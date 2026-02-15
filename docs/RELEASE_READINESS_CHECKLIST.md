@@ -53,3 +53,11 @@ Use this checklist before promoting to production.
 - [ ] Plan curation owner sign-off (`@ortwinverreck`)
 - [ ] Quality gate owner sign-off (`@ortwinverreck`)
 - [ ] Release owner sign-off (`@ortwinverreck`)
+
+## Vercel Deployment
+
+- [ ] Vercel production env var set: `NEXT_PUBLIC_CONVEX_URL`
+- [ ] Convex production env vars set: `SITE_URL`, `AUTH_RESEND_KEY`, `AUTH_EMAIL_FROM`
+- [ ] `npm run build:vercel` passes locally
+- [ ] Vercel project build command is `npm run build:vercel`
+- [ ] Vercel deploy runbook reviewed (`docs/VERCEL_DEPLOYMENT.md`)
