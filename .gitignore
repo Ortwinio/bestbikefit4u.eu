@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# convex
+convex/_generated
+
+# agent coordination (keep READMEs, exclude working files)
+context/*
+!context/README.md
+!context/INDEX.md
+messages/*
+!messages/README.md
+!messages/TEMPLATE.md

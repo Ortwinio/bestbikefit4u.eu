@@ -23,6 +23,7 @@ export const upsert = mutation({
     // Optional measurements
     armLengthCm: v.optional(v.number()),
     torsoLengthCm: v.optional(v.number()),
+    femurLengthCm: v.optional(v.number()),
     shoulderWidthCm: v.optional(v.number()),
     footLengthCm: v.optional(v.number()),
     handSpanCm: v.optional(v.number()),
@@ -74,6 +75,7 @@ export const upsert = mutation({
       inseamCm: args.inseamCm,
       armLengthCm: args.armLengthCm || args.heightCm * 0.44, // Fallback estimate
       torsoLengthCm: args.torsoLengthCm || args.heightCm * 0.32, // Fallback estimate
+      femurLengthCm: args.femurLengthCm,
       shoulderWidthCm: args.shoulderWidthCm || 42, // Default
       footLengthCm: args.footLengthCm,
       handSpanCm: args.handSpanCm,
@@ -104,6 +106,7 @@ export const updateMeasurements = mutation({
     inseamCm: v.optional(v.number()),
     armLengthCm: v.optional(v.number()),
     torsoLengthCm: v.optional(v.number()),
+    femurLengthCm: v.optional(v.number()),
     shoulderWidthCm: v.optional(v.number()),
     footLengthCm: v.optional(v.number()),
   },
@@ -129,6 +132,8 @@ export const updateMeasurements = mutation({
     if (args.armLengthCm !== undefined) updates.armLengthCm = args.armLengthCm;
     if (args.torsoLengthCm !== undefined)
       updates.torsoLengthCm = args.torsoLengthCm;
+    if (args.femurLengthCm !== undefined)
+      updates.femurLengthCm = args.femurLengthCm;
     if (args.shoulderWidthCm !== undefined)
       updates.shoulderWidthCm = args.shoulderWidthCm;
     if (args.footLengthCm !== undefined)
@@ -168,6 +173,7 @@ export const updateAssessment = mutation({
 
     await ctx.db.patch(profile._id, {
       flexibilityScore: args.flexibilityScore,
+      coreStabilityScore: args.coreStabilityScore,
       updatedAt: Date.now(),
     });
 

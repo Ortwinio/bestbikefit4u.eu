@@ -1,5 +1,11 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Internationalization
+
+- Active locales: `en`, `nl`
+- Routing model: locale-prefixed URLs (`/en/...`, `/nl/...`)
+- Architecture and maintenance guide: `docs/I18N.md`
+
 ## Getting Started
 
 First, run the development server:

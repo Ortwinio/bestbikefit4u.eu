@@ -3,6 +3,10 @@ import { v } from "convex/values";
 import { getQuestionById } from "./questions";
 import { requireSessionOwner } from "../lib/authz";
 import { validateShortString, validateTextString } from "../lib/validation";
+import {
+  isValidQuestionResponse,
+  questionResponseValueValidator,
+} from "./responseValidation";
 
 /**
  * Save a response to a question
@@ -11,21 +15,27 @@ export const saveResponse = mutation({
   args: {
     sessionId: v.id("fitSessions"),
     questionId: v.string(),
-    response: v.any(),
+    response: questionResponseValueValidator,
   },
   handler: async (ctx, args) => {
     await requireSessionOwner(ctx, args.sessionId);
 
     // Validate input lengths
     validateShortString(args.questionId, "questionId");
-    if (typeof args.response === "string") {
-      validateTextString(args.response, "response");
-    }
 
     // Get the question definition
     const question = getQuestionById(args.questionId);
     if (!question) {
       throw new Error(`Question not found: ${args.questionId}`);
+    }
+    if (typeof args.response === "string" && question.responseType === "text") {
+      validateTextString(args.response, "response");
+    }
+
+    if (!isValidQuestionResponse(question, args.response)) {
+      throw new Error(
+        `Invalid response type or value for question: ${args.questionId}`
+      );
     }
 
     // Check for existing response
@@ -115,14 +125,22 @@ export const completeQuestionnaire = mutation({
       (r) => r.questionId === "pain_severity"
     );
 
-    if (painAreasResponse && Array.isArray(painAreasResponse.response)) {
-      const painPoints = painAreasResponse.response.map((area: string) => ({
+    if (
+      painAreasResponse &&
+      Array.isArray(painAreasResponse.response) &&
+      painAreasResponse.response.every((area) => typeof area === "string")
+    ) {
+      const severityValue =
+        typeof painSeverityResponse?.response === "number"
+          ? painSeverityResponse.response
+          : undefined;
+      const painPoints = painAreasResponse.response.map((area) => ({
         area,
         frequency: "sometimes" as const,
         severity:
-          painSeverityResponse?.response >= 4
+          severityValue !== undefined && severityValue >= 4
             ? ("severe" as const)
-            : painSeverityResponse?.response >= 2
+            : severityValue !== undefined && severityValue >= 2
               ? ("moderate" as const)
               : ("mild" as const),
       }));
@@ -136,7 +154,7 @@ export const completeQuestionnaire = mutation({
     const weeklyHoursResponse = responses.find(
       (r) => r.questionId === "weekly_hours"
     );
-    if (weeklyHoursResponse) {
+    if (weeklyHoursResponse && typeof weeklyHoursResponse.response === "string") {
       const hoursMap: Record<string, number> = {
         "0-3": 2,
         "3-6": 5,
@@ -144,7 +162,7 @@ export const completeQuestionnaire = mutation({
         "10-15": 12,
         "15+": 18,
       };
-      const hours = hoursMap[weeklyHoursResponse.response as string] || 5;
+      const hours = hoursMap[weeklyHoursResponse.response] || 5;
       await ctx.db.patch(args.sessionId, {
         weeklyHours: hours,
       });

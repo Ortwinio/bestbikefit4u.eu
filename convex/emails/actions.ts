@@ -23,33 +23,6 @@ export const sendFitReport = action({
   args: {
     sessionId: v.id("fitSessions"),
     recipientEmail: v.string(),
-    // Pass the data directly to avoid circular reference
-    recommendation: v.object({
-      calculatedFit: v.object({
-        recommendedStackMm: v.number(),
-        recommendedReachMm: v.number(),
-        effectiveTopTubeMm: v.number(),
-        saddleHeightMm: v.number(),
-        saddleSetbackMm: v.number(),
-        saddleHeightRange: v.object({ min: v.number(), max: v.number() }),
-        handlebarDropMm: v.number(),
-        handlebarReachMm: v.number(),
-        stemLengthMm: v.number(),
-        stemAngleRecommendation: v.string(),
-        crankLengthMm: v.number(),
-        handlebarWidthMm: v.number(),
-      }),
-      confidenceScore: v.number(),
-      algorithmVersion: v.string(),
-      frameSizeRecommendations: v.array(
-        v.object({
-          size: v.string(),
-          fitScore: v.number(),
-          notes: v.optional(v.string()),
-        })
-      ),
-      fitNotes: v.array(v.string()),
-    }),
   },
   handler: async (ctx, args): Promise<{ success: boolean; emailId?: string }> => {
     const user = await ctx.runQuery(api.users.queries.getCurrentUser);

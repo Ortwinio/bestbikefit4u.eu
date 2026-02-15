@@ -1,0 +1,43 @@
+location,field,language,tooltip
+src/app/(auth)/login/page.tsx,Email address,en,Enter the email linked to your BikeFIT account. We’ll send the login code here.
+src/app/(auth)/login/page.tsx,Verification Code,en,Paste the 7‑character code from the email. Codes expire after a short time—request a new one if needed.
+src/app/(auth)/login/page.tsx,E-mailadres,nl,Vul het e-mailadres in dat aan je BikeFIT-account gekoppeld is. We sturen de inlogcode hiernaartoe.
+src/app/(auth)/login/page.tsx,Verificatiecode,nl,Plak de 7-tekens code uit de e-mail. Werkt de code niet meer? Vraag dan een nieuwe aan.
+src/components/measurements/StepBodyMeasurements.tsx,Height (cm),all,Stand barefoot against a wall. Measure floor to top of head (cm). Used for initial frame-size and reach estimates (typical 130–210 cm).
+src/components/measurements/StepBodyMeasurements.tsx,Inseam (cm),all,"Barefoot inseam: feet 10–15 cm apart, press a book firmly into the crotch, measure floor to book top (cm). Primary input for saddle height (typical 55–105 cm)."
+src/components/measurements/StepAdvancedMeasurements.tsx,Torso Length (cm),all,Measure from the top of your inseam reference (book) to the sternal notch (base of throat) while upright (cm). Improves reach and drop accuracy.
+src/components/measurements/StepAdvancedMeasurements.tsx,Arm Length (cm),all,Arm extended horizontally: measure from shoulder bone (acromion) to center of clenched fist (cm). Refines cockpit length.
+src/components/measurements/StepAdvancedMeasurements.tsx,Shoulder Width (cm),all,Measure bony shoulder width (acromion to acromion) in cm. Used to recommend handlebar width.
+src/components/measurements/StepAdvancedMeasurements.tsx,Femur Length (cm),all,Seated with knee at 90°: measure from hip bone (greater trochanter) to center of kneecap (cm). Helps refine saddle setback.
+src/components/bikes/BikeForm.tsx,Bike Name,all,"A label for this bike (e.g., “Canyon Endurace 2023”). Helps you track multiple fits."
+src/components/bikes/BikeForm.tsx,Bike Type,all,Select the exact type of bike you’re fitting. This changes posture targets and safety limits.
+src/components/bikes/BikeForm.tsx,Stack (mm),all,Vertical distance from BB center to top of head tube (mm). Found on the manufacturer geometry chart; determines handlebar height potential.
+src/components/bikes/BikeForm.tsx,Reach (mm),all,Horizontal distance from BB center to top of head tube (mm). Found on the manufacturer geometry chart; determines cockpit length baseline.
+src/components/bikes/BikeForm.tsx,Seat Tube Angle (deg),all,Angle of the seat tube (degrees). Use the manufacturer spec. Affects how far forward/back your saddle sits for the same saddle height.
+src/components/bikes/BikeForm.tsx,Head Tube Angle (deg),all,Angle of the head tube (degrees). Use the manufacturer spec. Influences steering stability and trail.
+src/components/bikes/BikeForm.tsx,Frame Size,all,"Enter the size label used by the brand (e.g., 54, 56, M, L). If unsure, use stack/reach instead for best accuracy."
+src/components/bikes/BikeForm.tsx,Saddle Height (mm),all,Measure from BB center to top of saddle along the seat tube line (mm). Use for comparing current vs. recommended fit.
+src/components/bikes/BikeForm.tsx,Saddle Setback (mm),all,Measure horizontal distance from BB center to saddle nose (mm). Positive values mean the saddle nose is behind the BB.
+src/components/bikes/BikeForm.tsx,Stem Length (mm),all,"Length printed on the stem (mm), center‑to‑center. Used to compare your current cockpit with recommendations."
+src/components/bikes/BikeForm.tsx,Stem Angle (deg),all,Angle printed on the stem (degrees). Affects handlebar height; note that flipping the stem changes the sign.
+src/components/bikes/BikeForm.tsx,Handlebar Width (mm),all,Width measured center‑to‑center at the hoods (mm). Typically matches shoulder width for comfort and control.
+src/components/bikes/BikeForm.tsx,Crank Length (mm),all,Length printed on the crank arm (mm). Used to adjust saddle height and hip/knee angles.
+src/components/questionnaire/questions/NumericQuestion.tsx,Your numeric answer,all,Enter a number only (no units). Use the specified unit in the label (cm/mm/deg).
+src/components/questionnaire/questions/TextQuestion.tsx,Your written answer,all,"Write a short, specific answer. Include relevant details like bike type, weekly volume, and any discomfort."
+src/app/(dashboard)/fit/[sessionId]/results/page.tsx,Email address,all,Enter the email linked to your BikeFIT account. We’ll send the login code here.
+src/app/(public)/contact/page.tsx,Name,en,"Your name, so we know how to address you."
+src/app/(public)/contact/page.tsx,Email,en,"Your email address, so we can reply."
+src/app/(public)/contact/page.tsx,Message,en,"Describe what you need help with (bike type, measurements, goals, and any pain/injuries)."
+src/app/(public)/contact/page.tsx,Naam,nl,"Je naam, zodat we je netjes kunnen aanspreken."
+src/app/(public)/contact/page.tsx,E-mail,nl,"Je e-mailadres, zodat we kunnen reageren."
+src/app/(public)/contact/page.tsx,Bericht,nl,"Beschrijf kort je vraag (fietstype, metingen, doelen en eventuele klachten/blessures)."
+src/app/(public)/calculators/saddle-height/page.tsx,Inseam (cm),all,"Barefoot inseam: feet 10–15 cm apart, press a book firmly into the crotch, measure floor to book top (cm). Primary input for saddle height (typical 55–105 cm)."
+src/app/(public)/calculators/saddle-height/page.tsx,Bike Category,all,Choose the category that matches your bike and intended use. This adjusts comfort vs. aerodynamics assumptions.
+src/app/(public)/calculators/saddle-height/page.tsx,Riding Goal,all,"Pick your primary goal (comfort, endurance, race, TT/aero). The app will trade off stability, comfort, and aerodynamics accordingly."
+src/app/(public)/calculators/saddle-height/page.tsx,Flexibility (1-5),all,"Rate hamstring/hip flexibility: 1 = very limited (can’t touch toes), 3 = toes, 5 = palms on floor. Lower scores reduce handlebar drop and reach."
+src/app/(public)/calculators/saddle-height/page.tsx,Core Stability (1-5),all,"Rate core stability: 1 = <45s stable plank, 3 = ~60s, 5 = 90s+ controlled. Lower scores reduce aggressive reach/drop to protect the lower back."
+src/app/(public)/calculators/frame-size/page.tsx,Height (cm),all,Stand barefoot against a wall. Measure floor to top of head (cm). Used for initial frame-size and reach estimates (typical 130–210 cm).
+src/app/(public)/calculators/frame-size/page.tsx,Inseam (cm),all,"Barefoot inseam: feet 10–15 cm apart, press a book firmly into the crotch, measure floor to book top (cm). Primary input for saddle height (typical 55–105 cm)."
+src/app/(public)/calculators/frame-size/page.tsx,Bike Category,all,Choose the category that matches your bike and intended use. This adjusts comfort vs. aerodynamics assumptions.
+src/app/(public)/calculators/crank-length/page.tsx,Inseam (cm),all,"Barefoot inseam: feet 10–15 cm apart, press a book firmly into the crotch, measure floor to book top (cm). Primary input for saddle height (typical 55–105 cm)."
+src/app/(public)/calculators/crank-length/page.tsx,Bike Category,all,Choose the category that matches your bike and intended use. This adjusts comfort vs. aerodynamics assumptions.

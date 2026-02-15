@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - release/**
+  pull_request:
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Contract tests (fail-fast gate)
+        run: npm run test:contracts
+
+  quality:
+    needs: contracts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm run test:unit
+
+      - name: Build (webpack mode)
+        run: npm run build -- --webpack
+
+      - name: Enforce plan README update when step files change
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          changed_files="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")"
+          echo "Changed files:"
+          echo "$changed_files"
+
+          if echo "$changed_files" | grep -Eq '^plans/.+/[0-9]{2}-.*\.md$'; then
+            if ! echo "$changed_files" | grep -Eq '^plans/.+/README\.md$'; then
+              echo "Plan step files changed but no plan README was updated."
+              echo "Update the corresponding plans/<plan-name>/README.md status/owner fields."
+              exit 1
+            fi
+          fi
+
+  e2e-communication:
+    needs: contracts
+    if: |
+      github.event_name == 'push' &&
+      (startsWith(github.ref, 'refs/heads/main') ||
+       startsWith(github.ref, 'refs/heads/master') ||
+       startsWith(github.ref, 'refs/heads/release/'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: E2E communication tests
+        run: npm run test:e2e:communication

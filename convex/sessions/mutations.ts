@@ -37,7 +37,10 @@ export const create = mutation({
     if (!userId) throw new Error("Not authenticated");
 
     if (args.bikeId) {
-      await requireBikeOwner(ctx, args.bikeId);
+      const { bike } = await requireBikeOwner(ctx, args.bikeId);
+      if (bike.bikeType !== args.bikeType) {
+        throw new Error("Bike type must match selected bike");
+      }
     }
 
     // Get user's profile
@@ -52,6 +55,7 @@ export const create = mutation({
       userId,
       profileId: profile._id,
       bikeId: args.bikeId,
+      bikeType: args.bikeType,
       status: "in_progress",
       ridingStyle: args.ridingStyle,
       primaryGoal: args.primaryGoal,

@@ -2,11 +2,10 @@ import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import {
   calculateBikeFit,
-  mapFlexibilityScore,
-  mapCoreScore,
   type FitInputs,
 } from "../lib/fitAlgorithm";
 import { requireSessionOwner, requireUserId } from "../lib/authz";
+import { buildFitInputs, estimateEffectiveTopTubeMm } from "./inputMapping";
 
 /**
  * Generate recommendations for a completed session
@@ -34,83 +33,22 @@ export const generate = mutation({
     if (!profile) throw new Error("Profile not found");
     if (profile.userId !== userId) throw new Error("Profile not found");
 
-    // Map session's primaryGoal to algorithm's ambition
-    const ambitionMap: Record<
-      string,
-      "comfort" | "balanced" | "performance" | "aero"
-    > = {
-      comfort: "comfort",
-      balanced: "balanced",
-      performance: "performance",
-      aerodynamics: "aero",
-    };
-
-    // Get bike category from session's bike or infer from riding style
-    let bikeCategory: "road" | "gravel" | "mtb" | "city" = "road";
-    if (session.bikeId) {
+    // Use the bike type snapshot captured at session creation.
+    // Fallback to linked bike type for older sessions that predate this field.
+    let bikeType: string | undefined = session.bikeType;
+    if (!bikeType && session.bikeId) {
       const bike = await ctx.db.get(session.bikeId);
       if (bike) {
         if (bike.userId !== userId) throw new Error("Bike not found");
-        const bikeTypeMap: Record<string, "road" | "gravel" | "mtb" | "city"> =
-          {
-            road: "road",
-            gravel: "gravel",
-            mountain: "mtb",
-            hybrid: "city",
-            city: "city",
-            tt_triathlon: "road",
-            cyclocross: "gravel",
-            touring: "gravel",
-          };
-        bikeCategory = bikeTypeMap[bike.bikeType] || "road";
+        bikeType = bike.bikeType;
       }
-    } else {
-      // Infer from riding style
-      const styleMap: Record<string, "road" | "gravel" | "mtb" | "city"> = {
-        recreational: "city",
-        fitness: "road",
-        sportive: "road",
-        racing: "road",
-        commuting: "city",
-        touring: "gravel",
-      };
-      bikeCategory = styleMap[session.ridingStyle] || "road";
     }
 
-    // Map flexibility score to numeric value
-    const flexScoreMap: Record<string, 1 | 2 | 3 | 4 | 5> = {
-      very_limited: 1,
-      limited: 2,
-      average: 3,
-      good: 4,
-      excellent: 5,
-    };
-    const flexNum = flexScoreMap[profile.flexibilityScore] || 3;
-
-    // Read the real core score (stored as 1-5) and clamp it
-    const coreNum =
-      typeof profile.coreStabilityScore === "number"
-        ? (Math.max(1, Math.min(5, Math.round(profile.coreStabilityScore))) as
-            1 | 2 | 3 | 4 | 5)
-        : 3; // neutral default if missing
-
-    // Build inputs for the algorithm
-    const fitInputs: FitInputs = {
-      category: bikeCategory,
-      ambition: ambitionMap[session.primaryGoal] || "balanced",
-      heightMm: profile.heightCm * 10,
-      inseamMm: profile.inseamCm * 10,
-      flexibilityScore: mapFlexibilityScore(flexNum),
-      coreScore: mapCoreScore(coreNum),
-      torsoMm: profile.torsoLengthCm ? profile.torsoLengthCm * 10 : undefined,
-      armMm: profile.armLengthCm ? profile.armLengthCm * 10 : undefined,
-      shoulderWidthMm: profile.shoulderWidthCm
-        ? profile.shoulderWidthCm * 10
-        : undefined,
-      footLengthMm: profile.footLengthCm
-        ? profile.footLengthCm * 10
-        : undefined,
-    };
+    const fitInputs = buildFitInputs({
+      profile,
+      session,
+      bikeType,
+    });
 
     // Run the calculation
     const result = calculateBikeFit(fitInputs);
@@ -183,7 +121,9 @@ export const generate = mutation({
       calculatedFit: {
         recommendedStackMm: result.frameStackTargetMm,
         recommendedReachMm: result.frameReachTargetMm,
-        effectiveTopTubeMm: result.saddleToBarReachMm + 50,
+        effectiveTopTubeMm: estimateEffectiveTopTubeMm(
+          result.saddleToBarReachMm
+        ),
         saddleHeightMm: result.saddleHeightMm,
         saddleSetbackMm: result.saddleSetbackMm,
         saddleHeightRange: result.saddleHeightRange,
