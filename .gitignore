@@ -42,7 +42,7 @@ yarn-error.log*
 next-env.d.ts
 
 # convex
-convex/_generated
+# Keep generated Convex client files in git so clean CI/Vercel builds resolve imports.
 
 # agent coordination (keep READMEs, exclude working files)
 context/*
