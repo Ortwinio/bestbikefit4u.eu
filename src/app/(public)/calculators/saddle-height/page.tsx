@@ -16,9 +16,9 @@ import {
 } from "@/lib/publicCalculators";
 
 export const metadata: Metadata = {
-  title: "Saddle Height Calculator | BikeFit AI",
+  title: "Saddle Height Calculator | BestBikeFit4U",
   description:
-    "Calculate recommended saddle height using the BikeFit AI algorithm with bike category, ambition, flexibility, and core stability inputs.",
+    "Calculate recommended saddle height using the BestBikeFit4U algorithm with bike category, ambition, flexibility, and core stability inputs.",
   keywords: [
     "saddle height calculator",
     "bike fit saddle height",
@@ -84,7 +84,7 @@ export default async function SaddleHeightCalculatorPage({
   const calculatorJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "BikeFit AI Saddle Height Calculator",
+    name: "BestBikeFit4U Saddle Height Calculator",
     url: "/calculators/saddle-height",
     applicationCategory: "SportsApplication",
     operatingSystem: "Any",
@@ -99,7 +99,7 @@ export default async function SaddleHeightCalculatorPage({
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-gray-900">Saddle Height Calculator</h1>
         <p className="mt-4 text-lg text-gray-600">
-          Uses the production BikeFit AI saddle-height formula from the fit
+          Uses the production BestBikeFit4U saddle-height formula from the fit
           engine, including flexibility, core, and ambition modifiers.
         </p>
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Stack and Reach Explained | BikeFit AI Science",
+  title: "Stack and Reach Explained | BestBikeFit4U Science",
   description:
     "Learn how stack and reach work, why they are better than seat-tube sizing, and how to use them for frame comparison.",
   keywords: [
@@ -34,7 +34,7 @@ export default function StackAndReachPage() {
       "How stack and reach describe bike geometry and improve frame selection accuracy.",
     author: {
       "@type": "Organization",
-      name: "BikeFit AI",
+      name: "BestBikeFit4U",
     },
     mainEntityOfPage: "/science/stack-and-reach",
   };

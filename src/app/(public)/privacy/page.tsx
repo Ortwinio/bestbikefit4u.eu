@@ -21,9 +21,9 @@ type PrivacyCopy = {
 const content: Record<Locale, PrivacyCopy> = {
   en: {
     metadata: {
-      title: "Privacy Policy - BikeFit AI",
-      description: "Learn how BikeFit AI collects, uses, and protects your personal data.",
-      keywords: ["privacy policy", "data protection", "BikeFit AI privacy"],
+      title: "Privacy Policy - BestBikeFit4U",
+      description: "Learn how BestBikeFit4U collects, uses, and protects your personal data.",
+      keywords: ["privacy policy", "data protection", "BestBikeFit4U privacy"],
     },
     title: "Privacy Policy",
     lastUpdatedLabel: "Last updated",
@@ -92,16 +92,16 @@ const content: Record<Locale, PrivacyCopy> = {
       },
       {
         title: "8. Contact",
-        body: "For privacy-related questions, contact us at support@bikefitai.com.",
+        body: "For privacy-related questions, contact us at support@bestbikefit4u.eu.",
       },
     ],
-    contactText: "support@bikefitai.com",
+    contactText: "support@bestbikefit4u.eu",
   },
   nl: {
     metadata: {
-      title: "Privacyverklaring - BikeFit AI",
-      description: "Lees hoe BikeFit AI jouw persoonsgegevens verzamelt, gebruikt en beschermt.",
-      keywords: ["privacyverklaring", "gegevensbescherming", "BikeFit AI privacy"],
+      title: "Privacyverklaring - BestBikeFit4U",
+      description: "Lees hoe BestBikeFit4U jouw persoonsgegevens verzamelt, gebruikt en beschermt.",
+      keywords: ["privacyverklaring", "gegevensbescherming", "BestBikeFit4U privacy"],
     },
     title: "Privacyverklaring",
     lastUpdatedLabel: "Laatst bijgewerkt",
@@ -170,10 +170,10 @@ const content: Record<Locale, PrivacyCopy> = {
       },
       {
         title: "8. Contact",
-        body: "Voor privacyvragen kun je contact opnemen via support@bikefitai.com.",
+        body: "Voor privacyvragen kun je contact opnemen via support@bestbikefit4u.eu.",
       },
     ],
-    contactText: "support@bikefitai.com",
+    contactText: "support@bestbikefit4u.eu",
   },
 };
 

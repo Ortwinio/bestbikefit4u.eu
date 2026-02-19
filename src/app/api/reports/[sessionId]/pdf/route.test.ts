@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { BRAND } from "@/config/brand";
 
 const mocks = vi.hoisted(() => {
   const token = vi.fn();
@@ -111,13 +112,13 @@ describe("pdf report route", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("Content-Type")).toBe("application/pdf");
     expect(response.headers.get("Content-Disposition")).toContain(
-      "bikefit-report-session_3.pdf"
+      `${BRAND.reportSlug}-session_3.pdf`
     );
 
     const buffer = await response.arrayBuffer();
     const text = new TextDecoder().decode(buffer);
     expect(text.startsWith("%PDF-1.4")).toBe(true);
-    expect(text).toContain("BikeFit AI - Fit Recommendation Report");
+    expect(text).toContain(BRAND.reportTitle);
     expect(text).toContain("Core Fit Metrics");
     expect(text).toContain("Safety Disclaimer");
   });

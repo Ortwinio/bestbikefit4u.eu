@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BRAND } from "@/config/brand";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import type { Messages } from "@/i18n/getDictionary";
@@ -120,7 +121,7 @@ export function Footer({ locale, labels }: FooterProps) {
         </div>
         <div className="mt-8 border-t border-gray-200 pt-8">
           <p className="text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} BikeFit AI.{" "}
+            &copy; {new Date().getFullYear()} {BRAND.name}.{" "}
             {f.allRightsReserved}
           </p>
         </div>

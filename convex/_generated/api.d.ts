@@ -17,6 +17,7 @@ import type * as emails_mutations from "../emails/mutations.js";
 import type * as emails_queries from "../emails/queries.js";
 import type * as http from "../http.js";
 import type * as lib_authz from "../lib/authz.js";
+import type * as lib_brand from "../lib/brand.js";
 import type * as lib_fitAlgorithm_calculations from "../lib/fitAlgorithm/calculations.js";
 import type * as lib_fitAlgorithm_constants from "../lib/fitAlgorithm/constants.js";
 import type * as lib_fitAlgorithm_index from "../lib/fitAlgorithm/index.js";
@@ -54,6 +55,7 @@ declare const fullApi: ApiFromModules<{
   "emails/queries": typeof emails_queries;
   http: typeof http;
   "lib/authz": typeof lib_authz;
+  "lib/brand": typeof lib_brand;
   "lib/fitAlgorithm/calculations": typeof lib_fitAlgorithm_calculations;
   "lib/fitAlgorithm/constants": typeof lib_fitAlgorithm_constants;
   "lib/fitAlgorithm/index": typeof lib_fitAlgorithm_index;

@@ -27,25 +27,25 @@ type FAQCopy = {
 const content: Record<Locale, FAQCopy> = {
   en: {
     metadata: {
-      title: "FAQ - BikeFit AI",
+      title: "FAQ - BestBikeFit4U",
       description:
-        "Frequently asked questions about BikeFit AI. Learn about our bike fitting process, measurement accuracy, and how to get the best results.",
+        "Frequently asked questions about BestBikeFit4U. Learn about our bike fitting process, measurement accuracy, and how to get the best results.",
       keywords: [
         "bike fit FAQ",
         "bike fitting questions",
-        "BikeFit AI help",
+        "BestBikeFit4U help",
         "cycling fit accuracy",
       ],
     },
     title: "Frequently Asked Questions",
-    subtitle: "Everything you need to know about BikeFit AI.",
+    subtitle: "Everything you need to know about BestBikeFit4U.",
     sections: [
       {
         category: "Getting Started",
         questions: [
           {
-            q: "How accurate is BikeFit AI?",
-            a: "BikeFit AI uses established biomechanical formulas including the LeMond/Hamley method for saddle height and KOPS for setback. Our calculations are within 5mm of what a professional fitter would recommend for most riders. Providing optional measurements (torso, arm length, shoulder width) improves accuracy further.",
+            q: "How accurate is BestBikeFit4U?",
+            a: "BestBikeFit4U uses established biomechanical formulas including the LeMond/Hamley method for saddle height and KOPS for setback. Our calculations are within 5mm of what a professional fitter would recommend for most riders. Providing optional measurements (torso, arm length, shoulder width) improves accuracy further.",
           },
           {
             q: "What measurements do I need?",
@@ -61,7 +61,7 @@ const content: Record<Locale, FAQCopy> = {
         category: "Bike Fitting",
         questions: [
           {
-            q: "What types of bikes does BikeFit AI support?",
+            q: "What types of bikes does BestBikeFit4U support?",
             a: "We support road bikes (endurance and race geometry), gravel bikes, mountain bikes (XC, trail, enduro), time trial/triathlon bikes, city/commuter bikes, and touring bikes. Each bike type uses category-specific multipliers and offset tables.",
           },
           {
@@ -116,20 +116,20 @@ const content: Record<Locale, FAQCopy> = {
   },
   nl: {
     metadata: {
-      title: "FAQ - BikeFit AI",
+      title: "FAQ - BestBikeFit4U",
       description:
-        "Veelgestelde vragen over BikeFit AI. Lees meer over ons bike fitting proces, meetnauwkeurigheid en hoe je de beste resultaten krijgt.",
-      keywords: ["bike fit FAQ", "bike fitting vragen", "BikeFit AI hulp"],
+        "Veelgestelde vragen over BestBikeFit4U. Lees meer over ons bike fitting proces, meetnauwkeurigheid en hoe je de beste resultaten krijgt.",
+      keywords: ["bike fit FAQ", "bike fitting vragen", "BestBikeFit4U hulp"],
     },
     title: "Veelgestelde vragen",
-    subtitle: "Alles wat je moet weten over BikeFit AI.",
+    subtitle: "Alles wat je moet weten over BestBikeFit4U.",
     sections: [
       {
         category: "Aan de slag",
         questions: [
           {
-            q: "Hoe nauwkeurig is BikeFit AI?",
-            a: "BikeFit AI gebruikt bewezen biomechanische formules, waaronder de LeMond/Hamley-methode voor zadelhoogte. Voor de meeste rijders zitten de uitkomsten dicht bij een professionele fitting, zeker met extra metingen zoals torso-, arm- en schouderbreedte.",
+            q: "Hoe nauwkeurig is BestBikeFit4U?",
+            a: "BestBikeFit4U gebruikt bewezen biomechanische formules, waaronder de LeMond/Hamley-methode voor zadelhoogte. Voor de meeste rijders zitten de uitkomsten dicht bij een professionele fitting, zeker met extra metingen zoals torso-, arm- en schouderbreedte.",
           },
           {
             q: "Welke metingen heb ik nodig?",
@@ -145,7 +145,7 @@ const content: Record<Locale, FAQCopy> = {
         category: "Bike fitting",
         questions: [
           {
-            q: "Welke fietstypes ondersteunt BikeFit AI?",
+            q: "Welke fietstypes ondersteunt BestBikeFit4U?",
             a: "We ondersteunen racefietsen, gravel, mountainbike, tijdrit/triathlon, stads- en tourfietsen. Elk type gebruikt specifieke correctiefactoren.",
           },
           {

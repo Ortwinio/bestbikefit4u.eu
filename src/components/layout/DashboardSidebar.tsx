@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { BRAND } from "@/config/brand";
 import { cn } from "@/utils/cn";
 import {
   LayoutDashboard,
@@ -41,7 +42,7 @@ export function DashboardSidebar() {
       <div className="flex h-full flex-col">
         <div className="flex h-16 items-center border-b border-gray-200 px-6">
           <Link href="/dashboard" className="text-xl font-bold text-gray-900">
-            BikeFit AI
+            {BRAND.name}
           </Link>
         </div>
 

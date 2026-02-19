@@ -54,7 +54,7 @@ Expected response includes:
 3. Validate auth sign-in path:
 
 ```bash
-npx convex run auth:signIn '{"provider":"resend","params":{"email":"qa-runtime-check@bikefit.ai"}}'
+npx convex run auth:signIn '{"provider":"resend","params":{"email":"qa-runtime-check@bestbikefit4u.eu"}}'
 ```
 
 Expected behavior:

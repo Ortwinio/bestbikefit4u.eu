@@ -1,6 +1,7 @@
 import { convexAuth } from "@convex-dev/auth/server";
 import { Email } from "@convex-dev/auth/providers/Email";
 import { Resend } from "resend";
+import { BRAND } from "./lib/brand";
 
 // Email format validation
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -115,12 +116,12 @@ const EmailProvider = Email({
     const resend = new Resend(process.env.AUTH_RESEND_KEY);
 
     const { error } = await resend.emails.send({
-      from: process.env.AUTH_EMAIL_FROM || "BikeFit AI <noreply@bikefit.ai>",
+      from: process.env.AUTH_EMAIL_FROM || BRAND.authEmailFrom,
       to: [email],
-      subject: "Your BikeFit AI Login Code",
+      subject: `Your ${BRAND.name} Login Code`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">BikeFit AI</h2>
+          <h2 style="color: #2563eb;">${BRAND.name}</h2>
           <p>Your login code is:</p>
           <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
             <span style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #1f2937;">${token}</span>

@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "./ConvexClientProvider";
+import { BRAND } from "@/config/brand";
 import { getRequestLocale } from "@/i18n/request";
 
 export const metadata: Metadata = {
-  title: "BikeFit AI",
+  title: BRAND.name,
   description: "AI-powered bike fitting application",
 };
 

@@ -11,9 +11,9 @@ import {
 } from "@/lib/publicCalculators";
 
 export const metadata: Metadata = {
-  title: "Crank Length Calculator | BikeFit AI",
+  title: "Crank Length Calculator | BestBikeFit4U",
   description:
-    "Calculate recommended crank length from inseam and bike category using BikeFit AI fit algorithm logic.",
+    "Calculate recommended crank length from inseam and bike category using BestBikeFit4U fit algorithm logic.",
   keywords: [
     "crank length calculator",
     "bike crank size",
@@ -54,7 +54,7 @@ export default async function CrankLengthCalculatorPage({
   const calculatorJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "BikeFit AI Crank Length Calculator",
+    name: "BestBikeFit4U Crank Length Calculator",
     url: "/calculators/crank-length",
     applicationCategory: "SportsApplication",
     operatingSystem: "Any",

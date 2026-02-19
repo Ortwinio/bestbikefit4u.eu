@@ -39,10 +39,10 @@ type ContactCopy = {
 const content: Record<Locale, ContactCopy> = {
   en: {
     metadata: {
-      title: "Contact Us - BikeFit AI",
+      title: "Contact Us - BestBikeFit4U",
       description:
-        "Get in touch with the BikeFit AI team. We are here to help with your bike fitting questions and support needs.",
-      keywords: ["contact BikeFit AI", "bike fit support", "cycling help"],
+        "Get in touch with the BestBikeFit4U team. We are here to help with your bike fitting questions and support needs.",
+      keywords: ["contact BestBikeFit4U", "bike fit support", "cycling help"],
     },
     title: "Contact Us",
     subtitle: "Have a question or need help? We'd love to hear from you.",
@@ -72,14 +72,14 @@ const content: Record<Locale, ContactCopy> = {
       "Describe what you need help with (bike type, measurements, goals, and any pain/injuries).",
     sendButton: "Send Message",
     formNote:
-      "Contact form is for display purposes. Please email us directly at support@bikefitai.com.",
+      "Contact form is for display purposes. Please email us directly at support@bestbikefit4u.eu.",
   },
   nl: {
     metadata: {
-      title: "Contact - BikeFit AI",
+      title: "Contact - BestBikeFit4U",
       description:
-        "Neem contact op met het BikeFit AI-team. We helpen je graag met vragen over bike fitting en support.",
-      keywords: ["contact BikeFit AI", "bike fit support", "fiets hulp"],
+        "Neem contact op met het BestBikeFit4U-team. We helpen je graag met vragen over bike fitting en support.",
+      keywords: ["contact BestBikeFit4U", "bike fit support", "fiets hulp"],
     },
     title: "Contact",
     subtitle: "Heb je een vraag of hulp nodig? We horen graag van je.",
@@ -109,7 +109,7 @@ const content: Record<Locale, ContactCopy> = {
       "Beschrijf kort je vraag (fietstype, metingen, doelen en eventuele klachten/blessures).",
     sendButton: "Verstuur bericht",
     formNote:
-      "Het contactformulier is alleen voor demonstratie. Mail ons direct via support@bikefitai.com.",
+      "Het contactformulier is alleen voor demonstratie. Mail ons direct via support@bestbikefit4u.eu.",
   },
 };
 
@@ -149,10 +149,10 @@ export default async function ContactPage() {
               </div>
               <p className="mt-2 text-gray-600">{page.emailSupportText}</p>
               <a
-                href="mailto:support@bikefitai.com"
+                href="mailto:support@bestbikefit4u.eu"
                 className="mt-1 inline-block text-blue-600 hover:text-blue-700"
               >
-                support@bikefitai.com
+                support@bestbikefit4u.eu
               </a>
             </div>
 

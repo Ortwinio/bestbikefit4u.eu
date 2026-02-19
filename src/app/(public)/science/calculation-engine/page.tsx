@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Bike Fit Calculation Engine | BikeFit AI Science",
+  title: "Bike Fit Calculation Engine | BestBikeFit4U Science",
   description:
-    "Detailed explanation of the BikeFit AI calculation engine: input validation, saddle height, reach, bar drop, and frame target logic.",
+    "Detailed explanation of the BestBikeFit4U calculation engine: input validation, saddle height, reach, bar drop, and frame target logic.",
   keywords: [
     "bike fit calculation engine",
     "cycling fit algorithm",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Bike Fit Calculation Engine",
     description:
-      "Understand how BikeFit AI transforms rider measurements into setup recommendations.",
+      "Understand how BestBikeFit4U transforms rider measurements into setup recommendations.",
     type: "article",
   },
 };
@@ -32,10 +32,10 @@ export default function CalculationEnginePage() {
     "@type": "Article",
     headline: "Bike Fit Calculation Engine",
     description:
-      "How BikeFit AI calculates saddle height, bar drop, reach, and frame targets from rider inputs.",
+      "How BestBikeFit4U calculates saddle height, bar drop, reach, and frame targets from rider inputs.",
     author: {
       "@type": "Organization",
-      name: "BikeFit AI",
+      name: "BestBikeFit4U",
     },
     mainEntityOfPage: "/science/calculation-engine",
   };
@@ -49,7 +49,7 @@ export default function CalculationEnginePage() {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-gray-900">Calculation Engine</h1>
         <p className="mt-4 text-lg text-gray-600">
-          The BikeFit AI engine combines validated measurement rules with proven
+          The BestBikeFit4U engine combines validated measurement rules with proven
           bike-fit equations to produce actionable setup recommendations.
         </p>
 

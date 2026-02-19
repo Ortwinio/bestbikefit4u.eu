@@ -46,7 +46,7 @@ type LoginCopy = {
 
 const loginCopy: Record<Locale, LoginCopy> = {
   en: {
-    successTitle: "Welcome to BikeFit AI",
+    successTitle: "Welcome to BestBikeFit4U",
     successSubtitle: "Redirecting to your dashboard...",
     back: "Back",
     enterVerificationCode: "Enter Verification Code",
@@ -61,11 +61,11 @@ const loginCopy: Record<Locale, LoginCopy> = {
     resendPrompt: "Didn't receive the code?",
     resendAction: "Resend",
     spamHint: "Check your spam folder if you don't see the email.",
-    signInTitle: "Sign in to BikeFit AI",
+    signInTitle: "Sign in to BestBikeFit4U",
     emailLabel: "Email address",
     emailPlaceholder: "you@example.com",
     emailTooltip:
-      "Enter the email linked to your BikeFIT account. We'll send the login code here.",
+      "Enter the email linked to your BestBikeFit4U account. We'll send the login code here.",
     sendCode: "Send Login Code",
     sendCodeError: "Failed to send verification code. Please try again.",
     resendCodeError: "Failed to resend code. Please try again.",
@@ -74,7 +74,7 @@ const loginCopy: Record<Locale, LoginCopy> = {
       "By signing in, you agree to our Terms of Service and Privacy Policy.",
   },
   nl: {
-    successTitle: "Welkom bij BikeFit AI",
+    successTitle: "Welkom bij BestBikeFit4U",
     successSubtitle: "Je wordt doorgestuurd naar je dashboard...",
     back: "Terug",
     enterVerificationCode: "Voer verificatiecode in",
@@ -89,11 +89,11 @@ const loginCopy: Record<Locale, LoginCopy> = {
     resendPrompt: "Geen code ontvangen?",
     resendAction: "Opnieuw verzenden",
     spamHint: "Controleer je spammap als je de e-mail niet ziet.",
-    signInTitle: "Log in bij BikeFit AI",
+    signInTitle: "Log in bij BestBikeFit4U",
     emailLabel: "E-mailadres",
     emailPlaceholder: "jij@example.com",
     emailTooltip:
-      "Vul het e-mailadres in dat aan je BikeFIT-account gekoppeld is. We sturen de inlogcode hiernaartoe.",
+      "Vul het e-mailadres in dat aan je BestBikeFit4U-account gekoppeld is. We sturen de inlogcode hiernaartoe.",
     sendCode: "Verstuur inlogcode",
     sendCodeError: "Verzenden van verificatiecode mislukt. Probeer opnieuw.",
     resendCodeError: "Opnieuw verzenden mislukt. Probeer opnieuw.",

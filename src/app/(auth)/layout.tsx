@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BRAND } from "@/config/brand";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
 
@@ -16,7 +17,7 @@ export default async function AuthLayout({
           href={withLocalePrefix("/", locale)}
           className="text-2xl font-bold text-gray-900"
         >
-          BikeFit AI
+          {BRAND.name}
         </Link>
       </div>
       <div className="w-full max-w-md">{children}</div>

@@ -26,9 +26,9 @@ type TermsCopy = {
 const content: Record<Locale, TermsCopy> = {
   en: {
     metadata: {
-      title: "Terms of Service - BikeFit AI",
-      description: "Read the terms and conditions for using BikeFit AI.",
-      keywords: ["terms of service", "terms and conditions", "BikeFit AI terms"],
+      title: "Terms of Service - BestBikeFit4U",
+      description: "Read the terms and conditions for using BestBikeFit4U.",
+      keywords: ["terms of service", "terms and conditions", "BestBikeFit4U terms"],
     },
     title: "Terms of Service",
     lastUpdatedLabel: "Last updated",
@@ -36,15 +36,15 @@ const content: Record<Locale, TermsCopy> = {
     sections: [
       {
         title: "1. Acceptance of Terms",
-        body: "By accessing or using BikeFit AI, you agree to these Terms of Service.",
+        body: "By accessing or using BestBikeFit4U, you agree to these Terms of Service.",
       },
       {
         title: "2. Description of Service",
-        body: "BikeFit AI provides algorithm-based bike fitting recommendations based on user measurements and preferences.",
+        body: "BestBikeFit4U provides algorithm-based bike fitting recommendations based on user measurements and preferences.",
       },
       {
         title: "3. Important Disclaimer",
-        warningTitle: "BikeFit AI is not a substitute for an in-person professional bike fit.",
+        warningTitle: "BestBikeFit4U is not a substitute for an in-person professional bike fit.",
         warningBody:
           "Recommendations depend on the quality of your measurements. Riders with injuries, chronic pain, or significant asymmetry should consult a qualified fitter or medical professional.",
       },
@@ -68,11 +68,11 @@ const content: Record<Locale, TermsCopy> = {
       },
       {
         title: "6. Subscription Plans",
-        body: "BikeFit AI offers Free, Pro, and Premium plans. Paid plans are billed monthly and can be cancelled at any time.",
+        body: "BestBikeFit4U offers Free, Pro, and Premium plans. Paid plans are billed monthly and can be cancelled at any time.",
       },
       {
         title: "7. Limitation of Liability",
-        body: "To the maximum extent permitted by law, BikeFit AI is not liable for indirect or consequential damages arising from use of the service. You are responsible for implementing fit changes gradually and safely.",
+        body: "To the maximum extent permitted by law, BestBikeFit4U is not liable for indirect or consequential damages arising from use of the service. You are responsible for implementing fit changes gradually and safely.",
       },
       {
         title: "8. Intellectual Property",
@@ -84,15 +84,15 @@ const content: Record<Locale, TermsCopy> = {
       },
       {
         title: "10. Contact",
-        body: "For questions about these terms, contact support@bikefitai.com.",
+        body: "For questions about these terms, contact support@bestbikefit4u.eu.",
       },
     ],
   },
   nl: {
     metadata: {
-      title: "Gebruiksvoorwaarden - BikeFit AI",
-      description: "Lees de voorwaarden voor het gebruik van BikeFit AI.",
-      keywords: ["gebruiksvoorwaarden", "voorwaarden", "BikeFit AI terms"],
+      title: "Gebruiksvoorwaarden - BestBikeFit4U",
+      description: "Lees de voorwaarden voor het gebruik van BestBikeFit4U.",
+      keywords: ["gebruiksvoorwaarden", "voorwaarden", "BestBikeFit4U terms"],
     },
     title: "Gebruiksvoorwaarden",
     lastUpdatedLabel: "Laatst bijgewerkt",
@@ -100,15 +100,15 @@ const content: Record<Locale, TermsCopy> = {
     sections: [
       {
         title: "1. Acceptatie van voorwaarden",
-        body: "Door BikeFit AI te gebruiken ga je akkoord met deze gebruiksvoorwaarden.",
+        body: "Door BestBikeFit4U te gebruiken ga je akkoord met deze gebruiksvoorwaarden.",
       },
       {
         title: "2. Beschrijving van de dienst",
-        body: "BikeFit AI biedt algoritme-gedreven bike fitting aanbevelingen op basis van jouw metingen en voorkeuren.",
+        body: "BestBikeFit4U biedt algoritme-gedreven bike fitting aanbevelingen op basis van jouw metingen en voorkeuren.",
       },
       {
         title: "3. Belangrijke disclaimer",
-        warningTitle: "BikeFit AI vervangt geen professionele fysieke bike fitting.",
+        warningTitle: "BestBikeFit4U vervangt geen professionele fysieke bike fitting.",
         warningBody:
           "Aanbevelingen hangen af van de nauwkeurigheid van je metingen. Bij blessures, chronische pijn of duidelijke asymmetrie raden we professionele begeleiding aan.",
       },
@@ -132,11 +132,11 @@ const content: Record<Locale, TermsCopy> = {
       },
       {
         title: "6. Abonnementsplannen",
-        body: "BikeFit AI biedt Free, Pro en Premium. Betaalde plannen worden maandelijks gefactureerd en kunnen op elk moment worden opgezegd.",
+        body: "BestBikeFit4U biedt Free, Pro en Premium. Betaalde plannen worden maandelijks gefactureerd en kunnen op elk moment worden opgezegd.",
       },
       {
         title: "7. Beperking van aansprakelijkheid",
-        body: "Voor zover wettelijk toegestaan is BikeFit AI niet aansprakelijk voor indirecte of gevolgschade. Je blijft zelf verantwoordelijk voor het veilig doorvoeren van aanpassingen.",
+        body: "Voor zover wettelijk toegestaan is BestBikeFit4U niet aansprakelijk voor indirecte of gevolgschade. Je blijft zelf verantwoordelijk voor het veilig doorvoeren van aanpassingen.",
       },
       {
         title: "8. Intellectueel eigendom",
@@ -148,7 +148,7 @@ const content: Record<Locale, TermsCopy> = {
       },
       {
         title: "10. Contact",
-        body: "Voor vragen over deze voorwaarden: support@bikefitai.com.",
+        body: "Voor vragen over deze voorwaarden: support@bestbikefit4u.eu.",
       },
     ],
   },

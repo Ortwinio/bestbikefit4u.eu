@@ -40,9 +40,9 @@ type PricingCopy = {
 const content: Record<Locale, PricingCopy> = {
   en: {
     metadata: {
-      title: "Pricing - BikeFit AI Plans and Features",
+      title: "Pricing - BestBikeFit4U Plans and Features",
       description:
-        "Choose the BikeFit AI plan that fits your needs. Free plan available for individual cyclists, Pro for enthusiasts, and Premium for coaches and bike fitters.",
+        "Choose the BestBikeFit4U plan that fits your needs. Free plan available for individual cyclists, Pro for enthusiasts, and Premium for coaches and bike fitters.",
       keywords: [
         "bike fit pricing",
         "bike fitting cost",
@@ -59,7 +59,7 @@ const content: Record<Locale, PricingCopy> = {
       {
         name: "Free",
         price: "0",
-        description: "Perfect for trying out BikeFit AI",
+        description: "Perfect for trying out BestBikeFit4U",
         features: [
           "1 bike fit session per month",
           "Basic fit recommendations",
@@ -142,14 +142,14 @@ const content: Record<Locale, PricingCopy> = {
       },
     ],
     ctaTitle: "Ready to Get Started?",
-    ctaSubtitle: "Try BikeFit AI free and see the difference proper fit makes.",
+    ctaSubtitle: "Try BestBikeFit4U free and see the difference proper fit makes.",
     ctaButton: "Start Your Free Fit",
   },
   nl: {
     metadata: {
-      title: "Prijzen - BikeFit AI",
+      title: "Prijzen - BestBikeFit4U",
       description:
-        "Kies het BikeFit AI-plan dat bij je past. Start gratis, upgrade naar Pro of Premium voor extra functies.",
+        "Kies het BestBikeFit4U-plan dat bij je past. Start gratis, upgrade naar Pro of Premium voor extra functies.",
       keywords: ["bike fit prijzen", "bike fitting kosten", "online bike fit"],
     },
     title: "Eenvoudige, transparante prijzen",
@@ -161,7 +161,7 @@ const content: Record<Locale, PricingCopy> = {
       {
         name: "Free",
         price: "0",
-        description: "Perfect om BikeFit AI uit te proberen",
+        description: "Perfect om BestBikeFit4U uit te proberen",
         features: [
           "1 bike fit-sessie per maand",
           "Basis fit-aanbevelingen",
@@ -243,7 +243,7 @@ const content: Record<Locale, PricingCopy> = {
       },
     ],
     ctaTitle: "Klaar om te starten?",
-    ctaSubtitle: "Probeer BikeFit AI gratis en ervaar het verschil van een goede fit.",
+    ctaSubtitle: "Probeer BestBikeFit4U gratis en ervaar het verschil van een goede fit.",
     ctaButton: "Start je gratis fit",
   },
 };

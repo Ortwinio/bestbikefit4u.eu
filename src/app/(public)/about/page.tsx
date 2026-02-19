@@ -44,9 +44,9 @@ type AboutCopy = {
 const content: Record<Locale, AboutCopy> = {
   en: {
     metadata: {
-      title: "How BikeFit AI Works - Bike Fitting Methodology",
+      title: "How BestBikeFit4U Works - Bike Fitting Methodology",
       description:
-        "Learn about the science behind BikeFit AI. We use proven biomechanical formulas including the LeMond/Hamley method to calculate your optimal bike position.",
+        "Learn about the science behind BestBikeFit4U. We use proven biomechanical formulas including the LeMond/Hamley method to calculate your optimal bike position.",
       keywords: [
         "bike fitting methodology",
         "LeMond method",
@@ -55,11 +55,11 @@ const content: Record<Locale, AboutCopy> = {
         "cycling biomechanics",
       ],
     },
-    title: "How BikeFit AI Works",
+    title: "How BestBikeFit4U Works",
     subtitle: "Professional bike fitting methodology, accessible to everyone.",
     scienceTitle: "The Science Behind Your Fit",
     scienceBody:
-      "BikeFit AI uses proven biomechanical formulas developed over decades of professional bike fitting research. Our algorithm combines established methods to provide recommendations tailored to your body, riding style, and goals.",
+      "BestBikeFit4U uses proven biomechanical formulas developed over decades of professional bike fitting research. Our algorithm combines established methods to provide recommendations tailored to your body, riding style, and goals.",
     saddleTitle: "Saddle Height Calculation",
     saddleBody1:
       "We use the LeMond/Hamley method as our baseline. This formula multiplies inseam by a bike-specific coefficient to estimate saddle height from bottom bracket center to saddle top.",
@@ -131,9 +131,9 @@ const content: Record<Locale, AboutCopy> = {
   },
   nl: {
     metadata: {
-      title: "Hoe BikeFit AI Werkt - Bike Fitting Methodiek",
+      title: "Hoe BestBikeFit4U Werkt - Bike Fitting Methodiek",
       description:
-        "Lees meer over de wetenschap achter BikeFit AI. We gebruiken bewezen biomechanische formules, waaronder LeMond/Hamley, om je ideale fietspositie te berekenen.",
+        "Lees meer over de wetenschap achter BestBikeFit4U. We gebruiken bewezen biomechanische formules, waaronder LeMond/Hamley, om je ideale fietspositie te berekenen.",
       keywords: [
         "bike fitting methodiek",
         "LeMond methode",
@@ -141,11 +141,11 @@ const content: Record<Locale, AboutCopy> = {
         "bike fit wetenschap",
       ],
     },
-    title: "Hoe BikeFit AI werkt",
+    title: "Hoe BestBikeFit4U werkt",
     subtitle: "Professionele bike fitting methodiek, toegankelijk voor iedereen.",
     scienceTitle: "De wetenschap achter je fit",
     scienceBody:
-      "BikeFit AI gebruikt bewezen biomechanische formules uit jarenlange bike fitting praktijk. Het algoritme combineert methodes tot aanbevelingen die passen bij jouw lichaam, rijstijl en doelen.",
+      "BestBikeFit4U gebruikt bewezen biomechanische formules uit jarenlange bike fitting praktijk. Het algoritme combineert methodes tot aanbevelingen die passen bij jouw lichaam, rijstijl en doelen.",
     saddleTitle: "Berekening van zadelhoogte",
     saddleBody1:
       "Als basis gebruiken we de LeMond/Hamley-methode. Deze formule gebruikt je binnenbeenlengte en een fietsafhankelijke factor om zadelhoogte te schatten.",

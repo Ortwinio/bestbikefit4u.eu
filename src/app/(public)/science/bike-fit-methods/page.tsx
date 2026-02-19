@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Bike Fit Methods Comparison | BikeFit AI Science",
+  title: "Bike Fit Methods Comparison | BestBikeFit4U Science",
   description:
     "Compare common bike fitting methods including LeMond, KOPS, and dynamic fit systems, and see where each method is useful.",
   keywords: [
@@ -55,7 +55,7 @@ export default function BikeFitMethodsPage() {
       "Comparison of LeMond, KOPS, and dynamic fitting approaches.",
     author: {
       "@type": "Organization",
-      name: "BikeFit AI",
+      name: "BestBikeFit4U",
     },
     mainEntityOfPage: "/science/bike-fit-methods",
   };

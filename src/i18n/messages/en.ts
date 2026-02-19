@@ -1,3 +1,5 @@
+import { BRAND } from "@/config/brand";
+
 const en = {
   common: {
     language: "Language",
@@ -5,7 +7,7 @@ const en = {
     dutch: "Dutch",
   },
   nav: {
-    brand: "BikeFit AI",
+    brand: BRAND.name,
     howItWorks: "How It Works",
     pricing: "Pricing",
     login: "Log in",
@@ -27,10 +29,10 @@ const en = {
   },
   home: {
     metadata: {
-      title: "BikeFit AI - Personalized Bike Fitting Recommendations",
+      title: `${BRAND.name} - Personalized Bike Fitting Recommendations`,
       description:
         "Get personalized bike fitting recommendations based on your body measurements, riding style, and goals. Free online bike fit calculator using proven biomechanical formulas.",
-      openGraphTitle: "BikeFit AI - Personalized Bike Fitting Recommendations",
+      openGraphTitle: `${BRAND.name} - Personalized Bike Fitting Recommendations`,
       openGraphDescription:
         "Get personalized bike fitting recommendations based on your body measurements. Free online bike fit calculator.",
       keywords: [
@@ -73,7 +75,7 @@ const en = {
       ],
     },
     features: {
-      title: "Why Choose BikeFit AI?",
+      title: `Why Choose ${BRAND.name}?`,
       subtitle: "Professional-grade fitting recommendations, accessible to everyone",
       items: [
         {
@@ -135,7 +137,7 @@ const en = {
     },
   },
   auth: {
-    signInTitle: "Sign in to BikeFit AI",
+    signInTitle: `Sign in to ${BRAND.name}`,
     sendCode: "Send Login Code",
   },
   dashboard: {

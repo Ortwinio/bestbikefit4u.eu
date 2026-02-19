@@ -48,7 +48,7 @@ const content: Record<Locale, MeasurementGuideCopy> = {
     metadata: {
       title: "How To Measure For Bike Fit - Measurement Guide",
       description:
-        "Step-by-step guide to measure height, inseam, torso, arm, shoulder width, femur length, and foot length for accurate BikeFit AI recommendations.",
+        "Step-by-step guide to measure height, inseam, torso, arm, shoulder width, femur length, and foot length for accurate BestBikeFit4U recommendations.",
       keywords: [
         "bike fit measurement guide",
         "how to measure inseam",
@@ -200,7 +200,7 @@ const content: Record<Locale, MeasurementGuideCopy> = {
     metadata: {
       title: "Hoe meten voor bike fit - Meetgids",
       description:
-        "Stapsgewijze gids voor het meten van lengte, binnenbeen, torso, arm, schouderbreedte, femurlengte en voetlengte voor nauwkeurige BikeFit AI-aanbevelingen.",
+        "Stapsgewijze gids voor het meten van lengte, binnenbeen, torso, arm, schouderbreedte, femurlengte en voetlengte voor nauwkeurige BestBikeFit4U-aanbevelingen.",
       keywords: [
         "bike fit meetgids",
         "binnenbeen meten",

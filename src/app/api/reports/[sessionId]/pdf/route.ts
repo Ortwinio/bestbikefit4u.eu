@@ -3,6 +3,7 @@ import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
+import { BRAND } from "@/config/brand";
 import { createSimplePdfFromLines } from "@/lib/pdf/simplePdf";
 import { buildRecommendationPdfLines } from "@/lib/reports/recommendationPdf";
 
@@ -68,7 +69,7 @@ export async function GET(
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="bikefit-report-${sessionId}.pdf"`,
+        "Content-Disposition": `attachment; filename="${BRAND.reportSlug}-${sessionId}.pdf"`,
         "Cache-Control": "no-store",
       },
     });

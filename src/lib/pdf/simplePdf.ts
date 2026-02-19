@@ -1,3 +1,5 @@
+import { BRAND } from "@/config/brand";
+
 const DEFAULT_FONT_SIZE = 10;
 const DEFAULT_LINE_HEIGHT = 14;
 const DEFAULT_LEFT_X = 50;
@@ -36,7 +38,7 @@ export function paginateLines(
   linesPerPage = DEFAULT_LINES_PER_PAGE
 ): string[][] {
   if (lines.length === 0) {
-    return [["BikeFit AI Report"]];
+    return [[`${BRAND.name} Report`]];
   }
 
   const pages: string[][] = [];
@@ -52,7 +54,7 @@ export function createSimplePdfFromLines(lines: string[]): Uint8Array {
 }
 
 export function createSimplePdf(pages: string[][]): Uint8Array {
-  const safePages = pages.length > 0 ? pages : [["BikeFit AI Report"]];
+  const safePages = pages.length > 0 ? pages : [[`${BRAND.name} Report`]];
   const objects: string[] = [];
 
   const pageObjectNumbers: number[] = [];

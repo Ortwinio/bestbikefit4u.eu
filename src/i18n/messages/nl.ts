@@ -1,3 +1,4 @@
+import { BRAND } from "@/config/brand";
 import type en from "./en";
 
 const nl = {
@@ -7,7 +8,7 @@ const nl = {
     dutch: "Nederlands",
   },
   nav: {
-    brand: "BikeFit AI",
+    brand: BRAND.name,
     howItWorks: "Hoe het werkt",
     pricing: "Prijzen",
     login: "Inloggen",
@@ -29,10 +30,10 @@ const nl = {
   },
   home: {
     metadata: {
-      title: "BikeFit AI - Persoonlijke bike fitting aanbevelingen",
+      title: `${BRAND.name} - Persoonlijke bike fitting aanbevelingen`,
       description:
         "Ontvang persoonlijke bike fitting aanbevelingen op basis van je lichaamsmetingen, rijstijl en doelen. Gratis online bike fit calculator met bewezen biomechanische formules.",
-      openGraphTitle: "BikeFit AI - Persoonlijke bike fitting aanbevelingen",
+      openGraphTitle: `${BRAND.name} - Persoonlijke bike fitting aanbevelingen`,
       openGraphDescription:
         "Ontvang persoonlijke bike fitting aanbevelingen op basis van je lichaamsmetingen. Gratis online bike fit calculator.",
       keywords: [
@@ -75,7 +76,7 @@ const nl = {
       ],
     },
     features: {
-      title: "Waarom kiezen voor BikeFit AI?",
+      title: `Waarom kiezen voor ${BRAND.name}?`,
       subtitle:
         "Professionele fit-aanbevelingen, toegankelijk voor iedere fietser",
       items: [
@@ -138,7 +139,7 @@ const nl = {
     },
   },
   auth: {
-    signInTitle: "Log in bij BikeFit AI",
+    signInTitle: `Log in bij ${BRAND.name}`,
     sendCode: "Verstuur inlogcode",
   },
   dashboard: {

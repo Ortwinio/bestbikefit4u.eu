@@ -1,3 +1,5 @@
+import { BRAND } from "@/config/brand";
+
 type FitSessionForPdf = {
   _id: string;
   createdAt: number;
@@ -81,7 +83,7 @@ export function buildRecommendationPdfLines(params: {
     .map((note, index) => `- ${index + 1}. ${note}`);
 
   return [
-    "BikeFit AI - Fit Recommendation Report",
+    BRAND.reportTitle,
     "======================================",
     "",
     `Session ID: ${session._id}`,

@@ -158,7 +158,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       const downloadUrl = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = downloadUrl;
-      anchor.download = `bikefit-report-${sessionId}.pdf`;
+      anchor.download = `bestbikefit4u-report-${sessionId}.pdf`;
       document.body.appendChild(anchor);
       anchor.click();
       anchor.remove();
@@ -295,7 +295,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                   <Input
                     type="email"
                     label="Email address"
-                    tooltip="Enter the email linked to your BikeFIT account. We'll send the login code here."
+                    tooltip="Enter the email linked to your BestBikeFit4U account. We'll send the login code here."
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"

@@ -11,9 +11,9 @@ import {
 } from "@/lib/publicCalculators";
 
 export const metadata: Metadata = {
-  title: "Frame Size Calculator | BikeFit AI",
+  title: "Frame Size Calculator | BestBikeFit4U",
   description:
-    "Estimate bike frame size using BikeFit AI algorithm functions based on height, inseam, and bike category.",
+    "Estimate bike frame size using BestBikeFit4U algorithm functions based on height, inseam, and bike category.",
   keywords: [
     "frame size calculator",
     "bike size calculator",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Frame Size Calculator",
     description:
-      "Get a quick frame size estimate powered by the BikeFit AI fit engine.",
+      "Get a quick frame size estimate powered by the BestBikeFit4U fit engine.",
     type: "website",
   },
 };
@@ -71,7 +71,7 @@ export default async function FrameSizeCalculatorPage({
   const calculatorJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "BikeFit AI Frame Size Calculator",
+    name: "BestBikeFit4U Frame Size Calculator",
     url: "/calculators/frame-size",
     applicationCategory: "SportsApplication",
     operatingSystem: "Any",

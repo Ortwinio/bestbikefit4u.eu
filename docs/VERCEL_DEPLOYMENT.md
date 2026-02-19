@@ -1,72 +1,78 @@
 # Vercel Deployment Guide
 
-Last updated: 2026-02-15
+Last updated: 2026-02-18
 
-This project deploys as a Next.js app on Vercel, backed by Convex.
+This project is a Next.js frontend on Vercel with a Convex production backend.
 
-## 1. Prerequisites
+## 1. One-Time Setup
 
-- A Vercel project connected to this repository
-- A Convex production deployment
-- A Resend API key for production email delivery
-
-## 2. Required Environment Variables
-
-### Vercel project env vars
-
-- `NEXT_PUBLIC_CONVEX_URL`
-  - Example: `https://your-deployment.convex.cloud`
-  - Used by frontend client and server routes
-
-### Convex deployment env vars
-
-- `SITE_URL`
-  - Example: `https://your-domain.com`
-  - Used for auth redirects and magic-link URLs
-- `AUTH_RESEND_KEY`
-  - Required for real verification/report emails in production
-- `AUTH_EMAIL_FROM`
-  - Example: `BikeFit AI <noreply@bikefit.ai>`
-  - Sender identity for outbound emails
-
-Convex usually provides `CONVEX_SITE_URL` automatically in deployment env. Auth config falls back to `NEXT_PUBLIC_CONVEX_SITE_URL` if needed.
-
-## 3. Build Configuration
-
-`vercel.json` enforces:
-
+1. Create or open your Convex production deployment.
+2. Create a Vercel project and connect this Git repository.
+3. Confirm `vercel.json` is respected:
 - `installCommand`: `npm ci`
 - `buildCommand`: `npm run build:vercel`
 
-`npm run build:vercel` runs a preflight check (`scripts/check-vercel-env.mjs`) before `next build`.
+## 2. Configure Production Environment Variables
 
-## 4. Deploy Backend (Convex)
+Set these in Vercel (Project Settings -> Environment Variables):
 
-Deploy Convex changes before or alongside Vercel frontend deploy:
+- `NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud`
+
+Set these in Convex production deployment env:
+
+- `SITE_URL=https://bestbikefit4u.eu`
+- `AUTH_RESEND_KEY=your_resend_api_key`
+- `AUTH_EMAIL_FROM=BestBikeFit4U <noreply@notifications.bestbikefit4u.eu>`
+
+CLI equivalent for Convex env:
+
+```bash
+npx convex env set SITE_URL https://bestbikefit4u.eu --prod
+npx convex env set AUTH_RESEND_KEY your_resend_api_key --prod
+npx convex env set AUTH_EMAIL_FROM 'BestBikeFit4U <noreply@notifications.bestbikefit4u.eu>' --prod
+```
+
+## 3. Deploy Convex Backend
+
+Deploy backend code first:
 
 ```bash
 npx convex deploy --prod
 ```
 
-Set Convex env vars:
+## 4. Deploy Vercel Frontend
 
-```bash
-npx convex env set SITE_URL https://your-domain.com
-npx convex env set AUTH_RESEND_KEY your_resend_api_key
-npx convex env set AUTH_EMAIL_FROM 'BikeFit AI <noreply@bikefit.ai>'
-```
+1. Push your branch (usually `main`).
+2. Let Vercel auto-deploy, or trigger a manual deploy in Vercel.
+3. In build logs, confirm this line appears:
+- `Vercel deployment preflight passed.`
 
-## 5. Deploy Frontend (Vercel)
+Notes:
+- `npm run build:vercel` runs `scripts/check-vercel-env.mjs` before `next build`.
+- The preflight fails if `NEXT_PUBLIC_CONVEX_URL` is missing, invalid, or points to `localhost`.
 
-After setting `NEXT_PUBLIC_CONVEX_URL` in Vercel:
+## 5. Validate Production
 
-1. Push to your deployment branch (for example `main`)
-2. Trigger a Vercel deployment (automatic or manual)
-3. Confirm build log includes `Vercel deployment preflight passed.`
+Run this smoke test after deploy:
 
-## 6. Post-Deploy Smoke Checks
+1. Open `/login` and complete magic-code sign-in.
+2. Confirm protected pages require auth (`/dashboard`, `/fit`).
+3. Complete a fit flow from profile to results.
+4. Verify PDF endpoint works for the owner:
+- `GET /api/reports/[sessionId]/pdf`
+5. Verify production email sending is working (Resend key present).
 
-- `/login` magic-code flow works end-to-end
-- Authenticated dashboard routes require login
-- `/fit` session flow completes through results
-- `GET /api/reports/[sessionId]/pdf` returns a PDF for authenticated owner
+## 6. Quick Troubleshooting
+
+- Build fails with missing env:
+  - Add `NEXT_PUBLIC_CONVEX_URL` in Vercel and redeploy.
+- Login links point to wrong domain:
+  - Update Convex `SITE_URL` to the exact production domain and redeploy Convex.
+- Emails not sent:
+  - Verify Convex `AUTH_RESEND_KEY` and `AUTH_EMAIL_FROM`.
+
+## 7. Pre-Release Gate
+
+Before production rollout, complete:
+
+- `docs/RELEASE_READINESS_CHECKLIST.md`
