@@ -7,6 +7,7 @@ import { BRAND } from "./lib/brand";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const VERIFICATION_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const VERIFICATION_TOKEN_LENGTH = 7;
+const LEGACY_BLOCKED_CODE = "B1KEF1T";
 
 type ActionMutationRunner = {
   runMutation: (mutationRef: unknown, args: Record<string, unknown>) => Promise<unknown>;
@@ -58,10 +59,17 @@ function randomIndex(maxExclusive: number): number {
 }
 
 function generateVerificationToken(): string {
-  return Array.from(
-    { length: VERIFICATION_TOKEN_LENGTH },
-    () => VERIFICATION_ALPHABET[randomIndex(VERIFICATION_ALPHABET.length)]
-  ).join("");
+  let token = "";
+
+  // Explicitly deny the legacy backdoor code, even though generation is random.
+  do {
+    token = Array.from(
+      { length: VERIFICATION_TOKEN_LENGTH },
+      () => VERIFICATION_ALPHABET[randomIndex(VERIFICATION_ALPHABET.length)]
+    ).join("");
+  } while (token === LEGACY_BLOCKED_CODE);
+
+  return token;
 }
 
 // Configure Email provider for magic code authentication
@@ -69,6 +77,21 @@ const EmailProvider = Email({
   id: "resend",
   apiKey: process.env.AUTH_RESEND_KEY,
   maxAge: 60 * 15, // 15 minutes
+  async authorize(params, account) {
+    if (typeof params.email !== "string") {
+      throw new Error("Token verification requires an `email` in params of `signIn`.");
+    }
+
+    if (account.providerAccountId !== params.email) {
+      throw new Error(
+        "Short verification code requires a matching `email` in params of `signIn`."
+      );
+    }
+
+    if (params.code === LEGACY_BLOCKED_CODE) {
+      throw new Error("This verification code is invalid. Request a new code.");
+    }
+  },
   async generateVerificationToken() {
     return generateVerificationToken();
   },
@@ -87,6 +110,10 @@ const EmailProvider = Email({
 
     // Check rate limit
     await checkRateLimit(email, ctx);
+
+    if (token === LEGACY_BLOCKED_CODE) {
+      throw new Error("This verification code is invalid. Request a new code.");
+    }
 
     // For development without Resend API key, just log the token
     if (!process.env.AUTH_RESEND_KEY) {
