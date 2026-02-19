@@ -3,6 +3,8 @@
 import { useId, useState } from "react";
 import { cn } from "@/utils/cn";
 import { FieldLabel } from "@/components/ui";
+import { formatMessage } from "@/i18n/dashboardMessages";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 interface NumericConfig {
   min?: number;
@@ -21,14 +23,15 @@ export function NumericQuestion({
   value,
   onChange,
 }: NumericQuestionProps) {
+  const { messages } = useDashboardMessages();
   const inputId = `question-numeric-${useId().replace(/:/g, "")}`;
   const [error, setError] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [localInput, setLocalInput] = useState("");
 
   const { min, max, unit } = config || {};
-  const tooltip =
-    "Enter a number only (no units). Use the specified unit in the label (cm/mm/deg).";
+  const unitLabel = unit ? ` ${unit}` : "";
+  const tooltip = messages.questionnaire.numeric.tooltip;
 
   // Display local input while focused, otherwise show prop value
   const displayValue = isFocused ? localInput : (value !== null ? String(value) : "");
@@ -55,17 +58,27 @@ export function NumericQuestion({
     const num = parseFloat(raw);
 
     if (isNaN(num)) {
-      setError("Please enter a valid number");
+      setError(messages.questionnaire.numeric.errors.invalidNumber);
       return;
     }
 
     if (min !== undefined && num < min) {
-      setError(`Value must be at least ${min}${unit ? ` ${unit}` : ""}`);
+      setError(
+        formatMessage(messages.questionnaire.numeric.errors.min, {
+          min,
+          unit: unitLabel,
+        })
+      );
       return;
     }
 
     if (max !== undefined && num > max) {
-      setError(`Value must be at most ${max}${unit ? ` ${unit}` : ""}`);
+      setError(
+        formatMessage(messages.questionnaire.numeric.errors.max, {
+          max,
+          unit: unitLabel,
+        })
+      );
       return;
     }
 
@@ -76,7 +89,7 @@ export function NumericQuestion({
   return (
     <div className="space-y-2">
       <FieldLabel
-        label="Your numeric answer"
+        label={messages.questionnaire.numeric.label}
         htmlFor={inputId}
         tooltip={tooltip}
       />
@@ -97,7 +110,9 @@ export function NumericQuestion({
               ? "border-red-300 focus:border-red-500"
               : "border-gray-200 focus:border-blue-600"
           )}
-          placeholder={`Enter a number${unit ? ` (${unit})` : ""}`}
+          placeholder={`${messages.questionnaire.numeric.placeholder}${
+            unit ? ` (${unit})` : ""
+          }`}
         />
         {unit && (
           <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
@@ -110,8 +125,11 @@ export function NumericQuestion({
 
       {min !== undefined && max !== undefined && !error && (
         <p className="text-sm text-gray-500">
-          Range: {min} - {max}
-          {unit ? ` ${unit}` : ""}
+          {formatMessage(messages.questionnaire.numeric.range, {
+            min,
+            max,
+            unit: unitLabel,
+          })}
         </p>
       )}
     </div>

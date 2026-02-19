@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui";
 import { AlertTriangle, RefreshCw, Home } from "lucide-react";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 export default function DashboardError({
   error,
@@ -12,6 +14,8 @@ export default function DashboardError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { locale, messages } = useDashboardMessages();
+
   useEffect(() => {
     // Log the error to an error reporting service
     console.error("Dashboard error:", error);
@@ -23,14 +27,14 @@ export default function DashboardError({
         <div className="mb-8">
           <AlertTriangle className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Something went wrong
+            {messages.errors.generic.title}
           </h1>
           <p className="text-gray-600">
-            We encountered an error while loading this page. Please try again.
+            {messages.errors.generic.description}
           </p>
           {error.digest && (
             <p className="text-xs text-gray-400 mt-2">
-              Error ID: {error.digest}
+              {messages.errors.generic.errorIdLabel} {error.digest}
             </p>
           )}
         </div>
@@ -38,12 +42,12 @@ export default function DashboardError({
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button variant="outline" onClick={reset}>
             <RefreshCw className="h-4 w-4 mr-2" />
-            Try Again
+            {messages.errors.generic.retry}
           </Button>
-          <Link href="/dashboard">
+          <Link href={withLocalePrefix("/dashboard", locale)}>
             <Button>
               <Home className="h-4 w-4 mr-2" />
-              Go to Dashboard
+              {messages.errors.generic.goDashboard}
             </Button>
           </Link>
         </div>

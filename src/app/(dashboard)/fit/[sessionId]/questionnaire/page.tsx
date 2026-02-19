@@ -1,7 +1,7 @@
 "use client";
 
-import { use, useMemo } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { use } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
@@ -11,8 +11,8 @@ import type { QuestionnaireResponseValue } from "@/components/questionnaire/type
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Button, EmptyState, LoadingState } from "@/components/ui";
-import { DEFAULT_LOCALE } from "@/i18n/config";
-import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 interface QuestionnairePageProps {
   params: Promise<{ sessionId: string }>;
@@ -21,11 +21,7 @@ interface QuestionnairePageProps {
 export default function QuestionnairePage({ params }: QuestionnairePageProps) {
   const { sessionId } = use(params);
   const router = useRouter();
-  const pathname = usePathname();
-  const locale = useMemo(
-    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
-    [pathname]
-  );
+  const { locale, messages } = useDashboardMessages();
   const pagePath = withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale);
   const logMarketingEvent = useMarketingEventLogger();
 
@@ -78,17 +74,17 @@ export default function QuestionnairePage({ params }: QuestionnairePageProps) {
   };
 
   if (session === undefined || questions === undefined || responses === undefined) {
-    return <LoadingState label="Loading questionnaire..." />;
+    return <LoadingState label={messages.questionnaire.loading} />;
   }
 
   if (session === null) {
     return (
       <EmptyState
-        title="Session not found"
-        description="The fit session you're looking for doesn't exist or has been archived."
+        title={messages.questionnaire.sessionNotFound.title}
+        description={messages.questionnaire.sessionNotFound.description}
         action={
           <Link href={withLocalePrefix("/fit", locale)}>
-            <Button>Start New Session</Button>
+            <Button>{messages.questionnaire.sessionNotFound.cta}</Button>
           </Link>
         }
       />
@@ -117,14 +113,13 @@ export default function QuestionnairePage({ params }: QuestionnairePageProps) {
           className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
-          Back
+          {messages.common.back}
         </Link>
         <h1 className="text-2xl font-bold text-gray-900">
-          Tell Us About Your Riding
+          {messages.questionnaire.title}
         </h1>
         <p className="text-gray-600 mt-2">
-          Answer these questions to help us personalize your bike fit
-          recommendations.
+          {messages.questionnaire.subtitle}
         </p>
       </div>
 

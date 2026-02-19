@@ -1,8 +1,7 @@
 "use client";
 
-import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { use, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
@@ -16,8 +15,8 @@ import {
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { reportClientError } from "@/lib/telemetry";
-import { DEFAULT_LOCALE } from "@/i18n/config";
-import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import {
   FitSummaryCard,
   AdjustmentPriorities,
@@ -40,11 +39,7 @@ interface ResultsPageProps {
 
 export default function ResultsPage({ params }: ResultsPageProps) {
   const { sessionId } = use(params);
-  const pathname = usePathname();
-  const locale = useMemo(
-    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
-    [pathname]
-  );
+  const { locale, messages } = useDashboardMessages();
   const pagePath = withLocalePrefix(`/fit/${sessionId}/results`, locale);
   const logMarketingEvent = useMarketingEventLogger();
 
@@ -179,7 +174,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       });
 
       if (!response.ok) {
-        let errorMessage = "Failed to generate PDF report.";
+        let errorMessage = messages.results.errors.pdfGenerateFailed;
         try {
           const payload = (await response.json()) as { error?: string };
           if (payload.error) {
@@ -202,7 +197,9 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       URL.revokeObjectURL(downloadUrl);
     } catch (error) {
       setDownloadError(
-        error instanceof Error ? error.message : "Failed to generate PDF report."
+        error instanceof Error
+          ? error.message
+          : messages.results.errors.pdfGenerateFailed
       );
     } finally {
       setIsDownloading(false);
@@ -211,17 +208,17 @@ export default function ResultsPage({ params }: ResultsPageProps) {
 
   // Loading state
   if (session === undefined || recommendation === undefined) {
-    return <LoadingState label="Loading fit results..." />;
+    return <LoadingState label={messages.results.loading} />;
   }
 
   if (session === null) {
     return (
       <EmptyState
-        title="Session not found"
-        description="The fit session you're looking for doesn't exist."
+        title={messages.results.sessionNotFound.title}
+        description={messages.results.sessionNotFound.description}
         action={
           <Link href={withLocalePrefix("/dashboard", locale)}>
-            <Button>Go to Dashboard</Button>
+            <Button>{messages.results.sessionNotFound.cta}</Button>
           </Link>
         }
       />
@@ -236,11 +233,11 @@ export default function ResultsPage({ params }: ResultsPageProps) {
     if (!canGenerateRecommendation) {
       return (
         <EmptyState
-          title="Questionnaire not completed"
-          description="Complete your questionnaire first, then we can generate your fit recommendation."
+          title={messages.results.questionnaireIncomplete.title}
+          description={messages.results.questionnaireIncomplete.description}
           action={
             <Link href={withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale)}>
-              <Button>Continue Questionnaire</Button>
+              <Button>{messages.results.questionnaireIncomplete.cta}</Button>
             </Link>
           }
         />
@@ -255,11 +252,10 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           }`}
         />
         <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          Calculating Your Fit
+          {messages.results.processing.title}
         </h1>
         <p className="text-gray-600">
-          We&apos;re analyzing your measurements and preferences to generate
-          personalized recommendations...
+          {messages.results.processing.description}
         </p>
         {generationError ? (
           <ErrorState className="mt-4 text-left" description={generationError} />
@@ -270,7 +266,9 @@ export default function ResultsPage({ params }: ResultsPageProps) {
             onClick={handleGenerateRecommendation}
             isLoading={isGenerating}
           >
-            {generationError ? "Retry Generation" : "Generate Now"}
+            {generationError
+              ? messages.results.processing.retryCta
+              : messages.results.processing.generateNowCta}
           </Button>
         </div>
       </div>
@@ -285,11 +283,15 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           setEmailError(null);
           setShowEmailModal(false);
         }}
-        title={emailSent ? "Email sent" : "Email report"}
+        title={
+          emailSent
+            ? messages.results.emailDialog.sentTitle
+            : messages.results.emailDialog.title
+        }
         description={
           emailSent
-            ? "Check your inbox for your bike fit report."
-            : "Send your bike fit recommendations to your email for future reference."
+            ? messages.results.emailDialog.sentDescription
+            : messages.results.emailDialog.description
         }
       >
         {emailSent ? (
@@ -300,15 +302,19 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           <>
             <Input
               type="email"
-              label="Email address"
-              tooltip="Enter the email address where you want to receive this report."
+              label={messages.results.emailDialog.emailLabel}
+              tooltip={messages.results.emailDialog.emailTooltip}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder={messages.results.emailDialog.emailPlaceholder}
             />
 
             {emailError ? (
-              <ErrorState className="mt-3" title="Failed to send report" description={emailError} />
+              <ErrorState
+                className="mt-3"
+                title={messages.results.emailDialog.errors.sendTitle}
+                description={emailError}
+              />
             ) : null}
 
             <div className="mt-6 flex gap-3">
@@ -320,7 +326,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                 }}
                 className="flex-1"
               >
-                Cancel
+                {messages.common.cancel}
               </Button>
               <Button
                 onClick={handleSendEmail}
@@ -329,7 +335,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                 className="flex-1"
               >
                 <Send className="h-4 w-4 mr-2" />
-                Send Report
+                {messages.results.emailDialog.sendCta}
               </Button>
             </div>
           </>
@@ -343,21 +349,18 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to Dashboard
+          {messages.results.backToDashboard}
         </Link>
 
         <div className="flex items-center gap-3 mb-2">
           <CheckCircle className="h-8 w-8 text-green-500" />
           <h1 className="text-2xl font-bold text-gray-900">
-            Your Bike Fit Recommendations
+            {messages.results.title}
           </h1>
         </div>
-        <p className="text-gray-600">
-          Based on your measurements and riding preferences, here are your
-          personalized bike fit settings.
-        </p>
+        <p className="text-gray-600">{messages.results.subtitle}</p>
         <p className="text-sm text-gray-400 mt-1">
-          Algorithm version: {recommendation.algorithmVersion}
+          {messages.results.algorithmVersionLabel}: {recommendation.algorithmVersion}
         </p>
       </div>
 
@@ -390,7 +393,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       <div className="mt-8 flex flex-wrap gap-3 pb-8">
         <Button variant="outline" onClick={() => setShowEmailModal(true)}>
           <Mail className="h-4 w-4 mr-2" />
-          Email Report
+          {messages.results.actions.emailReport}
         </Button>
         <Button
           variant="outline"
@@ -398,14 +401,18 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           isLoading={isDownloading}
         >
           <Download className="h-4 w-4 mr-2" />
-          Download PDF
+          {messages.results.actions.downloadPdf}
         </Button>
         <Link href={withLocalePrefix("/fit", locale)}>
-          <Button>Start New Fit Session</Button>
+          <Button>{messages.results.actions.startNewFit}</Button>
         </Link>
       </div>
       {downloadError ? (
-        <ErrorState className="mt-2" title="Failed to download PDF" description={downloadError} />
+        <ErrorState
+          className="mt-2"
+          title={messages.results.errors.downloadTitle}
+          description={downloadError}
+        />
       ) : null}
     </div>
   );

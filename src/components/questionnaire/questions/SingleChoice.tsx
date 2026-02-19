@@ -2,6 +2,7 @@
 
 import { cn } from "@/utils/cn";
 import { Check } from "lucide-react";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 interface Option {
   value: string;
@@ -22,9 +23,13 @@ export function SingleChoiceQuestion({
   value,
   onChange,
 }: SingleChoiceQuestionProps) {
+  const { messages } = useDashboardMessages();
+
   return (
     <fieldset className="space-y-3">
-      <legend className="sr-only">Choose one option</legend>
+      <legend className="sr-only">
+        {messages.questionnaire.a11y.singleChoiceLegend}
+      </legend>
       {options.map((option) => {
         const isSelected = value === option.value;
 

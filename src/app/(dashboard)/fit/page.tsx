@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
@@ -23,36 +23,22 @@ import {
   type BikeType,
 } from "@/lib/bikes";
 import { reportClientError } from "@/lib/telemetry";
-import { DEFAULT_LOCALE } from "@/i18n/config";
-import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { Bike, ArrowRight, AlertCircle } from "lucide-react";
 
-const ridingStyles = [
-  { value: "recreational", label: "Recreational", description: "Casual rides for fun and relaxation" },
-  { value: "fitness", label: "Fitness", description: "Regular exercise and health focus" },
-  { value: "sportive", label: "Sportive", description: "Long distance events and charity rides" },
-  { value: "racing", label: "Racing", description: "Competitive cycling and time trials" },
-  { value: "commuting", label: "Commuting", description: "Daily transportation to work" },
-  { value: "touring", label: "Touring", description: "Long-distance travel with luggage" },
-] as const;
-
-const ridingGoals = [
-  { value: "comfort", label: "Comfort", description: "Relaxed position, minimize strain" },
-  { value: "balanced", label: "Balanced", description: "Mix of comfort and efficiency" },
-  { value: "performance", label: "Performance", description: "More aggressive, power-focused" },
-  { value: "aerodynamics", label: "Aero", description: "Most aggressive, aerodynamic position (Road/TT only)" },
-] as const;
-
-type RidingStyle = typeof ridingStyles[number]["value"];
-type PrimaryGoal = typeof ridingGoals[number]["value"];
+type RidingStyle =
+  | "recreational"
+  | "fitness"
+  | "sportive"
+  | "racing"
+  | "commuting"
+  | "touring";
+type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
 
 export default function NewFitSessionPage() {
   const router = useRouter();
-  const pathname = usePathname();
-  const locale = useMemo(
-    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
-    [pathname]
-  );
+  const { locale, messages } = useDashboardMessages();
   const pagePath = withLocalePrefix("/fit", locale);
   const logMarketingEvent = useMarketingEventLogger();
   const hasTrackedFitViewRef = useRef(false);
@@ -82,6 +68,60 @@ export default function NewFitSessionPage() {
     isSelectedGoalAllowed &&
     hasProfile &&
     !isCreating;
+  const ridingStyles = [
+    {
+      value: "recreational" as const,
+      label: messages.fit.ridingStyles.recreational.label,
+      description: messages.fit.ridingStyles.recreational.description,
+    },
+    {
+      value: "fitness" as const,
+      label: messages.fit.ridingStyles.fitness.label,
+      description: messages.fit.ridingStyles.fitness.description,
+    },
+    {
+      value: "sportive" as const,
+      label: messages.fit.ridingStyles.sportive.label,
+      description: messages.fit.ridingStyles.sportive.description,
+    },
+    {
+      value: "racing" as const,
+      label: messages.fit.ridingStyles.racing.label,
+      description: messages.fit.ridingStyles.racing.description,
+    },
+    {
+      value: "commuting" as const,
+      label: messages.fit.ridingStyles.commuting.label,
+      description: messages.fit.ridingStyles.commuting.description,
+    },
+    {
+      value: "touring" as const,
+      label: messages.fit.ridingStyles.touring.label,
+      description: messages.fit.ridingStyles.touring.description,
+    },
+  ];
+  const ridingGoals = [
+    {
+      value: "comfort" as const,
+      label: messages.fit.goals.comfort.label,
+      description: messages.fit.goals.comfort.description,
+    },
+    {
+      value: "balanced" as const,
+      label: messages.fit.goals.balanced.label,
+      description: messages.fit.goals.balanced.description,
+    },
+    {
+      value: "performance" as const,
+      label: messages.fit.goals.performance.label,
+      description: messages.fit.goals.performance.description,
+    },
+    {
+      value: "aerodynamics" as const,
+      label: messages.fit.goals.aerodynamics.label,
+      description: messages.fit.goals.aerodynamics.description,
+    },
+  ];
 
   useEffect(() => {
     if (hasTrackedFitViewRef.current) {
@@ -140,16 +180,15 @@ export default function NewFitSessionPage() {
   };
 
   if (isLoadingProfile) {
-    return <LoadingState label="Loading fit setup..." />;
+    return <LoadingState label={messages.fit.loading} />;
   }
 
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Start New Fit Session</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{messages.fit.title}</h1>
         <p className="text-gray-600 mt-2">
-          Choose your bike and riding goals to get personalized setup
-          recommendations.
+          {messages.fit.subtitle}
         </p>
       </div>
 
@@ -159,15 +198,14 @@ export default function NewFitSessionPage() {
             <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
             <div>
               <p className="font-medium text-yellow-800">
-                Complete your profile first
+                {messages.fit.profileWarning.title}
               </p>
               <p className="text-sm text-yellow-700 mt-1">
-                You need to enter your body measurements before starting a fit
-                session.
+                {messages.fit.profileWarning.description}
               </p>
               <Link href={withLocalePrefix("/profile", locale)}>
                 <Button variant="outline" size="sm" className="mt-3">
-                  Go to Profile
+                  {messages.fit.profileWarning.cta}
                 </Button>
               </Link>
             </div>
@@ -177,7 +215,7 @@ export default function NewFitSessionPage() {
 
       {isLoadingBikes && (
         <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 text-sm text-gray-500">
-          Loading saved bikes...
+          {messages.fit.savedBikes.loading}
         </div>
       )}
 
@@ -185,10 +223,10 @@ export default function NewFitSessionPage() {
         <Card variant="bordered" className="mb-6">
           <CardHeader>
             <div className="flex items-center justify-between gap-3">
-              <CardTitle>Select a saved bike (optional)</CardTitle>
+              <CardTitle>{messages.fit.savedBikes.title}</CardTitle>
               {selectedBikeId && (
                 <Button variant="outline" size="sm" onClick={handleUseCustomBikeType}>
-                  Use custom bike type
+                  {messages.fit.savedBikes.useCustomType}
                 </Button>
               )}
             </div>
@@ -235,13 +273,15 @@ export default function NewFitSessionPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Bike className="h-5 w-5 text-blue-600" />
-            <CardTitle>What type of bike?</CardTitle>
+            <CardTitle>{messages.fit.sections.bikeType}</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
           {selectedBike ? (
             <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
-              Using saved bike <span className="font-semibold">{selectedBike.name}</span> ({BIKE_TYPE_LABELS[selectedBike.bikeType]}).
+              {messages.fit.savedBikes.usingBike}{" "}
+              <span className="font-semibold">{selectedBike.name}</span> (
+              {BIKE_TYPE_LABELS[selectedBike.bikeType]}).
             </div>
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
@@ -279,7 +319,7 @@ export default function NewFitSessionPage() {
 
       <Card variant="bordered" className="mb-6">
         <CardHeader>
-          <CardTitle>How do you typically ride?</CardTitle>
+          <CardTitle>{messages.fit.sections.ridingStyle}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -316,7 +356,7 @@ export default function NewFitSessionPage() {
 
       <Card variant="bordered" className="mb-6">
         <CardHeader>
-          <CardTitle>What&apos;s your primary goal?</CardTitle>
+          <CardTitle>{messages.fit.sections.primaryGoal}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -368,7 +408,7 @@ export default function NewFitSessionPage() {
           isLoading={isCreating}
           onClick={handleStartSession}
         >
-          Continue to Questions
+          {messages.fit.continueCta}
           <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
       </div>
@@ -376,14 +416,14 @@ export default function NewFitSessionPage() {
       {createError ? (
         <ErrorState
           className="mt-2"
-          title="Couldn't start fit session"
+          title={messages.fit.errors.startFailedTitle}
           description={createError}
         />
       ) : null}
 
       {!canStart && bikeType && ridingStyle && ridingGoal && !hasProfile && (
         <p className="text-sm text-gray-500 text-right mt-2">
-          Complete your profile to continue
+          {messages.fit.profileRequirementHint}
         </p>
       )}
     </div>

@@ -21,7 +21,7 @@
     "test:contracts": "vitest run contract.test.ts --bail=1",
     "test:e2e:communication": "vitest run convex-communication.e2e.test.ts --bail=1",
     "test:e2e:i18n": "vitest run tests/e2e/homepage-language-switch.e2e.test.ts --bail=1",
-    "test:i18n": "vitest run src/i18n/config.test.ts src/i18n/getDictionary.test.ts src/i18n/messages/messages-parity.test.ts tests/integration/locale-routing.integration.test.ts --bail=1",
+    "test:i18n": "vitest run src/i18n/config.test.ts src/i18n/getDictionary.test.ts src/i18n/dashboardMessages.test.ts src/i18n/messages/messages-parity.test.ts tests/integration/locale-routing.integration.test.ts tests/integration/dashboard-locale-switch.integration.test.ts --bail=1",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },

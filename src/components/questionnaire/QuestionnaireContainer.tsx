@@ -13,6 +13,8 @@ import { QuestionRenderer } from "./QuestionRenderer";
 import { ProgressBar } from "./ProgressBar";
 import { getErrorMessage, reportClientError } from "@/lib/telemetry";
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { formatMessage } from "@/i18n/dashboardMessages";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import type { QuestionDefinition, QuestionnaireResponseValue } from "./types";
 
 interface QuestionnaireContainerProps {
@@ -36,8 +38,10 @@ function hasQuestionResponse(response: QuestionnaireResponseValue | null): boole
   return true;
 }
 
-function extractMissingRequiredQuestionIds(message: string): string[] {
-  const marker = "Missing required responses:";
+function extractMissingRequiredQuestionIds(
+  message: string,
+  marker: string
+): string[] {
   const markerIndex = message.indexOf(marker);
   if (markerIndex === -1) {
     return [];
@@ -60,6 +64,7 @@ export function QuestionnaireContainer({
   onComplete,
   isLoading = false,
 }: QuestionnaireContainerProps) {
+  const { messages } = useDashboardMessages();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentResponse, setCurrentResponse] =
     useState<QuestionnaireResponseValue | null>(null);
@@ -162,10 +167,13 @@ export function QuestionnaireContainer({
         await onComplete();
       } catch (error) {
         const message = getErrorMessage(error);
-        const missingIds = extractMissingRequiredQuestionIds(message);
+        const missingIds = extractMissingRequiredQuestionIds(
+          message,
+          messages.questionnaire.errors.missingRequiredMarker
+        );
         if (missingIds.length > 0) {
           setMissingRequiredQuestionIds(missingIds);
-          setActionError("Please answer all required questions before completing.");
+          setActionError(messages.questionnaire.missingRequired.header);
           jumpToQuestion(missingIds[0]);
           return;
         }
@@ -197,14 +205,14 @@ export function QuestionnaireContainer({
   };
 
   if (isLoading) {
-    return <LoadingState label="Loading questionnaire..." />;
+    return <LoadingState label={messages.questionnaire.loading} />;
   }
 
   if (totalQuestions === 0 || !currentQuestion) {
     return (
       <EmptyState
-        title="No questionnaire items available"
-        description="Try again in a moment."
+        title={messages.questionnaire.emptyTitle}
+        description={messages.questionnaire.emptyDescription}
       />
     );
   }
@@ -226,7 +234,7 @@ export function QuestionnaireContainer({
       {missingRequiredQuestionIds.length > 0 && (
         <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
           <p className="text-sm font-medium text-amber-900">
-            Required questions still need an answer:
+            {messages.questionnaire.missingRequired.header}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {missingRequiredQuestionIds.map((questionId) => {
@@ -264,7 +272,7 @@ export function QuestionnaireContainer({
           disabled={currentIndex === 0 || isSaving || isCompleting}
         >
           <ChevronLeft className="h-4 w-4 mr-1" />
-          Previous
+          {messages.questionnaire.actions.previous}
         </Button>
 
         <div className="flex items-center gap-2">
@@ -274,7 +282,7 @@ export function QuestionnaireContainer({
               onClick={handleSkip}
               disabled={isSaving || isCompleting}
             >
-              Skip
+              {messages.questionnaire.actions.skip}
             </Button>
           )}
 
@@ -285,12 +293,12 @@ export function QuestionnaireContainer({
           >
             {isLastQuestion ? (
               <>
-                Complete
+                {messages.questionnaire.actions.complete}
                 <Check className="h-4 w-4 ml-1" />
               </>
             ) : (
               <>
-                Next
+                {messages.questionnaire.actions.next}
                 <ChevronRight className="h-4 w-4 ml-1" />
               </>
             )}
@@ -302,12 +310,15 @@ export function QuestionnaireContainer({
         <ErrorState
           className="mt-4"
           description={actionError}
-          title="We couldn't complete this step"
+          title={messages.questionnaire.errors.completeStepTitle}
         />
       ) : null}
 
       <p className="text-center text-sm text-gray-500 mt-4">
-        Question {currentIndex + 1} of {totalQuestions}
+        {formatMessage(messages.questionnaire.progress.questionOf, {
+          current: currentIndex + 1,
+          total: totalQuestions,
+        })}
         {currentQuestion.isRequired && (
           <span className="text-red-500 ml-1">*</span>
         )}

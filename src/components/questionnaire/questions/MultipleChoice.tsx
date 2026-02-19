@@ -2,6 +2,7 @@
 
 import { cn } from "@/utils/cn";
 import { Check } from "lucide-react";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 interface Option {
   value: string;
@@ -22,6 +23,8 @@ export function MultipleChoiceQuestion({
   value,
   onChange,
 }: MultipleChoiceQuestionProps) {
+  const { messages } = useDashboardMessages();
+
   const toggleOption = (optionValue: string) => {
     if (value.includes(optionValue)) {
       onChange(value.filter((v) => v !== optionValue));
@@ -32,7 +35,9 @@ export function MultipleChoiceQuestion({
 
   return (
     <fieldset className="space-y-3">
-      <legend className="mb-4 text-sm text-gray-500">Select all that apply</legend>
+      <legend className="mb-4 text-sm text-gray-500">
+        {messages.questionnaire.multiChoice.legend}
+      </legend>
       {options.map((option) => {
         const isSelected = value.includes(option.value);
 

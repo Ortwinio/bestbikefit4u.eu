@@ -6,8 +6,9 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { BRAND } from "@/config/brand";
+import { LanguageSwitch } from "./LanguageSwitch";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import {
-  extractLocaleFromPathname,
   stripLocalePrefix,
   withLocalePrefix,
 } from "@/i18n/navigation";
@@ -20,28 +21,26 @@ import {
   LogOut,
 } from "lucide-react";
 
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "New Fit Session", href: "/fit", icon: Settings },
-  { name: "My Bikes", href: "/bikes", icon: Bike },
-  { name: "Profile", href: "/profile", icon: User },
-];
-
-const websiteNavigation = [
-  { name: "Home", href: "/" },
-  { name: "How It Works", href: "/about" },
-  { name: "Pricing", href: "/pricing" },
-];
-
 export function DashboardSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { signOut } = useAuthActions();
-  const locale = extractLocaleFromPathname(pathname ?? "");
+  const { locale, messages, languageSwitchLabels } = useDashboardMessages();
   const internalPathname = stripLocalePrefix(pathname ?? "/");
 
-  const toLocalizedPath = (path: string) =>
-    locale ? withLocalePrefix(path, locale) : path;
+  const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
+  const navigation = [
+    { name: messages.nav.dashboard, href: "/dashboard", icon: LayoutDashboard },
+    { name: messages.nav.newFitSession, href: "/fit", icon: Settings },
+    { name: messages.nav.myBikes, href: "/bikes", icon: Bike },
+    { name: messages.nav.profile, href: "/profile", icon: User },
+  ];
+
+  const websiteNavigation = [
+    { name: messages.layout.website.home, href: "/" },
+    { name: messages.layout.website.howItWorks, href: "/about" },
+    { name: messages.layout.website.pricing, href: "/pricing" },
+  ];
 
   const user = useQuery(api.users.queries.getCurrentUser);
 
@@ -50,7 +49,8 @@ export function DashboardSidebar() {
     router.push(toLocalizedPath("/"));
   };
 
-  const displayName = user?.name || user?.email?.split("@")[0] || "User";
+  const displayName =
+    user?.name || user?.email?.split("@")[0] || messages.userMenu.fallbackUserName;
   const email = user?.email || "";
 
   return (
@@ -63,6 +63,9 @@ export function DashboardSidebar() {
           >
             {BRAND.name}
           </Link>
+        </div>
+        <div className="border-b border-gray-100 px-4 py-3">
+          <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
         </div>
 
         <nav className="flex-1 space-y-1 px-3 py-4">
@@ -90,7 +93,7 @@ export function DashboardSidebar() {
 
         <div className="border-t border-gray-100 px-3 py-3">
           <p className="px-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
-            Website
+            {messages.layout.sections.website}
           </p>
           <div className="mt-2 space-y-1">
             {websiteNavigation.map((item) => (
@@ -126,7 +129,7 @@ export function DashboardSidebar() {
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
           >
             <LogOut className="h-5 w-5" />
-            Sign out
+            {messages.common.signOut}
           </button>
         </div>
       </div>

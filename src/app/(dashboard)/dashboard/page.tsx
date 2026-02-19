@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
-import { usePathname } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import {
@@ -14,56 +12,12 @@ import {
   LoadingState,
   EmptyState,
 } from "@/components/ui";
-import { DEFAULT_LOCALE } from "@/i18n/config";
-import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { Plus, Clock, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
 
-const statusConfig: Record<
-  string,
-  { icon: typeof CheckCircle; color: string; label: string }
-> = {
-  completed: {
-    icon: CheckCircle,
-    color: "text-green-500",
-    label: "Completed",
-  },
-  in_progress: {
-    icon: Clock,
-    color: "text-yellow-500",
-    label: "In Progress",
-  },
-  questionnaire_complete: {
-    icon: Clock,
-    color: "text-blue-500",
-    label: "Processing",
-  },
-  processing: {
-    icon: Clock,
-    color: "text-blue-500",
-    label: "Processing",
-  },
-  archived: {
-    icon: AlertCircle,
-    color: "text-gray-400",
-    label: "Archived",
-  },
-};
-
-const ridingStyleLabels: Record<string, string> = {
-  recreational: "Recreational",
-  fitness: "Fitness",
-  sportive: "Sportive",
-  racing: "Racing",
-  commuting: "Commuting",
-  touring: "Touring",
-};
-
 export default function DashboardPage() {
-  const pathname = usePathname();
-  const locale = useMemo(
-    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
-    [pathname]
-  );
+  const { locale, messages } = useDashboardMessages();
   const sessions = useQuery(api.sessions.queries.listByUser);
   const profile = useQuery(api.profiles.queries.getMyProfile);
 
@@ -76,15 +30,53 @@ export default function DashboardPage() {
   const lastFitDate = lastSession?.completedAt
     ? new Date(lastSession.completedAt).toLocaleDateString()
     : "-";
+  const statusConfig: Record<
+    string,
+    { icon: typeof CheckCircle; color: string; label: string }
+  > = {
+    completed: {
+      icon: CheckCircle,
+      color: "text-green-500",
+      label: messages.sessions.status.completed,
+    },
+    in_progress: {
+      icon: Clock,
+      color: "text-yellow-500",
+      label: messages.sessions.status.inProgress,
+    },
+    questionnaire_complete: {
+      icon: Clock,
+      color: "text-blue-500",
+      label: messages.sessions.status.processing,
+    },
+    processing: {
+      icon: Clock,
+      color: "text-blue-500",
+      label: messages.sessions.status.processing,
+    },
+    archived: {
+      icon: AlertCircle,
+      color: "text-gray-400",
+      label: messages.sessions.status.archived,
+    },
+  };
+  const ridingStyleLabels: Record<string, string> = {
+    recreational: messages.sessions.ridingStyle.recreational,
+    fitness: messages.sessions.ridingStyle.fitness,
+    sportive: messages.sessions.ridingStyle.sportive,
+    racing: messages.sessions.ridingStyle.racing,
+    commuting: messages.sessions.ridingStyle.commuting,
+    touring: messages.sessions.ridingStyle.touring,
+  };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{messages.home.title}</h1>
         <Link href={withLocalePrefix("/fit", locale)}>
           <Button>
             <Plus className="h-4 w-4 mr-2" />
-            New Fit Session
+            {messages.home.newFitCta}
           </Button>
         </Link>
       </div>
@@ -96,14 +88,14 @@ export default function DashboardPage() {
             <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
             <div>
               <p className="font-medium text-yellow-800">
-                Complete your profile to get started
+                {messages.home.profileWarning.title}
               </p>
               <p className="text-sm text-yellow-700 mt-1">
-                Enter your body measurements to enable bike fit calculations.
+                {messages.home.profileWarning.description}
               </p>
               <Link href={withLocalePrefix("/profile", locale)}>
                 <Button variant="outline" size="sm" className="mt-3">
-                  Complete Profile
+                  {messages.home.profileWarning.cta}
                 </Button>
               </Link>
             </div>
@@ -118,7 +110,7 @@ export default function DashboardPage() {
             <div className="text-2xl font-bold text-gray-900">
               {isLoading ? "-" : sessions?.length ?? 0}
             </div>
-            <p className="text-sm text-gray-500">Total Sessions</p>
+            <p className="text-sm text-gray-500">{messages.home.stats.totalSessions}</p>
           </CardContent>
         </Card>
         <Card variant="bordered">
@@ -126,13 +118,13 @@ export default function DashboardPage() {
             <div className="text-2xl font-bold text-gray-900">
               {completedSessions}
             </div>
-            <p className="text-sm text-gray-500">Completed Fits</p>
+            <p className="text-sm text-gray-500">{messages.home.stats.completedFits}</p>
           </CardContent>
         </Card>
         <Card variant="bordered">
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-gray-900">{lastFitDate}</div>
-            <p className="text-sm text-gray-500">Last Fit Date</p>
+            <p className="text-sm text-gray-500">{messages.home.stats.lastFitDate}</p>
           </CardContent>
         </Card>
       </div>
@@ -140,18 +132,21 @@ export default function DashboardPage() {
       {/* Sessions List */}
       <Card variant="bordered">
         <CardHeader>
-          <CardTitle>Recent Fit Sessions</CardTitle>
+          <CardTitle>{messages.home.recentSessions.title}</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <LoadingState label="Loading sessions..." className="py-8" />
+            <LoadingState
+              label={messages.home.recentSessions.loading}
+              className="py-8"
+            />
           ) : !sessions || sessions.length === 0 ? (
             <EmptyState
-              title="No fit sessions yet"
-              description="You haven't started any fit sessions yet."
+              title={messages.home.recentSessions.emptyTitle}
+              description={messages.home.recentSessions.emptyDescription}
               action={
                 <Link href={withLocalePrefix("/fit", locale)}>
-                  <Button>Start Your First Fit</Button>
+                  <Button>{messages.home.recentSessions.emptyCta}</Button>
                 </Link>
               }
               className="border-0 p-0 shadow-none"
@@ -177,7 +172,8 @@ export default function DashboardPage() {
                       <StatusIcon className={`h-5 w-5 ${config.color}`} />
                       <div>
                         <p className="font-medium text-gray-900">
-                          {ridingStyleLabels[session.ridingStyle] || session.ridingStyle} Fit
+                          {ridingStyleLabels[session.ridingStyle] || session.ridingStyle}{" "}
+                          {messages.home.recentSessions.fitSuffix}
                         </p>
                         <p className="text-sm text-gray-500">
                           {new Date(session.createdAt).toLocaleDateString()} •{" "}
@@ -188,14 +184,14 @@ export default function DashboardPage() {
                     <Link href={sessionLink}>
                       <Button variant="ghost" size="sm">
                         {session.status === "completed" ? (
-                          "View Results"
+                          messages.home.recentSessions.actions.viewResults
                         ) : session.status === "in_progress" ? (
                           <>
-                            Continue
+                            {messages.home.recentSessions.actions.continue}
                             <ArrowRight className="h-4 w-4 ml-1" />
                           </>
                         ) : (
-                          "View"
+                          messages.home.recentSessions.actions.view
                         )}
                       </Button>
                     </Link>

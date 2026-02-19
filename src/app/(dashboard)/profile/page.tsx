@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { MeasurementWizard, type WizardFormData } from "@/components/measurements";
@@ -17,8 +16,8 @@ import {
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { reportClientError } from "@/lib/telemetry";
-import { DEFAULT_LOCALE } from "@/i18n/config";
-import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { User, Ruler, Activity, Edit2 } from "lucide-react";
 
 interface ProfileData {
@@ -36,18 +35,20 @@ function ProfileSummary({
   profile,
   onEdit,
   fitHref,
+  messages,
 }: {
   profile: ProfileData;
   onEdit: () => void;
   fitHref: string;
+  messages: ReturnType<typeof useDashboardMessages>["messages"];
 }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Your Profile</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{messages.profile.title}</h1>
         <Button onClick={onEdit}>
           <Edit2 className="h-4 w-4 mr-2" />
-          Edit Measurements
+          {messages.profile.actions.editMeasurements}
         </Button>
       </div>
 
@@ -57,40 +58,40 @@ function ProfileSummary({
           <CardHeader>
             <div className="flex items-center gap-2">
               <Ruler className="h-5 w-5 text-blue-600" />
-              <CardTitle>Body Measurements</CardTitle>
+              <CardTitle>{messages.profile.sections.bodyMeasurements}</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
             <dl className="space-y-3">
               <div className="flex justify-between">
-                <dt className="text-gray-500">Height</dt>
+                <dt className="text-gray-500">{messages.profile.measurements.height}</dt>
                 <dd className="font-medium">{profile.heightCm} cm</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-gray-500">Inseam</dt>
+                <dt className="text-gray-500">{messages.profile.measurements.inseam}</dt>
                 <dd className="font-medium">{profile.inseamCm} cm</dd>
               </div>
               {profile.torsoLengthCm && (
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Torso</dt>
+                  <dt className="text-gray-500">{messages.profile.measurements.torso}</dt>
                   <dd className="font-medium">{profile.torsoLengthCm} cm</dd>
                 </div>
               )}
               {profile.armLengthCm && (
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Arm Length</dt>
+                  <dt className="text-gray-500">{messages.profile.measurements.armLength}</dt>
                   <dd className="font-medium">{profile.armLengthCm} cm</dd>
                 </div>
               )}
               {profile.shoulderWidthCm && (
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Shoulder Width</dt>
+                  <dt className="text-gray-500">{messages.profile.measurements.shoulderWidth}</dt>
                   <dd className="font-medium">{profile.shoulderWidthCm} cm</dd>
                 </div>
               )}
               {profile.femurLengthCm && (
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Femur Length</dt>
+                  <dt className="text-gray-500">{messages.profile.measurements.femurLength}</dt>
                   <dd className="font-medium">{profile.femurLengthCm} cm</dd>
                 </div>
               )}
@@ -103,7 +104,7 @@ function ProfileSummary({
           <CardHeader>
             <div className="flex items-center gap-2">
               <Activity className="h-5 w-5 text-green-600" />
-              <CardTitle>Flexibility</CardTitle>
+              <CardTitle>{messages.profile.sections.flexibility}</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
@@ -112,7 +113,7 @@ function ProfileSummary({
                 {profile.flexibilityScore?.replace("_", " ")}
               </div>
               <p className="text-sm text-gray-500 mt-2">
-                Hamstring flexibility score
+                {messages.profile.flexibility.helper}
               </p>
             </div>
           </CardContent>
@@ -123,7 +124,7 @@ function ProfileSummary({
           <CardHeader>
             <div className="flex items-center gap-2">
               <User className="h-5 w-5 text-purple-600" />
-              <CardTitle>Core Stability</CardTitle>
+              <CardTitle>{messages.profile.sections.coreStability}</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
@@ -132,7 +133,7 @@ function ProfileSummary({
                 {profile.coreStabilityScore}/5
               </div>
               <p className="text-sm text-gray-500 mt-2">
-                Plank hold assessment
+                {messages.profile.coreStability.helper}
               </p>
             </div>
           </CardContent>
@@ -142,16 +143,13 @@ function ProfileSummary({
       {/* Additional Info */}
       <Card variant="bordered" className="mt-6">
         <CardHeader>
-          <CardTitle>Profile Status</CardTitle>
+          <CardTitle>{messages.profile.status.title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600">
-            Your profile is complete. You can now start a fit session to get
-            personalized bike setup recommendations.
-          </p>
+          <p className="text-gray-600">{messages.profile.status.description}</p>
           <div className="mt-4">
             <Link href={fitHref}>
-              <Button>Start New Fit Session</Button>
+              <Button>{messages.profile.status.startFitCta}</Button>
             </Link>
           </div>
         </CardContent>
@@ -176,11 +174,7 @@ function getDefaultValues(profile: ProfileData): Partial<WizardFormData> {
 }
 
 export default function ProfilePage() {
-  const pathname = usePathname();
-  const locale = useMemo(
-    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
-    [pathname]
-  );
+  const { locale, messages } = useDashboardMessages();
   const pagePath = withLocalePrefix("/profile", locale);
   const logMarketingEvent = useMarketingEventLogger();
   const hasTrackedProfileViewRef = useRef(false);
@@ -229,7 +223,7 @@ export default function ProfilePage() {
   };
 
   if (profileData === undefined && !isEditing) {
-    return <LoadingState label="Loading profile..." />;
+    return <LoadingState label={messages.profile.loading} />;
   }
 
   // Show wizard if no profile exists or editing
@@ -238,18 +232,20 @@ export default function ProfilePage() {
       <div>
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900">
-            {profileData ? "Edit Your Measurements" : "Complete Your Profile"}
+            {profileData
+              ? messages.profile.edit.title
+              : messages.profile.onboarding.title}
           </h1>
           <p className="text-gray-600 mt-2">
             {profileData
-              ? "Update your body measurements for more accurate fit recommendations."
-              : "Enter your body measurements to get personalized bike fit recommendations."}
+              ? messages.profile.edit.description
+              : messages.profile.onboarding.description}
           </p>
         </div>
         {saveError ? (
           <ErrorState
             className="mb-6"
-            title="Could not save profile"
+            title={messages.profile.errors.saveFailedTitle}
             description={saveError}
           />
         ) : null}
@@ -266,7 +262,7 @@ export default function ProfilePage() {
                 setIsEditing(false);
               }}
             >
-              Cancel
+              {messages.common.cancel}
             </Button>
           </div>
         )}
@@ -279,6 +275,7 @@ export default function ProfilePage() {
     <ProfileSummary
       profile={profileData}
       fitHref={withLocalePrefix("/fit", locale)}
+      messages={messages}
       onEdit={() => setIsEditing(true)}
     />
   );

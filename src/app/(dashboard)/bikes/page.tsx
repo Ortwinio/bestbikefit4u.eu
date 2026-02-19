@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
@@ -16,16 +15,12 @@ import {
   EmptyState,
 } from "@/components/ui";
 import { BIKE_TYPE_LABELS } from "@/lib/bikes";
-import { DEFAULT_LOCALE } from "@/i18n/config";
-import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 
 export default function BikesPage() {
-  const pathname = usePathname();
-  const locale = useMemo(
-    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
-    [pathname]
-  );
+  const { locale, messages } = useDashboardMessages();
   const bikes = useQuery(api.bikes.queries.listByUser);
   const removeBike = useMutation(api.bikes.mutations.remove);
 
@@ -35,7 +30,7 @@ export default function BikesPage() {
 
   const handleDelete = async (bikeId: Id<"bikes">, bikeName: string) => {
     const confirmed = window.confirm(
-      `Delete \"${bikeName}\"? This action cannot be undone.`
+      messages.bikes.delete.confirm.replace("{bikeName}", bikeName)
     );
     if (!confirmed) {
       return;
@@ -46,40 +41,38 @@ export default function BikesPage() {
       await removeBike({ bikeId });
     } catch (error) {
       console.error("Failed to delete bike:", error);
-      alert("Could not delete bike. Please try again.");
+      alert(messages.bikes.delete.failed);
     } finally {
       setDeletingBikeId(null);
     }
   };
 
   if (bikes === undefined) {
-    return <LoadingState label="Loading bikes..." />;
+    return <LoadingState label={messages.bikes.loading} />;
   }
 
   return (
     <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Bikes</h1>
-          <p className="text-gray-600 mt-2">
-            Save your bikes to keep fit sessions tied to real setups.
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900">{messages.bikes.title}</h1>
+          <p className="text-gray-600 mt-2">{messages.bikes.subtitle}</p>
         </div>
         <Link href={withLocalePrefix("/bikes/new", locale)}>
           <Button>
             <Plus className="h-4 w-4 mr-2" />
-            Add Bike
+            {messages.bikes.actions.addBike}
           </Button>
         </Link>
       </div>
 
       {bikes.length === 0 ? (
         <EmptyState
-          title="No bikes added yet"
-          description="Save your first bike to compare fit sessions over time."
+          title={messages.bikes.empty.title}
+          description={messages.bikes.empty.description}
           action={
             <Link href={withLocalePrefix("/bikes/new", locale)}>
-              <Button>Add Your First Bike</Button>
+              <Button>{messages.bikes.empty.cta}</Button>
             </Link>
           }
         />
@@ -100,7 +93,7 @@ export default function BikesPage() {
                       <Link href={withLocalePrefix(`/bikes/${bike._id}/edit`, locale)}>
                         <Button variant="outline" size="sm">
                           <Pencil className="h-4 w-4 mr-1" />
-                          Edit
+                          {messages.common.edit}
                         </Button>
                       </Link>
                       <Button
@@ -110,7 +103,7 @@ export default function BikesPage() {
                         isLoading={deletingBikeId === bike._id}
                       >
                         <Trash2 className="h-4 w-4 mr-1" />
-                        Delete
+                        {messages.common.delete}
                       </Button>
                     </div>
                   </div>
@@ -119,25 +112,36 @@ export default function BikesPage() {
                 <CardContent>
                   <div className="grid gap-3 sm:grid-cols-2 text-sm text-gray-600">
                     <div>
-                      <p className="font-medium text-gray-800 mb-1">Geometry</p>
-                      <p>
-                        Stack: {bike.currentGeometry?.stackMm ?? "-"} mm | Reach: {bike.currentGeometry?.reachMm ?? "-"} mm
+                      <p className="font-medium text-gray-800 mb-1">
+                        {messages.bikes.sections.geometry}
                       </p>
                       <p>
-                        STA: {bike.currentGeometry?.seatTubeAngle ?? "-"} deg | HTA: {bike.currentGeometry?.headTubeAngle ?? "-"} deg
+                        {messages.bikes.fields.stack}: {bike.currentGeometry?.stackMm ?? "-"} mm |{" "}
+                        {messages.bikes.fields.reach}: {bike.currentGeometry?.reachMm ?? "-"} mm
                       </p>
-                      <p>Frame size: {bike.currentGeometry?.frameSize ?? "-"}</p>
+                      <p>
+                        {messages.bikes.fields.sta}: {bike.currentGeometry?.seatTubeAngle ?? "-"} deg |{" "}
+                        {messages.bikes.fields.hta}: {bike.currentGeometry?.headTubeAngle ?? "-"} deg
+                      </p>
+                      <p>
+                        {messages.bikes.fields.frameSize}: {bike.currentGeometry?.frameSize ?? "-"}
+                      </p>
                     </div>
                     <div>
-                      <p className="font-medium text-gray-800 mb-1">Current Setup</p>
-                      <p>
-                        Saddle: {bike.currentSetup?.saddleHeightMm ?? "-"} mm | Setback: {bike.currentSetup?.saddleSetbackMm ?? "-"} mm
+                      <p className="font-medium text-gray-800 mb-1">
+                        {messages.bikes.sections.currentSetup}
                       </p>
                       <p>
-                        Stem: {bike.currentSetup?.stemLengthMm ?? "-"} mm @ {bike.currentSetup?.stemAngle ?? "-"} deg
+                        {messages.bikes.fields.saddle}: {bike.currentSetup?.saddleHeightMm ?? "-"} mm |{" "}
+                        {messages.bikes.fields.setback}: {bike.currentSetup?.saddleSetbackMm ?? "-"} mm
                       </p>
                       <p>
-                        Bar: {bike.currentSetup?.handlebarWidthMm ?? "-"} mm | Crank: {bike.currentSetup?.crankLengthMm ?? "-"} mm
+                        {messages.bikes.fields.stem}: {bike.currentSetup?.stemLengthMm ?? "-"} mm @{" "}
+                        {bike.currentSetup?.stemAngle ?? "-"} deg
+                      </p>
+                      <p>
+                        {messages.bikes.fields.bar}: {bike.currentSetup?.handlebarWidthMm ?? "-"} mm |{" "}
+                        {messages.bikes.fields.crank}: {bike.currentSetup?.crankLengthMm ?? "-"} mm
                       </p>
                     </div>
                   </div>

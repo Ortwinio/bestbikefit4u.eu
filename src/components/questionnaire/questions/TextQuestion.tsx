@@ -3,6 +3,7 @@
 import { useId } from "react";
 import { cn } from "@/utils/cn";
 import { FieldLabel } from "@/components/ui";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 interface TextQuestionProps {
   value: string | null;
@@ -14,24 +15,26 @@ interface TextQuestionProps {
 export function TextQuestion({
   value,
   onChange,
-  placeholder = "Type your answer here...",
+  placeholder,
   maxLength = 500,
 }: TextQuestionProps) {
+  const { messages } = useDashboardMessages();
   const textareaId = `question-text-${useId().replace(/:/g, "")}`;
   const currentLength = value?.length || 0;
+  const resolvedPlaceholder = placeholder ?? messages.questionnaire.text.placeholder;
 
   return (
     <div className="space-y-2">
       <FieldLabel
-        label="Your written answer"
+        label={messages.questionnaire.text.label}
         htmlFor={textareaId}
-        tooltip="Write a short, specific answer. Include relevant details like bike type, weekly volume, and any discomfort."
+        tooltip={messages.questionnaire.text.tooltip}
       />
       <textarea
         id={textareaId}
         value={value || ""}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         maxLength={maxLength}
         rows={4}
         className={cn(

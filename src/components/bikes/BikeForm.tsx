@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Select } from "@/components/ui";
 import { BIKE_TYPE_OPTIONS, BIKE_TYPE_LABELS, type BikeType } from "@/lib/bikes";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 export type BikeFormPayload = {
   name: string;
@@ -74,6 +75,7 @@ export function BikeForm({
   onSubmit,
   onDelete,
 }: BikeFormProps) {
+  const { messages } = useDashboardMessages();
   const [name, setName] = useState(initialData?.name ?? "");
   const [bikeType, setBikeType] = useState<BikeType | "">(
     initialData?.bikeType ?? ""
@@ -124,12 +126,12 @@ export function BikeForm({
 
     const trimmedName = name.trim();
     if (!trimmedName) {
-      setError("Bike name is required.");
+      setError(messages.bikeForm.errors.nameRequired);
       return;
     }
 
     if (!bikeType) {
-      setError("Bike type is required.");
+      setError(messages.bikeForm.errors.typeRequired);
       return;
     }
 
@@ -163,7 +165,7 @@ export function BikeForm({
       });
     } catch (submitError) {
       console.error("Failed to save bike:", submitError);
-      setError("Could not save bike. Please try again.");
+      setError(messages.bikeForm.errors.saveFailed);
     } finally {
       setIsSubmitting(false);
     }
@@ -175,7 +177,7 @@ export function BikeForm({
     }
 
     const confirmed = window.confirm(
-      "Delete this bike? This action cannot be undone."
+      messages.bikeForm.delete.confirm
     );
     if (!confirmed) {
       return;
@@ -187,7 +189,7 @@ export function BikeForm({
       await onDelete();
     } catch (deleteError) {
       console.error("Failed to delete bike:", deleteError);
-      setError("Could not delete bike. Please try again.");
+      setError(messages.bikeForm.errors.deleteFailed);
       setIsDeleting(false);
     }
   };
@@ -202,34 +204,34 @@ export function BikeForm({
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card variant="bordered">
           <CardHeader>
-            <CardTitle>Bike Basics</CardTitle>
+            <CardTitle>{messages.bikeForm.sections.basics}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <Input
-              label="Bike Name"
-              tooltip="A label for this bike (e.g., Canyon Endurace 2023). Helps you track multiple fits."
+              label={messages.bikeForm.fields.name.label}
+              tooltip={messages.bikeForm.fields.name.tooltip}
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="e.g. Canyon Endurace"
+              placeholder={messages.bikeForm.fields.name.placeholder}
               required
             />
 
             {showBikeTypeSelect ? (
               <Select
-                label="Bike Type"
-                tooltip="Select the exact type of bike you're fitting. This changes posture targets and safety limits."
+                label={messages.bikeForm.fields.type.label}
+                tooltip={messages.bikeForm.fields.type.tooltip}
                 value={bikeType}
                 onChange={(event) => setBikeType(event.target.value as BikeType)}
                 options={BIKE_TYPE_OPTIONS.map((option) => ({
                   value: option.value,
                   label: option.label,
                 }))}
-                placeholder="Choose bike type"
+                placeholder={messages.bikeForm.fields.type.placeholder}
                 required
               />
             ) : (
               <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700">
-                <span className="font-medium">Bike Type:</span>{" "}
+                <span className="font-medium">{messages.bikeForm.fields.type.staticLabel}</span>{" "}
                 {bikeType ? BIKE_TYPE_LABELS[bikeType] : "-"}
               </div>
             )}
@@ -238,93 +240,93 @@ export function BikeForm({
 
         <Card variant="bordered">
           <CardHeader>
-            <CardTitle>Current Geometry (Optional)</CardTitle>
+            <CardTitle>{messages.bikeForm.sections.geometry}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <Input
-              label="Stack (mm)"
-              tooltip="Vertical distance from BB center to top of head tube (mm). Found on the manufacturer geometry chart; determines handlebar height potential."
+              label={messages.bikeForm.fields.geometry.stack.label}
+              tooltip={messages.bikeForm.fields.geometry.stack.tooltip}
               type="number"
               value={stackMm}
               onChange={(event) => setStackMm(event.target.value)}
             />
             <Input
-              label="Reach (mm)"
-              tooltip="Horizontal distance from BB center to top of head tube (mm). Found on the manufacturer geometry chart; determines cockpit length baseline."
+              label={messages.bikeForm.fields.geometry.reach.label}
+              tooltip={messages.bikeForm.fields.geometry.reach.tooltip}
               type="number"
               value={reachMm}
               onChange={(event) => setReachMm(event.target.value)}
             />
             <Input
-              label="Seat Tube Angle (deg)"
-              tooltip="Angle of the seat tube (degrees). Use the manufacturer spec. Affects how far forward/back your saddle sits for the same saddle height."
+              label={messages.bikeForm.fields.geometry.seatTubeAngle.label}
+              tooltip={messages.bikeForm.fields.geometry.seatTubeAngle.tooltip}
               type="number"
               step="0.1"
               value={seatTubeAngle}
               onChange={(event) => setSeatTubeAngle(event.target.value)}
             />
             <Input
-              label="Head Tube Angle (deg)"
-              tooltip="Angle of the head tube (degrees). Use the manufacturer spec. Influences steering stability and trail."
+              label={messages.bikeForm.fields.geometry.headTubeAngle.label}
+              tooltip={messages.bikeForm.fields.geometry.headTubeAngle.tooltip}
               type="number"
               step="0.1"
               value={headTubeAngle}
               onChange={(event) => setHeadTubeAngle(event.target.value)}
             />
             <Input
-              label="Frame Size"
-              tooltip="Enter the size label used by the brand (e.g., 54, 56, M, L). If unsure, use stack/reach instead for best accuracy."
+              label={messages.bikeForm.fields.geometry.frameSize.label}
+              tooltip={messages.bikeForm.fields.geometry.frameSize.tooltip}
               value={frameSize}
               onChange={(event) => setFrameSize(event.target.value)}
-              placeholder="e.g. 54"
+              placeholder={messages.bikeForm.fields.geometry.frameSize.placeholder}
             />
           </CardContent>
         </Card>
 
         <Card variant="bordered">
           <CardHeader>
-            <CardTitle>Current Setup (Optional)</CardTitle>
+            <CardTitle>{messages.bikeForm.sections.setup}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <Input
-              label="Saddle Height (mm)"
-              tooltip="Measure from BB center to top of saddle along the seat tube line (mm). Use for comparing current vs. recommended fit."
+              label={messages.bikeForm.fields.setup.saddleHeight.label}
+              tooltip={messages.bikeForm.fields.setup.saddleHeight.tooltip}
               type="number"
               value={saddleHeightMm}
               onChange={(event) => setSaddleHeightMm(event.target.value)}
             />
             <Input
-              label="Saddle Setback (mm)"
-              tooltip="Measure horizontal distance from BB center to saddle nose (mm). Positive values mean the saddle nose is behind the BB."
+              label={messages.bikeForm.fields.setup.saddleSetback.label}
+              tooltip={messages.bikeForm.fields.setup.saddleSetback.tooltip}
               type="number"
               value={saddleSetbackMm}
               onChange={(event) => setSaddleSetbackMm(event.target.value)}
             />
             <Input
-              label="Stem Length (mm)"
-              tooltip="Length printed on the stem (mm), center-to-center. Used to compare your current cockpit with recommendations."
+              label={messages.bikeForm.fields.setup.stemLength.label}
+              tooltip={messages.bikeForm.fields.setup.stemLength.tooltip}
               type="number"
               value={stemLengthMm}
               onChange={(event) => setStemLengthMm(event.target.value)}
             />
             <Input
-              label="Stem Angle (deg)"
-              tooltip="Angle printed on the stem (degrees). Affects handlebar height; note that flipping the stem changes the sign."
+              label={messages.bikeForm.fields.setup.stemAngle.label}
+              tooltip={messages.bikeForm.fields.setup.stemAngle.tooltip}
               type="number"
               step="0.1"
               value={stemAngle}
               onChange={(event) => setStemAngle(event.target.value)}
             />
             <Input
-              label="Handlebar Width (mm)"
-              tooltip="Width measured center-to-center at the hoods (mm). Typically matches shoulder width for comfort and control."
+              label={messages.bikeForm.fields.setup.handlebarWidth.label}
+              tooltip={messages.bikeForm.fields.setup.handlebarWidth.tooltip}
               type="number"
               value={handlebarWidthMm}
               onChange={(event) => setHandlebarWidthMm(event.target.value)}
             />
             <Input
-              label="Crank Length (mm)"
-              tooltip="Length printed on the crank arm (mm). Used to adjust saddle height and hip/knee angles."
+              label={messages.bikeForm.fields.setup.crankLength.label}
+              tooltip={messages.bikeForm.fields.setup.crankLength.tooltip}
               type="number"
               step="0.1"
               value={crankLengthMm}
@@ -346,7 +348,7 @@ export function BikeForm({
 
           <Link href={cancelHref}>
             <Button type="button" variant="outline">
-              Cancel
+              {messages.common.cancel}
             </Button>
           </Link>
 
@@ -358,7 +360,7 @@ export function BikeForm({
               isLoading={isDeleting}
               className="ml-auto"
             >
-              Delete Bike
+              {messages.bikeForm.actions.deleteBike}
             </Button>
           )}
         </div>

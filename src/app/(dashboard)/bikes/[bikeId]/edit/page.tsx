@@ -1,7 +1,7 @@
 "use client";
 
-import { use, useMemo } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { use } from "react";
+import { useRouter } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { type Id } from "../../../../../../convex/_generated/dataModel";
@@ -11,8 +11,8 @@ import {
   type BikeFormPayload,
 } from "@/components/bikes";
 import { EmptyState, LoadingState } from "@/components/ui";
-import { DEFAULT_LOCALE } from "@/i18n/config";
-import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 interface EditBikePageProps {
   params: Promise<{ bikeId: string }>;
@@ -21,11 +21,7 @@ interface EditBikePageProps {
 export default function EditBikePage({ params }: EditBikePageProps) {
   const { bikeId } = use(params);
   const router = useRouter();
-  const pathname = usePathname();
-  const locale = useMemo(
-    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
-    [pathname]
-  );
+  const { locale, messages } = useDashboardMessages();
 
   const bike = useQuery(api.bikes.queries.getById, {
     bikeId: bikeId as Id<"bikes">,
@@ -49,14 +45,14 @@ export default function EditBikePage({ params }: EditBikePageProps) {
   };
 
   if (bike === undefined) {
-    return <LoadingState label="Loading bike..." />;
+    return <LoadingState label={messages.bikeForm.edit.loading} />;
   }
 
   if (bike === null) {
     return (
       <EmptyState
-        title="Bike not found"
-        description="This bike does not exist or you do not have access to it."
+        title={messages.bikeForm.edit.notFound.title}
+        description={messages.bikeForm.edit.notFound.description}
       />
     );
   }
@@ -70,9 +66,9 @@ export default function EditBikePage({ params }: EditBikePageProps) {
 
   return (
     <BikeForm
-      title="Edit Bike"
-      description="Update bike details and current setup values."
-      submitLabel="Save Changes"
+      title={messages.bikeForm.edit.title}
+      description={messages.bikeForm.edit.description}
+      submitLabel={messages.bikeForm.actions.saveChanges}
       initialData={initialData}
       showBikeTypeSelect={false}
       onSubmit={handleUpdate}
