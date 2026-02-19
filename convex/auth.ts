@@ -31,7 +31,7 @@ async function checkRateLimit(email: string, ctx: unknown): Promise<void> {
     throw new Error("Verification rate-limit context unavailable.");
   }
 
-  await ctx.runMutation("authRateLimit:consumeEmailVerificationRequest" as any, {
+  await ctx.runMutation("authRateLimit:consumeEmailVerificationRequest", {
     email: normalizeEmail(email),
   });
 }

@@ -5,11 +5,16 @@ import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
 import { BRAND } from "@/config/brand";
 import { createSimplePdfFromLines } from "@/lib/pdf/simplePdf";
+import { renderPdfFromHtml } from "@/lib/pdf/htmlPdf";
+import { renderPdfReportHtml } from "@/lib/reports/pdfLayoutTemplate";
+import { mapPdfReportData } from "@/lib/reports/pdfValueMapping";
 import { buildRecommendationPdfLines } from "@/lib/reports/recommendationPdf";
 
 interface PdfRouteContext {
   params: Promise<{ sessionId: string }>;
 }
+
+export const runtime = "nodejs";
 
 export async function GET(
   _request: Request,
@@ -60,8 +65,33 @@ export async function GET(
       );
     }
 
-    const lines = buildRecommendationPdfLines({ session, recommendation });
-    const pdfBytes = createSimplePdfFromLines(lines);
+    let pdfBytes: Uint8Array;
+
+    const richRenderingEnabled =
+      process.env.PDF_RICH_RENDER_ENABLED?.toLowerCase() !== "false";
+
+    if (richRenderingEnabled) {
+      try {
+        const mappedReport = mapPdfReportData({ session, recommendation });
+        const html = renderPdfReportHtml({ report: mappedReport });
+        pdfBytes = await renderPdfFromHtml({ html });
+      } catch (richRenderError) {
+        console.error("Rich PDF render failed, using simple fallback.", {
+          sessionId,
+          error:
+            richRenderError instanceof Error
+              ? richRenderError.message
+              : String(richRenderError),
+        });
+
+        const lines = buildRecommendationPdfLines({ session, recommendation });
+        pdfBytes = createSimplePdfFromLines(lines);
+      }
+    } else {
+      const lines = buildRecommendationPdfLines({ session, recommendation });
+      pdfBytes = createSimplePdfFromLines(lines);
+    }
+
     const pdfBuffer = new ArrayBuffer(pdfBytes.byteLength);
     new Uint8Array(pdfBuffer).set(pdfBytes);
 

@@ -11,6 +11,8 @@ const SUPPORTED_EXTENSIONS = new Set([".ts", ".tsx"]);
 const PRIMITIVE_FILES = new Set([
   "src/components/ui/Input.tsx",
   "src/components/ui/Select.tsx",
+  "src/components/questionnaire/questions/MultipleChoice.tsx",
+  "src/components/questionnaire/questions/SingleChoice.tsx",
 ]);
 
 const INPUT_SELECT_ENFORCED_FILES = new Set([

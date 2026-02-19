@@ -17,6 +17,7 @@ This project is a Next.js frontend on Vercel with a Convex production backend.
 Set these in Vercel (Project Settings -> Environment Variables):
 
 - `NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud`
+- `PDF_RICH_RENDER_ENABLED=true` (optional; set `false` to force legacy PDF fallback)
 
 Set these in Convex production deployment env:
 
