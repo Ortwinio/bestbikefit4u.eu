@@ -6,6 +6,11 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { BRAND } from "@/config/brand";
+import {
+  extractLocaleFromPathname,
+  stripLocalePrefix,
+  withLocalePrefix,
+} from "@/i18n/navigation";
 import { cn } from "@/utils/cn";
 import {
   LayoutDashboard,
@@ -22,16 +27,27 @@ const navigation = [
   { name: "Profile", href: "/profile", icon: User },
 ];
 
+const websiteNavigation = [
+  { name: "Home", href: "/" },
+  { name: "How It Works", href: "/about" },
+  { name: "Pricing", href: "/pricing" },
+];
+
 export function DashboardSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { signOut } = useAuthActions();
+  const locale = extractLocaleFromPathname(pathname ?? "");
+  const internalPathname = stripLocalePrefix(pathname ?? "/");
+
+  const toLocalizedPath = (path: string) =>
+    locale ? withLocalePrefix(path, locale) : path;
 
   const user = useQuery(api.users.queries.getCurrentUser);
 
   const handleSignOut = async () => {
     await signOut();
-    router.push("/");
+    router.push(toLocalizedPath("/"));
   };
 
   const displayName = user?.name || user?.email?.split("@")[0] || "User";
@@ -41,18 +57,23 @@ export function DashboardSidebar() {
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white">
       <div className="flex h-full flex-col">
         <div className="flex h-16 items-center border-b border-gray-200 px-6">
-          <Link href="/dashboard" className="text-xl font-bold text-gray-900">
+          <Link
+            href={toLocalizedPath("/dashboard")}
+            className="text-xl font-bold text-gray-900"
+          >
             {BRAND.name}
           </Link>
         </div>
 
         <nav className="flex-1 space-y-1 px-3 py-4">
           {navigation.map((item) => {
-            const isActive = pathname === item.href || (pathname?.startsWith(item.href + "/") ?? false);
+            const isActive =
+              internalPathname === item.href ||
+              internalPathname.startsWith(item.href + "/");
             return (
               <Link
                 key={item.name}
-                href={item.href}
+                href={toLocalizedPath(item.href)}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   isActive
@@ -66,6 +87,23 @@ export function DashboardSidebar() {
             );
           })}
         </nav>
+
+        <div className="border-t border-gray-100 px-3 py-3">
+          <p className="px-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+            Website
+          </p>
+          <div className="mt-2 space-y-1">
+            {websiteNavigation.map((item) => (
+              <Link
+                key={item.href}
+                href={toLocalizedPath(item.href)}
+                className="block rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+        </div>
 
         {/* User section */}
         <div className="border-t border-gray-200 p-3">

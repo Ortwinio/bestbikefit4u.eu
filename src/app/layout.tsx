@@ -21,7 +21,13 @@ export default async function RootLayout({
   return (
     <ConvexAuthNextjsServerProvider>
       <html lang={locale}>
-        <body className="antialiased">
+        <body className="relative antialiased">
+          <a
+            href="#main-content"
+            className="skip-link absolute left-4 top-3 z-[100] rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow"
+          >
+            Skip to main content
+          </a>
           <ConvexClientProvider>{children}</ConvexClientProvider>
         </body>
       </html>

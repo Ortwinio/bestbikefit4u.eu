@@ -5,11 +5,36 @@ import { validateShortString, validateTextString } from "../lib/validation";
 const marketingEventType = v.union(
   v.literal("cta_click"),
   v.literal("login_code_requested"),
-  v.literal("login_verified")
+  v.literal("login_code_resent"),
+  v.literal("login_verified"),
+  v.literal("funnel_landing_view"),
+  v.literal("funnel_login_view"),
+  v.literal("funnel_profile_view"),
+  v.literal("funnel_fit_view"),
+  v.literal("funnel_questionnaire_complete"),
+  v.literal("funnel_results_view"),
+  v.literal("login_send_error"),
+  v.literal("login_verify_error"),
+  v.literal("questionnaire_complete_error"),
+  v.literal("report_send_error")
 );
 
 type MarketingEventDoc = {
-  eventType: "cta_click" | "login_code_requested" | "login_verified";
+  eventType:
+    | "cta_click"
+    | "login_code_requested"
+    | "login_code_resent"
+    | "login_verified"
+    | "funnel_landing_view"
+    | "funnel_login_view"
+    | "funnel_profile_view"
+    | "funnel_fit_view"
+    | "funnel_questionnaire_complete"
+    | "funnel_results_view"
+    | "login_send_error"
+    | "login_verify_error"
+    | "questionnaire_complete_error"
+    | "report_send_error";
   locale: "en" | "nl";
   pagePath: string;
   section?: string;

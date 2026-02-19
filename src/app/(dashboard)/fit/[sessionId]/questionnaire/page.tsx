@@ -1,15 +1,18 @@
 "use client";
 
-import { use } from "react";
-import { useRouter } from "next/navigation";
+import { use, useMemo } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
 import { QuestionnaireContainer } from "@/components/questionnaire";
+import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import type { QuestionnaireResponseValue } from "@/components/questionnaire/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { Button, EmptyState, LoadingState } from "@/components/ui";
+import { DEFAULT_LOCALE } from "@/i18n/config";
+import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
 
 interface QuestionnairePageProps {
   params: Promise<{ sessionId: string }>;
@@ -18,6 +21,13 @@ interface QuestionnairePageProps {
 export default function QuestionnairePage({ params }: QuestionnairePageProps) {
   const { sessionId } = use(params);
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = useMemo(
+    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
+    [pathname]
+  );
+  const pagePath = withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale);
+  const logMarketingEvent = useMarketingEventLogger();
 
   const session = useQuery(api.sessions.queries.getById, {
     sessionId: sessionId as Id<"fitSessions">,
@@ -45,40 +55,46 @@ export default function QuestionnairePage({ params }: QuestionnairePageProps) {
   };
 
   const handleComplete = async () => {
-    await completeQuestionnaire({
-      sessionId: sessionId as Id<"fitSessions">,
-    });
-    router.push(`/fit/${sessionId}/results`);
+    try {
+      await completeQuestionnaire({
+        sessionId: sessionId as Id<"fitSessions">,
+      });
+      logMarketingEvent({
+        eventType: "funnel_questionnaire_complete",
+        locale,
+        pagePath,
+        section: "questionnaire_complete",
+      });
+      router.push(withLocalePrefix(`/fit/${sessionId}/results`, locale));
+    } catch (error) {
+      logMarketingEvent({
+        eventType: "questionnaire_complete_error",
+        locale,
+        pagePath,
+        section: "questionnaire_complete",
+      });
+      throw error;
+    }
   };
 
-  // Loading state
   if (session === undefined || questions === undefined || responses === undefined) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-      </div>
-    );
+    return <LoadingState label="Loading questionnaire..." />;
   }
 
-  // Session not found
   if (session === null) {
     return (
-      <div className="max-w-2xl mx-auto text-center py-12">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          Session Not Found
-        </h1>
-        <p className="text-gray-600 mb-6">
-          The fit session you&apos;re looking for doesn&apos;t exist or has been
-          archived.
-        </p>
-        <Link href="/fit">
-          <Button>Start New Session</Button>
-        </Link>
-      </div>
+      <EmptyState
+        title="Session not found"
+        description="The fit session you're looking for doesn't exist or has been archived."
+        action={
+          <Link href={withLocalePrefix("/fit", locale)}>
+            <Button>Start New Session</Button>
+          </Link>
+        }
+      />
     );
   }
 
-  // Convert responses array to record
   const responsesRecord: Record<string, QuestionnaireResponseValue> = {};
   responses.forEach((r) => {
     const response = r.response;
@@ -97,7 +113,7 @@ export default function QuestionnairePage({ params }: QuestionnairePageProps) {
       {/* Header */}
       <div className="mb-8">
         <Link
-          href="/fit"
+          href={withLocalePrefix("/fit", locale)}
           className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />

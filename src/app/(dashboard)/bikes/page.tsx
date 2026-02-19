@@ -1,15 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  LoadingState,
+  EmptyState,
+} from "@/components/ui";
 import { BIKE_TYPE_LABELS } from "@/lib/bikes";
-import { Bike, Plus, Pencil, Trash2 } from "lucide-react";
+import { DEFAULT_LOCALE } from "@/i18n/config";
+import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 
 export default function BikesPage() {
+  const pathname = usePathname();
+  const locale = useMemo(
+    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
+    [pathname]
+  );
   const bikes = useQuery(api.bikes.queries.listByUser);
   const removeBike = useMutation(api.bikes.mutations.remove);
 
@@ -37,11 +53,7 @@ export default function BikesPage() {
   };
 
   if (bikes === undefined) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-      </div>
-    );
+    return <LoadingState label="Loading bikes..." />;
   }
 
   return (
@@ -53,7 +65,7 @@ export default function BikesPage() {
             Save your bikes to keep fit sessions tied to real setups.
           </p>
         </div>
-        <Link href="/bikes/new">
+        <Link href={withLocalePrefix("/bikes/new", locale)}>
           <Button>
             <Plus className="h-4 w-4 mr-2" />
             Add Bike
@@ -62,15 +74,15 @@ export default function BikesPage() {
       </div>
 
       {bikes.length === 0 ? (
-        <Card variant="bordered">
-          <CardContent className="py-12 text-center">
-            <Bike className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600 mb-4">No bikes added yet.</p>
-            <Link href="/bikes/new">
+        <EmptyState
+          title="No bikes added yet"
+          description="Save your first bike to compare fit sessions over time."
+          action={
+            <Link href={withLocalePrefix("/bikes/new", locale)}>
               <Button>Add Your First Bike</Button>
             </Link>
-          </CardContent>
-        </Card>
+          }
+        />
       ) : (
         <div className="grid gap-4">
           {bikes.map((bike) => {
@@ -85,7 +97,7 @@ export default function BikesPage() {
                       <p className="text-sm text-gray-500 mt-1">{bikeTypeLabel}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Link href={`/bikes/${bike._id}/edit`}>
+                      <Link href={withLocalePrefix(`/bikes/${bike._id}/edit`, locale)}>
                         <Button variant="outline" size="sm">
                           <Pencil className="h-4 w-4 mr-1" />
                           Edit

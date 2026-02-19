@@ -1,12 +1,23 @@
 "use client";
 
-import { use, useCallback, useEffect, useRef, useState } from "react";
+import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
-import { Button, Input, Card, CardContent } from "@/components/ui";
+import {
+  Button,
+  Input,
+  AccessibleDialog,
+  EmptyState,
+  ErrorState,
+  LoadingState,
+} from "@/components/ui";
+import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { reportClientError } from "@/lib/telemetry";
+import { DEFAULT_LOCALE } from "@/i18n/config";
+import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
 import {
   FitSummaryCard,
   AdjustmentPriorities,
@@ -20,7 +31,6 @@ import {
   Mail,
   Download,
   RefreshCw,
-  X,
   Send,
 } from "lucide-react";
 
@@ -30,6 +40,13 @@ interface ResultsPageProps {
 
 export default function ResultsPage({ params }: ResultsPageProps) {
   const { sessionId } = use(params);
+  const pathname = usePathname();
+  const locale = useMemo(
+    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
+    [pathname]
+  );
+  const pagePath = withLocalePrefix(`/fit/${sessionId}/results`, locale);
+  const logMarketingEvent = useMarketingEventLogger();
 
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [email, setEmail] = useState("");
@@ -41,6 +58,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const hasAutoTriggeredGenerationRef = useRef(false);
+  const hasTrackedResultsViewRef = useRef(false);
 
   const session = useQuery(api.sessions.queries.getById, {
     sessionId: sessionId as Id<"fitSessions">,
@@ -94,6 +112,19 @@ export default function ResultsPage({ params }: ResultsPageProps) {
     }
   }, [session, recommendation, handleGenerateRecommendation]);
 
+  useEffect(() => {
+    if (!recommendation || hasTrackedResultsViewRef.current) {
+      return;
+    }
+    hasTrackedResultsViewRef.current = true;
+    logMarketingEvent({
+      eventType: "funnel_results_view",
+      locale,
+      pagePath,
+      section: "results_page",
+    });
+  }, [locale, logMarketingEvent, pagePath, recommendation]);
+
   // Pre-fill email from user
   useEffect(() => {
     if (user?.email && !email) {
@@ -118,6 +149,12 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         setEmailSent(false);
       }, 2000);
     } catch (error) {
+      logMarketingEvent({
+        eventType: "report_send_error",
+        locale,
+        pagePath,
+        section: "results_email_report",
+      });
       setEmailError(
         reportClientError(error, {
           area: "results",
@@ -174,31 +211,23 @@ export default function ResultsPage({ params }: ResultsPageProps) {
 
   // Loading state
   if (session === undefined || recommendation === undefined) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-      </div>
-    );
+    return <LoadingState label="Loading fit results..." />;
   }
 
-  // Session not found
   if (session === null) {
     return (
-      <div className="max-w-2xl mx-auto text-center py-12">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          Session Not Found
-        </h1>
-        <p className="text-gray-600 mb-6">
-          The fit session you&apos;re looking for doesn&apos;t exist.
-        </p>
-        <Link href="/dashboard">
-          <Button>Go to Dashboard</Button>
-        </Link>
-      </div>
+      <EmptyState
+        title="Session not found"
+        description="The fit session you're looking for doesn't exist."
+        action={
+          <Link href={withLocalePrefix("/dashboard", locale)}>
+            <Button>Go to Dashboard</Button>
+          </Link>
+        }
+      />
     );
   }
 
-  // Processing state
   if (recommendation === null) {
     const canGenerateRecommendation =
       session.status === "questionnaire_complete" ||
@@ -206,18 +235,15 @@ export default function ResultsPage({ params }: ResultsPageProps) {
 
     if (!canGenerateRecommendation) {
       return (
-        <div className="max-w-2xl mx-auto text-center py-12">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            Questionnaire Not Completed
-          </h1>
-          <p className="text-gray-600 mb-6">
-            Complete your questionnaire first, then we can generate your fit
-            recommendation.
-          </p>
-          <Link href={`/fit/${sessionId}/questionnaire`}>
-            <Button>Continue Questionnaire</Button>
-          </Link>
-        </div>
+        <EmptyState
+          title="Questionnaire not completed"
+          description="Complete your questionnaire first, then we can generate your fit recommendation."
+          action={
+            <Link href={withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale)}>
+              <Button>Continue Questionnaire</Button>
+            </Link>
+          }
+        />
       );
     }
 
@@ -235,11 +261,9 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           We&apos;re analyzing your measurements and preferences to generate
           personalized recommendations...
         </p>
-        {generationError && (
-          <p className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-            {generationError}
-          </p>
-        )}
+        {generationError ? (
+          <ErrorState className="mt-4 text-left" description={generationError} />
+        ) : null}
         <div className="mt-6">
           <Button
             variant="outline"
@@ -255,90 +279,67 @@ export default function ResultsPage({ params }: ResultsPageProps) {
 
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Email Modal */}
-      {showEmailModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card variant="bordered" className="w-full max-w-md">
-            <CardContent className="pt-6">
-              {emailSent ? (
-                <div className="text-center py-4">
-                  <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    Email Sent!
-                  </h3>
-                  <p className="text-gray-600 mt-2">
-                    Check your inbox for your bike fit report.
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Email Report
-                    </h3>
-                    <button
-                      onClick={() => {
-                        setEmailError(null);
-                        setShowEmailModal(false);
-                      }}
-                      className="text-gray-400 hover:text-gray-600"
-                    >
-                      <X className="h-5 w-5" />
-                    </button>
-                  </div>
+      <AccessibleDialog
+        open={showEmailModal}
+        onClose={() => {
+          setEmailError(null);
+          setShowEmailModal(false);
+        }}
+        title={emailSent ? "Email sent" : "Email report"}
+        description={
+          emailSent
+            ? "Check your inbox for your bike fit report."
+            : "Send your bike fit recommendations to your email for future reference."
+        }
+      >
+        {emailSent ? (
+          <div className="text-center py-2">
+            <CheckCircle className="mx-auto mb-3 h-10 w-10 text-green-500" />
+          </div>
+        ) : (
+          <>
+            <Input
+              type="email"
+              label="Email address"
+              tooltip="Enter the email address where you want to receive this report."
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+            />
 
-                  <p className="text-gray-600 mb-4">
-                    Send your bike fit recommendations to your email for future
-                    reference.
-                  </p>
+            {emailError ? (
+              <ErrorState className="mt-3" title="Failed to send report" description={emailError} />
+            ) : null}
 
-                  <Input
-                    type="email"
-                    label="Email address"
-                    tooltip="Enter the email linked to your BestBikeFit4U account. We'll send the login code here."
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                  />
-
-                  {emailError && (
-                    <p className="text-sm text-red-600 mt-2 bg-red-50 p-3 rounded-lg">
-                      {emailError}
-                    </p>
-                  )}
-
-                  <div className="flex gap-3 mt-6">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setEmailError(null);
-                        setShowEmailModal(false);
-                      }}
-                      className="flex-1"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleSendEmail}
-                      isLoading={isSending}
-                      disabled={!email}
-                      className="flex-1"
-                    >
-                      <Send className="h-4 w-4 mr-2" />
-                      Send Report
-                    </Button>
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      )}
+            <div className="mt-6 flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setEmailError(null);
+                  setShowEmailModal(false);
+                }}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSendEmail}
+                isLoading={isSending}
+                disabled={!email}
+                className="flex-1"
+              >
+                <Send className="h-4 w-4 mr-2" />
+                Send Report
+              </Button>
+            </div>
+          </>
+        )}
+      </AccessibleDialog>
 
       {/* Header */}
       <div className="mb-8">
         <Link
-          href="/dashboard"
+          href={withLocalePrefix("/dashboard", locale)}
           className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
@@ -399,15 +400,13 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           <Download className="h-4 w-4 mr-2" />
           Download PDF
         </Button>
-        <Link href="/fit">
+        <Link href={withLocalePrefix("/fit", locale)}>
           <Button>Start New Fit Session</Button>
         </Link>
       </div>
-      {downloadError && (
-        <p className="mt-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-          {downloadError}
-        </p>
-      )}
+      {downloadError ? (
+        <ErrorState className="mt-2" title="Failed to download PDF" description={downloadError} />
+      ) : null}
     </div>
   );
 }

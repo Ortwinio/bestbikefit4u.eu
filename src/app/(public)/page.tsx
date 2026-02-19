@@ -3,6 +3,7 @@ import { Button } from "@/components/ui";
 import { Ruler, Target, FileText, Bike, Activity, Shield } from "lucide-react";
 import type { Metadata } from "next";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { getDictionary } from "@/i18n/getDictionary";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
@@ -82,6 +83,12 @@ export default async function HomePage() {
 
   return (
     <div>
+      <TrackMarketingEventOnView
+        eventType="funnel_landing_view"
+        locale={locale}
+        pagePath={homePath}
+        section="landing"
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

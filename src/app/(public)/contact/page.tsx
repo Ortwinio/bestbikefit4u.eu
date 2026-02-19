@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button, FieldLabel } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { Mail, MessageSquare } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
@@ -22,18 +22,10 @@ type ContactCopy = {
   faqLink: string;
   responseTimes: string;
   responseItems: string[];
-  formTitle: string;
-  nameLabel: string;
-  namePlaceholder: string;
-  nameTooltip: string;
-  emailLabel: string;
-  emailPlaceholder: string;
-  emailTooltip: string;
-  messageLabel: string;
-  messagePlaceholder: string;
-  messageTooltip: string;
-  sendButton: string;
-  formNote: string;
+  directContactTitle: string;
+  directContactBody: string;
+  directContactCta: string;
+  directContactHint: string;
 };
 
 const content: Record<Locale, ContactCopy> = {
@@ -57,22 +49,11 @@ const content: Record<Locale, ContactCopy> = {
       "Pro plan: within 1 business day",
       "Premium plan: within 4 hours",
     ],
-    formTitle: "Send a Message",
-    nameLabel: "Name",
-    namePlaceholder: "Your name",
-    nameTooltip:
-      "Your name, so we know how to address you.",
-    emailLabel: "Email",
-    emailPlaceholder: "you@example.com",
-    emailTooltip:
-      "Your email address, so we can reply.",
-    messageLabel: "Message",
-    messagePlaceholder: "How can we help?",
-    messageTooltip:
-      "Describe what you need help with (bike type, measurements, goals, and any pain/injuries).",
-    sendButton: "Send Message",
-    formNote:
-      "Contact form is for display purposes. Please email us directly at support@bestbikefit4u.eu.",
+    directContactTitle: "Send us an email directly",
+    directContactBody:
+      "For now, the fastest support route is direct email. Include your bike type, goal, and where you are stuck so we can help quickly.",
+    directContactCta: "Open email app",
+    directContactHint: "Address: support@bestbikefit4u.eu",
   },
   nl: {
     metadata: {
@@ -94,22 +75,11 @@ const content: Record<Locale, ContactCopy> = {
       "Pro-plan: binnen 1 werkdag",
       "Premium-plan: binnen 4 uur",
     ],
-    formTitle: "Stuur een bericht",
-    nameLabel: "Naam",
-    namePlaceholder: "Jouw naam",
-    nameTooltip:
-      "Je naam, zodat we je netjes kunnen aanspreken.",
-    emailLabel: "E-mail",
-    emailPlaceholder: "jij@example.com",
-    emailTooltip:
-      "Je e-mailadres, zodat we kunnen reageren.",
-    messageLabel: "Bericht",
-    messagePlaceholder: "Waarmee kunnen we helpen?",
-    messageTooltip:
-      "Beschrijf kort je vraag (fietstype, metingen, doelen en eventuele klachten/blessures).",
-    sendButton: "Verstuur bericht",
-    formNote:
-      "Het contactformulier is alleen voor demonstratie. Mail ons direct via support@bestbikefit4u.eu.",
+    directContactTitle: "Mail ons direct",
+    directContactBody:
+      "Op dit moment helpen we je het snelst via directe e-mail. Vermeld je fietstype, doel en waar je vastloopt voor sneller antwoord.",
+    directContactCta: "Open e-mailapp",
+    directContactHint: "Adres: support@bestbikefit4u.eu",
   },
 };
 
@@ -181,55 +151,17 @@ export default async function ContactPage() {
           </div>
 
           <div className="rounded-lg border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900">{page.formTitle}</h2>
-            <form className="mt-4 space-y-4">
-              <div>
-                <FieldLabel
-                  label={page.nameLabel}
-                  htmlFor="name"
-                  tooltip={page.nameTooltip}
-                />
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                  placeholder={page.namePlaceholder}
-                />
-              </div>
-              <div>
-                <FieldLabel
-                  label={page.emailLabel}
-                  htmlFor="email"
-                  tooltip={page.emailTooltip}
-                />
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                  placeholder={page.emailPlaceholder}
-                />
-              </div>
-              <div>
-                <FieldLabel
-                  label={page.messageLabel}
-                  htmlFor="message"
-                  tooltip={page.messageTooltip}
-                />
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                  placeholder={page.messagePlaceholder}
-                />
-              </div>
-              <Button type="button" className="w-full">
-                {page.sendButton}
-              </Button>
-              <p className="text-xs text-gray-500 text-center">{page.formNote}</p>
-            </form>
+            <h2 className="text-lg font-semibold text-gray-900">
+              {page.directContactTitle}
+            </h2>
+            <p className="mt-3 text-gray-600">{page.directContactBody}</p>
+            <a
+              href="mailto:support@bestbikefit4u.eu"
+              className="mt-4 inline-block"
+            >
+              <Button>{page.directContactCta}</Button>
+            </a>
+            <p className="mt-3 text-xs text-gray-500">{page.directContactHint}</p>
           </div>
         </div>
       </div>

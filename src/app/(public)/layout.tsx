@@ -17,7 +17,9 @@ export default async function PublicLayout({
         locale={locale}
         labels={{ common: dictionary.common, nav: dictionary.nav }}
       />
-      <main className="flex-1">{children}</main>
+      <main id="main-content" tabIndex={-1} className="flex-1">
+        {children}
+      </main>
       <Footer
         locale={locale}
         labels={{

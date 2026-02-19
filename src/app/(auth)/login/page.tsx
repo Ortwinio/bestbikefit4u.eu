@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useConvexAuth, useMutation } from "convex/react";
-import { makeFunctionReference } from "convex/server";
+import { useConvexAuth } from "convex/react";
 import {
   Button,
   Input,
@@ -13,30 +12,18 @@ import {
   CardTitle,
   CardContent,
 } from "@/components/ui";
+import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
 import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
 import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
 
 type AuthStep = "email" | "code" | "success";
-type LoginEventType = "login_code_requested" | "login_verified";
-
-type LogMarketingEventArgs = {
-  eventType: LoginEventType;
-  locale: Locale;
-  pagePath: string;
-  section: string;
-  sourceTag?: string;
-};
-
-type LogMarketingEventFn = (args: LogMarketingEventArgs) => Promise<unknown>;
-
-const logMarketingEventRef = makeFunctionReference<
-  "mutation",
-  LogMarketingEventArgs,
-  unknown
->("analytics/mutations:logMarketingEvent");
+const RESEND_COOLDOWN_SECONDS = 30;
 
 type LoginCopy = {
+  uspTitle: string;
+  uspSubtitle: string;
+  uspItems: string[];
   successTitle: string;
   successSubtitle: string;
   back: string;
@@ -50,6 +37,9 @@ type LoginCopy = {
   verifyCode: string;
   resendPrompt: string;
   resendAction: string;
+  resendIn: string;
+  changeEmailAction: string;
+  codeSentSuccess: string;
   spamHint: string;
   signInTitle: string;
   emailLabel: string;
@@ -64,6 +54,13 @@ type LoginCopy = {
 
 const loginCopy: Record<Locale, LoginCopy> = {
   en: {
+    uspTitle: "Why a proper bike fit matters",
+    uspSubtitle: "BestBikeFit4U helps you ride better from your very first session.",
+    uspItems: [
+      "Reduce knee, back, neck, and hand discomfort",
+      "Improve pedaling efficiency and sustainable power",
+      "Get practical setup targets for your exact bike and goals",
+    ],
     successTitle: "Welcome to BestBikeFit4U",
     successSubtitle: "Redirecting to your dashboard...",
     back: "Back",
@@ -78,6 +75,9 @@ const loginCopy: Record<Locale, LoginCopy> = {
     verifyCode: "Verify Code",
     resendPrompt: "Didn't receive the code?",
     resendAction: "Resend",
+    resendIn: "Resend available in",
+    changeEmailAction: "Use a different email",
+    codeSentSuccess: "Verification code sent. Enter it below to continue.",
     spamHint: "Check your spam folder if you don't see the email.",
     signInTitle: "Sign in to BestBikeFit4U",
     emailLabel: "Email address",
@@ -92,6 +92,13 @@ const loginCopy: Record<Locale, LoginCopy> = {
       "By signing in, you agree to our Terms of Service and Privacy Policy.",
   },
   nl: {
+    uspTitle: "Waarom een goede bikefitting belangrijk is",
+    uspSubtitle: "Met BestBikeFit4U rijd je vanaf je eerste sessie beter.",
+    uspItems: [
+      "Minder knie-, rug-, nek- en handklachten",
+      "Efficiënter trappen en vermogen langer vasthouden",
+      "Concrete afstelwaarden voor jouw fiets en doelen",
+    ],
     successTitle: "Welkom bij BestBikeFit4U",
     successSubtitle: "Je wordt doorgestuurd naar je dashboard...",
     back: "Terug",
@@ -106,6 +113,9 @@ const loginCopy: Record<Locale, LoginCopy> = {
     verifyCode: "Code verifieren",
     resendPrompt: "Geen code ontvangen?",
     resendAction: "Opnieuw verzenden",
+    resendIn: "Opnieuw verzenden mogelijk over",
+    changeEmailAction: "Ander e-mailadres gebruiken",
+    codeSentSuccess: "Verificatiecode verzonden. Voer de code hieronder in.",
     spamHint: "Controleer je spammap als je de e-mail niet ziet.",
     signInTitle: "Log in bij BestBikeFit4U",
     emailLabel: "E-mailadres",
@@ -128,7 +138,8 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const { signIn } = useAuthActions();
   const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth();
-  const logMarketingEvent = useMutation(logMarketingEventRef) as LogMarketingEventFn;
+  const logMarketingEvent = useMarketingEventLogger();
+  const hasTrackedLoginViewRef = useRef(false);
 
   const locale = useMemo(
     () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
@@ -144,12 +155,48 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [resendSuccess, setResendSuccess] = useState(false);
+  const [sendSuccess, setSendSuccess] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  const uspPanel = (
+    <section className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+      <h2 className="text-base font-semibold text-blue-900">{text.uspTitle}</h2>
+      <p className="mt-1 text-sm text-blue-700">{text.uspSubtitle}</p>
+      <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-blue-800">
+        {text.uspItems.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </section>
+  );
 
   useEffect(() => {
     if (!isAuthLoading && isAuthenticated) {
       router.push(withLocalePrefix("/dashboard", locale));
     }
   }, [isAuthenticated, isAuthLoading, locale, router]);
+
+  useEffect(() => {
+    if (hasTrackedLoginViewRef.current) return;
+    hasTrackedLoginViewRef.current = true;
+    logMarketingEvent({
+      eventType: "funnel_login_view",
+      locale,
+      pagePath,
+      section: "login_page",
+      sourceTag,
+    });
+  }, [locale, logMarketingEvent, pagePath, sourceTag]);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) {
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setResendCooldown((current) => Math.max(0, current - 1));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [resendCooldown]);
 
   const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -165,9 +212,21 @@ export default function LoginPage() {
         section: "email_form",
         sourceTag,
       });
+      setResendCooldown(RESEND_COOLDOWN_SECONDS);
+      setSendSuccess(true);
+      setTimeout(() => setSendSuccess(false), 5000);
+      setResendSuccess(false);
+      setCode("");
       setStep("code");
     } catch (err) {
       console.error("Failed to send code:", err);
+      void logMarketingEvent({
+        eventType: "login_send_error",
+        locale,
+        pagePath,
+        section: "email_form",
+        sourceTag,
+      });
       setError(text.sendCodeError);
     } finally {
       setIsLoading(false);
@@ -195,26 +254,60 @@ export default function LoginPage() {
       }, 1500);
     } catch (err) {
       console.error("Failed to verify code:", err);
+      void logMarketingEvent({
+        eventType: "login_verify_error",
+        locale,
+        pagePath,
+        section: "code_form",
+        sourceTag,
+      });
       setError(text.invalidCode);
       setIsLoading(false);
     }
   };
 
   const handleResendCode = async () => {
+    if (resendCooldown > 0 || isLoading) {
+      return;
+    }
     setIsLoading(true);
     setError(null);
     setResendSuccess(false);
 
     try {
       await signIn("resend", { email });
+      void logMarketingEvent({
+        eventType: "login_code_resent",
+        locale,
+        pagePath,
+        section: "code_form",
+        sourceTag,
+      });
+      setResendCooldown(RESEND_COOLDOWN_SECONDS);
       setResendSuccess(true);
       setTimeout(() => setResendSuccess(false), 3000);
     } catch (err) {
       console.error("Failed to resend code:", err);
+      void logMarketingEvent({
+        eventType: "login_send_error",
+        locale,
+        pagePath,
+        section: "code_form_resend",
+        sourceTag,
+      });
       setError(text.resendCodeError);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleChangeEmail = () => {
+    setStep("email");
+    setCode("");
+    setError(null);
+    setResendSuccess(false);
+    setSendSuccess(false);
+    setResendCooldown(0);
   };
 
   if (step === "success") {
@@ -233,105 +326,127 @@ export default function LoginPage() {
 
   if (step === "code") {
     return (
+      <div className="space-y-4">
+        {uspPanel}
+        <Card variant="bordered">
+          <CardHeader>
+            <button
+              type="button"
+              onClick={handleChangeEmail}
+              className="flex items-center text-sm text-gray-500 hover:text-gray-700 mb-2"
+            >
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              {text.back}
+            </button>
+            <CardTitle>{text.enterVerificationCode}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">
+              {text.codeSentTo} <strong>{email}</strong>
+            </p>
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={handleChangeEmail}
+                className="text-sm font-medium text-blue-600 hover:text-blue-800"
+              >
+                {text.changeEmailAction}
+              </button>
+              {sendSuccess && (
+                <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
+                  {text.codeSentSuccess}
+                </p>
+              )}
+            </div>
+
+            <form onSubmit={handleVerifyCode} className="space-y-4">
+              <Input
+                label={text.verificationCodeLabel}
+                tooltip={text.verificationCodeTooltip}
+                type="text"
+                placeholder={text.verificationCodePlaceholder}
+                value={code}
+                onChange={(e) => setCode(e.target.value.toUpperCase())}
+                maxLength={7}
+                className="text-center text-2xl tracking-widest font-mono"
+                required
+                autoFocus
+              />
+
+              {error && (
+                <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+                  {error}
+                </p>
+              )}
+
+              {resendSuccess && (
+                <p className="text-sm text-green-600 bg-green-50 p-3 rounded-lg">
+                  {text.resendSuccess}
+                </p>
+              )}
+
+              <Button type="submit" className="w-full" isLoading={isLoading}>
+                {text.verifyCode}
+              </Button>
+            </form>
+
+            <div className="mt-4 text-center">
+              <button
+                type="button"
+                onClick={handleResendCode}
+                disabled={isLoading || resendCooldown > 0}
+                className="text-sm text-blue-600 hover:text-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {resendCooldown > 0
+                  ? `${text.resendIn} ${resendCooldown}s`
+                  : `${text.resendPrompt} ${text.resendAction}`}
+              </button>
+            </div>
+
+            <p className="mt-4 text-center text-xs text-gray-400">{text.spamHint}</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {uspPanel}
       <Card variant="bordered">
         <CardHeader>
-          <button
-            type="button"
-            onClick={() => setStep("email")}
-            className="flex items-center text-sm text-gray-500 hover:text-gray-700 mb-2"
-          >
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            {text.back}
-          </button>
-          <CardTitle>{text.enterVerificationCode}</CardTitle>
+          <CardTitle>{text.signInTitle}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600 mb-4">
-            {text.codeSentTo} <strong>{email}</strong>
-          </p>
-
-          <form onSubmit={handleVerifyCode} className="space-y-4">
+          <form onSubmit={handleSendCode} className="space-y-4">
             <Input
-              label={text.verificationCodeLabel}
-              tooltip={text.verificationCodeTooltip}
-              type="text"
-              placeholder={text.verificationCodePlaceholder}
-              value={code}
-              onChange={(e) => setCode(e.target.value.toUpperCase())}
-              maxLength={7}
-              className="text-center text-2xl tracking-widest font-mono"
+              label={text.emailLabel}
+              tooltip={text.emailTooltip}
+              type="email"
+              placeholder={text.emailPlaceholder}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               autoFocus
             />
 
             {error && (
-              <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
-                {error}
-              </p>
-            )}
-
-            {resendSuccess && (
-              <p className="text-sm text-green-600 bg-green-50 p-3 rounded-lg">
-                {text.resendSuccess}
-              </p>
+              <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{error}</p>
             )}
 
             <Button type="submit" className="w-full" isLoading={isLoading}>
-              {text.verifyCode}
+              <Mail className="h-4 w-4 mr-2" />
+              {text.sendCode}
             </Button>
           </form>
 
-          <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={handleResendCode}
-              disabled={isLoading}
-              className="text-sm text-blue-600 hover:text-blue-800 disabled:opacity-50"
-            >
-              {text.resendPrompt} {text.resendAction}
-            </button>
-          </div>
+          <p className="mt-4 text-center text-sm text-gray-500">{text.noPasswordHint}</p>
 
-          <p className="mt-4 text-center text-xs text-gray-400">{text.spamHint}</p>
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <p className="text-xs text-gray-400 text-center">{text.legalHint}</p>
+          </div>
         </CardContent>
       </Card>
-    );
-  }
-
-  return (
-    <Card variant="bordered">
-      <CardHeader>
-        <CardTitle>{text.signInTitle}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSendCode} className="space-y-4">
-          <Input
-            label={text.emailLabel}
-            tooltip={text.emailTooltip}
-            type="email"
-            placeholder={text.emailPlaceholder}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            autoFocus
-          />
-
-          {error && (
-            <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{error}</p>
-          )}
-
-          <Button type="submit" className="w-full" isLoading={isLoading}>
-            <Mail className="h-4 w-4 mr-2" />
-            {text.sendCode}
-          </Button>
-        </form>
-
-        <p className="mt-4 text-center text-sm text-gray-500">{text.noPasswordHint}</p>
-
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <p className="text-xs text-gray-400 text-center">{text.legalHint}</p>
-        </div>
-      </CardContent>
-    </Card>
+    </div>
   );
 }

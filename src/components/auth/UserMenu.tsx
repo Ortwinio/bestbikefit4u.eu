@@ -5,9 +5,41 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import { api } from "../../../convex/_generated/api";
-import { User, LogOut, Settings, ChevronDown } from "lucide-react";
+import type { Locale } from "@/i18n/config";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { User, LogOut, Settings, ChevronDown, LayoutDashboard, Bike } from "lucide-react";
 
-export function UserMenu() {
+type UserMenuProps = {
+  locale: Locale;
+};
+
+const menuLabels: Record<
+  Locale,
+  {
+    dashboard: string;
+    newFit: string;
+    bikes: string;
+    profile: string;
+    signOut: string;
+  }
+> = {
+  en: {
+    dashboard: "Dashboard",
+    newFit: "New Fit Session",
+    bikes: "My Bikes",
+    profile: "Profile Settings",
+    signOut: "Sign Out",
+  },
+  nl: {
+    dashboard: "Dashboard",
+    newFit: "Nieuwe fit-sessie",
+    bikes: "Mijn fietsen",
+    profile: "Profielinstellingen",
+    signOut: "Uitloggen",
+  },
+};
+
+export function UserMenu({ locale }: UserMenuProps) {
   const { isAuthenticated } = useConvexAuth();
   const { signOut } = useAuthActions();
   const router = useRouter();
@@ -32,9 +64,16 @@ export function UserMenu() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const labels = menuLabels[locale];
+
+  const navigate = (path: string) => {
+    setIsOpen(false);
+    router.push(withLocalePrefix(path, locale));
+  };
+
   const handleSignOut = async () => {
     await signOut();
-    router.push("/");
+    router.push(withLocalePrefix("/", locale));
   };
 
   if (!isAuthenticated) {
@@ -73,13 +112,42 @@ export function UserMenu() {
             <button
               type="button"
               onClick={() => {
-                setIsOpen(false);
-                router.push("/profile");
+                navigate("/dashboard");
+              }}
+              className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <LayoutDashboard className="h-4 w-4 text-gray-400" />
+              {labels.dashboard}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                navigate("/fit");
               }}
               className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
             >
               <Settings className="h-4 w-4 text-gray-400" />
-              Profile Settings
+              {labels.newFit}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                navigate("/bikes");
+              }}
+              className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <Bike className="h-4 w-4 text-gray-400" />
+              {labels.bikes}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                navigate("/profile");
+              }}
+              className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <Settings className="h-4 w-4 text-gray-400" />
+              {labels.profile}
             </button>
           </div>
 
@@ -91,7 +159,7 @@ export function UserMenu() {
               className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
             >
               <LogOut className="h-4 w-4" />
-              Sign Out
+              {labels.signOut}
             </button>
           </div>
         </div>

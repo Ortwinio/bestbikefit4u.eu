@@ -1,10 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo } from "react";
+import { usePathname } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { Button, Card, CardHeader, CardTitle, CardContent } from "@/components/ui";
-import { Plus, Clock, CheckCircle, AlertCircle, Bike, ArrowRight } from "lucide-react";
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  LoadingState,
+  EmptyState,
+} from "@/components/ui";
+import { DEFAULT_LOCALE } from "@/i18n/config";
+import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
+import { Plus, Clock, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
 
 const statusConfig: Record<
   string,
@@ -47,6 +59,11 @@ const ridingStyleLabels: Record<string, string> = {
 };
 
 export default function DashboardPage() {
+  const pathname = usePathname();
+  const locale = useMemo(
+    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
+    [pathname]
+  );
   const sessions = useQuery(api.sessions.queries.listByUser);
   const profile = useQuery(api.profiles.queries.getMyProfile);
 
@@ -64,7 +81,7 @@ export default function DashboardPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <Link href="/fit">
+        <Link href={withLocalePrefix("/fit", locale)}>
           <Button>
             <Plus className="h-4 w-4 mr-2" />
             New Fit Session
@@ -84,7 +101,7 @@ export default function DashboardPage() {
               <p className="text-sm text-yellow-700 mt-1">
                 Enter your body measurements to enable bike fit calculations.
               </p>
-              <Link href="/profile">
+              <Link href={withLocalePrefix("/profile", locale)}>
                 <Button variant="outline" size="sm" className="mt-3">
                   Complete Profile
                 </Button>
@@ -127,19 +144,18 @@ export default function DashboardPage() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-            </div>
+            <LoadingState label="Loading sessions..." className="py-8" />
           ) : !sessions || sessions.length === 0 ? (
-            <div className="text-center py-8">
-              <Bike className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 mb-4">
-                You haven&apos;t started any fit sessions yet.
-              </p>
-              <Link href="/fit">
-                <Button>Start Your First Fit</Button>
-              </Link>
-            </div>
+            <EmptyState
+              title="No fit sessions yet"
+              description="You haven't started any fit sessions yet."
+              action={
+                <Link href={withLocalePrefix("/fit", locale)}>
+                  <Button>Start Your First Fit</Button>
+                </Link>
+              }
+              className="border-0 p-0 shadow-none"
+            />
           ) : (
             <div className="divide-y divide-gray-200">
               {sessions.map((session) => {
@@ -147,10 +163,10 @@ export default function DashboardPage() {
                 const StatusIcon = config.icon;
                 const sessionLink =
                   session.status === "completed"
-                    ? `/fit/${session._id}/results`
+                    ? withLocalePrefix(`/fit/${session._id}/results`, locale)
                     : session.status === "in_progress"
-                      ? `/fit/${session._id}/questionnaire`
-                      : `/fit/${session._id}/results`;
+                      ? withLocalePrefix(`/fit/${session._id}/questionnaire`, locale)
+                      : withLocalePrefix(`/fit/${session._id}/results`, locale);
 
                 return (
                   <div

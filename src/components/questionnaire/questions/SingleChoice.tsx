@@ -10,33 +10,44 @@ interface Option {
 }
 
 interface SingleChoiceQuestionProps {
+  name: string;
   options: Option[];
   value: string | null;
   onChange: (value: string) => void;
 }
 
 export function SingleChoiceQuestion({
+  name,
   options,
   value,
   onChange,
 }: SingleChoiceQuestionProps) {
   return (
-    <div className="space-y-3">
+    <fieldset className="space-y-3">
+      <legend className="sr-only">Choose one option</legend>
       {options.map((option) => {
         const isSelected = value === option.value;
 
         return (
-          <button
+          <label
             key={option.value}
-            type="button"
-            onClick={() => onChange(option.value)}
+            htmlFor={`${name}-${option.value}`}
             className={cn(
-              "w-full flex items-center justify-between p-4 rounded-lg border-2 transition-all text-left",
+              "w-full flex cursor-pointer items-center justify-between rounded-lg border-2 p-4 text-left transition-all",
               isSelected
                 ? "border-blue-600 bg-blue-50"
                 : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
             )}
           >
+            <input
+              id={`${name}-${option.value}`}
+              name={name}
+              type="radio"
+              value={option.value}
+              checked={isSelected}
+              onChange={() => onChange(option.value)}
+              className="sr-only"
+            />
             <span
               className={cn(
                 "font-medium",
@@ -50,9 +61,9 @@ export function SingleChoiceQuestion({
                 <Check className="h-4 w-4 text-white" />
               </div>
             )}
-          </button>
+          </label>
         );
       })}
-    </div>
+    </fieldset>
   );
 }

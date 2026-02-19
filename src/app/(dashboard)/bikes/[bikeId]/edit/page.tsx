@@ -1,7 +1,7 @@
 "use client";
 
-import { use } from "react";
-import { useRouter } from "next/navigation";
+import { use, useMemo } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { type Id } from "../../../../../../convex/_generated/dataModel";
@@ -10,6 +10,9 @@ import {
   type BikeFormInitialData,
   type BikeFormPayload,
 } from "@/components/bikes";
+import { EmptyState, LoadingState } from "@/components/ui";
+import { DEFAULT_LOCALE } from "@/i18n/config";
+import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
 
 interface EditBikePageProps {
   params: Promise<{ bikeId: string }>;
@@ -18,6 +21,11 @@ interface EditBikePageProps {
 export default function EditBikePage({ params }: EditBikePageProps) {
   const { bikeId } = use(params);
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = useMemo(
+    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
+    [pathname]
+  );
 
   const bike = useQuery(api.bikes.queries.getById, {
     bikeId: bikeId as Id<"bikes">,
@@ -32,30 +40,24 @@ export default function EditBikePage({ params }: EditBikePageProps) {
       currentGeometry: payload.currentGeometry,
       currentSetup: payload.currentSetup,
     });
-    router.push("/bikes");
+    router.push(withLocalePrefix("/bikes", locale));
   };
 
   const handleDelete = async () => {
     await removeBike({ bikeId: bikeId as Id<"bikes"> });
-    router.push("/bikes");
+    router.push(withLocalePrefix("/bikes", locale));
   };
 
   if (bike === undefined) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-      </div>
-    );
+    return <LoadingState label="Loading bike..." />;
   }
 
   if (bike === null) {
     return (
-      <div className="max-w-2xl mx-auto text-center py-12">
-        <h1 className="text-2xl font-bold text-gray-900">Bike Not Found</h1>
-        <p className="text-gray-600 mt-2">
-          This bike does not exist or you do not have access to it.
-        </p>
-      </div>
+      <EmptyState
+        title="Bike not found"
+        description="This bike does not exist or you do not have access to it."
+      />
     );
   }
 
@@ -75,7 +77,7 @@ export default function EditBikePage({ params }: EditBikePageProps) {
       showBikeTypeSelect={false}
       onSubmit={handleUpdate}
       onDelete={handleDelete}
-      cancelHref="/bikes"
+      cancelHref={withLocalePrefix("/bikes", locale)}
     />
   );
 }

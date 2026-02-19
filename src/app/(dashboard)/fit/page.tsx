@@ -1,12 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
-import { Button, Card, CardHeader, CardTitle, CardContent } from "@/components/ui";
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  LoadingState,
+  ErrorState,
+} from "@/components/ui";
+import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import {
   BIKE_TYPE_LABELS,
   BIKE_TYPE_OPTIONS,
@@ -14,6 +23,8 @@ import {
   type BikeType,
 } from "@/lib/bikes";
 import { reportClientError } from "@/lib/telemetry";
+import { DEFAULT_LOCALE } from "@/i18n/config";
+import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
 import { Bike, ArrowRight, AlertCircle } from "lucide-react";
 
 const ridingStyles = [
@@ -37,6 +48,14 @@ type PrimaryGoal = typeof ridingGoals[number]["value"];
 
 export default function NewFitSessionPage() {
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = useMemo(
+    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
+    [pathname]
+  );
+  const pagePath = withLocalePrefix("/fit", locale);
+  const logMarketingEvent = useMarketingEventLogger();
+  const hasTrackedFitViewRef = useRef(false);
   const [bikeType, setBikeType] = useState<BikeType | "">("");
   const [selectedBikeId, setSelectedBikeId] = useState<Id<"bikes"> | null>(null);
   const [ridingStyle, setRidingStyle] = useState<RidingStyle | "">("");
@@ -64,6 +83,19 @@ export default function NewFitSessionPage() {
     hasProfile &&
     !isCreating;
 
+  useEffect(() => {
+    if (hasTrackedFitViewRef.current) {
+      return;
+    }
+    hasTrackedFitViewRef.current = true;
+    logMarketingEvent({
+      eventType: "funnel_fit_view",
+      locale,
+      pagePath,
+      section: "fit_start_page",
+    });
+  }, [locale, logMarketingEvent, pagePath]);
+
   const handleSelectBike = (bikeId: Id<"bikes">, selectedType: BikeType) => {
     setSelectedBikeId(bikeId);
     setBikeType(selectedType);
@@ -87,7 +119,7 @@ export default function NewFitSessionPage() {
         primaryGoal: ridingGoal,
         bikeId: selectedBike?._id,
       });
-      router.push(`/fit/${sessionId}/questionnaire`);
+      router.push(withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale));
     } catch (error) {
       setCreateError(
         reportClientError(error, {
@@ -108,11 +140,7 @@ export default function NewFitSessionPage() {
   };
 
   if (isLoadingProfile) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-      </div>
-    );
+    return <LoadingState label="Loading fit setup..." />;
   }
 
   return (
@@ -137,7 +165,7 @@ export default function NewFitSessionPage() {
                 You need to enter your body measurements before starting a fit
                 session.
               </p>
-              <Link href="/profile">
+              <Link href={withLocalePrefix("/profile", locale)}>
                 <Button variant="outline" size="sm" className="mt-3">
                   Go to Profile
                 </Button>
@@ -345,9 +373,13 @@ export default function NewFitSessionPage() {
         </Button>
       </div>
 
-      {createError && (
-        <p className="text-sm text-red-600 text-right mt-2">{createError}</p>
-      )}
+      {createError ? (
+        <ErrorState
+          className="mt-2"
+          title="Couldn't start fit session"
+          description={createError}
+        />
+      ) : null}
 
       {!canStart && bikeType && ridingStyle && ridingGoal && !hasProfile && (
         <p className="text-sm text-gray-500 text-right mt-2">

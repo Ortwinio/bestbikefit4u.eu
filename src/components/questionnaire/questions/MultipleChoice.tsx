@@ -10,12 +10,14 @@ interface Option {
 }
 
 interface MultipleChoiceQuestionProps {
+  name: string;
   options: Option[];
   value: string[];
   onChange: (value: string[]) => void;
 }
 
 export function MultipleChoiceQuestion({
+  name,
   options,
   value,
   onChange,
@@ -29,23 +31,31 @@ export function MultipleChoiceQuestion({
   };
 
   return (
-    <div className="space-y-3">
-      <p className="text-sm text-gray-500 mb-4">Select all that apply</p>
+    <fieldset className="space-y-3">
+      <legend className="mb-4 text-sm text-gray-500">Select all that apply</legend>
       {options.map((option) => {
         const isSelected = value.includes(option.value);
 
         return (
-          <button
+          <label
             key={option.value}
-            type="button"
-            onClick={() => toggleOption(option.value)}
+            htmlFor={`${name}-${option.value}`}
             className={cn(
-              "w-full flex items-center justify-between p-4 rounded-lg border-2 transition-all text-left",
+              "w-full flex cursor-pointer items-center justify-between rounded-lg border-2 p-4 text-left transition-all",
               isSelected
                 ? "border-blue-600 bg-blue-50"
                 : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
             )}
           >
+            <input
+              id={`${name}-${option.value}`}
+              name={name}
+              type="checkbox"
+              value={option.value}
+              checked={isSelected}
+              onChange={() => toggleOption(option.value)}
+              className="sr-only"
+            />
             <span
               className={cn(
                 "font-medium",
@@ -64,9 +74,9 @@ export function MultipleChoiceQuestion({
             >
               {isSelected && <Check className="h-4 w-4 text-white" />}
             </div>
-          </button>
+          </label>
         );
       })}
-    </div>
+    </fieldset>
   );
 }

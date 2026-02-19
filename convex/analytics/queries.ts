@@ -6,8 +6,24 @@ type AggregateRow = {
   value: number;
 };
 
+type MarketingEventType =
+  | "cta_click"
+  | "login_code_requested"
+  | "login_code_resent"
+  | "login_verified"
+  | "funnel_landing_view"
+  | "funnel_login_view"
+  | "funnel_profile_view"
+  | "funnel_fit_view"
+  | "funnel_questionnaire_complete"
+  | "funnel_results_view"
+  | "login_send_error"
+  | "login_verify_error"
+  | "questionnaire_complete_error"
+  | "report_send_error";
+
 type MarketingEvent = {
-  eventType: "cta_click" | "login_code_requested" | "login_verified";
+  eventType: MarketingEventType;
   locale: "en" | "nl";
   pagePath: string;
   section?: string;
@@ -78,9 +94,38 @@ export const getKpiDashboard = query({
     const ctaByPageSection = new Map<string, number>();
     const loginRequestedBySource = new Map<string, number>();
     const loginVerifiedBySource = new Map<string, number>();
+    const funnelCounts: Record<
+      | "landingView"
+      | "loginView"
+      | "profileView"
+      | "fitView"
+      | "questionnaireComplete"
+      | "resultsView",
+      number
+    > = {
+      landingView: 0,
+      loginView: 0,
+      profileView: 0,
+      fitView: 0,
+      questionnaireComplete: 0,
+      resultsView: 0,
+    };
+    const stepErrors: Record<
+      | "loginSendError"
+      | "loginVerifyError"
+      | "questionnaireCompleteError"
+      | "reportSendError",
+      number
+    > = {
+      loginSendError: 0,
+      loginVerifyError: 0,
+      questionnaireCompleteError: 0,
+      reportSendError: 0,
+    };
 
     let ctaClicks = 0;
     let loginCodeRequested = 0;
+    let loginCodeResent = 0;
     let loginVerified = 0;
 
     for (const event of events) {
@@ -101,9 +146,64 @@ export const getKpiDashboard = query({
         continue;
       }
 
+      if (event.eventType === "login_code_resent") {
+        loginCodeResent += 1;
+        continue;
+      }
+
       if (event.eventType === "login_verified") {
         loginVerified += 1;
         incrementCount(loginVerifiedBySource, event.sourceTag ?? "direct_or_unknown");
+        continue;
+      }
+
+      if (event.eventType === "funnel_landing_view") {
+        funnelCounts.landingView += 1;
+        continue;
+      }
+
+      if (event.eventType === "funnel_login_view") {
+        funnelCounts.loginView += 1;
+        continue;
+      }
+
+      if (event.eventType === "funnel_profile_view") {
+        funnelCounts.profileView += 1;
+        continue;
+      }
+
+      if (event.eventType === "funnel_fit_view") {
+        funnelCounts.fitView += 1;
+        continue;
+      }
+
+      if (event.eventType === "funnel_questionnaire_complete") {
+        funnelCounts.questionnaireComplete += 1;
+        continue;
+      }
+
+      if (event.eventType === "funnel_results_view") {
+        funnelCounts.resultsView += 1;
+        continue;
+      }
+
+      if (event.eventType === "login_send_error") {
+        stepErrors.loginSendError += 1;
+        continue;
+      }
+
+      if (event.eventType === "login_verify_error") {
+        stepErrors.loginVerifyError += 1;
+        continue;
+      }
+
+      if (event.eventType === "questionnaire_complete_error") {
+        stepErrors.questionnaireCompleteError += 1;
+        continue;
+      }
+
+      if (event.eventType === "report_send_error") {
+        stepErrors.reportSendError += 1;
       }
     }
 
@@ -149,6 +249,7 @@ export const getKpiDashboard = query({
         trackedEvents: events.length,
         ctaClicks,
         loginCodeRequested,
+        loginCodeResent,
         loginVerified,
         loginCompletionRatePct: toRatePercent(loginVerified, loginCodeRequested),
       },
@@ -160,6 +261,32 @@ export const getKpiDashboard = query({
       loginFunnel: {
         bySource: loginSourceRows,
       },
+      usabilityFunnel: {
+        counts: funnelCounts,
+        conversionRatePct: {
+          landingToLogin: toRatePercent(
+            funnelCounts.loginView,
+            funnelCounts.landingView
+          ),
+          loginToProfile: toRatePercent(
+            funnelCounts.profileView,
+            funnelCounts.loginView
+          ),
+          profileToFit: toRatePercent(
+            funnelCounts.fitView,
+            funnelCounts.profileView
+          ),
+          fitToQuestionnaireComplete: toRatePercent(
+            funnelCounts.questionnaireComplete,
+            funnelCounts.fitView
+          ),
+          questionnaireToResults: toRatePercent(
+            funnelCounts.resultsView,
+            funnelCounts.questionnaireComplete
+          ),
+        },
+      },
+      errorsByStep: stepErrors,
     };
   },
 });

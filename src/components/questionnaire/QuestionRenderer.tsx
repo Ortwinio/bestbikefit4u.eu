@@ -12,18 +12,24 @@ interface QuestionRendererProps {
   question: QuestionDefinition;
   value: QuestionnaireResponseValue | null;
   onChange: (value: QuestionnaireResponseValue | null) => void;
+  headingId?: string;
 }
 
 export function QuestionRenderer({
   question,
   value,
   onChange,
+  headingId,
 }: QuestionRendererProps) {
   return (
     <div className="space-y-4">
       {/* Question text */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-900">
+        <h2
+          id={headingId}
+          tabIndex={-1}
+          className="text-xl font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
           {question.questionText}
           {question.isRequired && <span className="text-red-500 ml-1">*</span>}
         </h2>
@@ -39,6 +45,7 @@ export function QuestionRenderer({
       <div className="mt-6">
         {question.responseType === "single_choice" && question.options && (
           <SingleChoiceQuestion
+            name={question.questionId}
             options={question.options}
             value={value as string | null}
             onChange={onChange}
@@ -47,6 +54,7 @@ export function QuestionRenderer({
 
         {question.responseType === "multiple_choice" && question.options && (
           <MultipleChoiceQuestion
+            name={question.questionId}
             options={question.options}
             value={(value as string[]) || []}
             onChange={onChange}

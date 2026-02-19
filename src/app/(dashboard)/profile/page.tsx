@@ -1,12 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { MeasurementWizard, type WizardFormData } from "@/components/measurements";
-import { Card, CardHeader, CardTitle, CardContent, Button } from "@/components/ui";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Button,
+  LoadingState,
+  ErrorState,
+} from "@/components/ui";
+import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { reportClientError } from "@/lib/telemetry";
+import { DEFAULT_LOCALE } from "@/i18n/config";
+import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
 import { User, Ruler, Activity, Edit2 } from "lucide-react";
 
 interface ProfileData {
@@ -23,9 +35,11 @@ interface ProfileData {
 function ProfileSummary({
   profile,
   onEdit,
+  fitHref,
 }: {
   profile: ProfileData;
   onEdit: () => void;
+  fitHref: string;
 }) {
   return (
     <div>
@@ -136,7 +150,7 @@ function ProfileSummary({
             personalized bike setup recommendations.
           </p>
           <div className="mt-4">
-            <Link href="/fit">
+            <Link href={fitHref}>
               <Button>Start New Fit Session</Button>
             </Link>
           </div>
@@ -162,11 +176,32 @@ function getDefaultValues(profile: ProfileData): Partial<WizardFormData> {
 }
 
 export default function ProfilePage() {
+  const pathname = usePathname();
+  const locale = useMemo(
+    () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
+    [pathname]
+  );
+  const pagePath = withLocalePrefix("/profile", locale);
+  const logMarketingEvent = useMarketingEventLogger();
+  const hasTrackedProfileViewRef = useRef(false);
   const [isEditing, setIsEditing] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
   const profileData = useQuery(api.profiles.queries.getMyProfile);
   const upsertProfile = useMutation(api.profiles.mutations.upsert);
+
+  useEffect(() => {
+    if (hasTrackedProfileViewRef.current || profileData === undefined) {
+      return;
+    }
+    hasTrackedProfileViewRef.current = true;
+    logMarketingEvent({
+      eventType: "funnel_profile_view",
+      locale,
+      pagePath,
+      section: "profile_page",
+    });
+  }, [locale, logMarketingEvent, pagePath, profileData]);
 
   const handleSaveProfile = async (data: WizardFormData) => {
     setSaveError(null);
@@ -194,11 +229,7 @@ export default function ProfilePage() {
   };
 
   if (profileData === undefined && !isEditing) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-      </div>
-    );
+    return <LoadingState label="Loading profile..." />;
   }
 
   // Show wizard if no profile exists or editing
@@ -215,11 +246,13 @@ export default function ProfilePage() {
               : "Enter your body measurements to get personalized bike fit recommendations."}
           </p>
         </div>
-        {saveError && (
-          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-            {saveError}
-          </div>
-        )}
+        {saveError ? (
+          <ErrorState
+            className="mb-6"
+            title="Could not save profile"
+            description={saveError}
+          />
+        ) : null}
         <MeasurementWizard
           onComplete={handleSaveProfile}
           defaultValues={profileData ? getDefaultValues(profileData) : undefined}
@@ -243,6 +276,10 @@ export default function ProfilePage() {
 
   // Show profile summary
   return (
-    <ProfileSummary profile={profileData} onEdit={() => setIsEditing(true)} />
+    <ProfileSummary
+      profile={profileData}
+      fitHref={withLocalePrefix("/fit", locale)}
+      onEdit={() => setIsEditing(true)}
+    />
   );
 }

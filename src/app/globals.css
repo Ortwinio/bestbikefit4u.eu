@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+.skip-link {
+  transform: translateY(-250%);
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}

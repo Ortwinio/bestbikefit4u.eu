@@ -383,7 +383,18 @@ export default defineSchema({
     eventType: v.union(
       v.literal("cta_click"),
       v.literal("login_code_requested"),
-      v.literal("login_verified")
+      v.literal("login_code_resent"),
+      v.literal("login_verified"),
+      v.literal("funnel_landing_view"),
+      v.literal("funnel_login_view"),
+      v.literal("funnel_profile_view"),
+      v.literal("funnel_fit_view"),
+      v.literal("funnel_questionnaire_complete"),
+      v.literal("funnel_results_view"),
+      v.literal("login_send_error"),
+      v.literal("login_verify_error"),
+      v.literal("questionnaire_complete_error"),
+      v.literal("report_send_error")
     ),
     locale: v.union(v.literal("en"), v.literal("nl")),
     pagePath: v.string(),
