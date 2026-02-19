@@ -1,6 +1,6 @@
-# BikeFit AI
+# BestBikeFit4U
 
-BikeFit AI is a Next.js + Convex application for guided bike fit recommendations, questionnaire flows, and downloadable fit reports.
+BestBikeFit4U is a Next.js + Convex application for guided bike fit recommendations, questionnaire flows, and downloadable fit reports.
 
 ## Stack
 
