@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useConvexAuth } from "convex/react";
+import { useConvexAuth, useMutation } from "convex/react";
 import {
   Button,
   Input,
@@ -107,14 +107,20 @@ const loginCopy: Record<Locale, LoginCopy> = {
 export default function LoginPage() {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { signIn } = useAuthActions();
   const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth();
+  const logMarketingEvent = useMutation(
+    "analytics/mutations:logMarketingEvent" as any
+  );
 
   const locale = useMemo(
     () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,
     [pathname]
   );
   const text = loginCopy[locale];
+  const pagePath = withLocalePrefix("/login", locale);
+  const sourceTag = searchParams?.get("src") ?? undefined;
 
   const [step, setStep] = useState<AuthStep>("email");
   const [email, setEmail] = useState("");
@@ -136,6 +142,13 @@ export default function LoginPage() {
 
     try {
       await signIn("resend", { email });
+      void logMarketingEvent({
+        eventType: "login_code_requested",
+        locale,
+        pagePath,
+        section: "email_form",
+        sourceTag,
+      });
       setStep("code");
     } catch (err) {
       console.error("Failed to send code:", err);
@@ -153,6 +166,13 @@ export default function LoginPage() {
     try {
       const result = await signIn("resend", { email, code });
       void result;
+      void logMarketingEvent({
+        eventType: "login_verified",
+        locale,
+        pagePath,
+        section: "code_form",
+        sourceTag,
+      });
       setStep("success");
       setTimeout(() => {
         window.location.href = withLocalePrefix("/dashboard", locale);

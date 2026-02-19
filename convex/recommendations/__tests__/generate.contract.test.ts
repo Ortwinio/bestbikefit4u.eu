@@ -64,7 +64,7 @@ function makeCtx(params: {
     armLengthCm?: number;
   };
   bike?: { _id: string; userId: string; bikeType: string };
-  existingRecommendation?: { _id: string } | null;
+  existingRecommendation?: { _id: string; createdAt: number } | null;
 }) {
   const { session, profile, bike, existingRecommendation = null } = params;
   const sessionId = session._id;
@@ -82,7 +82,9 @@ function makeCtx(params: {
       }
       return {
         withIndex: vi.fn(() => ({
-          unique: vi.fn(async () => existingRecommendation),
+          collect: vi.fn(async () =>
+            existingRecommendation ? [existingRecommendation] : []
+          ),
         })),
       };
     }),
@@ -189,7 +191,7 @@ describe("recommendations.generate contract", () => {
         flexibilityScore: "excellent",
         coreStabilityScore: 5,
       },
-      existingRecommendation: { _id: "rec_existing" },
+      existingRecommendation: { _id: "rec_existing", createdAt: 1 },
     });
 
     const handler = (generate as unknown as { _handler: TestHandler })._handler;

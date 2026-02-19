@@ -222,6 +222,42 @@ describe("convex communication e2e", () => {
       response: "3-6",
     });
 
+    await handlerOf<
+      { sessionId: string; questionId: string; response: string },
+      string
+    >(saveResponse)(mutationCtx, {
+      sessionId,
+      questionId: "typical_ride_length",
+      response: "medium",
+    });
+
+    await handlerOf<
+      { sessionId: string; questionId: string; response: string },
+      string
+    >(saveResponse)(mutationCtx, {
+      sessionId,
+      questionId: "has_pain",
+      response: "no",
+    });
+
+    await handlerOf<
+      { sessionId: string; questionId: string; response: string },
+      string
+    >(saveResponse)(mutationCtx, {
+      sessionId,
+      questionId: "position_priority",
+      response: "balanced",
+    });
+
+    await handlerOf<
+      { sessionId: string; questionId: string; response: string },
+      string
+    >(saveResponse)(mutationCtx, {
+      sessionId,
+      questionId: "current_position_feeling",
+      response: "good",
+    });
+
     await handlerOf<{ sessionId: string }, void>(completeQuestionnaire)(
       mutationCtx,
       { sessionId }

@@ -1,5 +1,6 @@
-import { mutation } from "../_generated/server";
+import { mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
+import type { Id } from "../_generated/dataModel";
 import {
   calculateBikeFit,
   type FitInputs,
@@ -18,14 +19,20 @@ export const generate = mutation({
   handler: async (ctx, args) => {
     const { userId, session } = await requireSessionOwner(ctx, args.sessionId);
 
-    // Check if recommendation already exists
-    const existing = await ctx.db
-      .query("recommendations")
-      .withIndex("by_session", (q) => q.eq("sessionId", args.sessionId))
-      .unique();
+    const existingRecommendationId = await getExistingRecommendationId(
+      ctx,
+      args.sessionId
+    );
+    if (existingRecommendationId) {
+      return existingRecommendationId;
+    }
 
-    if (existing) {
-      return existing._id;
+    // Acquire a lightweight per-session generation lock by transitioning
+    // questionnaire_complete -> processing before heavy compute work.
+    if (session.status === "questionnaire_complete") {
+      await ctx.db.patch(args.sessionId, {
+        status: "processing",
+      });
     }
 
     // Get the profile
@@ -52,6 +59,16 @@ export const generate = mutation({
 
     // Run the calculation
     const result = calculateBikeFit(fitInputs);
+
+    // Re-check after compute to avoid duplicate inserts if another transaction
+    // won the race while this one was calculating.
+    const concurrentRecommendationId = await getExistingRecommendationId(
+      ctx,
+      args.sessionId
+    );
+    if (concurrentRecommendationId) {
+      return concurrentRecommendationId;
+    }
 
     // Generate frame size recommendations
     const frameSizeRecommendations = [
@@ -152,6 +169,25 @@ export const generate = mutation({
     return recId;
   },
 });
+
+async function getExistingRecommendationId(
+  ctx: MutationCtx,
+  sessionId: Id<"fitSessions">
+): Promise<Id<"recommendations"> | null> {
+  const existingRecommendations = await ctx.db
+    .query("recommendations")
+    .withIndex("by_session", (q) => q.eq("sessionId", sessionId))
+    .collect();
+
+  if (existingRecommendations.length === 0) {
+    return null;
+  }
+
+  const [oldestRecommendation] = [...existingRecommendations].sort(
+    (a, b) => a.createdAt - b.createdAt
+  );
+  return oldestRecommendation?._id ?? null;
+}
 
 // Helper functions
 function estimateFrameSize(stackMm: number, reachMm: number): string {

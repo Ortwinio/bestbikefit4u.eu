@@ -14,10 +14,19 @@ export const getBySession = query({
     const session = await ctx.db.get(args.sessionId);
     if (!session || session.userId !== userId) return null;
 
-    return await ctx.db
+    const recommendations = await ctx.db
       .query("recommendations")
       .withIndex("by_session", (q) => q.eq("sessionId", args.sessionId))
-      .unique();
+      .collect();
+
+    if (recommendations.length === 0) {
+      return null;
+    }
+
+    const [oldestRecommendation] = [...recommendations].sort(
+      (a, b) => a.createdAt - b.createdAt
+    );
+    return oldestRecommendation ?? null;
   },
 });
 

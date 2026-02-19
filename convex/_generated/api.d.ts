@@ -9,7 +9,9 @@
  */
 
 import type * as auth from "../auth.js";
-import type * as authBackdoor from "../authBackdoor.js";
+import type * as analytics_mutations from "../analytics/mutations.js";
+import type * as analytics_queries from "../analytics/queries.js";
+import type * as authRateLimit from "../authRateLimit.js";
 import type * as bikes_mutations from "../bikes/mutations.js";
 import type * as bikes_queries from "../bikes/queries.js";
 import type * as emails_actions from "../emails/actions.js";
@@ -47,7 +49,9 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
-  authBackdoor: typeof authBackdoor;
+  "analytics/mutations": typeof analytics_mutations;
+  "analytics/queries": typeof analytics_queries;
+  authRateLimit: typeof authRateLimit;
   "bikes/mutations": typeof bikes_mutations;
   "bikes/queries": typeof bikes_queries;
   "emails/actions": typeof emails_actions;

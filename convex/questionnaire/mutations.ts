@@ -1,10 +1,11 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
-import { getQuestionById } from "./questions";
+import { getAllQuestions, getQuestionById } from "./questions";
 import { requireSessionOwner } from "../lib/authz";
 import { validateShortString, validateTextString } from "../lib/validation";
 import {
   isValidQuestionResponse,
+  type QuestionResponseValue,
   questionResponseValueValidator,
 } from "./responseValidation";
 
@@ -107,16 +108,35 @@ export const completeQuestionnaire = mutation({
   handler: async (ctx, args) => {
     await requireSessionOwner(ctx, args.sessionId);
 
-    // Update session status
-    await ctx.db.patch(args.sessionId, {
-      status: "questionnaire_complete",
-    });
-
     // Extract pain points from responses
     const responses = await ctx.db
       .query("questionnaireResponses")
       .withIndex("by_session", (q) => q.eq("sessionId", args.sessionId))
       .collect();
+    const responseMap = new Map(
+      responses.map((response) => [response.questionId, response.response])
+    );
+    const missingRequiredQuestionIds = getAllQuestions()
+      .filter((question) => question.isRequired)
+      .filter((question) => shouldShowQuestion(question, responseMap))
+      .filter((question) => {
+        const response = responseMap.get(question.questionId);
+        return (
+          response === undefined || !isValidQuestionResponse(question, response)
+        );
+      })
+      .map((question) => question.questionId);
+
+    if (missingRequiredQuestionIds.length > 0) {
+      throw new Error(
+        `Cannot complete questionnaire. Missing required responses: ${missingRequiredQuestionIds.join(", ")}`
+      );
+    }
+
+    // Update session status only after required responses are validated.
+    await ctx.db.patch(args.sessionId, {
+      status: "questionnaire_complete",
+    });
 
     const painAreasResponse = responses.find(
       (r) => r.questionId === "pain_areas"
@@ -169,3 +189,27 @@ export const completeQuestionnaire = mutation({
     }
   },
 });
+
+function shouldShowQuestion(
+  question: ReturnType<typeof getAllQuestions>[number],
+  responseMap: Map<string, QuestionResponseValue>
+): boolean {
+  if (!question.showCondition) {
+    return true;
+  }
+
+  const dependsOnResponse = responseMap.get(
+    question.showCondition.dependsOnQuestionId
+  );
+  if (dependsOnResponse === undefined) {
+    return false;
+  }
+
+  const responseValues = Array.isArray(dependsOnResponse)
+    ? dependsOnResponse
+    : [dependsOnResponse];
+
+  return question.showCondition.requiredValues.some((requiredValue) =>
+    responseValues.includes(requiredValue)
+  );
+}

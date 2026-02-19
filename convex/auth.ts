@@ -6,30 +6,33 @@ import { BRAND } from "./lib/brand";
 // Email format validation
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const VERIFICATION_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-const VERIFICATION_TOKEN_LENGTH = 6;
-const TEST_BACKDOOR_CODE = "B1KEF1T";
-const ENABLE_TEST_BACKDOOR = true;
+const VERIFICATION_TOKEN_LENGTH = 7;
 
-// In-memory rate limiter for magic code requests
-// Tracks timestamps of recent requests per email
-const rateLimitMap = new Map<string, number[]>();
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-const RATE_LIMIT_MAX_REQUESTS = 3;
+type ActionMutationRunner = {
+  runMutation: (mutationRef: unknown, args: Record<string, unknown>) => Promise<unknown>;
+};
 
-function checkRateLimit(email: string): void {
-  const now = Date.now();
-  const key = email.toLowerCase();
-  const timestamps = rateLimitMap.get(key) ?? [];
+function normalizeEmail(email: string): string {
+  return email.trim().toLowerCase();
+}
 
-  // Remove entries outside the window
-  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+function hasMutationRunner(ctx: unknown): ctx is ActionMutationRunner {
+  return (
+    typeof ctx === "object" &&
+    ctx !== null &&
+    "runMutation" in ctx &&
+    typeof (ctx as { runMutation?: unknown }).runMutation === "function"
+  );
+}
 
-  if (recent.length >= RATE_LIMIT_MAX_REQUESTS) {
-    throw new Error("Too many verification requests. Please try again later.");
+async function checkRateLimit(email: string, ctx: unknown): Promise<void> {
+  if (!hasMutationRunner(ctx)) {
+    throw new Error("Verification rate-limit context unavailable.");
   }
 
-  recent.push(now);
-  rateLimitMap.set(key, recent);
+  await ctx.runMutation("authRateLimit:consumeEmailVerificationRequest" as any, {
+    email: normalizeEmail(email),
+  });
 }
 
 function randomIndex(maxExclusive: number): number {
@@ -55,11 +58,6 @@ function randomIndex(maxExclusive: number): number {
 }
 
 function generateVerificationToken(): string {
-  // Test backdoor code override.
-  if (ENABLE_TEST_BACKDOOR) {
-    return TEST_BACKDOOR_CODE;
-  }
-
   return Array.from(
     { length: VERIFICATION_TOKEN_LENGTH },
     () => VERIFICATION_ALPHABET[randomIndex(VERIFICATION_ALPHABET.length)]
@@ -80,12 +78,7 @@ const EmailProvider = Email({
       token,
       expires,
     }: { identifier: string; token: string; expires: Date },
-    ctx?: {
-      runMutation: (
-        path: string,
-        args: { email: string }
-      ) => Promise<unknown>;
-    }
+    ctx?: unknown
   ) {
     // Validate email format
     if (!EMAIL_REGEX.test(email)) {
@@ -93,14 +86,7 @@ const EmailProvider = Email({
     }
 
     // Check rate limit
-    checkRateLimit(email);
-
-    if (ENABLE_TEST_BACKDOOR && ctx?.runMutation) {
-      await ctx.runMutation(
-        "authBackdoor:cleanupBackdoorVerificationCodes",
-        { email }
-      );
-    }
+    await checkRateLimit(email, ctx);
 
     // For development without Resend API key, just log the token
     if (!process.env.AUTH_RESEND_KEY) {

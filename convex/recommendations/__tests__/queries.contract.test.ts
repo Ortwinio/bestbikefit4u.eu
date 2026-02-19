@@ -15,7 +15,7 @@ import { getBySession } from "../queries";
 function makeQueryResult(recommendation: unknown) {
   return {
     withIndex: vi.fn(() => ({
-      unique: vi.fn(async () => recommendation),
+      collect: vi.fn(async () => (recommendation ? [recommendation] : [])),
     })),
   };
 }
