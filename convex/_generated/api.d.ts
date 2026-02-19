@@ -8,9 +8,9 @@
  * @module
  */
 
-import type * as auth from "../auth.js";
 import type * as analytics_mutations from "../analytics/mutations.js";
 import type * as analytics_queries from "../analytics/queries.js";
+import type * as auth from "../auth.js";
 import type * as authRateLimit from "../authRateLimit.js";
 import type * as bikes_mutations from "../bikes/mutations.js";
 import type * as bikes_queries from "../bikes/queries.js";
@@ -48,9 +48,9 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  auth: typeof auth;
   "analytics/mutations": typeof analytics_mutations;
   "analytics/queries": typeof analytics_queries;
+  auth: typeof auth;
   authRateLimit: typeof authRateLimit;
   "bikes/mutations": typeof bikes_mutations;
   "bikes/queries": typeof bikes_queries;

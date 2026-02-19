@@ -25,20 +25,23 @@ const nl = {
       terms: "Voorwaarden",
       science: "Wetenschap",
       calculators: "Calculators",
+      guides: "Gidsen",
       allRightsReserved: "Alle rechten voorbehouden.",
     },
   },
   home: {
     metadata: {
-      title: `${BRAND.name} - Persoonlijke bike fitting aanbevelingen`,
+      title: `${BRAND.name} - Online bikefitting voor comfort en prestaties`,
       description:
-        "Ontvang persoonlijke bike fitting aanbevelingen op basis van je lichaamsmetingen, rijstijl en doelen. Gratis online bike fit calculator met bewezen biomechanische formules.",
-      openGraphTitle: `${BRAND.name} - Persoonlijke bike fitting aanbevelingen`,
+        "Verminder fietsklachten, verbeter je efficientie en fiets langer met persoonlijke bikefitting-aanbevelingen op basis van je metingen en doelen.",
+      openGraphTitle: `${BRAND.name} - Online bikefitting voor comfort en prestaties`,
       openGraphDescription:
-        "Ontvang persoonlijke bike fitting aanbevelingen op basis van je lichaamsmetingen. Gratis online bike fit calculator.",
+        "Minder klachten en betere prestaties met een persoonlijk bikefitting-plan.",
       keywords: [
         "bike fit",
         "bike fitting",
+        "bike fitting knieklachten",
+        "bike fitting comfort",
         "zadelhoogte calculator",
         "fietsmaat calculator",
         "fietspositie",
@@ -47,16 +50,16 @@ const nl = {
       ],
     },
     hero: {
-      title: "Optimaliseer je bike fit",
-      titleAccent: "Met precisie",
+      title: "Fiets langer.",
+      titleAccent: "Met minder klachten en meer controle.",
       description:
-        "Ontvang persoonlijke bike fitting aanbevelingen op basis van je lichaamsmetingen, rijstijl en doelen. Ons algoritme gebruikt bewezen biomechanische formules om je optimale positie te berekenen.",
-      primaryCta: "Start je gratis fit",
-      secondaryCta: "Hoe het werkt",
+        "Start je gratis bikefitting en krijg concrete afstelwaarden om comfortabeler, efficienter en met meer vertrouwen te fietsen.",
+      primaryCta: "Start gratis bikefitting",
+      secondaryCta: "Bekijk hoe het werkt",
     },
     howItWorks: {
       title: "Hoe het werkt",
-      subtitle: "Drie eenvoudige stappen naar je perfecte bike fit",
+      subtitle: "In drie eenvoudige stappen naar een concreet fit-plan",
       steps: [
         {
           title: "Vul je metingen in",
@@ -75,10 +78,42 @@ const nl = {
         },
       ],
     },
-    features: {
-      title: `Waarom kiezen voor ${BRAND.name}?`,
+    reasonsToStart: {
+      title: "Waarom nu starten met bikefitting?",
       subtitle:
-        "Professionele fit-aanbevelingen, toegankelijk voor iedere fietser",
+        "Veel fietsers wachten te lang. Kleine aanpassingen nu kunnen maanden aan klachten schelen.",
+      items: [
+        {
+          title: "Minder terugkerende pijnklachten",
+          description:
+            "Pak knie-, onderrug-, nek-, hand- en zadelklachten gericht aan met positie-aanpassingen.",
+        },
+        {
+          title: "Meer vermogen met minder verspilling",
+          description:
+            "Stem zadelhoogte, reach en cockpit beter af zodat je efficienter en stabieler trapt.",
+        },
+        {
+          title: "Meer comfort op lange ritten",
+          description:
+            "Een betere gewichtsverdeling en houding maken lange ritten rustiger en minder vermoeiend.",
+        },
+        {
+          title: "Kleinere kans op overbelasting",
+          description:
+            "Voorkom dat je maandenlang rijdt in een houding die niet past bij jouw mobiliteit en core-stabiliteit.",
+        },
+        {
+          title: "Meer controle en vertrouwen",
+          description:
+            "Een gebalanceerde positie geeft meer controle op klimmen, dalen en technisch terrein.",
+        },
+      ],
+    },
+    features: {
+      title: "Wat je krijgt in je fit-plan",
+      subtitle:
+        "Heldere aanbevelingen die je zelf kunt toepassen of met je lokale fietsenmaker",
       items: [
         {
           title: "Nauwkeurige metingen",
@@ -86,14 +121,14 @@ const nl = {
             "Voer je lichaamsmetingen in en ontvang berekeningen op basis van bewezen LeMond/Hamley-methoden.",
         },
         {
-          title: "Doelgerichte fitting",
+          title: "Doelgerichte afstelling",
           description:
-            "Of je nu comfort, prestaties of aerodynamica belangrijk vindt, wij optimaliseren je positie.",
+            "Je fit past zich aan op comfort, uithoudingsvermogen, prestaties of aerodynamica.",
         },
         {
           title: "Uitgebreide rapporten",
           description:
-            "Ontvang complete aanbevelingen voor onder andere zadelhoogte, reach en stuurpenlengte.",
+            "Je ontvangt duidelijke afstelwaarden voor zadelhoogte, reach, stuurpenlengte en meer.",
         },
         {
           title: "Voor elk type fiets",
@@ -101,24 +136,46 @@ const nl = {
             "Race, gravel, mountainbike of stadsfiets - ons algoritme past zich aan jouw discipline aan.",
         },
         {
-          title: "Oplossingen voor klachten",
+          title: "Klachtgerichte aanpassingen",
           description:
-            "Meld waar je ongemak ervaart en krijg gerichte aanpassingen om je problemen te verhelpen.",
+            "Geef aan waar je klachten ervaart en krijg gerichte aanpassingen om eerst te testen.",
         },
         {
           title: "Wetenschappelijk onderbouwd",
           description:
-            "Gebouwd op tientallen jaren bike fitting onderzoek en biomechanische principes.",
+            "Gebouwd op tientallen jaren bikefitting-onderzoek en biomechanische principes.",
+        },
+      ],
+    },
+    trustSection: {
+      title: "Geen giswerk, maar onderbouwde keuzes",
+      subtitle:
+        "Elke aanbeveling is gebaseerd op duidelijke logica en praktische grenzen",
+      items: [
+        {
+          title: "Bewezen methodiek",
+          description:
+            "Adviezen zijn gebaseerd op bekende bikefitting-formules met correcties voor jouw situatie.",
+        },
+        {
+          title: "Praktisch toepasbaar advies",
+          description:
+            "Je krijgt een prioriteitenlijst, zodat je weet wat je eerst moet aanpassen en waarom.",
+        },
+        {
+          title: "Eerlijke grenzen",
+          description:
+            "Bij complexe klachten of blessures is een fysieke fit of medische beoordeling soms nodig.",
         },
       ],
     },
     recommendationSection: {
-      title: "Uitgebreide fit-aanbevelingen",
+      title: "Je rapport bevat de afstelwaarden die echt tellen",
       description:
-        "Ons algoritme berekent alle belangrijke metingen die je nodig hebt om je positie op de fiets te optimaliseren.",
+        "Werk met concrete doelwaarden om comfortabeler, consistenter en sneller te fietsen.",
       items: [
         "Zadelhoogte met aanpassingsmarge",
-        "Zadel setback (voor/achter positie)",
+        "Zadelterugstand (voor/achter positie)",
         "Stuurdrop en reach",
         "Stuurpenlengte en -hoek",
         "Optimalisatie van cranklengte",
@@ -126,16 +183,16 @@ const nl = {
         "Doelwaarden voor frame stack en reach",
         "Aanbevolen framemaat",
       ],
-      cardTitle: "Klaar om je fit te optimaliseren?",
+      cardTitle: "Klaar om klachten te verminderen en sterker te fietsen?",
       cardDescription:
-        "Sluit je aan bij fietsers die hun comfort en prestaties hebben verbeterd met data-gedreven bike fitting.",
-      cardCta: "Start gratis",
+        "Start gratis en ontvang binnen enkele minuten persoonlijke afstelwaarden.",
+      cardCta: "Start gratis fit",
     },
     cta: {
-      title: "Klaar om beter te fietsen?",
+      title: "Start vandaag met je gratis bikefitting",
       description:
-        "Start met een gratis fit-sessie en ervaar het verschil dat een goede positie maakt.",
-      button: "Start gratis",
+        "Geen giswerk en geen algemene tips, maar afstelwaarden die passen bij jouw lichaam en doelen.",
+      button: "Start gratis fit",
     },
   },
   auth: {

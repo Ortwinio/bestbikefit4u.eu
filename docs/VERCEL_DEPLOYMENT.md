@@ -1,6 +1,6 @@
 # Vercel Deployment Guide
 
-Last updated: 2026-02-18
+Last updated: 2026-02-19
 
 This project is a Next.js frontend on Vercel with a Convex production backend.
 
@@ -62,6 +62,19 @@ Run this smoke test after deploy:
 - `GET /api/reports/[sessionId]/pdf`
 5. Verify production email sending is working (Resend key present).
 
+Recommended commands:
+
+```bash
+npx convex env list --prod
+npx convex run auth:signIn '{"provider":"resend","params":{"email":"<test-email>"}}' --prod
+```
+
+For report-email flow, use a known owner session and recipient:
+
+```bash
+npx convex run emails/actions:sendFitReport '{"sessionId":"<owner-session-id>","recipientEmail":"<owner-email>"}' --prod --identity '{"subject":"<owner-user-id>|verification"}'
+```
+
 ## 6. Quick Troubleshooting
 
 - Build fails with missing env:
@@ -70,6 +83,18 @@ Run this smoke test after deploy:
   - Update Convex `SITE_URL` to the exact production domain and redeploy Convex.
 - Emails not sent:
   - Verify Convex `AUTH_RESEND_KEY` and `AUTH_EMAIL_FROM`.
+  - Verify `AUTH_EMAIL_FROM` stays `BestBikeFit4U <noreply@notifications.bestbikefit4u.eu>`.
+  - Probe Resend directly and inspect response:
+    ```bash
+    curl -sS https://api.resend.com/emails \
+      -H "Authorization: Bearer $AUTH_RESEND_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{"from":"BestBikeFit4U <noreply@notifications.bestbikefit4u.eu>","to":["<test-email>"],"subject":"probe","html":"<p>probe</p>"}'
+    ```
+  - Pull recent production logs and match by request ID:
+    ```bash
+    npx convex logs --prod --history 200 --jsonl
+    ```
 
 ## 7. Pre-Release Gate
 

@@ -158,6 +158,12 @@ export default async function CrankLengthCalculatorPage({
           >
             Bike Fit Methods
           </Link>
+          <Link
+            href="/guides/gravel-bike-fit-guide"
+            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
+          >
+            Gravel Bike Fit Guide
+          </Link>
         </div>
       </div>
     </div>

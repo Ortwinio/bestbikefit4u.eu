@@ -24,20 +24,23 @@ const en = {
       terms: "Terms",
       science: "Science",
       calculators: "Calculators",
+      guides: "Guides",
       allRightsReserved: "All rights reserved.",
     },
   },
   home: {
     metadata: {
-      title: `${BRAND.name} - Personalized Bike Fitting Recommendations`,
+      title: `${BRAND.name} - Online Bike Fitting for Comfort and Performance`,
       description:
-        "Get personalized bike fitting recommendations based on your body measurements, riding style, and goals. Free online bike fit calculator using proven biomechanical formulas.",
-      openGraphTitle: `${BRAND.name} - Personalized Bike Fitting Recommendations`,
+        "Reduce cycling pain, improve efficiency, and ride longer with personalized bike fitting recommendations based on your measurements, goals, and riding style.",
+      openGraphTitle: `${BRAND.name} - Online Bike Fitting for Comfort and Performance`,
       openGraphDescription:
-        "Get personalized bike fitting recommendations based on your body measurements. Free online bike fit calculator.",
+        "Reduce pain and improve performance with a personalized bike fit plan.",
       keywords: [
         "bike fit",
         "bike fitting",
+        "bike fitting for knee pain",
+        "bike fitting for comfort",
         "saddle height calculator",
         "bike size calculator",
         "cycling position",
@@ -46,16 +49,16 @@ const en = {
       ],
     },
     hero: {
-      title: "Perfect Your Bike Fit",
-      titleAccent: "With Precision",
+      title: "Ride Longer.",
+      titleAccent: "Hurt Less. Perform Better.",
       description:
-        "Get personalized bike fitting recommendations based on your body measurements, riding style, and goals. Our algorithm uses proven biomechanical formulas to calculate your optimal position.",
+        "Start your free bike fit and get practical setup targets to reduce pain, improve power transfer, and ride with more confidence.",
       primaryCta: "Start Your Free Fit",
-      secondaryCta: "How It Works",
+      secondaryCta: "See How It Works",
     },
     howItWorks: {
       title: "How It Works",
-      subtitle: "Three simple steps to your perfect bike fit",
+      subtitle: "Get an actionable fit plan in three simple steps",
       steps: [
         {
           title: "Enter Your Measurements",
@@ -74,9 +77,42 @@ const en = {
         },
       ],
     },
+    reasonsToStart: {
+      title: "Why start bike fitting now?",
+      subtitle:
+        "Most riders wait until discomfort gets worse. Small changes now can prevent months of frustration.",
+      items: [
+        {
+          title: "Reduce recurring pain",
+          description:
+            "Address knee, lower-back, neck, hand numbness, and saddle-pressure complaints with focused position changes.",
+        },
+        {
+          title: "Transfer more power with less effort",
+          description:
+            "Align saddle height, reach, and cockpit setup so your pedaling is more efficient and stable.",
+        },
+        {
+          title: "Ride longer in comfort",
+          description:
+            "Improve weight distribution and posture so endurance rides feel smoother and less fatiguing.",
+        },
+        {
+          title: "Lower overuse injury risk",
+          description:
+            "Avoid riding for months in a position your mobility and core support cannot sustain.",
+        },
+        {
+          title: "Gain control and confidence",
+          description:
+            "A balanced riding position improves control on climbs, descents, and technical terrain.",
+        },
+      ],
+    },
     features: {
-      title: `Why Choose ${BRAND.name}?`,
-      subtitle: "Professional-grade fitting recommendations, accessible to everyone",
+      title: "What you get in your fit plan",
+      subtitle:
+        "Clear recommendations you can apply yourself or together with your local bike shop",
       items: [
         {
           title: "Precision Measurements",
@@ -84,14 +120,14 @@ const en = {
             "Input your body measurements and get calculations based on proven LeMond/Hamley methods.",
         },
         {
-          title: "Goal-Based Fitting",
+          title: "Goal-Based Setup",
           description:
-            "Whether you prioritize comfort, performance, or aerodynamics, we optimize your position.",
+            "Your fit adapts to comfort, endurance, performance, or aero priorities.",
         },
         {
           title: "Detailed Reports",
           description:
-            "Receive comprehensive recommendations including saddle height, reach, stem length, and more.",
+            "Get clear setup targets for saddle height, reach, stem length, and more.",
         },
         {
           title: "All Bike Types",
@@ -99,9 +135,9 @@ const en = {
             "Road, gravel, mountain, or city bikes - our algorithm adapts to your discipline.",
         },
         {
-          title: "Pain Point Solutions",
+          title: "Pain-Aware Adjustments",
           description:
-            "Report discomfort areas and get specific adjustments to address your issues.",
+            "Share your discomfort areas and receive targeted position changes to test first.",
         },
         {
           title: "Science-Based",
@@ -110,10 +146,32 @@ const en = {
         },
       ],
     },
+    trustSection: {
+      title: "Built for trust, not guesswork",
+      subtitle:
+        "Every recommendation is grounded in clear logic and practical constraints",
+      items: [
+        {
+          title: "Method-backed calculations",
+          description:
+            "Recommendations are based on established bike fitting formulas plus rider-specific corrections.",
+        },
+        {
+          title: "Practical rider outcomes",
+          description:
+            "You receive an ordered action plan, so you know what to adjust first and why.",
+        },
+        {
+          title: "Transparent limitations",
+          description:
+            "Complex pain or injury cases may require an in-person fitter or medical assessment.",
+        },
+      ],
+    },
     recommendationSection: {
-      title: "Comprehensive Fit Recommendations",
+      title: "Your report includes the numbers that matter",
       description:
-        "Our algorithm calculates all the key measurements you need to optimize your position on the bike.",
+        "Use concrete fit targets to improve comfort, consistency, and performance on every ride.",
       items: [
         "Saddle height with adjustment range",
         "Saddle setback (fore/aft position)",
@@ -124,16 +182,16 @@ const en = {
         "Frame stack and reach targets",
         "Recommended frame size",
       ],
-      cardTitle: "Ready to optimize your fit?",
+      cardTitle: "Ready to fix discomfort and ride stronger?",
       cardDescription:
-        "Join cyclists who have improved their comfort and performance with data-driven bike fitting.",
-      cardCta: "Get Started Free",
+        "Start free and get personalized setup targets in minutes.",
+      cardCta: "Start Free Fit",
     },
     cta: {
-      title: "Ready to Improve Your Ride?",
+      title: "Start your free bike fit today",
       description:
-        "Start with a free fit session and experience the difference proper positioning makes.",
-      button: "Get Started Free",
+        "No guesswork. No generic tips. Get fit targets matched to your body and riding goals.",
+      button: "Start Free Fit",
     },
   },
   auth: {

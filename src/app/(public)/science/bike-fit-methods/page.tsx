@@ -44,6 +44,8 @@ const links = [
   { href: "/science/calculation-engine", label: "Calculation Engine" },
   { href: "/science/stack-and-reach", label: "Stack and Reach Guide" },
   { href: "/calculators/crank-length", label: "Crank Length Calculator" },
+  { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
+  { href: "/guides/mountain-bike-fit-guide", label: "Mountain Bike Fit Guide" },
 ];
 
 export default function BikeFitMethodsPage() {

@@ -1,6 +1,6 @@
 # Release Readiness Checklist
 
-Last updated: 2026-02-15
+Last updated: 2026-02-19
 
 Use this checklist before promoting to production.
 
@@ -22,6 +22,8 @@ Use this checklist before promoting to production.
 - [ ] Questionnaire save and complete flow works (`/fit/[sessionId]/questionnaire`)
 - [ ] Recommendation generation and results page render (`/fit/[sessionId]/results`)
 - [ ] Email report send path works for authorized user
+- [ ] Auth code email is received with sender `BestBikeFit4U <noreply@notifications.bestbikefit4u.eu>`
+- [ ] Report email is received with sender `BestBikeFit4U <noreply@notifications.bestbikefit4u.eu>`
 
 ## Security And Access Control
 
@@ -57,7 +59,16 @@ Use this checklist before promoting to production.
 ## Vercel Deployment
 
 - [ ] Vercel production env var set: `NEXT_PUBLIC_CONVEX_URL`
-- [ ] Convex production env vars set: `SITE_URL`, `AUTH_RESEND_KEY`, `AUTH_EMAIL_FROM`
+- [ ] Convex production env vars set: `SITE_URL`, `AUTH_RESEND_KEY`, `AUTH_EMAIL_FROM=BestBikeFit4U <noreply@notifications.bestbikefit4u.eu>`
 - [ ] `npm run build:vercel` passes locally
 - [ ] Vercel project build command is `npm run build:vercel`
 - [ ] Vercel deploy runbook reviewed (`docs/VERCEL_DEPLOYMENT.md`)
+
+## Resend Operational Checks
+
+- [ ] Resend domain `notifications.bestbikefit4u.eu` is `Verified` in the correct team/workspace
+- [ ] `AUTH_RESEND_KEY` is valid and scoped to sending for the verified sender domain
+- [ ] Direct Resend API smoke send returns an `id`
+- [ ] Production `auth:signIn` send path succeeds for a test inbox
+- [ ] Production `emails/actions:sendFitReport` send path succeeds for an owner email
+- [ ] Production log lookup command works for diagnostics: `npx convex logs --prod --history 200 --jsonl`

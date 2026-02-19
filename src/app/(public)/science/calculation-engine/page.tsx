@@ -24,6 +24,8 @@ const relatedLinks = [
   { href: "/science/bike-fit-methods", label: "Bike Fit Methods Comparison" },
   { href: "/calculators/saddle-height", label: "Saddle Height Calculator" },
   { href: "/calculators/frame-size", label: "Frame Size Calculator" },
+  { href: "/guides/bike-fitting-for-knee-pain", label: "Bike Fitting for Knee Pain" },
+  { href: "/guides/triathlon-bike-fit-guide", label: "Triathlon Bike Fit Guide" },
 ];
 
 export default function CalculationEnginePage() {

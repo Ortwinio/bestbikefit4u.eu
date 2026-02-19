@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui";
+import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -8,6 +9,7 @@ import { buildLocaleAlternates } from "@/i18n/metadata";
 
 type FAQItem = { q: string; a: string };
 type FAQSection = { category: string; questions: FAQItem[] };
+type FAQLink = { href: string; label: string };
 
 type FAQCopy = {
   metadata: {
@@ -18,6 +20,9 @@ type FAQCopy = {
   title: string;
   subtitle: string;
   sections: FAQSection[];
+  guideTitle: string;
+  guideBody: string;
+  guideLinks: FAQLink[];
   ctaTitle: string;
   ctaSubtitle: string;
   contactButton: string;
@@ -29,7 +34,7 @@ const content: Record<Locale, FAQCopy> = {
     metadata: {
       title: "FAQ - BestBikeFit4U",
       description:
-        "Frequently asked questions about BestBikeFit4U. Learn about our bike fitting process, measurement accuracy, and how to get the best results.",
+        "Frequently asked questions about BestBikeFit4U. Learn how our bike fitting works, what affects accuracy, and what you get in your fit report.",
       keywords: [
         "bike fit FAQ",
         "bike fitting questions",
@@ -45,7 +50,7 @@ const content: Record<Locale, FAQCopy> = {
         questions: [
           {
             q: "How accurate is BestBikeFit4U?",
-            a: "BestBikeFit4U uses established biomechanical formulas including the LeMond/Hamley method for saddle height and KOPS for setback. Our calculations are within 5mm of what a professional fitter would recommend for most riders. Providing optional measurements (torso, arm length, shoulder width) improves accuracy further.",
+            a: "BestBikeFit4U uses established biomechanical formulas, including LeMond/Hamley for saddle height and KOPS-based logic for setback. For most riders, results are close to what a professional fitter would recommend. Adding optional measurements (torso, arm length, shoulder width) improves accuracy further.",
           },
           {
             q: "What measurements do I need?",
@@ -83,7 +88,7 @@ const content: Record<Locale, FAQCopy> = {
         questions: [
           {
             q: "What do I get in a fit report?",
-            a: "Your report includes saddle height, saddle setback, handlebar drop, reach, stem length and angle, crank length, handlebar width, cleat position, frame size recommendation, and a prioritized adjustment guide.",
+            a: "Your fit report includes saddle height, saddle setback, handlebar drop, reach, stem length and angle, crank length, handlebar width, frame size recommendation, and a prioritized adjustment guide.",
           },
           {
             q: "Can I email my results?",
@@ -109,17 +114,25 @@ const content: Record<Locale, FAQCopy> = {
         ],
       },
     ],
+    guideTitle: "Popular next-step guides",
+    guideBody:
+      "If you came here for a specific pain point or bike type, these guides are the fastest next step.",
+    guideLinks: [
+      { href: "/guides/bike-fitting-for-knee-pain", label: "Bike Fitting for Knee Pain" },
+      { href: "/guides/gravel-bike-fit-guide", label: "Gravel Bike Fit Guide" },
+      { href: "/guides/mountain-bike-fit-guide", label: "Mountain Bike Fit Guide" },
+    ],
     ctaTitle: "Still have questions?",
     ctaSubtitle: "Get in touch or start your free fit session.",
     contactButton: "Contact Us",
-    startButton: "Start Your Free Fit",
+    startButton: "Start Free Fit",
   },
   nl: {
     metadata: {
       title: "FAQ - BestBikeFit4U",
       description:
-        "Veelgestelde vragen over BestBikeFit4U. Lees meer over ons bike fitting proces, meetnauwkeurigheid en hoe je de beste resultaten krijgt.",
-      keywords: ["bike fit FAQ", "bike fitting vragen", "BestBikeFit4U hulp"],
+        "Veelgestelde vragen over BestBikeFit4U. Lees hoe onze bikefitting werkt, hoe nauwkeurig de uitkomsten zijn en wat je krijgt in je fitrapport.",
+      keywords: ["bikefitting FAQ", "bikefitting vragen", "BestBikeFit4U hulp"],
     },
     title: "Veelgestelde vragen",
     subtitle: "Alles wat je moet weten over BestBikeFit4U.",
@@ -142,7 +155,7 @@ const content: Record<Locale, FAQCopy> = {
         ],
       },
       {
-        category: "Bike fitting",
+        category: "Bikefitting",
         questions: [
           {
             q: "Welke fietstypes ondersteunt BestBikeFit4U?",
@@ -154,7 +167,7 @@ const content: Record<Locale, FAQCopy> = {
           },
           {
             q: "Hoe beinvloedt flexibiliteit mijn fit?",
-            a: "Je flexibiliteitsscore beinvloedt onder meer bar drop, zadelhoogte en reach. Minder flexibel betekent doorgaans een rechtere, comfortabelere positie.",
+            a: "Je flexibiliteitsscore beinvloedt onder meer stuurdrop, zadelhoogte en reach. Minder flexibiliteit leidt meestal tot een rechtere en comfortabelere positie.",
           },
           {
             q: "Wat als ik nu al pijnklachten heb?",
@@ -166,12 +179,12 @@ const content: Record<Locale, FAQCopy> = {
         category: "Resultaten en rapporten",
         questions: [
           {
-            q: "Wat staat er in een fit-rapport?",
-            a: "Het rapport bevat zadelhoogte, setback, bar drop, reach, stuurpenadvies, cranklengte, stuurbreedte, framemaat en een prioriteitenlijst voor aanpassingen.",
+            q: "Wat staat er in een fitrapport?",
+            a: "Je fitrapport bevat zadelhoogte, zadelterugstand, stuurdrop, reach, stuurpenadvies, cranklengte, stuurbreedte, framemaat en een prioriteitenlijst voor aanpassingen.",
           },
           {
             q: "Kan ik mijn resultaten e-mailen?",
-            a: "Ja, je kunt je fit-rapport direct vanuit de resultatenpagina naar jezelf mailen.",
+            a: "Ja, je kunt je fitrapport direct vanuit de resultatenpagina naar jezelf mailen.",
           },
           {
             q: "Is PDF-export beschikbaar?",
@@ -193,10 +206,18 @@ const content: Record<Locale, FAQCopy> = {
         ],
       },
     ],
+    guideTitle: "Populaire vervolggidsen",
+    guideBody:
+      "Zoek je hulp bij een specifieke klacht of discipline? Start met een van deze gidsen.",
+    guideLinks: [
+      { href: "/guides/bike-fitting-for-knee-pain", label: "Bikefitting bij kniepijn" },
+      { href: "/guides/gravel-bike-fit-guide", label: "Gravel fit gids" },
+      { href: "/guides/mountain-bike-fit-guide", label: "MTB fit gids" },
+    ],
     ctaTitle: "Nog vragen?",
     ctaSubtitle: "Neem contact op of start direct je gratis fit-sessie.",
     contactButton: "Neem contact op",
-    startButton: "Start je gratis fit",
+    startButton: "Start gratis fit",
   },
 };
 
@@ -220,6 +241,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function FAQPage() {
   const locale = await getRequestLocale();
   const page = content[locale];
+  const pagePath = withLocalePrefix("/faq", locale);
 
   return (
     <div className="py-16">
@@ -243,6 +265,22 @@ export default async function FAQPage() {
           ))}
         </div>
 
+        <section className="mt-14 rounded-xl border border-gray-200 bg-gray-50 p-6">
+          <h2 className="text-2xl font-semibold text-gray-900">{page.guideTitle}</h2>
+          <p className="mt-2 text-gray-600">{page.guideBody}</p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {page.guideLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={withLocalePrefix(link.href, locale)}
+                className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </section>
+
         <div className="mt-16 rounded-2xl bg-blue-50 p-8 text-center">
           <h2 className="text-2xl font-semibold text-gray-900">{page.ctaTitle}</h2>
           <p className="mt-2 text-gray-600">{page.ctaSubtitle}</p>
@@ -250,9 +288,15 @@ export default async function FAQPage() {
             <Link href={withLocalePrefix("/contact", locale)}>
               <Button variant="outline">{page.contactButton}</Button>
             </Link>
-            <Link href={withLocalePrefix("/login", locale)}>
+            <TrackedCtaLink
+              href={withLocalePrefix("/login", locale)}
+              locale={locale}
+              pagePath={pagePath}
+              section="faq_final_cta"
+              ctaLabel={page.startButton}
+            >
               <Button>{page.startButton}</Button>
-            </Link>
+            </TrackedCtaLink>
           </div>
         </div>
       </div>

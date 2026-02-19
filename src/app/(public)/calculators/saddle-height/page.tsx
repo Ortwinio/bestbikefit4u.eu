@@ -245,6 +245,12 @@ export default async function SaddleHeightCalculatorPage({
           >
             Calculation Engine Notes
           </Link>
+          <Link
+            href="/guides/bike-fitting-for-knee-pain"
+            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
+          >
+            Bike Fitting for Knee Pain
+          </Link>
         </div>
       </div>
     </div>

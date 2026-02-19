@@ -6,6 +6,7 @@ import { BRAND } from "@/config/brand";
 import { getRequestLocale } from "@/i18n/request";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(BRAND.siteUrl),
   title: BRAND.name,
   description: "AI-powered bike fitting application",
 };

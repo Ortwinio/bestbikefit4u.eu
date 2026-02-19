@@ -196,6 +196,12 @@ export default async function FrameSizeCalculatorPage({
           >
             Stack and Reach Guide
           </Link>
+          <Link
+            href="/guides/road-bike-fit-guide"
+            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
+          >
+            Road Bike Fit Guide
+          </Link>
         </div>
       </div>
     </div>

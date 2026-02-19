@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useMutation } from "convex/react";
+import { makeFunctionReference } from "convex/server";
 import {
   Button,
   Input,
@@ -17,6 +18,23 @@ import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
 import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
 
 type AuthStep = "email" | "code" | "success";
+type LoginEventType = "login_code_requested" | "login_verified";
+
+type LogMarketingEventArgs = {
+  eventType: LoginEventType;
+  locale: Locale;
+  pagePath: string;
+  section: string;
+  sourceTag?: string;
+};
+
+type LogMarketingEventFn = (args: LogMarketingEventArgs) => Promise<unknown>;
+
+const logMarketingEventRef = makeFunctionReference<
+  "mutation",
+  LogMarketingEventArgs,
+  unknown
+>("analytics/mutations:logMarketingEvent");
 
 type LoginCopy = {
   successTitle: string;
@@ -110,9 +128,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const { signIn } = useAuthActions();
   const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth();
-  const logMarketingEvent = useMutation(
-    "analytics/mutations:logMarketingEvent" as any
-  );
+  const logMarketingEvent = useMutation(logMarketingEventRef) as LogMarketingEventFn;
 
   const locale = useMemo(
     () => extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE,

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui";
+import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 
 type SectionCard = { title: string; text: string };
+type SectionLink = { href: string; label: string };
 
 type AboutCopy = {
   metadata: {
@@ -36,6 +38,9 @@ type AboutCopy = {
   considerTitle: string;
   considerBody: string;
   considerBullets: string[];
+  guideTitle: string;
+  guideBody: string;
+  guideLinks: SectionLink[];
   ctaTitle: string;
   ctaBody: string;
   ctaButton: string;
@@ -44,9 +49,9 @@ type AboutCopy = {
 const content: Record<Locale, AboutCopy> = {
   en: {
     metadata: {
-      title: "How BestBikeFit4U Works - Bike Fitting Methodology",
+      title: "How BestBikeFit4U Works | Bike Fitting Methodology",
       description:
-        "Learn about the science behind BestBikeFit4U. We use proven biomechanical formulas including the LeMond/Hamley method to calculate your optimal bike position.",
+        "Learn how BestBikeFit4U calculates your fit report using proven bike fitting methods, rider-specific inputs, and practical adjustment priorities.",
       keywords: [
         "bike fitting methodology",
         "LeMond method",
@@ -56,7 +61,7 @@ const content: Record<Locale, AboutCopy> = {
       ],
     },
     title: "How BestBikeFit4U Works",
-    subtitle: "Professional bike fitting methodology, accessible to everyone.",
+    subtitle: "A professional bike fitting method, practical for every rider.",
     scienceTitle: "The Science Behind Your Fit",
     scienceBody:
       "BestBikeFit4U uses proven biomechanical formulas developed over decades of professional bike fitting research. Our algorithm combines established methods to provide recommendations tailored to your body, riding style, and goals.",
@@ -124,28 +129,36 @@ const content: Record<Locale, AboutCopy> = {
       "Pain points",
       "Injury history",
     ],
+    guideTitle: "Continue with practical fit guides",
+    guideBody:
+      "Use targeted guides for pain points and riding disciplines, then apply your personalized report.",
+    guideLinks: [
+      { href: "/guides/bike-fitting-for-knee-pain", label: "Bike Fitting for Knee Pain" },
+      { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
+      { href: "/guides/triathlon-bike-fit-guide", label: "Triathlon Bike Fit Guide" },
+    ],
     ctaTitle: "Ready to Find Your Perfect Fit?",
     ctaBody:
-      "Start a free fit session and get personalized recommendations based on proven bike fitting science.",
-    ctaButton: "Start Your Free Fit",
+      "Start a free fit session and receive a personalized fit report based on proven bike fitting methods.",
+    ctaButton: "Start Free Fit",
   },
   nl: {
     metadata: {
-      title: "Hoe BestBikeFit4U Werkt - Bike Fitting Methodiek",
+      title: "Hoe BestBikeFit4U werkt | Bikefitting methodiek",
       description:
-        "Lees meer over de wetenschap achter BestBikeFit4U. We gebruiken bewezen biomechanische formules, waaronder LeMond/Hamley, om je ideale fietspositie te berekenen.",
+        "Lees hoe BestBikeFit4U je fitrapport berekent met bewezen bikefitting-methodes, persoonlijke input en praktische afstelprioriteiten.",
       keywords: [
-        "bike fitting methodiek",
+        "bikefitting methodiek",
         "LeMond methode",
         "zadelhoogte formule",
-        "bike fit wetenschap",
+        "fietspositie",
       ],
     },
     title: "Hoe BestBikeFit4U werkt",
-    subtitle: "Professionele bike fitting methodiek, toegankelijk voor iedereen.",
+    subtitle: "Een professionele bikefitting-methodiek, praktisch voor elke fietser.",
     scienceTitle: "De wetenschap achter je fit",
     scienceBody:
-      "BestBikeFit4U gebruikt bewezen biomechanische formules uit jarenlange bike fitting praktijk. Het algoritme combineert methodes tot aanbevelingen die passen bij jouw lichaam, rijstijl en doelen.",
+      "BestBikeFit4U gebruikt bewezen biomechanische formules uit jarenlange bikefitting-praktijk. Het algoritme combineert meerdere methodes tot aanbevelingen die passen bij jouw lichaam, rijstijl en doelen.",
     saddleTitle: "Berekening van zadelhoogte",
     saddleBody1:
       "Als basis gebruiken we de LeMond/Hamley-methode. Deze formule gebruikt je binnenbeenlengte en een fietsafhankelijke factor om zadelhoogte te schatten.",
@@ -154,11 +167,11 @@ const content: Record<Locale, AboutCopy> = {
       "Flexibiliteit en mobiliteit",
       "Core-stabiliteit en houdingscontrole",
       "Fietstype en terrein",
-      "Doelstelling: comfort versus prestatie",
+      "Doelstelling: comfort versus prestaties",
     ],
     reachTitle: "Reach- en stackdoelen",
     reachBody1:
-      "Reach wordt bepaald met torso- en armverhoudingen voor een gebalanceerde cockpit. Stack en reach maken vergelijking tussen framemerken mogelijk.",
+      "Reach wordt bepaald met romp- en armverhoudingen voor een gebalanceerde cockpit. Met stack en reach kun je framemerken goed vergelijken.",
     reachBody2: "Het algoritme past aan op rijstijl:",
     reachBullets: [
       "Comfort: hogere stack en kortere reach",
@@ -181,7 +194,7 @@ const content: Record<Locale, AboutCopy> = {
     componentCards: [
       {
         title: "Cranklengte",
-        text: "Gebaseerd op binnenbeenlengte en bewegingsvrijheid voor efficient trappen en minder gewrichtsbelasting.",
+        text: "Gebaseerd op binnenbeenlengte en bewegingsvrijheid voor efficienter trappen en minder gewrichtsbelasting.",
       },
       {
         title: "Stuurbreedte",
@@ -192,7 +205,7 @@ const content: Record<Locale, AboutCopy> = {
         text: "Berekend om je doel-reach te halen met voorspelbaar stuurgedrag.",
       },
       {
-        title: "Zadel setback",
+        title: "Zadelterugstand",
         text: "Aangepast voor krachtoverdracht, bekkenstabiliteit en comfort op lange ritten.",
       },
     ],
@@ -210,10 +223,18 @@ const content: Record<Locale, AboutCopy> = {
       "Pijnpunten",
       "Blessuregeschiedenis",
     ],
+    guideTitle: "Praktische vervolggidsen",
+    guideBody:
+      "Bekijk gerichte gidsen voor klachten en disciplines en vertaal dat naar je eigen fitrapport.",
+    guideLinks: [
+      { href: "/guides/bike-fitting-for-knee-pain", label: "Bikefitting bij kniepijn" },
+      { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
+      { href: "/guides/triathlon-bike-fit-guide", label: "Triathlon fit gids" },
+    ],
     ctaTitle: "Klaar om je perfecte fit te vinden?",
     ctaBody:
-      "Start een gratis fit-sessie en ontvang persoonlijke aanbevelingen op basis van bewezen bike fitting wetenschap.",
-    ctaButton: "Start je gratis fit",
+      "Start een gratis fitsessie en ontvang een persoonlijk fitrapport op basis van bewezen bikefitting-methodes.",
+    ctaButton: "Start gratis fit",
   },
 };
 
@@ -237,6 +258,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AboutPage() {
   const locale = await getRequestLocale();
   const page = content[locale];
+  const pagePath = withLocalePrefix("/about", locale);
 
   return (
     <div className="py-16">
@@ -315,14 +337,36 @@ export default async function AboutPage() {
             </div>
           </section>
 
+          <section className="rounded-lg border border-gray-200 bg-gray-50 p-6">
+            <h2 className="text-2xl font-semibold text-gray-900">{page.guideTitle}</h2>
+            <p className="mt-3 text-gray-600">{page.guideBody}</p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              {page.guideLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={withLocalePrefix(link.href, locale)}
+                  className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </section>
+
           <section className="bg-blue-600 -mx-4 px-4 py-12 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 rounded-lg text-center">
             <h2 className="text-2xl font-bold text-white">{page.ctaTitle}</h2>
             <p className="mt-4 text-blue-100 max-w-2xl mx-auto">{page.ctaBody}</p>
-            <Link href={withLocalePrefix("/login", locale)}>
+            <TrackedCtaLink
+              href={withLocalePrefix("/login", locale)}
+              locale={locale}
+              pagePath={pagePath}
+              section="about_final_cta"
+              ctaLabel={page.ctaButton}
+            >
               <Button size="lg" className="mt-8 bg-white text-blue-600 hover:bg-blue-50">
                 {page.ctaButton}
               </Button>
-            </Link>
+            </TrackedCtaLink>
           </section>
         </div>
       </div>

@@ -377,4 +377,24 @@ export default defineSchema({
   })
     .index("by_category", ["category"])
     .index("by_question_id", ["questionId"]),
+
+  // Public-site marketing and conversion events (SEO/content iteration)
+  marketingEvents: defineTable({
+    eventType: v.union(
+      v.literal("cta_click"),
+      v.literal("login_code_requested"),
+      v.literal("login_verified")
+    ),
+    locale: v.union(v.literal("en"), v.literal("nl")),
+    pagePath: v.string(),
+    section: v.optional(v.string()),
+    ctaLabel: v.optional(v.string()),
+    ctaTargetPath: v.optional(v.string()),
+    sourceTag: v.optional(v.string()),
+    occurredAt: v.number(),
+  })
+    .index("by_occurred_at", ["occurredAt"])
+    .index("by_event_type_occurred_at", ["eventType", "occurredAt"])
+    .index("by_locale_occurred_at", ["locale", "occurredAt"])
+    .index("by_page_occurred_at", ["pagePath", "occurredAt"]),
 });

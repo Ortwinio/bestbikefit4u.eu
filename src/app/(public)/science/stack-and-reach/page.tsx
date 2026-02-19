@@ -23,6 +23,8 @@ const links = [
   { href: "/science/calculation-engine", label: "Calculation Engine" },
   { href: "/science/bike-fit-methods", label: "Fit Methods Comparison" },
   { href: "/calculators/frame-size", label: "Frame Size Calculator" },
+  { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
+  { href: "/guides/gravel-bike-fit-guide", label: "Gravel Bike Fit Guide" },
 ];
 
 export default function StackAndReachPage() {

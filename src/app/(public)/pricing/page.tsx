@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { Button } from "@/components/ui";
 import { Check } from "lucide-react";
 import type { Metadata } from "next";
+import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -268,6 +268,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PricingPage() {
   const locale = await getRequestLocale();
   const page = content[locale];
+  const pagePath = withLocalePrefix("/pricing", locale);
 
   return (
     <div className="py-16">
@@ -319,14 +320,21 @@ export default async function PricingPage() {
                 ))}
               </ul>
               <div className="mt-8">
-                <Link href={withLocalePrefix("/login", locale)} className="block">
+                <TrackedCtaLink
+                  href={withLocalePrefix("/login", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section={`pricing_tier_${tier.name.toLowerCase()}`}
+                  ctaLabel={tier.cta}
+                  className="block"
+                >
                   <Button
                     className={`w-full ${tier.highlighted ? "bg-white text-blue-600 hover:bg-blue-50" : ""}`}
                     variant={tier.highlighted ? "secondary" : "primary"}
                   >
                     {tier.cta}
                   </Button>
-                </Link>
+                </TrackedCtaLink>
               </div>
             </div>
           ))}
@@ -379,11 +387,17 @@ export default async function PricingPage() {
         <div className="mt-20 text-center">
           <h2 className="text-2xl font-bold text-gray-900">{page.ctaTitle}</h2>
           <p className="mt-4 text-gray-600">{page.ctaSubtitle}</p>
-          <Link href={withLocalePrefix("/login", locale)}>
+          <TrackedCtaLink
+            href={withLocalePrefix("/login", locale)}
+            locale={locale}
+            pagePath={pagePath}
+            section="pricing_final_cta"
+            ctaLabel={page.ctaButton}
+          >
             <Button size="lg" className="mt-8">
               {page.ctaButton}
             </Button>
-          </Link>
+          </TrackedCtaLink>
         </div>
       </div>
     </div>

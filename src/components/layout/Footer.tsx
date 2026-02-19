@@ -116,6 +116,14 @@ export function Footer({ locale, labels }: FooterProps) {
                   {f.calculators}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href={withLocalePrefix("/guides", locale)}
+                  className="text-sm text-gray-600 hover:text-gray-900"
+                >
+                  {f.guides}
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
