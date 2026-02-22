@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useMutation } from "convex/react";
 import { makeFunctionReference } from "convex/server";
 import type { Locale } from "@/i18n/config";
+import { canTrackMarketing } from "@/lib/cookieConsent";
 
 type TrackedCtaLinkProps = {
   href: string;
@@ -67,6 +68,10 @@ export function TrackedCtaLink({
   const trackedHref = withSourceTagForLogin(href, sourceTag);
 
   const handleClick = () => {
+    if (!canTrackMarketing()) {
+      return;
+    }
+
     void logMarketingEvent({
       eventType: "cta_click",
       locale,

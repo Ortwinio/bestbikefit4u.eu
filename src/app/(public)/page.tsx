@@ -93,14 +93,18 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <section className="bg-gradient-to-b from-blue-50 to-white py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section
+        className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-24"
+        style={{ backgroundImage: "url('/bestbikefit4u-home.gif')" }}
+      >
+        <div className="absolute inset-0 bg-slate-950/45" aria-hidden="true" />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
               {home.hero.title}
-              <span className="block text-blue-600">{home.hero.titleAccent}</span>
+              <span className="block text-blue-200">{home.hero.titleAccent}</span>
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-blue-50">
               {home.hero.description}
             </p>
             <div className="mt-10 flex justify-center gap-4">
@@ -114,7 +118,11 @@ export default async function HomePage() {
                 <Button size="lg">{home.hero.primaryCta}</Button>
               </TrackedCtaLink>
               <Link href={withLocalePrefix("/about", locale)}>
-                <Button variant="outline" size="lg">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-white bg-white/10 text-white hover:bg-white/20"
+                >
                   {home.hero.secondaryCta}
                 </Button>
               </Link>

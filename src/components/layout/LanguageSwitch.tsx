@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { Locale } from "@/i18n/config";
+import { extractLocaleFromPathname } from "@/i18n/navigation";
 import { buildLocaleSwitchHref } from "@/i18n/switchHref";
 import { cn } from "@/utils/cn";
 
@@ -17,6 +17,7 @@ type LanguageSwitchProps = {
 
 export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
   const pathname = usePathname() ?? "/";
+  const activeLocale = extractLocaleFromPathname(pathname) ?? locale;
   const searchParams = useSearchParams();
   const queryString = searchParams?.toString() ?? "";
 
@@ -39,32 +40,32 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
       aria-label={labels.language}
       className="flex items-center rounded-lg border border-gray-200 bg-gray-50 p-1"
     >
-      <Link
+      <a
         href={enHref}
         aria-label={labels.english}
-        aria-current={locale === "en" ? "page" : undefined}
+        aria-current={activeLocale === "en" ? "page" : undefined}
         className={cn(
           sharedClasses,
-          locale === "en"
+          activeLocale === "en"
             ? "bg-white text-blue-700 shadow-sm"
             : "text-gray-600 hover:text-gray-900"
         )}
       >
         EN
-      </Link>
-      <Link
+      </a>
+      <a
         href={nlHref}
         aria-label={labels.dutch}
-        aria-current={locale === "nl" ? "page" : undefined}
+        aria-current={activeLocale === "nl" ? "page" : undefined}
         className={cn(
           sharedClasses,
-          locale === "nl"
+          activeLocale === "nl"
             ? "bg-white text-blue-700 shadow-sm"
             : "text-gray-600 hover:text-gray-900"
         )}
       >
         NL
-      </Link>
+      </a>
     </nav>
   );
 }

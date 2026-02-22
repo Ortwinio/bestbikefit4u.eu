@@ -75,7 +75,7 @@ const content: Record<Locale, PrivacyCopy> = {
       },
       {
         title: "5. Cookies",
-        body: "We use essential cookies for authentication, session management, and language preference. We do not use advertising trackers.",
+        body: "We use essential cookies for authentication, session management, and language preference. Optional analytics cookies are only used after you grant consent. We do not use advertising trackers.",
       },
       {
         title: "6. Your Rights",
@@ -153,7 +153,7 @@ const content: Record<Locale, PrivacyCopy> = {
       },
       {
         title: "5. Cookies",
-        body: "We gebruiken alleen essentiële cookies voor authenticatie, sessiebeheer en taalvoorkeur. We gebruiken geen advertentietrackers.",
+        body: "We gebruiken essentiële cookies voor authenticatie, sessiebeheer en taalvoorkeur. Optionele analytics-cookies gebruiken we alleen na jouw toestemming. We gebruiken geen advertentietrackers.",
       },
       {
         title: "6. Jouw rechten",

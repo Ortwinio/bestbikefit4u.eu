@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { useMutation } from "convex/react";
 import { makeFunctionReference } from "convex/server";
 import type { Locale } from "@/i18n/config";
+import { canTrackMarketing } from "@/lib/cookieConsent";
 
 export type MarketingEventType =
   | "cta_click"
@@ -43,6 +44,10 @@ export function useMarketingEventLogger() {
   const logMarketingEvent = useMutation(logMarketingEventRef) as LogMarketingEventFn;
 
   return useCallback((args: LogMarketingEventArgs) => {
+    if (!canTrackMarketing()) {
+      return;
+    }
+
     void logMarketingEvent(args);
   }, [logMarketingEvent]);
 }
