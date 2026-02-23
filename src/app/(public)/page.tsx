@@ -4,11 +4,16 @@ import { Ruler, Target, FileText, Bike, Activity, Shield } from "lucide-react";
 import type { Metadata } from "next";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
+import { QuotesCarousel } from "@/components/home/QuotesCarousel";
 import { getDictionary } from "@/i18n/getDictionary";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { BRAND } from "@/config/brand";
+import {
+  HOME_QUOTES_DISPLAY_COUNT,
+  selectRandomHomeQuotesForLocale,
+} from "@/content/homeQuotes";
 
 const featureIcons = [Ruler, Target, FileText, Bike, Activity, Shield];
 const reasonsIcons = [Activity, Target, Bike, Shield, FileText];
@@ -80,6 +85,10 @@ export default async function HomePage() {
           { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
           { href: "/guides/gravel-bike-fit-guide", label: "Gravel Bike Fit Guide" },
         ];
+  const randomHomeQuotes = selectRandomHomeQuotesForLocale(
+    locale,
+    HOME_QUOTES_DISPLAY_COUNT
+  );
 
   return (
     <div>
@@ -130,6 +139,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      <QuotesCarousel locale={locale} quotes={randomHomeQuotes} />
 
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
