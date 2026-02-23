@@ -5,7 +5,7 @@ import {
   LOCALE_HEADER_NAME,
   type Locale,
 } from "@/i18n/config";
-import { isProtectedDashboardPath } from "@/i18n/navigation";
+import { isProtectedAppPath } from "@/i18n/navigation";
 import { decideProxyAction } from "@/i18n/proxyDecision";
 
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
@@ -30,7 +30,7 @@ function redirectToPath(request: NextRequest, pathname: string): NextResponse {
 const convexAuthProxy = convexAuthNextjsMiddleware(
   async (request, { convexAuth }) => {
     const { pathname } = request.nextUrl;
-    const isAuthenticated = isProtectedDashboardPath(pathname)
+    const isAuthenticated = isProtectedAppPath(pathname)
       ? await convexAuth.isAuthenticated()
       : true;
     const decision = decideProxyAction({

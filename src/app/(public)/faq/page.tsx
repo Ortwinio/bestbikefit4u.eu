@@ -7,19 +7,21 @@ import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 
-type FAQItem = { q: string; a: string };
-type FAQSection = { category: string; questions: FAQItem[] };
+type RawFAQItem = { q: string; a: string };
+type RawFAQSection = { category: string; questions: RawFAQItem[] };
+type FAQItem = { id: string; question: string; answer: string };
+type FAQSection = { id: string; title: string; items: FAQItem[] };
 type FAQLink = { href: string; label: string };
 
-type FAQCopy = {
+type RawFAQCopy = {
   metadata: {
     title: string;
     description: string;
     keywords: string[];
   };
   title: string;
-  subtitle: string;
-  sections: FAQSection[];
+  intro: string;
+  sections: RawFAQSection[];
   guideTitle: string;
   guideBody: string;
   guideLinks: FAQLink[];
@@ -29,21 +31,82 @@ type FAQCopy = {
   startButton: string;
 };
 
-const content: Record<Locale, FAQCopy> = {
+type FAQCopy = Omit<RawFAQCopy, "sections"> & {
+  sections: FAQSection[];
+};
+
+type FAQJsonLd = {
+  "@context": "https://schema.org";
+  "@type": "FAQPage";
+  mainEntity: Array<{
+    "@type": "Question";
+    name: string;
+    acceptedAnswer: {
+      "@type": "Answer";
+      text: string;
+    };
+  }>;
+};
+
+function toId(input: string): string {
+  return input
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function normalizeFAQCopy(raw: RawFAQCopy): FAQCopy {
+  return {
+    ...raw,
+    sections: raw.sections.map((section) => {
+      const sectionId = toId(section.category);
+
+      return {
+        id: sectionId,
+        title: section.category,
+        items: section.questions.map((faq, index) => ({
+          id: `${sectionId}-${index + 1}`,
+          question: faq.q,
+          answer: faq.a,
+        })),
+      };
+    }),
+  };
+}
+
+function buildFaqJsonLd(sections: FAQSection[]): FAQJsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: sections.flatMap((section) =>
+      section.items.map((item) => ({
+        "@type": "Question" as const,
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer" as const,
+          text: item.answer,
+        },
+      }))
+    ),
+  };
+}
+
+const contentRaw: Record<Locale, RawFAQCopy> = {
   en: {
     metadata: {
-      title: "FAQ - BestBikeFit4U",
+      title: "BestBikeFit4U FAQ | Online Bike Fitting, Saddle Height, Frame Size & Pain Fixes",
       description:
-        "Frequently asked questions about BestBikeFit4U. Learn how our bike fitting works, what affects accuracy, and what you get in your fit report.",
+        "Answers about BestBikeFit4U online bike fitting: measurements, saddle height, setback, reach & drop, stack & reach, MTB/gravel/TT setups, pain troubleshooting, plans, exports, and safety guardrails.",
       keywords: [
-        "bike fit FAQ",
-        "bike fitting questions",
-        "BestBikeFit4U help",
-        "cycling fit accuracy",
+        "online bike fitting FAQ",
+        "saddle height",
+        "frame size",
+        "reach and drop",
+        "stack and reach",
       ],
     },
     title: "Frequently Asked Questions",
-    subtitle: "Everything you need to know about BestBikeFit4U.",
+    intro: "Everything you need to know about BestBikeFit4U.",
     sections: [
       {
         category: "Getting Started",
@@ -129,13 +192,19 @@ const content: Record<Locale, FAQCopy> = {
   },
   nl: {
     metadata: {
-      title: "FAQ - BestBikeFit4U",
+      title: "BestBikeFit4U FAQ | Online bikefitting, zadelhoogte, framemaat & klachten oplossen",
       description:
-        "Veelgestelde vragen over BestBikeFit4U. Lees hoe onze bikefitting werkt, hoe nauwkeurig de uitkomsten zijn en wat je krijgt in je fitrapport.",
-      keywords: ["bikefitting FAQ", "bikefitting vragen", "BestBikeFit4U hulp"],
+        "Antwoorden over BestBikeFit4U online bikefitting: metingen, zadelhoogte, zadelterugstand, reach & drop, stack & reach, MTB/gravel/TT, klachten, abonnementen, exports en veiligheidsregels.",
+      keywords: [
+        "online bikefitting FAQ",
+        "zadelhoogte",
+        "framemaat",
+        "reach en drop",
+        "stack en reach",
+      ],
     },
     title: "Veelgestelde vragen",
-    subtitle: "Alles wat je moet weten over BestBikeFit4U.",
+    intro: "Alles wat je moet weten over BestBikeFit4U.",
     sections: [
       {
         category: "Aan de slag",
@@ -221,6 +290,11 @@ const content: Record<Locale, FAQCopy> = {
   },
 };
 
+const content: Record<Locale, FAQCopy> = {
+  en: normalizeFAQCopy(contentRaw.en),
+  nl: normalizeFAQCopy(contentRaw.nl),
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const page = content[locale];
@@ -242,25 +316,40 @@ export default async function FAQPage() {
   const locale = await getRequestLocale();
   const page = content[locale];
   const pagePath = withLocalePrefix("/faq", locale);
+  const faqJsonLd = buildFaqJsonLd(page.sections);
 
   return (
     <div className="py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-gray-900">{page.title}</h1>
-        <p className="mt-4 text-xl text-gray-600">{page.subtitle}</p>
+        <p className="mt-4 text-xl text-gray-600">{page.intro}</p>
 
         <div className="mt-12 space-y-12">
           {page.sections.map((section) => (
-            <section key={section.category}>
-              <h2 className="text-2xl font-semibold text-gray-900">{section.category}</h2>
-              <dl className="mt-6 space-y-6">
-                {section.questions.map((faq) => (
-                  <div key={faq.q} className="rounded-lg border border-gray-200 p-6">
-                    <dt className="text-lg font-medium text-gray-900">{faq.q}</dt>
-                    <dd className="mt-2 text-gray-600">{faq.a}</dd>
-                  </div>
+            <section key={section.id} aria-labelledby={`${section.id}-title`}>
+              <h2
+                id={`${section.id}-title`}
+                className="text-2xl font-semibold text-gray-900"
+              >
+                {section.title}
+              </h2>
+              <div className="mt-6 space-y-4">
+                {section.items.map((item) => (
+                  <details
+                    key={item.id}
+                    className="group rounded-lg border border-gray-200 bg-white p-5"
+                  >
+                    <summary className="cursor-pointer list-none text-lg text-gray-900 marker:hidden">
+                      <strong>{item.question}</strong>
+                    </summary>
+                    <p className="mt-3 leading-relaxed text-gray-600">{item.answer}</p>
+                  </details>
                 ))}
-              </dl>
+              </div>
             </section>
           ))}
         </div>

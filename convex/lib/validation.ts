@@ -26,3 +26,22 @@ export function validateShortString(value: string, fieldName: string): void {
 export function validateTextString(value: string, fieldName: string): void {
   validateStringLength(value, fieldName, MAX_TEXT_STRING);
 }
+
+export function validateFiniteNumber(value: number, fieldName: string): void {
+  if (!Number.isFinite(value)) {
+    throw new Error(`${fieldName} must be a finite number`);
+  }
+}
+
+export function validateNumberRange(
+  value: number,
+  fieldName: string,
+  min: number,
+  max: number
+): void {
+  validateFiniteNumber(value, fieldName);
+
+  if (value < min || value > max) {
+    throw new Error(`${fieldName} must be between ${min} and ${max}`);
+  }
+}

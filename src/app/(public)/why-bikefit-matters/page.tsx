@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
-import { HOME_QUOTES } from "@/content/homeQuotes";
+import { HOME_QUOTES_BY_LOCALE } from "@/content/homeQuotes";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
@@ -118,6 +118,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function WhyBikeFitMattersPage() {
   const locale = await getRequestLocale();
   const pagePath = withLocalePrefix("/why-bikefit-matters", locale);
+  const quotes = HOME_QUOTES_BY_LOCALE[locale];
 
   return (
     <div className="py-16">
@@ -146,14 +147,16 @@ export default async function WhyBikeFitMattersPage() {
             These are typical outcomes riders describe after getting their position
             dialed in:
           </p>
-          <div className="mt-6 space-y-3">
-            {HOME_QUOTES.map((quote) => (
-              <blockquote
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {quotes.map((quote) => (
+              <article
                 key={quote}
-                className="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm font-medium italic leading-relaxed text-blue-800"
+                className="rounded-xl border border-gray-200 bg-gray-50 p-5 shadow-sm"
               >
-                &ldquo;{quote}&rdquo;
-              </blockquote>
+                <blockquote className="text-base font-bold italic leading-relaxed text-blue-700">
+                  &ldquo;{quote}&rdquo;
+                </blockquote>
+              </article>
             ))}
           </div>
           <p className="mt-6 text-gray-600">

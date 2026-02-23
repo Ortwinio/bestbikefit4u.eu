@@ -11,6 +11,7 @@
     "build:vercel": "node scripts/check-vercel-env.mjs && next build",
     "start": "next start",
     "vercel:preflight": "node scripts/check-vercel-env.mjs",
+    "seo:validate-sitemaps": "node scripts/seo/validate-sitemaps.mjs",
     "lint": "npm-run-all lint:eslint lint:runtime-boundaries lint:tooltips",
     "lint:eslint": "eslint",
     "lint:runtime-boundaries": "node scripts/check-convex-runtime-boundaries.mjs",

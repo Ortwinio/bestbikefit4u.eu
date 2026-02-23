@@ -1,5 +1,9 @@
 import type { MetadataRoute } from "next";
 import { BRAND } from "@/config/brand";
+import {
+  ROBOTS_DISALLOW_PATHS,
+  SITEMAP_INDEX_PATH,
+} from "@/lib/seo/sitemap/config";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,18 +11,10 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/api/",
-          "/trpc/",
-          "/dashboard",
-          "/en/dashboard",
-          "/nl/dashboard",
-          "/en/login",
-          "/nl/login",
-        ],
+        disallow: [...ROBOTS_DISALLOW_PATHS],
       },
     ],
-    sitemap: `${BRAND.siteUrl}/sitemap.xml`,
+    sitemap: `${BRAND.siteUrl}${SITEMAP_INDEX_PATH}`,
     host: BRAND.host,
   };
 }

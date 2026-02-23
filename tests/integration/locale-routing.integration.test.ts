@@ -63,6 +63,32 @@ describe("locale routing integration", () => {
     });
   });
 
+  it("redirects unauthenticated protected app routes to localized login", () => {
+    const fitDecision = decideProxyAction({
+      pathname: "/nl/fit",
+      cookieLocale: "nl",
+      acceptLanguageHeader: null,
+      isAuthenticated: false,
+    });
+    expect(fitDecision).toEqual({
+      type: "auth_redirect",
+      pathname: "/nl/login",
+      locale: "nl",
+    });
+
+    const profileDecision = decideProxyAction({
+      pathname: "/en/profile",
+      cookieLocale: "en",
+      acceptLanguageHeader: null,
+      isAuthenticated: false,
+    });
+    expect(profileDecision).toEqual({
+      type: "auth_redirect",
+      pathname: "/en/login",
+      locale: "en",
+    });
+  });
+
   it("preserves pathname and query in language switch href", () => {
     const href = buildLocaleSwitchHref({
       pathname: "/nl/about",

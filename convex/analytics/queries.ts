@@ -1,5 +1,6 @@
 import { query } from "../_generated/server";
 import { v } from "convex/values";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 type AggregateRow = {
   key: string;
@@ -68,12 +69,37 @@ function toRatePercent(numerator: number, denominator: number): number {
   return Number(((numerator / denominator) * 100).toFixed(1));
 }
 
+function getAnalyticsAdminEmailAllowlist(): Set<string> {
+  const raw = process.env.ANALYTICS_ADMIN_EMAILS ?? "";
+  const normalized = raw
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter((email) => email.length > 0);
+  return new Set(normalized);
+}
+
 export const getKpiDashboard = query({
   args: {
     from: v.optional(v.number()),
     to: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authorized");
+    }
+
+    const user = await ctx.db.get(userId);
+    const userEmail = user?.email?.trim().toLowerCase();
+    const adminEmailAllowlist = getAnalyticsAdminEmailAllowlist();
+    if (
+      !userEmail ||
+      adminEmailAllowlist.size === 0 ||
+      !adminEmailAllowlist.has(userEmail)
+    ) {
+      throw new Error("Not authorized");
+    }
+
     const to = args.to ?? Date.now();
     const from = args.from ?? to - 30 * 24 * 60 * 60 * 1000;
 

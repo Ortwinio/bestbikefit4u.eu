@@ -1,7 +1,141 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
-import { validateShortString, validateTextString } from "../lib/validation";
+import {
+  validateNumberRange,
+  validateShortString,
+  validateTextString,
+} from "../lib/validation";
+
+const PROFILE_RANGES = {
+  heightCm: [120, 230],
+  inseamCm: [50, 120],
+  armLengthCm: [35, 110],
+  torsoLengthCm: [30, 90],
+  femurLengthCm: [20, 80],
+  shoulderWidthCm: [25, 70],
+  footLengthCm: [15, 40],
+  handSpanCm: [10, 35],
+  sitBoneWidthMm: [70, 220],
+  coreStabilityScore: [1, 5],
+  age: [10, 100],
+  weightKg: [30, 250],
+} as const;
+
+function validateProfileMeasurements(args: {
+  heightCm?: number;
+  inseamCm?: number;
+  armLengthCm?: number;
+  torsoLengthCm?: number;
+  femurLengthCm?: number;
+  shoulderWidthCm?: number;
+  footLengthCm?: number;
+  handSpanCm?: number;
+  sitBoneWidthMm?: number;
+  coreStabilityScore?: number;
+  age?: number;
+  weightKg?: number;
+}) {
+  if (args.heightCm !== undefined) {
+    validateNumberRange(
+      args.heightCm,
+      "heightCm",
+      PROFILE_RANGES.heightCm[0],
+      PROFILE_RANGES.heightCm[1]
+    );
+  }
+  if (args.inseamCm !== undefined) {
+    validateNumberRange(
+      args.inseamCm,
+      "inseamCm",
+      PROFILE_RANGES.inseamCm[0],
+      PROFILE_RANGES.inseamCm[1]
+    );
+  }
+  if (args.armLengthCm !== undefined) {
+    validateNumberRange(
+      args.armLengthCm,
+      "armLengthCm",
+      PROFILE_RANGES.armLengthCm[0],
+      PROFILE_RANGES.armLengthCm[1]
+    );
+  }
+  if (args.torsoLengthCm !== undefined) {
+    validateNumberRange(
+      args.torsoLengthCm,
+      "torsoLengthCm",
+      PROFILE_RANGES.torsoLengthCm[0],
+      PROFILE_RANGES.torsoLengthCm[1]
+    );
+  }
+  if (args.femurLengthCm !== undefined) {
+    validateNumberRange(
+      args.femurLengthCm,
+      "femurLengthCm",
+      PROFILE_RANGES.femurLengthCm[0],
+      PROFILE_RANGES.femurLengthCm[1]
+    );
+  }
+  if (args.shoulderWidthCm !== undefined) {
+    validateNumberRange(
+      args.shoulderWidthCm,
+      "shoulderWidthCm",
+      PROFILE_RANGES.shoulderWidthCm[0],
+      PROFILE_RANGES.shoulderWidthCm[1]
+    );
+  }
+  if (args.footLengthCm !== undefined) {
+    validateNumberRange(
+      args.footLengthCm,
+      "footLengthCm",
+      PROFILE_RANGES.footLengthCm[0],
+      PROFILE_RANGES.footLengthCm[1]
+    );
+  }
+  if (args.handSpanCm !== undefined) {
+    validateNumberRange(
+      args.handSpanCm,
+      "handSpanCm",
+      PROFILE_RANGES.handSpanCm[0],
+      PROFILE_RANGES.handSpanCm[1]
+    );
+  }
+  if (args.sitBoneWidthMm !== undefined) {
+    validateNumberRange(
+      args.sitBoneWidthMm,
+      "sitBoneWidthMm",
+      PROFILE_RANGES.sitBoneWidthMm[0],
+      PROFILE_RANGES.sitBoneWidthMm[1]
+    );
+  }
+  if (args.coreStabilityScore !== undefined) {
+    validateNumberRange(
+      args.coreStabilityScore,
+      "coreStabilityScore",
+      PROFILE_RANGES.coreStabilityScore[0],
+      PROFILE_RANGES.coreStabilityScore[1]
+    );
+    if (!Number.isInteger(args.coreStabilityScore)) {
+      throw new Error("coreStabilityScore must be a whole number");
+    }
+  }
+  if (args.age !== undefined) {
+    validateNumberRange(
+      args.age,
+      "age",
+      PROFILE_RANGES.age[0],
+      PROFILE_RANGES.age[1]
+    );
+  }
+  if (args.weightKg !== undefined) {
+    validateNumberRange(
+      args.weightKg,
+      "weightKg",
+      PROFILE_RANGES.weightKg[0],
+      PROFILE_RANGES.weightKg[1]
+    );
+  }
+}
 
 // Create or update profile
 export const upsert = mutation({
@@ -54,6 +188,21 @@ export const upsert = mutation({
     if (!userId) {
       throw new Error("Not authenticated");
     }
+
+    validateProfileMeasurements({
+      heightCm: args.heightCm,
+      inseamCm: args.inseamCm,
+      armLengthCm: args.armLengthCm,
+      torsoLengthCm: args.torsoLengthCm,
+      femurLengthCm: args.femurLengthCm,
+      shoulderWidthCm: args.shoulderWidthCm,
+      footLengthCm: args.footLengthCm,
+      handSpanCm: args.handSpanCm,
+      sitBoneWidthMm: args.sitBoneWidthMm,
+      coreStabilityScore: args.coreStabilityScore,
+      age: args.age,
+      weightKg: args.weightKg,
+    });
 
     // Validate string lengths for free-text fields
     if (args.injuryHistory) {
@@ -116,6 +265,16 @@ export const updateMeasurements = mutation({
       throw new Error("Not authenticated");
     }
 
+    validateProfileMeasurements({
+      heightCm: args.heightCm,
+      inseamCm: args.inseamCm,
+      armLengthCm: args.armLengthCm,
+      torsoLengthCm: args.torsoLengthCm,
+      femurLengthCm: args.femurLengthCm,
+      shoulderWidthCm: args.shoulderWidthCm,
+      footLengthCm: args.footLengthCm,
+    });
+
     const profile = await ctx.db
       .query("profiles")
       .withIndex("by_user", (q) => q.eq("userId", userId))
@@ -161,6 +320,10 @@ export const updateAssessment = mutation({
     if (!userId) {
       throw new Error("Not authenticated");
     }
+
+    validateProfileMeasurements({
+      coreStabilityScore: args.coreStabilityScore,
+    });
 
     const profile = await ctx.db
       .query("profiles")

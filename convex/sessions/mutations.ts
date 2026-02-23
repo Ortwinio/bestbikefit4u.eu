@@ -2,7 +2,10 @@ import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { requireBikeOwner, requireSessionOwner } from "../lib/authz";
-import { validateShortString } from "../lib/validation";
+import { validateNumberRange, validateShortString } from "../lib/validation";
+
+const WEEKLY_HOURS_RANGE = [0, 60] as const;
+const LONGEST_RIDE_KM_RANGE = [0, 600] as const;
 
 export const create = mutation({
   args: {
@@ -125,9 +128,24 @@ export const updateRidingDetails = mutation({
   handler: async (ctx, args) => {
     await requireSessionOwner(ctx, args.sessionId);
     const updates: Record<string, unknown> = {};
-    if (args.weeklyHours !== undefined) updates.weeklyHours = args.weeklyHours;
-    if (args.longestRideKm !== undefined)
+    if (args.weeklyHours !== undefined) {
+      validateNumberRange(
+        args.weeklyHours,
+        "weeklyHours",
+        WEEKLY_HOURS_RANGE[0],
+        WEEKLY_HOURS_RANGE[1]
+      );
+      updates.weeklyHours = args.weeklyHours;
+    }
+    if (args.longestRideKm !== undefined) {
+      validateNumberRange(
+        args.longestRideKm,
+        "longestRideKm",
+        LONGEST_RIDE_KM_RANGE[0],
+        LONGEST_RIDE_KM_RANGE[1]
+      );
       updates.longestRideKm = args.longestRideKm;
+    }
     await ctx.db.patch(args.sessionId, updates);
   },
 });

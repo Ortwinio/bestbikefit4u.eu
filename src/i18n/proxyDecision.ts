@@ -5,7 +5,7 @@ import {
 import {
   extractLocaleFromPathname,
   isBypassedPathname,
-  isProtectedDashboardPath,
+  isProtectedAppPath,
   stripLocalePrefix,
   withLocalePrefix,
 } from "./navigation";
@@ -57,7 +57,7 @@ export function decideProxyAction({
     };
   }
 
-  if (isProtectedDashboardPath(pathname) && !isAuthenticated) {
+  if (isProtectedAppPath(pathname) && !isAuthenticated) {
     return {
       type: "auth_redirect",
       pathname: withLocalePrefix("/login", pathLocale),

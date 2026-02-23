@@ -65,10 +65,12 @@ export function isBypassedPathname(pathname: string): boolean {
   return /\.[^/]+$/.test(normalizedPathname);
 }
 
-export function isProtectedDashboardPath(pathname: string): boolean {
+export function isProtectedAppPath(pathname: string): boolean {
   const internalPathname = stripLocalePrefix(pathname);
-  return (
-    internalPathname === "/dashboard" ||
-    internalPathname.startsWith("/dashboard/")
+  const protectedRoots = ["/dashboard", "/fit", "/bikes", "/profile"] as const;
+
+  return protectedRoots.some(
+    (root) =>
+      internalPathname === root || internalPathname.startsWith(`${root}/`)
   );
 }
