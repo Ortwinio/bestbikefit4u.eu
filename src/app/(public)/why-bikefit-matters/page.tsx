@@ -10,7 +10,13 @@ const PAGE_TITLE = "Why a good bike fit matters (comfort, power, injury preventi
 const PAGE_DESCRIPTION =
   "Real rider outcomes after a proper bike fit: less pain, fewer numb hands, better control, more efficiency. Learn why millimeters matter and what a fit actually changes.";
 
-const benefitBlocks = [
+type BenefitBlock = {
+  title: string;
+  paragraphs: readonly string[];
+  bullets?: readonly string[];
+};
+
+const benefitBlocks: readonly BenefitBlock[] = [
   {
     title: "Reduced pain and overload",
     paragraphs: [
