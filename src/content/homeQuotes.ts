@@ -56,15 +56,17 @@ export const HOME_QUOTES_BY_LOCALE: Record<Locale, readonly string[]> = {
 
 export const HOME_QUOTES_SECTION_COPY: Record<
   Locale,
-  { title: string; subtitle: string }
+  { title: string; subtitle: string; readMoreLabel: string }
 > = {
   en: {
     title: "What Riders Say",
     subtitle: "Short quotes from riders after practical fit adjustments.",
+    readMoreLabel: "Read more quotes",
   },
   nl: {
     title: "Wat Fietsers Zeggen",
     subtitle: "Korte ervaringen van fietsers na praktische fit-aanpassingen.",
+    readMoreLabel: "Lees meer ervaringen",
   },
 };
 

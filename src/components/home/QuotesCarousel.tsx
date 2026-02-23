@@ -1,5 +1,7 @@
+import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { HOME_QUOTES_SECTION_COPY } from "@/content/homeQuotes";
+import { withLocalePrefix } from "@/i18n/navigation";
 import { cn } from "@/utils/cn";
 
 type QuotesCarouselProps = {
@@ -18,6 +20,7 @@ export function QuotesCarousel({
   }
 
   const copy = HOME_QUOTES_SECTION_COPY[locale];
+  const readMoreHref = withLocalePrefix("/why-bikefit-matters", locale);
 
   return (
     <section
@@ -47,6 +50,14 @@ export function QuotesCarousel({
               </blockquote>
             </article>
           ))}
+        </div>
+        <div className="mt-8 text-center">
+          <Link
+            href={readMoreHref}
+            className="inline-flex text-sm font-semibold text-blue-700 hover:text-blue-800"
+          >
+            {copy.readMoreLabel}
+          </Link>
         </div>
       </div>
     </section>
