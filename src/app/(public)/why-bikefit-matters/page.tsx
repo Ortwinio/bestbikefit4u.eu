@@ -204,7 +204,7 @@ export default async function WhyBikeFitMattersPage() {
                     {paragraph}
                   </p>
                 ))}
-                {block.bullets ? (
+                {"bullets" in block && block.bullets ? (
                   <ul className="mt-4 list-disc space-y-2 pl-5 text-gray-600">
                     {block.bullets.map((item) => (
                       <li key={item}>{item}</li>
