@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/nextjs";
+
 export interface ClientErrorContext {
   area: string;
   action: string;
@@ -48,5 +50,18 @@ export function reportClientError(
     metadata: context.metadata,
     error,
   });
+
+  Sentry.captureException(error instanceof Error ? error : new Error(message), {
+    tags: {
+      area: context.area,
+      action: context.action,
+      operationType: context.operationType ?? "client",
+    },
+    extra: {
+      subjectId: context.subjectId,
+      metadata: context.metadata,
+    },
+  });
+
   return safeMessage;
 }

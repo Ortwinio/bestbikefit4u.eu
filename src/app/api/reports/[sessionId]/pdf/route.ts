@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { ConvexHttpClient } from "convex/browser";
-import { createHash } from "node:crypto";
 import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
 import { BRAND } from "@/config/brand";
@@ -16,49 +15,6 @@ interface PdfRouteContext {
 }
 
 export const runtime = "nodejs";
-
-const REPORT_RATE_LIMIT_WINDOW_MS = 60 * 1000;
-const REPORT_RATE_LIMIT_MAX_REQUESTS = 8;
-const reportRateLimitState = new Map<
-  string,
-  { tokens: number; lastRefillAt: number }
->();
-
-function hashToken(token: string): string {
-  return createHash("sha256").update(token).digest("hex").slice(0, 16);
-}
-
-function consumeReportRateLimitToken(key: string): boolean {
-  const now = Date.now();
-  const existing = reportRateLimitState.get(key);
-  if (!existing) {
-    reportRateLimitState.set(key, {
-      tokens: REPORT_RATE_LIMIT_MAX_REQUESTS - 1,
-      lastRefillAt: now,
-    });
-    return true;
-  }
-
-  const elapsed = Math.max(0, now - existing.lastRefillAt);
-  const refillRatePerMs = REPORT_RATE_LIMIT_MAX_REQUESTS / REPORT_RATE_LIMIT_WINDOW_MS;
-  const available = Math.min(
-    REPORT_RATE_LIMIT_MAX_REQUESTS,
-    existing.tokens + elapsed * refillRatePerMs
-  );
-  if (available < 1) {
-    reportRateLimitState.set(key, {
-      tokens: available,
-      lastRefillAt: now,
-    });
-    return false;
-  }
-
-  reportRateLimitState.set(key, {
-    tokens: available - 1,
-    lastRefillAt: now,
-  });
-  return true;
-}
 
 export async function GET(
   _request: Request,
@@ -79,8 +35,17 @@ export async function GET(
     }
 
     const { sessionId } = await context.params;
-    const limitKey = `report:${sessionId}:${hashToken(token)}`;
-    if (!consumeReportRateLimitToken(limitKey)) {
+
+    const convex = new ConvexHttpClient(convexUrl);
+    convex.setAuth(token);
+
+    const typedSessionId = sessionId as Id<"fitSessions">;
+
+    const allowed = await convex.mutation(
+      api.reportRateLimit.consumeReportRateLimitToken,
+      { sessionId: typedSessionId }
+    );
+    if (!allowed) {
       console.warn("Report download rate limit exceeded.", { sessionId });
       return NextResponse.json(
         { error: "Too many report requests. Please try again shortly." },
@@ -93,11 +58,6 @@ export async function GET(
         }
       );
     }
-
-    const convex = new ConvexHttpClient(convexUrl);
-    convex.setAuth(token);
-
-    const typedSessionId = sessionId as Id<"fitSessions">;
 
     const session = await convex.query(api.sessions.queries.getById, {
       sessionId: typedSessionId,

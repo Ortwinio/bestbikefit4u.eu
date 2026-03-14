@@ -1,16 +1,16 @@
 import { mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import type { Id } from "../_generated/dataModel";
-import {
-  calculateBikeFit,
-  type FitInputs,
-} from "../lib/fitAlgorithm";
+import { internal } from "../_generated/api";
 import { requireSessionOwner, requireUserId } from "../lib/authz";
-import { buildFitInputs, estimateEffectiveTopTubeMm } from "./inputMapping";
+import { mapBikeCategory, mapAmbition } from "./inputMapping";
 
 /**
- * Generate recommendations for a completed session
- * Gathers profile data, runs calculations, and stores results
+ * Generate recommendations for a completed session.
+ * Gathers profile data, transitions status to "processing", then schedules
+ * the generateFromData action to run the heavy computation outside the
+ * mutation transaction (longer CPU budget, Node.js runtime).
+ * Results arrive via the reactive `getBySession` subscription.
  */
 export const generate = mutation({
   args: {
@@ -19,20 +19,26 @@ export const generate = mutation({
   handler: async (ctx, args) => {
     const { userId, session } = await requireSessionOwner(ctx, args.sessionId);
 
+    // Return early if recommendation already exists
     const existingRecommendationId = await getExistingRecommendationId(
       ctx,
       args.sessionId
     );
     if (existingRecommendationId) {
-      return existingRecommendationId;
+      return;
     }
 
-    // Acquire a lightweight per-session generation lock by transitioning
-    // questionnaire_complete -> processing before heavy compute work.
+    // Skip re-scheduling if already processing or not ready
+    if (
+      session.status !== "questionnaire_complete" &&
+      session.status !== "processing"
+    ) {
+      return;
+    }
+
+    // Transition to "processing" to signal work is in progress
     if (session.status === "questionnaire_complete") {
-      await ctx.db.patch(args.sessionId, {
-        status: "processing",
-      });
+      await ctx.db.patch(args.sessionId, { status: "processing" });
     }
 
     // Get the profile
@@ -40,133 +46,44 @@ export const generate = mutation({
     if (!profile) throw new Error("Profile not found");
     if (profile.userId !== userId) throw new Error("Profile not found");
 
-    // Use the bike type snapshot captured at session creation.
-    // Fallback to linked bike type for older sessions that predate this field.
+    // Resolve bike type (snapshot on session takes priority over linked bike)
     let bikeType: string | undefined = session.bikeType;
-    if (!bikeType && session.bikeId) {
+    let frameStackMm: number | undefined;
+    let frameReachMm: number | undefined;
+    if (session.bikeId) {
       const bike = await ctx.db.get(session.bikeId);
-      if (bike) {
-        if (bike.userId !== userId) throw new Error("Bike not found");
-        bikeType = bike.bikeType;
+      if (bike && bike.userId === userId) {
+        if (!bikeType) bikeType = bike.bikeType;
+        frameStackMm = bike.currentGeometry?.stackMm ?? undefined;
+        frameReachMm = bike.currentGeometry?.reachMm ?? undefined;
       }
     }
 
-    const fitInputs = buildFitInputs({
-      profile,
-      session,
-      bikeType,
-    });
+    const bikeCategory = mapBikeCategory(session, bikeType);
+    const ambition = mapAmbition(session.primaryGoal);
 
-    // Run the calculation
-    const result = calculateBikeFit(fitInputs);
-
-    // Re-check after compute to avoid duplicate inserts if another transaction
-    // won the race while this one was calculating.
-    const concurrentRecommendationId = await getExistingRecommendationId(
-      ctx,
-      args.sessionId
+    // Schedule the action — computation happens outside the mutation transaction
+    await ctx.scheduler.runAfter(
+      0,
+      internal.recommendations.actions.generateFromData,
+      {
+        sessionId: args.sessionId,
+        userId,
+        heightCm: profile.heightCm,
+        inseamCm: profile.inseamCm,
+        torsoLengthCm: profile.torsoLengthCm,
+        armLengthCm: profile.armLengthCm,
+        shoulderWidthCm: profile.shoulderWidthCm,
+        footLengthCm: profile.footLengthCm,
+        flexibilityScore: profile.flexibilityScore,
+        coreStabilityScore: profile.coreStabilityScore,
+        bikeCategory,
+        ambition,
+        painPoints: session.painPoints,
+        frameStackMm,
+        frameReachMm,
+      }
     );
-    if (concurrentRecommendationId) {
-      return concurrentRecommendationId;
-    }
-
-    // Generate frame size recommendations
-    const frameSizeRecommendations = [
-      {
-        size: estimateFrameSize(
-          result.frameStackTargetMm,
-          result.frameReachTargetMm
-        ),
-        fitScore: result.confidenceScore,
-        notes: "Based on your measurements and preferences",
-      },
-    ];
-
-    // Generate fit notes
-    const fitNotes = generateFitNotes(result, fitInputs);
-
-    // Generate adjustment priorities
-    const adjustmentPriorities = [
-      {
-        priority: 1,
-        component: "Cleats",
-        recommendedValue: `${result.cleatOffsetMm}mm behind ball of foot`,
-        rationale: "Start with cleat position for proper foot alignment",
-      },
-      {
-        priority: 2,
-        component: "Saddle Height",
-        recommendedValue: `${result.saddleHeightMm}mm`,
-        rationale: "Set saddle height before other adjustments",
-      },
-      {
-        priority: 3,
-        component: "Saddle Setback",
-        recommendedValue: `${result.saddleSetbackMm}mm behind BB`,
-        rationale: "Affects knee tracking and power transfer",
-      },
-      {
-        priority: 4,
-        component: "Bar Drop (Spacers)",
-        recommendedValue: `${result.barDropMm}mm drop`,
-        rationale: "Adjust spacers to achieve target drop",
-      },
-      {
-        priority: 5,
-        component: "Stem",
-        recommendedValue: `${result.stemLengthMm}mm at ${result.stemAngleDeg}°`,
-        rationale: "Fine-tune reach after other adjustments",
-      },
-    ];
-
-    // Generate pain point solutions if pain points exist
-    let painPointSolutions:
-      | Array<{ painArea: string; cause: string; solution: string }>
-      | undefined;
-    if (session.painPoints && session.painPoints.length > 0) {
-      painPointSolutions = session.painPoints.map((pp) => ({
-        painArea: pp.area,
-        cause: getPainCause(pp.area),
-        solution: getPainSolution(pp.area, result),
-      }));
-    }
-
-    // Create recommendation
-    const recId = await ctx.db.insert("recommendations", {
-      sessionId: args.sessionId,
-      userId,
-      calculatedFit: {
-        recommendedStackMm: result.frameStackTargetMm,
-        recommendedReachMm: result.frameReachTargetMm,
-        effectiveTopTubeMm: estimateEffectiveTopTubeMm(
-          result.saddleToBarReachMm
-        ),
-        saddleHeightMm: result.saddleHeightMm,
-        saddleSetbackMm: result.saddleSetbackMm,
-        saddleHeightRange: result.saddleHeightRange,
-        handlebarDropMm: result.barDropMm,
-        handlebarReachMm: result.saddleToBarReachMm,
-        stemLengthMm: result.stemLengthMm,
-        stemAngleRecommendation: `${result.stemAngleDeg}°`,
-        crankLengthMm: result.crankLengthMm,
-        handlebarWidthMm: result.handlebarWidthMm,
-      },
-      confidenceScore: result.confidenceScore,
-      algorithmVersion: result.algorithmVersion,
-      frameSizeRecommendations,
-      fitNotes,
-      adjustmentPriorities,
-      painPointSolutions,
-      createdAt: Date.now(),
-    });
-
-    // Update session status
-    await ctx.db.patch(args.sessionId, {
-      status: "completed",
-      completedAt: Date.now(),
-    });
-
-    return recId;
   },
 });
 
@@ -174,96 +91,15 @@ async function getExistingRecommendationId(
   ctx: MutationCtx,
   sessionId: Id<"fitSessions">
 ): Promise<Id<"recommendations"> | null> {
-  const existingRecommendations = await ctx.db
+  const existing = await ctx.db
     .query("recommendations")
     .withIndex("by_session", (q) => q.eq("sessionId", sessionId))
     .collect();
 
-  if (existingRecommendations.length === 0) {
-    return null;
-  }
+  if (existing.length === 0) return null;
 
-  const [oldestRecommendation] = [...existingRecommendations].sort(
-    (a, b) => a.createdAt - b.createdAt
-  );
-  return oldestRecommendation?._id ?? null;
-}
-
-// Helper functions
-function estimateFrameSize(stackMm: number, reachMm: number): string {
-  if (stackMm < 520 || reachMm < 370) return "XS (48-50cm)";
-  if (stackMm < 550 || reachMm < 385) return "S (51-53cm)";
-  if (stackMm < 580 || reachMm < 400) return "M (54-55cm)";
-  if (stackMm < 610 || reachMm < 415) return "L (56-58cm)";
-  return "XL (59-62cm)";
-}
-
-function generateFitNotes(
-  result: ReturnType<typeof calculateBikeFit>,
-  inputs: FitInputs
-): string[] {
-  const notes: string[] = [];
-
-  notes.push(
-    `Saddle height of ${result.saddleHeightMm}mm is optimized for your ${inputs.inseamMm}mm inseam.`
-  );
-
-  if (result.barDropMm > 100) {
-    notes.push(
-      "Your position is quite aggressive. Consider building up to this gradually."
-    );
-  } else if (result.barDropMm < 50) {
-    notes.push("Your position prioritizes comfort with minimal bar drop.");
-  }
-
-  if (inputs.torsoMm && inputs.armMm) {
-    notes.push(
-      "Reach calculations are refined using your torso and arm measurements."
-    );
-  } else {
-    notes.push(
-      "Adding torso and arm measurements would improve reach accuracy."
-    );
-  }
-
-  if (result.warnings.length > 0) {
-    result.warnings.forEach((w) => {
-      if (w.severity !== "info") {
-        notes.push(w.recommendation);
-      }
-    });
-  }
-
-  return notes;
-}
-
-function getPainCause(area: string): string {
-  const causes: Record<string, string> = {
-    lower_back: "Often caused by excessive reach or improper saddle position",
-    neck: "Typically from too much bar drop or excessive reach",
-    shoulders: "Usually from bars too wide or narrow, or too much weight on hands",
-    hands: "Excessive weight on handlebars or poor bar angle",
-    knees: "Commonly from incorrect saddle height or cleat position",
-    feet: "Often from cleat misalignment or incorrect shoe fit",
-    sit_bones: "Usually saddle width mismatch or incorrect saddle height",
-  };
-  return causes[area] || "Position may need adjustment";
-}
-
-function getPainSolution(
-  area: string,
-  result: ReturnType<typeof calculateBikeFit>
-): string {
-  const solutions: Record<string, string> = {
-    lower_back: `Ensure saddle setback of ${result.saddleSetbackMm}mm and consider reducing bar drop if issues persist.`,
-    neck: `Target bar drop of ${result.barDropMm}mm and ensure proper stem length of ${result.stemLengthMm}mm.`,
-    shoulders: `Handlebar width of ${result.handlebarWidthMm}mm should match your shoulder width.`,
-    hands: `Check that bar drop doesn't exceed ${result.barDropMm}mm and ensure proper brake lever positioning.`,
-    knees: `Verify saddle height of ${result.saddleHeightMm}mm and check cleat offset of ${result.cleatOffsetMm}mm.`,
-    feet: `Set cleats ${result.cleatOffsetMm}mm behind ball of foot and verify proper foot alignment.`,
-    sit_bones: `Ensure saddle height of ${result.saddleHeightMm}mm allows slight knee bend at bottom of stroke.`,
-  };
-  return solutions[area] || "Review the recommended measurements and make gradual adjustments.";
+  const [oldest] = [...existing].sort((a, b) => a.createdAt - b.createdAt);
+  return oldest?._id ?? null;
 }
 
 export const create = mutation({

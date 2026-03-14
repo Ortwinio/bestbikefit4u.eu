@@ -506,6 +506,16 @@ const nl = {
       errors: {
         saveFailedTitle: "Profiel opslaan mislukt",
       },
+      dangerZone: {
+        title: "Gevarenzone",
+        deleteAccount: "Account verwijderen",
+        deleteConfirmTitle: "Account verwijderen?",
+        deleteConfirmDescription:
+          "Dit verwijdert permanent je profiel, fietsen, fit-sessies, aanbevelingen en alle andere gegevens. Deze actie kan niet ongedaan worden gemaakt.",
+        deleteConfirmCta: "Ja, verwijder mijn account",
+        cancel: "Annuleren",
+        deleteFailed: "Account verwijderen mislukt. Probeer het opnieuw.",
+      },
     },
     bikes: {
       loading: "Fietsen laden...",

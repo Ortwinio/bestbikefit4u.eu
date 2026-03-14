@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { calculateBikeFit } from "../../lib/fitAlgorithm";
-import { buildFitInputs, estimateEffectiveTopTubeMm } from "../inputMapping";
+import { mapBikeCategory, mapAmbition } from "../inputMapping";
 
 type TestHandler = (ctx: unknown, args: unknown) => Promise<unknown>;
 
@@ -20,11 +19,12 @@ describe("recommendations.generate mapping integration", () => {
     getAuthUserIdMock.mockResolvedValue("user_1");
   });
 
-  it("maps profile + session through algorithm into persisted calculatedFit fields", async () => {
+  it("transitions session to processing and schedules generateFromData action", async () => {
     const session = {
       _id: "session_1",
       userId: "user_1",
       profileId: "profile_1",
+      status: "questionnaire_complete",
       bikeType: "road",
       ridingStyle: "racing",
       primaryGoal: "performance",
@@ -45,6 +45,8 @@ describe("recommendations.generate mapping integration", () => {
       femurLengthCm: 47,
     };
 
+    const schedulerRunAfter = vi.fn(async () => undefined);
+
     const db = {
       get: vi.fn(async (id: string) => {
         if (id === "session_1") return session;
@@ -56,50 +58,72 @@ describe("recommendations.generate mapping integration", () => {
           collect: vi.fn(async () => []),
         })),
       })),
-      insert: vi.fn(async (_table: string, _doc: unknown) => "rec_1"),
       patch: vi.fn(async () => undefined),
     };
 
     const handler = (generate as unknown as { _handler: TestHandler })._handler;
-    const recId = await handler({ db }, { sessionId: "session_1" });
+    const result = await handler(
+      { db, scheduler: { runAfter: schedulerRunAfter } },
+      { sessionId: "session_1" }
+    );
 
-    expect(recId).toBe("rec_1");
-    expect(db.insert).toHaveBeenCalledTimes(1);
+    // The mutation now returns void — results arrive via reactive subscription
+    expect(result).toBeUndefined();
 
-    const fitInputs = buildFitInputs({
-      profile,
-      session: {
-        primaryGoal: session.primaryGoal,
-        ridingStyle: session.ridingStyle,
-      },
-      bikeType: session.bikeType,
-    });
-    const result = calculateBikeFit(fitInputs);
+    // Status transitions to "processing" immediately
+    expect(db.patch).toHaveBeenCalledWith("session_1", { status: "processing" });
 
-    const inserted = db.insert.mock.calls[0]?.[1] as Record<string, unknown> | undefined;
-    if (!inserted) {
-      throw new Error("Expected inserted recommendation payload");
-    }
-    expect(inserted.calculatedFit).toEqual({
-      recommendedStackMm: result.frameStackTargetMm,
-      recommendedReachMm: result.frameReachTargetMm,
-      effectiveTopTubeMm: estimateEffectiveTopTubeMm(result.saddleToBarReachMm),
-      saddleHeightMm: result.saddleHeightMm,
-      saddleSetbackMm: result.saddleSetbackMm,
-      saddleHeightRange: result.saddleHeightRange,
-      handlebarDropMm: result.barDropMm,
-      handlebarReachMm: result.saddleToBarReachMm,
-      stemLengthMm: result.stemLengthMm,
-      stemAngleRecommendation: `${result.stemAngleDeg}\u00B0`,
-      crankLengthMm: result.crankLengthMm,
-      handlebarWidthMm: result.handlebarWidthMm,
-    });
-    expect(inserted.algorithmVersion).toBe(result.algorithmVersion);
-    expect(inserted.confidenceScore).toBe(result.confidenceScore);
+    // Action was scheduled with the correct measurements
+    expect(schedulerRunAfter).toHaveBeenCalledTimes(1);
+    const callArgs = schedulerRunAfter.mock.calls[0] as unknown as [number, unknown, Record<string, unknown>];
+    const [delay, _actionRef, scheduledArgs] = callArgs;
+    expect(delay).toBe(0);
+    expect(scheduledArgs.sessionId).toBe("session_1");
+    expect(scheduledArgs.userId).toBe("user_1");
+    expect(scheduledArgs.heightCm).toBe(profile.heightCm);
+    expect(scheduledArgs.inseamCm).toBe(profile.inseamCm);
+    expect(scheduledArgs.flexibilityScore).toBe(profile.flexibilityScore);
+    expect(scheduledArgs.bikeCategory).toBe(
+      mapBikeCategory(session, session.bikeType)
+    );
+    expect(scheduledArgs.ambition).toBe(mapAmbition(session.primaryGoal));
+  });
 
-    expect(db.patch).toHaveBeenCalledWith("session_1", {
+  it("returns early without scheduling when recommendation already exists", async () => {
+    const session = {
+      _id: "session_1",
+      userId: "user_1",
+      profileId: "profile_1",
       status: "completed",
-      completedAt: expect.any(Number),
-    });
+      bikeType: "road",
+      ridingStyle: "racing",
+      primaryGoal: "performance",
+    };
+
+    const existingRec = { _id: "rec_existing", sessionId: "session_1", createdAt: 1000 };
+
+    const schedulerRunAfter = vi.fn();
+
+    const db = {
+      get: vi.fn(async (id: string) => {
+        if (id === "session_1") return session;
+        return null;
+      }),
+      query: vi.fn(() => ({
+        withIndex: vi.fn(() => ({
+          collect: vi.fn(async () => [existingRec]),
+        })),
+      })),
+      patch: vi.fn(),
+    };
+
+    const handler = (generate as unknown as { _handler: TestHandler })._handler;
+    await handler(
+      { db, scheduler: { runAfter: schedulerRunAfter } },
+      { sessionId: "session_1" }
+    );
+
+    expect(schedulerRunAfter).not.toHaveBeenCalled();
+    expect(db.patch).not.toHaveBeenCalled();
   });
 });

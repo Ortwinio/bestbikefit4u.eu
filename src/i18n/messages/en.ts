@@ -500,6 +500,16 @@ const en = {
       errors: {
         saveFailedTitle: "Could not save profile",
       },
+      dangerZone: {
+        title: "Danger Zone",
+        deleteAccount: "Delete Account",
+        deleteConfirmTitle: "Delete your account?",
+        deleteConfirmDescription:
+          "This will permanently delete your profile, bikes, fit sessions, recommendations, and all other data. This action cannot be undone.",
+        deleteConfirmCta: "Yes, delete my account",
+        cancel: "Cancel",
+        deleteFailed: "Could not delete account. Please try again.",
+      },
     },
     bikes: {
       loading: "Loading bikes...",

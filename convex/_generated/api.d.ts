@@ -12,6 +12,7 @@ import type * as analytics_mutations from "../analytics/mutations.js";
 import type * as analytics_queries from "../analytics/queries.js";
 import type * as auth from "../auth.js";
 import type * as authRateLimit from "../authRateLimit.js";
+import type * as reportRateLimit from "../reportRateLimit.js";
 import type * as bikes_mutations from "../bikes/mutations.js";
 import type * as bikes_queries from "../bikes/queries.js";
 import type * as emails_actions from "../emails/actions.js";
@@ -35,10 +36,12 @@ import type * as questionnaire_questions from "../questionnaire/questions.js";
 import type * as questionnaire_responseValidation from "../questionnaire/responseValidation.js";
 import type * as recommendations_actions from "../recommendations/actions.js";
 import type * as recommendations_inputMapping from "../recommendations/inputMapping.js";
+import type * as recommendations_internalMutations from "../recommendations/internalMutations.js";
 import type * as recommendations_mutations from "../recommendations/mutations.js";
 import type * as recommendations_queries from "../recommendations/queries.js";
 import type * as sessions_mutations from "../sessions/mutations.js";
 import type * as sessions_queries from "../sessions/queries.js";
+import type * as users_mutations from "../users/mutations.js";
 import type * as users_queries from "../users/queries.js";
 
 import type {
@@ -52,6 +55,7 @@ declare const fullApi: ApiFromModules<{
   "analytics/queries": typeof analytics_queries;
   auth: typeof auth;
   authRateLimit: typeof authRateLimit;
+  reportRateLimit: typeof reportRateLimit;
   "bikes/mutations": typeof bikes_mutations;
   "bikes/queries": typeof bikes_queries;
   "emails/actions": typeof emails_actions;
@@ -75,10 +79,12 @@ declare const fullApi: ApiFromModules<{
   "questionnaire/responseValidation": typeof questionnaire_responseValidation;
   "recommendations/actions": typeof recommendations_actions;
   "recommendations/inputMapping": typeof recommendations_inputMapping;
+  "recommendations/internalMutations": typeof recommendations_internalMutations;
   "recommendations/mutations": typeof recommendations_mutations;
   "recommendations/queries": typeof recommendations_queries;
   "sessions/mutations": typeof sessions_mutations;
   "sessions/queries": typeof sessions_queries;
+  "users/mutations": typeof users_mutations;
   "users/queries": typeof users_queries;
 }>;
 

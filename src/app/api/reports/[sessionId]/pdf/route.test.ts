@@ -4,6 +4,7 @@ import { BRAND } from "@/config/brand";
 const mocks = vi.hoisted(() => {
   const token = vi.fn();
   const query = vi.fn();
+  const mutation = vi.fn();
   const setAuth = vi.fn();
   const clientConstructor = vi.fn();
   const mapPdfReportData = vi.fn();
@@ -15,6 +16,7 @@ const mocks = vi.hoisted(() => {
   return {
     token,
     query,
+    mutation,
     setAuth,
     clientConstructor,
     mapPdfReportData,
@@ -37,6 +39,7 @@ vi.mock("convex/browser", () => ({
 
     setAuth = mocks.setAuth;
     query = mocks.query;
+    mutation = mocks.mutation;
   },
 }));
 
@@ -107,6 +110,8 @@ describe("pdf report route", () => {
     vi.clearAllMocks();
     process.env.NEXT_PUBLIC_CONVEX_URL = "https://example.convex.cloud";
     delete process.env.PDF_RICH_RENDER_ENABLED;
+    // By default the rate limit check allows the request
+    mocks.mutation.mockResolvedValue(true);
 
     mocks.mapPdfReportData.mockReturnValue({
       title: BRAND.reportTitle,
@@ -134,7 +139,20 @@ describe("pdf report route", () => {
 
     expect(response.status).toBe(401);
     expect(await response.json()).toEqual({ error: "Not authenticated." });
-    expect(mocks.clientConstructor).not.toHaveBeenCalled();
+    expect(mocks.mutation).not.toHaveBeenCalled();
+  });
+
+  it("returns 429 when the report rate limit is exceeded", async () => {
+    mocks.token.mockResolvedValue("token-rl");
+    mocks.mutation.mockResolvedValue(false);
+
+    const response = await GET(new Request("http://localhost"), {
+      params: Promise.resolve({ sessionId: "session_1" }),
+    });
+
+    expect(response.status).toBe(429);
+    expect(response.headers.get("Retry-After")).toBe("30");
+    expect(mocks.query).not.toHaveBeenCalled();
   });
 
   it("returns 404 when the session is missing or not owned", async () => {

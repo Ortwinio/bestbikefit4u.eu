@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
@@ -13,12 +14,13 @@ import {
   Button,
   LoadingState,
   ErrorState,
+  AccessibleDialog,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { reportClientError } from "@/lib/telemetry";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { User, Ruler, Activity, Edit2 } from "lucide-react";
+import { User, Ruler, Activity, Edit2, Trash2 } from "lucide-react";
 
 interface ProfileData {
   heightCm: number;
@@ -36,12 +38,20 @@ function ProfileSummary({
   onEdit,
   fitHref,
   messages,
+  onDeleteAccount,
+  isDeleting,
+  deleteError,
 }: {
   profile: ProfileData;
   onEdit: () => void;
   fitHref: string;
   messages: ReturnType<typeof useDashboardMessages>["messages"];
+  onDeleteAccount: () => void;
+  isDeleting: boolean;
+  deleteError: string | null;
 }) {
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -154,6 +164,54 @@ function ProfileSummary({
           </div>
         </CardContent>
       </Card>
+
+      {/* Danger Zone */}
+      <Card variant="bordered" className="mt-6 border-red-200">
+        <CardHeader>
+          <CardTitle className="text-red-700">
+            {messages.profile.dangerZone.title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {deleteError && (
+            <ErrorState className="mb-4" description={deleteError} />
+          )}
+          <Button
+            variant="outline"
+            onClick={() => setShowDeleteDialog(true)}
+            className="border-red-300 text-red-700 hover:bg-red-50"
+          >
+            <Trash2 className="h-4 w-4 mr-2" />
+            {messages.profile.dangerZone.deleteAccount}
+          </Button>
+        </CardContent>
+      </Card>
+
+      <AccessibleDialog
+        open={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        title={messages.profile.dangerZone.deleteConfirmTitle}
+        description={messages.profile.dangerZone.deleteConfirmDescription}
+      >
+        <div className="flex gap-3 mt-4">
+          <Button
+            variant="outline"
+            onClick={() => setShowDeleteDialog(false)}
+          >
+            {messages.profile.dangerZone.cancel}
+          </Button>
+          <Button
+            onClick={() => {
+              setShowDeleteDialog(false);
+              onDeleteAccount();
+            }}
+            isLoading={isDeleting}
+            className="bg-red-600 hover:bg-red-700 text-white"
+          >
+            {messages.profile.dangerZone.deleteConfirmCta}
+          </Button>
+        </div>
+      </AccessibleDialog>
     </div>
   );
 }
@@ -177,12 +235,16 @@ export default function ProfilePage() {
   const { locale, messages } = useDashboardMessages();
   const pagePath = withLocalePrefix("/profile", locale);
   const logMarketingEvent = useMarketingEventLogger();
+  const router = useRouter();
   const hasTrackedProfileViewRef = useRef(false);
   const [isEditing, setIsEditing] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const profileData = useQuery(api.profiles.queries.getMyProfile);
   const upsertProfile = useMutation(api.profiles.mutations.upsert);
+  const deleteAccount = useMutation(api.users.mutations.deleteAccount);
 
   useEffect(() => {
     if (hasTrackedProfileViewRef.current || profileData === undefined) {
@@ -196,6 +258,26 @@ export default function ProfilePage() {
       section: "profile_page",
     });
   }, [locale, logMarketingEvent, pagePath, profileData]);
+
+  const handleDeleteAccount = async () => {
+    setDeleteError(null);
+    setIsDeleting(true);
+    try {
+      await deleteAccount({});
+      router.push(withLocalePrefix("/", locale));
+    } catch (error) {
+      setDeleteError(
+        reportClientError(error, {
+          area: "profile",
+          action: "deleteAccount",
+          operationType: "mutation",
+          userMessage: messages.profile.dangerZone.deleteFailed,
+        })
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handleSaveProfile = async (data: WizardFormData) => {
     setSaveError(null);
@@ -277,6 +359,9 @@ export default function ProfilePage() {
       fitHref={withLocalePrefix("/fit", locale)}
       messages={messages}
       onEdit={() => setIsEditing(true)}
+      onDeleteAccount={handleDeleteAccount}
+      isDeleting={isDeleting}
+      deleteError={deleteError}
     />
   );
 }

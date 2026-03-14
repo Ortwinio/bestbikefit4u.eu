@@ -5,6 +5,7 @@
 
 import { internalAction } from "../_generated/server";
 import { v } from "convex/values";
+import { internal } from "../_generated/api";
 import {
   calculateBikeFit,
   mapFlexibilityScore,
@@ -13,11 +14,16 @@ import {
 } from "../lib/fitAlgorithm";
 
 /**
- * Internal action to generate recommendations from provided data
- * This should be called from a mutation that gathers all the data first
+ * Internal action that runs the fit algorithm and stores the result.
+ * Scheduled by the `generate` mutation so heavy computation runs in an
+ * action context (Node.js runtime, longer CPU budget).
  */
 export const generateFromData = internalAction({
   args: {
+    // Context for storage
+    sessionId: v.id("fitSessions"),
+    userId: v.id("users"),
+
     // Input data (already fetched by calling mutation)
     heightCm: v.number(),
     inseamCm: v.number(),
@@ -48,11 +54,31 @@ export const generateFromData = internalAction({
       v.literal("aero")
     ),
 
+    // Riding context
+    painPoints: v.optional(
+      v.array(
+        v.object({
+          area: v.string(),
+          frequency: v.union(
+            v.literal("rarely"),
+            v.literal("sometimes"),
+            v.literal("often"),
+            v.literal("always")
+          ),
+          severity: v.union(
+            v.literal("mild"),
+            v.literal("moderate"),
+            v.literal("severe")
+          ),
+        })
+      )
+    ),
+
     // Optional bike geometry
     frameStackMm: v.optional(v.number()),
     frameReachMm: v.optional(v.number()),
   },
-  handler: async (_ctx, args) => {
+  handler: async (ctx, args) => {
     // Build inputs for the algorithm
     const fitInputs: FitInputs = {
       category: args.bikeCategory,
@@ -75,11 +101,23 @@ export const generateFromData = internalAction({
       frameReachMm: args.frameReachMm,
     };
 
-    // Run the calculation
+    // Run the calculation (CPU-heavy work in action context)
     const result = calculateBikeFit(fitInputs);
 
-    // Return the full result to be stored by the calling mutation
-    return {
+    const fitNotes = generateFitNotes(result, fitInputs);
+    const painPointSolutions =
+      args.painPoints && args.painPoints.length > 0
+        ? args.painPoints.map((pp) => ({
+            painArea: pp.area,
+            cause: getPainCause(pp.area),
+            solution: getPainSolution(pp.area, result),
+          }))
+        : undefined;
+
+    // Store the result via an internal mutation (serialised, idempotent)
+    await ctx.runMutation(internal.recommendations.internalMutations.storeResult, {
+      sessionId: args.sessionId,
+      userId: args.userId,
       calculatedFit: {
         recommendedStackMm: result.frameStackTargetMm,
         recommendedReachMm: result.frameReachTargetMm,
@@ -97,10 +135,10 @@ export const generateFromData = internalAction({
       confidenceScore: result.confidenceScore,
       algorithmVersion: result.algorithmVersion,
       frameSizeRecommendations: generateFrameSizeRecommendations(result),
-      fitNotes: generateFitNotes(result, fitInputs),
+      fitNotes,
       adjustmentPriorities: generateAdjustmentPriorities(result),
-      warnings: result.warnings,
-    };
+      painPointSolutions,
+    });
   },
 });
 
@@ -172,6 +210,35 @@ function generateFitNotes(
   }
 
   return notes;
+}
+
+function getPainCause(area: string): string {
+  const causes: Record<string, string> = {
+    lower_back: "Often caused by excessive reach or improper saddle position",
+    neck: "Typically from too much bar drop or excessive reach",
+    shoulders: "Usually from bars too wide or narrow, or too much weight on hands",
+    hands: "Excessive weight on handlebars or poor bar angle",
+    knees: "Commonly from incorrect saddle height or cleat position",
+    feet: "Often from cleat misalignment or incorrect shoe fit",
+    sit_bones: "Usually saddle width mismatch or incorrect saddle height",
+  };
+  return causes[area] || "Position may need adjustment";
+}
+
+function getPainSolution(
+  area: string,
+  result: ReturnType<typeof calculateBikeFit>
+): string {
+  const solutions: Record<string, string> = {
+    lower_back: `Ensure saddle setback of ${result.saddleSetbackMm}mm and consider reducing bar drop if issues persist.`,
+    neck: `Target bar drop of ${result.barDropMm}mm and ensure proper stem length of ${result.stemLengthMm}mm.`,
+    shoulders: `Handlebar width of ${result.handlebarWidthMm}mm should match your shoulder width.`,
+    hands: `Check that bar drop doesn't exceed ${result.barDropMm}mm and ensure proper brake lever positioning.`,
+    knees: `Verify saddle height of ${result.saddleHeightMm}mm and check cleat offset of ${result.cleatOffsetMm}mm.`,
+    feet: `Set cleats ${result.cleatOffsetMm}mm behind ball of foot and verify proper foot alignment.`,
+    sit_bones: `Ensure saddle height of ${result.saddleHeightMm}mm allows slight knee bend at bottom of stroke.`,
+  };
+  return solutions[area] || "Review the recommended measurements and make gradual adjustments.";
 }
 
 // Generate adjustment priorities

@@ -378,6 +378,13 @@ export default defineSchema({
     .index("by_category", ["category"])
     .index("by_question_id", ["questionId"]),
 
+  // Rate limiting for PDF report downloads
+  reportRateLimits: defineTable({
+    identifier: v.string(),
+    tokens: v.number(),
+    lastRefillAt: v.number(),
+  }).index("by_identifier", ["identifier"]),
+
   // Public-site marketing and conversion events (SEO/content iteration)
   marketingEvents: defineTable({
     eventType: v.union(
