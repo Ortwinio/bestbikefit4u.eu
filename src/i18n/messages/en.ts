@@ -17,6 +17,7 @@ const en = {
       support: "Support",
       legal: "Legal",
       resources: "Resources",
+      sitemap: "Sitemap",
       contact: "Contact",
       faq: "FAQ",
       measurementGuide: "Measurement Guide",

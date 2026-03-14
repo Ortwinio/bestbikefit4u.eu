@@ -93,6 +93,14 @@ export function Footer({ locale, labels }: FooterProps) {
                   {f.terms}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/sitemap.xml"
+                  className="text-sm text-gray-600 hover:text-gray-900"
+                >
+                  {f.sitemap}
+                </Link>
+              </li>
             </ul>
           </div>
           <div>

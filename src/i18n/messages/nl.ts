@@ -18,6 +18,7 @@ const nl = {
       support: "Support",
       legal: "Juridisch",
       resources: "Bronnen",
+      sitemap: "Sitemap",
       contact: "Contact",
       faq: "FAQ",
       measurementGuide: "Meetgids",
