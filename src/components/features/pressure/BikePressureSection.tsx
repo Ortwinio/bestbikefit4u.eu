@@ -18,6 +18,8 @@ export function BikePressureSection({ bikeId }: BikePressureSectionProps) {
   const wheelsets = useQuery(api.wheelsets.queries.listForBike, { bikeId });
   const latestCalc = useQuery(api.pressureCalculations.queries.getLatestForBike, { bikeId });
   const profiles = useQuery(api.pressureProfiles.queries.listForBike, { bikeId });
+  const staleState = useQuery(api.pressureCalculations.queries.isBikePressureStale, { bikeId });
+  const latestRecommendation = useQuery(api.recommendations.queries.getLatestByBike, { bikeId });
 
   const activeWheelset = wheelsets?.find((wheelset) => wheelset.isActive) ?? wheelsets?.[0];
   const tireSetups = useQuery(
@@ -64,6 +66,21 @@ export function BikePressureSection({ bikeId }: BikePressureSectionProps) {
           </Link>
         </div>
       </div>
+
+      {staleState?.isStale ? (
+        <div className="mt-4 rounded-[var(--radius-md)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          {messages.dashboardHome.pressureStale}
+        </div>
+      ) : null}
+
+      {latestRecommendation?.pressureInsights?.warnings.length ? (
+        <div className="mt-4 rounded-[var(--radius-md)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          {messages.dashboardHome.pressureWarnings.replace(
+            "{count}",
+            String(latestRecommendation.pressureInsights.warnings.length)
+          )}
+        </div>
+      ) : null}
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,280px)]">
         <div className="rounded-xl border border-gray-200 p-4">

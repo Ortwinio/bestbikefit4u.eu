@@ -9,11 +9,7 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { User, LogOut, Settings, ChevronDown, LayoutDashboard, Bike } from "lucide-react";
 
-type UserMenuProps = {
-  locale?: string;
-};
-
-export function UserMenu(_: UserMenuProps) {
+export function UserMenu() {
   const { isAuthenticated } = useConvexAuth();
   const { signOut } = useAuthActions();
   const router = useRouter();

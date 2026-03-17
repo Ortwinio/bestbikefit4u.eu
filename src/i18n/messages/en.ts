@@ -319,6 +319,7 @@ const en = {
       myBikes: "My Bikes",
       profile: "Profile",
       tirePressure: "Tire Pressure",
+      settings: "Settings",
     },
     layout: {
       loading: "Loading dashboard...",
@@ -386,6 +387,21 @@ const en = {
           view: "View",
         },
       },
+    },
+    dashboardHome: {
+      subtitle: "Your rider profile, bike setup, and tyre-pressure guidance in one place.",
+      riderCardTitle: "Rider profile",
+      weightLabel: "Body weight",
+      weightMissing: "Add to profile",
+      editProfile: "Edit profile",
+      newFit: "New fit",
+      currentBikeTitle: "Current bike",
+      viewBike: "View bike",
+      noBikeTitle: "No bike saved yet",
+      noBikeDescription: "Add a bike to attach pressure and fit context to a real setup.",
+      pressureStale: "Recalculate recommended",
+      pressureWarnings: "{count} warnings in your fit & pressure layer",
+      viewAllFits: "View all",
     },
     fit: {
       loading: "Loading fit setup...",
@@ -560,10 +576,46 @@ const en = {
         pdfGenerateFailed: "Failed to generate PDF report.",
         downloadTitle: "Failed to download PDF",
       },
+      pressureInsights: {
+        title: "Fit & pressure insights",
+        comfort: "Comfort-oriented setup",
+        balanced: "Balanced setup",
+        performance: "Performance-oriented setup",
+        stability: "Stability",
+        surface: "Surface match",
+        surfaceMatched: "Pressure and surface look aligned.",
+        surfaceUnknown: "No surface note available yet.",
+        allGood: "Setup looks well-matched to your pressure profile.",
+        warningMessages: {
+          pressure_high_for_gravel:
+            "Your tyre pressure may reduce grip and comfort on gravel surfaces.",
+          pressure_low_general:
+            "Your tyre pressure may cause handling issues or pinch flats.",
+          aggressive_setup_rough_terrain:
+            "An aggressive position plus low pressure on rough terrain may increase discomfort.",
+          weight_mismatch:
+            "Your current weight differs from the weight used in the latest pressure calculation.",
+          gravel_road_conflict:
+            "This road-bike setup is paired with a gravel surface profile.",
+          mtb_pressure_stability:
+            "Your front tyre pressure is high for MTB use and may reduce stability.",
+          performance_posture_low_pressure:
+            "Your performance posture assumption works better with firmer road pressure.",
+        } as Record<string, string>,
+      },
+    },
+    dashboardFit: {
+      noResultsYet: "No fit results linked to this bike yet.",
     },
     profile: {
       loading: "Loading profile...",
       title: "Your Profile",
+      photo: {
+        upload: "Upload photo",
+        error: "Upload failed. Please try again.",
+        fileTooLarge: "Use an image smaller than 5 MB.",
+        invalidType: "Use JPG, PNG, or WEBP.",
+      },
       actions: {
         editMeasurements: "Edit Measurements",
       },
@@ -616,12 +668,61 @@ const en = {
         deleteFailed: "Could not delete account. Please try again.",
       },
     },
+    settings: {
+      title: "Settings",
+      subtitle: "Manage your account, preferences, and integrations.",
+      account: {
+        title: "Account",
+        type: "Account type",
+        free: "Free",
+        pro: "Pro",
+        upgrade: "Upgrade to Pro",
+        upgradeDescription:
+          "Unlock Strava sync, richer tyre-pressure insights, and a more advanced setup workflow.",
+        upgradeCta: "View plans",
+      },
+      preferences: {
+        title: "Preferences",
+        language: "Language",
+        appearance: "Appearance",
+        units: "Units",
+        metric: "Metric (kg, mm)",
+        imperial: "Imperial (lbs, in)",
+        light: "Light",
+        dark: "Dark",
+        system: "System",
+      },
+      integrations: {
+        title: "Integrations",
+        strava: "Strava",
+        stravaDescription:
+          "Connect Strava to bring your recent riding context into tyre-pressure guidance.",
+        connectStrava: "Connect Strava",
+        disconnectStrava: "Disconnect",
+        connected: "Connected",
+        available: "Available",
+        proOnly: "Available on Pro",
+      },
+      privacy: {
+        title: "Privacy",
+        description:
+          "Review your account data, profile details, and legal preferences from one place.",
+        privacyPolicy: "Privacy policy",
+        terms: "Terms",
+        manageProfile: "Manage profile",
+      },
+    },
     bikes: {
       loading: "Loading bikes...",
       title: "My Bikes",
       subtitle: "Save your bikes to keep fit sessions tied to real setups.",
       actions: {
         addBike: "Add Bike",
+      },
+      photo: {
+        add: "Add photo",
+        edit: "Change photo",
+        error: "Upload failed.",
       },
       empty: {
         title: "No bikes added yet",
@@ -895,6 +996,8 @@ const en = {
         goToMyBikes: "Go to my bikes",
         currentPressureSummary: "Current",
         recommendedPressureSummary: "Recommended",
+        profileWeightMissing: "Your profile is missing body weight.",
+        profileWeightCta: "Add weight",
         useCaseRace: "Race",
         useCaseEndurance: "Endurance",
         useCaseWetWeather: "Wet weather",

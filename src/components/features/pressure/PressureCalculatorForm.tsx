@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { calculateBasicPressure, type Discipline, type PressureOutput, type RidingGoal, type Surface, type ValidationError, type WarningKey, validatePressureInput } from "@/lib/pressure-engine";
+import { useMemo, useState } from "react";
+import { calculateBasicPressure, type PressureOutput, type RidingGoal, type Surface, type ValidationError, validatePressureInput } from "@/lib/pressure-engine";
 import { PressureResultCard } from "./PressureResultCard";
 import type { PressureResultLabels } from "./shared";
 
@@ -63,52 +63,46 @@ export function PressureCalculatorForm({
   );
   const [bodyWeightKg, setBodyWeightKg] = useState<number>(75);
   const [widthFrontMm, setWidthFrontMm] = useState<number>(28);
-  const [widthRearMm, setWidthRearMm] = useState<number>(28);
+  const [manualWidthRearMm, setManualWidthRearMm] = useState<number>(28);
   const [tubeType, setTubeType] = useState<"inner_tube" | "latex_tube" | "tubeless">("tubeless");
   const [surface, setSurface] = useState<Surface>("average_asphalt");
   const [ridingGoal, setRidingGoal] = useState<RidingGoal | undefined>(undefined);
   const [bikeWeightKg, setBikeWeightKg] = useState<number | undefined>(undefined);
-  const [result, setResult] = useState<PressureOutput | null>(null);
-  const [errors, setErrors] = useState<ValidationError[]>([]);
   const [hasManualRearWidth, setHasManualRearWidth] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const widthRearMm = hasManualRearWidth ? manualWidthRearMm : widthFrontMm;
 
-  useEffect(() => {
-    const validationErrors = validatePressureInput({
+  const errors: ValidationError[] = useMemo(
+    () =>
+      validatePressureInput({
+        bodyWeightKg,
+        widthFrontMm,
+        widthRearMm,
+        discipline,
+        tubeType,
+        surface,
+        bikeWeightKg,
+        ridingGoal,
+      }),
+    [bikeWeightKg, bodyWeightKg, discipline, ridingGoal, surface, tubeType, widthFrontMm, widthRearMm]
+  );
+
+  const result: PressureOutput | null = useMemo(() => {
+    if (errors.length > 0) {
+      return null;
+    }
+
+    return calculateBasicPressure({
+      discipline,
       bodyWeightKg,
       widthFrontMm,
       widthRearMm,
-      discipline,
       tubeType,
       surface,
-      bikeWeightKg,
       ridingGoal,
+      bikeWeightKg,
     });
-    setErrors(validationErrors);
-
-    if (validationErrors.length === 0) {
-      setResult(
-        calculateBasicPressure({
-          discipline,
-          bodyWeightKg,
-          widthFrontMm,
-          widthRearMm,
-          tubeType,
-          surface,
-          ridingGoal,
-          bikeWeightKg,
-        })
-      );
-    } else {
-      setResult(null);
-    }
-  }, [bikeWeightKg, bodyWeightKg, discipline, ridingGoal, surface, tubeType, widthFrontMm, widthRearMm]);
-
-  useEffect(() => {
-    if (!hasManualRearWidth) {
-      setWidthRearMm(widthFrontMm);
-    }
-  }, [hasManualRearWidth, widthFrontMm]);
+  }, [bikeWeightKg, bodyWeightKg, discipline, errors, ridingGoal, surface, tubeType, widthFrontMm, widthRearMm]);
 
   const disciplineButtons: Array<{ value: "road" | "gravel" | "mtb"; label: string }> = [
     { value: "road", label: labels.disciplineRoad },
@@ -213,7 +207,7 @@ export function PressureCalculatorForm({
                 value={widthRearMm}
                 onChange={(event) => {
                   setHasManualRearWidth(true);
-                  setWidthRearMm(Number(event.target.value));
+                  setManualWidthRearMm(Number(event.target.value));
                 }}
                 className="mt-3 w-full"
               />

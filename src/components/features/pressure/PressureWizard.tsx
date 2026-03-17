@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
@@ -28,8 +28,8 @@ export function PressureWizard({ initialBikeId }: PressureWizardProps) {
   const [selectedWheelsetId, setSelectedWheelsetId] = useState<Id<"wheelsets"> | null>(null);
   const [selectedTireSetupId, setSelectedTireSetupId] = useState<Id<"tireSetups"> | null>(null);
   const [inlineTireInput, setInlineTireInput] = useState<InlineTireInput | null>(null);
-  const [bodyWeightKg, setBodyWeightKg] = useState<number>(75);
-  const [bikeWeightKg, setBikeWeightKg] = useState<number | undefined>(undefined);
+  const [manualBodyWeightKg, setManualBodyWeightKg] = useState<number | undefined>(undefined);
+  const [manualBikeWeightKg, setManualBikeWeightKg] = useState<number | undefined>(undefined);
   const [extraLuggageKg, setExtraLuggageKg] = useState<number>(0);
   const [isWet, setIsWet] = useState(false);
   const [ridingGoal, setRidingGoal] = useState<"speed" | "balance" | "comfort">("balance");
@@ -43,6 +43,7 @@ export function PressureWizard({ initialBikeId }: PressureWizardProps) {
   const [offRoadPercent, setOffRoadPercent] = useState(0);
 
   const bikes = useQuery(api.bikes.queries.list);
+  const profile = useQuery(api.profiles.queries.getMyProfile);
   const selectedBike = bikes?.find((bike) => bike._id === selectedBikeId) ?? null;
   const wheelsets = useQuery(
     api.wheelsets.queries.listForBike,
@@ -54,15 +55,8 @@ export function PressureWizard({ initialBikeId }: PressureWizardProps) {
   );
 
   const discipline = selectedBike?.discipline ?? selectedDiscipline;
-
-  useEffect(() => {
-    if (selectedBike?.bikeWeightKg !== undefined && bikeWeightKg === undefined) {
-      setBikeWeightKg(selectedBike.bikeWeightKg);
-    }
-    if (selectedBike?.discipline) {
-      setSelectedDiscipline(selectedBike.discipline);
-    }
-  }, [bikeWeightKg, selectedBike]);
+  const bodyWeightKg = manualBodyWeightKg ?? profile?.weightKg ?? 75;
+  const bikeWeightKg = manualBikeWeightKg ?? selectedBike?.bikeWeightKg;
 
   const steps = [
     messages.pressure.wizard.stepLabels.bike,
@@ -74,6 +68,15 @@ export function PressureWizard({ initialBikeId }: PressureWizardProps) {
 
   return (
     <div className="space-y-6">
+      {profile !== undefined && !profile?.weightKg ? (
+        <div className="rounded-[var(--radius-lg)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          {messages.pressure.wizard.profileWeightMissing}{" "}
+          <a href={`/${locale}/profile`} className="font-semibold underline">
+            {messages.pressure.wizard.profileWeightCta}
+          </a>
+        </div>
+      ) : null}
+
       <div>
         <p className="text-sm font-medium text-gray-600">
           {messages.pressure.wizard.stepOf
@@ -171,8 +174,8 @@ export function PressureWizard({ initialBikeId }: PressureWizardProps) {
           currentFrontBar={currentFrontBar}
           currentRearBar={currentRearBar}
           onUpdate={(updates) => {
-            if (updates.bodyWeightKg !== undefined) setBodyWeightKg(updates.bodyWeightKg);
-            if ("bikeWeightKg" in updates) setBikeWeightKg(updates.bikeWeightKg);
+            if (updates.bodyWeightKg !== undefined) setManualBodyWeightKg(updates.bodyWeightKg);
+            if ("bikeWeightKg" in updates) setManualBikeWeightKg(updates.bikeWeightKg);
             if (updates.extraLuggageKg !== undefined) setExtraLuggageKg(updates.extraLuggageKg);
             if (updates.isWet !== undefined) setIsWet(updates.isWet);
             if (updates.ridingGoal !== undefined) setRidingGoal(updates.ridingGoal);

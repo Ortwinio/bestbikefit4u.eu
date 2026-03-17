@@ -320,6 +320,7 @@ const nl = {
       myBikes: "Mijn fietsen",
       profile: "Profiel",
       tirePressure: "Bandenspanning",
+      settings: "Instellingen",
     },
     layout: {
       loading: "Dashboard laden...",
@@ -387,6 +388,21 @@ const nl = {
           view: "Bekijken",
         },
       },
+    },
+    dashboardHome: {
+      subtitle: "Je rijdersprofiel, fietssetup en bandenspanningsadvies op een plek.",
+      riderCardTitle: "Rijdersprofiel",
+      weightLabel: "Lichaamsgewicht",
+      weightMissing: "Voeg toe aan profiel",
+      editProfile: "Profiel bewerken",
+      newFit: "Nieuwe fit",
+      currentBikeTitle: "Huidige fiets",
+      viewBike: "Bekijk fiets",
+      noBikeTitle: "Nog geen fiets opgeslagen",
+      noBikeDescription: "Voeg een fiets toe om druk- en fitcontext aan een echte setup te koppelen.",
+      pressureStale: "Herberekenen aanbevolen",
+      pressureWarnings: "{count} waarschuwingen in je fit- en spanningslaag",
+      viewAllFits: "Alles bekijken",
     },
     fit: {
       loading: "Fit-instellingen laden...",
@@ -566,10 +582,46 @@ const nl = {
         pdfGenerateFailed: "Genereren van PDF-rapport mislukt.",
         downloadTitle: "Downloaden van PDF mislukt",
       },
+      pressureInsights: {
+        title: "Fit- en spanningsinzichten",
+        comfort: "Comfortgerichte setup",
+        balanced: "Gebalanceerde setup",
+        performance: "Prestatiegerichte setup",
+        stability: "Stabiliteit",
+        surface: "Ondergrondmatch",
+        surfaceMatched: "Bandenspanning en ondergrond lijken goed op elkaar afgestemd.",
+        surfaceUnknown: "Nog geen notitie over ondergrond beschikbaar.",
+        allGood: "De setup past goed bij je spanningsprofiel.",
+        warningMessages: {
+          pressure_high_for_gravel:
+            "Je bandenspanning kan grip en comfort op gravel verminderen.",
+          pressure_low_general:
+            "Je bandenspanning kan stuurproblemen of snakebites veroorzaken.",
+          aggressive_setup_rough_terrain:
+            "Een agressieve positie plus lage druk op ruwe ondergrond kan extra discomfort geven.",
+          weight_mismatch:
+            "Je huidige gewicht wijkt af van het gewicht in de laatste spanningsberekening.",
+          gravel_road_conflict:
+            "Deze racefietssetup is gekoppeld aan een gravel-ondergrondprofiel.",
+          mtb_pressure_stability:
+            "Je voorbanddruk is hoog voor MTB-gebruik en kan stabiliteit verminderen.",
+          performance_posture_low_pressure:
+            "Een prestatiegerichte houding werkt beter met een stevigere bandenspanning op de weg.",
+        } as Record<string, string>,
+      },
+    },
+    dashboardFit: {
+      noResultsYet: "Nog geen fitresultaten gekoppeld aan deze fiets.",
     },
     profile: {
       loading: "Profiel laden...",
       title: "Jouw profiel",
+      photo: {
+        upload: "Foto uploaden",
+        error: "Upload mislukt. Probeer opnieuw.",
+        fileTooLarge: "Gebruik een afbeelding kleiner dan 5 MB.",
+        invalidType: "Gebruik JPG, PNG of WEBP.",
+      },
       actions: {
         editMeasurements: "Metingen bewerken",
       },
@@ -622,6 +674,50 @@ const nl = {
         deleteFailed: "Account verwijderen mislukt. Probeer het opnieuw.",
       },
     },
+    settings: {
+      title: "Instellingen",
+      subtitle: "Beheer je account, voorkeuren en integraties.",
+      account: {
+        title: "Account",
+        type: "Accounttype",
+        free: "Gratis",
+        pro: "Pro",
+        upgrade: "Upgrade naar Pro",
+        upgradeDescription:
+          "Ontgrendel Strava-sync, rijkere bandenspanningsinzichten en een geavanceerdere setupworkflow.",
+        upgradeCta: "Bekijk abonnementen",
+      },
+      preferences: {
+        title: "Voorkeuren",
+        language: "Taal",
+        appearance: "Weergave",
+        units: "Eenheden",
+        metric: "Metrisch (kg, mm)",
+        imperial: "Imperiaal (lbs, inch)",
+        light: "Licht",
+        dark: "Donker",
+        system: "Systeem",
+      },
+      integrations: {
+        title: "Integraties",
+        strava: "Strava",
+        stravaDescription:
+          "Koppel Strava om recente ritcontext mee te nemen in bandenspanningsadvies.",
+        connectStrava: "Strava koppelen",
+        disconnectStrava: "Ontkoppelen",
+        connected: "Verbonden",
+        available: "Beschikbaar",
+        proOnly: "Beschikbaar op Pro",
+      },
+      privacy: {
+        title: "Privacy",
+        description:
+          "Bekijk je accountdata, profielgegevens en juridische voorkeuren vanuit een plek.",
+        privacyPolicy: "Privacybeleid",
+        terms: "Voorwaarden",
+        manageProfile: "Profiel beheren",
+      },
+    },
     bikes: {
       loading: "Fietsen laden...",
       title: "Mijn fietsen",
@@ -654,6 +750,11 @@ const nl = {
         stem: "Stuurpen",
         bar: "Stuur",
         crank: "Crank",
+      },
+      photo: {
+        add: "Foto toevoegen",
+        edit: "Foto wijzigen",
+        error: "Upload mislukt.",
       },
     },
     bikeForm: {
@@ -903,6 +1004,8 @@ const nl = {
         goToMyBikes: "Naar mijn fietsen",
         currentPressureSummary: "Huidig",
         recommendedPressureSummary: "Aanbevolen",
+        profileWeightMissing: "Je profiel mist lichaamsgewicht.",
+        profileWeightCta: "Gewicht toevoegen",
         useCaseRace: "Race",
         useCaseEndurance: "Endurance",
         useCaseWetWeather: "Nat weer",

@@ -1,0 +1,103 @@
+"use client";
+
+import { useMemo, useRef } from "react";
+import { useMutation, useQuery } from "convex/react";
+import { Camera, Loader2, User } from "lucide-react";
+import { api } from "../../../convex/_generated/api";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { useImageUpload } from "@/hooks/useImageUpload";
+import { cn } from "@/utils/cn";
+
+type ProfilePhotoUploadProps = {
+  storageId?: string;
+  size?: "sidebar" | "settings" | "hero";
+};
+
+export function ProfilePhotoUpload({
+  storageId,
+  size = "sidebar",
+}: ProfilePhotoUploadProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { messages } = useDashboardMessages();
+  const updateProfile = useMutation(api.users.mutations.updateProfile);
+  const resolvedUrl = useQuery(
+    api.files.actions.getUrl,
+    storageId ? { storageId } : "skip"
+  );
+
+  const { uploadImage, isUploading, error, clearError } = useImageUpload(
+    async ({ storageId: nextStorageId }) => {
+      await updateProfile({ profile_image_url: nextStorageId });
+    }
+  );
+
+  const sizeClasses = useMemo(() => {
+    switch (size) {
+      case "hero":
+        return "h-20 w-20";
+      case "settings":
+        return "h-16 w-16";
+      default:
+        return "h-10 w-10";
+    }
+  }, [size]);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <button
+        type="button"
+        onClick={() => fileInputRef.current?.click()}
+        className={cn(
+          "group relative overflow-hidden rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)]",
+          sizeClasses
+        )}
+        aria-label={messages.profile.photo.upload}
+      >
+        {resolvedUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={resolvedUrl}
+            alt={messages.profile.photo.upload}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <span className="flex h-full w-full items-center justify-center text-[color:var(--primary)]">
+            <User className="h-5 w-5" />
+          </span>
+        )}
+
+        <span className="absolute inset-0 flex items-center justify-center bg-black/0 text-white opacity-0 transition-all group-hover:bg-black/45 group-hover:opacity-100">
+          {isUploading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Camera className="h-4 w-4" />
+          )}
+        </span>
+      </button>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        className="hidden"
+        onChange={(event) => {
+          const file = event.target.files?.[0];
+          if (!file) return;
+          clearError();
+          void uploadImage(file);
+          event.target.value = "";
+        }}
+      />
+
+      {error ? (
+        <p className="max-w-48 text-xs text-red-600">
+          {error === "file_too_large"
+            ? messages.profile.photo.fileTooLarge
+            : error === "invalid_type"
+              ? messages.profile.photo.invalidType
+              : messages.profile.photo.error}
+        </p>
+      ) : null}
+    </div>
+  );
+}

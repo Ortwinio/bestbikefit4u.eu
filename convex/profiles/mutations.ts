@@ -218,6 +218,12 @@ export const upsert = mutation({
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .unique();
 
+    const weightUpdatedAt =
+      args.weightKg !== undefined &&
+      (!existingProfile || existingProfile.weightKg !== args.weightKg)
+        ? Date.now()
+        : existingProfile?.weightUpdatedAt;
+
     const profileData = {
       userId,
       heightCm: args.heightCm,
@@ -234,6 +240,7 @@ export const upsert = mutation({
       injuryHistory: args.injuryHistory,
       age: args.age,
       weightKg: args.weightKg,
+      weightUpdatedAt,
       updatedAt: Date.now(),
     };
 
@@ -258,6 +265,7 @@ export const updateMeasurements = mutation({
     femurLengthCm: v.optional(v.number()),
     shoulderWidthCm: v.optional(v.number()),
     footLengthCm: v.optional(v.number()),
+    weightKg: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -273,6 +281,7 @@ export const updateMeasurements = mutation({
       femurLengthCm: args.femurLengthCm,
       shoulderWidthCm: args.shoulderWidthCm,
       footLengthCm: args.footLengthCm,
+      weightKg: args.weightKg,
     });
 
     const profile = await ctx.db
@@ -297,6 +306,12 @@ export const updateMeasurements = mutation({
       updates.shoulderWidthCm = args.shoulderWidthCm;
     if (args.footLengthCm !== undefined)
       updates.footLengthCm = args.footLengthCm;
+    if (args.weightKg !== undefined) {
+      updates.weightKg = args.weightKg;
+      if (profile.weightKg !== args.weightKg) {
+        updates.weightUpdatedAt = Date.now();
+      }
+    }
 
     await ctx.db.patch(profile._id, updates);
     return profile._id;

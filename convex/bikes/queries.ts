@@ -44,3 +44,16 @@ export const list = query({
       .collect();
   },
 });
+
+export const getCurrentBike = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await requireUserId(ctx);
+    const bikes = await ctx.db
+      .query("bikes")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+
+    return [...bikes].sort((a, b) => b.createdAt - a.createdAt)[0] ?? null;
+  },
+});

@@ -22,12 +22,13 @@ export default function DashboardLayout({
   const { isLoading, isAuthenticated } = useConvexAuth();
   const { locale, messages, languageSwitchLabels } = useDashboardMessages();
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
+  const loginPath = toLocalizedPath("/login");
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.replace(toLocalizedPath("/login"));
+      router.replace(loginPath);
     }
-  }, [isLoading, isAuthenticated, router, locale]);
+  }, [isLoading, isAuthenticated, loginPath, router]);
 
   if (isLoading || !isAuthenticated) {
     return (
@@ -85,7 +86,9 @@ export default function DashboardLayout({
                 { href: "/dashboard", label: messages.nav.dashboard },
                 { href: "/fit", label: messages.nav.newFitSession },
                 { href: "/bikes", label: messages.nav.myBikes },
+                { href: "/pressure-calculator", label: messages.nav.tirePressure },
                 { href: "/profile", label: messages.nav.profile },
+                { href: "/settings", label: messages.nav.settings },
               ].map((item) => (
                 <Link
                   key={item.href}

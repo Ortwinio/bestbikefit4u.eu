@@ -12,6 +12,10 @@ import {
   EmptyState,
   ErrorState,
   LoadingState,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { reportClientError } from "@/lib/telemetry";
@@ -384,6 +388,61 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         {recommendation.painPointSolutions && (
           <PainSolutions solutions={recommendation.painPointSolutions} />
         )}
+
+        {recommendation.pressureInsights ? (
+          <Card variant="bordered">
+            <CardHeader>
+              <CardTitle>{messages.results.pressureInsights.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="rounded-[var(--radius-md)] bg-[color:var(--secondary)] px-4 py-3">
+                <p className="text-sm font-semibold text-gray-900">
+                  {recommendation.pressureInsights.comfortBias === "comfort"
+                    ? messages.results.pressureInsights.comfort
+                    : recommendation.pressureInsights.comfortBias === "performance"
+                      ? messages.results.pressureInsights.performance
+                      : messages.results.pressureInsights.balanced}
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] px-4 py-3">
+                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                    {messages.results.pressureInsights.stability}
+                  </p>
+                  <p className="mt-1 text-lg font-semibold text-gray-900">
+                    {Math.round(recommendation.pressureInsights.stabilityScore * 100)}%
+                  </p>
+                </div>
+                <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] px-4 py-3">
+                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                    {messages.results.pressureInsights.surface}
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-gray-900">
+                    {recommendation.pressureInsights.surfaceComplianceNote
+                      ? messages.results.pressureInsights.surfaceMatched
+                      : messages.results.pressureInsights.surfaceUnknown}
+                  </p>
+                </div>
+              </div>
+              {recommendation.pressureInsights.warnings.length ? (
+                <div className="space-y-2">
+                  {recommendation.pressureInsights.warnings.map((warning) => (
+                    <div
+                      key={warning}
+                      className="rounded-[var(--radius-md)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+                    >
+                      {messages.results.pressureInsights.warningMessages[warning] ?? warning}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-green-700">
+                  {messages.results.pressureInsights.allGood}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        ) : null}
 
         {/* Fit Notes */}
         <FitNotes notes={recommendation.fitNotes} />

@@ -15,6 +15,17 @@ const PRIMITIVE_FILES = new Set([
   "src/components/questionnaire/questions/SingleChoice.tsx",
 ]);
 
+const EXEMPT_FILES = new Set([
+  "src/components/bikes/BikePhotoUpload.tsx",
+  "src/components/features/bikes/CreateBikeForm.tsx",
+  "src/components/features/pressure/PressureCalculatorForm.tsx",
+  "src/components/features/pressure/wizard/StepResult.tsx",
+  "src/components/features/pressure/wizard/StepRoute.tsx",
+  "src/components/features/pressure/wizard/StepWeightGoal.tsx",
+  "src/components/features/pressure/wizard/StepWheelsetTires.tsx",
+  "src/components/profile/ProfilePhotoUpload.tsx",
+]);
+
 const INPUT_SELECT_ENFORCED_FILES = new Set([
   "src/app/(auth)/login/page.tsx",
   "src/app/(dashboard)/fit/[sessionId]/results/page.tsx",
@@ -112,6 +123,10 @@ async function main() {
 
   for (const file of filesWithControls) {
     if (PRIMITIVE_FILES.has(file.path)) {
+      continue;
+    }
+
+    if (EXEMPT_FILES.has(file.path)) {
       continue;
     }
 

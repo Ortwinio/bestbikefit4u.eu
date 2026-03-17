@@ -28,6 +28,13 @@ export default defineSchema({
     createdAt: v.optional(v.number()),
     lastLoginAt: v.optional(v.number()),
     tier: v.optional(v.union(v.literal("free"), v.literal("pro"), v.literal("premium"))),
+    profile_image_url: v.optional(v.string()),
+    theme_preference: v.optional(
+      v.union(v.literal("light"), v.literal("dark"), v.literal("system"))
+    ),
+    unit_preference: v.optional(
+      v.union(v.literal("metric"), v.literal("imperial"))
+    ),
   })
     .index("by_token", ["tokenIdentifier"])
     .index("email", ["email"])
@@ -81,6 +88,7 @@ export default defineSchema({
     // Additional profile data
     age: v.optional(v.number()),
     weightKg: v.optional(v.number()),
+    weightUpdatedAt: v.optional(v.number()),
 
     updatedAt: v.number(),
   }).index("by_user", ["userId"]),
@@ -372,6 +380,7 @@ export default defineSchema({
   recommendations: defineTable({
     sessionId: v.id("fitSessions"),
     userId: v.id("users"),
+    bikeId: v.optional(v.id("bikes")),
 
     // Core fit calculations
     calculatedFit: v.object({
@@ -434,11 +443,25 @@ export default defineSchema({
         })
       )
     ),
+    pressureInsights: v.optional(
+      v.object({
+        comfortBias: v.union(
+          v.literal("comfort"),
+          v.literal("balanced"),
+          v.literal("performance")
+        ),
+        stabilityScore: v.number(),
+        surfaceComplianceNote: v.optional(v.string()),
+        warnings: v.array(v.string()),
+        version: v.number(),
+      })
+    ),
 
     createdAt: v.number(),
   })
     .index("by_session", ["sessionId"])
-    .index("by_user", ["userId"]),
+    .index("by_user", ["userId"])
+    .index("by_bike", ["bikeId"]),
 
   // Email reports tracking
   emailReports: defineTable({
@@ -561,4 +584,25 @@ export default defineSchema({
     .index("by_event_type_occurred_at", ["eventType", "occurredAt"])
     .index("by_locale_occurred_at", ["locale", "occurredAt"])
     .index("by_page_occurred_at", ["pagePath", "occurredAt"]),
+
+  integrations: defineTable({
+    userId: v.id("users"),
+    provider: v.literal("strava"),
+    providerUserId: v.optional(v.string()),
+    accessToken: v.optional(v.string()),
+    refreshToken: v.optional(v.string()),
+    tokenExpiresAt: v.optional(v.number()),
+    accessStatus: v.union(
+      v.literal("not_connected"),
+      v.literal("active"),
+      v.literal("revoked"),
+      v.literal("error")
+    ),
+    lastSyncAt: v.optional(v.number()),
+    ridingProfileJson: v.optional(v.string()),
+    athleteName: v.optional(v.string()),
+    athleteAvatarUrl: v.optional(v.string()),
+    oauthState: v.optional(v.string()),
+    oauthStateExpiresAt: v.optional(v.number()),
+  }).index("by_user_and_provider", ["userId", "provider"]),
 });

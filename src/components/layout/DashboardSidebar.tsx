@@ -21,6 +21,7 @@ import {
   LogOut,
   Gauge,
 } from "lucide-react";
+import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
@@ -36,6 +37,7 @@ export function DashboardSidebar() {
     { name: messages.nav.myBikes, href: "/bikes", icon: Bike },
     { name: messages.nav.tirePressure, href: "/pressure-calculator", icon: Gauge },
     { name: messages.nav.profile, href: "/profile", icon: User },
+    { name: messages.nav.settings, href: "/settings", icon: Settings },
   ];
 
   const websiteNavigation = [
@@ -114,9 +116,7 @@ export function DashboardSidebar() {
         <div className="border-t border-gray-200 p-3">
           {/* User info */}
           <div className="flex items-center gap-3 px-3 py-2 mb-2">
-            <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-              <User className="h-4 w-4 text-blue-600" />
-            </div>
+            <ProfilePhotoUpload storageId={user?.profile_image_url} size="sidebar" />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-900 truncate">
                 {displayName}

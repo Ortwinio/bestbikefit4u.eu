@@ -51,3 +51,23 @@ export const listByUser = query({
       .collect();
   },
 });
+
+export const getLatestByBike = query({
+  args: { bikeId: v.id("bikes") },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return null;
+
+    const bike = await ctx.db.get(args.bikeId);
+    if (!bike || bike.userId !== userId) {
+      return null;
+    }
+
+    const recommendations = await ctx.db
+      .query("recommendations")
+      .withIndex("by_bike", (q) => q.eq("bikeId", args.bikeId))
+      .collect();
+
+    return recommendations.sort((a, b) => b.createdAt - a.createdAt)[0] ?? null;
+  },
+});

@@ -17,6 +17,12 @@ export function BikePressureSummary({ bikeId }: BikePressureSummaryProps) {
   const latestCalc = useQuery(api.pressureCalculations.queries.getLatestForBike, {
     bikeId,
   });
+  const staleState = useQuery(api.pressureCalculations.queries.isBikePressureStale, {
+    bikeId,
+  });
+  const latestRecommendation = useQuery(api.recommendations.queries.getLatestByBike, {
+    bikeId,
+  });
 
   return (
     <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
@@ -37,6 +43,19 @@ export function BikePressureSummary({ bikeId }: BikePressureSummaryProps) {
               labels={messages.pressure.status}
             />
           </div>
+          {staleState?.isStale ? (
+            <p className="mt-3 text-xs font-semibold text-amber-800">
+              {messages.dashboardHome.pressureStale}
+            </p>
+          ) : null}
+          {latestRecommendation?.pressureInsights?.warnings.length ? (
+            <p className="mt-2 text-xs text-amber-800">
+              {messages.dashboardHome.pressureWarnings.replace(
+                "{count}",
+                String(latestRecommendation.pressureInsights.warnings.length)
+              )}
+            </p>
+          ) : null}
         </>
       ) : (
         <p className="text-sm text-gray-600">{messages.pressure.bikeCard.noCalculation}</p>

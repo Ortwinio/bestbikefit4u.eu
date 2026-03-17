@@ -32,7 +32,7 @@ export function HeaderAuthActions({
             Dashboard
           </Button>
         </Link>
-        <UserMenu locale={locale} />
+        <UserMenu />
       </div>
     );
   }

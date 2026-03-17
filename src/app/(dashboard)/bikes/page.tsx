@@ -18,7 +18,31 @@ import { BIKE_TYPE_LABELS } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { BikePressureSummary } from "@/components/features/pressure/BikePressureSummary";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Bike as BikeIcon } from "lucide-react";
+
+function BikeImage({ storageId }: { storageId?: string }) {
+  const imageUrl = useQuery(
+    api.files.actions.getUrl,
+    storageId ? { storageId } : "skip"
+  );
+
+  if (!imageUrl) {
+    return (
+      <div className="flex aspect-video items-center justify-center rounded-[var(--radius-lg)] bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]">
+        <BikeIcon className="h-8 w-8" />
+      </div>
+    );
+  }
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={imageUrl}
+      alt=""
+      className="aspect-video w-full rounded-[var(--radius-lg)] object-cover"
+    />
+  );
+}
 
 export default function BikesPage() {
   const { locale, messages } = useDashboardMessages();
@@ -85,76 +109,87 @@ export default function BikesPage() {
             return (
               <Card key={bike._id} variant="bordered">
                 <CardHeader className="mb-2">
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
                     <div>
-                      <CardTitle>{bike.name}</CardTitle>
-                      <p className="text-sm text-gray-500 mt-1">
-                        {[bike.brand, bike.model].filter(Boolean).join(" ") || bikeTypeLabel}
-                      </p>
+                      <Link href={withLocalePrefix(`/bikes/${bike._id}`, locale)} className="block">
+                        <BikeImage storageId={bike.photoUrl} />
+                      </Link>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Link href={withLocalePrefix(`/pressure-calculator?bikeId=${bike._id}`, locale)}>
-                        <Button variant="secondary" size="sm">
-                          {messages.pressure.bikeCard.newCalculation}
-                        </Button>
-                      </Link>
-                      <Link href={withLocalePrefix(`/bikes/${bike._id}/edit`, locale)}>
-                        <Button variant="outline" size="sm">
-                          <Pencil className="h-4 w-4 mr-1" />
-                          {messages.common.edit}
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDelete(bike._id, bike.name)}
-                        isLoading={deletingBikeId === bike._id}
-                      >
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        {messages.common.delete}
-                      </Button>
+                    <div className="space-y-4">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <Link href={withLocalePrefix(`/bikes/${bike._id}`, locale)}>
+                            <CardTitle>{bike.name}</CardTitle>
+                          </Link>
+                          <p className="text-sm text-gray-500 mt-1">
+                            {[bike.brand, bike.model].filter(Boolean).join(" ") || bikeTypeLabel}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Link href={withLocalePrefix(`/pressure-calculator?bikeId=${bike._id}`, locale)}>
+                            <Button variant="secondary" size="sm">
+                              {messages.pressure.bikeCard.newCalculation}
+                            </Button>
+                          </Link>
+                          <Link href={withLocalePrefix(`/bikes/${bike._id}/edit`, locale)}>
+                            <Button variant="outline" size="sm">
+                              <Pencil className="h-4 w-4 mr-1" />
+                              {messages.common.edit}
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleDelete(bike._id, bike.name)}
+                            isLoading={deletingBikeId === bike._id}
+                          >
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            {messages.common.delete}
+                          </Button>
+                        </div>
+                      </div>
+
+                      <CardContent className="px-0 pb-0">
+                        <div className="grid gap-3 sm:grid-cols-2 text-sm text-gray-600">
+                          <div>
+                            <p className="font-medium text-gray-800 mb-1">
+                              {messages.bikes.sections.geometry}
+                            </p>
+                            <p>
+                              {messages.bikes.fields.stack}: {bike.currentGeometry?.stackMm ?? "-"} mm |{" "}
+                              {messages.bikes.fields.reach}: {bike.currentGeometry?.reachMm ?? "-"} mm
+                            </p>
+                            <p>
+                              {messages.bikes.fields.sta}: {bike.currentGeometry?.seatTubeAngle ?? "-"} deg |{" "}
+                              {messages.bikes.fields.hta}: {bike.currentGeometry?.headTubeAngle ?? "-"} deg
+                            </p>
+                            <p>
+                              {messages.bikes.fields.frameSize}: {bike.currentGeometry?.frameSize ?? "-"}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-800 mb-1">
+                              {messages.bikes.sections.currentSetup}
+                            </p>
+                            <p>
+                              {messages.bikes.fields.saddle}: {bike.currentSetup?.saddleHeightMm ?? "-"} mm |{" "}
+                              {messages.bikes.fields.setback}: {bike.currentSetup?.saddleSetbackMm ?? "-"} mm
+                            </p>
+                            <p>
+                              {messages.bikes.fields.stem}: {bike.currentSetup?.stemLengthMm ?? "-"} mm @{" "}
+                              {bike.currentSetup?.stemAngle ?? "-"} deg
+                            </p>
+                            <p>
+                              {messages.bikes.fields.bar}: {bike.currentSetup?.handlebarWidthMm ?? "-"} mm |{" "}
+                              {messages.bikes.fields.crank}: {bike.currentSetup?.crankLengthMm ?? "-"} mm
+                            </p>
+                          </div>
+                          <BikePressureSummary bikeId={bike._id} />
+                        </div>
+                      </CardContent>
                     </div>
                   </div>
                 </CardHeader>
-
-                <CardContent>
-                  <div className="grid gap-3 sm:grid-cols-2 text-sm text-gray-600">
-                    <div>
-                      <p className="font-medium text-gray-800 mb-1">
-                        {messages.bikes.sections.geometry}
-                      </p>
-                      <p>
-                        {messages.bikes.fields.stack}: {bike.currentGeometry?.stackMm ?? "-"} mm |{" "}
-                        {messages.bikes.fields.reach}: {bike.currentGeometry?.reachMm ?? "-"} mm
-                      </p>
-                      <p>
-                        {messages.bikes.fields.sta}: {bike.currentGeometry?.seatTubeAngle ?? "-"} deg |{" "}
-                        {messages.bikes.fields.hta}: {bike.currentGeometry?.headTubeAngle ?? "-"} deg
-                      </p>
-                      <p>
-                        {messages.bikes.fields.frameSize}: {bike.currentGeometry?.frameSize ?? "-"}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-800 mb-1">
-                        {messages.bikes.sections.currentSetup}
-                      </p>
-                      <p>
-                        {messages.bikes.fields.saddle}: {bike.currentSetup?.saddleHeightMm ?? "-"} mm |{" "}
-                        {messages.bikes.fields.setback}: {bike.currentSetup?.saddleSetbackMm ?? "-"} mm
-                      </p>
-                      <p>
-                        {messages.bikes.fields.stem}: {bike.currentSetup?.stemLengthMm ?? "-"} mm @{" "}
-                        {bike.currentSetup?.stemAngle ?? "-"} deg
-                      </p>
-                      <p>
-                        {messages.bikes.fields.bar}: {bike.currentSetup?.handlebarWidthMm ?? "-"} mm |{" "}
-                        {messages.bikes.fields.crank}: {bike.currentSetup?.crankLengthMm ?? "-"} mm
-                      </p>
-                    </div>
-                    <BikePressureSummary bikeId={bike._id} />
-                  </div>
-                </CardContent>
               </Card>
             );
           })}
