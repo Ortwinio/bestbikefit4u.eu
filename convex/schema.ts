@@ -123,10 +123,156 @@ export default defineSchema({
         crankLengthMm: v.optional(v.number()),
       })
     ),
+    discipline: v.optional(
+      v.union(
+        v.literal("road"),
+        v.literal("gravel"),
+        v.literal("mtb"),
+        v.literal("tt")
+      )
+    ),
+    bikeWeightKg: v.optional(v.number()),
+    photoUrl: v.optional(v.string()),
+    fitProfileId: v.optional(v.id("profiles")),
+    brand: v.optional(v.string()),
+    model: v.optional(v.string()),
 
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("by_user", ["userId"]),
+
+  wheelsets: defineTable({
+    bikeId: v.id("bikes"),
+    userId: v.id("users"),
+    name: v.string(),
+    rimType: v.union(v.literal("hooked"), v.literal("hookless")),
+    internalRimWidthFrontMm: v.optional(v.number()),
+    internalRimWidthRearMm: v.optional(v.number()),
+    isActive: v.optional(v.boolean()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_bike", ["bikeId"])
+    .index("by_user", ["userId"]),
+
+  tireSetups: defineTable({
+    wheelsetId: v.id("wheelsets"),
+    userId: v.id("users"),
+    name: v.string(),
+    brand: v.optional(v.string()),
+    model: v.optional(v.string()),
+    widthFrontMm: v.number(),
+    widthRearMm: v.number(),
+    tubeType: v.union(
+      v.literal("inner_tube"),
+      v.literal("latex_tube"),
+      v.literal("tubeless")
+    ),
+    casingType: v.optional(
+      v.union(
+        v.literal("race_light"),
+        v.literal("allround"),
+        v.literal("reinforced")
+      )
+    ),
+    maxPressureBar: v.optional(v.number()),
+    isActive: v.optional(v.boolean()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_wheelset", ["wheelsetId"])
+    .index("by_user", ["userId"]),
+
+  pressureProfiles: defineTable({
+    bikeId: v.id("bikes"),
+    tireSetupId: v.id("tireSetups"),
+    userId: v.id("users"),
+    name: v.string(),
+    useCase: v.union(
+      v.literal("race"),
+      v.literal("endurance"),
+      v.literal("wet_weather"),
+      v.literal("gravel_mixed"),
+      v.literal("comfort"),
+      v.literal("custom")
+    ),
+    targetSurface: v.optional(v.string()),
+    targetGoal: v.optional(v.string()),
+    recommendedFrontBar: v.number(),
+    recommendedRearBar: v.number(),
+    lastCalculatedAt: v.number(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_bike", ["bikeId"])
+    .index("by_user", ["userId"]),
+
+  pressureCalculations: defineTable({
+    userId: v.id("users"),
+    bikeId: v.optional(v.id("bikes")),
+    tireSetupId: v.optional(v.id("tireSetups")),
+    sourceType: v.union(
+      v.literal("public_basic"),
+      v.literal("dashboard_basic"),
+      v.literal("dashboard_advanced")
+    ),
+    inputSnapshot: v.object({
+      bodyWeightKg: v.number(),
+      bikeWeightKg: v.optional(v.number()),
+      extraLuggageKg: v.optional(v.number()),
+      discipline: v.union(
+        v.literal("road"),
+        v.literal("gravel"),
+        v.literal("mtb"),
+        v.literal("tt")
+      ),
+      widthFrontMm: v.number(),
+      widthRearMm: v.number(),
+      tubeType: v.union(
+        v.literal("inner_tube"),
+        v.literal("latex_tube"),
+        v.literal("tubeless")
+      ),
+      casingType: v.optional(v.string()),
+      rimType: v.optional(v.union(v.literal("hooked"), v.literal("hookless"))),
+      internalRimWidthFrontMm: v.optional(v.number()),
+      internalRimWidthRearMm: v.optional(v.number()),
+      surface: v.union(
+        v.literal("smooth_asphalt"),
+        v.literal("average_asphalt"),
+        v.literal("rough_asphalt"),
+        v.literal("hardpack_gravel"),
+        v.literal("loose_gravel"),
+        v.literal("trail")
+      ),
+      ridingGoal: v.optional(
+        v.union(
+          v.literal("speed"),
+          v.literal("balance"),
+          v.literal("comfort")
+        )
+      ),
+      isWet: v.optional(v.boolean()),
+      routeDistanceKm: v.optional(v.number()),
+      routeElevationM: v.optional(v.number()),
+      offRoadPercent: v.optional(v.number()),
+    }),
+    recommendedFrontBar: v.number(),
+    recommendedRearBar: v.number(),
+    recommendedFrontPsi: v.number(),
+    recommendedRearPsi: v.number(),
+    currentFrontBar: v.optional(v.number()),
+    currentRearBar: v.optional(v.number()),
+    comfortScore: v.optional(v.number()),
+    gripScore: v.optional(v.number()),
+    efficiencyScore: v.optional(v.number()),
+    warningsJson: v.optional(v.string()),
+    routeContextJson: v.optional(v.string()),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_bike", ["bikeId"])
+    .index("by_user_created", ["userId", "createdAt"]),
 
   // Fit sessions - each time user goes through fitting process
   fitSessions: defineTable({

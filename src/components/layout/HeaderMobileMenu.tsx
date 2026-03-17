@@ -14,6 +14,7 @@ type HeaderMobileMenuProps = {
   locale: Locale;
   labels: {
     howItWorks: string;
+    tools: string;
     pricing: string;
     login: string;
     getStarted: string;
@@ -55,6 +56,13 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
               className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
               {labels.howItWorks}
+            </Link>
+            <Link
+              href={withLocalePrefix("/bandenspanning-calculator", locale)}
+              onClick={close}
+              className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              {labels.tools}
             </Link>
             <Link
               href={withLocalePrefix("/pricing", locale)}

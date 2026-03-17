@@ -118,6 +118,14 @@ export function Footer({ locale, labels }: FooterProps) {
               </li>
               <li>
                 <Link
+                  href={withLocalePrefix("/bandenspanning-calculator", locale)}
+                  className="text-sm text-gray-600 hover:text-gray-900"
+                >
+                  {f.tirePressure}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href={withLocalePrefix("/calculators/saddle-height", locale)}
                   className="text-sm text-gray-600 hover:text-gray-900"
                 >

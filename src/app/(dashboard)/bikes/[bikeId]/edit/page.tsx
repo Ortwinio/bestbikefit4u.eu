@@ -10,6 +10,7 @@ import {
   type BikeFormInitialData,
   type BikeFormPayload,
 } from "@/components/bikes";
+import { BikePressureSection } from "@/components/features/pressure/BikePressureSection";
 import { EmptyState, LoadingState } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -65,15 +66,18 @@ export default function EditBikePage({ params }: EditBikePageProps) {
   };
 
   return (
-    <BikeForm
-      title={messages.bikeForm.edit.title}
-      description={messages.bikeForm.edit.description}
-      submitLabel={messages.bikeForm.actions.saveChanges}
-      initialData={initialData}
-      showBikeTypeSelect={false}
-      onSubmit={handleUpdate}
-      onDelete={handleDelete}
-      cancelHref={withLocalePrefix("/bikes", locale)}
-    />
+    <div className="space-y-6">
+      <BikeForm
+        title={messages.bikeForm.edit.title}
+        description={messages.bikeForm.edit.description}
+        submitLabel={messages.bikeForm.actions.saveChanges}
+        initialData={initialData}
+        showBikeTypeSelect={false}
+        onSubmit={handleUpdate}
+        onDelete={handleDelete}
+        cancelHref={withLocalePrefix("/bikes", locale)}
+      />
+      <BikePressureSection bikeId={bike._id} />
+    </div>
   );
 }

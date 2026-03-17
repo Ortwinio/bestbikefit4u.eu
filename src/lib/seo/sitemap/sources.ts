@@ -104,6 +104,34 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
     changefreq: "weekly",
     priority: 0.8,
   },
+  {
+    id: "calculator-tire-pressure",
+    path: "/bandenspanning-calculator",
+    lastmod: "2026-03-17",
+    changefreq: "weekly",
+    priority: 0.9,
+  },
+  {
+    id: "calculator-tire-pressure-road",
+    path: "/bandenspanning/racefiets",
+    lastmod: "2026-03-17",
+    changefreq: "weekly",
+    priority: 0.9,
+  },
+  {
+    id: "calculator-tire-pressure-gravel",
+    path: "/bandenspanning/gravelbike",
+    lastmod: "2026-03-17",
+    changefreq: "weekly",
+    priority: 0.9,
+  },
+  {
+    id: "calculator-tire-pressure-mtb",
+    path: "/bandenspanning/mtb",
+    lastmod: "2026-03-17",
+    changefreq: "weekly",
+    priority: 0.9,
+  },
 ] as const;
 
 const GUIDE_ROUTE_SEEDS: readonly RouteSeed[] = [

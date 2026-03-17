@@ -17,6 +17,7 @@ import {
 import { BIKE_TYPE_LABELS } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { BikePressureSummary } from "@/components/features/pressure/BikePressureSummary";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 
 export default function BikesPage() {
@@ -87,9 +88,16 @@ export default function BikesPage() {
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <CardTitle>{bike.name}</CardTitle>
-                      <p className="text-sm text-gray-500 mt-1">{bikeTypeLabel}</p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {[bike.brand, bike.model].filter(Boolean).join(" ") || bikeTypeLabel}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2">
+                      <Link href={withLocalePrefix(`/pressure-calculator?bikeId=${bike._id}`, locale)}>
+                        <Button variant="secondary" size="sm">
+                          {messages.pressure.bikeCard.newCalculation}
+                        </Button>
+                      </Link>
                       <Link href={withLocalePrefix(`/bikes/${bike._id}/edit`, locale)}>
                         <Button variant="outline" size="sm">
                           <Pencil className="h-4 w-4 mr-1" />
@@ -144,6 +152,7 @@ export default function BikesPage() {
                         {messages.bikes.fields.crank}: {bike.currentSetup?.crankLengthMm ?? "-"} mm
                       </p>
                     </div>
+                    <BikePressureSummary bikeId={bike._id} />
                   </div>
                 </CardContent>
               </Card>

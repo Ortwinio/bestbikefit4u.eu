@@ -19,6 +19,7 @@ import {
   User,
   Settings,
   LogOut,
+  Gauge,
 } from "lucide-react";
 
 export function DashboardSidebar() {
@@ -33,6 +34,7 @@ export function DashboardSidebar() {
     { name: messages.nav.dashboard, href: "/dashboard", icon: LayoutDashboard },
     { name: messages.nav.newFitSession, href: "/fit", icon: Settings },
     { name: messages.nav.myBikes, href: "/bikes", icon: Bike },
+    { name: messages.nav.tirePressure, href: "/pressure-calculator", icon: Gauge },
     { name: messages.nav.profile, href: "/profile", icon: User },
   ];
 

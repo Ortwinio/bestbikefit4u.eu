@@ -30,6 +30,10 @@ import type * as lib_validation from "../lib/validation.js";
 import type * as profiles_index from "../profiles/index.js";
 import type * as profiles_mutations from "../profiles/mutations.js";
 import type * as profiles_queries from "../profiles/queries.js";
+import type * as pressureCalculations_mutations from "../pressureCalculations/mutations.js";
+import type * as pressureCalculations_queries from "../pressureCalculations/queries.js";
+import type * as pressureProfiles_mutations from "../pressureProfiles/mutations.js";
+import type * as pressureProfiles_queries from "../pressureProfiles/queries.js";
 import type * as questionnaire_mutations from "../questionnaire/mutations.js";
 import type * as questionnaire_queries from "../questionnaire/queries.js";
 import type * as questionnaire_questions from "../questionnaire/questions.js";
@@ -41,8 +45,12 @@ import type * as recommendations_mutations from "../recommendations/mutations.js
 import type * as recommendations_queries from "../recommendations/queries.js";
 import type * as sessions_mutations from "../sessions/mutations.js";
 import type * as sessions_queries from "../sessions/queries.js";
+import type * as tireSetups_mutations from "../tireSetups/mutations.js";
+import type * as tireSetups_queries from "../tireSetups/queries.js";
 import type * as users_mutations from "../users/mutations.js";
 import type * as users_queries from "../users/queries.js";
+import type * as wheelsets_mutations from "../wheelsets/mutations.js";
+import type * as wheelsets_queries from "../wheelsets/queries.js";
 
 import type {
   ApiFromModules,
@@ -73,6 +81,10 @@ declare const fullApi: ApiFromModules<{
   "profiles/index": typeof profiles_index;
   "profiles/mutations": typeof profiles_mutations;
   "profiles/queries": typeof profiles_queries;
+  "pressureCalculations/mutations": typeof pressureCalculations_mutations;
+  "pressureCalculations/queries": typeof pressureCalculations_queries;
+  "pressureProfiles/mutations": typeof pressureProfiles_mutations;
+  "pressureProfiles/queries": typeof pressureProfiles_queries;
   "questionnaire/mutations": typeof questionnaire_mutations;
   "questionnaire/queries": typeof questionnaire_queries;
   "questionnaire/questions": typeof questionnaire_questions;
@@ -84,8 +96,12 @@ declare const fullApi: ApiFromModules<{
   "recommendations/queries": typeof recommendations_queries;
   "sessions/mutations": typeof sessions_mutations;
   "sessions/queries": typeof sessions_queries;
+  "tireSetups/mutations": typeof tireSetups_mutations;
+  "tireSetups/queries": typeof tireSetups_queries;
   "users/mutations": typeof users_mutations;
   "users/queries": typeof users_queries;
+  "wheelsets/mutations": typeof wheelsets_mutations;
+  "wheelsets/queries": typeof wheelsets_queries;
 }>;
 
 /**

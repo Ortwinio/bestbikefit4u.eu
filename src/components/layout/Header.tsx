@@ -31,6 +31,12 @@ export function Header({ locale, labels }: HeaderProps) {
                 {labels.nav.howItWorks}
               </Link>
               <Link
+                href={withLocalePrefix("/bandenspanning-calculator", locale)}
+                className="text-sm text-gray-600 hover:text-gray-900"
+              >
+                {labels.nav.tools}
+              </Link>
+              <Link
                 href={withLocalePrefix("/pricing", locale)}
                 className="text-sm text-gray-600 hover:text-gray-900"
               >
@@ -51,6 +57,7 @@ export function Header({ locale, labels }: HeaderProps) {
               locale={locale}
               labels={{
                 howItWorks: labels.nav.howItWorks,
+                tools: labels.nav.tools,
                 pricing: labels.nav.pricing,
                 login: labels.nav.login,
                 getStarted: labels.nav.getStarted,

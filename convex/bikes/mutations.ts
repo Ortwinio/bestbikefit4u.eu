@@ -2,6 +2,13 @@ import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
 
+const disciplineValidator = v.union(
+  v.literal("road"),
+  v.literal("gravel"),
+  v.literal("mtb"),
+  v.literal("tt")
+);
+
 export const create = mutation({
   args: {
     name: v.string(),
@@ -34,6 +41,12 @@ export const create = mutation({
         crankLengthMm: v.optional(v.number()),
       })
     ),
+    discipline: v.optional(disciplineValidator),
+    bikeWeightKg: v.optional(v.number()),
+    photoUrl: v.optional(v.string()),
+    fitProfileId: v.optional(v.id("profiles")),
+    brand: v.optional(v.string()),
+    model: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
@@ -44,6 +57,12 @@ export const create = mutation({
       bikeType: args.bikeType,
       currentGeometry: args.currentGeometry,
       currentSetup: args.currentSetup,
+      discipline: args.discipline,
+      bikeWeightKg: args.bikeWeightKg,
+      photoUrl: args.photoUrl,
+      fitProfileId: args.fitProfileId,
+      brand: args.brand,
+      model: args.model,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
@@ -73,6 +92,12 @@ export const update = mutation({
         crankLengthMm: v.optional(v.number()),
       })
     ),
+    discipline: v.optional(disciplineValidator),
+    bikeWeightKg: v.optional(v.number()),
+    photoUrl: v.optional(v.string()),
+    fitProfileId: v.optional(v.id("profiles")),
+    brand: v.optional(v.string()),
+    model: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await requireBikeOwner(ctx, args.bikeId);
@@ -82,6 +107,12 @@ export const update = mutation({
       updates.currentGeometry = args.currentGeometry;
     if (args.currentSetup !== undefined)
       updates.currentSetup = args.currentSetup;
+    if (args.discipline !== undefined) updates.discipline = args.discipline;
+    if (args.bikeWeightKg !== undefined) updates.bikeWeightKg = args.bikeWeightKg;
+    if (args.photoUrl !== undefined) updates.photoUrl = args.photoUrl;
+    if (args.fitProfileId !== undefined) updates.fitProfileId = args.fitProfileId;
+    if (args.brand !== undefined) updates.brand = args.brand;
+    if (args.model !== undefined) updates.model = args.model;
 
     await ctx.db.patch(args.bikeId, updates);
   },
