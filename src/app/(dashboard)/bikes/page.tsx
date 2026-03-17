@@ -18,13 +18,11 @@ import { BIKE_TYPE_LABELS } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { BikePressureSummary } from "@/components/features/pressure/BikePressureSummary";
+import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { Plus, Pencil, Trash2, Bike as BikeIcon } from "lucide-react";
 
 function BikeImage({ storageId }: { storageId?: string }) {
-  const imageUrl = useQuery(
-    api.files.actions.getUrl,
-    storageId ? { storageId } : "skip"
-  );
+  const imageUrl = useResolvedImageUrl(storageId);
 
   if (!imageUrl) {
     return (

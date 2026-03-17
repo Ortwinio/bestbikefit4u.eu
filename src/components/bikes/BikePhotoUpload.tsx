@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useRef, useState } from "react";
+import { useMutation } from "convex/react";
 import { Bike, Camera, Loader2 } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 
 type BikePhotoUploadProps = {
   bikeId: Id<"bikes">;
@@ -18,18 +19,19 @@ export function BikePhotoUpload({
   currentPhotoStorageId,
 }: BikePhotoUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewUrlRef = useRef<string | null>(null);
   const { messages } = useDashboardMessages();
   const updateBike = useMutation(api.bikes.mutations.update);
-  const imageUrl = useQuery(
-    api.files.actions.getUrl,
-    currentPhotoStorageId ? { storageId: currentPhotoStorageId } : "skip"
-  );
+  const imageUrl = useResolvedImageUrl(currentPhotoStorageId);
+  const [optimisticUrl, setOptimisticUrl] = useState<string | null>(null);
 
   const { uploadImage, isUploading, error, clearError } = useImageUpload(
-    async ({ storageId }) => {
+    async ({ storageId, url }) => {
+      setOptimisticUrl(url);
       await updateBike({ bikeId, photoUrl: storageId });
     }
   );
+  const displayUrl = imageUrl ?? optimisticUrl;
 
   return (
     <div className="space-y-2">
@@ -38,9 +40,13 @@ export function BikePhotoUpload({
         onClick={() => fileInputRef.current?.click()}
         className="group relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]"
       >
-        {imageUrl ? (
+        {displayUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={imageUrl} alt={messages.bikes.photo.edit} className="h-full w-full object-cover" />
+          <img
+            src={displayUrl}
+            alt={messages.bikes.photo.edit}
+            className="h-full w-full object-cover"
+          />
         ) : (
           <span className="flex flex-col items-center gap-2 text-[color:var(--muted-foreground)]">
             <Bike className="h-8 w-8" />
@@ -66,6 +72,11 @@ export function BikePhotoUpload({
           const file = event.target.files?.[0];
           if (!file) return;
           clearError();
+          if (previewUrlRef.current) {
+            URL.revokeObjectURL(previewUrlRef.current);
+          }
+          previewUrlRef.current = URL.createObjectURL(file);
+          setOptimisticUrl(previewUrlRef.current);
           void uploadImage(file);
           event.target.value = "";
         }}

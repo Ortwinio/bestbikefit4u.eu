@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useRef } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useMemo, useRef, useState } from "react";
+import { useMutation } from "convex/react";
 import { Camera, Loader2, User } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { cn } from "@/utils/cn";
 
 type ProfilePhotoUploadProps = {
@@ -18,18 +19,19 @@ export function ProfilePhotoUpload({
   size = "sidebar",
 }: ProfilePhotoUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewUrlRef = useRef<string | null>(null);
   const { messages } = useDashboardMessages();
   const updateProfile = useMutation(api.users.mutations.updateProfile);
-  const resolvedUrl = useQuery(
-    api.files.actions.getUrl,
-    storageId ? { storageId } : "skip"
-  );
+  const resolvedUrl = useResolvedImageUrl(storageId);
+  const [optimisticUrl, setOptimisticUrl] = useState<string | null>(null);
 
   const { uploadImage, isUploading, error, clearError } = useImageUpload(
-    async ({ storageId: nextStorageId }) => {
+    async ({ storageId: nextStorageId, url }) => {
+      setOptimisticUrl(url);
       await updateProfile({ profile_image_url: nextStorageId });
     }
   );
+  const displayUrl = resolvedUrl ?? optimisticUrl;
 
   const sizeClasses = useMemo(() => {
     switch (size) {
@@ -53,10 +55,10 @@ export function ProfilePhotoUpload({
         )}
         aria-label={messages.profile.photo.upload}
       >
-        {resolvedUrl ? (
+        {displayUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={resolvedUrl}
+            src={displayUrl}
             alt={messages.profile.photo.upload}
             className="h-full w-full object-cover"
           />
@@ -84,6 +86,11 @@ export function ProfilePhotoUpload({
           const file = event.target.files?.[0];
           if (!file) return;
           clearError();
+          if (previewUrlRef.current) {
+            URL.revokeObjectURL(previewUrlRef.current);
+          }
+          previewUrlRef.current = URL.createObjectURL(file);
+          setOptimisticUrl(previewUrlRef.current);
           void uploadImage(file);
           event.target.value = "";
         }}

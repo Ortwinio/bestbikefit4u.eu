@@ -5,16 +5,14 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Button, Card, CardContent, CardHeader, CardTitle, EmptyState, LoadingState } from "@/components/ui";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
+import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { BIKE_TYPE_LABELS } from "@/lib/bikes";
 import { ArrowRight, Bike as BikeIcon, Plus } from "lucide-react";
 
 function CurrentBikeImage({ storageId }: { storageId?: string }) {
-  const imageUrl = useQuery(
-    api.files.actions.getUrl,
-    storageId ? { storageId } : "skip"
-  );
+  const imageUrl = useResolvedImageUrl(storageId);
 
   if (!imageUrl) {
     return (

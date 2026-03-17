@@ -1,4 +1,5 @@
 export const COOKIE_CONSENT_KEY = "bf_cookie_consent";
+export const COOKIE_CONSENT_EVENT = "bf-cookie-consent-change";
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
 
 export type CookieConsentChoice = "accepted" | "essential";
@@ -62,6 +63,31 @@ export function writeCookieConsent(choice: CookieConsentChoice): void {
   window.localStorage.setItem(COOKIE_CONSENT_KEY, choice);
   document.cookie =
     `${COOKIE_CONSENT_KEY}=${choice}; Path=/; Max-Age=${ONE_YEAR_IN_SECONDS}; SameSite=Lax`;
+  window.dispatchEvent(new Event(COOKIE_CONSENT_EVENT));
+}
+
+export function subscribeToCookieConsent(onChange: () => void): () => void {
+  if (typeof window === "undefined") {
+    return () => {};
+  }
+
+  const handleStorage = (event: StorageEvent) => {
+    if (!event.key || event.key === COOKIE_CONSENT_KEY) {
+      onChange();
+    }
+  };
+
+  const handleConsentChange = () => {
+    onChange();
+  };
+
+  window.addEventListener("storage", handleStorage);
+  window.addEventListener(COOKIE_CONSENT_EVENT, handleConsentChange);
+
+  return () => {
+    window.removeEventListener("storage", handleStorage);
+    window.removeEventListener(COOKIE_CONSENT_EVENT, handleConsentChange);
+  };
 }
 
 export function canTrackMarketing(): boolean {

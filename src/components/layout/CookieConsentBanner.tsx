@@ -8,6 +8,7 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import {
   type CookieConsentChoice,
   readCookieConsent,
+  subscribeToCookieConsent,
   writeCookieConsent,
 } from "@/lib/cookieConsent";
 
@@ -46,7 +47,7 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
   const copy = copyByLocale[locale];
 
   const showBanner = useSyncExternalStore(
-    () => () => {},
+    subscribeToCookieConsent,
     () => readCookieConsent() === null,
     () => false
   );
