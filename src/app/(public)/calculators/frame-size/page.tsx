@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { FieldLabel } from "@/components/ui";
+import { BRAND } from "@/config/brand";
 import { calculateQuickEstimate } from "../../../../../convex/lib/fitAlgorithm";
+import { buildFaqPageSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import {
   PUBLIC_BIKE_CATEGORY_OPTIONS,
   getFirstSearchParam,
@@ -68,20 +72,30 @@ export default async function FrameSizeCalculatorPage({
     }
   }
 
-  const calculatorJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: "BestBikeFit4U Frame Size Calculator",
-    url: "/calculators/frame-size",
-    applicationCategory: "SportsApplication",
-    operatingSystem: "Any",
-  };
+  const pageUrl = new URL("/calculators/frame-size", BRAND.siteUrl).toString();
+  const faqs = [
+    {
+      q: "Can a frame-size calculator replace a complete bike fit?",
+      a: "No. Frame size is only one part of the fit. Reach, drop, and contact points still determine whether the bike works well for you.",
+    },
+    {
+      q: "Why does inseam matter for frame size?",
+      a: "It strongly affects saddle height and overall proportions, which influence which size ranges are realistic.",
+    },
+  ];
 
   return (
     <div className="py-16">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorJsonLd) }}
+      <JsonLd
+        schema={[
+          buildWebApplicationSchema({
+            name: "BestBikeFit4U Frame Size Calculator",
+            description:
+              "Estimate bike frame size using BestBikeFit4U algorithm functions based on height, inseam, and bike category.",
+            url: pageUrl,
+          }),
+          buildFaqPageSchema(faqs),
+        ]}
       />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-gray-900">Frame Size Calculator</h1>
@@ -177,32 +191,23 @@ export default async function FrameSizeCalculatorPage({
           </div>
         )}
 
-        <div className="mt-10 grid gap-3 sm:grid-cols-3">
-          <Link
-            href="/calculators/saddle-height"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
-          >
-            Saddle Height Calculator
-          </Link>
-          <Link
-            href="/calculators/crank-length"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
-          >
-            Crank Length Calculator
-          </Link>
-          <Link
-            href="/science/stack-and-reach"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
-          >
-            Stack and Reach Guide
-          </Link>
-          <Link
-            href="/guides/road-bike-fit-guide"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
-          >
-            Road Bike Fit Guide
-          </Link>
-        </div>
+        <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6">
+          <h2 className="text-2xl font-semibold text-gray-900">FAQ</h2>
+          <div className="mt-4 space-y-4">
+            {faqs.map((faq) => (
+              <div key={faq.q}>
+                <h3 className="font-semibold text-gray-900">{faq.q}</h3>
+                <p className="mt-1 text-gray-600">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <RelatedLinksSection
+          title="Related tools and guides"
+          links={getRelatedLinks("frame-size", "en")}
+          locale="en"
+        />
       </div>
     </div>
   );

@@ -39,6 +39,7 @@ const NATIVE_CONTROL_ENFORCED_FILES = new Set([
   "src/app/(public)/calculators/saddle-height/page.tsx",
   "src/app/(public)/calculators/frame-size/page.tsx",
   "src/app/(public)/calculators/crank-length/page.tsx",
+  "src/app/(public)/calculators/bike-fit/page.tsx",
   "src/components/questionnaire/questions/NumericQuestion.tsx",
   "src/components/questionnaire/questions/TextQuestion.tsx",
 ]);

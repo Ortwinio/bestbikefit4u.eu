@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { FieldLabel } from "@/components/ui";
+import { BRAND } from "@/config/brand";
 import { calculateCrankLength } from "../../../../../convex/lib/fitAlgorithm/calculations";
+import { buildFaqPageSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import {
   PUBLIC_BIKE_CATEGORY_OPTIONS,
   getFirstSearchParam,
@@ -51,20 +55,30 @@ export default async function CrankLengthCalculatorPage({
     }
   }
 
-  const calculatorJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: "BestBikeFit4U Crank Length Calculator",
-    url: "/calculators/crank-length",
-    applicationCategory: "SportsApplication",
-    operatingSystem: "Any",
-  };
+  const pageUrl = new URL("/calculators/crank-length", BRAND.siteUrl).toString();
+  const faqs = [
+    {
+      q: "Does a shorter crank always improve comfort?",
+      a: "Not always. Crank length needs to match your inseam, bike category, and position goals rather than following a blanket rule.",
+    },
+    {
+      q: "Why is MTB crank guidance sometimes shorter?",
+      a: "MTB setups may favor slightly shorter cranks for pedal clearance and terrain control.",
+    },
+  ];
 
   return (
     <div className="py-16">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorJsonLd) }}
+      <JsonLd
+        schema={[
+          buildWebApplicationSchema({
+            name: "BestBikeFit4U Crank Length Calculator",
+            description:
+              "Calculate recommended crank length from inseam and bike category using BestBikeFit4U fit algorithm logic.",
+            url: pageUrl,
+          }),
+          buildFaqPageSchema(faqs),
+        ]}
       />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-gray-900">Crank Length Calculator</h1>
@@ -139,32 +153,23 @@ export default async function CrankLengthCalculatorPage({
           </div>
         )}
 
-        <div className="mt-10 grid gap-3 sm:grid-cols-3">
-          <Link
-            href="/calculators/saddle-height"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
-          >
-            Saddle Height Calculator
-          </Link>
-          <Link
-            href="/calculators/frame-size"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
-          >
-            Frame Size Calculator
-          </Link>
-          <Link
-            href="/science/bike-fit-methods"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
-          >
-            Bike Fit Methods
-          </Link>
-          <Link
-            href="/guides/gravel-bike-fit-guide"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
-          >
-            Gravel Bike Fit Guide
-          </Link>
-        </div>
+        <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6">
+          <h2 className="text-2xl font-semibold text-gray-900">FAQ</h2>
+          <div className="mt-4 space-y-4">
+            {faqs.map((faq) => (
+              <div key={faq.q}>
+                <h3 className="font-semibold text-gray-900">{faq.q}</h3>
+                <p className="mt-1 text-gray-600">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <RelatedLinksSection
+          title="Related tools and guides"
+          links={getRelatedLinks("crank-length", "en")}
+          locale="en"
+        />
       </div>
     </div>
   );

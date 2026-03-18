@@ -1,6 +1,8 @@
 import { GUIDE_SLUGS } from "@/app/(public)/guides/data";
+import { USE_CASE_SLUGS } from "@/app/(public)/use-cases/data";
 import { SUPPORTED_LOCALES, type Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { getProgrammaticCalculatorEntries } from "@/lib/seo/programmatic/tirePressure";
 import {
   DEFAULT_LOCALE_FOR_X_DEFAULT,
   SITEMAP_SECTION_PATHS,
@@ -18,11 +20,12 @@ import type {
 
 type RouteSeed = {
   id: string;
-  path: string;
+  path?: string;
   lastmod: string;
   changefreq?: SitemapContentEntry["changefreq"];
   priority?: number;
   locales?: readonly Locale[];
+  localizedPaths?: LocalizedPathMap;
 };
 
 function buildLocalizedPaths(
@@ -35,9 +38,13 @@ function buildLocalizedPaths(
 }
 
 function toEntry(seed: RouteSeed): SitemapContentEntry {
+  const localizedPaths =
+    seed.localizedPaths ??
+    (seed.path ? buildLocalizedPaths(seed.path, seed.locales) : {});
+
   return {
     id: seed.id,
-    localizedPaths: buildLocalizedPaths(seed.path, seed.locales),
+    localizedPaths: { ...localizedPaths },
     lastmod: normalizeLastmod(seed.lastmod),
     changefreq: seed.changefreq,
     priority: seed.priority,
@@ -57,6 +64,20 @@ const PAGE_ROUTE_SEEDS: readonly RouteSeed[] = [
     changefreq: "monthly",
     priority: 0.7,
   },
+  {
+    id: "use-cases-index",
+    path: "/use-cases",
+    lastmod: "2026-03-18",
+    changefreq: "weekly",
+    priority: 0.75,
+  },
+  ...USE_CASE_SLUGS.map<RouteSeed>((slug) => ({
+    id: `use-case-${slug}`,
+    path: `/use-cases/${slug}`,
+    lastmod: "2026-03-18",
+    changefreq: "weekly",
+    priority: 0.75,
+  })),
   { id: "privacy", path: "/privacy", lastmod: "2026-02-22", changefreq: "yearly", priority: 0.3 },
   { id: "terms", path: "/terms", lastmod: "2026-02-19", changefreq: "yearly", priority: 0.3 },
   {
@@ -105,6 +126,13 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
     priority: 0.8,
   },
   {
+    id: "calculator-bike-fit",
+    path: "/calculators/bike-fit",
+    lastmod: "2026-03-18",
+    changefreq: "weekly",
+    priority: 0.95,
+  },
+  {
     id: "calculator-tire-pressure",
     path: "/bandenspanning-calculator",
     lastmod: "2026-03-17",
@@ -132,6 +160,7 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
     changefreq: "weekly",
     priority: 0.9,
   },
+  ...getProgrammaticCalculatorEntries(),
 ] as const;
 
 const GUIDE_ROUTE_SEEDS: readonly RouteSeed[] = [

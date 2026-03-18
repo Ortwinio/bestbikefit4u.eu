@@ -5,11 +5,13 @@ import type { Metadata } from "next";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { QuotesCarousel } from "@/components/home/QuotesCarousel";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getDictionary } from "@/i18n/getDictionary";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { BRAND } from "@/config/brand";
+import { buildOrganizationSchema, buildWebSiteSchema } from "@/lib/seo/jsonLd";
 import {
   HOME_QUOTES_DISPLAY_COUNT,
   selectRandomHomeQuotesForLocale,
@@ -46,29 +48,15 @@ export default async function HomePage() {
     homePath,
     BRAND.siteUrl
   ).toString();
-  const organizationId = `${BRAND.siteUrl}/#organization`;
-  const websiteId = `${BRAND.siteUrl}/#website`;
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "Organization",
-        "@id": organizationId,
-        name: BRAND.name,
-        url: BRAND.siteUrl,
-        email: BRAND.supportEmail,
-      },
-      {
-        "@type": "WebSite",
-        "@id": websiteId,
+      buildOrganizationSchema(),
+      buildWebSiteSchema({
         url: localizedHomeUrl,
-        name: BRAND.name,
         description: home.metadata.description,
         inLanguage: locale,
-        publisher: {
-          "@id": organizationId,
-        },
-      },
+      }),
     ],
   };
   const guideLinks =
@@ -89,6 +77,34 @@ export default async function HomePage() {
     locale,
     HOME_QUOTES_DISPLAY_COUNT
   );
+  const popularTools =
+    locale === "nl"
+      ? [
+          { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+          { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
+          { href: "/calculators/frame-size", label: "Framemaat calculator" },
+          { href: "/bandenspanning-calculator", label: "Bandenspanning calculator" },
+        ]
+      : [
+          { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
+          { href: "/calculators/saddle-height", label: "Saddle Height Calculator" },
+          { href: "/calculators/frame-size", label: "Frame Size Calculator" },
+          { href: "/bandenspanning-calculator", label: "Tire Pressure Calculator" },
+        ];
+  const riderScenarios =
+    locale === "nl"
+      ? [
+          { href: "/use-cases/back-pain-cycling", label: "Bikefit bij lage rugklachten" },
+          { href: "/use-cases/gravel-cycling-fit", label: "Bikefit voor gravelrijden" },
+          { href: "/use-cases/triathlon-bike-fit", label: "Bikefit voor triathlon" },
+          { href: "/use-cases/tall-rider-bike-fit", label: "Bikefit voor lange rijders" },
+        ]
+      : [
+          { href: "/use-cases/back-pain-cycling", label: "Bike Fit for Lower Back Pain" },
+          { href: "/use-cases/gravel-cycling-fit", label: "Bike Fit for Gravel Riding" },
+          { href: "/use-cases/triathlon-bike-fit", label: "Bike Fit for Triathlon" },
+          { href: "/use-cases/tall-rider-bike-fit", label: "Bike Fit for Tall Riders" },
+        ];
 
   return (
     <div>
@@ -98,10 +114,7 @@ export default async function HomePage() {
         pagePath={homePath}
         section="landing"
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <JsonLd schema={structuredData} />
       <section
         className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-24"
         style={{ backgroundImage: "url('/bestbikefit4u-home.gif')" }}
@@ -229,6 +242,32 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900">
+              {locale === "nl" ? "Populaire calculators" : "Popular Calculators"}
+            </h2>
+            <p className="mt-4 text-lg text-gray-600">
+              {locale === "nl"
+                ? "Directe ingangen naar de belangrijkste gratis tools."
+                : "Direct entry points into the most important free tools."}
+            </p>
+          </div>
+          <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {popularTools.map((tool) => (
+              <Link
+                key={tool.href}
+                href={withLocalePrefix(tool.href, locale)}
+                className="rounded-xl border border-gray-200 bg-white px-5 py-4 text-sm font-semibold text-blue-700 shadow-sm hover:bg-blue-50"
+              >
+                {tool.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900">
               {home.trustSection.title}
             </h2>
             <p className="mt-4 text-lg text-gray-600">{home.trustSection.subtitle}</p>
@@ -280,6 +319,40 @@ export default async function HomePage() {
               className="text-sm font-semibold text-blue-700 hover:text-blue-800"
             >
               {locale === "nl" ? "Bekijk alle gidsen" : "View all guides"}
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900">
+              {locale === "nl" ? "Rijsituaties en klachten" : "Riding Scenarios and Pain Points"}
+            </h2>
+            <p className="mt-4 text-lg text-gray-600">
+              {locale === "nl"
+                ? "Gebruik scenario-pagina's om sneller naar de juiste calculator of gids te gaan."
+                : "Use scenario pages to move faster toward the right calculator or guide."}
+            </p>
+          </div>
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
+            {riderScenarios.map((item) => (
+              <Link
+                key={item.href}
+                href={withLocalePrefix(item.href, locale)}
+                className="rounded-xl border border-gray-200 bg-white px-5 py-4 text-sm font-semibold text-blue-700 shadow-sm hover:bg-blue-50"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+          <div className="mt-6 text-center">
+            <Link
+              href={withLocalePrefix("/use-cases", locale)}
+              className="text-sm font-semibold text-blue-700 hover:text-blue-800"
+            >
+              {locale === "nl" ? "Bekijk alle use cases" : "View all use cases"}
             </Link>
           </div>
         </div>

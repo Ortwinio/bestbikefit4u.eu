@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { FieldLabel } from "@/components/ui";
+import { BRAND } from "@/config/brand";
 import { mapCoreScore, mapFlexibilityScore } from "../../../../../convex/lib/fitAlgorithm";
 import { calculateSaddleHeight } from "../../../../../convex/lib/fitAlgorithm/calculations";
 import type { CalculationContext } from "../../../../../convex/lib/fitAlgorithm/types";
+import { buildFaqPageSchema, buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import {
   AMBITION_OPTIONS,
   PUBLIC_BIKE_CATEGORY_OPTIONS,
@@ -81,20 +85,40 @@ export default async function SaddleHeightCalculatorPage({
     }
   }
 
-  const calculatorJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: "BestBikeFit4U Saddle Height Calculator",
-    url: "/calculators/saddle-height",
-    applicationCategory: "SportsApplication",
-    operatingSystem: "Any",
-  };
+  const pageUrl = new URL("/calculators/saddle-height", BRAND.siteUrl).toString();
+  const faqs = [
+    {
+      q: "How do I measure inseam for saddle height?",
+      a: "Stand barefoot, place a book firmly between the legs, and measure from floor to the top of the book.",
+    },
+    {
+      q: "Why does flexibility affect saddle-height guidance?",
+      a: "The calculator combines inseam with riding context. Flexibility and core affect the wider fit posture around the saddle, which matters when choosing a safe starting point.",
+    },
+  ];
 
   return (
     <div className="py-16">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorJsonLd) }}
+      <JsonLd
+        schema={[
+          buildWebApplicationSchema({
+            name: "BestBikeFit4U Saddle Height Calculator",
+            description:
+              "Calculate recommended saddle height using the BestBikeFit4U algorithm with bike category, ambition, flexibility, and core stability inputs.",
+            url: pageUrl,
+          }),
+          buildFaqPageSchema(faqs),
+          buildHowToSchema({
+            name: "How to calculate saddle height",
+            description: "Quick process for getting a safe saddle-height starting point.",
+            steps: [
+              "Measure your inseam carefully.",
+              "Choose bike category and riding goal.",
+              "Rate flexibility and core stability.",
+              "Use the result as a starting point and test it conservatively.",
+            ],
+          }),
+        ]}
       />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-gray-900">Saddle Height Calculator</h1>
@@ -226,32 +250,23 @@ export default async function SaddleHeightCalculatorPage({
           </div>
         )}
 
-        <div className="mt-10 grid gap-3 sm:grid-cols-3">
-          <Link
-            href="/calculators/frame-size"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
-          >
-            Frame Size Calculator
-          </Link>
-          <Link
-            href="/calculators/crank-length"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
-          >
-            Crank Length Calculator
-          </Link>
-          <Link
-            href="/science/calculation-engine"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
-          >
-            Calculation Engine Notes
-          </Link>
-          <Link
-            href="/guides/bike-fitting-for-knee-pain"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
-          >
-            Bike Fitting for Knee Pain
-          </Link>
-        </div>
+        <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6">
+          <h2 className="text-2xl font-semibold text-gray-900">FAQ</h2>
+          <div className="mt-4 space-y-4">
+            {faqs.map((faq) => (
+              <div key={faq.q}>
+                <h3 className="font-semibold text-gray-900">{faq.q}</h3>
+                <p className="mt-1 text-gray-600">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <RelatedLinksSection
+          title="Related tools and guides"
+          links={getRelatedLinks("saddle-height", "en")}
+          locale="en"
+        />
       </div>
     </div>
   );
