@@ -14,21 +14,24 @@ import {
   LoadingState,
   EmptyState,
 } from "@/components/ui";
-import { BIKE_TYPE_LABELS } from "@/lib/bikes";
+import { getBikeTypeLabel } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { BikePressureSummary } from "@/components/features/pressure/BikePressureSummary";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
-import { Plus, Pencil, Trash2, Bike as BikeIcon } from "lucide-react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 
 function BikeImage({ storageId }: { storageId?: string }) {
   const imageUrl = useResolvedImageUrl(storageId);
 
   if (!imageUrl) {
     return (
-      <div className="flex aspect-video items-center justify-center rounded-[var(--radius-lg)] bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]">
-        <BikeIcon className="h-8 w-8" />
-      </div>
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src="/default-bike.svg"
+        alt=""
+        className="aspect-video w-full rounded-[var(--radius-lg)] object-cover"
+      />
     );
   }
 
@@ -102,7 +105,7 @@ export default function BikesPage() {
       ) : (
         <div className="grid gap-4">
           {bikes.map((bike) => {
-            const bikeTypeLabel = BIKE_TYPE_LABELS[bike.bikeType];
+            const bikeTypeLabel = getBikeTypeLabel(bike.bikeType, messages);
 
             return (
               <Card key={bike._id} variant="bordered">

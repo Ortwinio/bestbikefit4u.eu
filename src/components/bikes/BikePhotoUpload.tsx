@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useMutation } from "convex/react";
-import { Bike, Camera, Loader2 } from "lucide-react";
+import { Camera, Loader2 } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -48,10 +48,17 @@ export function BikePhotoUpload({
             className="h-full w-full object-cover"
           />
         ) : (
-          <span className="flex flex-col items-center gap-2 text-[color:var(--muted-foreground)]">
-            <Bike className="h-8 w-8" />
-            <span className="text-sm font-medium">{messages.bikes.photo.add}</span>
-          </span>
+          <div className="relative h-full w-full">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/default-bike.svg"
+              alt={messages.bikes.photo.add}
+              className="h-full w-full object-cover"
+            />
+            <span className="absolute inset-x-0 bottom-3 text-center text-sm font-medium text-[color:var(--foreground)]">
+              {messages.bikes.photo.add}
+            </span>
+          </div>
         )}
 
         <span className="absolute inset-0 flex items-center justify-center bg-black/0 text-white opacity-0 transition-all group-hover:bg-black/45 group-hover:opacity-100">

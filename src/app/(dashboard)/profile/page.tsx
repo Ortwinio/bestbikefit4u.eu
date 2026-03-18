@@ -17,6 +17,7 @@ import {
   AccessibleDialog,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
+import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { reportClientError } from "@/lib/telemetry";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -41,6 +42,7 @@ function ProfileSummary({
   onDeleteAccount,
   isDeleting,
   deleteError,
+  profileImageStorageId,
 }: {
   profile: ProfileData;
   onEdit: () => void;
@@ -49,13 +51,22 @@ function ProfileSummary({
   onDeleteAccount: () => void;
   isDeleting: boolean;
   deleteError: string | null;
+  profileImageStorageId?: string;
 }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">{messages.profile.title}</h1>
+        <div className="flex items-center gap-4">
+          <ProfilePhotoUpload
+            storageId={profileImageStorageId}
+            size="settings"
+          />
+          <h1 className="text-2xl font-bold text-gray-900">
+            {messages.profile.title}
+          </h1>
+        </div>
         <Button onClick={onEdit}>
           <Edit2 className="h-4 w-4 mr-2" />
           {messages.profile.actions.editMeasurements}
@@ -243,6 +254,7 @@ export default function ProfilePage() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const profileData = useQuery(api.profiles.queries.getMyProfile);
+  const user = useQuery(api.users.queries.getCurrentUser);
   const upsertProfile = useMutation(api.profiles.mutations.upsert);
   const deleteAccount = useMutation(api.users.mutations.deleteAccount);
 
@@ -362,6 +374,7 @@ export default function ProfilePage() {
       onDeleteAccount={handleDeleteAccount}
       isDeleting={isDeleting}
       deleteError={deleteError}
+      profileImageStorageId={user?.profile_image_url}
     />
   );
 }

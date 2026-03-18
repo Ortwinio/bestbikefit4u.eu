@@ -8,17 +8,20 @@ import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { BIKE_TYPE_LABELS } from "@/lib/bikes";
-import { ArrowRight, Bike as BikeIcon, Plus } from "lucide-react";
+import { getBikeTypeLabel } from "@/lib/bikes";
+import { ArrowRight, Plus } from "lucide-react";
 
 function CurrentBikeImage({ storageId }: { storageId?: string }) {
   const imageUrl = useResolvedImageUrl(storageId);
 
   if (!imageUrl) {
     return (
-      <div className="flex aspect-video items-center justify-center rounded-[var(--radius-lg)] bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]">
-        <BikeIcon className="h-8 w-8" />
-      </div>
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src="/default-bike.svg"
+        alt=""
+        className="aspect-video w-full rounded-[var(--radius-lg)] object-cover"
+      />
     );
   }
 
@@ -145,7 +148,7 @@ export default function DashboardPage() {
                     <p className="text-lg font-semibold text-gray-900">{currentBike.name}</p>
                     <p className="text-sm text-gray-600">
                       {[currentBike.brand, currentBike.model].filter(Boolean).join(" ") ||
-                        BIKE_TYPE_LABELS[currentBike.bikeType]}
+                        getBikeTypeLabel(currentBike.bikeType, messages)}
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-3">
