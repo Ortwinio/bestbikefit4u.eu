@@ -21,13 +21,14 @@ import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTr
 import { reportClientError } from "@/lib/telemetry";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import {
-  FitSummaryCard,
-  AdjustmentPriorities,
-  FrameSizeRecommendation,
-  FitNotes,
-  PainSolutions,
-} from "@/components/results";
+import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
+import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
+import { RiderProfileCard } from "./components/RiderProfileCard";
+import { PriorityTable } from "./components/PriorityTable";
+import { DetailedFitTable } from "./components/DetailedFitTable";
+import { AdjustmentSequence } from "./components/AdjustmentSequence";
+import { TirePressureSection } from "./components/TirePressureSection";
+import { ValidationPlan } from "./components/ValidationPlan";
 import {
   ArrowLeft,
   CheckCircle,
@@ -46,6 +47,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   const { locale, messages } = useDashboardMessages();
   const pagePath = withLocalePrefix(`/fit/${sessionId}/results`, locale);
   const logMarketingEvent = useMarketingEventLogger();
+  const reportCopy = getReportV2Copy(locale);
 
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [email, setEmail] = useState("");
@@ -59,15 +61,17 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   const hasAutoTriggeredGenerationRef = useRef(false);
   const hasTrackedResultsViewRef = useRef(false);
 
-  const session = useQuery(api.sessions.queries.getById, {
-    sessionId: sessionId as Id<"fitSessions">,
-  });
-
-  const recommendation = useQuery(api.recommendations.queries.getBySession, {
+  const reportSource = useQuery(api.recommendations.queries.getReportV2, {
     sessionId: sessionId as Id<"fitSessions">,
   });
 
   const user = useQuery(api.users.queries.getCurrentUser);
+  const session = reportSource?.session ?? null;
+  const recommendation = reportSource?.recommendation ?? null;
+  const reportPayload =
+    reportSource && reportSource.recommendation
+      ? mapReportV2Payload(reportSource)
+      : null;
 
   const generateRecommendation = useMutation(
     api.recommendations.mutations.generate
@@ -173,7 +177,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
     setDownloadError(null);
 
     try {
-      const response = await fetch(`/api/reports/${sessionId}/pdf`, {
+      const response = await fetch(`/api/reports/${sessionId}/pdf?locale=${locale}`, {
         method: "GET",
       });
 
@@ -194,7 +198,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       const downloadUrl = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = downloadUrl;
-      anchor.download = `bestbikefit4u-report-${sessionId}.pdf`;
+      anchor.download = `bestbikefit4u-report-${sessionId}-${locale}.pdf`;
       document.body.appendChild(anchor);
       anchor.click();
       anchor.remove();
@@ -211,7 +215,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   };
 
   // Loading state
-  if (session === undefined || recommendation === undefined) {
+  if (reportSource === undefined) {
     return <LoadingState label={messages.results.loading} />;
   }
 
@@ -370,82 +374,41 @@ export default function ResultsPage({ params }: ResultsPageProps) {
 
       {/* Results Grid */}
       <div className="space-y-6">
-        {/* Frame Size */}
-        <FrameSizeRecommendation
-          recommendations={recommendation.frameSizeRecommendations}
-        />
-
-        {/* Main Measurements */}
-        <FitSummaryCard
-          fit={recommendation.calculatedFit}
-          confidenceScore={recommendation.confidenceScore}
-        />
-
-        {/* Adjustment Steps */}
-        <AdjustmentPriorities priorities={recommendation.adjustmentPriorities} />
-
-        {/* Pain Solutions */}
-        {recommendation.painPointSolutions && (
-          <PainSolutions solutions={recommendation.painPointSolutions} />
-        )}
-
-        {recommendation.pressureInsights ? (
-          <Card variant="bordered">
-            <CardHeader>
-              <CardTitle>{messages.results.pressureInsights.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="rounded-[var(--radius-md)] bg-[color:var(--secondary)] px-4 py-3">
-                <p className="text-sm font-semibold text-gray-900">
-                  {recommendation.pressureInsights.comfortBias === "comfort"
-                    ? messages.results.pressureInsights.comfort
-                    : recommendation.pressureInsights.comfortBias === "performance"
-                      ? messages.results.pressureInsights.performance
-                      : messages.results.pressureInsights.balanced}
-                </p>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] px-4 py-3">
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                    {messages.results.pressureInsights.stability}
-                  </p>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">
-                    {Math.round(recommendation.pressureInsights.stabilityScore * 100)}%
-                  </p>
-                </div>
-                <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] px-4 py-3">
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                    {messages.results.pressureInsights.surface}
-                  </p>
-                  <p className="mt-1 text-sm font-medium text-gray-900">
-                    {recommendation.pressureInsights.surfaceComplianceNote
-                      ? messages.results.pressureInsights.surfaceMatched
-                      : messages.results.pressureInsights.surfaceUnknown}
-                  </p>
-                </div>
-              </div>
-              {recommendation.pressureInsights.warnings.length ? (
-                <div className="space-y-2">
-                  {recommendation.pressureInsights.warnings.map((warning) => (
-                    <div
-                      key={warning}
-                      className="rounded-[var(--radius-md)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
-                    >
-                      {messages.results.pressureInsights.warningMessages[warning] ?? warning}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-green-700">
-                  {messages.results.pressureInsights.allGood}
-                </p>
-              )}
-            </CardContent>
-          </Card>
+        {reportPayload ? (
+          <>
+            <RiderProfileCard
+              profile={reportPayload.profile}
+              frameTargets={reportPayload.frameTargets}
+              copy={reportCopy}
+            />
+            <PriorityTable rows={reportPayload.prioritySummary} copy={reportCopy} />
+            <DetailedFitTable rows={reportPayload.detailedFit} copy={reportCopy} />
+            <AdjustmentSequence
+              steps={reportPayload.adjustmentSequence}
+              copy={reportCopy}
+            />
+            <TirePressureSection
+              tirePressure={reportPayload.tirePressure}
+              warningMessages={messages.results.pressureInsights.warningMessages}
+              copy={reportCopy}
+            />
+            <ValidationPlan copy={reportCopy} />
+            {reportPayload.fitNotes.length ? (
+              <Card variant="bordered">
+                <CardHeader>
+                  <CardTitle>{reportCopy.sections.fitNotes}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm text-[color:var(--muted-foreground)]">
+                    {reportPayload.fitNotes.map((note) => (
+                      <li key={note}>{note}</li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ) : null}
+          </>
         ) : null}
-
-        {/* Fit Notes */}
-        <FitNotes notes={recommendation.fitNotes} />
       </div>
 
       {/* Action buttons */}

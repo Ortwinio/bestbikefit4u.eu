@@ -1,17 +1,19 @@
 import { describe, expect, it } from "vitest";
 import { renderPdfReportHtml } from "@/lib/reports/pdfLayoutTemplate";
-import { mapPdfReportData } from "@/lib/reports/pdfValueMapping";
+import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
+import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
 
-const report = mapPdfReportData({
+const copy = getReportV2Copy("en");
+const report = mapReportV2Payload({
   session: {
     _id: "session_abc",
-    createdAt: 1765411200000,
-    completedAt: 1765497600000,
     bikeType: "road",
     ridingStyle: "sportive",
     primaryGoal: "performance",
+    engineVersion: "v2",
   },
   recommendation: {
+    engineVersion: "v2",
     algorithmVersion: "2.0.0",
     confidenceScore: 90,
     calculatedFit: {
@@ -28,87 +30,58 @@ const report = mapPdfReportData({
       crankLengthMm: 172.5,
       handlebarWidthMm: 420,
     },
-    frameSizeRecommendations: [
-      {
-        size: "XL (59-62 cm equivalent)",
-        fitScore: 92,
-        notes: "Best match by stack/reach",
-      },
-    ],
-    adjustmentPriorities: [
-      {
-        priority: 1,
-        component: "Cleats",
-        recommendedValue: "3mm behind ball of foot",
-        rationale: "Start with foot alignment",
-      },
-      {
-        priority: 2,
-        component: "Saddle Height",
-        recommendedValue: "754mm",
-        rationale: "Set saddle height before cockpit updates",
-      },
-      {
-        priority: 3,
-        component: "Saddle Setback",
-        recommendedValue: "49mm behind BB",
-        rationale: "Stabilize hip position",
-      },
-    ],
+    frameSizeRecommendations: [{ size: "56", fitScore: 92 }],
     fitNotes: ["Confirm long-ride comfort after each adjustment."],
+    recommendationItems: [],
+    pressureInsights: {
+      comfortBias: "balanced",
+      stabilityScore: 0.8,
+      warnings: [],
+      version: 1,
+    },
   },
-});
+  bike: {
+    bikeType: "road",
+    bikeWeightKg: 8.2,
+    currentSetup: { saddleHeightMm: 750 },
+  },
+  bikeProfile: null,
+  profile: { weightKg: 72 },
+  latestPressureCalculation: {
+    recommendedFrontPsi: 67,
+    recommendedRearPsi: 71,
+    recommendedFrontBar: 4.6,
+    recommendedRearBar: 4.9,
+    comfortScore: 0.7,
+    gripScore: 0.75,
+    efficiencyScore: 0.72,
+    inputSnapshot: {
+      bodyWeightKg: 72,
+      surface: "average_asphalt",
+      ridingGoal: "balance",
+    },
+  },
+} as never);
 
 describe("pdf layout template", () => {
-  it("renders required sections and deterministic page breaks", () => {
-    const html = renderPdfReportHtml({ report });
+  it("renders required report-v2 sections", () => {
+    const html = renderPdfReportHtml({ report, copy });
 
-    const pageBreakCount = (html.match(/class="pageBreak"/g) || []).length;
-
-    expect(html).toContain("Fit Recommendation Report");
-    expect(html).toContain("Core fit targets");
-    expect(html).toContain("Implementation plan");
-    expect(html).toContain("Measurement guide");
-    expect(pageBreakCount).toBe(2);
+    expect(html).toContain(copy.sections.profile);
+    expect(html).toContain(copy.sections.prioritySummary);
+    expect(html).toContain(copy.sections.detailedFit);
+    expect(html).toContain(copy.sections.adjustmentSequence);
+    expect(html).toContain(copy.sections.tirePressure);
+    expect(html).toContain(copy.sections.validationPlan);
   });
 
-  it("uses fallback blocks when optional assets are missing", () => {
-    const html = renderPdfReportHtml({ report, assets: {} });
-
-    expect(html).toContain("Hero image unavailable in this runtime.");
-    expect(html).toContain(
-      "Measurement guide image unavailable in this runtime."
-    );
-  });
-
-  it("renders images when assets are provided", () => {
-    const html = renderPdfReportHtml({
-      report,
-      assets: {
-        logoUrl: "https://cdn.example/logo.png",
-        heroUrl: "https://cdn.example/hero.png",
-        iconCockpitUrl: "https://cdn.example/icon-cockpit.png",
-        iconStepsUrl: "https://cdn.example/icon-steps.png",
-        iconWarningUrl: "https://cdn.example/icon-warning.png",
-        measurementGuideUrl: "https://cdn.example/measurement.png",
-      },
-    });
-
-    expect(html).toContain('src="https://cdn.example/logo.png"');
-    expect(html).toContain('src="https://cdn.example/hero.png"');
-    expect(html).not.toContain("Hero image unavailable in this runtime.");
-  });
-
-  it("includes expected fixture metrics and ranges in rendered HTML", () => {
-    const html = renderPdfReportHtml({ report });
+  it("includes expected fixture metrics in rendered HTML", () => {
+    const html = renderPdfReportHtml({ report, copy });
 
     expect(html).toContain("754 mm");
-    expect(html).toContain("731-774 mm");
+    expect(html).toContain("731 mm - 774 mm");
     expect(html).toContain("98 mm");
-    expect(html).toContain("49 mm");
-    expect(html).toContain("538 mm");
-    expect(html).toContain("Core fit targets");
-    expect(html).toContain("Implementation plan");
-    expect(html).toContain("Measurement guide");
+    expect(html).toContain("67 psi");
+    expect(html).toContain("Confirm long-ride comfort after each adjustment.");
   });
 });

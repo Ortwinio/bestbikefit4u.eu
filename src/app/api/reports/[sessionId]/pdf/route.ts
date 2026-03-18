@@ -7,8 +7,10 @@ import { BRAND } from "@/config/brand";
 import { createSimplePdfFromLines } from "@/lib/pdf/simplePdf";
 import { renderPdfFromHtml } from "@/lib/pdf/htmlPdf";
 import { renderPdfReportHtml } from "@/lib/reports/pdfLayoutTemplate";
-import { mapPdfReportData } from "@/lib/reports/pdfValueMapping";
+import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
+import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
 import { buildRecommendationPdfLines } from "@/lib/reports/recommendationPdf";
+import type { Locale } from "@/i18n/config";
 
 interface PdfRouteContext {
   params: Promise<{ sessionId: string }>;
@@ -17,7 +19,7 @@ interface PdfRouteContext {
 export const runtime = "nodejs";
 
 export async function GET(
-  _request: Request,
+  request: Request,
   context: PdfRouteContext
 ): Promise<Response> {
   try {
@@ -35,6 +37,8 @@ export async function GET(
     }
 
     const { sessionId } = await context.params;
+    const locale =
+      (new URL(request.url).searchParams.get("locale") as Locale | null) ?? "en";
 
     const convex = new ConvexHttpClient(convexUrl);
     convex.setAuth(token);
@@ -59,23 +63,17 @@ export async function GET(
       );
     }
 
-    const session = await convex.query(api.sessions.queries.getById, {
+    const reportSource = await convex.query(api.recommendations.queries.getReportV2, {
       sessionId: typedSessionId,
     });
 
-    if (!session) {
+    if (!reportSource) {
       return NextResponse.json(
         { error: "Session not found." },
         { status: 404 }
       );
     }
-
-    const recommendation = await convex.query(
-      api.recommendations.queries.getBySession,
-      {
-        sessionId: typedSessionId,
-      }
-    );
+    const { session, recommendation } = reportSource;
 
     if (!recommendation) {
       return NextResponse.json(
@@ -91,8 +89,11 @@ export async function GET(
 
     if (richRenderingEnabled) {
       try {
-        const mappedReport = mapPdfReportData({ session, recommendation });
-        const html = renderPdfReportHtml({ report: mappedReport });
+        const mappedReport = mapReportV2Payload(reportSource);
+        const html = renderPdfReportHtml({
+          report: mappedReport,
+          copy: getReportV2Copy(locale),
+        });
         pdfBytes = await renderPdfFromHtml({ html });
       } catch (richRenderError) {
         console.error("Rich PDF render failed, using simple fallback.", {
@@ -118,7 +119,7 @@ export async function GET(
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${BRAND.reportSlug}-${sessionId}.pdf"`,
+        "Content-Disposition": `attachment; filename="${BRAND.reportSlug}-${sessionId}-${locale}.pdf"`,
         "Cache-Control": "no-store",
       },
     });

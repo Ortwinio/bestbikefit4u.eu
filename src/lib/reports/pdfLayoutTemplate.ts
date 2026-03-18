@@ -1,14 +1,5 @@
-import { BRAND } from "@/config/brand";
-import type { PdfReportViewModel } from "@/lib/reports/pdfValueMapping";
-
-export type PdfTemplateAssets = {
-  logoUrl?: string;
-  heroUrl?: string;
-  iconCockpitUrl?: string;
-  iconStepsUrl?: string;
-  iconWarningUrl?: string;
-  measurementGuideUrl?: string;
-};
+import type { ReportV2Copy } from "@/lib/reports/reportV2Copy";
+import type { ReportV2Payload } from "@/lib/reports/reportV2Types";
 
 function escapeHtml(value: string): string {
   return value
@@ -19,375 +10,280 @@ function escapeHtml(value: string): string {
     .replaceAll("'", "&#39;");
 }
 
-function renderIcon(url: string | undefined, alt: string): string {
-  if (!url) {
-    return "";
-  }
-  return `<img class="icon" src="${escapeHtml(url)}" alt="${escapeHtml(alt)}" />`;
-}
-
-function renderSummaryCards(cards: PdfReportViewModel["summaryCards"]): string {
-  return cards
-    .map(
-      (card) => `<div class="card" data-key="${escapeHtml(card.key)}">
-  <div class="cardLabel">${escapeHtml(card.label)}</div>
-  <div class="cardValue">${escapeHtml(card.value)}</div>
-  <div class="cardSubtitle">${escapeHtml(card.subtitle)}</div>
-</div>`
-    )
-    .join("\n");
-}
-
-function renderPriorityList(items: string[]): string {
-  return items
-    .map(
-      (item, index) =>
-        `<li><span class="priorityIndex">${index + 1}.</span> ${escapeHtml(item)}</li>`
-    )
-    .join("\n");
-}
-
-function renderCoreTargets(rows: PdfReportViewModel["coreTargets"]): string {
-  return rows
-    .map(
-      (row) => `<tr>
-  <td>${escapeHtml(row.parameter)}</td>
-  <td>${escapeHtml(row.target)}</td>
-  <td>${escapeHtml(row.range)}</td>
-  <td>${escapeHtml(row.why)}</td>
-</tr>`
-    )
-    .join("\n");
-}
-
-function renderImplementationRows(
-  rows: PdfReportViewModel["implementationPlan"]
+function getStatusLabel(
+  status: "ready" | "pending_data" | "optional",
+  copy: ReportV2Copy
 ): string {
-  return rows
-    .map(
-      (row) => `<tr>
-  <td>${escapeHtml(row.days)}</td>
-  <td>${escapeHtml(row.action)}</td>
-  <td>${escapeHtml(row.track)}</td>
-</tr>`
-    )
+  switch (status) {
+    case "ready":
+      return copy.status.ready;
+    case "pending_data":
+      return copy.status.pendingData;
+    case "optional":
+      return copy.status.optional;
+  }
+}
+
+function renderRows(report: ReportV2Payload["prioritySummary"], copy: ReportV2Copy): string {
+  return report
+    .map((row) => {
+      const parameter = copy.parameters[row.key];
+      return `<tr>
+  <td>${escapeHtml(parameter.label)}</td>
+  <td>${escapeHtml(row.targetLabel)}</td>
+  <td>${escapeHtml(parameter.whyItMatters)}</td>
+  <td>${escapeHtml(parameter.riderValidationCue)}</td>
+  <td>${escapeHtml(getStatusLabel(row.status, copy))}</td>
+</tr>`;
+    })
     .join("\n");
 }
 
-function renderDefinitionsRows(
-  rows: PdfReportViewModel["measurementDefinitions"]
+function renderDetailedRows(
+  report: ReportV2Payload["detailedFit"],
+  copy: ReportV2Copy
 ): string {
-  return rows
+  return report
+    .map((row) => {
+      const parameter = copy.parameters[row.key];
+      return `<tr>
+  <td>${escapeHtml(parameter.label)}</td>
+  <td>${escapeHtml(row.targetLabel)}</td>
+  <td>${escapeHtml(row.rangeLabel ?? "n/a")}</td>
+  <td>${escapeHtml(parameter.methodLabel)}</td>
+  <td>${escapeHtml(parameter.feelDescription)}</td>
+  <td>${escapeHtml(`${parameter.watchOutHigh} ${parameter.watchOutLow}`)}</td>
+</tr>`;
+    })
+    .join("\n");
+}
+
+function renderAdjustmentSteps(
+  report: ReportV2Payload["adjustmentSequence"],
+  copy: ReportV2Copy
+): string {
+  return report
+    .map((step) => {
+      const parameter = copy.parameters[step.key];
+      return `<li>
+  <strong>${step.order}. ${escapeHtml(parameter.label)}</strong><br />
+  ${escapeHtml(step.targetLabel)}<br />
+  <span class="muted">${escapeHtml(parameter.measurementReference)}</span><br />
+  <span class="muted">${escapeHtml(parameter.sequenceNote)}</span>
+</li>`;
+    })
+    .join("\n");
+}
+
+function renderTirePressure(report: ReportV2Payload["tirePressure"], copy: ReportV2Copy): string {
+  if (report.status === "ready") {
+    const inputs = report.inputs
+      .map(
+        (input) =>
+          `<li>${escapeHtml(
+            copy.tirePressure.inputLabels[
+              input.label as keyof typeof copy.tirePressure.inputLabels
+            ] ?? input.label
+          )}: ${escapeHtml(input.value)}</li>`
+      )
+      .join("\n");
+
+    const warnings = report.warnings.length
+      ? `<ul>${report.warnings.map((warning) => `<li>${escapeHtml(warning)}</li>`).join("\n")}</ul>`
+      : `<p>${escapeHtml(copy.tirePressure.noWarnings)}</p>`;
+
+    return `<div class="panel">
+  <p><strong>${escapeHtml(copy.tirePressure.front)}:</strong> ${Math.round(
+      report.frontPsi
+    )} psi / ${report.frontBar.toFixed(1)} bar</p>
+  <p><strong>${escapeHtml(copy.tirePressure.rear)}:</strong> ${Math.round(
+      report.rearPsi
+    )} psi / ${report.rearBar.toFixed(1)} bar</p>
+  <p><strong>${escapeHtml(copy.tirePressure.confidence)}:</strong> ${
+      report.confidence ? `${report.confidence}%` : "n/a"
+    }</p>
+  <p><strong>${escapeHtml(copy.tirePressure.inputLabels.surface)}:</strong> ${
+      report.surface ?? "n/a"
+    }</p>
+  <h3>${escapeHtml(copy.tirePressure.inputsTitle)}</h3>
+  <ul>${inputs}</ul>
+  <h3>${escapeHtml(copy.tirePressure.warnings)}</h3>
+  ${warnings}
+</div>`;
+  }
+
+  const missing = report.required
+    .map(
+      (item) =>
+        `<li>${escapeHtml(
+          copy.tirePressure.missingDataLabels[
+            item as keyof typeof copy.tirePressure.missingDataLabels
+          ] ?? item
+        )}</li>`
+    )
+    .join("\n");
+  const quickStart = report.quickStartTable
     .map(
       (row) => `<tr>
-  <td>${escapeHtml(row.metric)}</td>
-  <td>${escapeHtml(row.method)}</td>
-  <td>${escapeHtml(row.tools)}</td>
+  <td>${escapeHtml(row.weightLabel)}</td>
+  <td>${escapeHtml(row.tireSizeLabel)}</td>
+  <td>${escapeHtml(row.psiLabel)}</td>
 </tr>`
     )
     .join("\n");
+
+  return `<div class="panel warning">
+  <p><strong>${escapeHtml(copy.tirePressure.pendingTitle)}</strong></p>
+  <p>${escapeHtml(copy.tirePressure.pendingDescription)}</p>
+  <ul>${missing}</ul>
+  <h3>${escapeHtml(copy.tirePressure.quickStartTitle)}</h3>
+  <p class="muted">${escapeHtml(copy.tirePressure.quickStartNote)}</p>
+  <table>
+    <thead><tr><th>Weight</th><th>Tyre size</th><th>PSI</th></tr></thead>
+    <tbody>${quickStart}</tbody>
+  </table>
+</div>`;
 }
 
-function renderWarningList(items: string[]): string {
-  return items
-    .map((item) => `<li>${escapeHtml(item)}</li>`)
+function renderValidationPlan(copy: ReportV2Copy): string {
+  return copy.validationPlan.rows
+    .map(
+      (row) => `<tr>
+  <td>${escapeHtml(row.dayBlock)}</td>
+  <td>${escapeHtml(row.change)}</td>
+  <td>${escapeHtml(row.rideDuration)}</td>
+  <td>${escapeHtml(row.whatToScore)}</td>
+</tr>`
+    )
     .join("\n");
-}
-
-function renderFitNotes(notes: string[]): string {
-  if (notes.length === 0) {
-    return "";
-  }
-
-  const list = notes.map((note) => `<li>${escapeHtml(note)}</li>`).join("\n");
-
-  return `<section class="fitNotes">
-  <h2>Additional fit notes</h2>
-  <ul>${list}</ul>
-</section>`;
-}
-
-function renderLogo(assets: PdfTemplateAssets): string {
-  if (!assets.logoUrl) {
-    return `<div class="logoFallback">${escapeHtml(BRAND.name)}</div>`;
-  }
-  return `<img class="logo" src="${escapeHtml(assets.logoUrl)}" alt="${escapeHtml(
-    BRAND.name
-  )}" />`;
-}
-
-function renderHero(assets: PdfTemplateAssets): string {
-  if (!assets.heroUrl) {
-    return `<div class="assetFallback">Hero image unavailable in this runtime.</div>`;
-  }
-  return `<img class="imgRound" src="${escapeHtml(
-    assets.heroUrl
-  )}" alt="Rider on bike" />`;
-}
-
-function renderMeasurementImage(assets: PdfTemplateAssets): string {
-  if (!assets.measurementGuideUrl) {
-    return `<div class="assetFallback">Measurement guide image unavailable in this runtime.</div>`;
-  }
-  return `<img class="imgRound" src="${escapeHtml(
-    assets.measurementGuideUrl
-  )}" alt="Measurement guide" />`;
 }
 
 export function renderPdfReportHtml(params: {
-  report: PdfReportViewModel;
-  assets?: PdfTemplateAssets;
+  report: ReportV2Payload;
+  copy: ReportV2Copy;
 }): string {
-  const report = params.report;
-  const assets = params.assets ?? {};
+  const { report, copy } = params;
 
   return `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>${escapeHtml(report.title)}</title>
+  <title>${escapeHtml(copy.introTitle)}</title>
   <style>
-    @page { size: A4; margin: 18mm 18mm 16mm 18mm; }
-    :root {
-      --bbf-color-brand: #0B1E3B;
-      --bbf-color-text: #111827;
-      --bbf-color-muted: #6B7280;
-      --bbf-color-border: #E5E7EB;
-      --bbf-color-card: #0B1E3B;
-      --bbf-color-callout-bg: #EFF6FF;
-      --bbf-color-callout-border: #60A5FA;
-      --bbf-color-warn-bg: #FFF7ED;
-      --bbf-color-warn-border: #FB923C;
-      --bbf-space-xs: 6px;
-      --bbf-space-sm: 10px;
-      --bbf-space-md: 14px;
-      --bbf-space-lg: 18px;
-      --bbf-radius-md: 10px;
-      --bbf-radius-lg: 12px;
-    }
-    * { box-sizing: border-box; }
-    body {
-      font-family: "Arial", "Helvetica", sans-serif;
-      color: var(--bbf-color-text);
-      font-size: 12px;
-      line-height: 1.4;
-      margin: 0;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--bbf-color-border);
-      padding-bottom: var(--bbf-space-sm);
-    }
-    .logo { height: 28px; max-width: 220px; object-fit: contain; }
-    .logoFallback {
-      color: var(--bbf-color-brand);
-      font-weight: 700;
-      font-size: 18px;
-      letter-spacing: 0.2px;
-    }
-    .meta {
-      color: var(--bbf-color-muted);
-      font-size: 11px;
-      text-align: right;
-      line-height: 1.45;
-    }
-    h1 {
-      color: var(--bbf-color-brand);
-      font-size: 22px;
-      margin: var(--bbf-space-md) 0 var(--bbf-space-sm);
-    }
-    h2 {
-      color: var(--bbf-color-brand);
-      font-size: 14px;
-      margin: var(--bbf-space-md) 0 var(--bbf-space-sm);
-      display: flex;
-      align-items: center;
-      gap: var(--bbf-space-sm);
-    }
-    .icon { width: 22px; height: 22px; object-fit: contain; }
-    .grid2 {
-      display: grid;
-      grid-template-columns: 1.35fr 0.65fr;
-      gap: var(--bbf-space-md);
-      align-items: start;
-    }
-    .muted { color: var(--bbf-color-muted); font-size: 11px; }
-    .imgRound {
-      border-radius: var(--bbf-radius-lg);
-      width: 100%;
-      display: block;
-      border: 1px solid var(--bbf-color-border);
-    }
-    .assetFallback {
-      border: 1px dashed #9CA3AF;
-      border-radius: var(--bbf-radius-lg);
-      color: var(--bbf-color-muted);
-      padding: 20px 16px;
-      font-size: 11px;
-      min-height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-    .cardRow {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--bbf-space-sm);
-      margin: var(--bbf-space-sm) 0 var(--bbf-space-md);
-    }
-    .card {
-      background: var(--bbf-color-card);
-      color: #FFFFFF;
-      border-radius: var(--bbf-radius-md);
-      padding: 12px;
-      min-height: 84px;
-    }
-    .cardLabel { font-size: 11px; opacity: 0.9; }
-    .cardValue { font-size: 22px; font-weight: 700; margin: 6px 0; }
-    .cardSubtitle { font-size: 10px; opacity: 0.9; }
-    .callout {
-      background: var(--bbf-color-callout-bg);
-      border: 1px solid var(--bbf-color-callout-border);
-      border-radius: var(--bbf-radius-md);
-      padding: 12px;
-      margin: 0 0 var(--bbf-space-md);
-    }
-    .callout ul { margin: 8px 0 0; padding: 0; list-style: none; }
-    .callout li { margin-bottom: 6px; }
-    .priorityIndex { font-weight: 700; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 8px 0 0;
-    }
-    th {
-      background: var(--bbf-color-brand);
-      color: #FFFFFF;
-      text-align: left;
-      padding: 8px;
-      font-size: 11px;
-    }
-    td {
-      border: 1px solid var(--bbf-color-border);
-      padding: 8px;
-      vertical-align: top;
-    }
-    .warn {
-      background: var(--bbf-color-warn-bg);
-      border: 1px solid var(--bbf-color-warn-border);
-      border-radius: var(--bbf-radius-md);
-      padding: 12px;
-    }
-    .warn ul { margin: 0; padding-left: 16px; }
-    .warn li { margin-bottom: 6px; }
-    .fitNotes ul { margin: 0; padding-left: 18px; }
-    .frameGuidance {
-      margin-top: var(--bbf-space-md);
-      padding: 12px;
-      border: 1px solid var(--bbf-color-border);
-      border-radius: var(--bbf-radius-md);
-      background: #F9FAFB;
-    }
-    .pageBreak { page-break-before: always; }
+    @page { size: A4; margin: 16mm; }
+    body { font-family: Arial, Helvetica, sans-serif; color: #111827; font-size: 12px; line-height: 1.45; }
+    h1, h2, h3 { color: #0f172a; margin: 0 0 10px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 16px; margin-top: 24px; }
+    h3 { font-size: 13px; margin-top: 16px; }
+    p { margin: 0 0 8px; }
+    ul, ol { margin: 8px 0 0 18px; padding: 0; }
+    li { margin-bottom: 6px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border-bottom: 1px solid #e5e7eb; text-align: left; padding: 8px 6px; vertical-align: top; }
+    th { color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+    .muted { color: #64748b; }
+    .panel { border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px; margin-top: 10px; }
+    .warning { background: #fff7ed; border-color: #fdba74; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .chip { display: inline-block; border: 1px solid #cbd5e1; border-radius: 999px; padding: 2px 8px; font-size: 11px; margin: 0 6px 6px 0; }
   </style>
 </head>
 <body>
-  <header class="header">
-    ${renderLogo(assets)}
-    <div class="meta">
-      Session: ${escapeHtml(report.meta.sessionId)}<br/>
-      Created: ${escapeHtml(report.meta.createdDate)}<br/>
-      Completed: ${escapeHtml(report.meta.completedDate)}<br/>
-      Bike: ${escapeHtml(report.meta.bikeType)} | Goal: ${escapeHtml(
-    report.meta.goal
-  )}<br/>
-      Riding style: ${escapeHtml(report.meta.ridingStyle)}<br/>
-      Algorithm: v${escapeHtml(report.meta.algorithmVersion)} | Confidence: ${escapeHtml(
-    report.meta.confidence
-  )}
+  <h1>${escapeHtml(copy.introTitle)}</h1>
+  <p class="muted">${escapeHtml(copy.introBody)}</p>
+
+  <h2>${escapeHtml(copy.sections.profile)}</h2>
+  <div class="meta">
+    <div class="panel">
+      <p><strong>${escapeHtml(copy.profileFields.sessionId)}:</strong> ${escapeHtml(report.profile.sessionId)}</p>
+      <p><strong>${escapeHtml(copy.profileFields.bikeType)}:</strong> ${escapeHtml(report.profile.bikeType)}</p>
+      <p><strong>${escapeHtml(copy.profileFields.ridingStyle)}:</strong> ${escapeHtml(report.profile.ridingStyle)}</p>
+      <p><strong>${escapeHtml(copy.profileFields.goal)}:</strong> ${escapeHtml(report.profile.goal)}</p>
     </div>
-  </header>
-
-  <h1>${escapeHtml(report.intro.headline)}</h1>
-
-  <section class="grid2">
-    <div>
-      <p>${escapeHtml(report.intro.paragraphs[0] ?? "")}</p>
-      <p>${escapeHtml(report.intro.paragraphs[1] ?? "")}</p>
-      <p class="muted">${escapeHtml(report.intro.bestPractice)}</p>
+    <div class="panel">
+      <p><strong>${escapeHtml(copy.profileFields.algorithmVersion)}:</strong> ${escapeHtml(report.profile.algorithmVersion)}</p>
+      <p><strong>${escapeHtml(copy.profileFields.engineVersion)}:</strong> ${escapeHtml(report.profile.engineVersion)}</p>
+      <p><strong>${escapeHtml(copy.profileFields.confidence)}:</strong> ${report.profile.globalConfidence}%</p>
+      <p><strong>${escapeHtml(copy.profileFields.dataQuality)}:</strong> ${escapeHtml(
+        report.profile.dataQualityStatus === "complete"
+          ? copy.dataQuality.complete
+          : copy.dataQuality.partial
+      )}</p>
     </div>
-    ${renderHero(assets)}
-  </section>
+  </div>
+  ${
+    report.profile.missingData.length
+      ? `<div class="panel warning"><p>${escapeHtml(copy.dataQuality.banner)}</p>${report.profile.missingData
+          .map(
+            (item) =>
+              `<span class="chip">${escapeHtml(
+                copy.tirePressure.missingDataLabels[
+                  item as keyof typeof copy.tirePressure.missingDataLabels
+                ] ?? item
+              )}</span>`
+          )
+          .join("")}</div>`
+      : ""
+  }
 
-  <section class="cardRow">
-    ${renderSummaryCards(report.summaryCards)}
-  </section>
-
-  <section class="callout">
-    <strong>Your 3 priority changes (start here)</strong>
-    <ul>
-      ${renderPriorityList(report.priorityChanges)}
-    </ul>
-  </section>
-
-  <h2>${renderIcon(assets.iconCockpitUrl, "Core targets icon")}Core fit targets</h2>
+  <h2>${escapeHtml(copy.sections.prioritySummary)}</h2>
   <table>
     <thead>
-      <tr><th>Parameter</th><th>Target</th><th>Range</th><th>Why it matters</th></tr>
+      <tr>
+        <th>${escapeHtml(copy.table.parameter)}</th>
+        <th>${escapeHtml(copy.table.target)}</th>
+        <th>${escapeHtml(copy.table.whyItMatters)}</th>
+        <th>${escapeHtml(copy.table.riderValidationCue)}</th>
+        <th>${escapeHtml(copy.table.status)}</th>
+      </tr>
     </thead>
-    <tbody>
-      ${renderCoreTargets(report.coreTargets)}
-    </tbody>
+    <tbody>${renderRows(report.prioritySummary, copy)}</tbody>
   </table>
 
-  <section class="frameGuidance">
-    <strong>Frame guidance:</strong> ${escapeHtml(report.frameGuidance.size)}<br/>
-    <span class="muted">Fit score: ${escapeHtml(report.frameGuidance.fitScore)}</span><br/>
-    <span class="muted">${escapeHtml(report.frameGuidance.notes)}</span>
-  </section>
-
-  <div class="pageBreak"></div>
-
-  <h1>Implementation plan</h1>
-  <h2>${renderIcon(assets.iconStepsUrl, "Plan icon")}14-day progressive plan</h2>
+  <h2>${escapeHtml(copy.sections.detailedFit)}</h2>
   <table>
     <thead>
-      <tr><th>Days</th><th>What to do</th><th>What to track</th></tr>
+      <tr>
+        <th>${escapeHtml(copy.table.parameter)}</th>
+        <th>${escapeHtml(copy.table.target)}</th>
+        <th>${escapeHtml(copy.table.range)}</th>
+        <th>${escapeHtml(copy.table.method)}</th>
+        <th>${escapeHtml(copy.table.feelDescription)}</th>
+        <th>${escapeHtml(copy.table.watchOuts)}</th>
+      </tr>
     </thead>
-    <tbody>
-      ${renderImplementationRows(report.implementationPlan)}
-    </tbody>
+    <tbody>${renderDetailedRows(report.detailedFit, copy)}</tbody>
   </table>
 
-  <h2>${renderIcon(assets.iconWarningUrl, "Warning icon")}If you feel this -> try this</h2>
-  <section class="warn">
-    <ul>
-      ${renderWarningList(report.warningActions)}
-    </ul>
-  </section>
+  <h2>${escapeHtml(copy.sections.adjustmentSequence)}</h2>
+  <p class="muted">${escapeHtml(copy.adjustmentGuideline)}</p>
+  <ol>${renderAdjustmentSteps(report.adjustmentSequence, copy)}</ol>
 
-  ${renderFitNotes(report.fitNotes)}
+  <h2>${escapeHtml(copy.sections.tirePressure)}</h2>
+  ${renderTirePressure(report.tirePressure, copy)}
 
-  <div class="pageBreak"></div>
-
-  <h1>Measurement guide</h1>
-  <p class="muted">Use consistent reference points. See definitions below.</p>
-  ${renderMeasurementImage(assets)}
-
-  <h2>Definitions</h2>
+  <h2>${escapeHtml(copy.sections.validationPlan)}</h2>
   <table>
     <thead>
-      <tr><th>Metric</th><th>How to measure</th><th>Tools</th></tr>
+      <tr>
+        <th>${escapeHtml(copy.validationPlan.dayBlock)}</th>
+        <th>${escapeHtml(copy.validationPlan.change)}</th>
+        <th>${escapeHtml(copy.validationPlan.rideDuration)}</th>
+        <th>${escapeHtml(copy.validationPlan.whatToScore)}</th>
+      </tr>
     </thead>
-    <tbody>
-      ${renderDefinitionsRows(report.measurementDefinitions)}
-    </tbody>
+    <tbody>${renderValidationPlan(copy)}</tbody>
   </table>
 
-  <p class="muted">${escapeHtml(report.safetyDisclaimer)}</p>
+  ${
+    report.fitNotes.length
+      ? `<h2>${escapeHtml(copy.sections.fitNotes)}</h2><ul>${report.fitNotes
+          .map((note) => `<li>${escapeHtml(note)}</li>`)
+          .join("\n")}</ul>`
+      : ""
+  }
 </body>
 </html>`;
 }

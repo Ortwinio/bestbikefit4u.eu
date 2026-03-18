@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => {
   const mutation = vi.fn();
   const setAuth = vi.fn();
   const clientConstructor = vi.fn();
-  const mapPdfReportData = vi.fn();
+  const mapReportV2Payload = vi.fn();
   const renderPdfReportHtml = vi.fn();
   const renderPdfFromHtml = vi.fn();
   const buildRecommendationPdfLines = vi.fn();
@@ -19,7 +19,7 @@ const mocks = vi.hoisted(() => {
     mutation,
     setAuth,
     clientConstructor,
-    mapPdfReportData,
+    mapReportV2Payload,
     renderPdfReportHtml,
     renderPdfFromHtml,
     buildRecommendationPdfLines,
@@ -43,8 +43,8 @@ vi.mock("convex/browser", () => ({
   },
 }));
 
-vi.mock("@/lib/reports/pdfValueMapping", () => ({
-  mapPdfReportData: mocks.mapPdfReportData,
+vi.mock("@/lib/reports/reportV2Mapper", () => ({
+  mapReportV2Payload: mocks.mapReportV2Payload,
 }));
 
 vi.mock("@/lib/reports/pdfLayoutTemplate", () => ({
@@ -113,9 +113,8 @@ describe("pdf report route", () => {
     // By default the rate limit check allows the request
     mocks.mutation.mockResolvedValue(true);
 
-    mocks.mapPdfReportData.mockReturnValue({
-      title: BRAND.reportTitle,
-      summaryCards: [],
+    mocks.mapReportV2Payload.mockReturnValue({
+      profile: { sessionId: "session_3" },
     });
     mocks.renderPdfReportHtml.mockReturnValue("<html>report</html>");
     mocks.renderPdfFromHtml.mockResolvedValue(
@@ -170,37 +169,40 @@ describe("pdf report route", () => {
 
   it("returns 200 with rich renderer output for authorized users", async () => {
     mocks.token.mockResolvedValue("token-abc");
-    mocks.query
-      .mockResolvedValueOnce(sessionFixture)
-      .mockResolvedValueOnce(recommendationFixture);
+    mocks.query.mockResolvedValueOnce({
+      session: sessionFixture,
+      recommendation: recommendationFixture,
+    });
 
-    const response = await GET(new Request("http://localhost"), {
+    const response = await GET(new Request("http://localhost?locale=nl"), {
       params: Promise.resolve({ sessionId: "session_3" }),
     });
 
     expect(response.status).toBe(200);
     expect(response.headers.get("Content-Type")).toBe("application/pdf");
     expect(response.headers.get("Content-Disposition")).toContain(
-      `${BRAND.reportSlug}-session_3.pdf`
+      `${BRAND.reportSlug}-session_3-nl.pdf`
     );
 
     const buffer = await response.arrayBuffer();
     const text = new TextDecoder().decode(buffer);
     expect(text.startsWith("%PDF-1.4")).toBe(true);
     expect(text).toContain("rich");
-    expect(mocks.mapPdfReportData).toHaveBeenCalledWith({
+    expect(mocks.mapReportV2Payload).toHaveBeenCalledWith({
       session: sessionFixture,
       recommendation: recommendationFixture,
     });
+    expect(mocks.renderPdfReportHtml).toHaveBeenCalledTimes(1);
     expect(mocks.renderPdfFromHtml).toHaveBeenCalledTimes(1);
     expect(mocks.createSimplePdfFromLines).not.toHaveBeenCalled();
   });
 
   it("falls back to simple renderer when rich renderer fails", async () => {
     mocks.token.mockResolvedValue("token-fallback");
-    mocks.query
-      .mockResolvedValueOnce(sessionFixture)
-      .mockResolvedValueOnce(recommendationFixture);
+    mocks.query.mockResolvedValueOnce({
+      session: sessionFixture,
+      recommendation: recommendationFixture,
+    });
     mocks.renderPdfFromHtml.mockRejectedValueOnce(new Error("no chromium"));
 
     const response = await GET(new Request("http://localhost"), {
@@ -222,9 +224,10 @@ describe("pdf report route", () => {
   it("uses simple renderer directly when rich rendering is disabled by env", async () => {
     process.env.PDF_RICH_RENDER_ENABLED = "false";
     mocks.token.mockResolvedValue("token-env-flag");
-    mocks.query
-      .mockResolvedValueOnce(sessionFixture)
-      .mockResolvedValueOnce(recommendationFixture);
+    mocks.query.mockResolvedValueOnce({
+      session: sessionFixture,
+      recommendation: recommendationFixture,
+    });
 
     const response = await GET(new Request("http://localhost"), {
       params: Promise.resolve({ sessionId: "session_3" }),
@@ -248,5 +251,19 @@ describe("pdf report route", () => {
     expect(await response.json()).toEqual({
       error: "Failed to generate report.",
     });
+  });
+
+  it("returns 409 when recommendation is missing", async () => {
+    mocks.token.mockResolvedValue("token-wait");
+    mocks.query.mockResolvedValueOnce({
+      session: sessionFixture,
+      recommendation: null,
+    });
+
+    const response = await GET(new Request("http://localhost"), {
+      params: Promise.resolve({ sessionId: "session_3" }),
+    });
+
+    expect(response.status).toBe(409);
   });
 });
