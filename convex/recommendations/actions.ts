@@ -6,12 +6,12 @@
 import { internalAction } from "../_generated/server";
 import { v } from "convex/values";
 import { internal } from "../_generated/api";
+import type { FitInputs, FitOutputs } from "../lib/fitAlgorithm";
+import { runEngineV1Seed } from "./seedEngine";
 import {
-  calculateBikeFit,
-  mapFlexibilityScore,
-  mapCoreScore,
-  type FitInputs,
-} from "../lib/fitAlgorithm";
+  buildShadowDeltas,
+  isEngineV2ShadowEnabled,
+} from "./shadowMode";
 
 /**
  * Internal action that runs the fit algorithm and stores the result.
@@ -79,38 +79,28 @@ export const generateFromData = internalAction({
     frameReachMm: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    // Build inputs for the algorithm
-    const fitInputs: FitInputs = {
-      category: args.bikeCategory,
+    const seed = runEngineV1Seed({
+      heightCm: args.heightCm,
+      inseamCm: args.inseamCm,
+      torsoLengthCm: args.torsoLengthCm,
+      armLengthCm: args.armLengthCm,
+      shoulderWidthCm: args.shoulderWidthCm,
+      footLengthCm: args.footLengthCm,
+      flexibilityScore: args.flexibilityScore,
+      coreStabilityScore: args.coreStabilityScore,
+      bikeCategory: args.bikeCategory,
       ambition: args.ambition,
-      heightMm: args.heightCm * 10,
-      inseamMm: args.inseamCm * 10,
-      flexibilityScore: mapFlexibilityScore(
-        getFlexibilityNumeric(args.flexibilityScore) as 1 | 2 | 3 | 4 | 5
-      ),
-      coreScore: mapCoreScore(
-        Math.min(5, Math.max(1, args.coreStabilityScore)) as 1 | 2 | 3 | 4 | 5
-      ),
-      torsoMm: args.torsoLengthCm ? args.torsoLengthCm * 10 : undefined,
-      armMm: args.armLengthCm ? args.armLengthCm * 10 : undefined,
-      shoulderWidthMm: args.shoulderWidthCm
-        ? args.shoulderWidthCm * 10
-        : undefined,
-      footLengthMm: args.footLengthCm ? args.footLengthCm * 10 : undefined,
       frameStackMm: args.frameStackMm,
       frameReachMm: args.frameReachMm,
-    };
+    });
 
-    // Run the calculation (CPU-heavy work in action context)
-    const result = calculateBikeFit(fitInputs);
-
-    const fitNotes = generateFitNotes(result, fitInputs);
+    const fitNotes = generateFitNotes(seed.fitOutputs, seed.fitInputs);
     const painPointSolutions =
       args.painPoints && args.painPoints.length > 0
         ? args.painPoints.map((pp) => ({
             painArea: pp.area,
             cause: getPainCause(pp.area),
-            solution: getPainSolution(pp.area, result),
+            solution: getPainSolution(pp.area, seed.fitOutputs),
           }))
         : undefined;
 
@@ -118,47 +108,142 @@ export const generateFromData = internalAction({
     await ctx.runMutation(internal.recommendations.internalMutations.storeResult, {
       sessionId: args.sessionId,
       userId: args.userId,
-      calculatedFit: {
-        recommendedStackMm: result.frameStackTargetMm,
-        recommendedReachMm: result.frameReachTargetMm,
-        effectiveTopTubeMm: result.saddleToBarReachMm + 50,
-        saddleHeightMm: result.saddleHeightMm,
-        saddleSetbackMm: result.saddleSetbackMm,
-        saddleHeightRange: result.saddleHeightRange,
-        handlebarDropMm: result.barDropMm,
-        handlebarReachMm: result.saddleToBarReachMm,
-        stemLengthMm: result.stemLengthMm,
-        stemAngleRecommendation: `${result.stemAngleDeg}°`,
-        crankLengthMm: result.crankLengthMm,
-        handlebarWidthMm: result.handlebarWidthMm,
-      },
-      confidenceScore: result.confidenceScore,
-      algorithmVersion: result.algorithmVersion,
-      frameSizeRecommendations: generateFrameSizeRecommendations(result),
+      calculatedFit: seed.calculatedFit,
+      comparisonSnapshot: seed.comparisonSnapshot,
+      recommendationItems: seed.recommendationItems,
+      confidenceScore: seed.confidenceScore,
+      algorithmVersion: seed.algorithmVersion,
+      frameSizeRecommendations: generateFrameSizeRecommendations(seed.fitOutputs),
       fitNotes,
-      adjustmentPriorities: generateAdjustmentPriorities(result),
+      adjustmentPriorities: generateAdjustmentPriorities(seed.fitOutputs),
       painPointSolutions,
     });
+
+    if (isEngineV2ShadowEnabled()) {
+      await ctx.scheduler.runAfter(
+        0,
+        internal.recommendations.actions.runShadowComparison,
+        {
+          sessionId: args.sessionId,
+          userId: args.userId,
+          heightCm: args.heightCm,
+          inseamCm: args.inseamCm,
+          torsoLengthCm: args.torsoLengthCm,
+          armLengthCm: args.armLengthCm,
+          shoulderWidthCm: args.shoulderWidthCm,
+          footLengthCm: args.footLengthCm,
+          flexibilityScore: args.flexibilityScore,
+          coreStabilityScore: args.coreStabilityScore,
+          bikeCategory: args.bikeCategory,
+          ambition: args.ambition,
+          frameStackMm: args.frameStackMm,
+          frameReachMm: args.frameReachMm,
+          baselineSnapshot: seed.comparisonSnapshot,
+        }
+      );
+    }
   },
 });
 
-// Helper to convert flexibility score string to number
-function getFlexibilityNumeric(
-  score: "very_limited" | "limited" | "average" | "good" | "excellent"
-): number {
-  const map = {
-    very_limited: 1,
-    limited: 2,
-    average: 3,
-    good: 4,
-    excellent: 5,
-  };
-  return map[score] || 3;
-}
+export const runShadowComparison = internalAction({
+  args: {
+    sessionId: v.id("fitSessions"),
+    userId: v.id("users"),
+    heightCm: v.number(),
+    inseamCm: v.number(),
+    torsoLengthCm: v.optional(v.number()),
+    armLengthCm: v.optional(v.number()),
+    shoulderWidthCm: v.optional(v.number()),
+    footLengthCm: v.optional(v.number()),
+    flexibilityScore: v.union(
+      v.literal("very_limited"),
+      v.literal("limited"),
+      v.literal("average"),
+      v.literal("good"),
+      v.literal("excellent")
+    ),
+    coreStabilityScore: v.number(),
+    bikeCategory: v.union(
+      v.literal("road"),
+      v.literal("gravel"),
+      v.literal("mtb"),
+      v.literal("city")
+    ),
+    ambition: v.union(
+      v.literal("comfort"),
+      v.literal("balanced"),
+      v.literal("performance"),
+      v.literal("aero")
+    ),
+    frameStackMm: v.optional(v.number()),
+    frameReachMm: v.optional(v.number()),
+    baselineSnapshot: v.object({
+      saddleHeightMm: v.number(),
+      saddleSetbackMm: v.number(),
+      barDropMm: v.number(),
+      saddleToBarReachMm: v.number(),
+      stemLengthMm: v.number(),
+      crankLengthMm: v.number(),
+      handlebarWidthMm: v.number(),
+      confidenceScore: v.number(),
+    }),
+  },
+  handler: async (ctx, args) => {
+    try {
+      const shadowSeed = runEngineV1Seed({
+        heightCm: args.heightCm,
+        inseamCm: args.inseamCm,
+        torsoLengthCm: args.torsoLengthCm,
+        armLengthCm: args.armLengthCm,
+        shoulderWidthCm: args.shoulderWidthCm,
+        footLengthCm: args.footLengthCm,
+        flexibilityScore: args.flexibilityScore,
+        coreStabilityScore: args.coreStabilityScore,
+        bikeCategory: args.bikeCategory,
+        ambition: args.ambition,
+        frameStackMm: args.frameStackMm,
+        frameReachMm: args.frameReachMm,
+      });
+
+      await ctx.runMutation(
+        internal.recommendations.internalMutations.storeShadowComparison,
+        {
+          sessionId: args.sessionId,
+          userId: args.userId,
+          baselineEngineVersion: "v1",
+          shadowEngineVersion: "v2_shadow",
+          status: "completed",
+          baselineSnapshot: args.baselineSnapshot,
+          shadowSnapshot: shadowSeed.comparisonSnapshot,
+          deltas: buildShadowDeltas({
+            baseline: args.baselineSnapshot,
+            shadow: shadowSeed.comparisonSnapshot,
+          }),
+        }
+      );
+    } catch (error) {
+      await ctx.runMutation(
+        internal.recommendations.internalMutations.storeShadowComparison,
+        {
+          sessionId: args.sessionId,
+          userId: args.userId,
+          baselineEngineVersion: "v1",
+          shadowEngineVersion: "v2_shadow",
+          status: "failed",
+          baselineSnapshot: args.baselineSnapshot,
+          errorMessage:
+            error instanceof Error
+              ? error.message
+              : "Shadow comparison failed",
+        }
+      );
+    }
+  },
+});
 
 // Generate frame size recommendations
 function generateFrameSizeRecommendations(
-  result: ReturnType<typeof calculateBikeFit>
+  result: FitOutputs
 ) {
   const stack = result.frameStackTargetMm;
   const reach = result.frameReachTargetMm;
@@ -182,7 +267,7 @@ function estimateFrameSize(stackMm: number, reachMm: number): string {
 
 // Generate fit notes
 function generateFitNotes(
-  result: ReturnType<typeof calculateBikeFit>,
+  result: FitOutputs,
   inputs: FitInputs
 ): string[] {
   const notes: string[] = [];
@@ -227,7 +312,7 @@ function getPainCause(area: string): string {
 
 function getPainSolution(
   area: string,
-  result: ReturnType<typeof calculateBikeFit>
+  result: FitOutputs
 ): string {
   const solutions: Record<string, string> = {
     lower_back: `Ensure saddle setback of ${result.saddleSetbackMm}mm and consider reducing bar drop if issues persist.`,
@@ -243,7 +328,7 @@ function getPainSolution(
 
 // Generate adjustment priorities
 function generateAdjustmentPriorities(
-  result: ReturnType<typeof calculateBikeFit>
+  result: FitOutputs
 ) {
   return [
     {

@@ -19,8 +19,11 @@ export function FieldLabel({
   className,
 }: FieldLabelProps) {
   return (
-    <div className={cn("mb-1 flex items-center gap-1.5", className)}>
-      <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700">
+    <div className={cn("mb-1.5 flex items-center gap-1.5", className)}>
+      <label
+        htmlFor={htmlFor}
+        className="block text-sm font-medium text-[color:var(--foreground)]"
+      >
         {label}
       </label>
       {tooltip && (

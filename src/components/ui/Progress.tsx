@@ -1,0 +1,62 @@
+"use client";
+
+import { forwardRef, type HTMLAttributes } from "react";
+import { Progress as BaseProgress } from "@base-ui/react/progress";
+import { cn } from "@/utils/cn";
+
+export interface ProgressProps extends HTMLAttributes<HTMLDivElement> {
+  value: number | null;
+  max?: number;
+  label?: string;
+  indicatorClassName?: string;
+  trackClassName?: string;
+}
+
+export const Progress = forwardRef<HTMLDivElement, ProgressProps>(
+  (
+    {
+      className,
+      value,
+      max = 100,
+      label,
+      indicatorClassName,
+      trackClassName,
+      ...props
+    },
+    ref
+  ) => {
+    const percentage =
+      value === null ? 100 : Math.max(0, Math.min(100, (value / max) * 100));
+
+    return (
+      <BaseProgress.Root
+        ref={ref}
+        value={value}
+        max={max}
+        aria-label={label}
+        className={cn("w-full", className)}
+        {...props}
+      >
+        <BaseProgress.Track
+          className={cn(
+            "shadow-inset-track relative h-2.5 w-full overflow-hidden rounded-full bg-[color:var(--muted)]",
+            trackClassName
+          )}
+        >
+          <BaseProgress.Indicator
+            className={cn(
+              "h-full rounded-full bg-[color:var(--primary)] transition-transform duration-300 ease-out motion-reduce:transition-none",
+              value === null && "animate-pulse",
+              indicatorClassName
+            )}
+            style={{
+              width: value === null ? "42%" : `${percentage}%`,
+            }}
+          />
+        </BaseProgress.Track>
+      </BaseProgress.Root>
+    );
+  }
+);
+
+Progress.displayName = "Progress";

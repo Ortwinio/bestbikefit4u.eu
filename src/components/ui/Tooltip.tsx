@@ -1,6 +1,7 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId } from "react";
+import { Tooltip as BaseTooltip } from "@base-ui/react/tooltip";
 import { CircleHelp } from "lucide-react";
 import { cn } from "@/utils/cn";
 
@@ -39,51 +40,36 @@ export function Tooltip({
   className,
 }: TooltipProps) {
   const generatedId = useId().replace(/:/g, "");
-  const tooltipId = `tooltip-${generatedId}`;
   const resolvedDescriptionId = descriptionId ?? `tooltip-desc-${generatedId}`;
-  const [open, setOpen] = useState(false);
+  const tooltipId = `tooltip-${generatedId}`;
 
   return (
-    <span className={cn("relative inline-flex items-center", className)}>
+    <BaseTooltip.Provider delay={200} closeDelay={50}>
       <span id={resolvedDescriptionId} className="sr-only">
         {content}
       </span>
-      <button
-        type="button"
-        className="inline-flex h-4 w-4 items-center justify-center rounded-full text-gray-400 transition-colors hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
-        aria-label={label}
-        aria-describedby={resolvedDescriptionId}
-        aria-expanded={open}
-        aria-controls={tooltipId}
-        onMouseEnter={() =>
-          setOpen((current) => getNextTooltipOpenState(current, "mouseenter"))
-        }
-        onMouseLeave={() =>
-          setOpen((current) => getNextTooltipOpenState(current, "mouseleave"))
-        }
-        onFocus={() => setOpen((current) => getNextTooltipOpenState(current, "focus"))}
-        onBlur={() => setOpen((current) => getNextTooltipOpenState(current, "blur"))}
-        onClick={() => setOpen((current) => getNextTooltipOpenState(current, "click"))}
-        onKeyDown={(event) => {
-          if (event.key === "Escape") {
-            setOpen((current) => getNextTooltipOpenState(current, "escape"));
-            event.currentTarget.blur();
-          }
-        }}
-      >
-        <CircleHelp className="h-4 w-4" />
-      </button>
-      <span
-        id={tooltipId}
-        role="tooltip"
-        aria-hidden={!open}
-        className={cn(
-          "pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-max max-w-[min(20rem,calc(100vw-1rem))] rounded-md bg-gray-900 px-2.5 py-1.5 text-xs leading-relaxed text-white shadow-lg transition-opacity break-words sm:left-1/2 sm:-translate-x-1/2",
-          open ? "opacity-100" : "opacity-0"
-        )}
-      >
-        {content}
-      </span>
-    </span>
+      <BaseTooltip.Root>
+        <BaseTooltip.Trigger
+          className={cn("inline-flex items-center", className)}
+          aria-label={label}
+          aria-describedby={resolvedDescriptionId}
+        >
+          <span className="focus-ring inline-flex h-5 w-5 items-center justify-center rounded-full text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]">
+            <CircleHelp className="h-4 w-4" />
+          </span>
+        </BaseTooltip.Trigger>
+        <BaseTooltip.Portal>
+          <BaseTooltip.Positioner sideOffset={8} className="z-50">
+            <BaseTooltip.Popup
+              id={tooltipId}
+              className="max-w-xs rounded-[var(--radius-md)] bg-slate-950 px-3 py-2 text-xs leading-relaxed text-white shadow-lg"
+            >
+              {content}
+              <BaseTooltip.Arrow className="size-2 rotate-45 bg-slate-950" />
+            </BaseTooltip.Popup>
+          </BaseTooltip.Positioner>
+        </BaseTooltip.Portal>
+      </BaseTooltip.Root>
+    </BaseTooltip.Provider>
   );
 }

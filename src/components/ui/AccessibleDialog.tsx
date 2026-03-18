@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
-import { createPortal } from "react-dom";
+import { Dialog as BaseDialog } from "@base-ui/react/dialog";
+import { X } from "lucide-react";
+import { cn } from "@/utils/cn";
 
 interface AccessibleDialogProps {
   open: boolean;
@@ -11,16 +12,6 @@ interface AccessibleDialogProps {
   children: React.ReactNode;
 }
 
-const FOCUSABLE_SELECTOR = [
-  "a[href]",
-  "area[href]",
-  "button:not([disabled])",
-  "input:not([disabled])",
-  "select:not([disabled])",
-  "textarea:not([disabled])",
-  "[tabindex]:not([tabindex='-1'])",
-].join(", ");
-
 export function AccessibleDialog({
   open,
   title,
@@ -28,104 +19,40 @@ export function AccessibleDialog({
   onClose,
   children,
 }: AccessibleDialogProps) {
-  const titleId = useId().replace(/:/g, "");
-  const descriptionId = useId().replace(/:/g, "");
-  const containerRef = useRef<HTMLDivElement>(null);
-  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (!open) return;
-
-    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
-    document.body.style.overflow = "hidden";
-
-    const focusables = containerRef.current?.querySelectorAll<HTMLElement>(
-      FOCUSABLE_SELECTOR
-    );
-    if (focusables && focusables.length > 0) {
-      focusables[0].focus();
-    } else {
-      containerRef.current?.focus();
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-      previouslyFocusedRef.current?.focus();
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        onClose();
-        return;
-      }
-
-      if (event.key !== "Tab") {
-        return;
-      }
-
-      const focusables = containerRef.current?.querySelectorAll<HTMLElement>(
-        FOCUSABLE_SELECTOR
-      );
-      if (!focusables || focusables.length === 0) {
-        event.preventDefault();
-        return;
-      }
-
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      const active = document.activeElement as HTMLElement | null;
-
-      if (event.shiftKey && active === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && active === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [open, onClose]);
-
-  if (!open || typeof document === "undefined") {
-    return null;
-  }
-
-  return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <button
-        type="button"
-        aria-label="Close dialog"
-        className="absolute inset-0 bg-black/50"
-        onClick={onClose}
-      />
-      <div
-        ref={containerRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-describedby={description ? descriptionId : undefined}
-        tabIndex={-1}
-        className="relative z-10 w-full max-w-md rounded-lg border border-gray-200 bg-white p-6 shadow-xl focus:outline-none"
-      >
-        <h2 id={titleId} className="text-lg font-semibold text-gray-900">
-          {title}
-        </h2>
-        {description ? (
-          <p id={descriptionId} className="mt-2 text-sm text-gray-600">
-            {description}
-          </p>
-        ) : null}
-        <div className="mt-4">{children}</div>
-      </div>
-    </div>,
-    document.body
+  return (
+    <BaseDialog.Root
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen) {
+          onClose();
+        }
+      }}
+      disablePointerDismissal={false}
+    >
+      <BaseDialog.Portal>
+        <BaseDialog.Backdrop className="fixed inset-0 z-50 bg-slate-950/45 backdrop-blur-sm" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <BaseDialog.Popup
+            className={cn(
+              "relative w-full max-w-md rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-2xl shadow-slate-950/15 focus:outline-none"
+            )}
+          >
+            <BaseDialog.Close className="focus-ring absolute right-4 top-4 rounded-full p-1 text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)]">
+              <X className="h-4 w-4" />
+            </BaseDialog.Close>
+            <BaseDialog.Title className="text-lg font-semibold tracking-tight text-[color:var(--foreground)]">
+              {title}
+            </BaseDialog.Title>
+            {description ? (
+              <BaseDialog.Description className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
+                {description}
+              </BaseDialog.Description>
+            ) : null}
+            <div className="mt-4">{children}</div>
+          </BaseDialog.Popup>
+        </div>
+      </BaseDialog.Portal>
+    </BaseDialog.Root>
   );
 }
 

@@ -71,3 +71,21 @@ export const getLatestByBike = query({
     return recommendations.sort((a, b) => b.createdAt - a.createdAt)[0] ?? null;
   },
 });
+
+export const getShadowComparisonBySession = query({
+  args: { sessionId: v.id("fitSessions") },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return null;
+
+    const session = await ctx.db.get(args.sessionId);
+    if (!session || session.userId !== userId) return null;
+
+    const comparisons = await ctx.db
+      .query("recommendationShadowComparisons")
+      .withIndex("by_session", (q) => q.eq("sessionId", args.sessionId))
+      .collect();
+
+    return comparisons.sort((a, b) => b.createdAt - a.createdAt)[0] ?? null;
+  },
+});

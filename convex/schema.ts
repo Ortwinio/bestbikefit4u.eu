@@ -149,6 +149,38 @@ export default defineSchema({
     updatedAt: v.number(),
   }).index("by_user", ["userId"]),
 
+  bikeProfiles: defineTable({
+    userId: v.id("users"),
+    bikeId: v.id("bikes"),
+    name: v.string(),
+    profileType: v.union(
+      v.literal("base"),
+      v.literal("mountain"),
+      v.literal("endurance"),
+      v.literal("performance"),
+      v.literal("aero"),
+      v.literal("indoor"),
+      v.literal("technical"),
+      v.literal("comfort"),
+      v.literal("custom")
+    ),
+    isDefault: v.boolean(),
+    status: v.union(v.literal("active"), v.literal("archived")),
+    source: v.union(
+      v.literal("manual"),
+      v.literal("system_default"),
+      v.literal("legacy_migration")
+    ),
+    legacySessionId: v.optional(v.id("fitSessions")),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    archivedAt: v.optional(v.number()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_bike", ["bikeId"])
+    .index("by_user_bike", ["userId", "bikeId"])
+    .index("by_bike_default", ["bikeId", "isDefault"]),
+
   wheelsets: defineTable({
     bikeId: v.id("bikes"),
     userId: v.id("users"),
@@ -286,6 +318,7 @@ export default defineSchema({
   fitSessions: defineTable({
     userId: v.id("users"),
     bikeId: v.optional(v.id("bikes")),
+    bikeProfileId: v.optional(v.id("bikeProfiles")),
     bikeType: v.optional(
       v.union(
         v.literal("road"),
@@ -299,6 +332,27 @@ export default defineSchema({
       )
     ),
     profileId: v.id("profiles"),
+    engineVersion: v.optional(
+      v.union(v.literal("v1"), v.literal("v2_shadow"), v.literal("v2"))
+    ),
+    sourceType: v.optional(
+      v.union(
+        v.literal("legacy_flow"),
+        v.literal("bike_profile_flow"),
+        v.literal("migration_backfill")
+      )
+    ),
+    migrationMetadata: v.optional(
+      v.object({
+        source: v.union(
+          v.literal("legacy_v1"),
+          v.literal("v2_native"),
+          v.literal("backfill")
+        ),
+        migratedAt: v.optional(v.number()),
+        notes: v.optional(v.string()),
+      })
+    ),
 
     status: v.union(
       v.literal("in_progress"),
@@ -350,6 +404,8 @@ export default defineSchema({
     completedAt: v.optional(v.number()),
   })
     .index("by_user", ["userId"])
+    .index("by_user_bike", ["userId", "bikeId"])
+    .index("by_bike_profile", ["bikeProfileId"])
     .index("by_user_status", ["userId", "status"])
     .index("by_status", ["status"]),
 
@@ -381,6 +437,29 @@ export default defineSchema({
     sessionId: v.id("fitSessions"),
     userId: v.id("users"),
     bikeId: v.optional(v.id("bikes")),
+    bikeProfileId: v.optional(v.id("bikeProfiles")),
+    engineVersion: v.optional(
+      v.union(v.literal("v1"), v.literal("v2_shadow"), v.literal("v2"))
+    ),
+    sourceType: v.optional(
+      v.union(
+        v.literal("legacy_v1"),
+        v.literal("engine_v1"),
+        v.literal("engine_v2_shadow"),
+        v.literal("engine_v2")
+      )
+    ),
+    migrationMetadata: v.optional(
+      v.object({
+        source: v.union(
+          v.literal("legacy_v1"),
+          v.literal("v2_native"),
+          v.literal("backfill")
+        ),
+        migratedAt: v.optional(v.number()),
+        notes: v.optional(v.string()),
+      })
+    ),
 
     // Core fit calculations
     calculatedFit: v.object({
@@ -410,6 +489,40 @@ export default defineSchema({
 
     confidenceScore: v.number(),
     algorithmVersion: v.string(),
+    comparisonSnapshot: v.optional(
+      v.object({
+        saddleHeightMm: v.number(),
+        saddleSetbackMm: v.number(),
+        barDropMm: v.number(),
+        saddleToBarReachMm: v.number(),
+        stemLengthMm: v.number(),
+        crankLengthMm: v.number(),
+        handlebarWidthMm: v.number(),
+        confidenceScore: v.number(),
+      })
+    ),
+    recommendationItems: v.optional(
+      v.array(
+        v.object({
+          parameter: v.string(),
+          target: v.number(),
+          rangeLow: v.optional(v.number()),
+          rangeHigh: v.optional(v.number()),
+          confidence: v.optional(v.number()),
+          method: v.optional(v.string()),
+          why: v.optional(v.string()),
+          feasibility: v.optional(
+            v.union(
+              v.literal("direct"),
+              v.literal("component_change_required"),
+              v.literal("not_yet_evaluated")
+            )
+          ),
+          riskFlags: v.optional(v.array(v.string())),
+          changeOrder: v.optional(v.number()),
+        })
+      )
+    ),
 
     // Frame size recommendations
     frameSizeRecommendations: v.array(
@@ -461,7 +574,150 @@ export default defineSchema({
   })
     .index("by_session", ["sessionId"])
     .index("by_user", ["userId"])
-    .index("by_bike", ["bikeId"]),
+    .index("by_bike", ["bikeId"])
+    .index("by_bike_profile", ["bikeProfileId"])
+    .index("by_engine_version", ["engineVersion"]),
+
+  recommendationShadowComparisons: defineTable({
+    sessionId: v.id("fitSessions"),
+    userId: v.id("users"),
+    baselineEngineVersion: v.union(
+      v.literal("v1"),
+      v.literal("v2_shadow"),
+      v.literal("v2")
+    ),
+    shadowEngineVersion: v.union(
+      v.literal("v1"),
+      v.literal("v2_shadow"),
+      v.literal("v2")
+    ),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("completed"),
+      v.literal("failed")
+    ),
+    baselineSnapshot: v.object({
+      saddleHeightMm: v.number(),
+      saddleSetbackMm: v.number(),
+      barDropMm: v.number(),
+      saddleToBarReachMm: v.number(),
+      stemLengthMm: v.number(),
+      crankLengthMm: v.number(),
+      handlebarWidthMm: v.number(),
+      confidenceScore: v.number(),
+    }),
+    shadowSnapshot: v.optional(
+      v.object({
+        saddleHeightMm: v.number(),
+        saddleSetbackMm: v.number(),
+        barDropMm: v.number(),
+        saddleToBarReachMm: v.number(),
+        stemLengthMm: v.number(),
+        crankLengthMm: v.number(),
+        handlebarWidthMm: v.number(),
+        confidenceScore: v.number(),
+      })
+    ),
+    deltas: v.optional(
+      v.object({
+        saddleHeightMm: v.number(),
+        saddleSetbackMm: v.number(),
+        barDropMm: v.number(),
+        saddleToBarReachMm: v.number(),
+        stemLengthMm: v.number(),
+        crankLengthMm: v.number(),
+        handlebarWidthMm: v.number(),
+        confidenceScore: v.number(),
+      })
+    ),
+    errorMessage: v.optional(v.string()),
+    createdAt: v.number(),
+    completedAt: v.optional(v.number()),
+  })
+    .index("by_session", ["sessionId"])
+    .index("by_user", ["userId"])
+    .index("by_status", ["status"]),
+
+  validationCaptures: defineTable({
+    sessionId: v.id("fitSessions"),
+    userId: v.id("users"),
+    bikeId: v.optional(v.id("bikes")),
+    bikeProfileId: v.optional(v.id("bikeProfiles")),
+    captureType: v.union(
+      v.literal("side_video"),
+      v.literal("front_video"),
+      v.literal("manual_angles")
+    ),
+    sourceType: v.union(
+      v.literal("video_beta"),
+      v.literal("manual_beta"),
+      v.literal("staff_review")
+    ),
+    status: v.union(v.literal("active"), v.literal("archived")),
+    qualityScore: v.number(),
+    kneeAngleBdcDeg: v.optional(v.number()),
+    hipAngleTdcDeg: v.optional(v.number()),
+    trunkAngleDeg: v.optional(v.number()),
+    pelvicRockScore: v.optional(v.number()),
+    elbowAngleDeg: v.optional(v.number()),
+    kneeTrackingScore: v.optional(v.number()),
+    cadenceRpm: v.optional(v.number()),
+    powerWatts: v.optional(v.number()),
+    handPositionMode: v.optional(
+      v.union(
+        v.literal("tops"),
+        v.literal("hoods"),
+        v.literal("drops"),
+        v.literal("flat_bar"),
+        v.literal("aero_extensions")
+      )
+    ),
+    createdAt: v.number(),
+  })
+    .index("by_session", ["sessionId"])
+    .index("by_user", ["userId"]),
+
+  rideFeedbackEntries: defineTable({
+    sessionId: v.id("fitSessions"),
+    userId: v.id("users"),
+    bikeId: v.optional(v.id("bikes")),
+    bikeProfileId: v.optional(v.id("bikeProfiles")),
+    implementationStatus: v.union(
+      v.literal("confirmed"),
+      v.literal("partial"),
+      v.literal("not_implemented")
+    ),
+    comfortScore: v.number(),
+    handlingScore: v.optional(v.number()),
+    performanceFeelScore: v.optional(v.number()),
+    kneePainArea: v.optional(
+      v.union(
+        v.literal("front"),
+        v.literal("back"),
+        v.literal("medial"),
+        v.literal("lateral")
+      )
+    ),
+    kneePainSeverity: v.optional(v.number()),
+    lowerBackDiscomfortScore: v.optional(v.number()),
+    handPressureScore: v.optional(v.number()),
+    saddlePressureScore: v.optional(v.number()),
+    climbingConfidenceScore: v.optional(v.number()),
+    descendingControlScore: v.optional(v.number()),
+    notes: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
+    refinementSuggestion: v.optional(
+      v.object({
+        parameter: v.string(),
+        direction: v.union(v.literal("increase"), v.literal("decrease"), v.literal("hold")),
+        delta: v.number(),
+        rationale: v.string(),
+      })
+    ),
+    createdAt: v.number(),
+  })
+    .index("by_session", ["sessionId"])
+    .index("by_user", ["userId"]),
 
   // Email reports tracking
   emailReports: defineTable({

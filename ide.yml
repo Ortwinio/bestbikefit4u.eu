@@ -1,0 +1,25 @@
+name: bestbikefit4u
+team:
+  name: bikefit-team
+rows:
+  - size: 70%
+    panes:
+      - title: Planner
+        command: claude
+        role: lead
+        focus: true
+      - title: Executor 1
+        command: codex
+        role: teammate
+        task: Work on Next.js UI components, pages, and layouts in src/app and src/components
+      - title: Executor 2
+        command: codex
+        role: teammate
+        task: Work on Convex schema, mutations, queries, and actions in the convex/ directory
+  - panes:
+      - title: Next.js
+        command: npm run dev
+      - title: Convex
+        command: npx convex dev
+      - title: macmon
+        command: macmon

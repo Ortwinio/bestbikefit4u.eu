@@ -51,7 +51,7 @@ export const create = mutation({
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
 
-    return await ctx.db.insert("bikes", {
+    const bikeId = await ctx.db.insert("bikes", {
       userId,
       name: args.name,
       bikeType: args.bikeType,
@@ -66,6 +66,20 @@ export const create = mutation({
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
+
+    await ctx.db.insert("bikeProfiles", {
+      userId,
+      bikeId,
+      name: "Base",
+      profileType: "base",
+      isDefault: true,
+      status: "active",
+      source: "system_default",
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+
+    return bikeId;
   },
 });
 

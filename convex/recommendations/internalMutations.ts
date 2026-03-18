@@ -38,6 +38,40 @@ export const storeResult = internalMutation({
       crankLengthMm: v.number(),
       handlebarWidthMm: v.number(),
     }),
+    comparisonSnapshot: v.optional(
+      v.object({
+        saddleHeightMm: v.number(),
+        saddleSetbackMm: v.number(),
+        barDropMm: v.number(),
+        saddleToBarReachMm: v.number(),
+        stemLengthMm: v.number(),
+        crankLengthMm: v.number(),
+        handlebarWidthMm: v.number(),
+        confidenceScore: v.number(),
+      })
+    ),
+    recommendationItems: v.optional(
+      v.array(
+        v.object({
+          parameter: v.string(),
+          target: v.number(),
+          rangeLow: v.optional(v.number()),
+          rangeHigh: v.optional(v.number()),
+          confidence: v.optional(v.number()),
+          method: v.optional(v.string()),
+          why: v.optional(v.string()),
+          feasibility: v.optional(
+            v.union(
+              v.literal("direct"),
+              v.literal("component_change_required"),
+              v.literal("not_yet_evaluated")
+            )
+          ),
+          riskFlags: v.optional(v.array(v.string())),
+          changeOrder: v.optional(v.number()),
+        })
+      )
+    ),
     confidenceScore: v.number(),
     algorithmVersion: v.string(),
     frameSizeRecommendations: v.array(
@@ -100,6 +134,11 @@ export const storeResult = internalMutation({
       sessionId: args.sessionId,
       userId: args.userId,
       bikeId: session?.bikeId,
+      bikeProfileId: session?.bikeProfileId,
+      engineVersion: session?.engineVersion ?? "v1",
+      sourceType: "engine_v1",
+      comparisonSnapshot: args.comparisonSnapshot,
+      recommendationItems: args.recommendationItems,
       calculatedFit: args.calculatedFit,
       confidenceScore: args.confidenceScore,
       algorithmVersion: args.algorithmVersion,
@@ -117,5 +156,103 @@ export const storeResult = internalMutation({
     });
 
     return recId;
+  },
+});
+
+export const storeShadowComparison = internalMutation({
+  args: {
+    sessionId: v.id("fitSessions"),
+    userId: v.id("users"),
+    baselineEngineVersion: v.union(
+      v.literal("v1"),
+      v.literal("v2_shadow"),
+      v.literal("v2")
+    ),
+    shadowEngineVersion: v.union(
+      v.literal("v1"),
+      v.literal("v2_shadow"),
+      v.literal("v2")
+    ),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("completed"),
+      v.literal("failed")
+    ),
+    baselineSnapshot: v.object({
+      saddleHeightMm: v.number(),
+      saddleSetbackMm: v.number(),
+      barDropMm: v.number(),
+      saddleToBarReachMm: v.number(),
+      stemLengthMm: v.number(),
+      crankLengthMm: v.number(),
+      handlebarWidthMm: v.number(),
+      confidenceScore: v.number(),
+    }),
+    shadowSnapshot: v.optional(
+      v.object({
+        saddleHeightMm: v.number(),
+        saddleSetbackMm: v.number(),
+        barDropMm: v.number(),
+        saddleToBarReachMm: v.number(),
+        stemLengthMm: v.number(),
+        crankLengthMm: v.number(),
+        handlebarWidthMm: v.number(),
+        confidenceScore: v.number(),
+      })
+    ),
+    deltas: v.optional(
+      v.object({
+        saddleHeightMm: v.number(),
+        saddleSetbackMm: v.number(),
+        barDropMm: v.number(),
+        saddleToBarReachMm: v.number(),
+        stemLengthMm: v.number(),
+        crankLengthMm: v.number(),
+        handlebarWidthMm: v.number(),
+        confidenceScore: v.number(),
+      })
+    ),
+    errorMessage: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("recommendationShadowComparisons")
+      .withIndex("by_session", (q) => q.eq("sessionId", args.sessionId))
+      .collect();
+
+    const [oldest] = [...existing].sort((a, b) => a.createdAt - b.createdAt);
+    if (oldest) {
+      await ctx.db.patch(oldest._id, {
+        status: args.status,
+        baselineEngineVersion: args.baselineEngineVersion,
+        shadowEngineVersion: args.shadowEngineVersion,
+        baselineSnapshot: args.baselineSnapshot,
+        shadowSnapshot: args.shadowSnapshot,
+        deltas: args.deltas,
+        errorMessage: args.errorMessage,
+        completedAt:
+          args.status === "completed" || args.status === "failed"
+            ? Date.now()
+            : undefined,
+      });
+      return oldest._id;
+    }
+
+    return await ctx.db.insert("recommendationShadowComparisons", {
+      sessionId: args.sessionId,
+      userId: args.userId,
+      baselineEngineVersion: args.baselineEngineVersion,
+      shadowEngineVersion: args.shadowEngineVersion,
+      status: args.status,
+      baselineSnapshot: args.baselineSnapshot,
+      shadowSnapshot: args.shadowSnapshot,
+      deltas: args.deltas,
+      errorMessage: args.errorMessage,
+      createdAt: Date.now(),
+      completedAt:
+        args.status === "completed" || args.status === "failed"
+          ? Date.now()
+          : undefined,
+    });
   },
 });

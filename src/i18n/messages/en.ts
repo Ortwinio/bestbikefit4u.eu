@@ -417,6 +417,11 @@ const en = {
         title: "Select a saved bike (optional)",
         useCustomType: "Use custom bike type",
         usingBike: "Using saved bike",
+        profilesLoading: "Loading bike profiles...",
+        profilesTitle: "Choose a bike profile",
+        profilesHint: "Profiles keep multiple fit contexts for the same bike.",
+        noProfiles: "No saved bike profiles yet. We'll use the bike without a saved profile.",
+        defaultBadge: "Default",
       },
       sections: {
         bikeType: "What type of bike?",

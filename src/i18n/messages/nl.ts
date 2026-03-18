@@ -420,6 +420,12 @@ const nl = {
         title: "Kies een opgeslagen fiets (optioneel)",
         useCustomType: "Gebruik aangepast fietstype",
         usingBike: "Opgeslagen fiets gebruiken",
+        profilesLoading: "Fietsprofielen laden...",
+        profilesTitle: "Kies een fietsprofiel",
+        profilesHint: "Profielen bewaren meerdere fitcontexten voor dezelfde fiets.",
+        noProfiles:
+          "Nog geen opgeslagen fietsprofielen. We gebruiken deze fiets zonder opgeslagen profiel.",
+        defaultBadge: "Standaard",
       },
       sections: {
         bikeType: "Welk type fiets?",

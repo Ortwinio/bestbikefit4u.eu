@@ -1,8 +1,9 @@
 "use client";
 
-import { cn } from "@/utils/cn";
 import { formatMessage } from "@/i18n/dashboardMessages";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { cn } from "@/utils/cn";
+import { Progress } from "@/components/ui/Progress";
 
 interface ProgressBarProps {
   current: number;
@@ -39,12 +40,11 @@ export function ProgressBar({
           </span>
         </div>
       </div>
-      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-        <div
-          className="h-full bg-blue-600 transition-all duration-300 ease-out"
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
+      <Progress
+        value={percentage}
+        label={messages.questionnaire.progress.label}
+        className="w-full"
+      />
     </div>
   );
 }

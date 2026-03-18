@@ -1,7 +1,11 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
-import { requireBikeOwner, requireSessionOwner } from "../lib/authz";
+import {
+  requireBikeOwner,
+  requireBikeProfileOwner,
+  requireSessionOwner,
+} from "../lib/authz";
 import { validateNumberRange, validateShortString } from "../lib/validation";
 
 const WEEKLY_HOURS_RANGE = [0, 60] as const;
@@ -34,16 +38,34 @@ export const create = mutation({
       v.literal("aerodynamics")
     ),
     bikeId: v.optional(v.id("bikes")),
+    bikeProfileId: v.optional(v.id("bikeProfiles")),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
+
+    let resolvedBikeId = args.bikeId;
 
     if (args.bikeId) {
       const { bike } = await requireBikeOwner(ctx, args.bikeId);
       if (bike.bikeType !== args.bikeType) {
         throw new Error("Bike type must match selected bike");
       }
+    }
+
+    if (args.bikeProfileId) {
+      const { bikeProfile } = await requireBikeProfileOwner(ctx, args.bikeProfileId);
+      const { bike } = await requireBikeOwner(ctx, bikeProfile.bikeId);
+
+      if (resolvedBikeId && resolvedBikeId !== bike._id) {
+        throw new Error("Bike profile must belong to the selected bike");
+      }
+
+      if (bike.bikeType !== args.bikeType) {
+        throw new Error("Bike type must match selected bike profile");
+      }
+
+      resolvedBikeId = bike._id;
     }
 
     // Get user's profile
@@ -57,8 +79,11 @@ export const create = mutation({
     return await ctx.db.insert("fitSessions", {
       userId,
       profileId: profile._id,
-      bikeId: args.bikeId,
+      bikeId: resolvedBikeId,
+      bikeProfileId: args.bikeProfileId,
       bikeType: args.bikeType,
+      engineVersion: "v1",
+      sourceType: args.bikeProfileId ? "bike_profile_flow" : "legacy_flow",
       status: "in_progress",
       ridingStyle: args.ridingStyle,
       primaryGoal: args.primaryGoal,

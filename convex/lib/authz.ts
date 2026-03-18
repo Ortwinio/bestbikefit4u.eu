@@ -33,6 +33,18 @@ export async function requireBikeOwner(ctx: DbCtx, bikeId: Id<"bikes">) {
   return { userId, bike };
 }
 
+export async function requireBikeProfileOwner(
+  ctx: DbCtx,
+  bikeProfileId: Id<"bikeProfiles">
+) {
+  const userId = await requireUserId(ctx);
+  const bikeProfile = await ctx.db.get(bikeProfileId);
+  if (!bikeProfile || bikeProfile.userId !== userId) {
+    throw new Error("Bike profile not found");
+  }
+  return { userId, bikeProfile };
+}
+
 export async function requireRecommendationOwner(
   ctx: DbCtx,
   recommendationId: Id<"recommendations">

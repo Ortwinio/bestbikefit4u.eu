@@ -44,6 +44,9 @@ export default function NewFitSessionPage() {
   const hasTrackedFitViewRef = useRef(false);
   const [bikeType, setBikeType] = useState<BikeType | "">("");
   const [selectedBikeId, setSelectedBikeId] = useState<Id<"bikes"> | null>(null);
+  const [selectedBikeProfileId, setSelectedBikeProfileId] = useState<
+    Id<"bikeProfiles"> | null
+  >(null);
   const [ridingStyle, setRidingStyle] = useState<RidingStyle | "">("");
   const [ridingGoal, setRidingGoal] = useState<PrimaryGoal | "">("");
   const [isCreating, setIsCreating] = useState(false);
@@ -51,11 +54,16 @@ export default function NewFitSessionPage() {
 
   const profile = useQuery(api.profiles.queries.getMyProfile);
   const bikes = useQuery(api.bikes.queries.listByUser);
+  const bikeProfiles = useQuery(
+    api.bikeProfiles.queries.listByBike,
+    selectedBikeId ? { bikeId: selectedBikeId } : "skip"
+  );
   const createSession = useMutation(api.sessions.mutations.create);
 
   const hasProfile = profile !== undefined && profile !== null;
   const isLoadingProfile = profile === undefined;
   const isLoadingBikes = bikes === undefined;
+  const isLoadingBikeProfiles = selectedBikeId !== null && bikeProfiles === undefined;
   const selectedBike = bikes?.find((bike) => bike._id === selectedBikeId) || null;
   const effectiveBikeType = selectedBike?.bikeType ?? bikeType;
   const isSelectedGoalAllowed =
@@ -136,13 +144,53 @@ export default function NewFitSessionPage() {
     });
   }, [locale, logMarketingEvent, pagePath]);
 
+  useEffect(() => {
+    if (!selectedBikeId || bikeProfiles === undefined) {
+      return;
+    }
+
+    if (!bikeProfiles || bikeProfiles.length === 0) {
+      setSelectedBikeProfileId(null);
+      return;
+    }
+
+    const hasCurrentSelection = bikeProfiles.some(
+      (bikeProfile) => bikeProfile._id === selectedBikeProfileId
+    );
+    if (hasCurrentSelection) {
+      return;
+    }
+
+    const defaultProfile =
+      bikeProfiles.find((bikeProfile) => bikeProfile.isDefault) ?? bikeProfiles[0];
+    setSelectedBikeProfileId(defaultProfile?._id ?? null);
+  }, [bikeProfiles, selectedBikeId, selectedBikeProfileId]);
+
+  const profileTypeLabel = (profileType: string) => {
+    const labels: Record<string, string> = {
+      base: "Base",
+      mountain: "Mountain",
+      endurance: "Endurance",
+      performance: "Performance",
+      aero: "Aero",
+      indoor: "Indoor",
+      technical: "Technical",
+      comfort: "Comfort",
+      custom: "Custom",
+    };
+
+    return labels[profileType] ?? profileType;
+  };
+
   const handleSelectBike = (bikeId: Id<"bikes">, selectedType: BikeType) => {
     setSelectedBikeId(bikeId);
+    setSelectedBikeProfileId(null);
     setBikeType(selectedType);
   };
 
   const handleUseCustomBikeType = () => {
     setSelectedBikeId(null);
+    setSelectedBikeProfileId(null);
   };
 
   const handleStartSession = async () => {
@@ -158,6 +206,7 @@ export default function NewFitSessionPage() {
         ridingStyle,
         primaryGoal: ridingGoal,
         bikeId: selectedBike?._id,
+        bikeProfileId: selectedBikeProfileId ?? undefined,
       });
       router.push(withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale));
     } catch (error) {
@@ -316,6 +365,69 @@ export default function NewFitSessionPage() {
           )}
         </CardContent>
       </Card>
+
+      {selectedBike ? (
+        <Card variant="bordered" className="mb-6">
+          <CardHeader>
+            <CardTitle>{messages.fit.savedBikes.profilesTitle}</CardTitle>
+            <p className="text-sm text-gray-500">
+              {messages.fit.savedBikes.profilesHint}
+            </p>
+          </CardHeader>
+          <CardContent>
+            {isLoadingBikeProfiles ? (
+              <div className="rounded-lg border border-gray-200 bg-white p-4 text-sm text-gray-500">
+                {messages.fit.savedBikes.profilesLoading}
+              </div>
+            ) : bikeProfiles && bikeProfiles.length > 0 ? (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {bikeProfiles.map((bikeProfile) => (
+                  <button
+                    key={bikeProfile._id}
+                    type="button"
+                    onClick={() => setSelectedBikeProfileId(bikeProfile._id)}
+                    className={`rounded-lg border-2 p-4 text-left transition-all ${
+                      selectedBikeProfileId === bikeProfile._id
+                        ? "border-blue-600 bg-blue-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <p
+                        className={`font-medium ${
+                          selectedBikeProfileId === bikeProfile._id
+                            ? "text-blue-900"
+                            : "text-gray-900"
+                        }`}
+                      >
+                        {bikeProfile.name}
+                      </p>
+                      {bikeProfile.isDefault ? (
+                        <span className="rounded-full bg-white px-2 py-1 text-xs font-semibold text-blue-700">
+                          {messages.fit.savedBikes.defaultBadge}
+                        </span>
+                      ) : null}
+                    </div>
+                    <p
+                      className={`mt-1 text-sm ${
+                        selectedBikeProfileId === bikeProfile._id
+                          ? "text-blue-700"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      {profileTypeLabel(bikeProfile.profileType)}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-lg border border-gray-200 bg-white p-4 text-sm text-gray-500">
+                {messages.fit.savedBikes.noProfiles}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      ) : null}
 
       <Card variant="bordered" className="mb-6">
         <CardHeader>
