@@ -8,6 +8,38 @@ export type BikeType =
   | "touring"
   | "city";
 
+type BikeTypeMessages = {
+  bikeTypes: Record<BikeType, { label: string; description: string }>;
+};
+
+export function getBikeTypeOptions(
+  messages: BikeTypeMessages
+): Array<{ value: BikeType; label: string; description: string }> {
+  const types: BikeType[] = [
+    "road",
+    "gravel",
+    "mountain",
+    "hybrid",
+    "tt_triathlon",
+    "cyclocross",
+    "touring",
+    "city",
+  ];
+  return types.map((value) => ({
+    value,
+    label: messages.bikeTypes[value].label,
+    description: messages.bikeTypes[value].description,
+  }));
+}
+
+export function getBikeTypeLabel(
+  bikeType: BikeType,
+  messages: BikeTypeMessages
+): string {
+  return messages.bikeTypes[bikeType].label;
+}
+
+/** @deprecated Use getBikeTypeOptions(messages) for locale-aware labels */
 export const BIKE_TYPE_OPTIONS: Array<{
   value: BikeType;
   label: string;
@@ -55,6 +87,7 @@ export const BIKE_TYPE_OPTIONS: Array<{
   },
 ];
 
+/** @deprecated Use getBikeTypeLabel(bikeType, messages) for locale-aware labels */
 export const BIKE_TYPE_LABELS: Record<BikeType, string> = {
   road: "Road",
   gravel: "Gravel",
