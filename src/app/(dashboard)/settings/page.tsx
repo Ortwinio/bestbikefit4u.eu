@@ -58,10 +58,21 @@ export default function SettingsPage() {
     messages.userMenu.fallbackUserName
   );
   const profileImageSource = getEffectiveProfileImageSource(user);
+  const storedDisplayName =
+    user &&
+    "displayName" in user &&
+    typeof user.displayName === "string"
+      ? user.displayName
+      : "";
+  const editableDisplayName =
+    storedDisplayName ||
+    (effectiveDisplayName === messages.userMenu.fallbackUserName
+      ? ""
+      : effectiveDisplayName);
 
   useEffect(() => {
-    setDisplayName(user?.displayName ?? "");
-  }, [user?.displayName]);
+    setDisplayName(editableDisplayName);
+  }, [editableDisplayName]);
 
   const handleDeleteAccount = async () => {
     setDeleteError(null);
