@@ -32,7 +32,7 @@ export default function DashboardLayout({
 
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[color:var(--background)]">
         <LoadingState
           label={messages.layout.loading}
           className="min-h-screen"
@@ -42,13 +42,16 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[color:var(--background)]">
       <div className="hidden md:block">
         <DashboardSidebar />
       </div>
 
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 md:hidden">
-        <Link href={toLocalizedPath("/dashboard")} className="text-lg font-semibold text-gray-900">
+      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_88%,transparent)] px-4 py-3 backdrop-blur md:hidden">
+        <Link
+          href={toLocalizedPath("/dashboard")}
+          className="text-lg font-semibold text-[color:var(--foreground)]"
+        >
           {BRAND.name}
         </Link>
         <div className="flex items-center gap-2">
@@ -62,7 +65,7 @@ export default function DashboardLayout({
                 : messages.layout.mobileMenu.openAria
             }
             onClick={() => setIsMobileMenuOpen((current) => !current)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-700"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--muted-foreground)]"
           >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -77,8 +80,8 @@ export default function DashboardLayout({
             onClick={() => setIsMobileMenuOpen(false)}
             className="fixed inset-0 z-30 bg-black/30 md:hidden"
           />
-          <nav className="fixed inset-y-0 left-0 z-40 w-72 overflow-y-auto border-r border-gray-200 bg-white p-4 md:hidden">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+          <nav className="fixed inset-y-0 left-0 z-40 w-72 overflow-y-auto border-r border-[color:var(--border)] bg-[color:var(--card)] p-4 md:hidden">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
               {messages.layout.sections.dashboard}
             </p>
             <div className="space-y-1">
@@ -94,13 +97,13 @@ export default function DashboardLayout({
                   key={item.href}
                   href={toLocalizedPath(item.href)}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  className="block rounded-md px-3 py-2 text-sm text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
                 >
                   {item.label}
                 </Link>
               ))}
             </div>
-            <p className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wide text-gray-400">
+            <p className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
               {messages.layout.sections.website}
             </p>
             <div className="space-y-1">
@@ -113,7 +116,7 @@ export default function DashboardLayout({
                   key={item.href}
                   href={toLocalizedPath(item.href)}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  className="block rounded-md px-3 py-2 text-sm text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
                 >
                   {item.label}
                 </Link>

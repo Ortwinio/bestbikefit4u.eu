@@ -1,7 +1,7 @@
 "use client";
 
-import { useFormContext } from "react-hook-form";
-import { Input } from "@/components/ui";
+import { Controller, useFormContext } from "react-hook-form";
+import { NumberInput } from "@/components/ui";
 import { validateInseamRatio } from "@/lib/validations/profile";
 import { AlertCircle, Info } from "lucide-react";
 
@@ -28,14 +28,22 @@ export function StepBodyMeasurements() {
       <div className="grid gap-6 sm:grid-cols-2">
         {/* Height */}
         <div>
-          <Input
-            label="Height (cm)"
-            tooltip="Stand barefoot against a wall. Measure floor to top of head (cm). Used for initial frame-size and reach estimates (typical 130-210 cm)."
-            type="number"
-            step="0.1"
-            placeholder="175"
-            {...register("heightCm", { valueAsNumber: true })}
-            error={errors.heightCm?.message as string}
+          <Controller
+            name="heightCm"
+            render={({ field }) => (
+              <NumberInput
+                label="Height (cm)"
+                tooltip="Stand barefoot against a wall. Measure floor to top of head (cm). Used for initial frame-size and reach estimates (typical 130-210 cm)."
+                step={0.1}
+                min={0}
+                placeholder="175"
+                value={typeof field.value === "number" && !Number.isNaN(field.value) ? field.value : null}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                error={errors.heightCm?.message as string}
+                unit="cm"
+              />
+            )}
           />
           <div className="mt-2 p-3 bg-blue-50 rounded-lg">
             <div className="flex items-start gap-2">
@@ -54,14 +62,22 @@ export function StepBodyMeasurements() {
 
         {/* Inseam */}
         <div>
-          <Input
-            label="Inseam (cm)"
-            tooltip="Barefoot inseam: feet 10-15 cm apart, press a book firmly into the crotch, measure floor to book top (cm). Primary input for saddle height (typical 55-105 cm)."
-            type="number"
-            step="0.1"
-            placeholder="82"
-            {...register("inseamCm", { valueAsNumber: true })}
-            error={errors.inseamCm?.message as string}
+          <Controller
+            name="inseamCm"
+            render={({ field }) => (
+              <NumberInput
+                label="Inseam (cm)"
+                tooltip="Barefoot inseam: feet 10-15 cm apart, press a book firmly into the crotch, measure floor to book top (cm). Primary input for saddle height (typical 55-105 cm)."
+                step={0.1}
+                min={0}
+                placeholder="82"
+                value={typeof field.value === "number" && !Number.isNaN(field.value) ? field.value : null}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                error={errors.inseamCm?.message as string}
+                unit="cm"
+              />
+            )}
           />
           <div className="mt-2 p-3 bg-blue-50 rounded-lg">
             <div className="flex items-start gap-2">

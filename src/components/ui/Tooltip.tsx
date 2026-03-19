@@ -1,8 +1,13 @@
 "use client";
 
 import { useId } from "react";
-import { Tooltip as BaseTooltip } from "@base-ui/react/tooltip";
 import { CircleHelp } from "lucide-react";
+import {
+  Tooltip as PrototyperTooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/prototyper-ui/ui/tooltip";
 import { cn } from "@/utils/cn";
 
 export type TooltipInteraction =
@@ -44,12 +49,12 @@ export function Tooltip({
   const tooltipId = `tooltip-${generatedId}`;
 
   return (
-    <BaseTooltip.Provider delay={200} closeDelay={50}>
+    <TooltipProvider delay={200} closeDelay={50}>
       <span id={resolvedDescriptionId} className="sr-only">
         {content}
       </span>
-      <BaseTooltip.Root>
-        <BaseTooltip.Trigger
+      <PrototyperTooltip>
+        <TooltipTrigger
           className={cn("inline-flex items-center", className)}
           aria-label={label}
           aria-describedby={resolvedDescriptionId}
@@ -57,19 +62,15 @@ export function Tooltip({
           <span className="focus-ring inline-flex h-5 w-5 items-center justify-center rounded-full text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]">
             <CircleHelp className="h-4 w-4" />
           </span>
-        </BaseTooltip.Trigger>
-        <BaseTooltip.Portal>
-          <BaseTooltip.Positioner sideOffset={8} className="z-50">
-            <BaseTooltip.Popup
-              id={tooltipId}
-              className="max-w-xs rounded-[var(--radius-md)] bg-slate-950 px-3 py-2 text-xs leading-relaxed text-white shadow-lg"
-            >
-              {content}
-              <BaseTooltip.Arrow className="size-2 rotate-45 bg-slate-950" />
-            </BaseTooltip.Popup>
-          </BaseTooltip.Positioner>
-        </BaseTooltip.Portal>
-      </BaseTooltip.Root>
-    </BaseTooltip.Provider>
+        </TooltipTrigger>
+        <TooltipContent
+          id={tooltipId}
+          sideOffset={8}
+          className="max-w-xs rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--popover)] px-3 py-2 text-xs leading-relaxed text-[color:var(--popover-foreground)] shadow-lg shadow-black/10 dark:shadow-black/30"
+        >
+          {content}
+        </TooltipContent>
+      </PrototyperTooltip>
+    </TooltipProvider>
   );
 }

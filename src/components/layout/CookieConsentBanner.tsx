@@ -5,6 +5,8 @@ import { useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { useToast } from "@/components/ui";
+import { getDashboardMessages } from "@/i18n/dashboardMessages";
 import {
   type CookieConsentChoice,
   readCookieConsent,
@@ -45,6 +47,8 @@ const copyByLocale: Record<
 export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
   const [isDismissed, setIsDismissed] = useState(false);
   const copy = copyByLocale[locale];
+  const dashboardMessages = getDashboardMessages(locale);
+  const toast = useToast();
 
   const showBanner = useSyncExternalStore(
     subscribeToCookieConsent,
@@ -56,6 +60,12 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
   const handleConsent = (choice: CookieConsentChoice) => {
     writeCookieConsent(choice);
     setIsDismissed(true);
+    toast.success({
+      description:
+        choice === "accepted"
+          ? dashboardMessages.common.toasts.cookiesAccepted
+          : dashboardMessages.common.toasts.cookiesEssentialOnly,
+    });
   };
 
   if (!isVisible) {
@@ -64,13 +74,13 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[95] p-4">
-      <div className="pointer-events-auto mx-auto max-w-5xl rounded-2xl border border-gray-200 bg-white/95 p-4 shadow-xl backdrop-blur sm:p-5">
-        <h2 className="text-sm font-semibold text-gray-900">{copy.title}</h2>
-        <p className="mt-2 text-sm text-gray-700">
+      <div className="pointer-events-auto mx-auto max-w-5xl rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_90%,transparent)] p-4 shadow-xl shadow-black/10 backdrop-blur sm:p-5 dark:shadow-black/30">
+        <h2 className="text-sm font-semibold text-[color:var(--foreground)]">{copy.title}</h2>
+        <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
           {copy.body}{" "}
           <Link
             href={withLocalePrefix("/privacy", locale)}
-            className="font-medium text-blue-700 hover:text-blue-800"
+            className="font-medium text-[color:var(--primary)] hover:brightness-110"
           >
             {copy.privacyLabel}
           </Link>

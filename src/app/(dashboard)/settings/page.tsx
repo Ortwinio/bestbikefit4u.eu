@@ -1,26 +1,50 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { Card, CardContent, CardHeader, CardTitle, Button } from "@/components/ui";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Button,
+  AccessibleDialog,
+  ErrorState,
+  Input,
+  useToast,
+} from "@/components/ui";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { reportClientError } from "@/lib/telemetry";
+import {
+  getEffectiveDisplayName,
+  getEffectiveProfileImageSource,
+} from "@/lib/userIdentity";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { Trash2 } from "lucide-react";
 
 export default function SettingsPage() {
   const { signOut } = useAuthActions();
   const router = useRouter();
   const { locale, messages, languageSwitchLabels } = useDashboardMessages();
+  const toast = useToast();
   const user = useQuery(api.users.queries.getCurrentUser);
   const strava = useQuery(api.integrations.queries.getStravaStatus);
   const updateProfile = useMutation(api.users.mutations.updateProfile);
   const disconnectStrava = useMutation(api.integrations.mutations.disconnectStrava);
+  const deleteAccount = useMutation(api.users.mutations.deleteAccount);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [displayName, setDisplayName] = useState("");
+  const [isSavingDisplayName, setIsSavingDisplayName] = useState(false);
+  const [displayNameError, setDisplayNameError] = useState<string | null>(null);
 
   const accountType = useMemo(() => {
     if (user?.tier === "pro" || user?.tier === "premium") {
@@ -28,6 +52,55 @@ export default function SettingsPage() {
     }
     return messages.settings.account.free;
   }, [messages.settings.account.free, messages.settings.account.pro, user?.tier]);
+  const effectiveDisplayName = getEffectiveDisplayName(
+    user,
+    messages.userMenu.fallbackUserName
+  );
+  const profileImageSource = getEffectiveProfileImageSource(user);
+
+  useEffect(() => {
+    setDisplayName(user?.displayName ?? "");
+  }, [user?.displayName]);
+
+  const handleDeleteAccount = async () => {
+    setDeleteError(null);
+    setIsDeleting(true);
+    try {
+      await deleteAccount({});
+      router.push(withLocalePrefix("/", locale));
+    } catch (error) {
+      setDeleteError(
+        reportClientError(error, {
+          area: "settings",
+          action: "deleteAccount",
+          operationType: "mutation",
+          userMessage: messages.profile.dangerZone.deleteFailed,
+        })
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleSaveDisplayName = async () => {
+    setDisplayNameError(null);
+    setIsSavingDisplayName(true);
+    try {
+      await updateProfile({ displayName });
+      toast.success({ description: messages.common.toasts.displayNameSaved });
+    } catch (error) {
+      setDisplayNameError(
+        reportClientError(error, {
+          area: "settings",
+          action: "updateDisplayName",
+          operationType: "mutation",
+          userMessage: messages.settings.account.displayNameSaveFailed,
+        })
+      );
+    } finally {
+      setIsSavingDisplayName(false);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
@@ -43,13 +116,29 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
-              <ProfilePhotoUpload storageId={user?.profile_image_url} size="settings" />
+              <ProfilePhotoUpload source={profileImageSource} size="settings" />
               <div>
                 <p className="font-semibold text-gray-900">
-                  {user?.name || user?.email?.split("@")[0] || messages.userMenu.fallbackUserName}
+                  {effectiveDisplayName}
                 </p>
                 <p className="text-sm text-gray-600">{user?.email}</p>
               </div>
+            </div>
+            <div className="space-y-3">
+              <Input
+                label={messages.settings.account.displayNameLabel}
+                placeholder={messages.settings.account.displayNamePlaceholder}
+                value={displayName}
+                onChange={(event) => setDisplayName(event.target.value)}
+              />
+              {displayNameError ? <ErrorState description={displayNameError} /> : null}
+              <Button
+                variant="outline"
+                onClick={() => void handleSaveDisplayName()}
+                isLoading={isSavingDisplayName}
+              >
+                {messages.settings.account.saveDisplayName}
+              </Button>
             </div>
             <div className="flex items-center justify-between rounded-[var(--radius-md)] bg-[color:var(--secondary)] px-4 py-3">
               <span className="text-sm text-gray-700">{messages.settings.account.type}</span>
@@ -200,7 +289,52 @@ export default function SettingsPage() {
             </div>
           </CardContent>
         </Card>
+
+        <Card variant="bordered" className="border-red-200">
+          <CardHeader>
+            <CardTitle className="text-red-700">
+              {messages.profile.dangerZone.title}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {deleteError ? <ErrorState description={deleteError} /> : null}
+            <p className="text-sm text-gray-600">
+              {messages.profile.dangerZone.deleteConfirmDescription}
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => setShowDeleteDialog(true)}
+              className="border-red-300 text-red-700 hover:bg-red-50"
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              {messages.profile.dangerZone.deleteAccount}
+            </Button>
+          </CardContent>
+        </Card>
       </div>
+
+      <AccessibleDialog
+        open={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        title={messages.profile.dangerZone.deleteConfirmTitle}
+        description={messages.profile.dangerZone.deleteConfirmDescription}
+      >
+        <div className="mt-4 flex gap-3">
+          <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
+            {messages.profile.dangerZone.cancel}
+          </Button>
+          <Button
+            onClick={() => {
+              setShowDeleteDialog(false);
+              void handleDeleteAccount();
+            }}
+            isLoading={isDeleting}
+            className="bg-red-600 text-white hover:bg-red-700"
+          >
+            {messages.profile.dangerZone.deleteConfirmCta}
+          </Button>
+        </div>
+      </AccessibleDialog>
     </div>
   );
 }

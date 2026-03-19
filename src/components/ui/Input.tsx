@@ -1,5 +1,5 @@
 import { forwardRef, type InputHTMLAttributes, useId } from "react";
-import { Input as BaseInput } from "@base-ui/react/input";
+import { Input as PrototyperInput } from "@/components/prototyper-ui/ui/input";
 import { cn } from "@/utils/cn";
 import { FieldLabel } from "./FieldLabel";
 
@@ -49,7 +49,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             tooltipDescriptionId={tooltipDescriptionId}
           />
         )}
-        <BaseInput
+        <PrototyperInput
           ref={ref as never}
           id={inputId}
           aria-describedby={describedBy || undefined}
@@ -58,7 +58,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             "w-full rounded-[var(--radius-md)] border bg-[color:var(--card)] px-3 py-2 text-sm text-[color:var(--foreground)] transition-colors",
             "focus-field-ring",
             error
-              ? "border-red-500 text-red-900 invalid-field-ring"
+              ? "border-[color:var(--danger)] text-[color:var(--foreground)] invalid-field-ring"
               : "border-[color:var(--input)]",
             "placeholder:text-[color:var(--muted-foreground)] disabled:bg-[color:var(--muted)] disabled:text-[color:var(--muted-foreground)] disabled:cursor-not-allowed",
             className
@@ -66,7 +66,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error && (
-          <p id={errorId} className="mt-1 text-sm text-red-600">
+          <p id={errorId} className="mt-1 text-sm text-[color:var(--danger)]">
             {error}
           </p>
         )}

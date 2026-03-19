@@ -1,7 +1,7 @@
 "use client";
 
-import { useFormContext } from "react-hook-form";
-import { Input } from "@/components/ui";
+import { Controller, useFormContext } from "react-hook-form";
+import { NumberInput } from "@/components/ui";
 import { Info } from "lucide-react";
 
 export function StepAdvancedMeasurements() {
@@ -29,15 +29,23 @@ export function StepAdvancedMeasurements() {
       <div className="grid gap-6 sm:grid-cols-2">
         {/* Torso Length */}
         <div>
-          <Input
-            label="Torso Length (cm)"
-            tooltip="Measure from the top of your inseam reference (book) to the sternal notch (base of throat) while upright (cm). Improves reach and drop accuracy."
-            type="number"
-            step="0.1"
-            placeholder="58"
-            {...register("torsoLengthCm", { valueAsNumber: true })}
-            error={errors.torsoLengthCm?.message as string}
-            helperText="Hip bone to top of shoulder"
+          <Controller
+            name="torsoLengthCm"
+            render={({ field }) => (
+              <NumberInput
+                label="Torso Length (cm)"
+                tooltip="Measure from the top of your inseam reference (book) to the sternal notch (base of throat) while upright (cm). Improves reach and drop accuracy."
+                step={0.1}
+                min={0}
+                placeholder="58"
+                value={typeof field.value === "number" && !Number.isNaN(field.value) ? field.value : null}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                error={errors.torsoLengthCm?.message as string}
+                helperText="Hip bone to top of shoulder"
+                unit="cm"
+              />
+            )}
           />
           <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
             <p className="font-medium text-gray-700 mb-1">How to measure:</p>
@@ -50,15 +58,23 @@ export function StepAdvancedMeasurements() {
 
         {/* Arm Length */}
         <div>
-          <Input
-            label="Arm Length (cm)"
-            tooltip="Arm extended horizontally: measure from shoulder bone (acromion) to center of clenched fist (cm). Refines cockpit length."
-            type="number"
-            step="0.1"
-            placeholder="62"
-            {...register("armLengthCm", { valueAsNumber: true })}
-            error={errors.armLengthCm?.message as string}
-            helperText="Shoulder to wrist"
+          <Controller
+            name="armLengthCm"
+            render={({ field }) => (
+              <NumberInput
+                label="Arm Length (cm)"
+                tooltip="Arm extended horizontally: measure from shoulder bone (acromion) to center of clenched fist (cm). Refines cockpit length."
+                step={0.1}
+                min={0}
+                placeholder="62"
+                value={typeof field.value === "number" && !Number.isNaN(field.value) ? field.value : null}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                error={errors.armLengthCm?.message as string}
+                helperText="Shoulder to wrist"
+                unit="cm"
+              />
+            )}
           />
           <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
             <p className="font-medium text-gray-700 mb-1">How to measure:</p>
@@ -71,15 +87,23 @@ export function StepAdvancedMeasurements() {
 
         {/* Shoulder Width */}
         <div>
-          <Input
-            label="Shoulder Width (cm)"
-            tooltip="Measure bony shoulder width (acromion to acromion) in cm. Used to recommend handlebar width."
-            type="number"
-            step="0.1"
-            placeholder="42"
-            {...register("shoulderWidthCm", { valueAsNumber: true })}
-            error={errors.shoulderWidthCm?.message as string}
-            helperText="For handlebar width"
+          <Controller
+            name="shoulderWidthCm"
+            render={({ field }) => (
+              <NumberInput
+                label="Shoulder Width (cm)"
+                tooltip="Measure bony shoulder width (acromion to acromion) in cm. Used to recommend handlebar width."
+                step={0.1}
+                min={0}
+                placeholder="42"
+                value={typeof field.value === "number" && !Number.isNaN(field.value) ? field.value : null}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                error={errors.shoulderWidthCm?.message as string}
+                helperText="For handlebar width"
+                unit="cm"
+              />
+            )}
           />
           <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
             <p className="font-medium text-gray-700 mb-1">How to measure:</p>
@@ -91,15 +115,23 @@ export function StepAdvancedMeasurements() {
 
         {/* Femur Length */}
         <div>
-          <Input
-            label="Femur Length (cm)"
-            tooltip="Seated with knee at 90 deg: measure from hip bone (greater trochanter) to center of kneecap (cm). Helps refine saddle setback."
-            type="number"
-            step="0.1"
-            placeholder="45"
-            {...register("femurLengthCm", { valueAsNumber: true })}
-            error={errors.femurLengthCm?.message as string}
-            helperText="Hip joint to knee center"
+          <Controller
+            name="femurLengthCm"
+            render={({ field }) => (
+              <NumberInput
+                label="Femur Length (cm)"
+                tooltip="Seated with knee at 90 deg: measure from hip bone (greater trochanter) to center of kneecap (cm). Helps refine saddle setback."
+                step={0.1}
+                min={0}
+                placeholder="45"
+                value={typeof field.value === "number" && !Number.isNaN(field.value) ? field.value : null}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                error={errors.femurLengthCm?.message as string}
+                helperText="Hip joint to knee center"
+                unit="cm"
+              />
+            )}
           />
           <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
             <p className="font-medium text-gray-700 mb-1">How to measure:</p>

@@ -313,6 +313,14 @@ const nl = {
       edit: "Bewerken",
       delete: "Verwijderen",
       signOut: "Uitloggen",
+      toasts: {
+        profileSaved: "Je profielmetingen zijn opgeslagen.",
+        displayNameSaved: "Je weergavenaam is bijgewerkt.",
+        fitSessionStarted: "Nieuwe fit-sessie gestart.",
+        reportEmailed: "Je fit-rapport is per e-mail verzonden.",
+        cookiesAccepted: "Analytics-cookies zijn ingeschakeld.",
+        cookiesEssentialOnly: "Alleen essentiële cookies blijven actief.",
+      },
     },
     nav: {
       dashboard: "Dashboard",
@@ -941,6 +949,10 @@ const nl = {
       account: {
         title: "Account",
         type: "Accounttype",
+        displayNameLabel: "Weergavenaam",
+        displayNamePlaceholder: "Hoe je naam moet worden getoond",
+        saveDisplayName: "Weergavenaam opslaan",
+        displayNameSaveFailed: "Weergavenaam opslaan mislukt. Probeer het opnieuw.",
         free: "Gratis",
         pro: "Pro",
         upgrade: "Upgrade naar Pro",

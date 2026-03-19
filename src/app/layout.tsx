@@ -6,6 +6,7 @@ import { BRAND } from "@/config/brand";
 import { getRequestLocale } from "@/i18n/request";
 import { CookieConsentBanner } from "@/components/layout/CookieConsentBanner";
 import { GTMConsentLoader } from "@/components/analytics/GTMConsentLoader";
+import { ToastProvider } from "@/components/ui";
 
 const GTM_ID = "GTM-KH48ZSSC";
 
@@ -35,13 +36,15 @@ export default async function RootLayout({
         <body className="relative bg-[color:var(--background)] text-[color:var(--foreground)] antialiased">
           <a
             href="#main-content"
-            className="skip-link absolute left-4 top-3 z-[100] rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow"
+            className="skip-link absolute left-4 top-3 z-[100] rounded-md border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm font-medium text-[color:var(--foreground)] shadow"
           >
             Skip to main content
           </a>
           <GTMConsentLoader gtmId={GTM_ID} />
-          <ConvexClientProvider>{children}</ConvexClientProvider>
-          <CookieConsentBanner locale={locale} />
+          <ToastProvider>
+            <ConvexClientProvider>{children}</ConvexClientProvider>
+            <CookieConsentBanner locale={locale} />
+          </ToastProvider>
         </body>
       </html>
     </ConvexAuthNextjsServerProvider>

@@ -312,6 +312,14 @@ const en = {
       edit: "Edit",
       delete: "Delete",
       signOut: "Sign out",
+      toasts: {
+        profileSaved: "Your profile measurements have been saved.",
+        displayNameSaved: "Your display name has been updated.",
+        fitSessionStarted: "New fit session started.",
+        reportEmailed: "Your fit report has been sent by email.",
+        cookiesAccepted: "Analytics cookies have been enabled.",
+        cookiesEssentialOnly: "Only essential cookies will remain active.",
+      },
     },
     nav: {
       dashboard: "Dashboard",
@@ -933,6 +941,10 @@ const en = {
       account: {
         title: "Account",
         type: "Account type",
+        displayNameLabel: "Display name",
+        displayNamePlaceholder: "How your name should appear",
+        saveDisplayName: "Save display name",
+        displayNameSaveFailed: "Could not save display name. Please try again.",
         free: "Free",
         pro: "Pro",
         upgrade: "Upgrade to Pro",

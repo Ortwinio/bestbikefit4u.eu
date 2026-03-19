@@ -1,6 +1,11 @@
 import { forwardRef, type ChangeEvent, type SelectHTMLAttributes, useId } from "react";
-import { Select as BaseSelect } from "@base-ui/react/select";
-import { Check, ChevronDown } from "lucide-react";
+import {
+  Select as PrototyperSelect,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/prototyper-ui/ui/select";
 import { cn } from "@/utils/cn";
 import { FieldLabel } from "./FieldLabel";
 
@@ -70,7 +75,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             tooltipDescriptionId={tooltipDescriptionId}
           />
         )}
-        <BaseSelect.Root
+        <PrototyperSelect
           items={options}
           id={selectId}
           name={props.name}
@@ -89,7 +94,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             onChange?.(createSelectChangeEvent((nextValue ?? "") as string));
           }}
         >
-          <BaseSelect.Trigger
+          <SelectTrigger
             ref={ref as never}
             aria-describedby={describedBy || undefined}
             aria-invalid={error ? true : undefined}
@@ -97,49 +102,32 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               "flex w-full items-center justify-between rounded-[var(--radius-md)] border bg-[color:var(--card)] px-3 py-2 text-left text-sm text-[color:var(--foreground)] transition-colors",
               "focus-field-ring",
               error
-                ? "border-red-500 text-red-900 invalid-field-ring"
+                ? "border-[color:var(--danger)] text-[color:var(--foreground)] invalid-field-ring"
                 : "border-[color:var(--input)]",
               "disabled:bg-[color:var(--muted)] disabled:text-[color:var(--muted-foreground)] disabled:cursor-not-allowed",
               className
             )}
           >
-            <BaseSelect.Value placeholder={placeholder} />
-            <BaseSelect.Icon className="text-[color:var(--muted-foreground)]">
-              <ChevronDown className="h-4 w-4" />
-            </BaseSelect.Icon>
-          </BaseSelect.Trigger>
-          <BaseSelect.Portal>
-            <BaseSelect.Positioner sideOffset={6} className="z-50 outline-none">
-              <BaseSelect.Popup className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--popover)] p-1 text-[color:var(--popover-foreground)] shadow-xl">
-                <BaseSelect.List className="max-h-64 overflow-y-auto no-scrollbar">
-                  {options.map((option) => (
-                    <BaseSelect.Item
-                      key={option.value}
-                      value={option.value}
-                      label={option.label}
-                      disabled={option.disabled}
-                      className={({ disabled: itemDisabled, highlighted, selected }) =>
-                        cn(
-                          "flex cursor-default items-center justify-between gap-3 rounded-[calc(var(--radius-md)-2px)] px-3 py-2 text-sm outline-none",
-                          highlighted && "bg-[color:var(--accent)] text-[color:var(--accent-foreground)]",
-                          selected && "font-medium",
-                          itemDisabled && "status-disabled"
-                        )
-                      }
-                    >
-                      <BaseSelect.ItemText>{option.label}</BaseSelect.ItemText>
-                      <BaseSelect.ItemIndicator>
-                        <Check className="h-4 w-4" />
-                      </BaseSelect.ItemIndicator>
-                    </BaseSelect.Item>
-                  ))}
-                </BaseSelect.List>
-              </BaseSelect.Popup>
-            </BaseSelect.Positioner>
-          </BaseSelect.Portal>
-        </BaseSelect.Root>
+            <SelectValue placeholder={placeholder} />
+          </SelectTrigger>
+          <SelectContent
+            sideOffset={6}
+            className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--popover)] p-1 text-[color:var(--popover-foreground)] shadow-xl"
+          >
+            {options.map((option) => (
+              <SelectItem
+                key={option.value}
+                value={option.value}
+                disabled={option.disabled}
+                className="flex cursor-default items-center justify-between gap-3 rounded-[calc(var(--radius-md)-2px)] px-3 py-2 text-sm outline-none data-highlighted:bg-[color:var(--accent)] data-highlighted:text-[color:var(--accent-foreground)] data-disabled:status-disabled"
+              >
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </PrototyperSelect>
         {error && (
-          <p id={errorId} className="mt-1 text-sm text-red-600">
+          <p id={errorId} className="mt-1 text-sm text-[color:var(--danger)]">
             {error}
           </p>
         )}

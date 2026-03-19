@@ -16,6 +16,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  useToast,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { reportClientError } from "@/lib/telemetry";
@@ -45,6 +46,7 @@ interface ResultsPageProps {
 export default function ResultsPage({ params }: ResultsPageProps) {
   const { sessionId } = use(params);
   const { locale, messages } = useDashboardMessages();
+  const toast = useToast();
   const pagePath = withLocalePrefix(`/fit/${sessionId}/results`, locale);
   const logMarketingEvent = useMarketingEventLogger();
   const reportCopy = getReportV2Copy(locale);
@@ -147,6 +149,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         recipientEmail: email,
       });
       setEmailSent(true);
+      toast.success({ description: messages.common.toasts.reportEmailed });
       setTimeout(() => {
         setShowEmailModal(false);
         setEmailSent(false);

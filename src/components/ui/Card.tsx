@@ -1,37 +1,41 @@
 import { type HTMLAttributes, forwardRef } from "react";
-import { cva, type VariantProps } from "class-variance-authority";
+import {
+  Card as PrototyperCard,
+  CardContent as PrototyperCardContent,
+  CardDescription as PrototyperCardDescription,
+  CardFooter as PrototyperCardFooter,
+  CardHeader as PrototyperCardHeader,
+  CardTitle as PrototyperCardTitle,
+} from "@/components/prototyper-ui/ui/card";
 import { cn } from "@/utils/cn";
 
-const cardVariants = cva(
-  "rounded-[var(--radius-lg)] border border-transparent bg-[color:var(--card)] text-[color:var(--card-foreground)]",
-  {
-    variants: {
-      variant: {
-        default: "shadow-sm",
-        bordered: "border-[color:var(--border)] shadow-sm",
-        elevated: "border-[color:rgb(255_255_255_/_0.35)] shadow-xl shadow-slate-950/6",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-);
-
 export interface CardProps
-  extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
+  extends HTMLAttributes<HTMLDivElement> {
+  variant?: "default" | "bordered" | "elevated";
+}
+
+const cardVariantClassMap = {
+  default: "border-transparent shadow-sm",
+  bordered: "border-[color:var(--border)] shadow-sm",
+  elevated:
+    "border-[color:color-mix(in_oklch,var(--border)_72%,var(--card)_28%)] shadow-xl shadow-black/10 dark:shadow-black/30",
+} as const;
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant = "default", children, ...props }, ref) => {
     return (
-      <div
+      <PrototyperCard
         ref={ref}
-        className={cn(cardVariants({ variant }), "p-6", className)}
+        variant="transparent"
+        className={cn(
+          "rounded-[var(--radius-lg)] border bg-[color:var(--card)] p-6 text-[color:var(--card-foreground)]",
+          cardVariantClassMap[variant],
+          className
+        )}
         {...props}
       >
         {children}
-      </div>
+      </PrototyperCard>
     );
   }
 );
@@ -42,7 +46,11 @@ export const CardHeader = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("mb-4 space-y-1", className)} {...props} />
+  <PrototyperCardHeader
+    ref={ref}
+    className={cn("mb-4 space-y-1", className)}
+    {...props}
+  />
 ));
 
 CardHeader.displayName = "CardHeader";
@@ -51,7 +59,7 @@ export const CardTitle = forwardRef<
   HTMLHeadingElement,
   HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-  <h3
+  <PrototyperCardTitle
     ref={ref}
     className={cn("text-lg font-semibold tracking-tight text-[color:var(--foreground)]", className)}
     {...props}
@@ -64,7 +72,7 @@ export const CardDescription = forwardRef<
   HTMLParagraphElement,
   HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p
+  <PrototyperCardDescription
     ref={ref}
     className={cn("text-sm leading-6 text-[color:var(--muted-foreground)]", className)}
     {...props}
@@ -77,7 +85,11 @@ export const CardContent = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("text-[color:var(--foreground)]", className)} {...props} />
+  <PrototyperCardContent
+    ref={ref}
+    className={cn("text-[color:var(--foreground)]", className)}
+    {...props}
+  />
 ));
 
 CardContent.displayName = "CardContent";
@@ -86,7 +98,7 @@ export const CardFooter = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
+  <PrototyperCardFooter
     ref={ref}
     className={cn("mt-4 flex items-center gap-2", className)}
     {...props}

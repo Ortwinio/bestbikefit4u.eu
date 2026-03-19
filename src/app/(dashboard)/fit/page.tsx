@@ -14,11 +14,12 @@ import {
   CardContent,
   LoadingState,
   ErrorState,
+  useToast,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import {
-  BIKE_TYPE_LABELS,
-  BIKE_TYPE_OPTIONS,
+  getBikeTypeLabel,
+  getBikeTypeOptions,
   isAeroCompatibleBikeType,
   type BikeType,
 } from "@/lib/bikes";
@@ -39,6 +40,7 @@ type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
 export default function NewFitSessionPage() {
   const router = useRouter();
   const { locale, messages } = useDashboardMessages();
+  const toast = useToast();
   const pagePath = withLocalePrefix("/fit", locale);
   const logMarketingEvent = useMarketingEventLogger();
   const hasTrackedFitViewRef = useRef(false);
@@ -167,19 +169,10 @@ export default function NewFitSessionPage() {
   }, [bikeProfiles, selectedBikeId, selectedBikeProfileId]);
 
   const profileTypeLabel = (profileType: string) => {
-    const labels: Record<string, string> = {
-      base: "Base",
-      mountain: "Mountain",
-      endurance: "Endurance",
-      performance: "Performance",
-      aero: "Aero",
-      indoor: "Indoor",
-      technical: "Technical",
-      comfort: "Comfort",
-      custom: "Custom",
-    };
-
-    return labels[profileType] ?? profileType;
+    return (
+      (messages.bikeProfileTypes as Record<string, string>)[profileType] ??
+      profileType
+    );
   };
 
   const handleSelectBike = (bikeId: Id<"bikes">, selectedType: BikeType) => {
@@ -208,6 +201,7 @@ export default function NewFitSessionPage() {
         bikeId: selectedBike?._id,
         bikeProfileId: selectedBikeProfileId ?? undefined,
       });
+      toast.success({ description: messages.common.toasts.fitSessionStarted });
       router.push(withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale));
     } catch (error) {
       setCreateError(
@@ -309,7 +303,7 @@ export default function NewFitSessionPage() {
                         : "text-gray-500"
                     }`}
                   >
-                    {BIKE_TYPE_LABELS[bike.bikeType]}
+                    {getBikeTypeLabel(bike.bikeType, messages)}
                   </p>
                 </button>
               ))}
@@ -330,11 +324,11 @@ export default function NewFitSessionPage() {
             <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
               {messages.fit.savedBikes.usingBike}{" "}
               <span className="font-semibold">{selectedBike.name}</span> (
-              {BIKE_TYPE_LABELS[selectedBike.bikeType]}).
+              {getBikeTypeLabel(selectedBike.bikeType, messages)}).
             </div>
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
-              {BIKE_TYPE_OPTIONS.map((type) => (
+              {getBikeTypeOptions(messages).map((type) => (
                 <button
                   key={type.value}
                   type="button"
