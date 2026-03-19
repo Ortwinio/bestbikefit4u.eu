@@ -10,19 +10,19 @@ import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { cn } from "@/utils/cn";
 
 type ProfilePhotoUploadProps = {
-  storageId?: string;
+  source?: string;
   size?: "sidebar" | "settings" | "hero";
 };
 
 export function ProfilePhotoUpload({
-  storageId,
+  source,
   size = "sidebar",
 }: ProfilePhotoUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const previewUrlRef = useRef<string | null>(null);
   const { messages } = useDashboardMessages();
   const updateProfile = useMutation(api.users.mutations.updateProfile);
-  const resolvedUrl = useResolvedImageUrl(storageId);
+  const resolvedUrl = useResolvedImageUrl(source);
   const [optimisticUrl, setOptimisticUrl] = useState<string | null>(null);
 
   const { uploadImage, isUploading, error, clearError } = useImageUpload(
