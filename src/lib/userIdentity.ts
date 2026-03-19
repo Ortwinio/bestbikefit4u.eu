@@ -1,6 +1,7 @@
 import type { Doc } from "../../convex/_generated/dataModel";
 
-type UserIdentity = Pick<
+type UserIdentity = Partial<
+  Pick<
   Doc<"users">,
   | "displayName"
   | "displayNameSource"
@@ -10,6 +11,7 @@ type UserIdentity = Pick<
   | "googleName"
   | "googleProfileImageUrl"
   | "image"
+  >
 >;
 
 function getEmailLocalPart(email?: string) {
