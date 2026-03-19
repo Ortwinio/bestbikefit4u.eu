@@ -10,6 +10,8 @@ export type MarketingEventType =
   | "cta_click"
   | "login_code_requested"
   | "login_code_resent"
+  | "login_google_started"
+  | "login_google_error"
   | "login_verified"
   | "funnel_landing_view"
   | "funnel_login_view"
