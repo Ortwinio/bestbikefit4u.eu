@@ -1,9 +1,8 @@
 "use client";
 
 import { useFormContext, Controller } from "react-hook-form";
-import { cn } from "@/utils/cn";
+import { Selectable } from "@/components/ui";
 import { flexibilityTests } from "@/lib/validations/profile";
-import { Check } from "lucide-react";
 
 export function StepFlexibility() {
   const { control } = useFormContext();
@@ -44,55 +43,20 @@ export function StepFlexibility() {
             </label>
             <div className="grid gap-3">
               {flexibilityTests.map((test) => (
-                <button
+                <Selectable
                   key={test.score}
-                  type="button"
                   onClick={() => field.onChange(test.score)}
-                  className={cn(
-                    "flex items-center justify-between p-4 rounded-lg border-2 transition-all text-left",
-                    field.value === test.score
-                      ? "border-blue-600 bg-blue-50"
-                      : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                  )}
+                  selected={field.value === test.score}
+                  variant="card"
+                  label={test.label}
+                  badge={
+                    <span className="rounded-full bg-[color:var(--secondary)] px-2 py-0.5 text-xs text-[color:var(--secondary-foreground)]">
+                      {test.testResult}
+                    </span>
+                  }
+                  description={test.description}
                 >
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={cn(
-                          "font-medium",
-                          field.value === test.score
-                            ? "text-blue-900"
-                            : "text-gray-900"
-                        )}
-                      >
-                        {test.label}
-                      </span>
-                      <span
-                        className={cn(
-                          "text-xs px-2 py-0.5 rounded-full",
-                          field.value === test.score
-                            ? "bg-blue-200 text-blue-800"
-                            : "bg-gray-100 text-gray-600"
-                        )}
-                      >
-                        {test.testResult}
-                      </span>
-                    </div>
-                    <p
-                      className={cn(
-                        "text-sm mt-1",
-                        field.value === test.score
-                          ? "text-blue-700"
-                          : "text-gray-500"
-                      )}
-                    >
-                      {test.description}
-                    </p>
-                  </div>
-                  {field.value === test.score && (
-                    <Check className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                  )}
-                </button>
+                </Selectable>
               ))}
             </div>
           </div>

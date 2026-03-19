@@ -1,4 +1,5 @@
 import type { Id } from "../../../../../convex/_generated/dataModel";
+import { Button, NumberInput, Selectable } from "@/components/ui";
 import type { InlineTireInput } from "../shared";
 import { tubeTypeLabel } from "../shared";
 
@@ -73,40 +74,30 @@ export function StepWheelsetTires({
         <div className="space-y-3">
           <div className="grid gap-3">
             {wheelsets.map((wheelset) => (
-              <button
+              <Selectable
                 key={wheelset._id}
-                type="button"
                 onClick={() => onSelectWheelset(wheelset._id)}
-                className={`rounded-2xl border p-4 text-left ${
-                  selectedWheelsetId === wheelset._id
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 bg-white hover:border-gray-300"
-                }`}
-              >
-                {wheelset.name}
-              </button>
+                selected={selectedWheelsetId === wheelset._id}
+                variant="card"
+                label={wheelset.name}
+              />
             ))}
           </div>
 
           {tireSetups && tireSetups.length > 0 ? (
             <div className="grid gap-3">
               {tireSetups.map((tireSetup) => (
-                <button
+                <Selectable
                   key={tireSetup._id}
-                  type="button"
                   onClick={() => onSelectTireSetup(tireSetup._id)}
-                  className={`rounded-2xl border p-4 text-left ${
-                    selectedTireSetupId === tireSetup._id
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-200 bg-white hover:border-gray-300"
-                  }`}
-                >
-                  <p className="font-semibold text-gray-900">{tireSetup.name}</p>
-                  <p className="mt-1 text-sm text-gray-600">
-                    {tireSetup.widthFrontMm}/{tireSetup.widthRearMm}mm •{" "}
-                    {tubeTypeLabel(tireSetup.tubeType, locale)}
-                  </p>
-                </button>
+                  selected={selectedTireSetupId === tireSetup._id}
+                  variant="card"
+                  label={tireSetup.name}
+                  description={`${tireSetup.widthFrontMm}/${tireSetup.widthRearMm}mm • ${tubeTypeLabel(
+                    tireSetup.tubeType,
+                    locale
+                  )}`}
+                />
               ))}
             </div>
           ) : null}
@@ -116,101 +107,73 @@ export function StepWheelsetTires({
       <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
         <p className="text-sm font-semibold text-gray-900">{labels.manualInput}</p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <label className="block">
-            <span className="text-sm text-gray-700">{labels.widthFront}</span>
-            <input
-              type="number"
-              min={18}
-              max={80}
-              value={draft.widthFrontMm}
-              onChange={(event) =>
-                onInlineInputChange({
-                  ...draft,
-                  widthFrontMm: Number(event.target.value),
-                })
-              }
-              className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm text-gray-700">{labels.widthRear}</span>
-            <input
-              type="number"
-              min={18}
-              max={80}
-              value={draft.widthRearMm}
-              onChange={(event) =>
-                onInlineInputChange({
-                  ...draft,
-                  widthRearMm: Number(event.target.value),
-                })
-              }
-              className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm text-gray-700">{labels.rimWidthFront}</span>
-            <input
-              type="number"
-              value={draft.internalRimWidthFrontMm ?? ""}
-              onChange={(event) =>
-                onInlineInputChange({
-                  ...draft,
-                  internalRimWidthFrontMm: event.target.value
-                    ? Number(event.target.value)
-                    : undefined,
-                })
-              }
-              className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm text-gray-700">{labels.rimWidthRear}</span>
-            <input
-              type="number"
-              value={draft.internalRimWidthRearMm ?? ""}
-              onChange={(event) =>
-                onInlineInputChange({
-                  ...draft,
-                  internalRimWidthRearMm: event.target.value
-                    ? Number(event.target.value)
-                    : undefined,
-                })
-              }
-              className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm text-gray-700">{labels.maxPressure}</span>
-            <input
-              type="number"
-              step={0.1}
-              value={draft.maxPressureBar ?? ""}
-              onChange={(event) =>
-                onInlineInputChange({
-                  ...draft,
-                  maxPressureBar: event.target.value ? Number(event.target.value) : undefined,
-                })
-              }
-              className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-            />
-          </label>
+          <NumberInput
+            label={labels.widthFront}
+            min={18}
+            max={80}
+            value={draft.widthFrontMm}
+            onChange={(value) =>
+              onInlineInputChange({
+                ...draft,
+                widthFrontMm: value ?? draft.widthFrontMm,
+              })
+            }
+          />
+          <NumberInput
+            label={labels.widthRear}
+            min={18}
+            max={80}
+            value={draft.widthRearMm}
+            onChange={(value) =>
+              onInlineInputChange({
+                ...draft,
+                widthRearMm: value ?? draft.widthRearMm,
+              })
+            }
+          />
+          <NumberInput
+            label={labels.rimWidthFront}
+            value={draft.internalRimWidthFrontMm ?? null}
+            onChange={(value) =>
+              onInlineInputChange({
+                ...draft,
+                internalRimWidthFrontMm: value ?? undefined,
+              })
+            }
+          />
+          <NumberInput
+            label={labels.rimWidthRear}
+            value={draft.internalRimWidthRearMm ?? null}
+            onChange={(value) =>
+              onInlineInputChange({
+                ...draft,
+                internalRimWidthRearMm: value ?? undefined,
+              })
+            }
+          />
+          <NumberInput
+            label={labels.maxPressure}
+            step={0.1}
+            value={draft.maxPressureBar ?? null}
+            onChange={(value) =>
+              onInlineInputChange({
+                ...draft,
+                maxPressureBar: value ?? undefined,
+              })
+            }
+          />
           <div>
             <span className="text-sm text-gray-700">{labels.rimType}</span>
             <div className="mt-2 grid grid-cols-2 gap-2">
               {(["hooked", "hookless"] as const).map((option) => (
-                <button
+                <Selectable
                   key={option}
-                  type="button"
                   onClick={() => onInlineInputChange({ ...draft, rimType: option })}
-                  className={`rounded-xl px-4 py-3 text-sm font-semibold ${
-                    draft.rimType === option
-                      ? "bg-blue-600 text-white"
-                      : "bg-white text-gray-700 hover:bg-gray-100"
-                  }`}
+                  selected={draft.rimType === option}
+                  variant="segment"
                 >
                   {option}
-                </button>
+                </Selectable>
               ))}
             </div>
           </div>
@@ -218,20 +181,12 @@ export function StepWheelsetTires({
       </div>
 
       <div className="flex gap-3">
-        <button
-          type="button"
-          onClick={onBack}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
-        >
+        <Button variant="outline" onClick={onBack}>
           {labels.back}
-        </button>
-        <button
-          type="button"
-          onClick={onNext}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-        >
+        </Button>
+        <Button onClick={onNext}>
           {labels.next}
-        </button>
+        </Button>
       </div>
     </div>
   );

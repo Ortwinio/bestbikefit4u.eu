@@ -1,4 +1,5 @@
 import type { Id } from "../../../../../convex/_generated/dataModel";
+import { Button, Selectable } from "@/components/ui";
 import { disciplineLabel } from "../shared";
 
 interface BikeSummary {
@@ -47,22 +48,18 @@ export function StepBikeSelect({
       {bikes && bikes.length > 0 ? (
         <div className="grid gap-3">
           {bikes.map((bike) => (
-            <button
+            <Selectable
               key={bike._id}
-              type="button"
               onClick={() => onSelectBike(bike._id)}
-              className={`rounded-2xl border p-4 text-left ${
-                selectedBikeId === bike._id
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-gray-200 bg-white hover:border-gray-300"
+              selected={selectedBikeId === bike._id}
+              variant="card"
+              label={bike.name}
+              description={`${disciplineLabel(bike.discipline, locale)}${
+                bike.brand || bike.model
+                  ? ` • ${[bike.brand, bike.model].filter(Boolean).join(" ")}`
+                  : ""
               }`}
-            >
-              <p className="font-semibold text-gray-900">{bike.name}</p>
-              <p className="mt-1 text-sm text-gray-600">
-                {disciplineLabel(bike.discipline, locale)}
-                {bike.brand || bike.model ? ` • ${[bike.brand, bike.model].filter(Boolean).join(" ")}` : ""}
-              </p>
-            </button>
+            />
           ))}
         </div>
       ) : (
@@ -73,32 +70,24 @@ export function StepBikeSelect({
         <p className="text-sm font-semibold text-gray-900">{labels.continueWithoutBike}</p>
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {(["road", "gravel", "mtb", "tt"] as const).map((discipline) => (
-            <button
+            <Selectable
               key={discipline}
-              type="button"
               onClick={() => {
                 onContinueWithoutBike();
                 onSelectDiscipline(discipline);
               }}
-              className={`rounded-xl px-3 py-3 text-sm font-semibold ${
-                selectedBikeId === null && selectedDiscipline === discipline
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 hover:bg-gray-100"
-              }`}
+              selected={selectedBikeId === null && selectedDiscipline === discipline}
+              variant="segment"
             >
               {disciplineLabel(discipline, locale)}
-            </button>
+            </Selectable>
           ))}
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={onNext}
-        className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-      >
+      <Button onClick={onNext}>
         {labels.next}
-      </button>
+      </Button>
     </div>
   );
 }

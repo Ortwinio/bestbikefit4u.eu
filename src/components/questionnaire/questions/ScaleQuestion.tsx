@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/utils/cn";
+import { Selectable } from "@/components/ui";
 
 interface ScaleConfig {
   min: number;
@@ -27,25 +27,21 @@ export function ScaleQuestion({ config, value, onChange }: ScaleQuestionProps) {
           const isSelected = value === step;
 
           return (
-            <button
+            <Selectable
               key={step}
-              type="button"
               onClick={() => onChange(step)}
-              className={cn(
-                "flex-1 h-12 rounded-lg border-2 font-medium transition-all",
-                isSelected
-                  ? "border-blue-600 bg-blue-600 text-white"
-                  : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700"
-              )}
+              selected={isSelected}
+              variant="segment"
+              className="h-12"
             >
               {step}
-            </button>
+            </Selectable>
           );
         })}
       </div>
 
       {/* Labels */}
-      <div className="flex justify-between text-sm text-gray-500">
+      <div className="flex justify-between text-sm text-[color:var(--muted-foreground)]">
         <span>{minLabel}</span>
         <span>{maxLabel}</span>
       </div>

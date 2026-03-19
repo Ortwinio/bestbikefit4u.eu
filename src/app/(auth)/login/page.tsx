@@ -48,6 +48,9 @@ type LoginCopy = {
   sendCode: string;
   sendCodeError: string;
   resendCodeError: string;
+  googleSignIn: string;
+  googleSignInError: string;
+  continueWithEmail: string;
   noPasswordHint: string;
   legalHint: string;
 };
@@ -87,6 +90,9 @@ const loginCopy: Record<Locale, LoginCopy> = {
     sendCode: "Send Login Code",
     sendCodeError: "Failed to send verification code. Please try again.",
     resendCodeError: "Failed to resend code. Please try again.",
+    googleSignIn: "Continue with Google",
+    googleSignInError: "Google sign-in could not be started. Please try again.",
+    continueWithEmail: "Or continue with email",
     noPasswordHint: "No password needed. We'll send you a secure code to sign in.",
     legalHint:
       "By signing in, you agree to our Terms of Service and Privacy Policy.",
@@ -125,12 +131,43 @@ const loginCopy: Record<Locale, LoginCopy> = {
     sendCode: "Verstuur inlogcode",
     sendCodeError: "Verzenden van verificatiecode mislukt. Probeer opnieuw.",
     resendCodeError: "Opnieuw verzenden mislukt. Probeer opnieuw.",
+    googleSignIn: "Doorgaan met Google",
+    googleSignInError: "Google-login kon niet worden gestart. Probeer het opnieuw.",
+    continueWithEmail: "Of ga verder met e-mail",
     noPasswordHint:
       "Geen wachtwoord nodig. We sturen je een veilige code om in te loggen.",
     legalHint:
       "Door in te loggen ga je akkoord met onze Voorwaarden en Privacyverklaring.",
   },
 };
+
+function GoogleIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12 10.2v3.9h5.4c-.2 1.3-1.6 3.9-5.4 3.9-3.2 0-5.9-2.7-5.9-6s2.7-6 5.9-6c1.8 0 3 .8 3.7 1.5l2.5-2.4C16.7 3.6 14.6 2.7 12 2.7 6.9 2.7 2.8 6.8 2.8 12s4.1 9.3 9.2 9.3c5.3 0 8.8-3.7 8.8-8.9 0-.6-.1-1.1-.2-1.6H12Z"
+        fill="#4285F4"
+      />
+      <path
+        d="M2.8 7.5 6 9.9c.9-1.9 3-3.2 6-3.2 1.8 0 3 .8 3.7 1.5l2.5-2.4C16.7 3.6 14.6 2.7 12 2.7 8.5 2.7 5.4 4.7 2.8 7.5Z"
+        fill="#34A853"
+      />
+      <path
+        d="M12 21.3c2.5 0 4.6-.8 6.2-2.3l-2.9-2.2c-.8.6-1.9 1.1-3.3 1.1-3.8 0-5.2-2.6-5.4-3.8l-3.1 2.4c2.5 3 5.7 4.8 8.5 4.8Z"
+        fill="#FBBC05"
+      />
+      <path
+        d="M6.6 14.1c-.1-.4-.2-.8-.2-1.2s.1-.8.2-1.2L3.5 9.3C3 10.2 2.8 11.1 2.8 12s.2 1.8.7 2.7l3.1-2.4Z"
+        fill="#EA4335"
+      />
+    </svg>
+  );
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -157,6 +194,7 @@ export default function LoginPage() {
   const [resendSuccess, setResendSuccess] = useState(false);
   const [sendSuccess, setSendSuccess] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
+  const googleAuthEnabled = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === "true";
 
   const uspPanel = (
     <section className="rounded-lg border border-blue-200 bg-blue-50 p-4">
@@ -310,6 +348,41 @@ export default function LoginPage() {
     setResendCooldown(0);
   };
 
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await signIn("google", {
+        redirectTo: withLocalePrefix("/dashboard", locale),
+      });
+      void logMarketingEvent({
+        eventType: "login_google_started",
+        locale,
+        pagePath,
+        section: "google_button",
+        sourceTag,
+      });
+      if (result.redirect) {
+        window.location.href = result.redirect.toString();
+        return;
+      }
+      setError(text.googleSignInError);
+    } catch (err) {
+      console.error("Failed to start Google sign-in:", err);
+      void logMarketingEvent({
+        eventType: "login_google_error",
+        locale,
+        pagePath,
+        section: "google_button",
+        sourceTag,
+      });
+      setError(text.googleSignInError);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (step === "success") {
     return (
       <Card variant="bordered">
@@ -330,14 +403,15 @@ export default function LoginPage() {
         {uspPanel}
         <Card variant="bordered">
           <CardHeader>
-            <button
+            <Button
               type="button"
+              variant="ghost"
               onClick={handleChangeEmail}
-              className="flex items-center text-sm text-gray-500 hover:text-gray-700 mb-2"
+              className="mb-2 flex items-center px-0 text-sm text-gray-500 hover:text-gray-700"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
               {text.back}
-            </button>
+            </Button>
             <CardTitle>{text.enterVerificationCode}</CardTitle>
           </CardHeader>
           <CardContent>
@@ -345,13 +419,14 @@ export default function LoginPage() {
               {text.codeSentTo} <strong>{email}</strong>
             </p>
             <div className="mb-4 flex flex-wrap items-center gap-3">
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 onClick={handleChangeEmail}
-                className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                className="px-0 text-sm font-medium text-blue-600 hover:text-blue-800"
               >
                 {text.changeEmailAction}
-              </button>
+              </Button>
               {sendSuccess && (
                 <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
                   {text.codeSentSuccess}
@@ -391,16 +466,17 @@ export default function LoginPage() {
             </form>
 
             <div className="mt-4 text-center">
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 onClick={handleResendCode}
                 disabled={isLoading || resendCooldown > 0}
-                className="text-sm text-blue-600 hover:text-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+                className="px-0 text-sm text-blue-600 hover:text-blue-800"
               >
                 {resendCooldown > 0
                   ? `${text.resendIn} ${resendCooldown}s`
                   : `${text.resendPrompt} ${text.resendAction}`}
-              </button>
+              </Button>
             </div>
 
             <p className="mt-4 text-center text-xs text-gray-400">{text.spamHint}</p>
@@ -418,6 +494,29 @@ export default function LoginPage() {
           <CardTitle>{text.signInTitle}</CardTitle>
         </CardHeader>
         <CardContent>
+          {googleAuthEnabled ? (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => void handleGoogleSignIn()}
+                isLoading={isLoading}
+              >
+                <GoogleIcon />
+                {text.googleSignIn}
+              </Button>
+
+              <div className="my-6 flex items-center gap-3">
+                <div className="h-px flex-1 bg-gray-200" />
+                <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+                  {text.continueWithEmail}
+                </p>
+                <div className="h-px flex-1 bg-gray-200" />
+              </div>
+            </>
+          ) : null}
+
           <form onSubmit={handleSendCode} className="space-y-4">
             <Input
               label={text.emailLabel}

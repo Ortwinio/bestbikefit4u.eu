@@ -22,6 +22,11 @@ import {
   Gauge,
 } from "lucide-react";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
+import { Button } from "@/components/ui";
+import {
+  getEffectiveDisplayName,
+  getEffectiveProfileImageSource,
+} from "@/lib/userIdentity";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
@@ -53,9 +58,9 @@ export function DashboardSidebar() {
     router.push(toLocalizedPath("/"));
   };
 
-  const displayName =
-    user?.name || user?.email?.split("@")[0] || messages.userMenu.fallbackUserName;
+  const displayName = getEffectiveDisplayName(user, messages.userMenu.fallbackUserName);
   const email = user?.email || "";
+  const profileImageSource = getEffectiveProfileImageSource(user);
 
   return (
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white">
@@ -116,7 +121,7 @@ export function DashboardSidebar() {
         <div className="border-t border-gray-200 p-3">
           {/* User info */}
           <div className="flex items-center gap-3 px-3 py-2 mb-2">
-            <ProfilePhotoUpload storageId={user?.profile_image_url} size="sidebar" />
+            <ProfilePhotoUpload source={profileImageSource} size="sidebar" />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-900 truncate">
                 {displayName}
@@ -126,13 +131,14 @@ export function DashboardSidebar() {
           </div>
 
           {/* Sign out button */}
-          <button
+          <Button
+            variant="ghost"
             onClick={handleSignOut}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+            className="flex w-full items-center justify-start gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-700"
           >
             <LogOut className="h-5 w-5" />
             {messages.common.signOut}
-          </button>
+          </Button>
         </div>
       </div>
     </aside>

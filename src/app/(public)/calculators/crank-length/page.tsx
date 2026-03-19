@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
-import { FieldLabel } from "@/components/ui";
+import { Button, Input, Select } from "@/components/ui";
 import { BRAND } from "@/config/brand";
 import { calculateCrankLength } from "../../../../../convex/lib/fitAlgorithm/calculations";
 import { buildFaqPageSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
@@ -89,52 +89,32 @@ export default async function CrankLengthCalculatorPage({
 
         <form className="mt-10 rounded-xl border border-gray-200 bg-white p-6" method="GET">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <FieldLabel
-                label="Inseam (cm)"
-                htmlFor="crank-length-inseam"
-                tooltip="Barefoot inseam: feet 10–15 cm apart, press a book firmly into the crotch, measure floor to book top (cm). Primary input for saddle height (typical 55–105 cm)."
-              />
-              <input
-                id="crank-length-inseam"
-                name="inseamCm"
-                type="number"
-                min={55}
-                max={105}
-                step="0.1"
-                defaultValue={submittedInseam ?? ""}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-                required
-              />
-            </div>
+            <Input
+              label="Inseam (cm)"
+              id="crank-length-inseam"
+              name="inseamCm"
+              type="number"
+              min={55}
+              max={105}
+              step="0.1"
+              defaultValue={submittedInseam ?? ""}
+              tooltip="Barefoot inseam: feet 10–15 cm apart, press a book firmly into the crotch, measure floor to book top (cm). Primary input for saddle height (typical 55–105 cm)."
+              required
+            />
 
-            <div>
-              <FieldLabel
-                label="Bike Category"
-                htmlFor="crank-length-category"
-                tooltip="Choose the category that matches your bike and intended use. This adjusts comfort vs. aerodynamics assumptions."
-              />
-              <select
-                id="crank-length-category"
-                name="category"
-                defaultValue={category}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-              >
-                {PUBLIC_BIKE_CATEGORY_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Bike Category"
+              id="crank-length-category"
+              name="category"
+              defaultValue={category}
+              tooltip="Choose the category that matches your bike and intended use. This adjusts comfort vs. aerodynamics assumptions."
+              options={PUBLIC_BIKE_CATEGORY_OPTIONS}
+            />
           </div>
 
-          <button
-            type="submit"
-            className="mt-6 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-          >
+          <Button type="submit" className="mt-6">
             Calculate
-          </button>
+          </Button>
         </form>
 
         {error && (

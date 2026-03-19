@@ -15,6 +15,7 @@ import {
   AccessibleDialog,
   ErrorState,
   Input,
+  Selectable,
   useToast,
 } from "@/components/ui";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
@@ -202,22 +203,19 @@ export default function SettingsPage() {
                   ["metric", messages.settings.preferences.metric],
                   ["imperial", messages.settings.preferences.imperial],
                 ].map(([value, label]) => (
-                  <button
+                  <Selectable
                     key={value}
-                    type="button"
                     onClick={() =>
                       void updateProfile({
                         unit_preference: value as "metric" | "imperial",
                       })
                     }
-                    className={`rounded-[var(--radius-md)] border px-3 py-2 text-sm font-medium ${
-                      (user?.unit_preference ?? "metric") === value
-                        ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
-                        : "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)]"
-                    }`}
+                    selected={(user?.unit_preference ?? "metric") === value}
+                    variant="segment"
+                    fullWidth={false}
                   >
                     {label}
-                  </button>
+                  </Selectable>
                 ))}
               </div>
             </div>

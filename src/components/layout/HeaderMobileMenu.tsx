@@ -18,6 +18,11 @@ type HeaderMobileMenuProps = {
     pricing: string;
     login: string;
     getStarted: string;
+    dashboard: string;
+    newFitSession: string;
+    myBikes: string;
+    profile: string;
+    signOut: string;
   };
 };
 
@@ -37,15 +42,16 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
 
   return (
     <div className="md:hidden">
-      <button
+      <Button
         type="button"
+        variant="outline"
         aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
         aria-expanded={isOpen}
         onClick={() => setIsOpen((current) => !current)}
-        className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-700"
+        className="inline-flex h-9 w-9 items-center justify-center px-0 text-gray-700"
       >
         {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </button>
+      </Button>
 
       {isOpen && (
         <div className="absolute inset-x-0 top-full z-50 border-b border-gray-200 bg-white px-4 py-4 shadow-sm">
@@ -79,36 +85,37 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
                   onClick={close}
                   className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
-                  Dashboard
+                  {labels.dashboard}
                 </Link>
                 <Link
                   href={withLocalePrefix("/fit", locale)}
                   onClick={close}
                   className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
-                  {locale === "nl" ? "Nieuwe fit-sessie" : "New Fit Session"}
+                  {labels.newFitSession}
                 </Link>
                 <Link
                   href={withLocalePrefix("/bikes", locale)}
                   onClick={close}
                   className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
-                  {locale === "nl" ? "Mijn fietsen" : "My Bikes"}
+                  {labels.myBikes}
                 </Link>
                 <Link
                   href={withLocalePrefix("/profile", locale)}
                   onClick={close}
                   className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
-                  {locale === "nl" ? "Profiel" : "Profile"}
+                  {labels.profile}
                 </Link>
-                <button
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={handleSignOut}
-                  className="mt-2 w-full rounded-md border border-gray-200 px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  className="mt-2 w-full justify-start text-left text-sm text-gray-700 hover:bg-gray-100"
                 >
-                  {locale === "nl" ? "Uitloggen" : "Sign out"}
-                </button>
+                  {labels.signOut}
+                </Button>
               </>
             ) : (
               <div className="mt-2 flex items-center gap-2">

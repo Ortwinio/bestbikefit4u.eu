@@ -240,14 +240,15 @@ export function QuestionnaireContainer({
             {missingRequiredQuestionIds.map((questionId) => {
               const question = questions.find((item) => item.questionId === questionId);
               return (
-                <button
+                <Button
                   key={questionId}
-                  type="button"
+                  size="sm"
+                  variant="outline"
                   onClick={() => jumpToQuestion(questionId)}
-                  className="rounded-full border border-amber-300 bg-white px-3 py-1 text-xs text-amber-800 hover:bg-amber-100"
+                  className="border-amber-300 bg-white text-amber-800 hover:bg-amber-100"
                 >
                   {question?.questionText ?? questionId}
-                </button>
+                </Button>
               );
             })}
           </div>

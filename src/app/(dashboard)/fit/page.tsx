@@ -14,6 +14,7 @@ import {
   CardContent,
   LoadingState,
   ErrorState,
+  Selectable,
   useToast,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
@@ -257,7 +258,7 @@ export default function NewFitSessionPage() {
       )}
 
       {isLoadingBikes && (
-        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 text-sm text-gray-500">
+        <div className="mb-6 rounded-lg border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-sm text-[color:var(--muted-foreground)]">
           {messages.fit.savedBikes.loading}
         </div>
       )}
@@ -277,35 +278,14 @@ export default function NewFitSessionPage() {
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-2">
               {bikes.map((bike) => (
-                <button
+                <Selectable
                   key={bike._id}
-                  type="button"
                   onClick={() => handleSelectBike(bike._id, bike.bikeType)}
-                  className={`rounded-lg border-2 p-4 text-left transition-all ${
-                    selectedBikeId === bike._id
-                      ? "border-blue-600 bg-blue-50"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  <p
-                    className={`font-medium ${
-                      selectedBikeId === bike._id
-                        ? "text-blue-900"
-                        : "text-gray-900"
-                    }`}
-                  >
-                    {bike.name}
-                  </p>
-                  <p
-                    className={`text-sm mt-1 ${
-                      selectedBikeId === bike._id
-                        ? "text-blue-700"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    {getBikeTypeLabel(bike.bikeType, messages)}
-                  </p>
-                </button>
+                  selected={selectedBikeId === bike._id}
+                  variant="card"
+                  label={bike.name}
+                  description={getBikeTypeLabel(bike.bikeType, messages)}
+                />
               ))}
             </div>
           </CardContent>
@@ -321,7 +301,7 @@ export default function NewFitSessionPage() {
         </CardHeader>
         <CardContent>
           {selectedBike ? (
-            <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+            <div className="rounded-lg border border-[color:var(--primary)] bg-[color:color-mix(in_oklch,var(--card)_86%,var(--primary)_14%)] p-4 text-sm text-[color:var(--foreground)]">
               {messages.fit.savedBikes.usingBike}{" "}
               <span className="font-semibold">{selectedBike.name}</span> (
               {getBikeTypeLabel(selectedBike.bikeType, messages)}).
@@ -329,31 +309,14 @@ export default function NewFitSessionPage() {
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
               {getBikeTypeOptions(messages).map((type) => (
-                <button
+                <Selectable
                   key={type.value}
-                  type="button"
                   onClick={() => setBikeType(type.value)}
-                  className={`p-4 rounded-lg border-2 text-left transition-all ${
-                    bikeType === type.value
-                      ? "border-blue-600 bg-blue-50"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  <p
-                    className={`font-medium ${
-                      bikeType === type.value ? "text-blue-900" : "text-gray-900"
-                    }`}
-                  >
-                    {type.label}
-                  </p>
-                  <p
-                    className={`text-sm mt-1 ${
-                      bikeType === type.value ? "text-blue-700" : "text-gray-500"
-                    }`}
-                  >
-                    {type.description}
-                  </p>
-                </button>
+                  selected={bikeType === type.value}
+                  variant="card"
+                  label={type.label}
+                  description={type.description}
+                />
               ))}
             </div>
           )}
@@ -370,52 +333,31 @@ export default function NewFitSessionPage() {
           </CardHeader>
           <CardContent>
             {isLoadingBikeProfiles ? (
-              <div className="rounded-lg border border-gray-200 bg-white p-4 text-sm text-gray-500">
+              <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-sm text-[color:var(--muted-foreground)]">
                 {messages.fit.savedBikes.profilesLoading}
               </div>
             ) : bikeProfiles && bikeProfiles.length > 0 ? (
               <div className="grid gap-3 sm:grid-cols-2">
                 {bikeProfiles.map((bikeProfile) => (
-                  <button
+                  <Selectable
                     key={bikeProfile._id}
-                    type="button"
                     onClick={() => setSelectedBikeProfileId(bikeProfile._id)}
-                    className={`rounded-lg border-2 p-4 text-left transition-all ${
-                      selectedBikeProfileId === bikeProfile._id
-                        ? "border-blue-600 bg-blue-50"
-                        : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <p
-                        className={`font-medium ${
-                          selectedBikeProfileId === bikeProfile._id
-                            ? "text-blue-900"
-                            : "text-gray-900"
-                        }`}
-                      >
-                        {bikeProfile.name}
-                      </p>
-                      {bikeProfile.isDefault ? (
-                        <span className="rounded-full bg-white px-2 py-1 text-xs font-semibold text-blue-700">
+                    selected={selectedBikeProfileId === bikeProfile._id}
+                    variant="card"
+                    label={bikeProfile.name}
+                    description={profileTypeLabel(bikeProfile.profileType)}
+                    badge={
+                      bikeProfile.isDefault ? (
+                        <span className="rounded-full bg-[color:var(--secondary)] px-2 py-1 text-xs font-semibold text-[color:var(--secondary-foreground)]">
                           {messages.fit.savedBikes.defaultBadge}
                         </span>
-                      ) : null}
-                    </div>
-                    <p
-                      className={`mt-1 text-sm ${
-                        selectedBikeProfileId === bikeProfile._id
-                          ? "text-blue-700"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      {profileTypeLabel(bikeProfile.profileType)}
-                    </p>
-                  </button>
+                      ) : null
+                    }
+                  />
                 ))}
               </div>
             ) : (
-              <div className="rounded-lg border border-gray-200 bg-white p-4 text-sm text-gray-500">
+              <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-sm text-[color:var(--muted-foreground)]">
                 {messages.fit.savedBikes.noProfiles}
               </div>
             )}
@@ -427,34 +369,17 @@ export default function NewFitSessionPage() {
         <CardHeader>
           <CardTitle>{messages.fit.sections.ridingStyle}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {ridingStyles.map((style) => (
-              <button
+          <CardContent>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {ridingStyles.map((style) => (
+              <Selectable
                 key={style.value}
-                type="button"
                 onClick={() => setRidingStyle(style.value)}
-                className={`p-4 rounded-lg border-2 text-left transition-all ${
-                  ridingStyle === style.value
-                    ? "border-blue-600 bg-blue-50"
-                    : "border-gray-200 hover:border-gray-300"
-                }`}
-              >
-                <p
-                  className={`font-medium ${
-                    ridingStyle === style.value ? "text-blue-900" : "text-gray-900"
-                  }`}
-                >
-                  {style.label}
-                </p>
-                <p
-                  className={`text-sm mt-1 ${
-                    ridingStyle === style.value ? "text-blue-700" : "text-gray-500"
-                  }`}
-                >
-                  {style.description}
-                </p>
-              </button>
+                selected={ridingStyle === style.value}
+                variant="card"
+                label={style.label}
+                description={style.description}
+              />
             ))}
           </div>
         </CardContent>
@@ -473,35 +398,14 @@ export default function NewFitSessionPage() {
                       isAeroCompatibleBikeType(effectiveBikeType)
               )
               .map((goal) => (
-                <button
+                <Selectable
                   key={goal.value}
-                  type="button"
                   onClick={() => setRidingGoal(goal.value)}
-                  className={`p-4 rounded-lg border-2 text-left transition-all ${
-                    ridingGoal === goal.value
-                      ? "border-blue-600 bg-blue-50"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  <p
-                    className={`font-medium ${
-                      ridingGoal === goal.value
-                        ? "text-blue-900"
-                        : "text-gray-900"
-                    }`}
-                  >
-                    {goal.label}
-                  </p>
-                  <p
-                    className={`text-sm mt-1 ${
-                      ridingGoal === goal.value
-                        ? "text-blue-700"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    {goal.description}
-                  </p>
-                </button>
+                  selected={ridingGoal === goal.value}
+                  variant="card"
+                  label={goal.label}
+                  description={goal.description}
+                />
               ))}
           </div>
         </CardContent>

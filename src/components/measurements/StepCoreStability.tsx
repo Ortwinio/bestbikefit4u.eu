@@ -1,9 +1,9 @@
 "use client";
 
 import { useFormContext, Controller } from "react-hook-form";
-import { cn } from "@/utils/cn";
+import { Selectable } from "@/components/ui";
 import { coreStabilityTests } from "@/lib/validations/profile";
-import { Check, Timer } from "lucide-react";
+import { Timer } from "lucide-react";
 
 export function StepCoreStability() {
   const { control } = useFormContext();
@@ -51,55 +51,20 @@ export function StepCoreStability() {
             </label>
             <div className="grid gap-3">
               {coreStabilityTests.map((test) => (
-                <button
+                <Selectable
                   key={test.score}
-                  type="button"
                   onClick={() => field.onChange(test.score)}
-                  className={cn(
-                    "flex items-center justify-between p-4 rounded-lg border-2 transition-all text-left",
-                    field.value === test.score
-                      ? "border-blue-600 bg-blue-50"
-                      : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                  )}
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={cn(
-                        "flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold",
-                        field.value === test.score
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-100 text-gray-600"
-                      )}
-                    >
+                  selected={field.value === test.score}
+                  variant="card"
+                  trailing={
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--secondary)] text-lg font-bold text-[color:var(--secondary-foreground)]">
                       {test.score}
                     </div>
-                    <div>
-                      <span
-                        className={cn(
-                          "font-medium",
-                          field.value === test.score
-                            ? "text-blue-900"
-                            : "text-gray-900"
-                        )}
-                      >
-                        {test.label}
-                      </span>
-                      <p
-                        className={cn(
-                          "text-sm",
-                          field.value === test.score
-                            ? "text-blue-700"
-                            : "text-gray-500"
-                        )}
-                      >
-                        {test.description}
-                      </p>
-                    </div>
-                  </div>
-                  {field.value === test.score && (
-                    <Check className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                  )}
-                </button>
+                  }
+                  label={test.label}
+                  description={test.description}
+                >
+                </Selectable>
               ))}
             </div>
           </div>

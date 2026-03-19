@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
-import { FieldLabel } from "@/components/ui";
+import { Button, Input, Select } from "@/components/ui";
 import { BRAND } from "@/config/brand";
 import { mapCoreScore, mapFlexibilityScore } from "../../../../../convex/lib/fitAlgorithm";
 import { calculateSaddleHeight } from "../../../../../convex/lib/fitAlgorithm/calculations";
@@ -129,106 +129,63 @@ export default async function SaddleHeightCalculatorPage({
 
         <form className="mt-10 rounded-xl border border-gray-200 bg-white p-6" method="GET">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <FieldLabel
-                label="Inseam (cm)"
-                htmlFor="saddle-height-inseam"
-                tooltip="Barefoot inseam: feet 10-15 cm apart, press a book firmly into the crotch, measure floor to book top (cm). Primary input for saddle height (typical 55-105 cm)."
-              />
-              <input
-                id="saddle-height-inseam"
-                name="inseamCm"
-                type="number"
-                step="0.1"
-                min={55}
-                max={105}
-                defaultValue={submittedInseam ?? ""}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-                required
-              />
-            </div>
+            <Input
+              label="Inseam (cm)"
+              id="saddle-height-inseam"
+              name="inseamCm"
+              type="number"
+              step="0.1"
+              min={55}
+              max={105}
+              defaultValue={submittedInseam ?? ""}
+              tooltip="Barefoot inseam: feet 10-15 cm apart, press a book firmly into the crotch, measure floor to book top (cm). Primary input for saddle height (typical 55-105 cm)."
+              required
+            />
 
-            <div>
-              <FieldLabel
-                label="Bike Category"
-                htmlFor="saddle-height-category"
-                tooltip="Choose the category that matches your bike and intended use. This adjusts comfort vs. aerodynamics assumptions."
-              />
-              <select
-                id="saddle-height-category"
-                name="category"
-                defaultValue={category}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-              >
-                {PUBLIC_BIKE_CATEGORY_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Bike Category"
+              id="saddle-height-category"
+              name="category"
+              defaultValue={category}
+              tooltip="Choose the category that matches your bike and intended use. This adjusts comfort vs. aerodynamics assumptions."
+              options={PUBLIC_BIKE_CATEGORY_OPTIONS}
+            />
 
-            <div>
-              <FieldLabel
-                label="Riding Goal"
-                htmlFor="saddle-height-ambition"
-                tooltip="Pick your primary goal (comfort, endurance, race, TT/aero). The app will trade off stability, comfort, and aerodynamics accordingly."
-              />
-              <select
-                id="saddle-height-ambition"
-                name="ambition"
-                defaultValue={ambition}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-              >
-                {AMBITION_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Riding Goal"
+              id="saddle-height-ambition"
+              name="ambition"
+              defaultValue={ambition}
+              tooltip="Pick your primary goal (comfort, endurance, race, TT/aero). The app will trade off stability, comfort, and aerodynamics accordingly."
+              options={AMBITION_OPTIONS}
+            />
 
-            <div>
-              <FieldLabel
-                label="Flexibility (1-5)"
-                htmlFor="saddle-height-flexibility"
-                tooltip="Rate hamstring/hip flexibility: 1 = very limited (cannot touch toes), 3 = toes, 5 = palms on floor. Lower scores reduce handlebar drop and reach."
-              />
-              <input
-                id="saddle-height-flexibility"
-                name="flexibility"
-                type="number"
-                min={1}
-                max={5}
-                defaultValue={flexibility}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-              />
-            </div>
+            <Input
+              label="Flexibility (1-5)"
+              id="saddle-height-flexibility"
+              name="flexibility"
+              type="number"
+              min={1}
+              max={5}
+              defaultValue={flexibility}
+              tooltip="Rate hamstring/hip flexibility: 1 = very limited (cannot touch toes), 3 = toes, 5 = palms on floor. Lower scores reduce handlebar drop and reach."
+            />
 
-            <div>
-              <FieldLabel
-                label="Core Stability (1-5)"
-                htmlFor="saddle-height-core"
-                tooltip="Rate core stability: 1 = <45s stable plank, 3 = ~60s, 5 = 90s+ controlled. Lower scores reduce aggressive reach/drop to protect the lower back."
-              />
-              <input
-                id="saddle-height-core"
-                name="core"
-                type="number"
-                min={1}
-                max={5}
-                defaultValue={core}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-              />
-            </div>
+            <Input
+              label="Core Stability (1-5)"
+              id="saddle-height-core"
+              name="core"
+              type="number"
+              min={1}
+              max={5}
+              defaultValue={core}
+              tooltip="Rate core stability: 1 = <45s stable plank, 3 = ~60s, 5 = 90s+ controlled. Lower scores reduce aggressive reach/drop to protect the lower back."
+            />
           </div>
 
-          <button
-            type="submit"
-            className="mt-6 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-          >
+          <Button type="submit" className="mt-6">
             Calculate
-          </button>
+          </Button>
         </form>
 
         {error && (

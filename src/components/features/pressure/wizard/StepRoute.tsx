@@ -1,4 +1,5 @@
 import type { Surface } from "@/lib/pressure-engine";
+import { Button, NumberInput, Selectable, Slider } from "@/components/ui";
 import { surfaceLabel } from "../shared";
 
 interface StepRouteProps {
@@ -56,78 +57,47 @@ export function StepRoute({
         <p className="text-sm text-gray-700">{labels.surfaceLabel}</p>
         <div className="mt-2 flex flex-wrap gap-2">
           {surfaces.map((option) => (
-            <button
+            <Selectable
               key={option}
-              type="button"
               onClick={() => onUpdate({ surface: option })}
-              className={`rounded-full px-4 py-2 text-sm font-medium ${
-                surface === option
-                  ? "bg-gray-900 text-white"
-                  : "bg-gray-100 text-gray-700"
-              }`}
+              selected={surface === option}
+              variant="pill"
+              fullWidth={false}
             >
               {surfaceLabel(option, locale)}
-            </button>
+            </Selectable>
           ))}
         </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <label className="block">
-          <span className="text-sm text-gray-700">{labels.distanceLabel}</span>
-          <input
-            type="number"
-            value={routeDistanceKm ?? ""}
-            onChange={(event) =>
-              onUpdate({
-                routeDistanceKm: event.target.value ? Number(event.target.value) : undefined,
-              })
-            }
-            className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm text-gray-700">{labels.elevationLabel}</span>
-          <input
-            type="number"
-            value={routeElevationM ?? ""}
-            onChange={(event) =>
-              onUpdate({
-                routeElevationM: event.target.value ? Number(event.target.value) : undefined,
-              })
-            }
-            className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm text-gray-700">{labels.offRoadLabel}</span>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={offRoadPercent}
-            onChange={(event) => onUpdate({ offRoadPercent: Number(event.target.value) })}
-            className="mt-2 w-full"
-          />
-          <span className="text-sm text-gray-500">{offRoadPercent}%</span>
-        </label>
+        <NumberInput
+          label={labels.distanceLabel}
+          value={routeDistanceKm ?? null}
+          onChange={(value) => onUpdate({ routeDistanceKm: value ?? undefined })}
+        />
+        <NumberInput
+          label={labels.elevationLabel}
+          value={routeElevationM ?? null}
+          onChange={(value) => onUpdate({ routeElevationM: value ?? undefined })}
+        />
+        <Slider
+          label={labels.offRoadLabel}
+          min={0}
+          max={100}
+          value={offRoadPercent}
+          onChange={(value) => onUpdate({ offRoadPercent: value })}
+          valueLabel={`${offRoadPercent}%`}
+        />
       </div>
 
       <div className="flex gap-3">
-        <button
-          type="button"
-          onClick={onBack}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
-        >
+        <Button variant="outline" onClick={onBack}>
           {labels.back}
-        </button>
-        <button
-          type="button"
-          onClick={onNext}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-        >
+        </Button>
+        <Button onClick={onNext}>
           {labels.next}
-        </button>
+        </Button>
       </div>
     </div>
   );

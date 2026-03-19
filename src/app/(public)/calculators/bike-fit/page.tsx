@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button, FieldLabel } from "@/components/ui";
+import { Button, Input, Select } from "@/components/ui";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
@@ -228,144 +228,95 @@ export default async function BikeFitCalculatorPage({
 
         <form className="mt-10 rounded-2xl border border-gray-200 bg-white p-6" method="GET">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <FieldLabel
-                label={isNl ? "Lengte (cm)" : "Height (cm)"}
-                htmlFor="bike-fit-height"
-                tooltip={
-                  isNl
-                    ? "Meet staand zonder schoenen van vloer tot bovenkant hoofd. Gebruik centimeters."
-                    : "Measure standing barefoot from floor to top of head. Use centimeters."
-                }
-              />
-              <input
-                id="bike-fit-height"
-                name="heightCm"
-                type="number"
-                min={140}
-                max={220}
-                step="0.1"
-                defaultValue={submittedHeight ?? ""}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-                required
-              />
-            </div>
-            <div>
-              <FieldLabel
-                label={isNl ? "Binnenbeenlengte (cm)" : "Inseam (cm)"}
-                htmlFor="bike-fit-inseam"
-                tooltip={
-                  isNl
-                    ? "Meet blootsvoets met een boek stevig tussen de benen van vloer tot bovenzijde boek."
-                    : "Measure barefoot with a book held firmly between the legs from floor to the top of the book."
-                }
-              />
-              <input
-                id="bike-fit-inseam"
-                name="inseamCm"
-                type="number"
-                min={55}
-                max={105}
-                step="0.1"
-                defaultValue={submittedInseam ?? ""}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-                required
-              />
-            </div>
-            <div>
-              <FieldLabel
-                label={isNl ? "Fietscategorie" : "Bike Category"}
-                htmlFor="bike-fit-category"
-                tooltip={
-                  isNl
-                    ? "Kies de fietssoort die het best past bij je normale gebruik. Dat beïnvloedt comfort versus aerodynamica."
-                    : "Choose the bike type that best matches your normal use. This shifts comfort versus aerodynamics."
-                }
-              />
-              <select
-                id="bike-fit-category"
-                name="category"
-                defaultValue={category}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-              >
-                {PUBLIC_BIKE_CATEGORY_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <FieldLabel
-                label={isNl ? "Rijdoel" : "Riding Goal"}
-                htmlFor="bike-fit-ambition"
-                tooltip={
-                  isNl
-                    ? "Kies of je setup vooral comfort, balans, prestaties of aerodynamica moet ondersteunen."
-                    : "Choose whether your setup should prioritize comfort, balance, performance, or aerodynamics."
-                }
-              />
-              <select
-                id="bike-fit-ambition"
-                name="ambition"
-                defaultValue={ambition}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-              >
-                {AMBITION_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <FieldLabel
-                label={isNl ? "Flexibiliteit (1-5)" : "Flexibility (1-5)"}
-                htmlFor="bike-fit-flexibility"
-                tooltip={
-                  isNl
-                    ? "1 = erg stijf, 5 = zeer soepel. Lagere flexibiliteit beperkt meestal een agressieve drop."
-                    : "1 = very stiff, 5 = very flexible. Lower flexibility usually limits aggressive bar drop."
-                }
-              />
-              <input
-                id="bike-fit-flexibility"
-                name="flexibility"
-                type="number"
-                min={1}
-                max={5}
-                defaultValue={flexibility}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-              />
-            </div>
-            <div>
-              <FieldLabel
-                label={isNl ? "Core-stabiliteit (1-5)" : "Core Stability (1-5)"}
-                htmlFor="bike-fit-core"
-                tooltip={
-                  isNl
-                    ? "1 = laag, 5 = sterk. Minder core-stabiliteit vraagt vaak om een minder agressieve cockpit."
-                    : "1 = low, 5 = strong. Lower core stability often calls for a less aggressive cockpit."
-                }
-              />
-              <input
-                id="bike-fit-core"
-                name="core"
-                type="number"
-                min={1}
-                max={5}
-                defaultValue={core}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900"
-              />
-            </div>
+            <Input
+              label={isNl ? "Lengte (cm)" : "Height (cm)"}
+              id="bike-fit-height"
+              name="heightCm"
+              type="number"
+              min={140}
+              max={220}
+              step="0.1"
+              defaultValue={submittedHeight ?? ""}
+              tooltip={
+                isNl
+                  ? "Meet staand zonder schoenen van vloer tot bovenkant hoofd. Gebruik centimeters."
+                  : "Measure standing barefoot from floor to top of head. Use centimeters."
+              }
+              required
+            />
+            <Input
+              label={isNl ? "Binnenbeenlengte (cm)" : "Inseam (cm)"}
+              id="bike-fit-inseam"
+              name="inseamCm"
+              type="number"
+              min={55}
+              max={105}
+              step="0.1"
+              defaultValue={submittedInseam ?? ""}
+              tooltip={
+                isNl
+                  ? "Meet blootsvoets met een boek stevig tussen de benen van vloer tot bovenzijde boek."
+                  : "Measure barefoot with a book held firmly between the legs from floor to the top of the book."
+              }
+              required
+            />
+            <Select
+              label={isNl ? "Fietscategorie" : "Bike Category"}
+              id="bike-fit-category"
+              name="category"
+              defaultValue={category}
+              tooltip={
+                isNl
+                  ? "Kies de fietssoort die het best past bij je normale gebruik. Dat beïnvloedt comfort versus aerodynamica."
+                  : "Choose the bike type that best matches your normal use. This shifts comfort versus aerodynamics."
+              }
+              options={PUBLIC_BIKE_CATEGORY_OPTIONS}
+            />
+            <Select
+              label={isNl ? "Rijdoel" : "Riding Goal"}
+              id="bike-fit-ambition"
+              name="ambition"
+              defaultValue={ambition}
+              tooltip={
+                isNl
+                  ? "Kies of je setup vooral comfort, balans, prestaties of aerodynamica moet ondersteunen."
+                  : "Choose whether your setup should prioritize comfort, balance, performance, or aerodynamics."
+              }
+              options={AMBITION_OPTIONS}
+            />
+            <Input
+              label={isNl ? "Flexibiliteit (1-5)" : "Flexibility (1-5)"}
+              id="bike-fit-flexibility"
+              name="flexibility"
+              type="number"
+              min={1}
+              max={5}
+              defaultValue={flexibility}
+              tooltip={
+                isNl
+                  ? "1 = erg stijf, 5 = zeer soepel. Lagere flexibiliteit beperkt meestal een agressieve drop."
+                  : "1 = very stiff, 5 = very flexible. Lower flexibility usually limits aggressive bar drop."
+              }
+            />
+            <Input
+              label={isNl ? "Core-stabiliteit (1-5)" : "Core Stability (1-5)"}
+              id="bike-fit-core"
+              name="core"
+              type="number"
+              min={1}
+              max={5}
+              defaultValue={core}
+              tooltip={
+                isNl
+                  ? "1 = laag, 5 = sterk. Minder core-stabiliteit vraagt vaak om een minder agressieve cockpit."
+                  : "1 = low, 5 = strong. Lower core stability often calls for a less aggressive cockpit."
+              }
+            />
           </div>
 
-          <button
-            type="submit"
-            className="mt-6 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-          >
+          <Button type="submit" className="mt-6">
             {isNl ? "Bereken bike fit" : "Calculate Bike Fit"}
-          </button>
+          </Button>
         </form>
 
         {error ? (

@@ -1,8 +1,7 @@
 "use client";
 
 import { useId } from "react";
-import { cn } from "@/utils/cn";
-import { FieldLabel } from "@/components/ui";
+import { Textarea } from "@/components/ui";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 interface TextQuestionProps {
@@ -25,26 +24,19 @@ export function TextQuestion({
 
   return (
     <div className="space-y-2">
-      <FieldLabel
+      <Textarea
         label={messages.questionnaire.text.label}
-        htmlFor={textareaId}
         tooltip={messages.questionnaire.text.tooltip}
-      />
-      <textarea
         id={textareaId}
         value={value || ""}
         onChange={(e) => onChange(e.target.value)}
         placeholder={resolvedPlaceholder}
         maxLength={maxLength}
         rows={4}
-        className={cn(
-          "w-full px-4 py-3 rounded-lg border-2 text-base transition-colors resize-none",
-          "focus:outline-none focus:ring-0",
-          "border-gray-200 focus:border-blue-600"
-        )}
+        className="text-base"
       />
       <div className="flex justify-end">
-        <span className="text-sm text-gray-400">
+        <span className="text-sm text-[color:var(--muted-foreground)]">
           {currentLength} / {maxLength}
         </span>
       </div>

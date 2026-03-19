@@ -1,3 +1,5 @@
+import { Button, NumberInput, Selectable, Slider } from "@/components/ui";
+
 interface StepWeightGoalProps {
   bodyWeightKg: number;
   bikeWeightKg: number | undefined;
@@ -55,94 +57,51 @@ export function StepWeightGoal({
     <div className="space-y-5">
       <h2 className="text-xl font-semibold text-gray-900">{labels.title}</h2>
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block">
-          <span className="text-sm text-gray-700">{labels.bodyWeightLabel}</span>
-          <input
-            type="range"
-            min={35}
-            max={160}
-            step={1}
-            value={bodyWeightKg}
-            onChange={(event) => onUpdate({ bodyWeightKg: Number(event.target.value) })}
-            className="mt-2 w-full"
-          />
-          <span className="text-sm text-gray-500">{bodyWeightKg} kg</span>
-        </label>
-        <label className="block">
-          <span className="text-sm text-gray-700">{labels.bikeWeightLabel}</span>
-          <input
-            type="number"
-            value={bikeWeightKg ?? ""}
-            onChange={(event) =>
-              onUpdate({
-                bikeWeightKg: event.target.value ? Number(event.target.value) : undefined,
-              })
-            }
-            className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm text-gray-700">{labels.extraLuggageLabel}</span>
-          <input
-            type="number"
-            min={0}
-            max={30}
-            value={extraLuggageKg}
-            onChange={(event) => onUpdate({ extraLuggageKg: Number(event.target.value) })}
-            className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-          />
-        </label>
+        <Slider
+          label={labels.bodyWeightLabel}
+          min={35}
+          max={160}
+          step={1}
+          value={bodyWeightKg}
+          onChange={(value) => onUpdate({ bodyWeightKg: value })}
+          valueLabel={`${bodyWeightKg} kg`}
+        />
+        <NumberInput
+          label={labels.bikeWeightLabel}
+          value={bikeWeightKg ?? null}
+          onChange={(value) => onUpdate({ bikeWeightKg: value ?? undefined })}
+          step={0.1}
+        />
+        <NumberInput
+          label={labels.extraLuggageLabel}
+          min={0}
+          max={30}
+          value={extraLuggageKg}
+          onChange={(value) => onUpdate({ extraLuggageKg: value ?? 0 })}
+        />
         <div>
           <span className="text-sm text-gray-700">{labels.wetLabel}</span>
           <div className="mt-2 grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => onUpdate({ isWet: false })}
-              className={`rounded-xl px-4 py-3 text-sm font-semibold ${
-                !isWet ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700"
-              }`}
-            >
+            <Selectable onClick={() => onUpdate({ isWet: false })} selected={!isWet} variant="segment">
               {labels.dry}
-            </button>
-            <button
-              type="button"
-              onClick={() => onUpdate({ isWet: true })}
-              className={`rounded-xl px-4 py-3 text-sm font-semibold ${
-                isWet ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700"
-              }`}
-            >
+            </Selectable>
+            <Selectable onClick={() => onUpdate({ isWet: true })} selected={isWet} variant="segment">
               {labels.wet}
-            </button>
+            </Selectable>
           </div>
         </div>
-        <label className="block">
-          <span className="text-sm text-gray-700">{labels.currentFrontLabel}</span>
-          <input
-            type="number"
-            step={0.1}
-            value={currentFrontBar ?? ""}
-            onChange={(event) =>
-              onUpdate({
-                currentFrontBar: event.target.value ? Number(event.target.value) : undefined,
-              })
-            }
-            className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm text-gray-700">{labels.currentRearLabel}</span>
-          <input
-            type="number"
-            step={0.1}
-            value={currentRearBar ?? ""}
-            onChange={(event) =>
-              onUpdate({
-                currentRearBar: event.target.value ? Number(event.target.value) : undefined,
-              })
-            }
-            className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-          />
-        </label>
+        <NumberInput
+          label={labels.currentFrontLabel}
+          step={0.1}
+          value={currentFrontBar ?? null}
+          onChange={(value) => onUpdate({ currentFrontBar: value ?? undefined })}
+        />
+        <NumberInput
+          label={labels.currentRearLabel}
+          step={0.1}
+          value={currentRearBar ?? null}
+          onChange={(value) => onUpdate({ currentRearBar: value ?? undefined })}
+        />
       </div>
 
       <div>
@@ -155,37 +114,25 @@ export function StepWeightGoal({
               ["comfort", labels.goalComfort],
             ] as const
           ).map(([goal, goalLabel]) => (
-            <button
+            <Selectable
               key={goal}
-              type="button"
               onClick={() => onUpdate({ ridingGoal: goal })}
-              className={`rounded-xl px-4 py-3 text-sm font-semibold ${
-                ridingGoal === goal
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700"
-              }`}
+              selected={ridingGoal === goal}
+              variant="segment"
             >
               {goalLabel}
-            </button>
+            </Selectable>
           ))}
         </div>
       </div>
 
       <div className="flex gap-3">
-        <button
-          type="button"
-          onClick={onBack}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
-        >
+        <Button variant="outline" onClick={onBack}>
           {labels.back}
-        </button>
-        <button
-          type="button"
-          onClick={onNext}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-        >
+        </Button>
+        <Button onClick={onNext}>
           {labels.next}
-        </button>
+        </Button>
       </div>
     </div>
   );

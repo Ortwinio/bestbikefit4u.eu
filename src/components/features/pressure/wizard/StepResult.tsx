@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
+import { Button, Input, Select } from "@/components/ui";
 import { calculateAdvancedPressure } from "@/lib/pressure-engine";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { PressureResultCard } from "../PressureResultCard";
@@ -192,13 +193,9 @@ export function StepResult({
     return (
       <div className="space-y-4">
         <p className="text-sm text-gray-600">{wizardLabels.selectWheelsetFirst}</p>
-        <button
-          type="button"
-          onClick={onBack}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
-        >
+        <Button variant="outline" onClick={onBack}>
           {wizardLabels.back}
-        </button>
+        </Button>
       </div>
     );
   }
@@ -225,32 +222,19 @@ export function StepResult({
       ) : null}
 
       <div className="flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={onBack}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
-        >
+        <Button variant="outline" onClick={onBack}>
           {wizardLabels.back}
-        </button>
-        <button
-          type="button"
-          onClick={handleSaveCalculation}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-        >
+        </Button>
+        <Button onClick={handleSaveCalculation}>
           {wizardLabels.saveCalculation}
-        </button>
-        <button
-          type="button"
-          onClick={onReset}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
-        >
+        </Button>
+        <Button variant="outline" onClick={onReset}>
           {wizardLabels.newCalculation}
-        </button>
+        </Button>
         <Link
           href={withLocalePrefix("/bikes", locale)}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
         >
-          {wizardLabels.goToMyBikes}
+          <Button variant="outline">{wizardLabels.goToMyBikes}</Button>
         </Link>
       </div>
 
@@ -258,47 +242,38 @@ export function StepResult({
         <div className="rounded-2xl border border-gray-200 bg-white p-4">
           <p className="text-sm font-semibold text-gray-900">{wizardLabels.saveAsPreset}</p>
           <div className="mt-3 grid gap-4 sm:grid-cols-2">
-            <label className="block">
-              <span className="text-sm text-gray-700">{wizardLabels.presetName}</span>
-              <input
-                value={presetName}
-                onChange={(event) => setPresetName(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-              />
-            </label>
-            <label className="block">
-              <span className="text-sm text-gray-700">{wizardLabels.presetUseCase}</span>
-              <select
-                value={presetUseCase}
-                onChange={(event) =>
-                  setPresetUseCase(
-                    event.target.value as
-                      | "race"
-                      | "endurance"
-                      | "wet_weather"
-                      | "gravel_mixed"
-                      | "comfort"
-                      | "custom"
-                  )
-                }
-                className="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2"
-              >
-                <option value="race">{wizardLabels.useCaseRace}</option>
-                <option value="endurance">{wizardLabels.useCaseEndurance}</option>
-                <option value="wet_weather">{wizardLabels.useCaseWetWeather}</option>
-                <option value="gravel_mixed">{wizardLabels.useCaseGravelMixed}</option>
-                <option value="comfort">{wizardLabels.useCaseComfort}</option>
-                <option value="custom">{wizardLabels.useCaseCustom}</option>
-              </select>
-            </label>
+            <Input
+              label={wizardLabels.presetName}
+              value={presetName}
+              onChange={(event) => setPresetName(event.target.value)}
+            />
+            <Select
+              label={wizardLabels.presetUseCase}
+              value={presetUseCase}
+              onChange={(event) =>
+                setPresetUseCase(
+                  event.target.value as
+                    | "race"
+                    | "endurance"
+                    | "wet_weather"
+                    | "gravel_mixed"
+                    | "comfort"
+                    | "custom"
+                )
+              }
+              options={[
+                { value: "race", label: wizardLabels.useCaseRace },
+                { value: "endurance", label: wizardLabels.useCaseEndurance },
+                { value: "wet_weather", label: wizardLabels.useCaseWetWeather },
+                { value: "gravel_mixed", label: wizardLabels.useCaseGravelMixed },
+                { value: "comfort", label: wizardLabels.useCaseComfort },
+                { value: "custom", label: wizardLabels.useCaseCustom },
+              ]}
+            />
           </div>
-          <button
-            type="button"
-            onClick={handleSavePreset}
-            className="mt-4 rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800"
-          >
+          <Button type="button" onClick={handleSavePreset} className="mt-4">
             {wizardLabels.saveAsPreset}
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>

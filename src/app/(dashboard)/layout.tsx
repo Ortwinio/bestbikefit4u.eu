@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useConvexAuth } from "convex/react";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
-import { LoadingState } from "@/components/ui";
+import { Button, LoadingState } from "@/components/ui";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import { BRAND } from "@/config/brand";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -56,8 +56,9 @@ export default function DashboardLayout({
         </Link>
         <div className="flex items-center gap-2">
           <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
-          <button
+          <Button
             type="button"
+            variant="outline"
             aria-expanded={isMobileMenuOpen}
             aria-label={
               isMobileMenuOpen
@@ -65,10 +66,10 @@ export default function DashboardLayout({
                 : messages.layout.mobileMenu.openAria
             }
             onClick={() => setIsMobileMenuOpen((current) => !current)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--muted-foreground)]"
+            className="inline-flex h-9 w-9 items-center justify-center px-0 text-[color:var(--muted-foreground)]"
           >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          </Button>
         </div>
       </div>
 
