@@ -1,18 +1,13 @@
-import type { Doc } from "../../convex/_generated/dataModel";
-
-type UserIdentity = Partial<
-  Pick<
-  Doc<"users">,
-  | "displayName"
-  | "displayNameSource"
-  | "email"
-  | "name"
-  | "profile_image_url"
-  | "googleName"
-  | "googleProfileImageUrl"
-  | "image"
-  >
->;
+type UserIdentity = {
+  displayName?: string;
+  displayNameSource?: string;
+  email?: string;
+  name?: string;
+  profile_image_url?: string;
+  googleName?: string;
+  googleProfileImageUrl?: string;
+  image?: string;
+};
 
 function getEmailLocalPart(email?: string) {
   return email?.split("@")[0]?.trim() || null;
@@ -34,7 +29,7 @@ export function getEffectiveDisplayName(
 
 export function getEffectiveProfileImageSource(
   user: UserIdentity | null | undefined
-) {
+): string | undefined {
   return (
     user?.profile_image_url ||
     user?.googleProfileImageUrl ||
