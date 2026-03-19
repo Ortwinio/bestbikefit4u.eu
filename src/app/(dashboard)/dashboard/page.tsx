@@ -9,6 +9,10 @@ import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getBikeTypeLabel } from "@/lib/bikes";
+import {
+  getEffectiveDisplayName,
+  getEffectiveProfileImageSource,
+} from "@/lib/userIdentity";
 import { ArrowRight, Plus } from "lucide-react";
 
 function CurrentBikeImage({ storageId }: { storageId?: string }) {
@@ -54,6 +58,8 @@ export default function DashboardPage() {
   const completedSessions =
     sessions?.filter((session) => session.status === "completed").length ?? 0;
   const lastSession = sessions?.[0];
+  const displayName = getEffectiveDisplayName(user, messages.userMenu.fallbackUserName);
+  const profileImageSource = getEffectiveProfileImageSource(user);
 
   if (isLoading) {
     return <LoadingState label={messages.layout.loading} />;
@@ -81,10 +87,10 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
-              <ProfilePhotoUpload storageId={user?.profile_image_url} size="hero" />
+              <ProfilePhotoUpload source={profileImageSource} size="hero" />
               <div>
                 <p className="text-lg font-semibold text-gray-900">
-                  {user?.name || user?.email?.split("@")[0] || messages.userMenu.fallbackUserName}
+                  {displayName}
                 </p>
                 <p className="text-sm text-gray-600">{user?.email}</p>
               </div>
