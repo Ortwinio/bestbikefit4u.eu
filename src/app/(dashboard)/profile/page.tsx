@@ -826,7 +826,14 @@ export default function ProfilePage() {
 
     try {
       await updateMeasurements(values);
-      openRefreshDialog(values.weightKg);
+      const weightChanged =
+        (profileData.weightKg ?? undefined) !== (values.weightKg ?? undefined);
+      if (weightChanged && values.weightKg !== undefined) {
+        openRefreshDialog(values.weightKg);
+      } else {
+        setEditingMeasurements(false);
+        toast.success({ description: messages.common.toasts.profileSaved });
+      }
     } catch (error) {
       toast.error({
         description: reportClientError(error, {

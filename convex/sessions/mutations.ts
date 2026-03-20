@@ -13,29 +13,35 @@ const LONGEST_RIDE_KM_RANGE = [0, 600] as const;
 
 export const create = mutation({
   args: {
-    bikeType: v.union(
-      v.literal("road"),
-      v.literal("gravel"),
-      v.literal("mountain"),
-      v.literal("hybrid"),
-      v.literal("tt_triathlon"),
-      v.literal("cyclocross"),
-      v.literal("touring"),
-      v.literal("city")
+    bikeType: v.optional(
+      v.union(
+        v.literal("road"),
+        v.literal("gravel"),
+        v.literal("mountain"),
+        v.literal("hybrid"),
+        v.literal("tt_triathlon"),
+        v.literal("cyclocross"),
+        v.literal("touring"),
+        v.literal("city")
+      )
     ),
-    ridingStyle: v.union(
-      v.literal("recreational"),
-      v.literal("fitness"),
-      v.literal("sportive"),
-      v.literal("racing"),
-      v.literal("commuting"),
-      v.literal("touring")
+    ridingStyle: v.optional(
+      v.union(
+        v.literal("recreational"),
+        v.literal("fitness"),
+        v.literal("sportive"),
+        v.literal("racing"),
+        v.literal("commuting"),
+        v.literal("touring")
+      )
     ),
-    primaryGoal: v.union(
-      v.literal("comfort"),
-      v.literal("balanced"),
-      v.literal("performance"),
-      v.literal("aerodynamics")
+    primaryGoal: v.optional(
+      v.union(
+        v.literal("comfort"),
+        v.literal("balanced"),
+        v.literal("performance"),
+        v.literal("aerodynamics")
+      )
     ),
     bikeId: v.optional(v.id("bikes")),
     bikeProfileId: v.optional(v.id("bikeProfiles")),
@@ -45,12 +51,18 @@ export const create = mutation({
     if (!userId) throw new Error("Not authenticated");
 
     let resolvedBikeId = args.bikeId;
+    let snapshotBikeType = args.bikeType;
+    let snapshotRidingStyle = args.ridingStyle;
+    let snapshotPrimaryGoal = args.primaryGoal;
 
     if (args.bikeId) {
       const { bike } = await requireBikeOwner(ctx, args.bikeId);
-      if (bike.bikeType !== args.bikeType) {
+      if (args.bikeType && bike.bikeType !== args.bikeType) {
         throw new Error("Bike type must match selected bike");
       }
+      snapshotBikeType = bike.bikeType;
+      snapshotRidingStyle = bike.ridingStyle ?? snapshotRidingStyle;
+      snapshotPrimaryGoal = bike.primaryGoal ?? snapshotPrimaryGoal;
     }
 
     if (args.bikeProfileId) {
@@ -61,11 +73,18 @@ export const create = mutation({
         throw new Error("Bike profile must belong to the selected bike");
       }
 
-      if (bike.bikeType !== args.bikeType) {
+      if (args.bikeType && bike.bikeType !== args.bikeType) {
         throw new Error("Bike type must match selected bike profile");
       }
 
       resolvedBikeId = bike._id;
+      snapshotBikeType = bike.bikeType;
+      snapshotRidingStyle = bike.ridingStyle ?? snapshotRidingStyle;
+      snapshotPrimaryGoal = bike.primaryGoal ?? snapshotPrimaryGoal;
+    }
+
+    if (!snapshotBikeType || !snapshotRidingStyle || !snapshotPrimaryGoal) {
+      throw new Error("Bike type, riding style, and primary goal are required");
     }
 
     // Get user's profile
@@ -81,12 +100,12 @@ export const create = mutation({
       profileId: profile._id,
       bikeId: resolvedBikeId,
       bikeProfileId: args.bikeProfileId,
-      bikeType: args.bikeType,
+      bikeType: snapshotBikeType,
       engineVersion: "v2",
       sourceType: args.bikeProfileId ? "bike_profile_flow" : "legacy_flow",
       status: "in_progress",
-      ridingStyle: args.ridingStyle,
-      primaryGoal: args.primaryGoal,
+      ridingStyle: snapshotRidingStyle,
+      primaryGoal: snapshotPrimaryGoal,
       createdAt: Date.now(),
     });
   },
