@@ -18,6 +18,12 @@ interface PdfRouteContext {
 
 export const runtime = "nodejs";
 
+function isDirectUrl(source?: string | null): source is string {
+  return Boolean(
+    source && (source.startsWith("http://") || source.startsWith("https://"))
+  );
+}
+
 export async function GET(
   request: Request,
   context: PdfRouteContext
@@ -89,7 +95,18 @@ export async function GET(
 
     if (richRenderingEnabled) {
       try {
-        const mappedReport = mapReportV2Payload(reportSource);
+        const bikeImageSource = reportSource.bike?.photoUrl;
+        const bikeImageUrl = isDirectUrl(bikeImageSource)
+          ? bikeImageSource
+          : bikeImageSource
+            ? await convex.query(api.files.actions.getUrl, {
+                storageId: bikeImageSource,
+              })
+            : null;
+        const mappedReport = mapReportV2Payload({
+          ...reportSource,
+          bikeImageUrl,
+        });
         const html = renderPdfReportHtml({
           report: mappedReport,
           copy: getReportV2Copy(locale),

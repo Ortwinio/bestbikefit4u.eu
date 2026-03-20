@@ -139,7 +139,7 @@ export default function BikeDetailPage({
         <BikePhotoUpload bikeId={bike._id} currentPhotoStorageId={bike.photoUrl} />
 
         <div className="grid gap-6">
-          <Card variant="bordered">
+          <Card variant="bordered" className="dashboard-card-surface">
             <CardHeader>
               <CardTitle>{messages.bikes.sections.geometry}</CardTitle>
             </CardHeader>
@@ -156,7 +156,7 @@ export default function BikeDetailPage({
             </CardContent>
           </Card>
 
-          <Card variant="bordered">
+          <Card variant="bordered" className="dashboard-card-surface">
             <CardHeader>
               <CardTitle>{messages.pressure.bikeDetail.activeTireSetup}</CardTitle>
             </CardHeader>
@@ -171,7 +171,7 @@ export default function BikeDetailPage({
             </CardContent>
           </Card>
 
-          <Card variant="bordered">
+          <Card variant="bordered" className="dashboard-card-surface">
             <CardHeader>
               <CardTitle>{messages.results.title}</CardTitle>
             </CardHeader>
@@ -194,7 +194,7 @@ export default function BikeDetailPage({
             </CardContent>
           </Card>
 
-          <Card variant="bordered">
+          <Card variant="bordered" className="dashboard-card-surface">
             <CardHeader>
               <CardTitle>{messages.bikes.defaultProfile.title}</CardTitle>
             </CardHeader>
@@ -230,7 +230,7 @@ export default function BikeDetailPage({
         </div>
       </div>
 
-      <Card variant="bordered">
+      <Card variant="bordered" className="dashboard-card-surface">
         <CardHeader>
           <CardTitle>{messages.bikes.sections.notes}</CardTitle>
         </CardHeader>

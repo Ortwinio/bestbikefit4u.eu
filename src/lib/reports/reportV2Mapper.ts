@@ -17,6 +17,7 @@ type ReportV2Source = {
   bikeProfile: Doc<"bikeProfiles"> | null;
   profile: Doc<"profiles"> | null;
   latestPressureCalculation: Doc<"pressureCalculations"> | null;
+  bikeImageUrl?: string | null;
 };
 
 type QuickStartRow = {
@@ -346,6 +347,7 @@ export function mapReportV2Payload(source: ReportV2Source): ReportV2Payload {
     profile: {
       sessionId: source.session._id,
       bikeType: humanizeEnum(source.session.bikeType ?? source.bike?.bikeType),
+      bikeImageUrl: source.bikeImageUrl ?? null,
       ridingStyle: humanizeEnum(source.session.ridingStyle),
       goal: humanizeEnum(source.session.primaryGoal),
       algorithmVersion: recommendation?.algorithmVersion ?? "n/a",

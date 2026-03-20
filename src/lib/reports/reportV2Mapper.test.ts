@@ -82,6 +82,7 @@ describe("reportV2Mapper", () => {
     const payload = mapReportV2Payload(baseSource as never);
 
     expect(payload.profile.sessionId).toBe("session_1");
+    expect(payload.profile.bikeImageUrl).toBeNull();
     expect(payload.prioritySummary.length).toBeGreaterThan(0);
     expect(payload.tirePressure.status).toBe("ready");
     expect(payload.frameTargets.recommendedFrameLabel).toContain("56");
@@ -108,4 +109,3 @@ describe("reportV2Mapper", () => {
     expect(payload.detailedFit.every((row) => row.delta === null)).toBe(true);
   });
 });
-

@@ -239,7 +239,7 @@ export function BikeForm({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <Card variant="bordered">
+        <Card variant="bordered" className="dashboard-card-surface">
           <CardHeader>
             <CardTitle>{messages.bikeForm.sections.basics}</CardTitle>
           </CardHeader>
@@ -341,7 +341,7 @@ export function BikeForm({
           </CardContent>
         </Card>
 
-        <Card variant="bordered">
+        <Card variant="bordered" className="dashboard-card-surface">
           <CardHeader>
             <CardTitle>{messages.bikeForm.sections.geometry}</CardTitle>
           </CardHeader>
@@ -386,7 +386,7 @@ export function BikeForm({
           </CardContent>
         </Card>
 
-        <Card variant="bordered">
+        <Card variant="bordered" className="dashboard-card-surface">
           <CardHeader>
             <CardTitle>{messages.bikeForm.sections.setup}</CardTitle>
           </CardHeader>
@@ -438,7 +438,7 @@ export function BikeForm({
           </CardContent>
         </Card>
 
-        <Card variant="bordered">
+        <Card variant="bordered" className="dashboard-card-surface">
           <CardHeader>
             <CardTitle>{messages.bikeForm.sections.notes}</CardTitle>
           </CardHeader>

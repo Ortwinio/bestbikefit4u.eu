@@ -5,6 +5,8 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Button, Card, CardContent, CardHeader, CardTitle, EmptyState, LoadingState } from "@/components/ui";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
+import { FlexibilityScale } from "@/components/profile/FlexibilityScale";
+import { CoreStabilityBar } from "@/components/profile/CoreStabilityBar";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -60,8 +62,7 @@ export default function DashboardPage() {
   const lastSession = sessions?.[0];
   const displayName = getEffectiveDisplayName(user, messages.userMenu.fallbackUserName);
   const profileImageSource = getEffectiveProfileImageSource(user);
-  const dashboardCardClassName =
-    "bg-[color:color-mix(in_oklch,var(--card)_90%,black_3%)]";
+  const dashboardCardClassName = "dashboard-card-surface";
   const dashboardTileClassName =
     "bg-[color:color-mix(in_oklch,var(--secondary)_88%,black_4%)]";
 
@@ -106,26 +107,43 @@ export default function DashboardPage() {
             </div>
 
             {profile ? (
-              <div className="grid gap-3 sm:grid-cols-3">
-                <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                    {messages.profile.measurements.height}
-                  </p>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">{profile.heightCm} cm</p>
+              <div className="space-y-4">
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
+                    <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                      {messages.profile.measurements.height}
+                    </p>
+                    <p className="mt-1 text-lg font-semibold text-gray-900">{profile.heightCm} cm</p>
+                  </div>
+                  <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
+                    <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                      {messages.profile.measurements.inseam}
+                    </p>
+                    <p className="mt-1 text-lg font-semibold text-gray-900">{profile.inseamCm} cm</p>
+                  </div>
+                  <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
+                    <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                      {messages.dashboardHome.weightLabel}
+                    </p>
+                    <p className="mt-1 text-lg font-semibold text-gray-900">
+                      {profile.weightKg ? `${profile.weightKg} kg` : messages.dashboardHome.weightMissing}
+                    </p>
+                  </div>
                 </div>
-                <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                    {messages.profile.measurements.inseam}
-                  </p>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">{profile.inseamCm} cm</p>
-                </div>
-                <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                    {messages.dashboardHome.weightLabel}
-                  </p>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">
-                    {profile.weightKg ? `${profile.weightKg} kg` : messages.dashboardHome.weightMissing}
-                  </p>
+
+                <div className="grid gap-3 lg:grid-cols-2">
+                  <div className={`rounded-[var(--radius-md)] px-4 py-4 ${dashboardTileClassName}`}>
+                    <p className="mb-3 text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                      {messages.profile.sections.flexibility}
+                    </p>
+                    <FlexibilityScale score={profile.flexibilityScore} />
+                  </div>
+                  <div className={`rounded-[var(--radius-md)] px-4 py-4 ${dashboardTileClassName}`}>
+                    <p className="mb-3 text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                      {messages.profile.sections.coreStability}
+                    </p>
+                    <CoreStabilityBar score={profile.coreStabilityScore} />
+                  </div>
                 </div>
               </div>
             ) : (

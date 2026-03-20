@@ -218,6 +218,10 @@
   scrollbar-width: none;
 }
 
+@utility dashboard-card-surface {
+  background: color-mix(in oklch, var(--card) 90%, black 3%);
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

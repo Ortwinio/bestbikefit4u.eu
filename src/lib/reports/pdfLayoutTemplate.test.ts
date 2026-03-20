@@ -84,4 +84,20 @@ describe("pdf layout template", () => {
     expect(html).toContain("67 psi");
     expect(html).toContain("Confirm long-ride comfort after each adjustment.");
   });
+
+  it("renders bike image when available", () => {
+    const html = renderPdfReportHtml({
+      report: {
+        ...report,
+        profile: {
+          ...report.profile,
+          bikeImageUrl: "https://example.com/bike.jpg",
+        },
+      },
+      copy,
+    });
+
+    expect(html).toContain("https://example.com/bike.jpg");
+    expect(html).toContain("Bike photo");
+  });
 });

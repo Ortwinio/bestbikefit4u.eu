@@ -328,8 +328,9 @@ const en = {
     nav: {
       dashboard: "Dashboard",
       newFitSession: "New Fit Session",
+      newBike: "New Bike",
       bikeFitting: "Bike Fitting",
-      myBikes: "My Bikes",
+      myBikes: "My Bike Garage",
       profile: "Profile",
       tirePressure: "Tire Pressure",
       settings: "Settings",
@@ -354,7 +355,7 @@ const en = {
     userMenu: {
       dashboard: "Dashboard",
       newFitSession: "New Fit Session",
-      myBikes: "My Bikes",
+      myBikes: "My Bike Garage",
       profileSettings: "Profile Settings",
       fallbackUserName: "User",
     },

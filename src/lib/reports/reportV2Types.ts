@@ -17,6 +17,7 @@ export type ReportDelta = {
 export type ReportProfileSection = {
   sessionId: string;
   bikeType: string;
+  bikeImageUrl?: string | null;
   ridingStyle: string;
   goal: string;
   algorithmVersion: string;
@@ -90,4 +91,3 @@ export type ReportV2Payload = {
   };
   fitNotes: string[];
 };
-

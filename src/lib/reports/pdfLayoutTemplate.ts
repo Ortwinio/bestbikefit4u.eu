@@ -187,6 +187,8 @@ export function renderPdfReportHtml(params: {
     .warning { background: #fff7ed; border-color: #fdba74; }
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .hero { display: grid; grid-template-columns: 160px 1fr 1fr; gap: 12px; align-items: start; }
+    .bike-image { width: 160px; height: 120px; object-fit: cover; border-radius: 10px; border: 1px solid #e5e7eb; }
     .chip { display: inline-block; border: 1px solid #cbd5e1; border-radius: 999px; padding: 2px 8px; font-size: 11px; margin: 0 6px 6px 0; }
   </style>
 </head>
@@ -195,7 +197,14 @@ export function renderPdfReportHtml(params: {
   <p class="muted">${escapeHtml(copy.introBody)}</p>
 
   <h2>${escapeHtml(copy.sections.profile)}</h2>
-  <div class="meta">
+  <div class="hero">
+    <div class="panel">
+      ${
+        report.profile.bikeImageUrl
+          ? `<img class="bike-image" src="${escapeHtml(report.profile.bikeImageUrl)}" alt="Bike photo" />`
+          : `<div class="bike-image" style="display:flex;align-items:center;justify-content:center;background:#f3f4f6;color:#64748b;">Bike</div>`
+      }
+    </div>
     <div class="panel">
       <p><strong>${escapeHtml(copy.profileFields.sessionId)}:</strong> ${escapeHtml(report.profile.sessionId)}</p>
       <p><strong>${escapeHtml(copy.profileFields.bikeType)}:</strong> ${escapeHtml(report.profile.bikeType)}</p>

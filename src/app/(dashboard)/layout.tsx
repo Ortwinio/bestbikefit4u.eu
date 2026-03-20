@@ -90,6 +90,7 @@ export default function DashboardLayout({
                 { href: "/dashboard", label: messages.nav.dashboard },
                 { href: "/profile", label: messages.nav.profile },
                 { href: "/bikes", label: messages.nav.myBikes },
+                { href: "/bikes/new", label: messages.nav.newBike },
                 { href: "/fit-history", label: messages.nav.bikeFitting },
                 { href: "/fit", label: messages.nav.newFitSession },
                 { href: "/pressure-calculator", label: messages.nav.tirePressure },

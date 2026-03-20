@@ -14,6 +14,7 @@ import {
   CardTitle,
   useToast,
 } from "@/components/ui";
+import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { getBikeTypeLabel } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -24,6 +25,28 @@ interface BikeWithFitHistoryProps {
     session: Doc<"fitSessions">;
     recommendation: Doc<"recommendations"> | null;
   }>;
+}
+
+function FitHistoryBikeImage({ source }: { source?: string }) {
+  const imageUrl = useResolvedImageUrl(source);
+
+  if (!imageUrl) {
+    return (
+      <img
+        src="/default-bike.svg"
+        alt=""
+        className="h-24 w-36 rounded-[var(--radius-md)] object-cover"
+      />
+    );
+  }
+
+  return (
+    <img
+      src={imageUrl}
+      alt=""
+      className="h-24 w-36 rounded-[var(--radius-md)] object-cover"
+    />
+  );
 }
 
 export function BikeWithFitHistory({
@@ -81,12 +104,15 @@ export function BikeWithFitHistory({
 
   return (
     <>
-      <Card variant="bordered">
+      <Card variant="bordered" className="dashboard-card-surface">
         <CardHeader>
           <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <CardTitle>{bikeTitle}</CardTitle>
-              <p className="mt-1 text-sm text-gray-600">{bikeSubtitle}</p>
+            <div className="flex items-start gap-4">
+              <FitHistoryBikeImage source={bike?.photoUrl} />
+              <div>
+                <CardTitle>{bikeTitle}</CardTitle>
+                <p className="mt-1 text-sm text-gray-600">{bikeSubtitle}</p>
+              </div>
             </div>
             <Link
               href={withLocalePrefix(

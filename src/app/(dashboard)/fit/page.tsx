@@ -18,6 +18,7 @@ import {
   useToast,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
+import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import {
   getBikeTypeLabel,
   getBikeTypeOptions,
@@ -37,6 +38,28 @@ type RidingStyle =
   | "commuting"
   | "touring";
 type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
+
+function SavedBikeImage({ source }: { source?: string }) {
+  const imageUrl = useResolvedImageUrl(source);
+
+  if (!imageUrl) {
+    return (
+      <img
+        src="/default-bike.svg"
+        alt=""
+        className="h-20 w-full rounded-[var(--radius-md)] object-cover"
+      />
+    );
+  }
+
+  return (
+    <img
+      src={imageUrl}
+      alt=""
+      className="h-20 w-full rounded-[var(--radius-md)] object-cover"
+    />
+  );
+}
 
 export default function NewFitSessionPage() {
   const router = useRouter();
@@ -294,7 +317,7 @@ export default function NewFitSessionPage() {
       )}
 
       {bikes && bikes.length > 0 && (
-        <Card variant="bordered" className="mb-6">
+        <Card variant="bordered" className="dashboard-card-surface mb-6">
           <CardHeader>
             <div className="flex items-center justify-between gap-3">
               <CardTitle>{messages.fit.savedBikes.title}</CardTitle>
@@ -313,48 +336,48 @@ export default function NewFitSessionPage() {
                   onClick={() => handleSelectBike(bike._id, bike.bikeType)}
                   selected={selectedBikeId === bike._id}
                   variant="card"
-                  label={bike.name}
-                  description={getBikeTypeLabel(bike.bikeType, messages)}
+                  label={
+                    <div className="space-y-3">
+                      <SavedBikeImage source={bike.photoUrl} />
+                      <div>
+                        <div className="font-medium">{bike.name}</div>
+                        <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                          {getBikeTypeLabel(bike.bikeType, messages)}
+                        </div>
+                      </div>
+                    </div>
+                  }
                 />
               ))}
             </div>
+
+            {!selectedBikeId ? (
+              <div className="mt-6 space-y-3">
+                <div className="border-t border-[color:var(--border)] pt-6">
+                  <p className="text-sm font-medium text-gray-700">
+                    {messages.fit.sections.bikeType}
+                  </p>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    {getBikeTypeOptions(messages).map((type) => (
+                      <Selectable
+                        key={type.value}
+                        onClick={() => setBikeType(type.value)}
+                        selected={bikeType === type.value}
+                        variant="card"
+                        label={type.label}
+                        description={type.description}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </CardContent>
         </Card>
       )}
 
-      <Card variant="bordered" className="mb-6">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Bike className="h-5 w-5 text-blue-600" />
-            <CardTitle>{messages.fit.sections.bikeType}</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {selectedBike ? (
-            <div className="rounded-lg border border-[color:var(--primary)] bg-[color:color-mix(in_oklch,var(--card)_86%,var(--primary)_14%)] p-4 text-sm text-[color:var(--foreground)]">
-              {messages.fit.savedBikes.usingBike}{" "}
-              <span className="font-semibold">{selectedBike.name}</span> (
-              {getBikeTypeLabel(selectedBike.bikeType, messages)}).
-            </div>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {getBikeTypeOptions(messages).map((type) => (
-                <Selectable
-                  key={type.value}
-                  onClick={() => setBikeType(type.value)}
-                  selected={bikeType === type.value}
-                  variant="card"
-                  label={type.label}
-                  description={type.description}
-                />
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
       {selectedBike ? (
-        <Card variant="bordered" className="mb-6">
+        <Card variant="bordered" className="dashboard-card-surface mb-6">
           <CardHeader>
             <CardTitle>{messages.fit.savedBikes.profilesTitle}</CardTitle>
             <p className="text-sm text-gray-500">
@@ -395,7 +418,7 @@ export default function NewFitSessionPage() {
         </Card>
       ) : null}
 
-      <Card variant="bordered" className="mb-6">
+      <Card variant="bordered" className="dashboard-card-surface mb-6">
         <CardHeader>
           <CardTitle>{messages.fit.sections.ridingStyle}</CardTitle>
         </CardHeader>
@@ -439,7 +462,7 @@ export default function NewFitSessionPage() {
         </CardContent>
       </Card>
 
-      <Card variant="bordered" className="mb-6">
+      <Card variant="bordered" className="dashboard-card-surface mb-6">
         <CardHeader>
           <CardTitle>{messages.fit.sections.primaryGoal}</CardTitle>
         </CardHeader>

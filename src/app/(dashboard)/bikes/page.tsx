@@ -140,7 +140,11 @@ export default function BikesPage() {
               : null;
 
             return (
-              <Card key={bike._id} variant="bordered" className="overflow-hidden">
+              <Card
+                key={bike._id}
+                variant="bordered"
+                className="dashboard-card-surface overflow-hidden"
+              >
                 <CardContent className="space-y-6">
                   <div className="grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
                     <div className="pt-6">
@@ -199,7 +203,7 @@ export default function BikesPage() {
                       </div>
 
                       <div className="grid gap-4 md:grid-cols-2">
-                        <Card variant="bordered" className="bg-[color:var(--card)]">
+                        <Card variant="bordered" className="dashboard-card-surface">
                           <CardHeader>
                             <CardTitle>{messages.bikes.cards.bikeFit.title}</CardTitle>
                           </CardHeader>
@@ -245,7 +249,7 @@ export default function BikesPage() {
                           </CardContent>
                         </Card>
 
-                        <Card variant="bordered" className="bg-[color:var(--card)]">
+                        <Card variant="bordered" className="dashboard-card-surface">
                           <CardHeader>
                             <CardTitle>{messages.bikes.cards.advisedPressure.title}</CardTitle>
                           </CardHeader>
@@ -304,7 +308,7 @@ export default function BikesPage() {
                           </CardContent>
                         </Card>
 
-                        <Card variant="bordered" className="bg-[color:var(--card)]">
+                        <Card variant="bordered" className="dashboard-card-surface">
                           <CardHeader>
                             <CardTitle>{messages.bikes.cards.currentSetup.title}</CardTitle>
                           </CardHeader>
@@ -334,7 +338,7 @@ export default function BikesPage() {
                           </CardContent>
                         </Card>
 
-                        <Card variant="bordered" className="bg-[color:var(--card)]">
+                        <Card variant="bordered" className="dashboard-card-surface">
                           <CardHeader>
                             <CardTitle>
                               {messages.bikes.cards.currentTyrePressure.title}

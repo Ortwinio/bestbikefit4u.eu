@@ -92,7 +92,7 @@ export function BikePressureCard({
   };
 
   return (
-    <Card variant="bordered" className="h-full">
+    <Card variant="bordered" className="dashboard-card-surface h-full">
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div>

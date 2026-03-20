@@ -383,7 +383,7 @@ function FlexibilityCard({
   };
 
   return (
-    <Card variant="bordered">
+    <Card variant="bordered" className="dashboard-card-surface">
       <CardHeader>
         <div className="flex items-center gap-2">
           <Activity className="h-5 w-5 text-green-600" />
@@ -500,7 +500,7 @@ function CoreStabilityCard({
   };
 
   return (
-    <Card variant="bordered">
+    <Card variant="bordered" className="dashboard-card-surface">
       <CardHeader>
         <div className="flex items-center gap-2">
           <Dumbbell className="h-5 w-5 text-purple-600" />
@@ -638,7 +638,7 @@ function ProfileSummary({
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]">
-        <Card variant="bordered" className="xl:row-span-2">
+        <Card variant="bordered" className="dashboard-card-surface xl:row-span-2">
           <CardHeader>
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
@@ -686,7 +686,7 @@ function ProfileSummary({
         />
       </div>
 
-      <Card variant="bordered">
+      <Card variant="bordered" className="dashboard-card-surface">
         <CardHeader>
           <CardTitle>{messages.profile.status.title}</CardTitle>
         </CardHeader>
@@ -694,7 +694,7 @@ function ProfileSummary({
           <p className="text-gray-600">{messages.profile.status.description}</p>
           <div className="mt-4">
             <Link href={fitHref}>
-              <Button>{messages.profile.status.startFitCta}</Button>
+              <Button variant="primary">{messages.profile.status.startFitCta}</Button>
             </Link>
           </div>
         </CardContent>

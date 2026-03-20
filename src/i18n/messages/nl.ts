@@ -329,8 +329,9 @@ const nl = {
     nav: {
       dashboard: "Dashboard",
       newFitSession: "Nieuwe fit-sessie",
+      newBike: "Nieuwe fiets",
       bikeFitting: "Fietsafstelling",
-      myBikes: "Mijn fietsen",
+      myBikes: "Mijn fietsgarage",
       profile: "Profiel",
       tirePressure: "Bandenspanning",
       settings: "Instellingen",
@@ -355,7 +356,7 @@ const nl = {
     userMenu: {
       dashboard: "Dashboard",
       newFitSession: "Nieuwe fit-sessie",
-      myBikes: "Mijn fietsen",
+      myBikes: "Mijn fietsgarage",
       profileSettings: "Profielinstellingen",
       fallbackUserName: "Gebruiker",
     },

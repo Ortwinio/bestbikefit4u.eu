@@ -97,7 +97,7 @@ export function PressureCalculatorDashboard({
         )}
       </section>
 
-      <Card variant="bordered" id="pressure-wizard">
+      <Card variant="bordered" id="pressure-wizard" className="dashboard-card-surface">
         <CardHeader>
           <CardTitle>{messages.pressure.overview.startNew}</CardTitle>
         </CardHeader>

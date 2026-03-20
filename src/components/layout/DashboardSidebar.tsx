@@ -42,6 +42,7 @@ export function DashboardSidebar() {
     { name: messages.nav.dashboard, href: "/dashboard", icon: LayoutDashboard },
     { name: messages.nav.profile, href: "/profile", icon: User },
     { name: messages.nav.myBikes, href: "/bikes", icon: Bike },
+    { name: messages.nav.newBike, href: "/bikes/new", icon: PlusCircle },
     { name: messages.nav.bikeFitting, href: "/fit-history", icon: ClipboardList },
     { name: messages.nav.newFitSession, href: "/fit", icon: PlusCircle },
     { name: messages.nav.tirePressure, href: "/pressure-calculator", icon: Gauge },

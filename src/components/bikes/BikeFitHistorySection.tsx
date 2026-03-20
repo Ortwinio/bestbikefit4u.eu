@@ -40,7 +40,7 @@ export function BikeFitHistorySection({
   };
 
   return (
-    <Card variant="bordered">
+    <Card variant="bordered" className="dashboard-card-surface">
       <CardHeader>
         <CardTitle>{messages.bikes.sections.fittingHistory}</CardTitle>
       </CardHeader>

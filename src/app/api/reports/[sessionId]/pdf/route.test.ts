@@ -191,6 +191,7 @@ describe("pdf report route", () => {
     expect(mocks.mapReportV2Payload).toHaveBeenCalledWith({
       session: sessionFixture,
       recommendation: recommendationFixture,
+      bikeImageUrl: null,
     });
     expect(mocks.renderPdfReportHtml).toHaveBeenCalledTimes(1);
     expect(mocks.renderPdfFromHtml).toHaveBeenCalledTimes(1);

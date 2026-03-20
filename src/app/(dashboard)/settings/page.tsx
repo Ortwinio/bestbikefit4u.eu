@@ -122,7 +122,7 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card variant="bordered">
+        <Card variant="bordered" className="dashboard-card-surface">
           <CardHeader>
             <CardTitle>{messages.settings.account.title}</CardTitle>
           </CardHeader>
@@ -182,7 +182,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card variant="bordered">
+        <Card variant="bordered" className="dashboard-card-surface">
           <CardHeader>
             <CardTitle>{messages.settings.preferences.title}</CardTitle>
           </CardHeader>
@@ -233,7 +233,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card variant="bordered">
+        <Card variant="bordered" className="dashboard-card-surface">
           <CardHeader>
             <CardTitle>{messages.settings.integrations.title}</CardTitle>
           </CardHeader>
@@ -279,7 +279,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card variant="bordered">
+        <Card variant="bordered" className="dashboard-card-surface">
           <CardHeader>
             <CardTitle>{messages.settings.privacy.title}</CardTitle>
           </CardHeader>
@@ -299,7 +299,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card variant="bordered" className="border-red-200">
+        <Card variant="bordered" className="dashboard-card-surface border-red-200">
           <CardHeader>
             <CardTitle className="text-red-700">
               {messages.profile.dangerZone.title}
