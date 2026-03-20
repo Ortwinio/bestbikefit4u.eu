@@ -1,6 +1,7 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
+import { validateShortString } from "../lib/validation";
 
 const disciplineValidator = v.union(
   v.literal("road"),
@@ -49,6 +50,9 @@ export const create = mutation({
     model: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    validateShortString(args.name, "name");
+    if (args.brand !== undefined) validateShortString(args.brand, "brand");
+    if (args.model !== undefined) validateShortString(args.model, "model");
     const userId = await requireUserId(ctx);
 
     const bikeId = await ctx.db.insert("bikes", {
@@ -114,6 +118,9 @@ export const update = mutation({
     model: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    if (args.name !== undefined) validateShortString(args.name, "name");
+    if (args.brand !== undefined) validateShortString(args.brand, "brand");
+    if (args.model !== undefined) validateShortString(args.model, "model");
     await requireBikeOwner(ctx, args.bikeId);
     const updates: Record<string, unknown> = { updatedAt: Date.now() };
     if (args.name !== undefined) updates.name = args.name;

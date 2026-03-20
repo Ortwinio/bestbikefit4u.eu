@@ -69,13 +69,6 @@ function formatMm(value: number): string {
   return `${formatNumber(value, value % 1 === 0 ? 0 : 1)} mm`;
 }
 
-function formatPsi(value: number): string {
-  return `${formatNumber(value)} psi`;
-}
-
-function formatBar(value: number): string {
-  return `${formatNumber(value, 1)} bar`;
-}
 
 function humanizeEnum(value: string | undefined): string {
   if (!value) return "n/a";

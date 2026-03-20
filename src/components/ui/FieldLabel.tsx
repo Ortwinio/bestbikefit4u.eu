@@ -1,4 +1,5 @@
 import { cn } from "@/utils/cn";
+import { Label as PrototyperLabel } from "@/components/prototyper-ui/ui/label";
 import { Tooltip } from "./Tooltip";
 
 export interface FieldLabelProps {
@@ -20,12 +21,12 @@ export function FieldLabel({
 }: FieldLabelProps) {
   return (
     <div className={cn("mb-1.5 flex items-center gap-1.5", className)}>
-      <label
+      <PrototyperLabel
         htmlFor={htmlFor}
         className="block text-sm font-medium text-[color:var(--foreground)]"
       >
         {label}
-      </label>
+      </PrototyperLabel>
       {tooltip && (
         <Tooltip
           content={tooltip}

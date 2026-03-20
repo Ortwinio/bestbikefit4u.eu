@@ -1,6 +1,7 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
+import { validateShortString } from "../lib/validation";
 
 const useCaseValidator = v.union(
   v.literal("race"),
@@ -24,6 +25,9 @@ export const save = mutation({
     lastCalculatedAt: v.number(),
   },
   handler: async (ctx, args) => {
+    validateShortString(args.name, "name");
+    if (args.targetSurface !== undefined) validateShortString(args.targetSurface, "targetSurface");
+    if (args.targetGoal !== undefined) validateShortString(args.targetGoal, "targetGoal");
     const { userId } = await requireBikeOwner(ctx, args.bikeId);
     const tireSetup = await ctx.db.get(args.tireSetupId);
     if (!tireSetup || tireSetup.userId !== userId) {

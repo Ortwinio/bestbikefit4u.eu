@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 import { Button } from "@/components/ui";
 import { AlertTriangle, RefreshCw, Home } from "lucide-react";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -17,8 +18,7 @@ export default function DashboardError({
   const { locale, messages } = useDashboardMessages();
 
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error("Dashboard error:", error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (

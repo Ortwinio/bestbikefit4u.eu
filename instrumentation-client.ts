@@ -5,10 +5,11 @@ Sentry.init({
   tracesSampleRate: 0.1,
   debug: false,
   beforeSend(event) {
-    // Scrub email addresses from breadcrumbs and message
     if (event.request?.data) {
       delete event.request.data;
     }
     return event;
   },
 });
+
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

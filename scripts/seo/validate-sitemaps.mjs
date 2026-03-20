@@ -84,14 +84,6 @@ function parseAlternateLinks(urlBlock) {
   }));
 }
 
-function parsePathname(urlValue) {
-  try {
-    return new URL(urlValue).pathname;
-  } catch {
-    return null;
-  }
-}
-
 function isBlockedPath(pathname) {
   return disallowedUrlPathPrefixes.some((prefix) => {
     if (prefix.endsWith("/")) {

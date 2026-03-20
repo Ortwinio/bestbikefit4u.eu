@@ -17,7 +17,7 @@ interface MultipleChoiceQuestionProps {
 }
 
 export function MultipleChoiceQuestion({
-  name,
+  name: _name,
   options,
   value,
   onChange,

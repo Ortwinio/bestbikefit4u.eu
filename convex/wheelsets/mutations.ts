@@ -2,6 +2,7 @@ import type { Id } from "../_generated/dataModel";
 import { mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
+import { validateShortString } from "../lib/validation";
 
 async function deactivateSiblingWheelsets(
   ctx: MutationCtx,
@@ -29,6 +30,7 @@ export const create = mutation({
     isActive: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    validateShortString(args.name, "name");
     const { userId } = await requireBikeOwner(ctx, args.bikeId);
     const now = Date.now();
 
@@ -60,6 +62,7 @@ export const update = mutation({
     isActive: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    if (args.name !== undefined) validateShortString(args.name, "name");
     const userId = await requireUserId(ctx);
     const wheelset = await ctx.db.get(args.wheelsetId);
     if (!wheelset || wheelset.userId !== userId) {

@@ -2,6 +2,7 @@ import type { Id } from "../_generated/dataModel";
 import { mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import { requireUserId } from "../lib/authz";
+import { validateShortString } from "../lib/validation";
 
 async function requireOwnedWheelset(
   ctx: MutationCtx,
@@ -65,6 +66,9 @@ export const create = mutation({
     isActive: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    validateShortString(args.name, "name");
+    if (args.brand !== undefined) validateShortString(args.brand, "brand");
+    if (args.model !== undefined) validateShortString(args.model, "model");
     const userId = await requireUserId(ctx);
     await requireOwnedWheelset(ctx, args.wheelsetId, userId);
     const now = Date.now();
@@ -105,6 +109,9 @@ export const update = mutation({
     isActive: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    if (args.name !== undefined) validateShortString(args.name, "name");
+    if (args.brand !== undefined) validateShortString(args.brand, "brand");
+    if (args.model !== undefined) validateShortString(args.model, "model");
     const userId = await requireUserId(ctx);
     const tireSetup = await ctx.db.get(args.tireSetupId);
     if (!tireSetup || tireSetup.userId !== userId) {

@@ -7,7 +7,6 @@ import { AlertCircle, Info } from "lucide-react";
 
 export function StepBodyMeasurements() {
   const {
-    register,
     watch,
     formState: { errors },
   } = useFormContext();

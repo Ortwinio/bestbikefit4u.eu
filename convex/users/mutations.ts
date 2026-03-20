@@ -5,6 +5,7 @@ import { requireUserId } from "../lib/authz";
 export const updateProfile = mutation({
   args: {
     profile_image_url: v.optional(v.string()),
+    displayName: v.optional(v.string()),
     theme_preference: v.optional(
       v.union(v.literal("light"), v.literal("dark"), v.literal("system"))
     ),
@@ -14,7 +15,19 @@ export const updateProfile = mutation({
   },
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
-    await ctx.db.patch(userId, args);
+    const updates: Record<string, unknown> = { ...args };
+
+    if (args.profile_image_url !== undefined) {
+      updates.profileImageSource = args.profile_image_url ? "manual" : undefined;
+    }
+
+    if (args.displayName !== undefined) {
+      const trimmedDisplayName = args.displayName.trim();
+      updates.displayName = trimmedDisplayName || undefined;
+      updates.displayNameSource = trimmedDisplayName ? "manual" : undefined;
+    }
+
+    await ctx.db.patch(userId, updates);
   },
 });
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
@@ -196,7 +195,6 @@ export default function ProfilePage() {
   const { locale, messages } = useDashboardMessages();
   const pagePath = withLocalePrefix("/profile", locale);
   const logMarketingEvent = useMarketingEventLogger();
-  const router = useRouter();
   const hasTrackedProfileViewRef = useRef(false);
   const [isEditing, setIsEditing] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);

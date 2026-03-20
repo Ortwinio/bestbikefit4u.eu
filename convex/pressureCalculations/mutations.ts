@@ -1,6 +1,9 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
+import { validateStringLength } from "../lib/validation";
+
+const MAX_JSON_BLOB = 10000;
 
 const disciplineValidator = v.union(
   v.literal("road"),
@@ -71,6 +74,8 @@ export const save = mutation({
     routeContextJson: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    if (args.warningsJson !== undefined) validateStringLength(args.warningsJson, "warningsJson", MAX_JSON_BLOB);
+    if (args.routeContextJson !== undefined) validateStringLength(args.routeContextJson, "routeContextJson", MAX_JSON_BLOB);
     const userId = await requireUserId(ctx);
     if (args.bikeId) {
       await requireBikeOwner(ctx, args.bikeId);

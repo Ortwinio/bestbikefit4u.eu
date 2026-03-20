@@ -14,6 +14,21 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     "convex/_generated/**",
   ]),
+  {
+    rules: {
+      // Allow intentionally-unused parameters and variables prefixed with _
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          vars: "all",
+          args: "all",
+          varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

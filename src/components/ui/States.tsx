@@ -68,16 +68,16 @@ export function ErrorState({
   return (
     <div
       className={cn(
-        "rounded-[var(--radius-lg)] border border-red-200 bg-red-50/90 p-4",
+        "rounded-[var(--radius-lg)] border border-[color:var(--danger)]/30 bg-[color:var(--danger)]/8 p-4",
         className
       )}
       role="alert"
     >
       <div className="flex items-start gap-2">
-        <AlertCircle className="mt-0.5 h-4 w-4 text-red-600" />
+        <AlertCircle className="mt-0.5 h-4 w-4 text-[color:var(--danger)]" />
         <div>
-          <p className="text-sm font-medium text-red-800">{title}</p>
-          {description ? <p className="mt-1 text-sm text-red-700">{description}</p> : null}
+          <p className="text-sm font-medium text-[color:var(--danger)]">{title}</p>
+          {description ? <p className="mt-1 text-sm text-[color:var(--danger)]">{description}</p> : null}
           {action ? <div className="mt-3">{action}</div> : null}
         </div>
       </div>

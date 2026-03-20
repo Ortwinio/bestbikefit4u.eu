@@ -15,7 +15,12 @@ export default async function PublicLayout({
     <div className="flex min-h-screen flex-col">
       <Header
         locale={locale}
-        labels={{ common: dictionary.common, nav: dictionary.nav }}
+        labels={{
+          common: dictionary.common,
+          nav: dictionary.nav,
+          dashboardNav: dictionary.dashboard.nav,
+          dashboardSignOut: dictionary.dashboard.common.signOut,
+        }}
       />
       <main id="main-content" tabIndex={-1} className="flex-1">
         {children}

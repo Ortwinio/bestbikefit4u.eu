@@ -6,7 +6,6 @@ import { Info } from "lucide-react";
 
 export function StepAdvancedMeasurements() {
   const {
-    register,
     formState: { errors },
   } = useFormContext();
 

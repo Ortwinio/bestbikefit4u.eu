@@ -28,7 +28,18 @@ export default defineSchema({
     createdAt: v.optional(v.number()),
     lastLoginAt: v.optional(v.number()),
     tier: v.optional(v.union(v.literal("free"), v.literal("pro"), v.literal("premium"))),
+    googleEmail: v.optional(v.string()),
+    googleName: v.optional(v.string()),
+    googleProfileImageUrl: v.optional(v.string()),
+    displayName: v.optional(v.string()),
+    displayNameSource: v.optional(
+      v.union(v.literal("google"), v.literal("manual"), v.literal("email"))
+    ),
     profile_image_url: v.optional(v.string()),
+    profileImageSource: v.optional(
+      v.union(v.literal("google"), v.literal("manual"))
+    ),
+    lastGoogleSyncAt: v.optional(v.number()),
     theme_preference: v.optional(
       v.union(v.literal("light"), v.literal("dark"), v.literal("system"))
     ),

@@ -3,7 +3,7 @@
 import { formatMessage } from "@/i18n/dashboardMessages";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { cn } from "@/utils/cn";
-import { Progress } from "@/components/ui/Progress";
+import { Progress } from "@/components/ui";
 
 interface ProgressBarProps {
   current: number;

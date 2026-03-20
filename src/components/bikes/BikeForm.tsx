@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Select } from "@/components/ui";
-import { BIKE_TYPE_OPTIONS, BIKE_TYPE_LABELS, type BikeType } from "@/lib/bikes";
+import { getBikeTypeOptions, getBikeTypeLabel, type BikeType } from "@/lib/bikes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 export type BikeFormPayload = {
@@ -222,7 +222,7 @@ export function BikeForm({
                 tooltip={messages.bikeForm.fields.type.tooltip}
                 value={bikeType}
                 onChange={(event) => setBikeType(event.target.value as BikeType)}
-                options={BIKE_TYPE_OPTIONS.map((option) => ({
+                options={getBikeTypeOptions(messages).map((option) => ({
                   value: option.value,
                   label: option.label,
                 }))}
@@ -232,7 +232,7 @@ export function BikeForm({
             ) : (
               <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700">
                 <span className="font-medium">{messages.bikeForm.fields.type.staticLabel}</span>{" "}
-                {bikeType ? BIKE_TYPE_LABELS[bikeType] : "-"}
+                {bikeType ? getBikeTypeLabel(bikeType, messages) : "-"}
               </div>
             )}
           </CardContent>

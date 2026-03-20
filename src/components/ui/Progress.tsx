@@ -2,6 +2,10 @@
 
 import { forwardRef, type HTMLAttributes } from "react";
 import { Progress as BaseProgress } from "@base-ui/react/progress";
+import {
+  ProgressIndicator,
+  ProgressTrack,
+} from "@/components/prototyper-ui/ui/progress";
 import { cn } from "@/utils/cn";
 
 export interface ProgressProps extends HTMLAttributes<HTMLDivElement> {
@@ -37,13 +41,16 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(
         className={cn("w-full", className)}
         {...props}
       >
-        <BaseProgress.Track
+        <ProgressTrack
+          color="default"
+          size="lg"
           className={cn(
             "shadow-inset-track relative h-2.5 w-full overflow-hidden rounded-full bg-[color:var(--muted)]",
             trackClassName
           )}
         >
-          <BaseProgress.Indicator
+          <ProgressIndicator
+            color="default"
             className={cn(
               "h-full rounded-full bg-[color:var(--primary)] transition-transform duration-300 ease-out motion-reduce:transition-none",
               value === null && "animate-pulse",
@@ -53,7 +60,7 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(
               width: value === null ? "42%" : `${percentage}%`,
             }}
           />
-        </BaseProgress.Track>
+        </ProgressTrack>
       </BaseProgress.Root>
     );
   }

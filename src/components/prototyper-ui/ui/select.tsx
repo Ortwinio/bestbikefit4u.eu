@@ -35,6 +35,7 @@ const selectTriggerVariants = cva(
   }
 )
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function Select({ ...props }: SelectPrimitive.Root.Props<any>) {
   return <SelectPrimitive.Root data-slot="select" {...props} />
 }

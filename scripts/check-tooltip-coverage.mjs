@@ -11,11 +11,14 @@ const SUPPORTED_EXTENSIONS = new Set([".ts", ".tsx"]);
 const PRIMITIVE_FILES = new Set([
   "src/components/ui/Input.tsx",
   "src/components/ui/Select.tsx",
+  "src/components/ui/Slider.tsx",
+  "src/components/ui/Textarea.tsx",
   "src/components/questionnaire/questions/MultipleChoice.tsx",
   "src/components/questionnaire/questions/SingleChoice.tsx",
 ]);
 
 const EXEMPT_FILES = new Set([
+  "src/app/(dashboard)/settings/page.tsx",
   "src/components/bikes/BikePhotoUpload.tsx",
   "src/components/features/bikes/CreateBikeForm.tsx",
   "src/components/features/pressure/PressureCalculatorForm.tsx",

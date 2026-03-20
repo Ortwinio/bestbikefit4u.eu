@@ -4,6 +4,7 @@ import { Button } from "./Button";
 import { Select } from "./Select";
 import { ErrorState, LoadingState } from "./States";
 import { Progress } from "./Progress";
+import { AccessibleDialog } from "./AccessibleDialog";
 
 describe("ui primitive compatibility wrappers", () => {
   it("renders loading buttons as disabled", () => {
@@ -52,5 +53,22 @@ describe("ui primitive compatibility wrappers", () => {
 
     expect(html).toContain("progressbar");
     expect(html).toContain('aria-label="Completion"');
+  });
+
+  it("renders accessible dialog with title and description", () => {
+    const html = renderToStaticMarkup(
+      <AccessibleDialog
+        open={true}
+        title="Confirm action"
+        description="This action cannot be undone."
+        onClose={() => {}}
+      >
+        <p>Dialog content</p>
+      </AccessibleDialog>
+    );
+
+    expect(html).toContain("Confirm action");
+    expect(html).toContain("This action cannot be undone.");
+    expect(html).toContain("Dialog content");
   });
 });

@@ -17,7 +17,7 @@ interface SingleChoiceQuestionProps {
 }
 
 export function SingleChoiceQuestion({
-  name,
+  name: _name,
   options,
   value,
   onChange,

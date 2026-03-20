@@ -10,7 +10,7 @@ import { BikePressureSection } from "@/components/features/pressure/BikePressure
 import { Card, CardContent, CardHeader, CardTitle, EmptyState, LoadingState } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { BIKE_TYPE_LABELS } from "@/lib/bikes";
+import { getBikeTypeLabel } from "@/lib/bikes";
 
 export default function BikeDetailPage({
   params,
@@ -62,7 +62,7 @@ export default function BikeDetailPage({
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{bike.name}</h1>
           <p className="mt-1 text-sm text-gray-600">
-            {[bike.brand, bike.model].filter(Boolean).join(" ") || BIKE_TYPE_LABELS[bike.bikeType]}
+            {[bike.brand, bike.model].filter(Boolean).join(" ") || getBikeTypeLabel(bike.bikeType, messages)}
           </p>
         </div>
         <Link
@@ -82,7 +82,7 @@ export default function BikeDetailPage({
               <CardTitle>{messages.bikes.sections.geometry}</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-3 text-sm text-gray-700 sm:grid-cols-2">
-              <p>{messages.bikeForm.fields.type.staticLabel} {BIKE_TYPE_LABELS[bike.bikeType]}</p>
+              <p>{messages.bikeForm.fields.type.staticLabel} {getBikeTypeLabel(bike.bikeType, messages)}</p>
               <p>{messages.bikeForm.fields.brand.label}: {bike.brand ?? "-"}</p>
               <p>{messages.bikeForm.fields.model.label}: {bike.model ?? "-"}</p>
               <p>{messages.bikeForm.fields.bikeWeightKg.label}: {bike.bikeWeightKg ?? "-"}</p>

@@ -55,5 +55,9 @@ export default withSentryConfig(nextConfig, {
   telemetry: false,
   widenClientFileUpload: false,
   sourcemaps: { disable: true },
-  disableLogger: true,
+  webpack: {
+    treeshake: {
+      removeDebugLogging: true,
+    },
+  },
 });

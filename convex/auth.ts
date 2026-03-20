@@ -1,5 +1,6 @@
 import { convexAuth } from "@convex-dev/auth/server";
 import { Email } from "@convex-dev/auth/providers/Email";
+import Google from "@auth/core/providers/google";
 import { Resend } from "resend";
 import { BRAND } from "./lib/brand";
 
@@ -11,6 +12,13 @@ const LEGACY_BLOCKED_CODE = "B1KEF1T";
 
 type ActionMutationRunner = {
   runMutation: (mutationRef: unknown, args: Record<string, unknown>) => Promise<unknown>;
+};
+
+type AuthUserDoc = {
+  displayName?: string;
+  displayNameSource?: "google" | "manual" | "email";
+  profile_image_url?: string;
+  profileImageSource?: "google" | "manual";
 };
 
 function normalizeEmail(email: string): string {
@@ -152,6 +160,86 @@ const EmailProvider = Email({
   },
 });
 
+const googleProviderEnabled = Boolean(
+  process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+);
+
+const providers = [
+  EmailProvider,
+  ...(googleProviderEnabled
+    ? [
+        Google({
+          clientId: process.env.GOOGLE_CLIENT_ID!,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        }),
+      ]
+    : []),
+];
+
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-  providers: [EmailProvider],
+  providers,
+  callbacks: {
+    async afterUserCreatedOrUpdated(ctx, args) {
+      const patch: Record<string, unknown> = {
+        lastLoginAt: Date.now(),
+      };
+
+      if (args.provider.id !== "google") {
+        if (args.type === "email" || args.type === "verification") {
+          const currentUser = (await ctx.db.get(args.userId)) as AuthUserDoc | null;
+          if (
+            currentUser &&
+            !currentUser.displayName &&
+            !currentUser.displayNameSource &&
+            typeof args.profile.email === "string"
+          ) {
+            patch.displayName = args.profile.email.split("@")[0];
+            patch.displayNameSource = "email";
+          }
+        }
+
+        await ctx.db.patch(args.userId, patch);
+        return;
+      }
+
+      const currentUser = (await ctx.db.get(args.userId)) as AuthUserDoc | null;
+      const googleName =
+        typeof args.profile.name === "string" ? args.profile.name.trim() : undefined;
+      const googleEmail =
+        typeof args.profile.email === "string" ? args.profile.email.trim() : undefined;
+      const googleProfileImageUrl =
+        typeof args.profile.image === "string" ? args.profile.image : undefined;
+
+      patch.googleName = googleName;
+      patch.googleEmail = googleEmail;
+      patch.googleProfileImageUrl = googleProfileImageUrl;
+      patch.lastGoogleSyncAt = Date.now();
+
+      const hasManualDisplayName =
+        currentUser?.displayNameSource === "manual" &&
+        Boolean(currentUser.displayName?.trim());
+      if (!hasManualDisplayName) {
+        if (googleName) {
+          patch.displayName = googleName;
+          patch.displayNameSource = "google";
+        } else if (
+          !currentUser?.displayName &&
+          !currentUser?.displayNameSource &&
+          googleEmail
+        ) {
+          patch.displayName = googleEmail.split("@")[0];
+          patch.displayNameSource = "email";
+        }
+      }
+
+      const hasManualProfileImage =
+        currentUser?.profileImageSource === "manual" &&
+        Boolean(currentUser.profile_image_url);
+      if (!hasManualProfileImage && googleProfileImageUrl) {
+        patch.profileImageSource = "google";
+      }
+
+      await ctx.db.patch(args.userId, patch);
+    },
+  },
 });
