@@ -64,14 +64,15 @@ export default function DashboardPage() {
           <p className="mt-2 text-sm text-gray-600">{messages.dashboardHome.subtitle}</p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Link href={withLocalePrefix("/bikes/new", locale)}>
-            <Button variant="outline">
-              <Plus className="h-4 w-4" />
-              {messages.nav.newBike}
-            </Button>
+          <Link
+            href={withLocalePrefix("/bikes/new", locale)}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-blue-700 hover:text-blue-800"
+          >
+            <Plus className="h-4 w-4" />
+            {messages.nav.newBike}
           </Link>
           <Link href={withLocalePrefix("/fit", locale)}>
-            <Button>
+            <Button variant="primary">
               <Plus className="h-4 w-4" />
               {messages.home.newFitCta}
             </Button>
@@ -144,11 +145,14 @@ export default function DashboardPage() {
           )}
 
           <div className="flex flex-wrap gap-3">
-            <Link href={withLocalePrefix("/profile", locale)}>
-              <Button variant="outline">{messages.dashboardHome.editProfile}</Button>
+            <Link
+              href={withLocalePrefix("/profile", locale)}
+              className="inline-flex items-center text-sm font-semibold text-blue-700 hover:text-blue-800"
+            >
+              {messages.dashboardHome.editProfile}
             </Link>
             <Link href={withLocalePrefix("/fit", locale)}>
-              <Button variant="secondary">{messages.dashboardHome.newFit}</Button>
+              <Button variant="primary">{messages.dashboardHome.newFit}</Button>
             </Link>
           </div>
         </CardContent>

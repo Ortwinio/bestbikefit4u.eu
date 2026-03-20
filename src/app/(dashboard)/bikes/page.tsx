@@ -31,11 +31,12 @@ export default function BikesPage() {
           <h1 className="text-2xl font-bold text-gray-900">{messages.nav.myBikes}</h1>
           <p className="mt-2 text-sm text-gray-600">{messages.bikes.subtitle}</p>
         </div>
-        <Link href={withLocalePrefix("/bikes/new", locale)}>
-          <Button>
-            <Plus className="h-4 w-4" />
-            {messages.nav.newBike}
-          </Button>
+        <Link
+          href={withLocalePrefix("/bikes/new", locale)}
+          className="inline-flex items-center gap-2 text-sm font-semibold text-blue-700 hover:text-blue-800"
+        >
+          <Plus className="h-4 w-4" />
+          {messages.nav.newBike}
         </Link>
       </div>
 

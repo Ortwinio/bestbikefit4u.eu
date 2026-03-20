@@ -1238,7 +1238,7 @@ const en = {
         deleteBike: "Delete Bike",
         editNotes: "Edit note",
         saveNotes: "Save note",
-        startFitForBike: "Start fitting session for this bike",
+        startFitForBike: "Start fitting session",
       },
       errors: {
         nameRequired: "Bike name is required.",

@@ -114,6 +114,8 @@ export function BikeGarageRow({
 }) {
   const dashboardTileClassName =
     "bg-[color:color-mix(in_oklch,var(--secondary)_88%,black_4%)]";
+  const actionLinkClassName =
+    "inline-flex items-center text-sm font-semibold text-blue-700 hover:text-blue-800";
 
   const fitName = latestFit?.session.ridingStyle
     ? messages.sessions.ridingStyle[latestFit.session.ridingStyle]
@@ -158,11 +160,14 @@ export function BikeGarageRow({
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href={withLocalePrefix(`/bikes/${bike._id}`, locale)}>
-              <Button variant="outline">{messages.dashboardHome.viewBike}</Button>
+            <Link
+              href={withLocalePrefix(`/bikes/${bike._id}`, locale)}
+              className={actionLinkClassName}
+            >
+              {messages.dashboardHome.viewBike}
             </Link>
             <Link href={withLocalePrefix(`/fit?bikeId=${bike._id}`, locale)}>
-              <Button>{messages.bikeForm.actions.startFitForBike}</Button>
+              <Button variant="primary">{messages.bikeForm.actions.startFitForBike}</Button>
             </Link>
           </div>
         </CardContent>
@@ -202,11 +207,9 @@ export function BikeGarageRow({
               <div className="flex flex-wrap gap-3">
                 <Link
                   href={withLocalePrefix(`/fit/${latestFit.session._id}/results`, locale)}
+                  className={actionLinkClassName}
                 >
-                  <Button>{messages.fitHistory.viewReport}</Button>
-                </Link>
-                <Link href={withLocalePrefix(`/fit?bikeId=${bike._id}`, locale)}>
-                  <Button variant="outline">{messages.fitHistory.startNewSession}</Button>
+                  {messages.fitHistory.viewReport}
                 </Link>
               </div>
             </>
@@ -265,10 +268,9 @@ export function BikeGarageRow({
               <div className="flex flex-wrap gap-3">
                 <Link
                   href={withLocalePrefix(`/pressure-calculator?bikeId=${bike._id}`, locale)}
+                  className={actionLinkClassName}
                 >
-                  <Button variant={bike.pressureStateSummary.isStale ? "primary" : "outline"}>
-                    {messages.pressure.overview.recalculate}
-                  </Button>
+                  {messages.pressure.overview.recalculate}
                 </Link>
               </div>
             </>

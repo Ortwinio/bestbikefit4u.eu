@@ -1248,7 +1248,7 @@ const nl = {
         deleteBike: "Fiets verwijderen",
         editNotes: "Notitie bewerken",
         saveNotes: "Notitie opslaan",
-        startFitForBike: "Start een fit-sessie voor deze fiets",
+        startFitForBike: "Start fit-sessie",
       },
       errors: {
         nameRequired: "Fietsnaam is verplicht.",
