@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
-import { Activity, ArrowRight, Dumbbell, Edit2, Info, PencilLine, Ruler, User } from "lucide-react";
+import { Activity, ArrowRight, Dumbbell, Edit2, Info, PencilLine, Ruler } from "lucide-react";
 import { api } from "../../../../convex/_generated/api";
 import { MeasurementWizard, type WizardFormData } from "@/components/measurements";
 import {
@@ -39,18 +39,16 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import type { Locale } from "@/i18n/config";
 
 type FlexibilityScore = (typeof flexibilityTests)[number]["score"];
-type EditableMeasurementKey =
+type MeasurementValues = Pick<
+  ProfileData,
   | "heightCm"
   | "inseamCm"
+  | "weightKg"
   | "torsoLengthCm"
   | "armLengthCm"
   | "shoulderWidthCm"
-  | "femurLengthCm";
-type OptionalMeasurementKey =
-  | "torsoLengthCm"
-  | "armLengthCm"
-  | "shoulderWidthCm"
-  | "femurLengthCm";
+  | "femurLengthCm"
+>;
 
 interface ProfileData {
   heightCm: number;
@@ -65,7 +63,7 @@ interface ProfileData {
 }
 
 type MeasurementConfig = {
-  key: EditableMeasurementKey;
+  key: keyof MeasurementValues;
   label: string;
   unit: string;
   min: number;
@@ -113,185 +111,27 @@ function MeasurementInfoBox({
   );
 }
 
-function WeightEditor({
-  currentWeightKg,
+function BodyMeasurementsEditor({
+  profile,
   messages,
-  onSave,
-}: {
-  currentWeightKg?: number;
-  messages: ReturnType<typeof useDashboardMessages>["messages"];
-  onSave: (newWeightKg: number) => Promise<void>;
-}) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [value, setValue] = useState<number | null>(currentWeightKg ?? null);
-  const [isSaving, setIsSaving] = useState(false);
-
-  useEffect(() => {
-    setValue(currentWeightKg ?? null);
-  }, [currentWeightKg]);
-
-  const handleSave = async () => {
-    if (value === null) {
-      return;
-    }
-
-    setIsSaving(true);
-    try {
-      await onSave(value);
-      setIsEditing(false);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  return (
-    <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-sm font-medium text-[color:var(--foreground)]">
-            {messages.profile.measurements.weight}
-          </p>
-          <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-            {currentWeightKg
-              ? `${currentWeightKg} kg`
-              : messages.profile.measurements.weightNotSet}
-          </p>
-        </div>
-        {!isEditing ? (
-          <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)}>
-            <PencilLine className="h-4 w-4" />
-            {messages.profile.actions.editInline}
-          </Button>
-        ) : null}
-      </div>
-
-      {isEditing ? (
-        <div className="mt-4 space-y-3">
-          <NumberInput
-            label={messages.profile.measurements.weight}
-            tooltip={messages.profile.measurements.weightTooltip}
-            helperText={messages.profile.measurements.weightHelper}
-            min={30}
-            max={200}
-            step={0.5}
-            value={value}
-            onChange={setValue}
-            unit="kg"
-          />
-          <div className="flex justify-end gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                setValue(currentWeightKg ?? null);
-                setIsEditing(false);
-              }}
-            >
-              {messages.common.cancel}
-            </Button>
-            <Button size="sm" onClick={() => void handleSave()} isLoading={isSaving}>
-              {messages.profile.measurements.saveField}
-            </Button>
-          </div>
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function MeasurementRowEditor({
-  config,
   isEditing,
   onEdit,
   onCancel,
   onSave,
-  messages,
 }: {
-  config: MeasurementConfig;
+  profile: ProfileData;
+  messages: ReturnType<typeof useDashboardMessages>["messages"];
   isEditing: boolean;
   onEdit: () => void;
   onCancel: () => void;
-  onSave: (value: number) => Promise<void>;
-  messages: ReturnType<typeof useDashboardMessages>["messages"];
+  onSave: (values: MeasurementValues) => Promise<void>;
 }) {
-  const [draftValue, setDraftValue] = useState<number | null>(config.value ?? null);
-  const [isSaving, setIsSaving] = useState(false);
-
-  useEffect(() => {
-    setDraftValue(config.value ?? null);
-  }, [config.value, isEditing]);
-
-  const handleSave = async () => {
-    if (draftValue === null) {
-      return;
-    }
-
-    setIsSaving(true);
-    try {
-      await onSave(draftValue);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  return (
-    <div className="space-y-3 rounded-[var(--radius-lg)] border border-[color:var(--border)] px-4 py-3">
-      {!isEditing ? (
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="text-sm text-[color:var(--muted-foreground)]">{config.label}</p>
-            <p className="font-medium text-[color:var(--foreground)]">
-              {config.value !== undefined ? `${config.value} ${config.unit}` : "—"}
-            </p>
-          </div>
-          <Button variant="ghost" size="sm" onClick={onEdit}>
-            <PencilLine className="h-4 w-4" />
-            {messages.profile.actions.editInline}
-          </Button>
-        </div>
-      ) : (
-        <>
-          <NumberInput
-            label={config.label}
-            min={config.min}
-            max={config.max}
-            step={config.step ?? 0.5}
-            value={draftValue}
-            onChange={setDraftValue}
-            unit={config.unit}
-          />
-          <MeasurementInfoBox
-            title={messages.profile.measurements.howToMeasure}
-            steps={config.steps}
-          />
-          <div className="flex justify-end gap-2">
-            <Button variant="ghost" size="sm" onClick={onCancel}>
-              {messages.common.cancel}
-            </Button>
-            <Button size="sm" onClick={() => void handleSave()} isLoading={isSaving}>
-              {messages.profile.measurements.saveField}
-            </Button>
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-function OptionalMeasurementsEditor({
-  profile,
-  open,
-  onClose,
-  onSave,
-  messages,
-}: {
-  profile: ProfileData;
-  open: boolean;
-  onClose: () => void;
-  onSave: (values: Partial<Record<OptionalMeasurementKey, number>>) => Promise<void>;
-  messages: ReturnType<typeof useDashboardMessages>["messages"];
-}) {
-  const [values, setValues] = useState<Record<OptionalMeasurementKey, number | null>>({
+  const [values, setValues] = useState<{
+    [K in keyof MeasurementValues]: number | null;
+  }>({
+    heightCm: profile.heightCm,
+    inseamCm: profile.inseamCm,
+    weightKg: profile.weightKg ?? null,
     torsoLengthCm: profile.torsoLengthCm ?? null,
     armLengthCm: profile.armLengthCm ?? null,
     shoulderWidthCm: profile.shoulderWidthCm ?? null,
@@ -301,25 +141,86 @@ function OptionalMeasurementsEditor({
 
   useEffect(() => {
     setValues({
+      heightCm: profile.heightCm,
+      inseamCm: profile.inseamCm,
+      weightKg: profile.weightKg ?? null,
       torsoLengthCm: profile.torsoLengthCm ?? null,
       armLengthCm: profile.armLengthCm ?? null,
       shoulderWidthCm: profile.shoulderWidthCm ?? null,
       femurLengthCm: profile.femurLengthCm ?? null,
     });
-  }, [profile.armLengthCm, profile.femurLengthCm, profile.shoulderWidthCm, profile.torsoLengthCm, open]);
+  }, [
+    isEditing,
+    profile.armLengthCm,
+    profile.femurLengthCm,
+    profile.heightCm,
+    profile.inseamCm,
+    profile.shoulderWidthCm,
+    profile.torsoLengthCm,
+    profile.weightKg,
+  ]);
 
-  if (!open) {
-    return null;
-  }
+  const handleSave = async () => {
+    if (values.heightCm === null || values.inseamCm === null) {
+      return;
+    }
 
-  const configs: Array<MeasurementConfig & { key: OptionalMeasurementKey }> = [
+    setIsSaving(true);
+    try {
+      await onSave({
+        heightCm: values.heightCm,
+        inseamCm: values.inseamCm,
+        weightKg: values.weightKg ?? undefined,
+        torsoLengthCm: values.torsoLengthCm ?? undefined,
+        armLengthCm: values.armLengthCm ?? undefined,
+        shoulderWidthCm: values.shoulderWidthCm ?? undefined,
+        femurLengthCm: values.femurLengthCm ?? undefined,
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const ratioWarning =
+    values.heightCm && values.inseamCm
+      ? validateInseamRatio(values.heightCm, values.inseamCm)
+      : null;
+
+  const configs: MeasurementConfig[] = [
+    {
+      key: "heightCm",
+      label: messages.profile.measurements.height,
+      unit: "cm",
+      min: 130,
+      max: 210,
+      value: profile.heightCm,
+      steps: messages.profile.measurements.heightSteps,
+    },
+    {
+      key: "inseamCm",
+      label: messages.profile.measurements.inseam,
+      unit: "cm",
+      min: 55,
+      max: 105,
+      value: profile.inseamCm,
+      steps: messages.profile.measurements.inseamSteps,
+    },
+    {
+      key: "weightKg",
+      label: messages.profile.measurements.weight,
+      unit: "kg",
+      min: 30,
+      max: 200,
+      value: profile.weightKg,
+      steps: [],
+    },
     {
       key: "torsoLengthCm",
       label: messages.profile.measurements.torso,
       unit: "cm",
       min: 45,
       max: 75,
-      value: values.torsoLengthCm ?? undefined,
+      value: profile.torsoLengthCm,
       steps: messages.profile.measurements.torsoSteps,
     },
     {
@@ -328,7 +229,7 @@ function OptionalMeasurementsEditor({
       unit: "cm",
       min: 45,
       max: 75,
-      value: values.armLengthCm ?? undefined,
+      value: profile.armLengthCm,
       steps: messages.profile.measurements.armSteps,
     },
     {
@@ -337,7 +238,7 @@ function OptionalMeasurementsEditor({
       unit: "cm",
       min: 30,
       max: 55,
-      value: values.shoulderWidthCm ?? undefined,
+      value: profile.shoulderWidthCm,
       steps: messages.profile.measurements.shoulderSteps,
     },
     {
@@ -346,57 +247,102 @@ function OptionalMeasurementsEditor({
       unit: "cm",
       min: 35,
       max: 60,
-      value: values.femurLengthCm ?? undefined,
+      value: profile.femurLengthCm,
       steps: messages.profile.measurements.femurSteps,
     },
   ];
 
-  const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      await onSave({
-        torsoLengthCm: values.torsoLengthCm ?? undefined,
-        armLengthCm: values.armLengthCm ?? undefined,
-        shoulderWidthCm: values.shoulderWidthCm ?? undefined,
-        femurLengthCm: values.femurLengthCm ?? undefined,
-      });
-      onClose();
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   return (
-    <div className="space-y-4 rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
-      <div className="grid gap-4 md:grid-cols-2">
-        {configs.map((config) => (
-          <div key={config.key} className="space-y-3">
-            <NumberInput
-              label={config.label}
-              min={config.min}
-              max={config.max}
-              step={0.5}
-              value={values[config.key]}
-              onChange={(nextValue) =>
-                setValues((current) => ({ ...current, [config.key]: nextValue }))
-              }
-              unit={config.unit}
-            />
-            <MeasurementInfoBox
-              title={messages.profile.measurements.howToMeasure}
-              steps={config.steps}
-            />
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm text-[color:var(--muted-foreground)]">
+            {messages.profile.measurements.summary}
+          </p>
+        </div>
+        {!isEditing ? (
+          <Button variant="ghost" size="sm" onClick={onEdit}>
+            <PencilLine className="h-4 w-4" />
+            {messages.profile.actions.editInline}
+          </Button>
+        ) : null}
+      </div>
+
+      {!isEditing ? (
+        <dl className="space-y-3">
+          {configs.map((config) =>
+            config.value !== undefined ? (
+              <div key={config.key} className="flex justify-between gap-3">
+                <dt className="text-[color:var(--muted-foreground)]">{config.label}</dt>
+                <dd className="font-medium text-[color:var(--foreground)]">
+                  {config.value} {config.unit}
+                </dd>
+              </div>
+            ) : null
+          )}
+          {profile.weightKg === undefined ? (
+            <p className="text-sm italic text-[color:var(--muted-foreground)]">
+              {messages.profile.measurements.weightNotSet}
+            </p>
+          ) : null}
+        </dl>
+      ) : (
+        <div className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            {configs.map((config) => (
+              <NumberInput
+                key={config.key}
+                label={config.label}
+                tooltip={
+                  config.key === "weightKg"
+                    ? messages.profile.measurements.weightTooltip
+                    : undefined
+                }
+                helperText={
+                  config.key === "weightKg"
+                    ? messages.profile.measurements.weightHelper
+                    : undefined
+                }
+                min={config.min}
+                max={config.max}
+                step={config.key === "weightKg" ? 0.5 : 0.5}
+                value={values[config.key] ?? null}
+                onChange={(nextValue) =>
+                  setValues((current) => ({ ...current, [config.key]: nextValue }))
+                }
+                unit={config.unit}
+              />
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="flex justify-end gap-2">
-        <Button variant="ghost" size="sm" onClick={onClose}>
-          {messages.common.cancel}
-        </Button>
-        <Button size="sm" onClick={() => void handleSave()} isLoading={isSaving}>
-          {messages.profile.measurements.saveField}
-        </Button>
-      </div>
+
+          {ratioWarning ? (
+            <div className="rounded-[var(--radius-lg)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+              {ratioWarning}
+            </div>
+          ) : null}
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {configs
+              .filter((config) => config.steps.length > 0)
+              .map((config) => (
+                <MeasurementInfoBox
+                  key={config.key}
+                  title={`${messages.profile.measurements.howToMeasure} ${config.label}`}
+                  steps={config.steps}
+                />
+              ))}
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" size="sm" onClick={onCancel}>
+              {messages.common.cancel}
+            </Button>
+            <Button size="sm" onClick={() => void handleSave()} isLoading={isSaving}>
+              {messages.profile.measurements.saveField}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -639,18 +585,13 @@ function ProfileSummary({
   messages,
   displayName,
   profileImageSource,
-  activeMeasurementEditor,
-  showOptionalMeasurements,
+  editingMeasurements,
   editingFlexibility,
   editingCoreStability,
   onEditWizard,
-  onMeasurementEdit,
-  onMeasurementCancel,
-  onMeasurementSave,
-  onWeightSave,
-  onShowOptionalMeasurements,
-  onHideOptionalMeasurements,
-  onOptionalMeasurementsSave,
+  onStartMeasurementsEdit,
+  onCancelMeasurementsEdit,
+  onSaveMeasurements,
   onStartFlexibilityEdit,
   onCancelFlexibilityEdit,
   onSaveFlexibility,
@@ -664,20 +605,13 @@ function ProfileSummary({
   messages: ReturnType<typeof useDashboardMessages>["messages"];
   displayName: string;
   profileImageSource?: string;
-  activeMeasurementEditor: EditableMeasurementKey | null;
-  showOptionalMeasurements: boolean;
+  editingMeasurements: boolean;
   editingFlexibility: boolean;
   editingCoreStability: boolean;
   onEditWizard: () => void;
-  onMeasurementEdit: (key: EditableMeasurementKey) => void;
-  onMeasurementCancel: () => void;
-  onMeasurementSave: (key: EditableMeasurementKey, value: number) => Promise<void>;
-  onWeightSave: (weightKg: number) => Promise<void>;
-  onShowOptionalMeasurements: () => void;
-  onHideOptionalMeasurements: () => void;
-  onOptionalMeasurementsSave: (
-    values: Partial<Record<OptionalMeasurementKey, number>>
-  ) => Promise<void>;
+  onStartMeasurementsEdit: () => void;
+  onCancelMeasurementsEdit: () => void;
+  onSaveMeasurements: (values: MeasurementValues) => Promise<void>;
   onStartFlexibilityEdit: () => void;
   onCancelFlexibilityEdit: () => void;
   onSaveFlexibility: (score: FlexibilityScore) => Promise<void>;
@@ -685,73 +619,6 @@ function ProfileSummary({
   onCancelCoreStabilityEdit: () => void;
   onSaveCoreStability: (score: number) => Promise<void>;
 }) {
-  const ratioWarning = validateInseamRatio(profile.heightCm, profile.inseamCm);
-
-  const measurementConfigs: MeasurementConfig[] = [
-    {
-      key: "heightCm",
-      label: messages.profile.measurements.height,
-      unit: "cm",
-      min: 130,
-      max: 210,
-      value: profile.heightCm,
-      steps: messages.profile.measurements.heightSteps,
-    },
-    {
-      key: "inseamCm",
-      label: messages.profile.measurements.inseam,
-      unit: "cm",
-      min: 55,
-      max: 105,
-      value: profile.inseamCm,
-      steps: messages.profile.measurements.inseamSteps,
-    },
-    {
-      key: "torsoLengthCm",
-      label: messages.profile.measurements.torso,
-      unit: "cm",
-      min: 45,
-      max: 75,
-      value: profile.torsoLengthCm,
-      steps: messages.profile.measurements.torsoSteps,
-    },
-    {
-      key: "armLengthCm",
-      label: messages.profile.measurements.armLength,
-      unit: "cm",
-      min: 45,
-      max: 75,
-      value: profile.armLengthCm,
-      steps: messages.profile.measurements.armSteps,
-    },
-    {
-      key: "shoulderWidthCm",
-      label: messages.profile.measurements.shoulderWidth,
-      unit: "cm",
-      min: 30,
-      max: 55,
-      value: profile.shoulderWidthCm,
-      steps: messages.profile.measurements.shoulderSteps,
-    },
-    {
-      key: "femurLengthCm",
-      label: messages.profile.measurements.femurLength,
-      unit: "cm",
-      min: 35,
-      max: 60,
-      value: profile.femurLengthCm,
-      steps: messages.profile.measurements.femurSteps,
-    },
-  ];
-
-  const visibleConfigs = measurementConfigs.filter(
-    (config) =>
-      config.key === "heightCm" ||
-      config.key === "inseamCm" ||
-      config.value !== undefined ||
-      activeMeasurementEditor === config.key
-  );
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -773,56 +640,28 @@ function ProfileSummary({
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]">
         <Card variant="bordered" className="xl:row-span-2">
           <CardHeader>
-            <div className="flex items-center gap-2">
-              <Ruler className="h-5 w-5 text-blue-600" />
-              <CardTitle>{messages.profile.sections.bodyMeasurements}</CardTitle>
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <Ruler className="h-5 w-5 text-blue-600" />
+                <CardTitle>{messages.profile.sections.bodyMeasurements}</CardTitle>
+              </div>
+              {!editingMeasurements ? (
+                <Button variant="ghost" size="sm" onClick={onStartMeasurementsEdit}>
+                  <PencilLine className="h-4 w-4" />
+                  {messages.profile.measurements.editAllButton}
+                </Button>
+              ) : null}
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              {visibleConfigs.map((config) => (
-                <MeasurementRowEditor
-                  key={config.key}
-                  config={config}
-                  isEditing={activeMeasurementEditor === config.key}
-                  onEdit={() => onMeasurementEdit(config.key)}
-                  onCancel={onMeasurementCancel}
-                  onSave={(value) => onMeasurementSave(config.key, value)}
-                  messages={messages}
-                />
-              ))}
-            </div>
-
-            {ratioWarning ? (
-              <div className="rounded-[var(--radius-lg)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-                {ratioWarning}
-              </div>
-            ) : null}
-
-            <WeightEditor
-              currentWeightKg={profile.weightKg}
+          <CardContent>
+            <BodyMeasurementsEditor
+              profile={profile}
               messages={messages}
-              onSave={onWeightSave}
+              isEditing={editingMeasurements}
+              onEdit={onStartMeasurementsEdit}
+              onCancel={onCancelMeasurementsEdit}
+              onSave={onSaveMeasurements}
             />
-
-            <div className="space-y-3">
-              {!showOptionalMeasurements ? (
-                <button
-                  type="button"
-                  onClick={onShowOptionalMeasurements}
-                  className="text-sm font-semibold text-blue-700 hover:text-blue-800"
-                >
-                  {messages.profile.measurements.addOptional}
-                </button>
-              ) : null}
-              <OptionalMeasurementsEditor
-                profile={profile}
-                open={showOptionalMeasurements}
-                onClose={onHideOptionalMeasurements}
-                onSave={onOptionalMeasurementsSave}
-                messages={messages}
-              />
-            </div>
           </CardContent>
         </Card>
 
@@ -873,13 +712,11 @@ export default function ProfilePage() {
   const toast = useToast();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [showRecalculateDialog, setShowRecalculateDialog] = useState(false);
-  const [pendingNewWeight, setPendingNewWeight] = useState<number | null>(null);
+  const [showRefreshDialog, setShowRefreshDialog] = useState(false);
+  const [pendingRefreshWeight, setPendingRefreshWeight] = useState<number | null>(null);
   const [isRecalculating, setIsRecalculating] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-  const [activeMeasurementEditor, setActiveMeasurementEditor] =
-    useState<EditableMeasurementKey | null>(null);
-  const [showOptionalMeasurements, setShowOptionalMeasurements] = useState(false);
+  const [editingMeasurements, setEditingMeasurements] = useState(false);
   const [editingFlexibility, setEditingFlexibility] = useState(false);
   const [editingCoreStability, setEditingCoreStability] = useState(false);
 
@@ -920,16 +757,16 @@ export default function ProfilePage() {
     }
   }, [searchParams]);
 
-  const handlePostWeightSave = (previousWeight: number | undefined, newWeight: number) => {
-    const weightChanged =
-      previousWeight === undefined || Math.abs(newWeight - previousWeight) >= 0.5;
+  const openRefreshDialog = (nextWeightKg?: number) => {
+    setPendingRefreshWeight(nextWeightKg ?? null);
+    setShowRefreshDialog(true);
+  };
 
-    if (weightChanged && (recalculableBikeCount ?? 0) > 0) {
-      setPendingNewWeight(newWeight);
-      setShowRecalculateDialog(true);
-      return;
-    }
-
+  const finishProfileSave = () => {
+    setShowRefreshDialog(false);
+    setPendingRefreshWeight(null);
+    setIsEditing(false);
+    setEditingMeasurements(false);
     toast.success({ description: messages.common.toasts.profileSaved });
   };
 
@@ -951,8 +788,8 @@ export default function ProfilePage() {
       });
 
       setIsEditing(false);
-      if (data.weightKg !== undefined) {
-        handlePostWeightSave(previousWeight, data.weightKg);
+      if (previousWeight !== data.weightKg) {
+        openRefreshDialog(data.weightKg);
       } else {
         toast.success({ description: messages.common.toasts.profileSaved });
       }
@@ -967,51 +804,34 @@ export default function ProfilePage() {
     }
   };
 
-  const handleWeightSave = async (newWeightKg: number) => {
-    try {
-      await updateMeasurements({ weightKg: newWeightKg });
-      handlePostWeightSave(profileData?.weightKg, newWeightKg);
-    } catch (error) {
-      toast.error({
-        description: reportClientError(error, {
-          area: "profile",
-          action: "updateWeight",
-          operationType: "mutation",
-        }),
-      });
+  const handleSaveMeasurements = async (values: MeasurementValues) => {
+    if (!profileData) {
+      return;
     }
-  };
 
-  const handleMeasurementSave = async (
-    key: EditableMeasurementKey,
-    value: number
-  ) => {
-    try {
-      await updateMeasurements({ [key]: value });
-      setActiveMeasurementEditor(null);
-      toast.success({ description: messages.common.toasts.profileSaved });
-    } catch (error) {
-      toast.error({
-        description: reportClientError(error, {
-          area: "profile",
-          action: `update_${key}`,
-          operationType: "mutation",
-        }),
-      });
+    const hasChanges =
+      profileData.heightCm !== values.heightCm ||
+      profileData.inseamCm !== values.inseamCm ||
+      (profileData.weightKg ?? undefined) !== (values.weightKg ?? undefined) ||
+      (profileData.torsoLengthCm ?? undefined) !== (values.torsoLengthCm ?? undefined) ||
+      (profileData.armLengthCm ?? undefined) !== (values.armLengthCm ?? undefined) ||
+      (profileData.shoulderWidthCm ?? undefined) !==
+        (values.shoulderWidthCm ?? undefined) ||
+      (profileData.femurLengthCm ?? undefined) !== (values.femurLengthCm ?? undefined);
+
+    if (!hasChanges) {
+      setEditingMeasurements(false);
+      return;
     }
-  };
 
-  const handleOptionalMeasurementsSave = async (
-    values: Partial<Record<OptionalMeasurementKey, number>>
-  ) => {
     try {
       await updateMeasurements(values);
-      toast.success({ description: messages.common.toasts.profileSaved });
+      openRefreshDialog(values.weightKg);
     } catch (error) {
       toast.error({
         description: reportClientError(error, {
           area: "profile",
-          action: "updateOptionalMeasurements",
+          action: "updateMeasurements",
           operationType: "mutation",
         }),
       });
@@ -1058,27 +878,21 @@ export default function ProfilePage() {
     }
   };
 
-  const handleDismissRecalculate = () => {
-    setShowRecalculateDialog(false);
-    setPendingNewWeight(null);
-    setIsEditing(false);
-    toast.success({ description: messages.common.toasts.profileSaved });
-  };
-
   const handleRecalculate = async () => {
-    if (pendingNewWeight === null) {
+    if (pendingRefreshWeight === null) {
       return;
     }
 
     setIsRecalculating(true);
     try {
       const result = await recalculatePressureForAllBikes({
-        newWeightKg: pendingNewWeight,
-        autoNoteSource: `weight_change_${pendingNewWeight}kg`,
+        newWeightKg: pendingRefreshWeight,
+        autoNoteSource: `weight_change_${pendingRefreshWeight}kg`,
       });
-      setShowRecalculateDialog(false);
-      setPendingNewWeight(null);
+      setShowRefreshDialog(false);
+      setPendingRefreshWeight(null);
       setIsEditing(false);
+      setEditingMeasurements(false);
       toast.success({
         description: messages.profile.recalculate.successToast.replace(
           "{count}",
@@ -1164,23 +978,12 @@ export default function ProfilePage() {
         onEditWizard={() => setIsEditing(true)}
         displayName={displayName}
         profileImageSource={profileImageSource}
-        activeMeasurementEditor={activeMeasurementEditor}
-        showOptionalMeasurements={showOptionalMeasurements}
+        editingMeasurements={editingMeasurements}
         editingFlexibility={editingFlexibility}
         editingCoreStability={editingCoreStability}
-        onMeasurementEdit={(key) => {
-          setActiveMeasurementEditor(key);
-          setShowOptionalMeasurements(false);
-        }}
-        onMeasurementCancel={() => setActiveMeasurementEditor(null)}
-        onMeasurementSave={handleMeasurementSave}
-        onWeightSave={handleWeightSave}
-        onShowOptionalMeasurements={() => {
-          setActiveMeasurementEditor(null);
-          setShowOptionalMeasurements(true);
-        }}
-        onHideOptionalMeasurements={() => setShowOptionalMeasurements(false)}
-        onOptionalMeasurementsSave={handleOptionalMeasurementsSave}
+        onStartMeasurementsEdit={() => setEditingMeasurements(true)}
+        onCancelMeasurementsEdit={() => setEditingMeasurements(false)}
+        onSaveMeasurements={handleSaveMeasurements}
         onStartFlexibilityEdit={() => {
           setEditingFlexibility(true);
           setEditingCoreStability(false);
@@ -1195,23 +998,42 @@ export default function ProfilePage() {
         onSaveCoreStability={handleSaveCoreStability}
       />
       <AccessibleDialog
-        open={showRecalculateDialog}
-        title={messages.profile.recalculate.dialogTitle}
-        description={messages.profile.recalculate.dialogBody.replace(
-          "{weight}",
-          pendingNewWeight?.toString() ?? ""
-        )}
-        onClose={handleDismissRecalculate}
+        open={showRefreshDialog}
+        title={messages.profile.refresh.title}
+        description={
+          pendingRefreshWeight !== null && (recalculableBikeCount ?? 0) > 0
+            ? messages.profile.refresh.descriptionWithPressure.replace(
+                "{weight}",
+                String(pendingRefreshWeight)
+              )
+            : messages.profile.refresh.descriptionFitOnly
+        }
+        onClose={finishProfileSave}
       >
-        <div className="flex justify-end gap-2">
-          <Button type="button" variant="ghost" onClick={handleDismissRecalculate}>
-            {messages.profile.recalculate.dismissButton}
+        <div className="flex flex-wrap justify-end gap-2">
+          <Button type="button" variant="ghost" onClick={finishProfileSave}>
+            {messages.profile.refresh.dismissButton}
           </Button>
-          <Button type="button" onClick={handleRecalculate} isLoading={isRecalculating}>
-            {isRecalculating
-              ? messages.profile.recalculate.calculating
-              : messages.profile.recalculate.confirmButton}
-          </Button>
+          <Link
+            href={withLocalePrefix("/fit", locale)}
+            onClick={() => {
+              setShowRefreshDialog(false);
+              setPendingRefreshWeight(null);
+              setIsEditing(false);
+              setEditingMeasurements(false);
+            }}
+          >
+            <Button type="button" variant="outline">
+              {messages.profile.refresh.fitButton}
+            </Button>
+          </Link>
+          {pendingRefreshWeight !== null && (recalculableBikeCount ?? 0) > 0 ? (
+            <Button type="button" onClick={handleRecalculate} isLoading={isRecalculating}>
+              {isRecalculating
+                ? messages.profile.recalculate.calculating
+                : messages.profile.refresh.pressureButton}
+            </Button>
+          ) : null}
         </div>
       </AccessibleDialog>
     </>

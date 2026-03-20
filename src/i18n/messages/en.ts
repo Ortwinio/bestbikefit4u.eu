@@ -915,6 +915,7 @@ const en = {
         coreStability: "Core Stability",
       },
       measurements: {
+        summary: "Your saved rider measurements",
         height: "Height",
         inseam: "Inseam",
         weight: "Body weight",
@@ -927,6 +928,7 @@ const en = {
         femurLength: "Femur Length",
         howToMeasure: "How to measure:",
         saveField: "Save",
+        editAllButton: "Edit measurements",
         addOptional: "+ Add optional measurements",
         heightSteps: [
           "Stand barefoot against a wall",
@@ -1021,6 +1023,16 @@ const en = {
         dismissButton: "Not now",
         successToast: "Updated tire pressure recommendations for {count} bikes.",
         calculating: "Recalculating...",
+      },
+      refresh: {
+        title: "Do you want to recalculate your fitting and tire pressure settings?",
+        descriptionWithPressure:
+          "Your body measurements were updated. Start a new fitting session to refresh your fit recommendations, or recalculate tire pressure now based on {weight} kg.",
+        descriptionFitOnly:
+          "Your body measurements were updated. Start a new fitting session to refresh your fit recommendations.",
+        fitButton: "Start new fit session",
+        pressureButton: "Recalculate tire pressure",
+        dismissButton: "Not now",
       },
       improve: {
         flexibility: {

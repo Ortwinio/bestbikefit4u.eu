@@ -923,6 +923,7 @@ const nl = {
         coreStability: "Core-stabiliteit",
       },
       measurements: {
+        summary: "Je opgeslagen lichaamsmetingen",
         height: "Lengte",
         inseam: "Binnenbeenlengte",
         weight: "Lichaamsgewicht",
@@ -935,6 +936,7 @@ const nl = {
         femurLength: "Dijbeenlengte",
         howToMeasure: "Zo meet je het:",
         saveField: "Opslaan",
+        editAllButton: "Metingen bewerken",
         addOptional: "+ Optionele metingen toevoegen",
         heightSteps: [
           "Ga blootsvoets tegen een muur staan",
@@ -1029,6 +1031,16 @@ const nl = {
         dismissButton: "Nu niet",
         successToast: "Bandenspanningsadvies bijgewerkt voor {count} fietsen.",
         calculating: "Bezig met herberekenen...",
+      },
+      refresh: {
+        title: "Wil je je fitting- en bandenspanningsinstellingen opnieuw berekenen?",
+        descriptionWithPressure:
+          "Je lichaamsmetingen zijn bijgewerkt. Start een nieuwe fit-sessie om je fit-aanbevelingen te vernieuwen, of herbereken nu je bandenspanning op basis van {weight} kg.",
+        descriptionFitOnly:
+          "Je lichaamsmetingen zijn bijgewerkt. Start een nieuwe fit-sessie om je fit-aanbevelingen te vernieuwen.",
+        fitButton: "Start nieuwe fit-sessie",
+        pressureButton: "Herbereken bandenspanning",
+        dismissButton: "Nu niet",
       },
       improve: {
         flexibility: {
