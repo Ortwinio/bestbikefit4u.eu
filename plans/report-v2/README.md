@@ -120,8 +120,8 @@ With engine v2 nearly complete and i18n in place, all building blocks exist. Thi
 
 | Step | File | Priority | Status |
 |------|------|----------|--------|
-| 01 | `01-engine-v2-cutover.md` | P0 | Todo |
-| 02 | `02-report-data-model.md` | P0 | Todo |
+| 01 | `01-engine-v2-cutover.md` | P0 | Complete |
+| 02 | `02-report-data-model.md` | P0 | Complete |
 | 03 | `03-in-app-results-page-v2.md` | P1 | Todo |
 | 04 | `04-education-content.md` | P1 | Todo |
 | 05 | `05-pdf-report-v2.md` | P1 | Todo |

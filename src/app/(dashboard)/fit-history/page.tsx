@@ -65,7 +65,7 @@ export default function FitHistoryPage() {
           {messages.fitHistory.title}
         </h1>
         <p className="mt-2 text-sm text-gray-600">
-          {messages.fitHistory.emptyDescription}
+          {messages.fitHistory.subtitle}
         </p>
       </div>
 

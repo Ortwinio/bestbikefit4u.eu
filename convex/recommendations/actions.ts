@@ -210,7 +210,7 @@ export const runShadowComparison = internalAction({
         {
           sessionId: args.sessionId,
           userId: args.userId,
-          baselineEngineVersion: "v1",
+          baselineEngineVersion: "v2",
           shadowEngineVersion: "v2_shadow",
           status: "completed",
           baselineSnapshot: args.baselineSnapshot,
@@ -227,7 +227,7 @@ export const runShadowComparison = internalAction({
         {
           sessionId: args.sessionId,
           userId: args.userId,
-          baselineEngineVersion: "v1",
+          baselineEngineVersion: "v2",
           shadowEngineVersion: "v2_shadow",
           status: "failed",
           baselineSnapshot: args.baselineSnapshot,

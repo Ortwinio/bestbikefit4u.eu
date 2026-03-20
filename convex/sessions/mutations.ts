@@ -82,7 +82,7 @@ export const create = mutation({
       bikeId: resolvedBikeId,
       bikeProfileId: args.bikeProfileId,
       bikeType: args.bikeType,
-      engineVersion: "v1",
+      engineVersion: "v2",
       sourceType: args.bikeProfileId ? "bike_profile_flow" : "legacy_flow",
       status: "in_progress",
       ridingStyle: args.ridingStyle,
