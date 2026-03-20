@@ -3,6 +3,7 @@
 import { Controller, useFormContext } from "react-hook-form";
 import { NumberInput } from "@/components/ui";
 import { validateInseamRatio } from "@/lib/validations/profile";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { AlertCircle, Info } from "lucide-react";
 
 export function StepBodyMeasurements() {
@@ -10,6 +11,7 @@ export function StepBodyMeasurements() {
     watch,
     formState: { errors },
   } = useFormContext();
+  const { messages } = useDashboardMessages();
 
   const heightCm = watch("heightCm");
   const inseamCm = watch("inseamCm");
@@ -92,6 +94,27 @@ export function StepBodyMeasurements() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="max-w-sm">
+        <Controller
+          name="weightKg"
+          render={({ field }) => (
+            <NumberInput
+              label={messages.profile.measurements.weight}
+              step={0.5}
+              min={30}
+              max={200}
+              placeholder="75"
+              value={typeof field.value === "number" && !Number.isNaN(field.value) ? field.value : null}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              error={errors.weightKg?.message as string}
+              helperText={messages.profile.measurements.weightHelper}
+              unit="kg"
+            />
+          )}
+        />
       </div>
 
       {/* Ratio Warning */}

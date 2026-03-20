@@ -9,7 +9,10 @@ import { HeaderMobileMenu } from "./HeaderMobileMenu";
 type HeaderProps = {
   locale: Locale;
   labels: Pick<Messages, "common" | "nav"> & {
-    dashboardNav: Pick<Messages["dashboard"]["nav"], "dashboard" | "newFitSession" | "myBikes" | "profile">;
+    dashboardNav: Pick<
+      Messages["dashboard"]["nav"],
+      "dashboard" | "newFitSession" | "bikeFitting" | "myBikes" | "profile"
+    >;
     dashboardSignOut: string;
   };
 };
@@ -66,6 +69,7 @@ export function Header({ locale, labels }: HeaderProps) {
                 getStarted: labels.nav.getStarted,
                 dashboard: labels.dashboardNav.dashboard,
                 newFitSession: labels.dashboardNav.newFitSession,
+                bikeFitting: labels.dashboardNav.bikeFitting,
                 myBikes: labels.dashboardNav.myBikes,
                 profile: labels.dashboardNav.profile,
                 signOut: labels.dashboardSignOut,

@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import {
+  AccessibleDialog,
   Button,
   Card,
   CardContent,
@@ -13,6 +14,7 @@ import {
   CardTitle,
   LoadingState,
   EmptyState,
+  useToast,
 } from "@/components/ui";
 import { getBikeTypeLabel } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -47,27 +49,33 @@ function BikeImage({ storageId }: { storageId?: string }) {
 
 export default function BikesPage() {
   const { locale, messages } = useDashboardMessages();
+  const toast = useToast();
   const bikes = useQuery(api.bikes.queries.listByUser);
   const removeBike = useMutation(api.bikes.mutations.remove);
 
   const [deletingBikeId, setDeletingBikeId] = useState<Id<"bikes"> | null>(
     null
   );
+  const [pendingDelete, setPendingDelete] = useState<{
+    bikeId: Id<"bikes">;
+    bikeName: string;
+  } | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const handleDelete = async (bikeId: Id<"bikes">, bikeName: string) => {
-    const confirmed = window.confirm(
-      messages.bikes.delete.confirm.replace("{bikeName}", bikeName)
-    );
-    if (!confirmed) {
-      return;
-    }
-
+    setDeleteError(null);
     setDeletingBikeId(bikeId);
     try {
       await removeBike({ bikeId });
+      setPendingDelete(null);
+      toast.success({ description: messages.common.toasts.bikeDeleted });
     } catch (error) {
       console.error("Failed to delete bike:", error);
-      alert(messages.bikes.delete.failed);
+      if (error instanceof Error && error.message.includes("fitting history")) {
+        setDeleteError(messages.bikes.delete.blocked);
+      } else {
+        setDeleteError(messages.bikes.delete.failed);
+      }
     } finally {
       setDeletingBikeId(null);
     }
@@ -141,7 +149,12 @@ export default function BikesPage() {
                           <Button
                             variant="destructive"
                             size="sm"
-                            onClick={() => handleDelete(bike._id, bike.name)}
+                            onClick={() =>
+                              setPendingDelete({
+                                bikeId: bike._id,
+                                bikeName: bike.name,
+                              })
+                            }
                             isLoading={deletingBikeId === bike._id}
                           >
                             <Trash2 className="h-4 w-4 mr-1" />
@@ -196,6 +209,57 @@ export default function BikesPage() {
           })}
         </div>
       )}
+
+      <AccessibleDialog
+        open={pendingDelete !== null}
+        onClose={() => {
+          if (!deletingBikeId) {
+            setPendingDelete(null);
+            setDeleteError(null);
+          }
+        }}
+        title={
+          pendingDelete
+            ? messages.bikes.delete.dialogTitle.replace(
+                "{bikeName}",
+                pendingDelete.bikeName
+              )
+            : messages.bikes.delete.dialogTitle.replace("{bikeName}", "")
+        }
+        description={messages.bikes.delete.dialogDescription}
+      >
+        <div className="space-y-4">
+          {deleteError ? (
+            <p className="text-sm text-[color:var(--danger)]">{deleteError}</p>
+          ) : null}
+          <div className="flex flex-wrap justify-end gap-3">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setPendingDelete(null);
+                setDeleteError(null);
+              }}
+              disabled={deletingBikeId !== null}
+            >
+              {messages.common.cancel}
+            </Button>
+            <Button
+              variant="destructive"
+              isLoading={deletingBikeId !== null}
+              onClick={() =>
+                pendingDelete
+                  ? void handleDelete(
+                      pendingDelete.bikeId,
+                      pendingDelete.bikeName
+                    )
+                  : undefined
+              }
+            >
+              {messages.bikes.delete.dialogConfirm}
+            </Button>
+          </div>
+        </div>
+      </AccessibleDialog>
     </div>
   );
 }

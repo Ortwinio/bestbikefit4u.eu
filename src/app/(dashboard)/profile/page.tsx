@@ -13,6 +13,7 @@ import {
   Button,
   LoadingState,
   ErrorState,
+  AccessibleDialog,
   useToast,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
@@ -29,6 +30,7 @@ import { User, Ruler, Activity, Edit2 } from "lucide-react";
 interface ProfileData {
   heightCm: number;
   inseamCm: number;
+  weightKg?: number;
   torsoLengthCm?: number;
   armLengthCm?: number;
   femurLengthCm?: number;
@@ -89,6 +91,12 @@ function ProfileSummary({
                 <dt className="text-gray-500">{messages.profile.measurements.inseam}</dt>
                 <dd className="font-medium">{profile.inseamCm} cm</dd>
               </div>
+              {profile.weightKg ? (
+                <div className="flex justify-between">
+                  <dt className="text-gray-500">{messages.profile.measurements.weight}</dt>
+                  <dd className="font-medium">{profile.weightKg} kg</dd>
+                </div>
+              ) : null}
               {profile.torsoLengthCm && (
                 <div className="flex justify-between">
                   <dt className="text-gray-500">{messages.profile.measurements.torso}</dt>
@@ -181,6 +189,7 @@ function getDefaultValues(profile: ProfileData): Partial<WizardFormData> {
   return {
     heightCm: profile.heightCm,
     inseamCm: profile.inseamCm,
+    weightKg: profile.weightKg,
     torsoLengthCm: profile.torsoLengthCm,
     armLengthCm: profile.armLengthCm,
     femurLengthCm: profile.femurLengthCm,
@@ -197,12 +206,21 @@ export default function ProfilePage() {
   const logMarketingEvent = useMarketingEventLogger();
   const hasTrackedProfileViewRef = useRef(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showRecalculateDialog, setShowRecalculateDialog] = useState(false);
+  const [pendingNewWeight, setPendingNewWeight] = useState<number | null>(null);
+  const [isRecalculating, setIsRecalculating] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const toast = useToast();
 
   const profileData = useQuery(api.profiles.queries.getMyProfile);
+  const recalculableBikeCount = useQuery(
+    api.pressureCalculations.queries.getRecalculableBikeCount
+  );
   const user = useQuery(api.users.queries.getCurrentUser);
   const upsertProfile = useMutation(api.profiles.mutations.upsert);
+  const recalculatePressureForAllBikes = useMutation(
+    api.pressureCalculations.mutations.recalculatePressureForAllBikes
+  );
 
   useEffect(() => {
     if (hasTrackedProfileViewRef.current || profileData === undefined) {
@@ -220,9 +238,17 @@ export default function ProfilePage() {
   const handleSaveProfile = async (data: WizardFormData) => {
     setSaveError(null);
     try {
+      const previousWeight = profileData?.weightKg;
+      const newWeight = data.weightKg;
+      const weightChanged =
+        previousWeight !== undefined &&
+        newWeight !== undefined &&
+        Math.abs(newWeight - previousWeight) >= 0.5;
+
       await upsertProfile({
         heightCm: data.heightCm,
         inseamCm: data.inseamCm,
+        weightKg: data.weightKg,
         torsoLengthCm: data.torsoLengthCm,
         armLengthCm: data.armLengthCm,
         femurLengthCm: data.femurLengthCm,
@@ -230,6 +256,13 @@ export default function ProfilePage() {
         flexibilityScore: data.flexibilityScore,
         coreStabilityScore: data.coreStabilityScore,
       });
+
+      if (weightChanged && newWeight !== undefined && (recalculableBikeCount ?? 0) > 0) {
+        setPendingNewWeight(newWeight);
+        setShowRecalculateDialog(true);
+        return;
+      }
+
       setIsEditing(false);
       toast.success({ description: messages.common.toasts.profileSaved });
     } catch (error) {
@@ -240,6 +273,46 @@ export default function ProfilePage() {
           operationType: "mutation",
         })
       );
+    }
+  };
+
+  const handleDismissRecalculate = () => {
+    setShowRecalculateDialog(false);
+    setPendingNewWeight(null);
+    setIsEditing(false);
+    toast.success({ description: messages.common.toasts.profileSaved });
+  };
+
+  const handleRecalculate = async () => {
+    if (pendingNewWeight === null) {
+      return;
+    }
+
+    setIsRecalculating(true);
+    try {
+      const result = await recalculatePressureForAllBikes({
+        newWeightKg: pendingNewWeight,
+        autoNoteSource: `weight_change_${pendingNewWeight}kg`,
+      });
+      setShowRecalculateDialog(false);
+      setPendingNewWeight(null);
+      setIsEditing(false);
+      toast.success({
+        description: messages.profile.recalculate.successToast.replace(
+          "{count}",
+          String(result.recalculatedCount)
+        ),
+      });
+    } catch (error) {
+      toast.error({
+        description: reportClientError(error, {
+          area: "profile",
+          action: "recalculatePressure",
+          operationType: "mutation",
+        }),
+      });
+    } finally {
+      setIsRecalculating(false);
     }
   };
 
@@ -296,13 +369,35 @@ export default function ProfilePage() {
   const profileImageSource = getEffectiveProfileImageSource(user);
 
   return (
-    <ProfileSummary
-      profile={profileData}
-      fitHref={withLocalePrefix("/fit", locale)}
-      messages={messages}
-      onEdit={() => setIsEditing(true)}
-      displayName={displayName}
-      profileImageSource={profileImageSource}
-    />
+    <>
+      <ProfileSummary
+        profile={profileData}
+        fitHref={withLocalePrefix("/fit", locale)}
+        messages={messages}
+        onEdit={() => setIsEditing(true)}
+        displayName={displayName}
+        profileImageSource={profileImageSource}
+      />
+      <AccessibleDialog
+        open={showRecalculateDialog}
+        title={messages.profile.recalculate.dialogTitle}
+        description={messages.profile.recalculate.dialogBody.replace(
+          "{weight}",
+          pendingNewWeight?.toString() ?? ""
+        )}
+        onClose={handleDismissRecalculate}
+      >
+        <div className="flex justify-end gap-2">
+          <Button type="button" variant="ghost" onClick={handleDismissRecalculate}>
+            {messages.profile.recalculate.dismissButton}
+          </Button>
+          <Button type="button" onClick={handleRecalculate} isLoading={isRecalculating}>
+            {isRecalculating
+              ? messages.profile.recalculate.calculating
+              : messages.profile.recalculate.confirmButton}
+          </Button>
+        </div>
+      </AccessibleDialog>
+    </>
   );
 }

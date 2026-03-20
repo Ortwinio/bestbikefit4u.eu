@@ -20,6 +20,7 @@ import {
   Settings,
   LogOut,
   Gauge,
+  ClipboardList,
 } from "lucide-react";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { Button } from "@/components/ui";
@@ -39,6 +40,7 @@ export function DashboardSidebar() {
   const navigation = [
     { name: messages.nav.dashboard, href: "/dashboard", icon: LayoutDashboard },
     { name: messages.nav.newFitSession, href: "/fit", icon: Settings },
+    { name: messages.nav.bikeFitting, href: "/fit-history", icon: ClipboardList },
     { name: messages.nav.myBikes, href: "/bikes", icon: Bike },
     { name: messages.nav.tirePressure, href: "/pressure-calculator", icon: Gauge },
     { name: messages.nav.profile, href: "/profile", icon: User },

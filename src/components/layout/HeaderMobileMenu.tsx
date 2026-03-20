@@ -20,6 +20,7 @@ type HeaderMobileMenuProps = {
     getStarted: string;
     dashboard: string;
     newFitSession: string;
+    bikeFitting: string;
     myBikes: string;
     profile: string;
     signOut: string;
@@ -93,6 +94,13 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
                   className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
                   {labels.newFitSession}
+                </Link>
+                <Link
+                  href={withLocalePrefix("/fit-history", locale)}
+                  onClick={close}
+                  className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  {labels.bikeFitting}
                 </Link>
                 <Link
                   href={withLocalePrefix("/bikes", locale)}

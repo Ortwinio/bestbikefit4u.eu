@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
@@ -65,6 +65,14 @@ export function PressureWizard({ initialBikeId }: PressureWizardProps) {
     messages.pressure.wizard.stepLabels.route,
     messages.pressure.wizard.stepLabels.result,
   ];
+
+  useEffect(() => {
+    setSelectedBikeId((initialBikeId as Id<"bikes"> | undefined) ?? null);
+    setSelectedWheelsetId(null);
+    setSelectedTireSetupId(null);
+    setInlineTireInput(null);
+    setCurrentStep(1);
+  }, [initialBikeId]);
 
   return (
     <div className="space-y-6">

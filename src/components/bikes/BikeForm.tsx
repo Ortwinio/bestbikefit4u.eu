@@ -2,13 +2,24 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Select } from "@/components/ui";
+import {
+  AccessibleDialog,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Select,
+  Textarea,
+} from "@/components/ui";
 import { getBikeTypeOptions, getBikeTypeLabel, type BikeType } from "@/lib/bikes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 export type BikeFormPayload = {
   name: string;
   bikeType: BikeType;
+  notes?: string;
   currentGeometry?: {
     stackMm?: number;
     reachMm?: number;
@@ -29,6 +40,7 @@ export type BikeFormPayload = {
 export interface BikeFormInitialData {
   name: string;
   bikeType: BikeType;
+  notes?: string;
   currentGeometry?: {
     stackMm?: number;
     reachMm?: number;
@@ -77,6 +89,7 @@ export function BikeForm({
 }: BikeFormProps) {
   const { messages } = useDashboardMessages();
   const [name, setName] = useState(initialData?.name ?? "");
+  const [notes, setNotes] = useState(initialData?.notes ?? "");
   const [bikeType, setBikeType] = useState<BikeType | "">(
     initialData?.bikeType ?? ""
   );
@@ -118,6 +131,7 @@ export function BikeForm({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -160,6 +174,7 @@ export function BikeForm({
       await onSubmit({
         name: trimmedName,
         bikeType,
+        notes: notes.trim() || undefined,
         currentGeometry: hasGeometry ? geometry : undefined,
         currentSetup: hasSetup ? setup : undefined,
       });
@@ -176,22 +191,21 @@ export function BikeForm({
       return;
     }
 
-    const confirmed = window.confirm(
-      messages.bikeForm.delete.confirm
-    );
-    if (!confirmed) {
-      return;
-    }
-
     setIsDeleting(true);
     setError(null);
     try {
       await onDelete();
     } catch (deleteError) {
       console.error("Failed to delete bike:", deleteError);
-      setError(messages.bikeForm.errors.deleteFailed);
+      if (deleteError instanceof Error && deleteError.message.includes("fitting history")) {
+        setError(messages.bikes.delete.blocked);
+      } else {
+        setError(messages.bikeForm.errors.deleteFailed);
+      }
       setIsDeleting(false);
+      return;
     }
+    setShowDeleteDialog(false);
   };
 
   return (
@@ -335,6 +349,21 @@ export function BikeForm({
           </CardContent>
         </Card>
 
+        <Card variant="bordered">
+          <CardHeader>
+            <CardTitle>{messages.bikeForm.sections.notes}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Textarea
+              label={messages.bikeForm.fields.notes.label}
+              value={notes}
+              onChange={(event) => setNotes(event.target.value.slice(0, 500))}
+              placeholder={messages.bikeForm.fields.notes.placeholder}
+              helperText={`${messages.bikeForm.fields.notes.helper} ${notes.length}/500`}
+            />
+          </CardContent>
+        </Card>
+
         {error && (
           <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
@@ -356,7 +385,7 @@ export function BikeForm({
             <Button
               type="button"
               variant="destructive"
-              onClick={handleDelete}
+              onClick={() => setShowDeleteDialog(true)}
               isLoading={isDeleting}
               className="ml-auto"
             >
@@ -365,6 +394,32 @@ export function BikeForm({
           )}
         </div>
       </form>
+
+      {onDelete ? (
+        <AccessibleDialog
+          open={showDeleteDialog}
+          onClose={() => {
+            if (!isDeleting) {
+              setShowDeleteDialog(false);
+            }
+          }}
+          title={messages.bikeForm.delete.title}
+          description={messages.bikeForm.delete.description}
+        >
+          <div className="flex flex-wrap justify-end gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setShowDeleteDialog(false)}
+              disabled={isDeleting}
+            >
+              {messages.common.cancel}
+            </Button>
+            <Button variant="destructive" onClick={() => void handleDelete()} isLoading={isDeleting}>
+              {messages.bikeForm.delete.confirmButton}
+            </Button>
+          </div>
+        </AccessibleDialog>
+      ) : null}
     </div>
   );
 }

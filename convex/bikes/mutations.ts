@@ -1,7 +1,7 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
-import { validateShortString } from "../lib/validation";
+import { validateShortString, validateTextString } from "../lib/validation";
 
 const disciplineValidator = v.union(
   v.literal("road"),
@@ -48,11 +48,13 @@ export const create = mutation({
     fitProfileId: v.optional(v.id("profiles")),
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
+    notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     validateShortString(args.name, "name");
     if (args.brand !== undefined) validateShortString(args.brand, "brand");
     if (args.model !== undefined) validateShortString(args.model, "model");
+    if (args.notes !== undefined) validateTextString(args.notes, "notes");
     const userId = await requireUserId(ctx);
 
     const bikeId = await ctx.db.insert("bikes", {
@@ -67,6 +69,7 @@ export const create = mutation({
       fitProfileId: args.fitProfileId,
       brand: args.brand,
       model: args.model,
+      notes: args.notes,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
@@ -116,11 +119,13 @@ export const update = mutation({
     fitProfileId: v.optional(v.id("profiles")),
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
+    notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     if (args.name !== undefined) validateShortString(args.name, "name");
     if (args.brand !== undefined) validateShortString(args.brand, "brand");
     if (args.model !== undefined) validateShortString(args.model, "model");
+    if (args.notes !== undefined) validateTextString(args.notes, "notes");
     await requireBikeOwner(ctx, args.bikeId);
     const updates: Record<string, unknown> = { updatedAt: Date.now() };
     if (args.name !== undefined) updates.name = args.name;
@@ -134,6 +139,7 @@ export const update = mutation({
     if (args.fitProfileId !== undefined) updates.fitProfileId = args.fitProfileId;
     if (args.brand !== undefined) updates.brand = args.brand;
     if (args.model !== undefined) updates.model = args.model;
+    if (args.notes !== undefined) updates.notes = args.notes;
 
     await ctx.db.patch(args.bikeId, updates);
   },
@@ -142,7 +148,60 @@ export const update = mutation({
 export const remove = mutation({
   args: { bikeId: v.id("bikes") },
   handler: async (ctx, args) => {
-    await requireBikeOwner(ctx, args.bikeId);
+    const { userId } = await requireBikeOwner(ctx, args.bikeId);
+
+    const fitSessions = await ctx.db
+      .query("fitSessions")
+      .withIndex("by_user_bike", (q) =>
+        q.eq("userId", userId).eq("bikeId", args.bikeId)
+      )
+      .collect();
+
+    if (fitSessions.length > 0) {
+      throw new Error(
+        "This bike cannot be deleted yet because it has fitting history."
+      );
+    }
+
+    const pressureCalculations = await ctx.db
+      .query("pressureCalculations")
+      .withIndex("by_bike", (q) => q.eq("bikeId", args.bikeId))
+      .collect();
+    for (const calculation of pressureCalculations) {
+      await ctx.db.delete(calculation._id);
+    }
+
+    const pressureProfiles = await ctx.db
+      .query("pressureProfiles")
+      .withIndex("by_bike", (q) => q.eq("bikeId", args.bikeId))
+      .collect();
+    for (const profile of pressureProfiles) {
+      await ctx.db.delete(profile._id);
+    }
+
+    const bikeProfiles = await ctx.db
+      .query("bikeProfiles")
+      .withIndex("by_bike", (q) => q.eq("bikeId", args.bikeId))
+      .collect();
+    for (const bikeProfile of bikeProfiles) {
+      await ctx.db.delete(bikeProfile._id);
+    }
+
+    const wheelsets = await ctx.db
+      .query("wheelsets")
+      .withIndex("by_bike", (q) => q.eq("bikeId", args.bikeId))
+      .collect();
+    for (const wheelset of wheelsets) {
+      const tireSetups = await ctx.db
+        .query("tireSetups")
+        .withIndex("by_wheelset", (q) => q.eq("wheelsetId", wheelset._id))
+        .collect();
+      for (const tireSetup of tireSetups) {
+        await ctx.db.delete(tireSetup._id);
+      }
+      await ctx.db.delete(wheelset._id);
+    }
+
     await ctx.db.delete(args.bikeId);
   },
 });

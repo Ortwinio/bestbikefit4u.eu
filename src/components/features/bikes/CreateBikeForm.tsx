@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
-import { Button, Input, NumberInput, Select, Selectable } from "@/components/ui";
+import { Button, Input, NumberInput, Select, Selectable, Textarea } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
@@ -40,6 +40,7 @@ export function CreateBikeForm() {
   const [discipline, setDiscipline] = useState<Discipline>("road");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
+  const [notes, setNotes] = useState("");
   const [bikeWeightKg, setBikeWeightKg] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
 
@@ -102,6 +103,7 @@ export function CreateBikeForm() {
         discipline,
         brand: brand.trim() || undefined,
         model: model.trim() || undefined,
+        notes: notes.trim() || undefined,
         bikeWeightKg: bikeWeightKg ? Number(bikeWeightKg) : undefined,
         photoUrl: photoUrl.trim() || undefined,
       });
@@ -225,6 +227,14 @@ export function CreateBikeForm() {
                 placeholder={messages.bikeForm.fields.photoUrl.placeholder}
               />
             </div>
+
+            <Textarea
+              label={messages.bikeForm.fields.notes.label}
+              value={notes}
+              onChange={(event) => setNotes(event.target.value.slice(0, 500))}
+              placeholder={messages.bikeForm.fields.notes.placeholder}
+              helperText={`${messages.bikeForm.fields.notes.helper} ${notes.length}/500`}
+            />
 
             {error ? <p className="text-sm text-[color:var(--danger)]">{error}</p> : null}
             <div className="flex flex-wrap gap-3">

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
+import { BikeFitHistorySection } from "@/components/bikes/BikeFitHistorySection";
+import { BikeNotesEditor } from "@/components/bikes/BikeNotesEditor";
 import { BikePhotoUpload } from "@/components/bikes/BikePhotoUpload";
 import { BikePressureSection } from "@/components/features/pressure/BikePressureSection";
 import { Card, CardContent, CardHeader, CardTitle, EmptyState, LoadingState } from "@/components/ui";
@@ -131,6 +133,17 @@ export default function BikeDetailPage({
           </Card>
         </div>
       </div>
+
+      <Card variant="bordered">
+        <CardHeader>
+          <CardTitle>{messages.bikes.sections.notes}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <BikeNotesEditor bikeId={bike._id} initialNotes={bike.notes} />
+        </CardContent>
+      </Card>
+
+      <BikeFitHistorySection bikeId={bike._id} />
 
       <BikePressureSection bikeId={bike._id} />
     </div>

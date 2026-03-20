@@ -320,11 +320,15 @@ const nl = {
         reportEmailed: "Je fit-rapport is per e-mail verzonden.",
         cookiesAccepted: "Analytics-cookies zijn ingeschakeld.",
         cookiesEssentialOnly: "Alleen essentiële cookies blijven actief.",
+        bikeDeleted: "Fiets verwijderd.",
+        bikeNotesSaved: "Fietsnotities opgeslagen.",
+        pressureNoteSaved: "Bandenspanningsnotitie opgeslagen.",
       },
     },
     nav: {
       dashboard: "Dashboard",
       newFitSession: "Nieuwe fit-sessie",
+      bikeFitting: "Fietsafstelling",
       myBikes: "Mijn fietsen",
       profile: "Profiel",
       tirePressure: "Bandenspanning",
@@ -411,6 +415,22 @@ const nl = {
       pressureStale: "Herberekenen aanbevolen",
       pressureWarnings: "{count} waarschuwingen in je fit- en spanningslaag",
       viewAllFits: "Alles bekijken",
+    },
+    fitHistory: {
+      title: "Afstellingsgeschiedenis",
+      emptyTitle: "Nog geen fit-sessies",
+      emptyDescription:
+        "Voltooi een fit-sessie om hier je fietsgeschiedenis op te bouwen.",
+      emptyCta: "Start je eerste fit-sessie",
+      bikeWithoutName: "Fiets zonder naam",
+      noBikeLinked: "Geen fiets gekoppeld",
+      noRecommendationYet: "Nog geen aanbeveling gegenereerd",
+      latestSession: "Laatste sessie",
+      confidence: "Vertrouwen",
+      saddleHeight: "Zadelhoogte",
+      handlebarDrop: "Stuurval",
+      viewReport: "Bekijk rapport",
+      startNewSession: "Start nieuwe fit-sessie",
     },
     bikeTypes: {
       road: {
@@ -902,6 +922,8 @@ const nl = {
       measurements: {
         height: "Lengte",
         inseam: "Binnenbeenlengte",
+        weight: "Lichaamsgewicht",
+        weightHelper: "Gebruikt voor bandenspanningsberekeningen.",
         torso: "Torso",
         armLength: "Armlengte",
         shoulderWidth: "Schouderbreedte",
@@ -931,6 +953,15 @@ const nl = {
       },
       errors: {
         saveFailedTitle: "Profiel opslaan mislukt",
+      },
+      recalculate: {
+        dialogTitle: "Bandenspanning bijwerken?",
+        dialogBody:
+          "Je gewicht is gewijzigd naar {weight} kg. Wil je de aanbevolen bandenspanning voor je fietsen opnieuw laten berekenen?",
+        confirmButton: "Ja, herberekenen",
+        dismissButton: "Nu niet",
+        successToast: "Bandenspanningsadvies bijgewerkt voor {count} fietsen.",
+        calculating: "Bezig met herberekenen...",
       },
       dangerZone: {
         title: "Gevarenzone",
@@ -1007,10 +1038,18 @@ const nl = {
       delete: {
         confirm: 'Fiets "{bikeName}" verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
         failed: "Kon fiets niet verwijderen. Probeer opnieuw.",
+        blocked:
+          "Deze fiets kan niet worden verwijderd omdat er al afstelgeschiedenis aan gekoppeld is.",
+        dialogTitle: 'Fiets "{bikeName}" verwijderen?',
+        dialogDescription:
+          "Dit verwijdert de fiets en de direct gekoppelde wielset-, bandensetup- en bandenspanningsdata. Afstelgeschiedenis blokkeert verwijdering.",
+        dialogConfirm: "Fiets verwijderen",
       },
       sections: {
         geometry: "Geometrie",
         currentSetup: "Huidige setup",
+        notes: "Notities",
+        fittingHistory: "Afstellingsgeschiedenis",
       },
       fields: {
         stack: "Stack",
@@ -1050,6 +1089,9 @@ const nl = {
         save: "Fiets opslaan",
         saveChanges: "Wijzigingen opslaan",
         deleteBike: "Fiets verwijderen",
+        editNotes: "Notitie bewerken",
+        saveNotes: "Notitie opslaan",
+        startFitForBike: "Start een fit-sessie voor deze fiets",
       },
       errors: {
         nameRequired: "Fietsnaam is verplicht.",
@@ -1059,11 +1101,16 @@ const nl = {
       },
       delete: {
         confirm: "Deze fiets verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+        title: "Fiets verwijderen?",
+        description:
+          "Dit verwijdert de fiets en de direct gekoppelde wielset-, bandensetup- en bandenspanningsdata. Als de fiets al afstelgeschiedenis heeft, wordt verwijdering geblokkeerd.",
+        confirmButton: "Fiets verwijderen",
       },
       sections: {
         basics: "Basisgegevens fiets",
         geometry: "Huidige geometrie (optioneel)",
         setup: "Huidige setup (optioneel)",
+        notes: "Notities (optioneel)",
       },
       fields: {
         name: {
@@ -1103,6 +1150,12 @@ const nl = {
         photoUrl: {
           label: "Foto-URL",
           placeholder: "https://...",
+        },
+        notes: {
+          label: "Mijn notities",
+          placeholder:
+            "Voeg persoonlijke notities toe over deze fiets, setupwijzigingen of rij-indrukken...",
+          helper: "Maximaal 500 tekens.",
         },
         geometry: {
           stack: {
@@ -1229,6 +1282,32 @@ const nl = {
         profiles: "Opgeslagen presets",
         manageWheelsets: "Wielsets beheren",
         calculatePressure: "Bandenspanning berekenen",
+      },
+      overview: {
+        title: "Laatste bandenspanning per fiets",
+        subtitle: "Bekijk je laatste advies, voeg notities toe en start direct een nieuwe berekening.",
+        description:
+          "Je nieuwste bandenspanningsadvies blijft hier zichtbaar per fiets, zodat je setups kunt vergelijken zonder eerst de wizard te openen.",
+        startNew: "Nieuwe berekening starten",
+        frontPressure: "Voordruk",
+        rearPressure: "Achterdruk",
+        lastCalculated: "Laatst berekend",
+        recalculate: "Herberekenen",
+        noCalculation: "Nog geen berekening voor deze fiets. Start een advies om er een op te slaan.",
+        noCalculationCta: "Advies ophalen",
+        noBikesTitle: "Nog geen fietsen opgeslagen",
+        noBikesDescription:
+          "Voeg eerst een fiets toe om bandenspanningsadvies aan een echte setup te koppelen.",
+        noBikesCta: "Fiets toevoegen",
+        autoNoteWeightChange: "Gebaseerd op bijgewerkt gewicht van {weight} kg.",
+        userNotes: {
+          label: "Rijnotities",
+          placeholder: "Wat merkte je op op de weg of trail?",
+          helper: "Gebruik notities voor feedback, terreininformatie of setup-herinneringen. Maximaal 300 tekens.",
+          empty: "Nog geen rijnotities.",
+          editButton: "Notitie bewerken",
+          saveButton: "Notitie opslaan",
+        },
       },
       status: {
         optimal: "In lijn",

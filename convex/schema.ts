@@ -155,6 +155,7 @@ export default defineSchema({
     fitProfileId: v.optional(v.id("profiles")),
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
+    notes: v.optional(v.string()),
 
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -319,6 +320,8 @@ export default defineSchema({
     efficiencyScore: v.optional(v.number()),
     warningsJson: v.optional(v.string()),
     routeContextJson: v.optional(v.string()),
+    userNotes: v.optional(v.string()),
+    autoNoteSource: v.optional(v.string()),
     createdAt: v.number(),
   })
     .index("by_user", ["userId"])

@@ -319,11 +319,15 @@ const en = {
         reportEmailed: "Your fit report has been sent by email.",
         cookiesAccepted: "Analytics cookies have been enabled.",
         cookiesEssentialOnly: "Only essential cookies will remain active.",
+        bikeDeleted: "Bike deleted.",
+        bikeNotesSaved: "Bike notes saved.",
+        pressureNoteSaved: "Pressure note saved.",
       },
     },
     nav: {
       dashboard: "Dashboard",
       newFitSession: "New Fit Session",
+      bikeFitting: "Bike Fitting",
       myBikes: "My Bikes",
       profile: "Profile",
       tirePressure: "Tire Pressure",
@@ -410,6 +414,22 @@ const en = {
       pressureStale: "Recalculate recommended",
       pressureWarnings: "{count} warnings in your fit & pressure layer",
       viewAllFits: "View all",
+    },
+    fitHistory: {
+      title: "Bike Fitting History",
+      emptyTitle: "No fitting sessions yet",
+      emptyDescription:
+        "Complete a fitting session to build up your bike history.",
+      emptyCta: "Start your first fit session",
+      bikeWithoutName: "Bike without name",
+      noBikeLinked: "No bike linked",
+      noRecommendationYet: "No recommendation generated yet",
+      latestSession: "Latest session",
+      confidence: "Confidence",
+      saddleHeight: "Saddle height",
+      handlebarDrop: "Handlebar drop",
+      viewReport: "View report",
+      startNewSession: "Start new fitting session",
     },
     bikeTypes: {
       road: {
@@ -894,6 +914,8 @@ const en = {
       measurements: {
         height: "Height",
         inseam: "Inseam",
+        weight: "Body weight",
+        weightHelper: "Used for tire pressure calculations.",
         torso: "Torso",
         armLength: "Arm Length",
         shoulderWidth: "Shoulder Width",
@@ -923,6 +945,15 @@ const en = {
       },
       errors: {
         saveFailedTitle: "Could not save profile",
+      },
+      recalculate: {
+        dialogTitle: "Update tire pressure?",
+        dialogBody:
+          "Your weight changed to {weight} kg. Would you like to recalculate the recommended tire pressure for your bikes?",
+        confirmButton: "Yes, recalculate",
+        dismissButton: "Not now",
+        successToast: "Updated tire pressure recommendations for {count} bikes.",
+        calculating: "Recalculating...",
       },
       dangerZone: {
         title: "Danger Zone",
@@ -1003,10 +1034,18 @@ const en = {
       delete: {
         confirm: 'Delete "{bikeName}"? This action cannot be undone.',
         failed: "Could not delete bike. Please try again.",
+        blocked:
+          "This bike cannot be deleted because it already has fitting history.",
+        dialogTitle: 'Delete "{bikeName}"?',
+        dialogDescription:
+          "This removes the bike and its direct wheelset, tire setup, and pressure setup data. Fitting history prevents deletion.",
+        dialogConfirm: "Delete bike",
       },
       sections: {
         geometry: "Geometry",
         currentSetup: "Current Setup",
+        notes: "Notes",
+        fittingHistory: "Fitting History",
       },
       fields: {
         stack: "Stack",
@@ -1040,6 +1079,9 @@ const en = {
         save: "Save Bike",
         saveChanges: "Save Changes",
         deleteBike: "Delete Bike",
+        editNotes: "Edit note",
+        saveNotes: "Save note",
+        startFitForBike: "Start fitting session for this bike",
       },
       errors: {
         nameRequired: "Bike name is required.",
@@ -1049,11 +1091,16 @@ const en = {
       },
       delete: {
         confirm: "Delete this bike? This action cannot be undone.",
+        title: "Delete bike?",
+        description:
+          "This removes the bike and its direct wheelset, tire setup, and pressure setup data. If the bike already has fitting history, deletion will be blocked.",
+        confirmButton: "Delete bike",
       },
       sections: {
         basics: "Bike Basics",
         geometry: "Current Geometry (Optional)",
         setup: "Current Setup (Optional)",
+        notes: "Notes (Optional)",
       },
       fields: {
         name: {
@@ -1093,6 +1140,12 @@ const en = {
         photoUrl: {
           label: "Photo URL",
           placeholder: "https://...",
+        },
+        notes: {
+          label: "My Notes",
+          placeholder:
+            "Add personal notes about this bike, setup changes, or ride observations...",
+          helper: "Up to 500 characters.",
         },
         geometry: {
           stack: {
@@ -1219,6 +1272,32 @@ const en = {
         profiles: "Saved presets",
         manageWheelsets: "Manage wheelsets",
         calculatePressure: "Calculate pressure",
+      },
+      overview: {
+        title: "Latest pressure per bike",
+        subtitle: "Review your latest recommendation, capture notes, and start a recalculation from the same page.",
+        description:
+          "Your latest tyre-pressure recommendation stays visible here for every bike, so you can compare setups without opening the wizard first.",
+        startNew: "Start new calculation",
+        frontPressure: "Front pressure",
+        rearPressure: "Rear pressure",
+        lastCalculated: "Last calculated",
+        recalculate: "Recalculate",
+        noCalculation: "No calculation yet for this bike. Start one to save a recommendation.",
+        noCalculationCta: "Get recommendation",
+        noBikesTitle: "No bikes saved yet",
+        noBikesDescription:
+          "Add a bike first to attach tyre-pressure recommendations to a real setup.",
+        noBikesCta: "Add bike",
+        autoNoteWeightChange: "Based on updated weight of {weight} kg.",
+        userNotes: {
+          label: "Ride notes",
+          placeholder: "What did you notice on the road or trail?",
+          helper: "Use notes for rider feedback, terrain observations, or setup reminders. Max 300 characters.",
+          empty: "No rider notes yet.",
+          editButton: "Edit note",
+          saveButton: "Save note",
+        },
       },
       status: {
         optimal: "On target",

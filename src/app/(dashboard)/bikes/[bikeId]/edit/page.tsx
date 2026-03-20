@@ -34,6 +34,7 @@ export default function EditBikePage({ params }: EditBikePageProps) {
     await updateBike({
       bikeId: bikeId as Id<"bikes">,
       name: payload.name,
+      notes: payload.notes,
       currentGeometry: payload.currentGeometry,
       currentSetup: payload.currentSetup,
     });
@@ -61,6 +62,7 @@ export default function EditBikePage({ params }: EditBikePageProps) {
   const initialData: BikeFormInitialData = {
     name: bike.name,
     bikeType: bike.bikeType,
+    notes: bike.notes,
     currentGeometry: bike.currentGeometry,
     currentSetup: bike.currentSetup,
   };

@@ -16,6 +16,7 @@ const wizardSchema = z.object({
   // Step 1: Required body measurements
   heightCm: z.number().min(130).max(210),
   inseamCm: z.number().min(55).max(105),
+  weightKg: z.number().min(30).max(200).optional(),
 
   // Step 2: Optional advanced measurements
   torsoLengthCm: z.number().min(45).max(75).optional(),
@@ -62,6 +63,7 @@ export function MeasurementWizard({
     defaultValues: {
       heightCm: defaultValues?.heightCm,
       inseamCm: defaultValues?.inseamCm,
+      weightKg: defaultValues?.weightKg,
       torsoLengthCm: defaultValues?.torsoLengthCm,
       armLengthCm: defaultValues?.armLengthCm,
       femurLengthCm: defaultValues?.femurLengthCm,
