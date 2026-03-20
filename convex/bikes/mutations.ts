@@ -10,6 +10,22 @@ const disciplineValidator = v.union(
   v.literal("tt")
 );
 
+const ridingStyleValidator = v.union(
+  v.literal("recreational"),
+  v.literal("fitness"),
+  v.literal("sportive"),
+  v.literal("racing"),
+  v.literal("commuting"),
+  v.literal("touring")
+);
+
+const primaryGoalValidator = v.union(
+  v.literal("comfort"),
+  v.literal("balanced"),
+  v.literal("performance"),
+  v.literal("aerodynamics")
+);
+
 export const create = mutation({
   args: {
     name: v.string(),
@@ -43,6 +59,8 @@ export const create = mutation({
       })
     ),
     discipline: v.optional(disciplineValidator),
+    ridingStyle: v.optional(ridingStyleValidator),
+    primaryGoal: v.optional(primaryGoalValidator),
     bikeWeightKg: v.optional(v.number()),
     photoUrl: v.optional(v.string()),
     fitProfileId: v.optional(v.id("profiles")),
@@ -64,6 +82,8 @@ export const create = mutation({
       currentGeometry: args.currentGeometry,
       currentSetup: args.currentSetup,
       discipline: args.discipline,
+      ridingStyle: args.ridingStyle,
+      primaryGoal: args.primaryGoal,
       bikeWeightKg: args.bikeWeightKg,
       photoUrl: args.photoUrl,
       fitProfileId: args.fitProfileId,
@@ -114,6 +134,8 @@ export const update = mutation({
       })
     ),
     discipline: v.optional(disciplineValidator),
+    ridingStyle: v.optional(ridingStyleValidator),
+    primaryGoal: v.optional(primaryGoalValidator),
     bikeWeightKg: v.optional(v.number()),
     photoUrl: v.optional(v.string()),
     fitProfileId: v.optional(v.id("profiles")),
@@ -134,6 +156,8 @@ export const update = mutation({
     if (args.currentSetup !== undefined)
       updates.currentSetup = args.currentSetup;
     if (args.discipline !== undefined) updates.discipline = args.discipline;
+    if (args.ridingStyle !== undefined) updates.ridingStyle = args.ridingStyle;
+    if (args.primaryGoal !== undefined) updates.primaryGoal = args.primaryGoal;
     if (args.bikeWeightKg !== undefined) updates.bikeWeightKg = args.bikeWeightKg;
     if (args.photoUrl !== undefined) updates.photoUrl = args.photoUrl;
     if (args.fitProfileId !== undefined) updates.fitProfileId = args.fitProfileId;

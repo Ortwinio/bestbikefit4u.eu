@@ -12,7 +12,13 @@ vi.mock("@convex-dev/auth/server", () => ({
 
 import { create } from "../mutations";
 
-type BikeDoc = { _id: string; userId: string; bikeType: string } | null;
+type BikeDoc = {
+  _id: string;
+  userId: string;
+  bikeType: string;
+  ridingStyle?: string;
+  primaryGoal?: string;
+} | null;
 type BikeProfileDoc = {
   _id: string;
   userId: string;
@@ -107,7 +113,13 @@ describe("sessions.create contract", () => {
     getAuthUserIdMock.mockResolvedValue("user_1");
     const ctx = makeCtx({
       profile: { _id: "profile_1", userId: "user_1" },
-      bike: { _id: "bike_1", userId: "user_1", bikeType: "road" },
+      bike: {
+        _id: "bike_1",
+        userId: "user_1",
+        bikeType: "road",
+        ridingStyle: "fitness",
+        primaryGoal: "balanced",
+      },
       bikeProfile: { _id: "bike_profile_1", userId: "user_1", bikeId: "bike_1" },
     });
 
@@ -124,7 +136,9 @@ describe("sessions.create contract", () => {
       expect.objectContaining({
         bikeId: "bike_1",
         bikeProfileId: "bike_profile_1",
-        engineVersion: "v1",
+        engineVersion: "v2",
+        ridingStyle: "fitness",
+        primaryGoal: "balanced",
         sourceType: "bike_profile_flow",
       })
     );

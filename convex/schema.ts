@@ -150,6 +150,24 @@ export default defineSchema({
         v.literal("tt")
       )
     ),
+    ridingStyle: v.optional(
+      v.union(
+        v.literal("recreational"),
+        v.literal("fitness"),
+        v.literal("sportive"),
+        v.literal("racing"),
+        v.literal("commuting"),
+        v.literal("touring")
+      )
+    ),
+    primaryGoal: v.optional(
+      v.union(
+        v.literal("comfort"),
+        v.literal("balanced"),
+        v.literal("performance"),
+        v.literal("aerodynamics")
+      )
+    ),
     bikeWeightKg: v.optional(v.number()),
     photoUrl: v.optional(v.string()),
     fitProfileId: v.optional(v.id("profiles")),

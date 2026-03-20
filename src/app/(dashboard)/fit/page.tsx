@@ -69,13 +69,20 @@ export default function NewFitSessionPage() {
   const isLoadingBikeProfiles = selectedBikeId !== null && bikeProfiles === undefined;
   const selectedBike = bikes?.find((bike) => bike._id === selectedBikeId) || null;
   const effectiveBikeType = selectedBike?.bikeType ?? bikeType;
+  const effectiveRidingStyle = selectedBike?.ridingStyle ?? ridingStyle;
+  const effectiveRidingGoal = selectedBike?.primaryGoal ?? ridingGoal;
+  const bikeNeedsAttributes =
+    Boolean(selectedBike) &&
+    (!selectedBike?.ridingStyle || !selectedBike?.primaryGoal);
   const isSelectedGoalAllowed =
-    ridingGoal !== "aerodynamics" || isAeroCompatibleBikeType(effectiveBikeType);
+    effectiveRidingGoal !== "aerodynamics" ||
+    isAeroCompatibleBikeType(effectiveBikeType);
 
   const canStart =
     effectiveBikeType &&
-    ridingStyle &&
-    ridingGoal &&
+    effectiveRidingStyle &&
+    effectiveRidingGoal &&
+    !bikeNeedsAttributes &&
     isSelectedGoalAllowed &&
     hasProfile &&
     !isCreating;
@@ -188,7 +195,13 @@ export default function NewFitSessionPage() {
   };
 
   const handleStartSession = async () => {
-    if (!effectiveBikeType || !ridingStyle || !ridingGoal || !isSelectedGoalAllowed) {
+    if (
+      !effectiveBikeType ||
+      !effectiveRidingStyle ||
+      !effectiveRidingGoal ||
+      bikeNeedsAttributes ||
+      !isSelectedGoalAllowed
+    ) {
       return;
     }
 
@@ -197,8 +210,8 @@ export default function NewFitSessionPage() {
     try {
       const sessionId = await createSession({
         bikeType: effectiveBikeType,
-        ridingStyle,
-        primaryGoal: ridingGoal,
+        ridingStyle: effectiveRidingStyle,
+        primaryGoal: effectiveRidingGoal,
         bikeId: selectedBike?._id,
         bikeProfileId: selectedBikeProfileId ?? undefined,
       });
@@ -212,8 +225,8 @@ export default function NewFitSessionPage() {
           operationType: "mutation",
           metadata: {
             bikeType: effectiveBikeType,
-            ridingStyle,
-            primaryGoal: ridingGoal,
+            ridingStyle: effectiveRidingStyle,
+            primaryGoal: effectiveRidingGoal,
             hasBikeId: Boolean(selectedBike?._id),
           },
         })
@@ -369,19 +382,43 @@ export default function NewFitSessionPage() {
         <CardHeader>
           <CardTitle>{messages.fit.sections.ridingStyle}</CardTitle>
         </CardHeader>
-          <CardContent>
+        <CardContent>
+          {selectedBike ? (
+            <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-sm text-[color:var(--foreground)]">
+              {selectedBike.ridingStyle ? (
+                <>
+                  {messages.fit.savedBikes.usingBikeAttribute}{" "}
+                  <span className="font-semibold">
+                    {messages.fit.ridingStyles[selectedBike.ridingStyle].label}
+                  </span>
+                  .
+                </>
+              ) : (
+                <>
+                  {messages.fit.savedBikes.missingBikeAttribute}{" "}
+                  <Link
+                    href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)}
+                    className="font-semibold text-blue-700 hover:text-blue-800"
+                  >
+                    {messages.fit.savedBikes.completeBikeSetup}
+                  </Link>
+                </>
+              )}
+            </div>
+          ) : (
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {ridingStyles.map((style) => (
-              <Selectable
-                key={style.value}
-                onClick={() => setRidingStyle(style.value)}
-                selected={ridingStyle === style.value}
-                variant="card"
-                label={style.label}
-                description={style.description}
-              />
-            ))}
-          </div>
+                <Selectable
+                  key={style.value}
+                  onClick={() => setRidingStyle(style.value)}
+                  selected={ridingStyle === style.value}
+                  variant="card"
+                  label={style.label}
+                  description={style.description}
+                />
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -390,14 +427,37 @@ export default function NewFitSessionPage() {
           <CardTitle>{messages.fit.sections.primaryGoal}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {ridingGoals
-              .filter(
-                (goal) =>
-                      goal.value !== "aerodynamics" ||
-                      isAeroCompatibleBikeType(effectiveBikeType)
-              )
-              .map((goal) => (
+          {selectedBike ? (
+            <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-sm text-[color:var(--foreground)]">
+              {selectedBike.primaryGoal ? (
+                <>
+                  {messages.fit.savedBikes.usingBikeAttribute}{" "}
+                  <span className="font-semibold">
+                    {messages.fit.goals[selectedBike.primaryGoal].label}
+                  </span>
+                  .
+                </>
+              ) : (
+                <>
+                  {messages.fit.savedBikes.missingBikeAttribute}{" "}
+                  <Link
+                    href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)}
+                    className="font-semibold text-blue-700 hover:text-blue-800"
+                  >
+                    {messages.fit.savedBikes.completeBikeSetup}
+                  </Link>
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {ridingGoals
+                .filter(
+                  (goal) =>
+                    goal.value !== "aerodynamics" ||
+                    isAeroCompatibleBikeType(effectiveBikeType)
+                )
+                .map((goal) => (
                 <Selectable
                   key={goal.value}
                   onClick={() => setRidingGoal(goal.value)}
@@ -406,8 +466,9 @@ export default function NewFitSessionPage() {
                   label={goal.label}
                   description={goal.description}
                 />
-              ))}
-          </div>
+                ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -431,7 +492,7 @@ export default function NewFitSessionPage() {
         />
       ) : null}
 
-      {!canStart && bikeType && ridingStyle && ridingGoal && !hasProfile && (
+      {!canStart && effectiveBikeType && effectiveRidingStyle && effectiveRidingGoal && !hasProfile && (
         <p className="text-sm text-gray-500 text-right mt-2">
           {messages.fit.profileRequirementHint}
         </p>

@@ -11,6 +11,14 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 type Discipline = "road" | "gravel" | "mtb" | "tt";
 type Step = "bike" | "saved" | "wheelset" | "done";
+type RidingStyle =
+  | "recreational"
+  | "fitness"
+  | "sportive"
+  | "racing"
+  | "commuting"
+  | "touring";
+type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
 
 function deriveBikeType(discipline: Discipline) {
   switch (discipline) {
@@ -40,6 +48,8 @@ export function CreateBikeForm() {
   const [discipline, setDiscipline] = useState<Discipline>("road");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
+  const [ridingStyle, setRidingStyle] = useState<RidingStyle>("fitness");
+  const [primaryGoal, setPrimaryGoal] = useState<PrimaryGoal>("balanced");
   const [notes, setNotes] = useState("");
   const [bikeWeightKg, setBikeWeightKg] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
@@ -101,6 +111,8 @@ export function CreateBikeForm() {
         name: name.trim(),
         bikeType: deriveBikeType(discipline),
         discipline,
+        ridingStyle,
+        primaryGoal,
         brand: brand.trim() || undefined,
         model: model.trim() || undefined,
         notes: notes.trim() || undefined,
@@ -225,6 +237,60 @@ export function CreateBikeForm() {
                 value={photoUrl}
                 onChange={(event) => setPhotoUrl(event.target.value)}
                 placeholder={messages.bikeForm.fields.photoUrl.placeholder}
+              />
+              <Select
+                label={messages.fit.sections.ridingStyle}
+                value={ridingStyle}
+                onChange={(event) => setRidingStyle(event.target.value as RidingStyle)}
+                options={[
+                  {
+                    value: "recreational",
+                    label: messages.fit.ridingStyles.recreational.label,
+                  },
+                  {
+                    value: "fitness",
+                    label: messages.fit.ridingStyles.fitness.label,
+                  },
+                  {
+                    value: "sportive",
+                    label: messages.fit.ridingStyles.sportive.label,
+                  },
+                  {
+                    value: "racing",
+                    label: messages.fit.ridingStyles.racing.label,
+                  },
+                  {
+                    value: "commuting",
+                    label: messages.fit.ridingStyles.commuting.label,
+                  },
+                  {
+                    value: "touring",
+                    label: messages.fit.ridingStyles.touring.label,
+                  },
+                ]}
+              />
+              <Select
+                label={messages.fit.sections.primaryGoal}
+                value={primaryGoal}
+                onChange={(event) => setPrimaryGoal(event.target.value as PrimaryGoal)}
+                options={[
+                  {
+                    value: "comfort",
+                    label: messages.fit.goals.comfort.label,
+                  },
+                  {
+                    value: "balanced",
+                    label: messages.fit.goals.balanced.label,
+                  },
+                  {
+                    value: "performance",
+                    label: messages.fit.goals.performance.label,
+                  },
+                  {
+                    value: "aerodynamics",
+                    label: messages.fit.goals.aerodynamics.label,
+                  },
+                ]}
               />
             </div>
 

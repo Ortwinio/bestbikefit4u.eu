@@ -58,6 +58,13 @@ export default function BikeDetailPage({
     );
   }
 
+  const ridingStyleLabel = bike.ridingStyle
+    ? messages.fit.ridingStyles[bike.ridingStyle].label
+    : "-";
+  const primaryGoalLabel = bike.primaryGoal
+    ? messages.fit.goals[bike.primaryGoal].label
+    : "-";
+
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -85,6 +92,8 @@ export default function BikeDetailPage({
             </CardHeader>
             <CardContent className="grid gap-3 text-sm text-gray-700 sm:grid-cols-2">
               <p>{messages.bikeForm.fields.type.staticLabel} {getBikeTypeLabel(bike.bikeType, messages)}</p>
+              <p>{messages.fit.sections.ridingStyle}: {ridingStyleLabel}</p>
+              <p>{messages.fit.sections.primaryGoal}: {primaryGoalLabel}</p>
               <p>{messages.bikeForm.fields.brand.label}: {bike.brand ?? "-"}</p>
               <p>{messages.bikeForm.fields.model.label}: {bike.model ?? "-"}</p>
               <p>{messages.bikeForm.fields.bikeWeightKg.label}: {bike.bikeWeightKg ?? "-"}</p>

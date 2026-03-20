@@ -16,9 +16,21 @@ import {
 import { getBikeTypeOptions, getBikeTypeLabel, type BikeType } from "@/lib/bikes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
+type RidingStyle =
+  | "recreational"
+  | "fitness"
+  | "sportive"
+  | "racing"
+  | "commuting"
+  | "touring";
+
+type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
+
 export type BikeFormPayload = {
   name: string;
   bikeType: BikeType;
+  ridingStyle?: RidingStyle;
+  primaryGoal?: PrimaryGoal;
   notes?: string;
   currentGeometry?: {
     stackMm?: number;
@@ -40,6 +52,8 @@ export type BikeFormPayload = {
 export interface BikeFormInitialData {
   name: string;
   bikeType: BikeType;
+  ridingStyle?: RidingStyle;
+  primaryGoal?: PrimaryGoal;
   notes?: string;
   currentGeometry?: {
     stackMm?: number;
@@ -92,6 +106,12 @@ export function BikeForm({
   const [notes, setNotes] = useState(initialData?.notes ?? "");
   const [bikeType, setBikeType] = useState<BikeType | "">(
     initialData?.bikeType ?? ""
+  );
+  const [ridingStyle, setRidingStyle] = useState<RidingStyle | "">(
+    initialData?.ridingStyle ?? ""
+  );
+  const [primaryGoal, setPrimaryGoal] = useState<PrimaryGoal | "">(
+    initialData?.primaryGoal ?? ""
   );
 
   const [stackMm, setStackMm] = useState(
@@ -174,6 +194,8 @@ export function BikeForm({
       await onSubmit({
         name: trimmedName,
         bikeType,
+        ridingStyle: ridingStyle || undefined,
+        primaryGoal: primaryGoal || undefined,
         notes: notes.trim() || undefined,
         currentGeometry: hasGeometry ? geometry : undefined,
         currentSetup: hasSetup ? setup : undefined,
@@ -249,6 +271,64 @@ export function BikeForm({
                 {bikeType ? getBikeTypeLabel(bikeType, messages) : "-"}
               </div>
             )}
+
+            <Select
+              label={messages.fit.sections.ridingStyle}
+              value={ridingStyle}
+              onChange={(event) => setRidingStyle(event.target.value as RidingStyle)}
+              options={[
+                {
+                  value: "recreational",
+                  label: messages.fit.ridingStyles.recreational.label,
+                },
+                {
+                  value: "fitness",
+                  label: messages.fit.ridingStyles.fitness.label,
+                },
+                {
+                  value: "sportive",
+                  label: messages.fit.ridingStyles.sportive.label,
+                },
+                {
+                  value: "racing",
+                  label: messages.fit.ridingStyles.racing.label,
+                },
+                {
+                  value: "commuting",
+                  label: messages.fit.ridingStyles.commuting.label,
+                },
+                {
+                  value: "touring",
+                  label: messages.fit.ridingStyles.touring.label,
+                },
+              ]}
+              placeholder={messages.fit.sections.ridingStyle}
+            />
+
+            <Select
+              label={messages.fit.sections.primaryGoal}
+              value={primaryGoal}
+              onChange={(event) => setPrimaryGoal(event.target.value as PrimaryGoal)}
+              options={[
+                {
+                  value: "comfort",
+                  label: messages.fit.goals.comfort.label,
+                },
+                {
+                  value: "balanced",
+                  label: messages.fit.goals.balanced.label,
+                },
+                {
+                  value: "performance",
+                  label: messages.fit.goals.performance.label,
+                },
+                {
+                  value: "aerodynamics",
+                  label: messages.fit.goals.aerodynamics.label,
+                },
+              ]}
+              placeholder={messages.fit.sections.primaryGoal}
+            />
           </CardContent>
         </Card>
 
