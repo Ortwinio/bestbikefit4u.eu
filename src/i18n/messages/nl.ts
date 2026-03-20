@@ -1155,6 +1155,39 @@ const nl = {
         notes: "Notities",
         fittingHistory: "Afstellingsgeschiedenis",
       },
+      cards: {
+        bikeSummary: "{bikeType} opgeslagen in je fietsoverzicht.",
+        bikeFit: {
+          title: "Bikefitting",
+          hasFitDescription:
+            "Laatste fitresultaat voor deze fiets, inclusief rijstijl en fitdoel.",
+          noFitDescription:
+            "Er is nog geen fitresultaat opgeslagen voor deze fiets.",
+          lastUpdated: "Laatst bijgewerkt",
+        },
+        advisedPressure: {
+          title: "Geadviseerde bandenspanning",
+          descriptionWithSetup:
+            "Laatste spanningsadvies op basis van de actieve bandensetup: {setup}.",
+          descriptionWithoutSetup:
+            "Laatste opgeslagen spanningsadvies voor deze fiets.",
+        },
+        currentSetup: {
+          title: "Huidige setup",
+          description:
+            "Opgeslagen cockpit- en contactpuntsetup die nu als basis voor deze fiets geldt.",
+          emptyDescription:
+            "Er is nog geen huidige fietssetup opgeslagen voor deze fiets.",
+        },
+        currentTyrePressure: {
+          title: "Huidige bandenspanning",
+          description:
+            "De actieve wielset is {wheelset} met bandensetup {setup}.",
+          emptyDescription:
+            "Er is nog geen actieve wielset of bandensetup geselecteerd voor deze fiets.",
+          noCurrentPressure: "Geen huidige spanning opgeslagen",
+        },
+      },
       fields: {
         stack: "Stack",
         reach: "Reach",

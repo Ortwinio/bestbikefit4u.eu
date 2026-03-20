@@ -19,9 +19,10 @@ import {
 import { getBikeTypeLabel } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { BikePressureSummary } from "@/components/features/pressure/BikePressureSummary";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { Plus, Pencil, Trash2 } from "lucide-react";
+import { PressureStatusBadge } from "@/components/features/pressure/PressureStatusBadge";
+import { tubeTypeLabel } from "@/components/features/pressure/shared";
 
 function BikeImage({ storageId }: { storageId?: string }) {
   const imageUrl = useResolvedImageUrl(storageId);
@@ -50,7 +51,7 @@ function BikeImage({ storageId }: { storageId?: string }) {
 export default function BikesPage() {
   const { locale, messages } = useDashboardMessages();
   const toast = useToast();
-  const bikes = useQuery(api.bikes.queries.listByUser);
+  const bikes = useQuery(api.bikes.queries.listSummariesByUser);
   const removeBike = useMutation(api.bikes.mutations.remove);
 
   const [deletingBikeId, setDeletingBikeId] = useState<Id<"bikes"> | null>(
@@ -85,6 +86,8 @@ export default function BikesPage() {
     return <LoadingState label={messages.bikes.loading} />;
   }
 
+  const dateLocale = locale === "nl" ? "nl-NL" : "en-US";
+
   return (
     <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-8">
@@ -114,18 +117,42 @@ export default function BikesPage() {
         <div className="grid gap-4">
           {bikes.map((bike) => {
             const bikeTypeLabel = getBikeTypeLabel(bike.bikeType, messages);
+            const ridingStyleLabel = bike.ridingStyle
+              ? messages.fit.ridingStyles[bike.ridingStyle].label
+              : null;
+            const primaryGoalLabel = bike.primaryGoal
+              ? messages.fit.goals[bike.primaryGoal].label
+              : null;
+            const fitSummary = bike.latestRecommendationSummary;
+            const advisedPressure = bike.advisedPressureSummary;
+            const activeWheelset = bike.activeWheelsetSummary;
+            const activeTireSetup = bike.activeTireSetupSummary;
+            const pressureState = bike.pressureStateSummary;
+            const activeSetupDescriptor = activeTireSetup
+              ? [
+                  activeTireSetup.brand,
+                  activeTireSetup.model,
+                  `${activeTireSetup.widthFrontMm}/${activeTireSetup.widthRearMm} mm`,
+                  tubeTypeLabel(activeTireSetup.tubeType, locale),
+                ]
+                  .filter(Boolean)
+                  .join(" • ")
+              : null;
 
             return (
-              <Card key={bike._id} variant="bordered">
-                <CardHeader className="mb-2">
+              <Card key={bike._id} variant="bordered" className="overflow-hidden">
+                <CardContent className="space-y-6">
                   <div className="grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
-                    <div>
-                      <Link href={withLocalePrefix(`/bikes/${bike._id}`, locale)} className="block">
+                    <div className="pt-6">
+                      <Link
+                        href={withLocalePrefix(`/bikes/${bike._id}`, locale)}
+                        className="block"
+                      >
                         <BikeImage storageId={bike.photoUrl} />
                       </Link>
                     </div>
                     <div className="space-y-4">
-                      <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start justify-between gap-4 pt-6">
                         <div>
                           <Link href={withLocalePrefix(`/bikes/${bike._id}`, locale)}>
                             <CardTitle>{bike.name}</CardTitle>
@@ -133,13 +160,14 @@ export default function BikesPage() {
                           <p className="text-sm text-gray-500 mt-1">
                             {[bike.brand, bike.model].filter(Boolean).join(" ") || bikeTypeLabel}
                           </p>
+                          <p className="mt-2 text-sm text-gray-600">
+                            {messages.bikes.cards.bikeSummary.replace(
+                              "{bikeType}",
+                              bikeTypeLabel
+                            )}
+                          </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Link href={withLocalePrefix(`/pressure-calculator?bikeId=${bike._id}`, locale)}>
-                            <Button variant="secondary" size="sm">
-                              {messages.pressure.bikeCard.newCalculation}
-                            </Button>
-                          </Link>
                           <Link href={withLocalePrefix(`/bikes/${bike._id}/edit`, locale)}>
                             <Button variant="outline" size="sm">
                               <Pencil className="h-4 w-4 mr-1" />
@@ -163,47 +191,181 @@ export default function BikesPage() {
                         </div>
                       </div>
 
-                      <CardContent className="px-0 pb-0">
-                        <div className="grid gap-3 sm:grid-cols-2 text-sm text-gray-600">
-                          <div>
-                            <p className="font-medium text-gray-800 mb-1">
-                              {messages.bikes.sections.geometry}
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <Card variant="bordered" className="bg-[color:var(--card)]">
+                          <CardHeader>
+                            <CardTitle>{messages.bikes.cards.bikeFit.title}</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-3 text-sm text-gray-700">
+                            <p className="text-gray-600">
+                              {fitSummary
+                                ? messages.bikes.cards.bikeFit.hasFitDescription
+                                : messages.bikes.cards.bikeFit.noFitDescription}
                             </p>
                             <p>
-                              {messages.bikes.fields.stack}: {bike.currentGeometry?.stackMm ?? "-"} mm |{" "}
-                              {messages.bikes.fields.reach}: {bike.currentGeometry?.reachMm ?? "-"} mm
+                              {messages.fit.sections.ridingStyle}: {ridingStyleLabel ?? "-"}
                             </p>
                             <p>
-                              {messages.bikes.fields.sta}: {bike.currentGeometry?.seatTubeAngle ?? "-"} deg |{" "}
-                              {messages.bikes.fields.hta}: {bike.currentGeometry?.headTubeAngle ?? "-"} deg
+                              {messages.fit.sections.primaryGoal}: {primaryGoalLabel ?? "-"}
+                            </p>
+                            {fitSummary ? (
+                              <>
+                                <p>
+                                  {messages.results.algorithmVersionLabel}:{" "}
+                                  {fitSummary.algorithmVersion}
+                                </p>
+                                <p>
+                                  {messages.bikes.cards.bikeFit.lastUpdated}:{" "}
+                                  {new Date(fitSummary.createdAt).toLocaleDateString(
+                                    dateLocale
+                                  )}
+                                </p>
+                                <Link
+                                  href={withLocalePrefix(
+                                    `/fit/${fitSummary.sessionId}/results`,
+                                    locale
+                                  )}
+                                  className="inline-flex text-sm font-semibold text-blue-700 hover:text-blue-800"
+                                >
+                                  {messages.home.recentSessions.actions.viewResults}
+                                </Link>
+                              </>
+                            ) : (
+                              <p className="text-gray-500">
+                                {messages.dashboardFit.noResultsYet}
+                              </p>
+                            )}
+                          </CardContent>
+                        </Card>
+
+                        <Card variant="bordered" className="bg-[color:var(--card)]">
+                          <CardHeader>
+                            <CardTitle>{messages.bikes.cards.advisedPressure.title}</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-3 text-sm text-gray-700">
+                            <p className="text-gray-600">
+                              {activeSetupDescriptor
+                                ? messages.bikes.cards.advisedPressure.descriptionWithSetup.replace(
+                                    "{setup}",
+                                    activeSetupDescriptor
+                                  )
+                                : messages.bikes.cards.advisedPressure.descriptionWithoutSetup}
+                            </p>
+                            {advisedPressure ? (
+                              <>
+                                <div className="flex items-center justify-between gap-3">
+                                  <p>
+                                    {messages.pressure.bikeCard.front}{" "}
+                                    {advisedPressure.recommendedFrontBar}{" "}
+                                    {messages.pressure.result.bar}
+                                  </p>
+                                  <PressureStatusBadge
+                                    currentBar={advisedPressure.currentFrontBar}
+                                    recommendedBar={advisedPressure.recommendedFrontBar}
+                                    labels={messages.pressure.status}
+                                  />
+                                </div>
+                                <div className="flex items-center justify-between gap-3">
+                                  <p>
+                                    {messages.pressure.bikeCard.rear}{" "}
+                                    {advisedPressure.recommendedRearBar}{" "}
+                                    {messages.pressure.result.bar}
+                                  </p>
+                                  <PressureStatusBadge
+                                    currentBar={advisedPressure.currentRearBar}
+                                    recommendedBar={advisedPressure.recommendedRearBar}
+                                    labels={messages.pressure.status}
+                                  />
+                                </div>
+                                <p>
+                                  {messages.pressure.bikeCard.lastCalculated}:{" "}
+                                  {new Date(advisedPressure.createdAt).toLocaleDateString(
+                                    dateLocale
+                                  )}
+                                </p>
+                                {pressureState.isStale ? (
+                                  <p className="text-amber-800 font-medium">
+                                    {messages.dashboardHome.pressureStale}
+                                  </p>
+                                ) : null}
+                              </>
+                            ) : (
+                              <p className="text-gray-500">
+                                {messages.pressure.bikeCard.noCalculation}
+                              </p>
+                            )}
+                          </CardContent>
+                        </Card>
+
+                        <Card variant="bordered" className="bg-[color:var(--card)]">
+                          <CardHeader>
+                            <CardTitle>{messages.bikes.cards.currentSetup.title}</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-3 text-sm text-gray-700">
+                            <p className="text-gray-600">
+                              {bike.currentSetup
+                                ? messages.bikes.cards.currentSetup.description
+                                : messages.bikes.cards.currentSetup.emptyDescription}
                             </p>
                             <p>
-                              {messages.bikes.fields.frameSize}: {bike.currentGeometry?.frameSize ?? "-"}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-800 mb-1">
-                              {messages.bikes.sections.currentSetup}
+                              {messages.bikes.fields.saddle}:{" "}
+                              {bike.currentSetup?.saddleHeightMm ?? "-"} mm |{" "}
+                              {messages.bikes.fields.setback}:{" "}
+                              {bike.currentSetup?.saddleSetbackMm ?? "-"} mm
                             </p>
                             <p>
-                              {messages.bikes.fields.saddle}: {bike.currentSetup?.saddleHeightMm ?? "-"} mm |{" "}
-                              {messages.bikes.fields.setback}: {bike.currentSetup?.saddleSetbackMm ?? "-"} mm
-                            </p>
-                            <p>
-                              {messages.bikes.fields.stem}: {bike.currentSetup?.stemLengthMm ?? "-"} mm @{" "}
+                              {messages.bikes.fields.stem}:{" "}
+                              {bike.currentSetup?.stemLengthMm ?? "-"} mm @{" "}
                               {bike.currentSetup?.stemAngle ?? "-"} deg
                             </p>
                             <p>
-                              {messages.bikes.fields.bar}: {bike.currentSetup?.handlebarWidthMm ?? "-"} mm |{" "}
-                              {messages.bikes.fields.crank}: {bike.currentSetup?.crankLengthMm ?? "-"} mm
+                              {messages.bikes.fields.bar}:{" "}
+                              {bike.currentSetup?.handlebarWidthMm ?? "-"} mm |{" "}
+                              {messages.bikes.fields.crank}:{" "}
+                              {bike.currentSetup?.crankLengthMm ?? "-"} mm
                             </p>
-                          </div>
-                          <BikePressureSummary bikeId={bike._id} />
-                        </div>
-                      </CardContent>
+                          </CardContent>
+                        </Card>
+
+                        <Card variant="bordered" className="bg-[color:var(--card)]">
+                          <CardHeader>
+                            <CardTitle>
+                              {messages.bikes.cards.currentTyrePressure.title}
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-3 text-sm text-gray-700">
+                            <p className="text-gray-600">
+                              {activeWheelset && activeTireSetup
+                                ? messages.bikes.cards.currentTyrePressure.description
+                                    .replace("{wheelset}", activeWheelset.name)
+                                    .replace("{setup}", activeTireSetup.name)
+                                : messages.bikes.cards.currentTyrePressure.emptyDescription}
+                            </p>
+                            <p>
+                              {messages.pressure.bikeDetail.activeWheelset}:{" "}
+                              {activeWheelset?.name ??
+                                messages.pressure.bikeDetail.noWheelset}
+                            </p>
+                            <p>
+                              {messages.pressure.bikeDetail.activeTireSetup}:{" "}
+                              {activeTireSetup?.name ??
+                                messages.pressure.bikeDetail.noTireSetup}
+                            </p>
+                            {activeSetupDescriptor ? <p>{activeSetupDescriptor}</p> : null}
+                            <p>
+                              {messages.pressure.bikeDetail.currentPressure}:{" "}
+                              {pressureState.hasCurrentPressure
+                                ? `${advisedPressure?.currentFrontBar ?? "-"} / ${
+                                    advisedPressure?.currentRearBar ?? "-"
+                                  } ${messages.pressure.result.bar}`
+                                : messages.bikes.cards.currentTyrePressure.noCurrentPressure}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      </div>
                     </div>
                   </div>
-                </CardHeader>
+                </CardContent>
               </Card>
             );
           })}

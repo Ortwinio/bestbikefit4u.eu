@@ -1151,6 +1151,39 @@ const en = {
         notes: "Notes",
         fittingHistory: "Fitting History",
       },
+      cards: {
+        bikeSummary: "{bikeType} saved in your bike garage.",
+        bikeFit: {
+          title: "Bike fitting",
+          hasFitDescription:
+            "Latest fit result saved for this bike, including riding style and fit goal context.",
+          noFitDescription:
+            "No fit result has been saved for this bike yet.",
+          lastUpdated: "Last updated",
+        },
+        advisedPressure: {
+          title: "Advised tyre pressure",
+          descriptionWithSetup:
+            "Latest pressure recommendation based on the active tyre setup: {setup}.",
+          descriptionWithoutSetup:
+            "Latest saved pressure recommendation for this bike.",
+        },
+        currentSetup: {
+          title: "Current setup",
+          description:
+            "Saved cockpit and contact-point setup currently used as the baseline for this bike.",
+          emptyDescription:
+            "No current bike setup has been saved for this bike yet.",
+        },
+        currentTyrePressure: {
+          title: "Current tyre pressure",
+          description:
+            "The active wheelset is {wheelset} with tyre setup {setup}.",
+          emptyDescription:
+            "No active wheelset or tyre setup is selected for this bike yet.",
+          noCurrentPressure: "No current pressure recorded",
+        },
+      },
       fields: {
         stack: "Stack",
         reach: "Reach",
