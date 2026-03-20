@@ -1,33 +1,35 @@
-# 10 — Cleanup and Verification
+# 10 — Cleanup, Validation, and Sign-Off
 
 ## Goal
 
-Remove all dead code, verify types, and do a final visual check to confirm the migration is complete and correct.
+Remove migration-only glue, validate the completed migration, and record any unrelated repo-level blockers that remain.
 
 ## Steps
 
-### 1. Remove dead files
+### 1. Remove dead code and temporary glue
 
-Check that no old custom component files remain unreplaced. If any files from the original set were not fully replaced, either replace them now or confirm they are intentionally kept.
+Check that no legacy implementation remains where copied Prototyper source should now be the base layer.
 
-Files that should now be Prototyper UI versions (not the originals):
+Files that should now be copied Prototyper source or thin adapters over it:
+
 - `src/components/ui/Button.tsx`
 - `src/components/ui/Input.tsx`
 - `src/components/ui/Select.tsx`
 - `src/components/ui/Card.tsx`
-- `src/components/ui/AccessibleDialog.tsx` (or replaced by `Dialog.tsx`)
+- `src/components/ui/AccessibleDialog.tsx`
 - `src/components/ui/Tooltip.tsx`
-- `src/components/ui/FieldLabel.tsx` (or replaced by `Label.tsx`)
+- `src/components/ui/FieldLabel.tsx`
+- `src/components/ui/Progress.tsx`
 - `src/components/ui/States.tsx`
 - `src/components/questionnaire/ProgressBar.tsx`
 
 ### 2. Check for leftover imports
 
-```
-grep -r "from.*ui/Button\|from.*ui/Input\|from.*ui/Select" --include="*.tsx" src/
+```bash
+grep -r "from.*ui/Button\|from.*ui/Input\|from.*ui/Select\|from.*ui/AccessibleDialog" --include="*.tsx" src/
 ```
 
-Confirm all imports resolve to the new components.
+Confirm imports resolve to the migrated components and that no consumer still depends on deleted implementation details.
 
 ### 3. Type check
 
@@ -35,53 +37,52 @@ Confirm all imports resolve to the new components.
 npm run typecheck
 ```
 
-Or:
+Fix migration-related type errors.
+
+### 4. Build
 
 ```bash
-npx tsc --noEmit
+npm run build
 ```
 
-Fix any remaining type errors.
+Fix migration-related build errors.
 
-### 4. Lint
+### 5. Run targeted validation
 
-```bash
-npm run lint
-```
+Run the migration-focused checks that are expected to be actionable for this work:
 
-Fix any lint errors.
+- targeted UI tests
+- component tests in `src/components/ui/` if present
+- the checklist in `plans/feature-prototyper-ui-migration/TESTPLAN.md`
 
-### 5. Verify dark mode
+### 6. Record unrelated blockers explicitly
 
-If the project has a dark mode toggle or `.dark` is being applied as part of this migration, enable it and confirm the Prototyper UI tokens apply correctly (backgrounds, borders, text). Otherwise, verify only that dormant `.dark` token overrides exist and do not break light mode.
+If `npm run lint` or `npm test` still fail for unrelated existing issues, record that in the README or handoff notes rather than expanding scope silently.
 
-### 6. Execute the test plan
+### 7. Verify dark mode only if applicable
 
-Work through `plans/feature-prototyper-ui-migration/TESTPLAN.md`. If any checks are intentionally deferred, note them explicitly in the README before sign-off.
+If the project has a dark mode toggle or `.dark` is being applied as part of this migration, enable it and confirm Prototyper UI tokens apply correctly. Otherwise, only verify that dormant `.dark` token overrides do not break light mode.
 
-### 7. Update the plan README
+### 8. Update the plan README
 
-Mark all acceptance criteria as completed.
+Mark all acceptance criteria as completed and note any deferred manual checks.
 
-### 8. Commit
+### 9. Commit
 
 Commit with a message summarizing the migration:
 
-```
-Migrate UI primitives to Prototyper UI
-
-Replace 8 custom-built UI components (Button, Input, Select, Card,
-Dialog, Tooltip, FieldLabel, States) with Prototyper UI components
-built on @base-ui/react. Add OKLCH design token system to globals.css
-with compatibility wrappers for high-usage existing component APIs.
+```text
+Install real Prototyper UI source and rebuild local primitives around it
 ```
 
 ## Acceptance Criteria
 
 - [ ] No dead component files remain
-- [ ] `npm run typecheck` passes with 0 errors
-- [ ] `npm run lint` passes
+- [ ] `npm run typecheck` passes with 0 migration-related errors
+- [ ] `npm run build` passes
 - [ ] Relevant tests pass
 - [ ] App renders correctly in light mode
-- [ ] Dark mode is verified only if it is actually wired into the app during this migration
+- [ ] Dark mode is verified only if it is actually wired during this migration
+- [ ] `TESTPLAN.md` is executed or deferred explicitly
+- [ ] Unrelated repo-level failures are documented
 - [ ] Plan README acceptance criteria all checked

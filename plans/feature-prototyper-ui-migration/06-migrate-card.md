@@ -1,49 +1,44 @@
-# 06 — Migrate Card
+# 06 — Replace Custom Card
 
 ## Goal
 
-Replace `src/components/ui/Card.tsx` with the Prototyper UI `card` component and update all consumers.
+Replace `src/components/ui/Card.tsx` with copied Prototyper card source or a minimal adapter over it.
 
 ## Background
 
-The current `Card.tsx` exports `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, and `CardFooter` with variants `default`, `bordered`, `elevated`. Prototyper UI's card also has variant styles — check how they map.
+`Card.tsx` is still fully custom and still uses local styling glue. This should end with the same named exports backed by actual Prototyper source.
 
 ## Steps
 
 ### 1. Audit current usage
 
-```
-grep -r "from.*ui/Card\|CardHeader\|CardTitle\|CardContent\|CardFooter" --include="*.tsx" src/
-```
+Find all usages of:
 
-Note which sub-components are used and which variants are applied.
+- `Card`
+- `CardHeader`
+- `CardTitle`
+- `CardDescription`
+- `CardContent`
+- `CardFooter`
 
-### 2. Read Prototyper UI card
+Note current variant usage such as `default`, `bordered`, and `elevated`.
 
-Use `mcp__prototyper-ui__get_component` with `"card"` to read the full API and sub-components.
+### 2. Replace `Card.tsx`
 
-### 3. Replace `Card.tsx`
+Use copied Prototyper card source as the base implementation and keep the same named exports. Map current variants to the nearest Prototyper styles, adding only thin adapter logic where necessary.
 
-Replace with the Prototyper UI card source. Keep the same named exports (`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`) so consumers need minimal changes. Map variants:
-- `default` → closest Prototyper UI default
-- `bordered` → bordered variant if available, else add custom class
-- `elevated` → elevated/shadow variant if available
+### 3. Update consumers
 
-### 4. Update consumers
+Update consumers only if the replacement cannot preserve the current API.
 
-Main consumers:
-- `src/components/results/` — FitSummaryCard, AdjustmentPriorities, etc.
-- `src/components/features/pressure/PressureResultCard.tsx`
-- Dashboard and profile pages
-- Questionnaire container
+### 4. Update the barrel export
 
-### 5. Update barrel export
-
-Ensure all Card sub-components are re-exported from `src/components/ui/index.ts`.
+Ensure all card exports remain available from `src/components/ui/index.ts`.
 
 ## Acceptance Criteria
 
-- [ ] Old `Card.tsx` replaced
-- [ ] All card sub-components present and exported
+- [ ] `Card.tsx` is now copied Prototyper source or a thin adapter over it
+- [ ] All card sub-components are present and exported
 - [ ] All card usages render correctly
-- [ ] `npm run type-check` passes
+- [ ] `class-variance-authority` is removed from `Card.tsx` if no longer needed
+- [ ] `npm run typecheck` passes

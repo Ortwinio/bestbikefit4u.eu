@@ -1,54 +1,54 @@
-# 09 — Migrate Feedback Components
+# 09 — Rebuild Progress and Feedback Components
 
 ## Goal
 
-Replace `src/components/ui/States.tsx` and `src/components/questionnaire/ProgressBar.tsx` with implementations that use Prototyper UI tokens and, where appropriate, the `progress` component without breaking current contracts.
+Rebuild `Progress`, `States`, and questionnaire `ProgressBar` so they sit on top of copied Prototyper `progress` source and consistent token styling.
 
 ## Background
 
-`States.tsx` exports `LoadingState`, `EmptyState`, and `ErrorState` — visual display components for async states. The loading state typically shows a spinner or skeleton. The Prototyper UI `progress` component (with indeterminate mode) can power the loading state.
-
-`ProgressBar.tsx` in the questionnaire renders a localized completion bar. Replace the visual implementation with the Prototyper UI `progress` while preserving the real current props contract.
+`Progress.tsx` is currently still a wrapper. `States.tsx` and `src/components/questionnaire/ProgressBar.tsx` are still custom compositions. This step finishes that layer.
 
 ## Steps
 
-### 1. Read Prototyper UI progress
+### 1. Replace `src/components/ui/Progress.tsx`
 
-Use `mcp__prototyper-ui__get_component` with `"progress"` to understand the API, particularly indeterminate mode.
+Use copied Prototyper `progress` source as the base implementation. Keep any wrapper logic minimal.
 
 ### 2. Update `States.tsx`
 
-- `LoadingState`: Replace custom spinner/skeleton with `<Progress value={null} />` (indeterminate) only if the result still reads clearly as a loading state; otherwise keep a spinner and migrate styling to the token system
-- `EmptyState`: No progress involved — keep as-is or apply design token classes for consistency
-- `ErrorState`: No progress involved — keep as-is with design token classes
+Rebuild:
+
+- `LoadingState`
+- `EmptyState`
+- `ErrorState`
+
+Use Prototyper tokens and primitives where appropriate. Preserve `role="alert"` for error state.
 
 ### 3. Replace `src/components/questionnaire/ProgressBar.tsx`
 
-Replace the custom progress bar implementation with the Prototyper UI `progress` component. Keep the same real props interface so `QuestionnaireContainer.tsx` needs no changes:
-- `current: number`
-- `total: number`
-- `estimatedMinutes?: number`
-- `className?: string`
+Rebuild the questionnaire progress bar on top of the migrated `Progress` primitive while preserving the current props:
 
-Preserve the localized label and percentage text that the current component renders.
+- `current`
+- `total`
+- `estimatedMinutes?`
+- `className?`
 
-### 4. Audit consumers of States
+Keep current labels and percentage behavior intact.
 
-```
-grep -r "LoadingState\|EmptyState\|ErrorState" --include="*.tsx" src/
-```
+### 4. Audit consumers of states and progress
 
-No API changes are expected so consumers should not need updates.
+Update consumers only if the rebuilt components cannot preserve current contracts.
 
 ### 5. Update barrel exports
 
-Ensure `LoadingState`, `EmptyState`, `ErrorState` are still exported from `src/components/ui/index.ts`.
+Ensure `Progress`, `LoadingState`, `EmptyState`, and `ErrorState` remain exported correctly.
 
 ## Acceptance Criteria
 
+- [ ] `Progress.tsx` is now copied Prototyper source or a thin wrapper over it
 - [ ] `States.tsx` uses Prototyper UI tokens/components where appropriate
-- [ ] `ProgressBar.tsx` uses Prototyper UI `progress`
-- [ ] Questionnaire progress bar renders correctly
+- [ ] `ProgressBar.tsx` uses Prototyper-backed progress
+- [ ] Questionnaire progress renders correctly
 - [ ] Loading, empty, and error states render correctly
 - [ ] `ProgressBar` preserves `current/total/estimatedMinutes` behavior
 - [ ] `ErrorState` still exposes `role="alert"`

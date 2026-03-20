@@ -51,8 +51,8 @@ New code means new surface for type drift, test gaps, and lint issues. This plan
 
 | Step | File | Priority | Status |
 |------|------|----------|--------|
-| 01 | `01-audit-changed-files.md` | P0 | Todo |
-| 02 | `02-test-coverage-check.md` | P1 | Todo |
-| 03 | `03-ui-migration-validation.md` | P1 | Todo |
-| 04 | `04-quality-gate-run.md` | P0 | Todo |
-| 05 | `05-fix-and-stabilize.md` | P1 | Todo |
+| 01 | `01-audit-changed-files.md` | P0 | Done |
+| 02 | `02-test-coverage-check.md` | P1 | Done |
+| 03 | `03-ui-migration-validation.md` | P1 | Done |
+| 04 | `04-quality-gate-run.md` | P0 | Done |
+| 05 | `05-fix-and-stabilize.md` | P1 | Done |

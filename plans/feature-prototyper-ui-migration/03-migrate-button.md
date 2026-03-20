@@ -1,55 +1,48 @@
-# 03 — Migrate Button
+# 03 — Replace Custom Button
 
 ## Goal
 
-Replace `src/components/ui/Button.tsx` with the Prototyper UI `button` component and update all consumers.
+Replace `src/components/ui/Button.tsx` with copied Prototyper button source or a very thin adapter over it.
 
 ## Background
 
-The current `Button.tsx` has variants: `primary`, `secondary`, `outline`, `ghost`, `destructive`. The Prototyper UI button also has gradient variants. Map existing variants to the closest Prototyper UI equivalents.
+`Button.tsx` is still fully custom and still uses `class-variance-authority`. This is one of the clearest examples of migration glue that should go away once Prototyper source is in place.
 
 ## Steps
 
 ### 1. Audit current Button usage
 
-Search for all imports of the current Button:
-```
-grep -r "from.*components/ui/Button\|from.*ui/Button\|from.*ui'" --include="*.tsx" --include="*.ts" src/
-```
+Search for all imports of the current Button and note which variants, sizes, and loading states are used.
 
-Also check `src/components/ui/index.ts` to see if Button is re-exported.
+### 2. Preserve only the public contract that matters
 
-### 2. Understand current variant API
+Use the copied Prototyper button source as the base implementation:
 
-Read `src/components/ui/Button.tsx` to capture:
-- Prop interface (variant, size, loading state, disabled, etc.)
-- All variant names
+- keep the public export name `Button`
+- preserve `isLoading` if consumers use it
+- map current variants and sizes to the nearest Prototyper equivalents
+- avoid keeping styling logic that the copied source already provides
 
-### 3. Read the Prototyper UI button
+### 3. Replace the file
 
-Use `mcp__prototyper-ui__get_component` with name `"button"` to read its full API.
+Rebuild `src/components/ui/Button.tsx` so it is either:
 
-### 4. Replace the file
+- the copied Prototyper source with minimal local edits, or
+- a thin adapter over the copied Prototyper source
 
-Delete `src/components/ui/Button.tsx` and replace it with the Prototyper UI button source, adjusted as needed:
-- Keep the same export name `Button` (or re-export it as such)
-- If variant names differ, create a thin adapter or rename the variants
+### 4. Update consumers
 
-### 5. Update consumers
+Update consumers only where the compatibility surface is not sufficient.
 
-Update every file that imports `Button` to use the new variant names if they changed. Common consumers:
-- Layout components (`Header.tsx`, `DashboardSidebar.tsx`, etc.)
-- Auth components (`UserMenu.tsx`)
-- Feature components (measurement wizard, questionnaire, bike forms, pressure wizard)
-- Page files in `src/app/`
+### 5. Update the barrel export
 
-### 6. Update `src/components/ui/index.ts`
-
-Ensure `Button` is still exported from the barrel file.
+Ensure `Button` remains exported from `src/components/ui/index.ts`.
 
 ## Acceptance Criteria
 
-- [ ] Old `Button.tsx` replaced with Prototyper UI version
+- [ ] `Button.tsx` is now copied Prototyper source or a thin adapter over it
 - [ ] All consumers compile without errors
-- [ ] All button variants render correctly in dev mode
-- [ ] `npm run type-check` passes
+- [ ] Legacy `isLoading` behavior is preserved if required
+- [ ] Button variants render correctly in dev mode
+- [ ] `class-variance-authority` is removed from `Button.tsx` if no longer needed
+- [ ] `npm run typecheck` passes

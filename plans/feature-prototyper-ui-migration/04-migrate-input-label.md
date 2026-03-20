@@ -1,39 +1,31 @@
-# 04 — Migrate Input and FieldLabel
+# 04 — Rebuild Input and FieldLabel
 
 ## Goal
 
-Replace `src/components/ui/Input.tsx` and `src/components/ui/FieldLabel.tsx` with Prototyper UI-backed implementations while preserving the current public API unless a consumer migration is explicitly required.
+Rebuild `Input` and `FieldLabel` on top of copied Prototyper `input` and `label` source while preserving the current public contracts.
 
 ## Background
 
-The current `Input.tsx` is a compound component that bundles a label, tooltip, error message, helper text, generated ids, and `aria-describedby` wiring together. The current `FieldLabel.tsx` is a standalone label with optional tooltip. Prototyper UI separates these concerns: `input` is the raw input primitive, `label` is the label, and `field` / `textfield` are the compound wrappers.
-
-Consider whether to:
-- Use `textfield` (full compound: label + input + error) for most form usages
-- Use `input` + `label` separately where composition is needed
-
-Read both `input` and `textfield` component docs via `mcp__prototyper-ui__get_component` before deciding.
+This is a high-churn API. Do not force a pure Prototyper consumer refactor in this step unless the wrapper path clearly fails. The current component bundles label, tooltip, helper text, error state, generated ids, and `aria-describedby` wiring. That contract is valuable and should remain stable in phase one.
 
 ## Steps
 
 ### 1. Audit current usage
 
-```
-grep -r "from.*ui/Input\|from.*ui/FieldLabel\|from.*ui'" --include="*.tsx" src/
-```
+Find every `Input` and `FieldLabel` consumer and note reliance on:
 
-Note how `Input` is used: is the `label` prop always provided? Is `tooltip` commonly used? Is `error` always used? Does any consumer depend on generated ids or existing `aria-describedby` behavior?
+- `label`
+- `tooltip`
+- `tooltipLabel`
+- `error`
+- `helperText`
+- generated ids
+- current `aria-describedby` behavior
 
-### 2. Read Prototyper UI docs
+### 2. Replace files
 
-- `mcp__prototyper-ui__get_component` for `"input"`
-- `mcp__prototyper-ui__get_component` for `"label"`
-- `mcp__prototyper-ui__get_component` for `"textfield"` (compound)
-- `mcp__prototyper-ui__get_component` for `"field"` (wrapper)
+Replace `Input.tsx` with a Prototyper-backed compatibility wrapper. Preserve:
 
-### 3. Replace files
-
-Replace `Input.tsx` with a Prototyper UI-backed compatibility wrapper. Preserve the current `InputProps` surface first:
 - `label`
 - `tooltip`
 - `tooltipLabel`
@@ -42,35 +34,29 @@ Replace `Input.tsx` with a Prototyper UI-backed compatibility wrapper. Preserve 
 - generated `id` fallback
 - composed `aria-describedby`
 
-Replace `FieldLabel.tsx` with a Prototyper UI-backed compatibility wrapper. Preserve:
+Replace `FieldLabel.tsx` with a Prototyper-backed compatibility wrapper. Preserve:
+
 - `label`
 - `htmlFor`
 - `tooltip`
 - `tooltipLabel`
 - `tooltipDescriptionId`
 
-Do not convert consumers to raw Prototyper UI primitives unless the wrapper approach proves impossible.
+Do not convert consumers to raw Prototyper primitives unless the wrapper approach proves impossible.
 
-### 4. Update consumers
+### 3. Update consumers
 
-Main consumers:
-- `src/components/measurements/` — all step files use Input for body measurements
-- `src/components/questionnaire/questions/NumericQuestion.tsx`
-- `src/components/questionnaire/questions/TextQuestion.tsx`
-- `src/components/bikes/BikeForm.tsx`
-- Any auth or profile pages
+Update consumers only where wrapper compatibility is insufficient.
 
-Only update consumers where wrapper compatibility is insufficient. Pay attention to label, error, tooltip, helper text, and accessibility behavior.
+### 4. Update the barrel export
 
-### 5. Update barrel export
-
-Update `src/components/ui/index.ts` to export the new components.
+Ensure `Input` and `FieldLabel` remain exported from `src/components/ui/index.ts`.
 
 ## Acceptance Criteria
 
-- [ ] Old `Input.tsx` and `FieldLabel.tsx` replaced
+- [ ] `Input.tsx` and `FieldLabel.tsx` now wrap copied Prototyper source
 - [ ] All form fields render with proper labels and validation states
 - [ ] Error messages display correctly
-- [ ] Existing `InputProps` and `FieldLabelProps` behavior is preserved or all affected consumers are updated
+- [ ] Existing `InputProps` and `FieldLabelProps` behavior is preserved or affected consumers are updated
 - [ ] `aria-describedby` remains correct for helper text, error text, and tooltip descriptions
 - [ ] `npm run typecheck` passes

@@ -1,44 +1,34 @@
-# 08 — Migrate Tooltip
+# 08 — Replace Tooltip Wrapper
 
 ## Goal
 
-Replace `src/components/ui/Tooltip.tsx` with the Prototyper UI `tooltip` component and update all consumers.
+Replace `src/components/ui/Tooltip.tsx` with copied Prototyper tooltip source or the thinnest possible wrapper over it.
 
 ## Background
 
-The current `Tooltip.tsx` is a simple hover tooltip. The Prototyper UI `tooltip` is built on `@base-ui/react` with proper accessibility (ARIA described-by) and animation.
-
-Tooltip is also used inside `Input.tsx` and `FieldLabel.tsx` — since those were already replaced in prompt 04, check if Tooltip was inlined there or still imported separately.
+The current tooltip is conceptually close, but the migration is incomplete until the implementation is actually backed by copied Prototyper source.
 
 ## Steps
 
 ### 1. Audit current usage
 
-```
-grep -r "from.*ui/Tooltip\|<Tooltip" --include="*.tsx" src/
-```
+Find all direct `Tooltip` usages and confirm whether `Input` or `FieldLabel` still depend on it internally.
 
-Note all direct usages.
+### 2. Replace `Tooltip.tsx`
 
-### 2. Read Prototyper UI tooltip
+Use copied Prototyper `tooltip` source as the base implementation. Keep local wrapper logic only if needed to preserve a simpler `content + children` API.
 
-Use `mcp__prototyper-ui__get_component` with `"tooltip"` to read the full API.
+### 3. Update consumers
 
-### 3. Replace `Tooltip.tsx`
+Update consumers where the wrapper API cannot fully preserve current behavior.
 
-Replace with the Prototyper UI tooltip source. Keep the export name `Tooltip`. The Prototyper UI tooltip uses a provider/trigger/content pattern — create a simple `Tooltip` wrapper that accepts `content` and `children` props if needed to minimize API changes.
+### 4. Update the barrel export
 
-### 4. Update consumers
-
-Update all `<Tooltip>` usages to the new API.
-
-### 5. Update barrel export
-
-Ensure `Tooltip` is exported from `src/components/ui/index.ts`.
+Ensure `Tooltip` remains exported from `src/components/ui/index.ts`.
 
 ## Acceptance Criteria
 
-- [ ] Old `Tooltip.tsx` replaced
-- [ ] Tooltips appear on hover/focus
+- [ ] `Tooltip.tsx` is now copied Prototyper source or a small wrapper over it
+- [ ] Tooltips appear on hover and focus
 - [ ] ARIA `aria-describedby` is correctly set
-- [ ] `npm run type-check` passes
+- [ ] `npm run typecheck` passes

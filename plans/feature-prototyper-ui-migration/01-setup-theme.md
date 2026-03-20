@@ -1,56 +1,61 @@
-# 01 — Setup: Dependencies and CSS Tokens
+# 01 — Baseline, Dependencies, and Theme Readiness
 
 ## Goal
 
-Install required npm packages and wire the Prototyper UI design tokens into the global stylesheet. After this step the design token system is available and the app still renders correctly in the current light-theme setup.
+Confirm the repo is ready for a strict Prototyper migration. After this step, dependencies and theme tokens are verified, current gaps are documented, and the app still builds from the current baseline.
 
 ## Background
 
-Prototyper UI components depend on `@base-ui/react`, `class-variance-authority`, and `lucide-react`. The token system is a CSS block that must be added to `globals.css` before any components are installed. The project uses Tailwind CSS v4 which is compatible.
+This repo already appears to have partial Prototyper/Base UI setup. Do not assume the theme step is net-new work. First verify what is already present in `package.json`, `src/app/globals.css`, and `src/app/layout.tsx`, then only add what is still missing.
 
 ## Steps
 
-### 1. Install dependencies
+### 1. Audit current baseline
 
-```bash
-npm install @base-ui/react class-variance-authority lucide-react
-```
+Check:
 
-`lucide-react` may already be present — skip if so (check `package.json`).
+- `package.json` for `@base-ui/react`, `class-variance-authority`, and `lucide-react`
+- `src/app/globals.css` for token blocks and utilities
+- `src/app/layout.tsx` for font variables
+- `plans/feature-prototyper-ui-migration/MIGRATION-GAPS.md` to confirm the migration is still incomplete
 
-### 2. Update `src/app/globals.css`
+Record what is already done versus what is still needed.
 
-Replace the current minimal content with the full Prototyper UI token block. The current file only has `@import "tailwindcss"` and a `.skip-link` rule.
+### 2. Install or adjust dependencies only if needed
 
-The new `globals.css` should:
+If any required dependency is missing, add it. Do not churn dependency versions without a reason.
+
+### 3. Update `src/app/globals.css` only if needed
+
+If tokens or utilities are incomplete, bring them up to the Prototyper requirement. If they are already present, leave the file alone except for missing pieces.
+
+Expected end state:
+
 1. Keep `@import "tailwindcss"` at the top
-2. Add the complete `@theme { ... }` block with all Prototyper UI tokens
-3. Add the `:root { ... }` light-mode token values
-4. Add the `.dark { ... }` dark-mode overrides only as dormant token support unless this plan also adds an actual theme switch mechanism
-5. Add the `@utility` helpers (`focus-ring`, `focus-field-ring`, `invalid-field-ring`, `status-disabled`, `status-pending`, `no-highlight`, `shadow-inset-track`, `no-scrollbar`)
-6. Add the `@custom-variant` declarations (`motion-reduce`, `motion-safe`, `hover-only`)
-7. Add the `@layer base { ... }` styles (border, body, headings)
-8. Keep the existing `.skip-link` rule
+2. Add the complete `@theme { ... }` block with Prototyper tokens if missing
+3. Add `:root { ... }` light-mode token values if missing
+4. Add `.dark { ... }` token overrides only as dormant support unless this migration wires a real theme switch
+5. Add Prototyper utility classes that migrated components depend on
+6. Preserve existing app-specific global rules such as `.skip-link`
 
-The full token CSS is available via the `mcp__prototyper-ui__get_theme` tool.
+### 4. Keep font changes minimal
 
-### 3. Update font setup
+If token variables reference fonts the app does not load, map token variables conservatively. Do not widen this prompt into a typography redesign.
 
-Prototyper UI references `--font-geist-sans`, `--font-overpass`, `--font-geist-mono`. Check `src/app/layout.tsx` to see which fonts are currently loaded. If no custom fonts are loaded yet, prefer mapping the token variables conservatively instead of introducing a broad typography change in the same step.
+### 5. Verify
 
-If the existing font setup differs, map the existing font variables to `--font-sans` and `--font-heading` in `:root` rather than changing the font loading. Only add new fonts if the Prototyper UI components render incorrectly without them.
+Run the dev server and confirm:
 
-### 4. Verify
-
-Run the dev server (`npm run dev`) and confirm:
-- App still renders without errors
-- No TypeScript errors (`npm run typecheck` or `tsc --noEmit`)
-- The design tokens are applied (open DevTools, check `:root` for `--background`, `--primary`, etc.)
+- app still renders without errors
+- `npm run typecheck` passes or any current baseline failures are documented
+- the expected CSS variables exist
+- current UI files are still the custom/Base UI versions described in `MIGRATION-GAPS.md`
 
 ## Acceptance Criteria
 
-- [ ] `@base-ui/react`, `class-variance-authority` in `package.json` dependencies
-- [ ] `globals.css` contains the full Prototyper UI token block
+- [ ] Baseline dependency and theme audit completed
+- [ ] Missing dependencies added only if needed
+- [ ] `globals.css` contains the required Prototyper token/theme setup
 - [ ] App renders without errors in dev mode
-- [ ] `--background` and `--primary` CSS variables visible in browser DevTools
-- [ ] No unnecessary font-loading change was introduced without verifying need
+- [ ] `--background` and `--primary` CSS variables are present
+- [ ] No unnecessary font-loading change was introduced

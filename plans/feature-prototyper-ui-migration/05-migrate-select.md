@@ -1,36 +1,28 @@
-# 05 — Migrate Select
+# 05 — Rebuild Select
 
 ## Goal
 
-Replace `src/components/ui/Select.tsx` with a Prototyper UI-backed implementation while preserving the current public API unless there is a strong reason not to.
+Rebuild `src/components/ui/Select.tsx` on top of copied Prototyper `select` source while preserving the current consumer contract in phase one.
 
 ## Background
 
-The current `Select.tsx` takes an `options` array prop and also handles `label`, `tooltip`, `tooltipLabel`, `error`, `helperText`, generated ids, and `aria-describedby`. The Prototyper UI `select` is a custom dropdown built on `@base-ui/react` with a different API.
+The current `Select.tsx` is already a wrapper over Base UI, but it is not a copied Prototyper component. This prompt converts it into a thin compatibility adapter over actual Prototyper source.
 
 ## Steps
 
 ### 1. Audit current usage
 
-```
-grep -r "from.*ui/Select" --include="*.tsx" src/
-```
+For each `Select` usage, note:
 
-For each usage, note:
-- What options are passed (static array vs. dynamic)
-- Whether `label` or `error` props are used
-- Whether `tooltip`, `helperText`, and `placeholder` are used
-- The `value` / `onChange` binding pattern
+- the `options` shape
+- `placeholder` usage
+- controlled versus uncontrolled value binding
+- `label`, `tooltip`, `error`, and `helperText` usage
 
-### 2. Read Prototyper UI select
+### 2. Replace `Select.tsx`
 
-Use `mcp__prototyper-ui__get_component` with `"select"` to read the full API.
+Use copied Prototyper `select` source under the hood. Preserve the current wrapper contract where possible:
 
-### 3. Replace `Select.tsx`
-
-Replace with Prototyper UI select source. Because the API changes from an `options` array to declarative children, you have two options:
-
-**Option A (recommended):** Create a compatibility wrapper that accepts the same current props and renders Prototyper UI internals. Preserve:
 - `options: { value, label, disabled? }[]`
 - `placeholder`
 - `label`
@@ -38,26 +30,21 @@ Replace with Prototyper UI select source. Because the API changes from an `optio
 - `tooltipLabel`
 - `error`
 - `helperText`
-- existing controlled/uncontrolled usage pattern
+- current controlled/uncontrolled usage
 
-**Option B:** Update every consumer to use the declarative API directly.
+### 3. Update consumers
 
-Choose Option A unless there are very few consumers.
+Update consumers only where the compatibility adapter cannot preserve existing behavior.
 
-### 4. Update consumers
+### 4. Update the barrel export
 
-Main consumer:
-- `src/components/bikes/BikeForm.tsx`
-
-### 5. Update barrel export
-
-Ensure `Select` is still exported from `src/components/ui/index.ts`.
+Ensure `Select` remains exported from `src/components/ui/index.ts`.
 
 ## Acceptance Criteria
 
-- [ ] Old `Select.tsx` replaced with Prototyper UI version
+- [ ] `Select.tsx` is now a thin adapter over copied Prototyper select source
 - [ ] All select inputs render and function correctly
-- [ ] Options display, selection works, value binding works
-- [ ] Existing `SelectProps` compatibility is preserved or the affected consumers are fully updated
+- [ ] Options display, selection works, and value binding works
+- [ ] Existing `SelectProps` compatibility is preserved or affected consumers are updated
 - [ ] Keyboard navigation and focus behavior work correctly
 - [ ] `npm run typecheck` passes

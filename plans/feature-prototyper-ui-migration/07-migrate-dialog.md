@@ -1,57 +1,48 @@
-# 07 — Migrate Dialog
+# 07 — Rebuild AccessibleDialog
 
 ## Goal
 
-Replace `src/components/ui/AccessibleDialog.tsx` with a Prototyper UI-backed implementation while preserving the current controlled API unless a full consumer migration is intentionally chosen.
+Rebuild `src/components/ui/AccessibleDialog.tsx` on top of copied Prototyper `dialog` source while preserving the current controlled API.
 
 ## Background
 
-The current `AccessibleDialog.tsx` is a controlled focus-managed modal with props `open`, `title`, `description`, `onClose`, and `children`. The Prototyper UI `dialog` is compositional and handles accessibility natively, but its API shape differs materially.
+This is a high-churn API. Keep the current shape in phase one:
 
-## Steps
-
-### 1. Audit current usage
-
-```
-grep -r "AccessibleDialog\|from.*ui/AccessibleDialog" --include="*.tsx" src/
-```
-
-For each usage, note:
-- How open/close state is managed
-- What props are passed (title, description, trigger, etc.)
-- Whether custom content or actions are in the body/footer
-- Whether any consumer depends on close-via-overlay or return-focus behavior
-
-### 2. Read Prototyper UI dialog
-
-Use `mcp__prototyper-ui__get_component` with `"dialog"` to read the full API including the sheet variant.
-
-### 3. Replace `AccessibleDialog.tsx`
-
-Replace with a Prototyper UI-backed compatibility wrapper first. Preserve the current controlled API if practical:
 - `open`
 - `title`
 - `description`
 - `onClose`
 - `children`
 
-The Prototyper UI dialog has a sheet variant (slides in from the side) — note this for any side-panel usages in mobile navigation.
+## Steps
 
-### 4. Update consumers
+### 1. Audit current usage
 
-Search for `AccessibleDialog` usages and only update them to the compositional Prototyper UI API if the compatibility wrapper proves too limiting.
+Find every `AccessibleDialog` usage and note:
 
-Also check `src/app/(dashboard)/layout.tsx` — the mobile menu uses a sliding overlay that could benefit from the `dialog` sheet variant.
+- open/close state management
+- title and description usage
+- body/footer composition
+- expected overlay click behavior
+- expected focus return behavior
 
-### 5. Update barrel export
+### 2. Replace `AccessibleDialog.tsx`
 
-Keep `AccessibleDialog` exported from `src/components/ui/index.ts`. Export `Dialog` aliases or sub-components only if they are actually used.
+Use copied Prototyper `dialog` source under the hood. Keep the existing controlled wrapper API unless a consumer clearly needs more of the raw Prototyper composition model.
+
+### 3. Update consumers
+
+Update consumers only where the compatibility wrapper is insufficient.
+
+### 4. Update the barrel export
+
+Ensure `AccessibleDialog` remains exported from `src/components/ui/index.ts`.
 
 ## Acceptance Criteria
 
-- [ ] Old `AccessibleDialog.tsx` replaced
-- [ ] All dialogs open/close correctly
-- [ ] Focus management works (focus trapped inside, returns to trigger on close)
-- [ ] ESC key closes dialogs
-- [ ] Overlay click closes dialogs where current behavior expects it
+- [ ] `AccessibleDialog.tsx` is now a thin adapter over copied Prototyper dialog source
+- [ ] All dialogs open and close correctly
+- [ ] Focus management works correctly
+- [ ] ESC closes dialogs
+- [ ] Overlay click closes dialogs where expected
 - [ ] `npm run typecheck` passes

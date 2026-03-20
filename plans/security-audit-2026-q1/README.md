@@ -51,8 +51,15 @@ New feature code = new potential attack surface. This plan audits the delta and 
 
 | Step | File | Priority | Status |
 |------|------|----------|--------|
-| 01 | `01-delta-convex-review.md` | P0 | Todo |
-| 02 | `02-gtm-consent-validation.md` | P1 | Todo |
-| 03 | `03-dependency-audit.md` | P1 | Todo |
-| 04 | `04-csp-and-headers-recheck.md` | P1 | Todo |
-| 05 | `05-findings-and-fixes.md` | P0 | Todo |
+| 01 | `01-delta-convex-review.md` | P0 | Done — output: `output-01-delta-convex-review.md` |
+| 02 | `02-gtm-consent-validation.md` | P1 | Done — output: `output-02-gtm-consent-validation.md` |
+| 03 | `03-dependency-audit.md` | P1 | Done — output: `output-03-dependency-audit.md` |
+| 04 | `04-csp-and-headers-recheck.md` | P1 | Done — output: `output-04-csp-and-headers-recheck.md` |
+| 05 | `05-findings-and-fixes.md` | P0 | Done — output: `output-05-findings-and-fixes.md`; P1 CSP fix applied to `next.config.ts` |
+
+## Execution Notes (2026-03-18)
+
+All 5 steps completed. One P1 fix applied in code:
+- `next.config.ts`: Added `https://www.googletagmanager.com` to `script-src` and `connect-src`; added GA4 analytics endpoints to `connect-src`; added `https://*.convex.cloud` to `img-src`.
+
+No P0 findings found. P2/P3 items documented in `output-05-findings-and-fixes.md` for next sprint / Q2 review.

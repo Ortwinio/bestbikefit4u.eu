@@ -64,8 +64,28 @@ This plan does two things:
 
 | Step | File | Priority | Status |
 |------|------|----------|--------|
-| 01 | `01-i18n-static-audit.md` | P0 | Todo |
-| 02 | `02-route-coverage-check.md` | P1 | Todo |
-| 03 | `03-dashboard-language-switch-qa.md` | P0 | Todo |
-| 04 | `04-ux-flow-review.md` | P1 | Todo |
-| 05 | `05-fix-and-verify.md` | P1 | Todo |
+| 01 | `01-i18n-static-audit.md` | P0 | Done — output in `output-01-i18n-static-audit.md` |
+| 02 | `02-route-coverage-check.md` | P1 | Done — output in `output-02-route-coverage-check.md` |
+| 03 | `03-dashboard-language-switch-qa.md` | P0 | Done (static only) — output in `output-03-dashboard-language-switch-qa.md`; browser QA still needed |
+| 04 | `04-ux-flow-review.md` | P1 | Done — output in `output-04-ux-flow-review.md` |
+| 05 | `05-fix-and-verify.md` | P1 | Done — output in `output-05-fix-and-verify.md`; 1 P0 fix applied |
+
+## Progress Notes
+
+Executed 2026-03-18. Static analysis only (no browser).
+
+**P0 fix applied:**
+- `src/i18n/messages/nl.ts`: `dashboard.questionnaire.errors.missingRequiredMarker` translated from English to Dutch (`"Ontbrekende verplichte antwoorden:"`)
+- `npm run test:i18n` confirms 28/28 tests pass after fix
+
+**Remaining P1 items (not fixed — require larger refactor):**
+1. `src/lib/bikes.ts` — `BIKE_TYPE_OPTIONS` and `BIKE_TYPE_LABELS` hardcoded English
+2. `src/app/(dashboard)/fit/page.tsx` — `profileTypeLabel()` hardcoded English bike profile types
+3. `src/components/layout/HeaderMobileMenu.tsx` — authenticated nav uses inline ternaries; "Dashboard" has no NL value at all
+4. Questionnaire backend question text not localized
+5. Results page sub-components (`FitSummaryCard`, `AdjustmentPriorities`, etc.) not audited
+
+**Browser QA still required for:**
+- Dashboard language switch in Chrome and Firefox
+- Mobile viewport (375px) layout testing
+- Cookie persistence verification
