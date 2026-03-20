@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
@@ -40,6 +40,7 @@ type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
 
 export default function NewFitSessionPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { locale, messages } = useDashboardMessages();
   const toast = useToast();
   const pagePath = withLocalePrefix("/fit", locale);
@@ -62,6 +63,7 @@ export default function NewFitSessionPage() {
     selectedBikeId ? { bikeId: selectedBikeId } : "skip"
   );
   const createSession = useMutation(api.sessions.mutations.create);
+  const requestedBikeId = searchParams?.get("bikeId") ?? null;
 
   const hasProfile = profile !== undefined && profile !== null;
   const isLoadingProfile = profile === undefined;
@@ -153,6 +155,21 @@ export default function NewFitSessionPage() {
       section: "fit_start_page",
     });
   }, [locale, logMarketingEvent, pagePath]);
+
+  useEffect(() => {
+    if (!requestedBikeId || !bikes || selectedBikeId) {
+      return;
+    }
+
+    const requestedBike = bikes.find((bike) => bike._id === requestedBikeId);
+    if (!requestedBike) {
+      return;
+    }
+
+    setSelectedBikeId(requestedBike._id);
+    setSelectedBikeProfileId(null);
+    setBikeType(requestedBike.bikeType);
+  }, [bikes, requestedBikeId, selectedBikeId]);
 
   useEffect(() => {
     if (!selectedBikeId || bikeProfiles === undefined) {

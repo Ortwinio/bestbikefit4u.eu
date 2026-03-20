@@ -60,6 +60,10 @@ export default function DashboardPage() {
   const lastSession = sessions?.[0];
   const displayName = getEffectiveDisplayName(user, messages.userMenu.fallbackUserName);
   const profileImageSource = getEffectiveProfileImageSource(user);
+  const dashboardCardClassName =
+    "bg-[color:color-mix(in_oklch,var(--card)_90%,black_3%)]";
+  const dashboardTileClassName =
+    "bg-[color:color-mix(in_oklch,var(--secondary)_88%,black_4%)]";
 
   if (isLoading) {
     return <LoadingState label={messages.layout.loading} />;
@@ -81,7 +85,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-        <Card variant="bordered">
+        <Card variant="bordered" className={dashboardCardClassName}>
           <CardHeader>
             <CardTitle>{messages.dashboardHome.riderCardTitle}</CardTitle>
           </CardHeader>
@@ -103,19 +107,19 @@ export default function DashboardPage() {
 
             {profile ? (
               <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-[var(--radius-md)] bg-[color:var(--secondary)] px-4 py-3">
+                <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
                   <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                     {messages.profile.measurements.height}
                   </p>
                   <p className="mt-1 text-lg font-semibold text-gray-900">{profile.heightCm} cm</p>
                 </div>
-                <div className="rounded-[var(--radius-md)] bg-[color:var(--secondary)] px-4 py-3">
+                <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
                   <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                     {messages.profile.measurements.inseam}
                   </p>
                   <p className="mt-1 text-lg font-semibold text-gray-900">{profile.inseamCm} cm</p>
                 </div>
-                <div className="rounded-[var(--radius-md)] bg-[color:var(--secondary)] px-4 py-3">
+                <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
                   <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                     {messages.dashboardHome.weightLabel}
                   </p>
@@ -142,7 +146,7 @@ export default function DashboardPage() {
         </Card>
 
         <div className="grid gap-6">
-          <Card variant="bordered">
+          <Card variant="bordered" className={dashboardCardClassName}>
             <CardHeader>
               <CardTitle>{messages.dashboardHome.currentBikeTitle}</CardTitle>
             </CardHeader>
@@ -181,7 +185,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card variant="bordered">
+          <Card variant="bordered" className={dashboardCardClassName}>
             <CardHeader>
               <CardTitle>{messages.pressure.bikeDetail.sectionTitle}</CardTitle>
             </CardHeader>
@@ -231,19 +235,19 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        <Card variant="bordered">
+        <Card variant="bordered" className={dashboardCardClassName}>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-gray-900">{sessions?.length ?? 0}</div>
             <p className="text-sm text-gray-500">{messages.home.stats.totalSessions}</p>
           </CardContent>
         </Card>
-        <Card variant="bordered">
+        <Card variant="bordered" className={dashboardCardClassName}>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-gray-900">{completedSessions}</div>
             <p className="text-sm text-gray-500">{messages.home.stats.completedFits}</p>
           </CardContent>
         </Card>
-        <Card variant="bordered">
+        <Card variant="bordered" className={dashboardCardClassName}>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-gray-900">
               {lastSession?.completedAt
@@ -255,7 +259,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <Card variant="bordered">
+      <Card variant="bordered" className={dashboardCardClassName}>
         <CardHeader>
           <div className="flex items-center justify-between gap-4">
             <CardTitle>{messages.home.recentSessions.title}</CardTitle>
@@ -291,7 +295,7 @@ export default function DashboardPage() {
                   <Link
                     key={session._id}
                     href={withLocalePrefix(href, locale)}
-                    className="flex items-center justify-between rounded-[var(--radius-md)] border border-[color:var(--border)] px-4 py-3 hover:bg-[color:var(--accent)]"
+                    className={`flex items-center justify-between rounded-[var(--radius-md)] border border-[color:var(--border)] px-4 py-3 hover:bg-[color:var(--accent)] ${dashboardTileClassName}`}
                   >
                     <div>
                       <p className="font-medium text-gray-900">{session.primaryGoal}</p>

@@ -11,6 +11,7 @@ import {
   CardTitle,
   Input,
   Select,
+  Selectable,
   Textarea,
 } from "@/components/ui";
 import { getBikeTypeOptions, getBikeTypeLabel, type BikeType } from "@/lib/bikes";
@@ -253,18 +254,26 @@ export function BikeForm({
             />
 
             {showBikeTypeSelect ? (
-              <Select
-                label={messages.bikeForm.fields.type.label}
-                tooltip={messages.bikeForm.fields.type.tooltip}
-                value={bikeType}
-                onChange={(event) => setBikeType(event.target.value as BikeType)}
-                options={getBikeTypeOptions(messages).map((option) => ({
-                  value: option.value,
-                  label: option.label,
-                }))}
-                placeholder={messages.bikeForm.fields.type.placeholder}
-                required
-              />
+              <div>
+                <p className="text-sm font-medium text-gray-700">
+                  {messages.bikeForm.fields.type.label}
+                </p>
+                <p className="mt-1 text-sm text-gray-500">
+                  {messages.bikeForm.fields.type.tooltip}
+                </p>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {getBikeTypeOptions(messages).map((option) => (
+                    <Selectable
+                      key={option.value}
+                      onClick={() => setBikeType(option.value)}
+                      selected={bikeType === option.value}
+                      variant="card"
+                      label={option.label}
+                      description={option.description}
+                    />
+                  ))}
+                </div>
+              </div>
             ) : (
               <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700">
                 <span className="font-medium">{messages.bikeForm.fields.type.staticLabel}</span>{" "}

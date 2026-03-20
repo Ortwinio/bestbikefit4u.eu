@@ -432,6 +432,15 @@ const en = {
       handlebarDrop: "Handlebar drop",
       viewReport: "View report",
       startNewSession: "Start new fitting session",
+      delete: {
+        action: "Delete fitting",
+        dialogTitle: "Delete bike fitting?",
+        dialogDescription:
+          "This permanently deletes the fitting session, its questionnaire answers, recommendations, and related validation data.",
+        confirm: "Delete fitting",
+        success: "Bike fitting deleted.",
+        failed: "Could not delete the bike fitting. Please try again.",
+      },
     },
     bikeTypes: {
       road: {
@@ -470,6 +479,7 @@ const en = {
     bikeProfileTypes: {
       base: "Base",
       mountain: "Mountain",
+      climbing: "Climbing",
       endurance: "Endurance",
       performance: "Performance",
       aero: "Aero",
@@ -1144,6 +1154,15 @@ const en = {
         dialogDescription:
           "This removes the bike and its direct wheelset, tire setup, and pressure setup data. Fitting history prevents deletion.",
         dialogConfirm: "Delete bike",
+      },
+      defaultProfile: {
+        title: "Bike Profiles",
+        profileType: "Profile type",
+        empty: "No bike profile available yet.",
+      },
+      profiles: {
+        climbingDescription:
+          "Focused on seated traction, low-speed efficiency, and long sustained climbs.",
       },
       sections: {
         geometry: "Geometry",

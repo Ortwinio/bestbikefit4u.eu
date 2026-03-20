@@ -6,10 +6,10 @@ import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { Button, Input, NumberInput, Select, Selectable, Textarea } from "@/components/ui";
+import { getBikeTypeOptions, type BikeType } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
-type Discipline = "road" | "gravel" | "mtb" | "tt";
 type Step = "bike" | "saved" | "wheelset" | "done";
 type RidingStyle =
   | "recreational"
@@ -20,16 +20,18 @@ type RidingStyle =
   | "touring";
 type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
 
-function deriveBikeType(discipline: Discipline) {
-  switch (discipline) {
+function deriveDiscipline(bikeType: BikeType) {
+  switch (bikeType) {
     case "road":
       return "road" as const;
     case "gravel":
       return "gravel" as const;
-    case "mtb":
-      return "mountain" as const;
-    case "tt":
-      return "tt_triathlon" as const;
+    case "mountain":
+      return "mtb" as const;
+    case "tt_triathlon":
+      return "tt" as const;
+    default:
+      return undefined;
   }
 }
 
@@ -45,7 +47,7 @@ export function CreateBikeForm() {
   const [newBikeId, setNewBikeId] = useState<Id<"bikes"> | null>(null);
 
   const [name, setName] = useState("");
-  const [discipline, setDiscipline] = useState<Discipline>("road");
+  const [bikeType, setBikeType] = useState<BikeType>("road");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
   const [ridingStyle, setRidingStyle] = useState<RidingStyle>("fitness");
@@ -109,8 +111,8 @@ export function CreateBikeForm() {
     try {
       const bikeId = await createBike({
         name: name.trim(),
-        bikeType: deriveBikeType(discipline),
-        discipline,
+        bikeType,
+        discipline: deriveDiscipline(bikeType),
         ridingStyle,
         primaryGoal,
         brand: brand.trim() || undefined,
@@ -194,17 +196,22 @@ export function CreateBikeForm() {
             />
 
             <div>
-              <p className="text-sm font-medium text-gray-700">{messages.bikeForm.fields.discipline.label}</p>
-              <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                {(["road", "gravel", "mtb", "tt"] as const).map((option) => (
+              <p className="text-sm font-medium text-gray-700">
+                {messages.bikeForm.fields.type.label}
+              </p>
+              <p className="mt-1 text-sm text-gray-500">
+                {messages.bikeForm.fields.type.tooltip}
+              </p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {getBikeTypeOptions(messages).map((option) => (
                   <Selectable
-                    key={option}
-                    onClick={() => setDiscipline(option)}
-                    selected={discipline === option}
-                    variant="segment"
-                  >
-                    {messages.bikeForm.fields.discipline.options[option]}
-                  </Selectable>
+                    key={option.value}
+                    onClick={() => setBikeType(option.value)}
+                    selected={bikeType === option.value}
+                    variant="card"
+                    label={option.label}
+                    description={option.description}
+                  />
                 ))}
               </div>
             </div>

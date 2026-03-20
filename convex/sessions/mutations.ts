@@ -1,6 +1,7 @@
-import { mutation } from "../_generated/server";
+import { mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import type { Id } from "../_generated/dataModel";
 import {
   requireBikeOwner,
   requireBikeProfileOwner,
@@ -10,6 +11,27 @@ import { validateNumberRange, validateShortString } from "../lib/validation";
 
 const WEEKLY_HOURS_RANGE = [0, 60] as const;
 const LONGEST_RIDE_KM_RANGE = [0, 600] as const;
+
+async function deleteBySessionIndex(
+  ctx: MutationCtx,
+  table:
+    | "questionnaireResponses"
+    | "recommendations"
+    | "recommendationShadowComparisons"
+    | "validationCaptures"
+    | "rideFeedbackEntries"
+    | "emailReports",
+  sessionId: Id<"fitSessions">
+) {
+  const docs = await ctx.db
+    .query(table)
+    .withIndex("by_session", (q: any) => q.eq("sessionId", sessionId))
+    .collect();
+
+  for (const doc of docs) {
+    await ctx.db.delete(doc._id);
+  }
+}
 
 export const create = mutation({
   args: {
@@ -191,5 +213,27 @@ export const updateRidingDetails = mutation({
       updates.longestRideKm = args.longestRideKm;
     }
     await ctx.db.patch(args.sessionId, updates);
+  },
+});
+
+export const remove = mutation({
+  args: {
+    sessionId: v.id("fitSessions"),
+  },
+  handler: async (ctx, args) => {
+    await requireSessionOwner(ctx, args.sessionId);
+
+    await deleteBySessionIndex(ctx, "questionnaireResponses", args.sessionId);
+    await deleteBySessionIndex(ctx, "recommendations", args.sessionId);
+    await deleteBySessionIndex(
+      ctx,
+      "recommendationShadowComparisons",
+      args.sessionId
+    );
+    await deleteBySessionIndex(ctx, "validationCaptures", args.sessionId);
+    await deleteBySessionIndex(ctx, "rideFeedbackEntries", args.sessionId);
+    await deleteBySessionIndex(ctx, "emailReports", args.sessionId);
+
+    await ctx.db.delete(args.sessionId);
   },
 });

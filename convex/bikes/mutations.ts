@@ -2,6 +2,10 @@ import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
 import { validateShortString, validateTextString } from "../lib/validation";
+import {
+  getSystemClimbingBikeProfile,
+  getSystemDefaultBikeProfile,
+} from "../bikeProfiles/defaults";
 
 const disciplineValidator = v.union(
   v.literal("road"),
@@ -75,6 +79,11 @@ export const create = mutation({
     if (args.notes !== undefined) validateTextString(args.notes, "notes");
     const userId = await requireUserId(ctx);
 
+    const defaultProfile = getSystemDefaultBikeProfile({
+      bikeType: args.bikeType,
+      ridingStyle: args.ridingStyle,
+    });
+
     const bikeId = await ctx.db.insert("bikes", {
       userId,
       name: args.name,
@@ -97,14 +106,31 @@ export const create = mutation({
     await ctx.db.insert("bikeProfiles", {
       userId,
       bikeId,
-      name: "Base",
-      profileType: "base",
+      name: defaultProfile.name,
+      profileType: defaultProfile.profileType,
       isDefault: true,
       status: "active",
       source: "system_default",
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
+
+    const climbingProfile = getSystemClimbingBikeProfile({
+      bikeType: args.bikeType,
+    });
+    if (climbingProfile) {
+      await ctx.db.insert("bikeProfiles", {
+        userId,
+        bikeId,
+        name: climbingProfile.name,
+        profileType: climbingProfile.profileType,
+        isDefault: false,
+        status: "active",
+        source: "system_default",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+    }
 
     return bikeId;
   },
@@ -148,7 +174,7 @@ export const update = mutation({
     if (args.brand !== undefined) validateShortString(args.brand, "brand");
     if (args.model !== undefined) validateShortString(args.model, "model");
     if (args.notes !== undefined) validateTextString(args.notes, "notes");
-    await requireBikeOwner(ctx, args.bikeId);
+    const { bike } = await requireBikeOwner(ctx, args.bikeId);
     const updates: Record<string, unknown> = { updatedAt: Date.now() };
     if (args.name !== undefined) updates.name = args.name;
     if (args.currentGeometry !== undefined)
@@ -166,6 +192,28 @@ export const update = mutation({
     if (args.notes !== undefined) updates.notes = args.notes;
 
     await ctx.db.patch(args.bikeId, updates);
+
+    if (args.ridingStyle !== undefined) {
+      const nextBike = {
+        bikeType: bike.bikeType,
+        ridingStyle: args.ridingStyle,
+      };
+      const defaults = getSystemDefaultBikeProfile(nextBike);
+      const defaultProfile = await ctx.db
+        .query("bikeProfiles")
+        .withIndex("by_bike_default", (q) =>
+          q.eq("bikeId", args.bikeId).eq("isDefault", true)
+        )
+        .first();
+
+      if (defaultProfile && defaultProfile.source === "system_default") {
+        await ctx.db.patch(defaultProfile._id, {
+          name: defaults.name,
+          profileType: defaults.profileType,
+          updatedAt: Date.now(),
+        });
+      }
+    }
   },
 });
 

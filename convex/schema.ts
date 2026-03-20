@@ -186,6 +186,7 @@ export default defineSchema({
     profileType: v.union(
       v.literal("base"),
       v.literal("mountain"),
+      v.literal("climbing"),
       v.literal("endurance"),
       v.literal("performance"),
       v.literal("aero"),

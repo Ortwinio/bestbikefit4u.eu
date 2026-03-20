@@ -168,6 +168,13 @@ export default function BikesPage() {
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
+                          <Link
+                            href={withLocalePrefix(`/fit?bikeId=${bike._id}`, locale)}
+                          >
+                            <Button size="sm">
+                              {messages.bikeForm.actions.startFitForBike}
+                            </Button>
+                          </Link>
                           <Link href={withLocalePrefix(`/bikes/${bike._id}/edit`, locale)}>
                             <Button variant="outline" size="sm">
                               <Pencil className="h-4 w-4 mr-1" />

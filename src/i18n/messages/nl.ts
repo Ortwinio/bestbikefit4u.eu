@@ -433,6 +433,15 @@ const nl = {
       handlebarDrop: "Stuurval",
       viewReport: "Bekijk rapport",
       startNewSession: "Start nieuwe fit-sessie",
+      delete: {
+        action: "Fit verwijderen",
+        dialogTitle: "Bike fitting verwijderen?",
+        dialogDescription:
+          "Dit verwijdert de fit-sessie, vragenlijstantwoorden, aanbevelingen en gerelateerde validatiedata permanent.",
+        confirm: "Fit verwijderen",
+        success: "Bike fitting verwijderd.",
+        failed: "Kon de bike fitting niet verwijderen. Probeer het opnieuw.",
+      },
     },
     bikeTypes: {
       road: {
@@ -471,6 +480,7 @@ const nl = {
     bikeProfileTypes: {
       base: "Basis",
       mountain: "Berg",
+      climbing: "Klimmen",
       endurance: "Uithoudingsvermogen",
       performance: "Prestatie",
       aero: "Aero",
@@ -1148,6 +1158,15 @@ const nl = {
         dialogDescription:
           "Dit verwijdert de fiets en de direct gekoppelde wielset-, bandensetup- en bandenspanningsdata. Afstelgeschiedenis blokkeert verwijdering.",
         dialogConfirm: "Fiets verwijderen",
+      },
+      defaultProfile: {
+        title: "Fietsprofielen",
+        profileType: "Profieltype",
+        empty: "Nog geen fietsprofiel beschikbaar.",
+      },
+      profiles: {
+        climbingDescription:
+          "Gericht op zittende tractie, efficiëntie bij lage snelheid en lange beklimmingen.",
       },
       sections: {
         geometry: "Geometrie",

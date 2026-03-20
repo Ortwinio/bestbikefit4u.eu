@@ -1,8 +1,8 @@
 "use client";
 
-import { use } from "react";
+import { use, useEffect } from "react";
 import Link from "next/link";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
 import { BikeFitHistorySection } from "@/components/bikes/BikeFitHistorySection";
@@ -25,6 +25,13 @@ export default function BikeDetailPage({
   const bike = useQuery(api.bikes.queries.getById, {
     bikeId: bikeId as Id<"bikes">,
   });
+  const ensureDefaultBikeProfile = useMutation(
+    api.bikeProfiles.mutations.ensureDefaultForBike
+  );
+  const bikeProfiles = useQuery(
+    api.bikeProfiles.queries.listByBike,
+    bike ? { bikeId: bike._id } : "skip"
+  );
   const wheelsets = useQuery(
     api.wheelsets.queries.listForBike,
     bike ? { bikeId: bike._id } : "skip"
@@ -44,6 +51,29 @@ export default function BikeDetailPage({
   const activeTireSetup =
     tireSetups?.find((tireSetup: (typeof tireSetups)[number]) => tireSetup.isActive) ??
     tireSetups?.[0];
+  const shouldHaveClimbingProfile = [
+    "road",
+    "gravel",
+    "mountain",
+    "cyclocross",
+    "touring",
+    "tt_triathlon",
+  ].includes(bike?.bikeType ?? "");
+
+  useEffect(() => {
+    if (!bike || bikeProfiles === undefined) {
+      return;
+    }
+
+    const hasDefaultProfile = bikeProfiles.some((profile) => profile.isDefault);
+    const hasClimbingProfile = bikeProfiles.some(
+      (profile) => profile.profileType === "climbing"
+    );
+
+    if (!hasDefaultProfile || (shouldHaveClimbingProfile && !hasClimbingProfile)) {
+      void ensureDefaultBikeProfile({ bikeId: bike._id });
+    }
+  }, [bike, bikeProfiles, ensureDefaultBikeProfile, shouldHaveClimbingProfile]);
 
   if (bike === undefined) {
     return <LoadingState label={messages.bikeForm.edit.loading} />;
@@ -64,6 +94,29 @@ export default function BikeDetailPage({
   const primaryGoalLabel = bike.primaryGoal
     ? messages.fit.goals[bike.primaryGoal].label
     : "-";
+  const defaultBikeProfile =
+    bikeProfiles?.find((profile) => profile.isDefault) ?? bikeProfiles?.[0];
+  const defaultBikeProfileDescription = bike.ridingStyle
+    ? messages.fit.ridingStyles[bike.ridingStyle].description
+    : null;
+  const bikeProfileName = (profile: NonNullable<typeof bikeProfiles>[number]) => {
+    if (profile.isDefault && bike.ridingStyle) {
+      return messages.fit.ridingStyles[bike.ridingStyle].label;
+    }
+    if (profile.profileType === "climbing") {
+      return messages.bikeProfileTypes.climbing;
+    }
+    return profile.name;
+  };
+  const bikeProfileDescription = (profileType: string) => {
+    if (profileType === "climbing") {
+      return messages.bikes.profiles.climbingDescription;
+    }
+    if (profileType === defaultBikeProfile?.profileType && defaultBikeProfileDescription) {
+      return defaultBikeProfileDescription;
+    }
+    return null;
+  };
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -137,6 +190,40 @@ export default function BikeDetailPage({
                 </>
               ) : (
                 <p>{messages.dashboardFit.noResultsYet}</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card variant="bordered">
+            <CardHeader>
+              <CardTitle>{messages.bikes.defaultProfile.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm text-gray-700">
+              {bikeProfiles && bikeProfiles.length > 0 ? (
+                bikeProfiles.map((profile) => (
+                  <div
+                    key={profile._id}
+                    className="rounded-lg border border-gray-200 bg-gray-50 p-3"
+                  >
+                    <p className="font-medium text-gray-900">
+                      {bikeProfileName(profile)}
+                      {profile.isDefault ? (
+                        <span className="ml-2 rounded-full bg-[color:var(--secondary)] px-2 py-1 text-xs font-semibold text-[color:var(--secondary-foreground)]">
+                          {messages.fit.savedBikes.defaultBadge}
+                        </span>
+                      ) : null}
+                    </p>
+                    <p>
+                      {messages.bikes.defaultProfile.profileType}:{" "}
+                      {messages.bikeProfileTypes[profile.profileType]}
+                    </p>
+                    {bikeProfileDescription(profile.profileType) ? (
+                      <p>{bikeProfileDescription(profile.profileType)}</p>
+                    ) : null}
+                  </div>
+                ))
+              ) : (
+                <p>{messages.bikes.defaultProfile.empty}</p>
               )}
             </CardContent>
           </Card>

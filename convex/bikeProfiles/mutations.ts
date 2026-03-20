@@ -5,10 +5,15 @@ import {
   requireBikeOwner,
   requireBikeProfileOwner,
 } from "../lib/authz";
+import {
+  getSystemClimbingBikeProfile,
+  getSystemDefaultBikeProfile,
+} from "./defaults";
 
 const profileTypeValidator = v.union(
   v.literal("base"),
   v.literal("mountain"),
+  v.literal("climbing"),
   v.literal("endurance"),
   v.literal("performance"),
   v.literal("aero"),
@@ -133,6 +138,7 @@ export const ensureDefaultForBike = mutation({
   },
   handler: async (ctx, args) => {
     const { userId, bike } = await requireBikeOwner(ctx, args.bikeId);
+    const defaults = getSystemDefaultBikeProfile(bike);
 
     const existingDefault = await ctx.db
       .query("bikeProfiles")
@@ -142,19 +148,61 @@ export const ensureDefaultForBike = mutation({
       .first();
 
     if (existingDefault) {
+      const climbingProfile = getSystemClimbingBikeProfile(bike);
+      if (climbingProfile) {
+        const existingProfiles = await ctx.db
+          .query("bikeProfiles")
+          .withIndex("by_bike", (q) => q.eq("bikeId", bike._id))
+          .collect();
+        const hasClimbingProfile = existingProfiles.some(
+          (profile) =>
+            profile.status === "active" &&
+            (profile.profileType === "climbing" || profile.name === climbingProfile.name)
+        );
+        if (!hasClimbingProfile) {
+          await ctx.db.insert("bikeProfiles", {
+            userId,
+            bikeId: bike._id,
+            name: climbingProfile.name,
+            profileType: climbingProfile.profileType,
+            isDefault: false,
+            status: "active",
+            source: "system_default",
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          });
+        }
+      }
       return existingDefault._id;
     }
 
-    return await ctx.db.insert("bikeProfiles", {
+    const defaultProfileId = await ctx.db.insert("bikeProfiles", {
       userId,
       bikeId: bike._id,
-      name: args.name ?? "Base",
-      profileType: args.profileType ?? "base",
+      name: args.name ?? defaults.name,
+      profileType: args.profileType ?? defaults.profileType,
       isDefault: true,
       status: "active",
       source: "system_default",
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
+
+    const climbingProfile = getSystemClimbingBikeProfile(bike);
+    if (climbingProfile) {
+      await ctx.db.insert("bikeProfiles", {
+        userId,
+        bikeId: bike._id,
+        name: climbingProfile.name,
+        profileType: climbingProfile.profileType,
+        isDefault: false,
+        status: "active",
+        source: "system_default",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+    }
+
+    return defaultProfileId;
   },
 });
