@@ -88,11 +88,11 @@ export default function DashboardLayout({
             <div className="space-y-1">
               {[
                 { href: "/dashboard", label: messages.nav.dashboard },
-                { href: "/fit", label: messages.nav.newFitSession },
-                { href: "/fit-history", label: messages.nav.bikeFitting },
-                { href: "/bikes", label: messages.nav.myBikes },
-                { href: "/pressure-calculator", label: messages.nav.tirePressure },
                 { href: "/profile", label: messages.nav.profile },
+                { href: "/bikes", label: messages.nav.myBikes },
+                { href: "/fit-history", label: messages.nav.bikeFitting },
+                { href: "/fit", label: messages.nav.newFitSession },
+                { href: "/pressure-calculator", label: messages.nav.tirePressure },
                 { href: "/settings", label: messages.nav.settings },
               ].map((item) => (
                 <Link
