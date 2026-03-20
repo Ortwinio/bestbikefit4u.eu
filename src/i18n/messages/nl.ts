@@ -310,6 +310,7 @@ const nl = {
     common: {
       back: "Terug",
       cancel: "Annuleren",
+      save: "Opslaan",
       edit: "Bewerken",
       delete: "Verwijderen",
       signOut: "Uitloggen",
@@ -418,6 +419,7 @@ const nl = {
     },
     fitHistory: {
       title: "Afstellingsgeschiedenis",
+      subtitle: "Je afstellingssessies per fiets, nieuwste eerst.",
       emptyTitle: "Nog geen fit-sessies",
       emptyDescription:
         "Voltooi een fit-sessie om hier je fietsgeschiedenis op te bouwen.",
@@ -913,6 +915,7 @@ const nl = {
       },
       actions: {
         editMeasurements: "Metingen bewerken",
+        editInline: "Bewerken",
       },
       sections: {
         bodyMeasurements: "Lichaamsmetingen",
@@ -924,16 +927,80 @@ const nl = {
         inseam: "Binnenbeenlengte",
         weight: "Lichaamsgewicht",
         weightHelper: "Gebruikt voor bandenspanningsberekeningen.",
+        weightTooltip: "Je gewicht wordt gebruikt om de optimale bandenspanning voor je fietsen te berekenen.",
+        weightNotSet: "Voeg je gewicht toe om bandenspanningsberekeningen te activeren",
         torso: "Torso",
         armLength: "Armlengte",
         shoulderWidth: "Schouderbreedte",
         femurLength: "Dijbeenlengte",
+        howToMeasure: "Zo meet je het:",
+        saveField: "Opslaan",
+        addOptional: "+ Optionele metingen toevoegen",
+        heightSteps: [
+          "Ga blootsvoets tegen een muur staan",
+          "Leg een boek plat op je hoofd",
+          "Markeer de muur en meet vanaf de vloer tot de markering",
+        ],
+        inseamSteps: [
+          "Ga blootsvoets tegen een muur staan",
+          "Plaats een boek stevig tussen je benen zoals een zadel",
+          "Meet vanaf de vloer tot de bovenkant van het boek",
+        ],
+        torsoSteps: [
+          "Ga rechtop op een vlakke stoel zitten",
+          "Meet van je navel tot de bovenkant van het borstbeen",
+        ],
+        armSteps: [
+          "Strek je arm recht opzij",
+          "Meet van het schouderpunt tot het topje van de middelvinger",
+        ],
+        shoulderSteps: [
+          "Ga ontspannen staan met je armen langs je lichaam",
+          "Meet tussen de buitenste schouderpunten",
+        ],
+        femurSteps: [
+          "Ga op een stoel zitten met je bovenbeen horizontaal",
+          "Meet van de liesplooi tot het midden van de knie",
+        ],
       },
       flexibility: {
         helper: "Hamstring-flexibiliteitsscore",
+        editButton: "Score aanpassen",
+        improveLink: "Hoe verbeter je je flexibiliteit",
+        levelLabel: "{label} ({index}/5)",
+        saveButton: "Opslaan",
+        testInstructions: {
+          title: "Zo voer je de test uit",
+          steps: [
+            "Ga op de vloer zitten met je benen recht vooruit",
+            "Houd je knieën vlak op de grond",
+            "Reik met beide handen naar je tenen",
+            "Noteer hoe ver je comfortabel kunt reiken",
+          ],
+        },
+        impactTitle: "Wat dit betekent voor je fit",
+        impactDescription:
+          "Een lagere flexibiliteitsscore leidt tot een meer rechtopstaande positie met minder stuurval. Betere flexibiliteit maakt een lagere, aerodynamischere houding mogelijk.",
       },
       coreStability: {
         helper: "Plank-houding beoordeling",
+        editButton: "Opnieuw testen",
+        improveLink: "Hoe verbeter je je rompstabiliteit",
+        levelLabel: "{label} • {description}",
+        saveButton: "Opslaan",
+        testInstructions: {
+          title: "Front plank-houdtest",
+          steps: [
+            "Ga in een plank staan op je onderarmen en tenen",
+            "Houd een rechte lijn van hoofd tot hielen",
+            "Laat de heupen niet zakken en trek ze niet omhoog",
+            "Meet hoe lang je de positie met goede vorm vasthoudt",
+            "Stop zodra je vorm verslechtert",
+          ],
+        },
+        impactTitle: "Wat dit betekent voor je fit",
+        impactDescription:
+          "Bij lagere rompstabiliteit beperken we hoe ver je kunt reiken en hoe laag het stuur kan staan zonder vermoeidheid. Een sterkere core ondersteunt een langere, prestatiegerichtere houding.",
       },
       status: {
         title: "Profielstatus",
@@ -962,6 +1029,28 @@ const nl = {
         dismissButton: "Nu niet",
         successToast: "Bandenspanningsadvies bijgewerkt voor {count} fietsen.",
         calculating: "Bezig met herberekenen...",
+      },
+      improve: {
+        flexibility: {
+          title: "Verbeter je flexibiliteit",
+          subtitle:
+            "Hamstring- en onderrugflexibiliteit bepalen hoe laag en ver naar voren je comfortabel kunt rijden.",
+          whatItMeansTitle: "Wat je score betekent voor je bike fit",
+          exercisesTitle: "Oefeningen om je flexibiliteit te verbeteren",
+          progressTitle: "Zo volg je je vooruitgang",
+          updateScoreCta: "Mijn flexibiliteitsscore bijwerken",
+          backLink: "Terug naar profiel",
+        },
+        coreStability: {
+          title: "Verbeter je rompstabiliteit",
+          subtitle:
+            "Rompkracht bepaalt hoe lang je een agressieve houding kunt vasthouden zonder vermoeidheid of rugklachten.",
+          whatItMeansTitle: "Wat je score betekent voor je bike fit",
+          exercisesTitle: "Oefeningen om je rompstabiliteit op te bouwen",
+          progressTitle: "Zo volg je je vooruitgang",
+          updateScoreCta: "Mijn rompstabiliteitsscore bijwerken",
+          backLink: "Terug naar profiel",
+        },
       },
       dangerZone: {
         title: "Gevarenzone",

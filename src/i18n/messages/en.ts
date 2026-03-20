@@ -309,6 +309,7 @@ const en = {
     common: {
       back: "Back",
       cancel: "Cancel",
+      save: "Save",
       edit: "Edit",
       delete: "Delete",
       signOut: "Sign out",
@@ -417,6 +418,7 @@ const en = {
     },
     fitHistory: {
       title: "Bike Fitting History",
+      subtitle: "Your fitting sessions grouped by bike, newest first.",
       emptyTitle: "No fitting sessions yet",
       emptyDescription:
         "Complete a fitting session to build up your bike history.",
@@ -905,6 +907,7 @@ const en = {
       },
       actions: {
         editMeasurements: "Edit Measurements",
+        editInline: "Edit",
       },
       sections: {
         bodyMeasurements: "Body Measurements",
@@ -916,16 +919,80 @@ const en = {
         inseam: "Inseam",
         weight: "Body weight",
         weightHelper: "Used for tire pressure calculations.",
+        weightTooltip: "Your weight is used to calculate optimal tire pressure for your bikes.",
+        weightNotSet: "Add your weight to enable tire pressure calculations",
         torso: "Torso",
         armLength: "Arm Length",
         shoulderWidth: "Shoulder Width",
         femurLength: "Femur Length",
+        howToMeasure: "How to measure:",
+        saveField: "Save",
+        addOptional: "+ Add optional measurements",
+        heightSteps: [
+          "Stand barefoot against a wall",
+          "Place a book flat on your head",
+          "Mark the wall and measure from floor to the mark",
+        ],
+        inseamSteps: [
+          "Stand barefoot against a wall",
+          "Place a book firmly between your legs like a saddle",
+          "Measure from the floor to the top of the book",
+        ],
+        torsoSteps: [
+          "Sit upright on a flat chair",
+          "Measure from your navel to the top of the sternum",
+        ],
+        armSteps: [
+          "Extend your arm straight to the side",
+          "Measure from the shoulder point to the tip of your middle finger",
+        ],
+        shoulderSteps: [
+          "Stand relaxed with arms at your sides",
+          "Measure between the outer shoulder points",
+        ],
+        femurSteps: [
+          "Sit on a chair with your thigh parallel to the floor",
+          "Measure from the hip crease to the center of the knee",
+        ],
       },
       flexibility: {
         helper: "Hamstring flexibility score",
+        editButton: "Edit score",
+        improveLink: "How to improve your flexibility",
+        levelLabel: "{label} ({index}/5)",
+        saveButton: "Save",
+        testInstructions: {
+          title: "How to perform the test",
+          steps: [
+            "Sit on the floor with legs straight out in front",
+            "Keep your knees flat on the ground",
+            "Reach forward with both hands toward your toes",
+            "Note how far you can comfortably reach",
+          ],
+        },
+        impactTitle: "How this affects your fit",
+        impactDescription:
+          "Lower flexibility scores lead to a more upright position with less handlebar drop. Better flexibility allows a lower, more aerodynamic posture.",
       },
       coreStability: {
         helper: "Plank hold assessment",
+        editButton: "Re-test",
+        improveLink: "How to improve your core stability",
+        levelLabel: "{label} • {description}",
+        saveButton: "Save",
+        testInstructions: {
+          title: "Front plank hold test",
+          steps: [
+            "Get into a front plank on forearms and toes",
+            "Keep a straight line from head to heels",
+            "Avoid sagging or piking the hips",
+            "Time how long you can hold proper form",
+            "Stop when form starts to break down",
+          ],
+        },
+        impactTitle: "How this affects your fit",
+        impactDescription:
+          "Lower core stability limits how far you can reach and how low your handlebars can go without fatigue. A stronger core supports a longer, more performance-oriented position.",
       },
       status: {
         title: "Profile Status",
@@ -954,6 +1021,28 @@ const en = {
         dismissButton: "Not now",
         successToast: "Updated tire pressure recommendations for {count} bikes.",
         calculating: "Recalculating...",
+      },
+      improve: {
+        flexibility: {
+          title: "Improve Your Flexibility",
+          subtitle:
+            "Hamstring and lower back flexibility determine how low and forward you can comfortably ride.",
+          whatItMeansTitle: "What your score means for your bike fit",
+          exercisesTitle: "Exercises to improve your flexibility",
+          progressTitle: "How to track your progress",
+          updateScoreCta: "Update my flexibility score",
+          backLink: "Back to Profile",
+        },
+        coreStability: {
+          title: "Improve Your Core Stability",
+          subtitle:
+            "Core strength determines how long you can hold an aggressive position without fatigue or back pain.",
+          whatItMeansTitle: "What your score means for your bike fit",
+          exercisesTitle: "Exercises to build core stability",
+          progressTitle: "How to track your progress",
+          updateScoreCta: "Update my core stability score",
+          backLink: "Back to Profile",
+        },
       },
       dangerZone: {
         title: "Danger Zone",
