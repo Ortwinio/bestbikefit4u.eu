@@ -19,6 +19,10 @@ import { getBikeTypeLabel } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
+function formatConfidence(score: number) {
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+
 interface BikeWithFitHistoryProps {
   bike: Doc<"bikes"> | null;
   sessions: Array<{
@@ -135,7 +139,11 @@ export function BikeWithFitHistory({
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="text-sm font-semibold text-gray-900">
-                      {messages.fitHistory.latestSession}:{" "}
+                      {session.ridingStyle
+                        ? messages.sessions.ridingStyle[session.ridingStyle]
+                        : messages.nav.bikeFitting}
+                    </p>
+                    <p className="mt-1 text-sm text-gray-600">
                       {new Date(
                         session.completedAt ?? session.createdAt
                       ).toLocaleDateString(locale === "nl" ? "nl-NL" : "en-US")}
@@ -155,7 +163,7 @@ export function BikeWithFitHistory({
                         </p>
                         <p>
                           {messages.fitHistory.confidence}:{" "}
-                          {Math.round(recommendation.confidenceScore * 100)}%
+                          {formatConfidence(recommendation.confidenceScore)}%
                         </p>
                       </div>
                     ) : (
