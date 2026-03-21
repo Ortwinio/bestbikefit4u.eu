@@ -332,15 +332,15 @@ export default async function FAQPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">{page.title}</h1>
-        <p className="mt-4 text-xl text-gray-600">{page.intro}</p>
+        <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
+        <p className="mt-4 text-xl text-muted-foreground">{page.intro}</p>
 
         <div className="mt-12 space-y-12">
           {page.sections.map((section) => (
             <section key={section.id} aria-labelledby={`${section.id}-title`}>
               <h2
                 id={`${section.id}-title`}
-                className="text-2xl font-semibold text-gray-900"
+                className="text-2xl font-semibold text-foreground"
               >
                 {section.title}
               </h2>
@@ -348,12 +348,12 @@ export default async function FAQPage() {
                 {section.items.map((item) => (
                   <details
                     key={item.id}
-                    className="group rounded-lg border border-gray-200 bg-white p-5"
+                    className="group rounded-lg border border-border bg-card p-5"
                   >
-                    <summary className="cursor-pointer list-none text-lg text-gray-900 marker:hidden">
+                    <summary className="cursor-pointer list-none text-lg text-foreground marker:hidden">
                       <strong>{item.question}</strong>
                     </summary>
-                    <p className="mt-3 leading-relaxed text-gray-600">{item.answer}</p>
+                    <p className="mt-3 leading-relaxed text-muted-foreground">{item.answer}</p>
                   </details>
                 ))}
               </div>
@@ -361,15 +361,15 @@ export default async function FAQPage() {
           ))}
         </div>
 
-        <section className="mt-14 rounded-xl border border-gray-200 bg-gray-50 p-6">
-          <h2 className="text-2xl font-semibold text-gray-900">{page.guideTitle}</h2>
-          <p className="mt-2 text-gray-600">{page.guideBody}</p>
+        <section className="mt-14 rounded-xl border border-border bg-muted p-6">
+          <h2 className="text-2xl font-semibold text-foreground">{page.guideTitle}</h2>
+          <p className="mt-2 text-muted-foreground">{page.guideBody}</p>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {page.guideLinks.map((link) => (
               <Link
                 key={link.href}
                 href={withLocalePrefix(link.href, locale)}
-                className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
+                className="rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-primary hover:bg-secondary"
               >
                 {link.label}
               </Link>
@@ -377,9 +377,9 @@ export default async function FAQPage() {
           </div>
         </section>
 
-        <div className="mt-16 rounded-2xl bg-blue-50 p-8 text-center">
-          <h2 className="text-2xl font-semibold text-gray-900">{page.ctaTitle}</h2>
-          <p className="mt-2 text-gray-600">{page.ctaSubtitle}</p>
+        <div className="mt-16 rounded-2xl bg-primary-soft p-8 text-center">
+          <h2 className="text-2xl font-semibold text-foreground">{page.ctaTitle}</h2>
+          <p className="mt-2 text-muted-foreground">{page.ctaSubtitle}</p>
           <div className="mt-6 flex justify-center gap-4">
             <Button
               variant="outline"

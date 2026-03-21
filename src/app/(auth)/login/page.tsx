@@ -197,10 +197,10 @@ export default function LoginPage() {
   const googleAuthEnabled = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === "true";
 
   const uspPanel = (
-    <section className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-      <h2 className="text-base font-semibold text-blue-900">{text.uspTitle}</h2>
-      <p className="mt-1 text-sm text-blue-700">{text.uspSubtitle}</p>
-      <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-blue-800">
+    <section className="rounded-lg border border-border bg-primary-soft p-4">
+      <h2 className="text-base font-semibold text-primary">{text.uspTitle}</h2>
+      <p className="mt-1 text-sm text-muted-foreground">{text.uspSubtitle}</p>
+      <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-foreground">
         {text.uspItems.map((item) => (
           <li key={item}>{item}</li>
         ))}
@@ -387,11 +387,11 @@ export default function LoginPage() {
     return (
       <Card variant="bordered">
         <CardContent className="pt-8 pb-8 text-center">
-          <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <CheckCircle className="mx-auto mb-4 h-16 w-16 text-success" />
+          <h2 className="mb-2 text-xl font-semibold text-foreground">
             {text.successTitle}
           </h2>
-          <p className="text-gray-600">{text.successSubtitle}</p>
+          <p className="text-muted-foreground">{text.successSubtitle}</p>
         </CardContent>
       </Card>
     );
@@ -407,7 +407,7 @@ export default function LoginPage() {
               type="button"
               variant="ghost"
               onClick={handleChangeEmail}
-              className="mb-2 flex items-center px-0 text-sm text-gray-500 hover:text-gray-700"
+              className="mb-2 flex items-center px-0 text-sm text-muted-foreground hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
               {text.back}
@@ -415,7 +415,7 @@ export default function LoginPage() {
             <CardTitle>{text.enterVerificationCode}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-600 mb-4">
+            <p className="mb-4 text-muted-foreground">
               {text.codeSentTo} <strong>{email}</strong>
             </p>
             <div className="mb-4 flex flex-wrap items-center gap-3">
@@ -423,12 +423,12 @@ export default function LoginPage() {
                 type="button"
                 variant="ghost"
                 onClick={handleChangeEmail}
-                className="px-0 text-sm font-medium text-blue-600 hover:text-blue-800"
+                className="px-0 text-sm font-medium text-primary hover:text-primary-dark"
               >
                 {text.changeEmailAction}
               </Button>
               {sendSuccess && (
-                <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
+                <p className="rounded-lg bg-success/15 px-3 py-2 text-sm text-success">
                   {text.codeSentSuccess}
                 </p>
               )}
@@ -449,13 +449,13 @@ export default function LoginPage() {
               />
 
               {error && (
-                <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+                <p className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
                   {error}
                 </p>
               )}
 
               {resendSuccess && (
-                <p className="text-sm text-green-600 bg-green-50 p-3 rounded-lg">
+                <p className="rounded-lg bg-success/15 p-3 text-sm text-success">
                   {text.resendSuccess}
                 </p>
               )}
@@ -471,7 +471,7 @@ export default function LoginPage() {
                 variant="ghost"
                 onClick={handleResendCode}
                 disabled={isLoading || resendCooldown > 0}
-                className="px-0 text-sm text-blue-600 hover:text-blue-800"
+                className="px-0 text-sm text-primary hover:text-primary-dark"
               >
                 {resendCooldown > 0
                   ? `${text.resendIn} ${resendCooldown}s`
@@ -479,7 +479,9 @@ export default function LoginPage() {
               </Button>
             </div>
 
-            <p className="mt-4 text-center text-xs text-gray-400">{text.spamHint}</p>
+            <p className="mt-4 text-center text-xs text-muted-foreground">
+              {text.spamHint}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -508,11 +510,11 @@ export default function LoginPage() {
               </Button>
 
               <div className="my-6 flex items-center gap-3">
-                <div className="h-px flex-1 bg-gray-200" />
-                <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+                <div className="h-px flex-1 bg-border" />
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   {text.continueWithEmail}
                 </p>
-                <div className="h-px flex-1 bg-gray-200" />
+                <div className="h-px flex-1 bg-border" />
               </div>
             </>
           ) : null}
@@ -530,7 +532,9 @@ export default function LoginPage() {
             />
 
             {error && (
-              <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{error}</p>
+              <p className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
+                {error}
+              </p>
             )}
 
             <Button type="submit" className="w-full" isLoading={isLoading}>
@@ -539,10 +543,14 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <p className="mt-4 text-center text-sm text-gray-500">{text.noPasswordHint}</p>
+          <p className="mt-4 text-center text-sm text-muted-foreground">
+            {text.noPasswordHint}
+          </p>
 
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-xs text-gray-400 text-center">{text.legalHint}</p>
+          <div className="mt-6 border-t border-border pt-6">
+            <p className="text-center text-xs text-muted-foreground">
+              {text.legalHint}
+            </p>
           </div>
         </CardContent>
       </Card>

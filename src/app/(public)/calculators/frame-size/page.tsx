@@ -85,7 +85,7 @@ export default async function FrameSizeCalculatorPage({
   ];
 
   return (
-    <div className="py-16">
+    <div className="py-16 text-foreground">
       <JsonLd
         schema={[
           buildWebApplicationSchema({
@@ -98,13 +98,13 @@ export default async function FrameSizeCalculatorPage({
         ]}
       />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">Frame Size Calculator</h1>
-        <p className="mt-4 text-lg text-gray-600">
+        <h1 className="text-4xl font-bold text-foreground">Frame Size Calculator</h1>
+        <p className="mt-4 text-lg text-muted-foreground">
           Quick frame-size estimate using the fit engine&apos;s
           category-specific size bands and saddle-height baseline.
         </p>
 
-        <form className="mt-10 rounded-xl border border-gray-200 bg-white p-6" method="GET">
+        <form className="mt-10 rounded-xl border border-border bg-card p-6" method="GET">
           <div className="grid gap-4 sm:grid-cols-2">
             <Input
               label="Height (cm)"
@@ -150,30 +150,30 @@ export default async function FrameSizeCalculatorPage({
         </form>
 
         {error && (
-          <div className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="mt-6 rounded-lg border border-destructive/20 bg-destructive-soft px-4 py-3 text-sm text-destructive">
             {error}
           </div>
         )}
 
         {result && (
-          <div className="mt-6 rounded-xl border border-blue-200 bg-blue-50 p-6">
-            <h2 className="text-xl font-semibold text-gray-900">Result</h2>
-            <p className="mt-3 text-gray-800">
+          <div className="mt-6 rounded-xl border border-primary/20 bg-primary-soft p-6">
+            <h2 className="text-xl font-semibold text-foreground">Result</h2>
+            <p className="mt-3 text-foreground">
               Estimated frame size: <span className="font-bold">{result.frameSize}</span>
             </p>
-            <p className="mt-1 text-sm text-gray-700">
+            <p className="mt-1 text-sm text-muted-foreground">
               Estimated saddle-height baseline: {result.saddleHeightMm} mm
             </p>
           </div>
         )}
 
-        <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6">
-          <h2 className="text-2xl font-semibold text-gray-900">FAQ</h2>
+        <section className="mt-10 rounded-2xl border border-border bg-card p-6">
+          <h2 className="text-2xl font-semibold text-foreground">FAQ</h2>
           <div className="mt-4 space-y-4">
             {faqs.map((faq) => (
               <div key={faq.q}>
-                <h3 className="font-semibold text-gray-900">{faq.q}</h3>
-                <p className="mt-1 text-gray-600">{faq.a}</p>
+                <h3 className="font-semibold text-foreground">{faq.q}</h3>
+                <p className="mt-1 text-muted-foreground">{faq.a}</p>
               </div>
             ))}
           </div>

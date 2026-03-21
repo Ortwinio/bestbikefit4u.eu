@@ -42,40 +42,40 @@ export default function StackAndReachPage() {
   };
 
   return (
-    <div className="py-16">
+    <div className="py-16 text-foreground">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">Stack and Reach</h1>
-        <p className="mt-4 text-lg text-gray-600">
+        <h1 className="text-4xl font-bold text-foreground">Stack and Reach</h1>
+        <p className="mt-4 text-lg text-muted-foreground">
           Stack and reach provide a consistent way to compare bike frames across
           brands without relying on inconsistent size labels.
         </p>
 
         <div className="mt-10 grid gap-6">
-          <section className="rounded-xl border border-gray-200 bg-white p-6">
-            <h2 className="text-2xl font-semibold text-gray-900">What Is Stack?</h2>
-            <p className="mt-3 text-gray-700">
+          <section className="rounded-xl border border-border bg-card p-6">
+            <h2 className="text-2xl font-semibold text-foreground">What Is Stack?</h2>
+            <p className="mt-3 text-muted-foreground">
               Stack is the vertical distance from the bottom bracket to the top
               center of the head tube. Higher stack generally means a more
               upright riding posture.
             </p>
           </section>
 
-          <section className="rounded-xl border border-gray-200 bg-white p-6">
-            <h2 className="text-2xl font-semibold text-gray-900">What Is Reach?</h2>
-            <p className="mt-3 text-gray-700">
+          <section className="rounded-xl border border-border bg-card p-6">
+            <h2 className="text-2xl font-semibold text-foreground">What Is Reach?</h2>
+            <p className="mt-3 text-muted-foreground">
               Reach is the horizontal distance from the bottom bracket to that
               same head-tube reference point. Longer reach usually creates a
               more stretched cockpit.
             </p>
           </section>
 
-          <section className="rounded-xl border border-blue-200 bg-blue-50 p-6">
-            <h2 className="text-2xl font-semibold text-gray-900">Why It Matters</h2>
-            <p className="mt-3 text-gray-700">
+          <section className="rounded-xl border border-primary/20 bg-primary-soft p-6">
+            <h2 className="text-2xl font-semibold text-foreground">Why It Matters</h2>
+            <p className="mt-3 text-muted-foreground">
               Seat tube size alone can hide major geometry differences. Stack
               and reach reflect real rider position and are the best baseline
               when matching a frame to fit targets.
@@ -83,14 +83,14 @@ export default function StackAndReachPage() {
           </section>
         </div>
 
-        <section className="mt-12 rounded-xl border border-gray-200 bg-gray-50 p-6">
-          <h2 className="text-xl font-semibold text-gray-900">Continue Reading</h2>
+        <section className="mt-12 rounded-xl border border-border bg-muted p-6">
+          <h2 className="text-xl font-semibold text-foreground">Continue Reading</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
+                className="rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-primary hover:bg-secondary"
               >
                 {link.label}
               </Link>

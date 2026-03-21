@@ -52,10 +52,10 @@ export function StepRoute({
 
   return (
     <div className="space-y-5">
-      <h2 className="text-xl font-semibold text-gray-900">{labels.title}</h2>
+      <h2 className="text-xl font-semibold text-[color:var(--foreground)]">{labels.title}</h2>
 
       <Field.Root className="space-y-3">
-        <Field.Label className="text-sm text-gray-700">{labels.surfaceLabel}</Field.Label>
+        <Field.Label className="text-sm text-[color:var(--foreground)]">{labels.surfaceLabel}</Field.Label>
         <div className="mt-2 flex flex-wrap gap-2">
           {surfaces.map((option) => (
             <Selectable

@@ -38,12 +38,12 @@ export default function BikesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{messages.nav.myBikes}</h1>
-          <p className="mt-2 text-sm text-gray-600">{messages.bikes.subtitle}</p>
+          <h1 className="text-2xl font-bold text-foreground">{messages.nav.myBikes}</h1>
+          <p className="mt-2 text-sm text-muted-foreground">{messages.bikes.subtitle}</p>
         </div>
         <Link
           href={withLocalePrefix("/bikes/new", locale)}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-blue-700 hover:text-blue-800"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-dark"
         >
           <Plus className="h-4 w-4" />
           {messages.nav.newBike}

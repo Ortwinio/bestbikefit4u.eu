@@ -23,7 +23,7 @@ export function ProgressBar({
 
   return (
     <div className={cn("w-full", className)}>
-      <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+      <div className="mb-2 flex items-center justify-between text-sm text-muted-foreground">
         <span>{messages.questionnaire.progress.label}</span>
         <div className="flex items-center gap-3">
           {estimatedMinutes !== undefined ? (

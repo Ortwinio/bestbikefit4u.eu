@@ -1,11 +1,15 @@
 "use client";
 
 import { forwardRef, useId } from "react";
-import { NumberField } from "@base-ui/react/number-field";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { Field } from "./Field";
 import { Tooltip } from "./Tooltip";
+import {
+  NumberFieldGroup,
+  NumberFieldInput,
+  NumberFieldRoot,
+  NumberFieldSteppers,
+} from "@/components/prototyper-ui/ui/numberfield";
 
 export interface NumberInputProps {
   label?: string;
@@ -28,28 +32,7 @@ export interface NumberInputProps {
   inputClassName?: string;
   unit?: string;
   allowOutOfRange?: boolean;
-}
-
-function NumberInputSteppers({ label }: { label?: string }) {
-  const incrementLabel = label ? `Increase ${label}` : "Increase value";
-  const decrementLabel = label ? `Decrease ${label}` : "Decrease value";
-
-  return (
-    <div className="flex h-11 w-11 flex-col border-l border-[color:var(--border)] bg-[color:var(--secondary)]">
-      <NumberField.Increment
-        aria-label={incrementLabel}
-        className="flex flex-1 items-center justify-center text-[color:var(--secondary-foreground)] transition-colors hover:bg-[color:var(--accent)] focus-visible:z-10 focus-visible:focus-ring disabled:status-disabled"
-      >
-        <ChevronUp className="h-4 w-4" />
-      </NumberField.Increment>
-      <NumberField.Decrement
-        aria-label={decrementLabel}
-        className="flex flex-1 items-center justify-center border-t border-[color:var(--border)] text-[color:var(--secondary-foreground)] transition-colors hover:bg-[color:var(--accent)] focus-visible:z-10 focus-visible:focus-ring disabled:status-disabled"
-      >
-        <ChevronDown className="h-4 w-4" />
-      </NumberField.Decrement>
-    </div>
-  );
+  "aria-describedby"?: string;
 }
 
 function NumberInputFieldLabel({
@@ -102,6 +85,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       inputClassName,
       unit,
       allowOutOfRange = true,
+      "aria-describedby": ariaDescribedBy,
     },
     ref
   ) => {
@@ -113,7 +97,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     const tooltipDescriptionId = tooltip
       ? `${inputId}-tooltip-description`
       : undefined;
-    const describedBy = [tooltipDescriptionId, errorId, helperId]
+    const describedBy = [ariaDescribedBy, tooltipDescriptionId, errorId, helperId]
       .filter(Boolean)
       .join(" ");
 
@@ -133,7 +117,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             tooltipDescriptionId={tooltipDescriptionId}
           />
         ) : null}
-        <NumberField.Root
+        <NumberFieldRoot
           id={inputId}
           name={name}
           value={value}
@@ -146,9 +130,9 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
           onValueChange={onChange}
           className="w-full"
         >
-          <NumberField.Group className="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-[color:var(--input)] bg-[color:var(--card)] transition-colors focus-within:border-[color:var(--ring)] focus-within:focus-field-ring">
+          <NumberFieldGroup>
             <div className="relative flex min-w-0 flex-1 items-stretch">
-              <NumberField.Input
+              <NumberFieldInput
                 ref={ref}
                 aria-describedby={describedBy || undefined}
                 aria-errormessage={errorId}
@@ -156,7 +140,6 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 placeholder={placeholder}
                 onBlur={onBlur}
                 className={cn(
-                  "h-11 w-full min-w-0 bg-transparent px-3 text-sm text-[color:var(--foreground)] outline-none placeholder:text-[color:var(--muted-foreground)] disabled:cursor-not-allowed disabled:text-[color:var(--muted-foreground)]",
                   unit ? "pr-10" : "pr-3",
                   inputClassName
                 )}
@@ -167,9 +150,9 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 </span>
               ) : null}
             </div>
-            <NumberInputSteppers label={label} />
-          </NumberField.Group>
-        </NumberField.Root>
+            <NumberFieldSteppers label={label} />
+          </NumberFieldGroup>
+        </NumberFieldRoot>
         {error ? (
           <Field.Error
             match={true}

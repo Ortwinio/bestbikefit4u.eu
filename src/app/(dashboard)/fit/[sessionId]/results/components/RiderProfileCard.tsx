@@ -39,7 +39,7 @@ export function RiderProfileCard({
       </CardHeader>
       <CardContent className="space-y-6">
         {profile.dataQualityStatus === "partial" ? (
-          <div className="rounded-[var(--radius-md)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] px-4 py-3 text-sm text-[color:var(--warning-foreground)]">
             {copy.dataQuality.banner}
           </div>
         ) : null}
@@ -116,4 +116,3 @@ export function RiderProfileCard({
     </Card>
   );
 }
-

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { RadioGroup } from "@base-ui/react/radio-group";
 import { useMutation, useQuery } from "convex/react";
 import { Activity, ArrowRight, Dumbbell, Edit2, Info, PencilLine, Ruler } from "lucide-react";
 import { api } from "../../../../convex/_generated/api";
@@ -102,12 +103,12 @@ function MeasurementInfoBox({
   steps: string[];
 }) {
   return (
-    <div className="rounded-[var(--radius-lg)] bg-blue-50 p-3 text-sm">
+    <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_88%,var(--background)_12%)] p-3 text-sm">
       <div className="flex items-start gap-2">
-        <Info className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--primary)]" />
         <div>
-          <p className="font-medium text-blue-800">{title}</p>
-          <ul className="mt-1 space-y-1 text-blue-700">
+          <p className="font-medium text-[color:var(--foreground)]">{title}</p>
+          <ul className="mt-1 space-y-1 text-[color:var(--muted-foreground)]">
             {steps.map((step) => (
               <li key={step}>• {step}</li>
             ))}
@@ -323,7 +324,7 @@ function BodyMeasurementsEditor({
           </div>
 
           {ratioWarning ? (
-            <div className="rounded-[var(--radius-lg)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] px-4 py-3 text-sm text-[color:var(--warning-foreground)]">
               {ratioWarning}
             </div>
           ) : null}
@@ -393,7 +394,7 @@ function FlexibilityCard({
     <Card variant="bordered" className="dashboard-card-surface">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Activity className="h-5 w-5 text-green-600" />
+          <Activity className="h-5 w-5 text-[color:var(--primary)]" />
           <CardTitle>{messages.profile.sections.flexibility}</CardTitle>
         </div>
       </CardHeader>
@@ -414,7 +415,7 @@ function FlexibilityCard({
                 <Edit2 className="h-4 w-4" />
                 {messages.profile.flexibility.editButton}
               </Button>
-              <Link href={withLocalePrefix("/profile/improve/flexibility", locale)} className="inline-flex items-center gap-1 text-sm font-semibold text-blue-700 hover:text-blue-800">
+              <Link href={withLocalePrefix("/profile/improve/flexibility", locale)} className="inline-flex items-center gap-1 text-sm font-semibold text-[color:var(--primary)] hover:opacity-80">
                 {messages.profile.flexibility.improveLink}
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -426,14 +427,19 @@ function FlexibilityCard({
               title={messages.profile.flexibility.testInstructions.title}
               steps={messages.profile.flexibility.testInstructions.steps}
             />
-            <div className="grid gap-3">
+            <RadioGroup<FlexibilityScore>
+              aria-label={messages.profile.sections.flexibility}
+              className="grid gap-3"
+              value={draftScore}
+              onValueChange={(next) => setDraftScore(next)}
+            >
               {flexibilityTests.map((test) => {
                 const optionMeta = getFlexibilityMeta(test.score);
                 return (
                   <Selectable
                     key={test.score}
-                    selected={draftScore === test.score}
-                    onClick={() => setDraftScore(test.score)}
+                    mode="radio"
+                    value={test.score}
                     variant="card"
                     label={test.label}
                     badge={
@@ -445,7 +451,7 @@ function FlexibilityCard({
                   />
                 );
               })}
-            </div>
+            </RadioGroup>
             <div className="flex justify-end gap-2">
               <Button variant="ghost" size="sm" onClick={onCancel}>
                 {messages.common.cancel}
@@ -507,7 +513,7 @@ function CoreStabilityCard({
     <Card variant="bordered" className="dashboard-card-surface">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Dumbbell className="h-5 w-5 text-purple-600" />
+          <Dumbbell className="h-5 w-5 text-[color:var(--primary)]" />
           <CardTitle>{messages.profile.sections.coreStability}</CardTitle>
         </div>
       </CardHeader>
@@ -528,7 +534,7 @@ function CoreStabilityCard({
                 <Edit2 className="h-4 w-4" />
                 {messages.profile.coreStability.editButton}
               </Button>
-              <Link href={withLocalePrefix("/profile/improve/core-stability", locale)} className="inline-flex items-center gap-1 text-sm font-semibold text-blue-700 hover:text-blue-800">
+              <Link href={withLocalePrefix("/profile/improve/core-stability", locale)} className="inline-flex items-center gap-1 text-sm font-semibold text-[color:var(--primary)] hover:opacity-80">
                 {messages.profile.coreStability.improveLink}
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -540,12 +546,17 @@ function CoreStabilityCard({
               title={messages.profile.coreStability.testInstructions.title}
               steps={messages.profile.coreStability.testInstructions.steps}
             />
-            <div className="grid gap-3">
+            <RadioGroup<number>
+              aria-label={messages.profile.sections.coreStability}
+              className="grid gap-3"
+              value={draftScore}
+              onValueChange={(next) => setDraftScore(next)}
+            >
               {coreStabilityTests.map((test) => (
                 <Selectable
                   key={test.score}
-                  selected={draftScore === test.score}
-                  onClick={() => setDraftScore(test.score)}
+                  mode="radio"
+                  value={test.score}
                   variant="card"
                   label={test.label}
                   description={test.description}
@@ -556,7 +567,7 @@ function CoreStabilityCard({
                   }
                 />
               ))}
-            </div>
+            </RadioGroup>
             <div className="flex justify-end gap-2">
               <Button variant="ghost" size="sm" onClick={onCancel}>
                 {messages.common.cancel}
@@ -626,10 +637,10 @@ function ProfileSummary({
         <div className="flex items-center gap-4">
           <ProfilePhotoUpload source={profileImageSource} size="settings" />
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-[color:var(--foreground)]">
               {messages.profile.title}
             </h1>
-            <p className="mt-1 text-sm text-gray-600">{displayName}</p>
+            <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">{displayName}</p>
           </div>
         </div>
         <Button onClick={onEditWizard}>
@@ -643,7 +654,7 @@ function ProfileSummary({
           <CardHeader>
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <Ruler className="h-5 w-5 text-blue-600" />
+                <Ruler className="h-5 w-5 text-[color:var(--primary)]" />
                 <CardTitle>{messages.profile.sections.bodyMeasurements}</CardTitle>
               </div>
               {!editingMeasurements ? (
@@ -692,7 +703,7 @@ function ProfileSummary({
           <CardTitle>{messages.profile.status.title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600">{messages.profile.status.description}</p>
+          <p className="text-[color:var(--muted-foreground)]">{messages.profile.status.description}</p>
           <div className="mt-4">
             <Button variant="primary" {...linkButtonProps(fitHref)}>
               {messages.profile.status.startFitCta}
@@ -937,12 +948,12 @@ export default function ProfilePage() {
     return (
       <div>
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-[color:var(--foreground)]">
             {profileData
               ? messages.profile.edit.title
               : messages.profile.onboarding.title}
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-[color:var(--muted-foreground)]">
             {profileData
               ? messages.profile.edit.description
               : messages.profile.onboarding.description}

@@ -40,10 +40,10 @@ export default async function UseCasesIndexPage() {
   return (
     <div className="py-16">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">
+        <h1 className="text-4xl font-bold text-foreground">
           {isNl ? "Bikefit use cases" : "Bike Fit Use Cases"}
         </h1>
-        <p className="mt-4 max-w-3xl text-lg text-gray-600">
+        <p className="mt-4 max-w-3xl text-lg text-muted-foreground">
           {isNl
             ? "Gebruik deze scenario-pagina's om sneller te bepalen welke fit-aanpassingen en calculators voor jouw situatie relevant zijn."
             : "Use these scenario pages to identify which fit priorities and calculators matter most for your riding situation."}
@@ -56,13 +56,13 @@ export default async function UseCasesIndexPage() {
             return (
               <article
                 key={item.slug}
-                className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+                className="rounded-2xl border border-border bg-card p-6 shadow-sm"
               >
-                <h2 className="text-xl font-semibold text-gray-900">{copy.cardTitle}</h2>
-                <p className="mt-3 text-gray-600">{copy.cardDescription}</p>
+                <h2 className="text-xl font-semibold text-foreground">{copy.cardTitle}</h2>
+                <p className="mt-3 text-muted-foreground">{copy.cardDescription}</p>
                 <Link
                   href={withLocalePrefix(`/use-cases/${item.slug}`, locale)}
-                  className="mt-5 inline-flex text-sm font-semibold text-blue-700 hover:text-blue-800"
+                  className="mt-5 inline-flex text-sm font-semibold text-primary hover:text-primary-dark"
                 >
                   {isNl ? "Bekijk use case" : "View use case"}
                 </Link>
@@ -71,18 +71,18 @@ export default async function UseCasesIndexPage() {
           })}
         </div>
 
-        <section className="mt-14 rounded-2xl bg-blue-600 p-8 text-center">
-          <h2 className="text-2xl font-bold text-white">
+        <section className="mt-14 rounded-2xl bg-primary p-8 text-center">
+          <h2 className="text-2xl font-bold text-primary-foreground">
             {isNl ? "Wil je je eigen fit laten berekenen?" : "Ready to calculate your own fit?"}
           </h2>
-          <p className="mt-3 text-blue-100">
+          <p className="mt-3 text-primary-foreground/80">
             {isNl
               ? "Start met de gratis bike fit calculator en ga daarna verder in het dashboard."
               : "Start with the free bike-fit calculator and continue in the dashboard when you need more detail."}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button
-              className="bg-white text-blue-700 hover:bg-blue-50"
+              className="bg-background text-primary hover:bg-muted"
               {...linkButtonProps(withLocalePrefix("/calculators/bike-fit", locale))}
             >
               {isNl ? "Open bike fit calculator" : "Open Bike Fit Calculator"}
@@ -98,7 +98,7 @@ export default async function UseCasesIndexPage() {
                 />
               }
               variant="outline"
-              className="border-white text-white hover:bg-blue-500"
+              className="border-primary-foreground bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
             >
               {isNl ? "Start gratis fit" : "Start Free Fit"}
             </Button>

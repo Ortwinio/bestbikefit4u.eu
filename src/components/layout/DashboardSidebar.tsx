@@ -8,10 +8,7 @@ import { api } from "../../../convex/_generated/api";
 import { BRAND } from "@/config/brand";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import {
-  stripLocalePrefix,
-  withLocalePrefix,
-} from "@/i18n/navigation";
+import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
 import { cn } from "@/utils/cn";
 import {
   LayoutDashboard,
@@ -67,17 +64,17 @@ export function DashboardSidebar() {
   const profileImageSource = getEffectiveProfileImageSource(user);
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white">
+    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)]">
       <div className="flex h-full flex-col">
-        <div className="flex h-16 items-center border-b border-gray-200 px-6">
+        <div className="flex h-16 items-center border-b border-[color:var(--border)] px-6">
           <Link
             href={toLocalizedPath("/dashboard")}
-            className="text-xl font-bold text-gray-900"
+            className="text-xl font-bold text-[color:var(--foreground)]"
           >
             {BRAND.name}
           </Link>
         </div>
-        <div className="border-b border-gray-100 px-4 py-3">
+        <div className="border-b border-[color:var(--border)] px-4 py-3">
           <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
         </div>
 
@@ -93,8 +90,8 @@ export function DashboardSidebar() {
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-gray-700 hover:bg-gray-100"
+                    ? "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--secondary)_86%)] text-[color:var(--foreground)] shadow-sm"
+                    : "text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -104,8 +101,8 @@ export function DashboardSidebar() {
           })}
         </nav>
 
-        <div className="border-t border-gray-100 px-3 py-3">
-          <p className="px-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+        <div className="border-t border-[color:var(--border)] px-3 py-3">
+          <p className="px-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
             {messages.layout.sections.website}
           </p>
           <div className="mt-2 space-y-1">
@@ -113,7 +110,7 @@ export function DashboardSidebar() {
               <Link
                 key={item.href}
                 href={toLocalizedPath(item.href)}
-                className="block rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                className="block rounded-lg px-3 py-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
               >
                 {item.name}
               </Link>
@@ -121,24 +118,21 @@ export function DashboardSidebar() {
           </div>
         </div>
 
-        {/* User section */}
-        <div className="border-t border-gray-200 p-3">
-          {/* User info */}
-          <div className="flex items-center gap-3 px-3 py-2 mb-2">
+        <div className="border-t border-[color:var(--border)] p-3">
+          <div className="mb-2 flex items-center gap-3 px-3 py-2">
             <ProfilePhotoUpload source={profileImageSource} size="sidebar" />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium text-[color:var(--foreground)]">
                 {displayName}
               </p>
-              <p className="text-xs text-gray-500 truncate">{email}</p>
+              <p className="truncate text-xs text-[color:var(--muted-foreground)]">{email}</p>
             </div>
           </div>
 
-          {/* Sign out button */}
           <Button
             variant="ghost"
             onClick={handleSignOut}
-            className="flex w-full items-center justify-start gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-700"
+            className="w-full justify-start gap-3 rounded-lg px-3 py-2 text-sm font-medium"
           >
             <LogOut className="h-5 w-5" />
             {messages.common.signOut}

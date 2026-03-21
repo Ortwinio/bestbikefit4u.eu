@@ -4,13 +4,21 @@ import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Button, Card, CardContent, CardHeader, CardTitle, Progress } from "@/components/ui";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Progress,
+} from "@/components/ui";
 import { StepBodyMeasurements } from "./StepBodyMeasurements";
 import { StepAdvancedMeasurements } from "./StepAdvancedMeasurements";
 import { StepFlexibility } from "./StepFlexibility";
 import { StepCoreStability } from "./StepCoreStability";
 import { cn } from "@/utils/cn";
-import { ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 
 const wizardSchema = z.object({
   // Step 1: Required body measurements
@@ -75,13 +83,14 @@ export function MeasurementWizard({
   });
 
   const { handleSubmit, trigger, formState } = methods;
+  const activeStep = steps[currentStep - 1];
 
   const validateCurrentStep = async () => {
     switch (currentStep) {
       case 1:
         return await trigger(["heightCm", "inseamCm"]);
       case 2:
-        return true; // Optional fields
+        return true;
       case 3:
         return await trigger(["flexibilityScore"]);
       case 4:
@@ -130,104 +139,96 @@ export function MeasurementWizard({
 
   return (
     <FormProvider {...methods}>
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-8 space-y-3">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="text-sm font-medium text-gray-500">
-                Step {currentStep} of {steps.length}
-              </p>
-              <p className="text-base font-semibold text-gray-900">
-                {steps[currentStep - 1].title}
-              </p>
+      <div className="mx-auto max-w-2xl">
+        <Card variant="bordered" className="overflow-hidden">
+          <CardHeader className="border-b border-[color:var(--border)] bg-[color:var(--secondary)]/30 px-6 py-5">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium text-[color:var(--muted-foreground)]">
+                  Step {currentStep} of {steps.length}
+                </p>
+                <CardTitle className="text-lg text-[color:var(--foreground)]">
+                  {activeStep.title}
+                </CardTitle>
+              </div>
+              <CardDescription className="max-w-xs text-right">
+                {activeStep.description}
+              </CardDescription>
             </div>
-            <p className="max-w-xs text-right text-sm text-gray-500">
-              {steps[currentStep - 1].description}
-            </p>
-          </div>
-          <Progress
-            value={currentStep - 1}
-            max={steps.length - 1}
-            label="Measurement wizard progress"
-          />
-        </div>
-
-        {/* Progress Steps */}
-        <nav className="mb-8">
-          <ol className="flex items-center justify-between">
-            {steps.map((step, index) => (
-              <li key={step.id} className="flex items-center">
-                <div className="flex flex-col items-center">
-                  <div
-                    className={cn(
-                      "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-colors",
-                      currentStep > step.id
-                        ? "border-blue-600 bg-blue-600 text-white"
-                        : currentStep === step.id
-                          ? "border-blue-600 bg-white text-blue-600"
-                          : "border-gray-300 bg-white text-gray-400"
-                    )}
-                  >
-                    {currentStep > step.id ? (
-                      <Check className="h-5 w-5" />
-                    ) : (
-                      step.id
-                    )}
-                  </div>
-                  <div className="mt-2 text-center">
-                    <p
-                      className={cn(
-                        "text-sm font-medium",
-                        currentStep >= step.id
-                          ? "text-gray-900"
-                          : "text-gray-400"
-                      )}
-                    >
-                      {step.title}
-                    </p>
-                    <p className="text-xs text-gray-500 hidden sm:block">
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
-                {index < steps.length - 1 && (
-                  <div
-                    className={cn(
-                      "h-0.5 w-12 sm:w-24 mx-2 mt-[-24px]",
-                      currentStep > step.id ? "bg-blue-600" : "bg-gray-300"
-                    )}
-                  />
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
-
-        {/* Form Card */}
-        <Card variant="bordered">
-          <CardHeader>
-            <CardTitle>{steps[currentStep - 1].title}</CardTitle>
+            <Progress
+              value={currentStep - 1}
+              max={steps.length - 1}
+              label="Measurement wizard progress"
+            />
           </CardHeader>
-          <CardContent>
+
+          <CardContent className="px-6 py-6">
+            <nav className="mb-8" aria-label="Measurement steps">
+              <ol className="flex items-center justify-between gap-2">
+                {steps.map((step, index) => (
+                  <li key={step.id} className="flex min-w-0 items-center">
+                    <div className="flex flex-col items-center">
+                      <div
+                        className={cn(
+                          "flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-medium transition-colors",
+                          currentStep > step.id
+                            ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
+                            : currentStep === step.id
+                              ? "border-[color:var(--primary)] bg-[color:var(--card)] text-[color:var(--primary)]"
+                              : "border-[color:var(--border)] bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]"
+                        )}
+                      >
+                        {currentStep > step.id ? <Check className="h-5 w-5" /> : step.id}
+                      </div>
+                      <div className="mt-2 text-center">
+                        <p
+                          className={cn(
+                            "text-sm font-medium",
+                            currentStep >= step.id
+                              ? "text-[color:var(--foreground)]"
+                              : "text-[color:var(--muted-foreground)]"
+                          )}
+                        >
+                          {step.title}
+                        </p>
+                        <p className="hidden text-xs text-[color:var(--muted-foreground)] sm:block">
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
+                    {index < steps.length - 1 && (
+                      <div
+                        className={cn(
+                          "mx-2 mt-[-24px] h-0.5 w-12 sm:w-24",
+                          currentStep > step.id
+                            ? "bg-[color:var(--primary)]"
+                            : "bg-[color:var(--border)]"
+                        )}
+                      />
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </nav>
+
             <form onSubmit={handleSubmit(onSubmit)}>
               {renderStep()}
 
-              {/* Navigation Buttons */}
-              <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
+              <div className="mt-8 flex justify-between border-t border-[color:var(--border)] pt-6">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handlePrevious}
                   disabled={currentStep === 1}
                 >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  <ChevronLeft className="mr-1 h-4 w-4" />
                   Previous
                 </Button>
 
                 {currentStep < steps.length ? (
                   <Button type="button" onClick={handleNext}>
                     Next
-                    <ChevronRight className="h-4 w-4 ml-1" />
+                    <ChevronRight className="ml-1 h-4 w-4" />
                   </Button>
                 ) : (
                   <Button
@@ -236,7 +237,7 @@ export function MeasurementWizard({
                     disabled={!formState.isValid}
                   >
                     Save Profile
-                    <Check className="h-4 w-4 ml-1" />
+                    <Check className="ml-1 h-4 w-4" />
                   </Button>
                 )}
               </div>

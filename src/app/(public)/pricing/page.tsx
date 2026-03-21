@@ -274,8 +274,8 @@ export default async function PricingPage() {
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900">{page.title}</h1>
-          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">{page.subtitle}</p>
+          <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">{page.subtitle}</p>
         </div>
 
         <div className="mt-16 grid gap-8 md:grid-cols-3">
@@ -284,24 +284,24 @@ export default async function PricingPage() {
               key={tier.name}
               className={`rounded-2xl p-8 ${
                 tier.highlighted
-                  ? "bg-blue-600 text-white ring-4 ring-blue-600 scale-105"
-                  : "bg-white ring-1 ring-gray-200"
+                  ? "bg-primary text-primary-foreground ring-1 ring-primary scale-105"
+                  : "bg-card ring-1 ring-border"
               }`}
             >
               {tier.highlighted && (
-                <p className="text-sm font-semibold text-blue-200 mb-4">{page.popular}</p>
+                <p className="mb-4 text-sm font-semibold text-primary-foreground/80">{page.popular}</p>
               )}
-              <h3 className={`text-lg font-semibold ${tier.highlighted ? "text-white" : "text-gray-900"}`}>
+              <h3 className={`text-lg font-semibold ${tier.highlighted ? "text-primary-foreground" : "text-foreground"}`}>
                 {tier.name}
               </h3>
-              <p className={`mt-2 text-sm ${tier.highlighted ? "text-blue-100" : "text-gray-500"}`}>
+              <p className={`mt-2 text-sm ${tier.highlighted ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
                 {tier.description}
               </p>
               <p className="mt-6">
-                <span className={`text-4xl font-bold ${tier.highlighted ? "text-white" : "text-gray-900"}`}>
+                <span className={`text-4xl font-bold ${tier.highlighted ? "text-primary-foreground" : "text-foreground"}`}>
                   ${tier.price}
                 </span>
-                <span className={`text-sm ${tier.highlighted ? "text-blue-100" : "text-gray-500"}`}>
+                <span className={`text-sm ${tier.highlighted ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
                   {page.perMonth}
                 </span>
               </p>
@@ -310,10 +310,10 @@ export default async function PricingPage() {
                   <li key={feature} className="flex items-start gap-3">
                     <Check
                       className={`h-5 w-5 flex-shrink-0 ${
-                        tier.highlighted ? "text-blue-200" : "text-blue-600"
+                        tier.highlighted ? "text-primary-foreground/80" : "text-primary"
                       }`}
                     />
-                    <span className={`text-sm ${tier.highlighted ? "text-white" : "text-gray-600"}`}>
+                    <span className={`text-sm ${tier.highlighted ? "text-primary-foreground" : "text-muted-foreground"}`}>
                       {feature}
                     </span>
                   </li>
@@ -331,7 +331,7 @@ export default async function PricingPage() {
                       className="block"
                     />
                   }
-                  className={`w-full ${tier.highlighted ? "bg-white text-blue-600 hover:bg-blue-50" : ""}`}
+                  className={`w-full ${tier.highlighted ? "bg-background text-primary hover:bg-muted" : ""}`}
                   variant={tier.highlighted ? "secondary" : "primary"}
                 >
                   {tier.cta}
@@ -342,30 +342,30 @@ export default async function PricingPage() {
         </div>
 
         <div className="mt-20">
-          <h2 className="text-2xl font-bold text-gray-900 text-center">{page.comparisonTitle}</h2>
+          <h2 className="text-center text-2xl font-bold text-foreground">{page.comparisonTitle}</h2>
           <div className="mt-8 overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-200">
+                <tr className="border-b border-border">
                   {page.comparisonHeaders.map((header, index) => (
                     <th
                       key={header}
                       className={`py-4 px-4 font-semibold ${
                         index === 0 ? "text-left" : "text-center"
-                      } ${index === 2 ? "text-blue-600" : "text-gray-900"}`}
+                      } ${index === 2 ? "text-primary" : "text-foreground"}`}
                     >
                       {header}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-border">
                 {page.comparisonRows.map(([feature, free, pro, premium]) => (
                   <tr key={feature}>
-                    <td className="py-4 px-4 text-sm text-gray-700">{feature}</td>
-                    <td className="py-4 px-4 text-sm text-gray-600 text-center">{free}</td>
-                    <td className="py-4 px-4 text-sm text-blue-600 text-center font-medium">{pro}</td>
-                    <td className="py-4 px-4 text-sm text-gray-600 text-center">{premium}</td>
+                    <td className="px-4 py-4 text-sm text-foreground">{feature}</td>
+                    <td className="px-4 py-4 text-center text-sm text-muted-foreground">{free}</td>
+                    <td className="px-4 py-4 text-center text-sm font-medium text-primary">{pro}</td>
+                    <td className="px-4 py-4 text-center text-sm text-muted-foreground">{premium}</td>
                   </tr>
                 ))}
               </tbody>
@@ -374,20 +374,20 @@ export default async function PricingPage() {
         </div>
 
         <div className="mt-20">
-          <h2 className="text-2xl font-bold text-gray-900 text-center">{page.faqTitle}</h2>
+          <h2 className="text-center text-2xl font-bold text-foreground">{page.faqTitle}</h2>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             {page.faqs.map((faq) => (
-              <div key={faq.question} className="bg-gray-50 rounded-lg p-6">
-                <h3 className="font-semibold text-gray-900">{faq.question}</h3>
-                <p className="mt-2 text-sm text-gray-600">{faq.answer}</p>
+              <div key={faq.question} className="rounded-lg border border-border bg-muted p-6">
+                <h3 className="font-semibold text-foreground">{faq.question}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{faq.answer}</p>
               </div>
             ))}
           </div>
         </div>
 
         <div className="mt-20 text-center">
-          <h2 className="text-2xl font-bold text-gray-900">{page.ctaTitle}</h2>
-          <p className="mt-4 text-gray-600">{page.ctaSubtitle}</p>
+          <h2 className="text-2xl font-bold text-foreground">{page.ctaTitle}</h2>
+          <p className="mt-4 text-muted-foreground">{page.ctaSubtitle}</p>
           <Button
             render={
               <TrackedCtaLink

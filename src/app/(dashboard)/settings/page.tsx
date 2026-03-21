@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { RadioGroup } from "@base-ui/react/radio-group";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import {
@@ -115,10 +116,10 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6 text-[color:var(--foreground)]">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">{messages.settings.title}</h1>
-        <p className="mt-2 text-sm text-gray-600">{messages.settings.subtitle}</p>
+        <h1 className="text-2xl font-bold text-[color:var(--foreground)]">{messages.settings.title}</h1>
+        <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">{messages.settings.subtitle}</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -130,10 +131,10 @@ export default function SettingsPage() {
             <div className="flex items-center gap-4">
               <ProfilePhotoUpload source={profileImageSource} size="settings" />
               <div>
-                <p className="font-semibold text-gray-900">
+                <p className="font-semibold text-[color:var(--foreground)]">
                   {effectiveDisplayName}
                 </p>
-                <p className="text-sm text-gray-600">{user?.email}</p>
+                <p className="text-sm text-[color:var(--muted-foreground)]">{user?.email}</p>
               </div>
             </div>
             <div className="space-y-3">
@@ -152,19 +153,19 @@ export default function SettingsPage() {
                 {messages.settings.account.saveDisplayName}
               </Button>
             </div>
-            <div className="flex items-center justify-between rounded-[var(--radius-md)] bg-[color:var(--secondary)] px-4 py-3">
-              <span className="text-sm text-gray-700">{messages.settings.account.type}</span>
+            <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] px-4 py-3">
+              <span className="text-sm text-[color:var(--muted-foreground)]">{messages.settings.account.type}</span>
               <span className="rounded-full bg-[color:var(--primary)] px-3 py-1 text-xs font-semibold text-[color:var(--primary-foreground)]">
                 {accountType}
               </span>
             </div>
             {user?.tier !== "pro" && user?.tier !== "premium" ? (
-              <div className="rounded-[var(--radius-md)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+              <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] px-4 py-3 text-sm text-[color:var(--warning-foreground)]">
                 <p className="font-medium">{messages.settings.account.upgrade}</p>
                 <p className="mt-1">{messages.settings.account.upgradeDescription}</p>
                 <Link
                   href={withLocalePrefix("/pricing", locale)}
-                  className="mt-3 inline-flex font-semibold text-amber-900 underline"
+                  className="mt-3 inline-flex font-semibold text-[color:var(--warning-foreground)] underline"
                 >
                   {messages.settings.account.upgradeCta}
                 </Link>
@@ -188,13 +189,13 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-5">
             <div>
-              <p className="mb-2 text-sm font-medium text-gray-900">
+              <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
                 {messages.settings.preferences.language}
               </p>
               <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
             </div>
             <div>
-              <p className="mb-2 text-sm font-medium text-gray-900">
+              <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
                 {messages.settings.preferences.appearance}
               </p>
               <ThemeToggle
@@ -206,29 +207,34 @@ export default function SettingsPage() {
               />
             </div>
             <div>
-              <p className="mb-2 text-sm font-medium text-gray-900">
+              <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
                 {messages.settings.preferences.units}
               </p>
-              <div className="flex flex-wrap gap-2">
+              <RadioGroup<string>
+                aria-label={messages.settings.preferences.units}
+                className="flex flex-wrap gap-2"
+                value={user?.unit_preference ?? "metric"}
+                onValueChange={(nextValue) =>
+                  void updateProfile({
+                    unit_preference: nextValue as "metric" | "imperial",
+                  })
+                }
+              >
                 {[
                   ["metric", messages.settings.preferences.metric],
                   ["imperial", messages.settings.preferences.imperial],
                 ].map(([value, label]) => (
                   <Selectable
                     key={value}
-                    onClick={() =>
-                      void updateProfile({
-                        unit_preference: value as "metric" | "imperial",
-                      })
-                    }
-                    selected={(user?.unit_preference ?? "metric") === value}
+                    mode="radio"
+                    value={value}
                     variant="segment"
                     fullWidth={false}
                   >
                     {label}
                   </Selectable>
                 ))}
-              </div>
+              </RadioGroup>
             </div>
           </CardContent>
         </Card>
@@ -241,14 +247,14 @@ export default function SettingsPage() {
             <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] px-4 py-4">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="font-semibold text-gray-900">
+                  <p className="font-semibold text-[color:var(--foreground)]">
                     {messages.settings.integrations.strava}
                   </p>
-                  <p className="mt-1 text-sm text-gray-600">
+                  <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
                     {messages.settings.integrations.stravaDescription}
                   </p>
                 </div>
-                <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-gray-700 shadow-sm">
+                <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-1 text-xs font-semibold text-[color:var(--muted-foreground)] shadow-sm">
                   {user?.tier === "pro" || user?.tier === "premium"
                     ? strava?.accessStatus === "active"
                       ? messages.settings.integrations.connected
@@ -270,7 +276,7 @@ export default function SettingsPage() {
               ) : (
                 <Link
                   href={withLocalePrefix("/pricing", locale)}
-                  className="mt-4 inline-flex text-sm font-semibold text-blue-700 hover:text-blue-800"
+                  className="mt-4 inline-flex text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
                 >
                   {messages.settings.account.upgradeCta}
                 </Link>
@@ -283,37 +289,40 @@ export default function SettingsPage() {
           <CardHeader>
             <CardTitle>{messages.settings.privacy.title}</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm text-gray-600">
+          <CardContent className="space-y-2 text-sm text-[color:var(--muted-foreground)]">
             <p>{messages.settings.privacy.description}</p>
             <div className="flex flex-wrap gap-4">
-              <Link href={withLocalePrefix("/privacy", locale)} className="font-semibold text-blue-700">
+              <Link href={withLocalePrefix("/privacy", locale)} className="font-semibold text-[color:var(--primary)]">
                 {messages.settings.privacy.privacyPolicy}
               </Link>
-              <Link href={withLocalePrefix("/terms", locale)} className="font-semibold text-blue-700">
+              <Link href={withLocalePrefix("/terms", locale)} className="font-semibold text-[color:var(--primary)]">
                 {messages.settings.privacy.terms}
               </Link>
-              <Link href={withLocalePrefix("/profile", locale)} className="font-semibold text-blue-700">
+              <Link href={withLocalePrefix("/profile", locale)} className="font-semibold text-[color:var(--primary)]">
                 {messages.settings.privacy.manageProfile}
               </Link>
             </div>
           </CardContent>
         </Card>
 
-        <Card variant="bordered" className="dashboard-card-surface border-red-200">
+        <Card
+          variant="bordered"
+          className="dashboard-card-surface border-[color:color-mix(in_oklch,var(--destructive)_28%,var(--border))]"
+        >
           <CardHeader>
-            <CardTitle className="text-red-700">
+            <CardTitle className="text-[color:var(--destructive)]">
               {messages.profile.dangerZone.title}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {deleteError ? <ErrorState description={deleteError} /> : null}
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-[color:var(--muted-foreground)]">
               {messages.profile.dangerZone.deleteConfirmDescription}
             </p>
             <Button
               variant="outline"
               onClick={() => setShowDeleteDialog(true)}
-              className="border-red-300 text-red-700 hover:bg-red-50"
+              className="border-[color:var(--destructive)] text-[color:var(--destructive)] hover:bg-[color:color-mix(in_oklch,var(--destructive)_10%,var(--card)_90%)]"
             >
               <Trash2 className="mr-2 h-4 w-4" />
               {messages.profile.dangerZone.deleteAccount}
@@ -338,7 +347,7 @@ export default function SettingsPage() {
               void handleDeleteAccount();
             }}
             isLoading={isDeleting}
-            className="bg-red-600 text-white hover:bg-red-700"
+            variant="destructive"
           >
             {messages.profile.dangerZone.deleteConfirmCta}
           </Button>

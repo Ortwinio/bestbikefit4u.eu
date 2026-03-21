@@ -103,39 +103,39 @@ export default async function ProgrammaticTirePressurePage({
         ]}
       />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">
+        <h1 className="text-4xl font-bold text-[color:var(--foreground)]">
           Tire Pressure for {weight}kg {label.en} Rider
         </h1>
-        <p className="mt-4 max-w-3xl text-lg text-gray-600">
+        <p className="mt-4 max-w-3xl text-lg text-[color:var(--muted-foreground)]">
           This landing page gives a static starting recommendation for a {weight} kg rider on a{" "}
           {label.en} with common tire widths. Use it as a quick reference, then move to the full
           calculator for your exact setup.
         </p>
 
         <section className="mt-10 grid gap-6 md:grid-cols-2">
-          <div className="rounded-2xl border border-blue-200 bg-blue-50 p-6">
-            <h2 className="text-2xl font-semibold text-gray-900">Tubeless recommendation</h2>
-            <p className="mt-4 text-gray-700">Front: {tubeless.frontBar} bar / {tubeless.frontPsi} PSI</p>
-            <p className="mt-1 text-gray-700">Rear: {tubeless.rearBar} bar / {tubeless.rearPsi} PSI</p>
-            <p className="mt-4 text-sm text-gray-600">{tubeless.explanation}</p>
+          <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-secondary)] p-6">
+            <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Tubeless recommendation</h2>
+            <p className="mt-4 text-[color:var(--foreground)]">Front: {tubeless.frontBar} bar / {tubeless.frontPsi} PSI</p>
+            <p className="mt-1 text-[color:var(--foreground)]">Rear: {tubeless.rearBar} bar / {tubeless.rearPsi} PSI</p>
+            <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">{tubeless.explanation}</p>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white p-6">
-            <h2 className="text-2xl font-semibold text-gray-900">Inner-tube comparison</h2>
-            <p className="mt-4 text-gray-700">Front: {innerTube.frontBar} bar / {innerTube.frontPsi} PSI</p>
-            <p className="mt-1 text-gray-700">Rear: {innerTube.rearBar} bar / {innerTube.rearPsi} PSI</p>
-            <p className="mt-4 text-sm text-gray-600">
+          <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6">
+            <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Inner-tube comparison</h2>
+            <p className="mt-4 text-[color:var(--foreground)]">Front: {innerTube.frontBar} bar / {innerTube.frontPsi} PSI</p>
+            <p className="mt-1 text-[color:var(--foreground)]">Rear: {innerTube.rearBar} bar / {innerTube.rearPsi} PSI</p>
+            <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">
               Inner tubes typically require slightly higher pressure to reduce pinch-flat risk.
             </p>
           </div>
         </section>
 
-        <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6">
-          <h2 className="text-2xl font-semibold text-gray-900">FAQ</h2>
+        <section className="mt-10 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6">
+          <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">FAQ</h2>
           <div className="mt-4 space-y-4">
             {faqs.map((faq) => (
               <div key={faq.q}>
-                <h3 className="font-semibold text-gray-900">{faq.q}</h3>
-                <p className="mt-1 text-gray-600">{faq.a}</p>
+                <h3 className="font-semibold text-[color:var(--foreground)]">{faq.q}</h3>
+                <p className="mt-1 text-[color:var(--muted-foreground)]">{faq.a}</p>
               </div>
             ))}
           </div>

@@ -32,11 +32,16 @@ interface PressureStatusBadgeProps {
 }
 
 const STATUS_CLASSES: Record<PressureStatus, string> = {
-  optimal: "bg-green-100 text-green-800",
-  slightly_high: "bg-amber-100 text-amber-800",
-  too_high: "bg-red-100 text-red-800",
-  too_low: "bg-red-100 text-red-800",
-  no_measurement: "bg-gray-100 text-gray-600",
+  optimal:
+    "border border-[color:color-mix(in_oklch,var(--success)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--success)_12%)] text-[color:var(--success-foreground)]",
+  slightly_high:
+    "border border-[color:color-mix(in_oklch,var(--warning)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--warning)_12%)] text-[color:var(--warning-foreground)]",
+  too_high:
+    "border border-[color:color-mix(in_oklch,var(--danger)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--danger)_12%)] text-[color:var(--danger)]",
+  too_low:
+    "border border-[color:color-mix(in_oklch,var(--danger)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--danger)_12%)] text-[color:var(--danger)]",
+  no_measurement:
+    "border border-[color:var(--border)] bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]",
 };
 
 export function PressureStatusBadge({
@@ -48,7 +53,7 @@ export function PressureStatusBadge({
 
   return (
     <span
-      className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${STATUS_CLASSES[status]}`}
+      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold leading-none ${STATUS_CLASSES[status]}`}
     >
       {labels[status]}
     </span>

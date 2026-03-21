@@ -14,7 +14,7 @@ export function FitNotes({ notes }: FitNotesProps) {
     <Card variant="bordered">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Lightbulb className="h-5 w-5 text-yellow-500" />
+          <Lightbulb className="h-5 w-5 text-warning" />
           <CardTitle>Personalized Notes</CardTitle>
         </div>
       </CardHeader>
@@ -22,8 +22,8 @@ export function FitNotes({ notes }: FitNotesProps) {
         <ul className="space-y-3">
           {notes.map((note, index) => (
             <li key={index} className="flex items-start gap-3">
-              <Info className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <p className="text-gray-700">{note}</p>
+              <Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-info" />
+              <p className="text-foreground">{note}</p>
             </li>
           ))}
         </ul>

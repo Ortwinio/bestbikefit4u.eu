@@ -1,3 +1,5 @@
+import { Card, CardContent } from "@/components/ui";
+
 interface PressureCalculatorFaqProps {
   locale: "en" | "nl";
 }
@@ -60,13 +62,15 @@ export function PressureCalculatorFaq({ locale }: PressureCalculatorFaqProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-gray-900">{content.title}</h2>
+        <h2 className="text-3xl font-bold text-[color:var(--foreground)]">{content.title}</h2>
         <div className="mt-8 space-y-4">
           {content.items.map((item) => (
-            <div key={item.q} className="rounded-2xl border border-gray-200 bg-white p-5">
-              <h3 className="text-lg font-semibold text-gray-900">{item.q}</h3>
-              <p className="mt-2 text-gray-600">{item.a}</p>
-            </div>
+            <Card key={item.q} variant="bordered" className="shadow-sm">
+              <CardContent className="p-5">
+                <h3 className="text-lg font-semibold text-[color:var(--foreground)]">{item.q}</h3>
+                <p className="mt-2 text-[color:var(--muted-foreground)]">{item.a}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>

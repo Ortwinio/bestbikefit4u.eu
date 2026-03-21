@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { Card } from "@/components/ui";
 import { StepBikeSelect } from "./wizard/StepBikeSelect";
 import { StepWheelsetTires } from "./wizard/StepWheelsetTires";
 import { StepWeightGoal } from "./wizard/StepWeightGoal";
@@ -17,6 +18,10 @@ interface PressureWizardProps {
 }
 
 export function PressureWizard({ initialBikeId }: PressureWizardProps) {
+  return <PressureWizardContent key={initialBikeId ?? "no-bike"} initialBikeId={initialBikeId} />;
+}
+
+function PressureWizardContent({ initialBikeId }: PressureWizardProps) {
   const { locale, messages } = useDashboardMessages();
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [selectedBikeId, setSelectedBikeId] = useState<Id<"bikes"> | null>(
@@ -66,27 +71,19 @@ export function PressureWizard({ initialBikeId }: PressureWizardProps) {
     messages.pressure.wizard.stepLabels.result,
   ];
 
-  useEffect(() => {
-    setSelectedBikeId((initialBikeId as Id<"bikes"> | undefined) ?? null);
-    setSelectedWheelsetId(null);
-    setSelectedTireSetupId(null);
-    setInlineTireInput(null);
-    setCurrentStep(1);
-  }, [initialBikeId]);
-
   return (
     <div className="space-y-6">
       {profile !== undefined && !profile?.weightKg ? (
-        <div className="rounded-[var(--radius-lg)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_10%,var(--card)_90%)] px-4 py-3 text-sm text-[color:var(--warning-foreground)]">
           {messages.pressure.wizard.profileWeightMissing}{" "}
-          <a href={`/${locale}/profile`} className="font-semibold underline">
+          <a href={`/${locale}/profile`} className="font-semibold underline underline-offset-4">
             {messages.pressure.wizard.profileWeightCta}
           </a>
         </div>
       ) : null}
 
-      <div>
-        <p className="text-sm font-medium text-gray-600">
+      <Card variant="bordered" className="p-4">
+        <p className="text-sm font-medium text-[color:var(--muted-foreground)]">
           {messages.pressure.wizard.stepOf
             .replace("{current}", String(currentStep))
             .replace("{total}", "5")}
@@ -95,17 +92,17 @@ export function PressureWizard({ initialBikeId }: PressureWizardProps) {
           {steps.map((label, index) => (
             <div
               key={label}
-              className={`rounded-full px-3 py-2 text-center text-xs font-semibold ${
+              className={`rounded-full border px-3 py-2 text-center text-xs font-semibold transition-colors ${
                 index + 1 <= currentStep
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-500"
+                  ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
+                  : "border-[color:var(--border)] bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]"
               }`}
             >
               {label}
             </div>
           ))}
         </div>
-      </div>
+      </Card>
 
       {currentStep === 1 ? (
         <StepBikeSelect

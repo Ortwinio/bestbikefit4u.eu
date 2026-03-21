@@ -1,14 +1,17 @@
 "use client";
 
-import {
-  forwardRef,
-  useId,
-  type InputHTMLAttributes,
-  type ReactNode,
-} from "react";
-import { Slider as BaseSlider } from "@base-ui/react/slider";
+import { forwardRef, useId, type ComponentPropsWithoutRef, type InputHTMLAttributes } from "react";
 import { cn } from "@/utils/cn";
-import { FieldLabel } from "./FieldLabel";
+import { Tooltip } from "./Tooltip";
+import {
+  SliderControl as PrototyperSliderControl,
+  SliderIndicator as PrototyperSliderIndicator,
+  SliderLabel as PrototyperSliderLabel,
+  SliderRoot as PrototyperSliderRoot,
+  SliderThumb as PrototyperSliderThumb,
+  SliderTrack as PrototyperSliderTrack,
+  SliderValue as PrototyperSliderValue,
+} from "@/components/prototyper-ui/ui/slider";
 
 export interface SliderProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "value" | "onChange"> {
@@ -20,112 +23,6 @@ export interface SliderProps
   value: number;
   onChange: (value: number) => void;
   valueLabel?: string;
-}
-
-function SliderRoot({
-  className,
-  children,
-  ...props
-}: BaseSlider.Root.Props & { className?: string; children?: ReactNode }) {
-  return (
-    <BaseSlider.Root
-      data-slot="slider"
-      className={cn("relative flex w-full flex-col gap-2", className)}
-      {...props}
-    >
-      {children}
-    </BaseSlider.Root>
-  );
-}
-
-function SliderControl({
-  className,
-  ...props
-}: BaseSlider.Control.Props) {
-  return (
-    <BaseSlider.Control
-      data-slot="slider-control"
-      className={cn(
-        "relative flex h-10 w-full items-center touch-none select-none outline-none",
-        "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
-        "motion-reduce:transition-none",
-        className
-      )}
-      {...props}
-    />
-  );
-}
-
-function SliderTrack({
-  className,
-  ...props
-}: BaseSlider.Track.Props) {
-  return (
-    <BaseSlider.Track
-      data-slot="slider-track"
-      className={cn(
-        "relative h-2.5 w-full overflow-hidden rounded-full bg-[color:var(--muted)]",
-        "data-[orientation=vertical]:h-full data-[orientation=vertical]:w-2.5",
-        className
-      )}
-      {...props}
-    />
-  );
-}
-
-function SliderIndicator({
-  className,
-  ...props
-}: BaseSlider.Indicator.Props) {
-  return (
-    <BaseSlider.Indicator
-      data-slot="slider-indicator"
-      className={cn(
-        "absolute inset-y-0 left-0 rounded-full bg-[color:var(--primary)]",
-        "transition-[width,background-color] duration-200 ease-smooth motion-reduce:transition-none",
-        "data-[orientation=vertical]:inset-x-0 data-[orientation=vertical]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=vertical]:right-0",
-        className
-      )}
-      {...props}
-    />
-  );
-}
-
-function SliderThumb({
-  className,
-  ...props
-}: BaseSlider.Thumb.Props) {
-  return (
-    <BaseSlider.Thumb
-      data-slot="slider-thumb"
-      className={cn(
-        "relative z-10 size-5 rounded-full border border-[color:var(--border)] bg-[color:var(--card)]",
-        "shadow-[0_1px_1px_rgba(0,0,0,0.08),0_6px_14px_rgba(0,0,0,0.12)] outline-none",
-        "transition-[transform,box-shadow,border-color] duration-150 ease-smooth",
-        "hover:border-[color:var(--border-dark)]",
-        "focus-visible:focus-ring focus-visible:shadow-[0_1px_1px_rgba(0,0,0,0.08),0_8px_18px_rgba(0,0,0,0.16)]",
-        "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
-        "motion-safe:active:scale-[0.96] motion-reduce:transition-none",
-        className
-      )}
-      {...props}
-    />
-  );
-}
-
-function SliderOutput({
-  className,
-  id,
-  ...props
-}: BaseSlider.Value.Props) {
-  return (
-    <BaseSlider.Value
-      data-slot="slider-output"
-      id={id}
-      className={cn("text-sm tabular-nums text-[color:var(--muted-foreground)]", className)}
-      {...props}
-    />
-  );
 }
 
 export const Slider = forwardRef<HTMLDivElement, SliderProps>(
@@ -167,7 +64,9 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
         : step === undefined
           ? undefined
           : Number(step) || 1;
-    const sliderProps = props as unknown as BaseSlider.Root.Props;
+    const sliderProps = props as unknown as ComponentPropsWithoutRef<
+      typeof PrototyperSliderRoot
+    >;
     const labelledBy = [label ? labelId : undefined, sliderProps["aria-labelledby"]]
       .filter(Boolean)
       .join(" ");
@@ -176,7 +75,7 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
       .join(" ");
 
     return (
-      <SliderRoot
+      <PrototyperSliderRoot
         {...sliderProps}
         ref={ref}
         id={sliderId}
@@ -197,14 +96,17 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
       >
         {label ? (
           <div className="flex items-center justify-between gap-3">
-            <div id={labelId}>
-              <FieldLabel
-                label={label}
-                tooltip={tooltip}
-                tooltipLabel={tooltipLabel}
-                tooltipDescriptionId={tooltipDescriptionId}
-                className="mb-0"
-              />
+            <div id={labelId} className="flex items-center gap-1.5">
+              <PrototyperSliderLabel className="text-sm font-medium leading-none text-[color:var(--foreground)]">
+                {label}
+              </PrototyperSliderLabel>
+              {tooltip ? (
+                <Tooltip
+                  content={tooltip}
+                  label={tooltipLabel ?? `${label} help`}
+                  descriptionId={tooltipDescriptionId}
+                />
+              ) : null}
             </div>
             {valueLabel ? (
               <span className="text-sm font-medium tabular-nums text-[color:var(--muted-foreground)]">
@@ -213,13 +115,13 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
             ) : null}
           </div>
         ) : null}
-        <SliderOutput id={valueId} className="sr-only" />
-        <SliderControl>
-          <SliderTrack>
-            <SliderIndicator />
-            <SliderThumb aria-describedby={describedBy || undefined} />
-          </SliderTrack>
-        </SliderControl>
+        <PrototyperSliderValue id={valueId} className="sr-only" />
+        <PrototyperSliderControl>
+          <PrototyperSliderTrack>
+            <PrototyperSliderIndicator />
+            <PrototyperSliderThumb aria-describedby={describedBy || undefined} />
+          </PrototyperSliderTrack>
+        </PrototyperSliderControl>
         {error ? (
           <p id={errorId} className="text-sm text-[color:var(--danger)]">
             {error}
@@ -230,25 +132,20 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
             {helperText}
           </p>
         ) : null}
-      </SliderRoot>
+      </PrototyperSliderRoot>
     );
   }
 );
 
 Slider.displayName = "Slider";
 
-SliderRoot.displayName = "SliderRoot";
-SliderControl.displayName = "SliderControl";
-SliderTrack.displayName = "SliderTrack";
-SliderIndicator.displayName = "SliderIndicator";
-SliderThumb.displayName = "SliderThumb";
-SliderOutput.displayName = "SliderOutput";
-
 export {
-  SliderRoot,
-  SliderControl,
-  SliderTrack,
-  SliderIndicator,
-  SliderThumb,
-  SliderOutput,
+  PrototyperSliderControl as SliderControl,
+  PrototyperSliderIndicator as SliderIndicator,
+  PrototyperSliderLabel as SliderLabel,
+  PrototyperSliderRoot as SliderRoot,
+  PrototyperSliderThumb as SliderThumb,
+  PrototyperSliderTrack as SliderTrack,
+  PrototyperSliderValue as SliderOutput,
+  PrototyperSliderValue as SliderValue,
 };

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { NumberInput } from "@/components/ui";
-import { Field } from "@/components/ui/Field";
 import { formatMessage } from "@/i18n/dashboardMessages";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
@@ -70,7 +69,7 @@ export function NumericQuestion({
   };
 
   return (
-    <Field.Root className="space-y-2">
+    <div className="space-y-2">
       <NumberInput
         label={messages.questionnaire.numeric.label}
         tooltip={tooltip}
@@ -89,10 +88,10 @@ export function NumericQuestion({
       />
 
       {rangeMessage && !error ? (
-        <Field.Description className="text-sm text-[color:var(--muted-foreground)]">
+        <p className="text-sm text-[color:var(--muted-foreground)]">
           {rangeMessage}
-        </Field.Description>
+        </p>
       ) : null}
-    </Field.Root>
+    </div>
   );
 }

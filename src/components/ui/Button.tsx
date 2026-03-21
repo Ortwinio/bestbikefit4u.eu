@@ -1,32 +1,32 @@
-import { forwardRef, type ButtonHTMLAttributes, type ReactElement } from "react";
+import { forwardRef, type ComponentPropsWithoutRef } from "react";
 import { Loader2 } from "lucide-react";
 import { Button as PrototyperButton } from "@/components/prototyper-ui/ui/button";
-import { cn } from "@/utils/cn";
 
-const variantClassMap = {
-  primary:
-    "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] shadow-sm hover:brightness-110",
-  secondary:
-    "bg-[color:var(--secondary)] text-[color:var(--secondary-foreground)] hover:bg-[color:var(--accent)]",
-  outline:
-    "border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] hover:bg-[color:var(--accent)]",
-  ghost:
-    "bg-transparent text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)] shadow-none",
-  destructive:
-    "bg-[color:var(--destructive)] text-[color:var(--destructive-foreground)] shadow-sm hover:brightness-110",
-} as const;
+type PrototyperButtonProps = ComponentPropsWithoutRef<typeof PrototyperButton>;
+type ButtonVariant = NonNullable<PrototyperButtonProps["variant"]> | "primary";
+type ButtonSize = NonNullable<PrototyperButtonProps["size"]> | "md";
 
-const sizeClassMap = {
-  sm: "h-8 px-3 text-sm",
-  md: "h-10 px-4 text-sm",
-  lg: "h-12 px-6 text-base",
-} as const;
-
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: keyof typeof variantClassMap;
-  size?: keyof typeof sizeClassMap;
+export interface ButtonProps
+  extends Omit<PrototyperButtonProps, "variant" | "size"> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   isLoading?: boolean;
-  render?: ReactElement;
+}
+
+function resolveVariant(variant: ButtonVariant | undefined) {
+  if (!variant || variant === "primary") {
+    return "default";
+  }
+
+  return variant;
+}
+
+function resolveSize(size: ButtonSize | undefined) {
+  if (!size || size === "md") {
+    return "default";
+  }
+
+  return size;
 }
 
 export const Button = forwardRef<HTMLElement, ButtonProps>(
@@ -36,32 +36,33 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(
       variant = "primary",
       size = "md",
       isLoading = false,
+      isPending = false,
       disabled,
       children,
-      render,
       ...props
     },
     ref
-  ) => (
-    <PrototyperButton
-      ref={ref as never}
-      render={render}
-      disabled={disabled || isLoading}
-      aria-disabled={disabled || isLoading ? true : undefined}
-      variant="ghost"
-      size="default"
-      className={cn(
-        "no-highlight inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-md)] font-medium transition-all duration-200 motion-reduce:transition-none disabled:pointer-events-none disabled:opacity-50 focus-ring",
-        sizeClassMap[size],
-        variantClassMap[variant],
-        className
-      )}
-      {...props}
-    >
-      {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-      {children}
-    </PrototyperButton>
-  )
+  ) => {
+    const pending = isLoading || isPending;
+
+    return (
+      <PrototyperButton
+        ref={ref as never}
+        variant={resolveVariant(variant)}
+        size={resolveSize(size)}
+        isPending={pending}
+        disabled={disabled || pending}
+        aria-disabled={disabled || pending ? true : undefined}
+        className={className}
+        {...props}
+      >
+        {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+        {children}
+      </PrototyperButton>
+    );
+  }
 );
 
 Button.displayName = "Button";
+
+export { buttonVariants } from "@/components/prototyper-ui/ui/button";

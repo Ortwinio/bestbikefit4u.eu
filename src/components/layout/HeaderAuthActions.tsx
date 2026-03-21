@@ -21,7 +21,7 @@ export function HeaderAuthActions({
   const { isAuthenticated, isLoading } = useConvexAuth();
 
   if (isLoading) {
-    return <div className="h-9 w-28 rounded-lg bg-gray-100" aria-hidden="true" />;
+    return <div className="h-9 w-28 rounded-lg bg-[color:var(--surface-secondary)]" aria-hidden="true" />;
   }
 
   if (isAuthenticated) {

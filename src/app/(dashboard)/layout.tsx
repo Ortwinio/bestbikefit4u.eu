@@ -32,7 +32,7 @@ export default function DashboardLayout({
 
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[color:var(--background)]">
+      <div className="min-h-screen bg-background">
         <LoadingState
           label={messages.layout.loading}
           className="min-h-screen"
@@ -42,15 +42,15 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[color:var(--background)]">
+    <div className="min-h-screen bg-background">
       <div className="hidden md:block">
         <DashboardSidebar />
       </div>
 
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_88%,transparent)] px-4 py-3 backdrop-blur md:hidden">
+      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card/90 px-4 py-3 backdrop-blur md:hidden">
         <Link
           href={toLocalizedPath("/dashboard")}
-          className="text-lg font-semibold text-[color:var(--foreground)]"
+          className="text-lg font-semibold text-foreground"
         >
           {BRAND.name}
         </Link>
@@ -66,7 +66,7 @@ export default function DashboardLayout({
                 : messages.layout.mobileMenu.openAria
             }
             onClick={() => setIsMobileMenuOpen((current) => !current)}
-            className="inline-flex h-9 w-9 items-center justify-center px-0 text-[color:var(--muted-foreground)]"
+            className="inline-flex h-9 w-9 items-center justify-center px-0 text-muted-foreground"
           >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
@@ -81,8 +81,8 @@ export default function DashboardLayout({
             onClick={() => setIsMobileMenuOpen(false)}
             className="fixed inset-0 z-30 bg-black/30 md:hidden"
           />
-          <nav className="fixed inset-y-0 left-0 z-40 w-72 overflow-y-auto border-r border-[color:var(--border)] bg-[color:var(--card)] p-4 md:hidden">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+          <nav className="fixed inset-y-0 left-0 z-40 w-72 overflow-y-auto border-r border-border bg-card p-4 md:hidden">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               {messages.layout.sections.dashboard}
             </p>
             <div className="space-y-1">
@@ -100,13 +100,13 @@ export default function DashboardLayout({
                   key={item.href}
                   href={toLocalizedPath(item.href)}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block rounded-md px-3 py-2 text-sm text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+                  className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
                 >
                   {item.label}
                 </Link>
               ))}
             </div>
-            <p className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+            <p className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               {messages.layout.sections.website}
             </p>
             <div className="space-y-1">
@@ -119,7 +119,7 @@ export default function DashboardLayout({
                   key={item.href}
                   href={toLocalizedPath(item.href)}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block rounded-md px-3 py-2 text-sm text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+                  className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
                 >
                   {item.label}
                 </Link>

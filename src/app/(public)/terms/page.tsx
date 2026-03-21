@@ -176,22 +176,22 @@ export default async function TermsPage() {
   const page = content[locale];
 
   return (
-    <div className="py-16">
+    <div className="py-16 text-foreground">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">{page.title}</h1>
-        <p className="mt-4 text-sm text-gray-500">
+        <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
+        <p className="mt-4 text-sm text-muted-foreground">
           {page.lastUpdatedLabel}: {page.lastUpdatedDate}
         </p>
 
-        <div className="mt-12 space-y-8 text-gray-600">
+        <div className="mt-12 space-y-8 text-muted-foreground">
           {page.sections.map((section) => (
             <section key={section.title}>
-              <h2 className="text-2xl font-semibold text-gray-900">{section.title}</h2>
+              <h2 className="text-2xl font-semibold text-foreground">{section.title}</h2>
 
               {section.warningTitle ? (
-                <div className="mt-4 rounded-lg border-l-4 border-yellow-400 bg-yellow-50 p-4">
-                  <p className="font-medium text-yellow-800">{section.warningTitle}</p>
-                  {section.warningBody ? <p className="mt-2 text-yellow-700">{section.warningBody}</p> : null}
+                <div className="mt-4 rounded-lg border-l-4 border-warning bg-warning/10 p-4">
+                  <p className="font-medium text-warning-foreground">{section.warningTitle}</p>
+                  {section.warningBody ? <p className="mt-2 text-warning-foreground/90">{section.warningBody}</p> : null}
                 </div>
               ) : null}
 

@@ -63,14 +63,14 @@ export default function BikeFitMethodsPage() {
   };
 
   return (
-    <div className="py-16">
+    <div className="py-16 text-foreground">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">Bike Fit Methods</h1>
-        <p className="mt-4 text-lg text-gray-600">
+        <h1 className="text-4xl font-bold text-foreground">Bike Fit Methods</h1>
+        <p className="mt-4 text-lg text-muted-foreground">
           Modern fitting combines foundational formulas with rider-specific
           context. No single method solves everything in isolation.
         </p>
@@ -79,33 +79,33 @@ export default function BikeFitMethodsPage() {
           {methods.map((method) => (
             <article
               key={method.name}
-              className="rounded-xl border border-gray-200 bg-white p-6"
+              className="rounded-xl border border-border bg-card p-6"
             >
-              <h2 className="text-xl font-semibold text-gray-900">{method.name}</h2>
-              <p className="mt-2 text-sm text-gray-600">
-                <span className="font-medium text-gray-800">Focus:</span>{" "}
+              <h2 className="text-xl font-semibold text-foreground">{method.name}</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">Focus:</span>{" "}
                 {method.focus}
               </p>
-              <p className="mt-1 text-sm text-gray-600">
-                <span className="font-medium text-gray-800">Strength:</span>{" "}
+              <p className="mt-1 text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">Strength:</span>{" "}
                 {method.strength}
               </p>
-              <p className="mt-1 text-sm text-gray-600">
-                <span className="font-medium text-gray-800">Limit:</span>{" "}
+              <p className="mt-1 text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">Limit:</span>{" "}
                 {method.limit}
               </p>
             </article>
           ))}
         </div>
 
-        <section className="mt-12 rounded-xl border border-gray-200 bg-gray-50 p-6">
-          <h2 className="text-xl font-semibold text-gray-900">Related Resources</h2>
+        <section className="mt-12 rounded-xl border border-border bg-muted p-6">
+          <h2 className="text-xl font-semibold text-foreground">Related Resources</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
+                className="rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-primary hover:bg-secondary"
               >
                 {link.label}
               </Link>

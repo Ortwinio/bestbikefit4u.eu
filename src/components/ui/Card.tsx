@@ -1,4 +1,4 @@
-import { type HTMLAttributes, forwardRef } from "react";
+import { forwardRef, type ComponentPropsWithoutRef, type HTMLAttributes } from "react";
 import {
   Card as PrototyperCard,
   CardContent as PrototyperCardContent,
@@ -9,8 +9,11 @@ import {
 } from "@/components/prototyper-ui/ui/card";
 import { cn } from "@/utils/cn";
 
-export interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "bordered" | "elevated";
+type PrototyperCardProps = ComponentPropsWithoutRef<typeof PrototyperCard>;
+type CardVariant = NonNullable<PrototyperCardProps["variant"]> | "bordered";
+
+export interface CardProps extends Omit<PrototyperCardProps, "variant"> {
+  variant?: CardVariant;
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
@@ -79,3 +82,5 @@ export const CardFooter = forwardRef<
 ));
 
 CardFooter.displayName = "CardFooter";
+
+export { cardVariants } from "@/components/prototyper-ui/ui/card";

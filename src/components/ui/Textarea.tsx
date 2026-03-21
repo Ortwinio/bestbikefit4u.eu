@@ -4,6 +4,7 @@ import { forwardRef, type TextareaHTMLAttributes, useId } from "react";
 import { Tooltip } from "./Tooltip";
 import { Field } from "./Field";
 import { cn } from "@/utils/cn";
+import { Textarea as PrototyperTextarea } from "@/components/prototyper-ui/ui/textarea";
 
 export interface TextareaProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -87,21 +88,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             tooltipDescriptionId={tooltipDescriptionId}
           />
         ) : null}
-        <textarea
+        <PrototyperTextarea
           ref={ref}
           id={textareaId}
           rows={rows}
           aria-describedby={describedBy || undefined}
           aria-invalid={error ? true : undefined}
-          className={cn(
-            "w-full rounded-[var(--radius-md)] border bg-[color:var(--card)] px-3 py-2 text-sm text-[color:var(--foreground)] transition-colors resize-none",
-            "focus-field-ring",
-            error
-              ? "border-[color:var(--danger)] text-[color:var(--foreground)] invalid-field-ring"
-              : "border-[color:var(--input)]",
-            "placeholder:text-[color:var(--muted-foreground)] disabled:bg-[color:var(--muted)] disabled:text-[color:var(--muted-foreground)] disabled:cursor-not-allowed",
-            className
-          )}
+          className={cn(className)}
           {...props}
         />
         {error ? (

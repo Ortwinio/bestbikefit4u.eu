@@ -11,21 +11,20 @@ export function StepFlexibility() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
+        <h3 className="mb-2 text-lg font-medium text-[color:var(--foreground)]">
           Hamstring Flexibility Test
         </h3>
-        <p className="text-gray-600">
+        <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
           Your flexibility affects how aggressive your riding position can be.
           Complete this simple test to help us personalize your fit.
         </p>
       </div>
 
-      {/* Test Instructions */}
-      <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <h4 className="font-medium text-blue-800 mb-2">
-          How to perform the test:
+      <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 p-4">
+        <h4 className="mb-2 font-medium text-[color:var(--foreground)]">
+          How to perform the test
         </h4>
-        <ol className="list-decimal list-inside space-y-1 text-sm text-blue-700">
+        <ol className="list-inside list-decimal space-y-1 text-sm text-[color:var(--muted-foreground)]">
           <li>Sit on the floor with legs straight out in front</li>
           <li>Keep your knees flat on the ground</li>
           <li>Reach forward with both hands toward your toes</li>
@@ -33,52 +32,53 @@ export function StepFlexibility() {
         </ol>
       </div>
 
-      {/* Score Selection */}
       <Controller
         name="flexibilityScore"
         control={control}
-        render={({ field }) => (
-          <div className="space-y-3">
-            <label
-              id={`${field.name}-label`}
-              className="block text-sm font-medium text-gray-700"
-            >
-              Select your result:
-            </label>
-            <RadioGroup<number>
-              aria-labelledby={`${field.name}-label`}
-              className="grid gap-3"
-              name={field.name}
-              value={field.value ?? undefined}
-              onValueChange={(next) => field.onChange(next)}
-            >
-              {flexibilityTests.map((test) => (
-                <Selectable
-                  key={test.score}
-                  mode="radio"
-                  value={test.score}
-                  variant="card"
-                  label={test.label}
-                  badge={
-                    <span className="rounded-full bg-[color:var(--secondary)] px-2 py-0.5 text-xs text-[color:var(--secondary-foreground)]">
-                      {test.testResult}
-                    </span>
-                  }
-                  description={test.description}
-                >
-                </Selectable>
-              ))}
-            </RadioGroup>
-          </div>
-        )}
+        render={({ field }) => {
+          const legendId = `${field.name}-legend`;
+
+          return (
+            <fieldset className="space-y-3">
+              <legend
+                id={legendId}
+                className="text-sm font-medium text-[color:var(--foreground)]"
+              >
+                Select your result
+              </legend>
+              <RadioGroup<number>
+                aria-labelledby={legendId}
+                className="grid gap-3"
+                name={field.name}
+                value={field.value ?? undefined}
+                onValueChange={(next) => field.onChange(next)}
+              >
+                {flexibilityTests.map((test) => (
+                  <Selectable
+                    key={test.score}
+                    mode="radio"
+                    value={test.score}
+                    variant="card"
+                    label={test.label}
+                    badge={
+                      <span className="rounded-full bg-[color:var(--secondary)] px-2 py-0.5 text-xs text-[color:var(--secondary-foreground)]">
+                        {test.testResult}
+                      </span>
+                    }
+                    description={test.description}
+                  />
+                ))}
+              </RadioGroup>
+            </fieldset>
+          );
+        }}
       />
 
-      {/* Impact Note */}
-      <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-        <h4 className="font-medium text-gray-900 mb-2">
+      <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
+        <h4 className="mb-2 font-medium text-[color:var(--foreground)]">
           How this affects your fit
         </h4>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
           Lower flexibility scores will result in a more upright position with
           less handlebar drop. This protects your lower back and reduces strain.
           Higher flexibility allows for a more aggressive, aerodynamic position.

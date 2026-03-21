@@ -199,17 +199,17 @@ export default async function PrivacyPage() {
   const page = content[locale];
 
   return (
-    <div className="py-16">
+    <div className="py-16 text-foreground">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">{page.title}</h1>
-        <p className="mt-4 text-sm text-gray-500">
+        <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
+        <p className="mt-4 text-sm text-muted-foreground">
           {page.lastUpdatedLabel}: {page.lastUpdatedDate}
         </p>
 
-        <div className="mt-12 space-y-8 text-gray-600">
+        <div className="mt-12 space-y-8 text-muted-foreground">
           {page.sections.map((section) => (
             <section key={section.title}>
-              <h2 className="text-2xl font-semibold text-gray-900">{section.title}</h2>
+              <h2 className="text-2xl font-semibold text-foreground">{section.title}</h2>
 
               {section.body ? <p className="mt-4">{section.body}</p> : null}
 
@@ -217,7 +217,7 @@ export default async function PrivacyPage() {
                 <div className="mt-4 space-y-4">
                   {section.subsections.map((sub) => (
                     <div key={sub.title}>
-                      <h3 className="font-medium text-gray-900">{sub.title}</h3>
+                      <h3 className="font-medium text-foreground">{sub.title}</h3>
                       <p className="mt-1">{sub.body}</p>
                     </div>
                   ))}

@@ -184,7 +184,7 @@ export default async function BikeFitCalculatorPage({
   }
 
   return (
-    <div className="py-16">
+    <div className="py-16 text-foreground">
       <JsonLd
         schema={[
           buildWebApplicationSchema({
@@ -217,16 +217,16 @@ export default async function BikeFitCalculatorPage({
         ]}
       />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">
+        <h1 className="text-4xl font-bold text-foreground">
           {isNl ? "Gratis bike fit calculator" : "Free Bike Fit Calculator"}
         </h1>
-        <p className="mt-4 max-w-3xl text-lg text-gray-600">
+        <p className="mt-4 max-w-3xl text-lg text-muted-foreground">
           {isNl
             ? "Bereken zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel. Deze pagina gebruikt dezelfde fit-engine als de app, maar als snelle publieke intake."
             : "Calculate saddle height, reach, drop, and frame targets from your body measurements and riding goal. This page uses the same fit-engine logic as the app as a public first-pass intake."}
         </p>
 
-        <form className="mt-10 rounded-2xl border border-gray-200 bg-white p-6" method="GET">
+        <form className="mt-10 rounded-2xl border border-border bg-card p-6" method="GET">
           <div className="grid gap-4 sm:grid-cols-2">
             <Input
               label={isNl ? "Lengte (cm)" : "Height (cm)"}
@@ -320,47 +320,47 @@ export default async function BikeFitCalculatorPage({
         </form>
 
         {error ? (
-          <div className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="mt-6 rounded-lg border border-destructive/20 bg-destructive-soft px-4 py-3 text-sm text-destructive">
             {error}
           </div>
         ) : null}
 
         {result ? (
-          <section className="mt-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
-            <h2 className="text-2xl font-semibold text-gray-900">
+          <section className="mt-8 rounded-2xl border border-primary/20 bg-primary-soft p-6">
+            <h2 className="text-2xl font-semibold text-foreground">
               {isNl ? "Jouw eerste fitadvies" : "Your first-pass fit recommendation"}
             </h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-xl bg-white p-4">
-                <p className="text-sm text-gray-500">{isNl ? "Zadelhoogte" : "Saddle Height"}</p>
-                <p className="mt-1 text-2xl font-semibold text-gray-900">{result.saddleHeightMm} mm</p>
+              <div className="rounded-xl bg-card p-4">
+                <p className="text-sm text-muted-foreground">{isNl ? "Zadelhoogte" : "Saddle Height"}</p>
+                <p className="mt-1 text-2xl font-semibold text-foreground">{result.saddleHeightMm} mm</p>
               </div>
-              <div className="rounded-xl bg-white p-4">
-                <p className="text-sm text-gray-500">{isNl ? "Reach-doel" : "Reach Target"}</p>
-                <p className="mt-1 text-2xl font-semibold text-gray-900">{result.reachMm} mm</p>
-                <p className="mt-1 text-xs text-gray-500">
+              <div className="rounded-xl bg-card p-4">
+                <p className="text-sm text-muted-foreground">{isNl ? "Reach-doel" : "Reach Target"}</p>
+                <p className="mt-1 text-2xl font-semibold text-foreground">{result.reachMm} mm</p>
+                <p className="mt-1 text-xs text-muted-foreground">
                   {isNl ? "Range" : "Range"}: {result.reachRange.min}-{result.reachRange.max} mm
                 </p>
               </div>
-              <div className="rounded-xl bg-white p-4">
-                <p className="text-sm text-gray-500">{isNl ? "Stuurdrop" : "Bar Drop"}</p>
-                <p className="mt-1 text-2xl font-semibold text-gray-900">{result.barDropMm} mm</p>
+              <div className="rounded-xl bg-card p-4">
+                <p className="text-sm text-muted-foreground">{isNl ? "Stuurdrop" : "Bar Drop"}</p>
+                <p className="mt-1 text-2xl font-semibold text-foreground">{result.barDropMm} mm</p>
               </div>
-              <div className="rounded-xl bg-white p-4">
-                <p className="text-sm text-gray-500">{isNl ? "Framedoelen" : "Frame Targets"}</p>
-                <p className="mt-1 text-base font-semibold text-gray-900">
+              <div className="rounded-xl bg-card p-4">
+                <p className="text-sm text-muted-foreground">{isNl ? "Framedoelen" : "Frame Targets"}</p>
+                <p className="mt-1 text-base font-semibold text-foreground">
                   Stack {result.frameStackTargetMm} / Reach {result.frameReachTargetMm}
                 </p>
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {isNl ? "Snelle framemaatinschatting" : "Quick frame-size estimate"}: {result.frameSize}
                 </p>
               </div>
             </div>
             <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-foreground">
                 {isNl ? "Interpretatie" : "How to interpret this"}
               </h3>
-              <ul className="mt-3 list-inside list-disc space-y-2 text-gray-700">
+              <ul className="mt-3 list-inside list-disc space-y-2 text-muted-foreground">
                 {result.notes.map((note) => (
                   <li key={note}>{note}</li>
                 ))}
@@ -390,13 +390,13 @@ export default async function BikeFitCalculatorPage({
           </section>
         ) : null}
 
-        <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6">
-          <h2 className="text-2xl font-semibold text-gray-900">FAQ</h2>
+        <section className="mt-10 rounded-2xl border border-border bg-card p-6">
+          <h2 className="text-2xl font-semibold text-foreground">FAQ</h2>
           <div className="mt-4 space-y-4">
             {faqs.map((faq) => (
               <div key={faq.q}>
-                <h3 className="font-semibold text-gray-900">{faq.q}</h3>
-                <p className="mt-1 text-gray-600">{faq.a}</p>
+                <h3 className="font-semibold text-foreground">{faq.q}</h3>
+                <p className="mt-1 text-muted-foreground">{faq.a}</p>
               </div>
             ))}
           </div>

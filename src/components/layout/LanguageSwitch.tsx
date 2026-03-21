@@ -38,7 +38,7 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
   return (
     <nav
       aria-label={labels.language}
-      className="flex items-center rounded-lg border border-gray-200 bg-gray-50 p-1"
+      className="flex items-center rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-secondary)] p-1"
     >
       <a
         href={enHref}
@@ -47,8 +47,8 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
         className={cn(
           sharedClasses,
           activeLocale === "en"
-            ? "bg-white text-blue-700 shadow-sm"
-            : "text-gray-600 hover:text-gray-900"
+            ? "bg-[color:var(--background)] text-[color:var(--primary)] shadow-sm"
+            : "text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)]"
         )}
       >
         EN
@@ -60,8 +60,8 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
         className={cn(
           sharedClasses,
           activeLocale === "nl"
-            ? "bg-white text-blue-700 shadow-sm"
-            : "text-gray-600 hover:text-gray-900"
+            ? "bg-[color:var(--background)] text-[color:var(--primary)] shadow-sm"
+            : "text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)]"
         )}
       >
         NL

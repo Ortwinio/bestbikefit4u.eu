@@ -44,11 +44,13 @@ export default function DashboardPage() {
   const displayName = getEffectiveDisplayName(user, messages.userMenu.fallbackUserName);
   const profileImageSource = getEffectiveProfileImageSource(user);
   const dashboardCardClassName = "dashboard-card-surface";
-  const dashboardTileClassName =
-    "bg-[color:color-mix(in_oklch,var(--secondary)_88%,black_4%)]";
+  const dashboardTileClassName = "bg-surface-secondary";
 
   const latestFitByBike = useMemo(
-    () => buildLatestFitByBike(sessionsWithBikes as any),
+    () =>
+      buildLatestFitByBike(
+        sessionsWithBikes as Parameters<typeof buildLatestFitByBike>[0]
+      ),
     [sessionsWithBikes]
   );
 
@@ -60,13 +62,13 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{messages.home.title}</h1>
-          <p className="mt-2 text-sm text-gray-600">{messages.dashboardHome.subtitle}</p>
+          <h1 className="text-2xl font-bold text-foreground">{messages.home.title}</h1>
+          <p className="mt-2 text-sm text-muted-foreground">{messages.dashboardHome.subtitle}</p>
         </div>
         <div className="flex flex-wrap gap-3">
           <Link
             href={withLocalePrefix("/bikes/new", locale)}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-blue-700 hover:text-blue-800"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-dark"
           >
             <Plus className="h-4 w-4" />
             {messages.nav.newBike}
@@ -89,10 +91,10 @@ export default function DashboardPage() {
           <div className="flex items-center gap-4">
             <ProfilePhotoUpload source={profileImageSource} size="hero" />
             <div>
-              <p className="text-lg font-semibold text-gray-900">{displayName}</p>
-              <p className="text-sm text-gray-600">{user?.email}</p>
+              <p className="text-lg font-semibold text-foreground">{displayName}</p>
+              <p className="text-sm text-muted-foreground">{user?.email}</p>
             </div>
-            <div className="ml-auto rounded-full bg-[color:var(--primary)] px-3 py-1 text-xs font-semibold text-[color:var(--primary-foreground)]">
+            <div className="ml-auto rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
               {user?.tier === "pro" || user?.tier === "premium"
                 ? messages.settings.account.pro
                 : messages.settings.account.free}
@@ -103,22 +105,22 @@ export default function DashboardPage() {
             <div className="space-y-4">
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
                     {messages.profile.measurements.height}
                   </p>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">{profile.heightCm} cm</p>
+                  <p className="mt-1 text-lg font-semibold text-foreground">{profile.heightCm} cm</p>
                 </div>
                 <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
                     {messages.profile.measurements.inseam}
                   </p>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">{profile.inseamCm} cm</p>
+                  <p className="mt-1 text-lg font-semibold text-foreground">{profile.inseamCm} cm</p>
                 </div>
                 <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
                     {messages.dashboardHome.weightLabel}
                   </p>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">
+                  <p className="mt-1 text-lg font-semibold text-foreground">
                     {profile.weightKg ? `${profile.weightKg} kg` : messages.dashboardHome.weightMissing}
                   </p>
                 </div>
@@ -126,13 +128,13 @@ export default function DashboardPage() {
 
               <div className="grid gap-3 lg:grid-cols-2">
                 <div className={`rounded-[var(--radius-md)] px-4 py-4 ${dashboardTileClassName}`}>
-                  <p className="mb-3 text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">
                     {messages.profile.sections.flexibility}
                   </p>
                   <FlexibilityScale score={profile.flexibilityScore} />
                 </div>
                 <div className={`rounded-[var(--radius-md)] px-4 py-4 ${dashboardTileClassName}`}>
-                  <p className="mb-3 text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">
                     {messages.profile.sections.coreStability}
                   </p>
                   <CoreStabilityBar score={profile.coreStabilityScore} />
@@ -140,7 +142,7 @@ export default function DashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="rounded-[var(--radius-md)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <div className="rounded-[var(--radius-md)] border border-warning/20 bg-warning/15 px-4 py-3 text-sm text-foreground">
               {messages.home.profileWarning.description}
             </div>
           )}
@@ -148,7 +150,7 @@ export default function DashboardPage() {
           <div className="flex flex-wrap gap-3">
             <Link
               href={withLocalePrefix("/profile", locale)}
-              className="inline-flex items-center text-sm font-semibold text-blue-700 hover:text-blue-800"
+              className="inline-flex items-center text-sm font-semibold text-primary hover:text-primary-dark"
             >
               {messages.dashboardHome.editProfile}
             </Link>
@@ -165,12 +167,12 @@ export default function DashboardPage() {
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">{messages.bikes.title}</h2>
-            <p className="text-sm text-gray-600">{messages.bikes.subtitle}</p>
+            <h2 className="text-xl font-semibold text-foreground">{messages.bikes.title}</h2>
+            <p className="text-sm text-muted-foreground">{messages.bikes.subtitle}</p>
           </div>
           <Link
             href={withLocalePrefix("/bikes", locale)}
-            className="inline-flex items-center text-sm font-semibold text-blue-700 hover:text-blue-800"
+            className="inline-flex items-center text-sm font-semibold text-primary hover:text-primary-dark"
           >
             {messages.nav.myBikes}
             <ArrowRight className="h-4 w-4" />

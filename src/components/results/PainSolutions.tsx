@@ -27,15 +27,16 @@ export function PainSolutions({ solutions }: PainSolutionsProps) {
   if (!solutions || solutions.length === 0) return null;
 
   return (
-    <Card variant="bordered" className="border-orange-200">
-      <CardHeader className="bg-orange-50">
+    <Card
+      variant="bordered"
+      className="border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))]"
+    >
+      <CardHeader className="bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)]">
         <div className="flex items-center gap-2">
-          <HeartPulse className="h-5 w-5 text-orange-600" />
-          <CardTitle className="text-orange-900">
-            Pain Point Solutions
-          </CardTitle>
+          <HeartPulse className="h-5 w-5 text-warning" />
+          <CardTitle className="text-warning-foreground">Pain Point Solutions</CardTitle>
         </div>
-        <p className="text-sm text-orange-700 mt-1">
+        <p className="mt-1 text-sm text-warning">
           Based on the discomfort areas you mentioned
         </p>
       </CardHeader>
@@ -44,16 +45,16 @@ export function PainSolutions({ solutions }: PainSolutionsProps) {
           {solutions.map((solution, index) => (
             <div
               key={index}
-              className="p-4 bg-white border border-orange-100 rounded-lg"
+              className="rounded-lg border border-border bg-card p-4"
             >
-              <h4 className="font-semibold text-gray-900 flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-orange-500" />
+              <h4 className="flex items-center gap-2 font-semibold text-foreground">
+                <AlertTriangle className="h-4 w-4 text-warning" />
                 {areaLabels[solution.painArea] || solution.painArea}
               </h4>
-              <p className="text-sm text-gray-600 mt-1">{solution.cause}</p>
-              <div className="mt-3 flex items-start gap-2 p-3 bg-green-50 rounded-lg">
-                <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-green-800">{solution.solution}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{solution.cause}</p>
+              <div className="mt-3 flex items-start gap-2 rounded-lg bg-success/10 p-3">
+                <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" />
+                <p className="text-sm text-success">{solution.solution}</p>
               </div>
             </div>
           ))}

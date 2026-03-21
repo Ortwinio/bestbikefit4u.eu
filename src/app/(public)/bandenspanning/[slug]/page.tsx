@@ -103,39 +103,39 @@ export default async function ProgrammaticBandenspanningPage({
         ]}
       />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">
+        <h1 className="text-4xl font-bold text-[color:var(--foreground)]">
           Bandenspanning voor {weight}kg {label.nl}
         </h1>
-        <p className="mt-4 max-w-3xl text-lg text-gray-600">
+        <p className="mt-4 max-w-3xl text-lg text-[color:var(--muted-foreground)]">
           Deze pagina geeft een statisch startadvies voor een rijder van {weight} kg op een{" "}
           {label.nl} met gangbare bandbreedtes. Gebruik het als snelle referentie en ga daarna
           verder naar de volledige calculator voor jouw exacte setup.
         </p>
 
         <section className="mt-10 grid gap-6 md:grid-cols-2">
-          <div className="rounded-2xl border border-blue-200 bg-blue-50 p-6">
-            <h2 className="text-2xl font-semibold text-gray-900">Tubeless advies</h2>
-            <p className="mt-4 text-gray-700">Voor: {tubeless.frontBar} bar / {tubeless.frontPsi} PSI</p>
-            <p className="mt-1 text-gray-700">Achter: {tubeless.rearBar} bar / {tubeless.rearPsi} PSI</p>
-            <p className="mt-4 text-sm text-gray-600">{tubeless.explanation}</p>
+          <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-secondary)] p-6">
+            <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Tubeless advies</h2>
+            <p className="mt-4 text-[color:var(--foreground)]">Voor: {tubeless.frontBar} bar / {tubeless.frontPsi} PSI</p>
+            <p className="mt-1 text-[color:var(--foreground)]">Achter: {tubeless.rearBar} bar / {tubeless.rearPsi} PSI</p>
+            <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">{tubeless.explanation}</p>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white p-6">
-            <h2 className="text-2xl font-semibold text-gray-900">Vergelijking met binnenband</h2>
-            <p className="mt-4 text-gray-700">Voor: {innerTube.frontBar} bar / {innerTube.frontPsi} PSI</p>
-            <p className="mt-1 text-gray-700">Achter: {innerTube.rearBar} bar / {innerTube.rearPsi} PSI</p>
-            <p className="mt-4 text-sm text-gray-600">
+          <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6">
+            <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Vergelijking met binnenband</h2>
+            <p className="mt-4 text-[color:var(--foreground)]">Voor: {innerTube.frontBar} bar / {innerTube.frontPsi} PSI</p>
+            <p className="mt-1 text-[color:var(--foreground)]">Achter: {innerTube.rearBar} bar / {innerTube.rearPsi} PSI</p>
+            <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">
               Binnenband vraagt meestal iets meer druk om stootlekken te beperken.
             </p>
           </div>
         </section>
 
-        <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6">
-          <h2 className="text-2xl font-semibold text-gray-900">FAQ</h2>
+        <section className="mt-10 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6">
+          <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">FAQ</h2>
           <div className="mt-4 space-y-4">
             {faqs.map((faq) => (
               <div key={faq.q}>
-                <h3 className="font-semibold text-gray-900">{faq.q}</h3>
-                <p className="mt-1 text-gray-600">{faq.a}</p>
+                <h3 className="font-semibold text-[color:var(--foreground)]">{faq.q}</h3>
+                <p className="mt-1 text-[color:var(--muted-foreground)]">{faq.a}</p>
               </div>
             ))}
           </div>

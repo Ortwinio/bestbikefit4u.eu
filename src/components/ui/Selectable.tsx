@@ -7,9 +7,9 @@ import {
   type ReactNode,
 } from "react";
 import { Check } from "lucide-react";
-import { Checkbox } from "@base-ui/react/checkbox";
-import { Radio } from "@base-ui/react/radio";
 import { cn } from "@/utils/cn";
+import { CheckboxGroupItem } from "./CheckboxGroup";
+import { RadioGroupItem } from "./RadioGroup";
 
 type SelectableMode = "button" | "radio" | "checkbox";
 
@@ -128,27 +128,27 @@ export const Selectable = forwardRef<HTMLButtonElement, SelectableProps>(
 
     if (mode === "radio" && value !== undefined) {
       const { value: _value, ...radioProps } =
-        props as ComponentPropsWithoutRef<typeof Radio.Root>;
+        props as ComponentPropsWithoutRef<typeof RadioGroupItem>;
 
       return (
-        <Radio.Root
+        <RadioGroupItem
           ref={ref as never}
-          value={value}
+          value={String(value)}
           className={sharedClassName}
           data-slot="selectable"
           {...radioProps}
         >
           {content}
-        </Radio.Root>
+        </RadioGroupItem>
       );
     }
 
     if (mode === "checkbox" && value !== undefined) {
       const { value: _value, ...checkboxProps } =
-        props as ComponentPropsWithoutRef<typeof Checkbox.Root>;
+        props as ComponentPropsWithoutRef<typeof CheckboxGroupItem>;
 
       return (
-        <Checkbox.Root
+        <CheckboxGroupItem
           ref={ref as never}
           value={String(value)}
           className={sharedClassName}
@@ -156,7 +156,7 @@ export const Selectable = forwardRef<HTMLButtonElement, SelectableProps>(
           {...checkboxProps}
         >
           {content}
-        </Checkbox.Root>
+        </CheckboxGroupItem>
       );
     }
 

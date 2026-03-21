@@ -6,6 +6,7 @@ import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { Button, Input, NumberInput, Select, Selectable, Textarea } from "@/components/ui";
+import { Field } from "@/components/ui/Field";
 import { getBikeTypeOptions, type BikeType } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -225,13 +226,13 @@ export function CreateBikeForm() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="mx-auto max-w-4xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">{messages.bikeForm.new.title}</h1>
-        <p className="mt-2 text-gray-600">{messages.bikeForm.new.description}</p>
+        <h1 className="text-2xl font-bold text-[color:var(--foreground)]">{messages.bikeForm.new.title}</h1>
+        <p className="mt-2 text-[color:var(--muted-foreground)]">{messages.bikeForm.new.description}</p>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
         {step === "bike" && (
           <div className="space-y-5">
             <Input
@@ -241,13 +242,13 @@ export function CreateBikeForm() {
               placeholder={messages.bikeForm.fields.name.placeholder}
             />
 
-            <div>
-              <p className="text-sm font-medium text-gray-700">
+            <Field.Root className="space-y-3">
+              <Field.Label className="text-sm font-medium text-[color:var(--foreground)]">
                 {messages.bikeForm.fields.type.label}
-              </p>
-              <p className="mt-1 text-sm text-gray-500">
+              </Field.Label>
+              <Field.Description className="text-sm text-[color:var(--muted-foreground)]">
                 {messages.bikeForm.fields.type.tooltip}
-              </p>
+              </Field.Description>
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 {getBikeTypeOptions(messages).map((option) => (
                   <Selectable
@@ -260,7 +261,7 @@ export function CreateBikeForm() {
                   />
                 ))}
               </div>
-            </div>
+            </Field.Root>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <Input
@@ -373,7 +374,7 @@ export function CreateBikeForm() {
 
         {step === "saved" && (
           <div className="space-y-5">
-            <h2 className="text-xl font-semibold text-gray-900">{messages.pressure.wizard.bikeSaved}</h2>
+            <h2 className="text-xl font-semibold text-[color:var(--foreground)]">{messages.pressure.wizard.bikeSaved}</h2>
             <div className="flex flex-wrap gap-3">
               <Button onClick={() => setStep("wheelset")}>
                 {messages.pressure.wizard.addWheelset}
@@ -397,8 +398,10 @@ export function CreateBikeForm() {
                 onChange={(event) => setWheelsetName(event.target.value)}
                 error={wheelsetNameError}
               />
-              <div>
-                <span className="text-sm font-medium text-gray-700">{messages.pressure.wizard.rimType}</span>
+              <Field.Root className="space-y-3">
+                <Field.Label className="text-sm font-medium text-[color:var(--foreground)]">
+                  {messages.pressure.wizard.rimType}
+                </Field.Label>
                 <div className="mt-2 grid grid-cols-2 gap-2">
                   {(["hooked", "hookless"] as const).map((option) => (
                     <Selectable
@@ -411,7 +414,7 @@ export function CreateBikeForm() {
                     </Selectable>
                   ))}
                 </div>
-              </div>
+              </Field.Root>
               <NumberInput
                 label={messages.pressure.wizard.rimWidthFront}
                 value={internalRimWidthFrontMm ? Number(internalRimWidthFrontMm) : null}
@@ -441,8 +444,10 @@ export function CreateBikeForm() {
                 value={tireModel}
                 onChange={(event) => setTireModel(event.target.value)}
               />
-              <div>
-                <span className="text-sm font-medium text-gray-700">{messages.pressure.wizard.tubeTypeLabel}</span>
+              <Field.Root className="space-y-3">
+                <Field.Label className="text-sm font-medium text-[color:var(--foreground)]">
+                  {messages.pressure.wizard.tubeTypeLabel}
+                </Field.Label>
                 <div className="mt-2 grid grid-cols-3 gap-2">
                   {(["inner_tube", "latex_tube", "tubeless"] as const).map((option) => (
                     <Selectable
@@ -461,7 +466,7 @@ export function CreateBikeForm() {
                     </Selectable>
                   ))}
                 </div>
-              </div>
+              </Field.Root>
               <NumberInput
                 label={messages.pressure.wizard.widthFront}
                 value={widthFrontMm ? Number(widthFrontMm) : null}
@@ -512,7 +517,7 @@ export function CreateBikeForm() {
 
         {step === "done" && newBikeId && (
           <div className="space-y-5">
-            <h2 className="text-xl font-semibold text-gray-900">{messages.pressure.wizard.completedTitle}</h2>
+            <h2 className="text-xl font-semibold text-[color:var(--foreground)]">{messages.pressure.wizard.completedTitle}</h2>
             <div className="flex flex-wrap gap-3">
               <Button
                 render={

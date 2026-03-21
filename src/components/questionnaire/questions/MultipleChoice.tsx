@@ -29,7 +29,7 @@ export function MultipleChoiceQuestion({
 
   return (
     <fieldset className="space-y-3">
-      <legend id={legendId} className="mb-4 text-sm text-gray-500">
+      <legend id={legendId} className="sr-only">
         {messages.questionnaire.multiChoice.legend}
       </legend>
       <CheckboxGroup

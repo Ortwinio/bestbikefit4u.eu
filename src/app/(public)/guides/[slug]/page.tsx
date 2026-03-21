@@ -80,34 +80,34 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
       />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">{copy.h1}</h1>
-        <p className="mt-4 text-lg text-gray-600">{copy.intro}</p>
+        <h1 className="text-4xl font-bold text-foreground">{copy.h1}</h1>
+        <p className="mt-4 text-lg text-muted-foreground">{copy.intro}</p>
 
-        <section className="mt-10 rounded-xl border border-gray-200 bg-white p-6">
-          <h2 className="text-2xl font-semibold text-gray-900">{copy.takeawaysTitle}</h2>
-          <ul className="mt-4 space-y-2 text-gray-700 list-disc list-inside">
+        <section className="mt-10 rounded-xl border border-border bg-card p-6">
+          <h2 className="text-2xl font-semibold text-foreground">{copy.takeawaysTitle}</h2>
+          <ul className="mt-4 list-inside list-disc space-y-2 text-foreground">
             {copy.takeaways.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
         </section>
 
-        <section className="mt-8 rounded-xl border border-blue-200 bg-blue-50 p-6">
-          <h2 className="text-2xl font-semibold text-gray-900">{copy.adjustmentsTitle}</h2>
-          <ol className="mt-4 space-y-2 text-gray-700 list-decimal list-inside">
+        <section className="mt-8 rounded-xl border border-border bg-primary-soft p-6">
+          <h2 className="text-2xl font-semibold text-foreground">{copy.adjustmentsTitle}</h2>
+          <ol className="mt-4 list-inside list-decimal space-y-2 text-foreground">
             {copy.adjustments.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ol>
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-200 bg-white p-6">
-          <h2 className="text-2xl font-semibold text-gray-900">{copy.faqTitle}</h2>
+        <section className="mt-8 rounded-xl border border-border bg-card p-6">
+          <h2 className="text-2xl font-semibold text-foreground">{copy.faqTitle}</h2>
           <dl className="mt-4 space-y-4">
             {copy.faqs.map((faq) => (
               <div key={faq.q}>
-                <dt className="text-base font-semibold text-gray-900">{faq.q}</dt>
-                <dd className="mt-1 text-gray-600">{faq.a}</dd>
+                <dt className="text-base font-semibold text-foreground">{faq.q}</dt>
+                <dd className="mt-1 text-muted-foreground">{faq.a}</dd>
               </div>
             ))}
           </dl>
@@ -119,11 +119,11 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
           locale={locale}
         />
 
-        <section className="mt-10 rounded-2xl bg-blue-600 p-8 text-center">
-          <h2 className="text-2xl font-bold text-white">
+        <section className="mt-10 rounded-2xl bg-primary p-8 text-center">
+          <h2 className="text-2xl font-bold text-primary-foreground">
             {isNl ? "Wil je jouw fit concreet laten berekenen?" : "Ready to calculate your personalized fit?"}
           </h2>
-          <p className="mt-3 text-blue-100">
+          <p className="mt-3 text-primary-foreground/80">
             {isNl
               ? "Start gratis en ontvang afstelwaarden met duidelijke prioriteiten."
               : "Start free and get setup targets with clear adjustment priorities."}
@@ -137,16 +137,16 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
                   pagePath={pagePath}
                   section="guide_final_cta"
                   ctaLabel={copy.primaryCta}
-                />
+              />
               }
-              className="bg-white text-blue-700 hover:bg-blue-50"
+              className="bg-background text-primary hover:bg-muted"
             >
               {copy.primaryCta}
             </Button>
             <Button
               render={<Link href={withLocalePrefix("/about", locale)} />}
               variant="outline"
-              className="border-white text-white hover:bg-blue-500"
+              className="border-primary-foreground bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
             >
               {copy.secondaryCta}
             </Button>

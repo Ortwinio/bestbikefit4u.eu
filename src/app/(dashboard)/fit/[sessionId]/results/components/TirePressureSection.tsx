@@ -86,20 +86,22 @@ export function TirePressureSection({
                   {tirePressure.warnings.map((warning) => (
                     <div
                       key={warning}
-                      className="rounded-[var(--radius-md)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+                      className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] px-4 py-3 text-sm text-[color:var(--warning-foreground)]"
                     >
                       {warningMessages[warning] ?? warning}
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="mt-2 text-sm text-green-700">{copy.tirePressure.noWarnings}</p>
+                <p className="mt-2 text-sm text-success">
+                  {copy.tirePressure.noWarnings}
+                </p>
               )}
             </div>
           </>
         ) : (
           <>
-            <div className="rounded-[var(--radius-md)] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] px-4 py-3 text-sm text-[color:var(--warning-foreground)]">
               <p className="font-semibold">{copy.tirePressure.pendingTitle}</p>
               <p className="mt-1">{copy.tirePressure.pendingDescription}</p>
             </div>
@@ -147,4 +149,3 @@ export function TirePressureSection({
     </Card>
   );
 }
-

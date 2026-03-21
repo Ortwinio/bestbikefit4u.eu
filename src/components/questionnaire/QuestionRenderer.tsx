@@ -23,25 +23,23 @@ export function QuestionRenderer({
 }: QuestionRendererProps) {
   return (
     <div className="space-y-4">
-      {/* Question text */}
       <div>
         <h2
           id={headingId}
           tabIndex={-1}
-          className="text-xl font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="text-xl font-semibold text-foreground focus-visible:focus-ring"
         >
           {question.questionText}
-          {question.isRequired && <span className="text-red-500 ml-1">*</span>}
+          {question.isRequired && <span className="ml-1 text-destructive">*</span>}
         </h2>
         {question.helpText && (
-          <div className="flex items-start gap-2 mt-2 p-3 bg-blue-50 rounded-lg">
-            <HelpCircle className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-            <p className="text-sm text-blue-700">{question.helpText}</p>
+          <div className="mt-2 flex items-start gap-2 rounded-lg border border-border bg-muted p-3">
+            <HelpCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+            <p className="text-sm text-muted-foreground">{question.helpText}</p>
           </div>
         )}
       </div>
 
-      {/* Question input based on type */}
       <div className="mt-6">
         {question.responseType === "single_choice" && question.options && (
           <SingleChoiceQuestion

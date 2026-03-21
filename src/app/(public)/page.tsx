@@ -126,14 +126,14 @@ export default async function HomePage() {
         className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-24"
         style={{ backgroundImage: "url('/bestbikefit4u-home.gif')" }}
       >
-        <div className="absolute inset-0 bg-slate-950/45" aria-hidden="true" />
+        <div className="absolute inset-0 bg-black/45" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
+            <h1 className="text-4xl font-bold tracking-tight text-primary-foreground sm:text-5xl md:text-6xl">
               {home.hero.title}
-              <span className="block text-blue-200">{home.hero.titleAccent}</span>
+              <span className="block text-primary-foreground/80">{home.hero.titleAccent}</span>
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-blue-50">
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-primary-foreground/90">
               {home.hero.description}
             </p>
             <div className="mt-10 flex justify-center gap-4">
@@ -154,7 +154,7 @@ export default async function HomePage() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-white bg-white/10 text-white hover:bg-white/20"
+                className="border-primary-foreground/70 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20"
                 {...linkButtonProps(withLocalePrefix("/about", locale))}
               >
                 {home.hero.secondaryCta}
@@ -168,36 +168,36 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-3xl font-bold text-foreground">
               {home.howItWorks.title}
             </h2>
-            <p className="mt-4 text-lg text-gray-600">{home.howItWorks.subtitle}</p>
+            <p className="mt-4 text-lg text-muted-foreground">{home.howItWorks.subtitle}</p>
           </div>
           <div className="mt-16 grid gap-8 md:grid-cols-3">
             {home.howItWorks.steps.map((step, index) => (
               <div key={step.title} className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
-                  <span className="text-2xl font-bold text-blue-600">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary-soft">
+                  <span className="text-2xl font-bold text-primary">
                     {index + 1}
                   </span>
                 </div>
-                <h3 className="mt-6 text-xl font-semibold text-gray-900">
+                <h3 className="mt-6 text-xl font-semibold text-foreground">
                   {step.title}
                 </h3>
-                <p className="mt-2 text-gray-600">{step.description}</p>
+                <p className="mt-2 text-muted-foreground">{step.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-blue-50/60 py-20">
+      <section className="bg-secondary py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-3xl font-bold text-foreground">
               {home.reasonsToStart.title}
             </h2>
-            <p className="mx-auto mt-4 max-w-3xl text-lg text-gray-600">
+            <p className="mx-auto mt-4 max-w-3xl text-lg text-muted-foreground">
               {home.reasonsToStart.subtitle}
             </p>
           </div>
@@ -206,14 +206,14 @@ export default async function HomePage() {
               const Icon = reasonsIcons[index] ?? Activity;
 
               return (
-                <div key={reason.title} className="rounded-xl bg-white p-6 shadow-sm">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                    <Icon className="h-5 w-5 text-blue-700" />
+                <div key={reason.title} className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-soft">
+                    <Icon className="h-5 w-5 text-primary" />
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold text-gray-900">
+                  <h3 className="mt-4 text-lg font-semibold text-foreground">
                     {reason.title}
                   </h3>
-                  <p className="mt-2 text-gray-600">{reason.description}</p>
+                  <p className="mt-2 text-muted-foreground">{reason.description}</p>
                 </div>
               );
             })}
@@ -221,27 +221,27 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-gray-50 py-20">
+      <section className="bg-muted py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-3xl font-bold text-foreground">
               {home.features.title}
             </h2>
-            <p className="mt-4 text-lg text-gray-600">{home.features.subtitle}</p>
+            <p className="mt-4 text-lg text-muted-foreground">{home.features.subtitle}</p>
           </div>
           <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {home.features.items.map((feature, index) => {
               const Icon = featureIcons[index] ?? Ruler;
 
               return (
-                <div key={feature.title} className="rounded-lg bg-white p-6 shadow-sm">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                    <Icon className="h-6 w-6 text-blue-600" />
+                <div key={feature.title} className="rounded-lg border border-border bg-card p-6 shadow-sm">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-soft">
+                    <Icon className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold text-gray-900">
+                  <h3 className="mt-4 text-lg font-semibold text-foreground">
                     {feature.title}
                   </h3>
-                  <p className="mt-2 text-gray-600">{feature.description}</p>
+                  <p className="mt-2 text-muted-foreground">{feature.description}</p>
                 </div>
               );
             })}
@@ -252,10 +252,10 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-3xl font-bold text-foreground">
               {locale === "nl" ? "Populaire calculators" : "Popular Calculators"}
             </h2>
-            <p className="mt-4 text-lg text-gray-600">
+            <p className="mt-4 text-lg text-muted-foreground">
               {locale === "nl"
                 ? "Directe ingangen naar de belangrijkste gratis tools."
                 : "Direct entry points into the most important free tools."}
@@ -266,7 +266,7 @@ export default async function HomePage() {
               <Link
                 key={tool.href}
                 href={withLocalePrefix(tool.href, locale)}
-                className="rounded-xl border border-gray-200 bg-white px-5 py-4 text-sm font-semibold text-blue-700 shadow-sm hover:bg-blue-50"
+                className="rounded-xl border border-border bg-card px-5 py-4 text-sm font-semibold text-primary shadow-sm hover:bg-secondary"
               >
                 {tool.label}
               </Link>
@@ -278,22 +278,22 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-3xl font-bold text-foreground">
               {home.trustSection.title}
             </h2>
-            <p className="mt-4 text-lg text-gray-600">{home.trustSection.subtitle}</p>
+            <p className="mt-4 text-lg text-muted-foreground">{home.trustSection.subtitle}</p>
           </div>
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {home.trustSection.items.map((item, index) => {
               const Icon = trustIcons[index] ?? Shield;
 
               return (
-                <div key={item.title} className="rounded-xl border border-gray-200 p-6">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
-                    <Icon className="h-5 w-5 text-gray-700" />
+                <div key={item.title} className="rounded-xl border border-border bg-background p-6">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+                    <Icon className="h-5 w-5 text-foreground" />
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold text-gray-900">{item.title}</h3>
-                  <p className="mt-2 text-gray-600">{item.description}</p>
+                  <h3 className="mt-4 text-lg font-semibold text-foreground">{item.title}</h3>
+                  <p className="mt-2 text-muted-foreground">{item.description}</p>
                 </div>
               );
             })}
@@ -301,13 +301,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-gray-50 py-20">
+      <section className="bg-muted py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-3xl font-bold text-foreground">
               {locale === "nl" ? "Populaire bikefitting gidsen" : "Popular Bike Fitting Guides"}
             </h2>
-            <p className="mt-4 text-lg text-gray-600">
+            <p className="mt-4 text-lg text-muted-foreground">
               {locale === "nl"
                 ? "Verdiep je in klachtgerichte en disciplinegerichte gidsen, en zet de volgende stap met je persoonlijke fitrapport."
                 : "Explore pain-focused and discipline-specific guides, then apply your own personalized fit report."}
@@ -318,7 +318,7 @@ export default async function HomePage() {
               <Link
                 key={guide.href}
                 href={withLocalePrefix(guide.href, locale)}
-                className="rounded-lg border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-blue-700 hover:bg-blue-50"
+                className="rounded-lg border border-border bg-card px-5 py-4 text-sm font-medium text-primary hover:bg-secondary"
               >
                 {guide.label}
               </Link>
@@ -327,7 +327,7 @@ export default async function HomePage() {
           <div className="mt-6 text-center">
             <Link
               href={withLocalePrefix("/guides", locale)}
-              className="text-sm font-semibold text-blue-700 hover:text-blue-800"
+              className="text-sm font-semibold text-primary hover:text-primary-dark"
             >
               {locale === "nl" ? "Bekijk alle gidsen" : "View all guides"}
             </Link>
@@ -338,10 +338,10 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-3xl font-bold text-foreground">
               {locale === "nl" ? "Rijsituaties en klachten" : "Riding Scenarios and Pain Points"}
             </h2>
-            <p className="mt-4 text-lg text-gray-600">
+            <p className="mt-4 text-lg text-muted-foreground">
               {locale === "nl"
                 ? "Gebruik scenario-pagina's om sneller naar de juiste calculator of gids te gaan."
                 : "Use scenario pages to move faster toward the right calculator or guide."}
@@ -352,7 +352,7 @@ export default async function HomePage() {
               <Link
                 key={item.href}
                 href={withLocalePrefix(item.href, locale)}
-                className="rounded-xl border border-gray-200 bg-white px-5 py-4 text-sm font-semibold text-blue-700 shadow-sm hover:bg-blue-50"
+                className="rounded-xl border border-border bg-card px-5 py-4 text-sm font-semibold text-primary shadow-sm hover:bg-secondary"
               >
                 {item.label}
               </Link>
@@ -361,7 +361,7 @@ export default async function HomePage() {
           <div className="mt-6 text-center">
             <Link
               href={withLocalePrefix("/use-cases", locale)}
-              className="text-sm font-semibold text-blue-700 hover:text-blue-800"
+              className="text-sm font-semibold text-primary hover:text-primary-dark"
             >
               {locale === "nl" ? "Bekijk alle use cases" : "View all use cases"}
             </Link>
@@ -373,18 +373,18 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="items-center lg:grid lg:grid-cols-2 lg:gap-16">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">
+              <h2 className="text-3xl font-bold text-foreground">
                 {home.recommendationSection.title}
               </h2>
-              <p className="mt-4 text-lg text-gray-600">
+              <p className="mt-4 text-lg text-muted-foreground">
                 {home.recommendationSection.description}
               </p>
               <ul className="mt-8 space-y-4">
                 {home.recommendationSection.items.map((item) => (
                   <li key={item} className="flex items-center gap-3">
-                    <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
+                    <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-success/15">
                       <svg
-                        className="h-4 w-4 text-green-600"
+                        className="h-4 w-4 text-success"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -395,17 +395,17 @@ export default async function HomePage() {
                         />
                       </svg>
                     </div>
-                    <span className="text-gray-700">{item}</span>
+                    <span className="text-foreground">{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
             <div className="mt-12 lg:mt-0">
-              <div className="rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 p-8 text-white">
+              <div className="rounded-2xl bg-gradient-to-br from-primary to-primary-dark p-8 text-primary-foreground">
                 <h3 className="text-2xl font-bold">
                   {home.recommendationSection.cardTitle}
                 </h3>
-                <p className="mt-4 text-blue-100">
+                <p className="mt-4 text-primary-foreground/80">
                   {home.recommendationSection.cardDescription}
                 </p>
                 <Button
@@ -416,10 +416,10 @@ export default async function HomePage() {
                       pagePath={homePath}
                       section="recommendation_card"
                       ctaLabel={home.recommendationSection.cardCta}
-                    />
+                  />
                   }
                   size="lg"
-                  className="mt-6 bg-white text-blue-600 hover:bg-blue-50"
+                  className="mt-6 bg-background text-primary hover:bg-muted"
                 >
                   {home.recommendationSection.cardCta}
                 </Button>
@@ -429,10 +429,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-blue-600 py-16">
+      <section className="bg-primary py-16">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-white">{home.cta.title}</h2>
-          <p className="mt-4 text-lg text-blue-100">{home.cta.description}</p>
+          <h2 className="text-3xl font-bold text-primary-foreground">{home.cta.title}</h2>
+          <p className="mt-4 text-lg text-primary-foreground/80">{home.cta.description}</p>
           <div className="mt-8">
             <Button
               render={
@@ -445,7 +445,7 @@ export default async function HomePage() {
                 />
               }
               size="lg"
-              className="bg-white text-blue-600 hover:bg-blue-50"
+              className="bg-background text-primary hover:bg-muted"
             >
               {home.cta.button}
             </Button>

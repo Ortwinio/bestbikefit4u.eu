@@ -55,29 +55,29 @@ export default async function GuidesHubPage() {
   return (
     <div className="py-16">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">
+        <h1 className="text-4xl font-bold text-foreground">
           {isNl ? "Bikefitting gidsen" : "Bike Fitting Guides"}
         </h1>
-        <p className="mt-4 max-w-3xl text-lg text-gray-600">
+        <p className="mt-4 max-w-3xl text-lg text-muted-foreground">
           {isNl
             ? "Gebruik deze gidsen om sneller de juiste afstellingen te kiezen voor jouw klachten of discipline."
             : "Use these guides to choose better setup priorities for your pain points or cycling discipline."}
         </p>
 
         <section className="mt-12">
-          <h2 className="text-2xl font-semibold text-gray-900">
+          <h2 className="text-2xl font-semibold text-foreground">
             {getGuideClusterLabel("pain", locale)}
           </h2>
           <div className="mt-6 grid gap-6 md:grid-cols-2">
             {painGuides.map((guide) => {
               const copy = getGuideCopy(guide, locale);
               return (
-                <article key={guide.slug} className="rounded-xl border border-gray-200 bg-white p-6">
-                  <h3 className="text-xl font-semibold text-gray-900">{copy.cardTitle}</h3>
-                  <p className="mt-2 text-gray-600">{copy.cardDescription}</p>
+                <article key={guide.slug} className="rounded-xl border border-border bg-card p-6">
+                  <h3 className="text-xl font-semibold text-foreground">{copy.cardTitle}</h3>
+                  <p className="mt-2 text-muted-foreground">{copy.cardDescription}</p>
                   <Link
                     href={withLocalePrefix(`/guides/${guide.slug}`, locale)}
-                    className="mt-4 inline-flex text-sm font-medium text-blue-700 hover:text-blue-800"
+                    className="mt-4 inline-flex text-sm font-medium text-primary hover:text-primary-dark"
                   >
                     {isNl ? "Lees gids" : "Read guide"}
                   </Link>
@@ -88,19 +88,19 @@ export default async function GuidesHubPage() {
         </section>
 
         <section className="mt-12">
-          <h2 className="text-2xl font-semibold text-gray-900">
+          <h2 className="text-2xl font-semibold text-foreground">
             {getGuideClusterLabel("discipline", locale)}
           </h2>
           <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {disciplineGuides.map((guide) => {
               const copy = getGuideCopy(guide, locale);
               return (
-                <article key={guide.slug} className="rounded-xl border border-gray-200 bg-white p-6">
-                  <h3 className="text-xl font-semibold text-gray-900">{copy.cardTitle}</h3>
-                  <p className="mt-2 text-gray-600">{copy.cardDescription}</p>
+                <article key={guide.slug} className="rounded-xl border border-border bg-card p-6">
+                  <h3 className="text-xl font-semibold text-foreground">{copy.cardTitle}</h3>
+                  <p className="mt-2 text-muted-foreground">{copy.cardDescription}</p>
                   <Link
                     href={withLocalePrefix(`/guides/${guide.slug}`, locale)}
-                    className="mt-4 inline-flex text-sm font-medium text-blue-700 hover:text-blue-800"
+                    className="mt-4 inline-flex text-sm font-medium text-primary hover:text-primary-dark"
                   >
                     {isNl ? "Lees gids" : "Read guide"}
                   </Link>
@@ -110,11 +110,11 @@ export default async function GuidesHubPage() {
           </div>
         </section>
 
-        <section className="mt-14 rounded-2xl bg-blue-600 p-8 text-center">
-          <h2 className="text-2xl font-bold text-white">
+        <section className="mt-14 rounded-2xl bg-primary p-8 text-center">
+          <h2 className="text-2xl font-bold text-primary-foreground">
             {isNl ? "Klaar voor je persoonlijke fitrapport?" : "Ready for your personalized fit report?"}
           </h2>
-          <p className="mt-3 text-blue-100">
+          <p className="mt-3 text-primary-foreground/80">
             {isNl
               ? "Start gratis en ontvang afstelwaarden die passen bij jouw lichaam, doelen en rijstijl."
               : "Start free and get setup targets matched to your body, goals, and riding style."}
@@ -130,7 +130,7 @@ export default async function GuidesHubPage() {
               />
             }
             size="lg"
-            className="mt-6 bg-white text-blue-700 hover:bg-blue-50"
+            className="mt-6 bg-background text-primary hover:bg-muted"
           >
             {isNl ? "Start gratis fit" : "Start Free Fit"}
           </Button>

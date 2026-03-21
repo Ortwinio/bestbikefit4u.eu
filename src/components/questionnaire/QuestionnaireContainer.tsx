@@ -222,8 +222,8 @@ export function QuestionnaireContainer({
   const canProceed = !currentQuestion.isRequired || hasResponse;
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="sticky top-16 z-20 mb-6 rounded-lg border border-gray-200 bg-white/95 p-3 backdrop-blur md:top-4">
+    <div className="mx-auto max-w-2xl">
+      <div className="sticky top-16 z-20 mb-6 rounded-lg border border-border bg-card/95 p-3 backdrop-blur md:top-4">
         <ProgressBar
           current={currentIndex + 1}
           total={totalQuestions}
@@ -232,8 +232,8 @@ export function QuestionnaireContainer({
       </div>
 
       {missingRequiredQuestionIds.length > 0 && (
-        <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
-          <p className="text-sm font-medium text-amber-900">
+        <div className="mb-6 rounded-lg border border-border bg-destructive-soft p-4">
+          <p className="text-sm font-medium text-destructive">
             {messages.questionnaire.missingRequired.header}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -245,7 +245,6 @@ export function QuestionnaireContainer({
                   size="sm"
                   variant="outline"
                   onClick={() => jumpToQuestion(questionId)}
-                  className="border-amber-300 bg-white text-amber-800 hover:bg-amber-100"
                 >
                   {question?.questionText ?? questionId}
                 </Button>
@@ -315,13 +314,13 @@ export function QuestionnaireContainer({
         />
       ) : null}
 
-      <p className="text-center text-sm text-gray-500 mt-4">
+      <p className="mt-4 text-center text-sm text-muted-foreground">
         {formatMessage(messages.questionnaire.progress.questionOf, {
           current: currentIndex + 1,
           total: totalQuestions,
         })}
         {currentQuestion.isRequired && (
-          <span className="text-red-500 ml-1">*</span>
+          <span className="ml-1 text-destructive">*</span>
         )}
       </p>
     </div>

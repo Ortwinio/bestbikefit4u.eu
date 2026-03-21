@@ -122,8 +122,8 @@ export default function BikeDetailPage({
     <div className="mx-auto max-w-6xl space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{bike.name}</h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <h1 className="text-2xl font-bold text-[color:var(--foreground)]">{bike.name}</h1>
+          <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
             {[bike.brand, bike.model].filter(Boolean).join(" ") || getBikeTypeLabel(bike.bikeType, messages)}
           </p>
         </div>
@@ -143,7 +143,7 @@ export default function BikeDetailPage({
             <CardHeader>
               <CardTitle>{messages.bikes.sections.geometry}</CardTitle>
             </CardHeader>
-            <CardContent className="grid gap-3 text-sm text-gray-700 sm:grid-cols-2">
+            <CardContent className="grid gap-3 text-sm text-[color:var(--foreground)] sm:grid-cols-2">
               <p>{messages.bikeForm.fields.type.staticLabel} {getBikeTypeLabel(bike.bikeType, messages)}</p>
               <p>{messages.fit.sections.ridingStyle}: {ridingStyleLabel}</p>
               <p>{messages.fit.sections.primaryGoal}: {primaryGoalLabel}</p>
@@ -160,7 +160,7 @@ export default function BikeDetailPage({
             <CardHeader>
               <CardTitle>{messages.pressure.bikeDetail.activeTireSetup}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm text-gray-700">
+            <CardContent className="space-y-2 text-sm text-[color:var(--foreground)]">
               <p>{messages.pressure.bikeDetail.activeWheelset}: {activeWheelset?.name ?? messages.pressure.bikeDetail.noWheelset}</p>
               <p>{messages.pressure.bikeDetail.activeTireSetup}: {activeTireSetup?.name ?? messages.pressure.bikeDetail.noTireSetup}</p>
               {activeTireSetup ? (
@@ -175,14 +175,14 @@ export default function BikeDetailPage({
             <CardHeader>
               <CardTitle>{messages.results.title}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm text-gray-700">
+            <CardContent className="space-y-2 text-sm text-[color:var(--foreground)]">
               {recommendation ? (
                 <>
                   <p>{messages.results.algorithmVersionLabel}: {recommendation.algorithmVersion}</p>
                   <p>
                     <Link
                       href={withLocalePrefix(`/fit/${recommendation.sessionId}/results`, locale)}
-                      className="font-semibold text-blue-700 hover:text-blue-800"
+                      className="font-semibold text-[color:var(--primary)] hover:opacity-80"
                     >
                       {messages.home.recentSessions.actions.viewResults}
                     </Link>
@@ -198,14 +198,14 @@ export default function BikeDetailPage({
             <CardHeader>
               <CardTitle>{messages.bikes.defaultProfile.title}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm text-gray-700">
+            <CardContent className="space-y-3 text-sm text-[color:var(--foreground)]">
               {bikeProfiles && bikeProfiles.length > 0 ? (
                 bikeProfiles.map((profile) => (
                   <div
                     key={profile._id}
-                    className="rounded-lg border border-gray-200 bg-gray-50 p-3"
+                    className="rounded-lg border border-[color:var(--border)] bg-[color:var(--secondary)]/35 p-3"
                   >
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-[color:var(--foreground)]">
                       {bikeProfileName(profile)}
                       {profile.isDefault ? (
                         <span className="ml-2 rounded-full bg-[color:var(--secondary)] px-2 py-1 text-xs font-semibold text-[color:var(--secondary-foreground)]">

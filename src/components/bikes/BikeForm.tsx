@@ -15,6 +15,7 @@ import {
   Selectable,
   Textarea,
 } from "@/components/ui";
+import { Field } from "@/components/ui/Field";
 import { getBikeTypeOptions, getBikeTypeLabel, type BikeType } from "@/lib/bikes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
@@ -248,10 +249,10 @@ export function BikeForm({
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="mx-auto max-w-4xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-        <p className="text-gray-600 mt-2">{description}</p>
+        <h1 className="text-2xl font-bold text-[color:var(--foreground)]">{title}</h1>
+        <p className="mt-2 text-[color:var(--muted-foreground)]">{description}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -270,13 +271,13 @@ export function BikeForm({
             />
 
             {showBikeTypeSelect ? (
-              <div>
-                <p className="text-sm font-medium text-gray-700">
+              <Field.Root className="space-y-3">
+                <Field.Label className="text-sm font-medium text-[color:var(--foreground)]">
                   {messages.bikeForm.fields.type.label}
-                </p>
-                <p className="mt-1 text-sm text-gray-500">
+                </Field.Label>
+                <Field.Description className="text-sm text-[color:var(--muted-foreground)]">
                   {messages.bikeForm.fields.type.tooltip}
-                </p>
+                </Field.Description>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   {getBikeTypeOptions(messages).map((option) => (
                     <Selectable
@@ -289,10 +290,12 @@ export function BikeForm({
                     />
                   ))}
                 </div>
-              </div>
+              </Field.Root>
             ) : (
-              <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700">
-                <span className="font-medium">{messages.bikeForm.fields.type.staticLabel}</span>{" "}
+              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] px-3 py-2 text-sm text-[color:var(--muted-foreground)]">
+                <span className="font-medium text-[color:var(--foreground)]">
+                  {messages.bikeForm.fields.type.staticLabel}
+                </span>{" "}
                 {bikeType ? getBikeTypeLabel(bikeType, messages) : "-"}
               </div>
             )}
@@ -460,7 +463,7 @@ export function BikeForm({
         </Card>
 
         {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--danger)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--card)_92%,var(--danger)_8%)] px-4 py-3 text-sm text-[color:var(--danger)]">
             {error}
           </div>
         )}

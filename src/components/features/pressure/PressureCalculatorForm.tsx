@@ -136,10 +136,10 @@ export function PressureCalculatorForm({
   return (
     <section className="py-14">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:px-8">
-        <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
           <div className="space-y-6">
             <Field.Root className="space-y-3">
-              <Field.Label className="text-sm font-medium text-gray-700">
+              <Field.Label className="text-sm font-medium text-[color:var(--foreground)]">
                 {labels.disciplineLabel}
               </Field.Label>
               <div className="mt-3 grid grid-cols-3 gap-2">
@@ -193,7 +193,7 @@ export function PressureCalculatorForm({
             />
 
             <Field.Root className="space-y-3">
-              <Field.Label className="text-sm font-medium text-gray-700">
+              <Field.Label className="text-sm font-medium text-[color:var(--foreground)]">
                 {labels.tubeTypeLabel}
               </Field.Label>
               <div className="mt-3 grid grid-cols-3 gap-2">
@@ -211,7 +211,7 @@ export function PressureCalculatorForm({
             </Field.Root>
 
             <Field.Root className="space-y-3">
-              <Field.Label className="text-sm font-medium text-gray-700">
+              <Field.Label className="text-sm font-medium text-[color:var(--foreground)]">
                 {labels.surfaceLabel}
               </Field.Label>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -229,7 +229,7 @@ export function PressureCalculatorForm({
               </div>
             </Field.Root>
 
-            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
+            <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
               <Button
                 type="button"
                 variant="ghost"
@@ -243,7 +243,7 @@ export function PressureCalculatorForm({
               {showAdvanced ? (
                 <div className="mt-4 space-y-4">
                   <Field.Root className="space-y-3">
-                    <Field.Label className="text-sm font-medium text-gray-700">
+                    <Field.Label className="text-sm font-medium text-[color:var(--foreground)]">
                       {labels.ridingGoalLabel}
                     </Field.Label>
                     <div className="mt-3 grid grid-cols-3 gap-2">
@@ -255,9 +255,9 @@ export function PressureCalculatorForm({
                           }
                           selected={ridingGoal === option}
                           variant="segment"
-                          >
-                            {goalLabels[option]}
-                          </Selectable>
+                        >
+                          {goalLabels[option]}
+                        </Selectable>
                       ))}
                     </div>
                   </Field.Root>
@@ -283,7 +283,7 @@ export function PressureCalculatorForm({
           {result ? (
             <PressureResultCard result={result} labels={resultLabels} />
           ) : (
-            <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-6 text-sm text-gray-500">
+            <div className="rounded-[var(--radius-lg)] border border-dashed border-[color:var(--border)] bg-[color:var(--card)] p-6 text-sm text-[color:var(--muted-foreground)]">
               {labels.resultPlaceholder}
             </div>
           )}

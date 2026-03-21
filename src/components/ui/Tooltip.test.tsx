@@ -4,7 +4,7 @@ import { Input } from "@/components/ui";
 import { Tooltip, getNextTooltipOpenState } from "./Tooltip";
 
 describe("tooltip rendering and a11y wiring", () => {
-  it("renders a trigger and descriptive text association", () => {
+  it("renders a button trigger with the requested accessible name", () => {
     const html = renderToStaticMarkup(
       <Tooltip
         content="Helpful guidance for this field."
@@ -16,7 +16,9 @@ describe("tooltip rendering and a11y wiring", () => {
     expect(html).toContain('type="button"');
     expect(html).toContain('aria-label="More help"');
     expect(html).toContain('aria-describedby="tooltip-desc-test"');
+    expect(html).toContain('data-slot="tooltip-trigger"');
     expect(html).toContain("Helpful guidance for this field.");
+    expect(html).toContain('id="tooltip-desc-test"');
   });
 
   it("associates input aria-describedby with tooltip description", () => {

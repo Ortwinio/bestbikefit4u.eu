@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
-import { Button, Input, Select } from "@/components/ui";
+import { Button, Card, CardContent, Input, Select } from "@/components/ui";
 import { calculateAdvancedPressure } from "@/lib/pressure-engine";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { PressureResultCard } from "../PressureResultCard";
@@ -199,7 +199,7 @@ export function StepResult({
   if (!result) {
     return (
       <div className="space-y-4">
-        <p className="text-sm text-gray-600">{wizardLabels.selectWheelsetFirst}</p>
+        <p className="text-sm text-[color:var(--muted-foreground)]">{wizardLabels.selectWheelsetFirst}</p>
         <Button variant="outline" onClick={onBack}>
           {wizardLabels.back}
         </Button>
@@ -212,18 +212,20 @@ export function StepResult({
       <PressureResultCard result={result} labels={resultLabels} />
 
       {(currentFrontBar !== undefined || currentRearBar !== undefined) && (
-        <div className="rounded-2xl border border-gray-200 bg-white p-4">
-          <p className="text-sm text-gray-700">
-            {wizardLabels.currentPressureSummary}: {currentFrontBar ?? "-"} / {currentRearBar ?? "-"} bar
-          </p>
-          <p className="mt-1 text-sm text-gray-700">
-            {wizardLabels.recommendedPressureSummary}: {result.frontBar} / {result.rearBar} bar
-          </p>
-        </div>
+        <Card variant="bordered">
+          <CardContent className="space-y-1 p-4">
+            <p className="text-sm text-[color:var(--foreground)]">
+              {wizardLabels.currentPressureSummary}: {currentFrontBar ?? "-"} / {currentRearBar ?? "-"} bar
+            </p>
+            <p className="text-sm text-[color:var(--foreground)]">
+              {wizardLabels.recommendedPressureSummary}: {result.frontBar} / {result.rearBar} bar
+            </p>
+          </CardContent>
+        </Card>
       )}
 
       {saveMessage ? (
-        <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+        <div className="rounded-xl border border-[color:color-mix(in_oklch,var(--success)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--success)_10%,var(--card)_90%)] px-4 py-3 text-sm text-[color:var(--success-foreground)]">
           {saveMessage}
         </div>
       ) : null}
@@ -244,42 +246,44 @@ export function StepResult({
       </div>
 
       {bikeId && tireSetupId ? (
-        <div className="rounded-2xl border border-gray-200 bg-white p-4">
-          <p className="text-sm font-semibold text-gray-900">{wizardLabels.saveAsPreset}</p>
-          <div className="mt-3 grid gap-4 sm:grid-cols-2">
-            <Input
-              label={wizardLabels.presetName}
-              value={presetName}
-              onChange={(event) => setPresetName(event.target.value)}
-            />
-            <Select
-              label={wizardLabels.presetUseCase}
-              value={presetUseCase}
-              onChange={(event) =>
-                setPresetUseCase(
-                  event.target.value as
-                    | "race"
-                    | "endurance"
-                    | "wet_weather"
-                    | "gravel_mixed"
-                    | "comfort"
-                    | "custom"
-                )
-              }
-              options={[
-                { value: "race", label: wizardLabels.useCaseRace },
-                { value: "endurance", label: wizardLabels.useCaseEndurance },
-                { value: "wet_weather", label: wizardLabels.useCaseWetWeather },
-                { value: "gravel_mixed", label: wizardLabels.useCaseGravelMixed },
-                { value: "comfort", label: wizardLabels.useCaseComfort },
-                { value: "custom", label: wizardLabels.useCaseCustom },
-              ]}
-            />
-          </div>
-          <Button type="button" onClick={handleSavePreset} className="mt-4">
-            {wizardLabels.saveAsPreset}
-          </Button>
-        </div>
+        <Card variant="bordered">
+          <CardContent className="space-y-4 p-4">
+            <p className="text-sm font-semibold text-[color:var(--foreground)]">{wizardLabels.saveAsPreset}</p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Input
+                label={wizardLabels.presetName}
+                value={presetName}
+                onChange={(event) => setPresetName(event.target.value)}
+              />
+              <Select
+                label={wizardLabels.presetUseCase}
+                value={presetUseCase}
+                onChange={(event) =>
+                  setPresetUseCase(
+                    event.target.value as
+                      | "race"
+                      | "endurance"
+                      | "wet_weather"
+                      | "gravel_mixed"
+                      | "comfort"
+                      | "custom"
+                  )
+                }
+                options={[
+                  { value: "race", label: wizardLabels.useCaseRace },
+                  { value: "endurance", label: wizardLabels.useCaseEndurance },
+                  { value: "wet_weather", label: wizardLabels.useCaseWetWeather },
+                  { value: "gravel_mixed", label: wizardLabels.useCaseGravelMixed },
+                  { value: "comfort", label: wizardLabels.useCaseComfort },
+                  { value: "custom", label: wizardLabels.useCaseCustom },
+                ]}
+              />
+            </div>
+            <Button type="button" onClick={handleSavePreset}>
+              {wizardLabels.saveAsPreset}
+            </Button>
+          </CardContent>
+        </Card>
       ) : null}
     </div>
   );

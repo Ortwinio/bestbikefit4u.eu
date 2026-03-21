@@ -55,7 +55,7 @@ export function BikeNotesEditor({
   if (!isEditing) {
     return (
       <div className="space-y-3">
-        <p className="whitespace-pre-wrap text-sm text-gray-700">
+        <p className="whitespace-pre-wrap text-sm text-[color:var(--foreground)]">
           {savedValue || messages.bikeForm.fields.notes.placeholder}
         </p>
         <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>

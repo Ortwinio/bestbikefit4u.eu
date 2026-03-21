@@ -55,10 +55,10 @@ export function PressureCalculatorDashboard({
   return (
     <div className="mx-auto max-w-6xl space-y-8">
       <section className="space-y-3">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-[color:var(--foreground)]">
           {messages.pressure.wizard.title}
         </h1>
-        <p className="max-w-3xl text-sm text-gray-600">
+        <p className="max-w-3xl text-sm text-[color:var(--muted-foreground)]">
           {messages.pressure.overview.description}
         </p>
       </section>
@@ -66,10 +66,10 @@ export function PressureCalculatorDashboard({
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-[color:var(--foreground)]">
               {messages.pressure.overview.title}
             </h2>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-[color:var(--muted-foreground)]">
               {messages.pressure.overview.subtitle}
             </p>
           </div>

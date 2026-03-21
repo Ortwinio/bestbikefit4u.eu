@@ -11,12 +11,12 @@ export default async function AuthLayout({
   const locale = await getRequestLocale();
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50 px-4">
+    <div className="flex min-h-screen flex-col bg-[color:var(--surface-secondary)] px-4 text-[color:var(--foreground)]">
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center">
         <div className="mb-8">
           <Link
             href={withLocalePrefix("/", locale)}
-            className="text-2xl font-bold text-gray-900"
+            className="text-2xl font-bold text-[color:var(--foreground)]"
           >
             {BRAND.name}
           </Link>

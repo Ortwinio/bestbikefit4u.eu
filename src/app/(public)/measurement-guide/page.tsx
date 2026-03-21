@@ -381,12 +381,12 @@ export default async function MeasurementGuidePage() {
   return (
     <div className="py-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">{page.title}</h1>
-        <p className="mt-4 text-xl text-gray-600">{page.subtitle}</p>
+        <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
+        <p className="mt-4 text-xl text-muted-foreground">{page.subtitle}</p>
 
-        <section className="mt-10 rounded-xl border border-blue-200 bg-blue-50 p-6">
-          <h2 className="text-xl font-semibold text-gray-900">{page.beforeStartTitle}</h2>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-gray-700">
+        <section className="mt-10 rounded-xl border border-border bg-primary-soft p-6">
+          <h2 className="text-xl font-semibold text-foreground">{page.beforeStartTitle}</h2>
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-foreground">
             {page.beforeStartBullets.map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -395,35 +395,35 @@ export default async function MeasurementGuidePage() {
 
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           {page.items.map((item) => (
-            <article key={item.id} className="rounded-xl border border-gray-200 bg-white p-6">
+            <article key={item.id} className="rounded-xl border border-border bg-card p-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900">{item.name}</h2>
+                <h2 className="text-xl font-semibold text-foreground">{item.name}</h2>
                 <span
                   className={`rounded-full px-3 py-1 text-xs font-medium ${
-                    item.required ? "bg-red-100 text-red-700" : "bg-gray-100 text-gray-700"
+                    item.required ? "bg-destructive-soft text-destructive" : "bg-muted text-muted-foreground"
                   }`}
                 >
                   {item.required ? page.requiredLabel : page.optionalLabel}
                 </span>
               </div>
 
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-muted-foreground">
                 {page.unitLabel}: {item.unit}
                 {item.targetRange ? ` | ${page.rangeLabel}: ${item.targetRange}` : ""}
               </p>
 
-              <h3 className="mt-4 text-sm font-semibold text-gray-900">{page.toolsLabel}</h3>
-              <p className="mt-1 text-sm text-gray-600">{item.tools.join(" • ")}</p>
+              <h3 className="mt-4 text-sm font-semibold text-foreground">{page.toolsLabel}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{item.tools.join(" • ")}</p>
 
-              <h3 className="mt-4 text-sm font-semibold text-gray-900">{page.measureLabel}</h3>
-              <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-gray-700">
+              <h3 className="mt-4 text-sm font-semibold text-foreground">{page.measureLabel}</h3>
+              <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-foreground">
                 {item.steps.map((step) => (
                   <li key={step}>{step}</li>
                 ))}
               </ol>
 
-              <h3 className="mt-4 text-sm font-semibold text-gray-900">{page.mistakesLabel}</h3>
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-gray-700">
+              <h3 className="mt-4 text-sm font-semibold text-foreground">{page.mistakesLabel}</h3>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-foreground">
                 {item.mistakes.map((mistake) => (
                   <li key={mistake}>{mistake}</li>
                 ))}
@@ -432,28 +432,28 @@ export default async function MeasurementGuidePage() {
           ))}
         </div>
 
-        <section className="mt-12 rounded-xl border border-gray-200 bg-gray-50 p-6">
-          <h2 className="text-xl font-semibold text-gray-900">{page.remeasureTitle}</h2>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-gray-700">
+        <section className="mt-12 rounded-xl border border-border bg-muted p-6">
+          <h2 className="text-xl font-semibold text-foreground">{page.remeasureTitle}</h2>
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-foreground">
             {page.remeasureBullets.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
         </section>
 
-        <section className="mt-12 rounded-2xl bg-blue-600 p-8 text-center">
-          <h2 className="text-2xl font-semibold text-white">{page.ctaTitle}</h2>
-          <p className="mt-2 text-blue-100">{page.ctaBody}</p>
+        <section className="mt-12 rounded-2xl bg-primary p-8 text-center">
+          <h2 className="text-2xl font-semibold text-primary-foreground">{page.ctaTitle}</h2>
+          <p className="mt-2 text-primary-foreground/80">{page.ctaBody}</p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <Button
-              className="bg-white text-blue-700 hover:bg-blue-50"
+              className="bg-background text-primary hover:bg-muted"
               {...linkButtonProps(withLocalePrefix("/profile", locale))}
             >
               {page.ctaProfile}
             </Button>
             <Button
               variant="outline"
-              className="border-white text-white hover:bg-blue-700"
+              className="border-primary-foreground bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
               {...linkButtonProps(withLocalePrefix("/fit", locale))}
             >
               {page.ctaFit}

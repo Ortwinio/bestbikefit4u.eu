@@ -56,7 +56,7 @@ export function StepWeightGoal({
 }: StepWeightGoalProps) {
   return (
     <div className="space-y-5">
-      <h2 className="text-xl font-semibold text-gray-900">{labels.title}</h2>
+      <h2 className="text-xl font-semibold text-[color:var(--foreground)]">{labels.title}</h2>
       <div className="grid gap-4 sm:grid-cols-2">
         <Slider
           label={labels.bodyWeightLabel}
@@ -81,7 +81,7 @@ export function StepWeightGoal({
           onChange={(value) => onUpdate({ extraLuggageKg: value ?? 0 })}
         />
         <Field.Root className="space-y-3">
-          <Field.Label className="text-sm text-gray-700">{labels.wetLabel}</Field.Label>
+          <Field.Label className="text-sm text-[color:var(--foreground)]">{labels.wetLabel}</Field.Label>
           <div className="mt-2 grid grid-cols-2 gap-2">
             <Selectable onClick={() => onUpdate({ isWet: false })} selected={!isWet} variant="segment">
               {labels.dry}
@@ -106,7 +106,7 @@ export function StepWeightGoal({
       </div>
 
       <Field.Root className="space-y-3">
-        <Field.Label className="text-sm text-gray-700">{labels.goalTitle}</Field.Label>
+        <Field.Label className="text-sm text-[color:var(--foreground)]">{labels.goalTitle}</Field.Label>
         <div className="mt-2 grid grid-cols-3 gap-2">
           {(
             [

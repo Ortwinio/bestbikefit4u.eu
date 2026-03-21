@@ -42,7 +42,7 @@ export function StepBikeSelect({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-semibold text-gray-900">{labels.selectBike}</h2>
+        <h2 className="text-xl font-semibold text-[color:var(--foreground)]">{labels.selectBike}</h2>
       </div>
 
       {bikes && bikes.length > 0 ? (
@@ -63,11 +63,11 @@ export function StepBikeSelect({
           ))}
         </div>
       ) : (
-        <p className="text-sm text-gray-600">{labels.noBikes}</p>
+        <p className="text-sm text-[color:var(--muted-foreground)]">{labels.noBikes}</p>
       )}
 
-      <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
-        <p className="text-sm font-semibold text-gray-900">{labels.continueWithoutBike}</p>
+      <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+        <p className="text-sm font-semibold text-[color:var(--foreground)]">{labels.continueWithoutBike}</p>
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {(["road", "gravel", "mtb", "tt"] as const).map((discipline) => (
             <Selectable

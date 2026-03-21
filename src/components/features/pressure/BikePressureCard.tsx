@@ -97,12 +97,15 @@ export function BikePressureCard({
   };
 
   return (
-    <Card variant="bordered" className="dashboard-card-surface h-full">
+    <Card
+      variant="bordered"
+      className="dashboard-card-surface h-full border-[color:var(--border)] bg-[color:var(--card)]"
+    >
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div>
             <CardTitle>{bike.name}</CardTitle>
-            <p className="mt-1 text-sm text-gray-600">
+            <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
               {[bike.brand, bike.model].filter(Boolean).join(" ") ||
                 getBikeTypeLabel(bike.bikeType, messages)}
             </p>
@@ -123,44 +126,44 @@ export function BikePressureCard({
         {latestCalculation ? (
           <>
             <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-xl bg-gray-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
                   {messages.pressure.overview.frontPressure}
                 </p>
-                <p className="mt-2 text-lg font-semibold text-gray-900">
+                <p className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
                   {latestCalculation.recommendedFrontBar} {messages.pressure.result.bar}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-[color:var(--muted-foreground)]">
                   {latestCalculation.recommendedFrontPsi} {messages.pressure.result.psi}
                 </p>
               </div>
-              <div className="rounded-xl bg-gray-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
                   {messages.pressure.overview.rearPressure}
                 </p>
-                <p className="mt-2 text-lg font-semibold text-gray-900">
+                <p className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
                   {latestCalculation.recommendedRearBar} {messages.pressure.result.bar}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-[color:var(--muted-foreground)]">
                   {latestCalculation.recommendedRearPsi} {messages.pressure.result.psi}
                 </p>
               </div>
             </div>
 
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-[color:var(--muted-foreground)]">
               {messages.pressure.overview.lastCalculated}:{" "}
               {formatDate(latestCalculation.createdAt, locale)}
             </p>
 
             {autoNote ? (
-              <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+              <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--info)_32%,var(--border))] bg-[color:color-mix(in_oklch,var(--card)_92%,var(--info)_8%)] px-4 py-3 text-sm text-[color:var(--info-foreground)]">
                 {autoNote}
               </div>
             ) : null}
 
-            <div className="space-y-3 rounded-xl border border-gray-200 p-4">
+            <div className="space-y-3 rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
               <div className="flex items-center justify-between gap-3">
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-sm font-semibold text-[color:var(--foreground)]">
                   {messages.pressure.overview.userNotes.label}
                 </p>
                 {!isEditing ? (
@@ -213,14 +216,14 @@ export function BikePressureCard({
                   </div>
                 </>
               ) : (
-                <p className="text-sm leading-6 text-gray-600">
+                <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
                   {latestCalculation.userNotes || messages.pressure.overview.userNotes.empty}
                 </p>
               )}
             </div>
           </>
         ) : (
-          <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 px-4 py-5 text-sm text-gray-600">
+          <div className="rounded-[var(--radius-lg)] border border-dashed border-[color:var(--border)] bg-[color:var(--muted)] px-4 py-5 text-sm text-[color:var(--muted-foreground)]">
             {messages.pressure.overview.noCalculation}
           </div>
         )}

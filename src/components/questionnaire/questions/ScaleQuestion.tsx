@@ -29,7 +29,7 @@ export function ScaleQuestion({ config, value, onChange }: ScaleQuestionProps) {
       </legend>
       <RadioGroup<number>
         aria-labelledby={legendId}
-        className="flex justify-between gap-2"
+        className="grid grid-cols-2 gap-2 sm:grid-cols-5"
         value={value ?? undefined}
         onValueChange={(next) => onChange(next)}
       >
@@ -40,7 +40,7 @@ export function ScaleQuestion({ config, value, onChange }: ScaleQuestionProps) {
               mode="radio"
               value={step}
               variant="segment"
-              className="h-12"
+              className="h-12 justify-center"
             >
               {step}
             </Selectable>

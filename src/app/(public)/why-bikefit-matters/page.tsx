@@ -123,27 +123,27 @@ export default async function WhyBikeFitMattersPage() {
   return (
     <div className="py-16">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">
+        <h1 className="text-4xl font-bold text-foreground">
           Why so many riders feel the difference after a good bike fit
         </h1>
 
-        <p className="mt-5 text-lg leading-relaxed text-gray-600">
+        <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
           Most riders do not need a new bike to feel better and ride faster. They need
           a position that matches their body, flexibility, goals, and the terrain they
           ride. A proper bike fit turns vague problems (&quot;something feels off&quot;) into
           measurable adjustments in millimeters and degrees, then confirms those
           changes on the bike.
         </p>
-        <p className="mt-4 text-lg leading-relaxed text-gray-600">
+        <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
           What people often find surprising: small changes create big results,
           especially on longer rides.
         </p>
 
         <section className="mt-14">
-          <h2 className="text-3xl font-semibold text-gray-900">
+          <h2 className="text-3xl font-semibold text-foreground">
             What riders notice after a proper fit
           </h2>
-          <p className="mt-4 text-gray-600">
+          <p className="mt-4 text-muted-foreground">
             These are typical outcomes riders describe after getting their position
             dialed in:
           </p>
@@ -151,15 +151,15 @@ export default async function WhyBikeFitMattersPage() {
             {quotes.map((quote) => (
               <article
                 key={quote}
-                className="rounded-xl border border-gray-200 bg-gray-50 p-5 shadow-sm"
+                className="rounded-xl border border-border bg-card p-5 shadow-sm"
               >
-                <blockquote className="text-base font-bold italic leading-relaxed text-blue-700">
+                <blockquote className="text-base font-bold italic leading-relaxed text-primary">
                   &ldquo;{quote}&rdquo;
                 </blockquote>
               </article>
             ))}
           </div>
-          <p className="mt-6 text-gray-600">
+          <p className="mt-6 text-muted-foreground">
             These are not nice-to-have improvements. They map directly to the core
             areas a fit influences: comfort, joint load, breathing space, stability,
             and repeatability.
@@ -167,25 +167,25 @@ export default async function WhyBikeFitMattersPage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="text-3xl font-semibold text-gray-900">
+          <h2 className="text-3xl font-semibold text-foreground">
             Why a bike fit works (and why millimeters matter)
           </h2>
-          <p className="mt-4 text-gray-600">
+          <p className="mt-4 text-muted-foreground">
             A bike fit is not magic. It is biomechanics and basic physics applied to
             three contact points:
           </p>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-gray-600">
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
             <li>Feet (cleats, shoes, pedals)</li>
             <li>Pelvis (saddle height, setback, tilt, saddle choice)</li>
             <li>Hands and upper body (reach, drop, bar shape, hood position)</li>
           </ul>
-          <p className="mt-4 text-gray-600">
+          <p className="mt-4 text-muted-foreground">
             If one of these contact points is wrong, your body compensates.
             Compensation is what creates most recurring problems: numb hands, knee
             pain, hot foot, neck tightness, low-back fatigue, unstable descending, and
             dead power on climbs.
           </p>
-          <p className="mt-4 text-gray-600">
+          <p className="mt-4 text-muted-foreground">
             Small adjustments matter because the body repeats the same movement
             thousands of times per hour. A minor misalignment can be harmless for 20
             minutes and become a real issue after 2-4 hours.
@@ -193,22 +193,22 @@ export default async function WhyBikeFitMattersPage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="text-3xl font-semibold text-gray-900">
+          <h2 className="text-3xl font-semibold text-foreground">
             The most common reasons riders feel immediate benefits
           </h2>
           <div className="mt-6 space-y-8">
             {benefitBlocks.map((block, index) => (
               <article key={block.title}>
-                <h3 className="text-xl font-semibold text-gray-900">
+                <h3 className="text-xl font-semibold text-foreground">
                   {index + 1}) {block.title}
                 </h3>
                 {block.paragraphs.map((paragraph) => (
-                  <p key={paragraph} className="mt-3 text-gray-600">
+                  <p key={paragraph} className="mt-3 text-muted-foreground">
                     {paragraph}
                   </p>
                 ))}
                 {"bullets" in block && block.bullets ? (
-                  <ul className="mt-4 list-disc space-y-2 pl-5 text-gray-600">
+                  <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
                     {block.bullets.map((item) => (
                       <li key={item}>{item}</li>
                     ))}
@@ -220,19 +220,19 @@ export default async function WhyBikeFitMattersPage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="text-3xl font-semibold text-gray-900">
+          <h2 className="text-3xl font-semibold text-foreground">
             What actually gets adjusted in a professional bike fit
           </h2>
-          <p className="mt-4 text-gray-600">A fit typically covers:</p>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-gray-600">
+          <p className="mt-4 text-muted-foreground">A fit typically covers:</p>
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
             {fitAdjustmentItems.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
-          <p className="mt-6 text-gray-600">
+          <p className="mt-6 text-muted-foreground">
             Methods and principles commonly used (depending on rider and goal):
           </p>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-gray-600">
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
             {fitMethodItems.map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -240,13 +240,13 @@ export default async function WhyBikeFitMattersPage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="text-3xl font-semibold text-gray-900">
+          <h2 className="text-3xl font-semibold text-foreground">
             When you should consider a fit
           </h2>
-          <p className="mt-4 text-gray-600">
+          <p className="mt-4 text-muted-foreground">
             A fit is worth it if you recognize any of these:
           </p>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-gray-600">
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
             {considerFitItems.map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -254,12 +254,12 @@ export default async function WhyBikeFitMattersPage() {
         </section>
       </div>
 
-      <section className="mt-16 bg-blue-600 py-16">
+      <section className="mt-16 bg-primary py-16">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-white">
+          <h2 className="text-3xl font-bold text-primary-foreground">
             Start your free bike fit today
           </h2>
-          <p className="mt-4 text-lg text-blue-100">
+          <p className="mt-4 text-lg text-primary-foreground/80">
             No guesswork. No generic tips. Get fit targets matched to your body and
             riding goals.
           </p>
@@ -275,7 +275,7 @@ export default async function WhyBikeFitMattersPage() {
                 />
               }
               size="lg"
-              className="bg-white text-blue-600 hover:bg-blue-50"
+              className="bg-background text-primary hover:bg-muted"
             >
               Start Free Fit
             </Button>

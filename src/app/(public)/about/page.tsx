@@ -263,20 +263,20 @@ export default async function AboutPage() {
   return (
     <div className="py-16">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900">{page.title}</h1>
-        <p className="mt-4 text-xl text-gray-600">{page.subtitle}</p>
+        <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
+        <p className="mt-4 text-xl text-muted-foreground">{page.subtitle}</p>
 
         <div className="mt-12 space-y-12">
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900">{page.scienceTitle}</h2>
-            <p className="mt-4 text-gray-600 leading-relaxed">{page.scienceBody}</p>
+            <h2 className="text-2xl font-semibold text-foreground">{page.scienceTitle}</h2>
+            <p className="mt-4 leading-relaxed text-muted-foreground">{page.scienceBody}</p>
           </section>
 
-          <section className="bg-blue-50 -mx-4 px-4 py-8 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 rounded-lg">
-            <h3 className="text-xl font-semibold text-gray-900">{page.saddleTitle}</h3>
-            <p className="mt-4 text-gray-600 leading-relaxed">{page.saddleBody1}</p>
-            <p className="mt-4 text-gray-600 leading-relaxed">{page.saddleBody2}</p>
-            <ul className="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+          <section className="rounded-lg border border-border bg-primary-soft -mx-4 px-4 py-8 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+            <h3 className="text-xl font-semibold text-foreground">{page.saddleTitle}</h3>
+            <p className="mt-4 leading-relaxed text-muted-foreground">{page.saddleBody1}</p>
+            <p className="mt-4 leading-relaxed text-muted-foreground">{page.saddleBody2}</p>
+            <ul className="mt-4 list-inside list-disc space-y-2 text-muted-foreground">
               {page.saddleBullets.map((item) => (
                 <li key={item}>{item}</li>
               ))}
@@ -284,21 +284,21 @@ export default async function AboutPage() {
           </section>
 
           <section>
-            <h3 className="text-xl font-semibold text-gray-900">{page.reachTitle}</h3>
-            <p className="mt-4 text-gray-600 leading-relaxed">{page.reachBody1}</p>
-            <p className="mt-4 text-gray-600 leading-relaxed">{page.reachBody2}</p>
-            <ul className="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+            <h3 className="text-xl font-semibold text-foreground">{page.reachTitle}</h3>
+            <p className="mt-4 leading-relaxed text-muted-foreground">{page.reachBody1}</p>
+            <p className="mt-4 leading-relaxed text-muted-foreground">{page.reachBody2}</p>
+            <ul className="mt-4 list-inside list-disc space-y-2 text-muted-foreground">
               {page.reachBullets.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
           </section>
 
-          <section className="bg-gray-50 -mx-4 px-4 py-8 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 rounded-lg">
-            <h3 className="text-xl font-semibold text-gray-900">{page.dropTitle}</h3>
-            <p className="mt-4 text-gray-600 leading-relaxed">{page.dropBody1}</p>
-            <p className="mt-4 text-gray-600 leading-relaxed">{page.dropBody2}</p>
-            <ul className="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+          <section className="rounded-lg border border-border bg-secondary -mx-4 px-4 py-8 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+            <h3 className="text-xl font-semibold text-foreground">{page.dropTitle}</h3>
+            <p className="mt-4 leading-relaxed text-muted-foreground">{page.dropBody1}</p>
+            <p className="mt-4 leading-relaxed text-muted-foreground">{page.dropBody2}</p>
+            <ul className="mt-4 list-inside list-disc space-y-2 text-muted-foreground">
               {page.dropBullets.map((item) => (
                 <li key={item}>{item}</li>
               ))}
@@ -306,46 +306,46 @@ export default async function AboutPage() {
           </section>
 
           <section>
-            <h3 className="text-xl font-semibold text-gray-900">{page.componentsTitle}</h3>
-            <p className="mt-4 text-gray-600 leading-relaxed">{page.componentsBody}</p>
+            <h3 className="text-xl font-semibold text-foreground">{page.componentsTitle}</h3>
+            <p className="mt-4 leading-relaxed text-muted-foreground">{page.componentsBody}</p>
             <div className="mt-6 grid gap-6 md:grid-cols-2">
               {page.componentCards.map((card) => (
-                <div key={card.title} className="bg-white p-6 rounded-lg border border-gray-200">
-                  <h4 className="font-semibold text-gray-900">{card.title}</h4>
-                  <p className="mt-2 text-sm text-gray-600">{card.text}</p>
+                <div key={card.title} className="rounded-lg border border-border bg-card p-6">
+                  <h4 className="font-semibold text-foreground">{card.title}</h4>
+                  <p className="mt-2 text-sm text-muted-foreground">{card.text}</p>
                 </div>
               ))}
             </div>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900">{page.considerTitle}</h2>
-            <p className="mt-4 text-gray-600 leading-relaxed">{page.considerBody}</p>
+            <h2 className="text-2xl font-semibold text-foreground">{page.considerTitle}</h2>
+            <p className="mt-4 leading-relaxed text-muted-foreground">{page.considerBody}</p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {page.considerBullets.map((item) => (
                 <div key={item} className="flex items-center gap-2">
-                  <svg className="h-5 w-5 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="h-5 w-5 flex-shrink-0 text-primary" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-700">{item}</span>
+                  <span className="text-foreground">{item}</span>
                 </div>
               ))}
             </div>
           </section>
 
-          <section className="rounded-lg border border-gray-200 bg-gray-50 p-6">
-            <h2 className="text-2xl font-semibold text-gray-900">{page.guideTitle}</h2>
-            <p className="mt-3 text-gray-600">{page.guideBody}</p>
+          <section className="rounded-lg border border-border bg-muted p-6">
+            <h2 className="text-2xl font-semibold text-foreground">{page.guideTitle}</h2>
+            <p className="mt-3 text-muted-foreground">{page.guideBody}</p>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               {page.guideLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={withLocalePrefix(link.href, locale)}
-                  className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
+                  className="rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-primary hover:bg-secondary"
                 >
                   {link.label}
                 </Link>
@@ -353,9 +353,9 @@ export default async function AboutPage() {
             </div>
           </section>
 
-          <section className="bg-blue-600 -mx-4 px-4 py-12 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 rounded-lg text-center">
-            <h2 className="text-2xl font-bold text-white">{page.ctaTitle}</h2>
-            <p className="mt-4 text-blue-100 max-w-2xl mx-auto">{page.ctaBody}</p>
+          <section className="rounded-lg bg-primary -mx-4 px-4 py-12 text-center sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+            <h2 className="text-2xl font-bold text-primary-foreground">{page.ctaTitle}</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-primary-foreground/80">{page.ctaBody}</p>
             <Button
               render={
                 <TrackedCtaLink
@@ -367,7 +367,7 @@ export default async function AboutPage() {
                 />
               }
               size="lg"
-              className="mt-8 bg-white text-blue-600 hover:bg-blue-50"
+              className="mt-8 bg-background text-primary hover:bg-muted"
             >
               {page.ctaButton}
             </Button>

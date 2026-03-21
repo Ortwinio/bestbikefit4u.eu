@@ -1,7 +1,6 @@
 "use client";
 
 import { Textarea } from "@/components/ui";
-import { Field } from "@/components/ui/Field";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 interface TextQuestionProps {
@@ -22,7 +21,7 @@ export function TextQuestion({
   const resolvedPlaceholder = placeholder ?? messages.questionnaire.text.placeholder;
 
   return (
-    <Field.Root className="space-y-2">
+    <div className="space-y-2">
       <Textarea
         label={messages.questionnaire.text.label}
         tooltip={messages.questionnaire.text.tooltip}
@@ -33,9 +32,9 @@ export function TextQuestion({
         rows={4}
         className="text-base"
       />
-      <Field.Description className="flex justify-end text-sm text-[color:var(--muted-foreground)]">
+      <p className="flex justify-end text-sm text-[color:var(--muted-foreground)]">
         {currentLength} / {maxLength}
-      </Field.Description>
-    </Field.Root>
+      </p>
+    </div>
   );
 }

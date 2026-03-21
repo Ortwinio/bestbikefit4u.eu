@@ -25,15 +25,15 @@ export default function DashboardError({
     <div className="min-h-[60vh] flex items-center justify-center">
       <div className="max-w-md w-full px-4 text-center">
         <div className="mb-8">
-          <AlertTriangle className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <AlertTriangle className="mx-auto mb-4 h-16 w-16 text-warning" />
+          <h1 className="mb-2 text-2xl font-bold text-foreground">
             {messages.errors.generic.title}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             {messages.errors.generic.description}
           </p>
           {error.digest && (
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="mt-2 text-xs text-muted-foreground">
               {messages.errors.generic.errorIdLabel} {error.digest}
             </p>
           )}

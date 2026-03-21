@@ -72,7 +72,7 @@ export function StepWheelsetTires({
 
   return (
     <div className="space-y-5">
-      <h2 className="text-xl font-semibold text-gray-900">{labels.title}</h2>
+      <h2 className="text-xl font-semibold text-[color:var(--foreground)]">{labels.title}</h2>
 
       {bikeSelected && wheelsets && wheelsets.length > 0 ? (
         <div className="space-y-3">
@@ -108,8 +108,8 @@ export function StepWheelsetTires({
         </div>
       ) : null}
 
-      <Field.Root className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
-        <Field.Label className="text-sm font-semibold text-gray-900">
+      <Field.Root className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+        <Field.Label className="text-sm font-semibold text-[color:var(--foreground)]">
           {labels.manualInput}
         </Field.Label>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -144,7 +144,9 @@ export function StepWheelsetTires({
             onChange={(value) => updateDraft({ maxPressureBar: value ?? undefined })}
           />
           <Field.Root className="space-y-3">
-            <Field.Label className="text-sm text-gray-700">{labels.rimType}</Field.Label>
+            <Field.Label className="text-sm text-[color:var(--foreground)]">
+              {labels.rimType}
+            </Field.Label>
             <div className="mt-2 grid grid-cols-2 gap-2">
               {(["hooked", "hookless"] as const).map((option) => (
                 <Selectable

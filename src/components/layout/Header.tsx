@@ -19,32 +19,32 @@ type HeaderProps = {
 
 export function Header({ locale, labels }: HeaderProps) {
   return (
-    <header className="border-b border-gray-200 bg-white">
+    <header className="border-b border-[color:var(--border)] bg-[color:var(--background)] text-[color:var(--foreground)]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative flex min-h-16 items-center justify-between gap-3 py-3">
           <div className="flex items-center gap-6">
             <Link
               href={withLocalePrefix("/", locale)}
-              className="text-xl font-bold text-gray-900"
+              className="text-xl font-bold text-[color:var(--foreground)]"
             >
               {labels.nav.brand}
             </Link>
             <nav className="hidden items-center gap-6 md:flex">
               <Link
                 href={withLocalePrefix("/about", locale)}
-                className="text-sm text-gray-600 hover:text-gray-900"
+                className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
               >
                 {labels.nav.howItWorks}
               </Link>
               <Link
                 href={withLocalePrefix("/bandenspanning-calculator", locale)}
-                className="text-sm text-gray-600 hover:text-gray-900"
+                className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
               >
                 {labels.nav.tools}
               </Link>
               <Link
                 href={withLocalePrefix("/pricing", locale)}
-                className="text-sm text-gray-600 hover:text-gray-900"
+                className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
               >
                 {labels.nav.pricing}
               </Link>

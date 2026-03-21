@@ -28,7 +28,7 @@ import {
 import { reportClientError } from "@/lib/telemetry";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { Bike, ArrowRight, AlertCircle } from "lucide-react";
+import { ArrowRight, AlertCircle } from "lucide-react";
 
 type RidingStyle =
   | "recreational"
@@ -283,21 +283,21 @@ export default function NewFitSessionPage() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">{messages.fit.title}</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className="text-2xl font-bold text-foreground">{messages.fit.title}</h1>
+        <p className="mt-2 text-muted-foreground">
           {messages.fit.subtitle}
         </p>
       </div>
 
       {!isLoadingProfile && !hasProfile && (
-        <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <div className="mb-6 rounded-lg border border-warning/20 bg-warning/15 p-4">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
+            <AlertCircle className="mt-0.5 h-5 w-5 text-warning" />
             <div>
-              <p className="font-medium text-yellow-800">
+              <p className="font-medium text-foreground">
                 {messages.fit.profileWarning.title}
               </p>
-              <p className="text-sm text-yellow-700 mt-1">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {messages.fit.profileWarning.description}
               </p>
               <Button
@@ -314,7 +314,7 @@ export default function NewFitSessionPage() {
       )}
 
       {isLoadingBikes && (
-        <div className="mb-6 rounded-lg border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-sm text-[color:var(--muted-foreground)]">
+        <div className="mb-6 rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
           {messages.fit.savedBikes.loading}
         </div>
       )}
@@ -344,7 +344,7 @@ export default function NewFitSessionPage() {
                       <SavedBikeImage source={bike.photoUrl} />
                       <div>
                         <div className="font-medium">{bike.name}</div>
-                        <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                        <div className="mt-1 text-sm text-muted-foreground">
                           {getBikeTypeLabel(bike.bikeType, messages)}
                         </div>
                       </div>
@@ -356,8 +356,8 @@ export default function NewFitSessionPage() {
 
             {!selectedBikeId ? (
               <div className="mt-6 space-y-3">
-                <div className="border-t border-[color:var(--border)] pt-6">
-                  <p className="text-sm font-medium text-gray-700">
+                <div className="border-t border-border pt-6">
+                  <p className="text-sm font-medium text-foreground">
                     {messages.fit.sections.bikeType}
                   </p>
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -383,13 +383,13 @@ export default function NewFitSessionPage() {
         <Card variant="bordered" className="dashboard-card-surface mb-6">
           <CardHeader>
             <CardTitle>{messages.fit.savedBikes.profilesTitle}</CardTitle>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               {messages.fit.savedBikes.profilesHint}
             </p>
           </CardHeader>
           <CardContent>
             {isLoadingBikeProfiles ? (
-              <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-sm text-[color:var(--muted-foreground)]">
+              <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
                 {messages.fit.savedBikes.profilesLoading}
               </div>
             ) : bikeProfiles && bikeProfiles.length > 0 ? (
@@ -404,7 +404,7 @@ export default function NewFitSessionPage() {
                     description={profileTypeLabel(bikeProfile.profileType)}
                     badge={
                       bikeProfile.isDefault ? (
-                        <span className="rounded-full bg-[color:var(--secondary)] px-2 py-1 text-xs font-semibold text-[color:var(--secondary-foreground)]">
+                        <span className="rounded-full bg-secondary px-2 py-1 text-xs font-semibold text-secondary-foreground">
                           {messages.fit.savedBikes.defaultBadge}
                         </span>
                       ) : null
@@ -413,7 +413,7 @@ export default function NewFitSessionPage() {
                 ))}
               </div>
             ) : (
-              <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-sm text-[color:var(--muted-foreground)]">
+              <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
                 {messages.fit.savedBikes.noProfiles}
               </div>
             )}
@@ -427,7 +427,7 @@ export default function NewFitSessionPage() {
         </CardHeader>
         <CardContent>
           {selectedBike ? (
-            <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-sm text-[color:var(--foreground)]">
+            <div className="rounded-lg border border-border bg-card p-4 text-sm text-foreground">
               {selectedBike.ridingStyle ? (
                 <>
                   {messages.fit.savedBikes.usingBikeAttribute}{" "}
@@ -441,7 +441,7 @@ export default function NewFitSessionPage() {
                   {messages.fit.savedBikes.missingBikeAttribute}{" "}
                   <Link
                     href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)}
-                    className="font-semibold text-blue-700 hover:text-blue-800"
+                    className="font-semibold text-primary hover:text-primary-dark"
                   >
                     {messages.fit.savedBikes.completeBikeSetup}
                   </Link>
@@ -471,7 +471,7 @@ export default function NewFitSessionPage() {
         </CardHeader>
         <CardContent>
           {selectedBike ? (
-            <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-sm text-[color:var(--foreground)]">
+            <div className="rounded-lg border border-border bg-card p-4 text-sm text-foreground">
               {selectedBike.primaryGoal ? (
                 <>
                   {messages.fit.savedBikes.usingBikeAttribute}{" "}
@@ -485,7 +485,7 @@ export default function NewFitSessionPage() {
                   {messages.fit.savedBikes.missingBikeAttribute}{" "}
                   <Link
                     href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)}
-                    className="font-semibold text-blue-700 hover:text-blue-800"
+                    className="font-semibold text-primary hover:text-primary-dark"
                   >
                     {messages.fit.savedBikes.completeBikeSetup}
                   </Link>
@@ -501,14 +501,14 @@ export default function NewFitSessionPage() {
                     isAeroCompatibleBikeType(effectiveBikeType)
                 )
                 .map((goal) => (
-                <Selectable
-                  key={goal.value}
-                  onClick={() => setRidingGoal(goal.value)}
-                  selected={ridingGoal === goal.value}
-                  variant="card"
-                  label={goal.label}
-                  description={goal.description}
-                />
+                  <Selectable
+                    key={goal.value}
+                    onClick={() => setRidingGoal(goal.value)}
+                    selected={ridingGoal === goal.value}
+                    variant="card"
+                    label={goal.label}
+                    description={goal.description}
+                  />
                 ))}
             </div>
           )}
@@ -536,7 +536,7 @@ export default function NewFitSessionPage() {
       ) : null}
 
       {!canStart && effectiveBikeType && effectiveRidingStyle && effectiveRidingGoal && !hasProfile && (
-        <p className="text-sm text-gray-500 text-right mt-2">
+        <p className="mt-2 text-right text-sm text-muted-foreground">
           {messages.fit.profileRequirementHint}
         </p>
       )}
