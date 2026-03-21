@@ -127,13 +127,16 @@ export const Selectable = forwardRef<HTMLButtonElement, SelectableProps>(
     );
 
     if (mode === "radio" && value !== undefined) {
+      const { value: _value, ...radioProps } =
+        props as ComponentPropsWithoutRef<typeof Radio.Root>;
+
       return (
         <Radio.Root
           ref={ref as never}
           value={value}
           className={sharedClassName}
           data-slot="selectable"
-          {...(props as ComponentPropsWithoutRef<typeof Radio.Root>)}
+          {...radioProps}
         >
           {content}
         </Radio.Root>
@@ -141,13 +144,16 @@ export const Selectable = forwardRef<HTMLButtonElement, SelectableProps>(
     }
 
     if (mode === "checkbox" && value !== undefined) {
+      const { value: _value, ...checkboxProps } =
+        props as ComponentPropsWithoutRef<typeof Checkbox.Root>;
+
       return (
         <Checkbox.Root
           ref={ref as never}
           value={String(value)}
           className={sharedClassName}
           data-slot="selectable"
-          {...(props as ComponentPropsWithoutRef<typeof Checkbox.Root>)}
+          {...checkboxProps}
         >
           {content}
         </Checkbox.Root>
