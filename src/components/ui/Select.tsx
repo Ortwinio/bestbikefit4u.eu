@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, type ChangeEvent, type SelectHTMLAttributes, useId } from "react";
 import {
   Select as PrototyperSelect,

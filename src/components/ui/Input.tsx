@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, type InputHTMLAttributes, useId } from "react";
 import { Input as PrototyperInput } from "@/components/prototyper-ui/ui/input";
 import { Field } from "./Field";
