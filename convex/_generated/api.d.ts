@@ -12,6 +12,7 @@ import type * as analytics_mutations from "../analytics/mutations.js";
 import type * as analytics_queries from "../analytics/queries.js";
 import type * as auth from "../auth.js";
 import type * as authRateLimit from "../authRateLimit.js";
+import type * as bikeData_queries from "../bikeData/queries.js";
 import type * as bikeProfiles_defaults from "../bikeProfiles/defaults.js";
 import type * as bikeProfiles_mutations from "../bikeProfiles/mutations.js";
 import type * as bikeProfiles_queries from "../bikeProfiles/queries.js";
@@ -79,6 +80,7 @@ declare const fullApi: ApiFromModules<{
   "analytics/queries": typeof analytics_queries;
   auth: typeof auth;
   authRateLimit: typeof authRateLimit;
+  "bikeData/queries": typeof bikeData_queries;
   "bikeProfiles/defaults": typeof bikeProfiles_defaults;
   "bikeProfiles/mutations": typeof bikeProfiles_mutations;
   "bikeProfiles/queries": typeof bikeProfiles_queries;

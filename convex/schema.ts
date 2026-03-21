@@ -104,6 +104,41 @@ export default defineSchema({
     updatedAt: v.number(),
   }).index("by_user", ["userId"]),
 
+  // Bike catalogue - brands and models
+  bikeBrands: defineTable({
+    brandId: v.string(),
+    name: v.string(),
+    isActive: v.boolean(),
+  })
+    .index("by_brand_id", ["brandId"])
+    .index("by_name", ["name"]),
+
+  bikeModels: defineTable({
+    brandId: v.string(),
+    brandName: v.string(),
+    modelSlug: v.string(),
+    name: v.string(),
+    category: v.string(),
+    appBikeType: v.optional(
+      v.union(
+        v.literal("road"),
+        v.literal("gravel"),
+        v.literal("mountain"),
+        v.literal("hybrid"),
+        v.literal("tt_triathlon"),
+        v.literal("cyclocross"),
+        v.literal("touring"),
+        v.literal("city")
+      )
+    ),
+    fitEngineProfile: v.optional(v.string()),
+    fitEngineVariant: v.optional(v.string()),
+    introYearEstimate: v.optional(v.number()),
+    isActive: v.boolean(),
+  })
+    .index("by_brand_id", ["brandId"])
+    .index("by_model_slug", ["modelSlug"]),
+
   // Bikes - user's bicycles
   bikes: defineTable({
     userId: v.id("users"),
@@ -173,6 +208,7 @@ export default defineSchema({
     fitProfileId: v.optional(v.id("profiles")),
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
+    bikeModelId: v.optional(v.id("bikeModels")),
     notes: v.optional(v.string()),
 
     createdAt: v.number(),
