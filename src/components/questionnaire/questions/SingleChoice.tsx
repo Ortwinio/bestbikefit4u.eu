@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+import { RadioGroup } from "@base-ui/react/radio-group";
 import { Selectable } from "@/components/ui";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
@@ -17,31 +19,36 @@ interface SingleChoiceQuestionProps {
 }
 
 export function SingleChoiceQuestion({
-  name: _name,
+  name,
   options,
   value,
   onChange,
 }: SingleChoiceQuestionProps) {
   const { messages } = useDashboardMessages();
+  const legendId = useId();
 
   return (
     <fieldset className="space-y-3">
-      <legend className="sr-only">
+      <legend id={legendId} className="sr-only">
         {messages.questionnaire.a11y.singleChoiceLegend}
       </legend>
-      {options.map((option) => {
-        const isSelected = value === option.value;
-
-        return (
+      <RadioGroup<string>
+        aria-labelledby={legendId}
+        className="grid gap-3"
+        name={name}
+        value={value ?? undefined}
+        onValueChange={(next) => onChange(next)}
+      >
+        {options.map((option) => (
           <Selectable
             key={option.value}
-            onClick={() => onChange(option.value)}
-            selected={isSelected}
+            mode="radio"
+            value={option.value}
             label={option.label}
             variant="card"
           />
-        );
-      })}
+        ))}
+      </RadioGroup>
     </fieldset>
   );
 }

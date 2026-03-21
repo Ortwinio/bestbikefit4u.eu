@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Button, NumberInput, Selectable, Slider } from "@/components/ui";
+import { Field } from "@/components/ui/Field";
 import { calculateBasicPressure, type PressureOutput, type RidingGoal, type Surface, type ValidationError, validatePressureInput } from "@/lib/pressure-engine";
 import { PressureResultCard } from "./PressureResultCard";
 import type { PressureResultLabels } from "./shared";
@@ -137,8 +138,10 @@ export function PressureCalculatorForm({
       <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:px-8">
         <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
           <div className="space-y-6">
-            <div>
-              <p className="text-sm font-medium text-gray-700">{labels.disciplineLabel}</p>
+            <Field.Root className="space-y-3">
+              <Field.Label className="text-sm font-medium text-gray-700">
+                {labels.disciplineLabel}
+              </Field.Label>
               <div className="mt-3 grid grid-cols-3 gap-2">
                 {disciplineButtons.map((option) => (
                   <Selectable
@@ -151,7 +154,7 @@ export function PressureCalculatorForm({
                   </Selectable>
                 ))}
               </div>
-            </div>
+            </Field.Root>
 
             <Slider
               label={labels.bodyWeightLabel}
@@ -189,8 +192,10 @@ export function PressureCalculatorForm({
               error={findError(errors, "widthRearMm")}
             />
 
-            <div>
-              <p className="text-sm font-medium text-gray-700">{labels.tubeTypeLabel}</p>
+            <Field.Root className="space-y-3">
+              <Field.Label className="text-sm font-medium text-gray-700">
+                {labels.tubeTypeLabel}
+              </Field.Label>
               <div className="mt-3 grid grid-cols-3 gap-2">
                 {TUBE_OPTIONS.map((option) => (
                   <Selectable
@@ -203,10 +208,12 @@ export function PressureCalculatorForm({
                   </Selectable>
                 ))}
               </div>
-            </div>
+            </Field.Root>
 
-            <div>
-              <p className="text-sm font-medium text-gray-700">{labels.surfaceLabel}</p>
+            <Field.Root className="space-y-3">
+              <Field.Label className="text-sm font-medium text-gray-700">
+                {labels.surfaceLabel}
+              </Field.Label>
               <div className="mt-3 flex flex-wrap gap-2">
                 {SURFACE_OPTIONS.map((option) => (
                   <Selectable
@@ -220,7 +227,7 @@ export function PressureCalculatorForm({
                   </Selectable>
                 ))}
               </div>
-            </div>
+            </Field.Root>
 
             <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
               <Button
@@ -235,8 +242,10 @@ export function PressureCalculatorForm({
 
               {showAdvanced ? (
                 <div className="mt-4 space-y-4">
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">{labels.ridingGoalLabel}</p>
+                  <Field.Root className="space-y-3">
+                    <Field.Label className="text-sm font-medium text-gray-700">
+                      {labels.ridingGoalLabel}
+                    </Field.Label>
                     <div className="mt-3 grid grid-cols-3 gap-2">
                       {GOAL_OPTIONS.map((option) => (
                         <Selectable
@@ -246,12 +255,12 @@ export function PressureCalculatorForm({
                           }
                           selected={ridingGoal === option}
                           variant="segment"
-                        >
-                          {goalLabels[option]}
-                        </Selectable>
+                          >
+                            {goalLabels[option]}
+                          </Selectable>
                       ))}
                     </div>
-                  </div>
+                  </Field.Root>
 
                   <NumberInput
                     label={labels.bikeWeightLabel}

@@ -69,36 +69,82 @@ export function CreateBikeForm() {
   const [casingType, setCasingType] = useState<"race_light" | "allround" | "reinforced" | "">("");
   const [maxPressureBar, setMaxPressureBar] = useState("");
 
+  const bikeWeightError =
+    step === "bike" &&
+    bikeWeightKg &&
+    (Number(bikeWeightKg) < 3 || Number(bikeWeightKg) > 20)
+      ? messages.pressure.wizard.bikeWeightRange
+      : undefined;
+  const wheelsetNameError =
+    step === "wheelset" && !wheelsetName.trim()
+      ? messages.pressure.wizard.wheelsetNameRequired
+      : undefined;
+  const tireNameError =
+    step === "wheelset" && !tireName.trim()
+      ? messages.pressure.wizard.tireNameRequired
+      : undefined;
+  const widthFrontError =
+    step === "wheelset" &&
+    (Number(widthFrontMm) < 18 || Number(widthFrontMm) > 80)
+      ? messages.pressure.wizard.widthRange
+      : undefined;
+  const widthRearError =
+    step === "wheelset" &&
+    (Number(widthRearMm) < 18 || Number(widthRearMm) > 80)
+      ? messages.pressure.wizard.widthRange
+      : undefined;
+  const maxPressureError =
+    step === "wheelset" &&
+    maxPressureBar &&
+    (Number(maxPressureBar) < 3.5 || Number(maxPressureBar) > 10)
+      ? messages.pressure.wizard.maxPressureRange
+      : undefined;
+
   const validationError = useMemo(() => {
     if (step === "bike") {
       if (!name.trim()) {
         return messages.bikeForm.errors.nameRequired;
       }
-      if (bikeWeightKg && (Number(bikeWeightKg) < 3 || Number(bikeWeightKg) > 20)) {
+      if (bikeWeightError) {
         return messages.pressure.wizard.bikeWeightRange;
       }
     }
 
     if (step === "wheelset") {
-      if (!wheelsetName.trim()) {
+      if (wheelsetNameError) {
         return messages.pressure.wizard.wheelsetNameRequired;
       }
-      if (!tireName.trim()) {
+      if (tireNameError) {
         return messages.pressure.wizard.tireNameRequired;
       }
-      if (Number(widthFrontMm) < 18 || Number(widthFrontMm) > 80) {
+      if (widthFrontError) {
         return messages.pressure.wizard.widthRange;
       }
-      if (Number(widthRearMm) < 18 || Number(widthRearMm) > 80) {
+      if (widthRearError) {
         return messages.pressure.wizard.widthRange;
       }
-      if (maxPressureBar && (Number(maxPressureBar) < 3.5 || Number(maxPressureBar) > 10)) {
+      if (maxPressureError) {
         return messages.pressure.wizard.maxPressureRange;
       }
     }
 
     return null;
-  }, [bikeWeightKg, maxPressureBar, messages.bikeForm.errors.nameRequired, messages.pressure.wizard.bikeWeightRange, messages.pressure.wizard.maxPressureRange, messages.pressure.wizard.tireNameRequired, messages.pressure.wizard.widthRange, messages.pressure.wizard.wheelsetNameRequired, name, step, tireName, wheelsetName, widthFrontMm, widthRearMm]);
+  }, [
+    bikeWeightError,
+    messages.bikeForm.errors.nameRequired,
+    messages.pressure.wizard.bikeWeightRange,
+    messages.pressure.wizard.maxPressureRange,
+    messages.pressure.wizard.tireNameRequired,
+    messages.pressure.wizard.widthRange,
+    messages.pressure.wizard.wheelsetNameRequired,
+    name,
+    step,
+    tireNameError,
+    wheelsetNameError,
+    widthFrontError,
+    widthRearError,
+    maxPressureError,
+  ]);
 
   const handleCreateBike = async () => {
     if (validationError) {
@@ -237,6 +283,7 @@ export function CreateBikeForm() {
                 value={bikeWeightKg ? Number(bikeWeightKg) : null}
                 onChange={(value) => setBikeWeightKg(value === null ? "" : String(value))}
                 placeholder={messages.bikeForm.fields.bikeWeightKg.placeholder}
+                error={bikeWeightError}
                 unit="kg"
               />
               <Input
@@ -348,6 +395,7 @@ export function CreateBikeForm() {
                 label={messages.pressure.wizard.wheelsetName}
                 value={wheelsetName}
                 onChange={(event) => setWheelsetName(event.target.value)}
+                error={wheelsetNameError}
               />
               <div>
                 <span className="text-sm font-medium text-gray-700">{messages.pressure.wizard.rimType}</span>
@@ -381,6 +429,7 @@ export function CreateBikeForm() {
                 label={messages.pressure.wizard.tireSetupName}
                 value={tireName}
                 onChange={(event) => setTireName(event.target.value)}
+                error={tireNameError}
               />
               <Input
                 label={messages.bikeForm.fields.brand.label}
@@ -417,11 +466,13 @@ export function CreateBikeForm() {
                 label={messages.pressure.wizard.widthFront}
                 value={widthFrontMm ? Number(widthFrontMm) : null}
                 onChange={(value) => setWidthFrontMm(value === null ? "" : String(value))}
+                error={widthFrontError}
               />
               <NumberInput
                 label={messages.pressure.wizard.widthRear}
                 value={widthRearMm ? Number(widthRearMm) : null}
                 onChange={(value) => setWidthRearMm(value === null ? "" : String(value))}
+                error={widthRearError}
               />
               <Select
                 label={messages.pressure.wizard.casingType}
@@ -443,6 +494,7 @@ export function CreateBikeForm() {
                 step={0.1}
                 value={maxPressureBar ? Number(maxPressureBar) : null}
                 onChange={(value) => setMaxPressureBar(value === null ? "" : String(value))}
+                error={maxPressureError}
               />
             </div>
 

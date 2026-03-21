@@ -1,7 +1,7 @@
 "use client";
 
-import { useId } from "react";
 import { Textarea } from "@/components/ui";
+import { Field } from "@/components/ui/Field";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 interface TextQuestionProps {
@@ -18,16 +18,14 @@ export function TextQuestion({
   maxLength = 500,
 }: TextQuestionProps) {
   const { messages } = useDashboardMessages();
-  const textareaId = `question-text-${useId().replace(/:/g, "")}`;
   const currentLength = value?.length || 0;
   const resolvedPlaceholder = placeholder ?? messages.questionnaire.text.placeholder;
 
   return (
-    <div className="space-y-2">
+    <Field.Root className="space-y-2">
       <Textarea
         label={messages.questionnaire.text.label}
         tooltip={messages.questionnaire.text.tooltip}
-        id={textareaId}
         value={value || ""}
         onChange={(e) => onChange(e.target.value)}
         placeholder={resolvedPlaceholder}
@@ -35,11 +33,9 @@ export function TextQuestion({
         rows={4}
         className="text-base"
       />
-      <div className="flex justify-end">
-        <span className="text-sm text-[color:var(--muted-foreground)]">
-          {currentLength} / {maxLength}
-        </span>
-      </div>
-    </div>
+      <Field.Description className="flex justify-end text-sm text-[color:var(--muted-foreground)]">
+        {currentLength} / {maxLength}
+      </Field.Description>
+    </Field.Root>
   );
 }

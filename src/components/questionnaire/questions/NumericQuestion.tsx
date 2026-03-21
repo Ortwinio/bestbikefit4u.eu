@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { NumberInput } from "@/components/ui";
+import { Field } from "@/components/ui/Field";
 import { formatMessage } from "@/i18n/dashboardMessages";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
@@ -28,6 +29,14 @@ export function NumericQuestion({
   const { min, max, unit } = config || {};
   const unitLabel = unit ? ` ${unit}` : "";
   const tooltip = messages.questionnaire.numeric.tooltip;
+  const rangeMessage =
+    min !== undefined && max !== undefined
+      ? formatMessage(messages.questionnaire.numeric.range, {
+          min,
+          max,
+          unit: unitLabel,
+        })
+      : null;
 
   const handleChange = (nextValue: number | null) => {
     if (nextValue === null) {
@@ -61,7 +70,7 @@ export function NumericQuestion({
   };
 
   return (
-    <div className="space-y-2">
+    <Field.Root className="space-y-2">
       <NumberInput
         label={messages.questionnaire.numeric.label}
         tooltip={tooltip}
@@ -79,15 +88,11 @@ export function NumericQuestion({
         }`}
       />
 
-      {min !== undefined && max !== undefined && !error && (
-        <p className="text-sm text-[color:var(--muted-foreground)]">
-          {formatMessage(messages.questionnaire.numeric.range, {
-            min,
-            max,
-            unit: unitLabel,
-          })}
-        </p>
-      )}
-    </div>
+      {rangeMessage && !error ? (
+        <Field.Description className="text-sm text-[color:var(--muted-foreground)]">
+          {rangeMessage}
+        </Field.Description>
+      ) : null}
+    </Field.Root>
   );
 }

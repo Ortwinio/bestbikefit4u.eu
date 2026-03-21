@@ -6,8 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/prototyper-ui/ui/select";
-import { cn } from "@/utils/cn";
-import { FieldLabel } from "./FieldLabel";
+import { Field } from "./Field";
+import { Tooltip } from "./Tooltip";
 
 export interface SelectOption {
   value: string;
@@ -25,6 +25,33 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   placeholder?: string;
 }
 
+function SelectFieldLabel({
+  label,
+  tooltip,
+  tooltipLabel,
+  tooltipDescriptionId,
+}: {
+  label: string;
+  tooltip?: string;
+  tooltipLabel?: string;
+  tooltipDescriptionId?: string;
+}) {
+  return (
+    <div className="mb-1.5 flex items-center gap-1.5">
+      <Field.Label className="flex items-center gap-2 text-sm font-medium leading-none text-[color:var(--foreground)] data-[disabled]:status-disabled data-[invalid]:text-[color:var(--danger)] select-none">
+        {label}
+      </Field.Label>
+      {tooltip ? (
+        <Tooltip
+          content={tooltip}
+          label={tooltipLabel ?? `${label} help`}
+          descriptionId={tooltipDescriptionId}
+        />
+      ) : null}
+    </div>
+  );
+}
+
 function createSelectChangeEvent(value: string) {
   return {
     target: { value },
@@ -32,7 +59,7 @@ function createSelectChangeEvent(value: string) {
   } as ChangeEvent<HTMLSelectElement>;
 }
 
-export const Select = forwardRef<HTMLSelectElement, SelectProps>(
+export const Select = forwardRef<HTMLButtonElement, SelectProps>(
   (
     {
       className,
@@ -65,16 +92,21 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       .join(" ");
 
     return (
-      <div className="w-full">
-        {label && (
-          <FieldLabel
+      <Field.Root
+        data-slot="field"
+        className="w-full"
+        disabled={props.disabled}
+        invalid={Boolean(error)}
+        name={props.name}
+      >
+        {label ? (
+          <SelectFieldLabel
             label={label}
-            htmlFor={selectId}
             tooltip={tooltip}
             tooltipLabel={tooltipLabel}
             tooltipDescriptionId={tooltipDescriptionId}
           />
-        )}
+        ) : null}
         <PrototyperSelect
           items={options}
           id={selectId}
@@ -95,48 +127,43 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           }}
         >
           <SelectTrigger
-            ref={ref as never}
+            ref={ref}
             aria-describedby={describedBy || undefined}
             aria-invalid={error ? true : undefined}
-            className={cn(
-              "flex w-full items-center justify-between rounded-[var(--radius-md)] border bg-[color:var(--card)] px-3 py-2 text-left text-sm text-[color:var(--foreground)] transition-colors",
-              "focus-field-ring",
-              error
-                ? "border-[color:var(--danger)] text-[color:var(--foreground)] invalid-field-ring"
-                : "border-[color:var(--input)]",
-              "disabled:bg-[color:var(--muted)] disabled:text-[color:var(--muted-foreground)] disabled:cursor-not-allowed",
-              className
-            )}
+            className={className}
           >
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
-          <SelectContent
-            sideOffset={6}
-            className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--popover)] p-1 text-[color:var(--popover-foreground)] shadow-xl"
-          >
+          <SelectContent>
             {options.map((option) => (
               <SelectItem
                 key={option.value}
                 value={option.value}
                 disabled={option.disabled}
-                className="flex cursor-default items-center justify-between gap-3 rounded-[calc(var(--radius-md)-2px)] px-3 py-2 text-sm outline-none data-highlighted:bg-[color:var(--accent)] data-highlighted:text-[color:var(--accent-foreground)] data-disabled:status-disabled"
               >
                 {option.label}
               </SelectItem>
             ))}
           </SelectContent>
         </PrototyperSelect>
-        {error && (
-          <p id={errorId} className="mt-1 text-sm text-[color:var(--danger)]">
+        {error ? (
+          <Field.Error
+            match={true}
+            id={errorId}
+            className="mt-1 text-sm text-[color:var(--danger)]"
+          >
             {error}
-          </p>
-        )}
-        {helperText && !error && (
-          <p id={helperId} className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+          </Field.Error>
+        ) : null}
+        {helperText && !error ? (
+          <Field.Description
+            id={helperId}
+            className="mt-1 text-sm text-[color:var(--muted-foreground)]"
+          >
             {helperText}
-          </p>
-        )}
-      </div>
+          </Field.Description>
+        ) : null}
+      </Field.Root>
     );
   }
 );

@@ -1,5 +1,6 @@
 import type { Id } from "../../../../../convex/_generated/dataModel";
 import { Button, NumberInput, Selectable } from "@/components/ui";
+import { Field } from "@/components/ui/Field";
 import type { InlineTireInput } from "../shared";
 import { tubeTypeLabel } from "../shared";
 
@@ -66,6 +67,9 @@ export function StepWheelsetTires({
       rimType: "hooked" as const,
     };
 
+  const updateDraft = (updates: Partial<InlineTireInput>) =>
+    onInlineInputChange({ ...draft, ...updates });
+
   return (
     <div className="space-y-5">
       <h2 className="text-xl font-semibold text-gray-900">{labels.title}</h2>
@@ -104,71 +108,48 @@ export function StepWheelsetTires({
         </div>
       ) : null}
 
-      <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
-        <p className="text-sm font-semibold text-gray-900">{labels.manualInput}</p>
+      <Field.Root className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
+        <Field.Label className="text-sm font-semibold text-gray-900">
+          {labels.manualInput}
+        </Field.Label>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <NumberInput
             label={labels.widthFront}
             min={18}
             max={80}
             value={draft.widthFrontMm}
-            onChange={(value) =>
-              onInlineInputChange({
-                ...draft,
-                widthFrontMm: value ?? draft.widthFrontMm,
-              })
-            }
+            onChange={(value) => updateDraft({ widthFrontMm: value ?? draft.widthFrontMm })}
           />
           <NumberInput
             label={labels.widthRear}
             min={18}
             max={80}
             value={draft.widthRearMm}
-            onChange={(value) =>
-              onInlineInputChange({
-                ...draft,
-                widthRearMm: value ?? draft.widthRearMm,
-              })
-            }
+            onChange={(value) => updateDraft({ widthRearMm: value ?? draft.widthRearMm })}
           />
           <NumberInput
             label={labels.rimWidthFront}
             value={draft.internalRimWidthFrontMm ?? null}
-            onChange={(value) =>
-              onInlineInputChange({
-                ...draft,
-                internalRimWidthFrontMm: value ?? undefined,
-              })
-            }
+            onChange={(value) => updateDraft({ internalRimWidthFrontMm: value ?? undefined })}
           />
           <NumberInput
             label={labels.rimWidthRear}
             value={draft.internalRimWidthRearMm ?? null}
-            onChange={(value) =>
-              onInlineInputChange({
-                ...draft,
-                internalRimWidthRearMm: value ?? undefined,
-              })
-            }
+            onChange={(value) => updateDraft({ internalRimWidthRearMm: value ?? undefined })}
           />
           <NumberInput
             label={labels.maxPressure}
             step={0.1}
             value={draft.maxPressureBar ?? null}
-            onChange={(value) =>
-              onInlineInputChange({
-                ...draft,
-                maxPressureBar: value ?? undefined,
-              })
-            }
+            onChange={(value) => updateDraft({ maxPressureBar: value ?? undefined })}
           />
-          <div>
-            <span className="text-sm text-gray-700">{labels.rimType}</span>
+          <Field.Root className="space-y-3">
+            <Field.Label className="text-sm text-gray-700">{labels.rimType}</Field.Label>
             <div className="mt-2 grid grid-cols-2 gap-2">
               {(["hooked", "hookless"] as const).map((option) => (
                 <Selectable
                   key={option}
-                  onClick={() => onInlineInputChange({ ...draft, rimType: option })}
+                  onClick={() => updateDraft({ rimType: option })}
                   selected={draft.rimType === option}
                   variant="segment"
                 >
@@ -176,9 +157,9 @@ export function StepWheelsetTires({
                 </Selectable>
               ))}
             </div>
-          </div>
+          </Field.Root>
         </div>
-      </div>
+      </Field.Root>
 
       <div className="flex gap-3">
         <Button variant="outline" onClick={onBack}>

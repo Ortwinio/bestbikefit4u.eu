@@ -1,8 +1,9 @@
 "use client";
 
 import { forwardRef, type TextareaHTMLAttributes, useId } from "react";
+import { Tooltip } from "./Tooltip";
+import { Field } from "./Field";
 import { cn } from "@/utils/cn";
-import { FieldLabel } from "./FieldLabel";
 
 export interface TextareaProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -11,6 +12,35 @@ export interface TextareaProps
   tooltipLabel?: string;
   error?: string;
   helperText?: string;
+}
+
+function TextareaFieldLabel({
+  label,
+  tooltip,
+  tooltipLabel,
+  tooltipDescriptionId,
+}: {
+  label: string;
+  tooltip?: string;
+  tooltipLabel?: string;
+  tooltipDescriptionId?: string;
+}) {
+  return (
+    <div className="mb-1.5 flex items-center gap-1.5">
+      <Field.Label
+        className="flex items-center gap-2 text-sm font-medium leading-none text-[color:var(--foreground)] data-[disabled]:status-disabled data-[invalid]:text-[color:var(--danger)] select-none"
+      >
+        {label}
+      </Field.Label>
+      {tooltip ? (
+        <Tooltip
+          content={tooltip}
+          label={tooltipLabel ?? `${label} help`}
+          descriptionId={tooltipDescriptionId}
+        />
+      ) : null}
+    </div>
+  );
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -42,11 +72,16 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       .join(" ");
 
     return (
-      <div className="w-full">
+      <Field.Root
+        data-slot="field"
+        className="w-full"
+        disabled={props.disabled}
+        invalid={Boolean(error)}
+        name={props.name}
+      >
         {label ? (
-          <FieldLabel
+          <TextareaFieldLabel
             label={label}
-            htmlFor={textareaId}
             tooltip={tooltip}
             tooltipLabel={tooltipLabel}
             tooltipDescriptionId={tooltipDescriptionId}
@@ -70,16 +105,23 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           {...props}
         />
         {error ? (
-          <p id={errorId} className="mt-1 text-sm text-[color:var(--danger)]">
+          <Field.Error
+            match={true}
+            id={errorId}
+            className="mt-1 text-sm text-[color:var(--danger)]"
+          >
             {error}
-          </p>
+          </Field.Error>
         ) : null}
         {helperText && !error ? (
-          <p id={helperId} className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+          <Field.Description
+            id={helperId}
+            className="mt-1 text-sm text-[color:var(--muted-foreground)]"
+          >
             {helperText}
-          </p>
+          </Field.Description>
         ) : null}
-      </div>
+      </Field.Root>
     );
   }
 );

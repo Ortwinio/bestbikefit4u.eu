@@ -1,7 +1,16 @@
 export { Button, type ButtonProps } from "./Button";
 export { Input, type InputProps } from "./Input";
 export { NumberInput, type NumberInputProps } from "./NumberInput";
-export { Slider, type SliderProps } from "./Slider";
+export {
+  Slider,
+  SliderControl,
+  SliderIndicator,
+  SliderOutput,
+  SliderRoot,
+  SliderThumb,
+  SliderTrack,
+  type SliderProps,
+} from "./Slider";
 export { Select, type SelectProps, type SelectOption } from "./Select";
 export { Selectable, type SelectableProps } from "./Selectable";
 export { Textarea, type TextareaProps } from "./Textarea";

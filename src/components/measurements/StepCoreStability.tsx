@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormContext, Controller } from "react-hook-form";
+import { RadioGroup } from "@base-ui/react/radio-group";
 import { Selectable } from "@/components/ui";
 import { coreStabilityTests } from "@/lib/validations/profile";
 import { Timer } from "lucide-react";
@@ -46,15 +47,24 @@ export function StepCoreStability() {
         control={control}
         render={({ field }) => (
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              id={`${field.name}-label`}
+              className="block text-sm font-medium text-gray-700"
+            >
               How long can you hold a plank?
             </label>
-            <div className="grid gap-3">
+            <RadioGroup<number>
+              aria-labelledby={`${field.name}-label`}
+              className="grid gap-3"
+              name={field.name}
+              value={field.value ?? undefined}
+              onValueChange={(next) => field.onChange(next)}
+            >
               {coreStabilityTests.map((test) => (
                 <Selectable
                   key={test.score}
-                  onClick={() => field.onChange(test.score)}
-                  selected={field.value === test.score}
+                  mode="radio"
+                  value={test.score}
                   variant="card"
                   trailing={
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--secondary)] text-lg font-bold text-[color:var(--secondary-foreground)]">
@@ -66,7 +76,7 @@ export function StepCoreStability() {
                 >
                 </Selectable>
               ))}
-            </div>
+            </RadioGroup>
           </div>
         )}
       />

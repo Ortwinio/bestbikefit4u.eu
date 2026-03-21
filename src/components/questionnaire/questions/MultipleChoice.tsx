@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+import { CheckboxGroup } from "@base-ui/react/checkbox-group";
 import { Selectable } from "@/components/ui";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
@@ -17,39 +19,36 @@ interface MultipleChoiceQuestionProps {
 }
 
 export function MultipleChoiceQuestion({
-  name: _name,
+  name,
   options,
   value,
   onChange,
 }: MultipleChoiceQuestionProps) {
   const { messages } = useDashboardMessages();
-
-  const toggleOption = (optionValue: string) => {
-    if (value.includes(optionValue)) {
-      onChange(value.filter((v) => v !== optionValue));
-    } else {
-      onChange([...value, optionValue]);
-    }
-  };
+  const legendId = useId();
 
   return (
     <fieldset className="space-y-3">
-      <legend className="mb-4 text-sm text-gray-500">
+      <legend id={legendId} className="mb-4 text-sm text-gray-500">
         {messages.questionnaire.multiChoice.legend}
       </legend>
-      {options.map((option) => {
-        const isSelected = value.includes(option.value);
-
-        return (
+      <CheckboxGroup
+        aria-labelledby={legendId}
+        className="grid gap-3"
+        value={value}
+        onValueChange={(next) => onChange(next)}
+      >
+        {options.map((option) => (
           <Selectable
             key={option.value}
-            onClick={() => toggleOption(option.value)}
-            selected={isSelected}
+            mode="checkbox"
+            name={name}
+            value={option.value}
             label={option.label}
             variant="card"
           />
-        );
-      })}
+        ))}
+      </CheckboxGroup>
     </fieldset>
   );
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle, Progress } from "@/components/ui";
 import { StepBodyMeasurements } from "./StepBodyMeasurements";
 import { StepAdvancedMeasurements } from "./StepAdvancedMeasurements";
 import { StepFlexibility } from "./StepFlexibility";
@@ -131,6 +131,27 @@ export function MeasurementWizard({
   return (
     <FormProvider {...methods}>
       <div className="max-w-2xl mx-auto">
+        <div className="mb-8 space-y-3">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-medium text-gray-500">
+                Step {currentStep} of {steps.length}
+              </p>
+              <p className="text-base font-semibold text-gray-900">
+                {steps[currentStep - 1].title}
+              </p>
+            </div>
+            <p className="max-w-xs text-right text-sm text-gray-500">
+              {steps[currentStep - 1].description}
+            </p>
+          </div>
+          <Progress
+            value={currentStep - 1}
+            max={steps.length - 1}
+            label="Measurement wizard progress"
+          />
+        </div>
+
         {/* Progress Steps */}
         <nav className="mb-8">
           <ol className="flex items-center justify-between">

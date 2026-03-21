@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormContext, Controller } from "react-hook-form";
+import { RadioGroup } from "@base-ui/react/radio-group";
 import { Selectable } from "@/components/ui";
 import { flexibilityTests } from "@/lib/validations/profile";
 
@@ -38,15 +39,24 @@ export function StepFlexibility() {
         control={control}
         render={({ field }) => (
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              id={`${field.name}-label`}
+              className="block text-sm font-medium text-gray-700"
+            >
               Select your result:
             </label>
-            <div className="grid gap-3">
+            <RadioGroup<number>
+              aria-labelledby={`${field.name}-label`}
+              className="grid gap-3"
+              name={field.name}
+              value={field.value ?? undefined}
+              onValueChange={(next) => field.onChange(next)}
+            >
               {flexibilityTests.map((test) => (
                 <Selectable
                   key={test.score}
-                  onClick={() => field.onChange(test.score)}
-                  selected={field.value === test.score}
+                  mode="radio"
+                  value={test.score}
                   variant="card"
                   label={test.label}
                   badge={
@@ -58,7 +68,7 @@ export function StepFlexibility() {
                 >
                 </Selectable>
               ))}
-            </div>
+            </RadioGroup>
           </div>
         )}
       />

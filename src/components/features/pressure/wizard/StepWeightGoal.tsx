@@ -1,4 +1,5 @@
 import { Button, NumberInput, Selectable, Slider } from "@/components/ui";
+import { Field } from "@/components/ui/Field";
 
 interface StepWeightGoalProps {
   bodyWeightKg: number;
@@ -79,8 +80,8 @@ export function StepWeightGoal({
           value={extraLuggageKg}
           onChange={(value) => onUpdate({ extraLuggageKg: value ?? 0 })}
         />
-        <div>
-          <span className="text-sm text-gray-700">{labels.wetLabel}</span>
+        <Field.Root className="space-y-3">
+          <Field.Label className="text-sm text-gray-700">{labels.wetLabel}</Field.Label>
           <div className="mt-2 grid grid-cols-2 gap-2">
             <Selectable onClick={() => onUpdate({ isWet: false })} selected={!isWet} variant="segment">
               {labels.dry}
@@ -89,7 +90,7 @@ export function StepWeightGoal({
               {labels.wet}
             </Selectable>
           </div>
-        </div>
+        </Field.Root>
         <NumberInput
           label={labels.currentFrontLabel}
           step={0.1}
@@ -104,8 +105,8 @@ export function StepWeightGoal({
         />
       </div>
 
-      <div>
-        <p className="text-sm text-gray-700">{labels.goalTitle}</p>
+      <Field.Root className="space-y-3">
+        <Field.Label className="text-sm text-gray-700">{labels.goalTitle}</Field.Label>
         <div className="mt-2 grid grid-cols-3 gap-2">
           {(
             [
@@ -124,7 +125,7 @@ export function StepWeightGoal({
             </Selectable>
           ))}
         </div>
-      </div>
+      </Field.Root>
 
       <div className="flex gap-3">
         <Button variant="outline" onClick={onBack}>

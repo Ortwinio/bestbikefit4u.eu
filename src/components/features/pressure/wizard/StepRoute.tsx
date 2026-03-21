@@ -1,5 +1,6 @@
 import type { Surface } from "@/lib/pressure-engine";
 import { Button, NumberInput, Selectable, Slider } from "@/components/ui";
+import { Field } from "@/components/ui/Field";
 import { surfaceLabel } from "../shared";
 
 interface StepRouteProps {
@@ -53,8 +54,8 @@ export function StepRoute({
     <div className="space-y-5">
       <h2 className="text-xl font-semibold text-gray-900">{labels.title}</h2>
 
-      <div>
-        <p className="text-sm text-gray-700">{labels.surfaceLabel}</p>
+      <Field.Root className="space-y-3">
+        <Field.Label className="text-sm text-gray-700">{labels.surfaceLabel}</Field.Label>
         <div className="mt-2 flex flex-wrap gap-2">
           {surfaces.map((option) => (
             <Selectable
@@ -68,7 +69,7 @@ export function StepRoute({
             </Selectable>
           ))}
         </div>
-      </div>
+      </Field.Root>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <NumberInput

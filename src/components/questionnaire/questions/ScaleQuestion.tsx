@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+import { RadioGroup } from "@base-ui/react/radio-group";
 import { Selectable } from "@/components/ui";
 
 interface ScaleConfig {
@@ -18,19 +20,25 @@ interface ScaleQuestionProps {
 export function ScaleQuestion({ config, value, onChange }: ScaleQuestionProps) {
   const { min, max, minLabel, maxLabel } = config;
   const steps = Array.from({ length: max - min + 1 }, (_, i) => min + i);
+  const legendId = useId();
 
   return (
-    <div className="space-y-4">
-      {/* Scale buttons */}
-      <div className="flex justify-between gap-2">
+    <fieldset className="space-y-4">
+      <legend id={legendId} className="sr-only">
+        Select a scale value
+      </legend>
+      <RadioGroup<number>
+        aria-labelledby={legendId}
+        className="flex justify-between gap-2"
+        value={value ?? undefined}
+        onValueChange={(next) => onChange(next)}
+      >
         {steps.map((step) => {
-          const isSelected = value === step;
-
           return (
             <Selectable
               key={step}
-              onClick={() => onChange(step)}
-              selected={isSelected}
+              mode="radio"
+              value={step}
               variant="segment"
               className="h-12"
             >
@@ -38,13 +46,12 @@ export function ScaleQuestion({ config, value, onChange }: ScaleQuestionProps) {
             </Selectable>
           );
         })}
-      </div>
+      </RadioGroup>
 
-      {/* Labels */}
       <div className="flex justify-between text-sm text-[color:var(--muted-foreground)]">
         <span>{minLabel}</span>
         <span>{maxLabel}</span>
       </div>
-    </div>
+    </fieldset>
   );
 }

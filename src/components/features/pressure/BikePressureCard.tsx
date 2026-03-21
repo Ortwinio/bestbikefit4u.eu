@@ -48,10 +48,12 @@ export function BikePressureCard({
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [noteDraft, setNoteDraft] = useState(latestCalculation?.userNotes ?? "");
+  const [noteError, setNoteError] = useState<string | null>(null);
 
   useEffect(() => {
     setNoteDraft(latestCalculation?.userNotes ?? "");
     setIsEditing(false);
+    setNoteError(null);
   }, [latestCalculation?._id, latestCalculation?.userNotes]);
 
   const autoNote = useMemo(
@@ -68,6 +70,7 @@ export function BikePressureCard({
       return;
     }
 
+    setNoteError(null);
     setIsSaving(true);
     try {
       await updateNotes({
@@ -79,12 +82,14 @@ export function BikePressureCard({
         description: messages.common.toasts.pressureNoteSaved,
       });
     } catch (error) {
+      const message = reportClientError(error, {
+        area: "pressureOverview",
+        action: "updateNotes",
+        operationType: "mutation",
+      });
+      setNoteError(message);
       toast.error({
-        description: reportClientError(error, {
-          area: "pressureOverview",
-          action: "updateNotes",
-          operationType: "mutation",
-        }),
+        description: message,
       });
     } finally {
       setIsSaving(false);
@@ -175,10 +180,14 @@ export function BikePressureCard({
                 <>
                   <Textarea
                     value={noteDraft}
-                    onChange={(event) => setNoteDraft(event.target.value.slice(0, 300))}
+                    onChange={(event) => {
+                      setNoteError(null);
+                      setNoteDraft(event.target.value.slice(0, 300));
+                    }}
                     placeholder={messages.pressure.overview.userNotes.placeholder}
                     rows={4}
-                    helperText={messages.pressure.overview.userNotes.helper}
+                    helperText={`${messages.pressure.overview.userNotes.helper} ${noteDraft.length}/300`}
+                    error={noteError ?? undefined}
                   />
                   <div className="flex justify-end gap-2">
                     <Button
@@ -187,6 +196,7 @@ export function BikePressureCard({
                       size="sm"
                       onClick={() => {
                         setNoteDraft(latestCalculation.userNotes ?? "");
+                        setNoteError(null);
                         setIsEditing(false);
                       }}
                     >

@@ -2,6 +2,7 @@
 
 import { Controller, useFormContext } from "react-hook-form";
 import { NumberInput } from "@/components/ui";
+import { Field } from "@/components/ui/Field";
 import { Info } from "lucide-react";
 
 export function StepAdvancedMeasurements() {
@@ -46,13 +47,15 @@ export function StepAdvancedMeasurements() {
               />
             )}
           />
-          <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-            <p className="font-medium text-gray-700 mb-1">How to measure:</p>
-            <p>
-              Sit upright. Measure from top of hip bone (iliac crest) to top of
-              shoulder (acromion).
-            </p>
-          </div>
+          <Field.Root className="mt-2">
+            <Field.Description className="rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
+              <p className="font-medium text-gray-700 mb-1">How to measure:</p>
+              <p>
+                Sit upright. Measure from top of hip bone (iliac crest) to top of
+                shoulder (acromion).
+              </p>
+            </Field.Description>
+          </Field.Root>
         </div>
 
         {/* Arm Length */}
@@ -75,13 +78,15 @@ export function StepAdvancedMeasurements() {
               />
             )}
           />
-          <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-            <p className="font-medium text-gray-700 mb-1">How to measure:</p>
-            <p>
-              Arm extended slightly forward. Measure from shoulder bone to wrist
-              crease.
-            </p>
-          </div>
+          <Field.Root className="mt-2">
+            <Field.Description className="rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
+              <p className="font-medium text-gray-700 mb-1">How to measure:</p>
+              <p>
+                Arm extended slightly forward. Measure from shoulder bone to wrist
+                crease.
+              </p>
+            </Field.Description>
+          </Field.Root>
         </div>
 
         {/* Shoulder Width */}
@@ -104,12 +109,14 @@ export function StepAdvancedMeasurements() {
               />
             )}
           />
-          <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-            <p className="font-medium text-gray-700 mb-1">How to measure:</p>
-            <p>
-              Measure from back side, outer shoulder bone to outer shoulder bone.
-            </p>
-          </div>
+          <Field.Root className="mt-2">
+            <Field.Description className="rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
+              <p className="font-medium text-gray-700 mb-1">How to measure:</p>
+              <p>
+                Measure from back side, outer shoulder bone to outer shoulder bone.
+              </p>
+            </Field.Description>
+          </Field.Root>
         </div>
 
         {/* Femur Length */}
@@ -132,36 +139,40 @@ export function StepAdvancedMeasurements() {
               />
             )}
           />
-          <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-            <p className="font-medium text-gray-700 mb-1">How to measure:</p>
-            <p>
-              Measure from the hip joint (greater trochanter) to the center of
-              the knee while standing naturally.
-            </p>
-          </div>
+          <Field.Root className="mt-2">
+            <Field.Description className="rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
+              <p className="font-medium text-gray-700 mb-1">How to measure:</p>
+              <p>
+                Measure from the hip joint (greater trochanter) to the center of
+                the knee while standing naturally.
+              </p>
+            </Field.Description>
+          </Field.Root>
         </div>
       </div>
 
       {/* Impact explanation */}
-      <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-        <h4 className="font-medium text-gray-900 mb-3">
-          How these improve your fit
-        </h4>
-        <div className="space-y-2 text-sm text-gray-600">
-          <p>
-            <span className="font-medium text-gray-700">Torso + Arm length:</span>{" "}
-            Together, these determine your optimal handlebar reach and stem length.
-          </p>
-          <p>
-            <span className="font-medium text-gray-700">Shoulder width:</span>{" "}
-            Used to calculate handlebar width for road, gravel, and MTB.
-          </p>
-          <p>
-            <span className="font-medium text-gray-700">Femur length:</span>{" "}
-            Improves saddle setback and stability confidence scoring.
-          </p>
-        </div>
-      </div>
+      <Field.Root className="mt-6 rounded-lg bg-gray-50 p-4">
+        <Field.Description>
+          <h4 className="mb-3 font-medium text-gray-900">
+            How these improve your fit
+          </h4>
+          <div className="space-y-2 text-sm text-gray-600">
+            <p>
+              <span className="font-medium text-gray-700">Torso + Arm length:</span>{" "}
+              Together, these determine your optimal handlebar reach and stem length.
+            </p>
+            <p>
+              <span className="font-medium text-gray-700">Shoulder width:</span>{" "}
+              Used to calculate handlebar width for road, gravel, and MTB.
+            </p>
+            <p>
+              <span className="font-medium text-gray-700">Femur length:</span>{" "}
+              Improves saddle setback and stability confidence scoring.
+            </p>
+          </div>
+        </Field.Description>
+      </Field.Root>
     </div>
   );
 }

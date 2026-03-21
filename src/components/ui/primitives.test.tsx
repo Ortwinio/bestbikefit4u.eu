@@ -62,6 +62,9 @@ describe("ui primitive compatibility wrappers", () => {
 
     expect(html).toContain("progressbar");
     expect(html).toContain('aria-label="Completion"');
+    expect(html).toContain('data-slot="progress"');
+    expect(html).toContain('data-slot="progress-track"');
+    expect(html).toContain('data-slot="progress-indicator"');
   });
 
   it("renders accessible dialog with title and description", () => {
@@ -76,8 +79,10 @@ describe("ui primitive compatibility wrappers", () => {
       </AccessibleDialog>
     );
 
+    expect(html).toContain('data-slot="dialog-content"');
     expect(html).toContain("Confirm action");
     expect(html).toContain("This action cannot be undone.");
     expect(html).toContain("Dialog content");
+    expect(html).toContain("Close dialog");
   });
 });

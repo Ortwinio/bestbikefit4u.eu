@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
   Input,
+  NumberInput,
   Select,
   Selectable,
   Textarea,
@@ -97,6 +98,10 @@ function numberFromInput(value: string): number | undefined {
   }
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function numberToInputValue(value: string) {
+  return numberFromInput(value) ?? null;
 }
 
 export function BikeForm({
@@ -223,8 +228,10 @@ export function BikeForm({
 
     setIsDeleting(true);
     setError(null);
+    let deleted = false;
     try {
       await onDelete();
+      deleted = true;
     } catch (deleteError) {
       console.error("Failed to delete bike:", deleteError);
       if (deleteError instanceof Error && deleteError.message.includes("fitting history")) {
@@ -232,10 +239,12 @@ export function BikeForm({
       } else {
         setError(messages.bikeForm.errors.deleteFailed);
       }
+    } finally {
       setIsDeleting(false);
-      return;
     }
-    setShowDeleteDialog(false);
+    if (deleted) {
+      setShowDeleteDialog(false);
+    }
   };
 
   return (
@@ -353,35 +362,31 @@ export function BikeForm({
             <CardTitle>{messages.bikeForm.sections.geometry}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
-            <Input
+            <NumberInput
               label={messages.bikeForm.fields.geometry.stack.label}
               tooltip={messages.bikeForm.fields.geometry.stack.tooltip}
-              type="number"
-              value={stackMm}
-              onChange={(event) => setStackMm(event.target.value)}
+              value={numberToInputValue(stackMm)}
+              onChange={(value) => setStackMm(value === null ? "" : String(value))}
             />
-            <Input
+            <NumberInput
               label={messages.bikeForm.fields.geometry.reach.label}
               tooltip={messages.bikeForm.fields.geometry.reach.tooltip}
-              type="number"
-              value={reachMm}
-              onChange={(event) => setReachMm(event.target.value)}
+              value={numberToInputValue(reachMm)}
+              onChange={(value) => setReachMm(value === null ? "" : String(value))}
             />
-            <Input
+            <NumberInput
               label={messages.bikeForm.fields.geometry.seatTubeAngle.label}
               tooltip={messages.bikeForm.fields.geometry.seatTubeAngle.tooltip}
-              type="number"
-              step="0.1"
-              value={seatTubeAngle}
-              onChange={(event) => setSeatTubeAngle(event.target.value)}
+              step={0.1}
+              value={numberToInputValue(seatTubeAngle)}
+              onChange={(value) => setSeatTubeAngle(value === null ? "" : String(value))}
             />
-            <Input
+            <NumberInput
               label={messages.bikeForm.fields.geometry.headTubeAngle.label}
               tooltip={messages.bikeForm.fields.geometry.headTubeAngle.tooltip}
-              type="number"
-              step="0.1"
-              value={headTubeAngle}
-              onChange={(event) => setHeadTubeAngle(event.target.value)}
+              step={0.1}
+              value={numberToInputValue(headTubeAngle)}
+              onChange={(value) => setHeadTubeAngle(value === null ? "" : String(value))}
             />
             <Input
               label={messages.bikeForm.fields.geometry.frameSize.label}
@@ -398,49 +403,43 @@ export function BikeForm({
             <CardTitle>{messages.bikeForm.sections.setup}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
-            <Input
+            <NumberInput
               label={messages.bikeForm.fields.setup.saddleHeight.label}
               tooltip={messages.bikeForm.fields.setup.saddleHeight.tooltip}
-              type="number"
-              value={saddleHeightMm}
-              onChange={(event) => setSaddleHeightMm(event.target.value)}
+              value={numberToInputValue(saddleHeightMm)}
+              onChange={(value) => setSaddleHeightMm(value === null ? "" : String(value))}
             />
-            <Input
+            <NumberInput
               label={messages.bikeForm.fields.setup.saddleSetback.label}
               tooltip={messages.bikeForm.fields.setup.saddleSetback.tooltip}
-              type="number"
-              value={saddleSetbackMm}
-              onChange={(event) => setSaddleSetbackMm(event.target.value)}
+              value={numberToInputValue(saddleSetbackMm)}
+              onChange={(value) => setSaddleSetbackMm(value === null ? "" : String(value))}
             />
-            <Input
+            <NumberInput
               label={messages.bikeForm.fields.setup.stemLength.label}
               tooltip={messages.bikeForm.fields.setup.stemLength.tooltip}
-              type="number"
-              value={stemLengthMm}
-              onChange={(event) => setStemLengthMm(event.target.value)}
+              value={numberToInputValue(stemLengthMm)}
+              onChange={(value) => setStemLengthMm(value === null ? "" : String(value))}
             />
-            <Input
+            <NumberInput
               label={messages.bikeForm.fields.setup.stemAngle.label}
               tooltip={messages.bikeForm.fields.setup.stemAngle.tooltip}
-              type="number"
-              step="0.1"
-              value={stemAngle}
-              onChange={(event) => setStemAngle(event.target.value)}
+              step={0.1}
+              value={numberToInputValue(stemAngle)}
+              onChange={(value) => setStemAngle(value === null ? "" : String(value))}
             />
-            <Input
+            <NumberInput
               label={messages.bikeForm.fields.setup.handlebarWidth.label}
               tooltip={messages.bikeForm.fields.setup.handlebarWidth.tooltip}
-              type="number"
-              value={handlebarWidthMm}
-              onChange={(event) => setHandlebarWidthMm(event.target.value)}
+              value={numberToInputValue(handlebarWidthMm)}
+              onChange={(value) => setHandlebarWidthMm(value === null ? "" : String(value))}
             />
-            <Input
+            <NumberInput
               label={messages.bikeForm.fields.setup.crankLength.label}
               tooltip={messages.bikeForm.fields.setup.crankLength.tooltip}
-              type="number"
-              step="0.1"
-              value={crankLengthMm}
-              onChange={(event) => setCrankLengthMm(event.target.value)}
+              step={0.1}
+              value={numberToInputValue(crankLengthMm)}
+              onChange={(value) => setCrankLengthMm(value === null ? "" : String(value))}
             />
           </CardContent>
         </Card>

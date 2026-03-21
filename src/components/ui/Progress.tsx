@@ -38,6 +38,7 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(
         value={value}
         max={max}
         aria-label={label}
+        data-slot="progress"
         className={cn("w-full", className)}
         {...props}
       >

@@ -70,11 +70,14 @@ export function BikeNotesEditor({
       <Textarea
         label={messages.bikeForm.fields.notes.label}
         value={value}
-        onChange={(event) => setValue(event.target.value.slice(0, 500))}
+        onChange={(event) => {
+          setError(null);
+          setValue(event.target.value.slice(0, 500));
+        }}
         placeholder={messages.bikeForm.fields.notes.placeholder}
         helperText={`${messages.bikeForm.fields.notes.helper} ${value.length}/500`}
+        error={error ?? undefined}
       />
-      {error ? <p className="text-sm text-[color:var(--danger)]">{error}</p> : null}
       <div className="flex flex-wrap gap-3">
         <Button size="sm" onClick={() => void handleSave()} isLoading={isSaving}>
           {messages.bikeForm.actions.saveNotes}
