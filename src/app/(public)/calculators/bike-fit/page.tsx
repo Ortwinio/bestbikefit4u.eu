@@ -367,20 +367,25 @@ export default async function BikeFitCalculatorPage({
               </ul>
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
-              <TrackedCtaLink
-                href={withLocalePrefix("/login", locale)}
-                locale={locale}
-                pagePath={pagePath}
-                section="bike_fit_result"
-                ctaLabel={isNl ? "Ga verder in dashboard" : "Continue in Dashboard"}
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/login", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="bike_fit_result"
+                    ctaLabel={isNl ? "Ga verder in dashboard" : "Continue in Dashboard"}
+                  />
+                }
               >
-                <Button>{isNl ? "Ga verder in dashboard" : "Continue in Dashboard"}</Button>
-              </TrackedCtaLink>
-              <Link href={withLocalePrefix("/bandenspanning-calculator", locale)}>
-                <Button variant="outline">
-                  {isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"}
-                </Button>
-              </Link>
+                {isNl ? "Ga verder in dashboard" : "Continue in Dashboard"}
+              </Button>
+              <Button
+                render={<Link href={withLocalePrefix("/bandenspanning-calculator", locale)} />}
+                variant="outline"
+              >
+                {isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"}
+              </Button>
             </div>
           </section>
         ) : null}

@@ -74,9 +74,9 @@ export default function FitHistoryPage() {
           title={messages.fitHistory.emptyTitle}
           description={messages.fitHistory.emptyDescription}
           action={
-            <Link href={withLocalePrefix("/fit", locale)}>
-              <Button>{messages.fitHistory.emptyCta}</Button>
-            </Link>
+            <Button render={<Link href={withLocalePrefix("/fit", locale)} />}>
+              {messages.fitHistory.emptyCta}
+            </Button>
           }
         />
       ) : (

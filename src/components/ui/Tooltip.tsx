@@ -55,6 +55,7 @@ export function Tooltip({
       </span>
       <PrototyperTooltip>
         <TooltipTrigger
+          type="button"
           className={cn("inline-flex items-center", className)}
           aria-label={label}
           aria-describedby={resolvedDescriptionId}

@@ -228,9 +228,9 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         title={messages.results.sessionNotFound.title}
         description={messages.results.sessionNotFound.description}
         action={
-          <Link href={withLocalePrefix("/dashboard", locale)}>
-            <Button>{messages.results.sessionNotFound.cta}</Button>
-          </Link>
+          <Button render={<Link href={withLocalePrefix("/dashboard", locale)} />}>
+            {messages.results.sessionNotFound.cta}
+          </Button>
         }
       />
     );
@@ -247,9 +247,13 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           title={messages.results.questionnaireIncomplete.title}
           description={messages.results.questionnaireIncomplete.description}
           action={
-            <Link href={withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale)}>
-              <Button>{messages.results.questionnaireIncomplete.cta}</Button>
-            </Link>
+            <Button
+              render={
+                <Link href={withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale)} />
+              }
+            >
+              {messages.results.questionnaireIncomplete.cta}
+            </Button>
           }
         />
       );
@@ -428,9 +432,9 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           <Download className="h-4 w-4 mr-2" />
           {messages.results.actions.downloadPdf}
         </Button>
-        <Link href={withLocalePrefix("/fit", locale)}>
-          <Button>{messages.results.actions.startNewFit}</Button>
-        </Link>
+        <Button render={<Link href={withLocalePrefix("/fit", locale)} />}>
+          {messages.results.actions.startNewFit}
+        </Button>
       </div>
       {downloadError ? (
         <ErrorState

@@ -83,9 +83,9 @@ export default function QuestionnairePage({ params }: QuestionnairePageProps) {
         title={messages.questionnaire.sessionNotFound.title}
         description={messages.questionnaire.sessionNotFound.description}
         action={
-          <Link href={withLocalePrefix("/fit", locale)}>
-            <Button>{messages.questionnaire.sessionNotFound.cta}</Button>
-          </Link>
+          <Button render={<Link href={withLocalePrefix("/fit", locale)} />}>
+            {messages.questionnaire.sessionNotFound.cta}
+          </Button>
         }
       />
     );

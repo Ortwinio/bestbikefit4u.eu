@@ -46,6 +46,21 @@ function readStoredTheme(): ThemePreference {
   return "system";
 }
 
+function applyThemePreference(
+  nextTheme: ThemePreference,
+  setThemeState: (theme: ThemePreference) => void
+) {
+  setThemeState(nextTheme);
+
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem("theme", nextTheme);
+    document.documentElement.classList.toggle(
+      "dark",
+      resolveTheme(nextTheme) === "dark"
+    );
+  }
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const user = useQuery(api.users.queries.getCurrentUser);
   const updateProfile = useMutation(api.users.mutations.updateProfile);
@@ -69,14 +84,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [resolvedTheme, theme]);
 
   const setTheme = (nextTheme: ThemePreference) => {
-    setThemeState(nextTheme);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("theme", nextTheme);
-      document.documentElement.classList.toggle(
-        "dark",
-        resolveTheme(nextTheme) === "dark"
-      );
-    }
+    applyThemePreference(nextTheme, setThemeState);
     if (user) {
       void updateProfile({ theme_preference: nextTheme });
     }
@@ -84,9 +92,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (user?.theme_preference && user.theme_preference !== theme) {
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("theme", user.theme_preference);
-      }
+      applyThemePreference(user.theme_preference, setThemeState);
     }
   }, [theme, user?.theme_preference]);
 

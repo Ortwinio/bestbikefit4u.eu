@@ -300,11 +300,14 @@ export default function NewFitSessionPage() {
               <p className="text-sm text-yellow-700 mt-1">
                 {messages.fit.profileWarning.description}
               </p>
-              <Link href={withLocalePrefix("/profile", locale)}>
-                <Button variant="outline" size="sm" className="mt-3">
-                  {messages.fit.profileWarning.cta}
-                </Button>
-              </Link>
+              <Button
+                render={<Link href={withLocalePrefix("/profile", locale)} />}
+                variant="outline"
+                size="sm"
+                className="mt-3"
+              >
+                {messages.fit.profileWarning.cta}
+              </Button>
             </div>
           </div>
         </div>

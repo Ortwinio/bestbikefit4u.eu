@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { Button, type ButtonProps } from "@/components/ui";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -19,6 +19,13 @@ interface UseCasePageProps {
 
 export function generateStaticParams() {
   return USE_CASE_SLUGS.map((slug) => ({ slug }));
+}
+
+function linkButtonProps(href: string): ButtonProps {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false,
+  } as ButtonProps;
 }
 
 export async function generateMetadata({
@@ -132,22 +139,27 @@ export default async function UseCaseDetailPage({ params }: UseCasePageProps) {
               : "Use the free bike-fit calculator as a starting point, then continue with your full dashboard fit."}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link href={withLocalePrefix("/calculators/bike-fit", locale)}>
-              <Button className="bg-white text-blue-700 hover:bg-blue-50">
-                {isNl ? "Open bike fit calculator" : "Open Bike Fit Calculator"}
-              </Button>
-            </Link>
-            <TrackedCtaLink
-              href={withLocalePrefix("/login", locale)}
-              locale={locale}
-              pagePath={pagePath}
-              section="use_case_final_cta"
-              ctaLabel={copy.primaryCta}
+            <Button
+              className="bg-white text-blue-700 hover:bg-blue-50"
+              {...linkButtonProps(withLocalePrefix("/calculators/bike-fit", locale))}
             >
-              <Button variant="outline" className="border-white text-white hover:bg-blue-500">
-                {copy.primaryCta}
-              </Button>
-            </TrackedCtaLink>
+              {isNl ? "Open bike fit calculator" : "Open Bike Fit Calculator"}
+            </Button>
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/login", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="use_case_final_cta"
+                  ctaLabel={copy.primaryCta}
+                />
+              }
+              variant="outline"
+              className="border-white text-white hover:bg-blue-500"
+            >
+              {copy.primaryCta}
+            </Button>
           </div>
         </section>
       </div>

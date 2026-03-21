@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { Button, type ButtonProps } from "@/components/ui";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -350,6 +350,13 @@ const content: Record<Locale, MeasurementGuideCopy> = {
   },
 };
 
+function linkButtonProps(href: string): ButtonProps {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false,
+  } as ButtonProps;
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const page = content[locale];
@@ -438,14 +445,19 @@ export default async function MeasurementGuidePage() {
           <h2 className="text-2xl font-semibold text-white">{page.ctaTitle}</h2>
           <p className="mt-2 text-blue-100">{page.ctaBody}</p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link href={withLocalePrefix("/profile", locale)}>
-              <Button className="bg-white text-blue-700 hover:bg-blue-50">{page.ctaProfile}</Button>
-            </Link>
-            <Link href={withLocalePrefix("/fit", locale)}>
-              <Button variant="outline" className="border-white text-white hover:bg-blue-700">
-                {page.ctaFit}
-              </Button>
-            </Link>
+            <Button
+              className="bg-white text-blue-700 hover:bg-blue-50"
+              {...linkButtonProps(withLocalePrefix("/profile", locale))}
+            >
+              {page.ctaProfile}
+            </Button>
+            <Button
+              variant="outline"
+              className="border-white text-white hover:bg-blue-700"
+              {...linkButtonProps(withLocalePrefix("/fit", locale))}
+            >
+              {page.ctaFit}
+            </Button>
           </div>
         </section>
       </div>

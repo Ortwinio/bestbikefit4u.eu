@@ -84,6 +84,13 @@ function formatConfidence(score: number) {
   return Math.max(0, Math.min(100, Math.round(score)));
 }
 
+function linkButtonProps(href: string) {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false as const,
+  };
+}
+
 export function buildLatestFitByBike(
   sessionsWithBikes: BikeSessionEntry[] | undefined
 ) {
@@ -166,9 +173,12 @@ export function BikeGarageRow({
             >
               {messages.dashboardHome.viewBike}
             </Link>
-            <Link href={withLocalePrefix(`/fit?bikeId=${bike._id}`, locale)}>
-              <Button variant="primary">{messages.bikeForm.actions.startFitForBike}</Button>
-            </Link>
+            <Button
+              variant="primary"
+              {...linkButtonProps(withLocalePrefix(`/fit?bikeId=${bike._id}`, locale))}
+            >
+              {messages.bikeForm.actions.startFitForBike}
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -218,9 +228,9 @@ export function BikeGarageRow({
               title={messages.fitHistory.emptyTitle}
               description={messages.fitHistory.noRecommendationYet}
               action={
-                <Link href={withLocalePrefix(`/fit?bikeId=${bike._id}`, locale)}>
-                  <Button>{messages.fitHistory.startNewSession}</Button>
-                </Link>
+                <Button {...linkButtonProps(withLocalePrefix(`/fit?bikeId=${bike._id}`, locale))}>
+                  {messages.fitHistory.startNewSession}
+                </Button>
               }
               className="border-0 p-0 shadow-none"
             />
@@ -279,11 +289,13 @@ export function BikeGarageRow({
               title={messages.pressure.bikeCard.noCalculation}
               description={messages.pressure.overview.noCalculation}
               action={
-                <Link
-                  href={withLocalePrefix(`/pressure-calculator?bikeId=${bike._id}`, locale)}
+                <Button
+                  {...linkButtonProps(
+                    withLocalePrefix(`/pressure-calculator?bikeId=${bike._id}`, locale)
+                  )}
                 >
-                  <Button>{messages.pressure.overview.noCalculationCta}</Button>
-                </Link>
+                  {messages.pressure.overview.noCalculationCta}
+                </Button>
               }
               className="border-0 p-0 shadow-none"
             />

@@ -119,17 +119,21 @@ export default async function GuidesHubPage() {
               ? "Start gratis en ontvang afstelwaarden die passen bij jouw lichaam, doelen en rijstijl."
               : "Start free and get setup targets matched to your body, goals, and riding style."}
           </p>
-          <TrackedCtaLink
-            href={withLocalePrefix("/login", locale)}
-            locale={locale}
-            pagePath={pagePath}
-            section="hub_final_cta"
-            ctaLabel={isNl ? "Start gratis fit" : "Start Free Fit"}
+          <Button
+            render={
+              <TrackedCtaLink
+                href={withLocalePrefix("/login", locale)}
+                locale={locale}
+                pagePath={pagePath}
+                section="hub_final_cta"
+                ctaLabel={isNl ? "Start gratis fit" : "Start Free Fit"}
+              />
+            }
+            size="lg"
+            className="mt-6 bg-white text-blue-700 hover:bg-blue-50"
           >
-            <Button size="lg" className="mt-6 bg-white text-blue-700 hover:bg-blue-50">
-              {isNl ? "Start gratis fit" : "Start Free Fit"}
-            </Button>
-          </TrackedCtaLink>
+            {isNl ? "Start gratis fit" : "Start Free Fit"}
+          </Button>
         </section>
       </div>
     </div>

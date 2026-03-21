@@ -129,20 +129,27 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
               : "Start free and get setup targets with clear adjustment priorities."}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <TrackedCtaLink
-              href={withLocalePrefix("/login", locale)}
-              locale={locale}
-              pagePath={pagePath}
-              section="guide_final_cta"
-              ctaLabel={copy.primaryCta}
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/login", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="guide_final_cta"
+                  ctaLabel={copy.primaryCta}
+                />
+              }
+              className="bg-white text-blue-700 hover:bg-blue-50"
             >
-              <Button className="bg-white text-blue-700 hover:bg-blue-50">{copy.primaryCta}</Button>
-            </TrackedCtaLink>
-            <Link href={withLocalePrefix("/about", locale)}>
-              <Button variant="outline" className="border-white text-white hover:bg-blue-500">
-                {copy.secondaryCta}
-              </Button>
-            </Link>
+              {copy.primaryCta}
+            </Button>
+            <Button
+              render={<Link href={withLocalePrefix("/about", locale)} />}
+              variant="outline"
+              className="border-white text-white hover:bg-blue-500"
+            >
+              {copy.secondaryCta}
+            </Button>
           </div>
         </section>
       </div>

@@ -14,6 +14,15 @@ describe("ui primitive compatibility wrappers", () => {
     expect(html).toContain("Save");
   });
 
+  it("supports render-based link composition", () => {
+    const html = renderToStaticMarkup(
+      <Button render={<a href="/fit" />}>Start fit</Button>
+    );
+
+    expect(html).toContain('<a href="/fit"');
+    expect(html).toContain("Start fit");
+  });
+
   it("keeps select label and tooltip wiring intact", () => {
     const html = renderToStaticMarkup(
       <Select

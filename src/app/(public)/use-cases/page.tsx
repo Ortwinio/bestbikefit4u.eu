@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { Button, type ButtonProps } from "@/components/ui";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { USE_CASES, getUseCaseCopy } from "./data";
+
+function linkButtonProps(href: string): ButtonProps {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false,
+  } as ButtonProps;
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -74,22 +81,27 @@ export default async function UseCasesIndexPage() {
               : "Start with the free bike-fit calculator and continue in the dashboard when you need more detail."}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link href={withLocalePrefix("/calculators/bike-fit", locale)}>
-              <Button className="bg-white text-blue-700 hover:bg-blue-50">
-                {isNl ? "Open bike fit calculator" : "Open Bike Fit Calculator"}
-              </Button>
-            </Link>
-            <TrackedCtaLink
-              href={withLocalePrefix("/login", locale)}
-              locale={locale}
-              pagePath={pagePath}
-              section="use_cases_cta"
-              ctaLabel={isNl ? "Start gratis fit" : "Start Free Fit"}
+            <Button
+              className="bg-white text-blue-700 hover:bg-blue-50"
+              {...linkButtonProps(withLocalePrefix("/calculators/bike-fit", locale))}
             >
-              <Button variant="outline" className="border-white text-white hover:bg-blue-500">
-                {isNl ? "Start gratis fit" : "Start Free Fit"}
-              </Button>
-            </TrackedCtaLink>
+              {isNl ? "Open bike fit calculator" : "Open Bike Fit Calculator"}
+            </Button>
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/login", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="use_cases_cta"
+                  ctaLabel={isNl ? "Start gratis fit" : "Start Free Fit"}
+                />
+              }
+              variant="outline"
+              className="border-white text-white hover:bg-blue-500"
+            >
+              {isNl ? "Start gratis fit" : "Start Free Fit"}
+            </Button>
           </div>
         </section>
       </div>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { Button, type ButtonProps } from "@/components/ui";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
@@ -47,6 +47,13 @@ type FAQJsonLd = {
     };
   }>;
 };
+
+function linkButtonProps(href: string): ButtonProps {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false,
+  } as ButtonProps;
+}
 
 function toId(input: string): string {
   return input
@@ -374,18 +381,25 @@ export default async function FAQPage() {
           <h2 className="text-2xl font-semibold text-gray-900">{page.ctaTitle}</h2>
           <p className="mt-2 text-gray-600">{page.ctaSubtitle}</p>
           <div className="mt-6 flex justify-center gap-4">
-            <Link href={withLocalePrefix("/contact", locale)}>
-              <Button variant="outline">{page.contactButton}</Button>
-            </Link>
-            <TrackedCtaLink
-              href={withLocalePrefix("/login", locale)}
-              locale={locale}
-              pagePath={pagePath}
-              section="faq_final_cta"
-              ctaLabel={page.startButton}
+            <Button
+              variant="outline"
+              {...linkButtonProps(withLocalePrefix("/contact", locale))}
             >
-              <Button>{page.startButton}</Button>
-            </TrackedCtaLink>
+              {page.contactButton}
+            </Button>
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/login", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="faq_final_cta"
+                  ctaLabel={page.startButton}
+                />
+              }
+            >
+              {page.startButton}
+            </Button>
           </div>
         </div>
       </div>

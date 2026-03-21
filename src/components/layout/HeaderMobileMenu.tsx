@@ -127,14 +127,29 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
               </>
             ) : (
               <div className="mt-2 flex items-center gap-2">
-                <Link href={withLocalePrefix("/login", locale)} onClick={close}>
-                  <Button variant="ghost" size="sm">
-                    {labels.login}
-                  </Button>
-                </Link>
-                <Link href={withLocalePrefix("/login", locale)} onClick={close}>
-                  <Button size="sm">{labels.getStarted}</Button>
-                </Link>
+                <Button
+                  render={
+                    <Link
+                      href={withLocalePrefix("/login", locale)}
+                      onClick={close}
+                    />
+                  }
+                  variant="ghost"
+                  size="sm"
+                >
+                  {labels.login}
+                </Button>
+                <Button
+                  render={
+                    <Link
+                      href={withLocalePrefix("/login", locale)}
+                      onClick={close}
+                    />
+                  }
+                  size="sm"
+                >
+                  {labels.getStarted}
+                </Button>
               </div>
             )}
           </nav>

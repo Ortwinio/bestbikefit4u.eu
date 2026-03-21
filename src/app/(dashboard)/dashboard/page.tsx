@@ -71,12 +71,13 @@ export default function DashboardPage() {
             <Plus className="h-4 w-4" />
             {messages.nav.newBike}
           </Link>
-          <Link href={withLocalePrefix("/fit", locale)}>
-            <Button variant="primary">
-              <Plus className="h-4 w-4" />
-              {messages.home.newFitCta}
-            </Button>
-          </Link>
+          <Button
+            variant="primary"
+            render={<Link href={withLocalePrefix("/fit", locale)} />}
+          >
+            <Plus className="h-4 w-4" />
+            {messages.home.newFitCta}
+          </Button>
         </div>
       </div>
 
@@ -151,9 +152,12 @@ export default function DashboardPage() {
             >
               {messages.dashboardHome.editProfile}
             </Link>
-            <Link href={withLocalePrefix("/fit", locale)}>
-              <Button variant="primary">{messages.dashboardHome.newFit}</Button>
-            </Link>
+            <Button
+              variant="primary"
+              render={<Link href={withLocalePrefix("/fit", locale)} />}
+            >
+              {messages.dashboardHome.newFit}
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -180,9 +184,11 @@ export default function DashboardPage() {
                 title={messages.dashboardHome.noBikeTitle}
                 description={messages.dashboardHome.noBikeDescription}
                 action={
-                  <Link href={withLocalePrefix("/bikes/new", locale)}>
-                    <Button>{messages.bikes.actions.addBike}</Button>
-                  </Link>
+                  <Button
+                    render={<Link href={withLocalePrefix("/bikes/new", locale)} />}
+                  >
+                    {messages.bikes.actions.addBike}
+                  </Button>
                 }
                 className="border-0 p-0 shadow-none"
               />

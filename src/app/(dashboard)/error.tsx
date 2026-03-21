@@ -44,12 +44,10 @@ export default function DashboardError({
             <RefreshCw className="h-4 w-4 mr-2" />
             {messages.errors.generic.retry}
           </Button>
-          <Link href={withLocalePrefix("/dashboard", locale)}>
-            <Button>
-              <Home className="h-4 w-4 mr-2" />
-              {messages.errors.generic.goDashboard}
-            </Button>
-          </Link>
+          <Button render={<Link href={withLocalePrefix("/dashboard", locale)} />}>
+            <Home className="h-4 w-4 mr-2" />
+            {messages.errors.generic.goDashboard}
+          </Button>
         </div>
       </div>
     </div>

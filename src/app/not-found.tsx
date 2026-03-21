@@ -38,18 +38,17 @@ export default async function NotFound() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href={withLocalePrefix("/", locale)}>
-            <Button variant="outline">
-              <Home className="h-4 w-4 mr-2" />
-              {copy.goHome}
-            </Button>
-          </Link>
-          <Link href={withLocalePrefix("/dashboard", locale)}>
-            <Button>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              {copy.backToDashboard}
-            </Button>
-          </Link>
+          <Button
+            variant="outline"
+            render={<Link href={withLocalePrefix("/", locale)} />}
+          >
+            <Home className="h-4 w-4 mr-2" />
+            {copy.goHome}
+          </Button>
+          <Button render={<Link href={withLocalePrefix("/dashboard", locale)} />}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            {copy.backToDashboard}
+          </Button>
         </div>
       </div>
     </div>

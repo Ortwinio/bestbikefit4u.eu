@@ -10,13 +10,23 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { Plus } from "lucide-react";
 
+function linkButtonProps(href: string) {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false as const,
+  };
+}
+
 export default function BikesPage() {
   const { locale, messages } = useDashboardMessages();
   const bikes = useQuery(api.bikes.queries.listSummariesByUser);
   const sessionsWithBikes = useQuery(api.sessions.queries.getAllSessionsWithBikes);
 
   const latestFitByBike = useMemo(
-    () => buildLatestFitByBike(sessionsWithBikes as any),
+    () =>
+      buildLatestFitByBike(
+        sessionsWithBikes as Parameters<typeof buildLatestFitByBike>[0]
+      ),
     [sessionsWithBikes]
   );
 
@@ -47,9 +57,9 @@ export default function BikesPage() {
               title={messages.bikes.empty.title}
               description={messages.bikes.empty.description}
               action={
-                <Link href={withLocalePrefix("/bikes/new", locale)}>
-                  <Button>{messages.bikes.empty.cta}</Button>
-                </Link>
+                <Button {...linkButtonProps(withLocalePrefix("/bikes/new", locale))}>
+                  {messages.bikes.empty.cta}
+                </Button>
               }
               className="border-0 p-0 shadow-none"
             />

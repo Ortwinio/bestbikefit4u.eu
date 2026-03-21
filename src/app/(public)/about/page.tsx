@@ -356,17 +356,21 @@ export default async function AboutPage() {
           <section className="bg-blue-600 -mx-4 px-4 py-12 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 rounded-lg text-center">
             <h2 className="text-2xl font-bold text-white">{page.ctaTitle}</h2>
             <p className="mt-4 text-blue-100 max-w-2xl mx-auto">{page.ctaBody}</p>
-            <TrackedCtaLink
-              href={withLocalePrefix("/login", locale)}
-              locale={locale}
-              pagePath={pagePath}
-              section="about_final_cta"
-              ctaLabel={page.ctaButton}
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/login", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="about_final_cta"
+                  ctaLabel={page.ctaButton}
+                />
+              }
+              size="lg"
+              className="mt-8 bg-white text-blue-600 hover:bg-blue-50"
             >
-              <Button size="lg" className="mt-8 bg-white text-blue-600 hover:bg-blue-50">
-                {page.ctaButton}
-              </Button>
-            </TrackedCtaLink>
+              {page.ctaButton}
+            </Button>
           </section>
         </div>
       </div>

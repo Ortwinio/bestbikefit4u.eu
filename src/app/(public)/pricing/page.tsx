@@ -320,21 +320,22 @@ export default async function PricingPage() {
                 ))}
               </ul>
               <div className="mt-8">
-                <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section={`pricing_tier_${tier.name.toLowerCase()}`}
-                  ctaLabel={tier.cta}
-                  className="block"
+                <Button
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/login", locale)}
+                      locale={locale}
+                      pagePath={pagePath}
+                      section={`pricing_tier_${tier.name.toLowerCase()}`}
+                      ctaLabel={tier.cta}
+                      className="block"
+                    />
+                  }
+                  className={`w-full ${tier.highlighted ? "bg-white text-blue-600 hover:bg-blue-50" : ""}`}
+                  variant={tier.highlighted ? "secondary" : "primary"}
                 >
-                  <Button
-                    className={`w-full ${tier.highlighted ? "bg-white text-blue-600 hover:bg-blue-50" : ""}`}
-                    variant={tier.highlighted ? "secondary" : "primary"}
-                  >
-                    {tier.cta}
-                  </Button>
-                </TrackedCtaLink>
+                  {tier.cta}
+                </Button>
               </div>
             </div>
           ))}
@@ -387,17 +388,21 @@ export default async function PricingPage() {
         <div className="mt-20 text-center">
           <h2 className="text-2xl font-bold text-gray-900">{page.ctaTitle}</h2>
           <p className="mt-4 text-gray-600">{page.ctaSubtitle}</p>
-          <TrackedCtaLink
-            href={withLocalePrefix("/login", locale)}
-            locale={locale}
-            pagePath={pagePath}
-            section="pricing_final_cta"
-            ctaLabel={page.ctaButton}
+          <Button
+            render={
+              <TrackedCtaLink
+                href={withLocalePrefix("/login", locale)}
+                locale={locale}
+                pagePath={pagePath}
+                section="pricing_final_cta"
+                ctaLabel={page.ctaButton}
+              />
+            }
+            size="lg"
+            className="mt-8"
           >
-            <Button size="lg" className="mt-8">
-              {page.ctaButton}
-            </Button>
-          </TrackedCtaLink>
+            {page.ctaButton}
+          </Button>
         </div>
       </div>
     </div>

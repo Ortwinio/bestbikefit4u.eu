@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import type { Doc, Id } from "../../../../convex/_generated/dataModel";
+import type { Doc } from "../../../../convex/_generated/dataModel";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { Button, Card, CardContent, CardHeader, CardTitle, EmptyState } from "@/components/ui";
@@ -13,6 +13,13 @@ import { PressureWizard } from "./PressureWizard";
 
 interface PressureCalculatorDashboardProps {
   initialBikeId?: string;
+}
+
+function linkButtonProps(href: string) {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false as const,
+  };
 }
 
 export function PressureCalculatorDashboard({
@@ -78,9 +85,9 @@ export function PressureCalculatorDashboard({
             title={messages.pressure.overview.noBikesTitle}
             description={messages.pressure.overview.noBikesDescription}
             action={
-              <Link href={withLocalePrefix("/bikes/new", locale)}>
-                <Button>{messages.pressure.overview.noBikesCta}</Button>
-              </Link>
+              <Button {...linkButtonProps(withLocalePrefix("/bikes/new", locale))}>
+                {messages.pressure.overview.noBikesCta}
+              </Button>
             }
           />
         ) : (

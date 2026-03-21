@@ -142,12 +142,12 @@ export default async function ProgrammaticTirePressurePage({
         </section>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/bandenspanning-calculator">
-            <Button>Open Tire Pressure Calculator</Button>
-          </Link>
-          <Link href={label.guideHref}>
-            <Button variant="outline">Read {label.en[0].toUpperCase() + label.en.slice(1)} Fit Guide</Button>
-          </Link>
+          <Button render={<Link href="/bandenspanning-calculator" />}>
+            Open Tire Pressure Calculator
+          </Button>
+          <Button render={<Link href={label.guideHref} />} variant="outline">
+            Read {label.en[0].toUpperCase() + label.en.slice(1)} Fit Guide
+          </Button>
         </div>
 
         <RelatedLinksSection

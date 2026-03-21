@@ -314,11 +314,12 @@ export function CreateBikeForm() {
               <Button onClick={handleCreateBike} disabled={isSaving} isLoading={isSaving}>
                 {messages.bikeForm.actions.save}
               </Button>
-              <Link
-                href={withLocalePrefix("/bikes", locale)}
+              <Button
+                variant="outline"
+                render={<Link href={withLocalePrefix("/bikes", locale)} />}
               >
-                <Button variant="outline">{messages.common.cancel}</Button>
-              </Link>
+                {messages.common.cancel}
+              </Button>
             </div>
           </div>
         )}
@@ -330,11 +331,12 @@ export function CreateBikeForm() {
               <Button onClick={() => setStep("wheelset")}>
                 {messages.pressure.wizard.addWheelset}
               </Button>
-              <Link
-                href={withLocalePrefix("/bikes", locale)}
+              <Button
+                variant="outline"
+                render={<Link href={withLocalePrefix("/bikes", locale)} />}
               >
-                <Button variant="outline">{messages.pressure.wizard.skipToBikes}</Button>
-              </Link>
+                {messages.pressure.wizard.skipToBikes}
+              </Button>
             </div>
           </div>
         )}
@@ -460,16 +462,19 @@ export function CreateBikeForm() {
           <div className="space-y-5">
             <h2 className="text-xl font-semibold text-gray-900">{messages.pressure.wizard.completedTitle}</h2>
             <div className="flex flex-wrap gap-3">
-              <Link
-                href={withLocalePrefix(`/pressure-calculator?bikeId=${newBikeId}`, locale)}
+              <Button
+                render={
+                  <Link href={withLocalePrefix(`/pressure-calculator?bikeId=${newBikeId}`, locale)} />
+                }
               >
-                <Button>{messages.pressure.wizard.calculatePressure}</Button>
-              </Link>
-              <Link
-                href={withLocalePrefix("/bikes", locale)}
+                {messages.pressure.wizard.calculatePressure}
+              </Button>
+              <Button
+                variant="outline"
+                render={<Link href={withLocalePrefix("/bikes", locale)} />}
               >
-                <Button variant="outline">{messages.pressure.wizard.goToMyBikes}</Button>
-              </Link>
+                {messages.pressure.wizard.goToMyBikes}
+              </Button>
             </div>
           </div>
         )}

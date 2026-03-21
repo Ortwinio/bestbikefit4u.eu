@@ -13,6 +13,7 @@ describe("tooltip rendering and a11y wiring", () => {
       />
     );
 
+    expect(html).toContain('type="button"');
     expect(html).toContain('aria-label="More help"');
     expect(html).toContain('aria-describedby="tooltip-desc-test"');
     expect(html).toContain("Helpful guidance for this field.");

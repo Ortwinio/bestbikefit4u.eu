@@ -27,11 +27,13 @@ export function HeaderAuthActions({
   if (isAuthenticated) {
     return (
       <div className="flex items-center gap-2">
-        <Link href={withLocalePrefix("/dashboard", locale)}>
-          <Button variant="outline" size="sm">
-            Dashboard
-          </Button>
-        </Link>
+        <Button
+          render={<Link href={withLocalePrefix("/dashboard", locale)} />}
+          variant="outline"
+          size="sm"
+        >
+          Dashboard
+        </Button>
         <UserMenu />
       </div>
     );
@@ -39,14 +41,16 @@ export function HeaderAuthActions({
 
   return (
     <>
-      <Link href={withLocalePrefix("/login", locale)}>
-        <Button variant="ghost" size="sm">
-          {loginLabel}
-        </Button>
-      </Link>
-      <Link href={withLocalePrefix("/login", locale)}>
-        <Button size="sm">{getStartedLabel}</Button>
-      </Link>
+      <Button
+        render={<Link href={withLocalePrefix("/login", locale)} />}
+        variant="ghost"
+        size="sm"
+      >
+        {loginLabel}
+      </Button>
+      <Button render={<Link href={withLocalePrefix("/login", locale)} />} size="sm">
+        {getStartedLabel}
+      </Button>
     </>
   );
 }

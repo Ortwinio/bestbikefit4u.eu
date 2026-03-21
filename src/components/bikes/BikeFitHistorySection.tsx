@@ -12,6 +12,13 @@ interface BikeFitHistorySectionProps {
   bikeId: Id<"bikes">;
 }
 
+function linkButtonProps(href: string) {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false as const,
+  };
+}
+
 export function BikeFitHistorySection({
   bikeId,
 }: BikeFitHistorySectionProps) {
@@ -50,11 +57,9 @@ export function BikeFitHistorySection({
             title={messages.dashboardFit.noResultsYet}
             description={messages.bikes.subtitle}
             action={
-              <Link href={withLocalePrefix(`/fit?bikeId=${bikeId}`, locale)}>
-                <Button>
-                  {messages.bikeForm.actions.startFitForBike}
-                </Button>
-              </Link>
+              <Button {...linkButtonProps(withLocalePrefix(`/fit?bikeId=${bikeId}`, locale))}>
+                {messages.bikeForm.actions.startFitForBike}
+              </Button>
             }
           />
         ) : (

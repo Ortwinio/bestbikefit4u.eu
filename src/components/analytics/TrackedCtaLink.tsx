@@ -1,20 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { forwardRef, type ComponentPropsWithoutRef, type MouseEvent } from "react";
 import { useMutation } from "convex/react";
 import { makeFunctionReference } from "convex/server";
 import type { Locale } from "@/i18n/config";
 import { canTrackMarketing } from "@/lib/cookieConsent";
 
-type TrackedCtaLinkProps = {
+type TrackedCtaLinkProps = Omit<ComponentPropsWithoutRef<typeof Link>, "href"> & {
   href: string;
   locale: Locale;
   pagePath: string;
   section: string;
   ctaLabel: string;
-  className?: string;
-  children: ReactNode;
 };
 
 type LogMarketingEventArgs = {
@@ -54,20 +52,26 @@ function withSourceTagForLogin(href: string, sourceTag: string): string {
   return `${path}${nextQuery ? `?${nextQuery}` : ""}${hash}`;
 }
 
-export function TrackedCtaLink({
+export const TrackedCtaLink = forwardRef<HTMLAnchorElement, TrackedCtaLinkProps>(function TrackedCtaLink({
   href,
   locale,
   pagePath,
   section,
   ctaLabel,
-  className,
-  children,
-}: TrackedCtaLinkProps) {
+  onClick,
+  ...props
+}, ref) {
   const logMarketingEvent = useMutation(logMarketingEventRef) as LogMarketingEventFn;
   const sourceTag = `${pagePath}:${section}`;
   const trackedHref = withSourceTagForLogin(href, sourceTag);
 
-  const handleClick = () => {
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    onClick?.(event);
+
+    if (event.defaultPrevented) {
+      return;
+    }
+
     if (!canTrackMarketing()) {
       return;
     }
@@ -84,8 +88,6 @@ export function TrackedCtaLink({
   };
 
   return (
-    <Link href={trackedHref} className={className} onClick={handleClick}>
-      {children}
-    </Link>
+    <Link ref={ref} href={trackedHref} onClick={handleClick} {...props} />
   );
-}
+});

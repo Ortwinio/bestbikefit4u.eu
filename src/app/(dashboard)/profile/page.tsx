@@ -73,6 +73,13 @@ type MeasurementConfig = {
   steps: string[];
 };
 
+function linkButtonProps(href: string) {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false as const,
+  };
+}
+
 function getDefaultValues(profile: ProfileData): Partial<WizardFormData> {
   return {
     heightCm: profile.heightCm,
@@ -407,10 +414,7 @@ function FlexibilityCard({
                 <Edit2 className="h-4 w-4" />
                 {messages.profile.flexibility.editButton}
               </Button>
-              <Link
-                href={withLocalePrefix("/profile/improve/flexibility", locale)}
-                className="inline-flex items-center gap-1 text-sm font-semibold text-blue-700 hover:text-blue-800"
-              >
+              <Link href={withLocalePrefix("/profile/improve/flexibility", locale)} className="inline-flex items-center gap-1 text-sm font-semibold text-blue-700 hover:text-blue-800">
                 {messages.profile.flexibility.improveLink}
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -524,10 +528,7 @@ function CoreStabilityCard({
                 <Edit2 className="h-4 w-4" />
                 {messages.profile.coreStability.editButton}
               </Button>
-              <Link
-                href={withLocalePrefix("/profile/improve/core-stability", locale)}
-                className="inline-flex items-center gap-1 text-sm font-semibold text-blue-700 hover:text-blue-800"
-              >
+              <Link href={withLocalePrefix("/profile/improve/core-stability", locale)} className="inline-flex items-center gap-1 text-sm font-semibold text-blue-700 hover:text-blue-800">
                 {messages.profile.coreStability.improveLink}
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -693,9 +694,9 @@ function ProfileSummary({
         <CardContent>
           <p className="text-gray-600">{messages.profile.status.description}</p>
           <div className="mt-4">
-            <Link href={fitHref}>
-              <Button variant="primary">{messages.profile.status.startFitCta}</Button>
-            </Link>
+            <Button variant="primary" {...linkButtonProps(fitHref)}>
+              {messages.profile.status.startFitCta}
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -1021,19 +1022,25 @@ export default function ProfilePage() {
           <Button type="button" variant="ghost" onClick={finishProfileSave}>
             {messages.profile.refresh.dismissButton}
           </Button>
-          <Link
-            href={withLocalePrefix("/fit", locale)}
-            onClick={() => {
-              setShowRefreshDialog(false);
-              setPendingRefreshWeight(null);
-              setIsEditing(false);
-              setEditingMeasurements(false);
+          <Button
+            variant="outline"
+            {...{
+              render: (
+                <Link
+                  href={withLocalePrefix("/fit", locale)}
+                  onClick={() => {
+                    setShowRefreshDialog(false);
+                    setPendingRefreshWeight(null);
+                    setIsEditing(false);
+                    setEditingMeasurements(false);
+                  }}
+                />
+              ),
+              nativeButton: false as const,
             }}
           >
-            <Button type="button" variant="outline">
-              {messages.profile.refresh.fitButton}
-            </Button>
-          </Link>
+            {messages.profile.refresh.fitButton}
+          </Button>
           {pendingRefreshWeight !== null && (recalculableBikeCount ?? 0) > 0 ? (
             <Button type="button" onClick={handleRecalculate} isLoading={isRecalculating}>
               {isRecalculating

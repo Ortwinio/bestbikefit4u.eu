@@ -52,6 +52,13 @@ interface StepResultProps {
   };
 }
 
+function linkButtonProps(href: string) {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false as const,
+  };
+}
+
 export function StepResult({
   locale,
   bikeId,
@@ -231,11 +238,9 @@ export function StepResult({
         <Button variant="outline" onClick={onReset}>
           {wizardLabels.newCalculation}
         </Button>
-        <Link
-          href={withLocalePrefix("/bikes", locale)}
-        >
-          <Button variant="outline">{wizardLabels.goToMyBikes}</Button>
-        </Link>
+        <Button variant="outline" {...linkButtonProps(withLocalePrefix("/bikes", locale))}>
+          {wizardLabels.goToMyBikes}
+        </Button>
       </div>
 
       {bikeId && tireSetupId ? (

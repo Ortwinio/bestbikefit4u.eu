@@ -1,4 +1,4 @@
-import { forwardRef, type ButtonHTMLAttributes } from "react";
+import { forwardRef, type ButtonHTMLAttributes, type ReactElement } from "react";
 import { Loader2 } from "lucide-react";
 import { Button as PrototyperButton } from "@/components/prototyper-ui/ui/button";
 import { cn } from "@/utils/cn";
@@ -26,9 +26,10 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: keyof typeof variantClassMap;
   size?: keyof typeof sizeClassMap;
   isLoading?: boolean;
+  render?: ReactElement;
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLElement, ButtonProps>(
   (
     {
       className,
@@ -37,13 +38,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       isLoading = false,
       disabled,
       children,
+      render,
       ...props
     },
     ref
   ) => (
     <PrototyperButton
-      nativeButton
       ref={ref as never}
+      render={render}
       disabled={disabled || isLoading}
       aria-disabled={disabled || isLoading ? true : undefined}
       variant="ghost"

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { Button, type ButtonProps } from "@/components/ui";
 import { Ruler, Target, FileText, Bike, Activity, Shield } from "lucide-react";
 import type { Metadata } from "next";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
@@ -20,6 +20,13 @@ import {
 const featureIcons = [Ruler, Target, FileText, Bike, Activity, Shield];
 const reasonsIcons = [Activity, Target, Bike, Shield, FileText];
 const trustIcons = [Shield, Ruler, FileText];
+
+function linkButtonProps(href: string): ButtonProps {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false,
+  } as ButtonProps;
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -130,24 +137,28 @@ export default async function HomePage() {
               {home.hero.description}
             </p>
             <div className="mt-10 flex justify-center gap-4">
-              <TrackedCtaLink
-                href={withLocalePrefix("/login", locale)}
-                locale={locale}
-                pagePath={homePath}
-                section="hero_primary"
-                ctaLabel={home.hero.primaryCta}
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/login", locale)}
+                    locale={locale}
+                    pagePath={homePath}
+                    section="hero_primary"
+                    ctaLabel={home.hero.primaryCta}
+                  />
+                }
+                size="lg"
               >
-                <Button size="lg">{home.hero.primaryCta}</Button>
-              </TrackedCtaLink>
-              <Link href={withLocalePrefix("/about", locale)}>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-white bg-white/10 text-white hover:bg-white/20"
-                >
-                  {home.hero.secondaryCta}
-                </Button>
-              </Link>
+                {home.hero.primaryCta}
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-white bg-white/10 text-white hover:bg-white/20"
+                {...linkButtonProps(withLocalePrefix("/about", locale))}
+              >
+                {home.hero.secondaryCta}
+              </Button>
             </div>
           </div>
         </div>
@@ -397,20 +408,21 @@ export default async function HomePage() {
                 <p className="mt-4 text-blue-100">
                   {home.recommendationSection.cardDescription}
                 </p>
-                <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
-                  locale={locale}
-                  pagePath={homePath}
-                  section="recommendation_card"
-                  ctaLabel={home.recommendationSection.cardCta}
+                <Button
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/login", locale)}
+                      locale={locale}
+                      pagePath={homePath}
+                      section="recommendation_card"
+                      ctaLabel={home.recommendationSection.cardCta}
+                    />
+                  }
+                  size="lg"
+                  className="mt-6 bg-white text-blue-600 hover:bg-blue-50"
                 >
-                  <Button
-                    size="lg"
-                    className="mt-6 bg-white text-blue-600 hover:bg-blue-50"
-                  >
-                    {home.recommendationSection.cardCta}
-                  </Button>
-                </TrackedCtaLink>
+                  {home.recommendationSection.cardCta}
+                </Button>
               </div>
             </div>
           </div>
@@ -422,17 +434,21 @@ export default async function HomePage() {
           <h2 className="text-3xl font-bold text-white">{home.cta.title}</h2>
           <p className="mt-4 text-lg text-blue-100">{home.cta.description}</p>
           <div className="mt-8">
-            <TrackedCtaLink
-              href={withLocalePrefix("/login", locale)}
-              locale={locale}
-              pagePath={homePath}
-              section="final_cta"
-              ctaLabel={home.cta.button}
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/login", locale)}
+                  locale={locale}
+                  pagePath={homePath}
+                  section="final_cta"
+                  ctaLabel={home.cta.button}
+                />
+              }
+              size="lg"
+              className="bg-white text-blue-600 hover:bg-blue-50"
             >
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
-                {home.cta.button}
-              </Button>
-            </TrackedCtaLink>
+              {home.cta.button}
+            </Button>
           </div>
         </div>
       </section>

@@ -182,9 +182,11 @@ export function ProfileImproveGuideClient({
           ))}
         </ul>
         <div className="mt-6">
-          <Link href={withLocalePrefix(`/profile?edit=${editTarget}`, locale)}>
-            <Button>{updateScoreCta}</Button>
-          </Link>
+          <Button
+            render={<Link href={withLocalePrefix(`/profile?edit=${editTarget}`, locale)} />}
+          >
+            {updateScoreCta}
+          </Button>
         </div>
       </section>
     </div>

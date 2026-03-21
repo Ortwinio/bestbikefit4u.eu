@@ -264,17 +264,21 @@ export default async function WhyBikeFitMattersPage() {
             riding goals.
           </p>
           <div className="mt-8">
-            <TrackedCtaLink
-              href={withLocalePrefix("/login", locale)}
-              locale={locale}
-              pagePath={pagePath}
-              section="why_bikefit_matters_final_cta"
-              ctaLabel="Start Free Fit"
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/login", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="why_bikefit_matters_final_cta"
+                  ctaLabel="Start Free Fit"
+                />
+              }
+              size="lg"
+              className="bg-white text-blue-600 hover:bg-blue-50"
             >
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
-                Start Free Fit
-              </Button>
-            </TrackedCtaLink>
+              Start Free Fit
+            </Button>
           </div>
         </div>
       </section>

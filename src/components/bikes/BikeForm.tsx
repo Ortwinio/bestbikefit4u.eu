@@ -84,6 +84,13 @@ interface BikeFormProps {
   onDelete?: () => Promise<void>;
 }
 
+function linkButtonProps(href: string) {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false as const,
+  };
+}
+
 function numberFromInput(value: string): number | undefined {
   if (!value.trim()) {
     return undefined;
@@ -464,11 +471,9 @@ export function BikeForm({
             {submitLabel}
           </Button>
 
-          <Link href={cancelHref}>
-            <Button type="button" variant="outline">
-              {messages.common.cancel}
-            </Button>
-          </Link>
+          <Button variant="outline" {...linkButtonProps(cancelHref)}>
+            {messages.common.cancel}
+          </Button>
 
           {onDelete && (
             <Button

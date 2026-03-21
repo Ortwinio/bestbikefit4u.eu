@@ -142,12 +142,12 @@ export default async function ProgrammaticBandenspanningPage({
         </section>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/bandenspanning-calculator">
-            <Button>Open bandenspanning calculator</Button>
-          </Link>
-          <Link href={label.guideHref}>
-            <Button variant="outline">Lees {label.nl} fit gids</Button>
-          </Link>
+          <Button render={<Link href="/bandenspanning-calculator" />}>
+            Open bandenspanning calculator
+          </Button>
+          <Button render={<Link href={label.guideHref} />} variant="outline">
+            Lees {label.nl} fit gids
+          </Button>
         </div>
 
         <RelatedLinksSection
