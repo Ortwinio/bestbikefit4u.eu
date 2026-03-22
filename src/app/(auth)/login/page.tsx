@@ -364,6 +364,8 @@ export default function LoginPage() {
         sourceTag,
       });
       if (result.redirect) {
+        // Reset all form inputs to clear browser's native "Leave site?" prompt
+        document.querySelectorAll("input").forEach((el) => el.blur());
         window.location.href = result.redirect.toString();
         return;
       }
