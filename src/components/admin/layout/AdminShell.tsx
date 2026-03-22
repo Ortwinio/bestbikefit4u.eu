@@ -8,7 +8,7 @@ import { CircuitBoard, Menu, X } from "lucide-react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { Button, Card, CardContent } from "@/components/ui";
 import { cn } from "@/utils/cn";
-import { AdminStatusPill } from "./AdminUi";
+import { StatusPill } from "@/components/admin/shared/StatusPill";
 import {
   adminNavigationGroups,
   getAdminNavigationItem,
@@ -111,9 +111,9 @@ function AdminNavBlock({
                 {user.email}
               </p>
             </div>
-            <AdminStatusPill tone="info" className="capitalize">
+            <StatusPill tone="info" className="capitalize">
               {formatAdminRoleLabel(user.adminRole)}
-            </AdminStatusPill>
+            </StatusPill>
             {onSignOut ? (
               <Button
                 variant="outline"
@@ -168,10 +168,10 @@ export function AdminShell({
               </div>
 
               <div className="hidden items-center gap-2 lg:flex">
-                <AdminStatusPill tone="neutral">Prototyper UI</AdminStatusPill>
-                <AdminStatusPill tone="info" className="capitalize">
+                <StatusPill tone="neutral">Prototyper UI</StatusPill>
+                <StatusPill tone="info" className="capitalize">
                   {formatAdminRoleLabel(user.adminRole)}
-                </AdminStatusPill>
+                </StatusPill>
                 <Button variant="outline" onClick={handleSignOut}>
                   Sign out
                 </Button>

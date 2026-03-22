@@ -5,21 +5,9 @@ import type { ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
+import { StatusPill } from "@/components/admin/shared/StatusPill";
 
 type AdminStatusTone = "neutral" | "success" | "warning" | "danger" | "info";
-
-const statusToneClassMap: Record<AdminStatusTone, string> = {
-  neutral:
-    "border-[color:var(--border)] bg-[color:var(--secondary)] text-[color:var(--secondary-foreground)]",
-  success:
-    "border-[color:color-mix(in_oklch,var(--success)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--success)_14%,var(--secondary))] text-[color:var(--foreground)]",
-  warning:
-    "border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_14%,var(--secondary))] text-[color:var(--foreground)]",
-  danger:
-    "border-[color:color-mix(in_oklch,var(--danger)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--danger)_10%,var(--secondary))] text-[color:var(--foreground)]",
-  info:
-    "border-[color:color-mix(in_oklch,var(--primary)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--secondary))] text-[color:var(--foreground)]",
-};
 
 export function AdminStatusPill({
   tone = "neutral",
@@ -31,15 +19,9 @@ export function AdminStatusPill({
   className?: string;
 }) {
   return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium uppercase tracking-wide",
-        statusToneClassMap[tone],
-        className
-      )}
-    >
+    <StatusPill tone={tone} className={cn("gap-1 text-xs", className)}>
       {children}
-    </span>
+    </StatusPill>
   );
 }
 

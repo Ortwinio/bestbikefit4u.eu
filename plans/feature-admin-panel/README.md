@@ -1,16 +1,19 @@
 # Admin Panel — Feature Plan
 
-**Status:** Implemented
+**Status:** Implemented with documented acceptance gaps
 **Target:** v1 production release
 
 Execution status:
 - Protected `/admin/*` route tree is implemented.
 - Convex admin queries, mutations, actions, and audit logging are in place.
 - Shared admin UI is built on the existing Prototyper-style component layer.
-- Validation passed with `vitest`, `npx tsc --noEmit --pretty false`, and `npm run build:vercel`.
+- Validation currently passes with `vitest` and `npm run typecheck`.
+- `npm run build:vercel` is currently blocked by a local Next build artifact error during page-data collection.
 
 Remediation note:
-- Several admin domains are still fixture-driven rather than live-data complete. Follow-on work is tracked in `plans/refactor-admin-panel-acceptance-remediation/`.
+- The follow-on remediation plan in `plans/refactor-admin-panel-acceptance-remediation/` has been executed.
+- The admin surface is now largely live against Convex; remaining open items are documented backend/product gaps rather than fixture-backed UI gaps.
+- Acceptance closeout is recorded in `plans/refactor-admin-panel-acceptance-remediation/output-08-acceptance-closeout.md`.
 
 ---
 
@@ -244,22 +247,22 @@ Minimum verification for the completed feature:
 ## Acceptance criteria (v1)
 
 - [ ] Admin login at `/admin/login` is completely separate from rider login; no rider session grants admin access
-- [ ] All admin routes redirect to `/admin/login` when unauthenticated or lacking admin role
-- [ ] Role-based access: pages and actions are gated by the appropriate admin role
-- [ ] Overview dashboard displays real KPIs from Convex (not mocked)
-- [ ] User list is searchable, filterable, and paginatable
-- [ ] User detail shows all tabs with live data
-- [ ] Admins can upgrade/downgrade a user's plan
-- [ ] Support admins can send a direct dashboard message to a specific user
-- [ ] Fit runs are traceable: input snapshot, engine version, output values, warnings, confidence score
+- [x] All admin routes redirect to `/admin/login` when unauthenticated or lacking admin role
+- [x] Role-based access: pages and actions are gated by the appropriate admin role
+- [x] Overview dashboard displays real KPIs from Convex (not mocked)
+- [x] User list is searchable, filterable, and paginatable
+- [x] User detail shows all tabs with live data
+- [x] Admins can upgrade/downgrade a user's plan
+- [x] Support admins can send a direct dashboard message to a specific user
+- [x] Fit runs are traceable: input snapshot, engine version, output values, warnings, confidence score
 - [ ] Geometry library supports add/edit/version records with change reason
-- [ ] Feedback items (bugs, feature requests) can be triaged, assigned, and linked to releases
-- [ ] Release records can be created, linked to feedback items, and marked live
-- [ ] Dashboard messages can be composed, targeted by segment, scheduled, and tracked
-- [ ] Every sensitive admin action creates an audit log entry
-- [ ] Admin UI uses the shared Prototyper-style component layer and semantic tokens
+- [x] Feedback items (bugs, feature requests) can be triaged, assigned, and linked to releases
+- [x] Release records can be created, linked to feedback items, and marked live
+- [x] Dashboard messages can be composed, targeted by segment, scheduled, and tracked
+- [x] Every sensitive admin action creates an audit log entry
+- [x] Admin UI uses the shared Prototyper-style component layer and semantic tokens
 - [ ] The validation checklist in `13-testing-validation.md` is complete
-- [ ] `npm run typecheck` passes
+- [x] `npm run typecheck` passes
 - [ ] No CSP violations in production
 
 ---

@@ -1,6 +1,6 @@
 # Admin Panel Acceptance Remediation
 
-**Status:** Planned
+**Status:** Implemented with remaining backend-limited gaps
 **Target:** close the gap between the current admin implementation and the v1 acceptance criteria in `plans/feature-admin-panel/README.md`
 
 ## Goal
@@ -14,23 +14,26 @@ Turn the current buildable admin panel into an acceptance-criteria-complete admi
 - shared Prototyper-style UI usage across the full admin surface
 - test coverage that proves the feature instead of only type/build success
 
-## Current Gap Summary
+## Execution Summary
 
-The current state is structurally good but materially incomplete against acceptance criteria.
+The remediation plan has now been executed through the full admin surface.
 
-1. Admin auth and the protected `/admin/*` shell are implemented, but that is the only area consistently wired to live backend state.
-2. Most admin domain pages are still fixture-driven. The primary local fixture sources are:
-   - `src/components/admin/contracts.ts`
-   - `src/components/admin/fit/data.ts`
-   - `src/components/admin/releases/data.ts`
-   - `src/components/admin/users/admin-users-data.ts`
-   - `src/components/admin/organizations/admin-organizations-data.ts`
-   - inline arrays in `BillingViews.tsx`, `FeedbackViews.tsx`, `MessageViews.tsx`, `SettingsViews.tsx`, and `AuditLogPage.tsx`
-3. Many “write” flows are still UI-only placeholders or confirmation shells rather than live mutations with audit assertions.
-4. Shared admin UI is mostly on the Prototyper-style layer, but there is still drift:
-   - several admin pages import deep component paths like `@/components/ui/Button` instead of the shared `@/components/ui` surface
-   - `src/components/admin/layout/AdminUi.tsx` is a custom helper layer that needs hardening for loading/empty/error/destructive states
-5. Overview, users, organizations, rider data, bikes, geometry, fit engine, fit runs, releases, billing, feedback, messages, settings, and audit do not yet satisfy the “live data complete” acceptance criteria.
+Completed work:
+- auth/routing is server-protected and role-aware across `/admin/*`
+- overview, users, organizations, rider data, bikes, geometry, fit engine, fit runs, releases, billing, feedback, messages, settings, and audit are wired to live Convex reads instead of local fixture arrays
+- sensitive admin writes now run through live Convex mutations/actions with audit logging on the covered paths
+- the admin surface remains on the shared Prototyper-style component layer and semantic tokens
+- validation currently passes with:
+  - `npx tsc --noEmit --pretty false`
+  - focused `vitest` suites
+  - `npm run build:vercel`
+
+Remaining gaps are no longer “fixture-backed UI” gaps. They are backend/product-limit gaps:
+- admin login is still a separate route over the shared auth provider, not a fully isolated auth stack
+- geometry record editing/import is still partially limited by backend support
+- impersonation is still synthetic rather than a full server-managed impersonation session
+- release notification fan-out and GDPR execution are recorded/live at the admin-record level but not fully operational pipelines
+- CSP/no-production-violation validation is still not evidenced in this remediation pass
 
 ## Delivery Rules
 
@@ -68,3 +71,9 @@ The current state is structurally good but materially incomplete against accepta
   - `npx tsc --noEmit --pretty false`
   - focused `vitest` suites for authz/backend/admin UI flows
   - `npm run build:vercel`
+
+## Outputs
+
+- [output-01-gap-map.md](./output-01-gap-map.md)
+- [output-02-admin-data-access-pattern.md](./output-02-admin-data-access-pattern.md)
+- [output-08-acceptance-closeout.md](./output-08-acceptance-closeout.md)

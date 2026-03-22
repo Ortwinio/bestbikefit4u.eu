@@ -21,7 +21,15 @@ function matchesSearch(value: string | undefined, search: string | undefined) {
 }
 
 async function requireBillingAdminRead(ctx: QueryCtx) {
-  return requireAnyRole(ctx, ["super_admin", "ops_admin", "billing_admin"]);
+  return requireAnyRole(ctx, ["super_admin", "ops_admin", "billing_admin", "analyst"]);
+}
+
+async function requirePeopleRead(ctx: QueryCtx) {
+  return requireAnyRole(ctx, ["super_admin", "ops_admin", "support_admin", "analyst"]);
+}
+
+async function requireBikeRead(ctx: QueryCtx) {
+  return requireAnyRole(ctx, ["super_admin", "fit_specialist", "geometry_manager", "analyst"]);
 }
 
 async function requireGovernanceRead(ctx: QueryCtx) {
@@ -162,7 +170,7 @@ export const listUsers = query({
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    await requireAdminUserId(ctx);
+    await requirePeopleRead(ctx);
 
     return await ctx.db
       .query("users")
@@ -204,7 +212,7 @@ export const listUsers = query({
 export const getUserDetail = query({
   args: { userId: v.id("users") },
   handler: async (ctx, { userId }) => {
-    await requireAdminUserId(ctx);
+    await requirePeopleRead(ctx);
     const [user, bikes, fitRuns, integration, subscriptions, feedbackItems, receipts, auditLogs] =
       await Promise.all([
         ctx.db.get(userId),
@@ -257,7 +265,7 @@ export const listOrganizations = query({
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    await requireAdminUserId(ctx);
+    await requirePeopleRead(ctx);
     return await ctx.db
       .query("organizations")
       .filter((q) => {
@@ -274,7 +282,7 @@ export const listOrganizations = query({
 export const getOrganizationDetail = query({
   args: { orgId: v.id("organizations") },
   handler: async (ctx, { orgId }) => {
-    await requireAdminUserId(ctx);
+    await requirePeopleRead(ctx);
     const [organization, members, subscriptions, auditLogs] = await Promise.all([
       ctx.db.get(orgId),
       ctx.db
@@ -294,7 +302,7 @@ export const getOrganizationDetail = query({
 export const listOrgMembers = query({
   args: { orgId: v.id("organizations") },
   handler: async (ctx, { orgId }) => {
-    await requireAdminUserId(ctx);
+    await requirePeopleRead(ctx);
     const userMap = await getUserMap(ctx);
     const members = await ctx.db
       .query("organization_members")
@@ -315,7 +323,7 @@ export const listAllBikes = query({
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    await requireAdminUserId(ctx);
+    await requireBikeRead(ctx);
     return await ctx.db
       .query("bikes")
       .filter((q) => {
@@ -336,7 +344,7 @@ export const listAllBikes = query({
 export const getAdminBikeDetail = query({
   args: { bikeId: v.id("bikes") },
   handler: async (ctx, { bikeId }) => {
-    await requireAdminUserId(ctx);
+    await requireBikeRead(ctx);
     const bike = await ctx.db.get(bikeId);
     if (!bike) return null;
     const [owner, fitRuns, geometryRecord] = await Promise.all([
@@ -728,6 +736,7 @@ export const listAuditLogs = query({
         if (args.targetId) predicates.push(q.eq(q.field("targetId"), args.targetId));
         if (args.actionPrefix) {
           predicates.push(q.gte(q.field("action"), args.actionPrefix));
+          predicates.push(q.lt(q.field("action"), `${args.actionPrefix}\uffff`));
         }
         return predicates.length > 0 ? q.and(...predicates) : q.eq(q.field("action"), q.field("action"));
       })
