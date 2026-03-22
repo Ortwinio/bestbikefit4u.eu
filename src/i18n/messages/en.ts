@@ -327,6 +327,7 @@ const en = {
     },
     nav: {
       dashboard: "Dashboard",
+      feedback: "Feedback",
       newFitSession: "New Fit Session",
       newBike: "New Bike",
       bikeFitting: "Bike Fitting",
@@ -1156,6 +1157,43 @@ const en = {
           confirmBody: "This will replace your current profile photo with the one from your Strava account.",
           confirm: "Use Strava photo",
           cancel: "Keep current",
+        },
+        bikeImport: {
+          title: "Your Strava bikes",
+          description:
+            "Review the bikes Strava exposes, select the ones you want to bring into your local library, and confirm any ambiguous bike types after import.",
+          loading: "Loading Strava bike candidates...",
+          blockedTitle: "Strava bike import is blocked",
+          blockedDescription:
+            "The current backend only exposes Strava connection status and photo sync. The gear summary and bike import contracts needed for this flow are not available yet.",
+          backendBlocked:
+            "Missing backend support: a Strava gear summary query, an import action, and a bike identity field for exact already-imported detection.",
+          parseError:
+            "The stored Strava payload could not be parsed as bike import data.",
+          emptyTitle: "No Strava bike candidates available",
+          emptyDescription:
+            "No importable bike candidates were found in the current Strava payload.",
+          emptySelection: "Select at least one bike to import.",
+          selectionSummary: "{count} selected",
+          alreadyAdded: "Already added",
+          primary: "Primary",
+          typeConfirmationNeeded: "Type confirmation",
+          importButton: "Import bikes",
+          importButtonOne: "Import 1 bike",
+          importButtonMany: "Import {count} bikes",
+          successOne: "Imported {count} bike from Strava.",
+          successMany: "Imported {count} bikes from Strava.",
+          failed: "Could not import bikes from Strava. Please try again.",
+          resetSelection: "Reset selection",
+          postImportHint:
+            "Bikes with an ambiguous type will open a confirmation dialog after the initial import step.",
+          typeWizardTitle: "Confirm bike type",
+          typeWizardDescription:
+            "Strava flagged {name} as ambiguous. Choose the closest bike type before it is added to your library.",
+          typeWizardFallback: "Type details unavailable",
+          typeWizardPrompt: "Choose the bike type",
+          typeWizardCancel: "Cancel",
+          typeWizardSave: "Save and continue",
         },
         callback: {
           connected: "Strava connected successfully.",

@@ -328,6 +328,7 @@ const nl = {
     },
     nav: {
       dashboard: "Dashboard",
+      feedback: "Feedback",
       newFitSession: "Nieuwe fit-sessie",
       newBike: "Nieuwe fiets",
       bikeFitting: "Fietsafstelling",
@@ -1164,6 +1165,43 @@ const nl = {
           confirmBody: "Dit vervangt je huidige profielfoto door die van je Strava-account.",
           confirm: "Strava-foto gebruiken",
           cancel: "Huidige behouden",
+        },
+        bikeImport: {
+          title: "Jouw Strava-fietsen",
+          description:
+            "Bekijk de fietsen die Strava beschikbaar maakt, selecteer wat je lokaal wilt toevoegen en bevestig ambiguë fietstypes na de importstap.",
+          loading: "Strava-fietsen laden...",
+          blockedTitle: "Strava-fietsimport is geblokkeerd",
+          blockedDescription:
+            "De huidige backend geeft alleen Strava-verbinding en foto-sync terug. De gear-summary en import-contracten die deze flow nodig heeft zijn nog niet beschikbaar.",
+          backendBlocked:
+            "Ontbrekende backendondersteuning: een Strava gear-summary query, een importactie en een fiets-identificatieveld voor exacte detectie van reeds geïmporteerde fietsen.",
+          parseError:
+            "De opgeslagen Strava-payload kon niet worden gelezen als fietsimportdata.",
+          emptyTitle: "Geen Strava-fietskandidaten beschikbaar",
+          emptyDescription:
+            "Er zijn geen importeerbare fietskandidaten gevonden in de huidige Strava-payload.",
+          emptySelection: "Selecteer ten minste één fiets om te importeren.",
+          selectionSummary: "{count} geselecteerd",
+          alreadyAdded: "Al toegevoegd",
+          primary: "Primair",
+          typeConfirmationNeeded: "Typebevestiging",
+          importButton: "Fietsen importeren",
+          importButtonOne: "1 fiets importeren",
+          importButtonMany: "{count} fietsen importeren",
+          successOne: "{count} fiets geïmporteerd vanuit Strava.",
+          successMany: "{count} fietsen geïmporteerd vanuit Strava.",
+          failed: "Kon fietsen niet importeren vanuit Strava. Probeer het opnieuw.",
+          resetSelection: "Selectie resetten",
+          postImportHint:
+            "Fietsen met een ambigu type openen na de eerste importstap een bevestigingsdialoog.",
+          typeWizardTitle: "Fietstype bevestigen",
+          typeWizardDescription:
+            "Strava markeerde {name} als ambigu. Kies het meest passende fietstype voordat het aan je bibliotheek wordt toegevoegd.",
+          typeWizardFallback: "Typedetails niet beschikbaar",
+          typeWizardPrompt: "Kies het fietstype",
+          typeWizardCancel: "Annuleren",
+          typeWizardSave: "Opslaan en doorgaan",
         },
         callback: {
           connected: "Strava succesvol verbonden.",

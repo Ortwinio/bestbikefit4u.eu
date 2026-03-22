@@ -13,6 +13,7 @@ import {
   EmptyState,
   LoadingState,
 } from "@/components/ui";
+import { DashboardMessageSurface } from "@/components/dashboard-messages";
 import {
   BikeGarageRow,
   buildLatestFitByBike,
@@ -60,6 +61,8 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      <DashboardMessageSurface showBanners={false} showModal={false} />
+
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">{messages.home.title}</h1>

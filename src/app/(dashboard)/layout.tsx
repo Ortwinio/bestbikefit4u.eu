@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useConvexAuth } from "convex/react";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { Button, LoadingState } from "@/components/ui";
+import { DashboardMessageSurface } from "@/components/dashboard-messages";
+import { FeedbackDialog, FeedbackFloatingButton } from "@/components/feedback";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import { BRAND } from "@/config/brand";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -19,6 +21,7 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
   const { isLoading, isAuthenticated } = useConvexAuth();
   const { locale, messages, languageSwitchLabels } = useDashboardMessages();
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
@@ -88,6 +91,7 @@ export default function DashboardLayout({
             <div className="space-y-1">
               {[
                 { href: "/dashboard", label: messages.nav.dashboard },
+                { href: "/feedback", label: messages.nav.feedback },
                 { href: "/profile", label: messages.nav.profile },
                 { href: "/bikes", label: messages.nav.myBikes },
                 { href: "/bikes/new", label: messages.nav.newBike },
@@ -131,9 +135,24 @@ export default function DashboardLayout({
 
       <div className="md:pl-64">
         <main id="main-content" tabIndex={-1} className="p-4 sm:p-6 md:p-8">
+          <DashboardMessageSurface
+            showHomeCards={false}
+            showModal={false}
+            className="mb-6"
+          />
           {children}
         </main>
       </div>
+
+      <FeedbackFloatingButton
+        onClick={() => setIsFeedbackDialogOpen(true)}
+        label={messages.nav.feedback}
+      />
+      <FeedbackDialog
+        open={isFeedbackDialogOpen}
+        onClose={() => setIsFeedbackDialogOpen(false)}
+      />
+      <DashboardMessageSurface showBanners={false} showHomeCards={false} />
     </div>
   );
 }

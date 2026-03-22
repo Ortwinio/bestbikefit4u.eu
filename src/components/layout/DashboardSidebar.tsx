@@ -19,6 +19,7 @@ import {
   Gauge,
   ClipboardList,
   PlusCircle,
+  MessageSquareMore,
 } from "lucide-react";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { Button } from "@/components/ui";
@@ -37,6 +38,7 @@ export function DashboardSidebar() {
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
   const navigation = [
     { name: messages.nav.dashboard, href: "/dashboard", icon: LayoutDashboard },
+    { name: messages.nav.feedback, href: "/feedback", icon: MessageSquareMore },
     { name: messages.nav.profile, href: "/profile", icon: User },
     { name: messages.nav.myBikes, href: "/bikes", icon: Bike },
     { name: messages.nav.newBike, href: "/bikes/new", icon: PlusCircle },

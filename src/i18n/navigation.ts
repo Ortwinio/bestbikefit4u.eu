@@ -71,7 +71,16 @@ export function isBypassedPathname(pathname: string): boolean {
 
 export function isProtectedAppPath(pathname: string): boolean {
   const internalPathname = stripLocalePrefix(pathname);
-  const protectedRoots = ["/dashboard", "/fit", "/bikes", "/profile", "/settings", "/fit-history", "/pressure-calculator"] as const;
+  const protectedRoots = [
+    "/dashboard",
+    "/fit",
+    "/bikes",
+    "/profile",
+    "/settings",
+    "/fit-history",
+    "/pressure-calculator",
+    "/feedback",
+  ] as const;
 
   return protectedRoots.some(
     (root) =>

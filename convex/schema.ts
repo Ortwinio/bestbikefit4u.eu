@@ -224,6 +224,109 @@ export default defineSchema({
     ),
     bikeWeightKg: v.optional(v.number()),
     photoUrl: v.optional(v.string()),
+    source: v.optional(
+      v.union(
+        v.literal("manual"),
+        v.literal("strava"),
+        v.literal("admin_import")
+      )
+    ),
+    stravaGearId: v.optional(v.string()),
+    stravaPrimary: v.optional(v.boolean()),
+    bikeTypeSource: v.optional(
+      v.union(
+        v.literal("user"),
+        v.literal("strava_frame_type"),
+        v.literal("fallback_pending_confirmation"),
+        v.literal("inferred_from_usage"),
+        v.literal("admin_matched")
+      )
+    ),
+    needsTypeConfirmation: v.optional(v.boolean()),
+    lifetimeDistanceMeters: v.optional(v.number()),
+    recentDistance90dMeters: v.optional(v.number()),
+    rideCount90d: v.optional(v.number()),
+    avgRideDistance90dMeters: v.optional(v.number()),
+    avgSpeed90dKph: v.optional(v.number()),
+    avgElevationPer100Km90d: v.optional(v.number()),
+    trainerRideRatio90d: v.optional(v.number()),
+    dominantSportType: v.optional(v.string()),
+    lastRideAt: v.optional(v.number()),
+    inferredBikeRole: v.optional(
+      v.union(
+        v.literal("endurance_road"),
+        v.literal("race_road"),
+        v.literal("gravel"),
+        v.literal("mountain"),
+        v.literal("tt_triathlon"),
+        v.literal("training"),
+        v.literal("commute")
+      )
+    ),
+    lastStravaSync: v.optional(v.number()),
+    activitySummary: v.optional(
+      v.object({
+        source: v.literal("strava_v1_1"),
+        syncedAt: v.number(),
+        activityCount: v.number(),
+        rideCount: v.number(),
+        recentDistance90dMeters: v.optional(v.number()),
+        totalDistanceKm: v.number(),
+        totalMovingTimeSec: v.number(),
+        averageDurationSec: v.optional(v.number()),
+        trainerRatio: v.optional(v.number()),
+        commuteRatio: v.optional(v.number()),
+        climbingMetersPerKm: v.optional(v.number()),
+        dominantSportType: v.optional(v.string()),
+        averageSpeedMps: v.optional(v.number()),
+        maxSpeedMps: v.optional(v.number()),
+        totalElevationGainM: v.optional(v.number()),
+        lastActivityAt: v.optional(v.number()),
+        lastActivityName: v.optional(v.string()),
+        lastActivityType: v.optional(v.string()),
+        matchedGearCount: v.number(),
+        unmatchedGearCount: v.number(),
+        noGearCount: v.number(),
+        inferredBikeRole: v.optional(
+          v.union(
+            v.literal("endurance_road"),
+            v.literal("race_road"),
+            v.literal("gravel"),
+            v.literal("mountain"),
+            v.literal("tt_triathlon"),
+            v.literal("training"),
+            v.literal("commute")
+          )
+        ),
+        inferredRidingStyle: v.optional(
+          v.union(
+            v.literal("recreational"),
+            v.literal("fitness"),
+            v.literal("sportive"),
+            v.literal("racing"),
+            v.literal("commuting"),
+            v.literal("touring")
+          )
+        ),
+        inferredPrimaryGoal: v.optional(
+          v.union(
+            v.literal("comfort"),
+            v.literal("balanced"),
+            v.literal("performance"),
+            v.literal("aerodynamics")
+          )
+        ),
+        inferredDiscipline: v.optional(
+          v.union(
+            v.literal("road"),
+            v.literal("gravel"),
+            v.literal("mtb"),
+            v.literal("tt")
+          )
+        ),
+        inferenceConfidence: v.number(),
+      })
+    ),
     fitProfileId: v.optional(v.id("profiles")),
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
@@ -235,7 +338,44 @@ export default defineSchema({
     updatedAt: v.number(),
   })
     .index("by_user", ["userId"])
-    .index("by_geometry_record", ["geometryRecordId"]),
+    .index("by_geometry_record", ["geometryRecordId"])
+    .index("by_strava_gear", ["stravaGearId"]),
+
+  bikeActivities: defineTable({
+    userId: v.id("users"),
+    integrationId: v.id("integrations"),
+    stravaActivityId: v.string(),
+    bikeId: v.optional(v.id("bikes")),
+    gearId: v.optional(v.string()),
+    gearName: v.optional(v.string()),
+    gearBrand: v.optional(v.string()),
+    gearModel: v.optional(v.string()),
+    activityName: v.string(),
+    activityType: v.string(),
+    sportType: v.optional(v.string()),
+    startAt: v.number(),
+    distanceKm: v.number(),
+    movingTimeSec: v.number(),
+    elapsedTimeSec: v.optional(v.number()),
+    elevationGainM: v.optional(v.number()),
+    commute: v.optional(v.boolean()),
+    trainer: v.optional(v.boolean()),
+    manual: v.optional(v.boolean()),
+    matchStatus: v.union(
+      v.literal("matched_gear"),
+      v.literal("unmatched_gear"),
+      v.literal("no_gear")
+    ),
+    matchConfidence: v.number(),
+    matchReason: v.optional(v.string()),
+    importedAt: v.number(),
+    updatedAt: v.number(),
+    syncRunId: v.string(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_activity", ["userId", "stravaActivityId"])
+    .index("by_user_bike", ["userId", "bikeId"])
+    .index("by_user_start_at", ["userId", "startAt"]),
 
   bikeProfiles: defineTable({
     userId: v.id("users"),
@@ -968,6 +1108,8 @@ export default defineSchema({
     athleteStravaWeight: v.optional(v.number()),
     rideCount: v.optional(v.number()),
     totalDistanceKm: v.optional(v.number()),
+    stravaGearSummaryJson: v.optional(v.string()),
+    lastActivitySyncAt: v.optional(v.number()),
     syncErrorMessage: v.optional(v.string()),
     oauthState: v.optional(v.string()),
     oauthStateExpiresAt: v.optional(v.number()),
@@ -1184,6 +1326,15 @@ export default defineSchema({
     isInternal: v.boolean(),
     createdAt: v.number(),
   }).index("by_feedback_item", ["feedbackItemId"]),
+
+  feedback_upvotes: defineTable({
+    feedbackItemId: v.id("feedback_items"),
+    userId: v.id("users"),
+    createdAt: v.number(),
+  })
+    .index("by_feedback_item", ["feedbackItemId"])
+    .index("by_user", ["userId"])
+    .index("by_user_and_feedback", ["userId", "feedbackItemId"]),
 
   releases: defineTable({
     name: v.string(),
