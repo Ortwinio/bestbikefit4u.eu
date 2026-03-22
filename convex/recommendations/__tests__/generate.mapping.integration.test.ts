@@ -89,6 +89,76 @@ describe("recommendations.generate mapping integration", () => {
     expect(scheduledArgs.ambition).toBe(mapAmbition(session.primaryGoal));
   });
 
+  it("schedules advisory notes when bike usage context is available", async () => {
+    const session = {
+      _id: "session_1",
+      userId: "user_1",
+      profileId: "profile_1",
+      status: "questionnaire_complete",
+      bikeType: "road",
+      bikeId: "bike_1",
+      bikeProfileId: "bike_profile_1",
+      ridingStyle: "racing",
+      primaryGoal: "performance",
+      painPoints: [],
+    };
+
+    const profile = {
+      _id: "profile_1",
+      userId: "user_1",
+      heightCm: 180,
+      inseamCm: 83,
+      flexibilityScore: "good" as const,
+      coreStabilityScore: 4,
+    };
+
+    const bike = {
+      _id: "bike_1",
+      userId: "user_1",
+      bikeType: "road",
+      name: "Race bike",
+    };
+
+    const bikeProfile = {
+      _id: "bike_profile_1",
+      userId: "user_1",
+      bikeId: "bike_1",
+      name: "Performance",
+      profileType: "performance" as const,
+    };
+
+    const schedulerRunAfter = vi.fn(async () => undefined);
+
+    const db = {
+      get: vi.fn(async (id: string) => {
+        if (id === "session_1") return session;
+        if (id === "profile_1") return profile;
+        if (id === "bike_1") return bike;
+        if (id === "bike_profile_1") return bikeProfile;
+        return null;
+      }),
+      query: vi.fn(() => ({
+        withIndex: vi.fn(() => ({
+          collect: vi.fn(async () => []),
+        })),
+      })),
+      patch: vi.fn(async () => undefined),
+    };
+
+    const handler = (generate as unknown as { _handler: TestHandler })._handler;
+    await handler(
+      { db, scheduler: { runAfter: schedulerRunAfter } },
+      { sessionId: "session_1" }
+    );
+
+    expect(schedulerRunAfter).toHaveBeenCalledTimes(1);
+    const callArgs = schedulerRunAfter.mock.calls[0] as unknown as [number, unknown, Record<string, unknown>];
+    const [, , scheduledArgs] = callArgs;
+    expect(scheduledArgs.advisoryNotes).toEqual(
+      expect.arrayContaining([expect.stringContaining("Race bike")])
+    );
+  });
+
   it("returns early without scheduling when recommendation already exists", async () => {
     const session = {
       _id: "session_1",

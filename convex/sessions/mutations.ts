@@ -8,6 +8,7 @@ import {
   requireSessionOwner,
 } from "../lib/authz";
 import { validateNumberRange, validateShortString } from "../lib/validation";
+import { buildBikeRoleBias } from "../recommendations/bikeRoleBias";
 
 const WEEKLY_HOURS_RANGE = [0, 60] as const;
 const LONGEST_RIDE_KM_RANGE = [0, 600] as const;
@@ -82,9 +83,20 @@ export const create = mutation({
       if (args.bikeType && bike.bikeType !== args.bikeType) {
         throw new Error("Bike type must match selected bike");
       }
-      snapshotBikeType = bike.bikeType;
-      snapshotRidingStyle = bike.ridingStyle ?? snapshotRidingStyle;
-      snapshotPrimaryGoal = bike.primaryGoal ?? snapshotPrimaryGoal;
+      snapshotBikeType ??= bike.bikeType;
+      const bikeRoleBias = buildBikeRoleBias({
+        bikeName: bike.name,
+        bikeType: bike.bikeType,
+        discipline: bike.discipline,
+        ridingStyle: bike.ridingStyle,
+        primaryGoal: bike.primaryGoal,
+      });
+      snapshotRidingStyle ??=
+        (bike.ridingStyle as typeof snapshotRidingStyle) ??
+        (bikeRoleBias.suggestedRidingStyle as typeof snapshotRidingStyle);
+      snapshotPrimaryGoal ??=
+        (bike.primaryGoal as typeof snapshotPrimaryGoal) ??
+        (bikeRoleBias.suggestedPrimaryGoal as typeof snapshotPrimaryGoal);
     }
 
     if (args.bikeProfileId) {
@@ -100,9 +112,22 @@ export const create = mutation({
       }
 
       resolvedBikeId = bike._id;
-      snapshotBikeType = bike.bikeType;
-      snapshotRidingStyle = bike.ridingStyle ?? snapshotRidingStyle;
-      snapshotPrimaryGoal = bike.primaryGoal ?? snapshotPrimaryGoal;
+      snapshotBikeType ??= bike.bikeType;
+      const bikeRoleBias = buildBikeRoleBias({
+        bikeName: bike.name,
+        bikeType: bike.bikeType,
+        discipline: bike.discipline,
+        ridingStyle: bike.ridingStyle,
+        primaryGoal: bike.primaryGoal,
+        profileName: bikeProfile.name,
+        profileType: bikeProfile.profileType,
+      });
+      snapshotRidingStyle ??=
+        (bike.ridingStyle as typeof snapshotRidingStyle) ??
+        (bikeRoleBias.suggestedRidingStyle as typeof snapshotRidingStyle);
+      snapshotPrimaryGoal ??=
+        (bike.primaryGoal as typeof snapshotPrimaryGoal) ??
+        (bikeRoleBias.suggestedPrimaryGoal as typeof snapshotPrimaryGoal);
     }
 
     if (!snapshotBikeType || !snapshotRidingStyle || !snapshotPrimaryGoal) {

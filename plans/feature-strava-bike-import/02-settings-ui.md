@@ -1,5 +1,11 @@
 # Step 02 — Settings UI
 
+## Status
+
+Legacy overlap with `02-import-ui.md`.
+
+Use [02-import-ui.md](./02-import-ui.md) as the canonical implementation prompt for v1 UI work. Keep this file only as reference material unless it is explicitly consolidated later.
+
 ## Goal
 
 Add a "Import bikes from Strava" section to the Settings page that lists the user's Strava bikes, shows which are already imported, and lets them import selected ones in one click.

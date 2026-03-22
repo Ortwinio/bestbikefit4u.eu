@@ -2,6 +2,7 @@ import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { auth } from "./auth";
+import { fetchStravaAthlete } from "./integrations/strava";
 
 const http = httpRouter();
 
@@ -91,6 +92,14 @@ http.route({
     const athleteName = [athlete.firstname, athlete.lastname].filter(Boolean).join(" ");
     const avatarUrl = athlete.profile;
 
+    let cachedGearSummary: string | undefined;
+    try {
+      const athleteDetail = await fetchStravaAthlete(tokenData.access_token);
+      cachedGearSummary = JSON.stringify(athleteDetail.bikes);
+    } catch {
+      cachedGearSummary = undefined;
+    }
+
     // Persist the connection
     await ctx.runMutation(internal.integrations.mutations.upsertStravaIntegration, {
       userId: integration.userId,
@@ -103,6 +112,7 @@ http.route({
         athleteName,
         athleteAvatarUrl: avatarUrl || undefined,
         athleteStravaWeight: athlete.weight ?? undefined,
+        stravaGearSummaryJson: cachedGearSummary,
         oauthState: undefined,
         oauthStateExpiresAt: undefined,
         lastSyncAt: Date.now(),
@@ -116,6 +126,11 @@ http.route({
         { userId: integration.userId, imageUrl: avatarUrl }
       );
     }
+
+    await ctx.scheduler.runAfter(0, internal.integrations.actions.importRecentRides, {
+      userId: integration.userId,
+      windowDays: 90,
+    });
 
     return Response.redirect(`${siteUrl}/settings?strava=connected`);
   }),

@@ -73,6 +73,7 @@ export const generateFromData = internalAction({
         })
       )
     ),
+    advisoryNotes: v.optional(v.array(v.string())),
 
     // Optional bike geometry
     frameStackMm: v.optional(v.number()),
@@ -94,7 +95,10 @@ export const generateFromData = internalAction({
       frameReachMm: args.frameReachMm,
     });
 
-    const fitNotes = generateFitNotes(seed.fitOutputs, seed.fitInputs);
+    const fitNotes = mergeFitNotes(
+      args.advisoryNotes,
+      generateFitNotes(seed.fitOutputs, seed.fitInputs)
+    );
     const painPointSolutions =
       args.painPoints && args.painPoints.length > 0
         ? args.painPoints.map((pp) => ({
@@ -295,6 +299,26 @@ function generateFitNotes(
   }
 
   return notes;
+}
+
+function mergeFitNotes(
+  advisoryNotes: string[] | undefined,
+  generatedNotes: string[]
+): string[] {
+  const mergedNotes: string[] = [];
+  const seen = new Set<string>();
+
+  for (const note of [...(advisoryNotes ?? []), ...generatedNotes]) {
+    const normalized = note.trim();
+    if (!normalized || seen.has(normalized)) {
+      continue;
+    }
+
+    seen.add(normalized);
+    mergedNotes.push(normalized);
+  }
+
+  return mergedNotes;
 }
 
 function getPainCause(area: string): string {

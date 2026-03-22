@@ -4,6 +4,7 @@ import type { Id } from "../_generated/dataModel";
 import { internal } from "../_generated/api";
 import { requireSessionOwner, requireUserId } from "../lib/authz";
 import { mapBikeCategory, mapAmbition } from "./inputMapping";
+import { buildBikeRoleBias } from "./bikeRoleBias";
 
 /**
  * Generate recommendations for a completed session.
@@ -50,12 +51,67 @@ export const generate = mutation({
     let bikeType: string | undefined = session.bikeType;
     let frameStackMm: number | undefined;
     let frameReachMm: number | undefined;
+    let advisoryNotes: string[] | undefined;
+    let bike:
+      | {
+          _id: Id<"bikes">;
+          userId: Id<"users">;
+          name: string;
+          bikeType: string;
+          discipline?: string;
+          ridingStyle?: string;
+          primaryGoal?: string;
+          currentGeometry?: {
+            stackMm?: number;
+            reachMm?: number;
+          };
+        }
+      | null = null;
+    let bikeProfile:
+      | { name: string; profileType: string; bikeId: Id<"bikes">; userId: Id<"users"> }
+      | null = null;
+
     if (session.bikeId) {
-      const bike = await ctx.db.get(session.bikeId);
+      bike = await ctx.db.get(session.bikeId);
       if (bike && bike.userId === userId) {
         if (!bikeType) bikeType = bike.bikeType;
         frameStackMm = bike.currentGeometry?.stackMm ?? undefined;
         frameReachMm = bike.currentGeometry?.reachMm ?? undefined;
+      }
+    }
+
+    if (session.bikeProfileId) {
+      const loadedBikeProfile = await ctx.db.get(session.bikeProfileId);
+      if (
+        loadedBikeProfile &&
+        loadedBikeProfile.userId === userId &&
+        (!session.bikeId || loadedBikeProfile.bikeId === session.bikeId)
+      ) {
+        bikeProfile = loadedBikeProfile;
+      }
+    }
+
+    if (bike || bikeProfile) {
+      if (bike && bike.userId === userId) {
+        const bikeRoleBias = buildBikeRoleBias({
+          bikeName: bike.name,
+          bikeType: bike.bikeType,
+          discipline: bike.discipline,
+          ridingStyle: bike.ridingStyle,
+          primaryGoal: bike.primaryGoal,
+          profileName: bikeProfile?.name,
+          profileType: bikeProfile?.profileType,
+        });
+        advisoryNotes =
+          bikeRoleBias.source === "none" ? undefined : bikeRoleBias.advisoryNotes;
+      } else if (bikeProfile) {
+        const bikeRoleBias = buildBikeRoleBias({
+          profileName: bikeProfile.name,
+          profileType: bikeProfile.profileType,
+          bikeType,
+        });
+        advisoryNotes =
+          bikeRoleBias.source === "none" ? undefined : bikeRoleBias.advisoryNotes;
       }
     }
 
@@ -79,6 +135,7 @@ export const generate = mutation({
         coreStabilityScore: profile.coreStabilityScore,
         bikeCategory,
         ambition,
+        advisoryNotes,
         painPoints: session.painPoints,
         frameStackMm,
         frameReachMm,

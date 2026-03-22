@@ -2,256 +2,291 @@
 
 **Status:** Planning
 **Target:** v1
+**Owner:** Unassigned
+**Last updated:** 2026-03-22
+
+---
+
+## Plan Assessment
+
+### Strengths
+
+- Clear product goal: feedback submission, self-service tracking, voting, changelog, and admin-to-user messaging
+- Good scope boundary for v1
+- Reasonable phased breakdown across backend, submission UX, feedback hub, and dashboard message delivery
+
+### Quality gaps found
+
+1. **Contract drift across files**
+   - `README.md` refers to `markMessageRead` while `04-dashboard-messages.md` uses `dismissMessage` and `acknowledgeMessage`
+   - `README.md` references `/feedback/new`, while step 02 is modal-first and step 03 uses `/feedback` with an inline dialog
+   - Step 01 mentions `getPublicFeedbackComments`, but the implementation prompt uses `getPublicFeedbackDetail`
+
+2. **Backend prompt is underspecified and partly unsafe**
+   - Several example queries assume indexes/fields that may not exist, without a verification step
+   - `getFeatureBoard` fetches all upvotes and filters them in memory instead of querying by user directly
+   - Upvote toggling updates counters optimistically without calling out concurrency/consistency expectations
+   - Message receipt mutations are only partially described and do not clearly define idempotency rules
+
+3. **UI plan lacks explicit state and navigation decisions**
+   - The plan mixes “floating modal everywhere” with “submit page route” without deciding which is canonical
+   - Detail view behavior is vague: slide-over, sheet, dialog, or separate route are all mentioned interchangeably
+   - There is no explicit empty/loading/error behavior matrix for the major tabs
+
+4. **Acceptance criteria are too high-level**
+   - They do not define auth boundaries, visibility rules, vote toggle behavior, message receipt persistence, or release filtering precisely
+   - They do not include accessibility, mobile behavior, or regression guardrails
+
+5. **No test plan**
+   - There is no coverage map for schema, queries, mutations, component states, and route integration
 
 ---
 
 ## Goal
 
-Give users a first-class way to submit bugs and feature requests, track the status of their own submissions, upvote feature requests from other users, and see what's coming next and what's already been released.
+Give authenticated dashboard users a first-class way to:
+
+- submit bug reports, feature requests, and support questions
+- track their own submissions and visible admin replies
+- upvote open feature requests
+- read product changelog entries tied to shipped feedback items
+- receive targeted admin messages in the dashboard shell
 
 ---
 
-## Background
-
-The backend is already fully built:
-
-- `feedback_items` table — types: `bug`, `feature_request`, `support_case`; full status lifecycle from `new` through `released`
-- `feedback_comments` table — threaded replies with `isInternal` flag (admin-only comments are hidden from users)
-- `releases` table — status lifecycle `draft` → `rolling_out` → `live`; `releaseNotes` field
-- `release_items` — links releases to feedback items (feature requests that shipped in a release)
-- `dashboard_messages` — admin-to-user messages; `getMyMessages` query exists
-- `submitFeedback` mutation — public, already wired
-
-What does **not** exist yet: any user-facing UI for any of the above.
-
----
-
-## Scope
+## Product Scope
 
 ### In scope (v1)
 
-- **Feedback button** — persistent, accessible from anywhere in the dashboard (floating button or sidebar link)
-- **Submit form** — bug report and feature request forms; smart context capture (current page, linked fit session / bike)
-- **My submissions** — list of the user's own feedback items with live status badges
-- **Feature request board** — public list of open feature requests with upvote button; sorted by votes
-- **Changelog** — public-facing list of `live` and `rolling_out` releases with release notes
-- **Dashboard messages** — render admin messages (banners, inbox cards) in the dashboard layout
-- **i18n** — all strings in English and Dutch
+- Dashboard-only feedback entry points:
+  - persistent floating feedback button
+  - sidebar/mobile-nav link to `/feedback`
+- Submission dialog supporting:
+  - `bug`
+  - `feature_request`
+  - `support_case`
+- Context capture:
+  - current dashboard path
+  - linked fit session when relevant
+  - linked bike when relevant
+  - browser metadata for bug reports
+- `/feedback` hub page with three authenticated tabs:
+  - My Submissions
+  - Feature Requests
+  - Changelog
+- Feature-request voting with per-user toggle semantics
+- Feedback detail view for the reporting user
+- Dashboard message rendering:
+  - banners
+  - dashboard home cards
+  - single modal-once experience
+- Full English and Dutch i18n coverage
 
 ### Out of scope (v1)
 
-- Threaded user replies on feedback items (admin can reply; user sees it, but can't reply back)
-- Email notifications when status changes
-- Filtering / search on the feature board
-- Voting on bugs (vote = `feature_request` only)
-- Rich text / attachments in submissions
+- User replies back into feedback threads
+- Email notifications
+- File attachments
+- Search/filtering beyond default sorting
+- Public unauthenticated feedback board/changelog
+- Moderation tooling changes beyond user-facing receipt/dismiss flows
+
+---
+
+## Canonical UX Decisions
+
+- **Single canonical submission flow:** modal dialog launched from the floating button and from `/feedback`
+- **No `/feedback/new` route in v1**
+- **Canonical detail presentation:** inline detail sheet/dialog opened from My Submissions
+- **Authenticated only:** all feedback, board, changelog, and message UI lives inside `(dashboard)`
+
+---
+
+## Existing Backend Assumptions To Verify In Step 01
+
+Before implementation, verify the actual schema, indexes, and exported server functions for:
+
+- `feedback_items`
+- `feedback_comments`
+- `releases`
+- `release_items`
+- `dashboard_messages`
+- `message_receipts`
+- `message_targets`
+- existing feedback submission mutation
+- existing current-user message query
+
+If existing indexes do not support the planned access patterns, Step 01 must add the minimum required indexes before implementing queries.
+
+---
+
+## Required Backend Additions
+
+### New table
+
+`feedback_upvotes`
+
+Purpose:
+- enforce one vote per user per feature request
+- support toggle behavior
+- avoid storing denormalized voter IDs on the feedback item
+
+### Required queries
+
+- `feedback.queries.getMyFeedback`
+  - authenticated user only
+  - returns the user’s own items ordered by newest first
+  - includes visible comment count and linked release summary when applicable
+
+- `feedback.queries.getFeatureBoard`
+  - authenticated user only
+  - returns only open feature requests
+  - includes `hasUpvoted` for the current user
+  - sorted by `upvoteCount desc`, then `updatedAt desc`
+
+- `feedback.queries.getPublicFeedbackDetail`
+  - authenticated reporter only
+  - returns one owned feedback item
+  - includes only non-internal comments
+  - includes linked release summary if present
+
+- `releases.queries.getPublicReleases`
+  - authenticated user only
+  - returns only `rolling_out` and `live` releases
+  - excludes internal releases
+  - includes linked shipped feedback items of type `feature_request`
+
+### Required mutations
+
+- `feedback.mutations.upvoteFeedbackItem`
+  - feature requests only
+  - toggles vote on/off
+  - idempotent for repeated clicks
+  - keeps `upvoteCount` consistent with `feedback_upvotes`
+
+- `messages.mutations.dismissMessage`
+  - records a dismiss/read-style receipt for dismissible banners/cards
+  - idempotent
+
+- `messages.mutations.acknowledgeMessage`
+  - records one-time modal acknowledgement
+  - idempotent
+
+---
+
+## User-Facing Data Rules
+
+### Visible feedback statuses
+
+| Internal status | User label | Visible in My Submissions | Visible on Feature Board |
+|---|---|---:|---:|
+| `new` | Received | Yes | Yes |
+| `triaged` | Under review | Yes | Yes |
+| `needs_info` | Needs info | Yes | Yes |
+| `planned` | Planned | Yes | Yes |
+| `in_progress` | In progress | Yes | Yes |
+| `in_qa` | Testing | Yes | Yes |
+| `released` | Released | Yes | No |
+| `closed` | Closed | Yes | No |
+| `declined` | Not planned | Yes | No |
+
+### Visible comments
+
+- Only `feedback_comments.isInternal = false`
+- Only for the reporting user in v1
+
+### Visible releases
+
+- `status in {"rolling_out", "live"}`
+- `type !== "internal"`
 
 ---
 
 ## Routes
 
-```
-/feedback                    → tabbed page: My Submissions | Feature Board | Changelog
-/feedback/new                → submission form (type pre-selectable via ?type=bug|feature_request)
+```text
+/feedback
+  tab=mine         My submissions
+  tab=board        Feature requests
+  tab=changelog    Changelog
 ```
 
-The Changelog and Feature Board tabs are public within the dashboard (any authenticated user).
+No standalone create route in v1.
 
 ---
 
-## Backend additions needed
+## Implementation Sequence
 
-All tables exist. The following queries and mutations are missing:
-
-| What | Where | Notes |
+| Step | File | Outcome |
 |---|---|---|
-| `getMyFeedback` query | `convex/feedback/queries.ts` | User's own items, ordered by `createdAt` desc |
-| `getFeatureBoard` query | `convex/feedback/queries.ts` | Public feature requests with `status ∈ {new, triaged, planned, in_progress}`, sorted by `upvoteCount` desc |
-| `getPublicReleases` query | `convex/releases/queries.ts` | Releases with `status ∈ {rolling_out, live}`, ordered by `liveAt` desc; includes linked feedback items |
-| `upvoteFeedbackItem` mutation | `convex/feedback/mutations.ts` | Increments `upvoteCount`; idempotent per user (needs `feedback_upvotes` join table or a user-vote field) |
-| `getPublicFeedbackComments` query | `convex/feedback/queries.ts` | Non-internal comments on a feedback item; for "admin replied" thread |
-
-### Upvote idempotency
-
-Add a new table `feedback_upvotes`:
-```ts
-feedback_upvotes: defineTable({
-  feedbackItemId: v.id("feedback_items"),
-  userId: v.id("users"),
-  createdAt: v.number(),
-})
-  .index("by_item", ["feedbackItemId"])
-  .index("by_user_item", ["userId", "feedbackItemId"])
-```
-
-The `upvoteFeedbackItem` mutation checks `by_user_item` before incrementing `upvoteCount`. A second call from the same user removes their vote (toggle).
+| 01 | `01-backend.md` | Schema/index verification, vote table, user-facing queries, receipt mutations |
+| 02 | `02-feedback-form.md` | Feedback dialog, validation, floating trigger, context capture, i18n |
+| 03 | `03-feedback-page.md` | `/feedback` page, tabs, detail sheet, nav integration |
+| 04 | `04-dashboard-messages.md` | Banner/card/modal delivery, dismiss/acknowledge behavior |
 
 ---
 
-## Data visible to users
+## Acceptance Criteria
 
-### Feedback item status labels
+### Submission flow
 
-| Internal status | User-facing label |
-|---|---|
-| `new` | Received |
-| `triaged` | Under review |
-| `needs_info` | We need more info |
-| `planned` | Planned |
-| `in_progress` | In progress |
-| `in_qa` | Testing |
-| `released` | Released |
-| `closed` | Closed |
-| `declined` | Not planned |
+- [ ] An authenticated dashboard user can open the feedback dialog from any dashboard page via a persistent floating button.
+- [ ] The dialog supports `bug`, `feature_request`, and `support_case`.
+- [ ] Required fields are validated before submission.
+- [ ] Bug reports capture current path and browser metadata.
+- [ ] Session and bike context are pre-filled when available from the current page state.
+- [ ] Successful submission transitions to a confirmation state without leaving the current page.
+- [ ] Reopening the dialog starts from a clean state unless an explicit default type is passed.
 
-### Releases visible to users
+### Feedback hub
 
-Only `status = "rolling_out"` or `status = "live"` releases are shown. Releases of `type = "internal"` are hidden from users.
+- [ ] `/feedback` is reachable from the dashboard sidebar and mobile navigation.
+- [ ] My Submissions shows only the authenticated user’s own feedback items.
+- [ ] My Submissions maps internal statuses to the agreed user-facing labels.
+- [ ] Selecting a submission reveals its full detail and only non-internal admin replies.
+- [ ] Released submissions show linked release metadata when available.
 
-### Comments visible to users
+### Feature board
 
-Only `feedback_comments` with `isInternal = false` are shown. These represent admin replies or status update notes written for the reporter.
+- [ ] The Feature Requests tab shows only open feature requests.
+- [ ] Items are sorted by `upvoteCount desc`, then `updatedAt desc`.
+- [ ] The current user sees whether they have upvoted each item.
+- [ ] Clicking vote once adds a vote; clicking again removes it.
+- [ ] Vote state persists after reload.
 
----
+### Changelog
 
-## Dashboard messages integration
+- [ ] The Changelog tab shows only `rolling_out` and `live` releases.
+- [ ] Internal releases are excluded.
+- [ ] Each release renders release notes and linked shipped feature-request items.
 
-The `getMyMessages` query already exists. It needs to be wired into the dashboard layout so messages appear:
+### Dashboard messages
 
-- **`banner`** type → sticky bar at the top of the main content area
-- **`inbox_card`** type → card in a notification area on the dashboard home page
-- **`release_announcement`** type → highlighted card on the dashboard home page or the Changelog tab
-- **`modal`** type → shown once on next login (dismissed on close, suppressed after)
+- [ ] Dismissible banners render across dashboard pages and persist dismissal.
+- [ ] Sticky/safety banners render without dismiss controls.
+- [ ] Dashboard home cards render in the home page only.
+- [ ] A modal message is shown once until acknowledged.
+- [ ] Dismissed or acknowledged messages do not reappear after reload.
 
-Messages require a `markMessageRead` / `dismissMessage` mutation to record receipts.
+### Cross-cutting quality
 
----
-
-## UI layout
-
-### `/feedback` page — tabbed
-
-```
-┌── My Submissions ── Feature Requests ── Changelog ──┐
-│                                                      │
-│  [+ Submit feedback]                  (button, top right)
-└──────────────────────────────────────────────────────┘
-```
-
-### My Submissions tab
-
-```
-┌─────────────────────────────────────────────────────┐
-│  🐛 Dashboard crashes on Safari         [Received]  │
-│  2 days ago · Bug                                   │
-├─────────────────────────────────────────────────────┤
-│  ✨ Import bikes from Strava           [Released ✓] │
-│  3 weeks ago · Feature request                      │
-│  Released in: v1.4 Strava Integration               │
-└─────────────────────────────────────────────────────┘
-```
-
-Clicking an item opens a slide-over or detail page showing:
-- Full description
-- Current status + status history (if admin has left comments)
-- Admin replies (non-internal comments only)
-
-### Feature Requests tab
-
-```
-┌─────────────────────────────────────────────────────┐
-│  ▲ 47   Import bikes from Strava          [Planned] │
-│  ▲ 23   Dark mode for fit results      [In progress]│
-│  ▲ 12   Export fit results to PDF        [Received] │
-│  ▲  8   Zwift integration               [Received]  │
-└─────────────────────────────────────────────────────┘
-```
-
-Upvote button: filled/highlighted if the user has already voted. Toggle on click.
-
-### Changelog tab
-
-```
-┌─────────────────────────────────────────────────────┐
-│  v1.4 — Strava Integration           [Live] Mar 2026│
-│  Connect your Strava account to import bikes and    │
-│  sync your riding profile...                        │
-│  Ships: Import bikes from Strava  ✓                 │
-│         Strava profile photo import  ✓              │
-├─────────────────────────────────────────────────────┤
-│  v1.3 — Geometry Library             [Live] Jan 2026│
-│  ...                                                │
-└─────────────────────────────────────────────────────┘
-```
-
-### Feedback submission form
-
-Step 1 — choose type:
-- Bug report
-- Feature request
-- Support question
-
-Step 2 — form fields (vary by type):
-
-**Bug report:**
-- Title (required)
-- What happened? (required)
-- What did you expect to happen?
-- Page/feature affected (pre-filled from `window.location.pathname`)
-- Link to fit session (optional — if on a fit results page, pre-fill)
-
-**Feature request:**
-- Title (required)
-- Describe the feature (required)
-- Why would this help your fitting? (optional)
-
-**Support question:**
-- Subject (required)
-- Question (required)
-
-Step 3 — confirmation screen with link to My Submissions.
-
-### Floating feedback button
-
-A fixed `?` or `💬` button in the bottom-right corner of every dashboard page. Opens the submission form modal without navigating away.
+- [ ] All new UI strings are present in English and Dutch.
+- [ ] New UI follows the existing Prototyper UI/tokenized styling approach.
+- [ ] Keyboard and screen-reader access is preserved for dialog, tabs, buttons, and dismiss controls.
+- [ ] `npm run typecheck` passes.
+- [ ] Relevant unit/integration tests from `TESTPLAN.md` are implemented and passing.
 
 ---
 
-## Navigation
+## Delivery Risks
 
-Add to the sidebar and mobile nav:
-
-```
-Feedback & changelog       (link to /feedback)
-```
-
-Place it between Settings and Sign out.
+- Schema/index drift versus plan assumptions
+- Receipt semantics may already exist under different names in `messages`
+- Optimistic voting UI can drift if the mutation contract is not explicit
+- Modal delivery can become noisy if message targeting and acknowledgement are not carefully scoped
 
 ---
 
-## Implementation prompts
+## Test Plan
 
-| # | File | What it implements |
-|---|---|---|
-| 01 | `01-backend.md` | Schema addition (`feedback_upvotes`), all missing queries and mutations |
-| 02 | `02-feedback-form.md` | Submission form component, floating feedback button, i18n |
-| 03 | `03-feedback-page.md` | `/feedback` tabbed page: My Submissions, Feature Board, Changelog |
-| 04 | `04-dashboard-messages.md` | Dashboard message rendering (banners, inbox cards, modals), dismiss/read mutations |
-
----
-
-## Acceptance criteria
-
-- [ ] User can submit a bug report from any dashboard page via the floating button
-- [ ] User can submit a feature request from any dashboard page
-- [ ] Submission pre-fills page path and links to a fit session when relevant
-- [ ] My Submissions shows all the user's items with correct status labels
-- [ ] Feature board shows all open feature requests sorted by upvote count
-- [ ] Upvoting is idempotent — clicking twice removes the vote
-- [ ] Changelog shows all `live` and `rolling_out` releases with release notes
-- [ ] Released feature requests show which release they shipped in
-- [ ] Admin replies (non-internal comments) are visible to the reporter
-- [ ] Dashboard messages render in the layout (banners, inbox cards, modals)
-- [ ] Sidebar and mobile nav include the Feedback link
-- [ ] i18n strings complete in English and Dutch
-- [ ] `npm run typecheck` passes
+See [TESTPLAN.md](/Users/ortwinverreck/Developer/bestbikefit4u/plans/feature-user-feedback-portal/TESTPLAN.md).

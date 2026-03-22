@@ -1,209 +1,88 @@
-# Step 02 — Feedback Form & Floating Button
+# Step 02 — Feedback Dialog, Validation, and Floating Entry Point
 
 ## Goal
 
-Build the feedback submission form and a floating button that opens it from anywhere in the dashboard. The form adapts its fields to the submission type (bug / feature request / support).
+Build a dashboard-wide submission experience that is modal-first, type-safe, tokenized, and reusable from multiple entry points.
 
 ---
 
-## Pre-requisites
+## Deliverables
 
-- Step 01 complete: `submitFeedback` mutation already exists in `convex/feedback/mutations.ts`
-- Prototyper UI `AccessibleDialog`, `Input`, `Textarea`, `Button`, `RadioGroup`/`Selectable` available
+### 1. `FeedbackDialog`
 
----
+Create a controlled dialog component in `src/components/feedback/FeedbackDialog.tsx`.
 
-## 1. Component: `FeedbackDialog`
-
-Create `src/components/feedback/FeedbackDialog.tsx`.
-
-This is a controlled dialog that can be opened from the floating button or from a direct link with a pre-set type.
-
-### Props
+Required props:
 
 ```ts
 interface FeedbackDialogProps {
   open: boolean;
   onClose: () => void;
   defaultType?: "bug" | "feature_request" | "support_case";
-  // Context pre-fill
   linkedSessionId?: Id<"fitSessions">;
   linkedBikeId?: Id<"bikes">;
+  pagePath?: string;
 }
 ```
 
-### Step 1 — Type selector
+Behavior requirements:
 
-Show three cards/buttons the user clicks:
+- type selector step unless `defaultType` is provided
+- form step with fields varying by type
+- confirmation step after success
+- local reset on close/reopen
+- loading and error states
 
-```
-┌──────────────────────────────────────────────────────┐
-│  What would you like to do?                          │
-│                                                      │
-│  🐛  Report a bug                                    │
-│  ✨  Request a feature                               │
-│  💬  Ask a support question                          │
-└──────────────────────────────────────────────────────┘
-```
+### 2. Validation contract
 
-If `defaultType` is set, skip step 1 and go directly to step 2.
+- required title/description fields by type
+- no submit while invalid or pending
+- user-facing inline validation messages
+- bug reports capture:
+  - current dashboard path
+  - browser metadata
+  - linked session/bike when present
 
-### Step 2 — Fields by type
-
-**Bug report fields:**
-- `title`: Input — "Short description of the problem" (required)
-- `actualResult`: Textarea — "What happened?" (required)
-- `expectedResult`: Textarea — "What did you expect?" (optional)
-- Page path: auto-filled from `window.location.pathname`, shown as read-only text
-- Linked session: shown if `linkedSessionId` is provided, as read-only badge
-- Browser info: auto-captured as JSON string (`navigator.userAgent`, viewport size)
-
-**Feature request fields:**
-- `title`: Input — "Feature title" (required)
-- `description`: Textarea — "Describe the feature you'd like" (required)
-- Optional prompt below: "Why would this improve your bike fit?" maps to `expectedResult`
-
-**Support question fields:**
-- `title`: Input — "Subject" (required)
-- `description`: Textarea — "Your question" (required)
-
-### Step 3 — Confirmation
-
-After successful submit:
-```
-✓ Thanks! We received your [bug report / feature request / question].
-  You can track its status in Feedback & Changelog.
-
-  [View my submissions]   [Close]
-```
-
-### State
-
-```ts
-const [step, setStep] = useState<"type" | "form" | "done">("type");
-const [type, setType] = useState<FeedbackType | null>(defaultType ?? null);
-const [isSubmitting, setIsSubmitting] = useState(false);
-const [error, setError] = useState<string | null>(null);
-```
-
-### Submit handler
-
-```ts
-const handleSubmit = async () => {
-  setIsSubmitting(true);
-  try {
-    await submitFeedback({
-      type: type!,
-      title,
-      description,
-      expectedResult: expectedResult || undefined,
-      actualResult: actualResult || undefined,
-      pagePath: window.location.pathname,
-      linkedSessionId,
-      linkedBikeId,
-      browserInfoJson: JSON.stringify({
-        userAgent: navigator.userAgent,
-        viewport: `${window.innerWidth}x${window.innerHeight}`,
-      }),
-    });
-    setStep("done");
-  } catch {
-    setError(messages.feedback.form.submitError);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-```
-
----
-
-## 2. Component: `FeedbackFloatingButton`
+### 3. Floating dashboard trigger
 
 Create `src/components/feedback/FeedbackFloatingButton.tsx`.
 
-A fixed button in the bottom-right corner of the dashboard:
+Requirements:
 
-```tsx
-<div className="fixed bottom-6 right-6 z-40">
-  <Button
-    onClick={() => setOpen(true)}
-    className="rounded-full shadow-lg"
-    aria-label={messages.feedback.floatingButton.aria}
-  >
-    <MessageSquarePlus className="h-4 w-4 mr-2" />
-    {messages.feedback.floatingButton.label}
-  </Button>
-  <FeedbackDialog open={open} onClose={() => setOpen(false)} />
-</div>
-```
+- visible on all dashboard pages
+- desktop and mobile safe positioning
+- accessible label
+- opens `FeedbackDialog`
+- uses tokenized styles via the existing shared button/dialog primitives
 
-Use `MessageSquarePlus` from `lucide-react`.
+### 4. Dashboard integration
 
-Add `FeedbackFloatingButton` to `src/app/(dashboard)/layout.tsx` — inside the main content wrapper but outside `<main>`, so it floats over all pages.
+Wire the floating trigger into `src/app/(dashboard)/layout.tsx`.
+
+### 5. i18n
+
+Add the complete `feedback` key set required by this step in both locale files.
 
 ---
 
-## 3. i18n strings
+## Design constraints
 
-Add a top-level `feedback` key to both `en.ts` and `nl.ts`:
-
-**`en.ts`:**
-
-```ts
-feedback: {
-  floatingButton: {
-    label: "Feedback",
-    aria: "Submit feedback or report a bug",
-  },
-  typeSelector: {
-    title: "What would you like to do?",
-    bug: "Report a bug",
-    bugDescription: "Something isn't working as expected",
-    feature: "Request a feature",
-    featureDescription: "Suggest an improvement or new capability",
-    support: "Ask a question",
-    supportDescription: "Get help with using BestBikeFit4U",
-  },
-  form: {
-    titleLabel: "Title",
-    titlePlaceholder: "Short description",
-    descriptionLabel: "Description",
-    actualResultLabel: "What happened?",
-    actualResultPlaceholder: "Describe what went wrong",
-    expectedResultLabel: "What did you expect?",
-    expectedResultPlaceholder: "Describe what should have happened",
-    featureWhyLabel: "Why would this help?",
-    featureWhyPlaceholder: "Optional — helps us understand the value",
-    pageLabel: "Page",
-    submit: "Submit",
-    back: "Back",
-    submitError: "Could not submit. Please try again.",
-  },
-  done: {
-    title: "Thanks for your feedback!",
-    body: "We've received your {type}. You can track its status in Feedback & Changelog.",
-    viewSubmissions: "View my submissions",
-    close: "Close",
-    typeBug: "bug report",
-    typeFeature: "feature request",
-    typeSupport: "support question",
-  },
-},
-```
-
-**`nl.ts`** (translate accordingly).
+- Use existing shared UI primitives; do not add bespoke modal/button systems
+- Do not introduce hard-coded blue/gray visual styling when tokenized classes exist
+- Use the existing dashboard locale/message infrastructure
 
 ---
 
 ## Acceptance criteria
 
-- [ ] Floating button is visible on all dashboard pages (desktop + mobile)
-- [ ] Clicking the button opens the type selector
-- [ ] Selecting a type shows the correct form fields
-- [ ] Form validates required fields before submitting
-- [ ] Page path and browser info are auto-captured
-- [ ] Linked session/bike are pre-filled when provided
-- [ ] Successful submit shows the confirmation screen
-- [ ] "View my submissions" link navigates to `/feedback`
-- [ ] Dialog closes cleanly and resets state on re-open
+- [ ] Floating trigger appears on every dashboard page
+- [ ] Dialog opens and closes correctly from the trigger
+- [ ] Default type skips the type-selection step
+- [ ] Required fields validate per submission type
+- [ ] Path and browser metadata are captured for bug reports
+- [ ] Session and bike context render when provided
+- [ ] Successful submission shows confirmation state
+- [ ] Reopening the dialog resets prior form state
+- [ ] All strings are localized in English and Dutch
 - [ ] `npm run typecheck` passes
+

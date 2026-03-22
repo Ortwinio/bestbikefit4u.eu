@@ -1,7 +1,50 @@
 # Strava Bike Import & Usage Enrichment — Feature Plan
 
-**Status:** Planning
+**Status:** Implemented
 **Target:** v1 = bike import foundation | v1.1 = activity enrichment | v2 = fit intelligence
+
+---
+
+## Plan Audit
+
+### Assessment
+
+The original plan is directionally good, but not yet strong enough to execute without ambiguity.
+
+Main findings:
+- The plan has overlapping step definitions: `02-import-ui.md` and `02-settings-ui.md` describe the same surface with different assumptions.
+- The riskier parts of the feature are under-specified: token refresh failure, partial import failure, rate limits, idempotency, and protection of user-corrected fields.
+- Acceptance criteria are too shallow. They prove UI presence, but not sync correctness.
+- The activity-import plan does not clearly define behavior for activities without `gear_id`, unmatched `gear_id`, or repeated incremental sync.
+- v2 fit intelligence lacks a requirement that recommendation changes stay bounded and explainable.
+- There was no real test plan.
+
+### Improvements Applied
+
+- Added explicit delivery rules and source-of-truth rules.
+- Clarified canonical step ownership: `02-import-ui.md` is the primary v1 UI prompt; `02-settings-ui.md` is legacy overlap.
+- Rewrote acceptance criteria to validate correctness, idempotency, and safety.
+- Added a dedicated test plan at [05-test-plan.md](./05-test-plan.md).
+
+### Implementation Status
+
+- v1 shipped:
+  - Strava token refresh is server-side.
+  - athlete bike summary is cached in `integrations.stravaGearSummaryJson`.
+  - imported bikes are idempotent on `stravaGearId`.
+  - unknown `frame_type` now uses a safe provisional `hybrid` type with `bikeTypeSource = "fallback_pending_confirmation"` and `needsTypeConfirmation = true`, preserving the current app contract while forcing correction.
+- v1.1 shipped:
+  - recent Strava ride activities are normalized into `bikeActivities`.
+  - bikes receive usage summaries, inferred role, and activity summary metadata.
+- v2 shipped as advisory integration:
+  - fit start and recommendation generation consume bike-role advisory context.
+  - low-use reminder cron is wired through `convex/crons.ts`.
+
+### Verification Completed
+
+- `npm run typecheck`
+- `npx vitest run src/components/settings/StravaBikeImportSection.test.ts convex/integrations/__tests__/*.test.ts convex/recommendations/__tests__/bikeRoleBias.test.ts convex/recommendations/__tests__/actions.advisory.test.ts convex/recommendations/__tests__/generate.mapping.integration.test.ts convex/sessions/__tests__/create.contract.test.ts`
+- `npm run build:vercel`
 
 ---
 
@@ -15,6 +58,30 @@ When a user connects Strava, BestBikeFit4U should:
 4. Ask only for the data Strava cannot provide (frame size, model year, geometry, components, current setup)
 
 This reduces onboarding friction and gives the fit engine bike-specific context that manual entry rarely captures.
+
+---
+
+## Delivery Rules
+
+- All Strava writes must be idempotent.
+- User-entered bike fields always beat imported fields unless explicitly marked sync-owned.
+- Token refresh must happen server-side before Strava API calls.
+- Strava API failures must degrade gracefully:
+  - connect remains valid if bike fetch fails
+  - partial gear import failures surface itemized feedback
+  - rate-limit failures abort safely and tell the user to retry later
+- Activities without a resolvable bike may be stored, but must not pollute per-bike summaries.
+- Bike-role fit intelligence is advisory only. It may bias recommendation envelopes, but must never override measurement-driven logic.
+
+## Source Of Truth
+
+| Field / behavior | Source of truth |
+|---|---|
+| `stravaGearId`, `stravaPrimary`, lifetime distance | Strava sync-owned |
+| `bikeType` when `bikeTypeSource = "user"` | User-owned |
+| model year, frame size, geometry source | User-owned |
+| `inferredBikeRole`, recent usage stats | BestBikeFit4U derived |
+| final fit recommendation | Fit engine with imported usage as advisory input |
 
 ---
 
@@ -100,9 +167,9 @@ Key fields for bike enrichment:
 | 2                   | `cyclocross`     | `strava_frame_type`       |
 | 3                   | `road`           | `strava_frame_type`       |
 | 4                   | `tt_triathlon`   | `strava_frame_type`       |
-| null / unknown      | _(unset)_        | —                         |
+| null / unknown      | `hybrid` (provisional) | `fallback_pending_confirmation` |
 
-Unknown frame type → leave `bikeType` unset and prompt the user. Do not default to `road` in the database — that hides misclassifications.
+Unknown frame type → use a provisional `hybrid` type and set `needsTypeConfirmation = true`. This preserves the current bike/session contract while still surfacing the ambiguity to the user.
 
 ---
 
@@ -185,6 +252,13 @@ lastActivitySyncAt: v.optional(v.number()),     // for incremental activity impo
 - Activities: unique on `(userId, stravaActivityId)` — upsert on incremental sync
 - User-corrected fields (bikeType when `bikeTypeSource = "user"`) must never be overwritten by sync
 
+## Missing-Data Rules
+
+- Unknown `frame_type` must trigger user confirmation and must not silently default to `road`.
+- If one selected gear fetch fails, the other selected bikes still import successfully.
+- Activities without `gear_id` may be stored with no `bikeId`, but must not affect bike summaries.
+- Activities linked to a Strava `gear_id` that has not been imported must not be attached to the wrong bike.
+
 ---
 
 ## Product flow
@@ -213,31 +287,52 @@ lastActivitySyncAt: v.optional(v.number()),     // for incremental activity impo
 | # | File | What it implements |
 |---|---|---|
 | 01 | `01-schema-and-backend.md` | Schema additions (bikes, bikeActivities, integrations), token refresh helper, gear fetch action, idempotent bike upsert |
-| 02 | `02-import-ui.md` | Import review modal + post-import wizard in Settings; i18n en + nl |
+| 02 | `02-import-ui.md` | Canonical v1 import review UI + post-import wizard in Settings; i18n en + nl |
+| 02-legacy | `02-settings-ui.md` | Legacy overlap; reference only unless explicitly consolidated |
 | 03 | `03-activity-import.md` | Activity fetch action, pagination, bike linkage, per-bike usage summary mutations, bike role inference |
 | 04 | `04-fit-intelligence.md` | Feed bike role + usage profile into fit engine; terrain/load bias; low-use detection |
+| 05 | `05-test-plan.md` | Test strategy and release gates |
 
 ---
 
 ## Acceptance criteria
 
 ### v1
-- [ ] Bikes found on Strava are listed in the Settings import UI
-- [ ] Import creates records with name, brand, model, bikeType + bikeTypeSource, lifetime distance, stravaGearId
-- [ ] Already-imported bikes show "Already added" and are not duplicated
-- [ ] Unknown frame type leaves bikeType unset and prompts the user
-- [ ] Expired tokens are refreshed before every Strava call
-- [ ] Post-import wizard collects year, frame size, and geometry source
-- [ ] User-corrected bikeType sets `bikeTypeSource = "user"` and is never overwritten
+- [ ] Connected Strava users with bike data see an import section in Settings with clear imported vs. unimported state.
+- [ ] Import creates or updates bike records idempotently on `(userId, stravaGearId)` with:
+  - `source = "strava"`
+  - `stravaGearId`
+  - `stravaPrimary`
+  - lifetime distance
+  - `bikeType` only when Strava mapping is known
+  - correct `bikeTypeSource`
+- [ ] Re-running the same import does not create duplicate bikes.
+- [ ] Unknown `frame_type` leaves `bikeType` unset and triggers user confirmation instead of defaulting silently.
+- [ ] Expired or near-expiry tokens are refreshed before Strava API calls and refreshed credentials are persisted.
+- [ ] Partial gear-fetch failure does not invalidate the entire import; failed bikes are surfaced explicitly.
+- [ ] Post-import flow captures year, frame size, and geometry source.
+- [ ] User-corrected `bikeType` sets `bikeTypeSource = "user"` and survives later Strava sync.
+- [ ] Disconnecting Strava does not delete already imported local bikes.
 - [ ] `npm run typecheck` passes
 
 ### v1.1
-- [ ] User can trigger "Import recent rides" (last 90 / 180 days)
-- [ ] Activities are linked to the correct bike via `gear_id`
-- [ ] Per-bike stats show: ride count, recent distance, avg duration, last used
-- [ ] Bike role is inferred and surfaced on the bike detail page
-- [ ] Incremental sync only fetches new activities since `lastActivitySyncAt`
+- [ ] User can trigger recent-ride import for an explicit window (`90` or `180` days).
+- [ ] Activities are upserted idempotently on `(userId, stravaActivityId)`.
+- [ ] Activities with `gear_id` are linked to the correct imported bike.
+- [ ] Activities without a resolvable bike never corrupt per-bike summaries.
+- [ ] Per-bike stats include at least: ride count, recent distance, average duration, last used, trainer ratio, and dominant sport type.
+- [ ] Bike role is inferred, stored, and surfaced in the product UI.
+- [ ] Incremental sync only fetches newer activities since `lastActivitySyncAt`.
+- [ ] Pagination and rate-limit failure paths are handled safely.
 
 ### v2
-- [ ] Fit engine reads `inferredBikeRole` and `recentDistance90dMeters` from the bike record
-- [ ] Recommendations differ meaningfully between an endurance bike and a race bike for the same rider
+- [ ] Fit engine reads imported usage context from the selected bike record.
+- [ ] Recommendation envelopes differ meaningfully between at least endurance, race, and gravel roles for the same rider inputs.
+- [ ] Usage modifiers such as climbing load, indoor ratio, and low-use state affect guidance in bounded, explainable ways.
+- [ ] Low-use bike detection produces the intended dashboard message without duplicate spam.
+
+---
+
+## Validation
+
+The feature is not complete until the relevant release slice satisfies the test plan in [05-test-plan.md](./05-test-plan.md).

@@ -88,6 +88,7 @@ export const create = mutation({
       userId,
       name: args.name,
       bikeType: args.bikeType,
+      source: "manual",
       currentGeometry: args.currentGeometry,
       currentSetup: args.currentSetup,
       discipline: args.discipline,
@@ -140,6 +141,18 @@ export const update = mutation({
   args: {
     bikeId: v.id("bikes"),
     name: v.optional(v.string()),
+    bikeType: v.optional(
+      v.union(
+        v.literal("road"),
+        v.literal("gravel"),
+        v.literal("mountain"),
+        v.literal("hybrid"),
+        v.literal("tt_triathlon"),
+        v.literal("cyclocross"),
+        v.literal("touring"),
+        v.literal("city")
+      )
+    ),
     currentGeometry: v.optional(
       v.object({
         stackMm: v.optional(v.number()),
@@ -167,6 +180,16 @@ export const update = mutation({
     fitProfileId: v.optional(v.id("profiles")),
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
+    bikeTypeSource: v.optional(
+      v.union(
+        v.literal("user"),
+        v.literal("strava_frame_type"),
+        v.literal("fallback_pending_confirmation"),
+        v.literal("inferred_from_usage"),
+        v.literal("admin_matched")
+      )
+    ),
+    needsTypeConfirmation: v.optional(v.boolean()),
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -177,6 +200,7 @@ export const update = mutation({
     const { bike } = await requireBikeOwner(ctx, args.bikeId);
     const updates: Record<string, unknown> = { updatedAt: Date.now() };
     if (args.name !== undefined) updates.name = args.name;
+    if (args.bikeType !== undefined) updates.bikeType = args.bikeType;
     if (args.currentGeometry !== undefined)
       updates.currentGeometry = args.currentGeometry;
     if (args.currentSetup !== undefined)
@@ -189,14 +213,17 @@ export const update = mutation({
     if (args.fitProfileId !== undefined) updates.fitProfileId = args.fitProfileId;
     if (args.brand !== undefined) updates.brand = args.brand;
     if (args.model !== undefined) updates.model = args.model;
+    if (args.bikeTypeSource !== undefined) updates.bikeTypeSource = args.bikeTypeSource;
+    if (args.needsTypeConfirmation !== undefined)
+      updates.needsTypeConfirmation = args.needsTypeConfirmation;
     if (args.notes !== undefined) updates.notes = args.notes;
 
     await ctx.db.patch(args.bikeId, updates);
 
-    if (args.ridingStyle !== undefined) {
+    if (args.ridingStyle !== undefined || args.bikeType !== undefined) {
       const nextBike = {
-        bikeType: bike.bikeType,
-        ridingStyle: args.ridingStyle,
+        bikeType: args.bikeType ?? bike.bikeType,
+        ridingStyle: args.ridingStyle ?? bike.ridingStyle,
       };
       const defaults = getSystemDefaultBikeProfile(nextBike);
       const defaultProfile = await ctx.db

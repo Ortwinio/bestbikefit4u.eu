@@ -29,6 +29,7 @@ import { reportClientError } from "@/lib/telemetry";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { ArrowRight, AlertCircle } from "lucide-react";
+import { buildBikeRoleBias } from "../../../../convex/recommendations/bikeRoleBias";
 
 type RidingStyle =
   | "recreational"
@@ -93,24 +94,47 @@ export default function NewFitSessionPage() {
   const isLoadingBikes = bikes === undefined;
   const isLoadingBikeProfiles = selectedBikeId !== null && bikeProfiles === undefined;
   const selectedBike = bikes?.find((bike) => bike._id === selectedBikeId) || null;
+  const selectedBikeProfile =
+    bikeProfiles?.find((bikeProfile) => bikeProfile._id === selectedBikeProfileId) ??
+    null;
+  const selectedBikeRoleBias = selectedBike
+    ? buildBikeRoleBias({
+        bikeName: selectedBike.name,
+        bikeType: selectedBike.bikeType,
+        discipline: selectedBike.discipline,
+        ridingStyle: selectedBike.ridingStyle,
+        primaryGoal: selectedBike.primaryGoal,
+        profileName: selectedBikeProfile?.name,
+        profileType: selectedBikeProfile?.profileType,
+      })
+    : null;
   const effectiveBikeType = selectedBike?.bikeType ?? bikeType;
-  const effectiveRidingStyle = selectedBike?.ridingStyle ?? ridingStyle;
-  const effectiveRidingGoal = selectedBike?.primaryGoal ?? ridingGoal;
-  const bikeNeedsAttributes =
-    Boolean(selectedBike) &&
-    (!selectedBike?.ridingStyle || !selectedBike?.primaryGoal);
+  const effectiveRidingStyle =
+    selectedBike?.ridingStyle ??
+    ridingStyle ??
+    selectedBikeRoleBias?.suggestedRidingStyle ??
+    "";
+  const effectiveRidingGoal =
+    selectedBike?.primaryGoal ??
+    ridingGoal ??
+    selectedBikeRoleBias?.suggestedPrimaryGoal ??
+    "";
+  const visibleBikeRoleBias =
+    selectedBikeRoleBias?.source !== "none" ? selectedBikeRoleBias : null;
+  const bikeNeedsAttributes = Boolean(selectedBike) && (!effectiveRidingStyle || !effectiveRidingGoal);
   const isSelectedGoalAllowed =
     effectiveRidingGoal !== "aerodynamics" ||
     isAeroCompatibleBikeType(effectiveBikeType);
 
-  const canStart =
+  const canStart = Boolean(
     effectiveBikeType &&
-    effectiveRidingStyle &&
-    effectiveRidingGoal &&
-    !bikeNeedsAttributes &&
-    isSelectedGoalAllowed &&
-    hasProfile &&
-    !isCreating;
+      effectiveRidingStyle &&
+      effectiveRidingGoal &&
+      !bikeNeedsAttributes &&
+      isSelectedGoalAllowed &&
+      hasProfile &&
+      !isCreating
+  );
   const ridingStyles = [
     {
       value: "recreational" as const,
@@ -421,6 +445,39 @@ export default function NewFitSessionPage() {
         </Card>
       ) : null}
 
+      {selectedBike && visibleBikeRoleBias ? (
+        <Card variant="bordered" className="dashboard-card-surface mb-6">
+          <CardHeader>
+            <CardTitle>Imported bike usage context</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-lg border border-border bg-card p-4 text-sm text-foreground">
+              <p>{visibleBikeRoleBias.summary}</p>
+              <p className="mt-2 text-muted-foreground">
+                Confidence: {visibleBikeRoleBias.confidence}. This stays advisory; rider
+                measurements and explicit fit inputs still control the session.
+              </p>
+              {visibleBikeRoleBias.suggestedRidingStyle && visibleBikeRoleBias.suggestedPrimaryGoal ? (
+                <p className="mt-2 text-muted-foreground">
+                  Suggested bias:{" "}
+                  <span className="font-medium text-foreground">
+                    {messages.fit.ridingStyles[
+                      visibleBikeRoleBias.suggestedRidingStyle as RidingStyle
+                    ]?.label ?? visibleBikeRoleBias.suggestedRidingStyle}
+                  </span>{" "}
+                  /{" "}
+                  <span className="font-medium text-foreground">
+                    {messages.fit.goals[visibleBikeRoleBias.suggestedPrimaryGoal as PrimaryGoal]
+                      ?.label ?? visibleBikeRoleBias.suggestedPrimaryGoal}
+                  </span>
+                  .
+                </p>
+              ) : null}
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
+
       <Card variant="bordered" className="dashboard-card-surface mb-6">
         <CardHeader>
           <CardTitle>{messages.fit.sections.ridingStyle}</CardTitle>
@@ -435,6 +492,22 @@ export default function NewFitSessionPage() {
                     {messages.fit.ridingStyles[selectedBike.ridingStyle].label}
                   </span>
                   .
+                </>
+              ) : selectedBikeRoleBias?.suggestedRidingStyle ? (
+                <>
+                  Bike usage context suggests{" "}
+                  <span className="font-semibold">
+                    {messages.fit.ridingStyles[
+                      selectedBikeRoleBias.suggestedRidingStyle as RidingStyle
+                    ]?.label ?? selectedBikeRoleBias.suggestedRidingStyle}
+                  </span>
+                  . This is advisory and will be carried into the session if you continue.
+                  <Link
+                    href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)}
+                    className="ml-2 font-semibold text-primary hover:text-primary-dark"
+                  >
+                    {messages.fit.savedBikes.completeBikeSetup}
+                  </Link>
                 </>
               ) : (
                 <>
@@ -479,6 +552,21 @@ export default function NewFitSessionPage() {
                     {messages.fit.goals[selectedBike.primaryGoal].label}
                   </span>
                   .
+                </>
+              ) : selectedBikeRoleBias?.suggestedPrimaryGoal ? (
+                <>
+                  Bike usage context suggests{" "}
+                  <span className="font-semibold">
+                    {messages.fit.goals[selectedBikeRoleBias.suggestedPrimaryGoal as PrimaryGoal]
+                      ?.label ?? selectedBikeRoleBias.suggestedPrimaryGoal}
+                  </span>
+                  . This stays advisory and is folded into the start flow if you continue.
+                  <Link
+                    href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)}
+                    className="ml-2 font-semibold text-primary hover:text-primary-dark"
+                  >
+                    {messages.fit.savedBikes.completeBikeSetup}
+                  </Link>
                 </>
               ) : (
                 <>

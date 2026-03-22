@@ -16,6 +16,7 @@ type BikeDoc = {
   _id: string;
   userId: string;
   bikeType: string;
+  discipline?: string;
   ridingStyle?: string;
   primaryGoal?: string;
 } | null;
@@ -140,6 +141,34 @@ describe("sessions.create contract", () => {
         ridingStyle: "fitness",
         primaryGoal: "balanced",
         sourceType: "bike_profile_flow",
+      })
+    );
+  });
+
+  it("backfills riding context from bike usage when it is missing on the bike", async () => {
+    getAuthUserIdMock.mockResolvedValue("user_1");
+    const ctx = makeCtx({
+      profile: { _id: "profile_1", userId: "user_1" },
+      bike: {
+        _id: "bike_1",
+        userId: "user_1",
+        bikeType: "road",
+        discipline: "road",
+      },
+    });
+
+    const handler = (create as unknown as { _handler: TestHandler })._handler;
+    await handler(ctx, {
+      bikeType: "road",
+      bikeId: "bike_1",
+    });
+
+    expect(ctx.db.insert).toHaveBeenCalledWith(
+      "fitSessions",
+      expect.objectContaining({
+        bikeType: "road",
+        ridingStyle: "racing",
+        primaryGoal: "performance",
       })
     );
   });

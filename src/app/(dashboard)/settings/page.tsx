@@ -19,6 +19,7 @@ import {
   Selectable,
   useToast,
 } from "@/components/ui";
+import { StravaBikeImportSection } from "@/components/settings/StravaBikeImportSection";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -62,8 +63,8 @@ export default function SettingsPage() {
   const toast = useToast();
   const user = useQuery(api.users.queries.getCurrentUser);
   const strava = useQuery(api.integrations.queries.getStravaStatus);
+  const userBikes = useQuery(api.bikes.queries.listByUser);
   const updateProfile = useMutation(api.users.mutations.updateProfile);
-  const importStravaPhoto = useMutation(api.integrations.mutations.importStravaPhoto);
   const initiateStravaConnect = useAction(api.integrations.actions.initiateStravaConnect);
   const disconnectStravaAction = useAction(api.integrations.actions.disconnectStravaAction);
   const deleteAccount = useMutation(api.users.mutations.deleteAccount);
@@ -72,10 +73,8 @@ export default function SettingsPage() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [showStravaConsent, setShowStravaConsent] = useState(false);
   const [showStravaDisconnect, setShowStravaDisconnect] = useState(false);
-  const [showStravaPhotoConfirm, setShowStravaPhotoConfirm] = useState(false);
   const [isConnectingStrava, setIsConnectingStrava] = useState(false);
   const [isDisconnectingStrava, setIsDisconnectingStrava] = useState(false);
-  const [isImportingStravaPhoto, setIsImportingStravaPhoto] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [isSavingDisplayName, setIsSavingDisplayName] = useState(false);
   const [displayNameError, setDisplayNameError] = useState<string | null>(null);
@@ -167,19 +166,6 @@ export default function SettingsPage() {
       toast.error({ description: messages.settings.integrations.callback.error });
     } finally {
       setIsDisconnectingStrava(false);
-    }
-  };
-
-  const handleImportStravaPhoto = async () => {
-    setIsImportingStravaPhoto(true);
-    try {
-      await importStravaPhoto({});
-      setShowStravaPhotoConfirm(false);
-      toast.success({ description: messages.settings.integrations.photoImport.confirm });
-    } catch {
-      toast.error({ description: messages.settings.integrations.callback.error });
-    } finally {
-      setIsImportingStravaPhoto(false);
     }
   };
 
@@ -366,18 +352,12 @@ export default function SettingsPage() {
                 </div>
               ) : null}
 
+              <StravaBikeImportSection strava={strava} userBikes={userBikes} />
+
               {/* Actions */}
               <div className="mt-4 flex flex-wrap gap-3">
                 {strava?.accessStatus === "active" ? (
                   <>
-                    {strava.athleteAvatarUrl ? (
-                      <Button
-                        variant="outline"
-                        onClick={() => setShowStravaPhotoConfirm(true)}
-                      >
-                        {messages.settings.integrations.photoImport.importButton}
-                      </Button>
-                    ) : null}
                     <Button
                       variant="ghost"
                       onClick={() => setShowStravaDisconnect(true)}
@@ -534,36 +514,6 @@ export default function SettingsPage() {
             isLoading={isDisconnectingStrava}
           >
             {messages.settings.integrations.disconnectConfirm.confirm}
-          </Button>
-        </div>
-      </AccessibleDialog>
-
-      {/* Strava photo import confirmation */}
-      <AccessibleDialog
-        open={showStravaPhotoConfirm}
-        onClose={() => setShowStravaPhotoConfirm(false)}
-        title={messages.settings.integrations.photoImport.confirmTitle}
-        description={messages.settings.integrations.photoImport.confirmBody}
-      >
-        {strava?.athleteAvatarUrl ? (
-          <div className="mt-3 flex justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={strava.athleteAvatarUrl}
-              alt={strava.athleteName ?? "Strava"}
-              className="h-20 w-20 rounded-full object-cover"
-            />
-          </div>
-        ) : null}
-        <div className="mt-4 flex gap-3">
-          <Button variant="outline" onClick={() => setShowStravaPhotoConfirm(false)}>
-            {messages.settings.integrations.photoImport.cancel}
-          </Button>
-          <Button
-            onClick={() => void handleImportStravaPhoto()}
-            isLoading={isImportingStravaPhoto}
-          >
-            {messages.settings.integrations.photoImport.confirm}
           </Button>
         </div>
       </AccessibleDialog>
