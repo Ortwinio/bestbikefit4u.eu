@@ -337,8 +337,6 @@ export default function SettingsPage() {
                       <XCircle className="h-3.5 w-3.5 text-[color:var(--destructive)]" />
                       <span className="text-[color:var(--destructive)]">{messages.settings.integrations.error}</span>
                     </>
-                  ) : strava?.accessStatus === "pending" ? (
-                    <span className="text-[color:var(--muted-foreground)]">{messages.settings.integrations.pending}</span>
                   ) : (
                     <span className="text-[color:var(--muted-foreground)]">{messages.settings.integrations.available}</span>
                   )}
@@ -387,25 +385,14 @@ export default function SettingsPage() {
                       {messages.settings.integrations.disconnectStrava}
                     </Button>
                   </>
-                ) : strava?.accessStatus === "error" ? (
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowStravaConsent(true)}
-                    isLoading={isConnectingStrava}
-                  >
-                    {messages.settings.integrations.reconnect}
-                  </Button>
-                ) : strava?.accessStatus === "pending" ? (
-                  <Button variant="outline" disabled>
-                    {messages.settings.integrations.pending}
-                  </Button>
                 ) : (
                   <Button
-                    variant="outline"
                     onClick={() => setShowStravaConsent(true)}
                     isLoading={isConnectingStrava}
                   >
-                    {messages.settings.integrations.connectStrava}
+                    {strava?.accessStatus === "error"
+                      ? messages.settings.integrations.reconnect
+                      : messages.settings.integrations.connectStrava}
                   </Button>
                 )}
               </div>
