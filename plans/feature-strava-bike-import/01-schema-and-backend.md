@@ -1,37 +1,118 @@
-# Step 01 — Schema, Token Refresh & Backend
+# Step 01 — Schema & Backend (v1: Bike Import)
 
 ## Goal
 
-Add the `stravaGearId` field to the `bikes` table, implement token refresh logic, and build the Convex action that fetches bikes from Strava and imports selected ones.
+Extend the schema for the richer bike data model, build the token-refresh helper, update the Strava callback to cache the bike list, and implement the idempotent bike import action.
 
 ---
 
 ## Pre-requisites
 
-- Strava OAuth integration is working (access token, refresh token, and `tokenExpiresAt` are stored in `integrations`)
-- `bikes.mutations.create` exists and is fully typed
+- Strava OAuth working; `integrations` table stores `accessToken`, `refreshToken`, `tokenExpiresAt`
+- `bikes.mutations.create` exists
+- `convex/integrations/queries.getStravaIntegrationForUser` (internal) exists
 
 ---
 
-## 1. Schema — add `stravaGearId` to `bikes`
+## 1. Schema — `bikes` table additions
 
-In `convex/schema.ts`, add one optional field to the `bikes` table:
+In `convex/schema.ts`, add to the `bikes` table:
 
 ```ts
+// Strava import fields
+source: v.optional(v.union(
+  v.literal("manual"),
+  v.literal("strava"),
+  v.literal("admin_import")
+)),
 stravaGearId: v.optional(v.string()),
+stravaPrimary: v.optional(v.boolean()),
+
+// Type classification audit trail
+bikeTypeSource: v.optional(v.union(
+  v.literal("user"),
+  v.literal("strava_frame_type"),
+  v.literal("inferred_from_usage"),
+  v.literal("admin_matched")
+)),
+
+// Usage data (populated from Strava gear endpoint at import, enriched by v1.1)
+lifetimeDistanceMeters: v.optional(v.number()),
+recentDistance90dMeters: v.optional(v.number()),
+rideCount90d: v.optional(v.number()),
+inferredBikeRole: v.optional(v.union(
+  v.literal("endurance_road"),
+  v.literal("race_road"),
+  v.literal("gravel"),
+  v.literal("mountain"),
+  v.literal("tt_triathlon"),
+  v.literal("training"),
+  v.literal("commute")
+)),
+lastStravaSync: v.optional(v.number()),
 ```
 
-This is the Strava gear ID (e.g. `"b1234567"`). Used to detect already-imported bikes and prevent duplicates.
-
-Also add an index:
+Add index:
 
 ```ts
 .index("by_strava_gear", ["stravaGearId"])
 ```
 
+> **Do not remove existing fields.** These additions are purely additive.
+
 ---
 
-## 2. Token refresh helper
+## 2. Schema — `integrations` table additions
+
+Add to the `integrations` table fields:
+
+```ts
+stravaGearSummaryJson: v.optional(v.string()),  // JSON of bikes[] from athlete endpoint
+lastActivitySyncAt: v.optional(v.number()),     // used in v1.1 for incremental sync
+```
+
+Also add both fields to the `fields` object in `upsertStravaIntegration` (mutations.ts).
+
+---
+
+## 3. Schema — new `bikeActivities` table
+
+Add this table for v1.1. Define it now so the schema is ready:
+
+```ts
+bikeActivities: defineTable({
+  userId: v.id("users"),
+  bikeId: v.optional(v.id("bikes")),
+  stravaActivityId: v.string(),
+  stravaGearId: v.optional(v.string()),
+  name: v.string(),
+  sportType: v.string(),
+  startDate: v.number(),
+  distanceMeters: v.number(),
+  movingTimeSec: v.number(),
+  elapsedTimeSec: v.number(),
+  elevationGainMeters: v.optional(v.number()),
+  trainer: v.boolean(),
+  commute: v.boolean(),
+  deviceName: v.optional(v.string()),
+  averageSpeed: v.optional(v.number()),
+  maxSpeed: v.optional(v.number()),
+  averageCadence: v.optional(v.number()),
+  averageWatts: v.optional(v.number()),
+  weightedAverageWatts: v.optional(v.number()),
+  averageHeartrate: v.optional(v.number()),
+  maxHeartrate: v.optional(v.number()),
+  importedAt: v.number(),
+})
+  .index("by_user", ["userId"])
+  .index("by_bike", ["bikeId"])
+  .index("by_strava_id", ["stravaActivityId"])
+  .index("by_gear", ["stravaGearId"])
+```
+
+---
+
+## 4. Token refresh helper
 
 Create `convex/integrations/stravaToken.ts`:
 
@@ -40,6 +121,10 @@ import { internal } from "../_generated/api";
 import type { ActionCtx } from "../_generated/server";
 import type { Id } from "../_generated/dataModel";
 
+/**
+ * Returns a valid Strava access token for userId.
+ * Refreshes automatically if the stored token is expired or within 5 minutes of expiry.
+ */
 export async function getFreshStravaToken(
   ctx: ActionCtx,
   userId: Id<"users">
@@ -53,14 +138,16 @@ export async function getFreshStravaToken(
     throw new Error("Strava not connected");
   }
 
-  // Token still valid (5 min buffer)
-  if (integration.tokenExpiresAt && Date.now() < integration.tokenExpiresAt - 5 * 60 * 1000) {
+  const BUFFER_MS = 5 * 60 * 1000;
+  if (
+    integration.tokenExpiresAt &&
+    Date.now() < integration.tokenExpiresAt - BUFFER_MS
+  ) {
     return integration.accessToken;
   }
 
-  // Refresh
   if (!integration.refreshToken) {
-    throw new Error("No refresh token available");
+    throw new Error("No Strava refresh token stored");
   }
 
   const res = await fetch("https://www.strava.com/oauth/token", {
@@ -100,36 +187,53 @@ export async function getFreshStravaToken(
 
 ---
 
-## 3. Internal query — get user's already-imported Strava gear IDs
+## 5. Update Strava callback to cache bike list
 
-In `convex/bikes/queries.ts`, add an internal query:
+In `convex/http.ts`, after a successful token exchange, fetch the full athlete and cache the bike summary:
 
 ```ts
-export const getStravaGearIds = internalQuery({
-  args: { userId: v.id("users") },
-  handler: async (ctx, { userId }) => {
-    const bikes = await ctx.db
-      .query("bikes")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .collect();
-    return new Set(
-      bikes
-        .map((b) => b.stravaGearId)
-        .filter((id): id is string => id !== undefined)
-    );
-  },
-});
+// After persisting the integration with tokens, fetch full athlete detail:
+try {
+  const athleteRes = await fetch("https://www.strava.com/api/v3/athlete", {
+    headers: { Authorization: `Bearer ${tokenData.access_token}` },
+  });
+  if (athleteRes.ok) {
+    const athleteDetail = (await athleteRes.json()) as {
+      bikes?: Array<{
+        id: string;
+        name: string;
+        primary: boolean;
+        distance: number;
+      }>;
+    };
+    if (athleteDetail.bikes?.length) {
+      await ctx.runMutation(internal.integrations.mutations.upsertStravaIntegration, {
+        userId: integration.userId,
+        fields: {
+          stravaGearSummaryJson: JSON.stringify(
+            athleteDetail.bikes.map((b) => ({
+              id: b.id,
+              name: b.name,
+              primary: b.primary,
+              distanceMeters: b.distance,
+            }))
+          ),
+        },
+      });
+    }
+  }
+} catch {
+  // Non-fatal — user can still connect; bike list fetched on demand
+}
 ```
 
 ---
 
-## 4. Public query — list Strava bikes with import status
+## 6. Public query — gear summary
 
-Add to `convex/integrations/queries.ts`:
+In `convex/integrations/queries.ts`:
 
 ```ts
-// Returns summary of Strava bikes (no API call — from stored athlete data only)
-// Actual gear detail is fetched in the action.
 export const getStravaGearSummary = query({
   args: {},
   handler: async (ctx) => {
@@ -141,19 +245,14 @@ export const getStravaGearSummary = query({
       )
       .unique();
 
-    if (!integration || integration.accessStatus !== "active") {
-      return null;
-    }
-
-    // stravaGearSummary is stored as JSON from the athlete endpoint
-    // (added in step below — see §5)
+    if (!integration || integration.accessStatus !== "active") return null;
     if (!integration.stravaGearSummaryJson) return null;
 
     return JSON.parse(integration.stravaGearSummaryJson) as Array<{
       id: string;
       name: string;
       primary: boolean;
-      distanceM: number;
+      distanceMeters: number;
     }>;
   },
 });
@@ -161,153 +260,139 @@ export const getStravaGearSummary = query({
 
 ---
 
-## 5. Schema — add `stravaGearSummaryJson` to `integrations`
+## 7. bikeType mapping helper
 
-In `convex/schema.ts`, add to the `integrations` table fields:
-
-```ts
-stravaGearSummaryJson: v.optional(v.string()),
-```
-
-Also update `upsertStravaIntegration` in `convex/integrations/mutations.ts` to include `stravaGearSummaryJson` in the `fields` object validator.
-
-Update `convex/http.ts` — in the Strava callback, after token exchange, fetch the full athlete and store the bike summary:
+In `convex/integrations/actions.ts`, add a pure function (not exported):
 
 ```ts
-// In the callback handler, after parsing tokenData:
-const athleteRes = await fetch("https://www.strava.com/api/v3/athlete", {
-  headers: { Authorization: `Bearer ${tokenData.access_token}` },
-});
-if (athleteRes.ok) {
-  const athleteDetail = await athleteRes.json() as {
-    bikes?: Array<{ id: string; name: string; primary: boolean; distance: number }>;
-  };
-  if (athleteDetail.bikes) {
-    fields.stravaGearSummaryJson = JSON.stringify(
-      athleteDetail.bikes.map((b) => ({
-        id: b.id,
-        name: b.name,
-        primary: b.primary,
-        distanceM: b.distance,
-      }))
-    );
-  }
-}
-```
+type BikeType =
+  | "road" | "gravel" | "mountain" | "hybrid"
+  | "tt_triathlon" | "cyclocross" | "touring" | "city";
 
----
-
-## 6. Internal mutation — create bike from Strava gear
-
-In `convex/integrations/mutations.ts`, add:
-
-```ts
-export const createBikeFromStrava = internalMutation({
-  args: {
-    userId: v.id("users"),
-    stravaGearId: v.string(),
-    name: v.string(),
-    bikeType: v.union(
-      v.literal("road"),
-      v.literal("gravel"),
-      v.literal("mountain"),
-      v.literal("hybrid"),
-      v.literal("tt_triathlon"),
-      v.literal("cyclocross"),
-      v.literal("touring"),
-      v.literal("city")
-    ),
-    brand: v.optional(v.string()),
-    model: v.optional(v.string()),
-    notes: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    // Idempotency: skip if already imported
-    const existing = await ctx.db
-      .query("bikes")
-      .withIndex("by_strava_gear", (q) => q.eq("stravaGearId", args.stravaGearId))
-      .unique();
-    if (existing) return existing._id;
-
-    const now = Date.now();
-    return await ctx.db.insert("bikes", {
-      userId: args.userId,
-      stravaGearId: args.stravaGearId,
-      name: args.name,
-      bikeType: args.bikeType,
-      brand: args.brand,
-      model: args.model,
-      notes: args.notes,
-      createdAt: now,
-      updatedAt: now,
-    });
-  },
-});
-```
-
----
-
-## 7. Public action — import bikes from Strava
-
-In `convex/integrations/actions.ts`, add:
-
-```ts
-// Maps Strava frame_type integer to our bikeType union
-function stravaFrameTypeToBikeType(frameType: number | null | undefined): BikeType {
+// Returns undefined for unknown frame types — do not default to "road" in DB.
+function stravaFrameTypeToBikeType(frameType: number | null | undefined): BikeType | undefined {
   switch (frameType) {
     case 1: return "mountain";
     case 2: return "cyclocross";
     case 3: return "road";
     case 4: return "tt_triathlon";
-    default: return "road";
+    default: return undefined;
   }
 }
+```
 
-type BikeType = "road" | "gravel" | "mountain" | "hybrid" | "tt_triathlon" | "cyclocross" | "touring" | "city";
+---
 
+## 8. Internal mutation — create or update bike from Strava
+
+In `convex/integrations/mutations.ts`:
+
+```ts
+export const upsertBikeFromStrava = internalMutation({
+  args: {
+    userId: v.id("users"),
+    stravaGearId: v.string(),
+    name: v.string(),
+    stravaPrimary: v.boolean(),
+    lifetimeDistanceMeters: v.number(),
+    bikeType: v.optional(/* same union as bikes table */),
+    brand: v.optional(v.string()),
+    model: v.optional(v.string()),
+    notes: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("bikes")
+      .withIndex("by_strava_gear", (q) => q.eq("stravaGearId", args.stravaGearId))
+      .unique();
+
+    if (existing) {
+      // Update distance and primary flag, but NEVER overwrite user-corrected bikeType
+      await ctx.db.patch(existing._id, {
+        stravaPrimary: args.stravaPrimary,
+        lifetimeDistanceMeters: args.lifetimeDistanceMeters,
+        lastStravaSync: Date.now(),
+        // bikeType only updated if not user-corrected
+        ...(existing.bikeTypeSource !== "user" && args.bikeType
+          ? { bikeType: args.bikeType, bikeTypeSource: "strava_frame_type" as const }
+          : {}),
+      });
+      return { id: existing._id, created: false };
+    }
+
+    const now = Date.now();
+    const id = await ctx.db.insert("bikes", {
+      userId: args.userId,
+      source: "strava",
+      stravaGearId: args.stravaGearId,
+      stravaPrimary: args.stravaPrimary,
+      name: args.name,
+      bikeType: args.bikeType,
+      bikeTypeSource: args.bikeType ? "strava_frame_type" : undefined,
+      brand: args.brand,
+      model: args.model,
+      notes: args.notes,
+      lifetimeDistanceMeters: args.lifetimeDistanceMeters,
+      lastStravaSync: now,
+      createdAt: now,
+      updatedAt: now,
+    });
+    return { id, created: true };
+  },
+});
+```
+
+---
+
+## 9. Public action — import selected bikes
+
+In `convex/integrations/actions.ts`:
+
+```ts
 export const importBikesFromStrava = action({
   args: {
-    // Array of Strava gear IDs selected by the user to import
     gearIds: v.array(v.string()),
   },
   handler: async (ctx, { gearIds }) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
-    if (gearIds.length === 0) return { imported: 0, skipped: 0 };
+    if (gearIds.length === 0) return { imported: 0, skipped: 0, needsTypeConfirm: [] as string[] };
 
     const accessToken = await getFreshStravaToken(ctx, userId);
 
     let imported = 0;
     let skipped = 0;
+    const needsTypeConfirm: string[] = []; // gear IDs with unknown frame_type
 
     for (const gearId of gearIds) {
       const gearRes = await fetch(`https://www.strava.com/api/v3/gear/${gearId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
-      if (!gearRes.ok) {
-        skipped++;
-        continue;
-      }
+      if (!gearRes.ok) { skipped++; continue; }
 
       const gear = (await gearRes.json()) as {
         id: string;
         name: string;
+        primary: boolean;
+        distance: number;
         brand_name?: string;
         model_name?: string;
         frame_type?: number;
         description?: string;
-        primary: boolean;
       };
 
       const bikeType = stravaFrameTypeToBikeType(gear.frame_type);
+      if (!bikeType) needsTypeConfirm.push(gear.id);
 
-      const bikeId = await ctx.runMutation(
-        internal.integrations.mutations.createBikeFromStrava,
+      const result = await ctx.runMutation(
+        internal.integrations.mutations.upsertBikeFromStrava,
         {
           userId,
           stravaGearId: gear.id,
           name: gear.name,
+          stravaPrimary: gear.primary,
+          lifetimeDistanceMeters: gear.distance,
           bikeType,
           brand: gear.brand_name || undefined,
           model: gear.model_name || undefined,
@@ -315,23 +400,27 @@ export const importBikesFromStrava = action({
         }
       );
 
-      if (bikeId) imported++;
+      if (result.created) imported++;
       else skipped++;
     }
 
-    return { imported, skipped };
+    return { imported, skipped, needsTypeConfirm };
   },
 });
 ```
+
+`needsTypeConfirm` is returned so the UI can open the post-import type-selection wizard for those bikes.
 
 ---
 
 ## Acceptance criteria
 
-- [ ] `bikes` table has `stravaGearId` field and `by_strava_gear` index
-- [ ] `integrations` table has `stravaGearSummaryJson` field
-- [ ] Strava callback stores bike summary JSON after successful connect
-- [ ] `getFreshStravaToken` refreshes expired tokens transparently
-- [ ] `importBikesFromStrava` action creates bikes in the database
-- [ ] Re-importing the same gear ID is a no-op (idempotent)
+- [ ] `bikes` table has all new fields and the `by_strava_gear` index
+- [ ] `integrations` table has `stravaGearSummaryJson` and `lastActivitySyncAt`
+- [ ] `bikeActivities` table is defined (even if empty until v1.1)
+- [ ] Strava callback stores bike list JSON after successful connect
+- [ ] `getFreshStravaToken` refreshes expired tokens before any API call
+- [ ] `importBikesFromStrava` creates new bike records and skips existing ones
+- [ ] Existing user-corrected `bikeType` (`bikeTypeSource = "user"`) is never overwritten
+- [ ] Unknown `frame_type` leaves `bikeType` unset and returns gear ID in `needsTypeConfirm`
 - [ ] `npm run typecheck` passes
