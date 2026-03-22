@@ -50,6 +50,10 @@ export function switchLocalePathname(pathname: string, locale: Locale): string {
 export function isBypassedPathname(pathname: string): boolean {
   const normalizedPathname = ensureLeadingSlash(pathname);
 
+  if (normalizedPathname.startsWith("/admin")) {
+    return true;
+  }
+
   if (normalizedPathname.startsWith("/api")) {
     return true;
   }
@@ -67,7 +71,7 @@ export function isBypassedPathname(pathname: string): boolean {
 
 export function isProtectedAppPath(pathname: string): boolean {
   const internalPathname = stripLocalePrefix(pathname);
-  const protectedRoots = ["/dashboard", "/fit", "/bikes", "/profile"] as const;
+  const protectedRoots = ["/dashboard", "/fit", "/bikes", "/profile", "/settings", "/fit-history", "/pressure-calculator"] as const;
 
   return protectedRoots.some(
     (root) =>

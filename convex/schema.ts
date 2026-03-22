@@ -46,10 +46,28 @@ export default defineSchema({
     unit_preference: v.optional(
       v.union(v.literal("metric"), v.literal("imperial"))
     ),
+    adminRole: v.optional(
+      v.union(
+        v.literal("super_admin"),
+        v.literal("ops_admin"),
+        v.literal("support_admin"),
+        v.literal("fit_specialist"),
+        v.literal("geometry_manager"),
+        v.literal("billing_admin"),
+        v.literal("qa_manager"),
+        v.literal("analyst")
+      )
+    ),
+    suspendedAt: v.optional(v.number()),
+    suspendedReason: v.optional(v.string()),
+    trialEndsAt: v.optional(v.number()),
   })
     .index("by_token", ["tokenIdentifier"])
     .index("email", ["email"])
-    .index("phone", ["phone"]),
+    .index("phone", ["phone"])
+    .index("by_admin_role", ["adminRole"])
+    .index("by_tier", ["tier"])
+    .index("by_suspended_at", ["suspendedAt"]),
 
   // User profiles - body measurements for bike fitting
   profiles: defineTable({
@@ -102,6 +120,7 @@ export default defineSchema({
     weightUpdatedAt: v.optional(v.number()),
 
     updatedAt: v.number(),
+    adminNotes: v.optional(v.string()),
   }).index("by_user", ["userId"]),
 
   // Bike catalogue - brands and models
@@ -210,10 +229,13 @@ export default defineSchema({
     model: v.optional(v.string()),
     bikeModelId: v.optional(v.id("bikeModels")),
     notes: v.optional(v.string()),
+    geometryRecordId: v.optional(v.id("geometry_records")),
 
     createdAt: v.number(),
     updatedAt: v.number(),
-  }).index("by_user", ["userId"]),
+  })
+    .index("by_user", ["userId"])
+    .index("by_geometry_record", ["geometryRecordId"]),
 
   bikeProfiles: defineTable({
     userId: v.id("users"),
@@ -404,6 +426,7 @@ export default defineSchema({
     engineVersion: v.optional(
       v.union(v.literal("v1"), v.literal("v2_shadow"), v.literal("v2"))
     ),
+    engineVersionId: v.optional(v.id("engine_versions")),
     sourceType: v.optional(
       v.union(
         v.literal("legacy_flow"),
@@ -471,12 +494,26 @@ export default defineSchema({
 
     createdAt: v.number(),
     completedAt: v.optional(v.number()),
+    confidenceScore: v.optional(v.number()),
+    reviewStatus: v.optional(
+      v.union(
+        v.literal("not_required"),
+        v.literal("required"),
+        v.literal("reviewed"),
+        v.literal("overridden")
+      )
+    ),
+    reviewedBy: v.optional(v.id("users")),
+    reviewedAt: v.optional(v.number()),
+    reviewNotes: v.optional(v.string()),
   })
     .index("by_user", ["userId"])
     .index("by_user_bike", ["userId", "bikeId"])
     .index("by_bike_profile", ["bikeProfileId"])
     .index("by_user_status", ["userId", "status"])
-    .index("by_status", ["status"]),
+    .index("by_status", ["status"])
+    .index("by_engine_version", ["engineVersionId"])
+    .index("by_review_status", ["reviewStatus"]),
 
   // Questionnaire responses - dynamic follow-up questions
   questionnaireResponses: defineTable({
@@ -937,4 +974,397 @@ export default defineSchema({
   })
     .index("by_user_and_provider", ["userId", "provider"])
     .index("by_status", ["accessStatus"]),
+
+  organizations: defineTable({
+    name: v.string(),
+    slug: v.string(),
+    type: v.union(
+      v.literal("bike_shop"),
+      v.literal("enterprise"),
+      v.literal("fitter_studio"),
+      v.literal("brand")
+    ),
+    ownerUserId: v.id("users"),
+    planId: v.optional(v.id("plans")),
+    maxSeats: v.optional(v.number()),
+    usedSeats: v.optional(v.number()),
+    suspendedAt: v.optional(v.number()),
+    suspendedReason: v.optional(v.string()),
+    billingEmail: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_owner", ["ownerUserId"]),
+
+  organization_members: defineTable({
+    organizationId: v.id("organizations"),
+    userId: v.id("users"),
+    role: v.union(
+      v.literal("owner"),
+      v.literal("staff"),
+      v.literal("fitter"),
+      v.literal("viewer")
+    ),
+    joinedAt: v.number(),
+    removedAt: v.optional(v.number()),
+  })
+    .index("by_org", ["organizationId"])
+    .index("by_user", ["userId"])
+    .index("by_org_user", ["organizationId", "userId"]),
+
+  admin_audit_logs: defineTable({
+    adminUserId: v.id("users"),
+    action: v.string(),
+    targetType: v.optional(v.string()),
+    targetId: v.optional(v.string()),
+    payload: v.optional(v.string()),
+    reason: v.optional(v.string()),
+    ipAddress: v.optional(v.string()),
+    occurredAt: v.number(),
+  })
+    .index("by_admin", ["adminUserId"])
+    .index("by_target", ["targetType", "targetId"])
+    .index("by_occurred_at", ["occurredAt"]),
+
+  geometry_brands: defineTable({
+    name: v.string(),
+    slug: v.string(),
+    logoUrl: v.optional(v.string()),
+    website: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+    createdBy: v.id("users"),
+  }).index("by_slug", ["slug"]),
+
+  geometry_models: defineTable({
+    brandId: v.id("geometry_brands"),
+    name: v.string(),
+    category: v.union(
+      v.literal("road"),
+      v.literal("gravel"),
+      v.literal("mtb"),
+      v.literal("tt"),
+      v.literal("endurance"),
+      v.literal("city"),
+      v.literal("other")
+    ),
+    yearStart: v.optional(v.number()),
+    yearEnd: v.optional(v.number()),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+    createdBy: v.id("users"),
+  }).index("by_brand", ["brandId"]),
+
+  geometry_records: defineTable({
+    modelId: v.id("geometry_models"),
+    brandId: v.id("geometry_brands"),
+    sizeLabel: v.string(),
+    stack: v.optional(v.number()),
+    reach: v.optional(v.number()),
+    seatTubeAngle: v.optional(v.number()),
+    headTubeAngle: v.optional(v.number()),
+    wheelbase: v.optional(v.number()),
+    chainstay: v.optional(v.number()),
+    bbDrop: v.optional(v.number()),
+    effectiveTopTube: v.optional(v.number()),
+    standover: v.optional(v.number()),
+    forkRake: v.optional(v.number()),
+    headTubeLength: v.optional(v.number()),
+    source: v.union(
+      v.literal("manufacturer"),
+      v.literal("admin_import"),
+      v.literal("admin_manual"),
+      v.literal("user_entered")
+    ),
+    sourceUrl: v.optional(v.string()),
+    importJobId: v.optional(v.string()),
+    changeReason: v.optional(v.string()),
+    status: v.union(
+      v.literal("draft"),
+      v.literal("active"),
+      v.literal("superseded"),
+      v.literal("rejected")
+    ),
+    reviewedBy: v.optional(v.id("users")),
+    reviewedAt: v.optional(v.number()),
+    version: v.number(),
+    supersededBy: v.optional(v.id("geometry_records")),
+    createdAt: v.number(),
+    createdBy: v.id("users"),
+  })
+    .index("by_model", ["modelId"])
+    .index("by_brand", ["brandId"])
+    .index("by_status", ["status"])
+    .index("by_model_size", ["modelId", "sizeLabel"]),
+
+  engine_versions: defineTable({
+    versionLabel: v.string(),
+    description: v.optional(v.string()),
+    status: v.union(
+      v.literal("draft"),
+      v.literal("qa"),
+      v.literal("active"),
+      v.literal("deprecated")
+    ),
+    qaStatus: v.optional(
+      v.union(
+        v.literal("pending"),
+        v.literal("passed"),
+        v.literal("failed")
+      )
+    ),
+    ruleSetJson: v.optional(v.string()),
+    benchmarkResultsJson: v.optional(v.string()),
+    rollbackPlan: v.optional(v.string()),
+    ownerId: v.optional(v.id("users")),
+    activatedAt: v.optional(v.number()),
+    activatedBy: v.optional(v.id("users")),
+    createdAt: v.number(),
+    createdBy: v.id("users"),
+  })
+    .index("by_status", ["status"])
+    .index("by_version_label", ["versionLabel"]),
+
+  feedback_items: defineTable({
+    userId: v.optional(v.id("users")),
+    type: v.union(
+      v.literal("bug"),
+      v.literal("feature_request"),
+      v.literal("support_case")
+    ),
+    title: v.string(),
+    description: v.string(),
+    status: v.union(
+      v.literal("new"),
+      v.literal("triaged"),
+      v.literal("needs_info"),
+      v.literal("planned"),
+      v.literal("in_progress"),
+      v.literal("in_qa"),
+      v.literal("released"),
+      v.literal("closed"),
+      v.literal("declined")
+    ),
+    priority: v.optional(
+      v.union(
+        v.literal("low"),
+        v.literal("normal"),
+        v.literal("high"),
+        v.literal("urgent")
+      )
+    ),
+    category: v.optional(v.string()),
+    assignedTo: v.optional(v.id("users")),
+    duplicateOf: v.optional(v.id("feedback_items")),
+    linkedReleaseId: v.optional(v.id("releases")),
+    linkedSessionId: v.optional(v.id("fitSessions")),
+    linkedBikeId: v.optional(v.id("bikes")),
+    pagePath: v.optional(v.string()),
+    browserInfoJson: v.optional(v.string()),
+    expectedResult: v.optional(v.string()),
+    actualResult: v.optional(v.string()),
+    upvoteCount: v.optional(v.number()),
+    requesterCount: v.optional(v.number()),
+    productArea: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_type", ["type"])
+    .index("by_status", ["status"])
+    .index("by_assigned_to", ["assignedTo"])
+    .index("by_user", ["userId"])
+    .index("by_release", ["linkedReleaseId"]),
+
+  feedback_comments: defineTable({
+    feedbackItemId: v.id("feedback_items"),
+    authorUserId: v.id("users"),
+    body: v.string(),
+    isInternal: v.boolean(),
+    createdAt: v.number(),
+  }).index("by_feedback_item", ["feedbackItemId"]),
+
+  releases: defineTable({
+    name: v.string(),
+    type: v.union(
+      v.literal("app"),
+      v.literal("fit_engine"),
+      v.literal("geometry_data"),
+      v.literal("content"),
+      v.literal("integration"),
+      v.literal("internal")
+    ),
+    versionLabel: v.optional(v.string()),
+    status: v.union(
+      v.literal("draft"),
+      v.literal("in_qa"),
+      v.literal("approved"),
+      v.literal("scheduled"),
+      v.literal("rolling_out"),
+      v.literal("live"),
+      v.literal("rolled_back"),
+      v.literal("archived")
+    ),
+    ownerId: v.optional(v.id("users")),
+    description: v.optional(v.string()),
+    targetAudience: v.optional(v.string()),
+    rollbackPlan: v.optional(v.string()),
+    releaseNotes: v.optional(v.string()),
+    qaStatus: v.optional(
+      v.union(
+        v.literal("pending"),
+        v.literal("passed"),
+        v.literal("failed")
+      )
+    ),
+    rolloutDate: v.optional(v.number()),
+    liveAt: v.optional(v.number()),
+    createdAt: v.number(),
+    createdBy: v.id("users"),
+  })
+    .index("by_status", ["status"])
+    .index("by_type", ["type"])
+    .index("by_rollout_date", ["rolloutDate"]),
+
+  release_items: defineTable({
+    releaseId: v.id("releases"),
+    itemType: v.union(v.literal("feedback_item"), v.literal("geometry_record")),
+    itemId: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_release", ["releaseId"])
+    .index("by_item", ["itemType", "itemId"]),
+
+  dashboard_messages: defineTable({
+    title: v.string(),
+    body: v.string(),
+    type: v.union(
+      v.literal("banner"),
+      v.literal("inbox_card"),
+      v.literal("modal"),
+      v.literal("sticky_warning"),
+      v.literal("release_announcement"),
+      v.literal("upgrade_prompt"),
+      v.literal("safety_alert"),
+      v.literal("re_fit_reminder"),
+      v.literal("support_reply")
+    ),
+    priority: v.union(
+      v.literal("low"),
+      v.literal("normal"),
+      v.literal("high"),
+      v.literal("urgent")
+    ),
+    status: v.union(
+      v.literal("draft"),
+      v.literal("scheduled"),
+      v.literal("published"),
+      v.literal("expired"),
+      v.literal("paused")
+    ),
+    ctaText: v.optional(v.string()),
+    ctaUrl: v.optional(v.string()),
+    locale: v.optional(v.union(v.literal("all"), v.literal("en"), v.literal("nl"))),
+    dismissible: v.boolean(),
+    requiresAcknowledgement: v.boolean(),
+    linkedReleaseId: v.optional(v.id("releases")),
+    linkedFeedbackItemId: v.optional(v.id("feedback_items")),
+    startsAt: v.optional(v.number()),
+    expiresAt: v.optional(v.number()),
+    publishedAt: v.optional(v.number()),
+    pausedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    createdBy: v.id("users"),
+  })
+    .index("by_status", ["status"])
+    .index("by_published_at", ["publishedAt"]),
+
+  message_targets: defineTable({
+    messageId: v.id("dashboard_messages"),
+    targetType: v.string(),
+    targetValue: v.optional(v.string()),
+    createdAt: v.number(),
+  })
+    .index("by_message", ["messageId"])
+    .index("by_target", ["targetType", "targetValue"]),
+
+  message_receipts: defineTable({
+    messageId: v.id("dashboard_messages"),
+    userId: v.id("users"),
+    deliveredAt: v.number(),
+    viewedAt: v.optional(v.number()),
+    clickedAt: v.optional(v.number()),
+    acknowledgedAt: v.optional(v.number()),
+    dismissedAt: v.optional(v.number()),
+  })
+    .index("by_message", ["messageId"])
+    .index("by_user", ["userId"])
+    .index("by_message_user", ["messageId", "userId"]),
+
+  plans: defineTable({
+    key: v.string(),
+    name: v.string(),
+    tier: v.union(v.literal("free"), v.literal("pro"), v.literal("premium")),
+    priceCents: v.optional(v.number()),
+    billingInterval: v.optional(
+      v.union(v.literal("month"), v.literal("year"), v.literal("custom"))
+    ),
+    seatLimit: v.optional(v.number()),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.optional(v.number()),
+  }).index("by_key", ["key"]),
+
+  subscriptions: defineTable({
+    userId: v.optional(v.id("users")),
+    organizationId: v.optional(v.id("organizations")),
+    planId: v.id("plans"),
+    status: v.union(
+      v.literal("trialing"),
+      v.literal("active"),
+      v.literal("past_due"),
+      v.literal("canceled"),
+      v.literal("expired")
+    ),
+    provider: v.optional(v.string()),
+    externalId: v.optional(v.string()),
+    startsAt: v.optional(v.number()),
+    endsAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_org", ["organizationId"])
+    .index("by_plan", ["planId"]),
+
+  billing_events: defineTable({
+    subscriptionId: v.optional(v.id("subscriptions")),
+    userId: v.optional(v.id("users")),
+    organizationId: v.optional(v.id("organizations")),
+    eventType: v.string(),
+    payloadJson: v.optional(v.string()),
+    occurredAt: v.number(),
+    createdAt: v.number(),
+  })
+    .index("by_subscription", ["subscriptionId"])
+    .index("by_user", ["userId"])
+    .index("by_occurred_at", ["occurredAt"]),
+
+  feature_flags: defineTable({
+    key: v.string(),
+    value: v.boolean(),
+    description: v.optional(v.string()),
+    updatedBy: v.id("users"),
+    updatedAt: v.number(),
+  }).index("by_key", ["key"]),
+
+  gdpr_requests: defineTable({
+    requestType: v.union(v.literal("export"), v.literal("erasure")),
+    requesterEmail: v.string(),
+    receivedAt: v.number(),
+    fulfilledAt: v.optional(v.number()),
+    notes: v.optional(v.string()),
+    createdBy: v.id("users"),
+  }).index("by_received_at", ["receivedAt"]),
 });

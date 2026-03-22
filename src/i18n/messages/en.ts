@@ -1150,6 +1150,18 @@ const en = {
           confirm: "Disconnect",
           cancel: "Cancel",
         },
+        photoImport: {
+          importButton: "Use Strava photo",
+          confirmTitle: "Use your Strava profile photo?",
+          confirmBody: "This will replace your current profile photo with the one from your Strava account.",
+          confirm: "Use Strava photo",
+          cancel: "Keep current",
+        },
+        callback: {
+          connected: "Strava connected successfully.",
+          error: "Could not connect to Strava. Please try again.",
+          denied: "Strava connection was cancelled.",
+        },
       },
       privacy: {
         title: "Privacy",

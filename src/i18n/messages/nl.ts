@@ -1158,6 +1158,18 @@ const nl = {
           confirm: "Ontkoppelen",
           cancel: "Annuleren",
         },
+        photoImport: {
+          importButton: "Strava-foto gebruiken",
+          confirmTitle: "Je Strava-profielfoto gebruiken?",
+          confirmBody: "Dit vervangt je huidige profielfoto door die van je Strava-account.",
+          confirm: "Strava-foto gebruiken",
+          cancel: "Huidige behouden",
+        },
+        callback: {
+          connected: "Strava succesvol verbonden.",
+          error: "Kon geen verbinding maken met Strava. Probeer het opnieuw.",
+          denied: "Strava-verbinding geannuleerd.",
+        },
       },
       privacy: {
         title: "Privacy",

@@ -8,6 +8,11 @@
  * @module
  */
 
+import type * as admin_actions from "../admin/actions.js";
+import type * as admin_audit from "../admin/audit.js";
+import type * as admin_authz from "../admin/authz.js";
+import type * as admin_mutations from "../admin/mutations.js";
+import type * as admin_queries from "../admin/queries.js";
 import type * as analytics_mutations from "../analytics/mutations.js";
 import type * as analytics_queries from "../analytics/queries.js";
 import type * as auth from "../auth.js";
@@ -21,6 +26,7 @@ import type * as bikes_queries from "../bikes/queries.js";
 import type * as emails_actions from "../emails/actions.js";
 import type * as emails_mutations from "../emails/mutations.js";
 import type * as emails_queries from "../emails/queries.js";
+import type * as feedback_mutations from "../feedback/mutations.js";
 import type * as files_actions from "../files/actions.js";
 import type * as http from "../http.js";
 import type * as integrations_actions from "../integrations/actions.js";
@@ -36,6 +42,8 @@ import type * as lib_fitAlgorithm_validation from "../lib/fitAlgorithm/validatio
 import type * as lib_pressureFitInteraction from "../lib/pressureFitInteraction.js";
 import type * as lib_pressureStaleness from "../lib/pressureStaleness.js";
 import type * as lib_validation from "../lib/validation.js";
+import type * as messages_mutations from "../messages/mutations.js";
+import type * as messages_queries from "../messages/queries.js";
 import type * as pressureCalculations_mutations from "../pressureCalculations/mutations.js";
 import type * as pressureCalculations_queries from "../pressureCalculations/queries.js";
 import type * as pressureProfiles_mutations from "../pressureProfiles/mutations.js";
@@ -60,6 +68,7 @@ import type * as rideFeedback_mutations from "../rideFeedback/mutations.js";
 import type * as rideFeedback_queries from "../rideFeedback/queries.js";
 import type * as sessions_mutations from "../sessions/mutations.js";
 import type * as sessions_queries from "../sessions/queries.js";
+import type * as system_queries from "../system/queries.js";
 import type * as tireSetups_mutations from "../tireSetups/mutations.js";
 import type * as tireSetups_queries from "../tireSetups/queries.js";
 import type * as users_mutations from "../users/mutations.js";
@@ -76,6 +85,11 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "admin/actions": typeof admin_actions;
+  "admin/audit": typeof admin_audit;
+  "admin/authz": typeof admin_authz;
+  "admin/mutations": typeof admin_mutations;
+  "admin/queries": typeof admin_queries;
   "analytics/mutations": typeof analytics_mutations;
   "analytics/queries": typeof analytics_queries;
   auth: typeof auth;
@@ -89,6 +103,7 @@ declare const fullApi: ApiFromModules<{
   "emails/actions": typeof emails_actions;
   "emails/mutations": typeof emails_mutations;
   "emails/queries": typeof emails_queries;
+  "feedback/mutations": typeof feedback_mutations;
   "files/actions": typeof files_actions;
   http: typeof http;
   "integrations/actions": typeof integrations_actions;
@@ -104,6 +119,8 @@ declare const fullApi: ApiFromModules<{
   "lib/pressureFitInteraction": typeof lib_pressureFitInteraction;
   "lib/pressureStaleness": typeof lib_pressureStaleness;
   "lib/validation": typeof lib_validation;
+  "messages/mutations": typeof messages_mutations;
+  "messages/queries": typeof messages_queries;
   "pressureCalculations/mutations": typeof pressureCalculations_mutations;
   "pressureCalculations/queries": typeof pressureCalculations_queries;
   "pressureProfiles/mutations": typeof pressureProfiles_mutations;
@@ -128,6 +145,7 @@ declare const fullApi: ApiFromModules<{
   "rideFeedback/queries": typeof rideFeedback_queries;
   "sessions/mutations": typeof sessions_mutations;
   "sessions/queries": typeof sessions_queries;
+  "system/queries": typeof system_queries;
   "tireSetups/mutations": typeof tireSetups_mutations;
   "tireSetups/queries": typeof tireSetups_queries;
   "users/mutations": typeof users_mutations;

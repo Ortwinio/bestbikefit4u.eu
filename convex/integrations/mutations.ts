@@ -97,6 +97,29 @@ export const clearStravaConnection = internalMutation({
   },
 });
 
+// Public: import the Strava athlete photo as the user's profile photo
+export const importStravaPhoto = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await requireUserId(ctx);
+    const integration = await ctx.db
+      .query("integrations")
+      .withIndex("by_user_and_provider", (q) =>
+        q.eq("userId", userId).eq("provider", "strava")
+      )
+      .unique();
+
+    if (!integration?.athleteAvatarUrl) {
+      throw new Error("No Strava photo available");
+    }
+
+    await ctx.db.patch(userId, {
+      profile_image_url: integration.athleteAvatarUrl,
+      profileImageSource: "strava",
+    });
+  },
+});
+
 // Public: kept for backwards compatibility — client calls disconnectStravaAction instead
 export const disconnectStrava = mutation({
   args: {},
