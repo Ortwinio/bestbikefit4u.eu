@@ -32,8 +32,8 @@ const nextConfig: NextConfig = {
               // Convex uses WebSockets for real-time communication
               // In dev, the local Convex server runs on ws://127.0.0.1:*
               isDev
-                ? `connect-src 'self' http://127.0.0.1:* ws://127.0.0.1:* https://*.convex.cloud wss://*.convex.cloud https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com`
-                : `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com`,
+                ? `connect-src 'self' http://127.0.0.1:* ws://127.0.0.1:* https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com`
+                : `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com`,
               // GTM is loaded dynamically after consent — the external script origin must be whitelisted
               "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
               "style-src 'self' 'unsafe-inline'",
