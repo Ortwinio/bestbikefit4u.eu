@@ -37,7 +37,7 @@ export default defineSchema({
     ),
     profile_image_url: v.optional(v.string()),
     profileImageSource: v.optional(
-      v.union(v.literal("google"), v.literal("manual"))
+      v.union(v.literal("google"), v.literal("manual"), v.literal("strava"))
     ),
     lastGoogleSyncAt: v.optional(v.number()),
     theme_preference: v.optional(
@@ -919,6 +919,7 @@ export default defineSchema({
     tokenExpiresAt: v.optional(v.number()),
     accessStatus: v.union(
       v.literal("not_connected"),
+      v.literal("pending"),
       v.literal("active"),
       v.literal("revoked"),
       v.literal("error")
@@ -927,7 +928,13 @@ export default defineSchema({
     ridingProfileJson: v.optional(v.string()),
     athleteName: v.optional(v.string()),
     athleteAvatarUrl: v.optional(v.string()),
+    athleteStravaWeight: v.optional(v.number()),
+    rideCount: v.optional(v.number()),
+    totalDistanceKm: v.optional(v.number()),
+    syncErrorMessage: v.optional(v.string()),
     oauthState: v.optional(v.string()),
     oauthStateExpiresAt: v.optional(v.number()),
-  }).index("by_user_and_provider", ["userId", "provider"]),
+  })
+    .index("by_user_and_provider", ["userId", "provider"])
+    .index("by_status", ["accessStatus"]),
 });

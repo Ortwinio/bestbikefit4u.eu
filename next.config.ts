@@ -39,7 +39,9 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               // Convex storage URLs serve user-uploaded images (e.g. bike/profile photos)
               // Depending on deployment/runtime these can resolve on convex.cloud or convex.site.
-              "img-src 'self' data: blob: https://*.convex.cloud https://*.convex.site",
+              // Strava CDN serves athlete profile images (dgalywyr863hv.cloudfront.net).
+              // Google profile photos are served from lh3.googleusercontent.com.
+              "img-src 'self' data: blob: https://*.convex.cloud https://*.convex.site https://*.cloudfront.net https://lh3.googleusercontent.com",
               "font-src 'self'",
               "frame-ancestors 'none'",
             ].join("; "),

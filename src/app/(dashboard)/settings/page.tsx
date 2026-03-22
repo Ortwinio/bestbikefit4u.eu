@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { RadioGroup } from "@base-ui/react/radio-group";
-import { useMutation, useQuery } from "convex/react";
+import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import {
   Card,
@@ -29,7 +29,7 @@ import {
 } from "@/lib/userIdentity";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { Trash2 } from "lucide-react";
+import { CheckCircle2, Trash2, XCircle } from "lucide-react";
 
 export default function SettingsPage() {
   const { signOut } = useAuthActions();
@@ -39,11 +39,16 @@ export default function SettingsPage() {
   const user = useQuery(api.users.queries.getCurrentUser);
   const strava = useQuery(api.integrations.queries.getStravaStatus);
   const updateProfile = useMutation(api.users.mutations.updateProfile);
-  const disconnectStrava = useMutation(api.integrations.mutations.disconnectStrava);
+  const initiateStravaConnect = useAction(api.integrations.actions.initiateStravaConnect);
+  const disconnectStravaAction = useAction(api.integrations.actions.disconnectStravaAction);
   const deleteAccount = useMutation(api.users.mutations.deleteAccount);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [showStravaConsent, setShowStravaConsent] = useState(false);
+  const [showStravaDisconnect, setShowStravaDisconnect] = useState(false);
+  const [isConnectingStrava, setIsConnectingStrava] = useState(false);
+  const [isDisconnectingStrava, setIsDisconnectingStrava] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [isSavingDisplayName, setIsSavingDisplayName] = useState(false);
   const [displayNameError, setDisplayNameError] = useState<string | null>(null);
@@ -112,6 +117,29 @@ export default function SettingsPage() {
       );
     } finally {
       setIsSavingDisplayName(false);
+    }
+  };
+
+  const handleConnectStrava = async () => {
+    setIsConnectingStrava(true);
+    try {
+      const url = await initiateStravaConnect({});
+      window.location.href = url;
+    } catch {
+      toast.error({ description: "Could not start Strava connection. Please try again." });
+      setIsConnectingStrava(false);
+    }
+  };
+
+  const handleDisconnectStrava = async () => {
+    setIsDisconnectingStrava(true);
+    try {
+      await disconnectStravaAction({});
+      setShowStravaDisconnect(false);
+    } catch {
+      toast.error({ description: "Could not disconnect Strava. Please try again." });
+    } finally {
+      setIsDisconnectingStrava(false);
     }
   };
 
@@ -254,24 +282,86 @@ export default function SettingsPage() {
                     {messages.settings.integrations.stravaDescription}
                   </p>
                 </div>
-                <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-1 text-xs font-semibold text-[color:var(--muted-foreground)] shadow-sm">
-                  {user?.tier === "pro" || user?.tier === "premium"
-                    ? strava?.accessStatus === "active"
-                      ? messages.settings.integrations.connected
-                      : messages.settings.integrations.available
-                    : messages.settings.integrations.proOnly}
-                </span>
+                {/* Status badge */}
+                {user?.tier === "pro" || user?.tier === "premium" ? (
+                  <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-1 text-xs font-semibold shadow-sm">
+                    {strava?.accessStatus === "active" ? (
+                      <>
+                        <CheckCircle2 className="h-3.5 w-3.5 text-[color:var(--success,green)]" />
+                        <span className="text-[color:var(--foreground)]">{messages.settings.integrations.connected}</span>
+                      </>
+                    ) : strava?.accessStatus === "error" ? (
+                      <>
+                        <XCircle className="h-3.5 w-3.5 text-[color:var(--destructive)]" />
+                        <span className="text-[color:var(--destructive)]">{messages.settings.integrations.error}</span>
+                      </>
+                    ) : strava?.accessStatus === "pending" ? (
+                      <span className="text-[color:var(--muted-foreground)]">{messages.settings.integrations.pending}</span>
+                    ) : (
+                      <span className="text-[color:var(--muted-foreground)]">{messages.settings.integrations.available}</span>
+                    )}
+                  </span>
+                ) : (
+                  <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-1 text-xs font-semibold text-[color:var(--muted-foreground)] shadow-sm">
+                    {messages.settings.integrations.proOnly}
+                  </span>
+                )}
               </div>
+
+              {/* Connected state: athlete info */}
+              {strava?.accessStatus === "active" && strava.athleteName ? (
+                <div className="mt-3 flex items-center gap-3">
+                  {strava.athleteAvatarUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={strava.athleteAvatarUrl}
+                      alt={strava.athleteName}
+                      className="h-9 w-9 rounded-full object-cover"
+                    />
+                  ) : null}
+                  <div>
+                    <p className="text-sm font-medium text-[color:var(--foreground)]">{strava.athleteName}</p>
+                    {strava.lastSyncAt ? (
+                      <p className="text-xs text-[color:var(--muted-foreground)]">
+                        {messages.settings.integrations.lastSynced}:{" "}
+                        {new Date(strava.lastSyncAt).toLocaleString()}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              ) : null}
+
+              {/* Actions */}
               {user?.tier === "pro" || user?.tier === "premium" ? (
                 <div className="mt-4 flex flex-wrap gap-3">
-                  <Button variant="outline" disabled>
-                    {messages.settings.integrations.connectStrava}
-                  </Button>
                   {strava?.accessStatus === "active" ? (
-                    <Button variant="ghost" onClick={() => void disconnectStrava({})}>
+                    <Button
+                      variant="ghost"
+                      onClick={() => setShowStravaDisconnect(true)}
+                    >
                       {messages.settings.integrations.disconnectStrava}
                     </Button>
-                  ) : null}
+                  ) : strava?.accessStatus === "error" ? (
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowStravaConsent(true)}
+                      isLoading={isConnectingStrava}
+                    >
+                      {messages.settings.integrations.reconnect}
+                    </Button>
+                  ) : strava?.accessStatus === "pending" ? (
+                    <Button variant="outline" disabled>
+                      {messages.settings.integrations.pending}
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowStravaConsent(true)}
+                      isLoading={isConnectingStrava}
+                    >
+                      {messages.settings.integrations.connectStrava}
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <Link
@@ -350,6 +440,75 @@ export default function SettingsPage() {
             variant="destructive"
           >
             {messages.profile.dangerZone.deleteConfirmCta}
+          </Button>
+        </div>
+      </AccessibleDialog>
+
+      {/* Strava consent modal */}
+      <AccessibleDialog
+        open={showStravaConsent}
+        onClose={() => setShowStravaConsent(false)}
+        title={messages.settings.integrations.consent.title}
+        description={messages.settings.integrations.consent.howWeUseDescription}
+      >
+        <div className="mt-4 space-y-4 text-sm">
+          <div>
+            <p className="font-semibold text-[color:var(--foreground)]">
+              {messages.settings.integrations.consent.whatWeAccess}
+            </p>
+            <ul className="mt-2 space-y-1 text-[color:var(--muted-foreground)]">
+              <li>✓ {messages.settings.integrations.consent.accessProfile}</li>
+              <li>✓ {messages.settings.integrations.consent.accessActivities}</li>
+            </ul>
+          </div>
+          <div>
+            <p className="font-semibold text-[color:var(--foreground)]">
+              {messages.settings.integrations.consent.whatWeDoNot}
+            </p>
+            <ul className="mt-2 space-y-1 text-[color:var(--muted-foreground)]">
+              <li>✗ {messages.settings.integrations.consent.noGps}</li>
+              <li>✗ {messages.settings.integrations.consent.noNotes}</li>
+              <li>✗ {messages.settings.integrations.consent.noSocial}</li>
+              <li>✗ {messages.settings.integrations.consent.noSegments}</li>
+            </ul>
+          </div>
+          <p className="text-[color:var(--muted-foreground)]">
+            {messages.settings.integrations.consent.dataNote}
+          </p>
+        </div>
+        <div className="mt-6 flex gap-3">
+          <Button variant="outline" onClick={() => setShowStravaConsent(false)}>
+            {messages.settings.integrations.consent.cancel}
+          </Button>
+          <Button
+            onClick={() => {
+              setShowStravaConsent(false);
+              void handleConnectStrava();
+            }}
+            isLoading={isConnectingStrava}
+          >
+            {messages.settings.integrations.consent.confirm}
+          </Button>
+        </div>
+      </AccessibleDialog>
+
+      {/* Strava disconnect confirmation */}
+      <AccessibleDialog
+        open={showStravaDisconnect}
+        onClose={() => setShowStravaDisconnect(false)}
+        title={messages.settings.integrations.disconnectConfirm.title}
+        description={messages.settings.integrations.disconnectConfirm.body}
+      >
+        <div className="mt-4 flex gap-3">
+          <Button variant="outline" onClick={() => setShowStravaDisconnect(false)}>
+            {messages.settings.integrations.disconnectConfirm.cancel}
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={() => void handleDisconnectStrava()}
+            isLoading={isDisconnectingStrava}
+          >
+            {messages.settings.integrations.disconnectConfirm.confirm}
           </Button>
         </div>
       </AccessibleDialog>

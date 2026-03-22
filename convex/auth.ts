@@ -18,7 +18,7 @@ type AuthUserDoc = {
   displayName?: string;
   displayNameSource?: "google" | "manual" | "email";
   profile_image_url?: string;
-  profileImageSource?: "google" | "manual";
+  profileImageSource?: "google" | "manual" | "strava";
 };
 
 function normalizeEmail(email: string): string {
@@ -236,6 +236,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
         currentUser?.profileImageSource === "manual" &&
         Boolean(currentUser.profile_image_url);
       if (!hasManualProfileImage && googleProfileImageUrl) {
+        patch.profile_image_url = googleProfileImageUrl;
         patch.profileImageSource = "google";
       }
 
