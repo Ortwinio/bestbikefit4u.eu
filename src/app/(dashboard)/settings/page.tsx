@@ -316,29 +316,23 @@ export default function SettingsPage() {
                   </p>
                 </div>
                 {/* Status badge */}
-                {user?.tier === "pro" || user?.tier === "premium" ? (
-                  <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-1 text-xs font-semibold shadow-sm">
-                    {strava?.accessStatus === "active" ? (
-                      <>
-                        <CheckCircle2 className="h-3.5 w-3.5 text-[color:var(--success,green)]" />
-                        <span className="text-[color:var(--foreground)]">{messages.settings.integrations.connected}</span>
-                      </>
-                    ) : strava?.accessStatus === "error" ? (
-                      <>
-                        <XCircle className="h-3.5 w-3.5 text-[color:var(--destructive)]" />
-                        <span className="text-[color:var(--destructive)]">{messages.settings.integrations.error}</span>
-                      </>
-                    ) : strava?.accessStatus === "pending" ? (
-                      <span className="text-[color:var(--muted-foreground)]">{messages.settings.integrations.pending}</span>
-                    ) : (
-                      <span className="text-[color:var(--muted-foreground)]">{messages.settings.integrations.available}</span>
-                    )}
-                  </span>
-                ) : (
-                  <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-1 text-xs font-semibold text-[color:var(--muted-foreground)] shadow-sm">
-                    {messages.settings.integrations.proOnly}
-                  </span>
-                )}
+                <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-1 text-xs font-semibold shadow-sm">
+                  {strava?.accessStatus === "active" ? (
+                    <>
+                      <CheckCircle2 className="h-3.5 w-3.5 text-[color:var(--success,green)]" />
+                      <span className="text-[color:var(--foreground)]">{messages.settings.integrations.connected}</span>
+                    </>
+                  ) : strava?.accessStatus === "error" ? (
+                    <>
+                      <XCircle className="h-3.5 w-3.5 text-[color:var(--destructive)]" />
+                      <span className="text-[color:var(--destructive)]">{messages.settings.integrations.error}</span>
+                    </>
+                  ) : strava?.accessStatus === "pending" ? (
+                    <span className="text-[color:var(--muted-foreground)]">{messages.settings.integrations.pending}</span>
+                  ) : (
+                    <span className="text-[color:var(--muted-foreground)]">{messages.settings.integrations.available}</span>
+                  )}
+                </span>
               </div>
 
               {/* Connected state: athlete info */}
@@ -365,55 +359,46 @@ export default function SettingsPage() {
               ) : null}
 
               {/* Actions */}
-              {user?.tier === "pro" || user?.tier === "premium" ? (
-                <div className="mt-4 flex flex-wrap gap-3">
-                  {strava?.accessStatus === "active" ? (
-                    <>
-                      {strava.athleteAvatarUrl ? (
-                        <Button
-                          variant="outline"
-                          onClick={() => setShowStravaPhotoConfirm(true)}
-                        >
-                          {messages.settings.integrations.photoImport.importButton}
-                        </Button>
-                      ) : null}
+              <div className="mt-4 flex flex-wrap gap-3">
+                {strava?.accessStatus === "active" ? (
+                  <>
+                    {strava.athleteAvatarUrl ? (
                       <Button
-                        variant="ghost"
-                        onClick={() => setShowStravaDisconnect(true)}
+                        variant="outline"
+                        onClick={() => setShowStravaPhotoConfirm(true)}
                       >
-                        {messages.settings.integrations.disconnectStrava}
+                        {messages.settings.integrations.photoImport.importButton}
                       </Button>
-                    </>
-                  ) : strava?.accessStatus === "error" ? (
+                    ) : null}
                     <Button
-                      variant="outline"
-                      onClick={() => setShowStravaConsent(true)}
-                      isLoading={isConnectingStrava}
+                      variant="ghost"
+                      onClick={() => setShowStravaDisconnect(true)}
                     >
-                      {messages.settings.integrations.reconnect}
+                      {messages.settings.integrations.disconnectStrava}
                     </Button>
-                  ) : strava?.accessStatus === "pending" ? (
-                    <Button variant="outline" disabled>
-                      {messages.settings.integrations.pending}
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowStravaConsent(true)}
-                      isLoading={isConnectingStrava}
-                    >
-                      {messages.settings.integrations.connectStrava}
-                    </Button>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  href={withLocalePrefix("/pricing", locale)}
-                  className="mt-4 inline-flex text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
-                >
-                  {messages.settings.account.upgradeCta}
-                </Link>
-              )}
+                  </>
+                ) : strava?.accessStatus === "error" ? (
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowStravaConsent(true)}
+                    isLoading={isConnectingStrava}
+                  >
+                    {messages.settings.integrations.reconnect}
+                  </Button>
+                ) : strava?.accessStatus === "pending" ? (
+                  <Button variant="outline" disabled>
+                    {messages.settings.integrations.pending}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowStravaConsent(true)}
+                    isLoading={isConnectingStrava}
+                  >
+                    {messages.settings.integrations.connectStrava}
+                  </Button>
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>
