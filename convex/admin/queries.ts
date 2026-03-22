@@ -3,7 +3,7 @@ import { v } from "convex/values";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { QueryCtx } from "../_generated/server";
 import { query } from "../_generated/server";
-import { requireAdminUserId } from "./authz";
+import { requireAdminUserId, requireAnyRole } from "./authz";
 
 type AdminUserSummary = Pick<
   Doc<"users">,
@@ -18,6 +18,26 @@ async function getUserMap(ctx: QueryCtx) {
 function matchesSearch(value: string | undefined, search: string | undefined) {
   if (!search) return true;
   return (value ?? "").toLowerCase().includes(search.toLowerCase());
+}
+
+async function requireBillingAdminRead(ctx: QueryCtx) {
+  return requireAnyRole(ctx, ["super_admin", "ops_admin", "billing_admin"]);
+}
+
+async function requireGovernanceRead(ctx: QueryCtx) {
+  return requireAnyRole(ctx, [
+    "super_admin",
+    "ops_admin",
+    "qa_manager",
+    "geometry_manager",
+    "fit_specialist",
+    "support_admin",
+    "analyst",
+  ]);
+}
+
+async function requireMessagingRead(ctx: QueryCtx) {
+  return requireAnyRole(ctx, ["super_admin", "ops_admin", "support_admin", "qa_manager"]);
 }
 
 export const getCurrentAdminUser = query({
@@ -110,7 +130,7 @@ export const getOverviewStats = query({
 export const getRecentAuditLogs = query({
   args: {},
   handler: async (ctx) => {
-    await requireAdminUserId(ctx);
+    await requireMessagingRead(ctx);
     const userMap = await getUserMap(ctx);
     const logs = await ctx.db
       .query("admin_audit_logs")
@@ -330,28 +350,77 @@ export const getAdminBikeDetail = query({
 export const getAdminRiderData = query({
   args: { userId: v.id("users") },
   handler: async (ctx, { userId }) => {
-    await requireAdminUserId(ctx);
-    const profile = await ctx.db
-      .query("profiles")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .unique();
+    await requireGovernanceRead(ctx);
+    const [user, profile, bikes, sessions] = await Promise.all([
+      ctx.db.get(userId),
+      ctx.db
+        .query("profiles")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .unique(),
+      ctx.db.query("bikes").withIndex("by_user", (q) => q.eq("userId", userId)).collect(),
+      ctx.db.query("fitSessions").withIndex("by_user", (q) => q.eq("userId", userId)).collect(),
+    ]);
     if (!profile) return null;
+
+    const primarySession = sessions[0] ?? null;
+    const questionnaireResponses = primarySession
+      ? await ctx.db
+          .query("questionnaireResponses")
+          .withIndex("by_session", (q) => q.eq("sessionId", primarySession._id))
+          .collect()
+      : [];
+    const recommendations = primarySession
+      ? await ctx.db
+          .query("recommendations")
+          .withIndex("by_session", (q) => q.eq("sessionId", primarySession._id))
+          .collect()
+      : [];
+    const validationCaptures = primarySession
+      ? await ctx.db
+          .query("validationCaptures")
+          .withIndex("by_session", (q) => q.eq("sessionId", primarySession._id))
+          .collect()
+      : [];
+    const rideFeedbackEntries = primarySession
+      ? await ctx.db
+          .query("rideFeedbackEntries")
+          .withIndex("by_session", (q) => q.eq("sessionId", primarySession._id))
+          .collect()
+      : [];
+    const emailReports = primarySession
+      ? await ctx.db
+          .query("emailReports")
+          .withIndex("by_session", (q) => q.eq("sessionId", primarySession._id))
+          .collect()
+      : [];
 
     const measurementFlags = [
       profile.heightCm && profile.inseamCm > profile.heightCm * 0.55
         ? "inseam_outlier"
         : null,
       profile.heightCm === 0 || profile.inseamCm === 0 ? "zero_measurement" : null,
+      profile.injuryHistory?.some((entry) => entry.isOngoing) ? "ongoing_injury" : null,
     ].filter(Boolean);
 
-    return { profile, measurementFlags };
+    return {
+      user,
+      profile,
+      bikes,
+      fitSessions: sessions,
+      questionnaireResponses,
+      recommendations,
+      validationCaptures,
+      rideFeedbackEntries,
+      emailReports,
+      measurementFlags,
+    };
   },
 });
 
 export const listGeometryBrands = query({
   args: {},
   handler: async (ctx) => {
-    await requireAdminUserId(ctx);
+    await requireGovernanceRead(ctx);
     return await ctx.db.query("geometry_brands").collect();
   },
 });
@@ -359,7 +428,7 @@ export const listGeometryBrands = query({
 export const listGeometryModels = query({
   args: { brandId: v.id("geometry_brands") },
   handler: async (ctx, { brandId }) => {
-    await requireAdminUserId(ctx);
+    await requireGovernanceRead(ctx);
     return await ctx.db
       .query("geometry_models")
       .withIndex("by_brand", (q) => q.eq("brandId", brandId))
@@ -370,7 +439,7 @@ export const listGeometryModels = query({
 export const listGeometryRecords = query({
   args: { modelId: v.id("geometry_models") },
   handler: async (ctx, { modelId }) => {
-    await requireAdminUserId(ctx);
+    await requireGovernanceRead(ctx);
     return await ctx.db
       .query("geometry_records")
       .withIndex("by_model", (q) => q.eq("modelId", modelId))
@@ -381,7 +450,7 @@ export const listGeometryRecords = query({
 export const getGeometryRecordDetail = query({
   args: { recordId: v.id("geometry_records") },
   handler: async (ctx, { recordId }) => {
-    await requireAdminUserId(ctx);
+    await requireGovernanceRead(ctx);
     const record = await ctx.db.get(recordId);
     if (!record) return null;
     const history = await ctx.db
@@ -402,7 +471,7 @@ export const listFitRuns = query({
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    await requireAdminUserId(ctx);
+    await requireGovernanceRead(ctx);
     return await ctx.db
       .query("fitSessions")
       .filter((q) => {
@@ -423,7 +492,7 @@ export const listFitRuns = query({
 export const getFitRunTrace = query({
   args: { sessionId: v.id("fitSessions") },
   handler: async (ctx, { sessionId }) => {
-    await requireAdminUserId(ctx);
+    await requireGovernanceRead(ctx);
     const session = await ctx.db.get(sessionId);
     if (!session) return null;
     const [user, bike, profile, engineVersion] = await Promise.all([
@@ -439,7 +508,7 @@ export const getFitRunTrace = query({
 export const listEngineVersions = query({
   args: {},
   handler: async (ctx) => {
-    await requireAdminUserId(ctx);
+    await requireGovernanceRead(ctx);
     return await ctx.db.query("engine_versions").collect();
   },
 });
@@ -447,7 +516,7 @@ export const listEngineVersions = query({
 export const getEngineVersionDetail = query({
   args: { versionId: v.id("engine_versions") },
   handler: async (ctx, { versionId }) => {
-    await requireAdminUserId(ctx);
+    await requireGovernanceRead(ctx);
     const version = await ctx.db.get(versionId);
     if (!version) return null;
     const fitRuns = await ctx.db
@@ -466,7 +535,7 @@ export const listFeedbackItems = query({
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    await requireAdminUserId(ctx);
+    await requireGovernanceRead(ctx);
     return await ctx.db
       .query("feedback_items")
       .filter((q) => {
@@ -483,7 +552,7 @@ export const listFeedbackItems = query({
 export const getFeedbackDetail = query({
   args: { feedbackItemId: v.id("feedback_items") },
   handler: async (ctx, { feedbackItemId }) => {
-    await requireAdminUserId(ctx);
+    await requireGovernanceRead(ctx);
     const item = await ctx.db.get(feedbackItemId);
     if (!item) return null;
     const [comments, user, release] = await Promise.all([
@@ -505,7 +574,7 @@ export const listReleases = query({
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    await requireAdminUserId(ctx);
+    await requireGovernanceRead(ctx);
     return await ctx.db
       .query("releases")
       .filter((q) => {
@@ -521,7 +590,7 @@ export const listReleases = query({
 export const getReleaseDetail = query({
   args: { releaseId: v.id("releases") },
   handler: async (ctx, { releaseId }) => {
-    await requireAdminUserId(ctx);
+    await requireGovernanceRead(ctx);
     const release = await ctx.db.get(releaseId);
     if (!release) return null;
     const linkedItems = await ctx.db
@@ -538,7 +607,7 @@ export const listDashboardMessages = query({
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    await requireAdminUserId(ctx);
+    await requireMessagingRead(ctx);
     return await ctx.db
       .query("dashboard_messages")
       .filter((q) =>
@@ -551,7 +620,7 @@ export const listDashboardMessages = query({
 export const getDashboardMessageDetail = query({
   args: { messageId: v.id("dashboard_messages") },
   handler: async (ctx, { messageId }) => {
-    await requireAdminUserId(ctx);
+    await requireMessagingRead(ctx);
     const [message, targets, receipts] = await Promise.all([
       ctx.db.get(messageId),
       ctx.db.query("message_targets").withIndex("by_message", (q) => q.eq("messageId", messageId)).collect(),
@@ -571,33 +640,61 @@ export const estimateMessageReach = query({
     ),
   },
   handler: async (ctx, { targets }) => {
-    await requireAdminUserId(ctx);
-    const users = await ctx.db.query("users").collect();
+    await requireMessagingRead(ctx);
+    const [users, integrations, fitSessions, memberships, bikes] = await Promise.all([
+      ctx.db.query("users").collect(),
+      ctx.db.query("integrations").collect(),
+      ctx.db.query("fitSessions").collect(),
+      ctx.db.query("organization_members").collect(),
+      ctx.db.query("bikes").collect(),
+    ]);
+    const activeIntegrations = new Set(
+      integrations.filter((integration) => integration.accessStatus === "active").map((integration) => integration.userId)
+    );
+    const usersWithFit = new Set(fitSessions.map((session) => session.userId));
+    const membershipsByUser = new Map<string, Set<string>>();
+    for (const membership of memberships) {
+      const key = String(membership.userId);
+      const current = membershipsByUser.get(key) ?? new Set<string>();
+      current.add(String(membership.organizationId));
+      membershipsByUser.set(key, current);
+    }
+    const bikesByUser = new Map<string, Array<(typeof bikes)[number]>>();
+    for (const bike of bikes) {
+      const key = String(bike.userId);
+      const current = bikesByUser.get(key) ?? [];
+      current.push(bike);
+      bikesByUser.set(key, current);
+    }
+
     const matched = new Set<string>();
     for (const user of users) {
-      const integration = await ctx.db
-        .query("integrations")
-        .withIndex("by_user_and_provider", (q) =>
-          q.eq("userId", user._id).eq("provider", "strava")
-        )
-        .unique();
-      const hasFit = Boolean(
-        await ctx.db.query("fitSessions").withIndex("by_user", (q) => q.eq("userId", user._id)).first()
-      );
       const matches = targets.some((target) => {
         switch (target.targetType) {
           case "all":
             return true;
           case "user":
-            return target.targetValue === user._id;
+            return target.targetValue === String(user._id);
           case "plan":
             return target.targetValue === user.tier;
+          case "organization":
+            return Boolean(
+              target.targetValue &&
+                membershipsByUser.get(String(user._id))?.has(target.targetValue)
+            );
           case "locale":
             return true;
           case "strava_connected":
-            return target.targetValue === String(integration?.accessStatus === "active");
+            return target.targetValue === String(activeIntegrations.has(user._id));
           case "fit_completed":
-            return target.targetValue === String(hasFit);
+            return target.targetValue === String(usersWithFit.has(user._id));
+          case "bike_type":
+            return Boolean(
+              target.targetValue &&
+                bikesByUser
+                  .get(String(user._id))
+                  ?.some((bike) => bike.bikeType === target.targetValue)
+            );
           default:
             return false;
         }
@@ -616,7 +713,7 @@ export const listAuditLogs = query({
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    await requireAdminUserId(ctx);
+    await requireMessagingRead(ctx);
     return await ctx.db
       .query("admin_audit_logs")
       .filter((q) => {
@@ -633,7 +730,195 @@ export const listAuditLogs = query({
 export const getFeatureFlags = query({
   args: {},
   handler: async (ctx) => {
-    await requireAdminUserId(ctx);
+    await requireBillingAdminRead(ctx);
     return await ctx.db.query("feature_flags").collect();
   },
 });
+
+export const listPlans = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireBillingAdminRead(ctx);
+    const plans = await ctx.db.query("plans").collect();
+    return plans.sort((a, b) => {
+      if (a.isActive !== b.isActive) return a.isActive ? -1 : 1;
+      return a.name.localeCompare(b.name);
+    });
+  },
+});
+
+export const getPlanDetail = query({
+  args: { planId: v.id("plans") },
+  handler: async (ctx, { planId }) => {
+    await requireBillingAdminRead(ctx);
+    const [plan, subscriptions, billingEvents] = await Promise.all([
+      ctx.db.get(planId),
+      ctx.db.query("subscriptions").withIndex("by_plan", (q) => q.eq("planId", planId)).collect(),
+      ctx.db.query("billing_events").collect(),
+    ]);
+    if (!plan) return null;
+    const subscriptionIds = new Set(subscriptions.map((subscription) => subscription._id));
+    return {
+      plan,
+      subscriptions,
+      billingEvents: billingEvents.filter(
+        (event) => event.subscriptionId && subscriptionIds.has(event.subscriptionId)
+      ),
+    };
+  },
+});
+
+export const listSubscriptions = query({
+  args: {
+    userId: v.optional(v.id("users")),
+    organizationId: v.optional(v.id("organizations")),
+    status: v.optional(v.string()),
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, args) => {
+    await requireBillingAdminRead(ctx);
+    return await ctx.db
+      .query("subscriptions")
+      .filter((q) => {
+        const predicates = [];
+        if (args.userId) predicates.push(q.eq(q.field("userId"), args.userId));
+        if (args.organizationId) predicates.push(q.eq(q.field("organizationId"), args.organizationId));
+        if (args.status) predicates.push(q.eq(q.field("status"), args.status));
+        return predicates.length > 0 ? q.and(...predicates) : q.eq(q.field("status"), q.field("status"));
+      })
+      .paginate(args.paginationOpts);
+  },
+});
+
+export const getSubscriptionDetail = query({
+  args: { subscriptionId: v.id("subscriptions") },
+  handler: async (ctx, { subscriptionId }) => {
+    await requireBillingAdminRead(ctx);
+    const subscription = await ctx.db.get(subscriptionId);
+    if (!subscription) return null;
+    const [user, organization, plan, events] = await Promise.all([
+      subscription.userId ? ctx.db.get(subscription.userId) : Promise.resolve(null),
+      subscription.organizationId ? ctx.db.get(subscription.organizationId) : Promise.resolve(null),
+      ctx.db.get(subscription.planId),
+      ctx.db
+        .query("billing_events")
+        .withIndex("by_subscription", (q) => q.eq("subscriptionId", subscriptionId))
+        .collect(),
+    ]);
+    return { subscription, user, organization, plan, events };
+  },
+});
+
+export const listBillingEvents = query({
+  args: {
+    subscriptionId: v.optional(v.id("subscriptions")),
+    userId: v.optional(v.id("users")),
+    organizationId: v.optional(v.id("organizations")),
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, args) => {
+    await requireBillingAdminRead(ctx);
+    return await ctx.db
+      .query("billing_events")
+      .filter((q) => {
+        const predicates = [];
+        if (args.subscriptionId) predicates.push(q.eq(q.field("subscriptionId"), args.subscriptionId));
+        if (args.userId) predicates.push(q.eq(q.field("userId"), args.userId));
+        if (args.organizationId) predicates.push(q.eq(q.field("organizationId"), args.organizationId));
+        return predicates.length > 0 ? q.and(...predicates) : q.eq(q.field("eventType"), q.field("eventType"));
+      })
+      .paginate(args.paginationOpts);
+  },
+});
+
+export const listGdprRequests = query({
+  args: { paginationOpts: paginationOptsValidator },
+  handler: async (ctx, args) => {
+    await requireBillingAdminRead(ctx);
+    return await ctx.db
+      .query("gdpr_requests")
+      .withIndex("by_received_at")
+      .order("desc")
+      .paginate(args.paginationOpts);
+  },
+});
+
+export const listAdminRiderQueue = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireGovernanceRead(ctx);
+    const [users, profiles, bikes, sessions, feedbackItems] = await Promise.all([
+      ctx.db.query("users").collect(),
+      ctx.db.query("profiles").collect(),
+      ctx.db.query("bikes").collect(),
+      ctx.db.query("fitSessions").collect(),
+      ctx.db.query("feedback_items").collect(),
+    ]);
+    const userById = new Map(users.map((user) => [String(user._id), user]));
+    const bikesByUser = new Map<string, number>();
+    for (const bike of bikes) {
+      const key = String(bike.userId);
+      bikesByUser.set(key, (bikesByUser.get(key) ?? 0) + 1);
+    }
+    const sessionsByUser = new Map<string, number>();
+    for (const session of sessions) {
+      const key = String(session.userId);
+      sessionsByUser.set(key, (sessionsByUser.get(key) ?? 0) + 1);
+    }
+    const feedbackByUser = new Map<string, number>();
+    for (const item of feedbackItems) {
+      if (!item.userId) continue;
+      const key = String(item.userId);
+      feedbackByUser.set(key, (feedbackByUser.get(key) ?? 0) + 1);
+    }
+    return profiles
+      .map((profile) => {
+        const user = userById.get(String(profile.userId)) ?? null;
+        const measurementFlags = [
+          profile.heightCm && profile.inseamCm > profile.heightCm * 0.55 ? "inseam_outlier" : null,
+          profile.heightCm === 0 || profile.inseamCm === 0 ? "zero_measurement" : null,
+          profile.injuryHistory?.some((entry) => entry.isOngoing) ? "ongoing_injury" : null,
+        ].filter(Boolean);
+        return {
+          user,
+          profile,
+          bikesCount: bikesByUser.get(String(profile.userId)) ?? 0,
+          fitRunsCount: sessionsByUser.get(String(profile.userId)) ?? 0,
+          feedbackCount: feedbackByUser.get(String(profile.userId)) ?? 0,
+          measurementFlags,
+        };
+      })
+      .sort((a, b) => {
+        const aScore = a.measurementFlags.length + a.feedbackCount + a.fitRunsCount;
+        const bScore = b.measurementFlags.length + b.feedbackCount + b.fitRunsCount;
+        return bScore - aScore;
+      });
+  },
+});
+
+export const listAdminUsers = listUsers;
+export const getAdminUserDetail = getUserDetail;
+export const listAdminOrganizations = listOrganizations;
+export const getAdminOrganizationDetail = getOrganizationDetail;
+export const listAdminOrgMembers = listOrgMembers;
+export const listAdminBikes = listAllBikes;
+export const listAdminGeometryBrands = listGeometryBrands;
+export const listAdminGeometryModels = listGeometryModels;
+export const listAdminGeometryRecords = listGeometryRecords;
+export const getAdminGeometryRecord = getGeometryRecordDetail;
+export const listAdminFitRuns = listFitRuns;
+export const getAdminFitRunTrace = getFitRunTrace;
+export const listAdminEngineVersions = listEngineVersions;
+export const getAdminEngineVersionDetail = getEngineVersionDetail;
+export const listAdminReleases = listReleases;
+export const getAdminReleaseDetail = getReleaseDetail;
+export const listAdminFeedbackItems = listFeedbackItems;
+export const getAdminFeedbackDetail = getFeedbackDetail;
+export const listAdminDashboardMessages = listDashboardMessages;
+export const getAdminDashboardMessageDetail = getDashboardMessageDetail;
+export const listAdminPlans = listPlans;
+export const getAdminPlanDetail = getPlanDetail;
+export const listAdminSubscriptions = listSubscriptions;
+export const getAdminSubscriptionDetail = getSubscriptionDetail;
+export const listAdminBillingEvents = listBillingEvents;
+export const listAdminGdprRequests = listGdprRequests;

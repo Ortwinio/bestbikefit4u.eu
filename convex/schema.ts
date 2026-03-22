@@ -1305,7 +1305,13 @@ export default defineSchema({
   plans: defineTable({
     key: v.string(),
     name: v.string(),
-    tier: v.union(v.literal("free"), v.literal("pro"), v.literal("premium")),
+    tier: v.union(
+      v.literal("free"),
+      v.literal("pro"),
+      v.literal("premium"),
+      v.literal("bike_shop"),
+      v.literal("enterprise")
+    ),
     priceCents: v.optional(v.number()),
     billingInterval: v.optional(
       v.union(v.literal("month"), v.literal("year"), v.literal("custom"))
@@ -1362,9 +1368,14 @@ export default defineSchema({
   gdpr_requests: defineTable({
     requestType: v.union(v.literal("export"), v.literal("erasure")),
     requesterEmail: v.string(),
+    subjectUserId: v.optional(v.id("users")),
+    status: v.union(v.literal("requested"), v.literal("fulfilled"), v.literal("failed")),
     receivedAt: v.number(),
     fulfilledAt: v.optional(v.number()),
     notes: v.optional(v.string()),
     createdBy: v.id("users"),
-  }).index("by_received_at", ["receivedAt"]),
+  })
+    .index("by_received_at", ["receivedAt"])
+    .index("by_subject", ["subjectUserId"])
+    .index("by_status", ["status"]),
 });

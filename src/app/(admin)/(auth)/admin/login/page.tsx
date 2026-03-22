@@ -2,12 +2,18 @@ import { redirect } from "next/navigation";
 import { CircuitBoard, ShieldCheck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import { AdminLoginForm } from "@/components/admin/auth/AdminLoginForm";
-import { getCurrentAdminSession } from "@/components/admin/auth/admin-session";
+import {
+  getCurrentAdminSession,
+  hasAuthenticatedNonAdminSession,
+} from "@/components/admin/auth/admin-session";
 
 export default async function AdminLoginPage() {
   const session = await getCurrentAdminSession();
   if (session) {
     redirect("/admin/overview");
+  }
+  if (await hasAuthenticatedNonAdminSession()) {
+    redirect("/dashboard");
   }
 
   return (

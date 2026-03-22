@@ -16,13 +16,19 @@ type CurrentUserRecord = {
   adminRole?: unknown;
 } | null;
 
-export async function getCurrentAdminSession(): Promise<AdminSessionUser | null> {
+async function getCurrentUserRecord(): Promise<CurrentUserRecord> {
   const token = await convexAuthNextjsToken();
   if (!token) {
     return null;
   }
 
-  const user = (await fetchQuery(api.users.queries.getCurrentUser, {}, { token })) as CurrentUserRecord;
+  return (await fetchQuery(api.users.queries.getCurrentUser, {}, {
+    token,
+  })) as CurrentUserRecord;
+}
+
+export async function getCurrentAdminSession(): Promise<AdminSessionUser | null> {
+  const user = await getCurrentUserRecord();
   if (!user || !user.adminRole || !isAdminRole(user.adminRole)) {
     return null;
   }
@@ -44,6 +50,11 @@ export async function requireAdminSession(
   }
 
   return session as AdminSessionUser;
+}
+
+export async function hasAuthenticatedNonAdminSession() {
+  const user = await getCurrentUserRecord();
+  return Boolean(user && (!user.adminRole || !isAdminRole(user.adminRole)));
 }
 
 export { isAdminRole } from "./admin-auth-shared";

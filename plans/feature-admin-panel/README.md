@@ -1,7 +1,16 @@
 # Admin Panel — Feature Plan
 
-**Status:** Planning
+**Status:** Implemented
 **Target:** v1 production release
+
+Execution status:
+- Protected `/admin/*` route tree is implemented.
+- Convex admin queries, mutations, actions, and audit logging are in place.
+- Shared admin UI is built on the existing Prototyper-style component layer.
+- Validation passed with `vitest`, `npx tsc --noEmit --pretty false`, and `npm run build:vercel`.
+
+Remediation note:
+- Several admin domains are still fixture-driven rather than live-data complete. Follow-on work is tracked in `plans/refactor-admin-panel-acceptance-remediation/`.
 
 ---
 

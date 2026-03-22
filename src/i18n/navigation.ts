@@ -78,3 +78,8 @@ export function isProtectedAppPath(pathname: string): boolean {
       internalPathname === root || internalPathname.startsWith(`${root}/`)
   );
 }
+
+export function isAdminPath(pathname: string): boolean {
+  const internalPathname = stripLocalePrefix(pathname);
+  return internalPathname === "/admin" || internalPathname.startsWith("/admin/");
+}
