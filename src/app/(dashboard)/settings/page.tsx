@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
@@ -31,10 +31,33 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { CheckCircle2, Trash2, XCircle } from "lucide-react";
 
+// Separate component so useSearchParams() is inside a Suspense boundary
+function StravaCallbackToast() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { locale, messages } = useDashboardMessages();
+  const toast = useToast();
+
+  useEffect(() => {
+    const stravaParam = searchParams?.get("strava");
+    if (!stravaParam) return;
+    router.replace(withLocalePrefix("/settings", locale));
+    if (stravaParam === "connected") {
+      toast.success({ description: messages.settings.integrations.callback.connected });
+    } else if (stravaParam === "denied") {
+      toast.info({ description: messages.settings.integrations.callback.denied });
+    } else if (stravaParam === "error") {
+      toast.error({ description: messages.settings.integrations.callback.error });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return null;
+}
+
 export default function SettingsPage() {
   const { signOut } = useAuthActions();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { locale, messages, languageSwitchLabels } = useDashboardMessages();
   const toast = useToast();
   const user = useQuery(api.users.queries.getCurrentUser);
@@ -83,22 +106,6 @@ export default function SettingsPage() {
   useEffect(() => {
     setDisplayName(editableDisplayName);
   }, [editableDisplayName]);
-
-  useEffect(() => {
-    const stravaParam = searchParams?.get("strava");
-    if (!stravaParam) return;
-    // Clean the URL immediately so refreshing doesn't re-show the toast
-    const cleanUrl = withLocalePrefix("/settings", locale);
-    router.replace(cleanUrl);
-    if (stravaParam === "connected") {
-      toast.success({ description: messages.settings.integrations.callback.connected });
-    } else if (stravaParam === "denied") {
-      toast.info({ description: messages.settings.integrations.callback.denied });
-    } else if (stravaParam === "error") {
-      toast.error({ description: messages.settings.integrations.callback.error });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleDeleteAccount = async () => {
     setDeleteError(null);
@@ -178,6 +185,9 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 text-[color:var(--foreground)]">
+      <Suspense>
+        <StravaCallbackToast />
+      </Suspense>
       <div>
         <h1 className="text-2xl font-bold text-[color:var(--foreground)]">{messages.settings.title}</h1>
         <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">{messages.settings.subtitle}</p>
