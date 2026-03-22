@@ -41,6 +41,31 @@ function formatDate(value?: number | string | null) {
   });
 }
 
+function BikePhoto({ photoUrl, name }: { photoUrl?: string | null; name: string }) {
+  if (photoUrl) {
+    return (
+      <img
+        src={photoUrl}
+        alt={name}
+        className="h-10 w-16 rounded object-cover shrink-0"
+        onError={(e) => {
+          (e.currentTarget as HTMLImageElement).style.display = "none";
+          (e.currentTarget.nextElementSibling as HTMLElement | null)?.removeAttribute("hidden");
+        }}
+      />
+    );
+  }
+  return (
+    <div className="flex h-10 w-16 shrink-0 items-center justify-center rounded bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+        <circle cx="6" cy="17" r="3" />
+        <circle cx="18" cy="17" r="3" />
+        <path d="M6 17h12M9 10l3-6 3 3-2 3h3l2 7" />
+      </svg>
+    </div>
+  );
+}
+
 function BikeSnapshotRow({ bike }: { bike: BikeRow }) {
   const detail = useQuery(api.admin.queries.getAdminBikeDetail, { bikeId: bike._id });
 
@@ -63,9 +88,19 @@ function BikeSnapshotRow({ bike }: { bike: BikeRow }) {
   return (
     <tr className="border-t border-[color:var(--border)]">
       <td className="px-4 py-4 align-top">
-        <div className="font-medium">{bike.name}</div>
-        <div className="text-xs text-[color:var(--muted-foreground)]">
-          {bike.brand ?? "No brand"} / {bike.model ?? "No model"}
+        <div className="flex items-start gap-3">
+          <BikePhoto photoUrl={bike.photoUrl} name={bike.name} />
+          <div>
+            <div className="font-medium">{bike.name}</div>
+            <div className="text-xs text-[color:var(--muted-foreground)]">
+              {bike.brand ?? "No brand"} / {bike.model ?? "No model"}
+            </div>
+            {bike.bikeType && (
+              <div className="mt-1">
+                <SharedStatusPill tone="neutral">{bike.bikeType}</SharedStatusPill>
+              </div>
+            )}
+          </div>
         </div>
       </td>
       <td className="px-4 py-4 align-top">
