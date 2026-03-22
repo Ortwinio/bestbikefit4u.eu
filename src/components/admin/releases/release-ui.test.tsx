@@ -14,6 +14,7 @@ describe("release admin ui helpers", () => {
     expect(releaseStatusTone("rolling_out")).toBe("warning");
     expect(releaseStatusTone("approved")).toBe("info");
     expect(releaseStatusTone("rolled_back")).toBe("danger");
+    expect(releaseStatusTone("archived")).toBe("neutral");
     expect(releaseStatusTone("draft")).toBe("neutral");
   });
 

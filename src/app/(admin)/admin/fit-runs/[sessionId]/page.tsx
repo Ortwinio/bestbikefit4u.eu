@@ -1,20 +1,30 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Progress, Textarea } from "@/components/ui";
+import type { Doc } from "../../../../../../convex/_generated/dataModel";
+import { api } from "../../../../../../convex/_generated/api";
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Progress } from "@/components/ui";
 import {
   AdminPageHeader,
   AdminSectionCard,
   AdminStatusPill,
 } from "@/components/admin/layout/AdminUi";
-import { engineVersions, fitRuns, fitTraces } from "@/components/admin/fit/data";
-import { cn } from "@/utils/cn";
+import { FitRunReviewPanel } from "@/components/admin/fit/FitRunReviewPanel";
+import { reviewStatusTone } from "@/components/admin/fit/fit-ui";
+import {
+  formatAdminDateTime,
+  formatAdminPercent,
+  getAdminDisplayName,
+  getBikeDisplayName,
+} from "@/components/admin/shared/admin-format";
+import { fetchAdminQuery, getAdminQueryToken } from "@/components/admin/shared/admin-live-data";
 
-function reviewTone(status: string) {
-  if (status === "required") return "warning";
-  if (status === "reviewed") return "success";
-  if (status === "overridden") return "info";
-  return "neutral";
-}
+type FitRunTraceDetail = {
+  session: Doc<"fitSessions">;
+  user: Doc<"users"> | null;
+  bike: Doc<"bikes"> | null;
+  profile: Doc<"profiles"> | null;
+  engineVersion: Doc<"engine_versions"> | null;
+};
 
 export default async function FitRunDetailPage({
   params,
@@ -22,147 +32,304 @@ export default async function FitRunDetailPage({
   params: Promise<{ sessionId: string }>;
 }) {
   const { sessionId } = await params;
-  const run = fitRuns.find((item) => item.sessionId === sessionId);
+  const token = await getAdminQueryToken();
+  const detail = (await fetchAdminQuery(
+    api.admin.queries.getFitRunTrace,
+    { sessionId: sessionId as Doc<"fitSessions">["_id"] },
+    token
+  )) as FitRunTraceDetail | null;
 
-  if (!run) {
+  if (!detail) {
     notFound();
   }
 
-  const traceSteps = fitTraces[run.sessionId] ?? [];
-  const engineVersion = engineVersions.find((item) => item.id === run.engineVersionId);
+  const { session, user, bike, profile, engineVersion } = detail;
+  const bikeLabel = getBikeDisplayName(bike);
+  const confidence = formatAdminPercent(session.confidenceScore);
 
   return (
     <div className="space-y-8">
       <AdminPageHeader
         eyebrow="Fit operations"
-        title={run.user}
-        description={`${run.bike} · ${run.completedAt}`}
+        title={getAdminDisplayName(user)}
+        description={`${bikeLabel} · ${formatAdminDateTime(session.completedAt ?? session.createdAt)}`}
         actions={
           <>
-            <Button variant="outline" render={<Link href="/admin/fit-runs" />}>Back to runs</Button>
-            <Button render={<Link href={`/admin/fit-engine/${run.engineVersionId}`} />}>Open version</Button>
+            <Button variant="outline" render={<Link href="/admin/fit-runs" />}>
+              Back to runs
+            </Button>
+            {engineVersion ? (
+              <Button
+                render={<Link href={`/admin/fit-engine/${engineVersion._id}`} />}
+              >
+                Open version
+              </Button>
+            ) : (
+              <Button disabled>Open version</Button>
+            )}
           </>
         }
       />
 
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
+          <CardHeader>
+            <CardDescription className="text-xs uppercase tracking-wide">
+              Confidence
+            </CardDescription>
+            <CardTitle className="text-2xl">{confidence}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
+          <CardHeader>
+            <CardDescription className="text-xs uppercase tracking-wide">
+              Review
+            </CardDescription>
+            <CardTitle className="text-2xl">
+              <AdminStatusPill tone={reviewStatusTone(session.reviewStatus ?? "not_required")}>
+                {session.reviewStatus ?? "not_required"}
+              </AdminStatusPill>
+            </CardTitle>
+          </CardHeader>
+        </Card>
+        <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
+          <CardHeader>
+            <CardDescription className="text-xs uppercase tracking-wide">
+              Engine
+            </CardDescription>
+            <CardTitle className="text-base leading-6">
+              {engineVersion?.versionLabel ?? "No engine version recorded"}
+            </CardTitle>
+          </CardHeader>
+        </Card>
+        <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
+          <CardHeader>
+            <CardDescription className="text-xs uppercase tracking-wide">
+              Session state
+            </CardDescription>
+            <CardTitle className="text-base leading-6">{session.status.replaceAll("_", " ")}</CardTitle>
+          </CardHeader>
+        </Card>
+      </section>
+
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.8fr)]">
-        <AdminSectionCard title="Trace timeline" description="A readable timeline of the calculation steps that produced this fit result.">
-          <div className="space-y-4">
-            {traceSteps.map((step, index) => (
-              <div
-                key={`${step.step}-${index}`}
-                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                      Step {index + 1}
-                    </p>
-                    <h3 className="mt-1 text-base font-semibold">{step.step}</h3>
-                  </div>
-                  {step.warning ? <AdminStatusPill tone="warning">warning</AdminStatusPill> : null}
-                </div>
-                <div className="mt-3 grid gap-3 md:grid-cols-2">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">Method</p>
-                    <p className="mt-1 text-sm">{step.method}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">Input</p>
-                    <p className="mt-1 text-sm">{step.input}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">Output</p>
-                    <p className="mt-1 text-sm">{step.output}</p>
-                  </div>
-                  {step.modifier ? (
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">Modifier</p>
-                      <p className="mt-1 text-sm">{step.modifier}</p>
-                    </div>
-                  ) : null}
-                </div>
-                {step.warning ? (
-                  <p className="mt-3 rounded-xl border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--secondary))] px-3 py-2 text-sm">
-                    {step.warning}
-                  </p>
-                ) : null}
+        <div className="space-y-6">
+          <AdminSectionCard
+            title="Session snapshot"
+            description="Live fields stored in the fit session."
+          >
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  Riding style
+                </p>
+                <p className="mt-2 text-sm leading-6">{session.ridingStyle}</p>
               </div>
-            ))}
-          </div>
-        </AdminSectionCard>
+              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  Primary goal
+                </p>
+                <p className="mt-2 text-sm leading-6">{session.primaryGoal}</p>
+              </div>
+              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  Weekly hours
+                </p>
+                <p className="mt-2 text-sm leading-6">
+                  {session.weeklyHours ?? "Unset"}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  Longest ride
+                </p>
+                <p className="mt-2 text-sm leading-6">
+                  {session.longestRideKm ? `${session.longestRideKm} km` : "Unset"}
+                </p>
+              </div>
+            </div>
+            {session.reviewNotes ? (
+              <div className="mt-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  Review notes
+                </p>
+                <p className="mt-2 text-sm leading-6">{session.reviewNotes}</p>
+              </div>
+            ) : null}
+          </AdminSectionCard>
+
+          <AdminSectionCard
+            title="Rider profile"
+            description="The rider measurement snapshot linked to this run."
+          >
+            {profile ? (
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                    Height
+                  </p>
+                  <p className="mt-2 text-sm leading-6">{profile.heightCm} cm</p>
+                </div>
+                <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                    Inseam
+                  </p>
+                  <p className="mt-2 text-sm leading-6">{profile.inseamCm} cm</p>
+                </div>
+                <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                    Torso
+                  </p>
+                  <p className="mt-2 text-sm leading-6">{profile.torsoLengthCm} cm</p>
+                </div>
+                <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                    Flexibility
+                  </p>
+                  <p className="mt-2 text-sm leading-6">{profile.flexibilityScore}</p>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-[color:var(--muted-foreground)]">
+                No profile snapshot was attached to this run.
+              </p>
+            )}
+          </AdminSectionCard>
+
+          <AdminSectionCard
+            title="Bike snapshot"
+            description="The exact bike record associated with the run."
+          >
+            {bike ? (
+              <div className="space-y-3">
+                <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                    Bike
+                  </p>
+                  <p className="mt-2 text-sm leading-6">{bikeLabel}</p>
+                </div>
+                <div className="grid gap-3 md:grid-cols-2">
+                  <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                      Type
+                    </p>
+                    <p className="mt-2 text-sm leading-6">{bike.bikeType}</p>
+                  </div>
+                  <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                      Geometry record
+                    </p>
+                    <p className="mt-2 text-sm leading-6">
+                      {bike.geometryRecordId ?? "Unset"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-[color:var(--muted-foreground)]">
+                No bike was linked to this run.
+              </p>
+            )}
+          </AdminSectionCard>
+
+          <AdminSectionCard
+            title="Engine snapshot"
+            description="The version that produced the fit output."
+          >
+            {engineVersion ? (
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                    Version
+                  </p>
+                  <p className="mt-2 text-sm leading-6">{engineVersion.versionLabel}</p>
+                </div>
+                <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                    Status
+                  </p>
+                  <p className="mt-2 text-sm leading-6">
+                    {engineVersion.status}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                    QA status
+                  </p>
+                  <p className="mt-2 text-sm leading-6">
+                    {engineVersion.qaStatus ?? "pending"}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                    Rollback plan
+                  </p>
+                  <p className="mt-2 text-sm leading-6">
+                    {engineVersion.rollbackPlan ?? "No rollback plan stored."}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-[color:var(--muted-foreground)]">
+                No engine snapshot was attached to this run.
+              </p>
+            )}
+          </AdminSectionCard>
+        </div>
 
         <div className="space-y-6">
-          <AdminSectionCard title="Summary" description="Core values and the review status at a glance.">
+          <AdminSectionCard
+            title="Run summary"
+            description="Core values and the review status at a glance."
+          >
             <div className="space-y-4">
               <div className="grid gap-3 sm:grid-cols-2">
                 <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
                   <CardHeader>
-                    <CardDescription className="uppercase tracking-wide text-xs">Confidence</CardDescription>
-                    <CardTitle className="text-2xl">{Math.round(run.confidenceScore * 100)}%</CardTitle>
+                    <CardDescription className="text-xs uppercase tracking-wide">
+                      Confidence
+                    </CardDescription>
+                    <CardTitle className="text-2xl">{confidence}</CardTitle>
                   </CardHeader>
                 </Card>
                 <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
                   <CardHeader>
-                    <CardDescription className="uppercase tracking-wide text-xs">Review</CardDescription>
+                    <CardDescription className="text-xs uppercase tracking-wide">
+                      Review
+                    </CardDescription>
                     <CardTitle className="text-2xl">
-                      <AdminStatusPill tone={reviewTone(run.reviewStatus)}>
-                        {run.reviewStatus}
+                      <AdminStatusPill tone={reviewStatusTone(session.reviewStatus ?? "not_required")}>
+                        {session.reviewStatus ?? "not_required"}
                       </AdminStatusPill>
                     </CardTitle>
                   </CardHeader>
                 </Card>
               </div>
 
-              <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                  Engine
-                </p>
-                <p className="text-sm">{engineVersion?.versionLabel ?? run.engineVersionId}</p>
-              </div>
-
-              <Progress value={run.confidenceScore * 100} max={100} label="Confidence" />
+              <Progress value={session.confidenceScore ? Math.round(session.confidenceScore * 100) : 0} max={100} label="Confidence" />
 
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
                   Result summary
                 </p>
-                <p className="text-sm leading-6">{run.resultSummary}</p>
+                <p className="text-sm leading-6">
+                  {session.reviewNotes
+                    ? "Review notes are recorded for this session."
+                    : "No review note has been saved yet."}
+                </p>
               </div>
             </div>
           </AdminSectionCard>
 
-          <AdminSectionCard title="Snapshots" description="The exact data shape to expect from the backend trace contract.">
-            <div className="space-y-3">
-              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">Rider snapshot</p>
-                <p className="mt-2 text-sm leading-6">Height, inseam, flexibility, injury flags, and goal context are captured here.</p>
-              </div>
-              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">Bike snapshot</p>
-                <p className="mt-2 text-sm leading-6">Linked bike geometry, setup values, and any derived frame-size data are represented here.</p>
-              </div>
-              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">Engine version</p>
-                <p className="mt-2 text-sm leading-6">Version label, rule hash, and deployment state should come from the planned admin backend contract.</p>
-              </div>
-            </div>
-          </AdminSectionCard>
-
-          <AdminSectionCard title="Manual review" description="Fit specialists can leave a note here once the queue needs attention.">
-            <div className="space-y-3">
-              <Textarea
-                rows={4}
-                placeholder="Add review notes, override context, or a summary of the final decision."
-              />
-              <div className="flex flex-wrap gap-2">
-                <Button variant="outline">Mark reviewed</Button>
-                <Button variant="ghost">Save note only</Button>
-              </div>
-              <p className="text-xs text-[color:var(--muted-foreground)]">
-                The slice intentionally keeps this as UI only. The backend contract will attach the real review mutation later.
-              </p>
-            </div>
+          <AdminSectionCard
+            title="Manual review"
+            description="Fit specialists can leave a note here once the queue needs attention."
+          >
+            <FitRunReviewPanel
+              sessionId={session._id}
+              reviewStatus={session.reviewStatus}
+              initialNotes={session.reviewNotes}
+            />
           </AdminSectionCard>
         </div>
       </div>

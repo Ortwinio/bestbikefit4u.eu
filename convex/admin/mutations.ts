@@ -580,7 +580,7 @@ export const updateFeedbackItem = mutation({
     productArea: v.optional(v.string()),
   },
   handler: async (ctx, { feedbackItemId, ...updates }) => {
-    const adminId = await requireAdminUserId(ctx);
+    const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager", "support_admin"]);
     await ctx.db.patch(feedbackItemId, { ...updates, updatedAt: Date.now() });
     await writeAuditLog(ctx, {
       adminUserId: adminId,
@@ -599,7 +599,7 @@ export const addFeedbackComment = mutation({
     isInternal: v.boolean(),
   },
   handler: async (ctx, { feedbackItemId, body, isInternal }) => {
-    const adminId = await requireAdminUserId(ctx);
+    const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager", "support_admin"]);
     const commentId = await ctx.db.insert("feedback_comments", {
       feedbackItemId,
       authorUserId: adminId,
@@ -654,7 +654,7 @@ export const createDashboardMessage = mutation({
     ),
   },
   handler: async (ctx, { targets, ...message }) => {
-    const adminId = await requireAdminUserId(ctx);
+    const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager", "support_admin"]);
     const messageId = await ctx.db.insert("dashboard_messages", {
       ...message,
       status: message.startsAt ? "scheduled" : "draft",
@@ -680,16 +680,142 @@ export const createDashboardMessage = mutation({
   },
 });
 
+export const updateDashboardMessage = mutation({
+  args: {
+    messageId: v.id("dashboard_messages"),
+    title: v.optional(v.string()),
+    body: v.optional(v.string()),
+    type: v.optional(
+      v.union(
+        v.literal("banner"),
+        v.literal("inbox_card"),
+        v.literal("modal"),
+        v.literal("sticky_warning"),
+        v.literal("release_announcement"),
+        v.literal("upgrade_prompt"),
+        v.literal("safety_alert"),
+        v.literal("re_fit_reminder"),
+        v.literal("support_reply")
+      )
+    ),
+    priority: v.optional(
+      v.union(v.literal("low"), v.literal("normal"), v.literal("high"), v.literal("urgent"))
+    ),
+    ctaText: v.optional(v.string()),
+    ctaUrl: v.optional(v.string()),
+    locale: v.optional(v.union(v.literal("all"), v.literal("en"), v.literal("nl"))),
+    dismissible: v.optional(v.boolean()),
+    requiresAcknowledgement: v.optional(v.boolean()),
+    startsAt: v.optional(v.number()),
+    expiresAt: v.optional(v.number()),
+    targets: v.optional(
+      v.array(
+        v.object({
+          targetType: v.string(),
+          targetValue: v.optional(v.string()),
+        })
+      )
+    ),
+  },
+  handler: async (ctx, { messageId, targets, ...updates }) => {
+    const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager", "support_admin"]);
+    await ctx.db.patch(messageId, updates);
+    if (targets) {
+      const existingTargets = await ctx.db
+        .query("message_targets")
+        .withIndex("by_message", (q) => q.eq("messageId", messageId))
+        .collect();
+      for (const target of existingTargets) {
+        await ctx.db.delete(target._id);
+      }
+      for (const target of targets) {
+        await ctx.db.insert("message_targets", {
+          messageId,
+          targetType: target.targetType,
+          targetValue: target.targetValue,
+          createdAt: Date.now(),
+        });
+      }
+    }
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "message.update",
+      targetType: "message",
+      targetId: messageId,
+      payload: { ...updates, targets },
+    });
+  },
+});
+
 export const publishDashboardMessage = mutation({
   args: { messageId: v.id("dashboard_messages") },
   handler: async (ctx, { messageId }) => {
-    const adminId = await requireAdminUserId(ctx);
+    const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager", "support_admin"]);
     await ctx.db.patch(messageId, { status: "published", publishedAt: Date.now() });
     await writeAuditLog(ctx, {
       adminUserId: adminId,
       action: "message.publish",
       targetType: "message",
       targetId: messageId,
+    });
+  },
+});
+
+export const pauseDashboardMessage = mutation({
+  args: { messageId: v.id("dashboard_messages"), reason: v.optional(v.string()) },
+  handler: async (ctx, { messageId, reason }) => {
+    const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager", "support_admin"]);
+    await ctx.db.patch(messageId, { status: "paused", pausedAt: Date.now() });
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "message.pause",
+      targetType: "message",
+      targetId: messageId,
+      reason,
+    });
+  },
+});
+
+export const expireDashboardMessage = mutation({
+  args: { messageId: v.id("dashboard_messages"), reason: v.optional(v.string()) },
+  handler: async (ctx, { messageId, reason }) => {
+    const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager", "support_admin"]);
+    await ctx.db.patch(messageId, { status: "expired", expiresAt: Date.now() });
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "message.expire",
+      targetType: "message",
+      targetId: messageId,
+      reason,
+    });
+  },
+});
+
+export const deleteDashboardMessage = mutation({
+  args: { messageId: v.id("dashboard_messages"), reason: v.optional(v.string()) },
+  handler: async (ctx, { messageId, reason }) => {
+    const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager", "support_admin"]);
+    const targets = await ctx.db
+      .query("message_targets")
+      .withIndex("by_message", (q) => q.eq("messageId", messageId))
+      .collect();
+    const receipts = await ctx.db
+      .query("message_receipts")
+      .withIndex("by_message", (q) => q.eq("messageId", messageId))
+      .collect();
+    for (const target of targets) {
+      await ctx.db.delete(target._id);
+    }
+    for (const receipt of receipts) {
+      await ctx.db.delete(receipt._id);
+    }
+    await ctx.db.delete(messageId);
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "message.delete",
+      targetType: "message",
+      targetId: messageId,
+      reason,
     });
   },
 });
@@ -731,6 +857,40 @@ export const startTrial = mutation({
   handler: async (ctx, { userId, planId, trialEndsAt, reason }) => {
     const adminId = await requireAnyRole(ctx, ["super_admin", "billing_admin"]);
     await ctx.db.patch(userId, { trialEndsAt });
+    if (planId) {
+      const now = Date.now();
+      const existingSubscription = await ctx.db
+        .query("subscriptions")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .first();
+      if (existingSubscription) {
+        await ctx.db.patch(existingSubscription._id, {
+          planId,
+          status: "trialing",
+          startsAt: existingSubscription.startsAt ?? now,
+          endsAt: trialEndsAt,
+          updatedAt: now,
+        });
+      } else {
+        const subscriptionId = await ctx.db.insert("subscriptions", {
+          userId,
+          planId,
+          status: "trialing",
+          startsAt: now,
+          endsAt: trialEndsAt,
+          createdAt: now,
+          updatedAt: now,
+        });
+        await ctx.db.insert("billing_events", {
+          subscriptionId,
+          userId,
+          eventType: "trial_started",
+          payloadJson: JSON.stringify({ planId, trialEndsAt }),
+          occurredAt: now,
+          createdAt: now,
+        });
+      }
+    }
     await writeAuditLog(ctx, {
       adminUserId: adminId,
       action: "billing.trial_start",
@@ -738,6 +898,269 @@ export const startTrial = mutation({
       targetId: userId,
       payload: { planId, trialEndsAt },
       reason,
+    });
+  },
+});
+
+export const createPlan = mutation({
+  args: {
+    key: v.string(),
+    name: v.string(),
+    tier: v.union(
+      v.literal("free"),
+      v.literal("pro"),
+      v.literal("premium"),
+      v.literal("bike_shop"),
+      v.literal("enterprise")
+    ),
+    priceCents: v.optional(v.number()),
+    billingInterval: v.optional(
+      v.union(v.literal("month"), v.literal("year"), v.literal("custom"))
+    ),
+    seatLimit: v.optional(v.number()),
+    isActive: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    const adminId = await requireAnyRole(ctx, ["super_admin", "billing_admin"]);
+    const now = Date.now();
+    const planId = await ctx.db.insert("plans", {
+      ...args,
+      isActive: args.isActive ?? true,
+      createdAt: now,
+      updatedAt: now,
+    });
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "billing.plan_create",
+      targetType: "plan",
+      targetId: planId,
+      payload: args,
+    });
+    return planId;
+  },
+});
+
+export const updatePlan = mutation({
+  args: {
+    planId: v.id("plans"),
+    name: v.optional(v.string()),
+    tier: v.optional(
+      v.union(
+        v.literal("free"),
+        v.literal("pro"),
+        v.literal("premium"),
+        v.literal("bike_shop"),
+        v.literal("enterprise")
+      )
+    ),
+    priceCents: v.optional(v.number()),
+    billingInterval: v.optional(
+      v.union(v.literal("month"), v.literal("year"), v.literal("custom"))
+    ),
+    seatLimit: v.optional(v.number()),
+    isActive: v.optional(v.boolean()),
+  },
+  handler: async (ctx, { planId, ...updates }) => {
+    const adminId = await requireAnyRole(ctx, ["super_admin", "billing_admin"]);
+    await ctx.db.patch(planId, { ...updates, updatedAt: Date.now() });
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "billing.plan_update",
+      targetType: "plan",
+      targetId: planId,
+      payload: updates,
+    });
+  },
+});
+
+export const changeSubscriptionPlan = mutation({
+  args: {
+    subscriptionId: v.id("subscriptions"),
+    planId: v.id("plans"),
+    reason: v.string(),
+  },
+  handler: async (ctx, { subscriptionId, planId, reason }) => {
+    const adminId = await requireAnyRole(ctx, ["super_admin", "billing_admin"]);
+    await ctx.db.patch(subscriptionId, { planId, updatedAt: Date.now() });
+    await ctx.db.insert("billing_events", {
+      subscriptionId,
+      eventType: "subscription_plan_changed",
+      payloadJson: JSON.stringify({ planId }),
+      occurredAt: Date.now(),
+      createdAt: Date.now(),
+    });
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "billing.subscription_plan_change",
+      targetType: "subscription",
+      targetId: subscriptionId,
+      payload: { planId },
+      reason,
+    });
+  },
+});
+
+export const cancelSubscription = mutation({
+  args: { subscriptionId: v.id("subscriptions"), reason: v.string() },
+  handler: async (ctx, { subscriptionId, reason }) => {
+    const adminId = await requireAnyRole(ctx, ["super_admin", "billing_admin"]);
+    const now = Date.now();
+    await ctx.db.patch(subscriptionId, { status: "canceled", endsAt: now, updatedAt: now });
+    await ctx.db.insert("billing_events", {
+      subscriptionId,
+      eventType: "subscription_canceled",
+      payloadJson: JSON.stringify({ reason }),
+      occurredAt: now,
+      createdAt: now,
+    });
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "billing.subscription_cancel",
+      targetType: "subscription",
+      targetId: subscriptionId,
+      reason,
+    });
+  },
+});
+
+export const resumeSubscription = mutation({
+  args: { subscriptionId: v.id("subscriptions"), reason: v.string() },
+  handler: async (ctx, { subscriptionId, reason }) => {
+    const adminId = await requireAnyRole(ctx, ["super_admin", "billing_admin"]);
+    const now = Date.now();
+    await ctx.db.patch(subscriptionId, { status: "active", updatedAt: now });
+    await ctx.db.insert("billing_events", {
+      subscriptionId,
+      eventType: "subscription_resumed",
+      payloadJson: JSON.stringify({ reason }),
+      occurredAt: now,
+      createdAt: now,
+    });
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "billing.subscription_resume",
+      targetType: "subscription",
+      targetId: subscriptionId,
+      reason,
+    });
+  },
+});
+
+export const requestGdprExport = mutation({
+  args: {
+    requesterEmail: v.string(),
+    subjectUserId: v.optional(v.id("users")),
+    notes: v.optional(v.string()),
+  },
+  handler: async (ctx, { requesterEmail, subjectUserId, notes }) => {
+    const adminId = await requireAnyRole(ctx, [
+      "super_admin",
+      "ops_admin",
+      "support_admin",
+      "billing_admin",
+    ]);
+    const requestId = await ctx.db.insert("gdpr_requests", {
+      requestType: "export",
+      requesterEmail,
+      subjectUserId,
+      status: "requested",
+      receivedAt: Date.now(),
+      notes,
+      createdBy: adminId,
+    });
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "gdpr.request_export",
+      targetType: "gdpr_request",
+      targetId: requestId,
+      payload: { requesterEmail, subjectUserId, notes },
+    });
+    return requestId;
+  },
+});
+
+export const requestGdprErasure = mutation({
+  args: {
+    requesterEmail: v.string(),
+    subjectUserId: v.optional(v.id("users")),
+    notes: v.optional(v.string()),
+  },
+  handler: async (ctx, { requesterEmail, subjectUserId, notes }) => {
+    const adminId = await requireAnyRole(ctx, [
+      "super_admin",
+      "ops_admin",
+      "support_admin",
+      "billing_admin",
+    ]);
+    const requestId = await ctx.db.insert("gdpr_requests", {
+      requestType: "erasure",
+      requesterEmail,
+      subjectUserId,
+      status: "requested",
+      receivedAt: Date.now(),
+      notes,
+      createdBy: adminId,
+    });
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "gdpr.request_erasure",
+      targetType: "gdpr_request",
+      targetId: requestId,
+      payload: { requesterEmail, subjectUserId, notes },
+    });
+    return requestId;
+  },
+});
+
+export const fulfillGdprRequest = mutation({
+  args: {
+    requestId: v.id("gdpr_requests"),
+    notes: v.optional(v.string()),
+  },
+  handler: async (ctx, { requestId, notes }) => {
+    const adminId = await requireAnyRole(ctx, [
+      "super_admin",
+      "ops_admin",
+      "support_admin",
+      "billing_admin",
+    ]);
+    await ctx.db.patch(requestId, {
+      status: "fulfilled",
+      fulfilledAt: Date.now(),
+      notes,
+    });
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "gdpr.request_fulfill",
+      targetType: "gdpr_request",
+      targetId: requestId,
+      reason: notes,
+    });
+  },
+});
+
+export const failGdprRequest = mutation({
+  args: {
+    requestId: v.id("gdpr_requests"),
+    notes: v.optional(v.string()),
+  },
+  handler: async (ctx, { requestId, notes }) => {
+    const adminId = await requireAnyRole(ctx, [
+      "super_admin",
+      "ops_admin",
+      "support_admin",
+      "billing_admin",
+    ]);
+    await ctx.db.patch(requestId, {
+      status: "failed",
+      notes,
+    });
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "gdpr.request_fail",
+      targetType: "gdpr_request",
+      targetId: requestId,
+      reason: notes,
     });
   },
 });

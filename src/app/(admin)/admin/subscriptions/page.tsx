@@ -7,7 +7,7 @@ export default function AdminSubscriptionsPage() {
       <AdminPageHeader
         eyebrow="Admin / Billing"
         title="Subscriptions"
-        description="User plan assignments, trial state, and quick plan-change workflows."
+        description="Live subscription assignments, lifecycle actions, and read-only blockers for non-mutation roles."
       />
       <SubscriptionsView />
     </div>

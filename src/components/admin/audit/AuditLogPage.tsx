@@ -2,314 +2,397 @@
 
 import Link from "next/link";
 import { Fragment, useMemo, useState } from "react";
-import { Button, Input, Select } from "@/components/ui";
+import { useAction, usePaginatedQuery, useQuery } from "convex/react";
+import type { Id } from "../../../../convex/_generated/dataModel";
+import { api } from "../../../../convex/_generated/api";
 import {
-  AdminPageHeader,
-  AdminSectionCard,
-  AdminStatusPill,
-  AdminTable,
-  AdminTableCell,
-  AdminTableHead,
-} from "@/components/admin/layout/AdminUi";
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  EmptyState,
+  ErrorState,
+  Input,
+  LoadingState,
+  Select,
+} from "@/components/ui";
+import {
+  AUDIT_READ_ROLES,
+  formatAuditDateTime,
+  formatAuditRelativeDate,
+  getAdminName,
+  getAuditActionLabel,
+  getAuditTargetHref,
+  getAuditTargetLabel,
+  parseAuditPayload,
+  summarizeAuditPayload,
+  type AuditTargetType,
+} from "./audit-utils";
 
-type AuditAction =
-  | "user.tier_change"
-  | "user.suspend"
-  | "user.restore"
-  | "billing.trial_start"
-  | "billing.trial_end"
-  | "geometry.approve"
-  | "release.status_change"
-  | "fit_run.reviewed"
-  | "message.create"
-  | "message.publish"
-  | "feature_flag.set"
-  | "gdpr.export"
-  | "gdpr.anonymize";
-
-type AuditTargetType =
-  | "user"
-  | "organization"
-  | "release"
-  | "geometry_record"
-  | "fit_run"
-  | "message"
-  | "engine_version";
-
-type AuditRow = {
-  id: string;
-  time: string;
-  admin: string;
-  role: string;
-  action: AuditAction;
-  targetType: AuditTargetType;
-  targetName: string;
-  targetHref: string;
-  payload: Record<string, unknown>;
-  reason?: string;
-  details: string;
-};
-
-const ACTION_LABELS: Record<AuditAction, string> = {
-  "user.tier_change": "Changed user plan",
-  "user.suspend": "Suspended user",
-  "user.restore": "Restored user",
-  "billing.trial_start": "Started trial",
-  "billing.trial_end": "Ended trial",
-  "geometry.approve": "Approved geometry record",
-  "release.status_change": "Changed release status",
-  "fit_run.reviewed": "Reviewed fit run",
-  "message.create": "Created dashboard message",
-  "message.publish": "Published dashboard message",
-  "feature_flag.set": "Changed feature flag",
-  "gdpr.export": "Exported user data",
-  "gdpr.anonymize": "Anonymized user account",
-};
-
-const auditRows: AuditRow[] = [
-  {
-    id: "audit_001",
-    time: "2026-03-22 09:31",
-    admin: "Morgan Reed",
-    role: "super_admin",
-    action: "feature_flag.set",
-    targetType: "engine_version",
-    targetName: "manual_review_queue_enabled",
-    targetHref: "/admin/settings",
-    payload: { key: "manual_review_queue_enabled", value: true },
-    reason: "Keep review flow enabled during rollout",
-    details: "Updated system feature flag value from off to on.",
-  },
-  {
-    id: "audit_002",
-    time: "2026-03-21 16:14",
-    admin: "Tess Novak",
-    role: "support_admin",
-    action: "message.publish",
-    targetType: "message",
-    targetName: "Spring upgrade prompt",
-    targetHref: "/admin/messages/msg_001",
-    payload: { messageId: "msg_001", audience: "pro users" },
-    details: "Published a dashboard message to the pro tier audience.",
-  },
-  {
-    id: "audit_003",
-    time: "2026-03-20 11:07",
-    admin: "Morgan Reed",
-    role: "super_admin",
-    action: "user.tier_change",
-    targetType: "user",
-    targetName: "Ellie Vermeer",
-    targetHref: "/admin/rider-data/user_ellie",
-    payload: { fromTier: "free", toTier: "premium" },
-    reason: "Promo onboarding upgrade",
-    details: "User tier was manually updated after the support review.",
-  },
-  {
-    id: "audit_004",
-    time: "2026-03-19 13:02",
-    admin: "Alex Morgan",
-    role: "billing_admin",
-    action: "billing.trial_start",
-    targetType: "user",
-    targetName: "Omar de Wit",
-    targetHref: "/admin/rider-data/user_omar",
-    payload: { plan: "pro", durationDays: 14 },
-    reason: "Seasonal trial extension",
-    details: "Extended the trial window for a pro-tier account.",
-  },
+const AUDIT_TARGET_OPTIONS: Array<{ value: AuditTargetType | "all"; label: string }> = [
+  { value: "all", label: "All targets" },
+  { value: "user", label: "Users" },
+  { value: "organization", label: "Organizations" },
+  { value: "release", label: "Releases" },
+  { value: "geometry_record", label: "Geometry records" },
+  { value: "fit_run", label: "Fit runs" },
+  { value: "message", label: "Messages" },
+  { value: "engine_version", label: "Engine versions" },
+  { value: "feature_flag", label: "Feature flags" },
+  { value: "plan", label: "Plans" },
 ];
 
-function formatRelativeTime(timeString: string) {
-  const date = new Date(timeString.replace(" ", "T"));
-  const diffDays = Math.round((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24));
-  if (diffDays <= 0) return "Today";
-  if (diffDays === 1) return "1 day ago";
-  return `${diffDays} days ago`;
-}
-
-function roleTone(role: string) {
-  switch (role) {
-    case "super_admin":
-      return "danger";
-    case "billing_admin":
-      return "warning";
-    case "support_admin":
-      return "info";
-    default:
-      return "neutral";
-  }
+function formatActionForTarget(row: {
+  action: string;
+  targetType?: string | null;
+  targetId?: string | null;
+  payload?: string | null;
+  occurredAt: number;
+}) {
+  return {
+    actionLabel: getAuditActionLabel(row.action),
+    targetLabel: getAuditTargetLabel(row.targetType),
+    targetHref: getAuditTargetHref(row.targetType, row.targetId),
+    payload: parseAuditPayload(row.payload),
+    payloadSummary: summarizeAuditPayload(row.payload),
+    relativeTime: formatAuditRelativeDate(row.occurredAt),
+  };
 }
 
 export function AuditLogPage() {
-  const [adminFilter, setAdminFilter] = useState("all");
-  const [actionFilter, setActionFilter] = useState("all");
-  const [targetFilter, setTargetFilter] = useState("all");
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
-  const [expandedIds, setExpandedIds] = useState<string[]>(["audit_001"]);
-
-  const filteredRows = useMemo(
-    () =>
-      auditRows.filter((row) => {
-        const matchesAdmin = adminFilter === "all" || row.admin === adminFilter;
-        const matchesAction =
-          actionFilter === "all" ||
-          row.action.startsWith(actionFilter);
-        const matchesTarget = targetFilter === "all" || row.targetType === targetFilter;
-        const rowDate = row.time.slice(0, 10);
-        const matchesFrom = !fromDate || rowDate >= fromDate;
-        const matchesTo = !toDate || rowDate <= toDate;
-        return matchesAdmin && matchesAction && matchesTarget && matchesFrom && matchesTo;
-      }),
-    [actionFilter, adminFilter, fromDate, targetFilter, toDate]
+  const currentAdmin = useQuery(api.admin.queries.getCurrentAdminUser, {});
+  const adminRoster = usePaginatedQuery(
+    api.admin.queries.listUsers,
+    currentAdmin ? { adminRole: "admin_only" } : "skip",
+    { initialNumItems: 20 }
   );
+  const [adminFilter, setAdminFilter] = useState<"all" | "mine" | string>("all");
+  const [targetFilter, setTargetFilter] = useState<AuditTargetType | "all">("all");
+  const [targetId, setTargetId] = useState("");
+  const [expandedIds, setExpandedIds] = useState<string[]>([]);
+  const exportAuditLogsCsv = useAction(api.admin.actions.exportAuditLogsCsv);
+  const canReadAudit = Boolean(currentAdmin && AUDIT_READ_ROLES.has(currentAdmin.adminRole as never));
+
+  const auditArgs =
+    currentAdmin && canReadAudit
+      ? {
+          adminUserId:
+            adminFilter === "all"
+              ? undefined
+              : adminFilter === "mine"
+                ? currentAdmin._id
+                : (adminFilter as Id<"users">),
+          targetType: targetFilter === "all" ? undefined : targetFilter,
+          targetId: targetId.trim() || undefined,
+        }
+      : "skip";
+
+  const auditLogs = usePaginatedQuery(api.admin.queries.listAuditLogs, auditArgs, {
+    initialNumItems: 20,
+  });
+
+  const adminOptions = useMemo(() => {
+    const options = [
+      { value: "all", label: "All admins" },
+      { value: "mine", label: "My actions" },
+    ];
+
+    for (const admin of adminRoster.results) {
+      options.push({
+        value: String(admin._id),
+        label: getAdminName(admin),
+      });
+    }
+
+    return options;
+  }, [adminRoster.results]);
+
+  const adminNameMap = useMemo(() => {
+    const entries: Array<[string, string]> = adminRoster.results.map((admin) => [
+      String(admin._id),
+      getAdminName(admin),
+    ]);
+    if (currentAdmin) {
+      entries.unshift([String(currentAdmin._id), getAdminName(currentAdmin)]);
+    }
+    return new Map(entries);
+  }, [adminRoster.results, currentAdmin]);
+
+  const rows = auditLogs.status === "LoadingFirstPage" ? [] : auditLogs.results;
+
+  if (currentAdmin === undefined) {
+    return <LoadingState label="Loading audit log..." />;
+  }
+
+  if (!currentAdmin) {
+    return (
+      <EmptyState
+        title="Admin access required"
+        description="Audit logs are only available to authenticated admin accounts."
+      />
+    );
+  }
+
+  if (adminRoster.status === "LoadingFirstPage" || (canReadAudit && auditLogs.status === "LoadingFirstPage")) {
+    return <LoadingState label="Loading audit log..." />;
+  }
+
+  if (!canReadAudit) {
+    return (
+      <ErrorState
+        title="Audit log access is backend-gated"
+        description="The current admin role cannot read audit logs yet. Audit visibility is limited to super_admin, ops_admin, support_admin, and qa_manager roles."
+      />
+    );
+  }
+
+  const currentAdminId = currentAdmin._id;
+
+  async function handleExport() {
+    const csv = await exportAuditLogsCsv({
+      adminUserId:
+        adminFilter === "all"
+          ? undefined
+          : adminFilter === "mine"
+            ? currentAdminId
+            : (adminFilter as Id<"users">),
+      targetType: targetFilter === "all" ? undefined : targetFilter,
+      targetId: targetId.trim() || undefined,
+    });
+
+    const blob = new Blob([csv.csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "audit-log.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
 
   return (
     <div className="space-y-6">
-      <AdminPageHeader
-        eyebrow="Admin / Audit"
-        title="Audit log"
-        description="Immutable chronology of admin actions, with filters and expandable payload context."
-        actions={<Button variant="outline">Export CSV</Button>}
-      />
-
-      <AdminSectionCard
-        title="Filters"
-        description="Refine the audit view by admin, action prefix, target type, or date range."
-      >
-        <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_repeat(3,minmax(0,0.7fr))]">
-          <Select
-            value={adminFilter}
-            onChange={(event) => setAdminFilter(event.currentTarget.value)}
-            options={[
-              { value: "all", label: "All admins" },
-              { value: "Morgan Reed", label: "Morgan Reed" },
-              { value: "Tess Novak", label: "Tess Novak" },
-              { value: "Alex Morgan", label: "Alex Morgan" },
-            ]}
-          />
-          <Select
-            value={actionFilter}
-            onChange={(event) => setActionFilter(event.currentTarget.value)}
-            options={[
-              { value: "all", label: "All actions" },
-              { value: "user.", label: "User actions" },
-              { value: "billing.", label: "Billing actions" },
-              { value: "message.", label: "Message actions" },
-              { value: "gdpr.", label: "GDPR actions" },
-              { value: "feature_flag.", label: "Feature flags" },
-            ]}
-          />
-          <Select
-            value={targetFilter}
-            onChange={(event) => setTargetFilter(event.currentTarget.value as typeof targetFilter)}
-            options={[
-              { value: "all", label: "All targets" },
-              { value: "user", label: "User" },
-              { value: "organization", label: "Organization" },
-              { value: "release", label: "Release" },
-              { value: "geometry_record", label: "Geometry record" },
-              { value: "fit_run", label: "Fit run" },
-              { value: "message", label: "Message" },
-              { value: "engine_version", label: "Engine version" },
-            ]}
-          />
-          <div className="grid gap-3 sm:grid-cols-2">
-            <Input type="date" value={fromDate} onChange={(event) => setFromDate(event.currentTarget.value)} />
-            <Input type="date" value={toDate} onChange={(event) => setToDate(event.currentTarget.value)} />
-          </div>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <div className="text-sm text-[color:var(--muted-foreground)]">Admin / Audit</div>
+          <h1 className="text-3xl font-semibold tracking-tight">Audit log</h1>
+          <p className="mt-2 max-w-2xl text-[color:var(--muted-foreground)]">
+            Live admin activity backed by Convex audit rows and an export action.
+          </p>
         </div>
-      </AdminSectionCard>
+        <Button variant="outline" onClick={() => void handleExport()}>
+          Export CSV
+        </Button>
+      </div>
 
-      <AdminSectionCard title="Entries" description="Newest filtered events first. Click a row to expand the payload.">
-        <AdminTable>
-          <AdminTableHead columns={["Time", "Admin", "Action", "Target", "Details", "Reason"]} />
-          <tbody>
-            {filteredRows.map((row) => {
-              const expanded = expandedIds.includes(row.id);
-              return (
-                <Fragment key={row.id}>
-                  <tr key={row.id} className="border-t border-[color:var(--border)]">
-                    <AdminTableCell>
-                      <button
-                        type="button"
-                        className="text-left"
-                        title={row.time}
-                        onClick={() =>
-                          setExpandedIds((current) =>
-                            current.includes(row.id)
-                              ? current.filter((entryId) => entryId !== row.id)
-                              : [...current, row.id]
-                          )
-                        }
-                      >
-                        <div className="font-medium">{formatRelativeTime(row.time)}</div>
-                        <div className="text-xs text-[color:var(--muted-foreground)]">{row.time}</div>
-                      </button>
-                    </AdminTableCell>
-                    <AdminTableCell>
-                      <div className="flex flex-col gap-1">
-                        <span className="font-medium">{row.admin}</span>
-                        <AdminStatusPill tone={roleTone(row.role)}>{row.role}</AdminStatusPill>
-                      </div>
-                    </AdminTableCell>
-                    <AdminTableCell>
-                      <AdminStatusPill tone="info">{ACTION_LABELS[row.action]}</AdminStatusPill>
-                    </AdminTableCell>
-                    <AdminTableCell>
-                      <Button variant="ghost" size="sm" className="h-auto p-0 font-medium" render={<Link href={row.targetHref} />}>
-                        {row.targetName}
-                      </Button>
-                      <div className="text-xs text-[color:var(--muted-foreground)]">{row.targetType}</div>
-                    </AdminTableCell>
-                    <AdminTableCell>
-                      <button
-                        type="button"
-                        className="text-sm font-medium text-[color:var(--foreground)] hover:underline"
-                        onClick={() =>
-                          setExpandedIds((current) =>
-                            current.includes(row.id)
-                              ? current.filter((entryId) => entryId !== row.id)
-                              : [...current, row.id]
-                          )
-                        }
-                      >
-                        {expanded ? "Hide details" : "Show details"}
-                      </button>
-                    </AdminTableCell>
-                    <AdminTableCell>{row.reason ?? "—"}</AdminTableCell>
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-[color:var(--muted-foreground)]">
+              Loaded rows
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-3xl font-semibold">{rows.length}</CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-[color:var(--muted-foreground)]">
+              Visible admins
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-3xl font-semibold">{adminRoster.results.length}</CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-[color:var(--muted-foreground)]">
+              Current role
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm font-medium">{currentAdmin.adminRole}</CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-[color:var(--muted-foreground)]">
+              Filters
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm font-medium">
+            {targetFilter === "all" ? "All targets" : targetFilter.replaceAll("_", " ")}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader className="gap-4">
+          <CardTitle>Filters</CardTitle>
+          <div className="grid gap-3 lg:grid-cols-[1.2fr_1fr_0.8fr_auto]">
+            <Select
+              value={adminFilter}
+              onChange={(event) => setAdminFilter(event.target.value)}
+              options={adminOptions}
+            />
+            <Select
+              value={targetFilter}
+              onChange={(event) => setTargetFilter(event.target.value as AuditTargetType | "all")}
+              options={AUDIT_TARGET_OPTIONS}
+            />
+            <Input
+              value={targetId}
+              onChange={(event) => setTargetId(event.target.value)}
+              placeholder="Filter exact target ID"
+            />
+            <Button
+              variant="outline"
+              onClick={() => {
+                setAdminFilter("all");
+                setTargetFilter("all");
+                setTargetId("");
+              }}
+            >
+              Clear
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {rows.length === 0 ? (
+            <EmptyState
+              title="No audit entries matched"
+              description="Try broadening the admin or target filters."
+            />
+          ) : (
+            <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)]">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]">
+                  <tr>
+                    <th className="px-4 py-3 font-medium">Time</th>
+                    <th className="px-4 py-3 font-medium">Admin</th>
+                    <th className="px-4 py-3 font-medium">Action</th>
+                    <th className="px-4 py-3 font-medium">Target</th>
+                    <th className="px-4 py-3 font-medium">Summary</th>
+                    <th className="px-4 py-3 font-medium">Reason</th>
                   </tr>
-                  {expanded ? (
-                    <tr key={`${row.id}-details`} className="border-t border-[color:var(--border)] bg-[color:var(--secondary)]">
-                      <td colSpan={6} className="px-4 py-4">
-                        <div className="grid gap-4 xl:grid-cols-2">
-                          <div>
-                            <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Payload</p>
-                            <pre className="mt-2 overflow-auto rounded-[var(--radius-md)] bg-[color:var(--card)] p-4 text-xs leading-6">
-{JSON.stringify(row.payload, null, 2)}
-                            </pre>
-                          </div>
-                          <div className="space-y-3">
-                            <div>
-                              <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Reason</p>
-                              <p className="mt-1 text-sm">{row.reason ?? "No reason provided."}</p>
+                </thead>
+                <tbody>
+                  {rows.map((row) => {
+                    const expanded = expandedIds.includes(String(row._id));
+                    const derived = formatActionForTarget(row);
+                    const adminName = adminNameMap.get(String(row.adminUserId)) ?? String(row.adminUserId);
+
+                    return (
+                      <Fragment key={String(row._id)}>
+                        <tr className="border-t border-[color:var(--border)]">
+                          <td className="px-4 py-4 align-top">
+                            <button
+                              type="button"
+                              className="text-left"
+                              onClick={() =>
+                                setExpandedIds((current) =>
+                                  current.includes(String(row._id))
+                                    ? current.filter((id) => id !== String(row._id))
+                                    : [...current, String(row._id)]
+                                )
+                              }
+                            >
+                              <div className="font-medium">{derived.relativeTime}</div>
+                              <div className="text-xs text-[color:var(--muted-foreground)]">
+                                {formatAuditDateTime(row.occurredAt)}
+                              </div>
+                            </button>
+                          </td>
+                          <td className="px-4 py-4 align-top">
+                            <div className="font-medium">{adminName}</div>
+                            <div className="text-xs text-[color:var(--muted-foreground)]">
+                              {String(row.adminUserId)}
                             </div>
-                            <div>
-                              <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Context</p>
-                              <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">{row.details}</p>
+                          </td>
+                          <td className="px-4 py-4 align-top">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-auto p-0 font-medium"
+                              onClick={() =>
+                                setExpandedIds((current) =>
+                                  current.includes(String(row._id))
+                                    ? current.filter((id) => id !== String(row._id))
+                                    : [...current, String(row._id)]
+                                )
+                              }
+                            >
+                              {derived.actionLabel}
+                            </Button>
+                          </td>
+                          <td className="px-4 py-4 align-top">
+                            {derived.targetHref ? (
+                              <Button variant="outline" size="sm" render={<Link href={derived.targetHref} />}>
+                                {String(row.targetId ?? derived.targetLabel)}
+                              </Button>
+                            ) : (
+                              <div className="font-medium">{String(row.targetId ?? "—")}</div>
+                            )}
+                            <div className="text-xs text-[color:var(--muted-foreground)]">
+                              {derived.targetLabel}
                             </div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  ) : null}
-                </Fragment>
-              );
-            })}
-          </tbody>
-        </AdminTable>
-      </AdminSectionCard>
+                          </td>
+                          <td className="px-4 py-4 align-top text-[color:var(--muted-foreground)]">
+                            {derived.payloadSummary}
+                          </td>
+                          <td className="px-4 py-4 align-top">{row.reason ?? "—"}</td>
+                        </tr>
+                        {expanded ? (
+                          <tr className="border-t border-[color:var(--border)] bg-[color:var(--secondary)]">
+                            <td colSpan={6} className="px-4 py-4">
+                              <div className="grid gap-4 xl:grid-cols-2">
+                                <div>
+                                  <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
+                                    Payload
+                                  </p>
+                                  <pre className="mt-2 overflow-auto rounded-[var(--radius-md)] bg-[color:var(--card)] p-4 text-xs leading-6">
+                                    {JSON.stringify(derived.payload, null, 2)}
+                                  </pre>
+                                </div>
+                                <div className="space-y-3">
+                                  <div>
+                                    <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
+                                      Reason
+                                    </p>
+                                    <p className="mt-1 text-sm">{row.reason ?? "No reason provided."}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
+                                      Context
+                                    </p>
+                                    <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                                      Audit rows are immutable Convex records. Use the target link to inspect the affected resource.
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        ) : null}
+                      </Fragment>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          <div className="mt-4 flex items-center justify-between gap-3">
+            <div className="text-sm text-[color:var(--muted-foreground)]">
+              {auditLogs.status === "Exhausted" ? "All entries loaded" : "More entries available"}
+            </div>
+            <Button
+              variant="outline"
+              isLoading={auditLogs.status === "LoadingMore"}
+              disabled={auditLogs.status !== "CanLoadMore"}
+              onClick={() => auditLogs.loadMore(20)}
+            >
+              Load more
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

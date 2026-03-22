@@ -9,9 +9,11 @@ type AuditLogRow = Pick<
   "_id" | "occurredAt" | "adminUserId" | "action" | "targetType" | "targetId" | "reason"
 >;
 
-async function requireAdminActionUser(ctx: ActionCtx): Promise<{ _id: Id<"users"> }> {
+async function requireAdminActionUser(
+  ctx: ActionCtx
+): Promise<{ _id: Id<"users">; adminRole: string }> {
   const admin = (await ctx.runQuery(api.admin.queries.getCurrentAdminUser, {})) as
-    | { _id: Id<"users"> }
+    | { _id: Id<"users">; adminRole: string }
     | null;
   if (!admin) {
     throw new Error("Not authorized: admin role required");
@@ -29,6 +31,9 @@ export const startImpersonation = action({
     { userId, reason }
   ): Promise<{ impersonationToken: string; userId: Id<"users">; reason: string }> => {
     const admin = await requireAdminActionUser(ctx);
+    if (!["super_admin", "ops_admin", "support_admin"].includes(admin.adminRole)) {
+      throw new Error("Not authorized: requires impersonation role");
+    }
     return {
       impersonationToken: `impersonation:${admin._id}:${userId}:${Date.now()}`,
       userId,
@@ -59,10 +64,40 @@ export const notifyRelease = action({
     generalAnnouncementCreated: boolean;
     release: unknown;
   }> => {
-    await requireAdminActionUser(ctx);
+    const admin = await requireAdminActionUser(ctx);
+    if (!["super_admin", "ops_admin", "support_admin", "qa_manager"].includes(admin.adminRole)) {
+      throw new Error("Not authorized: requires release messaging role");
+    }
     const release = await ctx.runQuery(api.admin.queries.getReleaseDetail, {
       releaseId: args.releaseId,
     });
+
+    if (args.sendGeneralAnnouncement) {
+      const releaseDetail = release as
+        | { release: { name: string; versionLabel?: string | null; description?: string | null } | null }
+        | null;
+      const announcementId = await ctx.runMutation(api.admin.mutations.createDashboardMessage, {
+        title: releaseDetail?.release
+          ? `Release announced: ${releaseDetail.release.name}`
+          : "Release announcement",
+        body:
+          releaseDetail?.release?.description ??
+          releaseDetail?.release?.versionLabel ??
+          "A new release is available.",
+        type: "release_announcement",
+        priority: "normal",
+        ctaText: "View release",
+        ctaUrl: `/admin/releases/${args.releaseId}`,
+        locale: "all",
+        dismissible: true,
+        requiresAcknowledgement: false,
+        startsAt: Date.now(),
+        targets: args.announcementTargets ?? [],
+      });
+      await ctx.runMutation(api.admin.mutations.publishDashboardMessage, {
+        messageId: announcementId,
+      });
+    }
 
     return {
       notifiedUsers: args.sendToAffectedUsers ? 0 : 0,
@@ -74,7 +109,11 @@ export const notifyRelease = action({
 
 export const importGeometryFromCsv = action({
   args: { csvContent: v.string() },
-  handler: async (_ctx, { csvContent }) => {
+  handler: async (ctx, { csvContent }) => {
+    const admin = await requireAdminActionUser(ctx);
+    if (!["super_admin", "ops_admin", "geometry_manager"].includes(admin.adminRole)) {
+      throw new Error("Not authorized: requires geometry role");
+    }
     const rows = csvContent
       .split(/\r?\n/)
       .map((line) => line.trim())
@@ -96,7 +135,10 @@ export const exportAuditLogsCsv = action({
     targetId: v.optional(v.string()),
   },
   handler: async (ctx, args): Promise<{ csv: string }> => {
-    await requireAdminActionUser(ctx);
+    const admin = await requireAdminActionUser(ctx);
+    if (!["super_admin", "ops_admin", "support_admin", "qa_manager"].includes(admin.adminRole)) {
+      throw new Error("Not authorized: requires audit export role");
+    }
     const logs = await ctx.runQuery(api.admin.queries.listAuditLogs, {
       ...args,
       paginationOpts: { cursor: null, numItems: 500 },
@@ -118,14 +160,26 @@ export const exportAuditLogsCsv = action({
   },
 });
 
+export const exportAdminAuditLogsCsv = exportAuditLogsCsv;
+
 export const exportUserData = action({
   args: { userId: v.id("users"), reason: v.string() },
   handler: async (
     ctx,
     { userId, reason }
   ): Promise<{ reason: string; exportedAt: number; data: unknown }> => {
-    await requireAdminActionUser(ctx);
+    const admin = await requireAdminActionUser(ctx);
+    if (!["super_admin", "ops_admin", "support_admin", "billing_admin"].includes(admin.adminRole)) {
+      throw new Error("Not authorized: requires GDPR export role");
+    }
     const detail = await ctx.runQuery(api.admin.queries.getUserDetail, { userId });
+    await ctx.runMutation(api.admin.mutations.requestGdprExport, {
+      requesterEmail:
+        (detail as { user?: { email?: string | null } | null } | null)?.user?.email ??
+        "unknown@example.com",
+      subjectUserId: userId,
+      notes: reason,
+    });
     return { reason, exportedAt: Date.now(), data: detail };
   },
 });
@@ -136,7 +190,18 @@ export const anonymizeUser = action({
     ctx,
     { userId, reason }
   ): Promise<{ userId: Id<"users">; reason: string; anonymizedAt: number }> => {
-    await requireAdminActionUser(ctx);
+    const admin = await requireAdminActionUser(ctx);
+    if (!["super_admin", "ops_admin", "support_admin", "billing_admin"].includes(admin.adminRole)) {
+      throw new Error("Not authorized: requires GDPR erasure role");
+    }
+    const detail = await ctx.runQuery(api.admin.queries.getUserDetail, { userId });
+    await ctx.runMutation(api.admin.mutations.requestGdprErasure, {
+      requesterEmail:
+        (detail as { user?: { email?: string | null } | null } | null)?.user?.email ??
+        "unknown@example.com",
+      subjectUserId: userId,
+      notes: reason,
+    });
     return { userId, reason, anonymizedAt: Date.now() };
   },
 });

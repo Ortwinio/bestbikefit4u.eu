@@ -13,7 +13,7 @@ export default function AdminEditPlanPage({
       <AdminPageHeader
         eyebrow="Admin / Billing"
         title="Edit plan"
-        description="Update a contract-shaped plan record using the shared Prototyper UI form surface."
+        description="Update a live Convex billing plan, or review the read-only blocker when the role cannot mutate plans."
       />
       <PlanFormView mode="edit" planId={planId} />
     </div>

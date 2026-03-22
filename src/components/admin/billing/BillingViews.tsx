@@ -1,427 +1,889 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, Component, type ErrorInfo, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import type { Id } from "../../../../convex/_generated/dataModel";
 import {
+  AccessibleDialog,
   Button,
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  CardDescription,
+  EmptyState,
+  ErrorState,
+  FieldLabel,
   Input,
-  Select,
-  Textarea,
+  LoadingState,
   NumberInput,
+  Select,
   SegmentedControl,
   SegmentedControlItem,
-  AccessibleDialog,
-  Progress,
-  Tooltip,
-  FieldLabel,
+  Textarea,
+  useToast,
 } from "@/components/ui";
-import { cn } from "@/utils/cn";
+import {
+  AdminMetricCard,
+  AdminSectionCard,
+  AdminStatusPill,
+  AdminTable,
+  AdminTableCell,
+  AdminTableHead,
+  AdminTableRow,
+} from "@/components/admin/layout/AdminUi";
+import { formatAdminDateTime } from "@/components/admin/shared/admin-format";
+import {
+  BILLING_MANAGEMENT_ROLES,
+  billingPlanTone,
+  billingSubscriptionTone,
+  canManageBilling,
+  formatBillingInterval,
+  formatBillingMoney,
+  formatBillingPlanStatus,
+  formatBillingSubscriptionSubject,
+  formatBillingTier,
+  summarizeBillingEventPayload,
+  type BillingEvent,
+  type BillingPlan,
+  type BillingSubscription,
+} from "./billing-live-data";
 
-export type PlanEntitlementKey =
-  | "can_connect_strava"
-  | "can_create_multiple_bikes"
-  | "can_export_advanced_report"
-  | "can_receive_manual_fit_review"
-  | "can_manage_clients"
-  | "can_use_shop_team_seats"
-  | "can_access_enterprise_reporting";
+type BillingTier = BillingPlan["tier"];
+type BillingInterval = NonNullable<BillingPlan["billingInterval"]>;
+type SubscriptionStatus = BillingSubscription["status"];
 
-export type PlanRecord = {
-  id: string;
-  name: string;
-  slug: string;
-  tier: "free" | "premium" | "pro" | "bike_shop" | "enterprise";
-  description: string;
-  priceMonthly: number | null;
-  priceYearly: number | null;
-  maxBikes: number | null;
-  maxSeats: number | null;
-  entitlements: Record<PlanEntitlementKey, boolean>;
-  isActive: boolean;
-};
-
-export type SubscriptionRecord = {
-  id: string;
-  userId: string;
-  name: string;
-  email: string;
-  tier: PlanRecord["tier"];
-  trialEndsAt?: string;
-  joinedAt: string;
-  lastLoginAt: string;
-  suspended?: boolean;
-};
-
-export type BillingEventRecord = {
-  id: string;
-  subjectType: "user" | "organization";
-  subjectName: string;
-  eventType: string;
-  fromTier?: string;
-  toTier?: string;
-  reason?: string;
-  adminName: string;
-  occurredAt: string;
-};
-
-const ENTITLEMENT_LABELS: Record<PlanEntitlementKey, string> = {
-  can_connect_strava: "Connect Strava",
-  can_create_multiple_bikes: "Multiple bikes",
-  can_export_advanced_report: "Advanced report export",
-  can_receive_manual_fit_review: "Manual fit review",
-  can_manage_clients: "Manage clients",
-  can_use_shop_team_seats: "Shop team seats",
-  can_access_enterprise_reporting: "Enterprise reporting",
-};
-
-const plans: PlanRecord[] = [
-  {
-    id: "plan-free",
-    name: "Free",
-    slug: "free",
-    tier: "free",
-    description: "Entry-level rider access with one bike and core fit tools.",
-    priceMonthly: 0,
-    priceYearly: 0,
-    maxBikes: 1,
-    maxSeats: 1,
-    entitlements: {
-      can_connect_strava: false,
-      can_create_multiple_bikes: false,
-      can_export_advanced_report: false,
-      can_receive_manual_fit_review: false,
-      can_manage_clients: false,
-      can_use_shop_team_seats: false,
-      can_access_enterprise_reporting: false,
-    },
-    isActive: true,
-  },
-  {
-    id: "plan-pro",
-    name: "Pro",
-    slug: "pro",
-    tier: "pro",
-    description: "For frequent riders who want deeper analysis and exports.",
-    priceMonthly: 1900,
-    priceYearly: 19000,
-    maxBikes: 6,
-    maxSeats: 1,
-    entitlements: {
-      can_connect_strava: true,
-      can_create_multiple_bikes: true,
-      can_export_advanced_report: true,
-      can_receive_manual_fit_review: true,
-      can_manage_clients: false,
-      can_use_shop_team_seats: false,
-      can_access_enterprise_reporting: false,
-    },
-    isActive: true,
-  },
-  {
-    id: "plan-premium",
-    name: "Premium",
-    slug: "premium",
-    tier: "premium",
-    description: "Best for serious riders and multi-bike owners.",
-    priceMonthly: 2900,
-    priceYearly: 29000,
-    maxBikes: 10,
-    maxSeats: 1,
-    entitlements: {
-      can_connect_strava: true,
-      can_create_multiple_bikes: true,
-      can_export_advanced_report: true,
-      can_receive_manual_fit_review: true,
-      can_manage_clients: false,
-      can_use_shop_team_seats: false,
-      can_access_enterprise_reporting: false,
-    },
-    isActive: true,
-  },
-  {
-    id: "plan-shop",
-    name: "Bike Shop",
-    slug: "bike-shop",
-    tier: "bike_shop",
-    description: "Team plan for fit studios and commercial bike shops.",
-    priceMonthly: 7900,
-    priceYearly: 79000,
-    maxBikes: 50,
-    maxSeats: 8,
-    entitlements: {
-      can_connect_strava: true,
-      can_create_multiple_bikes: true,
-      can_export_advanced_report: true,
-      can_receive_manual_fit_review: true,
-      can_manage_clients: true,
-      can_use_shop_team_seats: true,
-      can_access_enterprise_reporting: false,
-    },
-    isActive: true,
-  },
-  {
-    id: "plan-enterprise",
-    name: "Enterprise",
-    slug: "enterprise",
-    tier: "enterprise",
-    description: "Custom deployments with reporting and service-level support.",
-    priceMonthly: null,
-    priceYearly: null,
-    maxBikes: null,
-    maxSeats: null,
-    entitlements: {
-      can_connect_strava: true,
-      can_create_multiple_bikes: true,
-      can_export_advanced_report: true,
-      can_receive_manual_fit_review: true,
-      can_manage_clients: true,
-      can_use_shop_team_seats: true,
-      can_access_enterprise_reporting: true,
-    },
-    isActive: false,
-  },
+const planTierOptions: Array<{ value: BillingTier; label: string }> = [
+  { value: "free", label: "Free" },
+  { value: "pro", label: "Pro" },
+  { value: "premium", label: "Premium" },
+  { value: "bike_shop", label: "Bike shop" },
+  { value: "enterprise", label: "Enterprise" },
 ];
 
-const subscriptions: SubscriptionRecord[] = [
-  {
-    id: "sub-1",
-    userId: "user-1",
-    name: "Alex Morgan",
-    email: "alex@example.com",
-    tier: "pro",
-    trialEndsAt: "2026-04-08",
-    joinedAt: "2025-10-12",
-    lastLoginAt: "2026-03-20",
-  },
-  {
-    id: "sub-2",
-    userId: "user-2",
-    name: "Jules Vermeer",
-    email: "jules@example.com",
-    tier: "premium",
-    joinedAt: "2025-12-06",
-    lastLoginAt: "2026-03-21",
-  },
-  {
-    id: "sub-3",
-    userId: "user-3",
-    name: "Northwind Cycles",
-    email: "ops@northwindcycles.com",
-    tier: "bike_shop",
-    joinedAt: "2025-07-21",
-    lastLoginAt: "2026-03-20",
-  },
-  {
-    id: "sub-4",
-    userId: "user-4",
-    name: "Orla Jensen",
-    email: "orla@example.com",
-    tier: "free",
-    suspended: true,
-    joinedAt: "2025-03-03",
-    lastLoginAt: "2026-03-10",
-  },
+const billingIntervalOptions: Array<{ value: BillingInterval; label: string }> = [
+  { value: "month", label: "Monthly" },
+  { value: "year", label: "Yearly" },
+  { value: "custom", label: "Custom" },
 ];
 
-const billingEvents: BillingEventRecord[] = [
-  {
-    id: "event-1",
-    subjectType: "user",
-    subjectName: "Alex Morgan",
-    eventType: "trial_start",
-    toTier: "pro",
-    reason: "Promotional onboarding trial",
-    adminName: "Morgan Reed",
-    occurredAt: "2026-03-18 09:42",
-  },
-  {
-    id: "event-2",
-    subjectType: "organization",
-    subjectName: "Northwind Cycles",
-    eventType: "seat_change",
-    fromTier: "6",
-    toTier: "8",
-    reason: "Seasonal hiring",
-    adminName: "Morgan Reed",
-    occurredAt: "2026-03-17 16:15",
-  },
-  {
-    id: "event-3",
-    subjectType: "user",
-    subjectName: "Orla Jensen",
-    eventType: "plan_change",
-    fromTier: "premium",
-    toTier: "free",
-    reason: "Expired promotional period",
-    adminName: "Tess Novak",
-    occurredAt: "2026-03-16 12:05",
-  },
+const subscriptionStatusOptions: Array<{ value: "all" | SubscriptionStatus; label: string }> = [
+  { value: "all", label: "All statuses" },
+  { value: "trialing", label: "Trialing" },
+  { value: "active", label: "Active" },
+  { value: "past_due", label: "Past due" },
+  { value: "canceled", label: "Canceled" },
+  { value: "expired", label: "Expired" },
 ];
 
-function money(amount: number | null) {
-  if (amount === null) {
-    return "Custom";
-  }
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "EUR",
-    maximumFractionDigits: 0,
-  }).format(amount / 100);
+const billingEventTypes = [
+  "all",
+  "subscription_plan_changed",
+  "subscription_canceled",
+  "subscription_resumed",
+  "trial_started",
+] as const;
+
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Something went wrong.";
 }
 
-function tierLabel(tier: PlanRecord["tier"]) {
-  return tier.replace("_", " ");
-}
-
-function toneClass(isActive: boolean) {
-  return isActive
-    ? "border-[color:var(--success)]/30 bg-[color:color-mix(in_oklch,var(--success)_12%,var(--card)_88%)] text-[color:var(--foreground)]"
-    : "border-[color:var(--border)] bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]";
-}
-
-function Pill({
-  children,
-  active = true,
-}: {
-  children: ReactNode;
-  active?: boolean;
-}) {
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em]",
-        toneClass(active)
-      )}
-    >
-      {children}
-    </span>
-  );
-}
-
-function SectionCard({
+function BillingReadOnlyNotice({
   title,
   description,
-  children,
-  actions,
+  action,
 }: {
   title: string;
-  description?: string;
-  children: ReactNode;
-  actions?: ReactNode;
+  description: string;
+  action?: ReactNode;
 }) {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-start justify-between gap-4">
-        <div>
-          <CardTitle>{title}</CardTitle>
-          {description ? <CardDescription>{description}</CardDescription> : null}
+    <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_86%,var(--background)_14%)] p-4">
+      <div className="flex items-start gap-3">
+        <AdminStatusPill tone="warning">Read only</AdminStatusPill>
+        <div className="min-w-0 space-y-2">
+          <div>
+            <p className="text-sm font-semibold text-[color:var(--foreground)]">{title}</p>
+            <p className="mt-1 text-sm leading-6 text-[color:var(--muted-foreground)]">{description}</p>
+          </div>
+          {action ? <div className="flex flex-wrap gap-2">{action}</div> : null}
         </div>
-        {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
-      </CardHeader>
-      <CardContent>{children}</CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
-function FieldBlock({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
+function BillingLoadingShell({ label }: { label: string }) {
+  return <LoadingState label={label} />;
+}
+
+class BillingErrorBoundary extends Component<
+  {
+    title: string;
+    description: string;
+    children: ReactNode;
+  },
+  { error: Error | null }
+> {
+  state = { error: null as Error | null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error("Billing view failed to render:", error, info);
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <ErrorState
+          title={this.props.title}
+          description={`${this.props.description} ${this.state.error.message}`}
+          action={
+            <Button variant="outline" onClick={() => window.location.reload()}>
+              Reload
+            </Button>
+          }
+        />
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+function BillingField({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="space-y-1">
+    <div className="space-y-1.5">
       <FieldLabel label={label} />
       {children}
     </div>
   );
 }
 
-export function BillingCatalogView() {
+function BillingCatalogContent() {
+  const currentAdmin = useQuery(api.admin.queries.getCurrentAdminUser);
+  const plans = useQuery(api.admin.queries.listPlans);
+  const canManage = canManageBilling(currentAdmin?.adminRole);
+
+  if (currentAdmin === undefined || plans === undefined) {
+    return <BillingLoadingShell label="Loading billing plans..." />;
+  }
+
+  const roleName = currentAdmin?.adminRole ?? "unknown";
+  const activePlans = plans.filter((plan: BillingPlan) => plan.isActive);
+
   return (
     <div className="space-y-6">
-      <SectionCard
-        title="Plan Catalog"
-        description="Manual plan definitions that mirror the planned admin contracts."
-        actions={
-          <Button render={<Link href="/admin/licenses/plans/new" />}>New plan</Button>
+      {!canManage ? (
+        <BillingReadOnlyNotice
+          title="Billing is read only for this role"
+          description={`Your current admin role (${roleName}) can inspect live billing data, but edits are restricted to ${Array.from(BILLING_MANAGEMENT_ROLES).join(" and ")}.`}
+          action={
+            <Button render={<Link href="/admin/subscriptions" />} variant="outline">
+              Open subscriptions
+            </Button>
+          }
+        />
+      ) : null}
+
+      {plans.length === 0 ? (
+        <EmptyState
+          title="No billing plans yet"
+          description="Create the first live billing plan in Convex."
+          action={
+            canManage ? (
+              <Button render={<Link href="/admin/licenses/plans/new" />}>Create plan</Button>
+            ) : null
+          }
+        />
+      ) : (
+        <>
+          <section className="grid gap-4 md:grid-cols-3">
+            <AdminMetricCard label="Total plans" value={plans.length} description="Live plan records in Convex." />
+            <AdminMetricCard label="Active plans" value={activePlans.length} description="Currently assignable plans." />
+            <AdminMetricCard
+              label="Custom-priced plans"
+              value={plans.filter((plan: BillingPlan) => plan.billingInterval === "custom" || plan.priceCents === undefined).length}
+              description="Manual pricing or contract-driven plans."
+            />
+          </section>
+
+          <AdminSectionCard
+            title="Plan catalog"
+            description="Live plan definitions and pricing contracts."
+            actions={
+              canManage ? (
+                <Button render={<Link href="/admin/licenses/plans/new" />}>Create plan</Button>
+              ) : (
+                <AdminStatusPill tone="warning">Read only</AdminStatusPill>
+              )
+            }
+          >
+            <AdminTable>
+              <AdminTableHead columns={["Name", "Tier", "Price", "Seats", "Status", "Updated", "Action"]} />
+              <tbody>
+                {plans.map((plan: BillingPlan) => (
+                  <AdminTableRow key={String(plan._id)}>
+                    <AdminTableCell className="font-medium">{plan.name}</AdminTableCell>
+                    <AdminTableCell>
+                      <AdminStatusPill tone={billingPlanTone(plan.tier)}>{formatBillingTier(plan.tier)}</AdminStatusPill>
+                    </AdminTableCell>
+                    <AdminTableCell>
+                      {formatBillingMoney(plan.priceCents)}
+                      {formatBillingInterval(plan.billingInterval)}
+                    </AdminTableCell>
+                    <AdminTableCell>{plan.seatLimit ?? "—"}</AdminTableCell>
+                    <AdminTableCell>
+                      <AdminStatusPill tone={plan.isActive ? "success" : "neutral"}>
+                        {formatBillingPlanStatus(plan.isActive)}
+                      </AdminStatusPill>
+                    </AdminTableCell>
+                    <AdminTableCell>{formatAdminDateTime(plan.updatedAt ?? plan.createdAt)}</AdminTableCell>
+                    <AdminTableCell>
+                      <Button
+                        render={<Link href={`/admin/licenses/plans/${String(plan._id)}/edit`} />}
+                        size="sm"
+                        variant="outline"
+                      >
+                        {canManage ? "Edit" : "View"}
+                      </Button>
+                    </AdminTableCell>
+                  </AdminTableRow>
+                ))}
+              </tbody>
+            </AdminTable>
+          </AdminSectionCard>
+        </>
+      )}
+    </div>
+  );
+}
+
+function PlanFormContent({ mode, planId }: { mode: "new" | "edit"; planId?: string }) {
+  const router = useRouter();
+  const toast = useToast();
+  const currentAdmin = useQuery(api.admin.queries.getCurrentAdminUser);
+  const canManage = canManageBilling(currentAdmin?.adminRole);
+  const detail = useQuery(
+    api.admin.queries.getPlanDetail,
+    mode === "edit" && planId ? { planId: planId as Id<"plans"> } : "skip"
+  );
+  const createPlan = useMutation(api.admin.mutations.createPlan);
+  const updatePlan = useMutation(api.admin.mutations.updatePlan);
+
+  const [key, setKey] = useState("");
+  const [name, setName] = useState("");
+  const [tier, setTier] = useState<BillingTier>("free");
+  const [priceCents, setPriceCents] = useState<number | null>(null);
+  const [billingInterval, setBillingInterval] = useState<BillingInterval>("month");
+  const [seatLimit, setSeatLimit] = useState<number | null>(null);
+  const [isActive, setIsActive] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (mode !== "edit" || !detail?.plan) {
+      return;
+    }
+
+    setKey(detail.plan.key);
+    setName(detail.plan.name);
+    setTier(detail.plan.tier);
+    setPriceCents(detail.plan.priceCents ?? null);
+    setBillingInterval(detail.plan.billingInterval ?? "custom");
+    setSeatLimit(detail.plan.seatLimit ?? null);
+    setIsActive(detail.plan.isActive);
+  }, [
+    detail?.plan?._id,
+    detail?.plan?.billingInterval,
+    detail?.plan?.isActive,
+    detail?.plan?.key,
+    detail?.plan?.name,
+    detail?.plan?.priceCents,
+    detail?.plan?.seatLimit,
+    detail?.plan?.tier,
+    mode,
+  ]);
+
+  if (currentAdmin === undefined || (mode === "edit" && detail === undefined)) {
+    return <BillingLoadingShell label={mode === "new" ? "Loading plan form..." : "Loading plan..."} />;
+  }
+
+  if (mode === "edit" && !detail?.plan) {
+    return (
+      <EmptyState
+        title="Plan not found"
+        description="Convex returned no live plan for this route."
+        action={
+          <Button render={<Link href="/admin/licenses" />} variant="outline">
+            Back to license catalog
+          </Button>
         }
+      />
+    );
+  }
+
+  const roleName = currentAdmin?.adminRole ?? "unknown";
+  if (!canManage) {
+    return (
+      <BillingReadOnlyNotice
+        title={mode === "new" ? "Plan creation is restricted" : "Plan editing is restricted"}
+        description={`The current admin role (${roleName}) can view live plan data, but only super_admin and billing_admin can create or update billing plans.`}
+        action={
+          <>
+            <Button render={<Link href="/admin/licenses" />} variant="outline">
+              Back to license catalog
+            </Button>
+            {mode === "edit" ? (
+              <Button render={<Link href="/admin/subscriptions" />} variant="secondary">
+                Review subscriptions
+              </Button>
+            ) : null}
+          </>
+        }
+      />
+    );
+  }
+
+  const preview = {
+    key: key.trim(),
+    name: name.trim(),
+    tier,
+    priceCents: priceCents ?? undefined,
+    billingInterval,
+    seatLimit: seatLimit ?? undefined,
+    isActive,
+  };
+
+  const relatedSubscriptions = detail?.subscriptions.length ?? 0;
+  const relatedEvents = detail?.billingEvents.length ?? 0;
+
+  const handleSubmit = async () => {
+    if (!key.trim() || !name.trim()) {
+      toast.error({ description: "Key and name are required." });
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      if (mode === "new") {
+        await createPlan({
+          key: key.trim(),
+          name: name.trim(),
+          tier,
+          priceCents: priceCents ?? undefined,
+          billingInterval,
+          seatLimit: seatLimit ?? undefined,
+          isActive,
+        });
+        toast.success({ description: "Billing plan created." });
+      } else if (planId) {
+        await updatePlan({
+          planId: planId as Id<"plans">,
+          name: name.trim(),
+          tier,
+          priceCents: priceCents ?? undefined,
+          billingInterval,
+          seatLimit: seatLimit ?? undefined,
+          isActive,
+        });
+        toast.success({ description: "Billing plan updated." });
+      }
+
+      router.push("/admin/licenses");
+      router.refresh();
+    } catch (error) {
+      toast.error({ description: getErrorMessage(error) });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <AdminSectionCard
+      title={mode === "new" ? "Create plan" : "Edit plan"}
+      description="Persisted to live Convex billing plans."
+      actions={<AdminStatusPill tone={isActive ? "success" : "neutral"}>{formatBillingPlanStatus(isActive)}</AdminStatusPill>}
+    >
+      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="grid gap-4 md:grid-cols-2">
+          <BillingField label="Key">
+            <Input
+              value={key}
+              onChange={(event) => setKey(event.currentTarget.value)}
+              disabled={mode === "edit"}
+              placeholder="pro-monthly"
+            />
+          </BillingField>
+          <BillingField label="Name">
+            <Input value={name} onChange={(event) => setName(event.currentTarget.value)} placeholder="Pro" />
+          </BillingField>
+          <Select
+            label="Tier"
+            value={tier}
+            onChange={(event) => setTier(event.currentTarget.value as BillingTier)}
+            options={planTierOptions.map((option) => ({ value: option.value, label: option.label }))}
+          />
+          <Select
+            label="Billing interval"
+            value={billingInterval}
+            onChange={(event) => setBillingInterval(event.currentTarget.value as BillingInterval)}
+            options={billingIntervalOptions.map((option) => ({ value: option.value, label: option.label }))}
+          />
+          <NumberInput
+            label="Price cents"
+            value={priceCents}
+            onChange={setPriceCents}
+            min={0}
+            helperText="Leave empty for custom pricing."
+          />
+          <NumberInput
+            label="Seat limit"
+            value={seatLimit}
+            onChange={setSeatLimit}
+            min={0}
+            helperText="Leave empty for unlimited seats."
+          />
+          <div className="space-y-1.5 md:col-span-2">
+            <FieldLabel label="Plan active" />
+            <SegmentedControl value={isActive ? "active" : "inactive"} onValueChange={(value) => setIsActive(value === "active")}>
+              <SegmentedControlItem value="active">Active</SegmentedControlItem>
+              <SegmentedControlItem value="inactive">Inactive</SegmentedControlItem>
+            </SegmentedControl>
+          </div>
+          <div className="flex flex-wrap gap-2 md:col-span-2">
+            <Button isLoading={isSaving} onClick={() => void handleSubmit()}>
+              {mode === "new" ? "Create plan" : "Save changes"}
+            </Button>
+            <Button render={<Link href="/admin/licenses" />} variant="outline">
+              Cancel
+            </Button>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <AdminMetricCard label="Related subscriptions" value={relatedSubscriptions} description="Loaded from the live plan detail query." />
+          <AdminMetricCard label="Related events" value={relatedEvents} description="Loaded from the live plan detail query." />
+          <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <p className="text-sm font-semibold text-[color:var(--foreground)]">Payload preview</p>
+              <AdminStatusPill tone={billingPlanTone(tier)}>{formatBillingTier(tier)}</AdminStatusPill>
+            </div>
+            <pre className="overflow-auto rounded-[var(--radius-md)] bg-[color:var(--secondary)] p-3 text-xs leading-6">
+{JSON.stringify(preview, null, 2)}
+            </pre>
+          </div>
+        </div>
+      </div>
+    </AdminSectionCard>
+  );
+}
+
+function SubscriptionsContent() {
+  const router = useRouter();
+  const toast = useToast();
+  const currentAdmin = useQuery(api.admin.queries.getCurrentAdminUser);
+  const plans = useQuery(api.admin.queries.listPlans);
+  const canManage = canManageBilling(currentAdmin?.adminRole);
+  const [status, setStatus] = useState<"all" | SubscriptionStatus>("all");
+  const [planFilter, setPlanFilter] = useState<"all" | string>("all");
+  const [selectedSubscriptionId, setSelectedSubscriptionId] = useState<string | null>(null);
+  const [selectedPlanId, setSelectedPlanId] = useState("");
+  const [reason, setReason] = useState("");
+  const [pendingAction, setPendingAction] = useState<"change" | "cancel" | "resume" | null>(null);
+  const changeSubscriptionPlan = useMutation(api.admin.mutations.changeSubscriptionPlan);
+  const cancelSubscription = useMutation(api.admin.mutations.cancelSubscription);
+  const resumeSubscription = useMutation(api.admin.mutations.resumeSubscription);
+  const subscriptionResult = usePaginatedQuery(
+    api.admin.queries.listSubscriptions,
+    { status: status === "all" ? undefined : status },
+    { initialNumItems: 20 }
+  );
+  const selectedSubscriptionDetail = useQuery(
+    api.admin.queries.getSubscriptionDetail,
+    selectedSubscriptionId ? { subscriptionId: selectedSubscriptionId as Id<"subscriptions"> } : "skip"
+  );
+
+  const planMap = useMemo(
+    () => new Map((plans ?? []).map((plan: BillingPlan) => [String(plan._id), plan] as const)),
+    [plans]
+  );
+  const subscriptions = subscriptionResult.results as BillingSubscription[];
+  const filteredSubscriptions = useMemo(() => {
+    return subscriptions.filter((subscription: BillingSubscription) => {
+      return planFilter === "all" || String(subscription.planId) === planFilter;
+    });
+  }, [planFilter, subscriptions]);
+  const selectedSubscription =
+    filteredSubscriptions.find((subscription: BillingSubscription) => String(subscription._id) === selectedSubscriptionId) ?? null;
+
+  useEffect(() => {
+    const currentPlanId = selectedSubscriptionDetail?.subscription?.planId ?? selectedSubscription?.planId;
+    if (!currentPlanId) {
+      return;
+    }
+
+    setSelectedPlanId(String(currentPlanId));
+  }, [selectedSubscription?._id, selectedSubscription?.planId, selectedSubscriptionDetail?.subscription?.planId]);
+
+  if (currentAdmin === undefined || plans === undefined || subscriptionResult.status === "LoadingFirstPage") {
+    return <BillingLoadingShell label="Loading subscriptions..." />;
+  }
+
+  const roleName = currentAdmin?.adminRole ?? "unknown";
+  const handleMutation = async (action: "change" | "cancel" | "resume", handler: () => Promise<void>) => {
+    setPendingAction(action);
+    try {
+      await handler();
+      toast.success({ description: "Subscription updated." });
+      router.refresh();
+      setSelectedSubscriptionId(null);
+      setReason("");
+    } catch (error) {
+      toast.error({ description: getErrorMessage(error) });
+    } finally {
+      setPendingAction(null);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {!canManage ? (
+        <BillingReadOnlyNotice
+          title="Subscription lifecycle actions are restricted"
+          description={`The current admin role (${roleName}) can inspect live subscription data, but only super_admin and billing_admin can change plans or cancel subscriptions.`}
+        />
+      ) : null}
+
+      <AdminSectionCard title="Subscription filters" description="Live subscriptions from Convex billing records.">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
+          <Select
+            label="Status"
+            value={status}
+            onChange={(event) => setStatus(event.currentTarget.value as "all" | SubscriptionStatus)}
+            options={subscriptionStatusOptions.map((option) => ({ value: option.value, label: option.label }))}
+          />
+          <Select
+            label="Plan"
+            value={planFilter}
+            onChange={(event) => setPlanFilter(event.currentTarget.value)}
+            options={[
+              { value: "all", label: "All plans" },
+              ...plans.map((plan: BillingPlan) => ({
+                value: String(plan._id),
+                label: `${plan.name} (${formatBillingTier(plan.tier)})`,
+              })),
+            ]}
+          />
+        </div>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-[color:var(--muted-foreground)]">
+          <span>
+            Showing {filteredSubscriptions.length} loaded subscription{filteredSubscriptions.length === 1 ? "" : "s"}
+            {subscriptionResult.status === "LoadingMore" ? " while fetching more..." : ""}
+          </span>
+          <button
+            type="button"
+            className="font-medium text-[color:var(--foreground)] hover:underline"
+            onClick={() => {
+              setStatus("all");
+              setPlanFilter("all");
+            }}
+          >
+            Clear filters
+          </button>
+        </div>
+      </AdminSectionCard>
+
+      {filteredSubscriptions.length === 0 ? (
+        <EmptyState
+          title="No subscriptions found"
+          description="No live subscription rows matched the current filters."
+        />
+      ) : (
+        <AdminSectionCard title="Subscriptions" description="Plan assignments and lifecycle management.">
+          <AdminTable>
+            <AdminTableHead columns={["Subject", "Plan", "Status", "Provider", "Starts", "Ends", "Action"]} />
+            <tbody>
+              {filteredSubscriptions.map((subscription: BillingSubscription) => {
+                const plan = planMap.get(String(subscription.planId));
+                return (
+                  <AdminTableRow key={String(subscription._id)}>
+                    <AdminTableCell className="font-medium">
+                      <div className="space-y-1">
+                        <div>{formatBillingSubscriptionSubject(subscription)}</div>
+                        <div className="text-xs text-[color:var(--muted-foreground)]">ID {String(subscription._id)}</div>
+                      </div>
+                    </AdminTableCell>
+                    <AdminTableCell>{plan?.name ?? String(subscription.planId)}</AdminTableCell>
+                    <AdminTableCell>
+                      <AdminStatusPill tone={billingSubscriptionTone(subscription.status)}>
+                        {subscription.status}
+                      </AdminStatusPill>
+                    </AdminTableCell>
+                    <AdminTableCell>{subscription.provider ?? "—"}</AdminTableCell>
+                    <AdminTableCell>{formatAdminDateTime(subscription.startsAt)}</AdminTableCell>
+                    <AdminTableCell>{formatAdminDateTime(subscription.endsAt)}</AdminTableCell>
+                    <AdminTableCell>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setSelectedSubscriptionId(String(subscription._id))}
+                      >
+                        {canManage ? "Manage" : "View"}
+                      </Button>
+                    </AdminTableCell>
+                  </AdminTableRow>
+                );
+              })}
+            </tbody>
+          </AdminTable>
+
+          {subscriptionResult.status === "CanLoadMore" ? (
+            <div className="mt-4 flex justify-end">
+              <Button variant="outline" onClick={() => subscriptionResult.loadMore(20)}>
+                Load more
+              </Button>
+            </div>
+          ) : null}
+        </AdminSectionCard>
+      )}
+
+      <AccessibleDialog
+        open={Boolean(selectedSubscription)}
+        onClose={() => {
+          setSelectedSubscriptionId(null);
+          setReason("");
+        }}
+        title={
+          selectedSubscriptionDetail
+            ? `Manage ${formatBillingSubscriptionSubject(selectedSubscriptionDetail.subscription)}`
+            : "Manage subscription"
+        }
+        description="Apply a plan change or lifecycle update to the selected live subscription."
       >
-        <div className="grid gap-4 xl:grid-cols-2">
-          {plans.map((plan) => (
-            <Card key={plan.id} className="border-[color:var(--border)]/70">
-              <CardHeader className="gap-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <CardTitle>{plan.name}</CardTitle>
-                    <CardDescription>{plan.description}</CardDescription>
-                  </div>
-                  <Pill active={plan.isActive}>{tierLabel(plan.tier)}</Pill>
+        {selectedSubscription && selectedSubscriptionDetail === undefined ? (
+          <BillingLoadingShell label="Loading subscription detail..." />
+        ) : selectedSubscription && selectedSubscriptionDetail === null ? (
+          <EmptyState
+            title="Subscription not found"
+            description="Convex returned no live subscription detail for the selected row."
+          />
+        ) : selectedSubscription && selectedSubscriptionDetail ? (
+          <div className="space-y-4">
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Current subject</p>
+                <p className="mt-1 text-sm font-medium">{formatBillingSubscriptionSubject(selectedSubscriptionDetail.subscription)}</p>
+                <p className="mt-1 text-xs text-[color:var(--muted-foreground)]">
+                  Plan ID {String(selectedSubscriptionDetail.subscription.planId)}
+                </p>
+              </div>
+              <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Lifecycle</p>
+                <p className="mt-1 text-sm font-medium">{selectedSubscriptionDetail.subscription.status}</p>
+                <p className="mt-1 text-xs text-[color:var(--muted-foreground)]">
+                  Starts {formatAdminDateTime(selectedSubscriptionDetail.subscription.startsAt)} · Ends {formatAdminDateTime(selectedSubscriptionDetail.subscription.endsAt)}
+                </p>
+              </div>
+            </div>
+
+            {selectedSubscriptionDetail.user || selectedSubscriptionDetail.organization ? (
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">User</p>
+                  <p className="mt-1 text-sm font-medium">
+                    {selectedSubscriptionDetail.user
+                      ? selectedSubscriptionDetail.user.displayName ?? selectedSubscriptionDetail.user.name ?? selectedSubscriptionDetail.user.email ?? "Unknown"
+                      : "—"}
+                  </p>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
-                      Monthly
-                    </p>
-                    <p className="mt-1 text-lg font-semibold">{money(plan.priceMonthly)}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
-                      Yearly
-                    </p>
-                    <p className="mt-1 text-lg font-semibold">{money(plan.priceYearly)}</p>
-                  </div>
+                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Organization</p>
+                  <p className="mt-1 text-sm font-medium">
+                    {selectedSubscriptionDetail.organization ? selectedSubscriptionDetail.organization.name : "—"}
+                  </p>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-[var(--radius-md)] bg-[color:var(--secondary)] p-3">
-                    <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
-                      Max bikes
-                    </p>
-                    <p className="mt-1 text-base font-semibold">{plan.maxBikes ?? "Unlimited"}</p>
-                  </div>
-                  <div className="rounded-[var(--radius-md)] bg-[color:var(--secondary)] p-3">
-                    <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
-                      Max seats
-                    </p>
-                    <p className="mt-1 text-base font-semibold">{plan.maxSeats ?? "Unlimited"}</p>
-                  </div>
-                </div>
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {Object.entries(plan.entitlements).map(([key, value]) => (
-                    <div
-                      key={key}
-                      className="flex items-center justify-between rounded-[var(--radius-md)] border border-[color:var(--border)] px-3 py-2 text-sm"
+              </div>
+            ) : null}
+
+            {!canManage ? (
+              <BillingReadOnlyNotice
+                title="This subscription can only be inspected"
+                description="The selected subscription is live, but plan changes and lifecycle mutations are restricted to super_admin and billing_admin."
+              />
+            ) : (
+              <div className="space-y-4">
+                <Select
+                  label="New plan"
+                  value={selectedPlanId}
+                  onChange={(event) => setSelectedPlanId(event.currentTarget.value)}
+                  options={plans.map((plan: BillingPlan) => ({
+                    value: String(plan._id),
+                    label: `${plan.name} (${formatBillingTier(plan.tier)})`,
+                  }))}
+                />
+                <Textarea
+                  label="Reason"
+                  rows={3}
+                  value={reason}
+                  onChange={(event) => setReason(event.currentTarget.value)}
+                  placeholder="Why is this change being made?"
+                />
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    isLoading={pendingAction === "change"}
+                    onClick={() =>
+                      void handleMutation("change", async () => {
+                        await changeSubscriptionPlan({
+                          subscriptionId: selectedSubscriptionDetail.subscription._id as Id<"subscriptions">,
+                          planId: selectedPlanId as Id<"plans">,
+                          reason: reason.trim() || "Admin subscription plan change",
+                        });
+                      })
+                    }
+                  >
+                    Change plan
+                  </Button>
+                  {selectedSubscriptionDetail.subscription.status === "canceled" ? (
+                    <Button
+                      variant="outline"
+                      isLoading={pendingAction === "resume"}
+                      onClick={() =>
+                        void handleMutation("resume", async () => {
+                          await resumeSubscription({
+                            subscriptionId: selectedSubscriptionDetail.subscription._id as Id<"subscriptions">,
+                            reason: reason.trim() || "Admin subscription resume",
+                          });
+                        })
+                      }
                     >
-                      <span>{ENTITLEMENT_LABELS[key as PlanEntitlementKey]}</span>
-                      <span className={value ? "text-[color:var(--success)]" : "text-[color:var(--muted-foreground)]"}>
-                        {value ? "Yes" : "No"}
-                      </span>
+                      Resume
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      isLoading={pendingAction === "cancel"}
+                      onClick={() =>
+                        void handleMutation("cancel", async () => {
+                          await cancelSubscription({
+                            subscriptionId: selectedSubscriptionDetail.subscription._id as Id<"subscriptions">,
+                            reason: reason.trim() || "Admin subscription cancel",
+                          });
+                        })
+                      }
+                    >
+                      Cancel
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {selectedSubscriptionDetail.events.length > 0 ? (
+              <div className="space-y-2">
+                <p className="text-sm font-semibold text-[color:var(--foreground)]">Live billing events</p>
+                <div className="space-y-2">
+                  {selectedSubscriptionDetail.events.map((event: BillingEvent) => (
+                    <div
+                      key={String(event._id)}
+                      className="rounded-[var(--radius-md)] border border-[color:var(--border)] p-3 text-sm"
+                    >
+                      <div className="flex flex-wrap items-center gap-2">
+                        <AdminStatusPill tone="neutral">{event.eventType.replaceAll("_", " ")}</AdminStatusPill>
+                        <span className="text-[color:var(--muted-foreground)]">{formatAdminDateTime(event.occurredAt)}</span>
+                      </div>
+                      <p className="mt-2 text-[color:var(--muted-foreground)]">{summarizeBillingEventPayload(event.payloadJson)}</p>
                     </div>
                   ))}
                 </div>
-              </CardContent>
-              <CardFooter className="justify-between">
-                <span className="text-sm text-[color:var(--muted-foreground)]">
-                  Slug: <code>{plan.slug}</code>
-                </span>
-                <Button variant="outline" render={<Link href={`/admin/licenses/plans/${plan.id}/edit`} />}>
-                  Edit
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </SectionCard>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+      </AccessibleDialog>
     </div>
+  );
+}
+
+function BillingEventsContent() {
+  const [eventFilter, setEventFilter] = useState<(typeof billingEventTypes)[number]>("all");
+  const result = usePaginatedQuery(api.admin.queries.listBillingEvents, {}, { initialNumItems: 30 });
+
+  if (result.status === "LoadingFirstPage") {
+    return <BillingLoadingShell label="Loading billing events..." />;
+  }
+
+  const rows = result.results.filter((event: BillingEvent) => eventFilter === "all" || event.eventType === eventFilter);
+
+  if (rows.length === 0) {
+    return <EmptyState title="No billing events" description="No live billing events matched the current filter." />;
+  }
+
+  return (
+    <div className="space-y-6">
+      <AdminSectionCard
+        title="Billing event feed"
+        description="Chronological live billing changes and lifecycle events."
+        actions={
+          <Select
+            aria-label="Billing event filter"
+            value={eventFilter}
+            onChange={(event) => setEventFilter(event.currentTarget.value as (typeof billingEventTypes)[number])}
+            options={billingEventTypes.map((value) => ({
+              value,
+              label: value === "all" ? "All events" : value.replaceAll("_", " "),
+            }))}
+          />
+        }
+      >
+        <AdminTable>
+          <AdminTableHead columns={["Time", "Event", "Subscription", "User", "Organization", "Payload"]} />
+          <tbody>
+            {rows.map((event: BillingEvent) => (
+              <AdminTableRow key={String(event._id)}>
+                <AdminTableCell className="font-medium">{formatAdminDateTime(event.occurredAt)}</AdminTableCell>
+                <AdminTableCell>
+                  <AdminStatusPill tone="neutral">{event.eventType.replaceAll("_", " ")}</AdminStatusPill>
+                </AdminTableCell>
+                <AdminTableCell>{event.subscriptionId ? String(event.subscriptionId) : "—"}</AdminTableCell>
+                <AdminTableCell>
+                  {event.userId ? <Link href={`/admin/users/${String(event.userId)}`}>{String(event.userId)}</Link> : "—"}
+                </AdminTableCell>
+                <AdminTableCell>
+                  {event.organizationId ? (
+                    <Link href={`/admin/organizations/${String(event.organizationId)}`}>{String(event.organizationId)}</Link>
+                  ) : (
+                    "—"
+                  )}
+                </AdminTableCell>
+                <AdminTableCell className="max-w-[28rem] break-words text-[color:var(--muted-foreground)]">
+                  {summarizeBillingEventPayload(event.payloadJson)}
+                </AdminTableCell>
+              </AdminTableRow>
+            ))}
+          </tbody>
+        </AdminTable>
+
+        {result.status === "CanLoadMore" ? (
+          <div className="mt-4 flex justify-end">
+            <Button variant="outline" onClick={() => result.loadMore(30)}>
+              Load more
+            </Button>
+          </div>
+        ) : null}
+      </AdminSectionCard>
+    </div>
+  );
+}
+
+export function BillingCatalogView() {
+  return (
+    <BillingErrorBoundary
+      title="Could not load billing plans"
+      description="Convex returned an unexpected error while loading the live billing catalog."
+    >
+      <BillingCatalogContent />
+    </BillingErrorBoundary>
   );
 }
 
@@ -432,392 +894,34 @@ export function PlanFormView({
   mode: "new" | "edit";
   planId?: string;
 }) {
-  const existingPlan = plans.find((plan) => plan.id === planId) ?? plans[1];
-  const [name, setName] = useState(existingPlan.name);
-  const [slug, setSlug] = useState(existingPlan.slug);
-  const [description, setDescription] = useState(existingPlan.description);
-  const [tier, setTier] = useState(existingPlan.tier);
-  const [priceMonthly, setPriceMonthly] = useState(existingPlan.priceMonthly ?? 0);
-  const [priceYearly, setPriceYearly] = useState(existingPlan.priceYearly ?? 0);
-  const [maxBikes, setMaxBikes] = useState<number | null>(existingPlan.maxBikes);
-  const [maxSeats, setMaxSeats] = useState<number | null>(existingPlan.maxSeats);
-  const [isActive, setIsActive] = useState(existingPlan.isActive);
-  const [submitted, setSubmitted] = useState(false);
-  const [entitlements, setEntitlements] = useState(existingPlan.entitlements);
-
-  const summary = useMemo(
-    () => ({
-      name,
-      slug,
-      tier,
-      isActive,
-      maxBikes: maxBikes ?? "Unlimited",
-      maxSeats: maxSeats ?? "Unlimited",
-    }),
-    [name, slug, tier, isActive, maxBikes, maxSeats]
-  );
-
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
-      <SectionCard
-        title={mode === "new" ? "Create plan" : `Edit plan: ${existingPlan.name}`}
-        description="Plan catalog contract, expressed with the shared Prototyper UI layer."
-        actions={<Pill active={isActive}>{isActive ? "Active" : "Inactive"}</Pill>}
-      >
-        <form
-          className="grid gap-6 lg:grid-cols-[1.4fr_0.9fr]"
-          onSubmit={(event) => {
-            event.preventDefault();
-            setSubmitted(true);
-          }}
-        >
-          <div className="space-y-5">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <FieldBlock label="Name">
-                <Input value={name} onChange={(event) => setName(event.target.value)} />
-              </FieldBlock>
-              <FieldBlock label="Slug">
-                <Input value={slug} onChange={(event) => setSlug(event.target.value)} />
-              </FieldBlock>
-            </div>
-            <Textarea
-              label="Description"
-              rows={4}
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-            />
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Select
-                label="Tier"
-                value={tier}
-                onChange={(event) => setTier(event.target.value as PlanRecord["tier"])}
-                options={[
-                  { value: "free", label: "Free" },
-                  { value: "premium", label: "Premium" },
-                  { value: "pro", label: "Pro" },
-                  { value: "bike_shop", label: "Bike Shop" },
-                  { value: "enterprise", label: "Enterprise" },
-                ]}
-              />
-              <div className="grid gap-4 sm:grid-cols-2">
-                <NumberInput
-                  label="Monthly price"
-                  value={priceMonthly}
-                  onChange={(next) => setPriceMonthly(next ?? 0)}
-                  unit="cents"
-                />
-                <NumberInput
-                  label="Yearly price"
-                  value={priceYearly}
-                  onChange={(next) => setPriceYearly(next ?? 0)}
-                  unit="cents"
-                />
-              </div>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <NumberInput
-                label="Max bikes"
-                value={maxBikes ?? 0}
-                onChange={(next) => setMaxBikes(next)}
-                allowOutOfRange
-              />
-              <NumberInput
-                label="Max seats"
-                value={maxSeats ?? 0}
-                onChange={(next) => setMaxSeats(next)}
-                allowOutOfRange
-              />
-            </div>
-            <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium">Entitlements</h3>
-                <Tooltip content="Toggle the availability flags the plan exposes." />
-              </div>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {Object.entries(entitlements).map(([key, value]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() =>
-                      setEntitlements((current) => ({
-                        ...current,
-                        [key]: !value,
-                      }))
-                    }
-                    className={cn(
-                      "flex items-center justify-between rounded-[var(--radius-md)] border px-3 py-2 text-left text-sm transition-colors",
-                      value
-                        ? "border-[color:var(--primary)] bg-[color:color-mix(in_oklch,var(--primary)_10%,var(--card)_90%)]"
-                        : "border-[color:var(--border)] bg-[color:var(--secondary)]"
-                    )}
-                  >
-                    <span>{ENTITLEMENT_LABELS[key as PlanEntitlementKey]}</span>
-                    <span className="font-medium">{value ? "On" : "Off"}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="space-y-5">
-            <Card>
-              <CardHeader>
-                <CardTitle>Preview</CardTitle>
-                <CardDescription>Shape of the payload the backend contract expects.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="rounded-[var(--radius-md)] bg-[color:var(--secondary)] p-3 text-sm">
-                  <pre className="overflow-auto text-xs leading-6">
-{JSON.stringify(summary, null, 2)}
-                  </pre>
-                </div>
-                <Progress value={submitted ? 100 : 62} label="Form completion" />
-              </CardContent>
-              <CardFooter className="justify-end gap-2">
-                <Button type="submit">Save plan</Button>
-              </CardFooter>
-            </Card>
-            {submitted ? (
-              <div className="rounded-[var(--radius-lg)] border border-[color:var(--success)]/30 bg-[color:color-mix(in_oklch,var(--success)_10%,var(--card)_90%)] p-4 text-sm">
-                Plan saved locally. Wire this to the planned `createPlan` / `updatePlan` mutation.
-              </div>
-            ) : null}
-          </div>
-        </form>
-      </SectionCard>
-    </div>
+    <BillingErrorBoundary
+      title={mode === "new" ? "Could not open plan form" : "Could not load billing plan"}
+      description="Convex returned an unexpected error while loading the live billing plan form."
+    >
+      <PlanFormContent mode={mode} planId={planId} />
+    </BillingErrorBoundary>
   );
 }
 
 export function SubscriptionsView() {
-  const [planFilter, setPlanFilter] = useState<"all" | PlanRecord["tier"]>("all");
-  const [trialFilter, setTrialFilter] = useState<"all" | "active">("all");
-  const [suspensionFilter, setSuspensionFilter] = useState<"all" | "suspended">("all");
-  const [selectedUser, setSelectedUser] = useState<SubscriptionRecord | null>(null);
-
-  const filtered = subscriptions.filter((subscription) => {
-    const planMatches = planFilter === "all" || subscription.tier === planFilter;
-    const trialMatches =
-      trialFilter === "all" || Boolean(subscription.trialEndsAt) === true;
-    const suspensionMatches =
-      suspensionFilter === "all" || Boolean(subscription.suspended) === true;
-    return planMatches && trialMatches && suspensionMatches;
-  });
-
   return (
-    <div className="space-y-6">
-      <SectionCard
-        title="Subscriptions"
-        description="Manual view over the current account tier and trial state."
-        actions={
-          <SegmentedControl value={planFilter} onValueChange={(value) => setPlanFilter(value as typeof planFilter)} size="sm">
-            <SegmentedControlItem value="all" size="sm">All</SegmentedControlItem>
-            <SegmentedControlItem value="free" size="sm">Free</SegmentedControlItem>
-            <SegmentedControlItem value="pro" size="sm">Pro</SegmentedControlItem>
-            <SegmentedControlItem value="premium" size="sm">Premium</SegmentedControlItem>
-          </SegmentedControl>
-        }
-      >
-        <div className="flex flex-wrap gap-3">
-          <Select
-            value={trialFilter}
-            onChange={(event) => setTrialFilter(event.target.value as typeof trialFilter)}
-            options={[
-              { value: "all", label: "All trials" },
-              { value: "active", label: "Trial active" },
-            ]}
-          />
-          <Select
-            value={suspensionFilter}
-            onChange={(event) => setSuspensionFilter(event.target.value as typeof suspensionFilter)}
-            options={[
-              { value: "all", label: "All accounts" },
-              { value: "suspended", label: "Suspended only" },
-            ]}
-          />
-        </div>
-        <div className="mt-5 overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)]">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]">
-              <tr>
-                <th className="px-4 py-3 font-medium">Name</th>
-                <th className="px-4 py-3 font-medium">Email</th>
-                <th className="px-4 py-3 font-medium">Plan</th>
-                <th className="px-4 py-3 font-medium">Trial end</th>
-                <th className="px-4 py-3 font-medium">Joined</th>
-                <th className="px-4 py-3 font-medium">Last login</th>
-                <th className="px-4 py-3 font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((subscription) => (
-                <tr key={subscription.id} className="border-t border-[color:var(--border)]">
-                  <td className="px-4 py-3">{subscription.name}</td>
-                  <td className="px-4 py-3 text-[color:var(--muted-foreground)]">{subscription.email}</td>
-                  <td className="px-4 py-3">
-                    <Pill active>{tierLabel(subscription.tier)}</Pill>
-                  </td>
-                  <td className="px-4 py-3">{subscription.trialEndsAt ?? "—"}</td>
-                  <td className="px-4 py-3">{subscription.joinedAt}</td>
-                  <td className="px-4 py-3">{subscription.lastLoginAt}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex flex-wrap gap-2">
-                      <Button size="sm" variant="outline" onClick={() => setSelectedUser(subscription)}>
-                        Change plan
-                      </Button>
-                      <Button size="sm" variant="ghost" render={<Link href={`/admin/users/${subscription.userId}`} />}>
-                        View user
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </SectionCard>
-      <SectionCard
-        title="Billing events"
-        description="Chronological state changes that feed the audit trail."
-        actions={
-          <Button variant="outline" render={<Link href="/admin/subscriptions/events" />}>
-            Open feed
-          </Button>
-        }
-      >
-        <div className="space-y-3">
-          {billingEvents.map((event) => (
-            <div key={event.id} className="flex items-start justify-between gap-4 rounded-[var(--radius-md)] border border-[color:var(--border)] p-4">
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Pill>{event.eventType}</Pill>
-                  <span className="font-medium">{event.subjectName}</span>
-                  <span className="text-[color:var(--muted-foreground)]">{event.occurredAt}</span>
-                </div>
-                <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
-                  {event.fromTier ? `${event.fromTier} → ` : ""}
-                  {event.toTier ?? "—"} {event.reason ? `• ${event.reason}` : ""}
-                </p>
-              </div>
-              <span className="text-sm text-[color:var(--muted-foreground)]">{event.adminName}</span>
-            </div>
-          ))}
-        </div>
-      </SectionCard>
-      <AccessibleDialog
-        open={selectedUser !== null}
-        title={selectedUser ? `Change plan for ${selectedUser.name}` : "Change plan"}
-        description="This mirrors the planned admin mutation flow without hitting the backend yet."
-        onClose={() => setSelectedUser(null)}
-      >
-        <div className="space-y-4">
-          <Select
-            label="New plan"
-            value={selectedUser?.tier ?? "pro"}
-            onChange={() => undefined}
-            options={plans.map((plan) => ({ value: plan.tier, label: plan.name }))}
-          />
-          <Textarea label="Reason" rows={3} placeholder="Why is this change being made?" />
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setSelectedUser(null)}>
-              Cancel
-            </Button>
-            <Button onClick={() => setSelectedUser(null)}>Apply change</Button>
-          </div>
-        </div>
-      </AccessibleDialog>
-    </div>
+    <BillingErrorBoundary
+      title="Could not load billing subscriptions"
+      description="Convex returned an unexpected error while loading the live subscription list."
+    >
+      <SubscriptionsContent />
+    </BillingErrorBoundary>
   );
 }
 
 export function BillingEventsView() {
-  const [eventFilter, setEventFilter] = useState<"all" | "plan_change" | "trial_start" | "trial_end" | "seat_change">("all");
-
-  const rows = billingEvents.filter((event) => eventFilter === "all" || event.eventType === eventFilter);
-
   return (
-    <div className="space-y-6">
-      <SectionCard
-        title="Billing events"
-        description="Read-only state changes for plans, trials, seats, and manual billing adjustments."
-        actions={
-          <Select
-            value={eventFilter}
-            onChange={(event) => setEventFilter(event.target.value as typeof eventFilter)}
-            options={[
-              { value: "all", label: "All events" },
-              { value: "plan_change", label: "Plan changes" },
-              { value: "trial_start", label: "Trial starts" },
-              { value: "trial_end", label: "Trial ends" },
-              { value: "seat_change", label: "Seat changes" },
-            ]}
-          />
-        }
-      >
-        <div className="space-y-3">
-          {rows.map((event) => (
-            <div key={event.id} className="grid gap-2 rounded-[var(--radius-md)] border border-[color:var(--border)] p-4 md:grid-cols-[1.5fr_1fr_1fr] md:items-center">
-              <div>
-                <div className="flex items-center gap-2">
-                  <Pill>{event.eventType}</Pill>
-                  <span className="font-medium">{event.subjectName}</span>
-                </div>
-                <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
-                  {event.reason ?? "No reason provided"}
-                </p>
-              </div>
-              <div className="text-sm">
-                <p className="text-[color:var(--muted-foreground)]">Change</p>
-                <p>{event.fromTier ? `${event.fromTier} → ` : ""}{event.toTier ?? "—"}</p>
-              </div>
-              <div className="text-sm text-[color:var(--muted-foreground)]">
-                <p>{event.adminName}</p>
-                <p>{event.occurredAt}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </SectionCard>
-    </div>
-  );
-}
-
-export function TrialManagementView() {
-  const trialActive = true;
-  const [trialPlan, setTrialPlan] = useState("pro");
-  const [days, setDays] = useState(14);
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Trial management</CardTitle>
-        <CardDescription>Local prototype of the planned trial workflow.</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {trialActive ? (
-          <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] p-4">
-            <p className="text-sm font-medium">Active trial expires on 2026-04-08</p>
-            <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-              Extend or end the trial in the planned billing mutation layer.
-            </p>
-          </div>
-        ) : null}
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Select
-            label="Plan for trial"
-            value={trialPlan}
-            onChange={(event) => setTrialPlan(event.target.value)}
-            options={plans.filter((plan) => plan.tier === "pro" || plan.tier === "premium").map((plan) => ({
-              value: plan.tier,
-              label: plan.name,
-            }))}
-          />
-          <NumberInput label="Duration in days" value={days} onChange={(next) => setDays(next ?? 0)} />
-        </div>
-      </CardContent>
-      <CardFooter className="justify-end gap-2">
-        <Button variant="outline">End trial now</Button>
-        <Button>Start / extend trial</Button>
-      </CardFooter>
-    </Card>
+    <BillingErrorBoundary
+      title="Could not load billing events"
+      description="Convex returned an unexpected error while loading the live billing event feed."
+    >
+      <BillingEventsContent />
+    </BillingErrorBoundary>
   );
 }

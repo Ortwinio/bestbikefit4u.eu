@@ -1,10 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AccessibleDialog, Button, Card, CardContent, CardHeader, CardTitle, Input, Select, SegmentedControl, SegmentedControlItem, Textarea } from "@/components/ui";
-import { cn } from "@/utils/cn";
-import type { AdminUserDetail, AdminUserPlan, AdminUserRole } from "./admin-users-data";
+import { useAction, useMutation, useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import type { Doc, Id } from "../../../../convex/_generated/dataModel";
+import {
+  Button,
+  EmptyState,
+  Input,
+  LoadingState,
+  Select,
+  SegmentedControl,
+  SegmentedControlItem,
+  Textarea,
+  useToast,
+} from "@/components/ui";
+import {
+  AdminPageHeader,
+  AdminSectionCard,
+  AdminStatusPill,
+  AdminTable,
+  AdminTableCell,
+  AdminTableHead,
+  AdminTableRow,
+} from "@/components/admin/layout/AdminUi";
+import { formatAdminDate, formatAdminRelativeDate, formatAdminDateTime } from "@/components/admin/shared/admin-format";
+import { displayAdminUserName } from "@/components/admin/shared/live-admin-data";
+import { formatAdminRoleLabel } from "../auth/admin-auth-shared";
 
 type TabKey =
   | "overview"
@@ -19,23 +42,24 @@ type TabKey =
 
 const tabs: Array<{ key: TabKey; label: string }> = [
   { key: "overview", label: "Overview" },
-  { key: "profile", label: "Rider Profile" },
+  { key: "profile", label: "Profile" },
   { key: "bikes", label: "Bikes" },
   { key: "fit-history", label: "Fit History" },
   { key: "integrations", label: "Integrations" },
   { key: "license", label: "License" },
   { key: "feedback", label: "Feedback" },
   { key: "messages", label: "Messages" },
-  { key: "audit", label: "Audit Trail" },
+  { key: "audit", label: "Audit" },
 ];
 
-const planOptions = [
+const tierOptions = [
   { value: "free", label: "Free" },
   { value: "pro", label: "Pro" },
   { value: "premium", label: "Premium" },
 ] as const;
 
 const roleOptions = [
+  { value: "none", label: "Remove admin access" },
   { value: "super_admin", label: "super_admin" },
   { value: "ops_admin", label: "ops_admin" },
   { value: "support_admin", label: "support_admin" },
@@ -46,45 +70,64 @@ const roleOptions = [
   { value: "analyst", label: "analyst" },
 ] as const;
 
-function formatDate(dateString: string) {
-  return new Intl.DateTimeFormat("en", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(dateString));
-}
+const messageTypeOptions = [
+  { value: "banner", label: "Banner" },
+  { value: "inbox_card", label: "Inbox card" },
+  { value: "modal", label: "Modal" },
+  { value: "sticky_warning", label: "Sticky warning" },
+  { value: "support_reply", label: "Support reply" },
+] as const;
 
-function badgeClassName(kind: "free" | "pro" | "premium" | "admin" | "warning" | "success" | "muted") {
-  switch (kind) {
+const messagePriorityOptions = [
+  { value: "low", label: "Low" },
+  { value: "normal", label: "Normal" },
+  { value: "high", label: "High" },
+  { value: "urgent", label: "Urgent" },
+] as const;
+
+type UserDetailData = {
+  user: Doc<"users"> | null;
+  bikes: Doc<"bikes">[];
+  fitRuns: Doc<"fitSessions">[];
+  integration: Doc<"integrations"> | null;
+  subscriptions: Doc<"subscriptions">[];
+  feedbackItems: Doc<"feedback_items">[];
+  messageReceipts: Doc<"message_receipts">[];
+  auditLogs: Doc<"admin_audit_logs">[];
+  bikeCount: number;
+  fitRunCount: number;
+  stravaConnected: boolean;
+};
+
+type RiderData = {
+  user: Doc<"users"> | null;
+  profile: Doc<"profiles"> | null;
+  bikes: Doc<"bikes">[];
+  fitSessions: Doc<"fitSessions">[];
+  questionnaireResponses: Doc<"questionnaireResponses">[];
+  recommendations: Doc<"recommendations">[];
+  validationCaptures: Doc<"validationCaptures">[];
+  rideFeedbackEntries: Doc<"rideFeedbackEntries">[];
+  emailReports: Doc<"emailReports">[];
+  measurementFlags: string[];
+};
+
+function userTierTone(tier: string | null) {
+  switch (tier) {
     case "premium":
-      return "border border-[color:color-mix(in_oklch,var(--primary)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_10%,var(--card))]";
+      return "success";
     case "pro":
-      return "border border-[color:color-mix(in_oklch,var(--secondary)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--secondary)_10%,var(--card))]";
-    case "admin":
-      return "border border-[color:color-mix(in_oklch,var(--warning)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card))]";
-    case "warning":
-      return "border border-[color:color-mix(in_oklch,var(--warning)_34%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_14%,var(--card))]";
-    case "success":
-      return "border border-[color:color-mix(in_oklch,var(--success)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--success)_10%,var(--card))]";
-    case "free":
-    case "muted":
+      return "info";
     default:
-      return "border border-[color:var(--border)] bg-[color:var(--secondary)]";
+      return "neutral";
   }
 }
 
-function badge({ children, kind = "muted" }: { children: string; kind?: "free" | "pro" | "premium" | "admin" | "warning" | "success" | "muted" }) {
-  return (
-    <span className={cn("inline-flex rounded-full px-2.5 py-1 text-xs font-medium capitalize text-[color:var(--foreground)]", badgeClassName(kind))}>
-      {children}
-    </span>
-  );
+function adminRoleTone(role: string | null) {
+  return role ? "info" : "neutral";
 }
 
-function SectionTitle({ children }: { children: string }) {
-  return <h3 className="text-base font-semibold text-[color:var(--foreground)]">{children}</h3>;
-}
-
-function SummaryStat({ label, value }: { label: string; value: string | number }) {
+function liveStat(label: string, value: string | number) {
   return (
     <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
       <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">{label}</div>
@@ -93,55 +136,231 @@ function SummaryStat({ label, value }: { label: string; value: string | number }
   );
 }
 
-export function UserDetailClient({ user }: { user: AdminUserDetail }) {
-  const [tab, setTab] = useState<TabKey>("overview");
-  const [notice, setNotice] = useState<string | null>(null);
-  const [plan, setPlan] = useState<AdminUserPlan>(user.row.plan);
-  const [planReason, setPlanReason] = useState("");
-  const [messageTitle, setMessageTitle] = useState("");
-  const [messageType, setMessageType] = useState("inbox_card");
-  const [messageBody, setMessageBody] = useState("");
-  const [adminRole, setAdminRole] = useState<AdminUserRole | "none">(user.row.adminRole ?? "none");
-  const [roleReason, setRoleReason] = useState("");
-  const [isSuspendDialogOpen, setIsSuspendDialogOpen] = useState(false);
-  const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState(false);
-  const [isImpersonateDialogOpen, setIsImpersonateDialogOpen] = useState(false);
-  const [suspensionReason, setSuspensionReason] = useState(user.row.suspendedReason ?? "");
-  const [impersonationReason, setImpersonationReason] = useState("");
+function getMutationErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Something went wrong.";
+}
 
-  const openFeedbackCount = user.feedback.filter((item) => item.status !== "closed").length;
+export function UserDetailClient({ userId }: { userId: string }) {
+  const toast = useToast();
+  const [tab, setTab] = useState<TabKey>("overview");
+  const [tier, setTier] = useState<"free" | "pro" | "premium">("free");
+  const [tierReason, setTierReason] = useState("");
+  const [adminRole, setAdminRole] = useState<"none" | (typeof roleOptions)[number]["value"]>("none");
+  const [roleReason, setRoleReason] = useState("");
+  const [suspendReason, setSuspendReason] = useState("");
+  const [messageTitle, setMessageTitle] = useState("");
+  const [messageBody, setMessageBody] = useState("");
+  const [messageType, setMessageType] = useState<(typeof messageTypeOptions)[number]["value"]>("inbox_card");
+  const [messagePriority, setMessagePriority] = useState<(typeof messagePriorityOptions)[number]["value"]>("normal");
+  const [impersonationReason, setImpersonationReason] = useState("");
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
+
+  const resolvedUserId = userId as Id<"users">;
+  const detail = useQuery(api.admin.queries.getUserDetail, { userId: resolvedUserId }) as UserDetailData | undefined;
+  const riderData = useQuery(api.admin.queries.getAdminRiderData, { userId: resolvedUserId }) as RiderData | null | undefined;
+  const currentAdmin = useQuery(api.admin.queries.getCurrentAdminUser);
+  const changeUserTier = useMutation(api.admin.mutations.changeUserTier);
+  const suspendUser = useMutation(api.admin.mutations.suspendUser);
+  const restoreUser = useMutation(api.admin.mutations.restoreUser);
+  const setAdminRoleMutation = useMutation(api.admin.mutations.setAdminRole);
+  const createDashboardMessage = useMutation(api.admin.mutations.createDashboardMessage);
+  const startImpersonation = useAction(api.admin.actions.startImpersonation);
+
+  const liveUser = detail?.user ?? riderData?.user ?? null;
+  const profile = riderData?.profile ?? null;
+  const canChangeTier = currentAdmin?.adminRole
+    ? ["super_admin", "billing_admin", "ops_admin"].includes(currentAdmin.adminRole)
+    : false;
+  const canChangeRole = currentAdmin?.adminRole === "super_admin";
+  const canSuspend = currentAdmin?.adminRole
+    ? ["super_admin", "support_admin", "ops_admin"].includes(currentAdmin.adminRole)
+    : false;
+  const canImpersonate = Boolean(currentAdmin);
+
+  useEffect(() => {
+    if (!liveUser) {
+      return;
+    }
+
+    setTier(liveUser.tier ?? "free");
+    setAdminRole(liveUser.adminRole ?? "none");
+    setSuspendReason(liveUser.suspendedReason ?? "");
+  }, [liveUser?._id, liveUser?.tier, liveUser?.adminRole, liveUser?.suspendedReason]);
+
+  if (detail === undefined || riderData === undefined || currentAdmin === undefined) {
+    return <LoadingState label="Loading user..." />;
+  }
+
+  if (!liveUser) {
+    return (
+      <EmptyState
+        title="User not found"
+        description="Convex returned no live user record for this route."
+        action={
+          <Button render={<Link href="/admin/users" />} variant="outline">
+            Back to users
+          </Button>
+        }
+      />
+    );
+  }
+
+  const summaryBikes = riderData?.bikes ?? detail.bikes;
+  const summaryFitRuns = riderData?.fitSessions ?? detail.fitRuns;
+  const subscriptions = detail.subscriptions ?? [];
+  const feedbackItems = detail.feedbackItems ?? [];
+  const receipts = detail.messageReceipts ?? [];
+  const auditLogs = detail.auditLogs ?? [];
+
+  const runMutation = async (
+    action: string,
+    handler: () => Promise<unknown>,
+    successDescription: string
+  ) => {
+    setPendingAction(action);
+    try {
+      await handler();
+      toast.success({ description: successDescription });
+    } catch (error) {
+      toast.error({ description: getMutationErrorMessage(error) });
+    } finally {
+      setPendingAction(null);
+    }
+  };
+
+  const handleChangeTier = async () => {
+    if (!canChangeTier) return;
+    await runMutation(
+      "tier",
+      async () => {
+        await changeUserTier({
+          userId: resolvedUserId,
+          tier,
+          reason: tierReason.trim() || "Admin tier update",
+        });
+      },
+      `Tier updated to ${tier}.`
+    );
+  };
+
+  const handleSuspend = async () => {
+    if (!canSuspend) return;
+    await runMutation(
+      "suspend",
+      async () => {
+        await suspendUser({
+          userId: resolvedUserId,
+          reason: suspendReason.trim() || "Admin suspension",
+        });
+      },
+      "User suspended."
+    );
+  };
+
+  const handleRestore = async () => {
+    if (!canSuspend) return;
+    await runMutation(
+      "restore",
+      async () => {
+        await restoreUser({
+          userId: resolvedUserId,
+          reason: "Admin restore",
+        });
+      },
+      "User restored."
+    );
+  };
+
+  const handleSaveRole = async () => {
+    if (!canChangeRole) return;
+    await runMutation(
+      "role",
+      async () => {
+        await setAdminRoleMutation({
+          userId: resolvedUserId,
+          role: adminRole === "none" ? undefined : adminRole,
+          reason: roleReason.trim() || "Admin role update",
+        });
+      },
+      "Admin role updated."
+    );
+  };
+
+  const handleSendMessage = async () => {
+    await runMutation(
+      "message",
+      async () => {
+        await createDashboardMessage({
+          title: messageTitle.trim() || `Message for ${displayAdminUserName(liveUser)}`,
+          body: messageBody.trim() || "Admin message",
+          type: messageType,
+          priority: messagePriority,
+          locale: "all",
+          dismissible: true,
+          requiresAcknowledgement: false,
+          startsAt: Date.now(),
+          targets: [{ targetType: "user", targetValue: String(resolvedUserId) }],
+        });
+      },
+      "Dashboard message created."
+    );
+  };
+
+  const handleImpersonate = async () => {
+    if (!canImpersonate) return;
+    setPendingAction("impersonate");
+    try {
+      const result = await startImpersonation({
+        userId: resolvedUserId,
+        reason: impersonationReason.trim() || "Admin support review",
+      });
+      toast.success({
+        description: `Impersonation token created for ${String(result.userId)}.`,
+      });
+      setImpersonationReason("");
+    } catch (error) {
+      toast.error({ description: getMutationErrorMessage(error) });
+    } finally {
+      setPendingAction(null);
+    }
+  };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p className="text-sm uppercase tracking-[0.22em] text-[color:var(--muted-foreground)]">Admin / Users & Accounts</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[color:var(--foreground)]">{user.row.name}</h1>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {badge({ children: user.row.plan, kind: user.row.plan })}
-            {user.row.adminRole ? badge({ children: user.row.adminRole.replaceAll("_", " "), kind: "admin" }) : null}
-            {user.row.stravaConnected ? badge({ children: "Strava connected", kind: "success" }) : badge({ children: "Strava not connected", kind: "warning" })}
-            {user.row.suspendedAt ? badge({ children: "Suspended", kind: "warning" }) : null}
-          </div>
-          <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">{user.row.email}</p>
-        </div>
-        <Button render={<Link href="./" />} variant="outline">
-          Back to users
-        </Button>
+    <div className="space-y-8">
+      <AdminPageHeader
+        eyebrow="Command center"
+        title={displayAdminUserName(liveUser)}
+        description={liveUser.email ?? "Live user record from Convex."}
+        actions={
+          <Button render={<Link href="/admin/users" />} variant="outline">
+            Back to users
+          </Button>
+        }
+      />
+
+      <div className="flex flex-wrap gap-2">
+        <AdminStatusPill tone={userTierTone(liveUser.tier ?? null)}>{liveUser.tier ?? "free"}</AdminStatusPill>
+        {liveUser.adminRole ? (
+          <AdminStatusPill tone={adminRoleTone(liveUser.adminRole)}>
+            {formatAdminRoleLabel(liveUser.adminRole)}
+          </AdminStatusPill>
+        ) : (
+          <AdminStatusPill tone="neutral">No admin role</AdminStatusPill>
+        )}
+        <AdminStatusPill tone={detail.stravaConnected ? "success" : "warning"}>
+          {detail.stravaConnected ? "Strava connected" : "Strava not connected"}
+        </AdminStatusPill>
+        <AdminStatusPill tone={liveUser.suspendedAt ? "warning" : "success"}>
+          {liveUser.suspendedAt ? "Suspended" : "Active"}
+        </AdminStatusPill>
       </div>
 
-      {notice ? (
-        <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--primary)_24%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_8%,var(--card))] p-4 text-sm text-[color:var(--foreground)]">
-          {notice}
-        </div>
-      ) : null}
-
-      <div className="grid gap-4 md:grid-cols-4">
-        <SummaryStat label="Bikes" value={user.row.bikesCount} />
-        <SummaryStat label="Fit runs" value={user.row.fitRunsCount} />
-        <SummaryStat label="Open feedback" value={openFeedbackCount} />
-        <SummaryStat label="Last login" value={formatDate(user.row.lastLoginAt)} />
-      </div>
+      <section className="grid gap-4 md:grid-cols-4">
+        {liveStat("Bikes", summaryBikes.length)}
+        {liveStat("Fit runs", summaryFitRuns.length)}
+        {liveStat("Feedback", feedbackItems.length)}
+        {liveStat("Message receipts", receipts.length)}
+      </section>
 
       <SegmentedControl
         aria-label="User detail tabs"
@@ -158,121 +377,55 @@ export function UserDetailClient({ user }: { user: AdminUserDetail }) {
 
       {tab === "overview" ? (
         <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-          <Card>
-            <CardHeader>
-              <CardTitle>Account overview</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Joined</div>
-                  <div className="mt-1 text-sm text-[color:var(--foreground)]">{formatDate(user.row.joinedAt)}</div>
-                </div>
-                <div>
-                  <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Last login</div>
-                  <div className="mt-1 text-sm text-[color:var(--foreground)]">{formatDate(user.row.lastLoginAt)}</div>
-                </div>
-                <div>
-                  <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Account type</div>
-                  <div className="mt-1 text-sm text-[color:var(--foreground)]">{badge({ children: user.row.plan, kind: user.row.plan })}</div>
-                </div>
-                <div>
-                  <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Admin role</div>
-                  <div className="mt-1 text-sm text-[color:var(--foreground)]">
-                    {user.row.adminRole ? badge({ children: user.row.adminRole.replaceAll("_", " "), kind: "admin" }) : "None"}
-                  </div>
-                </div>
+          <AdminSectionCard title="Account overview" description="Live Convex account data.">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Joined" value={formatAdminDate(liveUser.createdAt)} />
+              <Field label="Last login" value={formatAdminDate(liveUser.lastLoginAt)} />
+              <Field label="Tier" value={liveUser.tier ?? "free"} />
+              <Field label="Admin role" value={liveUser.adminRole ? formatAdminRoleLabel(liveUser.adminRole) : "None"} />
+              <Field label="Suspension" value={liveUser.suspendedAt ? formatAdminDate(liveUser.suspendedAt) : "Active"} />
+              <Field label="Billing email" value={liveUser.email ?? "—"} />
+            </div>
+            {liveUser.suspendedReason ? (
+              <div className="mt-4 rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4 text-sm text-[color:var(--muted-foreground)]">
+                {liveUser.suspendedReason}
               </div>
-
-              {user.row.suspendedAt ? (
-                <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--warning)_24%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--card))] p-4 text-sm text-[color:var(--foreground)]">
-                  <div className="font-medium">Suspended</div>
-                  <div className="mt-1 text-[color:var(--muted-foreground)]">{user.row.suspendedReason ?? "No reason recorded"}</div>
-                  <div className="mt-1 text-xs text-[color:var(--muted-foreground)]">{user.row.suspendedAt ? formatDate(user.row.suspendedAt) : ""}</div>
-                </div>
-              ) : null}
-
-              <div className="grid gap-3 sm:grid-cols-3">
-                <Button type="button" variant="outline" onClick={() => setNotice("Planned mutation: `changeUserTier`")}>Change plan</Button>
-                <Button type="button" variant="outline" onClick={() => setIsSuspendDialogOpen(true)}>Suspend account</Button>
-                <Button type="button" variant="outline" onClick={() => setIsImpersonateDialogOpen(true)}>View as user</Button>
-              </div>
-            </CardContent>
-          </Card>
+            ) : null}
+          </AdminSectionCard>
 
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Change plan</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <AdminSectionCard title="Tier and role" description="Persisted through Convex admin mutations.">
+              <div className="space-y-3">
                 <Select
-                  aria-label="User plan"
-                  value={plan}
-                  onChange={(event) => setPlan(event.currentTarget.value as AdminUserPlan)}
-                  options={planOptions.map((option) => ({ value: option.value, label: option.label }))}
+                  aria-label="User tier"
+                  value={tier}
+                  onChange={(event) => setTier(event.currentTarget.value as "free" | "pro" | "premium")}
+                  options={tierOptions.map((option) => ({ value: option.value, label: option.label }))}
                 />
                 <Textarea
-                  value={planReason}
-                  onChange={(event) => setPlanReason(event.currentTarget.value)}
-                  placeholder="Reason for the plan change"
+                  value={tierReason}
+                  onChange={(event) => setTierReason(event.currentTarget.value)}
+                  placeholder="Reason for tier change"
                   rows={3}
                 />
                 <Button
-                  type="button"
                   className="w-full"
-                  onClick={() => setNotice(`Planned mutation: \`changeUserTier\` for ${user.row.email} -> ${plan}. Reason: ${planReason || "n/a"}`)}
+                  onClick={() => void handleChangeTier()}
+                  isLoading={pendingAction === "tier"}
+                  disabled={!canChangeTier}
                 >
-                  Apply change
+                  Update tier
                 </Button>
-              </CardContent>
-            </Card>
+              </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Send dashboard message</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Input value={messageTitle} onChange={(event) => setMessageTitle(event.currentTarget.value)} placeholder="Message title" />
-                <Select
-                  aria-label="Message type"
-                  value={messageType}
-                  onChange={(event) => setMessageType(event.currentTarget.value)}
-                  options={[
-                    { value: "inbox_card", label: "Inbox card" },
-                    { value: "banner", label: "Banner" },
-                    { value: "support_reply", label: "Support reply" },
-                  ]}
-                />
-                <Textarea
-                  value={messageBody}
-                  onChange={(event) => setMessageBody(event.currentTarget.value)}
-                  placeholder="Write the dashboard message body"
-                  rows={4}
-                />
-                <Button
-                  type="button"
-                  className="w-full"
-                  onClick={() => setNotice(`Planned mutation: \`createDashboardMessage\` for ${user.row.email}.`)}
-                >
-                  Send message
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Admin role</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              <div className="mt-6 space-y-3">
                 <Select
                   aria-label="Admin role"
                   value={adminRole}
-                  onChange={(event) => setAdminRole(event.currentTarget.value as AdminUserRole | "none")}
-                  options={[
-                    { value: "none", label: "Remove admin access" },
-                    ...roleOptions.map((option) => ({ value: option.value, label: option.label })),
-                  ]}
+                  onChange={(event) =>
+                    setAdminRole(event.currentTarget.value as "none" | (typeof roleOptions)[number]["value"])
+                  }
+                  options={roleOptions.map((option) => ({ value: option.value, label: option.label }))}
                 />
                 <Textarea
                   value={roleReason}
@@ -281,313 +434,302 @@ export function UserDetailClient({ user }: { user: AdminUserDetail }) {
                   rows={3}
                 />
                 <Button
-                  type="button"
                   className="w-full"
-                  onClick={() => setNotice(`Planned mutation: \`setAdminRole\` -> ${adminRole}.`)}
+                  onClick={() => void handleSaveRole()}
+                  isLoading={pendingAction === "role"}
+                  disabled={!canChangeRole}
                 >
                   Save role
                 </Button>
-              </CardContent>
-            </Card>
+              </div>
+            </AdminSectionCard>
+
+            <AdminSectionCard title="Safety actions" description="Suspend, restore, impersonate, or send a message.">
+              <div className="space-y-3">
+                <Textarea
+                  value={suspendReason}
+                  onChange={(event) => setSuspendReason(event.currentTarget.value)}
+                  placeholder="Suspension reason"
+                  rows={3}
+                />
+                <div className="flex flex-wrap gap-2">
+                  <Button onClick={() => void handleSuspend()} isLoading={pendingAction === "suspend"} disabled={!canSuspend}>
+                    Suspend
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => void handleRestore()}
+                    isLoading={pendingAction === "restore"}
+                    disabled={!canSuspend}
+                  >
+                    Restore
+                  </Button>
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-3">
+                <Textarea
+                  value={impersonationReason}
+                  onChange={(event) => setImpersonationReason(event.currentTarget.value)}
+                  placeholder="Impersonation reason"
+                  rows={3}
+                />
+                <Button
+                  variant="outline"
+                  onClick={() => void handleImpersonate()}
+                  isLoading={pendingAction === "impersonate"}
+                  disabled={!canImpersonate}
+                >
+                  Start impersonation
+                </Button>
+              </div>
+            </AdminSectionCard>
+
+            <AdminSectionCard title="Dashboard message" description="Send a live message to this user.">
+              <div className="space-y-3">
+                <Input
+                  value={messageTitle}
+                  onChange={(event) => setMessageTitle(event.currentTarget.value)}
+                  placeholder="Message title"
+                />
+                <Textarea
+                  value={messageBody}
+                  onChange={(event) => setMessageBody(event.currentTarget.value)}
+                  placeholder="Message body"
+                  rows={4}
+                />
+                <Select
+                  aria-label="Message type"
+                  value={messageType}
+                  onChange={(event) => setMessageType(event.currentTarget.value as (typeof messageTypeOptions)[number]["value"])}
+                  options={messageTypeOptions.map((option) => ({ value: option.value, label: option.label }))}
+                />
+                <Select
+                  aria-label="Message priority"
+                  value={messagePriority}
+                  onChange={(event) =>
+                    setMessagePriority(event.currentTarget.value as (typeof messagePriorityOptions)[number]["value"])
+                  }
+                  options={messagePriorityOptions.map((option) => ({ value: option.value, label: option.label }))}
+                />
+                <Button className="w-full" onClick={() => void handleSendMessage()} isLoading={pendingAction === "message"}>
+                  Send message
+                </Button>
+              </div>
+            </AdminSectionCard>
           </div>
         </div>
       ) : null}
 
       {tab === "profile" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Rider profile</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <ProfileField label="Height" value={`${user.riderProfile.heightCm} cm`} />
-              <ProfileField label="Inseam" value={`${user.riderProfile.inseamCm} cm`} />
-              <ProfileField label="Arm length" value={`${user.riderProfile.armLengthCm} cm`} />
-              <ProfileField label="Torso length" value={`${user.riderProfile.torsoLengthCm} cm`} />
-              <ProfileField label="Shoulder width" value={`${user.riderProfile.shoulderWidthCm} cm`} />
-              <ProfileField label="Flexibility" value={user.riderProfile.flexibility} />
-              <ProfileField label="Core stability" value={`${user.riderProfile.coreStability}/5`} />
-              <ProfileField label="Injury history" value={user.riderProfile.injuryHistory.join(", ")} />
+        <AdminSectionCard
+          title="Rider profile"
+          description="Derived from the live admin rider data query."
+        >
+          {profile ? (
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <Field label="Height" value={`${profile.heightCm} cm`} />
+                <Field label="Inseam" value={`${profile.inseamCm} cm`} />
+                <Field label="Arm length" value={`${profile.armLengthCm} cm`} />
+                <Field label="Torso length" value={`${profile.torsoLengthCm} cm`} />
+                <Field label="Shoulder width" value={`${profile.shoulderWidthCm} cm`} />
+                <Field label="Flexibility" value={profile.flexibilityScore} />
+                <Field label="Core stability" value={`${profile.coreStabilityScore}/5`} />
+                <Field label="Updated" value={formatAdminDate(profile.updatedAt)} />
+                <Field label="Age" value={profile.age ? `${profile.age}` : "—"} />
+              </div>
+              <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Measurement flags</p>
+                {riderData?.measurementFlags.length ? (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {riderData.measurementFlags.map((flag) => (
+                      <AdminStatusPill key={flag} tone="warning">
+                        {flag}
+                      </AdminStatusPill>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-3 text-sm text-[color:var(--muted-foreground)]">No measurement flags.</p>
+                )}
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          ) : (
+            <EmptyState
+              title="No rider profile"
+              description="Convex returned no rider profile for this user."
+            />
+          )}
+        </AdminSectionCard>
       ) : null}
 
       {tab === "bikes" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Bikes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <table className="min-w-full divide-y divide-[color:var(--border)] text-sm">
-              <thead className="text-left text-xs uppercase tracking-[0.16em] text-[color:var(--muted-foreground)]">
-                <tr>
-                  <th className="py-3 pr-4">Name</th>
-                  <th className="px-4 py-3">Category</th>
-                  <th className="px-4 py-3">Size</th>
-                  <th className="px-4 py-3">Geometry</th>
-                  <th className="px-4 py-3 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[color:var(--border)]">
-                {user.bikes.map((bike) => (
-                  <tr key={bike.id}>
-                    <td className="py-3 pr-4 font-medium text-[color:var(--foreground)]">{bike.name}</td>
-                    <td className="px-4 py-3 text-[color:var(--foreground)]">{bike.category}</td>
-                    <td className="px-4 py-3 text-[color:var(--foreground)]">{bike.size}</td>
-                    <td className="px-4 py-3">{bike.geometryLinked ? badge({ children: "Linked", kind: "success" }) : badge({ children: "Unlinked", kind: "warning" })}</td>
-                    <td className="px-4 py-3 text-right">
-                      <Button render={<Link href={`../bikes/${bike.id}`} />} size="sm" variant="outline">
-                        View
-                      </Button>
-                    </td>
-                  </tr>
+        <AdminSectionCard title="Bikes" description="Live bikes linked to the user.">
+          {summaryBikes.length === 0 ? (
+            <EmptyState title="No bikes" description="This user has no bike records." />
+          ) : (
+            <AdminTable>
+              <AdminTableHead columns={["Name", "Type", "Geometry", "Created"]} />
+              <tbody>
+                {summaryBikes.map((bike: Doc<"bikes">) => (
+                  <AdminTableRow key={String(bike._id)}>
+                    <AdminTableCell className="font-medium">{bike.name}</AdminTableCell>
+                    <AdminTableCell>{bike.bikeType}</AdminTableCell>
+                    <AdminTableCell>{bike.currentGeometry ? "Linked" : "Not linked"}</AdminTableCell>
+                    <AdminTableCell>{formatAdminRelativeDate(bike._creationTime)}</AdminTableCell>
+                  </AdminTableRow>
                 ))}
               </tbody>
-            </table>
-          </CardContent>
-        </Card>
+            </AdminTable>
+          )}
+        </AdminSectionCard>
       ) : null}
 
       {tab === "fit-history" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Fit history</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <table className="min-w-full divide-y divide-[color:var(--border)] text-sm">
-              <thead className="text-left text-xs uppercase tracking-[0.16em] text-[color:var(--muted-foreground)]">
-                <tr>
-                  <th className="py-3 pr-4">Bike</th>
-                  <th className="px-4 py-3">Engine</th>
-                  <th className="px-4 py-3">Completed</th>
-                  <th className="px-4 py-3">Confidence</th>
-                  <th className="px-4 py-3 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[color:var(--border)]">
-                {user.fitHistory.map((fit) => (
-                  <tr key={fit.id}>
-                    <td className="py-3 pr-4 font-medium text-[color:var(--foreground)]">{fit.bike}</td>
-                    <td className="px-4 py-3 text-[color:var(--foreground)]">{fit.engineVersion}</td>
-                    <td className="px-4 py-3 text-[color:var(--muted-foreground)]">{formatDate(fit.completedAt)}</td>
-                    <td className="px-4 py-3">{badge({ children: fit.confidence, kind: fit.confidence === "High" ? "success" : fit.confidence === "Medium" ? "premium" : "warning" })}</td>
-                    <td className="px-4 py-3 text-right">
-                      <Button render={<Link href={`../fit-runs/${fit.id}`} />} size="sm" variant="outline">
-                        Trace
-                      </Button>
-                    </td>
-                  </tr>
+        <AdminSectionCard title="Fit history" description="Recent fit sessions and review status.">
+          {summaryFitRuns.length === 0 ? (
+            <EmptyState title="No fit runs" description="This user has no fit history." />
+          ) : (
+            <AdminTable>
+              <AdminTableHead columns={["Session", "Status", "Review", "Confidence", "Completed"]} />
+              <tbody>
+                {summaryFitRuns.map((session: Doc<"fitSessions">) => (
+                  <AdminTableRow key={String(session._id)}>
+                    <AdminTableCell className="font-medium">{String(session._id)}</AdminTableCell>
+                    <AdminTableCell>{session.status}</AdminTableCell>
+                    <AdminTableCell>{session.reviewStatus ?? "—"}</AdminTableCell>
+                    <AdminTableCell>
+                      {session.confidenceScore !== undefined ? `${Math.round(session.confidenceScore * 100)}%` : "—"}
+                    </AdminTableCell>
+                    <AdminTableCell>{formatAdminDate(session.completedAt ?? session.createdAt)}</AdminTableCell>
+                  </AdminTableRow>
                 ))}
               </tbody>
-            </table>
-          </CardContent>
-        </Card>
+            </AdminTable>
+          )}
+        </AdminSectionCard>
       ) : null}
 
       {tab === "integrations" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Integrations</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {user.integrations.length === 0 ? (
-              <div className="rounded-[var(--radius-lg)] border border-dashed border-[color:var(--border)] p-6 text-sm text-[color:var(--muted-foreground)]">
-                No integrations connected.
-              </div>
-            ) : user.integrations.map((integration) => (
-              <div key={integration.provider} className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="font-medium text-[color:var(--foreground)]">{integration.provider}</div>
-                  {badge({ children: integration.status, kind: integration.status === "active" ? "success" : "warning" })}
-                </div>
-                <div className="mt-2 text-sm text-[color:var(--muted-foreground)]">{integration.notes}</div>
-                <div className="mt-1 text-xs text-[color:var(--muted-foreground)]">Last sync {integration.lastSync}</div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        <AdminSectionCard title="Integrations" description="Live integration and sync state.">
+          {detail.integration ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Provider" value={detail.integration.provider} />
+              <Field label="Status" value={detail.integration.accessStatus} />
+              <Field label="Last sync" value={formatAdminDateTime(detail.integration.lastSyncAt)} />
+              <Field label="Athlete" value={detail.integration.athleteName ?? "—"} />
+              <Field
+                label="Ride count"
+                value={detail.integration.rideCount !== undefined ? String(detail.integration.rideCount) : "—"}
+              />
+              <Field
+                label="Distance"
+                value={
+                  detail.integration.totalDistanceKm != null
+                    ? `${detail.integration.totalDistanceKm} km`
+                    : "—"
+                }
+              />
+              <Field label="Sync error" value={detail.integration.syncErrorMessage ?? "—"} />
+            </div>
+          ) : (
+            <EmptyState title="No integrations" description="This user has no live integration records." />
+          )}
+        </AdminSectionCard>
       ) : null}
 
       {tab === "license" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>License</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-5">
-            <div className="grid gap-4 sm:grid-cols-3">
-              <ProfileField label="Current plan" value={user.license.currentPlan} />
-              <ProfileField label="Assigned at" value={formatDate(user.license.assignedAt)} />
-              <ProfileField label="Trial ends" value={user.license.trialEndsAt ? formatDate(user.license.trialEndsAt) : "No trial"} />
-            </div>
-
-            <div>
-              <SectionTitle>Plan change history</SectionTitle>
-              <table className="mt-4 min-w-full divide-y divide-[color:var(--border)] text-sm">
-                <thead className="text-left text-xs uppercase tracking-[0.16em] text-[color:var(--muted-foreground)]">
-                  <tr>
-                    <th className="py-3 pr-4">Date</th>
-                    <th className="px-4 py-3">Action</th>
-                    <th className="px-4 py-3">Reason</th>
-                    <th className="px-4 py-3">Admin</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[color:var(--border)]">
-                {user.license.history.map((entry) => (
-                  <tr key={`${entry.action}-${entry.time}`}>
-                    <td className="py-3 pr-4 text-[color:var(--muted-foreground)]">{formatDate(entry.time)}</td>
-                      <td className="px-4 py-3 font-medium text-[color:var(--foreground)]">{entry.action}</td>
-                      <td className="px-4 py-3 text-[color:var(--muted-foreground)]">{entry.reason}</td>
-                      <td className="px-4 py-3 text-[color:var(--foreground)]">{entry.admin}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+        <AdminSectionCard title="License" description="User subscription records from Convex.">
+          {subscriptions.length === 0 ? (
+            <EmptyState title="No subscriptions" description="This user has no subscription rows." />
+          ) : (
+            <AdminTable>
+              <AdminTableHead columns={["Plan", "Status", "Starts", "Ends"]} />
+              <tbody>
+                {subscriptions.map((subscription: Doc<"subscriptions">) => (
+                  <AdminTableRow key={String(subscription._id)}>
+                    <AdminTableCell className="font-medium">{String(subscription.planId)}</AdminTableCell>
+                    <AdminTableCell>{subscription.status}</AdminTableCell>
+                    <AdminTableCell>{formatAdminDate(subscription.startsAt)}</AdminTableCell>
+                    <AdminTableCell>{formatAdminDate(subscription.endsAt)}</AdminTableCell>
+                  </AdminTableRow>
+                ))}
+              </tbody>
+            </AdminTable>
+          )}
+        </AdminSectionCard>
       ) : null}
 
       {tab === "feedback" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Feedback</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {user.feedback.map((item) => (
-              <div key={item.id} className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="font-medium text-[color:var(--foreground)]">{item.title}</div>
-                  {badge({ children: item.type.replace("_", " "), kind: item.type === "bug" ? "warning" : "muted" })}
-                  {badge({ children: item.status, kind: "muted" })}
-                </div>
-                {item.linkedRelease ? <div className="mt-2 text-sm text-[color:var(--muted-foreground)]">Linked release: {item.linkedRelease}</div> : null}
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        <AdminSectionCard title="Feedback" description="Support and product feedback linked to this user.">
+          {feedbackItems.length === 0 ? (
+            <EmptyState title="No feedback" description="This user has no feedback items." />
+          ) : (
+            <AdminTable>
+              <AdminTableHead columns={["Title", "Type", "Status", "Created"]} />
+              <tbody>
+                {feedbackItems.map((item: Doc<"feedback_items">) => (
+                  <AdminTableRow key={String(item._id)}>
+                    <AdminTableCell className="font-medium">{item.title}</AdminTableCell>
+                    <AdminTableCell>{item.type}</AdminTableCell>
+                    <AdminTableCell>{item.status}</AdminTableCell>
+                    <AdminTableCell>{formatAdminDate(item.createdAt)}</AdminTableCell>
+                  </AdminTableRow>
+                ))}
+              </tbody>
+            </AdminTable>
+          )}
+        </AdminSectionCard>
       ) : null}
 
       {tab === "messages" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Messages</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {user.messages.length === 0 ? (
-              <div className="rounded-[var(--radius-lg)] border border-dashed border-[color:var(--border)] p-6 text-sm text-[color:var(--muted-foreground)]">
-                No dashboard messages received yet.
-              </div>
-            ) : user.messages.map((message) => (
-              <div key={message.id} className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="font-medium text-[color:var(--foreground)]">{message.title}</div>
-                  {badge({ children: message.type, kind: "muted" })}
-                  {badge({ children: message.state, kind: message.state === "read" ? "success" : "warning" })}
-                </div>
-                <div className="mt-2 text-sm text-[color:var(--muted-foreground)]">{formatDate(message.receivedAt)}</div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        <AdminSectionCard title="Messages" description="Message receipts recorded for this user.">
+          {receipts.length === 0 ? (
+            <EmptyState title="No messages" description="This user has no message receipts." />
+          ) : (
+            <AdminTable>
+              <AdminTableHead columns={["Message", "Delivered", "Viewed", "Acknowledged", "Dismissed"]} />
+              <tbody>
+                {receipts.map((receipt: Doc<"message_receipts">) => (
+                  <AdminTableRow key={String(receipt._id)}>
+                    <AdminTableCell className="font-medium">{String(receipt.messageId)}</AdminTableCell>
+                    <AdminTableCell>{formatAdminDate(receipt.deliveredAt)}</AdminTableCell>
+                    <AdminTableCell>{formatAdminDate(receipt.viewedAt)}</AdminTableCell>
+                    <AdminTableCell>{formatAdminDate(receipt.acknowledgedAt)}</AdminTableCell>
+                    <AdminTableCell>{formatAdminDate(receipt.dismissedAt)}</AdminTableCell>
+                  </AdminTableRow>
+                ))}
+              </tbody>
+            </AdminTable>
+          )}
+        </AdminSectionCard>
       ) : null}
 
       {tab === "audit" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Audit trail</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {user.auditTrail.map((entry) => (
-              <div key={`${entry.action}-${entry.time}`} className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="font-medium text-[color:var(--foreground)]">{entry.action}</div>
-                  <div className="text-xs text-[color:var(--muted-foreground)]">{formatDate(entry.time)}</div>
-                </div>
-                <div className="mt-2 text-sm text-[color:var(--muted-foreground)]">Target: {entry.target}</div>
-                <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">Admin: {entry.admin}</div>
-                <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">Reason: {entry.reason}</div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        <AdminSectionCard title="Audit trail" description="Live admin audit log entries for this user.">
+          {auditLogs.length === 0 ? (
+            <EmptyState title="No audit entries" description="This user has no audit trail entries." />
+          ) : (
+            <AdminTable>
+              <AdminTableHead columns={["Time", "Action", "Reason"]} />
+              <tbody>
+                {auditLogs.map((entry: Doc<"admin_audit_logs">) => (
+                  <AdminTableRow key={String(entry._id)}>
+                    <AdminTableCell className="font-medium">{formatAdminDate(entry.occurredAt)}</AdminTableCell>
+                    <AdminTableCell>{entry.action}</AdminTableCell>
+                    <AdminTableCell>{entry.reason ?? "—"}</AdminTableCell>
+                  </AdminTableRow>
+                ))}
+              </tbody>
+            </AdminTable>
+          )}
+        </AdminSectionCard>
       ) : null}
-
-      <AccessibleDialog
-        open={isSuspendDialogOpen}
-        title="Suspend account"
-        description="This placeholder dialog mirrors the planned admin mutation flow."
-        onClose={() => setIsSuspendDialogOpen(false)}
-      >
-        <div className="space-y-4">
-          <Textarea
-            value={suspensionReason}
-            onChange={(event) => setSuspensionReason(event.currentTarget.value)}
-            placeholder="Reason for suspension"
-            rows={4}
-          />
-          <Button
-            type="button"
-            className="w-full"
-            onClick={() => {
-              setIsSuspendDialogOpen(false);
-              setNotice("Planned mutation: `suspendUser`.");
-            }}
-          >
-            Confirm suspension
-          </Button>
-        </div>
-      </AccessibleDialog>
-
-      <AccessibleDialog
-        open={isRestoreDialogOpen}
-        title="Restore account"
-        description="Re-enable access for the selected user."
-        onClose={() => setIsRestoreDialogOpen(false)}
-      >
-        <div className="space-y-4">
-          <Button
-            type="button"
-            className="w-full"
-            onClick={() => {
-              setIsRestoreDialogOpen(false);
-              setNotice("Planned mutation: `restoreUser`.");
-            }}
-          >
-            Restore access
-          </Button>
-        </div>
-      </AccessibleDialog>
-
-      <AccessibleDialog
-        open={isImpersonateDialogOpen}
-        title="View as user"
-        description="This is the planned impersonation flow for support admins."
-        onClose={() => setIsImpersonateDialogOpen(false)}
-      >
-        <div className="space-y-4">
-          <Input
-            value={impersonationReason}
-            onChange={(event) => setImpersonationReason(event.currentTarget.value)}
-            placeholder="Reason for impersonation"
-          />
-          <Button
-            type="button"
-            className="w-full"
-            onClick={() => {
-              setIsImpersonateDialogOpen(false);
-              setNotice("Planned action: `startImpersonation`.");
-            }}
-          >
-            Open new tab
-          </Button>
-        </div>
-      </AccessibleDialog>
     </div>
   );
 }
 
-function ProfileField({ label, value }: { label: string; value: string }) {
+function Field({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
       <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">{label}</div>

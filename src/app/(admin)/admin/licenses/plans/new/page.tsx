@@ -7,7 +7,7 @@ export default function AdminNewPlanPage() {
       <AdminPageHeader
         eyebrow="Admin / Billing"
         title="Create plan"
-        description="Build a new contract-shaped plan record using the shared Prototyper UI form surface."
+        description="Create a live billing plan in Convex using the shared Prototyper UI form surface."
       />
       <PlanFormView mode="new" />
     </div>

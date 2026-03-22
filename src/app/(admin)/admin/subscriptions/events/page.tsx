@@ -7,7 +7,7 @@ export default function AdminBillingEventsPage() {
       <AdminPageHeader
         eyebrow="Admin / Billing"
         title="Billing events"
-        description="A chronological feed of plan changes, trial actions, and seat adjustments."
+        description="A live Convex feed of plan changes, lifecycle updates, and billing payloads."
       />
       <BillingEventsView />
     </div>

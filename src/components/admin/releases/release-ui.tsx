@@ -3,6 +3,7 @@ import { AdminStatusPill } from "@/components/admin/layout/AdminUi";
 import type { ReleaseStatus, ReleaseType } from "./data";
 
 type AdminStatusTone = "neutral" | "success" | "warning" | "danger" | "info";
+export type ReleaseWorkflowStatus = ReleaseStatus | "archived";
 
 const releaseTypeLabelMap: Record<ReleaseType, string> = {
   app: "App",
@@ -13,7 +14,7 @@ const releaseTypeLabelMap: Record<ReleaseType, string> = {
   internal: "Internal",
 };
 
-export function releaseStatusTone(status: ReleaseStatus): AdminStatusTone {
+export function releaseStatusTone(status: ReleaseWorkflowStatus): AdminStatusTone {
   if (status === "live") return "success";
   if (status === "rolling_out") return "warning";
   if (status === "approved" || status === "scheduled") return "info";
@@ -37,7 +38,7 @@ export function ReleaseStatusPill({
   status,
   children,
 }: {
-  status: ReleaseStatus;
+  status: ReleaseWorkflowStatus;
   children?: ReactNode;
 }) {
   return <AdminStatusPill tone={releaseStatusTone(status)}>{children ?? status.replaceAll("_", " ")}</AdminStatusPill>;

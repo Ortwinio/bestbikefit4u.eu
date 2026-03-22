@@ -1,23 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
+import { useMutation, useQuery } from "convex/react";
+import { useRouter } from "next/navigation";
+import { api } from "@/../convex/_generated/api";
+import type { Id } from "@/../convex/_generated/dataModel";
 import {
   AccessibleDialog,
   Button,
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
+  EmptyState,
   Input,
   Select,
   SegmentedControl,
   SegmentedControlItem,
   Textarea,
-  FieldLabel,
-  Selectable,
+  useToast,
 } from "@/components/ui";
 import {
   AdminSectionCard,
@@ -25,262 +29,303 @@ import {
   AdminTable,
   AdminTableCell,
   AdminTableHead,
+  AdminTableRow,
 } from "@/components/admin/layout/AdminUi";
+import type {
+  MessageComposeData,
+  MessageDetailData,
+  MessageDetailRecord,
+  MessageInboxRow,
+} from "./message-data";
+import {
+  messagePriorityLabel,
+  messagePriorityTone,
+  messageStatusLabel,
+  messageStatusTone,
+  messageTypeLabel,
+  messageTypeTone,
+  type DashboardMessagePriority,
+  type DashboardMessageStatus,
+  type DashboardMessageType,
+} from "./message-ui";
+import { formatAdminDate, formatAdminDateTime, getAdminDisplayName } from "../shared/admin-format";
 
-export type DashboardMessageType =
-  | "banner"
-  | "inbox_card"
-  | "modal"
-  | "sticky_warning"
-  | "release_announcement"
-  | "upgrade_prompt"
-  | "safety_alert"
-  | "re_fit_reminder"
-  | "support_reply";
-
-export type DashboardMessageStatus = "draft" | "scheduled" | "published" | "expired" | "paused";
-
-export type DashboardMessagePriority = "low" | "normal" | "high" | "urgent";
-
-type AudienceRule = {
-  targetType: "all" | "user" | "plan" | "organization" | "locale" | "strava_connected" | "fit_completed" | "bike_type";
-  targetValue?: string;
-};
-
-type DashboardMessage = {
-  id: string;
-  title: string;
-  body: string;
-  type: DashboardMessageType;
-  status: DashboardMessageStatus;
-  priority: DashboardMessagePriority;
-  targetSummary: string;
-  publishedAt?: string;
-  scheduledAt?: string;
-  expiresAt?: string;
-  delivered: number;
-  viewed: number;
-  clicked: number;
-  acknowledged: number;
-  dismissed: number;
-  locale: "all" | "en" | "nl";
-  requiresAck: boolean;
-  dismissible: boolean;
-  ctaText?: string;
-  ctaUrl?: string;
-  linkedRelease?: string;
-  linkedFeedback?: string;
-  audience: AudienceRule[];
-};
-
-const messageTypeLabels: Record<DashboardMessageType, string> = {
-  banner: "Banner",
-  inbox_card: "Inbox card",
-  modal: "Modal",
-  sticky_warning: "Sticky warning",
-  release_announcement: "Release announcement",
-  upgrade_prompt: "Upgrade prompt",
-  safety_alert: "Safety alert",
-  re_fit_reminder: "Re-fit reminder",
-  support_reply: "Support reply",
-};
-
-const statusLabels: Record<DashboardMessageStatus, string> = {
-  draft: "Draft",
-  scheduled: "Scheduled",
-  published: "Published",
-  expired: "Expired",
-  paused: "Paused",
-};
-
-const priorityLabels: Record<DashboardMessagePriority, string> = {
-  low: "Low",
-  normal: "Normal",
-  high: "High",
-  urgent: "Urgent",
-};
-
-const messageRecords: DashboardMessage[] = [
-  {
-    id: "msg_001",
-    title: "Spring upgrade prompt",
-    body: "Pro riders can now access advanced fit exports and richer history views.",
-    type: "upgrade_prompt",
-    status: "published",
-    priority: "high",
-    targetSummary: "Pro users",
-    publishedAt: "2026-03-20",
-    delivered: 1824,
-    viewed: 1041,
-    clicked: 211,
-    acknowledged: 88,
-    dismissed: 93,
-    locale: "all",
-    requiresAck: false,
-    dismissible: true,
-    ctaText: "Upgrade now",
-    ctaUrl: "/pricing",
-    linkedRelease: "v1.18.0",
-    linkedFeedback: "feedback_002",
-    audience: [{ targetType: "plan", targetValue: "pro" }],
-  },
-  {
-    id: "msg_002",
-    title: "Maintenance window notice",
-    body: "A short maintenance window will affect fit run publishing at 04:00 UTC.",
-    type: "banner",
-    status: "scheduled",
-    priority: "urgent",
-    targetSummary: "All users",
-    scheduledAt: "2026-03-23 04:00",
-    delivered: 0,
-    viewed: 0,
-    clicked: 0,
-    acknowledged: 0,
-    dismissed: 0,
-    locale: "all",
-    requiresAck: true,
-    dismissible: false,
-    audience: [{ targetType: "all" }],
-  },
-  {
-    id: "msg_003",
-    title: "New fit history export",
-    body: "You can now export fit history as CSV or PDF from the dashboard.",
-    type: "inbox_card",
-    status: "published",
-    priority: "normal",
-    targetSummary: "Premium users",
-    publishedAt: "2026-03-17",
-    delivered: 721,
-    viewed: 511,
-    clicked: 109,
-    acknowledged: 41,
-    dismissed: 17,
-    locale: "en",
-    requiresAck: false,
-    dismissible: true,
-    ctaText: "Open history",
-    ctaUrl: "/fit-history",
-    audience: [{ targetType: "plan", targetValue: "premium" }, { targetType: "locale", targetValue: "en" }],
-  },
-  {
-    id: "msg_004",
-    title: "Support follow-up for billing question",
-    body: "Thanks for the follow-up. The billing trail is now visible in the admin portal.",
-    type: "support_reply",
-    status: "draft",
-    priority: "low",
-    targetSummary: "1 specific user",
-    delivered: 0,
-    viewed: 0,
-    clicked: 0,
-    acknowledged: 0,
-    dismissed: 0,
-    locale: "all",
-    requiresAck: false,
-    dismissible: true,
-    linkedFeedback: "feedback_004",
-    audience: [{ targetType: "user", targetValue: "user_omar" }],
-  },
+const statusOptions: Array<{ value: "all" | DashboardMessageStatus; label: string }> = [
+  { value: "all", label: "All statuses" },
+  { value: "draft", label: "Draft" },
+  { value: "scheduled", label: "Scheduled" },
+  { value: "published", label: "Published" },
+  { value: "paused", label: "Paused" },
+  { value: "expired", label: "Expired" },
 ];
 
-function formatDate(dateString?: string) {
-  if (!dateString) return "—";
-  return new Intl.DateTimeFormat("en", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(dateString));
+const typeOptions: Array<{ value: DashboardMessageType; label: string }> = [
+  { value: "banner", label: "Banner" },
+  { value: "inbox_card", label: "Inbox card" },
+  { value: "modal", label: "Modal" },
+  { value: "sticky_warning", label: "Sticky warning" },
+  { value: "release_announcement", label: "Release announcement" },
+  { value: "upgrade_prompt", label: "Upgrade prompt" },
+  { value: "safety_alert", label: "Safety alert" },
+  { value: "re_fit_reminder", label: "Re-fit reminder" },
+  { value: "support_reply", label: "Support reply" },
+];
+
+const priorityOptions: Array<{ value: DashboardMessagePriority; label: string }> = [
+  { value: "low", label: "Low" },
+  { value: "normal", label: "Normal" },
+  { value: "high", label: "High" },
+  { value: "urgent", label: "Urgent" },
+];
+
+const localeOptions = [
+  { value: "all", label: "All locales" },
+  { value: "en", label: "English" },
+  { value: "nl", label: "Dutch" },
+];
+
+const targetTypeOptions = [
+  { value: "all", label: "All users" },
+  { value: "user", label: "Specific user" },
+  { value: "plan", label: "Plan" },
+  { value: "organization", label: "Organization" },
+  { value: "locale", label: "Locale" },
+  { value: "strava_connected", label: "Strava connected" },
+  { value: "fit_completed", label: "Fit completed" },
+  { value: "bike_type", label: "Bike type" },
+] as const;
+
+type AudienceRuleDraft = {
+  targetType: string;
+  targetValue: string;
+};
+
+function buildMessageHref(status: string) {
+  const params = new URLSearchParams();
+  if (status && status !== "all") params.set("status", status);
+  const query = params.toString();
+  return query ? `/admin/messages?${query}` : "/admin/messages";
 }
 
-function percent(part: number, whole: number) {
-  if (whole === 0) return "0%";
-  return `${Math.round((part / whole) * 100)}%`;
+function formatDeliverySummary(detail: MessageDetailRecord) {
+  const delivered = detail.receipts.length;
+  const viewed = detail.receipts.filter((receipt) => Boolean(receipt.viewedAt)).length;
+  const clicked = detail.receipts.filter((receipt) => Boolean(receipt.clickedAt)).length;
+  return { delivered, viewed, clicked };
 }
 
-function typeTone(type: DashboardMessageType) {
-  switch (type) {
-    case "banner":
-    case "sticky_warning":
-      return "warning";
-    case "modal":
-      return "info";
-    case "support_reply":
-      return "success";
-    case "upgrade_prompt":
-      return "info";
-    case "release_announcement":
-      return "success";
-    case "safety_alert":
-      return "danger";
-    case "re_fit_reminder":
-      return "neutral";
-    case "inbox_card":
-    default:
-      return "neutral";
-  }
+function toDateTimeLocalValue(value?: number | null) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const pad = (part: number) => String(part).padStart(2, "0");
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
-function statusTone(status: DashboardMessageStatus) {
-  switch (status) {
-    case "published":
-      return "success";
-    case "scheduled":
-      return "info";
-    case "paused":
-      return "warning";
-    case "expired":
-      return "neutral";
-    case "draft":
-    default:
-      return "neutral";
-  }
+function fromDateTimeLocalValue(value: string) {
+  if (!value) return undefined;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return undefined;
+  return date.getTime();
 }
 
-function priorityTone(priority: DashboardMessagePriority) {
-  switch (priority) {
-    case "urgent":
-      return "danger";
-    case "high":
-      return "warning";
-    case "normal":
-      return "info";
-    case "low":
-    default:
-      return "neutral";
-  }
+function normalizeTargets(targets: AudienceRuleDraft[]) {
+  return targets
+    .map((target) => ({
+      targetType: target.targetType,
+      targetValue:
+        target.targetType === "all"
+          ? undefined
+          : target.targetValue.trim() || undefined,
+    }))
+    .filter((target) => target.targetType);
 }
 
-function FieldBlock({ label, children }: { label: string; children: ReactNode }) {
+function summaryCard(label: string, value: string | number, description: string) {
+  return (
+    <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
+      <CardHeader>
+        <CardDescription className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+          {label}
+        </CardDescription>
+        <CardTitle className="text-2xl">{value}</CardTitle>
+      </CardHeader>
+      <CardContent className="-mt-2">
+        <p className="text-sm text-[color:var(--muted-foreground)]">{description}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function FieldValue({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
   return (
     <div className="space-y-1.5">
-      <FieldLabel label={label} />
-      {children}
+      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+        {label}
+      </p>
+      <div className="text-sm leading-6 text-[color:var(--foreground)]">{children}</div>
     </div>
   );
 }
 
-function toneCard(selected: boolean) {
-  return selected
-    ? "border-[color:color-mix(in_oklch,var(--primary)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_8%,var(--card))]"
-    : "border-[color:var(--border)] bg-[color:var(--card)]";
+function MessageSnapshotCard({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
+      <CardHeader>
+        <CardTitle className="text-base">{title}</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">{children}</CardContent>
+    </Card>
+  );
 }
 
-export function MessageListView() {
-  const [statusFilter, setStatusFilter] = useState<"all" | DashboardMessageStatus>("all");
-  const [typeFilter, setTypeFilter] = useState<"all" | DashboardMessageType>("all");
+function AudienceRuleEditor({
+  rule,
+  users,
+  releases,
+  onChange,
+  onRemove,
+  canRemove,
+}: {
+  rule: AudienceRuleDraft;
+  users: MessageComposeData["users"];
+  releases: MessageComposeData["releases"];
+  onChange: (next: AudienceRuleDraft) => void;
+  onRemove: () => void;
+  canRemove: boolean;
+}) {
+  const targetValuePlaceholder = (() => {
+    switch (rule.targetType) {
+      case "user":
+        return "User ID";
+      case "plan":
+        return "free, premium, pro";
+      case "organization":
+        return "Organization ID";
+      case "locale":
+        return "en or nl";
+      case "strava_connected":
+      case "fit_completed":
+        return "true or false";
+      case "bike_type":
+        return "road, gravel, mtb...";
+      default:
+        return "";
+    }
+  })();
 
-  const filteredMessages = useMemo(
-    () =>
-      messageRecords.filter((message) => {
-        const matchesStatus = statusFilter === "all" || message.status === statusFilter;
-        const matchesType = typeFilter === "all" || message.type === typeFilter;
-        return matchesStatus && matchesType;
-      }),
-    [statusFilter, typeFilter]
+  const suggestions = (() => {
+    switch (rule.targetType) {
+      case "user":
+        return users.slice(0, 6).map((user) => ({ value: String(user._id), label: getAdminDisplayName(user) }));
+      case "plan":
+        return [
+          { value: "free", label: "free" },
+          { value: "premium", label: "premium" },
+          { value: "pro", label: "pro" },
+        ];
+      case "organization":
+        return [];
+      case "locale":
+        return localeOptions.filter((option) => option.value !== "all");
+      case "strava_connected":
+      case "fit_completed":
+        return [
+          { value: "true", label: "true" },
+          { value: "false", label: "false" },
+        ];
+      case "bike_type":
+        return [
+          { value: "road", label: "road" },
+          { value: "gravel", label: "gravel" },
+          { value: "mtb", label: "mtb" },
+          { value: "tri", label: "tri" },
+        ];
+      default:
+        return [];
+    }
+  })();
+
+  return (
+    <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+      <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+        <Select
+          label="Target type"
+          value={rule.targetType}
+          onChange={(event) =>
+            onChange({
+              targetType: event.currentTarget.value,
+              targetValue: event.currentTarget.value === "all" ? "" : rule.targetValue,
+            })
+          }
+          options={targetTypeOptions.map((option) => ({ value: option.value, label: option.label }))}
+        />
+        {rule.targetType === "all" ? (
+          <div className="rounded-[var(--radius-md)] border border-dashed border-[color:var(--border)] p-3 text-sm text-[color:var(--muted-foreground)]">
+            This rule matches the full audience.
+          </div>
+        ) : suggestions.length > 0 ? (
+          <Select
+            label="Target value"
+            value={rule.targetValue}
+            onChange={(event) => onChange({ ...rule, targetValue: event.currentTarget.value })}
+            options={[{ value: "", label: "Choose a value" }, ...suggestions]}
+            helperText={targetValuePlaceholder}
+          />
+        ) : (
+          <Input
+            label="Target value"
+            value={rule.targetValue}
+            onChange={(event) => onChange({ ...rule, targetValue: event.currentTarget.value })}
+            placeholder={targetValuePlaceholder}
+          />
+        )}
+        <div className="flex items-end">
+          <Button type="button" variant="outline" onClick={onRemove} disabled={!canRemove}>
+            Remove
+          </Button>
+        </div>
+      </div>
+      {rule.targetType === "all" ? (
+        <p className="mt-3 text-xs text-[color:var(--muted-foreground)]">
+          `all` is a real backend target type. Use it alone when the message should reach every user.
+        </p>
+      ) : rule.targetType === "organization" ? (
+        <p className="mt-3 text-xs text-[color:var(--muted-foreground)]">
+          Organization ID targeting is live, but the current loader does not have a dedicated organization lookup for suggestions.
+        </p>
+      ) : null}
+    </div>
   );
+}
 
-  const totalDelivered = messageRecords.reduce((sum, message) => sum + message.delivered, 0);
+export function MessageListView({
+  rows,
+  filters,
+}: {
+  rows: MessageInboxRow[];
+  filters: { status: string };
+}) {
+  const publishedCount = rows.filter((message) => message.message.status === "published").length;
+  const scheduledCount = rows.filter((message) => message.message.status === "scheduled").length;
+  const deliveredCount = rows.reduce((sum, row) => sum + row.targetCount, 0);
 
   return (
     <div className="space-y-6">
@@ -292,389 +337,260 @@ export function MessageListView() {
         }
       >
         <div className="grid gap-4 md:grid-cols-4">
-          <Card className={toneCard(false)}>
-            <CardContent className="p-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Messages</div>
-              <div className="mt-2 text-3xl font-semibold">{messageRecords.length}</div>
-            </CardContent>
-          </Card>
-          <Card className={toneCard(false)}>
-            <CardContent className="p-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Published</div>
-              <div className="mt-2 text-3xl font-semibold">
-                {messageRecords.filter((message) => message.status === "published").length}
-              </div>
-            </CardContent>
-          </Card>
-          <Card className={toneCard(false)}>
-            <CardContent className="p-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Scheduled</div>
-              <div className="mt-2 text-3xl font-semibold">
-                {messageRecords.filter((message) => message.status === "scheduled").length}
-              </div>
-            </CardContent>
-          </Card>
-          <Card className={toneCard(false)}>
-            <CardContent className="p-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Delivered</div>
-              <div className="mt-2 text-3xl font-semibold">{totalDelivered.toLocaleString()}</div>
-            </CardContent>
-          </Card>
+          {summaryCard("Messages", rows.length, "Live messages from Convex")}
+          {summaryCard("Published", publishedCount, "Currently visible")}
+          {summaryCard("Scheduled", scheduledCount, "Queued for release")}
+          {summaryCard("Targets", deliveredCount, "Total audience rows")}
         </div>
 
-        <div className="mt-6 space-y-4">
-          <SegmentedControl
-            aria-label="Message status filter"
-            value={statusFilter}
-            onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}
-            size="sm"
-            className="flex-wrap"
-          >
-            <SegmentedControlItem value="all" size="sm">All</SegmentedControlItem>
-            <SegmentedControlItem value="draft" size="sm">Draft</SegmentedControlItem>
-            <SegmentedControlItem value="scheduled" size="sm">Scheduled</SegmentedControlItem>
-            <SegmentedControlItem value="published" size="sm">Published</SegmentedControlItem>
-            <SegmentedControlItem value="paused" size="sm">Paused</SegmentedControlItem>
-            <SegmentedControlItem value="expired" size="sm">Expired</SegmentedControlItem>
-          </SegmentedControl>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {statusOptions.map((option) => {
+            const active = filters.status === option.value || (filters.status === "" && option.value === "all");
+            return (
+              <Button
+                key={option.value}
+                size="sm"
+                variant={active ? "primary" : "outline"}
+                render={<Link href={buildMessageHref(option.value)} />}
+              >
+                {option.label}
+              </Button>
+            );
+          })}
+        </div>
 
-          <Select
-            value={typeFilter}
-            onChange={(event) => setTypeFilter(event.currentTarget.value as typeof typeFilter)}
-            options={[
-              { value: "all", label: "All types" },
-              { value: "banner", label: "Banner" },
-              { value: "inbox_card", label: "Inbox card" },
-              { value: "modal", label: "Modal" },
-              { value: "sticky_warning", label: "Sticky warning" },
-              { value: "release_announcement", label: "Release announcement" },
-              { value: "upgrade_prompt", label: "Upgrade prompt" },
-              { value: "safety_alert", label: "Safety alert" },
-            ]}
-          />
-
-          <AdminTable>
-            <AdminTableHead
-              columns={["Title", "Type", "Priority", "Target", "Timing", "Delivery", "Status", "Actions"]}
+        {rows.length === 0 ? (
+          <div className="mt-6">
+            <EmptyState
+              title="No messages found"
+              description="No live dashboard messages matched the current filter."
             />
-            <tbody>
-              {filteredMessages.map((message) => (
-                <tr key={message.id} className="border-t border-[color:var(--border)]">
-                  <AdminTableCell className="font-medium">
-                    <Button variant="ghost" size="sm" className="h-auto p-0 text-left font-medium" render={<Link href={`/admin/messages/${message.id}`} />}>
-                      {message.title}
-                    </Button>
-                    <p className="mt-1 text-xs text-[color:var(--muted-foreground)]">{message.body}</p>
-                  </AdminTableCell>
-                  <AdminTableCell>
-                    <AdminStatusPill tone={typeTone(message.type)}>{messageTypeLabels[message.type]}</AdminStatusPill>
-                  </AdminTableCell>
-                  <AdminTableCell>
-                    <AdminStatusPill tone={priorityTone(message.priority)}>{priorityLabels[message.priority]}</AdminStatusPill>
-                  </AdminTableCell>
-                  <AdminTableCell>{message.targetSummary}</AdminTableCell>
-                  <AdminTableCell>{formatDate(message.publishedAt ?? message.scheduledAt)}</AdminTableCell>
-                  <AdminTableCell>
-                    <div className="text-sm">
-                      <div>Delivered {message.delivered.toLocaleString()}</div>
-                      <div className="text-xs text-[color:var(--muted-foreground)]">
-                        Viewed {percent(message.viewed, message.delivered)} · Clicked {percent(message.clicked, message.delivered)}
+          </div>
+        ) : (
+          <div className="mt-6">
+            <AdminTable>
+              <AdminTableHead
+                columns={["Title", "Type", "Priority", "Audience", "Timing", "Status", "Action"]}
+              />
+              <tbody>
+                {rows.map((row) => (
+                  <AdminTableRow key={row.message._id}>
+                    <AdminTableCell className="font-medium">
+                      <Link href={`/admin/messages/${row.message._id}`} className="font-medium hover:underline">
+                        {row.message.title}
+                      </Link>
+                      <p className="mt-1 text-xs text-[color:var(--muted-foreground)]">
+                        {row.message.body}
+                      </p>
+                    </AdminTableCell>
+                    <AdminTableCell>
+                      <AdminStatusPill tone={messageTypeTone(row.message.type)}>
+                        {messageTypeLabel(row.message.type)}
+                      </AdminStatusPill>
+                    </AdminTableCell>
+                    <AdminTableCell>
+                      <AdminStatusPill tone={messagePriorityTone(row.message.priority)}>
+                        {messagePriorityLabel(row.message.priority)}
+                      </AdminStatusPill>
+                    </AdminTableCell>
+                    <AdminTableCell>
+                      <div className="space-y-1">
+                        <p>{row.targetCount} rows</p>
+                        <p className="text-xs text-[color:var(--muted-foreground)]">
+                          {row.creatorName}
+                        </p>
                       </div>
-                    </div>
-                  </AdminTableCell>
-                  <AdminTableCell>
-                    <AdminStatusPill tone={statusTone(message.status)}>{statusLabels[message.status]}</AdminStatusPill>
-                  </AdminTableCell>
-                  <AdminTableCell>
-                    <Button variant="outline" size="sm" render={<Link href={`/admin/messages/${message.id}`} />}>
-                      View / Edit
-                    </Button>
-                  </AdminTableCell>
-                </tr>
-              ))}
-            </tbody>
-          </AdminTable>
-        </div>
+                    </AdminTableCell>
+                    <AdminTableCell>
+                      <div className="space-y-1">
+                        <p>{row.message.startsAt ? formatAdminDateTime(row.message.startsAt) : "Draft"}</p>
+                        <p className="text-xs text-[color:var(--muted-foreground)]">
+                          Expires {formatAdminDate(row.message.expiresAt) }
+                        </p>
+                      </div>
+                    </AdminTableCell>
+                    <AdminTableCell>
+                      <AdminStatusPill tone={messageStatusTone(row.message.status)}>
+                        {messageStatusLabel(row.message.status)}
+                      </AdminStatusPill>
+                      <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+                        {row.deliverySummary}
+                      </p>
+                    </AdminTableCell>
+                    <AdminTableCell>
+                      <Button variant="outline" size="sm" render={<Link href={`/admin/messages/${row.message._id}`} />}>
+                        Open
+                      </Button>
+                    </AdminTableCell>
+                  </AdminTableRow>
+                ))}
+              </tbody>
+            </AdminTable>
+          </div>
+        )}
       </AdminSectionCard>
     </div>
   );
 }
 
-export function MessageComposeView() {
-  const [messageType, setMessageType] = useState<DashboardMessageType>("banner");
-  const [title, setTitle] = useState("Maintenance banner");
-  const [body, setBody] = useState("A short maintenance window will affect publishing.");
-  const [ctaText, setCtaText] = useState("Learn more");
-  const [ctaUrl, setCtaUrl] = useState("/admin/audit");
-  const [priority, setPriority] = useState<DashboardMessagePriority>("high");
-  const [dismissible, setDismissible] = useState(true);
-  const [requiresAck, setRequiresAck] = useState(false);
-  const [locale, setLocale] = useState("all");
-  const [sendTiming, setSendTiming] = useState<"now" | "scheduled">("scheduled");
-  const [startsAt, setStartsAt] = useState("2026-03-24T04:00");
-  const [expiresMode, setExpiresMode] = useState<"none" | "date">("date");
-  const [expiresAt, setExpiresAt] = useState("2026-04-10T00:00");
-  const [audience, setAudience] = useState<AudienceRule[]>([
-    { targetType: "all" },
-    { targetType: "plan", targetValue: "pro" },
-  ]);
-  const [previewOpen, setPreviewOpen] = useState(false);
+function getUserOptions(users: MessageComposeData["users"]) {
+  return [
+    { value: "", label: "Select a user" },
+    ...users.map((user) => ({ value: String(user._id), label: getAdminDisplayName(user) })),
+  ];
+}
 
-  const estimatedReach = useMemo(() => {
-    const base = audience.length * 182;
-    const typeBonus = messageType === "banner" ? 160 : messageType === "inbox_card" ? 120 : 80;
-    return Math.max(20, base + typeBonus);
-  }, [audience.length, messageType]);
+function getReleaseOptions(releases: MessageComposeData["releases"]) {
+  return [
+    { value: "", label: "No release link" },
+    ...releases.map((release) => ({
+      value: String(release._id),
+      label: release.versionLabel ? `${release.name} · ${release.versionLabel}` : release.name,
+    })),
+  ];
+}
+
+function getFeedbackOptions(feedbackItems: MessageComposeData["feedbackItems"]) {
+  return [
+    { value: "", label: "No feedback link" },
+    ...feedbackItems.map((item) => ({ value: String(item._id), label: item.title })),
+  ];
+}
+
+function getAudienceInitialTargets(detail: MessageDetailRecord | null) {
+  if (!detail) {
+    return [{ targetType: "all", targetValue: "" }];
+  }
+
+  return detail.targets.length > 0
+    ? detail.targets.map((target) => ({
+        targetType: target.targetType,
+        targetValue: target.targetValue ?? "",
+      }))
+    : [{ targetType: "all", targetValue: "" }];
+}
+
+function MessageLifecycleControls({
+  messageId,
+  status,
+}: {
+  messageId: Id<"dashboard_messages">;
+  status: DashboardMessageStatus;
+}) {
+  const router = useRouter();
+  const toast = useToast();
+  const publish = useMutation(api.admin.mutations.publishDashboardMessage);
+  const pause = useMutation(api.admin.mutations.pauseDashboardMessage);
+  const expire = useMutation(api.admin.mutations.expireDashboardMessage);
+  const remove = useMutation(api.admin.mutations.deleteDashboardMessage);
+  const [pending, setPending] = useState<"publish" | "pause" | "expire" | "delete" | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [reason, setReason] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const run = async (
+    action: "publish" | "pause" | "expire" | "delete",
+    fn: () => Promise<void>
+  ) => {
+    setError(null);
+    setPending(action);
+    try {
+      await fn();
+      router.refresh();
+      toast.success({
+        description: `Message ${action}d.`,
+      });
+    } catch (mutationError) {
+      console.error(`Failed to ${action} dashboard message:`, mutationError);
+      setError(`Could not ${action} the message.`);
+    } finally {
+      setPending(null);
+    }
+  };
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(24rem,0.7fr)]">
-      <AdminSectionCard
-        title="Compose message"
-        description="Build a dashboard message using the planned admin contract."
-        actions={<Button variant="outline" size="sm" onClick={() => setPreviewOpen(true)}>Preview</Button>}
-      >
-        <div className="space-y-6">
-          <Card className={toneCard(false)}>
-            <CardHeader>
-              <CardTitle className="text-base">Content</CardTitle>
-              <CardDescription>Message type, body, priority, and delivery controls.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Select
-                label="Type"
-                value={messageType}
-                onChange={(event) => setMessageType(event.currentTarget.value as DashboardMessageType)}
-                options={Object.entries(messageTypeLabels).map(([value, label]) => ({ value, label }))}
-              />
-              <FieldBlock label="Title">
-                <Input value={title} onChange={(event) => setTitle(event.currentTarget.value)} />
-              </FieldBlock>
-              <Textarea label="Body" rows={5} value={body} onChange={(event) => setBody(event.currentTarget.value)} />
-              <div className="grid gap-4 sm:grid-cols-2">
-                <FieldBlock label="CTA text">
-                  <Input value={ctaText} onChange={(event) => setCtaText(event.currentTarget.value)} />
-                </FieldBlock>
-                <FieldBlock label="CTA URL">
-                  <Input value={ctaUrl} onChange={(event) => setCtaUrl(event.currentTarget.value)} />
-                </FieldBlock>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <SegmentedControl
-                  aria-label="Priority"
-                  value={priority}
-                  onValueChange={(value) => setPriority(value as DashboardMessagePriority)}
-                  size="sm"
-                  className="flex-wrap"
-                >
-                  <SegmentedControlItem value="low" size="sm">Low</SegmentedControlItem>
-                  <SegmentedControlItem value="normal" size="sm">Normal</SegmentedControlItem>
-                  <SegmentedControlItem value="high" size="sm">High</SegmentedControlItem>
-                  <SegmentedControlItem value="urgent" size="sm">Urgent</SegmentedControlItem>
-                </SegmentedControl>
-                <Select
-                  label="Locale"
-                  value={locale}
-                  onChange={(event) => setLocale(event.currentTarget.value)}
-                  options={[
-                    { value: "all", label: "All languages" },
-                    { value: "en", label: "EN only" },
-                    { value: "nl", label: "NL only" },
-                  ]}
-                />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Selectable selected={dismissible} onClick={() => setDismissible((value) => !value)} variant="pill">
-                  {dismissible ? "Dismissible" : "Locked"}
-                </Selectable>
-                <Selectable selected={requiresAck} onClick={() => setRequiresAck((value) => !value)} variant="pill">
-                  {requiresAck ? "Acknowledgement required" : "No acknowledgement"}
-                </Selectable>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className={toneCard(false)}>
-            <CardHeader>
-              <CardTitle className="text-base">Audience</CardTitle>
-              <CardDescription>OR-combined rules with estimated reach.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                {audience.map((rule, index) => (
-                  <div key={`${rule.targetType}-${index}`} className="grid gap-3 rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-                    <Select
-                      label={`Rule ${index + 1} type`}
-                      value={rule.targetType}
-                      onChange={(event) =>
-                        setAudience((current) =>
-                          current.map((entry, entryIndex) =>
-                            entryIndex === index ? { ...entry, targetType: event.currentTarget.value as AudienceRule["targetType"] } : entry
-                          )
-                        )
-                      }
-                      options={[
-                        { value: "all", label: "All users" },
-                        { value: "user", label: "Specific user" },
-                        { value: "plan", label: "Plan / tier" },
-                        { value: "organization", label: "Organization" },
-                        { value: "locale", label: "Locale" },
-                        { value: "strava_connected", label: "Strava connected" },
-                        { value: "fit_completed", label: "Fit completed" },
-                        { value: "bike_type", label: "Bike type" },
-                      ]}
-                    />
-                    <FieldBlock label="Value">
-                      <Input
-                        value={rule.targetValue ?? ""}
-                        onChange={(event) =>
-                          setAudience((current) =>
-                            current.map((entry, entryIndex) =>
-                              entryIndex === index ? { ...entry, targetValue: event.currentTarget.value } : entry
-                            )
-                          )
-                        }
-                        placeholder="Optional target value"
-                      />
-                    </FieldBlock>
-                    <div className="flex items-end">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setAudience((current) => current.filter((_, entryIndex) => entryIndex !== index))}
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <Button variant="outline" size="sm" onClick={() => setAudience((current) => [...current, { targetType: "organization" }])}>
-                  Add audience rule
-                </Button>
-                <AdminStatusPill tone="info">Estimated reach: {estimatedReach.toLocaleString()}</AdminStatusPill>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className={toneCard(false)}>
-            <CardHeader>
-              <CardTitle className="text-base">Scheduling</CardTitle>
-              <CardDescription>Send now or schedule, with optional expiry.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <SegmentedControl
-                aria-label="Send timing"
-                value={sendTiming}
-                onValueChange={(value) => setSendTiming(value as typeof sendTiming)}
-                size="sm"
-              >
-                <SegmentedControlItem value="now" size="sm">Now</SegmentedControlItem>
-                <SegmentedControlItem value="scheduled" size="sm">Scheduled</SegmentedControlItem>
-              </SegmentedControl>
-              {sendTiming === "scheduled" ? (
-                <FieldBlock label="Starts at">
-                  <Input type="datetime-local" value={startsAt} onChange={(event) => setStartsAt(event.currentTarget.value)} />
-                </FieldBlock>
-              ) : null}
-              <SegmentedControl
-                aria-label="Expiry"
-                value={expiresMode}
-                onValueChange={(value) => setExpiresMode(value as typeof expiresMode)}
-                size="sm"
-              >
-                <SegmentedControlItem value="none" size="sm">None</SegmentedControlItem>
-                <SegmentedControlItem value="date" size="sm">On date</SegmentedControlItem>
-              </SegmentedControl>
-              {expiresMode === "date" ? (
-                <FieldBlock label="Expires at">
-                  <Input type="datetime-local" value={expiresAt} onChange={(event) => setExpiresAt(event.currentTarget.value)} />
-                </FieldBlock>
-              ) : null}
-            </CardContent>
-            <CardFooter className="flex-wrap justify-end gap-2">
-              <Button variant="outline">Save draft</Button>
-              <Button variant="outline" onClick={() => setPreviewOpen(true)}>
-                Preview
-              </Button>
-              <Button variant="outline">Publish now</Button>
-              <Button>Schedule</Button>
-            </CardFooter>
-          </Card>
-        </div>
-      </AdminSectionCard>
-
-      <div className="space-y-6">
-        <Card className={toneCard(false)}>
-          <CardHeader>
-            <CardTitle className="text-base">Preview</CardTitle>
-            <CardDescription>How the message will look in the dashboard.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <AdminStatusPill tone={typeTone(messageType)}>{messageTypeLabels[messageType]}</AdminStatusPill>
-                <AdminStatusPill tone={priorityTone(priority)}>{priorityLabels[priority]}</AdminStatusPill>
-              </div>
-              <p className="mt-3 text-lg font-semibold">{title}</p>
-              <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">{body}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {ctaText ? <Button size="sm">{ctaText}</Button> : null}
-                {dismissible ? <Button variant="outline" size="sm">Dismiss</Button> : null}
-              </div>
-            </div>
-            <AdminStatusPill tone="info">Estimated reach: {estimatedReach.toLocaleString()}</AdminStatusPill>
-          </CardContent>
-        </Card>
-
-        <Card className={toneCard(false)}>
-          <CardHeader>
-            <CardTitle className="text-base">Current payload</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="overflow-auto rounded-[var(--radius-md)] bg-[color:var(--secondary)] p-4 text-xs leading-6">
-{JSON.stringify(
-  {
-    type: messageType,
-    title,
-    body,
-    ctaText,
-    ctaUrl,
-    priority,
-    dismissible,
-    requiresAck,
-    locale,
-    sendTiming,
-    startsAt,
-    expiresMode,
-    expiresAt,
-    audience,
-  },
-  null,
-  2
-)}
-            </pre>
-          </CardContent>
-        </Card>
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2">
+        {status !== "published" ? (
+          <Button
+            isLoading={pending === "publish"}
+            onClick={() =>
+              void run("publish", async () => {
+                await publish({ messageId });
+              })
+            }
+          >
+            Publish
+          </Button>
+        ) : null}
+        {status !== "paused" ? (
+          <Button
+            variant="outline"
+            isLoading={pending === "pause"}
+            onClick={() =>
+              void run("pause", async () => {
+                await pause({ messageId, reason: reason.trim() || undefined });
+              })
+            }
+          >
+            Pause
+          </Button>
+        ) : null}
+        {status !== "expired" ? (
+          <Button
+            variant="outline"
+            isLoading={pending === "expire"}
+            onClick={() =>
+              void run("expire", async () => {
+                await expire({ messageId, reason: reason.trim() || undefined });
+              })
+            }
+          >
+            Expire now
+          </Button>
+        ) : null}
+        <Button variant="outline" render={<Link href={`/admin/messages/${messageId}/edit`} />}>
+          Edit
+        </Button>
+        <Button variant="destructive" isLoading={pending === "delete"} onClick={() => setDeleteOpen(true)}>
+          Delete
+        </Button>
       </div>
-
+      <Input
+        label="Reason"
+        value={reason}
+        onChange={(event) => setReason(event.currentTarget.value)}
+        placeholder="Optional operational note"
+        helperText="Used when pausing, expiring, or deleting."
+      />
+      {error ? <p className="text-sm text-[color:var(--danger)]">{error}</p> : null}
       <AccessibleDialog
-        open={previewOpen}
-        title="Preview message"
-        description="Rendered using the current form values."
-        onClose={() => setPreviewOpen(false)}
+        open={deleteOpen}
+        title="Delete dashboard message"
+        description="This permanently removes the message, targets, and receipts."
+        onClose={() => setDeleteOpen(false)}
       >
         <div className="space-y-4">
-          <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <AdminStatusPill tone={typeTone(messageType)}>{messageTypeLabels[messageType]}</AdminStatusPill>
-              <AdminStatusPill tone={priorityTone(priority)}>{priorityLabels[priority]}</AdminStatusPill>
-            </div>
-            <p className="mt-3 text-lg font-semibold">{title}</p>
-            <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">{body}</p>
-          </div>
-          <div className="flex justify-end">
-            <Button onClick={() => setPreviewOpen(false)}>Close</Button>
+          <p className="text-sm text-[color:var(--muted-foreground)]">
+            Confirm deletion only if the message should no longer exist in admin or user-facing history.
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" type="button" onClick={() => setDeleteOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              type="button"
+              isLoading={pending === "delete"}
+              onClick={() =>
+                void run("delete", async () => {
+                  await remove({ messageId, reason: reason.trim() || undefined });
+                  setDeleteOpen(false);
+                })
+              }
+            >
+              Delete
+            </Button>
           </div>
         </div>
       </AccessibleDialog>
@@ -682,119 +598,423 @@ export function MessageComposeView() {
   );
 }
 
-export function MessageDetailView({ messageId }: { messageId: string }) {
-  const message = messageRecords.find((entry) => entry.id === messageId) ?? messageRecords[0];
-  const [status, setStatus] = useState<DashboardMessageStatus>(message.status);
-  const [priority, setPriority] = useState<DashboardMessagePriority>(message.priority);
+export function MessageDetailView({ data }: { data: MessageDetailData }) {
+  const summary = formatDeliverySummary(data.detail);
 
   return (
     <div className="space-y-6">
       <AdminSectionCard
-        title={message.title}
-        description="Delivery statistics, audience shape, and status controls."
+        title={data.detail.message.title}
+        description="Delivery stats, audience shape, and status controls for a dashboard message."
         actions={
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" render={<Link href="/admin/messages/new" />}>
-              Duplicate
-            </Button>
-            <Button variant="outline" size="sm">
-              Pause
-            </Button>
-            <Button variant="outline" size="sm">
-              Expire now
+            <Button variant="outline" render={<Link href="/admin/messages" />}>
+              Back to inbox
             </Button>
           </div>
         }
       >
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(20rem,0.8fr)]">
           <div className="space-y-6">
-            <Card className={toneCard(false)}>
+            <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
               <CardHeader className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  <AdminStatusPill tone={typeTone(message.type)}>{messageTypeLabels[message.type]}</AdminStatusPill>
-                  <AdminStatusPill tone={priorityTone(priority)}>{priorityLabels[priority]}</AdminStatusPill>
-                  <AdminStatusPill tone={statusTone(status)}>{statusLabels[status]}</AdminStatusPill>
+                  <AdminStatusPill tone={messageTypeTone(data.detail.message.type)}>
+                    {messageTypeLabel(data.detail.message.type)}
+                  </AdminStatusPill>
+                  <AdminStatusPill tone={messagePriorityTone(data.detail.message.priority)}>
+                    {messagePriorityLabel(data.detail.message.priority)}
+                  </AdminStatusPill>
+                  <AdminStatusPill tone={messageStatusTone(data.detail.message.status)}>
+                    {messageStatusLabel(data.detail.message.status)}
+                  </AdminStatusPill>
                 </div>
                 <CardDescription>
-                  Published {formatDate(message.publishedAt ?? message.scheduledAt)} · Target {message.targetSummary}
+                  Created by {getAdminDisplayName(data.users.find((user) => user._id === data.detail.message.createdBy) ?? null)}
+                  {" "}· {formatAdminDateTime(data.detail.message.createdAt)}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Textarea label="Body" rows={5} value={message.body} readOnly />
+                <Textarea label="Body" rows={5} value={data.detail.message.body} readOnly />
+
+                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                  <MessageSnapshotCard title="Delivered">
+                    <div className="text-3xl font-semibold">{summary.delivered.toLocaleString()}</div>
+                  </MessageSnapshotCard>
+                  <MessageSnapshotCard title="Viewed">
+                    <div className="text-3xl font-semibold">
+                      {summary.delivered === 0 ? "0%" : `${Math.round((summary.viewed / summary.delivered) * 100)}%`}
+                    </div>
+                  </MessageSnapshotCard>
+                  <MessageSnapshotCard title="Clicked">
+                    <div className="text-3xl font-semibold">
+                      {summary.delivered === 0 ? "0%" : `${Math.round((summary.clicked / summary.delivered) * 100)}%`}
+                    </div>
+                  </MessageSnapshotCard>
+                  <MessageSnapshotCard title="Targets">
+                    <div className="text-3xl font-semibold">{data.detail.targets.length}</div>
+                  </MessageSnapshotCard>
+                </div>
+
+                <MessageLifecycleControls
+                  messageId={data.detail.message._id}
+                  status={data.detail.message.status}
+                />
+                <p className="text-xs leading-5 text-[color:var(--muted-foreground)]">
+                  Linked release and feedback references are read-only until the backend exposes write fields for those relationships.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="space-y-6">
+            <MessageSnapshotCard title="Audience">
+              {data.detail.targets.length === 0 ? (
+                <EmptyState
+                  title="No audience rules"
+                  description="This message currently targets the default audience."
+                  className="border-none bg-transparent p-0 shadow-none"
+                />
+              ) : (
+                data.detail.targets.map((rule, index) => (
+                  <div
+                    key={`${rule.targetType}-${index}`}
+                    className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-3"
+                  >
+                    <div className="flex flex-wrap items-center gap-2">
+                      <AdminStatusPill tone="info">{rule.targetType}</AdminStatusPill>
+                      <span className="text-sm text-[color:var(--muted-foreground)]">
+                        {rule.targetValue ?? "all"}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
+              <AdminStatusPill tone="info">Estimated reach: {summary.delivered.toLocaleString()}</AdminStatusPill>
+            </MessageSnapshotCard>
+
+            <MessageSnapshotCard title="Scheduling">
+              <FieldValue label="Published at">{formatAdminDateTime(data.detail.message.publishedAt)}</FieldValue>
+              <FieldValue label="Starts at">{formatAdminDateTime(data.detail.message.startsAt)}</FieldValue>
+              <FieldValue label="Expires at">{formatAdminDateTime(data.detail.message.expiresAt)}</FieldValue>
+              <FieldValue label="Locale">{data.detail.message.locale ?? "all"}</FieldValue>
+              <FieldValue label="Dismissible">{data.detail.message.dismissible ? "Yes" : "No"}</FieldValue>
+              <FieldValue label="Acknowledgement">{data.detail.message.requiresAcknowledgement ? "Required" : "Optional"}</FieldValue>
+              <FieldValue label="Linked release">
+                {data.linkedRelease ? data.linkedRelease.name : "Not linked"}
+              </FieldValue>
+              <FieldValue label="Linked feedback">
+                {data.linkedFeedback ? data.linkedFeedback.title : "Not linked"}
+              </FieldValue>
+            </MessageSnapshotCard>
+
+            <MessageSnapshotCard title="Lifecycle">
+              <FieldValue label="Created at">{formatAdminDateTime(data.detail.message.createdAt)}</FieldValue>
+              <FieldValue label="Published at">{formatAdminDateTime(data.detail.message.publishedAt)}</FieldValue>
+              <FieldValue label="Paused at">{formatAdminDateTime(data.detail.message.pausedAt)}</FieldValue>
+              <FieldValue label="Expired at">{formatAdminDateTime(data.detail.message.expiresAt)}</FieldValue>
+            </MessageSnapshotCard>
+          </div>
+        </div>
+      </AdminSectionCard>
+    </div>
+  );
+}
+
+function getComposeBaseState(data: MessageComposeData) {
+  return {
+    title: data.detail?.message.title ?? "",
+    body: data.detail?.message.body ?? "",
+    type: (data.detail?.message.type ?? "banner") as DashboardMessageType,
+    priority: (data.detail?.message.priority ?? "normal") as DashboardMessagePriority,
+    ctaText: data.detail?.message.ctaText ?? "",
+    ctaUrl: data.detail?.message.ctaUrl ?? "",
+    locale: (data.detail?.message.locale ?? "all") as "all" | "en" | "nl",
+    dismissible: data.detail?.message.dismissible ?? true,
+    requiresAcknowledgement: data.detail?.message.requiresAcknowledgement ?? false,
+    startsAt: toDateTimeLocalValue(data.detail?.message.startsAt),
+    expiresAt: toDateTimeLocalValue(data.detail?.message.expiresAt),
+    targets: getAudienceInitialTargets(data.detail),
+  };
+}
+
+export function MessageComposeView({
+  data,
+  mode,
+}: {
+  data: MessageComposeData;
+  mode: "create" | "edit";
+}) {
+  const router = useRouter();
+  const toast = useToast();
+  const createMessage = useMutation(api.admin.mutations.createDashboardMessage);
+  const updateMessage = useMutation(api.admin.mutations.updateDashboardMessage);
+  const [form, setForm] = useState(() => getComposeBaseState(data));
+  const [error, setError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const normalizedTargets = useMemo(() => normalizeTargets(form.targets), [form.targets]);
+  const estimatedReach = useQuery(
+    api.admin.queries.estimateMessageReach,
+    normalizedTargets.length > 0 ? { targets: normalizedTargets } : { targets: [{ targetType: "all" }] }
+  );
+
+  useEffect(() => {
+    setForm(getComposeBaseState(data));
+  }, [data]);
+
+  const setField = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
+    setForm((current) => ({ ...current, [key]: value }));
+  };
+
+  const updateTarget = (index: number, next: AudienceRuleDraft) => {
+    setForm((current) => ({
+      ...current,
+      targets: current.targets.map((target, targetIndex) => (targetIndex === index ? next : target)),
+    }));
+  };
+
+  const addTarget = () => {
+    setForm((current) => ({
+      ...current,
+      targets: [...current.targets, { targetType: "plan", targetValue: "" }],
+    }));
+  };
+
+  const removeTarget = (index: number) => {
+    setForm((current) => ({
+      ...current,
+      targets: current.targets.length === 1 ? current.targets : current.targets.filter((_, targetIndex) => targetIndex !== index),
+    }));
+  };
+
+  const saveMessage = async () => {
+    setError(null);
+    setIsSaving(true);
+    try {
+      const payload = {
+        title: form.title.trim(),
+        body: form.body.trim(),
+        type: form.type,
+        priority: form.priority,
+        ctaText: form.ctaText.trim() || undefined,
+        ctaUrl: form.ctaUrl.trim() || undefined,
+        locale: form.locale,
+        dismissible: form.dismissible,
+        requiresAcknowledgement: form.requiresAcknowledgement,
+        startsAt: fromDateTimeLocalValue(form.startsAt),
+        expiresAt: fromDateTimeLocalValue(form.expiresAt),
+        targets: normalizedTargets,
+      } as const;
+
+      if (!payload.title || !payload.body) {
+        setError("Title and body are required.");
+        return;
+      }
+
+      if (mode === "create" || !data.detail) {
+        const messageId = await createMessage(payload);
+        router.push(`/admin/messages/${messageId}`);
+        toast.success({ description: "Dashboard message created." });
+      } else {
+        await updateMessage({
+          messageId: data.detail.message._id,
+          ...payload,
+        });
+        router.refresh();
+        toast.success({ description: "Dashboard message updated." });
+      }
+    } catch (mutationError) {
+      console.error("Failed to save dashboard message:", mutationError);
+      setError("Could not save the dashboard message.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const editMode = mode === "edit" && Boolean(data.detail);
+
+  return (
+    <div className="space-y-6">
+      <AdminSectionCard
+        title={editMode ? "Edit message" : "New message"}
+        description="Draft, target, preview, and schedule a dashboard message."
+        actions={
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" render={<Link href="/admin/messages" />}>
+              Back to inbox
+            </Button>
+          </div>
+        }
+      >
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(20rem,0.8fr)]">
+          <div className="space-y-6">
+            <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
+              <CardHeader>
+                <CardTitle className="text-base">Message content</CardTitle>
+                <CardDescription>All fields below write to the live Convex mutation contract.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Input
+                  label="Title"
+                  value={form.title}
+                  onChange={(event) => setField("title", event.currentTarget.value)}
+                  placeholder="Short, visible headline"
+                />
+                <Textarea
+                  label="Body"
+                  rows={6}
+                  value={form.body}
+                  onChange={(event) => setField("body", event.currentTarget.value)}
+                  placeholder="Main message copy"
+                />
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Select
-                    label="Status"
-                    value={status}
-                    onChange={(event) => setStatus(event.currentTarget.value as DashboardMessageStatus)}
-                    options={Object.entries(statusLabels).map(([value, label]) => ({ value, label }))}
+                    label="Message type"
+                    value={form.type}
+                    onChange={(event) => setField("type", event.currentTarget.value as DashboardMessageType)}
+                    options={typeOptions}
                   />
                   <Select
                     label="Priority"
-                    value={priority}
-                    onChange={(event) => setPriority(event.currentTarget.value as DashboardMessagePriority)}
-                    options={Object.entries(priorityLabels).map(([value, label]) => ({ value, label }))}
+                    value={form.priority}
+                    onChange={(event) =>
+                      setField("priority", event.currentTarget.value as DashboardMessagePriority)
+                    }
+                    options={priorityOptions}
                   />
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                  <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
-                    <CardContent className="p-4">
-                      <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Delivered</div>
-                      <div className="mt-2 text-3xl font-semibold">{message.delivered.toLocaleString()}</div>
-                    </CardContent>
-                  </Card>
-                  <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
-                    <CardContent className="p-4">
-                      <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Viewed</div>
-                      <div className="mt-2 text-3xl font-semibold">{percent(message.viewed, message.delivered)}</div>
-                    </CardContent>
-                  </Card>
-                  <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
-                    <CardContent className="p-4">
-                      <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Clicked</div>
-                      <div className="mt-2 text-3xl font-semibold">{percent(message.clicked, message.delivered)}</div>
-                    </CardContent>
-                  </Card>
-                  <Card className="border-[color:var(--border)] bg-[color:var(--card)]">
-                    <CardContent className="p-4">
-                      <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">Acknowledged</div>
-                      <div className="mt-2 text-3xl font-semibold">{percent(message.acknowledged, message.delivered)}</div>
-                    </CardContent>
-                  </Card>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Input
+                    label="CTA text"
+                    value={form.ctaText}
+                    onChange={(event) => setField("ctaText", event.currentTarget.value)}
+                    placeholder="Upgrade now"
+                  />
+                  <Input
+                    label="CTA URL"
+                    value={form.ctaUrl}
+                    onChange={(event) => setField("ctaUrl", event.currentTarget.value)}
+                    placeholder="/pricing"
+                  />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <Select
+                    label="Locale"
+                    value={form.locale}
+                    onChange={(event) =>
+                      setField("locale", event.currentTarget.value as "all" | "en" | "nl")
+                    }
+                    options={localeOptions}
+                  />
+                  <Input
+                    label="Starts at"
+                    type="datetime-local"
+                    value={form.startsAt}
+                    onChange={(event) => setField("startsAt", event.currentTarget.value)}
+                  />
+                  <Input
+                    label="Expires at"
+                    type="datetime-local"
+                    value={form.expiresAt}
+                    onChange={(event) => setField("expiresAt", event.currentTarget.value)}
+                  />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Select
+                    label="Dismissible"
+                    value={form.dismissible ? "true" : "false"}
+                    onChange={(event) => setField("dismissible", event.currentTarget.value === "true")}
+                    options={[
+                      { value: "true", label: "Yes" },
+                      { value: "false", label: "No" },
+                    ]}
+                  />
+                  <Select
+                    label="Acknowledgement required"
+                    value={form.requiresAcknowledgement ? "true" : "false"}
+                    onChange={(event) =>
+                      setField("requiresAcknowledgement", event.currentTarget.value === "true")
+                    }
+                    options={[
+                      { value: "true", label: "Yes" },
+                      { value: "false", label: "No" },
+                    ]}
+                  />
+                </div>
+                <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-medium text-[color:var(--foreground)]">Audience</p>
+                      <p className="text-sm text-[color:var(--muted-foreground)]">
+                        Estimate reach against the live Convex user base.
+                      </p>
+                    </div>
+                    <Button type="button" variant="outline" onClick={addTarget}>
+                      Add rule
+                    </Button>
+                  </div>
+                  <div className="mt-4 space-y-3">
+                    {form.targets.map((rule, index) => (
+                      <AudienceRuleEditor
+                        key={`${rule.targetType}-${index}`}
+                        rule={rule}
+                        users={data.users}
+                        releases={data.releases}
+                        onChange={(next) => updateTarget(index, next)}
+                        onRemove={() => removeTarget(index)}
+                        canRemove={form.targets.length > 1}
+                      />
+                    ))}
+                  </div>
+                </div>
+                {error ? <p className="text-sm text-[color:var(--danger)]">{error}</p> : null}
+                <div className="flex flex-wrap gap-2">
+                  <Button onClick={() => void saveMessage()} isLoading={isSaving}>
+                    {editMode ? "Update message" : "Create message"}
+                  </Button>
                 </div>
               </CardContent>
             </Card>
           </div>
 
           <div className="space-y-6">
-            <Card className={toneCard(false)}>
-              <CardHeader>
-                <CardTitle className="text-base">Audience</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {message.audience.map((rule, index) => (
-                  <div key={`${rule.targetType}-${index}`} className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <AdminStatusPill tone="info">{rule.targetType}</AdminStatusPill>
-                      <span className="text-sm text-[color:var(--muted-foreground)]">{rule.targetValue ?? "all"}</span>
-                    </div>
-                  </div>
-                ))}
-                <AdminStatusPill tone="info">Estimated reach: {message.delivered.toLocaleString()}</AdminStatusPill>
-              </CardContent>
-            </Card>
+            <MessageSnapshotCard title="Live reach">
+              {estimatedReach ? (
+                <div className="space-y-2">
+                  <div className="text-3xl font-semibold">{estimatedReach.estimatedReach.toLocaleString()}</div>
+                  <p className="text-sm text-[color:var(--muted-foreground)]">
+                    Estimate from the current audience rule set.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-sm text-[color:var(--muted-foreground)]">Estimating audience...</p>
+              )}
+            </MessageSnapshotCard>
 
-            <Card className={toneCard(false)}>
-              <CardHeader>
-                <CardTitle className="text-base">Scheduling</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm text-[color:var(--muted-foreground)]">
-                <p>Published at: {formatDate(message.publishedAt)}</p>
-                <p>Starts at: {formatDate(message.scheduledAt)}</p>
-                <p>Expires at: {formatDate(message.expiresAt)}</p>
-                <p>Linked release: {message.linkedRelease ?? "—"}</p>
-                <p>Linked feedback: {message.linkedFeedback ?? "—"}</p>
-              </CardContent>
-            </Card>
+            <MessageSnapshotCard title="Read-only links">
+              <FieldValue label="Linked release">
+                {data.linkedRelease ? data.linkedRelease.name : "No live link"}
+              </FieldValue>
+              <FieldValue label="Linked feedback">
+                {data.linkedFeedback ? data.linkedFeedback.title : "No live link"}
+              </FieldValue>
+              <p className="text-xs text-[color:var(--muted-foreground)]">
+                These relationships are visible in live data, but the current write contract does not persist them.
+              </p>
+            </MessageSnapshotCard>
+
+            {editMode && data.detail ? (
+              <MessageSnapshotCard title="Current record">
+                <FieldValue label="Status">
+                <AdminStatusPill tone={messageStatusTone(data.detail.message.status)}>
+                  {messageStatusLabel(data.detail.message.status)}
+                </AdminStatusPill>
+              </FieldValue>
+              <FieldValue label="Created at">{formatAdminDateTime(data.detail.message.createdAt)}</FieldValue>
+              <FieldValue label="Published at">{formatAdminDateTime(data.detail.message.publishedAt)}</FieldValue>
+              <FieldValue label="Created time">{formatAdminDateTime(data.detail.message._creationTime)}</FieldValue>
+            </MessageSnapshotCard>
+            ) : null}
           </div>
         </div>
       </AdminSectionCard>

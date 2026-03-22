@@ -3,7 +3,9 @@ import { Button } from "@/components/ui";
 import type { ReleaseStatus, ReleaseType } from "./data";
 import { releaseTypeLabel } from "./release-ui";
 
-const statusOptions: Array<{ label: string; value: "all" | ReleaseStatus }> = [
+type ReleaseStatusFilter = "all" | ReleaseStatus | "archived";
+
+const statusOptions: Array<{ label: string; value: ReleaseStatusFilter }> = [
   { label: "All statuses", value: "all" },
   { label: "Draft", value: "draft" },
   { label: "QA", value: "in_qa" },
@@ -12,6 +14,7 @@ const statusOptions: Array<{ label: string; value: "all" | ReleaseStatus }> = [
   { label: "Rolling out", value: "rolling_out" },
   { label: "Live", value: "live" },
   { label: "Rolled back", value: "rolled_back" },
+  { label: "Archived", value: "archived" },
 ];
 
 const typeOptions: Array<{ label: string; value: "all" | ReleaseType }> = [

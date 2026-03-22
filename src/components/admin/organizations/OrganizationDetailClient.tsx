@@ -1,10 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AccessibleDialog, Button, Card, CardContent, CardHeader, CardTitle, Input, Select, SegmentedControl, SegmentedControlItem, Textarea } from "@/components/ui";
-import { cn } from "@/utils/cn";
-import type { AdminOrganizationDetail, AdminOrganizationType } from "./admin-organizations-data";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import type { Doc, Id } from "../../../../convex/_generated/dataModel";
+import {
+  Button,
+  EmptyState,
+  Input,
+  LoadingState,
+  Select,
+  SegmentedControl,
+  SegmentedControlItem,
+  Textarea,
+  useToast,
+} from "@/components/ui";
+import {
+  AdminPageHeader,
+  AdminSectionCard,
+  AdminStatusPill,
+  AdminTable,
+  AdminTableCell,
+  AdminTableHead,
+  AdminTableRow,
+} from "@/components/admin/layout/AdminUi";
+import { formatAdminDate } from "@/components/admin/shared/admin-format";
+import {
+  displayAdminUserName,
+  normalizeAdminOrganizationMemberRow,
+} from "@/components/admin/shared/live-admin-data";
 
 type TabKey = "overview" | "members" | "billing" | "audit";
 
@@ -12,46 +37,35 @@ const tabs: Array<{ key: TabKey; label: string }> = [
   { key: "overview", label: "Overview" },
   { key: "members", label: "Members" },
   { key: "billing", label: "Billing" },
-  { key: "audit", label: "Audit Trail" },
+  { key: "audit", label: "Audit" },
 ];
 
 const typeOptions = [
-  { value: "bike_shop", label: "bike shop" },
-  { value: "enterprise", label: "enterprise" },
-  { value: "fitter_studio", label: "fitter studio" },
-  { value: "brand", label: "brand" },
+  { value: "bike_shop", label: "Bike shop" },
+  { value: "enterprise", label: "Enterprise" },
+  { value: "fitter_studio", label: "Studio" },
+  { value: "brand", label: "Brand" },
 ] as const;
 
-function formatDate(dateString: string) {
-  return new Intl.DateTimeFormat("en", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(dateString));
-}
+const roleOptions = [
+  { value: "owner", label: "Owner" },
+  { value: "staff", label: "Staff" },
+  { value: "fitter", label: "Fitter" },
+  { value: "viewer", label: "Viewer" },
+] as const;
 
-function badgeClassName(kind: "muted" | "success" | "warning" | "admin") {
-  switch (kind) {
-    case "success":
-      return "border border-[color:color-mix(in_oklch,var(--success)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--success)_10%,var(--card))]";
-    case "warning":
-      return "border border-[color:color-mix(in_oklch,var(--warning)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card))]";
-    case "admin":
-      return "border border-[color:color-mix(in_oklch,var(--primary)_24%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_10%,var(--card))]";
-    case "muted":
-    default:
-      return "border border-[color:var(--border)] bg-[color:var(--secondary)]";
-  }
-}
+type OrganizationDetailData = {
+  organization: Doc<"organizations"> | null;
+  members: Doc<"organization_members">[];
+  subscriptions: Doc<"subscriptions">[];
+  auditLogs: Doc<"admin_audit_logs">[];
+};
 
-function badge({ children, kind = "muted" }: { children: string; kind?: "muted" | "success" | "warning" | "admin" }) {
-  return (
-    <span className={cn("inline-flex rounded-full px-2.5 py-1 text-xs font-medium capitalize text-[color:var(--foreground)]", badgeClassName(kind))}>
-      {children}
-    </span>
-  );
-}
+type MemberRow = Doc<"organization_members"> & {
+  user: Pick<Doc<"users">, "displayName" | "name" | "email"> | null;
+};
 
-function SummaryStat({ label, value }: { label: string; value: string | number }) {
+function liveStat(label: string, value: string | number) {
   return (
     <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
       <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">{label}</div>
@@ -60,46 +74,202 @@ function SummaryStat({ label, value }: { label: string; value: string | number }
   );
 }
 
-export function OrganizationDetailClient({ organization }: { organization: AdminOrganizationDetail }) {
+function getMutationErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Something went wrong.";
+}
+
+function organizationTypeTone(type: string) {
+  switch (type) {
+    case "enterprise":
+      return "success";
+    case "fitter_studio":
+      return "info";
+    case "brand":
+      return "warning";
+    default:
+      return "neutral";
+  }
+}
+
+export function OrganizationDetailClient({ orgId }: { orgId: string }) {
+  const toast = useToast();
   const [tab, setTab] = useState<TabKey>("overview");
-  const [notice, setNotice] = useState<string | null>(null);
-  const [name, setName] = useState(organization.row.name);
-  const [type, setType] = useState<AdminOrganizationType>(organization.row.type);
-  const [maxSeats, setMaxSeats] = useState(String(organization.row.maxSeats));
-  const [addMemberOpen, setAddMemberOpen] = useState(false);
-  const [memberEmail, setMemberEmail] = useState("");
-  const [memberRole, setMemberRole] = useState("staff");
-  const [memberReason, setMemberReason] = useState("");
-  const [editReason, setEditReason] = useState("");
+  const [name, setName] = useState("");
+  const [type, setType] = useState<(typeof typeOptions)[number]["value"]>("bike_shop");
+  const [maxSeats, setMaxSeats] = useState("");
+  const [billingEmail, setBillingEmail] = useState("");
+  const [notes, setNotes] = useState("");
+  const [memberUserId, setMemberUserId] = useState("");
+  const [memberRole, setMemberRole] = useState<(typeof roleOptions)[number]["value"]>("staff");
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
+
+  const resolvedOrgId = orgId as Id<"organizations">;
+  const detail = useQuery(api.admin.queries.getOrganizationDetail, { orgId: resolvedOrgId }) as
+    | OrganizationDetailData
+    | undefined;
+  const orgMembers = useQuery(api.admin.queries.listOrgMembers, { orgId: resolvedOrgId }) as
+    | MemberRow[]
+    | undefined;
+  const updateOrganization = useMutation(api.admin.mutations.updateOrganization);
+  const suspendOrganization = useMutation(api.admin.mutations.suspendOrganization);
+  const addOrgMember = useMutation(api.admin.mutations.addOrgMember);
+  const removeOrgMember = useMutation(api.admin.mutations.removeOrgMember);
+
+  useEffect(() => {
+    if (!detail?.organization) {
+      return;
+    }
+
+    setName(detail.organization.name);
+    setType(detail.organization.type);
+    setMaxSeats(detail.organization.maxSeats?.toString() ?? "");
+    setBillingEmail(detail.organization.billingEmail ?? "");
+    setNotes(detail.organization.notes ?? "");
+  }, [
+    detail?.organization?._id,
+    detail?.organization?.name,
+    detail?.organization?.type,
+    detail?.organization?.maxSeats,
+    detail?.organization?.billingEmail,
+    detail?.organization?.notes,
+  ]);
+
+  if (detail === undefined || orgMembers === undefined) {
+    return <LoadingState label="Loading organization..." />;
+  }
+
+  const organization = detail.organization;
+  if (!organization) {
+    return (
+      <EmptyState
+        title="Organization not found"
+        description="Convex returned no live organization record for this route."
+        action={
+          <Button render={<Link href="/admin/organizations" />} variant="outline">
+            Back to organizations
+          </Button>
+        }
+      />
+    );
+  }
+
+  const members = orgMembers
+    .map(normalizeAdminOrganizationMemberRow)
+    .filter((member) => member.removedAt === null);
+  const subscriptions = detail.subscriptions ?? [];
+  const auditLogs = detail.auditLogs ?? [];
+  const ownerMember = orgMembers.find((member) => member.role === "owner") ?? orgMembers[0] ?? null;
+  const liveSeatsUsed = organization.usedSeats ?? members.length;
+
+  const runMutation = async (
+    action: string,
+    handler: () => Promise<void>,
+    successDescription: string
+  ) => {
+    setPendingAction(action);
+    try {
+      await handler();
+      toast.success({ description: successDescription });
+    } catch (error) {
+      toast.error({ description: getMutationErrorMessage(error) });
+    } finally {
+      setPendingAction(null);
+    }
+  };
+
+  const handleUpdateOrganization = async () => {
+    const parsedMaxSeats = maxSeats.trim() ? Number(maxSeats) : undefined;
+    if (parsedMaxSeats !== undefined && Number.isNaN(parsedMaxSeats)) {
+      toast.error({ description: "Max seats must be a number." });
+      return;
+    }
+
+    await runMutation(
+      "update",
+      async () => {
+        await updateOrganization({
+          orgId: resolvedOrgId,
+          name: name.trim() || organization.name,
+          type,
+          maxSeats: parsedMaxSeats,
+          billingEmail: billingEmail.trim() || undefined,
+          notes: notes.trim() || undefined,
+        });
+      },
+      "Organization updated."
+    );
+  };
+
+  const handleSuspendOrganization = async () => {
+    await runMutation(
+      "suspend",
+      async () => {
+        await suspendOrganization({
+          orgId: resolvedOrgId,
+          reason: "Admin suspension",
+        });
+      },
+      "Organization suspended."
+    );
+  };
+
+  const handleAddMember = async () => {
+    if (!memberUserId.trim()) {
+      toast.error({ description: "User ID is required." });
+      return;
+    }
+
+    await runMutation(
+      "member-add",
+      async () => {
+        await addOrgMember({
+          organizationId: resolvedOrgId,
+          userId: memberUserId as Id<"users">,
+          role: memberRole,
+        });
+      },
+      "Organization member added."
+    );
+  };
+
+  const handleRemoveMember = async (memberId: Id<"organization_members">) => {
+    await runMutation(
+      `remove-${String(memberId)}`,
+      async () => {
+        await removeOrgMember({ memberId });
+      },
+      "Organization member removed."
+    );
+  };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p className="text-sm uppercase tracking-[0.22em] text-[color:var(--muted-foreground)]">Admin / Users & Accounts</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[color:var(--foreground)]">{organization.row.name}</h1>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {badge({ children: organization.row.type.replaceAll("_", " ") })}
-            {organization.row.suspended ? badge({ children: "Suspended", kind: "warning" }) : badge({ children: "Active", kind: "success" })}
-          </div>
-          <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">{organization.row.ownerEmail}</p>
-        </div>
-        <Button render={<Link href="./" />} variant="outline">
-          Back to organizations
-        </Button>
+    <div className="space-y-8">
+      <AdminPageHeader
+        eyebrow="Command center"
+        title={organization.name}
+        description={organization.billingEmail ?? organization.slug}
+        actions={
+          <Button render={<Link href="/admin/organizations" />} variant="outline">
+            Back to organizations
+          </Button>
+        }
+      />
+
+      <div className="flex flex-wrap gap-2">
+        <AdminStatusPill tone={organizationTypeTone(organization.type)}>
+          {organization.type.replaceAll("_", " ")}
+        </AdminStatusPill>
+        <AdminStatusPill tone={organization.suspendedAt ? "warning" : "success"}>
+          {organization.suspendedAt ? "Suspended" : "Active"}
+        </AdminStatusPill>
+        <AdminStatusPill tone="info">{members.length} members</AdminStatusPill>
       </div>
 
-      {notice ? (
-        <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--primary)_24%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_8%,var(--card))] p-4 text-sm text-[color:var(--foreground)]">
-          {notice}
-        </div>
-      ) : null}
-
-      <div className="grid gap-4 md:grid-cols-3">
-        <SummaryStat label="Seats" value={`${organization.row.seatsUsed} / ${organization.row.maxSeats}`} />
-        <SummaryStat label="Members" value={organization.members.length} />
-        <SummaryStat label="Created" value={formatDate(organization.row.createdAt)} />
-      </div>
+      <section className="grid gap-4 md:grid-cols-3">
+        {liveStat("Members", members.length)}
+        {liveStat("Seats", `${liveSeatsUsed} / ${organization.maxSeats ?? "—"}`)}
+        {liveStat("Subscriptions", subscriptions.length)}
+      </section>
 
       <SegmentedControl
         aria-label="Organization detail tabs"
@@ -115,179 +285,188 @@ export function OrganizationDetailClient({ organization }: { organization: Admin
       </SegmentedControl>
 
       {tab === "overview" ? (
-        <div className="grid gap-6 xl:grid-cols-[1fr_0.9fr]">
-          <Card>
-            <CardHeader>
-              <CardTitle>Organization overview</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <ProfileField label="Owner" value={organization.overview.ownerName} />
-                <ProfileField label="Plan" value={organization.overview.plan} />
-                <ProfileField label="Billing email" value={organization.row.billingEmail} />
-                <ProfileField label="Seat usage" value={`${organization.row.seatsUsed} / ${organization.row.maxSeats}`} />
+        <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+          <AdminSectionCard title="Organization overview" description="Live organization record from Convex.">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field
+                label="Owner"
+                value={ownerMember?.user ? displayAdminUserName(ownerMember.user) : "—"}
+              />
+              <Field label="Plan" value={organization.planId ? String(organization.planId) : "—"} />
+              <Field label="Billing email" value={organization.billingEmail ?? "—"} />
+              <Field label="Slug" value={organization.slug} />
+              <Field label="Created" value={formatAdminDate(organization.createdAt)} />
+              <Field label="Updated" value={formatAdminDate(organization.updatedAt)} />
+            </div>
+            {organization.notes ? (
+              <div className="mt-4 rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4 text-sm leading-6 text-[color:var(--muted-foreground)]">
+                {organization.notes}
               </div>
-              <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4 text-sm leading-6 text-[color:var(--muted-foreground)]">
-                {organization.overview.notes}
+            ) : null}
+            {organization.suspendedAt ? (
+              <div className="mt-4 rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--warning)_24%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--card))] p-4 text-sm">
+                <div className="font-medium text-[color:var(--foreground)]">Suspended</div>
+                <div className="mt-1 text-[color:var(--muted-foreground)]">{organization.suspendedReason ?? "No reason recorded"}</div>
+                <div className="mt-1 text-xs text-[color:var(--muted-foreground)]">{formatAdminDate(organization.suspendedAt)}</div>
               </div>
-              {organization.overview.suspension ? (
-                <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--warning)_24%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--card))] p-4 text-sm">
-                  <div className="font-medium text-[color:var(--foreground)]">Suspended</div>
-                  <div className="mt-1 text-[color:var(--muted-foreground)]">{organization.overview.suspension.reason}</div>
-                  <div className="mt-1 text-xs text-[color:var(--muted-foreground)]">{formatDate(organization.overview.suspension.at)}</div>
-                </div>
-              ) : null}
-              <div className="grid gap-3 sm:grid-cols-3">
-                <Button type="button" variant="outline" onClick={() => setNotice("Planned mutation: `updateOrganization`.")}>
-                  Edit details
-                </Button>
-                <Button type="button" variant="outline" onClick={() => setNotice("Planned mutation: `suspendOrganization`.")}>
-                  Suspend / restore
-                </Button>
-                <Button type="button" variant="outline" onClick={() => setAddMemberOpen(true)}>
-                  Add member
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+            ) : null}
+          </AdminSectionCard>
 
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick updates</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <AdminSectionCard title="Update organization" description="Persisted through Convex admin mutations.">
+              <div className="space-y-3">
                 <Input value={name} onChange={(event) => setName(event.currentTarget.value)} placeholder="Organization name" />
                 <Select
                   aria-label="Organization type"
                   value={type}
-                  onChange={(event) => setType(event.currentTarget.value as AdminOrganizationType)}
+                  onChange={(event) => setType(event.currentTarget.value as (typeof typeOptions)[number]["value"])}
                   options={typeOptions.map((option) => ({ value: option.value, label: option.label }))}
                 />
-                <Input value={maxSeats} onChange={(event) => setMaxSeats(event.currentTarget.value)} placeholder="Max seats" />
-                <Textarea value={editReason} onChange={(event) => setEditReason(event.currentTarget.value)} placeholder="Reason for this update" rows={3} />
-                <Button type="button" className="w-full" onClick={() => setNotice("Planned mutation: `updateOrganization`.")}>
+                <Input
+                  value={maxSeats}
+                  onChange={(event) => setMaxSeats(event.currentTarget.value)}
+                  placeholder="Max seats"
+                />
+                <Input
+                  value={billingEmail}
+                  onChange={(event) => setBillingEmail(event.currentTarget.value)}
+                  placeholder="Billing email"
+                />
+                <Textarea
+                  value={notes}
+                  onChange={(event) => setNotes(event.currentTarget.value)}
+                  placeholder="Notes"
+                  rows={3}
+                />
+                <Button className="w-full" onClick={() => void handleUpdateOrganization()} isLoading={pendingAction === "update"}>
                   Save changes
                 </Button>
-              </CardContent>
-            </Card>
+              </div>
+            </AdminSectionCard>
+
+            <AdminSectionCard title="Organization actions" description="Suspend this organization or add a new member.">
+              <div className="space-y-3">
+                <Button
+                  className="w-full"
+                  variant="outline"
+                  onClick={() => void handleSuspendOrganization()}
+                  isLoading={pendingAction === "suspend"}
+                >
+                  Suspend organization
+                </Button>
+                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4 text-sm text-[color:var(--muted-foreground)]">
+                  Organization restore is not exposed by the current backend mutation set.
+                </div>
+              </div>
+            </AdminSectionCard>
           </div>
         </div>
       ) : null}
 
       {tab === "members" ? (
-        <Card>
-          <CardHeader className="flex items-center justify-between gap-4">
-            <CardTitle>Members</CardTitle>
-            <Button type="button" onClick={() => setAddMemberOpen(true)}>
-              Add member
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <table className="min-w-full divide-y divide-[color:var(--border)] text-sm">
-              <thead className="text-left text-xs uppercase tracking-[0.16em] text-[color:var(--muted-foreground)]">
-                <tr>
-                  <th className="py-3 pr-4">Name</th>
-                  <th className="px-4 py-3">Email</th>
-                  <th className="px-4 py-3">Role</th>
-                  <th className="px-4 py-3">Joined</th>
-                  <th className="px-4 py-3 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[color:var(--border)]">
-                {organization.members.map((member) => (
-                  <tr key={member.id}>
-                    <td className="py-3 pr-4 font-medium text-[color:var(--foreground)]">{member.name}</td>
-                    <td className="px-4 py-3 text-[color:var(--foreground)]">{member.email}</td>
-                    <td className="px-4 py-3">{badge({ children: member.role, kind: member.role === "owner" ? "admin" : "muted" })}</td>
-                    <td className="px-4 py-3 text-[color:var(--muted-foreground)]">{formatDate(member.joinedAt)}</td>
-                    <td className="px-4 py-3 text-right">
-                      <Button type="button" variant="outline" size="sm" onClick={() => setNotice("Planned mutation: `removeOrgMember`.")}>
-                        Remove
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
+        <div className="space-y-6">
+          <AdminSectionCard title="Add member" description="Use a live Convex user ID and assign a role.">
+            <div className="grid gap-3 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto]">
+              <Input
+                value={memberUserId}
+                onChange={(event) => setMemberUserId(event.currentTarget.value)}
+                placeholder="User ID"
+              />
+              <Select
+                aria-label="Member role"
+                value={memberRole}
+                onChange={(event) => setMemberRole(event.currentTarget.value as (typeof roleOptions)[number]["value"])}
+                options={roleOptions.map((option) => ({ value: option.value, label: option.label }))}
+              />
+              <Button onClick={() => void handleAddMember()} isLoading={pendingAction === "member-add"}>
+                Add member
+              </Button>
+            </div>
+          </AdminSectionCard>
+
+          <AdminSectionCard title="Members" description="Live membership rows from Convex.">
+            {members.length === 0 ? (
+              <EmptyState title="No members" description="This organization has no live membership rows." />
+            ) : (
+              <AdminTable>
+                <AdminTableHead columns={["Name", "Email", "Role", "Joined", "Action"]} />
+                <tbody>
+                  {members.map((member) => (
+                    <AdminTableRow key={member.id}>
+                      <AdminTableCell className="font-medium">{member.name}</AdminTableCell>
+                      <AdminTableCell>{member.email}</AdminTableCell>
+                      <AdminTableCell>
+                        <AdminStatusPill tone={member.role === "owner" ? "success" : "neutral"}>
+                          {member.role}
+                        </AdminStatusPill>
+                      </AdminTableCell>
+                      <AdminTableCell>{formatAdminDate(member.joinedAt)}</AdminTableCell>
+                      <AdminTableCell>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => void handleRemoveMember(member.id as Id<"organization_members">)}
+                          isLoading={pendingAction === `remove-${member.id}`}
+                        >
+                          Remove
+                        </Button>
+                      </AdminTableCell>
+                    </AdminTableRow>
+                  ))}
+                </tbody>
+              </AdminTable>
+            )}
+          </AdminSectionCard>
+        </div>
       ) : null}
 
       {tab === "billing" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Billing</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {organization.billing.map((item) => (
-              <div key={item.item} className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
-                <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">{item.item}</div>
-                <div className="mt-2 text-sm text-[color:var(--foreground)]">{item.value}</div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        <AdminSectionCard title="Billing" description="Current subscription rows linked to this organization.">
+          {subscriptions.length === 0 ? (
+            <EmptyState title="No subscriptions" description="This organization has no subscription rows." />
+          ) : (
+            <AdminTable>
+              <AdminTableHead columns={["Plan", "Status", "Starts", "Ends"]} />
+              <tbody>
+                {subscriptions.map((subscription: Doc<"subscriptions">) => (
+                  <AdminTableRow key={String(subscription._id)}>
+                    <AdminTableCell className="font-medium">{String(subscription.planId)}</AdminTableCell>
+                    <AdminTableCell>{subscription.status}</AdminTableCell>
+                    <AdminTableCell>{formatAdminDate(subscription.startsAt)}</AdminTableCell>
+                    <AdminTableCell>{formatAdminDate(subscription.endsAt)}</AdminTableCell>
+                  </AdminTableRow>
+                ))}
+              </tbody>
+            </AdminTable>
+          )}
+        </AdminSectionCard>
       ) : null}
 
       {tab === "audit" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Audit trail</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {organization.auditTrail.map((entry) => (
-              <div key={`${entry.action}-${entry.time}`} className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="font-medium text-[color:var(--foreground)]">{entry.action}</div>
-                  <div className="text-xs text-[color:var(--muted-foreground)]">{formatDate(entry.time)}</div>
-                </div>
-                <div className="mt-2 text-sm text-[color:var(--muted-foreground)]">Target: {entry.target}</div>
-                <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">Admin: {entry.admin}</div>
-                <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">Reason: {entry.reason}</div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        <AdminSectionCard title="Audit trail" description="Live admin audit entries for this organization.">
+          {auditLogs.length === 0 ? (
+            <EmptyState title="No audit entries" description="This organization has no audit trail entries." />
+          ) : (
+            <AdminTable>
+              <AdminTableHead columns={["Time", "Action", "Reason"]} />
+              <tbody>
+                {auditLogs.map((entry: Doc<"admin_audit_logs">) => (
+                  <AdminTableRow key={String(entry._id)}>
+                    <AdminTableCell className="font-medium">{formatAdminDate(entry.occurredAt)}</AdminTableCell>
+                    <AdminTableCell>{entry.action}</AdminTableCell>
+                    <AdminTableCell>{entry.reason ?? "—"}</AdminTableCell>
+                  </AdminTableRow>
+                ))}
+              </tbody>
+            </AdminTable>
+          )}
+        </AdminSectionCard>
       ) : null}
-
-      <AccessibleDialog
-        open={addMemberOpen}
-        title="Add member"
-        description="Search for a user and assign an organization role."
-        onClose={() => setAddMemberOpen(false)}
-      >
-        <div className="space-y-4">
-          <Input value={memberEmail} onChange={(event) => setMemberEmail(event.currentTarget.value)} placeholder="User email" />
-          <Select
-            aria-label="Member role"
-            value={memberRole}
-            onChange={(event) => setMemberRole(event.currentTarget.value)}
-            options={[
-              { value: "owner", label: "owner" },
-              { value: "staff", label: "staff" },
-              { value: "fitter", label: "fitter" },
-              { value: "viewer", label: "viewer" },
-            ]}
-          />
-          <Textarea value={memberReason} onChange={(event) => setMemberReason(event.currentTarget.value)} placeholder="Reason for access change" rows={3} />
-          <Button
-            type="button"
-            className="w-full"
-            onClick={() => {
-              setAddMemberOpen(false);
-              setNotice("Planned mutation: `addOrgMember`.");
-            }}
-          >
-            Add member
-          </Button>
-        </div>
-      </AccessibleDialog>
     </div>
   );
 }
 
-function ProfileField({ label, value }: { label: string; value: string }) {
+function Field({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
       <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">{label}</div>

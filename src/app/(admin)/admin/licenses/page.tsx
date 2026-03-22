@@ -7,7 +7,7 @@ export default function AdminLicensesPage() {
       <AdminPageHeader
         eyebrow="Admin / Billing"
         title="License catalog"
-        description="Plan definitions, entitlement flags, and plan management in the shared Prototyper UI surface."
+        description="Live billing plan definitions, pricing contracts, and read-only blockers for roles without mutation access."
       />
       <BillingCatalogView />
     </div>

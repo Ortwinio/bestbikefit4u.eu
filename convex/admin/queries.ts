@@ -40,6 +40,10 @@ async function requireMessagingRead(ctx: QueryCtx) {
   return requireAnyRole(ctx, ["super_admin", "ops_admin", "support_admin", "qa_manager"]);
 }
 
+async function requireGdprAdminRead(ctx: QueryCtx) {
+  return requireAnyRole(ctx, ["super_admin", "ops_admin", "support_admin", "billing_admin"]);
+}
+
 export const getCurrentAdminUser = query({
   args: {},
   handler: async (ctx) => {
@@ -710,6 +714,7 @@ export const listAuditLogs = query({
     adminUserId: v.optional(v.id("users")),
     targetType: v.optional(v.string()),
     targetId: v.optional(v.string()),
+    actionPrefix: v.optional(v.string()),
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
@@ -721,6 +726,9 @@ export const listAuditLogs = query({
         if (args.adminUserId) predicates.push(q.eq(q.field("adminUserId"), args.adminUserId));
         if (args.targetType) predicates.push(q.eq(q.field("targetType"), args.targetType));
         if (args.targetId) predicates.push(q.eq(q.field("targetId"), args.targetId));
+        if (args.actionPrefix) {
+          predicates.push(q.gte(q.field("action"), args.actionPrefix));
+        }
         return predicates.length > 0 ? q.and(...predicates) : q.eq(q.field("action"), q.field("action"));
       })
       .paginate(args.paginationOpts);
@@ -834,12 +842,24 @@ export const listBillingEvents = query({
 export const listGdprRequests = query({
   args: { paginationOpts: paginationOptsValidator },
   handler: async (ctx, args) => {
-    await requireBillingAdminRead(ctx);
+    await requireGdprAdminRead(ctx);
     return await ctx.db
       .query("gdpr_requests")
       .withIndex("by_received_at")
       .order("desc")
       .paginate(args.paginationOpts);
+  },
+});
+
+export const getGdprRequestDetail = query({
+  args: { requestId: v.id("gdpr_requests") },
+  handler: async (ctx, { requestId }) => {
+    await requireGdprAdminRead(ctx);
+    const request = await ctx.db.get(requestId);
+    if (!request) return null;
+    const subjectUser = request.subjectUserId ? await ctx.db.get(request.subjectUserId) : null;
+    const creator = await ctx.db.get(request.createdBy);
+    return { request, subjectUser, creator };
   },
 });
 
@@ -922,3 +942,6 @@ export const listAdminSubscriptions = listSubscriptions;
 export const getAdminSubscriptionDetail = getSubscriptionDetail;
 export const listAdminBillingEvents = listBillingEvents;
 export const listAdminGdprRequests = listGdprRequests;
+export const getAdminGdprRequestDetail = getGdprRequestDetail;
+export const listAdminAuditLogs = listAuditLogs;
+export const listAdminFeatureFlags = getFeatureFlags;

@@ -1,11 +1,20 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Input } from "@/components/ui/Input";
-import { Textarea } from "@/components/ui/Textarea";
-import { StatusPill } from "@/components/admin/shared/StatusPill";
+import { useState } from "react";
+import { api } from "../../../../../../convex/_generated/api";
+import { useAction } from "convex/react";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  EmptyState,
+  Input,
+  Textarea,
+} from "@/components/ui";
+import { ErrorState } from "@/components/ui";
+import { StatusPill as SharedStatusPill } from "@/components/admin/shared/StatusPill";
 
 function parsePreviewRows(csv: string) {
   const lines = csv.trim().split("\n").filter(Boolean);
@@ -28,11 +37,30 @@ function parsePreviewRows(csv: string) {
 }
 
 export default function GeometryImportPage() {
-  const [csv, setCsv] = useState("brand_slug,model_name,category,size_label,stack,reach\ncanyon,Endurace CF SLX,endurance,54,571,387");
+  const importGeometryFromCsv = useAction(api.admin.actions.importGeometryFromCsv);
+  const [csv, setCsv] = useState(
+    "brand_slug,model_name,category,size_label,stack,reach\ncanyon,Endurace CF SLX,endurance,54,571,387"
+  );
   const [fileName, setFileName] = useState("manual-paste.csv");
-  const [previewReady, setPreviewReady] = useState(true);
+  const [previewResult, setPreviewResult] = useState<{
+    rowsProcessed: number;
+    recordsCreated: number;
+    errors: string[];
+    previewRows: string[];
+  } | null>(null);
+  const [isPreviewing, setIsPreviewing] = useState(false);
 
-  const previewRows = useMemo(() => parsePreviewRows(csv), [csv]);
+  const parsedRows = parsePreviewRows(csv);
+
+  async function handlePreview() {
+    setIsPreviewing(true);
+    try {
+      const result = await importGeometryFromCsv({ csvContent: csv });
+      setPreviewResult(result);
+    } finally {
+      setIsPreviewing(false);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -43,68 +71,113 @@ export default function GeometryImportPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Upload or paste CSV</CardTitle>
+          <CardTitle>Preview live import input</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Input label="File name" value={fileName} onChange={(event) => setFileName(event.target.value)} />
-          <input
-            type="file"
-            accept=".csv"
-            className="block w-full rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (file) {
-                setFileName(file.name);
-              }
-            }}
+          <Input
+            label="File name"
+            value={fileName}
+            onChange={(event) => setFileName(event.target.value)}
           />
           <Textarea
             label="CSV content"
             rows={10}
             value={csv}
-            onChange={(event) => {
-              setCsv(event.target.value);
-              setPreviewReady(false);
-            }}
+            onChange={(event) => setCsv(event.target.value)}
           />
-          <div className="flex gap-2">
-            <Button onClick={() => setPreviewReady(true)}>Preview first 5 rows</Button>
-            <Button variant="outline">Import records</Button>
+          <div className="flex flex-wrap gap-2">
+            <Button isLoading={isPreviewing} onClick={() => void handlePreview()}>
+              Run import preview
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCsv(
+                  "brand_slug,model_name,category,size_label,stack,reach\ncanyon,Endurace CF SLX,endurance,54,571,387"
+                );
+                setFileName("manual-paste.csv");
+                setPreviewResult(null);
+              }}
+            >
+              Reset sample
+            </Button>
           </div>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="flex-row items-center justify-between">
-          <CardTitle>Preview</CardTitle>
-          <StatusPill tone={previewReady ? "success" : "warning"}>{previewReady ? "ready" : "needs refresh"}</StatusPill>
-        </CardHeader>
-        <CardContent className="p-0">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]">
-              <tr>
-                <th className="px-4 py-3 font-medium">Brand</th>
-                <th className="px-4 py-3 font-medium">Model</th>
-                <th className="px-4 py-3 font-medium">Category</th>
-                <th className="px-4 py-3 font-medium">Size</th>
-                <th className="px-4 py-3 font-medium">Stack / Reach</th>
-              </tr>
-            </thead>
-            <tbody>
-              {previewRows.map((row) => (
-                <tr key={row.id} className="border-t border-[color:var(--border)]">
-                  <td className="px-4 py-4">{row.brandSlug}</td>
-                  <td className="px-4 py-4">{row.modelName}</td>
-                  <td className="px-4 py-4">{row.category}</td>
-                  <td className="px-4 py-4">{row.sizeLabel}</td>
-                  <td className="px-4 py-4">{row.stack} / {row.reach}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </CardContent>
-      </Card>
+      <ErrorState
+        title="Geometry import persistence is still backend-limited"
+        description="The action can parse CSV and return a preview, but there is no end-to-end persisted import pipeline yet. Use this page to validate the incoming payload before wiring a real importer."
+      />
+
+      {previewResult === null ? (
+        <EmptyState
+          title="No preview run yet"
+          description="Run the preview to inspect parsed rows before any future persistence work."
+        />
+      ) : previewResult.errors.length > 0 ? (
+        <ErrorState
+          title="Import preview reported issues"
+          description={previewResult.errors.join(" • ")}
+        />
+      ) : (
+        <Card>
+          <CardHeader className="flex-row items-center justify-between">
+            <CardTitle>Preview results</CardTitle>
+            <SharedStatusPill tone="success">
+              {previewResult.recordsCreated} records ready
+            </SharedStatusPill>
+          </CardHeader>
+          <CardContent className="space-y-4 p-0">
+            <div className="grid gap-4 px-4 pt-4 md:grid-cols-3">
+              <Card variant="bordered">
+                <CardContent className="pt-6">
+                  <div className="text-sm text-[color:var(--muted-foreground)]">Rows processed</div>
+                  <div className="mt-2 text-3xl font-semibold">{previewResult.rowsProcessed}</div>
+                </CardContent>
+              </Card>
+              <Card variant="bordered">
+                <CardContent className="pt-6">
+                  <div className="text-sm text-[color:var(--muted-foreground)]">File name</div>
+                  <div className="mt-2 text-sm">{fileName}</div>
+                </CardContent>
+              </Card>
+              <Card variant="bordered">
+                <CardContent className="pt-6">
+                  <div className="text-sm text-[color:var(--muted-foreground)]">Preview rows</div>
+                  <div className="mt-2 text-sm">{parsedRows.length}</div>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)]">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]">
+                  <tr>
+                    <th className="px-4 py-3 font-medium">Brand</th>
+                    <th className="px-4 py-3 font-medium">Model</th>
+                    <th className="px-4 py-3 font-medium">Category</th>
+                    <th className="px-4 py-3 font-medium">Size</th>
+                    <th className="px-4 py-3 font-medium">Stack / Reach</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {parsedRows.map((row) => (
+                    <tr key={row.id} className="border-t border-[color:var(--border)]">
+                      <td className="px-4 py-4">{row.brandSlug}</td>
+                      <td className="px-4 py-4">{row.modelName}</td>
+                      <td className="px-4 py-4">{row.category}</td>
+                      <td className="px-4 py-4">{row.sizeLabel}</td>
+                      <td className="px-4 py-4">
+                        {row.stack} / {row.reach}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
-
