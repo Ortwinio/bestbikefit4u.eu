@@ -13,4 +13,10 @@ crons.weekly(
   internal.integrations.actions.scanLowUseBikes
 );
 
+crons.interval(
+  "strava login-triggered bike auto-import",
+  { minutes: 10 },
+  internal.integrations.actions.scanStravaAutoImportCandidates
+);
+
 export default crons;

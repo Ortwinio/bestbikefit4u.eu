@@ -104,6 +104,42 @@ export const getStravaIntegrationForUser = internalQuery({
   },
 });
 
+export const getImportedStravaGearIdsForUser = internalQuery({
+  args: { userId: v.id("users") },
+  handler: async (ctx, { userId }) => {
+    const bikes = await ctx.db
+      .query("bikes")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+
+    return bikes
+      .map((bike) => bike.stravaGearId)
+      .filter((gearId): gearId is string => Boolean(gearId));
+  },
+});
+
+export const getStravaAutoImportCandidates = internalQuery({
+  args: {},
+  handler: async (ctx) => {
+    const integrations = await ctx.db
+      .query("integrations")
+      .withIndex("by_status", (q) => q.eq("accessStatus", "active"))
+      .collect();
+
+    const candidates = [];
+    for (const integration of integrations) {
+      const user = await ctx.db.get(integration.userId);
+      candidates.push({
+        userId: integration.userId,
+        lastLoginAt: user?.lastLoginAt ?? null,
+        lastSyncAt: integration.lastSyncAt ?? null,
+      });
+    }
+
+    return candidates;
+  },
+});
+
 export const getLowUseReminderCandidates = internalQuery({
   args: {},
   handler: async (ctx) => {

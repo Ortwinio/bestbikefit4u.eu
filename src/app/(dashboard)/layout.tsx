@@ -10,6 +10,7 @@ import { Button, LoadingState } from "@/components/ui";
 import { DashboardMessageSurface } from "@/components/dashboard-messages";
 import { FeedbackDialog, FeedbackFloatingButton } from "@/components/feedback";
 import { getFeedbackRouteContext } from "@/components/feedback/route-context";
+import { StravaAutoImportTrigger } from "@/components/integrations/StravaAutoImportTrigger";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import { BRAND } from "@/config/brand";
 import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
@@ -172,6 +173,10 @@ export default function DashboardLayout({
 
       <div className="md:pl-64">
         <main id="main-content" tabIndex={-1} className="p-4 sm:p-6 md:p-8">
+          <StravaAutoImportTrigger
+            userId={user?._id ?? null}
+            lastLoginAt={user?.lastLoginAt ?? null}
+          />
           <DashboardMessageSurface
             showHomeCards={false}
             showModal={false}

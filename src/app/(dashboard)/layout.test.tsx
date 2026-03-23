@@ -2,13 +2,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 
-const { usePathnameMock, useRouterMock, useConvexAuthMock } = vi.hoisted(() => ({
+const { usePathnameMock, useRouterMock, useConvexAuthMock, useQueryMock } = vi.hoisted(() => ({
   usePathnameMock: vi.fn(),
   useRouterMock: vi.fn(() => ({ replace: vi.fn() })),
   useConvexAuthMock: vi.fn(() => ({
     isLoading: false,
     isAuthenticated: true,
   })),
+  useQueryMock: vi.fn(() => ({ _id: "user_1", adminRole: null })),
 }));
 
 vi.mock("next/navigation", () => ({
@@ -18,6 +19,7 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("convex/react", () => ({
   useConvexAuth: useConvexAuthMock,
+  useQuery: useQueryMock,
 }));
 
 vi.mock("@/components/ui", () => ({
@@ -56,6 +58,10 @@ vi.mock("@/components/feedback", () => ({
       data-linked-session-id={linkedSessionId ?? ""}
     />
   ),
+}));
+
+vi.mock("@/components/integrations/StravaAutoImportTrigger", () => ({
+  StravaAutoImportTrigger: () => null,
 }));
 
 vi.mock("@/i18n/useDashboardMessages", () => ({
