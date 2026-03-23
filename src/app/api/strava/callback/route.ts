@@ -20,11 +20,6 @@ function resolveConvexSiteUrl(): string {
 export async function GET(request: Request) {
   const incoming = new URL(request.url);
   const convexSiteUrl = resolveConvexSiteUrl();
-  const target = new URL(`${convexSiteUrl}/strava/callback`);
-
-  incoming.searchParams.forEach((value, key) => {
-    target.searchParams.set(key, value);
-  });
-
-  return Response.redirect(target.toString(), 307);
+  const rawSearch = incoming.search || "";
+  return Response.redirect(`${convexSiteUrl}/strava/callback${rawSearch}`, 307);
 }
