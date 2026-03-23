@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import type { DashboardMessage, DashboardMessageGroups, DashboardMessageId } from "./types";
 import { groupDashboardMessages } from "./utils";
 
@@ -72,7 +73,8 @@ export type UseDashboardMessageFeedResult = {
 };
 
 export function useDashboardMessageFeed(): UseDashboardMessageFeedResult {
-  const messages = useQuery(api.messages.queries.getMyMessages);
+  const { locale } = useDashboardMessages();
+  const messages = useQuery(api.messages.queries.getMyMessages, { locale });
   const markViewedMutation = useMutation(api.messages.mutations.markMessageViewed);
   const clickMutation = useMutation(api.messages.mutations.markMessageClicked);
   const dismissMutation = useMutation(api.messages.mutations.markMessageDismissed);
