@@ -127,8 +127,8 @@ export const initiateStravaConnect = action({
     }
 
     const clientId = requireEnv("STRAVA_CLIENT_ID");
-    const convexSiteUrl = requireEnv("CONVEX_SITE_URL");
-    const redirectUri = `${convexSiteUrl}/strava/callback`;
+    const siteUrl = requireEnv("SITE_URL");
+    const redirectUri = `${siteUrl}/api/strava/callback`;
     const state = generateState();
 
     await ctx.runMutation(internal.integrations.mutations.upsertStravaIntegration, {
