@@ -54,6 +54,7 @@ type StravaStatusLike = {
 };
 
 export interface StravaBikeImportSectionProps {
+  id?: string;
   strava: StravaStatusLike | null | undefined;
   userBikes: LocalBikeSnapshot[] | undefined;
 }
@@ -67,6 +68,7 @@ function bikeTypeLabelOrder(messages: ReturnType<typeof useDashboardMessages>["m
 }
 
 export function StravaBikeImportSection({
+  id,
   strava,
   userBikes,
 }: StravaBikeImportSectionProps) {
@@ -317,7 +319,10 @@ export function StravaBikeImportSection({
   }
 
   return (
-    <div className="mt-4 rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
+    <div
+      id={id}
+      className="mt-4 rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--card)] p-4"
+    >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-sm font-semibold text-[color:var(--foreground)]">

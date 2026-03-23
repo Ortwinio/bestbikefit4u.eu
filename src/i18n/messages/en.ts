@@ -1129,6 +1129,7 @@ const en = {
           "Connect Strava to bring your recent riding context into tyre-pressure guidance.",
         connectStrava: "Connect Strava",
         disconnectStrava: "Disconnect",
+        importStravaData: "Import Strava data",
         syncNow: "Sync now",
         connected: "Connected",
         available: "Available",

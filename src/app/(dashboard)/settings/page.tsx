@@ -30,7 +30,7 @@ import {
 } from "@/lib/userIdentity";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { CheckCircle2, Trash2, XCircle } from "lucide-react";
+import { CheckCircle2, Trash2 } from "lucide-react";
 
 // Separate component so useSearchParams() is inside a Suspense boundary
 function StravaCallbackToast() {
@@ -311,22 +311,28 @@ export default function SettingsPage() {
                     {messages.settings.integrations.stravaDescription}
                   </p>
                 </div>
-                {/* Status badge */}
-                <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-1 text-xs font-semibold shadow-sm">
-                  {strava?.accessStatus === "active" ? (
-                    <>
-                      <CheckCircle2 className="h-3.5 w-3.5 text-[color:var(--success,green)]" />
-                      <span className="text-[color:var(--foreground)]">{messages.settings.integrations.connected}</span>
-                    </>
-                  ) : strava?.accessStatus === "error" ? (
-                    <>
-                      <XCircle className="h-3.5 w-3.5 text-[color:var(--destructive)]" />
-                      <span className="text-[color:var(--destructive)]">{messages.settings.integrations.error}</span>
-                    </>
-                  ) : (
-                    <span className="text-[color:var(--muted-foreground)]">{messages.settings.integrations.available}</span>
-                  )}
-                </span>
+                {strava?.accessStatus === "active" ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled
+                    className="shrink-0"
+                  >
+                    <CheckCircle2 className="h-4 w-4 text-[color:var(--success,green)]" />
+                    {messages.settings.integrations.connected}
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    onClick={() => setShowStravaConsentInline((current) => !current)}
+                    isLoading={isConnectingStrava}
+                    className="shrink-0"
+                  >
+                    {strava?.accessStatus === "error"
+                      ? messages.settings.integrations.reconnect
+                      : messages.settings.integrations.connectStrava}
+                  </Button>
+                )}
               </div>
 
               {/* Connected state: athlete info */}
@@ -352,29 +358,34 @@ export default function SettingsPage() {
                 </div>
               ) : null}
 
-              <StravaBikeImportSection strava={strava} userBikes={userBikes} />
+              <StravaBikeImportSection
+                id="strava-bike-import"
+                strava={strava}
+                userBikes={userBikes}
+              />
 
               {/* Actions */}
               <div className="mt-4 flex flex-wrap gap-3">
                 {strava?.accessStatus === "active" ? (
                   <>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       onClick={() => setShowStravaDisconnect(true)}
                     >
                       {messages.settings.integrations.disconnectStrava}
                     </Button>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        document
+                          .getElementById("strava-bike-import")
+                          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }}
+                    >
+                      {messages.settings.integrations.importStravaData}
+                    </Button>
                   </>
-                ) : (
-                  <Button
-                    onClick={() => setShowStravaConsentInline((current) => !current)}
-                    isLoading={isConnectingStrava}
-                  >
-                    {strava?.accessStatus === "error"
-                      ? messages.settings.integrations.reconnect
-                      : messages.settings.integrations.connectStrava}
-                  </Button>
-                )}
+                ) : null}
               </div>
 
               {strava?.accessStatus !== "active" && showStravaConsentInline ? (

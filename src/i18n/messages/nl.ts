@@ -1137,6 +1137,7 @@ const nl = {
           "Koppel Strava om recente ritcontext mee te nemen in bandenspanningsadvies.",
         connectStrava: "Strava koppelen",
         disconnectStrava: "Ontkoppelen",
+        importStravaData: "Strava-data importeren",
         syncNow: "Nu synchroniseren",
         connected: "Verbonden",
         available: "Beschikbaar",
