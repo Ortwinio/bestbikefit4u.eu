@@ -93,47 +93,49 @@ export function DashboardSidebar() {
           <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
         </div>
 
-        <nav className="flex-1 space-y-1 px-3 py-4">
-          {navigation.map((item) => {
-            const isActive =
-              internalPathname === item.href ||
-              internalPathname.startsWith(item.href + "/");
-            return (
-              <Link
-                key={item.name}
-                href={toLocalizedPath(item.href)}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  isActive
-                    ? "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--secondary)_86%)] text-[color:var(--foreground)] shadow-sm"
-                    : "text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
-                )}
-              >
-                <item.icon className="h-5 w-5" />
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {isSuperAdmin && (
-          <div className="border-t border-[color:var(--border)] px-3 py-3">
-            <p className="px-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
-              {messages.layout.sections.admin}
-            </p>
-            <div className="mt-2 space-y-1">
-              {adminNavigation.map((item) => (
+        <div className="flex-1 overflow-y-auto px-3 py-4">
+          <nav className="space-y-1">
+            {navigation.map((item) => {
+              const isActive =
+                internalPathname === item.href ||
+                internalPathname.startsWith(item.href + "/");
+              return (
                 <Link
-                  key={item.href}
-                  href={item.href}
-                  className="block rounded-lg px-3 py-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+                  key={item.name}
+                  href={toLocalizedPath(item.href)}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    isActive
+                      ? "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--secondary)_86%)] text-[color:var(--foreground)] shadow-sm"
+                      : "text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+                  )}
                 >
+                  <item.icon className="h-5 w-5" />
                   {item.name}
                 </Link>
-              ))}
+              );
+            })}
+          </nav>
+
+          {isSuperAdmin && (
+            <div className="mt-6">
+              <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                {messages.layout.sections.admin}
+              </p>
+              <div className="space-y-1">
+                {adminNavigation.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="block rounded-lg px-3 py-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         <div className="border-t border-[color:var(--border)] px-3 py-3">
           <p className="px-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
