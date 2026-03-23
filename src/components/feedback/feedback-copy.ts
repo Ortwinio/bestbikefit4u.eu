@@ -62,6 +62,10 @@ type FeedbackCopy = {
     string
   >;
   releaseStatuses: Record<"rolling_out" | "live", string>;
+  releaseTypes: Record<
+    "app" | "fit_engine" | "geometry_data" | "content" | "integration" | "internal",
+    string
+  >;
   actions: {
     viewDetails: string;
     upvote: string;
@@ -164,19 +168,27 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       },
     },
     statuses: {
-      new: "New",
-      triaged: "Triaged",
+      new: "Received",
+      triaged: "Under review",
       needs_info: "Needs info",
       planned: "Planned",
       in_progress: "In progress",
-      in_qa: "In QA",
+      in_qa: "Testing",
       released: "Released",
       closed: "Closed",
-      declined: "Declined",
+      declined: "Not planned",
     },
     releaseStatuses: {
       rolling_out: "Rolling out",
       live: "Live",
+    },
+    releaseTypes: {
+      app: "App",
+      fit_engine: "Fit engine",
+      geometry_data: "Geometry data",
+      content: "Content",
+      integration: "Integration",
+      internal: "Internal",
     },
     actions: {
       viewDetails: "View details",
@@ -278,19 +290,27 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       },
     },
     statuses: {
-      new: "Nieuw",
-      triaged: "Beoordeeld",
+      new: "Ontvangen",
+      triaged: "In beoordeling",
       needs_info: "Meer info nodig",
       planned: "Gepland",
       in_progress: "In uitvoering",
-      in_qa: "In test",
+      in_qa: "In testfase",
       released: "Uitgebracht",
       closed: "Gesloten",
-      declined: "Afgewezen",
+      declined: "Niet gepland",
     },
     releaseStatuses: {
       rolling_out: "Uitrol bezig",
       live: "Live",
+    },
+    releaseTypes: {
+      app: "App",
+      fit_engine: "Fit-engine",
+      geometry_data: "Geometriedata",
+      content: "Content",
+      integration: "Integratie",
+      internal: "Intern",
     },
     actions: {
       viewDetails: "Details bekijken",

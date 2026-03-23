@@ -15,6 +15,13 @@ export type FeedbackStatus =
   | "declined";
 export type FeedbackPriority = "low" | "normal" | "high" | "urgent";
 export type ReleaseStatus = "rolling_out" | "live";
+export type ReleaseType =
+  | "app"
+  | "fit_engine"
+  | "geometry_data"
+  | "content"
+  | "integration"
+  | "internal";
 
 export type FeedbackCommentView = {
   _id?: string;
@@ -80,7 +87,7 @@ export type PublicReleaseRow = {
   _id: Id<"releases">;
   name: string;
   versionLabel?: string;
-  type: string;
+  type: ReleaseType;
   status: ReleaseStatus;
   releaseNotes?: string;
   liveAt?: number;
