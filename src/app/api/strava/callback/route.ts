@@ -21,5 +21,15 @@ export async function GET(request: Request) {
   const incoming = new URL(request.url);
   const convexSiteUrl = resolveConvexSiteUrl();
   const rawSearch = incoming.search || "";
-  return Response.redirect(`${convexSiteUrl}/strava/callback${rawSearch}`, 307);
+  const response = await fetch(`${convexSiteUrl}/strava/callback${rawSearch}`, {
+    method: "GET",
+    redirect: "manual",
+  });
+
+  const location = response.headers.get("location");
+  if (location) {
+    return Response.redirect(location, response.status);
+  }
+
+  return new Response("Strava callback failed", { status: 502 });
 }
