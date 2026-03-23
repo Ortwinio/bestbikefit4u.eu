@@ -2,6 +2,15 @@ import { v } from "convex/values";
 import { mutation } from "../_generated/server";
 import { requireUserId } from "../lib/authz";
 
+const OPEN_FEATURE_STATUSES = new Set([
+  "new",
+  "triaged",
+  "needs_info",
+  "planned",
+  "in_progress",
+  "in_qa",
+]);
+
 export const submitFeedback = mutation({
   args: {
     type: v.union(
@@ -21,6 +30,20 @@ export const submitFeedback = mutation({
   },
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
+    if (args.linkedBikeId) {
+      const linkedBike = await ctx.db.get(args.linkedBikeId);
+      if (!linkedBike || linkedBike.userId !== userId) {
+        throw new Error("Invalid linked bike");
+      }
+    }
+
+    if (args.linkedSessionId) {
+      const linkedSession = await ctx.db.get(args.linkedSessionId);
+      if (!linkedSession || linkedSession.userId !== userId) {
+        throw new Error("Invalid linked session");
+      }
+    }
+
     const now = Date.now();
     const feedbackItemId = await ctx.db.insert("feedback_items", {
       ...args,
@@ -57,6 +80,9 @@ export const upvoteFeedbackItem = mutation({
     }
     if (feedbackItem.type !== "feature_request") {
       throw new Error("Only feature requests can be upvoted");
+    }
+    if (!OPEN_FEATURE_STATUSES.has(feedbackItem.status)) {
+      throw new Error("This feature request can no longer be voted on");
     }
 
     const existingUpvote = await ctx.db

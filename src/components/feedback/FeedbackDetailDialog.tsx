@@ -42,13 +42,13 @@ export function FeedbackDetailDialog({
       ) : detail ? (
         <div className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
-            <Card className="border border-[color:var(--border)]">
+            <Card className="dashboard-card-surface border border-[color:var(--border)]">
               <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                 {copy.dialog.titleLabel}
               </p>
               <p className="mt-1 text-sm text-[color:var(--foreground)]">{detail.item.title}</p>
             </Card>
-            <Card className="border border-[color:var(--border)]">
+            <Card className="dashboard-card-surface border border-[color:var(--border)]">
               <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                 {copy.dialog.pagePathLabel}
               </p>
@@ -61,7 +61,7 @@ export function FeedbackDetailDialog({
           {detail.item.expectedResult || detail.item.actualResult ? (
             <div className="grid gap-3 lg:grid-cols-2">
               {detail.item.expectedResult ? (
-                <Card className="border border-[color:var(--border)]">
+                <Card className="dashboard-card-surface border border-[color:var(--border)]">
                   <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                     {copy.dialog.expectedResultLabel}
                   </p>
@@ -71,7 +71,7 @@ export function FeedbackDetailDialog({
                 </Card>
               ) : null}
               {detail.item.actualResult ? (
-                <Card className="border border-[color:var(--border)]">
+                <Card className="dashboard-card-surface border border-[color:var(--border)]">
                   <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                     {copy.dialog.actualResultLabel}
                   </p>
@@ -84,7 +84,7 @@ export function FeedbackDetailDialog({
           ) : null}
 
           {detail.item.browserInfoJson ? (
-            <Card className="border border-[color:var(--border)]">
+            <Card className="dashboard-card-surface border border-[color:var(--border)]">
               <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                 {copy.dialog.browserInfoLabel}
               </p>
@@ -95,7 +95,7 @@ export function FeedbackDetailDialog({
           ) : null}
 
           {detail.item.linkedRelease ? (
-            <Card className="border border-[color:var(--border)]">
+            <Card className="dashboard-card-surface border border-[color:var(--border)]">
               <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                 {copy.states.linkedRelease}
               </p>
@@ -125,7 +125,10 @@ export function FeedbackDetailDialog({
             ) : (
               <div className="space-y-3">
                 {detail.item.comments.map((comment, index) => (
-                  <Card key={`${comment.createdAt}-${index}`} className="border border-[color:var(--border)]">
+                  <Card
+                    key={`${comment.createdAt}-${index}`}
+                    className="dashboard-card-surface border border-[color:var(--border)]"
+                  >
                     <div className="flex items-start justify-between gap-3">
                       <p className="text-sm font-medium text-[color:var(--foreground)]">
                         {commentAuthorLabel(comment.authorName, copy.states.commentAuthorFallback)}

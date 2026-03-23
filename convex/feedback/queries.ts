@@ -54,6 +54,26 @@ function getVisibleCommentCount(comments: Doc<"feedback_comments">[]) {
   return comments.filter((comment) => !comment.isInternal).length;
 }
 
+function getCommentAuthorName(user: Doc<"users"> | null) {
+  if (!user) {
+    return undefined;
+  }
+
+  if ("displayName" in user && typeof user.displayName === "string" && user.displayName.trim()) {
+    return user.displayName.trim();
+  }
+
+  if ("name" in user && typeof user.name === "string" && user.name.trim()) {
+    return user.name.trim();
+  }
+
+  if ("email" in user && typeof user.email === "string" && user.email.includes("@")) {
+    return user.email.split("@")[0];
+  }
+
+  return undefined;
+}
+
 const OPEN_FEATURE_STATUSES = [
   "new",
   "triaged",
@@ -174,6 +194,12 @@ export const getPublicFeedbackDetail = query({
         .collect(),
       getLinkedRelease(ctx, item),
     ]);
+    const authorIds = Array.from(new Set(comments.map((comment) => comment.authorUserId)));
+    const authors = new Map(
+      await Promise.all(
+        authorIds.map(async (authorUserId) => [authorUserId, await ctx.db.get(authorUserId)] as const)
+      )
+    );
 
     return {
       item: {
@@ -196,7 +222,11 @@ export const getPublicFeedbackDetail = query({
         updatedAt: item.updatedAt,
         comments: comments
           .filter((comment) => !comment.isInternal)
-          .sort((a, b) => a.createdAt - b.createdAt),
+          .sort((a, b) => a.createdAt - b.createdAt)
+          .map((comment) => ({
+            ...comment,
+            authorName: getCommentAuthorName(authors.get(comment.authorUserId) ?? null),
+          })),
         linkedRelease: linkedRelease ? buildReleaseSummary(linkedRelease) : null,
       },
     };

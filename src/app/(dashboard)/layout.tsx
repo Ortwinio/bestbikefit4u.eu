@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useConvexAuth } from "convex/react";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { Button, LoadingState } from "@/components/ui";
 import { DashboardMessageSurface } from "@/components/dashboard-messages";
 import { FeedbackDialog, FeedbackFloatingButton } from "@/components/feedback";
+import { getFeedbackRouteContext } from "@/components/feedback/route-context";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import { BRAND } from "@/config/brand";
-import { withLocalePrefix } from "@/i18n/navigation";
+import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { Menu, X } from "lucide-react";
 
@@ -20,12 +21,16 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
   const { isLoading, isAuthenticated } = useConvexAuth();
   const { locale, messages, languageSwitchLabels } = useDashboardMessages();
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
   const loginPath = toLocalizedPath("/login");
+  const internalPathname = stripLocalePrefix(pathname ?? "/");
+  const { linkedBikeId, linkedSessionId } = getFeedbackRouteContext(pathname);
+  const showFloatingFeedbackButton = internalPathname !== "/feedback";
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -144,13 +149,17 @@ export default function DashboardLayout({
         </main>
       </div>
 
-      <FeedbackFloatingButton
-        onClick={() => setIsFeedbackDialogOpen(true)}
-        label={messages.nav.feedback}
-      />
+      {showFloatingFeedbackButton ? (
+        <FeedbackFloatingButton
+          onClick={() => setIsFeedbackDialogOpen(true)}
+          label={messages.nav.feedback}
+        />
+      ) : null}
       <FeedbackDialog
         open={isFeedbackDialogOpen}
         onClose={() => setIsFeedbackDialogOpen(false)}
+        linkedBikeId={linkedBikeId}
+        linkedSessionId={linkedSessionId}
       />
       <DashboardMessageSurface showBanners={false} showHomeCards={false} />
     </div>

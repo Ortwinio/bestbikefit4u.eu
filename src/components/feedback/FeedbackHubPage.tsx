@@ -184,7 +184,7 @@ export function FeedbackHubPage() {
     <div className="relative min-h-full">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_top_left,var(--primary)_0%,transparent_55%),radial-gradient(circle_at_top_right,var(--warning)_0%,transparent_40%)] opacity-20" />
       <div className="relative mx-auto max-w-6xl space-y-6">
-        <Card className="border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_92%,var(--primary)_8%)]">
+        <Card className="dashboard-card-surface border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_92%,var(--primary)_8%)]">
           <CardContent className="gap-4 p-0">
             <div className="flex flex-col gap-4 rounded-[inherit] p-6 sm:p-8">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -260,7 +260,7 @@ export function FeedbackHubPage() {
                 {latestMyFeedback.map((item) => (
                   <Card
                     key={String(item._id)}
-                    className="border border-[color:var(--border)]"
+                    className="dashboard-card-surface border border-[color:var(--border)]"
                   >
                     <CardContent className="gap-3">
                       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -334,7 +334,7 @@ export function FeedbackHubPage() {
                   const itemId = String(item._id);
                   const isPending = Boolean(pendingVotes[itemId]);
                   return (
-                    <Card key={itemId} className="border border-[color:var(--border)]">
+                    <Card key={itemId} className="dashboard-card-surface border border-[color:var(--border)]">
                       <CardContent className="gap-4">
                         <div className="flex items-start justify-between gap-4">
                           <div className="space-y-2">
@@ -399,7 +399,7 @@ export function FeedbackHubPage() {
             ) : (
               <div className="grid gap-4">
                 {publicReleases.map((release) => (
-                  <Card key={String(release._id)} className="border border-[color:var(--border)]">
+                  <Card key={String(release._id)} className="dashboard-card-surface border border-[color:var(--border)]">
                     <CardContent className="gap-4">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div className="space-y-2">
@@ -407,7 +407,11 @@ export function FeedbackHubPage() {
                             <Pill className={statusClassName(release.status)}>
                               {copy.releaseStatuses[release.status]}
                             </Pill>
-                            {release.type ? <Pill className="border-[color:var(--border)] bg-[color:var(--secondary)] text-[color:var(--foreground)]">{release.type}</Pill> : null}
+                            {release.type ? (
+                              <Pill className="border-[color:var(--border)] bg-[color:var(--secondary)] text-[color:var(--foreground)]">
+                                {copy.releaseTypes[release.type]}
+                              </Pill>
+                            ) : null}
                           </div>
                           <p className="text-base font-semibold text-[color:var(--foreground)]">
                             {formatReleaseName(release, copy)}
