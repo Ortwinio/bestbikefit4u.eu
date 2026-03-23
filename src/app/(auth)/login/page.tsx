@@ -195,6 +195,21 @@ export default function LoginPage() {
   const [sendSuccess, setSendSuccess] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const googleAuthEnabled = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === "true";
+  const oauthRedirectingRef = useRef(false);
+
+  // @convex-dev/auth registers a bubble-phase beforeunload listener that calls
+  // e.preventDefault() while isRefreshingToken is true (auto-refresh on page load).
+  // We suppress it for intentional OAuth redirects using a capture-phase listener,
+  // which runs first and stops propagation to all subsequent listeners.
+  useEffect(() => {
+    const suppress = (e: Event) => {
+      if (oauthRedirectingRef.current) {
+        e.stopImmediatePropagation();
+      }
+    };
+    window.addEventListener("beforeunload", suppress, { capture: true });
+    return () => window.removeEventListener("beforeunload", suppress, { capture: true });
+  }, []);
 
   const uspPanel = (
     <section className="rounded-lg border border-border bg-primary-soft p-4">
@@ -365,10 +380,7 @@ export default function LoginPage() {
       });
       if (result.redirect) {
         const redirectUrl = result.redirect.toString();
-        // Reset forms at the DOM level to clear browser's native "Leave site?" prompt.
-        // blur() alone is insufficient; form.reset() removes the dirty state.
-        document.querySelectorAll("form").forEach((form) => form.reset());
-        document.querySelectorAll("input").forEach((el) => el.blur());
+        oauthRedirectingRef.current = true;
         window.location.href = redirectUrl;
         return;
       }
