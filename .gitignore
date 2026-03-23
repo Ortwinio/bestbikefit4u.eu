@@ -51,3 +51,4 @@ context/*
 messages/*
 !messages/README.md
 !messages/TEMPLATE.md
+claude/.obsidian/

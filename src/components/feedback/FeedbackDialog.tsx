@@ -129,6 +129,8 @@ export function FeedbackDialog({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const resolvedPagePath = pagePath ?? pathname ?? "";
+  const liveValidation = buildValidation(selectedType, form, copy);
+  const isFormValid = Object.keys(liveValidation).length === 0;
 
   useEffect(() => {
     if (!open) {
@@ -160,7 +162,7 @@ export function FeedbackDialog({
     );
   }, [open, selectedType]);
 
-  const canSubmit = Boolean(selectedType);
+  const canSubmit = Boolean(selectedType) && isFormValid;
 
   function updateField<K extends keyof FeedbackFormState>(field: K, value: FeedbackFormState[K]) {
     setForm((current) => ({ ...current, [field]: value }));

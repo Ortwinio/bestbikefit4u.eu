@@ -1,0 +1,133 @@
+brand_id,brand,model_slug,model,category,fit_engine_profile,fit_engine_variant,intro_year_estimate,intro_year_confidence,geometry_status,is_active_assumption
+specialized,Specialized,specialized-tarmac,Tarmac,Road-Race,road_performance,race_allround,2003,estimated,queue_for_geometry_import,True
+specialized,Specialized,specialized-aethos,Aethos,Road-Lightweight,road_performance,lightweight_climbing,2020,estimated,queue_for_geometry_import,True
+specialized,Specialized,specialized-roubaix,Roubaix,Road-Endurance,road_endurance,comfort_endurance,2004,estimated,queue_for_geometry_import,True
+specialized,Specialized,specialized-venge,Venge,Road-Aero,road_performance,aero_race,2011,estimated,queue_for_geometry_import,True
+specialized,Specialized,specialized-diverge,Diverge,Gravel,gravel,allroad,2014,estimated,queue_for_geometry_import,True
+specialized,Specialized,specialized-crux,Crux,Gravel,gravel,allroad,2010,estimated,queue_for_geometry_import,True
+specialized,Specialized,specialized-epic,Epic,MTB-XC,mtb_xc,xc,2003,estimated,queue_for_geometry_import,True
+specialized,Specialized,specialized-stumpjumper,Stumpjumper,MTB-Trail,mtb_trail,trail,1981,estimated,queue_for_geometry_import,True
+specialized,Specialized,specialized-enduro,Enduro,MTB-Enduro,mtb_enduro,enduro,2000,estimated,queue_for_geometry_import,True
+specialized,Specialized,specialized-demo,Demo,MTB-Downhill,mtb_downhill,downhill,2004,estimated,queue_for_geometry_import,True
+specialized,Specialized,specialized-turbo-vado,Turbo Vado,E-Bike,electric_assist,assisted_upright,2016,estimated,queue_for_geometry_import,True
+specialized,Specialized,specialized-turbo-creo,Turbo Creo,E-Bike,electric_assist,assisted_upright,2019,estimated,queue_for_geometry_import,True
+trek,Trek,trek-madone,Madone,Road-Aero,road_performance,aero_race,2003,estimated,starter_geometry_loaded,True
+trek,Trek,trek-emonda,Emonda,Road-Race,road_performance,race_allround,2014,estimated,queue_for_geometry_import,True
+trek,Trek,trek-domane,Domane,Road-Endurance,road_endurance,comfort_endurance,2012,estimated,queue_for_geometry_import,True
+trek,Trek,trek-checkpoint,Checkpoint,Gravel,gravel,allroad,2018,estimated,starter_geometry_loaded,True
+trek,Trek,trek-boone,Boone,Cyclocross,cyclocross,cx_race,2012,estimated,queue_for_geometry_import,True
+trek,Trek,trek-supercaliber,Supercaliber,MTB-XC,mtb_xc,xc,2019,estimated,queue_for_geometry_import,True
+trek,Trek,trek-fuel-ex,Fuel EX,MTB-Trail,mtb_trail,trail,2005,estimated,queue_for_geometry_import,True
+trek,Trek,trek-slash,Slash,MTB-Enduro,mtb_enduro,enduro,2010,estimated,queue_for_geometry_import,True
+trek,Trek,trek-marlin,Marlin,MTB-Hardtail,mtb_xc,hardtail,2012,estimated,queue_for_geometry_import,True
+trek,Trek,trek-fx,FX,Hybrid,fitness_hybrid,upright_fitness,2005,estimated,queue_for_geometry_import,True
+trek,Trek,trek-allant,Allant+,E-Bike,electric_assist,assisted_upright,2018,estimated,queue_for_geometry_import,True
+giant,Giant,giant-tcr,TCR,Road-Race,road_performance,race_allround,1997,estimated,starter_geometry_loaded,True
+giant,Giant,giant-propel,Propel,Road-Aero,road_performance,aero_race,2013,estimated,queue_for_geometry_import,True
+giant,Giant,giant-defy,Defy,Road-Endurance,road_endurance,comfort_endurance,2008,estimated,queue_for_geometry_import,True
+giant,Giant,giant-revolt,Revolt,Gravel,gravel,allroad,2013,estimated,starter_geometry_loaded,True
+giant,Giant,giant-tcx,TCX,Cyclocross,cyclocross,cx_race,2003,estimated,queue_for_geometry_import,True
+giant,Giant,giant-anthem,Anthem,MTB-XC,mtb_xc,xc,2006,estimated,queue_for_geometry_import,True
+giant,Giant,giant-trance,Trance,MTB-Trail,mtb_trail,trail,2005,estimated,queue_for_geometry_import,True
+giant,Giant,giant-reign,Reign,MTB-Enduro,mtb_enduro,enduro,2005,estimated,queue_for_geometry_import,True
+giant,Giant,giant-talon,Talon,MTB-Hardtail,mtb_xc,hardtail,2009,estimated,queue_for_geometry_import,True
+giant,Giant,giant-fastroad,FastRoad,Hybrid,fitness_hybrid,upright_fitness,2016,estimated,queue_for_geometry_import,True
+giant,Giant,giant-explore-e,Explore E+,E-Bike,electric_assist,assisted_upright,2019,estimated,queue_for_geometry_import,True
+cannondale,Cannondale,cannondale-supersix-evo,SuperSix EVO,Road-Race,road_performance,race_allround,2007,estimated,queue_for_geometry_import,True
+cannondale,Cannondale,cannondale-systemsix,SystemSix,Road-Aero,road_performance,aero_race,2018,estimated,queue_for_geometry_import,True
+cannondale,Cannondale,cannondale-synapse,Synapse,Road-Endurance,road_endurance,comfort_endurance,2006,estimated,queue_for_geometry_import,True
+cannondale,Cannondale,cannondale-topstone,Topstone,Gravel,gravel,allroad,2019,estimated,starter_geometry_loaded,True
+cannondale,Cannondale,cannondale-caadx,CAADX,Cyclocross,cyclocross,cx_race,2013,estimated,queue_for_geometry_import,True
+cannondale,Cannondale,cannondale-scalpel,Scalpel,MTB-XC,mtb_xc,xc,2001,estimated,queue_for_geometry_import,True
+cannondale,Cannondale,cannondale-habit,Habit,MTB-Trail,mtb_trail,trail,2015,estimated,queue_for_geometry_import,True
+cannondale,Cannondale,cannondale-jekyll,Jekyll,MTB-Enduro,mtb_enduro,enduro,2001,estimated,queue_for_geometry_import,True
+cannondale,Cannondale,cannondale-trail,Trail,MTB-Hardtail,mtb_xc,hardtail,2006,estimated,queue_for_geometry_import,True
+cannondale,Cannondale,cannondale-quick,Quick,Hybrid,fitness_hybrid,upright_fitness,2009,estimated,queue_for_geometry_import,True
+canyon,Canyon,canyon-aeroad,Aeroad,Road-Aero,road_performance,aero_race,2011,estimated,starter_geometry_loaded,True
+canyon,Canyon,canyon-ultimate,Ultimate,Road-Race,road_performance,race_allround,2004,estimated,queue_for_geometry_import,True
+canyon,Canyon,canyon-endurace,Endurace,Road-Endurance,road_endurance,comfort_endurance,2014,estimated,starter_geometry_loaded,True
+canyon,Canyon,canyon-grail,Grail,Gravel,gravel,allroad,2018,estimated,queue_for_geometry_import,True
+canyon,Canyon,canyon-grizl,Grizl,Gravel,gravel,allroad,2021,estimated,queue_for_geometry_import,True
+canyon,Canyon,canyon-speedmax,Speedmax,Triathlon-TT,tt_tri,aero_tt,2011,estimated,queue_for_geometry_import,True
+canyon,Canyon,canyon-inflite,Inflite,Cyclocross,cyclocross,cx_race,2014,estimated,queue_for_geometry_import,True
+canyon,Canyon,canyon-lux,Lux,MTB-XC,mtb_xc,xc,2018,estimated,queue_for_geometry_import,True
+canyon,Canyon,canyon-neuron,Neuron,MTB-Trail,mtb_trail,trail,2016,estimated,queue_for_geometry_import,True
+canyon,Canyon,canyon-spectral,Spectral,MTB-Enduro,mtb_enduro,enduro,2014,estimated,queue_for_geometry_import,True
+scott,Scott,scott-addict-rc,Addict RC,Road-Race,road_performance,race_allround,2007,estimated,starter_geometry_loaded,True
+scott,Scott,scott-foil,Foil,Road-Aero,road_performance,aero_race,2010,estimated,queue_for_geometry_import,True
+scott,Scott,scott-addict,Addict,Road-Endurance,road_endurance,comfort_endurance,2007,estimated,queue_for_geometry_import,True
+scott,Scott,scott-addict-gravel,Addict Gravel,Gravel,gravel,allroad,2019,estimated,queue_for_geometry_import,True
+scott,Scott,scott-spark,Spark,MTB-XC,mtb_xc,xc,2006,estimated,queue_for_geometry_import,True
+scott,Scott,scott-genius,Genius,MTB-Trail,mtb_trail,trail,2004,estimated,queue_for_geometry_import,True
+scott,Scott,scott-ransom,Ransom,MTB-Enduro,mtb_enduro,enduro,2006,estimated,queue_for_geometry_import,True
+scott,Scott,scott-scale,Scale,MTB-Hardtail,mtb_xc,hardtail,2005,estimated,queue_for_geometry_import,True
+scott,Scott,scott-speedster,Speedster,Hybrid,fitness_hybrid,upright_fitness,2008,estimated,queue_for_geometry_import,True
+bmc,BMC,bmc-teammachine,Teammachine,Road-Race,road_performance,race_allround,2007,estimated,queue_for_geometry_import,True
+bmc,BMC,bmc-timemachine,Timemachine,Triathlon-TT,tt_tri,aero_tt,2010,estimated,queue_for_geometry_import,True
+bmc,BMC,bmc-roadmachine,Roadmachine,Road-Endurance,road_endurance,comfort_endurance,2016,estimated,starter_geometry_loaded,True
+bmc,BMC,bmc-kaius,Kaius,Gravel,gravel,allroad,2022,estimated,starter_geometry_loaded,True
+bmc,BMC,bmc-fourstroke,Fourstroke,MTB-XC,mtb_xc,xc,2011,estimated,queue_for_geometry_import,True
+bmc,BMC,bmc-twostroke,Twostroke,MTB-Hardtail,mtb_xc,hardtail,2020,estimated,queue_for_geometry_import,True
+bmc,BMC,bmc-urs,URS,Gravel,gravel,allroad,2020,estimated,queue_for_geometry_import,True
+pinarello,Pinarello,pinarello-dogma-f,Dogma F,Road-Race,road_performance,race_allround,2021,estimated,queue_for_geometry_import,True
+pinarello,Pinarello,pinarello-dogma-x,Dogma X,Road-Endurance,road_endurance,comfort_endurance,2022,estimated,queue_for_geometry_import,True
+pinarello,Pinarello,pinarello-prince,Prince,Road-Race,road_performance,race_allround,2017,estimated,queue_for_geometry_import,True
+pinarello,Pinarello,pinarello-grevil,Grevil,Gravel,gravel,allroad,2018,estimated,starter_geometry_loaded,True
+pinarello,Pinarello,pinarello-crossista,Crossista,Cyclocross,cyclocross,cx_race,2019,estimated,queue_for_geometry_import,True
+pinarello,Pinarello,pinarello-nytro,Nytro,E-Bike,electric_assist,assisted_upright,2018,estimated,queue_for_geometry_import,True
+cervelo,Cervelo,cervelo-s5,S5,Road-Aero,road_performance,aero_race,2011,estimated,queue_for_geometry_import,True
+cervelo,Cervelo,cervelo-r5,R5,Road-Race,road_performance,race_allround,2011,estimated,queue_for_geometry_import,True
+cervelo,Cervelo,cervelo-caledonia,Caledonia,Road-Endurance,road_endurance,comfort_endurance,2020,estimated,starter_geometry_loaded,True
+cervelo,Cervelo,cervelo-aspero,Aspero,Gravel,gravel,allroad,2019,estimated,starter_geometry_loaded,True
+cervelo,Cervelo,cervelo-p5,P5,Triathlon-TT,tt_tri,aero_tt,2010,estimated,queue_for_geometry_import,True
+cervelo,Cervelo,cervelo-px-series,PX Series,Triathlon-TT,tt_tri,aero_tt,2017,estimated,queue_for_geometry_import,True
+santa-cruz,Santa Cruz,santa-cruz-blur,Blur,MTB-XC,mtb_xc,xc,2001,estimated,queue_for_geometry_import,True
+santa-cruz,Santa Cruz,santa-cruz-tallboy,Tallboy,MTB-Trail,mtb_trail,trail,2009,estimated,starter_geometry_loaded,True
+santa-cruz,Santa Cruz,santa-cruz-hightower,Hightower,MTB-Trail,mtb_trail,trail,2016,estimated,starter_geometry_loaded,True
+santa-cruz,Santa Cruz,santa-cruz-megatower,Megatower,MTB-Enduro,mtb_enduro,enduro,2019,estimated,queue_for_geometry_import,True
+santa-cruz,Santa Cruz,santa-cruz-v10,V10,MTB-Downhill,mtb_downhill,downhill,2003,estimated,queue_for_geometry_import,True
+merida,Merida,merida-scultura,Scultura,Road-Race,road_performance,race_allround,2006,estimated,queue_for_geometry_import,True
+merida,Merida,merida-reacto,Reacto,Road-Aero,road_performance,aero_race,2011,estimated,queue_for_geometry_import,True
+merida,Merida,merida-endurance,Endurance,Road-Endurance,road_endurance,comfort_endurance,2023,estimated,queue_for_geometry_import,True
+merida,Merida,merida-silex,Silex,Gravel,gravel,allroad,2018,estimated,queue_for_geometry_import,True
+merida,Merida,merida-ninety-six,Ninety-Six,MTB-XC,mtb_xc,xc,2005,estimated,queue_for_geometry_import,True
+merida,Merida,merida-one-forty,One-Forty,MTB-Trail,mtb_trail,trail,2023,estimated,queue_for_geometry_import,True
+orbea,Orbea,orbea-orca,Orca,Road-Race,road_performance,race_allround,2003,estimated,queue_for_geometry_import,True
+orbea,Orbea,orbea-orca-aero,Orca Aero,Road-Aero,road_performance,aero_race,2019,estimated,queue_for_geometry_import,True
+orbea,Orbea,orbea-avant,Avant,Road-Endurance,road_endurance,comfort_endurance,2013,estimated,queue_for_geometry_import,True
+orbea,Orbea,orbea-terra,Terra,Gravel,gravel,allroad,2017,estimated,queue_for_geometry_import,True
+orbea,Orbea,orbea-alma,Alma,MTB-XC,mtb_xc,xc,2006,estimated,queue_for_geometry_import,True
+orbea,Orbea,orbea-occam,Occam,MTB-Trail,mtb_trail,trail,2014,estimated,queue_for_geometry_import,True
+orbea,Orbea,orbea-rallon,Rallon,MTB-Enduro,mtb_enduro,enduro,2013,estimated,queue_for_geometry_import,True
+cube,Cube,cube-agree,Agree,Road-Race,road_performance,race_allround,2010,estimated,queue_for_geometry_import,True
+cube,Cube,cube-litening,Litening,Road-Aero,road_performance,aero_race,2011,estimated,queue_for_geometry_import,True
+cube,Cube,cube-nuroad,Nuroad,Gravel,gravel,allroad,2018,estimated,queue_for_geometry_import,True
+cube,Cube,cube-cross-race,Cross Race,Cyclocross,cyclocross,cx_race,2014,estimated,queue_for_geometry_import,True
+cube,Cube,cube-stereo,Stereo,MTB-Trail,mtb_trail,trail,2008,estimated,queue_for_geometry_import,True
+cube,Cube,cube-reaction,Reaction,MTB-Hardtail,mtb_xc,hardtail,2010,estimated,queue_for_geometry_import,True
+focus,Focus,focus-izalco-max,Izalco Max,Road-Race,road_performance,race_allround,2011,estimated,queue_for_geometry_import,True
+focus,Focus,focus-paralane,Paralane,Road-Endurance,road_endurance,comfort_endurance,2017,estimated,queue_for_geometry_import,True
+focus,Focus,focus-atlas,Atlas,Gravel,gravel,allroad,2022,estimated,queue_for_geometry_import,True
+focus,Focus,focus-raven,Raven,MTB-XC,mtb_xc,xc,2005,estimated,queue_for_geometry_import,True
+focus,Focus,focus-jam,Jam,MTB-Trail,mtb_trail,trail,2017,estimated,queue_for_geometry_import,True
+ridley,Ridley,ridley-noah,Noah,Road-Aero,road_performance,aero_race,2007,estimated,queue_for_geometry_import,True
+ridley,Ridley,ridley-helium,Helium,Road-Race,road_performance,race_allround,2008,estimated,queue_for_geometry_import,True
+ridley,Ridley,ridley-kanzo,Kanzo,Gravel,gravel,allroad,2018,estimated,queue_for_geometry_import,True
+ridley,Ridley,ridley-x-night,X-Night,Cyclocross,cyclocross,cx_race,2012,estimated,queue_for_geometry_import,True
+colnago,Colnago,colnago-v4rs,V4Rs,Road-Race,road_performance,race_allround,2022,estimated,queue_for_geometry_import,True
+colnago,Colnago,colnago-c68,C68,Road-Endurance,road_endurance,comfort_endurance,2022,estimated,queue_for_geometry_import,True
+colnago,Colnago,colnago-g3x,G3X,Gravel,gravel,allroad,2020,estimated,queue_for_geometry_import,True
+factor,Factor,factor-ostro-vam,Ostro VAM,Road-Aero,road_performance,aero_race,2021,estimated,queue_for_geometry_import,True
+factor,Factor,factor-o2-vam,O2 VAM,Road-Race,road_performance,race_allround,2023,estimated,queue_for_geometry_import,True
+factor,Factor,factor-ls,LS,Road-Endurance,road_endurance,comfort_endurance,2019,estimated,queue_for_geometry_import,True
+factor,Factor,factor-slick,Slick,Triathlon-TT,tt_tri,aero_tt,2018,estimated,queue_for_geometry_import,True
+lapierre,Lapierre,lapierre-xelius,Xelius,Road-Race,road_performance,race_allround,2010,estimated,queue_for_geometry_import,True
+lapierre,Lapierre,lapierre-aircode,Aircode,Road-Aero,road_performance,aero_race,2015,estimated,queue_for_geometry_import,True
+lapierre,Lapierre,lapierre-crosshill,Crosshill,Gravel,gravel,allroad,2021,estimated,queue_for_geometry_import,True
+lapierre,Lapierre,lapierre-zesty,Zesty,MTB-Trail,mtb_trail,trail,2006,estimated,queue_for_geometry_import,True
+wilier-triestina,Wilier Triestina,wilier-triestina-filante,Filante,Road-Aero,road_performance,aero_race,2020,estimated,queue_for_geometry_import,True
+wilier-triestina,Wilier Triestina,wilier-triestina-zero-slr,Zero SLR,Road-Race,road_performance,race_allround,2019,estimated,queue_for_geometry_import,True
+wilier-triestina,Wilier Triestina,wilier-triestina-jena,Jena,Gravel,gravel,allroad,2019,estimated,queue_for_geometry_import,True
+yeti-cycles,Yeti Cycles,yeti-cycles-sb120,SB120,MTB-XC,mtb_xc,xc,2023,estimated,queue_for_geometry_import,True
+yeti-cycles,Yeti Cycles,yeti-cycles-sb140,SB140,MTB-Trail,mtb_trail,trail,2023,estimated,queue_for_geometry_import,True
+yeti-cycles,Yeti Cycles,yeti-cycles-sb160,SB160,MTB-Enduro,mtb_enduro,enduro,2023,estimated,queue_for_geometry_import,True

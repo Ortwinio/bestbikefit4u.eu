@@ -1,0 +1,118 @@
+brand,model,category,fit_engine_profile,fit_engine_variant,intro_year_estimate,recommended_source_priority,notes
+Specialized,Tarmac,Road-Race,road_performance,race_allround,2003,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Specialized,Aethos,Road-Lightweight,road_performance,lightweight_climbing,2020,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Specialized,Roubaix,Road-Endurance,road_endurance,comfort_endurance,2004,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Specialized,Venge,Road-Aero,road_performance,aero_race,2011,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Specialized,Diverge,Gravel,gravel,allroad,2014,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Specialized,Crux,Gravel,gravel,allroad,2010,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Specialized,Epic,MTB-XC,mtb_xc,xc,2003,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Specialized,Stumpjumper,MTB-Trail,mtb_trail,trail,1981,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Specialized,Enduro,MTB-Enduro,mtb_enduro,enduro,2000,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Specialized,Demo,MTB-Downhill,mtb_downhill,downhill,2004,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Specialized,Turbo Vado,E-Bike,electric_assist,assisted_upright,2016,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Specialized,Turbo Creo,E-Bike,electric_assist,assisted_upright,2019,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Trek,Emonda,Road-Race,road_performance,race_allround,2014,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Trek,Domane,Road-Endurance,road_endurance,comfort_endurance,2012,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Trek,Boone,Cyclocross,cyclocross,cx_race,2012,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Trek,Supercaliber,MTB-XC,mtb_xc,xc,2019,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Trek,Fuel EX,MTB-Trail,mtb_trail,trail,2005,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Trek,Slash,MTB-Enduro,mtb_enduro,enduro,2010,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Trek,Marlin,MTB-Hardtail,mtb_xc,hardtail,2012,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Trek,FX,Hybrid,fitness_hybrid,upright_fitness,2005,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Trek,Allant+,E-Bike,electric_assist,assisted_upright,2018,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Giant,Propel,Road-Aero,road_performance,aero_race,2013,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Giant,Defy,Road-Endurance,road_endurance,comfort_endurance,2008,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Giant,TCX,Cyclocross,cyclocross,cx_race,2003,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Giant,Anthem,MTB-XC,mtb_xc,xc,2006,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Giant,Trance,MTB-Trail,mtb_trail,trail,2005,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Giant,Reign,MTB-Enduro,mtb_enduro,enduro,2005,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Giant,Talon,MTB-Hardtail,mtb_xc,hardtail,2009,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Giant,FastRoad,Hybrid,fitness_hybrid,upright_fitness,2016,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Giant,Explore E+,E-Bike,electric_assist,assisted_upright,2019,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cannondale,SuperSix EVO,Road-Race,road_performance,race_allround,2007,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cannondale,SystemSix,Road-Aero,road_performance,aero_race,2018,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cannondale,Synapse,Road-Endurance,road_endurance,comfort_endurance,2006,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cannondale,CAADX,Cyclocross,cyclocross,cx_race,2013,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cannondale,Scalpel,MTB-XC,mtb_xc,xc,2001,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cannondale,Habit,MTB-Trail,mtb_trail,trail,2015,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cannondale,Jekyll,MTB-Enduro,mtb_enduro,enduro,2001,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cannondale,Trail,MTB-Hardtail,mtb_xc,hardtail,2006,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cannondale,Quick,Hybrid,fitness_hybrid,upright_fitness,2009,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Canyon,Ultimate,Road-Race,road_performance,race_allround,2004,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Canyon,Grail,Gravel,gravel,allroad,2018,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Canyon,Grizl,Gravel,gravel,allroad,2021,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Canyon,Speedmax,Triathlon-TT,tt_tri,aero_tt,2011,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Canyon,Inflite,Cyclocross,cyclocross,cx_race,2014,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Canyon,Lux,MTB-XC,mtb_xc,xc,2018,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Canyon,Neuron,MTB-Trail,mtb_trail,trail,2016,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Canyon,Spectral,MTB-Enduro,mtb_enduro,enduro,2014,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Scott,Foil,Road-Aero,road_performance,aero_race,2010,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Scott,Addict,Road-Endurance,road_endurance,comfort_endurance,2007,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Scott,Addict Gravel,Gravel,gravel,allroad,2019,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Scott,Spark,MTB-XC,mtb_xc,xc,2006,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Scott,Genius,MTB-Trail,mtb_trail,trail,2004,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Scott,Ransom,MTB-Enduro,mtb_enduro,enduro,2006,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Scott,Scale,MTB-Hardtail,mtb_xc,hardtail,2005,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Scott,Speedster,Hybrid,fitness_hybrid,upright_fitness,2008,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+BMC,Teammachine,Road-Race,road_performance,race_allround,2007,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+BMC,Timemachine,Triathlon-TT,tt_tri,aero_tt,2010,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+BMC,Fourstroke,MTB-XC,mtb_xc,xc,2011,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+BMC,Twostroke,MTB-Hardtail,mtb_xc,hardtail,2020,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+BMC,URS,Gravel,gravel,allroad,2020,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Pinarello,Dogma F,Road-Race,road_performance,race_allround,2021,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Pinarello,Dogma X,Road-Endurance,road_endurance,comfort_endurance,2022,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Pinarello,Prince,Road-Race,road_performance,race_allround,2017,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Pinarello,Crossista,Cyclocross,cyclocross,cx_race,2019,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Pinarello,Nytro,E-Bike,electric_assist,assisted_upright,2018,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cervelo,S5,Road-Aero,road_performance,aero_race,2011,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cervelo,R5,Road-Race,road_performance,race_allround,2011,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cervelo,P5,Triathlon-TT,tt_tri,aero_tt,2010,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cervelo,PX Series,Triathlon-TT,tt_tri,aero_tt,2017,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Santa Cruz,Blur,MTB-XC,mtb_xc,xc,2001,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Santa Cruz,Megatower,MTB-Enduro,mtb_enduro,enduro,2019,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Santa Cruz,V10,MTB-Downhill,mtb_downhill,downhill,2003,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Merida,Scultura,Road-Race,road_performance,race_allround,2006,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Merida,Reacto,Road-Aero,road_performance,aero_race,2011,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Merida,Endurance,Road-Endurance,road_endurance,comfort_endurance,2023,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Merida,Silex,Gravel,gravel,allroad,2018,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Merida,Ninety-Six,MTB-XC,mtb_xc,xc,2005,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Merida,One-Forty,MTB-Trail,mtb_trail,trail,2023,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Orbea,Orca,Road-Race,road_performance,race_allround,2003,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Orbea,Orca Aero,Road-Aero,road_performance,aero_race,2019,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Orbea,Avant,Road-Endurance,road_endurance,comfort_endurance,2013,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Orbea,Terra,Gravel,gravel,allroad,2017,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Orbea,Alma,MTB-XC,mtb_xc,xc,2006,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Orbea,Occam,MTB-Trail,mtb_trail,trail,2014,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Orbea,Rallon,MTB-Enduro,mtb_enduro,enduro,2013,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cube,Agree,Road-Race,road_performance,race_allround,2010,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cube,Litening,Road-Aero,road_performance,aero_race,2011,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cube,Nuroad,Gravel,gravel,allroad,2018,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cube,Cross Race,Cyclocross,cyclocross,cx_race,2014,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cube,Stereo,MTB-Trail,mtb_trail,trail,2008,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Cube,Reaction,MTB-Hardtail,mtb_xc,hardtail,2010,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Focus,Izalco Max,Road-Race,road_performance,race_allround,2011,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Focus,Paralane,Road-Endurance,road_endurance,comfort_endurance,2017,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Focus,Atlas,Gravel,gravel,allroad,2022,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Focus,Raven,MTB-XC,mtb_xc,xc,2005,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Focus,Jam,MTB-Trail,mtb_trail,trail,2017,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Ridley,Noah,Road-Aero,road_performance,aero_race,2007,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Ridley,Helium,Road-Race,road_performance,race_allround,2008,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Ridley,Kanzo,Gravel,gravel,allroad,2018,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Ridley,X-Night,Cyclocross,cyclocross,cx_race,2012,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Colnago,V4Rs,Road-Race,road_performance,race_allround,2022,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Colnago,C68,Road-Endurance,road_endurance,comfort_endurance,2022,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Colnago,G3X,Gravel,gravel,allroad,2020,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Factor,Ostro VAM,Road-Aero,road_performance,aero_race,2021,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Factor,O2 VAM,Road-Race,road_performance,race_allround,2023,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Factor,LS,Road-Endurance,road_endurance,comfort_endurance,2019,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Factor,Slick,Triathlon-TT,tt_tri,aero_tt,2018,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Lapierre,Xelius,Road-Race,road_performance,race_allround,2010,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Lapierre,Aircode,Road-Aero,road_performance,aero_race,2015,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Lapierre,Crosshill,Gravel,gravel,allroad,2021,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Lapierre,Zesty,MTB-Trail,mtb_trail,trail,2006,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Wilier Triestina,Filante,Road-Aero,road_performance,aero_race,2020,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Wilier Triestina,Zero SLR,Road-Race,road_performance,race_allround,2019,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Wilier Triestina,Jena,Gravel,gravel,allroad,2019,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Yeti Cycles,SB120,MTB-XC,mtb_xc,xc,2023,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Yeti Cycles,SB140,MTB-Trail,mtb_trail,trail,2023,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.
+Yeti Cycles,SB160,MTB-Enduro,mtb_enduro,enduro,2023,official_brand_geometry_then_geometrygeeks,Need representative latest model-year page with reliable stack|reach extraction.

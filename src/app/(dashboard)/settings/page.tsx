@@ -71,7 +71,7 @@ export default function SettingsPage() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
-  const [showStravaConsent, setShowStravaConsent] = useState(false);
+  const [showStravaConsentInline, setShowStravaConsentInline] = useState(false);
   const [showStravaDisconnect, setShowStravaDisconnect] = useState(false);
   const [isConnectingStrava, setIsConnectingStrava] = useState(false);
   const [isDisconnectingStrava, setIsDisconnectingStrava] = useState(false);
@@ -367,7 +367,7 @@ export default function SettingsPage() {
                   </>
                 ) : (
                   <Button
-                    onClick={() => setShowStravaConsent(true)}
+                    onClick={() => setShowStravaConsentInline((current) => !current)}
                     isLoading={isConnectingStrava}
                   >
                     {strava?.accessStatus === "error"
@@ -376,6 +376,61 @@ export default function SettingsPage() {
                   </Button>
                 )}
               </div>
+
+              {strava?.accessStatus !== "active" && showStravaConsentInline ? (
+                <div className="mt-4 rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--primary)_20%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_8%,var(--card)_92%)] p-4">
+                  <div className="space-y-4 text-sm">
+                    <div>
+                      <p className="font-semibold text-[color:var(--foreground)]">
+                        {messages.settings.integrations.consent.title}
+                      </p>
+                      <p className="mt-1 text-[color:var(--muted-foreground)]">
+                        {messages.settings.integrations.consent.howWeUseDescription}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-[color:var(--foreground)]">
+                        {messages.settings.integrations.consent.whatWeAccess}
+                      </p>
+                      <ul className="mt-2 space-y-1 text-[color:var(--muted-foreground)]">
+                        <li>✓ {messages.settings.integrations.consent.accessProfile}</li>
+                        <li>✓ {messages.settings.integrations.consent.accessActivities}</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-[color:var(--foreground)]">
+                        {messages.settings.integrations.consent.whatWeDoNot}
+                      </p>
+                      <ul className="mt-2 space-y-1 text-[color:var(--muted-foreground)]">
+                        <li>✗ {messages.settings.integrations.consent.noGps}</li>
+                        <li>✗ {messages.settings.integrations.consent.noNotes}</li>
+                        <li>✗ {messages.settings.integrations.consent.noSocial}</li>
+                        <li>✗ {messages.settings.integrations.consent.noSegments}</li>
+                      </ul>
+                    </div>
+                    <p className="text-[color:var(--muted-foreground)]">
+                      {messages.settings.integrations.consent.dataNote}
+                    </p>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowStravaConsentInline(false)}
+                    >
+                      {messages.settings.integrations.consent.cancel}
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setShowStravaConsentInline(false);
+                        void handleConnectStrava();
+                      }}
+                      isLoading={isConnectingStrava}
+                    >
+                      {messages.settings.integrations.consent.confirm}
+                    </Button>
+                  </div>
+                </div>
+              ) : null}
             </div>
           </CardContent>
         </Card>
@@ -445,54 +500,6 @@ export default function SettingsPage() {
             variant="destructive"
           >
             {messages.profile.dangerZone.deleteConfirmCta}
-          </Button>
-        </div>
-      </AccessibleDialog>
-
-      {/* Strava consent modal */}
-      <AccessibleDialog
-        open={showStravaConsent}
-        onClose={() => setShowStravaConsent(false)}
-        title={messages.settings.integrations.consent.title}
-        description={messages.settings.integrations.consent.howWeUseDescription}
-      >
-        <div className="mt-4 space-y-4 text-sm">
-          <div>
-            <p className="font-semibold text-[color:var(--foreground)]">
-              {messages.settings.integrations.consent.whatWeAccess}
-            </p>
-            <ul className="mt-2 space-y-1 text-[color:var(--muted-foreground)]">
-              <li>✓ {messages.settings.integrations.consent.accessProfile}</li>
-              <li>✓ {messages.settings.integrations.consent.accessActivities}</li>
-            </ul>
-          </div>
-          <div>
-            <p className="font-semibold text-[color:var(--foreground)]">
-              {messages.settings.integrations.consent.whatWeDoNot}
-            </p>
-            <ul className="mt-2 space-y-1 text-[color:var(--muted-foreground)]">
-              <li>✗ {messages.settings.integrations.consent.noGps}</li>
-              <li>✗ {messages.settings.integrations.consent.noNotes}</li>
-              <li>✗ {messages.settings.integrations.consent.noSocial}</li>
-              <li>✗ {messages.settings.integrations.consent.noSegments}</li>
-            </ul>
-          </div>
-          <p className="text-[color:var(--muted-foreground)]">
-            {messages.settings.integrations.consent.dataNote}
-          </p>
-        </div>
-        <div className="mt-6 flex gap-3">
-          <Button variant="outline" onClick={() => setShowStravaConsent(false)}>
-            {messages.settings.integrations.consent.cancel}
-          </Button>
-          <Button
-            onClick={() => {
-              setShowStravaConsent(false);
-              void handleConnectStrava();
-            }}
-            isLoading={isConnectingStrava}
-          >
-            {messages.settings.integrations.consent.confirm}
           </Button>
         </div>
       </AccessibleDialog>
