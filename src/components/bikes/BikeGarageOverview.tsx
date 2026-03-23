@@ -122,7 +122,7 @@ export function BikeGarageRow({
   const dashboardTileClassName =
     "bg-[color:color-mix(in_oklch,var(--secondary)_88%,black_4%)]";
   const actionLinkClassName =
-    "inline-flex items-center text-sm font-semibold text-blue-700 hover:text-blue-800";
+    "inline-flex items-center text-sm font-semibold text-[color:var(--primary)] hover:opacity-80";
 
   const fitName = latestFit?.session.ridingStyle
     ? messages.sessions.ridingStyle[latestFit.session.ridingStyle]
@@ -140,11 +140,11 @@ export function BikeGarageRow({
         <CardContent className="space-y-4">
           <BikeImage source={bike.photoUrl} alt={bike.name} />
           <div className="space-y-1">
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium text-[color:var(--foreground)]">
               {[bike.brand, bike.model].filter(Boolean).join(" ") ||
                 getBikeTypeLabel(bike.bikeType, messages)}
             </p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-[color:var(--muted-foreground)]">
               {getBikeTypeLabel(bike.bikeType, messages)}
             </p>
           </div>
@@ -153,7 +153,7 @@ export function BikeGarageRow({
               <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                 {messages.fit.sections.ridingStyle}
               </p>
-              <p className="mt-1 text-sm font-semibold text-gray-900">
+              <p className="mt-1 text-sm font-semibold text-[color:var(--foreground)]">
                 {bike.ridingStyle ? messages.sessions.ridingStyle[bike.ridingStyle] : "-"}
               </p>
             </div>
@@ -161,7 +161,7 @@ export function BikeGarageRow({
               <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                 {messages.fit.sections.primaryGoal}
               </p>
-              <p className="mt-1 text-sm font-semibold text-gray-900">
+              <p className="mt-1 text-sm font-semibold text-[color:var(--foreground)]">
                 {bike.primaryGoal ? messages.fit.goals[bike.primaryGoal].label : "-"}
               </p>
             </div>
@@ -191,14 +191,14 @@ export function BikeGarageRow({
           {latestFit && latestFit.recommendation ? (
             <>
               <div className={`rounded-[var(--radius-md)] px-4 py-4 ${dashboardTileClassName}`}>
-                <p className="text-lg font-semibold text-gray-900">
+                <p className="text-lg font-semibold text-[color:var(--foreground)]">
                   {fitName ?? messages.nav.bikeFitting}
                 </p>
                 {goalLabel ? (
-                  <p className="mt-1 text-sm text-gray-600">{goalLabel}</p>
+                  <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">{goalLabel}</p>
                 ) : null}
               </div>
-              <div className="space-y-2 text-sm text-gray-700">
+              <div className="space-y-2 text-sm text-[color:var(--foreground)]">
                 <p>
                   {formatDate(
                     latestFit.session.completedAt ?? latestFit.session.createdAt,
@@ -242,7 +242,7 @@ export function BikeGarageRow({
         <CardHeader>
           <div className="flex items-center justify-between gap-3">
             <CardTitle>{messages.pressure.bikeDetail.sectionTitle}</CardTitle>
-            <Gauge className="h-5 w-5 text-gray-500" />
+            <Gauge className="h-5 w-5 text-[color:var(--muted-foreground)]" />
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -253,7 +253,7 @@ export function BikeGarageRow({
                   <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                     {messages.pressure.overview.frontPressure}
                   </p>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">
+                  <p className="mt-1 text-lg font-semibold text-[color:var(--foreground)]">
                     {bike.advisedPressureSummary.recommendedFrontBar} {messages.pressure.result.bar}
                   </p>
                 </div>
@@ -261,17 +261,17 @@ export function BikeGarageRow({
                   <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                     {messages.pressure.overview.rearPressure}
                   </p>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">
+                  <p className="mt-1 text-lg font-semibold text-[color:var(--foreground)]">
                     {bike.advisedPressureSummary.recommendedRearBar} {messages.pressure.result.bar}
                   </p>
                 </div>
               </div>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-[color:var(--muted-foreground)]">
                 {messages.pressure.overview.lastCalculated}:{" "}
                 {formatDate(bike.advisedPressureSummary.createdAt, locale)}
               </p>
               {bike.pressureStateSummary.isStale ? (
-                <div className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900">
+                <div className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900 dark:bg-amber-900/30 dark:text-amber-300">
                   {messages.dashboardHome.pressureStale}
                 </div>
               ) : null}

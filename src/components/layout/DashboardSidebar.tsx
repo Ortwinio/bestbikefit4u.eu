@@ -38,7 +38,6 @@ export function DashboardSidebar() {
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
   const navigation = [
     { name: messages.nav.dashboard, href: "/dashboard", icon: LayoutDashboard },
-    { name: messages.nav.feedback, href: "/feedback", icon: MessageSquareMore },
     { name: messages.nav.profile, href: "/profile", icon: User },
     { name: messages.nav.myBikes, href: "/bikes", icon: Bike },
     { name: messages.nav.newBike, href: "/bikes/new", icon: PlusCircle },
@@ -46,6 +45,7 @@ export function DashboardSidebar() {
     { name: messages.nav.newFitSession, href: "/fit", icon: PlusCircle },
     { name: messages.nav.tirePressure, href: "/pressure-calculator", icon: Gauge },
     { name: messages.nav.settings, href: "/settings", icon: Settings },
+    { name: messages.nav.feedback, href: "/feedback", icon: MessageSquareMore },
   ];
 
   const websiteNavigation = [

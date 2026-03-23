@@ -100,7 +100,7 @@ export function ProfilePhotoUpload({
       />
 
       {error ? (
-        <p className="max-w-48 text-xs text-red-600">
+        <p className="max-w-48 text-xs text-[color:var(--destructive)]">
           {error === "file_too_large"
             ? messages.profile.photo.fileTooLarge
             : error === "invalid_type"

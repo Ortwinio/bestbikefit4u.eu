@@ -383,7 +383,7 @@ export function FeedbackDialog({
             ) : null}
 
             {submitError ? (
-              <div className="rounded-[var(--radius-lg)] border border-[color:var(--danger)]/30 bg-[color:color-mix(in_oklch,var(--danger)_10%,var(--card)_90%)] px-4 py-3 text-sm text-[color:var(--danger)]">
+              <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--danger)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--danger)_10%,var(--card)_90%)] px-4 py-3 text-sm text-[color:var(--danger)]">
                 {submitError}
               </div>
             ) : null}

@@ -71,16 +71,16 @@ export function BikeFitHistorySection({
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-sm font-semibold text-[color:var(--foreground)]">
                       {new Date(session.completedAt ?? session.createdAt).toLocaleDateString(
                         locale === "nl" ? "nl-NL" : "en-US"
                       )}
                     </p>
-                    <p className="mt-1 text-sm text-gray-600">
+                    <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
                       {getStatusLabel(session.status)}
                     </p>
                     {recommendation ? (
-                    <p className="mt-2 text-sm text-gray-700">
+                    <p className="mt-2 text-sm text-[color:var(--foreground)]">
                         {messages.bikes.fields.saddle}:{" "}
                         {recommendation.calculatedFit.saddleHeightMm} mm
                       </p>
@@ -88,7 +88,7 @@ export function BikeFitHistorySection({
                   </div>
                   <Link
                     href={withLocalePrefix(`/fit/${session._id}/results`, locale)}
-                    className="text-sm font-semibold text-blue-700 hover:text-blue-800"
+                    className="text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
                   >
                     {messages.home.recentSessions.actions.viewResults}
                   </Link>
@@ -97,7 +97,7 @@ export function BikeFitHistorySection({
             ))}
             <Link
               href={withLocalePrefix(`/fit?bikeId=${bikeId}`, locale)}
-              className="inline-flex text-sm font-semibold text-blue-700 hover:text-blue-800"
+              className="inline-flex text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
             >
               {messages.bikeForm.actions.startFitForBike}
             </Link>

@@ -71,6 +71,7 @@ export default function SettingsPage() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
   const [showStravaConsentInline, setShowStravaConsentInline] = useState(false);
   const [showStravaDisconnect, setShowStravaDisconnect] = useState(false);
   const [isConnectingStrava, setIsConnectingStrava] = useState(false);
@@ -318,7 +319,7 @@ export default function SettingsPage() {
                     disabled
                     className="shrink-0"
                   >
-                    <CheckCircle2 className="h-4 w-4 text-[color:var(--success,green)]" />
+                    <CheckCircle2 className="h-4 w-4 text-[color:var(--success)]" />
                     {messages.settings.integrations.connected}
                   </Button>
                 ) : (
@@ -494,24 +495,44 @@ export default function SettingsPage() {
 
       <AccessibleDialog
         open={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
+        onClose={() => {
+          setShowDeleteDialog(false);
+          setDeleteConfirmInput("");
+        }}
         title={messages.profile.dangerZone.deleteConfirmTitle}
         description={messages.profile.dangerZone.deleteConfirmDescription}
       >
-        <div className="mt-4 flex gap-3">
-          <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
-            {messages.profile.dangerZone.cancel}
-          </Button>
-          <Button
-            onClick={() => {
-              setShowDeleteDialog(false);
-              void handleDeleteAccount();
-            }}
-            isLoading={isDeleting}
-            variant="destructive"
-          >
-            {messages.profile.dangerZone.deleteConfirmCta}
-          </Button>
+        <div className="mt-4 space-y-4">
+          <Input
+            label={messages.profile.dangerZone.deleteConfirmInputLabel}
+            placeholder={messages.profile.dangerZone.deleteConfirmInputPlaceholder}
+            value={deleteConfirmInput}
+            onChange={(e) => setDeleteConfirmInput(e.target.value)}
+            autoComplete="off"
+          />
+          <div className="flex gap-3">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowDeleteDialog(false);
+                setDeleteConfirmInput("");
+              }}
+            >
+              {messages.profile.dangerZone.cancel}
+            </Button>
+            <Button
+              onClick={() => {
+                setShowDeleteDialog(false);
+                setDeleteConfirmInput("");
+                void handleDeleteAccount();
+              }}
+              isLoading={isDeleting}
+              variant="destructive"
+              disabled={deleteConfirmInput !== messages.profile.dangerZone.deleteConfirmWord}
+            >
+              {messages.profile.dangerZone.deleteConfirmCta}
+            </Button>
+          </div>
         </div>
       </AccessibleDialog>
 

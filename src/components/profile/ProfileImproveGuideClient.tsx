@@ -99,7 +99,7 @@ export function ProfileImproveGuideClient({
     <div className="mx-auto max-w-5xl space-y-8">
       <Link
         href={withLocalePrefix("/profile", locale)}
-        className="inline-flex text-sm font-semibold text-blue-700 hover:text-blue-800"
+        className="inline-flex text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
       >
         {backLabel}
       </Link>

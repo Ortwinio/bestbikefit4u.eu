@@ -91,7 +91,7 @@ export default function DashboardLayout({
             type="button"
             aria-label={messages.layout.mobileMenu.overlayCloseAria}
             onClick={() => setIsMobileMenuOpen(false)}
-            className="fixed inset-0 z-30 bg-black/30 md:hidden"
+            className="fixed inset-0 z-30 bg-[color:var(--foreground)]/20 md:hidden"
           />
           <nav className="fixed inset-y-0 left-0 z-40 w-72 overflow-y-auto border-r border-border bg-card p-4 md:hidden">
             <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">

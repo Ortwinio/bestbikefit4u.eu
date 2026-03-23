@@ -90,7 +90,7 @@ export function BikePhotoUpload({
       />
 
       {error ? (
-        <p className="text-xs text-red-600">
+        <p className="text-xs text-[color:var(--destructive)]">
           {error === "file_too_large"
             ? messages.profile.photo.fileTooLarge
             : error === "invalid_type"

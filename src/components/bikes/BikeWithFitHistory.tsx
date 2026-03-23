@@ -115,7 +115,7 @@ export function BikeWithFitHistory({
               <FitHistoryBikeImage source={bike?.photoUrl} />
               <div>
                 <CardTitle>{bikeTitle}</CardTitle>
-                <p className="mt-1 text-sm text-gray-600">{bikeSubtitle}</p>
+                <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">{bikeSubtitle}</p>
               </div>
             </div>
             <Link
@@ -123,7 +123,7 @@ export function BikeWithFitHistory({
                 bike ? `/fit?bikeId=${bike._id}` : "/fit",
                 locale
               )}
-              className="text-sm font-semibold text-blue-700 hover:text-blue-800"
+              className="text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
             >
               {messages.fitHistory.startNewSession}
             </Link>
@@ -138,21 +138,21 @@ export function BikeWithFitHistory({
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-sm font-semibold text-[color:var(--foreground)]">
                       {session.ridingStyle
                         ? messages.sessions.ridingStyle[session.ridingStyle]
                         : messages.nav.bikeFitting}
                     </p>
-                    <p className="mt-1 text-sm text-gray-600">
+                    <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
                       {new Date(
                         session.completedAt ?? session.createdAt
                       ).toLocaleDateString(locale === "nl" ? "nl-NL" : "en-US")}
                     </p>
-                    <p className="mt-1 text-sm text-gray-600">
+                    <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
                       {getStatusLabel(session.status)}
                     </p>
                     {recommendation ? (
-                      <div className="mt-2 space-y-1 text-sm text-gray-700">
+                      <div className="mt-2 space-y-1 text-sm text-[color:var(--foreground)]">
                         <p>
                           {messages.fitHistory.saddleHeight}:{" "}
                           {recommendation.calculatedFit.saddleHeightMm} mm
@@ -167,7 +167,7 @@ export function BikeWithFitHistory({
                         </p>
                       </div>
                     ) : (
-                      <p className="mt-2 text-sm text-gray-600">
+                      <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
                         {messages.fitHistory.noRecommendationYet}
                       </p>
                     )}
@@ -175,7 +175,7 @@ export function BikeWithFitHistory({
                   <div className="flex flex-col items-end gap-2">
                     <Link
                       href={withLocalePrefix(`/fit/${session._id}/results`, locale)}
-                      className="text-sm font-semibold text-blue-700 hover:text-blue-800"
+                      className="text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
                     >
                       {messages.fitHistory.viewReport}
                     </Link>

@@ -1098,6 +1098,9 @@ const nl = {
         deleteConfirmDescription:
           "Dit verwijdert permanent je profiel, fietsen, fit-sessies, aanbevelingen en alle andere gegevens. Deze actie kan niet ongedaan worden gemaakt.",
         deleteConfirmCta: "Ja, verwijder mijn account",
+        deleteConfirmInputLabel: "Typ \"Verwijder\" om te bevestigen",
+        deleteConfirmInputPlaceholder: "Verwijder",
+        deleteConfirmWord: "Verwijder",
         cancel: "Annuleren",
         deleteFailed: "Account verwijderen mislukt. Probeer het opnieuw.",
       },

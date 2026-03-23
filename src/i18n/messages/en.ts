@@ -1090,6 +1090,9 @@ const en = {
         deleteConfirmDescription:
           "This will permanently delete your profile, bikes, fit sessions, recommendations, and all other data. This action cannot be undone.",
         deleteConfirmCta: "Yes, delete my account",
+        deleteConfirmInputLabel: "Type \"Delete\" to confirm",
+        deleteConfirmInputPlaceholder: "Delete",
+        deleteConfirmWord: "Delete",
         cancel: "Cancel",
         deleteFailed: "Could not delete account. Please try again.",
       },
