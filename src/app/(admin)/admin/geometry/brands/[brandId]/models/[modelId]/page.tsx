@@ -191,7 +191,7 @@ export default function GeometryModelPage({ params }: PageProps) {
                         size="sm"
                         render={<Link href={`/admin/geometry/${String(record._id)}`} />}
                       >
-                        View detail
+                        Edit record
                       </Button>
                     </td>
                   </tr>

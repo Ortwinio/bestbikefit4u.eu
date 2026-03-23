@@ -15,9 +15,111 @@ async function getUserMap(ctx: QueryCtx) {
   return new Map<Id<"users">, Doc<"users">>(users.map((user) => [user._id, user]));
 }
 
-function matchesSearch(value: string | undefined, search: string | undefined) {
-  if (!search) return true;
-  return (value ?? "").toLowerCase().includes(search.toLowerCase());
+function normalizeSearchTerm(search: string | undefined) {
+  const trimmed = search?.trim();
+  return trimmed ? trimmed.toLowerCase() : "";
+}
+
+function matchesUserSearch(user: Doc<"users">, search: string | undefined) {
+  const needle = normalizeSearchTerm(search);
+  if (!needle) {
+    return true;
+  }
+
+  const candidateValues = [
+    user.email,
+    user.name,
+    user.displayName,
+    user.googleEmail,
+    user.googleName,
+    String(user._id),
+  ];
+
+  return candidateValues.some((value) => (value ?? "").toLowerCase().includes(needle));
+}
+
+function matchesUserFilters(
+  user: Doc<"users">,
+  args: {
+    tier?: string;
+    adminRole?: string;
+    suspended?: boolean;
+  }
+) {
+  if (args.tier && user.tier !== args.tier) {
+    return false;
+  }
+
+  if (args.adminRole === "admin_only" && !user.adminRole) {
+    return false;
+  }
+
+  if (args.adminRole === "none" && user.adminRole) {
+    return false;
+  }
+
+  if (args.adminRole &&
+    args.adminRole !== "admin_only" &&
+    args.adminRole !== "none" &&
+    user.adminRole !== args.adminRole
+  ) {
+    return false;
+  }
+
+  if (args.suspended === true && !user.suspendedAt) {
+    return false;
+  }
+
+  if (args.suspended === false && user.suspendedAt) {
+    return false;
+  }
+
+  return true;
+}
+
+function sortUsersForAdminSearch(a: Doc<"users">, b: Doc<"users">) {
+  const createdAtA = a.createdAt ?? 0;
+  const createdAtB = b.createdAt ?? 0;
+  if (createdAtA !== createdAtB) {
+    return createdAtB - createdAtA;
+  }
+
+  return String(a._id).localeCompare(String(b._id));
+}
+
+function paginateInMemory<T>(
+  rows: T[],
+  paginationOpts: { cursor: string | null; numItems: number }
+) {
+  const start = paginationOpts.cursor ? Number.parseInt(paginationOpts.cursor, 10) : 0;
+  const safeStart = Number.isFinite(start) && start >= 0 ? start : 0;
+  const page = rows.slice(safeStart, safeStart + paginationOpts.numItems);
+  const nextIndex = safeStart + page.length;
+
+  return {
+    page,
+    isDone: nextIndex >= rows.length,
+    continueCursor: nextIndex < rows.length ? String(nextIndex) : "",
+    splitCursor: null,
+    pageStatus: null,
+  };
+}
+
+function parseWarningsJson(value?: string | null) {
+  if (!value) {
+    return [] as string[];
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.filter((entry): entry is string => typeof entry === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function sortByCreatedAtDesc<T extends { createdAt?: number }>(rows: T[]) {
+  return [...rows].sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
 }
 
 async function requireBillingAdminRead(ctx: QueryCtx) {
@@ -172,21 +274,19 @@ export const listUsers = query({
   handler: async (ctx, args) => {
     await requirePeopleRead(ctx);
 
+    const search = normalizeSearchTerm(args.search);
+    if (search) {
+      const users = await ctx.db.query("users").collect();
+      const filtered = users
+        .filter((user) => matchesUserSearch(user, search) && matchesUserFilters(user, args))
+        .sort(sortUsersForAdminSearch);
+      return paginateInMemory(filtered, args.paginationOpts);
+    }
+
     return await ctx.db
       .query("users")
       .filter((q) => {
         const predicates = [];
-        if (args.search) {
-          const needle = args.search.toLowerCase();
-          predicates.push(
-            q.or(
-              q.eq(q.field("email"), args.search),
-              q.eq(q.field("name"), args.search),
-              q.eq(q.field("displayName"), args.search),
-              q.gte(q.field("email"), needle)
-            )
-          );
-        }
         if (args.tier) {
           predicates.push(q.eq(q.field("tier"), args.tier));
         }
@@ -507,13 +607,45 @@ export const getFitRunTrace = query({
     await requireGovernanceRead(ctx);
     const session = await ctx.db.get(sessionId);
     if (!session) return null;
-    const [user, bike, profile, engineVersion] = await Promise.all([
+    const [user, bike, profile, engineVersion, recommendations] = await Promise.all([
       ctx.db.get(session.userId),
       session.bikeId ? ctx.db.get(session.bikeId) : null,
       ctx.db.get(session.profileId),
       session.engineVersionId ? ctx.db.get(session.engineVersionId) : null,
+      ctx.db
+        .query("recommendations")
+        .withIndex("by_session", (q) => q.eq("sessionId", sessionId))
+        .collect(),
     ]);
-    return { session, user, bike, profile, engineVersion };
+    const recommendation = sortByCreatedAtDesc(recommendations)[0] ?? null;
+    const pressureCalculations = session.bikeId
+      ? await ctx.db
+          .query("pressureCalculations")
+          .withIndex("by_bike", (q) => q.eq("bikeId", session.bikeId))
+          .collect()
+      : [];
+    const latestPressureCalculation = sortByCreatedAtDesc(pressureCalculations)[0] ?? null;
+    const pressureWarnings = parseWarningsJson(latestPressureCalculation?.warningsJson);
+    const recommendationWarnings = recommendation?.pressureInsights?.warnings ?? [];
+
+    return {
+      session,
+      user,
+      bike,
+      profile,
+      engineVersion,
+      recommendation,
+      calculatedFit: recommendation?.calculatedFit ?? null,
+      comparisonSnapshot: recommendation?.comparisonSnapshot ?? null,
+      recommendationItems: recommendation?.recommendationItems ?? [],
+      fitNotes: recommendation?.fitNotes ?? [],
+      adjustmentPriorities: recommendation?.adjustmentPriorities ?? [],
+      pressureInsights: recommendation?.pressureInsights ?? null,
+      confidenceScore: recommendation?.confidenceScore ?? session.confidenceScore ?? null,
+      pressureCalculation: latestPressureCalculation,
+      pressureWarnings,
+      warnings: [...recommendationWarnings, ...pressureWarnings],
+    };
   },
 });
 

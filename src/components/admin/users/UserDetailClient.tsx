@@ -73,7 +73,6 @@ const roleOptions = [
 const messageTypeOptions = [
   { value: "banner", label: "Banner" },
   { value: "inbox_card", label: "Inbox card" },
-  { value: "modal", label: "Modal" },
   { value: "sticky_warning", label: "Sticky warning" },
   { value: "support_reply", label: "Support reply" },
 ] as const;

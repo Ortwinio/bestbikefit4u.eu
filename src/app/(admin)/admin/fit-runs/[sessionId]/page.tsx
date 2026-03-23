@@ -2,7 +2,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Doc } from "../../../../../../convex/_generated/dataModel";
 import { api } from "../../../../../../convex/_generated/api";
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Progress } from "@/components/ui";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  EmptyState,
+  Progress,
+} from "@/components/ui";
 import {
   AdminPageHeader,
   AdminSectionCard,
@@ -17,14 +26,19 @@ import {
   getBikeDisplayName,
 } from "@/components/admin/shared/admin-format";
 import { fetchAdminQuery, getAdminQueryToken } from "@/components/admin/shared/admin-live-data";
+import {
+  collectFitTraceArtifacts,
+  type FitRunTraceDetail,
+  formatTraceValue,
+} from "./fit-trace";
 
-type FitRunTraceDetail = {
-  session: Doc<"fitSessions">;
-  user: Doc<"users"> | null;
-  bike: Doc<"bikes"> | null;
-  profile: Doc<"profiles"> | null;
-  engineVersion: Doc<"engine_versions"> | null;
-};
+function formatTraceLabel(value: unknown) {
+  if (value === null || value === undefined || value === "") {
+    return "Not recorded";
+  }
+
+  return Array.isArray(value) || typeof value === "object" ? formatTraceValue(value) : String(value);
+}
 
 export default async function FitRunDetailPage({
   params,
@@ -46,6 +60,7 @@ export default async function FitRunDetailPage({
   const { session, user, bike, profile, engineVersion } = detail;
   const bikeLabel = getBikeDisplayName(bike);
   const confidence = formatAdminPercent(session.confidenceScore);
+  const traceArtifacts = collectFitTraceArtifacts(detail);
 
   return (
     <div className="space-y-8">
@@ -275,6 +290,38 @@ export default async function FitRunDetailPage({
               </p>
             )}
           </AdminSectionCard>
+
+          <AdminSectionCard
+            title="Output and warnings"
+            description="Any richer payloads already attached to the fit session."
+          >
+            {traceArtifacts.length === 0 ? (
+              <EmptyState
+                title="No extended trace payload"
+                description="This session does not currently expose output or warning payloads beyond the core snapshot."
+                className="border-none bg-transparent p-0 shadow-none"
+              />
+            ) : (
+              <div className="grid gap-3 md:grid-cols-2">
+                {traceArtifacts.map((artifact) => (
+                  <div
+                    key={artifact.key}
+                    className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4"
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                      {artifact.title}
+                    </p>
+                    <p className="mt-2 text-xs leading-5 text-[color:var(--muted-foreground)]">
+                      {artifact.description}
+                    </p>
+                    <pre className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-[color:var(--foreground)]">
+                      {formatTraceLabel(artifact.value)}
+                    </pre>
+                  </div>
+                ))}
+              </div>
+            )}
+          </AdminSectionCard>
         </div>
 
         <div className="space-y-6">
@@ -317,6 +364,24 @@ export default async function FitRunDetailPage({
                     ? "Review notes are recorded for this session."
                     : "No review note has been saved yet."}
                 </p>
+                {session.reviewNotes ? (
+                  <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                      Review notes
+                    </p>
+                    <p className="mt-2 whitespace-pre-wrap text-sm leading-6">{session.reviewNotes}</p>
+                  </div>
+                ) : null}
+                {"resultSummary" in (session as Record<string, unknown>) ? (
+                  <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                      Session summary
+                    </p>
+                    <p className="mt-2 whitespace-pre-wrap text-sm leading-6">
+                      {formatTraceLabel((session as Record<string, unknown>).resultSummary)}
+                    </p>
+                  </div>
+                ) : null}
               </div>
             </div>
           </AdminSectionCard>

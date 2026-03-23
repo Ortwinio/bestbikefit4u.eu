@@ -62,7 +62,6 @@ const statusOptions: Array<{ value: "all" | DashboardMessageStatus; label: strin
 const typeOptions: Array<{ value: DashboardMessageType; label: string }> = [
   { value: "banner", label: "Banner" },
   { value: "inbox_card", label: "Inbox card" },
-  { value: "modal", label: "Modal" },
   { value: "sticky_warning", label: "Sticky warning" },
   { value: "release_announcement", label: "Release announcement" },
   { value: "upgrade_prompt", label: "Upgrade prompt" },

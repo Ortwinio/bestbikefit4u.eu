@@ -46,6 +46,8 @@ function makeCtx({
   user,
   integration = null,
   fitSessions = [],
+  memberships = [],
+  bikes = [],
 }: {
   messages: FakeRecord[];
   targets: FakeRecord[];
@@ -53,6 +55,8 @@ function makeCtx({
   user: FakeRecord | null;
   integration?: FakeRecord | null;
   fitSessions?: FakeRecord[];
+  memberships?: FakeRecord[];
+  bikes?: FakeRecord[];
 }) {
   return {
     db: {
@@ -68,6 +72,10 @@ function makeCtx({
             return makeIndexQuery(integration ? [integration] : [], "unique");
           case "fitSessions":
             return makeIndexQuery(fitSessions);
+          case "organization_members":
+            return makeIndexQuery(memberships);
+          case "bikes":
+            return makeIndexQuery(bikes);
           default:
             throw new Error(`Unhandled table ${table}`);
         }
@@ -221,5 +229,48 @@ describe("messages.getMyMessages contract", () => {
     expect(
       (await handler(completedCtx, { locale: "en" })) as Array<{ _id: string }>
     ).toEqual([expect.objectContaining({ _id: "msg_fit" })]);
+  });
+
+  it("supports organization and bike-type targeting in rider message visibility", async () => {
+    getAuthUserIdMock.mockResolvedValue("user_1");
+    const now = Date.now();
+    const handler = (getMyMessages as unknown as { _handler: TestHandler })._handler;
+    const ctx = makeCtx({
+      messages: [
+        {
+          _id: "msg_org",
+          title: "Org message",
+          status: "published",
+          locale: "all",
+          priority: "normal",
+          type: "banner",
+          dismissible: true,
+          requiresAcknowledgement: false,
+          createdAt: now,
+        },
+        {
+          _id: "msg_bike",
+          title: "Bike message",
+          status: "published",
+          locale: "all",
+          priority: "normal",
+          type: "banner",
+          dismissible: true,
+          requiresAcknowledgement: false,
+          createdAt: now,
+        },
+      ],
+      targets: [
+        { messageId: "msg_org", targetType: "organization", targetValue: "org_1" },
+        { messageId: "msg_bike", targetType: "bike_type", targetValue: "gravel" },
+      ],
+      user: { _id: "user_1", tier: "free" },
+      memberships: [{ _id: "member_1", userId: "user_1", organizationId: "org_1" }],
+      bikes: [{ _id: "bike_1", userId: "user_1", bikeType: "gravel" }],
+    });
+
+    const result = (await handler(ctx, { locale: "en" })) as Array<{ _id: string }>;
+
+    expect(result.map((item) => item._id)).toEqual(["msg_org", "msg_bike"]);
   });
 });

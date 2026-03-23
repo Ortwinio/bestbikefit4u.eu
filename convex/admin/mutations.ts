@@ -1,7 +1,171 @@
 import { v } from "convex/values";
-import { mutation } from "../_generated/server";
+import type { Doc, Id } from "../_generated/dataModel";
+import { mutation, type MutationCtx } from "../_generated/server";
 import { writeAuditLog } from "./audit";
 import { requireAnyRole, requireAdminRole, requireAdminUserId } from "./authz";
+
+type DashboardMessageTargetInput = {
+  targetType: string;
+  targetValue?: string;
+};
+
+type DashboardMessageInput = {
+  title: string;
+  body: string;
+  type:
+    | "banner"
+    | "inbox_card"
+    | "modal"
+    | "sticky_warning"
+    | "release_announcement"
+    | "upgrade_prompt"
+    | "safety_alert"
+    | "re_fit_reminder"
+    | "support_reply";
+  priority: "low" | "normal" | "high" | "urgent";
+  ctaText?: string;
+  ctaUrl?: string;
+  locale?: "all" | "en" | "nl";
+  dismissible: boolean;
+  requiresAcknowledgement: boolean;
+  startsAt?: number;
+  expiresAt?: number;
+  linkedReleaseId?: Id<"releases">;
+  linkedFeedbackItemId?: Id<"feedback_items">;
+};
+
+function resolveDashboardMessageStatus(startsAt: number | undefined, now: number) {
+  if (startsAt === undefined) {
+    return "draft" as const;
+  }
+
+  return startsAt <= now ? ("published" as const) : ("scheduled" as const);
+}
+
+function resolveDashboardMessagePublishedAt(
+  status: "draft" | "scheduled" | "published" | "expired" | "paused",
+  now: number,
+  existingPublishedAt?: number
+) {
+  if (status !== "published") {
+    return undefined;
+  }
+
+  return existingPublishedAt ?? now;
+}
+
+async function createDashboardMessageRecord(
+  ctx: MutationCtx,
+  adminId: Id<"users">,
+  targets: DashboardMessageTargetInput[],
+  message: DashboardMessageInput
+) {
+  const now = Date.now();
+  const status = resolveDashboardMessageStatus(message.startsAt, now);
+  const messageId = await ctx.db.insert("dashboard_messages", {
+    ...message,
+    status,
+    publishedAt: resolveDashboardMessagePublishedAt(status, now),
+    createdAt: now,
+    createdBy: adminId,
+  });
+
+  for (const target of targets) {
+    await ctx.db.insert("message_targets", {
+      messageId,
+      targetType: target.targetType,
+      targetValue: target.targetValue,
+      createdAt: now,
+    });
+  }
+
+  await writeAuditLog(ctx, {
+    adminUserId: adminId,
+    action: "message.create",
+    targetType: "message",
+    targetId: messageId,
+    payload: { ...message, targets },
+  });
+
+  return messageId;
+}
+
+function isAllowedReleaseTransition(
+  currentStatus: Doc<"releases">["status"],
+  nextStatus: Doc<"releases">["status"]
+) {
+  if (currentStatus === "archived") {
+    return nextStatus === "archived";
+  }
+
+  return true;
+}
+
+async function getLinkedFeedbackItems(
+  ctx: MutationCtx,
+  releaseId: Id<"releases">
+) {
+  const releaseItems = await ctx.db
+    .query("release_items")
+    .withIndex("by_release", (q) => q.eq("releaseId", releaseId))
+    .collect();
+  const feedbackItemIds = releaseItems
+    .filter((item) => item.itemType === "feedback_item")
+    .map((item) => item.itemId as Id<"feedback_items">);
+  const feedbackItems = await Promise.all(feedbackItemIds.map((feedbackItemId) => ctx.db.get(feedbackItemId)));
+  return feedbackItems.filter((item): item is Doc<"feedback_items"> => item !== null);
+}
+
+async function markFeedbackItemsReleased(
+  ctx: MutationCtx,
+  releaseId: Id<"releases">
+) {
+  const feedbackItems = await getLinkedFeedbackItems(ctx, releaseId);
+  const now = Date.now();
+  for (const item of feedbackItems) {
+    await ctx.db.patch(item._id, {
+      status: "released",
+      linkedReleaseId: releaseId,
+      updatedAt: now,
+    });
+  }
+
+  return feedbackItems.length;
+}
+
+async function createFeedbackReplyNotification(
+  ctx: MutationCtx,
+  adminId: Id<"users">,
+  feedbackItem: Pick<Doc<"feedback_items">, "_id" | "userId" | "title" | "linkedReleaseId">,
+  body: string
+) {
+  if (!feedbackItem.userId) {
+    return null;
+  }
+
+  return await createDashboardMessageRecord(
+    ctx,
+    adminId,
+    [
+      {
+        targetType: "user",
+        targetValue: String(feedbackItem.userId),
+      },
+    ],
+    {
+      title: `Update on ${feedbackItem.title}`,
+      body,
+      type: "support_reply",
+      priority: "normal",
+      locale: "all",
+      dismissible: true,
+      requiresAcknowledgement: false,
+      startsAt: Date.now(),
+      linkedReleaseId: feedbackItem.linkedReleaseId,
+      linkedFeedbackItemId: feedbackItem._id,
+    }
+  );
+}
 
 export const changeUserTier = mutation({
   args: {
@@ -378,6 +542,69 @@ export const createGeometryRecordVersion = mutation({
   },
 });
 
+export const saveGeometryRecordVersion = mutation({
+  args: {
+    recordId: v.id("geometry_records"),
+    source: v.union(
+      v.literal("manufacturer"),
+      v.literal("admin_import"),
+      v.literal("admin_manual"),
+      v.literal("user_entered")
+    ),
+    sourceUrl: v.optional(v.string()),
+    changeReason: v.string(),
+    stack: v.optional(v.number()),
+    reach: v.optional(v.number()),
+    seatTubeAngle: v.optional(v.number()),
+    headTubeAngle: v.optional(v.number()),
+    wheelbase: v.optional(v.number()),
+    chainstay: v.optional(v.number()),
+    bbDrop: v.optional(v.number()),
+    effectiveTopTube: v.optional(v.number()),
+    standover: v.optional(v.number()),
+    forkRake: v.optional(v.number()),
+    headTubeLength: v.optional(v.number()),
+  },
+  handler: async (ctx, { recordId, ...updates }) => {
+    const adminId = await requireAnyRole(ctx, ["super_admin", "geometry_manager"]);
+    const record = await ctx.db.get(recordId);
+    if (!record) {
+      throw new Error("Geometry record not found");
+    }
+
+    const nextId = await ctx.db.insert("geometry_records", {
+      ...record,
+      ...updates,
+      status: "draft",
+      version: record.version + 1,
+      supersededBy: undefined,
+      reviewedBy: undefined,
+      reviewedAt: undefined,
+      createdAt: Date.now(),
+      createdBy: adminId,
+    });
+
+    await ctx.db.patch(recordId, {
+      status: "superseded",
+      supersededBy: nextId,
+    });
+
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "geometry.version_edit",
+      targetType: "geometry_record",
+      targetId: nextId,
+      payload: {
+        previousRecordId: recordId,
+        updates,
+      },
+      reason: updates.changeReason,
+    });
+
+    return nextId;
+  },
+});
+
 export const linkBikeToGeometry = mutation({
   args: { bikeId: v.id("bikes"), recordId: v.id("geometry_records") },
   handler: async (ctx, { bikeId, recordId }) => {
@@ -522,16 +749,27 @@ export const updateReleaseStatus = mutation({
   },
   handler: async (ctx, { releaseId, status }) => {
     const adminId = await requireAnyRole(ctx, ["super_admin", "qa_manager", "ops_admin"]);
+    const release = await ctx.db.get(releaseId);
+    if (!release) {
+      throw new Error("Release not found");
+    }
+
+    if (!isAllowedReleaseTransition(release.status, status)) {
+      throw new Error(`Not allowed to transition release from ${release.status} to ${status}`);
+    }
+
     await ctx.db.patch(releaseId, {
       status,
       liveAt: status === "live" ? Date.now() : undefined,
     });
+
+    const releasedFeedbackCount = status === "live" ? await markFeedbackItemsReleased(ctx, releaseId) : 0;
     await writeAuditLog(ctx, {
       adminUserId: adminId,
       action: "release.status_change",
       targetType: "release",
       targetId: releaseId,
-      payload: { status },
+      payload: { from: release.status, to: status, releasedFeedbackCount },
     });
   },
 });
@@ -540,6 +778,7 @@ export const linkFeedbackToRelease = mutation({
   args: { feedbackItemId: v.id("feedback_items"), releaseId: v.id("releases") },
   handler: async (ctx, { feedbackItemId, releaseId }) => {
     const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager"]);
+    const release = await ctx.db.get(releaseId);
     await ctx.db.patch(feedbackItemId, { linkedReleaseId: releaseId, updatedAt: Date.now() });
     await ctx.db.insert("release_items", {
       releaseId,
@@ -547,6 +786,12 @@ export const linkFeedbackToRelease = mutation({
       itemId: feedbackItemId,
       createdAt: Date.now(),
     });
+    if (release?.status === "live") {
+      await ctx.db.patch(feedbackItemId, {
+        status: "released",
+        updatedAt: Date.now(),
+      });
+    }
     await writeAuditLog(ctx, {
       adminUserId: adminId,
       action: "feedback.link_release",
@@ -600,6 +845,7 @@ export const addFeedbackComment = mutation({
   },
   handler: async (ctx, { feedbackItemId, body, isInternal }) => {
     const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager", "support_admin"]);
+    const feedbackItem = await ctx.db.get(feedbackItemId);
     const commentId = await ctx.db.insert("feedback_comments", {
       feedbackItemId,
       authorUserId: adminId,
@@ -614,6 +860,11 @@ export const addFeedbackComment = mutation({
       targetId: feedbackItemId,
       payload: { commentId, isInternal },
     });
+
+    if (!isInternal && feedbackItem) {
+      await createFeedbackReplyNotification(ctx, adminId, feedbackItem, body);
+    }
+
     return commentId;
   },
 });
@@ -646,6 +897,8 @@ export const createDashboardMessage = mutation({
     requiresAcknowledgement: v.boolean(),
     startsAt: v.optional(v.number()),
     expiresAt: v.optional(v.number()),
+    linkedReleaseId: v.optional(v.id("releases")),
+    linkedFeedbackItemId: v.optional(v.id("feedback_items")),
     targets: v.array(
       v.object({
         targetType: v.string(),
@@ -655,28 +908,7 @@ export const createDashboardMessage = mutation({
   },
   handler: async (ctx, { targets, ...message }) => {
     const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager", "support_admin"]);
-    const messageId = await ctx.db.insert("dashboard_messages", {
-      ...message,
-      status: message.startsAt ? "scheduled" : "draft",
-      createdAt: Date.now(),
-      createdBy: adminId,
-    });
-    for (const target of targets) {
-      await ctx.db.insert("message_targets", {
-        messageId,
-        targetType: target.targetType,
-        targetValue: target.targetValue,
-        createdAt: Date.now(),
-      });
-    }
-    await writeAuditLog(ctx, {
-      adminUserId: adminId,
-      action: "message.create",
-      targetType: "message",
-      targetId: messageId,
-      payload: { ...message, targets },
-    });
-    return messageId;
+    return await createDashboardMessageRecord(ctx, adminId, targets, message);
   },
 });
 
@@ -719,7 +951,21 @@ export const updateDashboardMessage = mutation({
   },
   handler: async (ctx, { messageId, targets, ...updates }) => {
     const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager", "support_admin"]);
-    await ctx.db.patch(messageId, updates);
+    const existing = await ctx.db.get(messageId);
+    if (!existing) {
+      throw new Error("Message not found");
+    }
+
+    const shouldResolveStatus = updates.startsAt !== undefined;
+    const status = shouldResolveStatus
+      ? resolveDashboardMessageStatus(updates.startsAt, Date.now())
+      : existing.status;
+
+    await ctx.db.patch(messageId, {
+      ...updates,
+      status,
+      publishedAt: resolveDashboardMessagePublishedAt(status, Date.now(), existing.publishedAt),
+    });
     if (targets) {
       const existingTargets = await ctx.db
         .query("message_targets")
@@ -751,7 +997,15 @@ export const publishDashboardMessage = mutation({
   args: { messageId: v.id("dashboard_messages") },
   handler: async (ctx, { messageId }) => {
     const adminId = await requireAnyRole(ctx, ["super_admin", "ops_admin", "qa_manager", "support_admin"]);
-    await ctx.db.patch(messageId, { status: "published", publishedAt: Date.now() });
+    const existing = await ctx.db.get(messageId);
+    if (!existing) {
+      throw new Error("Message not found");
+    }
+
+    await ctx.db.patch(messageId, {
+      status: "published",
+      publishedAt: existing.publishedAt ?? Date.now(),
+    });
     await writeAuditLog(ctx, {
       adminUserId: adminId,
       action: "message.publish",

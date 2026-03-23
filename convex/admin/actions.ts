@@ -71,36 +71,108 @@ export const notifyRelease = action({
     const release = await ctx.runQuery(api.admin.queries.getReleaseDetail, {
       releaseId: args.releaseId,
     });
+    const releaseDetail = release as
+      | {
+          release: { name: string; versionLabel?: string | null; description?: string | null } | null;
+          linkedItems?: Array<{ itemType: string; itemId: string }>;
+        }
+      | null;
+    const releaseName = releaseDetail?.release?.name ?? "Release update";
+    const releaseLabel = releaseDetail?.release?.versionLabel
+      ? `${releaseName} · ${releaseDetail.release.versionLabel}`
+      : releaseName;
+    const announcementTargets =
+      args.announcementTargets && args.announcementTargets.length > 0
+        ? args.announcementTargets
+        : [{ targetType: "all" }];
 
     if (args.sendGeneralAnnouncement) {
-      const releaseDetail = release as
-        | { release: { name: string; versionLabel?: string | null; description?: string | null } | null }
-        | null;
       const announcementId = await ctx.runMutation(api.admin.mutations.createDashboardMessage, {
-        title: releaseDetail?.release
-          ? `Release announced: ${releaseDetail.release.name}`
-          : "Release announcement",
+        title: `Release announced: ${releaseLabel}`,
         body:
           releaseDetail?.release?.description ??
-          releaseDetail?.release?.versionLabel ??
-          "A new release is available.",
+          `Release ${releaseLabel} is now available.`,
         type: "release_announcement",
         priority: "normal",
-        ctaText: "View release",
-        ctaUrl: `/admin/releases/${args.releaseId}`,
+        ctaText: "View update",
+        ctaUrl: `/feedback`,
         locale: "all",
         dismissible: true,
         requiresAcknowledgement: false,
         startsAt: Date.now(),
-        targets: args.announcementTargets ?? [],
+        linkedReleaseId: args.releaseId,
+        targets: announcementTargets,
       });
       await ctx.runMutation(api.admin.mutations.publishDashboardMessage, {
         messageId: announcementId,
       });
     }
 
+    let notifiedUsers = 0;
+    if (args.sendToAffectedUsers) {
+      const linkedFeedbackItems = await Promise.all(
+        (releaseDetail?.linkedItems ?? [])
+          .filter((item) => item.itemType === "feedback_item")
+          .map(async (item) =>
+            await ctx.runQuery(api.admin.queries.getFeedbackDetail, {
+              feedbackItemId: item.itemId as Id<"feedback_items">,
+            })
+          )
+      );
+
+      const usersById = new Map<
+        string,
+        {
+          userId: Id<"users">;
+          feedbackItems: Array<{ _id: Id<"feedback_items">; title: string }>;
+        }
+      >();
+
+      for (const detail of linkedFeedbackItems) {
+        if (!detail?.item.userId) {
+          continue;
+        }
+
+        const key = String(detail.item.userId);
+        const current = usersById.get(key) ?? {
+          userId: detail.item.userId,
+          feedbackItems: [],
+        };
+        current.feedbackItems.push({
+          _id: detail.item._id,
+          title: detail.item.title,
+        });
+        usersById.set(key, current);
+      }
+
+      for (const { userId, feedbackItems } of usersById.values()) {
+        const primaryFeedbackItem = feedbackItems[0];
+        const feedbackSummary =
+          feedbackItems.length === 1
+            ? `your feedback item "${primaryFeedbackItem?.title ?? "feedback"}"`
+            : `${feedbackItems.length} feedback items you reported`;
+        const messageId = await ctx.runMutation(api.admin.mutations.createDashboardMessage, {
+          title: `Update on your feedback`,
+          body: `The release ${releaseLabel} is now live and addresses ${feedbackSummary}.`,
+          type: "support_reply",
+          priority: "normal",
+          locale: "all",
+          dismissible: true,
+          requiresAcknowledgement: false,
+          startsAt: Date.now(),
+          linkedReleaseId: args.releaseId,
+          linkedFeedbackItemId: primaryFeedbackItem?._id,
+          targets: [{ targetType: "user", targetValue: String(userId) }],
+        });
+        await ctx.runMutation(api.admin.mutations.publishDashboardMessage, {
+          messageId,
+        });
+        notifiedUsers += 1;
+      }
+    }
+
     return {
-      notifiedUsers: args.sendToAffectedUsers ? 0 : 0,
+      notifiedUsers,
       generalAnnouncementCreated: args.sendGeneralAnnouncement,
       release,
     };

@@ -54,7 +54,7 @@ export default async function AdminLoginPage() {
         </section>
 
         <section>
-          <Card className="border-[color:var(--border)] bg-[color:var(--card)] shadow-2xl shadow-black/10">
+          <Card className="border-[color:var(--border)] bg-[color:var(--card)] shadow-2xl">
             <CardContent className="p-6 sm:p-8">
               <div className="mb-6 flex items-center gap-3">
                 <div className="flex size-11 items-center justify-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]">

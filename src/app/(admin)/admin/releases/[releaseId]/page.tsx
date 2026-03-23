@@ -16,6 +16,7 @@ import {
   ReleaseStatusPill,
   ReleaseTypePill,
 } from "@/components/admin/releases/release-ui";
+import { ReleaseActionPanel } from "@/components/admin/releases/ReleaseActionPanel";
 import {
   formatAdminDate,
   formatAdminDateTime,
@@ -71,6 +72,9 @@ export default async function ReleaseDetailPage({
         .map((entry) => entry.trim())
         .filter(Boolean)
     : [];
+  const linkedFeedbackIds = detail.linkedItems
+    .filter((item) => item.itemType === "feedback_item")
+    .map((item) => String(item.itemId));
   const isLive = release.status === "live";
   const isRollingOut = release.status === "rolling_out";
 
@@ -262,6 +266,12 @@ export default async function ReleaseDetailPage({
               )}
             </div>
           </AdminSectionCard>
+
+          <ReleaseActionPanel
+            releaseId={release._id}
+            releaseStatus={release.status}
+            linkedFeedbackIds={linkedFeedbackIds}
+          />
 
           <AdminSectionCard
             title="Release snapshot"

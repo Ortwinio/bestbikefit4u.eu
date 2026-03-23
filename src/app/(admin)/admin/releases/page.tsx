@@ -18,6 +18,7 @@ import {
   releaseTypeLabel,
   ReleaseTypePill,
 } from "@/components/admin/releases/release-ui";
+import { ReleaseCreateCard } from "@/components/admin/releases/ReleaseCreateCard";
 import {
   formatAdminDate,
   formatAdminDateTime,
@@ -139,6 +140,9 @@ export default async function ReleasesPage({
         description="Track rollout state, QA readiness, and linked operational impact from a single admin surface."
         actions={
           <>
+            <Button variant="outline" render={<Link href="#new-release" />}>
+              New release
+            </Button>
             <Button variant="outline" render={<Link href="/admin/releases/calendar" />}>
               Calendar
             </Button>
@@ -236,6 +240,9 @@ export default async function ReleasesPage({
         </AdminSectionCard>
 
         <div className="space-y-6">
+          <div id="new-release">
+            <ReleaseCreateCard />
+          </div>
           <AdminSectionCard
             title="Rollout health"
             description="Current production and scheduled activity at a glance."

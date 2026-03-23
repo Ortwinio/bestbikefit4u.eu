@@ -204,7 +204,7 @@ export function AdminShell({
           <button
             type="button"
             aria-label="Close admin navigation"
-            className="absolute inset-0 bg-black/45"
+            className="absolute inset-0 bg-[color:color-mix(in_oklch,var(--foreground)_45%,transparent)]"
             onClick={() => setIsMobileMenuOpen(false)}
           />
           <aside className="absolute inset-y-0 left-0 w-[min(100%,20rem)] overflow-y-auto border-r border-[color:var(--border)] bg-[color:var(--card)] shadow-2xl">

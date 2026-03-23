@@ -171,25 +171,11 @@ export function AdminTableHead({
 
 export function AdminTableRow({
   children,
-  href,
 }: {
   children: ReactNode;
-  href?: string;
 }) {
-  const row = (
-    <tr className={cn("border-t border-[color:var(--border)]", href ? "group hover:bg-[color:var(--accent)]" : "")}>
-      {children}
-    </tr>
-  );
-
-  if (!href) {
-    return row;
-  }
-
   return (
-    <Link href={href} className="contents">
-      {row}
-    </Link>
+    <tr className="border-t border-[color:var(--border)]">{children}</tr>
   );
 }
 

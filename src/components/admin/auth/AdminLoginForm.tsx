@@ -114,7 +114,7 @@ export function AdminLoginForm() {
 
   if (step === "code") {
     return (
-      <Card className="border-[color:var(--border)] bg-[color:var(--card)] shadow-xl shadow-black/10">
+      <Card className="border-[color:var(--border)] bg-[color:var(--card)] shadow-xl">
         <CardHeader className="space-y-3">
           <Button
             type="button"
@@ -171,7 +171,7 @@ export function AdminLoginForm() {
   }
 
   return (
-    <Card className="border-[color:var(--border)] bg-[color:var(--card)] shadow-xl shadow-black/10">
+    <Card className="border-[color:var(--border)] bg-[color:var(--card)] shadow-xl">
       <CardHeader className="space-y-3">
         <CardTitle className="text-2xl tracking-tight">Request admin access code</CardTitle>
         <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
