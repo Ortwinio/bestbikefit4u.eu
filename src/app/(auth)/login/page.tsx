@@ -364,9 +364,12 @@ export default function LoginPage() {
         sourceTag,
       });
       if (result.redirect) {
-        // Reset all form inputs to clear browser's native "Leave site?" prompt
+        const redirectUrl = result.redirect.toString();
+        // Reset forms at the DOM level to clear browser's native "Leave site?" prompt.
+        // blur() alone is insufficient; form.reset() removes the dirty state.
+        document.querySelectorAll("form").forEach((form) => form.reset());
         document.querySelectorAll("input").forEach((el) => el.blur());
-        window.location.href = result.redirect.toString();
+        window.location.href = redirectUrl;
         return;
       }
       setError(text.googleSignInError);

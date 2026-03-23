@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useConvexAuth } from "convex/react";
+import { useConvexAuth, useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { Button, LoadingState } from "@/components/ui";
 import { DashboardMessageSurface } from "@/components/dashboard-messages";
@@ -25,6 +26,8 @@ export default function DashboardLayout({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
   const { isLoading, isAuthenticated } = useConvexAuth();
+  const user = useQuery(api.users.queries.getCurrentUser);
+  const isSuperAdmin = user?.adminRole === "super_admin";
   const { locale, messages, languageSwitchLabels } = useDashboardMessages();
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
   const loginPath = toLocalizedPath("/login");
@@ -134,6 +137,35 @@ export default function DashboardLayout({
                 </Link>
               ))}
             </div>
+            {isSuperAdmin && (
+              <>
+                <p className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  {messages.layout.sections.admin}
+                </p>
+                <div className="space-y-1">
+                  {[
+                    { href: "/admin/overview", label: messages.layout.admin.overview },
+                    { href: "/admin/users", label: messages.layout.admin.users },
+                    { href: "/admin/bikes", label: messages.layout.admin.bikes },
+                    { href: "/admin/feedback", label: messages.layout.admin.feedback },
+                    { href: "/admin/messages", label: messages.layout.admin.messages },
+                    { href: "/admin/releases", label: messages.layout.admin.releases },
+                    { href: "/admin/geometry", label: messages.layout.admin.geometry },
+                    { href: "/admin/fit-runs", label: messages.layout.admin.fitRuns },
+                    { href: "/admin/settings", label: messages.layout.admin.settings },
+                  ].map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </>
+            )}
           </nav>
         </>
       )}

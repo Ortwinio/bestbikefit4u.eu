@@ -54,7 +54,20 @@ export function DashboardSidebar() {
     { name: messages.layout.website.pricing, href: "/pricing" },
   ];
 
+  const adminNavigation = [
+    { name: messages.layout.admin.overview, href: "/admin/overview" },
+    { name: messages.layout.admin.users, href: "/admin/users" },
+    { name: messages.layout.admin.bikes, href: "/admin/bikes" },
+    { name: messages.layout.admin.feedback, href: "/admin/feedback" },
+    { name: messages.layout.admin.messages, href: "/admin/messages" },
+    { name: messages.layout.admin.releases, href: "/admin/releases" },
+    { name: messages.layout.admin.geometry, href: "/admin/geometry" },
+    { name: messages.layout.admin.fitRuns, href: "/admin/fit-runs" },
+    { name: messages.layout.admin.settings, href: "/admin/settings" },
+  ];
+
   const user = useQuery(api.users.queries.getCurrentUser);
+  const isSuperAdmin = user?.adminRole === "super_admin";
 
   const handleSignOut = async () => {
     await signOut();
@@ -102,6 +115,25 @@ export function DashboardSidebar() {
             );
           })}
         </nav>
+
+        {isSuperAdmin && (
+          <div className="border-t border-[color:var(--border)] px-3 py-3">
+            <p className="px-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+              {messages.layout.sections.admin}
+            </p>
+            <div className="mt-2 space-y-1">
+              {adminNavigation.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="block rounded-lg px-3 py-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="border-t border-[color:var(--border)] px-3 py-3">
           <p className="px-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
