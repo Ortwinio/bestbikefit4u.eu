@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildFeedbackSubmissionPayload,
   buildFeedbackValidation,
   createEmptyFeedbackState,
   getFeedbackGuidedPrompts,
@@ -15,6 +16,8 @@ const copy = {
     descriptionLabel: "Description",
     expectedResultLabel: "Expected result",
     actualResultLabel: "Actual result",
+    contactEmailLabel: "Contact email",
+    contactNameLabel: "Name",
   },
 };
 
@@ -50,6 +53,8 @@ describe("feedback-flow", () => {
         actualResult: "",
         pagePath: "",
         browserInfoJson: "",
+        contactEmail: "",
+        contactName: "",
       },
       copy
     );
@@ -63,6 +68,8 @@ describe("feedback-flow", () => {
         actualResult: "",
         pagePath: "",
         browserInfoJson: "",
+        contactEmail: "",
+        contactName: "",
       },
       copy
     );
@@ -82,5 +89,55 @@ describe("feedback-flow", () => {
   it("returns user-facing lifecycle guidance for feedback statuses", () => {
     expect(getFeedbackStatusDescription("planned", "en")).toContain("planned");
     expect(getFeedbackStatusDescription("released", "nl")).toContain("release");
+  });
+
+  it("builds the rich submission payload for anonymous feedback", () => {
+    expect(
+      buildFeedbackSubmissionPayload({
+        type: "support_case",
+        form: {
+          title: " Need help ",
+          description: " Cannot find the saved result ",
+          category: "",
+          expectedResult: "",
+          actualResult: "",
+          pagePath: "/en/calculators/bike-fit",
+          browserInfoJson: '{"userAgent":"test"}',
+          contactEmail: " rider@example.com ",
+          contactName: " Rider ",
+        },
+        locale: "en",
+        pathname: "/calculators/bike-fit",
+        pageUrl: "https://bestbikefit4u.eu/en/calculators/bike-fit",
+        queryString: "step=results",
+        routeFamily: "calculators",
+        activityTrail: [
+          { action: "route_view", pathname: "/calculators/bike-fit", timestamp: 1 },
+        ],
+        activitySummary: "User opened the feedback panel from /calculators/bike-fit.",
+        isAuthenticated: false,
+      })
+    ).toEqual({
+      type: "support_case",
+      title: "Need help",
+      description: "Cannot find the saved result",
+      category: undefined,
+      pageUrl: "https://bestbikefit4u.eu/en/calculators/bike-fit",
+      pathname: "/calculators/bike-fit",
+      queryString: "step=results",
+      locale: "en",
+      pagePath: "/en/calculators/bike-fit",
+      routeFamily: "calculators",
+      activitySummary: "User opened the feedback panel from /calculators/bike-fit.",
+      activityTrailJson:
+        '[{"action":"route_view","pathname":"/calculators/bike-fit","timestamp":1}]',
+      linkedSessionId: undefined,
+      linkedBikeId: undefined,
+      contactEmail: "rider@example.com",
+      contactName: "Rider",
+      expectedResult: undefined,
+      actualResult: undefined,
+      browserInfoJson: '{"userAgent":"test"}',
+    });
   });
 });

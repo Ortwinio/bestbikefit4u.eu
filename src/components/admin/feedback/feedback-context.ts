@@ -216,7 +216,7 @@ export function getFeedbackActivityTrail(item: Doc<"feedback_items">) {
       if (!entry || typeof entry !== "object") {
         return null;
       }
-      const activity = entry as ActivityEntry;
+      const activity = entry as Exclude<ActivityEntry, string>;
       if (typeof activity.label === "string" && activity.label.trim()) {
         return activity.label.trim();
       }

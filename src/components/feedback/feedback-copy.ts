@@ -17,12 +17,16 @@ type FeedbackCopy = {
   dialog: {
     title: string;
     subtitle: string;
+    mission: string;
     chooseTypeTitle: string;
     chooseTypeSubtitle: string;
     formTitle: string;
     formSubtitle: string;
     successTitle: string;
     successSubtitle: string;
+    nextStepsTitle: string;
+    nextSteps: string[];
+    guidedPromptsTitle: string;
     submit: string;
     submitting: string;
     submitAnother: string;
@@ -35,17 +39,22 @@ type FeedbackCopy = {
     pagePathLabel: string;
     browserInfoLabel: string;
     browserInfoHelper: string;
+    contactEmailLabel: string;
+    contactNameLabel: string;
     categoryHelper: string;
     placeholders: {
       bugTitle: string;
       featureRequestTitle: string;
       supportCaseTitle: string;
+      reviewTitle: string;
       description: string;
       category: string;
       expectedResult: string;
       actualResult: string;
       pagePath: string;
       browserInfo: string;
+      contactEmail: string;
+      contactName: string;
     };
     linkedContextLabel: string;
     linkedSessionLabel: string;
@@ -56,7 +65,7 @@ type FeedbackCopy = {
     expectedResultLabel: string;
     actualResultLabel: string;
   };
-  types: Record<"bug" | "feature_request" | "support_case", { label: string; description: string }>;
+  types: Record<"bug" | "feature_request" | "support_case" | "review", { label: string; description: string }>;
   statuses: Record<
     "new" | "triaged" | "needs_info" | "planned" | "in_progress" | "in_qa" | "released" | "closed" | "declined",
     string
@@ -100,7 +109,7 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
     page: {
       title: "Feedback portal",
       subtitle:
-        "Submit bugs, track your requests, vote on ideas, and read what shipped.",
+        "Track your reports, vote on ideas, and stay close to what improves the ride.",
       primaryCta: "Submit feedback",
       floatingCta: "Give feedback",
       dashboardHint: "Available anywhere in the dashboard.",
@@ -113,13 +122,22 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
     },
     dialog: {
       title: "Submit feedback",
-      subtitle: "Share a bug, feature idea, or support request from the dashboard.",
-      chooseTypeTitle: "What do you want to send?",
-      chooseTypeSubtitle: "Pick the feedback type first so we can ask for the right details.",
+      subtitle: "Share what happened, what you need, or what would make BestBikeFit even better.",
+      mission:
+        "Together we create the BestBikeFit experience. We ride longer, hurt less often, and perform better. Your feedback is food for champions.",
+      chooseTypeTitle: "What do you want to share?",
+      chooseTypeSubtitle: "Pick the path that fits best. We will keep it short and useful.",
       formTitle: "Add the details",
-      formSubtitle: "The more context you share, the faster we can respond.",
-      successTitle: "Feedback submitted",
-      successSubtitle: "Your message is saved and ready for the team to review.",
+      formSubtitle: "A little context goes a long way. Keep it clear and practical.",
+      successTitle: "Thank you for your feedback.",
+      successSubtitle: "We review every message carefully and share updates back in your dashboard when relevant.",
+      nextStepsTitle: "What happens next",
+      nextSteps: [
+        "We review your feedback and place it in the right workflow.",
+        "If the team replies, you will see it in your dashboard.",
+        "When a fix or improvement ships, we can link it back to your report.",
+      ],
+      guidedPromptsTitle: "Helpful prompts",
       submit: "Send feedback",
       submitting: "Sending...",
       submitAnother: "Send another",
@@ -131,18 +149,23 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       typeDescription: "You can switch later before you send it.",
       pagePathLabel: "Page path",
       browserInfoLabel: "Browser metadata",
-      browserInfoHelper: "Captured automatically for bug reports.",
+      browserInfoHelper: "Captured automatically for bug reports and support diagnostics.",
+      contactEmailLabel: "Contact email",
+      contactNameLabel: "Name",
       categoryHelper: "Optional, but useful when the issue belongs to a specific area.",
       placeholders: {
         bugTitle: "Crash when saving a bike",
         featureRequestTitle: "Add keyboard shortcuts",
         supportCaseTitle: "Need help connecting Strava",
-        description: "Explain what happened, what you expected, and any useful context.",
+        reviewTitle: "This really helped my riding position",
+        description: "Tell us what you were trying to do, what happened, and what would have made it better.",
         category: "Dashboard, fit engine, data, setup...",
         expectedResult: "What should have happened?",
         actualResult: "What actually happened?",
         pagePath: "Captured from the current dashboard route.",
-        browserInfo: "Collected automatically for bug reports.",
+        browserInfo: "Collected automatically for bug reports and support cases.",
+        contactEmail: "name@example.com",
+        contactName: "Your name",
       },
       linkedContextLabel: "Linked context",
       linkedSessionLabel: "Fit session",
@@ -165,6 +188,10 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       support_case: {
         label: "Support case",
         description: "A question or setup issue you want help with.",
+      },
+      review: {
+        label: "Review",
+        description: "Share what felt great or what improved your riding experience.",
       },
     },
     statuses: {
@@ -222,7 +249,7 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
     page: {
       title: "Feedbackportaal",
       subtitle:
-        "Meld bugs, volg je aanvragen, stem op ideeën en lees wat is uitgebracht.",
+        "Volg je meldingen, stem op ideeën en blijf dicht bij wat jouw rit verbetert.",
       primaryCta: "Feedback sturen",
       floatingCta: "Geef feedback",
       dashboardHint: "Beschikbaar in het hele dashboard.",
@@ -235,13 +262,22 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
     },
     dialog: {
       title: "Feedback sturen",
-      subtitle: "Deel een bug, idee of supportvraag vanuit het dashboard.",
-      chooseTypeTitle: "Wat wil je sturen?",
-      chooseTypeSubtitle: "Kies eerst het type zodat we de juiste vragen kunnen tonen.",
+      subtitle: "Deel wat er gebeurde, wat je nodig hebt of wat BestBikeFit nog beter kan maken.",
+      mission:
+        "Samen bouwen we aan de BestBikeFit-beleving. We rijden langer, hebben minder vaak last en presteren beter. Jouw feedback is voeding voor kampioenen.",
+      chooseTypeTitle: "Wat wil je delen?",
+      chooseTypeSubtitle: "Kies de route die het best past. We houden het kort en bruikbaar.",
       formTitle: "Voeg de details toe",
-      formSubtitle: "Meer context helpt ons sneller reageren.",
-      successTitle: "Feedback verstuurd",
-      successSubtitle: "Je bericht is opgeslagen en klaar voor beoordeling.",
+      formSubtitle: "Een beetje context helpt al veel. Houd het duidelijk en praktisch.",
+      successTitle: "Dank je wel voor je feedback.",
+      successSubtitle: "We bekijken ieder bericht zorgvuldig en delen relevante updates terug in je dashboard.",
+      nextStepsTitle: "Wat gebeurt er nu",
+      nextSteps: [
+        "We beoordelen je feedback en plaatsen die in de juiste workflow.",
+        "Als het team reageert, zie je dat terug in je dashboard.",
+        "Wanneer een fix of verbetering live gaat, kunnen we die aan je melding koppelen.",
+      ],
+      guidedPromptsTitle: "Handige denkvragen",
       submit: "Verstuur feedback",
       submitting: "Versturen...",
       submitAnother: "Nog een sturen",
@@ -253,18 +289,23 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       typeDescription: "Je kunt dit later nog wijzigen vóór je verstuurt.",
       pagePathLabel: "Paginapad",
       browserInfoLabel: "Browsermetadata",
-      browserInfoHelper: "Wordt automatisch vastgelegd voor bugrapporten.",
+      browserInfoHelper: "Wordt automatisch vastgelegd voor bugmeldingen en supportdiagnose.",
+      contactEmailLabel: "E-mailadres",
+      contactNameLabel: "Naam",
       categoryHelper: "Optioneel, maar handig wanneer het probleem bij een specifiek onderdeel hoort.",
       placeholders: {
         bugTitle: "Crash bij het opslaan van een fiets",
         featureRequestTitle: "Sneltoetsen toevoegen",
         supportCaseTitle: "Hulp nodig bij Strava-koppeling",
-        description: "Leg uit wat er gebeurde, wat je verwachtte en welke context helpt.",
+        reviewTitle: "Dit hielp mijn fietspositie echt vooruit",
+        description: "Vertel wat je probeerde te doen, wat er gebeurde en wat dit beter had gemaakt.",
         category: "Dashboard, fit engine, data, setup...",
         expectedResult: "Wat had er moeten gebeuren?",
         actualResult: "Wat gebeurde er daadwerkelijk?",
         pagePath: "Overgenomen van de huidige dashboardroute.",
-        browserInfo: "Automatisch verzameld voor bugrapporten.",
+        browserInfo: "Automatisch verzameld voor bugmeldingen en supportvragen.",
+        contactEmail: "naam@voorbeeld.nl",
+        contactName: "Je naam",
       },
       linkedContextLabel: "Gekoppelde context",
       linkedSessionLabel: "Fitsessie",
@@ -287,6 +328,10 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       support_case: {
         label: "Supportcase",
         description: "Een vraag of installatieprobleem waarbij je hulp wilt.",
+      },
+      review: {
+        label: "Review",
+        description: "Deel wat goed voelde of wat jouw rijervaring beter maakte.",
       },
     },
     statuses: {

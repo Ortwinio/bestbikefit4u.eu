@@ -6,6 +6,7 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getFeedbackCopy, getFeedbackLocale } from "./feedback-copy";
 import { feedbackApi } from "./feedback-api";
 import { formatFeedbackDateTime, prettyPrintJson } from "./feedback-format";
+import { getFeedbackStatusDescription } from "./feedback-flow";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 export interface FeedbackDetailDialogProps {
@@ -47,6 +48,9 @@ export function FeedbackDetailDialog({
                 {copy.dialog.titleLabel}
               </p>
               <p className="mt-1 text-sm text-[color:var(--foreground)]">{detail.item.title}</p>
+              <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
+                {getFeedbackStatusDescription(detail.item.status, getFeedbackLocale(locale))}
+              </p>
             </Card>
             <Card className="dashboard-card-surface border border-[color:var(--border)]">
               <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">

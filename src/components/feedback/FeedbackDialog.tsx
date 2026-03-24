@@ -2,14 +2,36 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useMutation } from "convex/react";
+import { useConvexAuth, useMutation } from "convex/react";
 import { CheckCircle2 } from "lucide-react";
-import { AccessibleDialog, Button, Card, Input, Selectable, Textarea } from "@/components/ui";
+import { Button, Card, Input, Selectable, Textarea } from "@/components/ui";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/prototyper-ui/ui/dialog";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { stripLocalePrefix } from "@/i18n/navigation";
 import { cn } from "@/utils/cn";
+import {
+  getFeedbackActivityTrail,
+  inferFeedbackRouteFamily,
+  summarizeFeedbackActivity,
+} from "./feedback-activity";
 import { getFeedbackCopy, getFeedbackLocale } from "./feedback-copy";
 import { feedbackApi, type FeedbackType } from "./feedback-api";
 import { createBrowserMetadata } from "./feedback-format";
+import {
+  buildFeedbackValidation,
+  buildFeedbackSubmissionPayload,
+  createEmptyFeedbackState,
+  getFeedbackGuidedPrompts,
+  type FeedbackFieldErrors,
+  type FeedbackFormState,
+  validationMessageForField,
+} from "./feedback-flow";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 export interface FeedbackDialogProps {
@@ -21,31 +43,7 @@ export interface FeedbackDialogProps {
   pagePath?: string;
 }
 
-type FeedbackFormState = {
-  title: string;
-  description: string;
-  category: string;
-  expectedResult: string;
-  actualResult: string;
-  pagePath: string;
-  browserInfoJson: string;
-};
-
-type FeedbackFieldErrors = Partial<Record<keyof FeedbackFormState | "type", string>>;
-
-const typeOrder: FeedbackType[] = ["bug", "feature_request", "support_case"];
-
-function createEmptyState(pagePath: string, type?: FeedbackType): FeedbackFormState {
-  return {
-    title: "",
-    description: "",
-    category: "",
-    expectedResult: "",
-    actualResult: "",
-    pagePath,
-    browserInfoJson: type === "bug" ? createBrowserMetadata() : "",
-  };
-}
+const typeOrder: FeedbackType[] = ["bug", "feature_request", "support_case", "review"];
 
 function feedbackTypeTone(type: FeedbackType) {
   if (type === "bug") return "border-[color:color-mix(in_oklch,var(--danger)_30%,var(--border))]";
@@ -62,52 +60,6 @@ function feedbackTypeAccent(type: FeedbackType) {
   return "bg-[color:color-mix(in_oklch,var(--warning)_10%,var(--card)_90%)]";
 }
 
-function buildValidation(
-  type: FeedbackType | null,
-  state: FeedbackFormState,
-  copy = getFeedbackCopy("en")
-) {
-  const errors: FeedbackFieldErrors = {};
-  if (!type) {
-    errors.type = copy.dialog.typePrompt;
-    return errors;
-  }
-
-  if (!state.title.trim()) {
-    errors.title = copy.dialog.titleLabel;
-  }
-  if (!state.description.trim()) {
-    errors.description = copy.dialog.descriptionLabel;
-  }
-  if (type === "bug") {
-    if (!state.expectedResult.trim()) {
-      errors.expectedResult = copy.dialog.expectedResultLabel;
-    }
-    if (!state.actualResult.trim()) {
-      errors.actualResult = copy.dialog.actualResultLabel;
-    }
-  }
-
-  return errors;
-}
-
-function validationMessageFor(field: string, copy = getFeedbackCopy("en")) {
-  switch (field) {
-    case "type":
-      return copy.dialog.typeDescription;
-    case "title":
-      return `${copy.dialog.titleLabel} is required.`;
-    case "description":
-      return `${copy.dialog.descriptionLabel} is required.`;
-    case "expectedResult":
-      return `${copy.dialog.expectedResultLabel} is required.`;
-    case "actualResult":
-      return `${copy.dialog.actualResultLabel} is required.`;
-    default:
-      return copy.dialog.errorGeneric;
-  }
-}
-
 export function FeedbackDialog({
   open,
   onClose,
@@ -117,26 +69,27 @@ export function FeedbackDialog({
   pagePath,
 }: FeedbackDialogProps) {
   const { locale } = useDashboardMessages();
+  const { isAuthenticated } = useConvexAuth();
   const copy = getFeedbackCopy(getFeedbackLocale(locale));
   const pathname = usePathname();
   const submitFeedback = useMutation(feedbackApi.mutations.submitFeedback);
   const [step, setStep] = useState<"type" | "form" | "success">(defaultType ? "form" : "type");
   const [selectedType, setSelectedType] = useState<FeedbackType | null>(defaultType ?? null);
   const [form, setForm] = useState<FeedbackFormState>(() =>
-    createEmptyState(pagePath ?? pathname ?? "", defaultType)
+    createEmptyFeedbackState(pagePath ?? pathname ?? "", defaultType, createBrowserMetadata)
   );
   const [errors, setErrors] = useState<FeedbackFieldErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const resolvedPagePath = pagePath ?? pathname ?? "";
-  const liveValidation = buildValidation(selectedType, form, copy);
+  const liveValidation = buildFeedbackValidation(selectedType, form, copy);
   const isFormValid = Object.keys(liveValidation).length === 0;
 
   useEffect(() => {
     if (!open) {
       setStep("type");
       setSelectedType(null);
-      setForm(createEmptyState(resolvedPagePath, defaultType));
+      setForm(createEmptyFeedbackState(resolvedPagePath, defaultType, createBrowserMetadata));
       setErrors({});
       setSubmitError(null);
       return;
@@ -145,13 +98,19 @@ export function FeedbackDialog({
     const nextType = defaultType ?? null;
     setSelectedType(nextType);
     setStep(nextType ? "form" : "type");
-    setForm(createEmptyState(resolvedPagePath, nextType ?? undefined));
+    setForm(
+      createEmptyFeedbackState(
+        resolvedPagePath,
+        nextType ?? undefined,
+        createBrowserMetadata
+      )
+    );
     setErrors({});
     setSubmitError(null);
   }, [defaultType, open, resolvedPagePath]);
 
   useEffect(() => {
-    if (!open || selectedType !== "bug") return;
+    if (!open || (selectedType !== "bug" && selectedType !== "support_case")) return;
     setForm((current) =>
       current.browserInfoJson
         ? current
@@ -177,7 +136,10 @@ export function FeedbackDialog({
     setStep("form");
     setForm((current) => ({
       ...current,
-      browserInfoJson: type === "bug" ? current.browserInfoJson || createBrowserMetadata() : "",
+      browserInfoJson:
+        type === "bug" || type === "support_case"
+          ? current.browserInfoJson || createBrowserMetadata()
+          : "",
     }));
   }
 
@@ -191,7 +153,7 @@ export function FeedbackDialog({
   }
 
   async function handleSubmit() {
-    const validation = buildValidation(selectedType, form, copy);
+    const validation = buildFeedbackValidation(selectedType, form, copy);
     setErrors(validation);
     const hasValidationError = Object.keys(validation).length > 0;
     if (hasValidationError || !selectedType) {
@@ -201,19 +163,33 @@ export function FeedbackDialog({
 
     setIsSubmitting(true);
     try {
-      await submitFeedback({
-        type: selectedType,
-        title: form.title.trim(),
-        description: form.description.trim(),
-        category: form.category.trim() || undefined,
-        pagePath: form.pagePath.trim() || undefined,
-        linkedSessionId,
-        linkedBikeId,
-        expectedResult: selectedType === "bug" ? form.expectedResult.trim() : undefined,
-        actualResult: selectedType === "bug" ? form.actualResult.trim() : undefined,
-        browserInfoJson:
-          selectedType === "bug" ? form.browserInfoJson || createBrowserMetadata() : undefined,
-      });
+      const strippedPathname = stripLocalePrefix(pathname ?? resolvedPagePath);
+      const pageUrl = typeof window !== "undefined" ? window.location.href : undefined;
+      const queryString =
+        typeof window !== "undefined"
+          ? window.location.search.replace(/^\?/, "") || undefined
+          : undefined;
+      const activityTrail = getFeedbackActivityTrail();
+      await submitFeedback(
+        buildFeedbackSubmissionPayload({
+          type: selectedType,
+          form,
+          locale: getFeedbackLocale(locale),
+          pathname: strippedPathname,
+          pageUrl,
+          queryString,
+          routeFamily: inferFeedbackRouteFamily(strippedPathname),
+          activityTrail,
+          activitySummary: summarizeFeedbackActivity(
+            selectedType,
+            activityTrail,
+            strippedPathname
+          ),
+          isAuthenticated,
+          linkedSessionId,
+          linkedBikeId,
+        })
+      );
       setStep("success");
     } catch (error) {
       console.error("Failed to submit feedback", error);
@@ -224,32 +200,54 @@ export function FeedbackDialog({
   }
 
   const selectedTypeMeta = selectedType ? copy.types[selectedType] : null;
+  const guidedPrompts = selectedType
+    ? getFeedbackGuidedPrompts(selectedType, getFeedbackLocale(locale))
+    : [];
   const showTypeStep = step === "type" && !defaultType;
   const showFormStep = step === "form";
   const showSuccessStep = step === "success";
 
   return (
-    <AccessibleDialog
+    <Dialog
       open={open}
-      onClose={onClose}
-      title={
-        showTypeStep
-          ? copy.dialog.chooseTypeTitle
-          : showSuccessStep
-            ? copy.dialog.successTitle
-            : copy.dialog.formTitle
-      }
-      description={
-        showTypeStep
-          ? copy.dialog.chooseTypeSubtitle
-          : showSuccessStep
-            ? copy.dialog.successSubtitle
-            : copy.dialog.formSubtitle
-      }
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen) {
+          onClose();
+        }
+      }}
     >
+      <DialogContent
+        side="right"
+        className="flex h-full w-full max-w-none flex-col border-l border-[color:var(--border)] bg-[color:var(--card)] p-0 text-[color:var(--foreground)] sm:max-w-xl"
+      >
+        <DialogHeader className="border-b border-[color:var(--border)] px-5 py-5 sm:px-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
+            {copy.page.floatingCta}
+          </p>
+          <DialogTitle className="text-2xl font-semibold tracking-tight text-[color:var(--foreground)]">
+            {showTypeStep
+              ? copy.dialog.chooseTypeTitle
+              : showSuccessStep
+                ? copy.dialog.successTitle
+                : copy.dialog.formTitle}
+          </DialogTitle>
+          <DialogDescription className="space-y-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
+            <span className="block">
+              {copy.dialog.mission}
+            </span>
+            <span className="block">
+              {showTypeStep
+                ? copy.dialog.chooseTypeSubtitle
+                : showSuccessStep
+                  ? copy.dialog.successSubtitle
+                  : copy.dialog.formSubtitle}
+            </span>
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-6">
       {showTypeStep ? (
         <div className="space-y-4">
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             {typeOrder.map((type) => (
               <Selectable
                 key={type}
@@ -279,23 +277,57 @@ export function FeedbackDialog({
                 {selectedTypeMeta?.description}
               </p>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => setStep("type")} type="button">
-              {copy.dialog.changeType}
-            </Button>
+            {!defaultType ? (
+              <Button variant="ghost" size="sm" onClick={() => setStep("type")} type="button">
+                {copy.dialog.changeType}
+              </Button>
+            ) : null}
+
+            {!isAuthenticated ? (
+              <>
+                <Input
+                  label={copy.dialog.contactNameLabel}
+                  value={form.contactName}
+                  onChange={(event) => updateField("contactName", event.target.value)}
+                  placeholder={copy.dialog.placeholders.contactName}
+                />
+                <Input
+                  label={copy.dialog.contactEmailLabel}
+                  type="email"
+                  value={form.contactEmail}
+                  onChange={(event) => updateField("contactEmail", event.target.value)}
+                  placeholder={copy.dialog.placeholders.contactEmail}
+                />
+              </>
+            ) : null}
           </div>
 
           <div className="grid gap-4">
+            <Card className="border border-[color:var(--border)] bg-[color:var(--secondary)]">
+              <div className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  {copy.dialog.guidedPromptsTitle}
+                </p>
+                <ul className="space-y-1 text-sm text-[color:var(--foreground)]">
+                  {guidedPrompts.map((prompt) => (
+                    <li key={prompt}>• {prompt}</li>
+                  ))}
+                </ul>
+              </div>
+            </Card>
             <Input
               label={copy.dialog.titleLabel}
               value={form.title}
               onChange={(event) => updateField("title", event.target.value)}
-              error={errors.title ? validationMessageFor("title", copy) : undefined}
+              error={errors.title ? validationMessageForField("title", copy) : undefined}
               placeholder={
                 selectedType === "bug"
                   ? copy.dialog.placeholders.bugTitle
                   : selectedType === "feature_request"
                     ? copy.dialog.placeholders.featureRequestTitle
-                    : copy.dialog.placeholders.supportCaseTitle
+                    : selectedType === "review"
+                      ? copy.dialog.placeholders.reviewTitle
+                      : copy.dialog.placeholders.supportCaseTitle
               }
             />
 
@@ -303,18 +335,20 @@ export function FeedbackDialog({
               label={copy.dialog.descriptionLabel}
               value={form.description}
               onChange={(event) => updateField("description", event.target.value)}
-              error={errors.description ? validationMessageFor("description", copy) : undefined}
+              error={errors.description ? validationMessageForField("description", copy) : undefined}
               placeholder={copy.dialog.placeholders.description}
               rows={5}
             />
 
-            <Input
-              label={copy.dialog.categoryLabel}
-              value={form.category}
-              onChange={(event) => updateField("category", event.target.value)}
-              placeholder={copy.dialog.placeholders.category}
-              helperText={copy.dialog.categoryHelper}
-            />
+            {selectedType !== "review" ? (
+              <Input
+                label={copy.dialog.categoryLabel}
+                value={form.category}
+                onChange={(event) => updateField("category", event.target.value)}
+                placeholder={copy.dialog.placeholders.category}
+                helperText={copy.dialog.categoryHelper}
+              />
+            ) : null}
 
             {selectedType === "bug" ? (
               <>
@@ -323,7 +357,7 @@ export function FeedbackDialog({
                   value={form.expectedResult}
                   onChange={(event) => updateField("expectedResult", event.target.value)}
                   error={
-                    errors.expectedResult ? validationMessageFor("expectedResult", copy) : undefined
+                    errors.expectedResult ? validationMessageForField("expectedResult", copy) : undefined
                   }
                   placeholder={copy.dialog.placeholders.expectedResult}
                   rows={3}
@@ -333,7 +367,7 @@ export function FeedbackDialog({
                   value={form.actualResult}
                   onChange={(event) => updateField("actualResult", event.target.value)}
                   error={
-                    errors.actualResult ? validationMessageFor("actualResult", copy) : undefined
+                    errors.actualResult ? validationMessageForField("actualResult", copy) : undefined
                   }
                   placeholder={copy.dialog.placeholders.actualResult}
                   rows={3}
@@ -422,6 +456,19 @@ export function FeedbackDialog({
             </div>
           </div>
 
+          <Card className="border border-[color:var(--border)] bg-[color:var(--secondary)]">
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                {copy.dialog.nextStepsTitle}
+              </p>
+              <ul className="space-y-2 text-sm text-[color:var(--foreground)]">
+                {copy.dialog.nextSteps.map((stepLine) => (
+                  <li key={stepLine}>• {stepLine}</li>
+                ))}
+              </ul>
+            </div>
+          </Card>
+
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <Button variant="outline" type="button" onClick={onClose}>
               {copy.dialog.close}
@@ -432,7 +479,13 @@ export function FeedbackDialog({
               onClick={() => {
                 setStep(defaultType ? "form" : "type");
                 setSelectedType(defaultType ?? null);
-                setForm(createEmptyState(resolvedPagePath, defaultType));
+                setForm(
+                  createEmptyFeedbackState(
+                    resolvedPagePath,
+                    defaultType,
+                    createBrowserMetadata
+                  )
+                );
                 setErrors({});
                 setSubmitError(null);
               }}
@@ -442,6 +495,8 @@ export function FeedbackDialog({
           </div>
         </div>
       ) : null}
-    </AccessibleDialog>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

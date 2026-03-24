@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { mutation } from "../_generated/server";
+import { requireUserId } from "../lib/authz";
 import {
   computeContextCompleteness,
   feedbackRouteFamilyValidator,
@@ -119,13 +120,14 @@ export const submitFeedback = mutation({
       contextCompleteness,
       status: "new",
       priority: "normal",
-      upvoteCount: args.type === "feature_request" ? 1 : undefined,
+      upvoteCount:
+        args.type === "feature_request" ? (userId ? 1 : 0) : undefined,
       requesterCount: args.type === "feature_request" ? 1 : undefined,
       createdAt: now,
       updatedAt: now,
     });
 
-    if (args.type === "feature_request") {
+    if (args.type === "feature_request" && userId) {
       await ctx.db.insert("feedback_upvotes", {
         feedbackItemId,
         userId,

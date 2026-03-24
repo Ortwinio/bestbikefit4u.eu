@@ -24,6 +24,7 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
+import { trackFeedbackSignal } from "@/components/feedback/feedback-activity";
 import { RiderProfileCard } from "./components/RiderProfileCard";
 import { PriorityTable } from "./components/PriorityTable";
 import { DetailedFitTable } from "./components/DetailedFitTable";
@@ -122,6 +123,11 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       return;
     }
     hasTrackedResultsViewRef.current = true;
+    trackFeedbackSignal(
+      pagePath,
+      "view_fit_results",
+      "Viewed fit results"
+    );
     logMarketingEvent({
       eventType: "funnel_results_view",
       locale,
@@ -148,6 +154,11 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         sessionId: sessionId as Id<"fitSessions">,
         recipientEmail: email,
       });
+      trackFeedbackSignal(
+        pagePath,
+        "send_email_report",
+        "Sent the fit report by email"
+      );
       setEmailSent(true);
       toast.success({ description: messages.common.toasts.reportEmailed });
       setTimeout(() => {
@@ -206,6 +217,11 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       anchor.click();
       anchor.remove();
       URL.revokeObjectURL(downloadUrl);
+      trackFeedbackSignal(
+        pagePath,
+        "download_pdf_report",
+        "Downloaded the fit report PDF"
+      );
     } catch (error) {
       setDownloadError(
         error instanceof Error
@@ -422,7 +438,17 @@ export default function ResultsPage({ params }: ResultsPageProps) {
 
       {/* Action buttons */}
       <div className="mt-8 flex flex-wrap gap-3 pb-8">
-        <Button variant="outline" onClick={() => setShowEmailModal(true)}>
+        <Button
+          variant="outline"
+          onClick={() => {
+            trackFeedbackSignal(
+              pagePath,
+              "open_email_report",
+              "Opened the fit report email dialog"
+            );
+            setShowEmailModal(true);
+          }}
+        >
           <Mail className="h-4 w-4 mr-2" />
           {messages.results.actions.emailReport}
         </Button>

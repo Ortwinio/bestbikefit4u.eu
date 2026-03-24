@@ -8,18 +8,13 @@ import { api } from "../../../convex/_generated/api";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { Button, LoadingState } from "@/components/ui";
 import { DashboardMessageSurface } from "@/components/dashboard-messages";
-import { FeedbackDialog, FeedbackFloatingButton } from "@/components/feedback";
-import { getFeedbackRouteContext } from "@/components/feedback/route-context";
 import { StravaAutoImportTrigger } from "@/components/integrations/StravaAutoImportTrigger";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import { BRAND } from "@/config/brand";
-import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
+import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { Menu, X } from "lucide-react";
-import {
-  adminNavigationGroups,
-  isAdminNavigationActive,
-} from "@/components/admin/layout/admin-navigation";
+import { adminNavigationGroups } from "@/components/admin/layout/admin-navigation";
 
 export default function DashboardLayout({
   children,
@@ -29,16 +24,12 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
   const { isLoading, isAuthenticated } = useConvexAuth();
   const user = useQuery(api.users.queries.getCurrentUser);
   const isSuperAdmin = user?.adminRole === "super_admin";
   const { locale, messages, languageSwitchLabels } = useDashboardMessages();
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
   const loginPath = toLocalizedPath("/login");
-  const internalPathname = stripLocalePrefix(pathname ?? "/");
-  const { linkedBikeId, linkedSessionId } = getFeedbackRouteContext(pathname);
-  const showFloatingFeedbackButton = internalPathname !== "/feedback";
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -188,19 +179,6 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
-
-      {showFloatingFeedbackButton ? (
-        <FeedbackFloatingButton
-          onClick={() => setIsFeedbackDialogOpen(true)}
-          label={messages.nav.feedback}
-        />
-      ) : null}
-      <FeedbackDialog
-        open={isFeedbackDialogOpen}
-        onClose={() => setIsFeedbackDialogOpen(false)}
-        linkedBikeId={linkedBikeId}
-        linkedSessionId={linkedSessionId}
-      />
       <DashboardMessageSurface showBanners={false} showHomeCards={false} />
     </div>
   );

@@ -8,6 +8,14 @@ import {
   fetchAdminUsers,
   getAdminQueryToken,
 } from "../shared/admin-live-data";
+import {
+  type FeedbackRouteFamily,
+  getFeedbackActivitySummary,
+  getFeedbackContextCompleteness,
+  getFeedbackReporterKind,
+  getFeedbackReporterName,
+  getFeedbackRouteFamily,
+} from "./feedback-context";
 
 export type FeedbackFilters = {
   type?: string;
@@ -22,6 +30,10 @@ export type FeedbackInboxRow = {
   releaseName: string;
   linkedSessionLabel: string;
   linkedBikeLabel: string;
+  routeFamily: FeedbackRouteFamily;
+  contextCompleteness: "low" | "medium" | "high";
+  reporterKind: "authenticated" | "anonymous";
+  activitySummary?: string;
 };
 
 export type FeedbackDetailRecord = {
@@ -101,11 +113,18 @@ export async function loadFeedbackInboxData(filters: FeedbackFilters) {
       const release = item.linkedReleaseId ? releaseMap.get(item.linkedReleaseId) : null;
       return {
         item,
-        reporterName: getDisplayName(item.userId ? userMap.get(item.userId) : undefined),
+        reporterName: getFeedbackReporterName(
+          item,
+          getDisplayName(item.userId ? userMap.get(item.userId) : undefined)
+        ),
         assigneeName: getDisplayName(item.assignedTo ? userMap.get(item.assignedTo) : undefined),
         releaseName: release?.versionLabel ? `${release.name} · ${release.versionLabel}` : release?.name ?? "—",
         linkedSessionLabel: item.linkedSessionId ? String(item.linkedSessionId) : "—",
         linkedBikeLabel: item.linkedBikeId ? String(item.linkedBikeId) : "—",
+        routeFamily: getFeedbackRouteFamily(item),
+        contextCompleteness: getFeedbackContextCompleteness(item),
+        reporterKind: getFeedbackReporterKind(item),
+        activitySummary: getFeedbackActivitySummary(item),
       };
     }),
     users,

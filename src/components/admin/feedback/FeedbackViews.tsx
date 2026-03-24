@@ -49,6 +49,20 @@ import {
   type FeedbackType,
 } from "./feedback-ui";
 import { formatAdminDateTime, getAdminDisplayName } from "../shared/admin-format";
+import {
+  getFeedbackActivitySummary,
+  getFeedbackActivityTrail,
+  getFeedbackContactSummary,
+  getFeedbackContextCompleteness,
+  getFeedbackContextCompletenessLabel,
+  getFeedbackContextCompletenessTone,
+  getFeedbackLocationSummary,
+  getFeedbackReporterKind,
+  getFeedbackReporterKindLabel,
+  getFeedbackReporterName,
+  getFeedbackRouteFamily,
+  getFeedbackRouteFamilyLabel,
+} from "./feedback-context";
 
 const statusOptions: Array<{ value: "all" | FeedbackStatus; label: string }> = [
   { value: "all", label: "All statuses" },
@@ -68,6 +82,7 @@ const typeOptions: Array<{ value: "all" | FeedbackType; label: string }> = [
   { value: "bug", label: "Bugs" },
   { value: "feature_request", label: "Feature requests" },
   { value: "support_case", label: "Support cases" },
+  { value: "review", label: "Reviews" },
 ];
 
 const priorityOptions: Array<{ value: FeedbackPriority; label: string }> = [
@@ -192,7 +207,7 @@ export function FeedbackInboxView({
 }) {
   const openCount = rows.filter((row) => row.item.status !== "closed" && row.item.status !== "declined").length;
   const featureRequestCount = rows.filter((row) => row.item.type === "feature_request").length;
-  const triagedCount = rows.filter((row) => row.item.status === "triaged").length;
+  const anonymousCount = rows.filter((row) => row.reporterKind === "anonymous").length;
 
   return (
     <div className="space-y-6">
@@ -211,7 +226,7 @@ export function FeedbackInboxView({
           {summaryCard("Loaded", rows.length, "Live feedback items")}
           {summaryCard("Open", openCount, "Not closed or declined")}
           {summaryCard("Feature requests", featureRequestCount, "Planning candidates")}
-          {summaryCard("Triaged", triagedCount, "Already reviewed")}
+          {summaryCard("Anonymous", anonymousCount, "Requires stronger context review")}
         </div>
 
         <div className="mt-6 space-y-4">
@@ -274,7 +289,7 @@ export function FeedbackInboxView({
           <div className="mt-6">
             <AdminTable>
               <AdminTableHead
-                columns={["Title", "Type", "Priority", "Status", "Reporter", "Assigned", "Release", "Action"]}
+                columns={["Title", "Type", "Priority", "Status", "Context", "Reporter", "Assigned", "Release", "Action"]}
               />
               <tbody>
                 {rows.map((row) => (
@@ -304,7 +319,29 @@ export function FeedbackInboxView({
                         {feedbackStatusLabel(row.item.status)}
                       </AdminStatusPill>
                     </AdminTableCell>
-                    <AdminTableCell>{row.reporterName}</AdminTableCell>
+                    <AdminTableCell>
+                      <div className="flex flex-wrap gap-2">
+                        <AdminStatusPill tone="neutral">
+                          {getFeedbackRouteFamilyLabel(row.routeFamily)}
+                        </AdminStatusPill>
+                        <AdminStatusPill tone={getFeedbackContextCompletenessTone(row.contextCompleteness)}>
+                          {getFeedbackContextCompletenessLabel(row.contextCompleteness)}
+                        </AdminStatusPill>
+                      </div>
+                      {row.activitySummary ? (
+                        <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+                          {row.activitySummary}
+                        </p>
+                      ) : null}
+                    </AdminTableCell>
+                    <AdminTableCell>
+                      <div className="space-y-1">
+                        <p>{row.reporterName}</p>
+                        <AdminStatusPill tone={row.reporterKind === "authenticated" ? "info" : "warning"}>
+                          {getFeedbackReporterKindLabel(row.reporterKind)}
+                        </AdminStatusPill>
+                      </div>
+                    </AdminTableCell>
                     <AdminTableCell>{row.assigneeName}</AdminTableCell>
                     <AdminTableCell>{row.releaseName}</AdminTableCell>
                     <AdminTableCell>
@@ -548,6 +585,14 @@ export function FeedbackDetailView({ data }: { data: FeedbackDetailData }) {
   const reporterName = getReporterName(data);
   const linkedBike = data.linkedBike;
   const linkedSession = data.linkedSession;
+  const routeFamily = getFeedbackRouteFamily(data.detail.item);
+  const contextCompleteness = getFeedbackContextCompleteness(data.detail.item);
+  const reporterKind = getFeedbackReporterKind(data.detail.item);
+  const reporterLabel = getFeedbackReporterName(data.detail.item, reporterName);
+  const locationSummary = getFeedbackLocationSummary(data.detail.item);
+  const activitySummary = getFeedbackActivitySummary(data.detail.item);
+  const activityTrail = getFeedbackActivityTrail(data.detail.item);
+  const contactSummary = getFeedbackContactSummary(data.detail.item);
 
   return (
     <div className="space-y-6">
@@ -578,7 +623,7 @@ export function FeedbackDetailView({ data }: { data: FeedbackDetailData }) {
                   </AdminStatusPill>
                 </div>
                 <CardDescription>
-                  Reported by {reporterName} · Created {formatAdminDateTime(data.detail.item.createdAt)}
+                  Reported by {reporterLabel} · Created {formatAdminDateTime(data.detail.item.createdAt)}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -708,7 +753,22 @@ export function FeedbackDetailView({ data }: { data: FeedbackDetailData }) {
 
           <div className="space-y-6">
             <SnapshotCard title="Triage summary" description="Live metadata from Convex.">
-              <FieldValue label="Reporter">{reporterName}</FieldValue>
+              <FieldValue label="Reporter">{reporterLabel}</FieldValue>
+              <FieldValue label="Reporter type">
+                <AdminStatusPill tone={reporterKind === "authenticated" ? "info" : "warning"}>
+                  {getFeedbackReporterKindLabel(reporterKind)}
+                </AdminStatusPill>
+              </FieldValue>
+              <FieldValue label="Route family">
+                <AdminStatusPill tone="neutral">
+                  {getFeedbackRouteFamilyLabel(routeFamily)}
+                </AdminStatusPill>
+              </FieldValue>
+              <FieldValue label="Context completeness">
+                <AdminStatusPill tone={getFeedbackContextCompletenessTone(contextCompleteness)}>
+                  {getFeedbackContextCompletenessLabel(contextCompleteness)}
+                </AdminStatusPill>
+              </FieldValue>
               <FieldValue label="Assignee">{data.assigneeName}</FieldValue>
               <FieldValue label="Release">
                 {data.detail.release ? data.detail.release.name : "No release linked"}
@@ -718,6 +778,65 @@ export function FeedbackDetailView({ data }: { data: FeedbackDetailData }) {
               </FieldValue>
               <FieldValue label="Linked bike">
                 {data.detail.item.linkedBikeId ? feedbackBikeLabel(linkedBike?.bike) : "Not linked"}
+              </FieldValue>
+            </SnapshotCard>
+
+            <SnapshotCard
+              title="Reported context"
+              description="Route, locale, contact, and summary signals attached to the report."
+            >
+              <FieldValue label="URL">{locationSummary.pageUrl ?? "Not captured"}</FieldValue>
+              <FieldValue label="Path">{locationSummary.pathname ?? "Not captured"}</FieldValue>
+              <FieldValue label="Query string">
+                {locationSummary.queryString ? (
+                  <code className="text-xs">{locationSummary.queryString}</code>
+                ) : (
+                  "Not captured"
+                )}
+              </FieldValue>
+              <FieldValue label="Locale">{locationSummary.locale ?? "Not captured"}</FieldValue>
+              <FieldValue label="Anonymous contact">{contactSummary}</FieldValue>
+              <FieldValue label="Activity summary">
+                {activitySummary ?? "No derived summary"}
+              </FieldValue>
+            </SnapshotCard>
+
+            <SnapshotCard
+              title="Activity trail"
+              description="Recent user actions captured alongside the report."
+            >
+              {activityTrail.length > 0 ? (
+                <ul className="space-y-2">
+                  {activityTrail.map((entry, index) => (
+                    <li
+                      key={`${entry}-${index}`}
+                      className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] px-3 py-2 text-sm"
+                    >
+                      {entry}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <EmptyState
+                  title="No activity trail"
+                  description="This report did not include recent interaction history."
+                  className="border-none bg-transparent p-0 shadow-none"
+                />
+              )}
+            </SnapshotCard>
+
+            <SnapshotCard
+              title="Environment"
+              description="Browser and device metadata captured with the report."
+            >
+              <FieldValue label="Browser metadata">
+                {data.detail.item.browserInfoJson ? (
+                  <pre className="overflow-x-auto rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-3 text-xs leading-5 text-[color:var(--foreground)]">
+                    {data.detail.item.browserInfoJson}
+                  </pre>
+                ) : (
+                  "Not captured"
+                )}
               </FieldValue>
             </SnapshotCard>
 

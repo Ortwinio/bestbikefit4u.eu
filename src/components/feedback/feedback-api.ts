@@ -103,12 +103,28 @@ export type SubmitFeedbackArgs = {
   title: string;
   description: string;
   category?: string;
+  pageUrl?: string;
+  pathname?: string;
+  queryString?: string;
+  locale?: "en" | "nl";
   pagePath?: string;
-  routeFamily?: string;
+  routeFamily?:
+    | "marketing"
+    | "auth"
+    | "dashboard"
+    | "fit_results"
+    | "calculators"
+    | "profile"
+    | "bikes"
+    | "settings"
+    | "pricing"
+    | "other";
   activitySummary?: string;
-  contextCompleteness?: "low" | "medium" | "high";
+  activityTrailJson?: string;
   linkedSessionId?: Id<"fitSessions">;
   linkedBikeId?: Id<"bikes">;
+  contactEmail?: string;
+  contactName?: string;
   expectedResult?: string;
   actualResult?: string;
   browserInfoJson?: string;

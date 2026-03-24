@@ -1,5 +1,6 @@
 import type { FeedbackLocale } from "./feedback-copy";
-import type { FeedbackStatus, FeedbackType } from "./feedback-api";
+import type { FeedbackStatus, FeedbackType, SubmitFeedbackArgs } from "./feedback-api";
+import type { FeedbackActivityEntry } from "./feedback-activity";
 
 export type FeedbackFormState = {
   title: string;
@@ -9,6 +10,8 @@ export type FeedbackFormState = {
   actualResult: string;
   pagePath: string;
   browserInfoJson: string;
+  contactEmail: string;
+  contactName: string;
 };
 
 export type FeedbackFieldErrors = Partial<Record<keyof FeedbackFormState | "type", string>>;
@@ -22,6 +25,8 @@ type FlowCopy = {
     descriptionLabel: string;
     expectedResultLabel: string;
     actualResultLabel: string;
+    contactEmailLabel: string;
+    contactNameLabel: string;
   };
 };
 
@@ -37,7 +42,10 @@ export function createEmptyFeedbackState(
     expectedResult: "",
     actualResult: "",
     pagePath,
-    browserInfoJson: type === "bug" ? createBrowserMetadata() : "",
+    browserInfoJson:
+      type === "bug" || type === "support_case" ? createBrowserMetadata() : "",
+    contactEmail: "",
+    contactName: "",
   };
 }
 
@@ -139,4 +147,61 @@ export function getFeedbackStatusDescription(status: FeedbackStatus, locale: Fee
         };
 
   return labels[status];
+}
+
+export function buildFeedbackSubmissionPayload({
+  type,
+  form,
+  locale,
+  pathname,
+  pageUrl,
+  queryString,
+  routeFamily,
+  activityTrail,
+  activitySummary,
+  isAuthenticated,
+  linkedSessionId,
+  linkedBikeId,
+}: {
+  type: FeedbackType;
+  form: FeedbackFormState;
+  locale: FeedbackLocale;
+  pathname: string;
+  pageUrl?: string;
+  queryString?: string;
+  routeFamily: SubmitFeedbackArgs["routeFamily"];
+  activityTrail: FeedbackActivityEntry[];
+  activitySummary?: string;
+  isAuthenticated: boolean;
+  linkedSessionId?: SubmitFeedbackArgs["linkedSessionId"];
+  linkedBikeId?: SubmitFeedbackArgs["linkedBikeId"];
+}): SubmitFeedbackArgs {
+  const browserInfoRequired = type === "bug" || type === "support_case";
+  const trimmedCategory = form.category.trim();
+  const trimmedContactEmail = form.contactEmail.trim();
+  const trimmedContactName = form.contactName.trim();
+
+  return {
+    type,
+    title: form.title.trim(),
+    description: form.description.trim(),
+    category: type === "review" || !trimmedCategory ? undefined : trimmedCategory,
+    pageUrl: pageUrl?.trim() || undefined,
+    pathname: pathname.trim() || undefined,
+    queryString: queryString?.trim() || undefined,
+    locale,
+    pagePath: form.pagePath.trim() || undefined,
+    routeFamily,
+    activitySummary,
+    activityTrailJson:
+      activityTrail.length > 0 ? JSON.stringify(activityTrail.slice(-6)) : undefined,
+    linkedSessionId,
+    linkedBikeId,
+    contactEmail: isAuthenticated || !trimmedContactEmail ? undefined : trimmedContactEmail,
+    contactName: isAuthenticated || !trimmedContactName ? undefined : trimmedContactName,
+    expectedResult: type === "bug" ? form.expectedResult.trim() || undefined : undefined,
+    actualResult: type === "bug" ? form.actualResult.trim() || undefined : undefined,
+    browserInfoJson:
+      browserInfoRequired ? form.browserInfoJson.trim() || undefined : undefined,
+  };
 }

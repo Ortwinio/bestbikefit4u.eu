@@ -18,8 +18,8 @@ import {
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { cn } from "@/utils/cn";
-import { FeedbackDialog } from "./FeedbackDialog";
 import { FeedbackDetailDialog } from "./FeedbackDetailDialog";
+import { useFeedbackPanel } from "./FeedbackPanelProvider";
 import {
   feedbackApi,
   type FeedbackOverviewRow,
@@ -29,6 +29,8 @@ import {
 } from "./feedback-api";
 import { getFeedbackCopy, getFeedbackLocale } from "./feedback-copy";
 import { formatFeedbackDate, truncateText } from "./feedback-format";
+import { getFeedbackStatusDescription } from "./feedback-flow";
+import { trackFeedbackSignal } from "./feedback-activity";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 type FeedbackTab = "mine" | "board" | "changelog";
@@ -98,6 +100,7 @@ function formatReleaseName(release: PublicReleaseRow, copy = getFeedbackCopy("en
 
 export function FeedbackHubPage() {
   const { locale } = useDashboardMessages();
+  const { openPanel } = useFeedbackPanel();
   const copy = getFeedbackCopy(getFeedbackLocale(locale));
   const pathname = usePathname();
   const router = useRouter();
@@ -106,7 +109,6 @@ export function FeedbackHubPage() {
     const requested = searchParams?.get("tab") ?? null;
     return isFeedbackTab(requested) ? requested : "mine";
   });
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedFeedbackId, setSelectedFeedbackId] = useState<Id<"feedback_items"> | null>(null);
   const [voteOverrides, setVoteOverrides] = useState<
     Record<string, { hasUpvoted: boolean; upvoteCount: number }>
@@ -126,8 +128,20 @@ export function FeedbackHubPage() {
     }
   }, [searchParams, tab]);
 
+  function openFeedbackPanel(defaultType?: FeedbackType) {
+    openPanel({
+      defaultType,
+      pagePath: pathname ?? "/feedback",
+    });
+  }
+
   function updateTab(nextTab: FeedbackTab) {
     setTab(nextTab);
+    trackFeedbackSignal(
+      pathname ?? "/feedback",
+      "switch_feedback_tab",
+      `Switched feedback hub to the ${nextTab} tab`
+    );
     const params = new URLSearchParams(searchParams?.toString() ?? "");
     params.set("tab", nextTab);
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
@@ -156,6 +170,13 @@ export function FeedbackHubPage() {
 
     try {
       const result = await upvoteFeedbackItem({ feedbackItemId: item._id });
+      trackFeedbackSignal(
+        pathname ?? "/feedback",
+        "vote_feature_request",
+        current.hasUpvoted
+          ? "Removed a vote from a feature request"
+          : "Upvoted a feature request"
+      );
       setVoteOverrides((state) => ({
         ...state,
         [itemId]: {
@@ -199,6 +220,9 @@ export function FeedbackHubPage() {
                     <p className="mt-2 max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
                       {copy.page.subtitle}
                     </p>
+                    <p className="max-w-2xl text-sm leading-6 text-[color:var(--foreground)]">
+                      {copy.dialog.mission}
+                    </p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-3">
@@ -209,7 +233,7 @@ export function FeedbackHubPage() {
                     <ArrowRight className="h-4 w-4" />
                     {copy.page.backToDashboard}
                   </Link>
-                  <Button type="button" variant="default" onClick={() => setDialogOpen(true)}>
+                  <Button type="button" variant="default" onClick={() => openFeedbackPanel()}>
                     <Plus className="h-4 w-4" />
                     {copy.page.primaryCta}
                   </Button>
@@ -230,7 +254,7 @@ export function FeedbackHubPage() {
                 <Button
                   type="button"
                   variant="primary-soft"
-                  onClick={() => setDialogOpen(true)}
+                  onClick={() => openFeedbackPanel()}
                   className="hidden md:inline-flex"
                 >
                   <MessageSquarePlus className="h-4 w-4" />
@@ -250,7 +274,7 @@ export function FeedbackHubPage() {
                 title={copy.states.emptyMineTitle}
                 description={copy.states.emptyMineDescription}
                 action={
-                  <Button type="button" variant="default" onClick={() => setDialogOpen(true)}>
+                  <Button type="button" variant="default" onClick={() => openFeedbackPanel()}>
                     {copy.actions.emptySubmit}
                   </Button>
                 }
@@ -274,7 +298,14 @@ export function FeedbackHubPage() {
                           <button
                             type="button"
                             className="text-left text-base font-semibold text-[color:var(--foreground)] hover:underline"
-                            onClick={() => setSelectedFeedbackId(item._id)}
+                            onClick={() => {
+                              trackFeedbackSignal(
+                                pathname ?? "/feedback",
+                                "open_feedback_detail",
+                                "Opened a feedback thread from the feedback hub"
+                              );
+                              setSelectedFeedbackId(item._id);
+                            }}
                           >
                             {item.title}
                           </button>
@@ -294,6 +325,9 @@ export function FeedbackHubPage() {
                         {item.releaseSummary ? <span>{item.releaseSummary}</span> : null}
                         {item.pagePath ? <span>{item.pagePath}</span> : null}
                       </div>
+                      <p className="text-sm text-[color:var(--muted-foreground)]">
+                        {getFeedbackStatusDescription(item.status, getFeedbackLocale(locale))}
+                      </p>
                     </CardContent>
                     <CardFooter className="justify-between border-t border-[color:var(--border)] px-4 py-3">
                       <div className="text-xs text-[color:var(--muted-foreground)]">
@@ -302,7 +336,14 @@ export function FeedbackHubPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => setSelectedFeedbackId(item._id)}
+                        onClick={() => {
+                          trackFeedbackSignal(
+                            pathname ?? "/feedback",
+                            "open_feedback_detail",
+                            "Opened a feedback thread from the feedback hub"
+                          );
+                          setSelectedFeedbackId(item._id);
+                        }}
                       >
                         {copy.actions.viewDetails}
                       </Button>
@@ -323,7 +364,11 @@ export function FeedbackHubPage() {
                 title={copy.states.emptyBoardTitle}
                 description={copy.states.emptyBoardDescription}
                 action={
-                  <Button type="button" variant="default" onClick={() => setDialogOpen(true)}>
+                  <Button
+                    type="button"
+                    variant="default"
+                    onClick={() => openFeedbackPanel("feature_request")}
+                  >
                     {copy.actions.openFeedback}
                   </Button>
                 }
@@ -349,6 +394,9 @@ export function FeedbackHubPage() {
                             </p>
                             <p className="max-w-3xl text-sm text-[color:var(--muted-foreground)]">
                               {item.description}
+                            </p>
+                            <p className="max-w-3xl text-sm text-[color:var(--muted-foreground)]">
+                              {getFeedbackStatusDescription(item.status, getFeedbackLocale(locale))}
                             </p>
                           </div>
                           <div className="flex flex-col items-end gap-2">
@@ -465,7 +513,6 @@ export function FeedbackHubPage() {
         ) : null}
       </div>
 
-      <FeedbackDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
       <FeedbackDetailDialog
         open={selectedFeedbackId !== null}
         onClose={() => setSelectedFeedbackId(null)}

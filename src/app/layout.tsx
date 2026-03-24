@@ -6,6 +6,7 @@ import { BRAND } from "@/config/brand";
 import { getRequestLocale } from "@/i18n/request";
 import { CookieConsentBanner } from "@/components/layout/CookieConsentBanner";
 import { GTMConsentLoader } from "@/components/analytics/GTMConsentLoader";
+import { FeedbackPanelProvider } from "@/components/feedback";
 import { ToastProvider } from "@/components/ui";
 
 const GTM_ID = "GTM-KH48ZSSC";
@@ -42,7 +43,9 @@ export default async function RootLayout({
           </a>
           <GTMConsentLoader gtmId={GTM_ID} />
           <ToastProvider>
-            <ConvexClientProvider>{children}</ConvexClientProvider>
+            <ConvexClientProvider>
+              <FeedbackPanelProvider>{children}</FeedbackPanelProvider>
+            </ConvexClientProvider>
             <CookieConsentBanner locale={locale} />
           </ToastProvider>
         </body>
