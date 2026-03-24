@@ -348,17 +348,6 @@ const en = {
         website: "Website",
         admin: "Admin",
       },
-      admin: {
-        overview: "Overview",
-        users: "Users",
-        bikes: "Bikes",
-        feedback: "Feedback",
-        messages: "Messages",
-        releases: "Releases",
-        geometry: "Geometry",
-        fitRuns: "Fit Runs",
-        settings: "Settings",
-      },
       website: {
         home: "Home",
         howItWorks: "How It Works",

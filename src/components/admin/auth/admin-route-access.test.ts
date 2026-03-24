@@ -2,16 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   canAccessAdminRoute,
   getRequiredAdminRoles,
-  isAdminProtectedPath,
 } from "./admin-route-access";
 
 describe("admin route access", () => {
-  it("marks protected admin routes correctly", () => {
-    expect(isAdminProtectedPath("/admin")).toBe(true);
-    expect(isAdminProtectedPath("/admin/overview")).toBe(true);
-    expect(isAdminProtectedPath("/admin/login")).toBe(false);
-  });
-
   it("maps route prefixes to required roles", () => {
     expect(getRequiredAdminRoles("/admin/settings")).toEqual([
       "super_admin",

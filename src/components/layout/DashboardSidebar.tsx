@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
@@ -20,6 +21,8 @@ import {
   ClipboardList,
   PlusCircle,
   MessageSquareMore,
+  ChevronDown,
+  CircuitBoard,
 } from "lucide-react";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { Button } from "@/components/ui";
@@ -27,6 +30,10 @@ import {
   getEffectiveDisplayName,
   getEffectiveProfileImageSource,
 } from "@/lib/userIdentity";
+import {
+  adminNavigationGroups,
+  isAdminNavigationActive,
+} from "@/components/admin/layout/admin-navigation";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
@@ -54,20 +61,12 @@ export function DashboardSidebar() {
     { name: messages.layout.website.pricing, href: "/pricing" },
   ];
 
-  const adminNavigation = [
-    { name: messages.layout.admin.overview, href: "/admin/overview" },
-    { name: messages.layout.admin.users, href: "/admin/users" },
-    { name: messages.layout.admin.bikes, href: "/admin/bikes" },
-    { name: messages.layout.admin.feedback, href: "/admin/feedback" },
-    { name: messages.layout.admin.messages, href: "/admin/messages" },
-    { name: messages.layout.admin.releases, href: "/admin/releases" },
-    { name: messages.layout.admin.geometry, href: "/admin/geometry" },
-    { name: messages.layout.admin.fitRuns, href: "/admin/fit-runs" },
-    { name: messages.layout.admin.settings, href: "/admin/settings" },
-  ];
-
   const user = useQuery(api.users.queries.getCurrentUser);
   const isSuperAdmin = user?.adminRole === "super_admin";
+
+  const [isAdminOpen, setIsAdminOpen] = useState(
+    () => internalPathname.startsWith("/admin")
+  );
 
   const handleSignOut = async () => {
     await signOut();
@@ -118,21 +117,60 @@ export function DashboardSidebar() {
           </nav>
 
           {isSuperAdmin && (
-            <div className="mt-6">
-              <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                {messages.layout.sections.admin}
-              </p>
-              <div className="space-y-1">
-                {adminNavigation.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="block rounded-lg px-3 py-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
+            <div className="mt-4">
+              {/* Toggle button - styled like a nav item */}
+              <button
+                type="button"
+                onClick={() => setIsAdminOpen((v) => !v)}
+                className={cn(
+                  "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  internalPathname.startsWith("/admin")
+                    ? "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--secondary)_86%)] text-[color:var(--foreground)] shadow-sm"
+                    : "text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+                )}
+              >
+                <CircuitBoard className="h-5 w-5 shrink-0" />
+                <span className="flex-1 text-left">{messages.layout.sections.admin}</span>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 shrink-0 transition-transform duration-200",
+                    isAdminOpen && "rotate-180"
+                  )}
+                />
+              </button>
+
+              {/* Sub-items — only shown when open */}
+              {isAdminOpen && (
+                <div className="mt-1 space-y-4 pl-2">
+                  {adminNavigationGroups.map((group) => (
+                    <div key={group.label}>
+                      <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        {group.label}
+                      </p>
+                      <div className="space-y-0.5">
+                        {group.items.map((item) => {
+                          const isActive = isAdminNavigationActive(internalPathname, item.href);
+                          return (
+                            <Link
+                              key={item.href}
+                              href={item.href}
+                              className={cn(
+                                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                                isActive
+                                  ? "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--secondary)_86%)] text-[color:var(--foreground)] shadow-sm"
+                                  : "text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+                              )}
+                            >
+                              <item.icon className="h-4 w-4 shrink-0" />
+                              {item.label}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

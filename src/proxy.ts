@@ -5,10 +5,8 @@ import {
   LOCALE_HEADER_NAME,
   type Locale,
 } from "@/i18n/config";
-import { isAdminPath, isProtectedAppPath } from "@/i18n/navigation";
+import { isProtectedAppPath } from "@/i18n/navigation";
 import { decideProxyAction } from "@/i18n/proxyDecision";
-import { ADMIN_PATHNAME_HEADER } from "@/components/admin/auth/admin-request";
-import { isAdminProtectedPath } from "@/components/admin/auth/admin-route-access";
 
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
 
@@ -32,22 +30,14 @@ function redirectToPath(request: NextRequest, pathname: string): NextResponse {
 const convexAuthProxy = convexAuthNextjsMiddleware(
   async (request, { convexAuth }) => {
     const { pathname } = request.nextUrl;
-    if (isAdminPath(pathname)) {
-      const requestHeaders = new Headers(request.headers);
-      requestHeaders.set(ADMIN_PATHNAME_HEADER, pathname);
 
-      if (isAdminProtectedPath(pathname)) {
-        const isAuthenticated = await convexAuth.isAuthenticated();
-        if (!isAuthenticated) {
-          return redirectToPath(request, "/admin/login");
-        }
+    // Admin paths: protected, non-locale-prefixed — let the (dashboard) layout handle auth
+    if (pathname.startsWith("/admin")) {
+      const isAuthenticated = await convexAuth.isAuthenticated();
+      if (!isAuthenticated) {
+        return redirectToPath(request, "/login");
       }
-
-      return NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-      });
+      return NextResponse.next();
     }
 
     const isAuthenticated = isProtectedAppPath(pathname)

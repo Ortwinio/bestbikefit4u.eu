@@ -16,6 +16,10 @@ import { BRAND } from "@/config/brand";
 import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { Menu, X } from "lucide-react";
+import {
+  adminNavigationGroups,
+  isAdminNavigationActive,
+} from "@/components/admin/layout/admin-navigation";
 
 export default function DashboardLayout({
   children,
@@ -143,26 +147,25 @@ export default function DashboardLayout({
                 <p className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   {messages.layout.sections.admin}
                 </p>
-                <div className="space-y-1">
-                  {[
-                    { href: "/admin/overview", label: messages.layout.admin.overview },
-                    { href: "/admin/users", label: messages.layout.admin.users },
-                    { href: "/admin/bikes", label: messages.layout.admin.bikes },
-                    { href: "/admin/feedback", label: messages.layout.admin.feedback },
-                    { href: "/admin/messages", label: messages.layout.admin.messages },
-                    { href: "/admin/releases", label: messages.layout.admin.releases },
-                    { href: "/admin/geometry", label: messages.layout.admin.geometry },
-                    { href: "/admin/fit-runs", label: messages.layout.admin.fitRuns },
-                    { href: "/admin/settings", label: messages.layout.admin.settings },
-                  ].map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
-                    >
-                      {item.label}
-                    </Link>
+                <div className="space-y-4">
+                  {adminNavigationGroups.map((group) => (
+                    <div key={group.label}>
+                      <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        {group.label}
+                      </p>
+                      <div className="space-y-0.5">
+                        {group.items.map((item) => (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+                          >
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </>

@@ -15,7 +15,7 @@ type PaginatedResult<T> = {
 export async function getAdminQueryToken() {
   const token = await convexAuthNextjsToken();
   if (!token) {
-    redirect("/admin/login");
+    redirect("/login");
   }
 
   return token;

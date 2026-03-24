@@ -349,17 +349,6 @@ const nl = {
         website: "Website",
         admin: "Admin",
       },
-      admin: {
-        overview: "Overzicht",
-        users: "Gebruikers",
-        bikes: "Fietsen",
-        feedback: "Feedback",
-        messages: "Berichten",
-        releases: "Releases",
-        geometry: "Geometrie",
-        fitRuns: "Fit-runs",
-        settings: "Instellingen",
-      },
       website: {
         home: "Home",
         howItWorks: "Hoe het werkt",

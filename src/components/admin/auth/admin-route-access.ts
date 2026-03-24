@@ -71,10 +71,6 @@ const adminRouteRules: AdminRouteRule[] = [
   },
 ];
 
-export function isAdminProtectedPath(pathname: string) {
-  return pathname === "/admin" || (pathname.startsWith("/admin/") && pathname !== "/admin/login");
-}
-
 export function getRequiredAdminRoles(pathname: string): AdminRouteAccess {
   const normalizedPathname = pathname.split("?")[0] ?? pathname;
 
