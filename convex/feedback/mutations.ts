@@ -1,6 +1,14 @@
 import { v } from "convex/values";
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { mutation } from "../_generated/server";
-import { requireUserId } from "../lib/authz";
+import {
+  computeContextCompleteness,
+  feedbackRouteFamilyValidator,
+  inferRouteFamily,
+  sanitizeJsonString,
+  trimOptionalString,
+  trimRequiredString,
+} from "./shared";
 
 const OPEN_FEATURE_STATUSES = new Set([
   "new",
@@ -16,21 +24,34 @@ export const submitFeedback = mutation({
     type: v.union(
       v.literal("bug"),
       v.literal("feature_request"),
-      v.literal("support_case")
+      v.literal("support_case"),
+      v.literal("review")
     ),
     title: v.string(),
     description: v.string(),
     category: v.optional(v.string()),
+    pageUrl: v.optional(v.string()),
+    pathname: v.optional(v.string()),
+    queryString: v.optional(v.string()),
+    locale: v.optional(v.union(v.literal("en"), v.literal("nl"))),
+    routeFamily: v.optional(feedbackRouteFamilyValidator),
+    activitySummary: v.optional(v.string()),
+    activityTrailJson: v.optional(v.string()),
     pagePath: v.optional(v.string()),
     linkedSessionId: v.optional(v.id("fitSessions")),
     linkedBikeId: v.optional(v.id("bikes")),
+    contactEmail: v.optional(v.string()),
+    contactName: v.optional(v.string()),
     expectedResult: v.optional(v.string()),
     actualResult: v.optional(v.string()),
     browserInfoJson: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const userId = await requireUserId(ctx);
+    const userId = await getAuthUserId(ctx);
     if (args.linkedBikeId) {
+      if (!userId) {
+        throw new Error("Authentication required for linked bike");
+      }
       const linkedBike = await ctx.db.get(args.linkedBikeId);
       if (!linkedBike || linkedBike.userId !== userId) {
         throw new Error("Invalid linked bike");
@@ -38,6 +59,9 @@ export const submitFeedback = mutation({
     }
 
     if (args.linkedSessionId) {
+      if (!userId) {
+        throw new Error("Authentication required for linked session");
+      }
       const linkedSession = await ctx.db.get(args.linkedSessionId);
       if (!linkedSession || linkedSession.userId !== userId) {
         throw new Error("Invalid linked session");
@@ -45,9 +69,54 @@ export const submitFeedback = mutation({
     }
 
     const now = Date.now();
+    const pagePath = trimOptionalString(args.pagePath, 512);
+    const pathname = trimOptionalString(args.pathname, 512);
+    const routeFamily = inferRouteFamily(pathname, pagePath, args.routeFamily);
+    const activitySummary = trimOptionalString(args.activitySummary, 280);
+    const activityTrailJson = sanitizeJsonString(args.activityTrailJson, 4000);
+    const browserInfoJson = sanitizeJsonString(args.browserInfoJson, 4000);
+    const pageUrl = trimOptionalString(args.pageUrl, 2048);
+    const queryString = trimOptionalString(args.queryString, 1024);
+    const description = trimRequiredString(args.description, 4000);
+    const title = trimRequiredString(args.title, 160);
+    const contactEmail = trimOptionalString(args.contactEmail, 320);
+    const contactName = trimOptionalString(args.contactName, 160);
+    const contextCompleteness = computeContextCompleteness({
+      pageUrl,
+      pathname,
+      description,
+      routeFamily,
+      linkedSessionId: args.linkedSessionId,
+      linkedBikeId: args.linkedBikeId,
+      browserInfoJson,
+      activitySummary,
+      activityTrailJson,
+      userId: userId ?? undefined,
+      contactEmail,
+      contactName,
+    });
     const feedbackItemId = await ctx.db.insert("feedback_items", {
-      ...args,
-      userId,
+      type: args.type,
+      title,
+      description,
+      category: trimOptionalString(args.category, 120),
+      pageUrl,
+      pathname,
+      queryString,
+      locale: args.locale,
+      routeFamily,
+      activitySummary,
+      activityTrailJson,
+      pagePath,
+      linkedSessionId: args.linkedSessionId,
+      linkedBikeId: args.linkedBikeId,
+      contactEmail,
+      contactName,
+      expectedResult: trimOptionalString(args.expectedResult, 2000),
+      actualResult: trimOptionalString(args.actualResult, 2000),
+      browserInfoJson,
+      userId: userId ?? undefined,
+      contextCompleteness,
       status: "new",
       priority: "normal",
       upvoteCount: args.type === "feature_request" ? 1 : undefined,

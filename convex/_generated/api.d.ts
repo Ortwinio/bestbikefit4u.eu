@@ -11,6 +11,7 @@
 import type * as admin_actions from "../admin/actions.js";
 import type * as admin_audit from "../admin/audit.js";
 import type * as admin_authz from "../admin/authz.js";
+import type * as admin_bootstrap from "../admin/bootstrap.js";
 import type * as admin_mutations from "../admin/mutations.js";
 import type * as admin_queries from "../admin/queries.js";
 import type * as analytics_mutations from "../analytics/mutations.js";
@@ -29,6 +30,7 @@ import type * as emails_mutations from "../emails/mutations.js";
 import type * as emails_queries from "../emails/queries.js";
 import type * as feedback_mutations from "../feedback/mutations.js";
 import type * as feedback_queries from "../feedback/queries.js";
+import type * as feedback_shared from "../feedback/shared.js";
 import type * as files_actions from "../files/actions.js";
 import type * as http from "../http.js";
 import type * as integrations_actions from "../integrations/actions.js";
@@ -95,6 +97,7 @@ declare const fullApi: ApiFromModules<{
   "admin/actions": typeof admin_actions;
   "admin/audit": typeof admin_audit;
   "admin/authz": typeof admin_authz;
+  "admin/bootstrap": typeof admin_bootstrap;
   "admin/mutations": typeof admin_mutations;
   "admin/queries": typeof admin_queries;
   "analytics/mutations": typeof analytics_mutations;
@@ -113,6 +116,7 @@ declare const fullApi: ApiFromModules<{
   "emails/queries": typeof emails_queries;
   "feedback/mutations": typeof feedback_mutations;
   "feedback/queries": typeof feedback_queries;
+  "feedback/shared": typeof feedback_shared;
   "files/actions": typeof files_actions;
   http: typeof http;
   "integrations/actions": typeof integrations_actions;

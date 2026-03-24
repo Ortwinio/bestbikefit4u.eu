@@ -2,7 +2,7 @@ import { makeFunctionReference } from "convex/server";
 import type { Id } from "../../../convex/_generated/dataModel";
 import type { FeedbackLocale } from "./feedback-copy";
 
-export type FeedbackType = "bug" | "feature_request" | "support_case";
+export type FeedbackType = "bug" | "feature_request" | "support_case" | "review";
 export type FeedbackStatus =
   | "new"
   | "triaged"
@@ -48,6 +48,9 @@ export type FeedbackOverviewRow = {
   status: FeedbackStatus;
   category?: string;
   pagePath?: string;
+  routeFamily?: string;
+  activitySummary?: string;
+  contextCompleteness?: "low" | "medium" | "high";
   linkedSessionId?: Id<"fitSessions">;
   linkedBikeId?: Id<"bikes">;
   expectedResult?: string;
@@ -101,6 +104,9 @@ export type SubmitFeedbackArgs = {
   description: string;
   category?: string;
   pagePath?: string;
+  routeFamily?: string;
+  activitySummary?: string;
+  contextCompleteness?: "low" | "medium" | "high";
   linkedSessionId?: Id<"fitSessions">;
   linkedBikeId?: Id<"bikes">;
   expectedResult?: string;

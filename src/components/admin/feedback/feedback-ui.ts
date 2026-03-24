@@ -1,7 +1,7 @@
 import { createElement, type ReactNode } from "react";
 import { AdminStatusPill } from "@/components/admin/layout/AdminUi";
 
-export type FeedbackType = "bug" | "feature_request" | "support_case";
+export type FeedbackType = "bug" | "feature_request" | "support_case" | "review";
 export type FeedbackStatus =
   | "new"
   | "triaged"
@@ -18,6 +18,7 @@ const typeLabels: Record<FeedbackType, string> = {
   bug: "Bug",
   feature_request: "Feature request",
   support_case: "Support case",
+  review: "Review",
 };
 
 const statusLabels: Record<FeedbackStatus, string> = {
@@ -42,6 +43,7 @@ const priorityLabels: Record<FeedbackPriority, string> = {
 export function feedbackTypeTone(type: FeedbackType) {
   if (type === "bug") return "danger";
   if (type === "feature_request") return "info";
+  if (type === "review") return "success";
   return "neutral";
 }
 

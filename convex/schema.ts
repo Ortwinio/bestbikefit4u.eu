@@ -1274,7 +1274,8 @@ export default defineSchema({
     type: v.union(
       v.literal("bug"),
       v.literal("feature_request"),
-      v.literal("support_case")
+      v.literal("support_case"),
+      v.literal("review")
     ),
     title: v.string(),
     description: v.string(),
@@ -1303,8 +1304,33 @@ export default defineSchema({
     linkedReleaseId: v.optional(v.id("releases")),
     linkedSessionId: v.optional(v.id("fitSessions")),
     linkedBikeId: v.optional(v.id("bikes")),
+    pageUrl: v.optional(v.string()),
+    pathname: v.optional(v.string()),
+    queryString: v.optional(v.string()),
+    locale: v.optional(v.union(v.literal("en"), v.literal("nl"))),
+    routeFamily: v.optional(
+      v.union(
+        v.literal("marketing"),
+        v.literal("auth"),
+        v.literal("dashboard"),
+        v.literal("fit_results"),
+        v.literal("calculators"),
+        v.literal("profile"),
+        v.literal("bikes"),
+        v.literal("settings"),
+        v.literal("pricing"),
+        v.literal("other")
+      )
+    ),
+    activitySummary: v.optional(v.string()),
+    contextCompleteness: v.optional(
+      v.union(v.literal("low"), v.literal("medium"), v.literal("high"))
+    ),
+    activityTrailJson: v.optional(v.string()),
     pagePath: v.optional(v.string()),
     browserInfoJson: v.optional(v.string()),
+    contactEmail: v.optional(v.string()),
+    contactName: v.optional(v.string()),
     expectedResult: v.optional(v.string()),
     actualResult: v.optional(v.string()),
     upvoteCount: v.optional(v.number()),
@@ -1317,7 +1343,8 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_assigned_to", ["assignedTo"])
     .index("by_user", ["userId"])
-    .index("by_release", ["linkedReleaseId"]),
+    .index("by_release", ["linkedReleaseId"])
+    .index("by_route_family", ["routeFamily"]),
 
   feedback_comments: defineTable({
     feedbackItemId: v.id("feedback_items"),

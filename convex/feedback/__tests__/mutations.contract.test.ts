@@ -106,4 +106,77 @@ describe("feedback mutations contract", () => {
       "This feature request can no longer be voted on"
     );
   });
+
+  it("allows anonymous review submission with derived context fields", async () => {
+    getAuthUserIdMock.mockResolvedValue(null);
+    const ctx = makeCtx();
+    const handler = (submitFeedback as unknown as { _handler: TestHandler })._handler;
+
+    await handler(ctx, {
+      type: "review",
+      title: "  Great fit results  ",
+      description: "  The fit advice felt spot on.  ",
+      pageUrl: "https://bestbikefit4u.eu/en/dashboard",
+      pathname: "/dashboard",
+      locale: "en",
+      activitySummary: "  User reviewed the fit result after checking bike settings. ",
+      contactEmail: " rider@example.com ",
+      contactName: " Rider ",
+    });
+
+    expect(ctx.db.insert).toHaveBeenCalledWith(
+      "feedback_items",
+      expect.objectContaining({
+        userId: undefined,
+        type: "review",
+        title: "Great fit results",
+        description: "The fit advice felt spot on.",
+        routeFamily: "dashboard",
+        contextCompleteness: "high",
+        contactEmail: "rider@example.com",
+        contactName: "Rider",
+      })
+    );
+  });
+
+  it("requires authentication when linked entities are attached", async () => {
+    getAuthUserIdMock.mockResolvedValue(null);
+    const ctx = makeCtx({
+      bike: { _id: "bike_2", userId: "user_2" },
+    });
+    const handler = (submitFeedback as unknown as { _handler: TestHandler })._handler;
+
+    await expect(
+      handler(ctx, {
+        type: "bug",
+        title: "Broken",
+        description: "Details",
+        linkedBikeId: "bike_2",
+      })
+    ).rejects.toThrow("Authentication required for linked bike");
+  });
+
+  it("drops invalid json payload fields and computes medium completeness for low-context reports", async () => {
+    const ctx = makeCtx();
+    const handler = (submitFeedback as unknown as { _handler: TestHandler })._handler;
+
+    await handler(ctx, {
+      type: "support_case",
+      title: "Need help",
+      description: "I cannot find the saved session.",
+      pathname: "/settings",
+      activityTrailJson: "{not-json}",
+      browserInfoJson: "{also-not-json}",
+    });
+
+    expect(ctx.db.insert).toHaveBeenCalledWith(
+      "feedback_items",
+      expect.objectContaining({
+        routeFamily: "settings",
+        activityTrailJson: undefined,
+        browserInfoJson: undefined,
+        contextCompleteness: "medium",
+      })
+    );
+  });
 });

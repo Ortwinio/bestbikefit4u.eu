@@ -25,6 +25,10 @@ function makeCtx() {
             description: "Broken description",
             status: "new",
             linkedReleaseId: "release_1",
+            routeFamily: "fit_results",
+            activitySummary: "User opened fit results and reported an issue.",
+            contextCompleteness: "high",
+            contactEmail: "rider@example.com",
             createdAt: 100,
           };
         }
@@ -85,5 +89,13 @@ describe("feedback queries contract", () => {
         body: "Thanks, we're looking at it.",
       }),
     ]);
+    expect(result.item).toEqual(
+      expect.objectContaining({
+        routeFamily: "fit_results",
+        activitySummary: "User opened fit results and reported an issue.",
+        contextCompleteness: "high",
+        contactEmail: "rider@example.com",
+      })
+    );
   });
 });
