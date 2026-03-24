@@ -66,15 +66,6 @@ export function buildFeedbackValidation(
   if (!state.description.trim()) {
     errors.description = copy.dialog.descriptionLabel;
   }
-  if (type === "bug") {
-    if (!state.expectedResult.trim()) {
-      errors.expectedResult = copy.dialog.expectedResultLabel;
-    }
-    if (!state.actualResult.trim()) {
-      errors.actualResult = copy.dialog.actualResultLabel;
-    }
-  }
-
   return errors;
 }
 

@@ -82,8 +82,6 @@ export function FeedbackDialog({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const resolvedPagePath = pagePath ?? pathname ?? "";
-  const liveValidation = buildFeedbackValidation(selectedType, form, copy);
-  const isFormValid = Object.keys(liveValidation).length === 0;
 
   useEffect(() => {
     if (!open) {
@@ -121,7 +119,7 @@ export function FeedbackDialog({
     );
   }, [open, selectedType]);
 
-  const canSubmit = Boolean(selectedType) && isFormValid;
+  const canSubmit = Boolean(selectedType) && !isSubmitting;
 
   function updateField<K extends keyof FeedbackFormState>(field: K, value: FeedbackFormState[K]) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -203,6 +201,9 @@ export function FeedbackDialog({
   const guidedPrompts = selectedType
     ? getFeedbackGuidedPrompts(selectedType, getFeedbackLocale(locale))
     : [];
+  const hasTechnicalDetails = Boolean(
+    form.pagePath || form.browserInfoJson || linkedSessionId || linkedBikeId
+  );
   const showTypeStep = step === "type" && !defaultType;
   const showFormStep = step === "form";
   const showSuccessStep = step === "success";
@@ -289,8 +290,11 @@ export function FeedbackDialog({
               </Button>
             ) : null}
 
+          </div>
+
+          <div className="grid gap-4">
             {!isAuthenticated ? (
-              <>
+              <div className="grid gap-4 sm:grid-cols-2">
                 <Input
                   label={copy.dialog.contactNameLabel}
                   value={form.contactName}
@@ -304,11 +308,8 @@ export function FeedbackDialog({
                   onChange={(event) => updateField("contactEmail", event.target.value)}
                   placeholder={copy.dialog.placeholders.contactEmail}
                 />
-              </>
+              </div>
             ) : null}
-          </div>
-
-          <div className="grid gap-4">
             <Card className="panel-surface-subtle border">
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
@@ -346,16 +347,6 @@ export function FeedbackDialog({
               rows={5}
             />
 
-            {selectedType !== "review" ? (
-              <Input
-                label={copy.dialog.categoryLabel}
-                value={form.category}
-                onChange={(event) => updateField("category", event.target.value)}
-                placeholder={copy.dialog.placeholders.category}
-                helperText={copy.dialog.categoryHelper}
-              />
-            ) : null}
-
             {selectedType === "bug" ? (
               <>
                 <Textarea
@@ -378,48 +369,61 @@ export function FeedbackDialog({
                   placeholder={copy.dialog.placeholders.actualResult}
                   rows={3}
                 />
-                <Input
-                  label={copy.dialog.pagePathLabel}
-                  value={form.pagePath}
-                  onChange={(event) => updateField("pagePath", event.target.value)}
-                  helperText={copy.dialog.placeholders.pagePath}
-                />
-                <Textarea
-                  label={copy.dialog.browserInfoLabel}
-                  value={form.browserInfoJson}
-                  onChange={(event) => updateField("browserInfoJson", event.target.value)}
-                  helperText={copy.dialog.browserInfoHelper}
-                  placeholder={copy.dialog.placeholders.browserInfo}
-                  rows={6}
-                />
               </>
             ) : null}
 
-            {resolvedPagePath || linkedSessionId || linkedBikeId ? (
-              <Card className="panel-surface-subtle border border-[color:color-mix(in_oklch,var(--primary)_34%,var(--border))]">
-                <div className="space-y-2">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                    {copy.dialog.linkedContextLabel}
-                  </p>
-                  {resolvedPagePath ? (
-                    <p className="text-sm text-[color:var(--foreground)]">
-                      {copy.dialog.pagePathLabel}: {resolvedPagePath}
-                    </p>
+            {hasTechnicalDetails ? (
+              <details className="panel-surface-subtle rounded-[var(--radius-lg)] border p-4">
+                <summary className="cursor-pointer list-none text-sm font-semibold text-[color:var(--primary)]">
+                  {copy.dialog.technicalDetailsLabel}
+                </summary>
+                <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
+                  {copy.dialog.technicalDetailsHint}
+                </p>
+                <div className="mt-4 space-y-3 text-sm text-[color:var(--foreground)]">
+                  {form.pagePath ? (
+                    <div className="space-y-1">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        {copy.dialog.pagePathLabel}
+                      </p>
+                      <code className="block rounded-[var(--radius-md)] bg-[color:var(--background)] px-3 py-2 text-xs text-[color:var(--foreground)]">
+                        {form.pagePath}
+                      </code>
+                    </div>
                   ) : null}
-                  <div className="flex flex-wrap gap-2">
-                    {linkedSessionId ? (
-                      <span className="rounded-full bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--secondary)_88%)] px-3 py-1 text-xs font-medium text-[color:var(--primary)]">
-                        {copy.dialog.linkedSessionLabel}: {String(linkedSessionId)}
-                      </span>
-                    ) : null}
-                    {linkedBikeId ? (
-                      <span className="rounded-full bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--secondary)_88%)] px-3 py-1 text-xs font-medium text-[color:var(--primary)]">
-                        {copy.dialog.linkedBikeLabel}: {String(linkedBikeId)}
-                      </span>
-                    ) : null}
-                  </div>
+
+                  {form.browserInfoJson ? (
+                    <div className="space-y-1">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        {copy.dialog.browserInfoLabel}
+                      </p>
+                      <pre className="overflow-x-auto rounded-[var(--radius-md)] bg-[color:var(--background)] px-3 py-2 text-xs text-[color:var(--foreground)] whitespace-pre-wrap break-all">
+                        {form.browserInfoJson}
+                      </pre>
+                    </div>
+                  ) : null}
+
+                  {resolvedPagePath || linkedSessionId || linkedBikeId ? (
+                    <div className="space-y-2">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        {copy.dialog.linkedContextLabel}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {linkedSessionId ? (
+                          <span className="rounded-full bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--secondary)_88%)] px-3 py-1 text-xs font-medium text-[color:var(--primary)]">
+                            {copy.dialog.linkedSessionLabel}: {String(linkedSessionId)}
+                          </span>
+                        ) : null}
+                        {linkedBikeId ? (
+                          <span className="rounded-full bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--secondary)_88%)] px-3 py-1 text-xs font-medium text-[color:var(--primary)]">
+                            {copy.dialog.linkedBikeLabel}: {String(linkedBikeId)}
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
-              </Card>
+              </details>
             ) : null}
 
             {submitError ? (
@@ -434,7 +438,7 @@ export function FeedbackDialog({
               variant="outline"
               type="button"
               onClick={handleBack}
-              className="border-[color:var(--primary)] text-[color:var(--primary)] hover-only:text-[color:var(--primary)]"
+              className="bg-[color:var(--background)] border-[color:var(--primary)] text-[color:var(--primary)] hover-only:text-[color:var(--primary)]"
             >
               {copy.dialog.back}
             </Button>

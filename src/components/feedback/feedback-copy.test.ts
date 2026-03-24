@@ -16,5 +16,6 @@ describe("feedback copy contract", () => {
     expect(copy.types.review.label).toBe("Review");
     expect(copy.dialog.successTitle).toBe("Dank je wel voor je feedback.");
     expect(copy.dialog.nextStepsTitle).toBe("Wat gebeurt er nu");
+    expect(copy.dialog.technicalDetailsLabel).toBe("Technische details");
   });
 });

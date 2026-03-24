@@ -39,6 +39,8 @@ type FeedbackCopy = {
     pagePathLabel: string;
     browserInfoLabel: string;
     browserInfoHelper: string;
+    technicalDetailsLabel: string;
+    technicalDetailsHint: string;
     contactEmailLabel: string;
     contactNameLabel: string;
     categoryHelper: string;
@@ -150,6 +152,9 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       pagePathLabel: "Page path",
       browserInfoLabel: "Browser metadata",
       browserInfoHelper: "Captured automatically for bug reports and support diagnostics.",
+      technicalDetailsLabel: "Technical details",
+      technicalDetailsHint:
+        "Captured automatically for debugging and support. You do not need to edit this.",
       contactEmailLabel: "Contact email",
       contactNameLabel: "Name",
       categoryHelper: "Optional, but useful when the issue belongs to a specific area.",
@@ -290,6 +295,9 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       pagePathLabel: "Paginapad",
       browserInfoLabel: "Browsermetadata",
       browserInfoHelper: "Wordt automatisch vastgelegd voor bugmeldingen en supportdiagnose.",
+      technicalDetailsLabel: "Technische details",
+      technicalDetailsHint:
+        "Wordt automatisch vastgelegd voor debugging en support. Je hoeft dit niet te bewerken.",
       contactEmailLabel: "E-mailadres",
       contactNameLabel: "Naam",
       categoryHelper: "Optioneel, maar handig wanneer het probleem bij een specifiek onderdeel hoort.",

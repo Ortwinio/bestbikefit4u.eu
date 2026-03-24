@@ -42,7 +42,7 @@ describe("feedback-flow", () => {
     ]);
   });
 
-  it("requires expected and actual result only for bug reports", () => {
+  it("requires only title and description for submission", () => {
     const reviewErrors = buildFeedbackValidation(
       "review",
       {
@@ -81,8 +81,6 @@ describe("feedback-flow", () => {
     expect(bugErrors).toEqual({
       title: "Title",
       description: "Description",
-      expectedResult: "Expected result",
-      actualResult: "Actual result",
     });
   });
 
