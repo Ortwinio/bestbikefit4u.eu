@@ -41,25 +41,6 @@ vi.mock("@/components/dashboard-messages", () => ({
   DashboardMessageSurface: () => <div data-testid="dashboard-message-surface" />,
 }));
 
-vi.mock("@/components/feedback", () => ({
-  FeedbackFloatingButton: ({ label }: { label: string }) => (
-    <button data-testid="feedback-floating-button">{label}</button>
-  ),
-  FeedbackDialog: ({
-    linkedBikeId,
-    linkedSessionId,
-  }: {
-    linkedBikeId?: string;
-    linkedSessionId?: string;
-  }) => (
-    <div
-      data-testid="feedback-dialog"
-      data-linked-bike-id={linkedBikeId ?? ""}
-      data-linked-session-id={linkedSessionId ?? ""}
-    />
-  ),
-}));
-
 vi.mock("@/components/integrations/StravaAutoImportTrigger", () => ({
   StravaAutoImportTrigger: () => null,
 }));
@@ -105,7 +86,11 @@ vi.mock("@/i18n/useDashboardMessages", () => ({
   }),
 }));
 
-import DashboardLayout from "./layout";
+import DashboardLayout, {
+  DASHBOARD_MOBILE_HEADER_CLASSNAME,
+  DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME,
+  DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME,
+} from "./layout";
 
 function renderLayout(pathname: string) {
   usePathnameMock.mockReturnValue(pathname);
@@ -117,32 +102,19 @@ function renderLayout(pathname: string) {
 }
 
 describe("DashboardLayout feedback context integration", () => {
-  it("passes linked bike context from bike routes into FeedbackDialog", () => {
-    const html = renderLayout("/nl/bikes/bike_123/edit");
-
-    expect(html).toContain('data-testid="feedback-dialog"');
-    expect(html).toContain('data-linked-bike-id="bike_123"');
-    expect(html).toContain('data-linked-session-id=""');
-  });
-
-  it("passes linked session context from fit routes into FeedbackDialog", () => {
-    const html = renderLayout("/nl/fit/session_456/results");
-
-    expect(html).toContain('data-testid="feedback-dialog"');
-    expect(html).toContain('data-linked-bike-id=""');
-    expect(html).toContain('data-linked-session-id="session_456"');
-  });
-
-  it("passes no linked ids for unrelated dashboard routes", () => {
+  it("renders the dashboard shell without legacy local feedback mounting", () => {
     const html = renderLayout("/nl/dashboard");
 
-    expect(html).toContain('data-linked-bike-id=""');
-    expect(html).toContain('data-linked-session-id=""');
+    expect(html).toContain('data-testid="sidebar"');
+    expect(html).toContain("Dashboard content");
+    expect(html).toContain('data-testid="dashboard-message-surface"');
   });
 
-  it("hides the floating feedback button on the dedicated feedback route", () => {
-    const html = renderLayout("/nl/feedback");
-
-    expect(html).not.toContain('data-testid="feedback-floating-button"');
+  it("defines an opaque mobile panel contract", () => {
+    expect(DASHBOARD_MOBILE_HEADER_CLASSNAME).not.toContain("bg-card/90");
+    expect(DASHBOARD_MOBILE_HEADER_CLASSNAME).not.toContain("backdrop-blur");
+    expect(DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME).toContain("panel-backdrop");
+    expect(DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME).toContain("panel-surface-base");
+    expect(DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME).toContain("panel-theme-context");
   });
 });

@@ -8,6 +8,12 @@ import { XIcon } from "lucide-react"
 import { cn } from "@/components/lib/utils"
 import { Button } from "@/components/prototyper-ui/ui/button"
 
+export const DIALOG_OVERLAY_CLASSNAME =
+  "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 panel-backdrop duration-200 fixed inset-0 isolate z-50 transition motion-reduce:animate-none motion-reduce:transition-none"
+
+export const DIALOG_PANEL_CLASSNAME =
+  "panel-surface-base panel-theme-context shadow-overlay"
+
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
@@ -32,7 +38,7 @@ function DialogOverlay({
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/40 dark:bg-black/55 duration-200 supports-backdrop-filter:backdrop-blur-xs fixed inset-0 isolate z-50 transition motion-reduce:animate-none motion-reduce:transition-none",
+        DIALOG_OVERLAY_CLASSNAME,
         className
       )}
       {...props}
@@ -42,7 +48,8 @@ function DialogOverlay({
 
 const sheetVariants = cva(
   [
-    "fixed z-50 gap-4 bg-overlay text-overlay-foreground shadow-overlay transition ease-out-fluid",
+    "fixed z-50 gap-4 transition ease-out-fluid",
+    DIALOG_PANEL_CLASSNAME,
     "data-open:animate-in data-open:duration-300",
     "data-closed:animate-out data-closed:duration-200",
     "data-entering:will-change-[opacity,transform] data-exiting:will-change-[opacity,transform]",
@@ -80,7 +87,8 @@ function DialogContent({
           side
             ? sheetVariants({ side, className: "h-full overflow-y-auto p-6" })
             : [
-                "bg-overlay text-overlay-foreground shadow-overlay data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-[0.98] data-open:zoom-in-[1.02] grid max-w-[calc(100%-2rem)] gap-6 rounded-2xl p-6 text-sm duration-200 ease-out-fluid sm:max-w-md fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none overflow-hidden transition data-entering:will-change-[opacity,transform] data-exiting:will-change-[opacity,transform] motion-reduce:animate-none motion-reduce:transition-none",
+                DIALOG_PANEL_CLASSNAME,
+                "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-[0.98] data-open:zoom-in-[1.02] grid max-w-[calc(100%-2rem)] gap-6 rounded-2xl p-6 text-sm duration-200 ease-out-fluid sm:max-w-md fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none overflow-hidden transition data-entering:will-change-[opacity,transform] data-exiting:will-change-[opacity,transform] motion-reduce:animate-none motion-reduce:transition-none",
               ],
           className
         )}

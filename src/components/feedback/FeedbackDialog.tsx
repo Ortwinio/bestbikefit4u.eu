@@ -54,10 +54,10 @@ function feedbackTypeTone(type: FeedbackType) {
 
 function feedbackTypeAccent(type: FeedbackType) {
   if (type === "bug")
-    return "bg-[color:color-mix(in_oklch,var(--danger)_10%,var(--card)_90%)]";
+    return "bg-[color:color-mix(in_oklch,var(--danger)_14%,var(--card)_86%)]";
   if (type === "feature_request")
-    return "bg-[color:color-mix(in_oklch,var(--primary)_10%,var(--card)_90%)]";
-  return "bg-[color:color-mix(in_oklch,var(--warning)_10%,var(--card)_90%)]";
+    return "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--card)_86%)]";
+  return "bg-[color:color-mix(in_oklch,var(--warning)_14%,var(--card)_86%)]";
 }
 
 export function FeedbackDialog({
@@ -218,7 +218,7 @@ export function FeedbackDialog({
     >
       <DialogContent
         side="right"
-        className="flex h-full w-full max-w-none flex-col border-l border-[color:var(--border)] bg-[color:var(--card)] p-0 text-[color:var(--foreground)] sm:max-w-xl"
+        className="flex h-full w-full max-w-none flex-col border-l p-0 sm:max-w-xl"
       >
         <DialogHeader className="border-b border-[color:var(--border)] px-5 py-5 sm:px-6">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
@@ -278,7 +278,13 @@ export function FeedbackDialog({
               </p>
             </div>
             {!defaultType ? (
-              <Button variant="ghost" size="sm" onClick={() => setStep("type")} type="button">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setStep("type")}
+                type="button"
+                className="text-[color:var(--primary)] hover-only:bg-[color:var(--accent)] hover-only:text-[color:var(--primary)]"
+              >
                 {copy.dialog.changeType}
               </Button>
             ) : null}
@@ -303,7 +309,7 @@ export function FeedbackDialog({
           </div>
 
           <div className="grid gap-4">
-            <Card className="border border-[color:var(--border)] bg-[color:var(--secondary)]">
+            <Card className="panel-surface-subtle border">
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
                   {copy.dialog.guidedPromptsTitle}
@@ -390,7 +396,7 @@ export function FeedbackDialog({
             ) : null}
 
             {resolvedPagePath || linkedSessionId || linkedBikeId ? (
-              <Card className="border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_92%,var(--primary)_8%)]">
+              <Card className="panel-surface-subtle border border-[color:color-mix(in_oklch,var(--primary)_34%,var(--border))]">
                 <div className="space-y-2">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
                     {copy.dialog.linkedContextLabel}
@@ -417,14 +423,19 @@ export function FeedbackDialog({
             ) : null}
 
             {submitError ? (
-              <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--danger)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--danger)_10%,var(--card)_90%)] px-4 py-3 text-sm text-[color:var(--danger)]">
+              <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--danger)_38%,var(--border))] bg-[color:color-mix(in_oklch,var(--danger)_14%,var(--card)_86%)] px-4 py-3 text-sm text-[color:var(--danger)]">
                 {submitError}
               </div>
             ) : null}
           </div>
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <Button variant="outline" type="button" onClick={handleBack}>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={handleBack}
+              className="border-[color:var(--primary)] text-[color:var(--primary)] hover-only:text-[color:var(--primary)]"
+            >
               {copy.dialog.back}
             </Button>
             <Button
@@ -442,7 +453,7 @@ export function FeedbackDialog({
 
       {showSuccessStep ? (
         <div className="space-y-4">
-          <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--success)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--success)_12%,var(--card)_88%)] p-4">
+          <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--success)_34%,var(--border))] bg-[color:color-mix(in_oklch,var(--success)_14%,var(--card)_86%)] p-4">
             <div className="flex items-start gap-3">
               <CheckCircle2 className="mt-0.5 h-5 w-5 text-[color:var(--success)]" />
               <div>
@@ -456,7 +467,7 @@ export function FeedbackDialog({
             </div>
           </div>
 
-          <Card className="border border-[color:var(--border)] bg-[color:var(--secondary)]">
+          <Card className="panel-surface-subtle border">
             <div className="space-y-2">
               <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
                 {copy.dialog.nextStepsTitle}
@@ -470,7 +481,12 @@ export function FeedbackDialog({
           </Card>
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <Button variant="outline" type="button" onClick={onClose}>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={onClose}
+              className="border-[color:var(--primary)] text-[color:var(--primary)] hover-only:text-[color:var(--primary)]"
+            >
               {copy.dialog.close}
             </Button>
             <Button

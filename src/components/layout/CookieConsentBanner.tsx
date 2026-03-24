@@ -74,7 +74,7 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[95] p-4">
-      <div className="pointer-events-auto mx-auto max-w-5xl rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_90%,transparent)] p-4 shadow-xl shadow-black/10 backdrop-blur sm:p-5 dark:shadow-black/30">
+      <div className="panel-surface-base panel-theme-context pointer-events-auto mx-auto max-w-5xl rounded-2xl border p-4 shadow-xl sm:p-5">
         <h2 className="text-sm font-semibold text-[color:var(--foreground)]">{copy.title}</h2>
         <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
           {copy.body}{" "}

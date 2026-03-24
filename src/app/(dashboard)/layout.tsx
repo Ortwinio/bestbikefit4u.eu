@@ -16,6 +16,15 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { Menu, X } from "lucide-react";
 import { adminNavigationGroups } from "@/components/admin/layout/admin-navigation";
 
+export const DASHBOARD_MOBILE_HEADER_CLASSNAME =
+  "sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card px-4 py-3 md:hidden";
+
+export const DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME =
+  "panel-backdrop fixed inset-0 z-30 md:hidden";
+
+export const DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME =
+  "panel-surface-base panel-theme-context fixed inset-y-0 left-0 z-40 w-72 overflow-y-auto border-r p-4 md:hidden";
+
 export default function DashboardLayout({
   children,
 }: {
@@ -54,7 +63,7 @@ export default function DashboardLayout({
         <DashboardSidebar />
       </div>
 
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card/90 px-4 py-3 backdrop-blur md:hidden">
+      <div className={DASHBOARD_MOBILE_HEADER_CLASSNAME}>
         <Link
           href={toLocalizedPath("/dashboard")}
           className="text-lg font-semibold text-foreground"
@@ -86,9 +95,9 @@ export default function DashboardLayout({
             type="button"
             aria-label={messages.layout.mobileMenu.overlayCloseAria}
             onClick={() => setIsMobileMenuOpen(false)}
-            className="fixed inset-0 z-30 bg-[color:var(--foreground)]/20 md:hidden"
+            className={DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME}
           />
-          <nav className="fixed inset-y-0 left-0 z-40 w-72 overflow-y-auto border-r border-border bg-card p-4 md:hidden">
+          <nav className={DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME}>
             <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               {messages.layout.sections.dashboard}
             </p>

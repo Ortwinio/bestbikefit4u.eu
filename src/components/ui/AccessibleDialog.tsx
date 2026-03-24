@@ -37,9 +37,9 @@ export function AccessibleDialog({
         className="fixed inset-0 z-50 flex items-center justify-center p-4"
         data-slot="dialog"
       >
-        <div className="fixed inset-0 bg-[color:color-mix(in_oklch,var(--foreground)_30%,transparent)] backdrop-blur-sm" />
+        <div className="panel-backdrop fixed inset-0" />
         <div
-          className="relative z-10 w-full max-w-md rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] p-6 text-[color:var(--foreground)] shadow-2xl"
+          className="panel-surface-base panel-theme-context relative z-10 w-full max-w-md rounded-[var(--radius-xl)] border p-6 shadow-2xl"
           data-slot="dialog-content"
         >
           <DialogHeader className="relative pr-10">
@@ -84,7 +84,7 @@ export function AccessibleDialog({
     >
       <DialogContent
         showCloseButton={false}
-        className="max-w-md gap-0 rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] p-6 text-[color:var(--foreground)] shadow-2xl"
+        className="max-w-md gap-0 rounded-[var(--radius-xl)] border p-6 shadow-2xl"
       >
         <DialogHeader className="relative pr-10">
           <DialogClose

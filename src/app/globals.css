@@ -99,6 +99,18 @@
   --overlay: 100.00% 0.000 0.0;
   --overlay-foreground: 14.05% 0.016 243.0;
   --field-background: 100.00% 0.000 0.0;
+  --panel-surface: 14.00% 0.010 243.0;
+  --panel-surface-subtle: 20.00% 0.014 243.0;
+  --panel-foreground: 98.48% 0.000 0.0;
+  --panel-muted-foreground: 84.00% 0.010 243.0;
+  --panel-border: 43.00% 0.040 243.0;
+  --panel-border-light: 54.00% 0.060 243.0;
+  --panel-border-dark: 28.00% 0.018 243.0;
+  --panel-backdrop: 0% 0 0 / 0.72;
+  --panel-field-background: 22.00% 0.014 243.0;
+  --panel-field-border: oklch(100% 0 0 / 0.18);
+  --panel-field-border-hover: oklch(100% 0 0 / 0.28);
+  --panel-shell-background: 100.00% 0.000 0.0;
 
   /* Backwards-compat alias */
   --danger: var(--destructive);
@@ -164,6 +176,18 @@
   --overlay: 19.50% 0.020 243.0;
   --overlay-foreground: 98.48% 0.000 0.0;
   --field-background: 16.30% 0.018 243.0;
+  --panel-surface: 100.00% 0.000 0.0;
+  --panel-surface-subtle: 96.76% 0.000 0.0;
+  --panel-foreground: 14.05% 0.016 243.0;
+  --panel-muted-foreground: 42.00% 0.020 243.0;
+  --panel-border: 85.00% 0.012 243.0;
+  --panel-border-light: 93.00% 0.006 243.0;
+  --panel-border-dark: 76.00% 0.016 243.0;
+  --panel-backdrop: 0% 0 0 / 0.36;
+  --panel-field-background: 100.00% 0.000 0.0;
+  --panel-field-border: oklch(0% 0 0 / 0.12);
+  --panel-field-border-hover: oklch(0% 0 0 / 0.22);
+  --panel-shell-background: 100.00% 0.000 0.0;
 
   /* Backwards-compat alias */
   --danger: var(--destructive);
@@ -222,6 +246,40 @@
 
 @utility dashboard-card-surface {
   background: color-mix(in oklch, oklch(var(--card)) 90%, black 3%);
+}
+
+@utility panel-surface-base {
+  background: oklch(var(--panel-surface));
+  color: oklch(var(--panel-foreground));
+  border-color: oklch(var(--panel-border));
+}
+
+@utility panel-surface-subtle {
+  background: oklch(var(--panel-surface-subtle));
+  color: oklch(var(--panel-foreground));
+  border-color: oklch(var(--panel-border));
+}
+
+@utility panel-theme-context {
+  --background: var(--panel-shell-background);
+  --foreground: var(--panel-foreground);
+  --card: var(--panel-surface-subtle);
+  --card-foreground: var(--panel-foreground);
+  --secondary: var(--panel-surface-subtle);
+  --secondary-foreground: var(--panel-foreground);
+  --muted-foreground: var(--panel-muted-foreground);
+  --accent: var(--panel-surface-subtle);
+  --accent-foreground: var(--panel-foreground);
+  --border: var(--panel-border);
+  --border-light: var(--panel-border-light);
+  --border-dark: var(--panel-border-dark);
+  --field-background: var(--panel-field-background);
+  --field-border: var(--panel-field-border);
+  --field-border-hover: var(--panel-field-border-hover);
+}
+
+@utility panel-backdrop {
+  background: oklch(var(--panel-backdrop));
 }
 
 .no-scrollbar::-webkit-scrollbar {
