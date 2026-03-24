@@ -15,6 +15,18 @@ export interface BikeCandidate {
   _id: Id<"bikes">;
   name: string;
   bikeType: "road" | "gravel" | "mountain" | "hybrid" | "tt_triathlon" | "cyclocross" | "touring" | "city";
+  stravaGearId?: string | null;
+  rideCount90d?: number | null;
+  recentDistance90dMeters?: number | null;
+  inferredBikeRole?:
+    | "endurance_road"
+    | "race_road"
+    | "gravel"
+    | "mountain"
+    | "tt_triathlon"
+    | "training"
+    | "commute"
+    | null;
   brand?: string | null;
   model?: string | null;
   discipline?: Discipline | null;
@@ -181,6 +193,18 @@ export function matchActivityToBike(
       matchStatus: "no_gear",
       matchConfidence: 0,
       matchReason: "activity has no gear_id",
+    };
+  }
+
+  const exactGearMatch = bikes.find(
+    (bike) => bike.stravaGearId && bike.stravaGearId === activity.gearId
+  );
+  if (exactGearMatch) {
+    return {
+      bikeId: exactGearMatch._id,
+      matchStatus: "matched_gear",
+      matchConfidence: 1,
+      matchReason: "exact stravaGearId match",
     };
   }
 

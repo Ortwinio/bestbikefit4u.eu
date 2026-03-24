@@ -33,6 +33,7 @@ describe("activity sync helpers", () => {
     const bike: BikeCandidate = {
       _id: bikeId,
       name: "Road Rocket",
+      stravaGearId: "gear-1",
       bikeType: "road",
       brand: "Cervelo",
       model: "R5",
@@ -56,7 +57,8 @@ describe("activity sync helpers", () => {
 
     expect(match.bikeId).toBe(bikeId);
     expect(match.matchStatus).toBe("matched_gear");
-    expect(match.matchConfidence).toBeGreaterThan(0.65);
+    expect(match.matchConfidence).toBe(1);
+    expect(match.matchReason).toBe("exact stravaGearId match");
   });
 
   it("infers a commute-oriented role and patch from bike activity summaries", () => {

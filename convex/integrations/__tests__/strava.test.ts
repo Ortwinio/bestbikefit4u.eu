@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { Id } from "../../_generated/dataModel";
 import {
+  getStravaBikeReadiness,
   inferBikeRole,
   isSupportedRideActivity,
   mapStravaFrameTypeToBikeType,
   parseStravaGearSummaryJson,
   summarizeBikeActivityGroup,
+  summarizeStravaBikeOverviewActivities,
   type BikeActivityUsageInput,
 } from "../strava";
 
@@ -97,5 +99,57 @@ describe("strava integration helpers", () => {
       averageSpeedMps: summary.averageSpeedMps,
       climbingMetersPerKm: summary.climbingMetersPerKm,
     }));
+  });
+
+  it("summarizes recent overview metrics for a Strava bike", () => {
+    const summary = summarizeStravaBikeOverviewActivities([
+      {
+        distanceKm: 40,
+        movingTimeSec: 3600,
+        startAt: 1_700_000_000_000,
+      },
+      {
+        distanceKm: 20,
+        movingTimeSec: 1800,
+        startAt: 1_700_100_000_000,
+      },
+    ]);
+
+    expect(summary).toEqual({
+      rideCountWindow: 2,
+      totalDistanceWindowMeters: 60000,
+      avgRideDistanceWindowMeters: 30000,
+      avgSpeedWindowKph: 40,
+      lastRideAt: 1_700_100_000_000,
+    });
+  });
+
+  it("computes readiness states for imported and unimported bikes", () => {
+    expect(getStravaBikeReadiness({ importedBike: null })).toBe(
+      "available_in_strava"
+    );
+    expect(
+      getStravaBikeReadiness({
+        importedBike: {
+          needsTypeConfirmation: true,
+        },
+      })
+    ).toBe("imported_needs_type_confirmation");
+    expect(
+      getStravaBikeReadiness({
+        importedBike: {
+          needsTypeConfirmation: false,
+          currentGeometry: {},
+        },
+      })
+    ).toBe("imported_needs_fit_setup");
+    expect(
+      getStravaBikeReadiness({
+        importedBike: {
+          needsTypeConfirmation: false,
+          currentGeometry: { frameSize: "56" },
+        },
+      })
+    ).toBe("fit_ready");
   });
 });

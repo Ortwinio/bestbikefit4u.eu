@@ -4,7 +4,6 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
-import { RadioGroup } from "@base-ui/react/radio-group";
 import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import {
@@ -16,6 +15,7 @@ import {
   AccessibleDialog,
   ErrorState,
   Input,
+  RadioGroup,
   Selectable,
   useToast,
 } from "@/components/ui";
@@ -63,7 +63,6 @@ export default function SettingsPage() {
   const toast = useToast();
   const user = useQuery(api.users.queries.getCurrentUser);
   const strava = useQuery(api.integrations.queries.getStravaStatus);
-  const userBikes = useQuery(api.bikes.queries.listByUser);
   const updateProfile = useMutation(api.users.mutations.updateProfile);
   const initiateStravaConnect = useAction(api.integrations.actions.initiateStravaConnect);
   const disconnectStravaAction = useAction(api.integrations.actions.disconnectStravaAction);
@@ -268,7 +267,7 @@ export default function SettingsPage() {
               <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
                 {messages.settings.preferences.units}
               </p>
-              <RadioGroup<string>
+              <RadioGroup
                 aria-label={messages.settings.preferences.units}
                 className="flex flex-wrap gap-2"
                 value={user?.unit_preference ?? "metric"}
@@ -362,7 +361,6 @@ export default function SettingsPage() {
               <StravaBikeImportSection
                 id="strava-bike-import"
                 strava={strava}
-                userBikes={userBikes}
               />
 
               {/* Actions */}

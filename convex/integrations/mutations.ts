@@ -348,9 +348,23 @@ export const upsertStravaIntegration = internalMutation({
     for (const bike of bikes) {
       const usageInputs = activityInputsByBike.get(bike._id);
       if (!usageInputs?.length) {
-        if (bike.activitySummary) {
+        if (
+          bike.activitySummary ||
+          bike.rideCount90d !== undefined ||
+          bike.recentDistance90dMeters !== undefined ||
+          bike.inferredBikeRole !== undefined
+        ) {
           await ctx.db.patch(bike._id, {
             activitySummary: undefined,
+            recentDistance90dMeters: undefined,
+            rideCount90d: undefined,
+            avgRideDistance90dMeters: undefined,
+            avgSpeed90dKph: undefined,
+            avgElevationPer100Km90d: undefined,
+            trainerRideRatio90d: undefined,
+            dominantSportType: undefined,
+            lastRideAt: undefined,
+            inferredBikeRole: undefined,
             updatedAt: activitySync.importedAt,
           });
         }
@@ -398,6 +412,20 @@ export const upsertStravaIntegration = internalMutation({
           unmatchedGearCount: summaryCounts.unmatched,
           noGearCount: summaryCounts.noGear,
         },
+        recentDistance90dMeters: summary.recentDistance90dMeters,
+        rideCount90d: summary.rideCount90d,
+        avgRideDistance90dMeters:
+          summary.rideCount90d > 0
+            ? Math.round(summary.recentDistance90dMeters / summary.rideCount90d)
+            : undefined,
+        avgSpeed90dKph: Number((summary.averageSpeedMps * 3.6).toFixed(1)),
+        avgElevationPer100Km90d: Number(
+          (summary.climbingMetersPerKm * 100).toFixed(1)
+        ),
+        trainerRideRatio90d: Number(summary.trainerRatio.toFixed(2)),
+        dominantSportType: summary.dominantSportType,
+        lastRideAt: latestUsage?.startDate,
+        inferredBikeRole: summary.inferredBikeRole,
         updatedAt: activitySync.importedAt,
       };
 
@@ -463,7 +491,6 @@ export const upsertImportedStravaBike = internalMutation({
 
     if (bike) {
       const patch: Record<string, unknown> = {
-        name: gear.name,
         bikeType,
         bikeTypeSource,
         needsTypeConfirmation,
@@ -471,12 +498,22 @@ export const upsertImportedStravaBike = internalMutation({
         stravaGearId: gear.gearId,
         stravaPrimary: gear.primary,
         lifetimeDistanceMeters: gear.distanceMeters,
-        brand: gear.brandName ?? undefined,
-        model: gear.modelName ?? undefined,
-        notes: gear.description ?? undefined,
         lastStravaSync: now,
         updatedAt: now,
       };
+
+      if (!bike.name?.trim()) {
+        patch.name = gear.name;
+      }
+      if (!bike.brand?.trim() && gear.brandName) {
+        patch.brand = gear.brandName;
+      }
+      if (!bike.model?.trim() && gear.modelName) {
+        patch.model = gear.modelName;
+      }
+      if (!bike.notes?.trim() && gear.description) {
+        patch.notes = gear.description;
+      }
 
       if (bike.bikeTypeSource !== "user" && mappedType.bikeType) {
         patch.bikeType = mappedType.bikeType;
@@ -565,6 +602,47 @@ export const clearStravaConnection = internalMutation({
 
     if (!existing) return null;
 
+    const [bikeActivities, bikes] = await Promise.all([
+      ctx.db
+        .query("bikeActivities")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .collect(),
+      ctx.db
+        .query("bikes")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .collect(),
+    ]);
+
+    for (const activity of bikeActivities) {
+      await ctx.db.delete(activity._id);
+    }
+
+    for (const bike of bikes) {
+      if (
+        !bike.activitySummary &&
+        bike.rideCount90d === undefined &&
+        bike.recentDistance90dMeters === undefined &&
+        bike.inferredBikeRole === undefined
+      ) {
+        continue;
+      }
+
+      await ctx.db.patch(bike._id, {
+        activitySummary: undefined,
+        recentDistance90dMeters: undefined,
+        rideCount90d: undefined,
+        avgRideDistance90dMeters: undefined,
+        avgSpeed90dKph: undefined,
+        avgElevationPer100Km90d: undefined,
+        trainerRideRatio90d: undefined,
+        dominantSportType: undefined,
+        lastRideAt: undefined,
+        inferredBikeRole: undefined,
+        lastStravaSync: undefined,
+        updatedAt: Date.now(),
+      });
+    }
+
     await ctx.db.patch(existing._id, {
       accessStatus: "revoked",
       accessToken: undefined,
@@ -623,6 +701,47 @@ export const disconnectStrava = mutation({
       return null;
     }
 
+    const [bikeActivities, bikes] = await Promise.all([
+      ctx.db
+        .query("bikeActivities")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .collect(),
+      ctx.db
+        .query("bikes")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .collect(),
+    ]);
+
+    for (const activity of bikeActivities) {
+      await ctx.db.delete(activity._id);
+    }
+
+    for (const bike of bikes) {
+      if (
+        !bike.activitySummary &&
+        bike.rideCount90d === undefined &&
+        bike.recentDistance90dMeters === undefined &&
+        bike.inferredBikeRole === undefined
+      ) {
+        continue;
+      }
+
+      await ctx.db.patch(bike._id, {
+        activitySummary: undefined,
+        recentDistance90dMeters: undefined,
+        rideCount90d: undefined,
+        avgRideDistance90dMeters: undefined,
+        avgSpeed90dKph: undefined,
+        avgElevationPer100Km90d: undefined,
+        trainerRideRatio90d: undefined,
+        dominantSportType: undefined,
+        lastRideAt: undefined,
+        inferredBikeRole: undefined,
+        lastStravaSync: undefined,
+        updatedAt: Date.now(),
+      });
+    }
+
     await ctx.db.patch(existing._id, {
       accessStatus: "revoked",
       accessToken: undefined,
@@ -632,6 +751,11 @@ export const disconnectStrava = mutation({
       oauthStateExpiresAt: undefined,
       ridingProfileJson: undefined,
       athleteStravaWeight: undefined,
+      rideCount: undefined,
+      totalDistanceKm: undefined,
+      lastSyncAt: undefined,
+      stravaGearSummaryJson: undefined,
+      lastActivitySyncAt: undefined,
       syncErrorMessage: undefined,
     });
 

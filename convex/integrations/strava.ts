@@ -108,6 +108,20 @@ export interface StravaImportedBikeRecord {
   primaryGoal?: "comfort" | "balanced" | "performance" | "aerodynamics";
 }
 
+export type StravaBikeReadiness =
+  | "available_in_strava"
+  | "imported_needs_type_confirmation"
+  | "imported_needs_fit_setup"
+  | "fit_ready";
+
+export interface StravaBikeOverviewActivitySummary {
+  rideCountWindow: number;
+  totalDistanceWindowMeters: number;
+  avgRideDistanceWindowMeters?: number;
+  avgSpeedWindowKph?: number;
+  lastRideAt?: number;
+}
+
 function mostCommon(values: string[]): string {
   const counts = new Map<string, number>();
   for (const value of values) {
@@ -464,6 +478,75 @@ export function summarizeBikeActivityGroup(
       climbingMetersPerKm,
     }),
   };
+}
+
+export function summarizeStravaBikeOverviewActivities(
+  activities: Array<{
+    distanceKm: number;
+    movingTimeSec: number;
+    startAt: number;
+  }>
+): StravaBikeOverviewActivitySummary {
+  if (activities.length === 0) {
+    return {
+      rideCountWindow: 0,
+      totalDistanceWindowMeters: 0,
+    };
+  }
+
+  const rideCountWindow = activities.length;
+  const totalDistanceWindowMeters = Math.round(
+    activities.reduce((sum, activity) => sum + activity.distanceKm * 1000, 0)
+  );
+  const totalMovingTimeSec = activities.reduce(
+    (sum, activity) => sum + activity.movingTimeSec,
+    0
+  );
+
+  return {
+    rideCountWindow,
+    totalDistanceWindowMeters,
+    avgRideDistanceWindowMeters: Math.round(
+      totalDistanceWindowMeters / Math.max(rideCountWindow, 1)
+    ),
+    avgSpeedWindowKph:
+      totalMovingTimeSec > 0
+        ? Number(
+            (
+              (totalDistanceWindowMeters / 1000) /
+              (totalMovingTimeSec / 3600)
+            ).toFixed(1)
+          )
+        : undefined,
+    lastRideAt: [...activities].sort((a, b) => b.startAt - a.startAt)[0]?.startAt,
+  };
+}
+
+export function getStravaBikeReadiness(input: {
+  importedBike: {
+    needsTypeConfirmation?: boolean | null;
+    currentGeometry?: { frameSize?: string | null } | null;
+    geometryRecordId?: Id<"geometry_records"> | null;
+    currentSetup?: unknown;
+  } | null;
+}): StravaBikeReadiness {
+  if (!input.importedBike) {
+    return "available_in_strava";
+  }
+
+  if (input.importedBike.needsTypeConfirmation) {
+    return "imported_needs_type_confirmation";
+  }
+
+  const hasFrameSize = Boolean(input.importedBike.currentGeometry?.frameSize);
+  const hasGeometryRecord = Boolean(input.importedBike.geometryRecordId);
+  const hasSetup = Boolean(input.importedBike.currentSetup);
+
+  if (!hasFrameSize && !hasGeometryRecord && !hasSetup) {
+    return "imported_needs_fit_setup";
+  }
+
+  return "fit_ready";
 }
 
 export function isRideLikeActivity(activity: StravaActivity) {
