@@ -155,7 +155,12 @@ export function FeedbackDialog({
     setErrors(validation);
     const hasValidationError = Object.keys(validation).length > 0;
     if (hasValidationError || !selectedType) {
-      setSubmitError(copy.dialog.errorGeneric);
+      const firstErrorField = Object.keys(validation)[0];
+      setSubmitError(
+        firstErrorField
+          ? validationMessageForField(firstErrorField, copy)
+          : copy.dialog.errorGeneric
+      );
       return;
     }
 
@@ -191,7 +196,11 @@ export function FeedbackDialog({
       setStep("success");
     } catch (error) {
       console.error("Failed to submit feedback", error);
-      setSubmitError(copy.dialog.errorGeneric);
+      setSubmitError(
+        error instanceof Error && error.message.trim()
+          ? error.message
+          : copy.dialog.errorGeneric
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -320,8 +329,7 @@ export function FeedbackDialog({
                 />
               </div>
             ) : null}
-            <Input
-              className="bg-[color:var(--card)]"
+            <Textarea
               label={copy.dialog.titleLabel}
               value={form.title}
               onChange={(event) => updateField("title", event.target.value)}
@@ -332,9 +340,10 @@ export function FeedbackDialog({
                   : selectedType === "feature_request"
                     ? copy.dialog.placeholders.featureRequestTitle
                     : selectedType === "review"
-                      ? copy.dialog.placeholders.reviewTitle
+                    ? copy.dialog.placeholders.reviewTitle
                       : copy.dialog.placeholders.supportCaseTitle
               }
+              rows={2}
             />
 
             <Textarea
@@ -434,12 +443,12 @@ export function FeedbackDialog({
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <Button
-              variant="outline"
+              variant="secondary"
               type="button"
               onClick={handleBack}
-              className="bg-[color:var(--background)] border-[color:var(--primary)] text-[color:var(--primary)] hover-only:text-[color:var(--primary)]"
+              className="border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] hover-only:bg-[color:var(--accent)]"
             >
-              {copy.dialog.back}
+              {defaultType ? copy.dialog.close : copy.dialog.back}
             </Button>
             <Button
               type="button"

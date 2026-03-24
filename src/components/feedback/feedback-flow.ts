@@ -171,11 +171,13 @@ export function buildFeedbackSubmissionPayload({
   const trimmedCategory = form.category.trim();
   const trimmedContactEmail = form.contactEmail.trim();
   const trimmedContactName = form.contactName.trim();
+  const trimmedTitle = form.title.trim();
+  const trimmedDescription = form.description.trim();
 
   return {
     type,
-    title: form.title.trim(),
-    description: form.description.trim(),
+    title: trimmedTitle,
+    description: trimmedDescription,
     category: type === "review" || !trimmedCategory ? undefined : trimmedCategory,
     pageUrl: pageUrl?.trim() || undefined,
     pathname: pathname.trim() || undefined,

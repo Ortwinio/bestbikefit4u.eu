@@ -42,7 +42,7 @@ describe("feedback-flow", () => {
     ]);
   });
 
-  it("requires only title and description for submission", () => {
+  it("requires title and description for submission", () => {
     const reviewErrors = buildFeedbackValidation(
       "review",
       {
@@ -138,4 +138,5 @@ describe("feedback-flow", () => {
       browserInfoJson: '{"userAgent":"test"}',
     });
   });
+
 });
