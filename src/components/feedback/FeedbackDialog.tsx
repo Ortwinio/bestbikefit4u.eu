@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useConvexAuth, useMutation } from "convex/react";
 import { CheckCircle2 } from "lucide-react";
-import { Button, Input, Selectable, Textarea } from "@/components/ui";
+import { Button, Card, Input, Selectable, Textarea } from "@/components/ui";
 import {
   Dialog,
   DialogContent,
