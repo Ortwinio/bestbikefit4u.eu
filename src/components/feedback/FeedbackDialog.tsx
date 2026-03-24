@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useConvexAuth, useMutation } from "convex/react";
 import { CheckCircle2 } from "lucide-react";
-import { Button, Card, Input, Selectable, Textarea } from "@/components/ui";
+import { Button, Input, Selectable, Textarea } from "@/components/ui";
 import {
   Dialog,
   DialogContent,
@@ -277,6 +277,16 @@ export function FeedbackDialog({
               <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
                 {selectedTypeMeta?.description}
               </p>
+              <div className="mt-3 space-y-2 text-sm text-[color:var(--muted-foreground)]">
+                <p className="font-medium text-[color:var(--muted-foreground)]">
+                  {copy.dialog.guidedPromptsTitle}
+                </p>
+                <ul className="space-y-1 text-[color:var(--muted-foreground)]">
+                  {guidedPrompts.map((prompt) => (
+                    <li key={prompt}>• {prompt}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
             {!defaultType ? (
               <Button
@@ -310,19 +320,8 @@ export function FeedbackDialog({
                 />
               </div>
             ) : null}
-            <Card className="panel-surface-subtle border">
-              <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                  {copy.dialog.guidedPromptsTitle}
-                </p>
-                <ul className="space-y-1 text-sm text-[color:var(--foreground)]">
-                  {guidedPrompts.map((prompt) => (
-                    <li key={prompt}>• {prompt}</li>
-                  ))}
-                </ul>
-              </div>
-            </Card>
             <Input
+              className="bg-[color:var(--card)]"
               label={copy.dialog.titleLabel}
               value={form.title}
               onChange={(event) => updateField("title", event.target.value)}
