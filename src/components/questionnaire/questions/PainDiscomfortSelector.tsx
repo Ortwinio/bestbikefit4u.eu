@@ -7,7 +7,7 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 type PainValue = "no" | "yes";
 
-const PAIN_KEYS: PainValue[] = ["no", "yes"];
+const PAIN_KEYS: PainValue[] = ["yes", "no"];
 
 interface PainDiscomfortSelectorProps {
   value: string | null;
