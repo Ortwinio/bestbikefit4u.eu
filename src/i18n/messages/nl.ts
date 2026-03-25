@@ -608,6 +608,48 @@ const nl = {
       a11y: {
         singleChoiceLegend: "Kies één optie",
       },
+      weeklyHours: {
+        questionText: "Hoeveel uur per week rijd je doorgaans?",
+        helpText:
+          "Tip: Schat je gemiddelde wekelijkse rijtijd over de afgelopen 1–2 maanden.",
+        radioGroupLabel: "Wekelijkse rijuren",
+        selectPrompt: "Beweeg de schuifregelaar om je wekelijkse rijuren te kiezen.",
+        whyTitle: "Waarom dit belangrijk is",
+        whyText:
+          "Het aantal uren dat je fietst bepaalt hoe lang je je positie kunt vasthouden, hoeveel belasting je spieren en gewrichten aankunnen en hoe agressief je fietsopstelling kan zijn. Een positie die te agressief is voor jouw niveau kan leiden tot ongemak of blessures.",
+        options: {
+          "0-3": {
+            label: "0–3 u",
+            subtitle: "Af en toe fietsen",
+            tooltip:
+              "Korte of onregelmatige ritten, voornamelijk gericht op comfort en plezier.",
+          },
+          "3-6": {
+            label: "3–6 u",
+            subtitle: "Regelmatig fietsen",
+            tooltip:
+              "Je rijdt meerdere keren per week en bouwt consistentie op.",
+          },
+          "6-10": {
+            label: "6–10 u",
+            subtitle: "Enthousiast niveau",
+            tooltip:
+              "Je traint regelmatig en verbetert je conditie en efficiëntie.",
+          },
+          "10-15": {
+            label: "10–15 u",
+            subtitle: "Hoog volume",
+            tooltip:
+              "Je rijdt vaak, regelmatig met structuur of specifieke doelen.",
+          },
+          "15+": {
+            label: "15+ u",
+            subtitle: "Prestatie / wedstrijd",
+            tooltip:
+              "Je hebt een hoge trainingsbelasting en je lichaam is goed aangepast aan langdurige inspanning.",
+          },
+        },
+      },
       experienceLevel: {
         questionText: "Wat beschrijft jouw fietsachtergrond het best?",
         helpText:

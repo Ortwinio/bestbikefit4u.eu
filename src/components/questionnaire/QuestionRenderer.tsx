@@ -3,6 +3,7 @@
 import type { QuestionDefinition, QuestionnaireResponseValue } from "./types";
 import { SingleChoiceQuestion } from "./questions/SingleChoice";
 import { ExperienceLevelSelector } from "./questions/ExperienceLevelSelector";
+import { WeeklyHoursSelector } from "./questions/WeeklyHoursSelector";
 import { MultipleChoiceQuestion } from "./questions/MultipleChoice";
 import { ScaleQuestion } from "./questions/ScaleQuestion";
 import { NumericQuestion } from "./questions/NumericQuestion";
@@ -25,12 +26,17 @@ export function QuestionRenderer({
 }: QuestionRendererProps) {
   const { messages } = useDashboardMessages();
   const isExperienceLevel = question.questionId === "experience_level";
+  const isWeeklyHours = question.questionId === "weekly_hours";
   const questionText = isExperienceLevel
     ? messages.questionnaire.experienceLevel.questionText
-    : question.questionText;
+    : isWeeklyHours
+      ? messages.questionnaire.weeklyHours.questionText
+      : question.questionText;
   const helpText = isExperienceLevel
     ? messages.questionnaire.experienceLevel.helpText
-    : question.helpText;
+    : isWeeklyHours
+      ? messages.questionnaire.weeklyHours.helpText
+      : question.helpText;
 
   return (
     <div className="space-y-4">
@@ -59,9 +65,17 @@ export function QuestionRenderer({
           />
         )}
 
+        {question.questionId === "weekly_hours" && (
+          <WeeklyHoursSelector
+            value={value as string | null}
+            onChange={onChange}
+          />
+        )}
+
         {question.responseType === "single_choice" &&
           question.options &&
-          question.questionId !== "experience_level" && (
+          question.questionId !== "experience_level" &&
+          question.questionId !== "weekly_hours" && (
           <SingleChoiceQuestion
             name={question.questionId}
             options={question.options}

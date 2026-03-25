@@ -602,6 +602,48 @@ const en = {
       a11y: {
         singleChoiceLegend: "Choose one option",
       },
+      weeklyHours: {
+        questionText: "How many hours per week do you typically ride?",
+        helpText:
+          "Tip: Estimate your average weekly riding time over the past 1–2 months.",
+        radioGroupLabel: "Weekly riding hours",
+        selectPrompt: "Move the slider to select your weekly riding hours.",
+        whyTitle: "Why this matters",
+        whyText:
+          "The number of hours you ride influences how long you can maintain your position, how much load your muscles and joints can handle, and how aggressive your bike setup can be. A position that is too aggressive for your current level may lead to discomfort or injury.",
+        options: {
+          "0-3": {
+            label: "0–3 h",
+            subtitle: "Occasional riding",
+            tooltip:
+              "Short or infrequent rides, mainly focused on comfort and enjoyment.",
+          },
+          "3-6": {
+            label: "3–6 h",
+            subtitle: "Regular riding",
+            tooltip:
+              "You ride multiple times per week and are building consistency.",
+          },
+          "6-10": {
+            label: "6–10 h",
+            subtitle: "Enthusiast level",
+            tooltip:
+              "You train regularly and are improving your fitness and efficiency.",
+          },
+          "10-15": {
+            label: "10–15 h",
+            subtitle: "High volume",
+            tooltip:
+              "You ride frequently, often with structure or specific goals.",
+          },
+          "15+": {
+            label: "15+ h",
+            subtitle: "Performance / racing",
+            tooltip:
+              "You have a high training load and your body is well adapted to sustained effort.",
+          },
+        },
+      },
       experienceLevel: {
         questionText: "What best describes your cycling experience?",
         helpText:
