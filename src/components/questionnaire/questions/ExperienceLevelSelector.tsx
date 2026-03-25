@@ -62,9 +62,9 @@ export function ExperienceLevelSelector({
           aria-label={t.radioGroupLabel}
         >
           <SliderControl>
-            <SliderTrack>
+            <SliderTrack className="bg-[color:var(--border)]">
               <SliderIndicator />
-              <SliderThumb />
+              <SliderThumb className="size-6 border-2 border-[color:var(--primary)] shadow-md" />
             </SliderTrack>
           </SliderControl>
         </SliderRoot>

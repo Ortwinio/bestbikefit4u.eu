@@ -609,6 +609,9 @@ const nl = {
         singleChoiceLegend: "Kies één optie",
       },
       experienceLevel: {
+        questionText: "Wat beschrijft jouw fietsachtergrond het best?",
+        helpText:
+          "Dit stelt de lichamelijke basis in voor jouw fietspositie. Wees eerlijk — een niveau dat niet bij je lichaam past, leidt tot een positie die oncomfortabel of inefficiënt is.",
         radioGroupLabel: "Ervaringsniveau als fietser",
         selectPrompt: "Beweeg de schuifregelaar om je ervaringsniveau te kiezen.",
         moreAbout: "Meer over {level}",

@@ -603,6 +603,9 @@ const en = {
         singleChoiceLegend: "Choose one option",
       },
       experienceLevel: {
+        questionText: "What best describes your cycling experience?",
+        helpText:
+          "This sets the physical baseline for your fit. Be honest — choosing a level that doesn't match your body will produce a position that is uncomfortable or inefficient.",
         radioGroupLabel: "Cycling experience level",
         selectPrompt: "Move the slider to select your experience level.",
         moreAbout: "More about {level}",
