@@ -47,14 +47,14 @@ export function ExperienceLevelSelector({
         <div
           role="radiogroup"
           aria-label={t.radioGroupLabel}
-          className="relative flex items-center justify-between"
+          className="relative flex h-10 items-center justify-between"
         >
-          {/* Track background */}
-          <div className="pointer-events-none absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-[color:var(--secondary)]" />
+          {/* Track background — light blue tint, always visible */}
+          <div className="pointer-events-none absolute inset-x-0 top-1/2 h-3 -translate-y-1/2 rounded-full bg-[color:var(--primary)]/20" />
 
           {/* Filled portion */}
           <div
-            className="pointer-events-none absolute left-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-[color:var(--primary)] transition-[width] duration-300 ease-out"
+            className="pointer-events-none absolute left-0 top-1/2 h-3 -translate-y-1/2 rounded-full bg-[color:var(--primary)] transition-[width] duration-300 ease-out"
             style={{ width: `${fillPercent}%` }}
           />
 
@@ -72,8 +72,8 @@ export function ExperienceLevelSelector({
                   "relative z-10 rounded-full bg-[color:var(--primary)] transition-all duration-200",
                   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--primary)]",
                   isActive
-                    ? "size-7 border-[3px] border-[color:var(--card)] shadow-[0_2px_10px_rgba(0,0,0,0.25)]"
-                    : "size-3 opacity-50 hover:opacity-90 hover:scale-125"
+                    ? "size-7 border-[3px] border-[color:var(--card)] shadow-md"
+                    : "size-5 border-2 border-[color:var(--card)] opacity-50 hover:opacity-90"
                 )}
               />
             );
