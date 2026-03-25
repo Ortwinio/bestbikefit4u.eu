@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
@@ -20,14 +21,6 @@ export function PainDiscomfortSelector({
   const { messages } = useDashboardMessages();
   const t = messages.questionnaire.painDiscomfort;
 
-  const selectedIndex = value
-    ? PAIN_KEYS.indexOf(value as PainValue)
-    : -1;
-  const fillPercent =
-    selectedIndex >= 0
-      ? (selectedIndex / (PAIN_KEYS.length - 1)) * 100
-      : 0;
-
   return (
     <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border">
 
@@ -38,84 +31,65 @@ export function PainDiscomfortSelector({
           alt={t.imageAlt}
           width={900}
           height={400}
-          className="h-auto w-full object-cover"
+          className="h-auto max-h-56 w-full object-cover"
           priority
         />
       </div>
 
-      {/* Slider */}
-      <div className="border-t border-border px-6 pt-6 pb-3">
-
-        {/* Track + dots */}
-        <div
-          role="radiogroup"
-          aria-label={t.radioGroupLabel}
-          className="relative flex h-12 items-center justify-between"
-        >
-          {/* Track background */}
-          <div className="pointer-events-none absolute inset-x-0 top-1/2 h-3 -translate-y-1/2 rounded-full bg-primary/20" />
-
-          {/* Filled portion */}
-          <div
-            className="pointer-events-none absolute left-0 top-1/2 h-3 -translate-y-1/2 rounded-full bg-primary transition-[width] duration-300 ease-out"
-            style={{ width: `${fillPercent}%` }}
-          />
-
-          {/* Snap-point buttons */}
-          {PAIN_KEYS.map((key, i) => {
-            const isActive = i === selectedIndex;
-            return (
-              <button
-                key={key}
-                type="button"
-                role="radio"
-                aria-checked={isActive}
-                onClick={() => onChange(key)}
-                className={cn(
-                  "relative z-10 rounded-full bg-primary transition-all duration-200",
-                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
-                  isActive
-                    ? "size-8 border-4 border-background shadow-lg"
-                    : "size-4 opacity-60 hover:opacity-100"
-                )}
-              />
-            );
-          })}
-        </div>
-
-        {/* Position labels */}
-        <div className="mt-1 grid grid-cols-2 text-xs font-medium">
-          {PAIN_KEYS.map((key, i) => (
-            <span
+      {/* Two-card selector */}
+      <div
+        role="radiogroup"
+        aria-label={t.radioGroupLabel}
+        className="flex border-t border-border"
+      >
+        {PAIN_KEYS.map((key, i) => {
+          const isSelected = value === key;
+          return (
+            <button
               key={key}
+              type="button"
+              role="radio"
+              aria-checked={isSelected}
+              onClick={() => onChange(key)}
               className={cn(
-                "transition-colors duration-150",
-                i === 0 ? "text-left" : "text-right",
-                key === value
-                  ? "font-semibold text-primary"
-                  : "text-muted-foreground"
+                "relative flex flex-1 flex-col items-center gap-2 px-4 py-5 text-center transition-colors duration-150",
+                "focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary",
+                i !== 0 && "border-l border-border",
+                isSelected
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-card text-foreground hover:bg-accent"
               )}
             >
-              {t.options[key].label}
-            </span>
-          ))}
-        </div>
+              {/* Check icon */}
+              <CheckCircle2
+                className={cn(
+                  "h-5 w-5 transition-opacity duration-150",
+                  isSelected ? "opacity-100" : "opacity-0"
+                )}
+              />
+
+              <span className="text-sm font-semibold">
+                {t.options[key].label}
+              </span>
+              <span
+                className={cn(
+                  "text-xs",
+                  isSelected ? "text-primary-foreground/80" : "text-muted-foreground"
+                )}
+              >
+                {t.options[key].subtitle}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Explanation panel */}
-      <div className="min-h-[88px] border-t border-border px-6 py-4">
+      <div className="min-h-[80px] border-t border-border px-6 py-4">
         {value && PAIN_KEYS.includes(value as PainValue) ? (
-          <>
-            <p className="text-sm font-semibold text-foreground">
-              {t.options[value as PainValue].label}
-              <span className="ml-1.5 text-xs font-normal text-muted-foreground">
-                · {t.options[value as PainValue].subtitle}
-              </span>
-            </p>
-            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-              {t.options[value as PainValue].tooltip}
-            </p>
-          </>
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            {t.options[value as PainValue].tooltip}
+          </p>
         ) : (
           <p className="text-xs text-muted-foreground">{t.selectPrompt}</p>
         )}
