@@ -21,12 +21,10 @@ export function ExperienceLevelSelector({
   const t = messages.questionnaire.experienceLevel;
 
   const levelIndex = value !== null ? LEVEL_KEYS.indexOf(value) : -1;
-
-  // Fill width: 0% at beginner, 50% at intermediate, 100% at advanced
   const fillPercent = levelIndex >= 0 ? (levelIndex / 2) * 100 : 0;
 
   return (
-    <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)]">
+    <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border">
 
       {/* Reference image */}
       <div className="relative w-full">
@@ -41,20 +39,20 @@ export function ExperienceLevelSelector({
       </div>
 
       {/* Slider */}
-      <div className="border-t border-[color:var(--border)] px-6 pt-6 pb-3">
+      <div className="border-t border-border px-6 pt-6 pb-3">
 
         {/* Track + dots */}
         <div
           role="radiogroup"
           aria-label={t.radioGroupLabel}
-          className="relative flex h-10 items-center justify-between"
+          className="relative flex h-12 items-center justify-between"
         >
-          {/* Track background — light blue tint, always visible */}
-          <div className="pointer-events-none absolute inset-x-0 top-1/2 h-3 -translate-y-1/2 rounded-full bg-[color:var(--primary)]/20" />
+          {/* Track background */}
+          <div className="pointer-events-none absolute inset-x-0 top-1/2 h-3 -translate-y-1/2 rounded-full bg-primary/20" />
 
           {/* Filled portion */}
           <div
-            className="pointer-events-none absolute left-0 top-1/2 h-3 -translate-y-1/2 rounded-full bg-[color:var(--primary)] transition-[width] duration-300 ease-out"
+            className="pointer-events-none absolute left-0 top-1/2 h-3 -translate-y-1/2 rounded-full bg-primary transition-[width] duration-300 ease-out"
             style={{ width: `${fillPercent}%` }}
           />
 
@@ -69,11 +67,11 @@ export function ExperienceLevelSelector({
                 aria-checked={isActive}
                 onClick={() => onChange(key)}
                 className={cn(
-                  "relative z-10 rounded-full bg-[color:var(--primary)] transition-all duration-200",
-                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--primary)]",
+                  "relative z-10 rounded-full bg-primary transition-all duration-200",
+                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
                   isActive
-                    ? "size-7 border-[3px] border-[color:var(--card)] shadow-md"
-                    : "size-5 border-2 border-[color:var(--card)] opacity-50 hover:opacity-90"
+                    ? "size-8 border-4 border-background shadow-lg"
+                    : "size-4 opacity-60 hover:opacity-100"
                 )}
               />
             );
@@ -81,7 +79,7 @@ export function ExperienceLevelSelector({
         </div>
 
         {/* Position labels */}
-        <div className="mt-3 grid grid-cols-3 text-xs font-medium">
+        <div className="mt-1 grid grid-cols-3 text-xs font-medium">
           {LEVEL_KEYS.map((key, i) => (
             <span
               key={key}
@@ -89,8 +87,8 @@ export function ExperienceLevelSelector({
                 "transition-colors duration-150",
                 i === 0 ? "text-left" : i === 1 ? "text-center" : "text-right",
                 key === value
-                  ? "font-semibold text-[color:var(--primary)]"
-                  : "text-[color:var(--muted-foreground)]"
+                  ? "font-semibold text-primary"
+                  : "text-muted-foreground"
               )}
             >
               {t.levels[key].label}
@@ -100,21 +98,21 @@ export function ExperienceLevelSelector({
       </div>
 
       {/* Explanation panel */}
-      <div className="min-h-[88px] border-t border-[color:var(--border)] px-6 py-4">
+      <div className="min-h-[88px] border-t border-border px-6 py-4">
         {value ? (
           <>
-            <p className="text-sm font-semibold text-[color:var(--foreground)]">
+            <p className="text-sm font-semibold text-foreground">
               {t.levels[value].label}
-              <span className="ml-1.5 text-xs font-normal text-[color:var(--muted-foreground)]">
+              <span className="ml-1.5 text-xs font-normal text-muted-foreground">
                 · {t.levels[value].subtitle}
               </span>
             </p>
-            <p className="mt-1.5 text-xs leading-relaxed text-[color:var(--muted-foreground)]">
+            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
               {t.levels[value].tooltip}
             </p>
           </>
         ) : (
-          <p className="text-xs text-[color:var(--muted-foreground)]">
+          <p className="text-xs text-muted-foreground">
             {t.selectPrompt}
           </p>
         )}
