@@ -573,6 +573,17 @@ const en = {
       loading: "Loading questionnaire...",
       title: "Tell Us About Your Riding",
       subtitle: "Answer these questions to help us personalize your bike fit recommendations.",
+      intro: {
+        title: "Tell Us About Your Riding",
+        body1: "To create an accurate bike fit, we need to understand how you ride.",
+        body2:
+          "Your riding volume, intensity, and preferences determine how much load your body can handle and how aggressive your position can be.",
+        body3: "By answering the following questions, we tailor your bike setup to balance:",
+        comfort: "Comfort",
+        efficiency: "Efficiency",
+        performance: "Performance",
+        start: "Start",
+      },
       sessionNotFound: {
         title: "Session not found",
         description: "The fit session you're looking for doesn't exist or has been archived.",

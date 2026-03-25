@@ -10,6 +10,7 @@ import {
   ErrorState,
 } from "@/components/ui";
 import { QuestionRenderer } from "./QuestionRenderer";
+import { QuestionnaireIntro } from "./QuestionnaireIntro";
 import { ProgressBar } from "./ProgressBar";
 import { getErrorMessage, reportClientError } from "@/lib/telemetry";
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
@@ -65,6 +66,9 @@ export function QuestionnaireContainer({
   isLoading = false,
 }: QuestionnaireContainerProps) {
   const { messages } = useDashboardMessages();
+  const [showIntro, setShowIntro] = useState(
+    () => Object.keys(responses).length === 0
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentResponse, setCurrentResponse] =
     useState<QuestionnaireResponseValue | null>(null);
@@ -256,73 +260,81 @@ export function QuestionnaireContainer({
 
       <Card variant="bordered" className="mb-6">
         <CardContent className="pt-6">
-          <QuestionRenderer
-            question={currentQuestion}
-            value={currentResponse}
-            onChange={setCurrentResponse}
-            headingId={questionHeadingId(currentQuestion.questionId)}
-          />
+          {showIntro ? (
+            <QuestionnaireIntro onStart={() => setShowIntro(false)} />
+          ) : (
+            <QuestionRenderer
+              question={currentQuestion}
+              value={currentResponse}
+              onChange={setCurrentResponse}
+              headingId={questionHeadingId(currentQuestion.questionId)}
+            />
+          )}
         </CardContent>
       </Card>
 
-      <div className="flex items-center justify-between">
-        <Button
-          variant="outline"
-          onClick={handlePrevious}
-          disabled={currentIndex === 0 || isSaving || isCompleting}
-        >
-          <ChevronLeft className="h-4 w-4 mr-1" />
-          {messages.questionnaire.actions.previous}
-        </Button>
-
-        <div className="flex items-center gap-2">
-          {!currentQuestion.isRequired && !isLastQuestion && (
+      {!showIntro && (
+        <>
+          <div className="flex items-center justify-between">
             <Button
-              variant="ghost"
-              onClick={handleSkip}
-              disabled={isSaving || isCompleting}
+              variant="outline"
+              onClick={handlePrevious}
+              disabled={currentIndex === 0 || isSaving || isCompleting}
             >
-              {messages.questionnaire.actions.skip}
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              {messages.questionnaire.actions.previous}
             </Button>
-          )}
 
-          <Button
-            onClick={handleNext}
-            disabled={!canProceed || isSaving || isCompleting}
-            isLoading={isSaving || isCompleting}
-          >
-            {isLastQuestion ? (
-              <>
-                {messages.questionnaire.actions.complete}
-                <Check className="h-4 w-4 ml-1" />
-              </>
-            ) : (
-              <>
-                {messages.questionnaire.actions.next}
-                <ChevronRight className="h-4 w-4 ml-1" />
-              </>
+            <div className="flex items-center gap-2">
+              {!currentQuestion.isRequired && !isLastQuestion && (
+                <Button
+                  variant="ghost"
+                  onClick={handleSkip}
+                  disabled={isSaving || isCompleting}
+                >
+                  {messages.questionnaire.actions.skip}
+                </Button>
+              )}
+
+              <Button
+                onClick={handleNext}
+                disabled={!canProceed || isSaving || isCompleting}
+                isLoading={isSaving || isCompleting}
+              >
+                {isLastQuestion ? (
+                  <>
+                    {messages.questionnaire.actions.complete}
+                    <Check className="h-4 w-4 ml-1" />
+                  </>
+                ) : (
+                  <>
+                    {messages.questionnaire.actions.next}
+                    <ChevronRight className="h-4 w-4 ml-1" />
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+
+          {actionError ? (
+            <ErrorState
+              className="mt-4"
+              description={actionError}
+              title={messages.questionnaire.errors.completeStepTitle}
+            />
+          ) : null}
+
+          <p className="mt-4 text-center text-sm text-muted-foreground">
+            {formatMessage(messages.questionnaire.progress.questionOf, {
+              current: currentIndex + 1,
+              total: totalQuestions,
+            })}
+            {currentQuestion.isRequired && (
+              <span className="ml-1 text-destructive">*</span>
             )}
-          </Button>
-        </div>
-      </div>
-
-      {actionError ? (
-        <ErrorState
-          className="mt-4"
-          description={actionError}
-          title={messages.questionnaire.errors.completeStepTitle}
-        />
-      ) : null}
-
-      <p className="mt-4 text-center text-sm text-muted-foreground">
-        {formatMessage(messages.questionnaire.progress.questionOf, {
-          current: currentIndex + 1,
-          total: totalQuestions,
-        })}
-        {currentQuestion.isRequired && (
-          <span className="ml-1 text-destructive">*</span>
-        )}
-      </p>
+          </p>
+        </>
+      )}
     </div>
   );
 }

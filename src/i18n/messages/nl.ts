@@ -578,6 +578,17 @@ const nl = {
       title: "Vertel ons over je rijstijl",
       subtitle:
         "Beantwoord deze vragen zodat we je bikefit-aanbevelingen kunnen personaliseren.",
+      intro: {
+        title: "Vertel ons over je rijgedrag",
+        body1: "Om een nauwkeurige bikefit te maken, moeten we begrijpen hoe jij fietst.",
+        body2:
+          "Je rijvolume, intensiteit en voorkeuren bepalen hoeveel belasting je lichaam aankan en hoe agressief je positie kan zijn.",
+        body3: "Door de volgende vragen te beantwoorden, stemmen we je fietsopstelling af op de balans tussen:",
+        comfort: "Comfort",
+        efficiency: "Efficiëntie",
+        performance: "Prestatie",
+        start: "Starten",
+      },
       sessionNotFound: {
         title: "Sessie niet gevonden",
         description:
