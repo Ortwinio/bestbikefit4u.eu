@@ -53,6 +53,9 @@ type LoginCopy = {
   continueWithEmail: string;
   noPasswordHint: string;
   legalHint: string;
+  localhostDevLoginLabel: string;
+  localhostDevLoginHint: string;
+  localhostDevLoginError: string;
 };
 
 const loginCopy: Record<Locale, LoginCopy> = {
@@ -96,6 +99,11 @@ const loginCopy: Record<Locale, LoginCopy> = {
     noPasswordHint: "No password needed. We'll send you a secure code to sign in.",
     legalHint:
       "By signing in, you agree to our Terms of Service and Privacy Policy.",
+    localhostDevLoginLabel: "Localhost dev admin sign-in",
+    localhostDevLoginHint:
+      "Available only on localhost when the local dev login env vars are configured.",
+    localhostDevLoginError:
+      "Localhost dev login failed. Check your local env vars and try again.",
   },
   nl: {
     uspTitle: "Waarom een goede bikefitting belangrijk is",
@@ -138,8 +146,21 @@ const loginCopy: Record<Locale, LoginCopy> = {
       "Geen wachtwoord nodig. We sturen je een veilige code om in te loggen.",
     legalHint:
       "Door in te loggen ga je akkoord met onze Voorwaarden en Privacyverklaring.",
+    localhostDevLoginLabel: "Localhost dev admin-login",
+    localhostDevLoginHint:
+      "Alleen beschikbaar op localhost als de lokale dev-login omgevingsvariabelen zijn ingesteld.",
+    localhostDevLoginError:
+      "Localhost dev-login mislukt. Controleer je lokale omgevingsvariabelen en probeer opnieuw.",
   },
 };
+
+function isLocalhostRuntime() {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  return ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
+}
 
 function GoogleIcon() {
   return (
@@ -194,7 +215,18 @@ export default function LoginPage() {
   const [resendSuccess, setResendSuccess] = useState(false);
   const [sendSuccess, setSendSuccess] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [localhostDevReady, setLocalhostDevReady] = useState(false);
   const googleAuthEnabled = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === "true";
+  const localhostDevLoginEnabled =
+    process.env.NEXT_PUBLIC_ENABLE_LOCALHOST_DEV_LOGIN === "true";
+  const localhostDevLoginSecret =
+    process.env.NEXT_PUBLIC_LOCALHOST_DEV_LOGIN_SECRET ?? "";
+  const localhostDevLoginEmail =
+    process.env.NEXT_PUBLIC_LOCALHOST_DEV_LOGIN_EMAIL ?? "";
+  const localhostDevLoginName =
+    process.env.NEXT_PUBLIC_LOCALHOST_DEV_LOGIN_NAME ?? "";
+  const localhostDevLoginRole =
+    process.env.NEXT_PUBLIC_LOCALHOST_DEV_LOGIN_ROLE ?? "super_admin";
   const oauthRedirectingRef = useRef(false);
 
   // @convex-dev/auth registers a bubble-phase beforeunload listener that calls
@@ -240,6 +272,10 @@ export default function LoginPage() {
       sourceTag,
     });
   }, [locale, logMarketingEvent, pagePath, sourceTag]);
+
+  useEffect(() => {
+    setLocalhostDevReady(localhostDevLoginEnabled && isLocalhostRuntime());
+  }, [localhostDevLoginEnabled]);
 
   useEffect(() => {
     if (resendCooldown <= 0) {
@@ -396,6 +432,32 @@ export default function LoginPage() {
       });
       setError(text.googleSignInError);
     } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLocalhostDevLogin = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const credentials: Record<string, string> = {
+        secret: localhostDevLoginSecret,
+        hostname: window.location.hostname,
+        adminRole: localhostDevLoginRole,
+      };
+      if (localhostDevLoginEmail) {
+        credentials.email = localhostDevLoginEmail;
+      }
+      if (localhostDevLoginName) {
+        credentials.name = localhostDevLoginName;
+      }
+
+      await signIn("localhost-dev", credentials);
+      window.location.href = withLocalePrefix("/dashboard", locale);
+    } catch (err) {
+      console.error("Failed to start localhost dev login:", err);
+      setError(text.localhostDevLoginError);
       setIsLoading(false);
     }
   };
@@ -563,6 +625,23 @@ export default function LoginPage() {
           <p className="mt-4 text-center text-sm text-muted-foreground">
             {text.noPasswordHint}
           </p>
+
+          {localhostDevReady ? (
+            <div className="mt-6 rounded-lg border border-primary/25 bg-primary-soft p-4">
+              <p className="text-sm font-medium text-foreground">
+                {text.localhostDevLoginHint}
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-3 w-full"
+                onClick={() => void handleLocalhostDevLogin()}
+                isLoading={isLoading}
+              >
+                {text.localhostDevLoginLabel}
+              </Button>
+            </div>
+          ) : null}
 
           <div className="mt-6 border-t border-border pt-6">
             <p className="text-center text-xs text-muted-foreground">

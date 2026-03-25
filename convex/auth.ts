@@ -1,8 +1,17 @@
 import { convexAuth } from "@convex-dev/auth/server";
 import { Email } from "@convex-dev/auth/providers/Email";
+import { ConvexCredentials } from "@convex-dev/auth/providers/ConvexCredentials";
 import Google from "@auth/core/providers/google";
 import { Resend } from "resend";
 import { BRAND } from "./lib/brand";
+import type { Id } from "./_generated/dataModel";
+import { internal } from "./_generated/api";
+import {
+  isAllowedLocalhostHost,
+  normalizeLocalDevEmail,
+  normalizeLocalDevName,
+  normalizeLocalDevRole,
+} from "./authLocalDev";
 
 // Email format validation
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -164,8 +173,60 @@ const googleProviderEnabled = Boolean(
   process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
 );
 
+const localhostDevLoginEnabled = Boolean(process.env.LOCALHOST_DEV_LOGIN_SECRET);
+
+const localhostDevProvider = localhostDevLoginEnabled
+  ? ConvexCredentials({
+      id: "localhost-dev",
+      authorize: async (credentials, ctx) => {
+        const configuredSecret = process.env.LOCALHOST_DEV_LOGIN_SECRET;
+        if (!configuredSecret) {
+          return null;
+        }
+
+        const submittedSecret =
+          typeof credentials.secret === "string" ? credentials.secret : "";
+        if (submittedSecret !== configuredSecret) {
+          throw new Error("Localhost dev login is not configured for this environment.");
+        }
+
+        const hostname =
+          typeof credentials.hostname === "string" ? credentials.hostname : "";
+        if (!isAllowedLocalhostHost(hostname)) {
+          throw new Error("Localhost dev login only works on localhost.");
+        }
+
+        const email = normalizeLocalDevEmail(
+          typeof credentials.email === "string" && credentials.email.length > 0
+            ? credentials.email
+            : process.env.LOCALHOST_DEV_LOGIN_EMAIL ?? "local-admin@example.com"
+        );
+        const name = normalizeLocalDevName(
+          typeof credentials.name === "string"
+            ? credentials.name
+            : process.env.LOCALHOST_DEV_LOGIN_NAME ?? "Local Admin",
+          email
+        );
+        const adminRole = normalizeLocalDevRole(
+          typeof credentials.adminRole === "string" && credentials.adminRole.length > 0
+            ? credentials.adminRole
+            : process.env.LOCALHOST_DEV_LOGIN_ROLE ?? "super_admin"
+        );
+
+        const result = (await ctx.runMutation(internal.authLocalDev.ensureLocalDevUser, {
+          email,
+          name,
+          adminRole,
+        })) as { userId: Id<"users"> };
+
+        return { userId: result.userId };
+      },
+    })
+  : undefined;
+
 const providers = [
   EmailProvider,
+  ...(localhostDevProvider ? [localhostDevProvider] : []),
   ...(googleProviderEnabled
     ? [
         Google({
