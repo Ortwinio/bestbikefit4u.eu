@@ -12,6 +12,15 @@ type ExperienceLevel = "beginner" | "intermediate" | "advanced";
 
 const LEVEL_KEYS: ExperienceLevel[] = ["beginner", "intermediate", "advanced"];
 
+const LEVEL_SELECTED_CLASSES: Record<ExperienceLevel, string> = {
+  beginner:
+    "data-checked:bg-[color:var(--success)] data-checked:text-[color:var(--success-foreground)]",
+  intermediate:
+    "data-checked:bg-[color:var(--warning)] data-checked:text-[color:var(--warning-foreground)]",
+  advanced:
+    "data-checked:bg-[color:var(--danger)] data-checked:text-[color:var(--danger-foreground)]",
+};
+
 interface ExperienceLevelSelectorProps {
   value: ExperienceLevel | null;
   onChange: (value: ExperienceLevel) => void;
@@ -45,13 +54,16 @@ export function ExperienceLevelSelector({
           value={value ?? ""}
           onValueChange={(v) => onChange(v as ExperienceLevel)}
           aria-label={t.radioGroupLabel}
-          className="w-full"
+          className="w-full bg-[color:var(--primary)] border-[color:var(--primary)]"
         >
           {LEVEL_KEYS.map((key) => (
             <SegmentedControlItem
               key={key}
               value={key}
-              className="flex-1 py-2.5 text-sm data-checked:bg-[color:var(--primary)] data-checked:text-[color:var(--primary-foreground)]"
+              className={cn(
+                "flex-1 py-2.5 text-sm text-[color:var(--primary-foreground)] opacity-70 hover:opacity-100 data-checked:opacity-100 data-checked:shadow-md",
+                LEVEL_SELECTED_CLASSES[key]
+              )}
             >
               {t.levels[key].label}
             </SegmentedControlItem>
