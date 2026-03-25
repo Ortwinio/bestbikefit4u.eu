@@ -4,6 +4,7 @@ import type { QuestionDefinition, QuestionnaireResponseValue } from "./types";
 import { SingleChoiceQuestion } from "./questions/SingleChoice";
 import { ExperienceLevelSelector } from "./questions/ExperienceLevelSelector";
 import { WeeklyHoursSelector } from "./questions/WeeklyHoursSelector";
+import { RideDistanceSelector } from "./questions/RideDistanceSelector";
 import { MultipleChoiceQuestion } from "./questions/MultipleChoice";
 import { ScaleQuestion } from "./questions/ScaleQuestion";
 import { NumericQuestion } from "./questions/NumericQuestion";
@@ -27,16 +28,21 @@ export function QuestionRenderer({
   const { messages } = useDashboardMessages();
   const isExperienceLevel = question.questionId === "experience_level";
   const isWeeklyHours = question.questionId === "weekly_hours";
+  const isRideDistance = question.questionId === "typical_ride_length";
   const questionText = isExperienceLevel
     ? messages.questionnaire.experienceLevel.questionText
     : isWeeklyHours
       ? messages.questionnaire.weeklyHours.questionText
-      : question.questionText;
+      : isRideDistance
+        ? messages.questionnaire.rideDistance.questionText
+        : question.questionText;
   const helpText = isExperienceLevel
     ? messages.questionnaire.experienceLevel.helpText
     : isWeeklyHours
       ? messages.questionnaire.weeklyHours.helpText
-      : question.helpText;
+      : isRideDistance
+        ? messages.questionnaire.rideDistance.helpText
+        : question.helpText;
 
   return (
     <div className="space-y-4">
@@ -72,10 +78,18 @@ export function QuestionRenderer({
           />
         )}
 
+        {question.questionId === "typical_ride_length" && (
+          <RideDistanceSelector
+            value={value as string | null}
+            onChange={onChange}
+          />
+        )}
+
         {question.responseType === "single_choice" &&
           question.options &&
           question.questionId !== "experience_level" &&
-          question.questionId !== "weekly_hours" && (
+          question.questionId !== "weekly_hours" &&
+          question.questionId !== "typical_ride_length" && (
           <SingleChoiceQuestion
             name={question.questionId}
             options={question.options}

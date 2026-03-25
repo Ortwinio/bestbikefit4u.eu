@@ -619,6 +619,39 @@ const nl = {
       a11y: {
         singleChoiceLegend: "Kies één optie",
       },
+      rideDistance: {
+        questionText: "Wat is je gebruikelijke ritafstand?",
+        helpText:
+          "Denk aan de afstand die je het vaakst rijdt — niet je langste incidentele rit.",
+        radioGroupLabel: "Gebruikelijke ritafstand",
+        selectPrompt: "Beweeg de schuifregelaar om je gebruikelijke ritafstand te kiezen.",
+        options: {
+          short: {
+            label: "< 30 km",
+            subtitle: "Casual / recreatief",
+            tooltip:
+              "Korte ritten geven prioriteit aan een rechtopstaande, comfortabele positie. Zadelhoogte en stuurreach zijn geoptimaliseerd voor gemak en laagdrempelig fietsen.",
+          },
+          medium: {
+            label: "30–80 km",
+            subtitle: "Regelmatig trainen",
+            tooltip:
+              "Middellange afstanden vereisen een balans tussen comfort en efficiëntie. Je positie kan een matige voorwaartse houding aan zonder vermoeidheid te veroorzaken.",
+          },
+          long: {
+            label: "80–150 km",
+            subtitle: "Duurzaamheid",
+            tooltip:
+              "Lange afstanden vragen om een fit die efficiëntie over uren in stand houdt. Romp­activatie en zadelcontact worden cruciaal — je positie moet krachtig én comfortabel zijn.",
+          },
+          ultra: {
+            label: "150+ km",
+            subtitle: "Ultra-duurzaamheid",
+            tooltip:
+              "Op deze afstand wordt het kleinste ongemak uitvergroot. Je fit geeft prioriteit aan gewrichtsbescherming, drukverdeling en het vermogen om de trappracht over vele uren vast te houden.",
+          },
+        },
+      },
       weeklyHours: {
         questionText: "Hoeveel uur per week rijd je doorgaans?",
         helpText:

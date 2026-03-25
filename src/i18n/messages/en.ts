@@ -613,6 +613,39 @@ const en = {
       a11y: {
         singleChoiceLegend: "Choose one option",
       },
+      rideDistance: {
+        questionText: "What is your typical ride distance?",
+        helpText:
+          "Think about the distance you ride most often — not your longest occasional ride.",
+        radioGroupLabel: "Typical ride distance",
+        selectPrompt: "Move the slider to select your typical ride distance.",
+        options: {
+          short: {
+            label: "< 30 km",
+            subtitle: "Casual / recreational",
+            tooltip:
+              "Short rides prioritise an upright, comfortable position. Saddle height and handlebar reach are optimised for ease and low-impact cycling.",
+          },
+          medium: {
+            label: "30–80 km",
+            subtitle: "Regular training",
+            tooltip:
+              "Medium distances require a balance between comfort and efficiency. Your position can tolerate moderate forward lean without causing fatigue.",
+          },
+          long: {
+            label: "80–150 km",
+            subtitle: "Endurance",
+            tooltip:
+              "Long distances demand a fit that sustains efficiency over hours. Core engagement and saddle contact become critical — your position must be powerful yet comfortable.",
+          },
+          ultra: {
+            label: "150+ km",
+            subtitle: "Ultra-endurance",
+            tooltip:
+              "At this distance, the smallest discomfort is amplified. Your fit prioritises joint protection, pressure distribution, and the ability to maintain power output over many hours.",
+          },
+        },
+      },
       weeklyHours: {
         questionText: "How many hours per week do you typically ride?",
         helpText:
