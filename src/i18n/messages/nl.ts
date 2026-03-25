@@ -608,38 +608,6 @@ const nl = {
       a11y: {
         singleChoiceLegend: "Kies één optie",
       },
-      experienceLevel: {
-        radioGroupLabel: "Fietsers ervaringsniveau",
-        moreAbout: "Meer over {level}",
-        imageAlt:
-          "Fietsposities van beginner (rechtop) via gemiddeld naar gevorderd (aerodynamisch)",
-        levels: {
-          beginner: {
-            label: "Beginner",
-            subtitle: "Comfort eerst",
-            explanation:
-              "We gaan uit van een lagere flexibiliteit en roompkracht. Je fit wordt meer rechtop — minder heuphoek, minder rugbelasting en een zadel-stuurhoogte die makkelijker vol te houden is op lange ritten.",
-            tooltip:
-              "Een niveau boven je huidige conditie kiezen leidt tot een positie die je niet comfortabel kunt vasthouden. Lagere stuur vergroot de heuphoek en vereist kernkracht om rugpijn te voorkomen. Twijfel je? Begin hier.",
-          },
-          intermediate: {
-            label: "Gemiddeld",
-            subtitle: "Gebalanceerd",
-            explanation:
-              "Gemiddelde flexibiliteit en kernkracht. Je fit gebruikt een neutrale stuurpositie — niet agressief, niet volledig rechtop. Geschikt voor regelmatige ritten van meerdere uren over gevarieerd terrein.",
-            tooltip:
-              "Dit niveau past geen aanpassing toe op de stuurhoogte. Het is de basislijn waarop de meeste fietsers na 6–12 maanden regelmatig rijden uitkomen. Je lichaam kan een matige heuphoek zonder problemen aan.",
-          },
-          advanced: {
-            label: "Gevorderd",
-            subtitle: "Prestatie",
-            explanation:
-              "Hogere tolerantie voor heuphoek, vollere knieextensie en de kernkracht om langdurig een aerodynamische houding vast te houden. Je fit wordt agressiever — lager stuur, langere reach.",
-            tooltip:
-              "Wees eerlijk: als je kernkracht en flexibiliteit dit niet ondersteunen, zorgt de positie binnen de eerste 30 minuten voor ongemak. Een agressieve fit verbetert prestaties alleen als je lichaam er klaar voor is.",
-          },
-        },
-      },
       multiChoice: {
         legend: "Selecteer alles wat van toepassing is",
       },

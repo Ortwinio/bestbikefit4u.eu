@@ -602,38 +602,6 @@ const en = {
       a11y: {
         singleChoiceLegend: "Choose one option",
       },
-      experienceLevel: {
-        radioGroupLabel: "Cycling experience level",
-        moreAbout: "More about {level}",
-        imageAlt:
-          "Cycling positions from beginner (upright) through intermediate to advanced (aerodynamic)",
-        levels: {
-          beginner: {
-            label: "Beginner",
-            subtitle: "Comfort first",
-            explanation:
-              "We assume lower baseline flexibility and core stability. Your fit will be more upright — less hip closure, less lower-back strain, and a saddle-to-bar height that is easier to sustain on longer rides.",
-            tooltip:
-              "Choosing a level above your current fitness leads to a position you cannot hold comfortably. Lower bars increase hip closure and require core strength to avoid back pain. If in doubt, start here.",
-          },
-          intermediate: {
-            label: "Intermediate",
-            subtitle: "Balanced",
-            explanation:
-              "Average flexibility and core strength. Your fit uses a neutral handlebar position — neither aggressive nor fully upright. Suited for regular multi-hour rides across varied terrain.",
-            tooltip:
-              "This level applies no modifier to bar drop. It is the baseline most riders fit into after 6–12 months of regular riding. Your body can sustain moderate hip closure without strain.",
-          },
-          advanced: {
-            label: "Advanced",
-            subtitle: "Performance",
-            explanation:
-              "Higher tolerance for hip closure, fuller knee extension, and the core strength to hold an aerodynamic posture for extended periods. Your fit will be more aggressive — lower bars, longer reach.",
-            tooltip:
-              "Be honest: if your core and flexibility do not support this, the position will cause discomfort within the first 30 minutes. An aggressive fit only improves performance when your body is conditioned for it.",
-          },
-        },
-      },
       multiChoice: {
         legend: "Select all that apply",
       },
