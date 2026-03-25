@@ -92,7 +92,7 @@ export function ExperienceLevelSelector({
                     {/* Check icon — visible when selected */}
                     <CheckCircle2
                       className={cn(
-                        "h-4 w-4 shrink-0 text-[color:var(--primary)] transition-opacity duration-150",
+                        "h-4 w-4 shrink-0 text-[color:var(--success)] transition-opacity duration-150",
                         isSelected ? "opacity-100" : "opacity-0"
                       )}
                     />
