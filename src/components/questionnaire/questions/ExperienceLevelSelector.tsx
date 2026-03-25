@@ -51,7 +51,7 @@ export function ExperienceLevelSelector({
             <SegmentedControlItem
               key={key}
               value={key}
-              className="flex-1 py-2.5 text-sm"
+              className="flex-1 py-2.5 text-sm data-checked:bg-[color:var(--primary)] data-checked:text-[color:var(--primary-foreground)]"
             >
               {t.levels[key].label}
             </SegmentedControlItem>
