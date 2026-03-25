@@ -672,6 +672,7 @@ const en = {
         questionText: "How many hours per week do you typically ride?",
         helpText:
           "Tip: Estimate your average weekly riding time over the past 1–2 months.",
+        imageAlt: "Clock representing weekly riding time",
         radioGroupLabel: "Weekly riding hours",
         selectPrompt: "Move the slider to select your weekly riding hours.",
         whyTitle: "Why this matters",

@@ -678,6 +678,7 @@ const nl = {
         questionText: "Hoeveel uur per week rijd je doorgaans?",
         helpText:
           "Tip: Schat je gemiddelde wekelijkse rijtijd over de afgelopen 1–2 maanden.",
+        imageAlt: "Klok die wekelijkse rijtijd weergeeft",
         radioGroupLabel: "Wekelijkse rijuren",
         selectPrompt: "Beweeg de schuifregelaar om je wekelijkse rijuren te kiezen.",
         whyTitle: "Waarom dit belangrijk is",

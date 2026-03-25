@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "@/utils/cn";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
@@ -25,8 +26,20 @@ export function WeeklyHoursSelector({
   return (
     <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border">
 
+      {/* Reference image */}
+      <div className="relative w-full">
+        <Image
+          src="/clock.png"
+          alt={t.imageAlt}
+          width={900}
+          height={400}
+          className="h-auto max-h-56 w-full object-cover"
+          priority
+        />
+      </div>
+
       {/* Slider */}
-      <div className="px-6 pt-6 pb-3">
+      <div className="border-t border-border px-6 pt-6 pb-3">
 
         {/* Track + dots */}
         <div
