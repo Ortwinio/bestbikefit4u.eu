@@ -3,23 +3,17 @@
 import Image from "next/image";
 import { cn } from "@/utils/cn";
 import {
-  SegmentedControl,
-  SegmentedControlItem,
-} from "@/components/ui/SegmentedControl";
+  SliderControl,
+  SliderIndicator,
+  SliderRoot,
+  SliderThumb,
+  SliderTrack,
+} from "@/components/prototyper-ui/ui/slider";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 type ExperienceLevel = "beginner" | "intermediate" | "advanced";
 
 const LEVEL_KEYS: ExperienceLevel[] = ["beginner", "intermediate", "advanced"];
-
-const LEVEL_SELECTED_CLASSES: Record<ExperienceLevel, string> = {
-  beginner:
-    "data-checked:bg-[color:var(--success)] data-checked:text-[color:var(--success-foreground)]",
-  intermediate:
-    "data-checked:bg-[color:var(--warning)] data-checked:text-[color:var(--warning-foreground)]",
-  advanced:
-    "data-checked:bg-[color:var(--danger)] data-checked:text-[color:var(--danger-foreground)]",
-};
 
 interface ExperienceLevelSelectorProps {
   value: ExperienceLevel | null;
@@ -32,6 +26,9 @@ export function ExperienceLevelSelector({
 }: ExperienceLevelSelectorProps) {
   const { messages } = useDashboardMessages();
   const t = messages.questionnaire.experienceLevel;
+
+  const levelIndex = value !== null ? LEVEL_KEYS.indexOf(value) : -1;
+  const sliderIndex = levelIndex >= 0 ? levelIndex : 1;
 
   return (
     <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)]">
@@ -48,27 +45,57 @@ export function ExperienceLevelSelector({
         />
       </div>
 
-      {/* Segmented control */}
-      <div className="border-t border-[color:var(--border)] px-6 py-5">
-        <SegmentedControl
-          value={value ?? ""}
-          onValueChange={(v) => onChange(v as ExperienceLevel)}
+      {/* Slider */}
+      <div className="border-t border-[color:var(--border)] px-6 pt-6 pb-3">
+        <SliderRoot
+          min={0}
+          max={2}
+          step={1}
+          value={[sliderIndex]}
+          onValueChange={(vals) => {
+            const idx = Array.isArray(vals) ? vals[0] : vals;
+            if (typeof idx === "number") {
+              onChange(LEVEL_KEYS[idx] ?? "intermediate");
+            }
+          }}
           aria-label={t.radioGroupLabel}
-          className="w-full bg-[color:var(--primary)] border-[color:var(--primary)]"
         >
-          {LEVEL_KEYS.map((key) => (
-            <SegmentedControlItem
+          <SliderControl>
+            <SliderTrack
+              className="h-3 rounded-full bg-[color:color-mix(in_oklch,var(--primary)_25%,var(--card)_75%)]"
+            >
+              <SliderIndicator className="bg-[color:var(--primary)]" />
+              <SliderThumb
+                className={cn(
+                  "size-7 rounded-full border-[3px] border-[color:var(--card)]",
+                  "bg-[color:var(--primary)] shadow-[0_0_0_2px_color-mix(in_oklch,var(--primary)_60%,transparent)]",
+                  "hover:shadow-[0_0_0_4px_color-mix(in_oklch,var(--primary)_35%,transparent)]",
+                  "focus-visible:shadow-[0_0_0_4px_color-mix(in_oklch,var(--primary)_35%,transparent)]"
+                )}
+              />
+            </SliderTrack>
+          </SliderControl>
+        </SliderRoot>
+
+        {/* Position labels */}
+        <div className="mt-2 grid grid-cols-3 text-xs font-medium">
+          {LEVEL_KEYS.map((key, i) => (
+            <span
               key={key}
-              value={key}
               className={cn(
-                "flex-1 py-2.5 text-sm text-[color:var(--primary-foreground)] opacity-70 hover:opacity-100 data-checked:opacity-100 data-checked:shadow-md",
-                LEVEL_SELECTED_CLASSES[key]
+                "transition-colors duration-150",
+                i === 0 && "text-left",
+                i === 1 && "text-center",
+                i === 2 && "text-right",
+                key === value
+                  ? "text-[color:var(--primary)] font-semibold"
+                  : "text-[color:var(--muted-foreground)]"
               )}
             >
               {t.levels[key].label}
-            </SegmentedControlItem>
+            </span>
           ))}
-        </SegmentedControl>
+        </div>
       </div>
 
       {/* Explanation panel */}
