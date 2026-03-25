@@ -2,13 +2,6 @@
 
 import Image from "next/image";
 import { cn } from "@/utils/cn";
-import {
-  SliderControl,
-  SliderIndicator,
-  SliderRoot,
-  SliderThumb,
-  SliderTrack,
-} from "@/components/prototyper-ui/ui/slider";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 type ExperienceLevel = "beginner" | "intermediate" | "advanced";
@@ -28,7 +21,9 @@ export function ExperienceLevelSelector({
   const t = messages.questionnaire.experienceLevel;
 
   const levelIndex = value !== null ? LEVEL_KEYS.indexOf(value) : -1;
-  const sliderIndex = levelIndex >= 0 ? levelIndex : 1;
+
+  // Fill width: 0% at beginner, 50% at intermediate, 100% at advanced
+  const fillPercent = levelIndex >= 0 ? (levelIndex / 2) * 100 : 0;
 
   return (
     <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)]">
@@ -47,48 +42,54 @@ export function ExperienceLevelSelector({
 
       {/* Slider */}
       <div className="border-t border-[color:var(--border)] px-6 pt-6 pb-3">
-        <SliderRoot
-          min={0}
-          max={2}
-          step={1}
-          value={[sliderIndex]}
-          onValueChange={(vals) => {
-            const idx = Array.isArray(vals) ? vals[0] : vals;
-            if (typeof idx === "number") {
-              onChange(LEVEL_KEYS[idx] ?? "intermediate");
-            }
-          }}
+
+        {/* Track + dots */}
+        <div
+          role="radiogroup"
           aria-label={t.radioGroupLabel}
+          className="relative flex items-center justify-between"
         >
-          <SliderControl>
-            <SliderTrack
-              className="h-3 rounded-full bg-[color:color-mix(in_oklch,var(--primary)_25%,var(--card)_75%)]"
-            >
-              <SliderIndicator className="bg-[color:var(--primary)]" />
-              <SliderThumb
+          {/* Track background */}
+          <div className="pointer-events-none absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-[color:var(--secondary)]" />
+
+          {/* Filled portion */}
+          <div
+            className="pointer-events-none absolute left-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-[color:var(--primary)] transition-[width] duration-300 ease-out"
+            style={{ width: `${fillPercent}%` }}
+          />
+
+          {/* Snap-point buttons */}
+          {LEVEL_KEYS.map((key, i) => {
+            const isActive = i === levelIndex;
+            return (
+              <button
+                key={key}
+                type="button"
+                role="radio"
+                aria-checked={isActive}
+                onClick={() => onChange(key)}
                 className={cn(
-                  "size-7 rounded-full border-[3px] border-[color:var(--card)]",
-                  "bg-[color:var(--primary)] shadow-[0_0_0_2px_color-mix(in_oklch,var(--primary)_60%,transparent)]",
-                  "hover:shadow-[0_0_0_4px_color-mix(in_oklch,var(--primary)_35%,transparent)]",
-                  "focus-visible:shadow-[0_0_0_4px_color-mix(in_oklch,var(--primary)_35%,transparent)]"
+                  "relative z-10 rounded-full bg-[color:var(--primary)] transition-all duration-200",
+                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--primary)]",
+                  isActive
+                    ? "size-7 border-[3px] border-[color:var(--card)] shadow-[0_2px_10px_rgba(0,0,0,0.25)]"
+                    : "size-3 opacity-50 hover:opacity-90 hover:scale-125"
                 )}
               />
-            </SliderTrack>
-          </SliderControl>
-        </SliderRoot>
+            );
+          })}
+        </div>
 
         {/* Position labels */}
-        <div className="mt-2 grid grid-cols-3 text-xs font-medium">
+        <div className="mt-3 grid grid-cols-3 text-xs font-medium">
           {LEVEL_KEYS.map((key, i) => (
             <span
               key={key}
               className={cn(
                 "transition-colors duration-150",
-                i === 0 && "text-left",
-                i === 1 && "text-center",
-                i === 2 && "text-right",
+                i === 0 ? "text-left" : i === 1 ? "text-center" : "text-right",
                 key === value
-                  ? "text-[color:var(--primary)] font-semibold"
+                  ? "font-semibold text-[color:var(--primary)]"
                   : "text-[color:var(--muted-foreground)]"
               )}
             >
