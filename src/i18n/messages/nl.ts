@@ -610,6 +610,7 @@ const nl = {
       },
       experienceLevel: {
         radioGroupLabel: "Ervaringsniveau als fietser",
+        selectPrompt: "Beweeg de schuifregelaar om je ervaringsniveau te kiezen.",
         moreAbout: "Meer over {level}",
         imageAlt:
           "Fietsposities van beginner (rechtop) via gemiddeld naar gevorderd (aerodynamisch)",

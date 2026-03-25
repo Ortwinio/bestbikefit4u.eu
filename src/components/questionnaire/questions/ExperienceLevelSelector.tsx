@@ -1,14 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { CheckCircle2, Info } from "lucide-react";
 import { cn } from "@/utils/cn";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/prototyper-ui/ui/tooltip";
+  SliderControl,
+  SliderIndicator,
+  SliderRoot,
+  SliderThumb,
+  SliderTrack,
+} from "@/components/prototyper-ui/ui/slider";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 type ExperienceLevel = "beginner" | "intermediate" | "advanced";
@@ -27,105 +27,89 @@ export function ExperienceLevelSelector({
   const { messages } = useDashboardMessages();
   const t = messages.questionnaire.experienceLevel;
 
+  const levelIndex = value !== null ? LEVEL_KEYS.indexOf(value) : -1;
+  // Default thumb to center (intermediate) when nothing is selected yet
+  const sliderIndex = levelIndex >= 0 ? levelIndex : 1;
+
   return (
-    <TooltipProvider delay={150} closeDelay={50}>
-      <div className="space-y-0 overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)]">
+    <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)]">
 
-        {/* Reference image */}
-        <div className="relative w-full">
-          <Image
-            src="/bestbikefit4u-beginner-intermediate-advanced.png"
-            alt={t.imageAlt}
-            width={900}
-            height={400}
-            className="h-auto w-full object-cover"
-            priority
-          />
-        </div>
+      {/* Reference image */}
+      <div className="relative w-full">
+        <Image
+          src="/bestbikefit4u-beginner-intermediate-advanced.png"
+          alt={t.imageAlt}
+          width={900}
+          height={400}
+          className="h-auto w-full object-cover"
+          priority
+        />
+      </div>
 
-        {/* Selector bar */}
-        <div
-          role="radiogroup"
+      {/* Slider */}
+      <div className="border-t border-[color:var(--border)] px-6 pt-6 pb-3">
+        <SliderRoot
+          min={0}
+          max={2}
+          step={1}
+          value={[sliderIndex]}
+          onValueChange={(vals) => {
+            const idx = Array.isArray(vals) ? vals[0] : vals;
+            if (typeof idx === "number") {
+              onChange(LEVEL_KEYS[idx] ?? "intermediate");
+            }
+          }}
           aria-label={t.radioGroupLabel}
-          className="flex w-full border-t border-[color:var(--border)]"
         >
-          {LEVEL_KEYS.map((key, index) => {
-            const level = t.levels[key];
-            const isSelected = value === key;
-            const isFirst = index === 0;
+          <SliderControl>
+            <SliderTrack>
+              <SliderIndicator />
+              <SliderThumb />
+            </SliderTrack>
+          </SliderControl>
+        </SliderRoot>
 
-            return (
-              <button
-                key={key}
-                type="button"
-                role="radio"
-                aria-checked={isSelected}
-                onClick={() => onChange(key)}
-                className={cn(
-                  "group relative flex flex-1 flex-col items-start gap-2 px-4 py-4 text-left transition-colors duration-150 focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[color:var(--primary)]",
-                  !isFirst && "border-l border-[color:var(--border)]",
-                  isSelected
-                    ? "bg-[color:color-mix(in_oklch,var(--primary)_18%,var(--card)_82%)]"
-                    : "bg-[color:var(--card)] hover:bg-[color:var(--accent)]"
-                )}
-              >
-                {/* Selected indicator bar at top */}
-                <span
-                  className={cn(
-                    "absolute inset-x-0 top-0 h-1 transition-colors duration-150",
-                    isSelected ? "bg-[color:var(--primary)]" : "bg-transparent"
-                  )}
-                />
-
-                {/* Label + icons */}
-                <span className="flex w-full items-center justify-between gap-1.5">
-                  <span className="flex items-center gap-1.5">
-                    <span className="text-sm font-semibold text-[color:var(--foreground)]">
-                      {level.label}
-                    </span>
-                    <span className="text-xs text-[color:var(--muted-foreground)]">
-                      · {level.subtitle}
-                    </span>
-                  </span>
-
-                  <span className="flex items-center gap-1">
-                    {/* Check icon — visible when selected */}
-                    <CheckCircle2
-                      className={cn(
-                        "h-4 w-4 shrink-0 text-[color:var(--success)] transition-opacity duration-150",
-                        isSelected ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-
-                    <Tooltip>
-                      <TooltipTrigger
-                        type="button"
-                        aria-label={t.moreAbout.replace("{level}", level.label)}
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)] focus-visible:outline-2 focus-visible:outline-[color:var(--primary)]"
-                      >
-                        <Info className="h-3.5 w-3.5" />
-                      </TooltipTrigger>
-                      <TooltipContent
-                        side="top"
-                        sideOffset={8}
-                        className="max-w-[240px] text-xs leading-relaxed"
-                      >
-                        {level.tooltip}
-                      </TooltipContent>
-                    </Tooltip>
-                  </span>
-                </span>
-
-                {/* Explanation text */}
-                <p className="text-xs leading-relaxed text-[color:var(--muted-foreground)]">
-                  {level.explanation}
-                </p>
-              </button>
-            );
-          })}
+        {/* Position labels */}
+        <div className="mt-2 grid grid-cols-3 text-xs font-medium">
+          {LEVEL_KEYS.map((key, i) => (
+            <span
+              key={key}
+              className={cn(
+                "transition-colors duration-150",
+                i === 0 && "text-left",
+                i === 1 && "text-center",
+                i === 2 && "text-right",
+                key === value
+                  ? "text-[color:var(--foreground)]"
+                  : "text-[color:var(--muted-foreground)]"
+              )}
+            >
+              {t.levels[key].label}
+            </span>
+          ))}
         </div>
       </div>
-    </TooltipProvider>
+
+      {/* Explanation panel */}
+      <div className="min-h-[88px] border-t border-[color:var(--border)] px-6 py-4">
+        {value ? (
+          <>
+            <p className="text-sm font-semibold text-[color:var(--foreground)]">
+              {t.levels[value].label}
+              <span className="ml-1.5 text-xs font-normal text-[color:var(--muted-foreground)]">
+                · {t.levels[value].subtitle}
+              </span>
+            </p>
+            <p className="mt-1.5 text-xs leading-relaxed text-[color:var(--muted-foreground)]">
+              {t.levels[value].tooltip}
+            </p>
+          </>
+        ) : (
+          <p className="text-xs text-[color:var(--muted-foreground)]">
+            {t.selectPrompt}
+          </p>
+        )}
+      </div>
+    </div>
   );
 }

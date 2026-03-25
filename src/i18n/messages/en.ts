@@ -604,6 +604,7 @@ const en = {
       },
       experienceLevel: {
         radioGroupLabel: "Cycling experience level",
+        selectPrompt: "Move the slider to select your experience level.",
         moreAbout: "More about {level}",
         imageAlt:
           "Cycling positions from beginner (upright) through intermediate to advanced (aerodynamic)",
