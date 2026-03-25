@@ -118,6 +118,24 @@ export const generate = mutation({
     const bikeCategory = mapBikeCategory(session, bikeType);
     const ambition = mapAmbition(session.primaryGoal);
 
+    // Fetch questionnaire responses to extract experience_level
+    const questionnaireResponses = await ctx.db
+      .query("questionnaireResponses")
+      .withIndex("by_session", (q) => q.eq("sessionId", args.sessionId))
+      .collect();
+
+    const VALID_EXPERIENCE_LEVELS = ["beginner", "intermediate", "advanced"] as const;
+    type ExperienceLevel = (typeof VALID_EXPERIENCE_LEVELS)[number];
+    const experienceLevelResponse = questionnaireResponses.find(
+      (r) => r.questionId === "experience_level"
+    );
+    const experienceLevel: ExperienceLevel | undefined =
+      VALID_EXPERIENCE_LEVELS.includes(
+        experienceLevelResponse?.response as ExperienceLevel
+      )
+        ? (experienceLevelResponse!.response as ExperienceLevel)
+        : undefined;
+
     // Schedule the action — computation happens outside the mutation transaction
     await ctx.scheduler.runAfter(
       0,
@@ -139,6 +157,7 @@ export const generate = mutation({
         painPoints: session.painPoints,
         frameStackMm,
         frameReachMm,
+        experienceLevel,
       }
     );
   },

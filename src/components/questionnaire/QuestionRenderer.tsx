@@ -2,6 +2,7 @@
 
 import type { QuestionDefinition, QuestionnaireResponseValue } from "./types";
 import { SingleChoiceQuestion } from "./questions/SingleChoice";
+import { ExperienceLevelSelector } from "./questions/ExperienceLevelSelector";
 import { MultipleChoiceQuestion } from "./questions/MultipleChoice";
 import { ScaleQuestion } from "./questions/ScaleQuestion";
 import { NumericQuestion } from "./questions/NumericQuestion";
@@ -41,7 +42,16 @@ export function QuestionRenderer({
       </div>
 
       <div className="mt-6">
-        {question.responseType === "single_choice" && question.options && (
+        {question.questionId === "experience_level" && (
+          <ExperienceLevelSelector
+            value={(value as "beginner" | "intermediate" | "advanced" | null) ?? null}
+            onChange={onChange}
+          />
+        )}
+
+        {question.responseType === "single_choice" &&
+          question.options &&
+          question.questionId !== "experience_level" && (
           <SingleChoiceQuestion
             name={question.questionId}
             options={question.options}

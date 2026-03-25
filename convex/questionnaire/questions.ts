@@ -12,6 +12,7 @@ export interface QuestionDefinition {
   options?: Array<{
     value: string;
     label: string;
+    description?: string;
     followUpQuestionIds?: string[];
   }>;
   numericConfig?: {
@@ -43,21 +44,26 @@ export const QUESTIONNAIRE_QUESTIONS: QuestionDefinition[] = [
   {
     questionId: "experience_level",
     category: "riding_context",
-    questionText: "How would you describe your cycling experience?",
-    helpText: "This helps us adjust recommendations for your skill level",
+    questionText: "What best describes your cycling experience?",
+    helpText:
+      "This sets the physical baseline for your fit. Be honest — choosing a level that doesn't match your body will produce a position that is uncomfortable or inefficient.",
     responseType: "single_choice",
     options: [
       {
         value: "beginner",
-        label: "Beginner - New to cycling or returning after a long break",
+        label: "Beginner",
+        description: "New to cycling, or returning after a long break",
       },
       {
         value: "intermediate",
-        label: "Intermediate - Regular rider, comfortable on most terrain",
+        label: "Intermediate",
+        description: "Ride regularly and feel comfortable on most terrain",
       },
       {
         value: "advanced",
-        label: "Advanced - Experienced cyclist, races or trains seriously",
+        label: "Advanced",
+        description:
+          "Race or train seriously, and want a performance-oriented position",
       },
     ],
     baseOrder: 10,

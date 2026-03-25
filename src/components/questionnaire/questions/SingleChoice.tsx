@@ -8,6 +8,7 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 interface Option {
   value: string;
   label: string;
+  description?: string;
   followUpQuestionIds?: string[];
 }
 
@@ -45,6 +46,7 @@ export function SingleChoiceQuestion({
             mode="radio"
             value={option.value}
             label={option.label}
+            description={option.description}
             variant="card"
           />
         ))}

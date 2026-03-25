@@ -78,6 +78,15 @@ export const generateFromData = internalAction({
     // Optional bike geometry
     frameStackMm: v.optional(v.number()),
     frameReachMm: v.optional(v.number()),
+
+    // Optional questionnaire-derived fields
+    experienceLevel: v.optional(
+      v.union(
+        v.literal("beginner"),
+        v.literal("intermediate"),
+        v.literal("advanced")
+      )
+    ),
   },
   handler: async (ctx, args) => {
     const seed = runEngineV1Seed({
@@ -93,6 +102,7 @@ export const generateFromData = internalAction({
       ambition: args.ambition,
       frameStackMm: args.frameStackMm,
       frameReachMm: args.frameReachMm,
+      experienceLevel: args.experienceLevel,
     });
 
     const fitNotes = mergeFitNotes(
@@ -142,6 +152,7 @@ export const generateFromData = internalAction({
           ambition: args.ambition,
           frameStackMm: args.frameStackMm,
           frameReachMm: args.frameReachMm,
+          experienceLevel: args.experienceLevel,
           baselineSnapshot: seed.comparisonSnapshot,
         }
       );
@@ -181,6 +192,13 @@ export const runShadowComparison = internalAction({
     ),
     frameStackMm: v.optional(v.number()),
     frameReachMm: v.optional(v.number()),
+    experienceLevel: v.optional(
+      v.union(
+        v.literal("beginner"),
+        v.literal("intermediate"),
+        v.literal("advanced")
+      )
+    ),
     baselineSnapshot: v.object({
       saddleHeightMm: v.number(),
       saddleSetbackMm: v.number(),
@@ -207,6 +225,7 @@ export const runShadowComparison = internalAction({
         ambition: args.ambition,
         frameStackMm: args.frameStackMm,
         frameReachMm: args.frameReachMm,
+        experienceLevel: args.experienceLevel,
       });
 
       await ctx.runMutation(

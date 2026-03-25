@@ -24,6 +24,7 @@ export interface EngineV1SeedSource {
   ambition: Ambition;
   frameStackMm?: number;
   frameReachMm?: number;
+  experienceLevel?: "beginner" | "intermediate" | "advanced";
 }
 
 export interface EngineComparisonSnapshot {
@@ -113,6 +114,7 @@ export function buildEngineV1FitInputs(source: EngineV1SeedSource): FitInputs {
     femurMm: source.femurLengthCm ? source.femurLengthCm * 10 : undefined,
     frameStackMm: source.frameStackMm,
     frameReachMm: source.frameReachMm,
+    experienceLevel: source.experienceLevel,
   };
 }
 
