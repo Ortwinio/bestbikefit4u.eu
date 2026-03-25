@@ -619,6 +619,28 @@ const nl = {
       a11y: {
         singleChoiceLegend: "Kies één optie",
       },
+      painDiscomfort: {
+        questionText: "Heb je ongemak of pijn tijdens het fietsen?",
+        imageAlt: "Illustratie van comfortabele versus oncomfortabele fietsposities",
+        helpText:
+          "Het identificeren van pijnpunten helpt ons gerichte aanpassingen aan je positie aan te bevelen.",
+        radioGroupLabel: "Ongemak of pijn tijdens het fietsen",
+        selectPrompt: "Beweeg de schuifregelaar om te antwoorden.",
+        options: {
+          no: {
+            label: "Nee",
+            subtitle: "Ik rijd comfortabel",
+            tooltip:
+              "Je huidige positie werkt goed. We richten ons op het behouden van comfort terwijl we efficiëntie en prestaties optimaliseren.",
+          },
+          yes: {
+            label: "Ja",
+            subtitle: "Ik heb enig ongemak",
+            tooltip:
+              "Ongemak tijdens het fietsen wijst vaak op een fitprobleem — zadelhoogte, reach, klikaanpassing of stuuropstelling. Je antwoorden helpen ons de oorzaak te identificeren en aan te pakken.",
+          },
+        },
+      },
       rideDistance: {
         questionText: "Wat is je gebruikelijke ritafstand?",
         helpText:

@@ -5,6 +5,7 @@ import { SingleChoiceQuestion } from "./questions/SingleChoice";
 import { ExperienceLevelSelector } from "./questions/ExperienceLevelSelector";
 import { WeeklyHoursSelector } from "./questions/WeeklyHoursSelector";
 import { RideDistanceSelector } from "./questions/RideDistanceSelector";
+import { PainDiscomfortSelector } from "./questions/PainDiscomfortSelector";
 import { MultipleChoiceQuestion } from "./questions/MultipleChoice";
 import { ScaleQuestion } from "./questions/ScaleQuestion";
 import { NumericQuestion } from "./questions/NumericQuestion";
@@ -29,20 +30,25 @@ export function QuestionRenderer({
   const isExperienceLevel = question.questionId === "experience_level";
   const isWeeklyHours = question.questionId === "weekly_hours";
   const isRideDistance = question.questionId === "typical_ride_length";
+  const isPainDiscomfort = question.questionId === "has_pain";
   const questionText = isExperienceLevel
     ? messages.questionnaire.experienceLevel.questionText
     : isWeeklyHours
       ? messages.questionnaire.weeklyHours.questionText
       : isRideDistance
         ? messages.questionnaire.rideDistance.questionText
-        : question.questionText;
+        : isPainDiscomfort
+          ? messages.questionnaire.painDiscomfort.questionText
+          : question.questionText;
   const helpText = isExperienceLevel
     ? messages.questionnaire.experienceLevel.helpText
     : isWeeklyHours
       ? messages.questionnaire.weeklyHours.helpText
       : isRideDistance
         ? messages.questionnaire.rideDistance.helpText
-        : question.helpText;
+        : isPainDiscomfort
+          ? messages.questionnaire.painDiscomfort.helpText
+          : question.helpText;
 
   return (
     <div className="space-y-4">
@@ -85,11 +91,19 @@ export function QuestionRenderer({
           />
         )}
 
+        {question.questionId === "has_pain" && (
+          <PainDiscomfortSelector
+            value={value as string | null}
+            onChange={onChange}
+          />
+        )}
+
         {question.responseType === "single_choice" &&
           question.options &&
           question.questionId !== "experience_level" &&
           question.questionId !== "weekly_hours" &&
-          question.questionId !== "typical_ride_length" && (
+          question.questionId !== "typical_ride_length" &&
+          question.questionId !== "has_pain" && (
           <SingleChoiceQuestion
             name={question.questionId}
             options={question.options}

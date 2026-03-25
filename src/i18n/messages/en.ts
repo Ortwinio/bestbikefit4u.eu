@@ -613,6 +613,28 @@ const en = {
       a11y: {
         singleChoiceLegend: "Choose one option",
       },
+      painDiscomfort: {
+        questionText: "Do you experience any discomfort or pain while cycling?",
+        imageAlt: "Illustration of comfortable versus uncomfortable cycling positions",
+        helpText:
+          "Identifying pain points helps us recommend targeted adjustments to your position.",
+        radioGroupLabel: "Discomfort or pain while cycling",
+        selectPrompt: "Move the slider to answer.",
+        options: {
+          no: {
+            label: "No",
+            subtitle: "I'm comfortable",
+            tooltip:
+              "Your current position is working well. We'll focus on maintaining comfort while optimising efficiency and performance.",
+          },
+          yes: {
+            label: "Yes",
+            subtitle: "I have some discomfort",
+            tooltip:
+              "Discomfort while cycling often points to a fit issue — saddle height, reach, cleat position, or handlebar setup. Your responses will help us identify and address the cause.",
+          },
+        },
+      },
       rideDistance: {
         questionText: "What is your typical ride distance?",
         helpText:
