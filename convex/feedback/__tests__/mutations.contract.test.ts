@@ -175,7 +175,7 @@ describe("feedback mutations contract", () => {
         routeFamily: "settings",
         activityTrailJson: undefined,
         browserInfoJson: undefined,
-        contextCompleteness: "medium",
+        contextCompleteness: "high",
       })
     );
   });

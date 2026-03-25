@@ -12,8 +12,10 @@ describe("feedback ui helpers", () => {
   it("maps feedback types to labels and tones", () => {
     expect(feedbackTypeLabel("bug")).toBe("Bug");
     expect(feedbackTypeLabel("feature_request")).toBe("Feature request");
+    expect(feedbackTypeLabel("review")).toBe("Review");
     expect(feedbackTypeTone("bug")).toBe("danger");
     expect(feedbackTypeTone("support_case")).toBe("neutral");
+    expect(feedbackTypeTone("review")).toBe("success");
   });
 
   it("maps feedback statuses to labels and tones", () => {
