@@ -6,6 +6,7 @@ import { ExperienceLevelSelector } from "./questions/ExperienceLevelSelector";
 import { WeeklyHoursSelector } from "./questions/WeeklyHoursSelector";
 import { RideDistanceSelector } from "./questions/RideDistanceSelector";
 import { PainDiscomfortSelector } from "./questions/PainDiscomfortSelector";
+import { PainAreasSelector } from "./questions/PainAreasSelector";
 import { MultipleChoiceQuestion } from "./questions/MultipleChoice";
 import { ScaleQuestion } from "./questions/ScaleQuestion";
 import { NumericQuestion } from "./questions/NumericQuestion";
@@ -31,6 +32,7 @@ export function QuestionRenderer({
   const isWeeklyHours = question.questionId === "weekly_hours";
   const isRideDistance = question.questionId === "typical_ride_length";
   const isPainDiscomfort = question.questionId === "has_pain";
+  const isPainAreas = question.questionId === "pain_areas";
   const questionText = isExperienceLevel
     ? messages.questionnaire.experienceLevel.questionText
     : isWeeklyHours
@@ -39,7 +41,9 @@ export function QuestionRenderer({
         ? messages.questionnaire.rideDistance.questionText
         : isPainDiscomfort
           ? messages.questionnaire.painDiscomfort.questionText
-          : question.questionText;
+          : isPainAreas
+            ? messages.questionnaire.painAreas.questionText
+            : question.questionText;
   const helpText = isExperienceLevel
     ? messages.questionnaire.experienceLevel.helpText
     : isWeeklyHours
@@ -48,7 +52,9 @@ export function QuestionRenderer({
         ? messages.questionnaire.rideDistance.helpText
         : isPainDiscomfort
           ? messages.questionnaire.painDiscomfort.helpText
-          : question.helpText;
+          : isPainAreas
+            ? messages.questionnaire.painAreas.helpText
+            : question.helpText;
 
   return (
     <div className="space-y-4">
@@ -98,6 +104,13 @@ export function QuestionRenderer({
           />
         )}
 
+        {question.questionId === "pain_areas" && (
+          <PainAreasSelector
+            value={(value as string[]) || []}
+            onChange={onChange}
+          />
+        )}
+
         {question.responseType === "single_choice" &&
           question.options &&
           question.questionId !== "experience_level" &&
@@ -112,7 +125,9 @@ export function QuestionRenderer({
           />
         )}
 
-        {question.responseType === "multiple_choice" && question.options && (
+        {question.responseType === "multiple_choice" &&
+          question.options &&
+          question.questionId !== "pain_areas" && (
           <MultipleChoiceQuestion
             name={question.questionId}
             options={question.options}

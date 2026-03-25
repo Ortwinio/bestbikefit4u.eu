@@ -747,6 +747,48 @@ const en = {
           },
         },
       },
+      painAreas: {
+        questionText: "Where do you experience discomfort?",
+        helpText: "Select all areas that apply. This helps pinpoint the root cause of your discomfort.",
+        selectPrompt: "Select one or more areas above.",
+        areas: {
+          knee_front: {
+            label: "Front of knee",
+            subtitle: "Anterior",
+            tooltip: "Pain at the front of the knee often points to saddle height being too low, cleats positioned too far back, or excessive float in the pedal system.",
+          },
+          knee_back: {
+            label: "Back of knee",
+            subtitle: "Posterior",
+            tooltip: "Posterior knee pain is commonly caused by saddle height being too high or cleats positioned too far forward, stretching the hamstring attachment.",
+          },
+          lower_back: {
+            label: "Lower back",
+            subtitle: "Lumbar",
+            tooltip: "Lower back discomfort usually comes from a reach that is too long, saddle too high, or insufficient core strength. A shorter stem or higher bar height can help.",
+          },
+          neck: {
+            label: "Neck or shoulders",
+            subtitle: "Cervical / Trapezius",
+            tooltip: "Neck and shoulder tension is often caused by bars that are too low or too far away, forcing you to hold your head up for extended periods.",
+          },
+          hands: {
+            label: "Hands",
+            subtitle: "Numbness or pain",
+            tooltip: "Hand numbness or pain is typically caused by too much weight on the bars, bars too low, or grip width not matching shoulder width. Padded gloves and ergonomic bar tape can also help.",
+          },
+          saddle: {
+            label: "Saddle area",
+            subtitle: "Sit bones / perineum",
+            tooltip: "Saddle discomfort points to saddle height, tilt, fore-aft position, or saddle width/shape not matching your sit bone width. A professional saddle fitting is recommended.",
+          },
+          feet: {
+            label: "Feet",
+            subtitle: "Hot foot or numbness",
+            tooltip: "Hot foot and numbness usually stem from cleat position (too far forward) or cycling shoes that are too narrow, compressing the metatarsal nerves under load.",
+          },
+        },
+      },
       multiChoice: {
         legend: "Select all that apply",
       },

@@ -753,6 +753,48 @@ const nl = {
           },
         },
       },
+      painAreas: {
+        questionText: "Waar ervaar je ongemak?",
+        helpText: "Selecteer alle gebieden die van toepassing zijn. Dit helpt de oorzaak van je ongemak te bepalen.",
+        selectPrompt: "Selecteer een of meer gebieden hierboven.",
+        areas: {
+          knee_front: {
+            label: "Voorkant knie",
+            subtitle: "Anterieur",
+            tooltip: "Pijn aan de voorkant van de knie wijst vaak op een te lage zadelhoogte, een te ver naar achteren geplaatste schoenplaat, of te veel speling in het pedaalsysteem.",
+          },
+          knee_back: {
+            label: "Achterkant knie",
+            subtitle: "Posterieur",
+            tooltip: "Posterieure kniepijn wordt vaak veroorzaakt door een te hoge zadelhoogte of een te ver naar voren geplaatste schoenplaat, waardoor de hamstringaanhechting te veel wordt uitgerekt.",
+          },
+          lower_back: {
+            label: "Onderrug",
+            subtitle: "Lumbaal",
+            tooltip: "Ongemak in de onderrug komt meestal door een te lange reach, een te hoge zadelhoogte of onvoldoende rompkracht. Een kortere stuurpen of hogere stuurhoogte kan helpen.",
+          },
+          neck: {
+            label: "Nek of schouders",
+            subtitle: "Cervicaal / Trapezius",
+            tooltip: "Nek- en schouderspanning wordt vaak veroorzaakt door een te laag of te ver weg geplaatst stuur, waardoor je je hoofd langdurig omhoog moet houden.",
+          },
+          hands: {
+            label: "Handen",
+            subtitle: "Gevoelloosheid of pijn",
+            tooltip: "Gevoelloosheid of pijn in de handen wordt meestal veroorzaakt door te veel gewicht op het stuur, een te laag stuur of een greepbreedte die niet overeenkomt met je schouderbreedte.",
+          },
+          saddle: {
+            label: "Zadelgebied",
+            subtitle: "Zitbeenderen / perineum",
+            tooltip: "Zadelpijn wijst op een verkeerde zadelhoogte, -kanteling, voor-achterwaartse positie, of een zadelbreedte/-vorm die niet past bij jouw zitbeenafstand.",
+          },
+          feet: {
+            label: "Voeten",
+            subtitle: "Brandende voeten of gevoelloosheid",
+            tooltip: "Brandende voeten en gevoelloosheid zijn meestal het gevolg van een schoenplaatpositie die te ver naar voren staat, of te nauwe fietsschoenen die de metatarsaalzenuwen onder belasting afknellen.",
+          },
+        },
+      },
       multiChoice: {
         legend: "Selecteer alles wat van toepassing is",
       },
