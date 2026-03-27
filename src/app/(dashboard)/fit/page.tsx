@@ -32,25 +32,20 @@ import { buildBikeRoleBias } from "../../../../convex/recommendations/bikeRoleBi
 
 type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
 
-function SavedBikeImage({ source }: { source?: string }) {
+function SavedBikeImage({ source, selected }: { source?: string; selected?: boolean }) {
   const imageUrl = useResolvedImageUrl(source);
 
-  if (!imageUrl) {
-    return (
-      <img
-        src="/default-bike.svg"
-        alt=""
-        className="h-20 w-full rounded-[var(--radius-md)] object-cover"
-      />
-    );
-  }
-
   return (
-    <img
-      src={imageUrl}
-      alt=""
-      className="h-20 w-full rounded-[var(--radius-md)] object-cover"
-    />
+    <div className={cn(
+      "flex aspect-video w-full items-center justify-center overflow-hidden rounded-[var(--radius-md)]",
+      selected ? "bg-primary-foreground/10" : "bg-muted"
+    )}>
+      <img
+        src={imageUrl ?? "/default-bike.svg"}
+        alt=""
+        className="h-full w-full object-contain p-2"
+      />
+    </div>
   );
 }
 
@@ -260,7 +255,7 @@ export default function NewFitSessionPage() {
                       )}
                     />
 
-                    <SavedBikeImage source={bike.photoUrl} />
+                    <SavedBikeImage source={bike.photoUrl} selected={isSelected} />
 
                     <div className="mt-3">
                       <div className="pr-6 font-medium">{bike.name}</div>
