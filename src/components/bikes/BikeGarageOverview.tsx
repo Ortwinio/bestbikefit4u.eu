@@ -280,7 +280,7 @@ export function BikeGarageRow({
         </CardHeader>
         <CardContent className="space-y-4">
           {latestFit && rec ? (() => {
-            const r = latestFit.responses;
+            const r = latestFit.responses ?? {};
             const experienceLabel = resolveLabel(EXPERIENCE_LABELS, r.experience_level as string);
             const weeklyHoursLabel = resolveLabel(WEEKLY_HOURS_LABELS, r.weekly_hours as string);
             const rideLengthLabel = resolveLabel(RIDE_LENGTH_LABELS, r.typical_ride_length as string);
