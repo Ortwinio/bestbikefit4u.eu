@@ -579,15 +579,38 @@ const nl = {
       subtitle:
         "Beantwoord deze vragen zodat we je bikefit-aanbevelingen kunnen personaliseren.",
       intro: {
-        title: "Vertel ons over je rijgedrag",
-        body1: "Om een nauwkeurige bikefit te maken, moeten we begrijpen hoe jij fietst.",
-        body2:
-          "Je rijvolume, intensiteit en voorkeuren bepalen hoeveel belasting je lichaam aankan en hoe agressief je positie kan zijn.",
-        body3: "Door de volgende vragen te beantwoorden, stemmen we je fietsopstelling af op de balans tussen:",
-        comfort: "Comfort",
-        efficiency: "Efficiëntie",
-        performance: "Prestatie",
-        start: "Starten",
+        title: "Vertel ons over je rijstijl",
+        description:
+          "Deze intake duurt ongeveer 5–7 minuten. Op basis van je antwoorden maken we een gepersonaliseerde bikefit met nauwkeurige metingen op maat van jouw lichaam, rijstijl en doelen. We analyseren hoe je lichaam wordt belast tijdens het fietsen en vertalen dit naar een optimale positie die comfort, efficiëntie en prestatie in balans brengt. Het resultaat is een opstelling die je direct op je fiets kunt toepassen.",
+        gainTitle: "Wat je ermee wint:",
+        gains: [
+          {
+            label: "Meer snelheid en efficiëntie",
+            detail: "Breng meer vermogen over in voorwaartse beweging zonder extra inspanning",
+          },
+          {
+            label: "Meer comfort op langere ritten",
+            detail: "Verminder druk op je rug, nek, schouders en handen",
+          },
+          {
+            label: "Minder kans op blessures",
+            detail: "Minimaliseer belasting op knieën, heupen en onderrug",
+          },
+          {
+            label: "Een opstelling op maat van jouw lichaam en doelen",
+            detail: "Gebaseerd op je metingen, flexibiliteit en rijprofiel",
+          },
+          {
+            label: "Direct toepasbare aanpassingen",
+            detail: "Met exacte waarden voor zadelhoogte, setback, reach en drop",
+          },
+        ],
+        progress: {
+          timeRemaining: "~7 minuten resterend",
+          percentComplete: "10% voltooid",
+        },
+        illustrationAlt: "Illustratie van fietser",
+        start: "Start je bikefit",
       },
       sessionNotFound: {
         title: "Sessie niet gevonden",

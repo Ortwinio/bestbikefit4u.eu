@@ -574,15 +574,38 @@ const en = {
       title: "Tell Us About Your Riding",
       subtitle: "Answer these questions to help us personalize your bike fit recommendations.",
       intro: {
-        title: "Tell Us About Your Riding",
-        body1: "To create an accurate bike fit, we need to understand how you ride.",
-        body2:
-          "Your riding volume, intensity, and preferences determine how much load your body can handle and how aggressive your position can be.",
-        body3: "By answering the following questions, we tailor your bike setup to balance:",
-        comfort: "Comfort",
-        efficiency: "Efficiency",
-        performance: "Performance",
-        start: "Start",
+        title: "Tell us about your riding style",
+        description:
+          "This intake takes approximately 5–7 minutes to complete. Based on your answers, we create a personalized bike fit with precise measurements tailored to your body, riding style, and goals. We analyze how your body is loaded during cycling and translate this into an optimal position that balances comfort, efficiency, and performance. The result is a setup you can apply directly to your bike, helping you ride better, longer, and with more confidence.",
+        gainTitle: "What you gain:",
+        gains: [
+          {
+            label: "More speed and efficiency",
+            detail: "Transfer more power into forward motion without increasing effort",
+          },
+          {
+            label: "Greater comfort on longer rides",
+            detail: "Reduce pressure on your back, neck, shoulders, and hands",
+          },
+          {
+            label: "Lower risk of injuries",
+            detail: "Minimize strain on knees, hips, and lower back",
+          },
+          {
+            label: "A setup tailored to your body and goals",
+            detail: "Based on your measurements, flexibility, and riding profile",
+          },
+          {
+            label: "Actionable adjustments you can apply immediately",
+            detail: "Including exact values for saddle height, setback, reach, and drop",
+          },
+        ],
+        progress: {
+          timeRemaining: "~7 minutes remaining",
+          percentComplete: "10% complete",
+        },
+        illustrationAlt: "Cyclist illustration",
+        start: "Start your bike fit",
       },
       sessionNotFound: {
         title: "Session not found",
