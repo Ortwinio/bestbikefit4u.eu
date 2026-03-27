@@ -8,7 +8,6 @@ import { Id } from "../../../../../../convex/_generated/dataModel";
 import { QuestionnaireContainer } from "@/components/questionnaire";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import type { QuestionnaireResponseValue } from "@/components/questionnaire/types";
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Button, EmptyState, LoadingState } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -106,23 +105,6 @@ export default function QuestionnairePage({ params }: QuestionnairePageProps) {
 
   return (
     <div className="max-w-2xl mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <Link
-          href={withLocalePrefix("/fit", locale)}
-          className="mb-4 inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          {messages.common.back}
-        </Link>
-        <h1 className="text-2xl font-bold text-foreground">
-          {messages.questionnaire.title}
-        </h1>
-        <p className="mt-2 text-muted-foreground">
-          {messages.questionnaire.subtitle}
-        </p>
-      </div>
-
       {/* Questionnaire */}
       <QuestionnaireContainer
         questions={questions}
