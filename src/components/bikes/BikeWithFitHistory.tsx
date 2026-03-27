@@ -235,32 +235,60 @@ export function BikeWithFitHistory({
           if (!isDeleting) setSessionToDelete(null);
         }}
       >
-        {/* Warning icon + description */}
-        <div className="mb-5 flex gap-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-destructive/10">
-            <AlertTriangle className="h-5 w-5 text-destructive" />
-          </div>
+        {/* Session being deleted */}
+        {sessionToDelete && (() => {
+          const deleteDate = new Date(sessionToDelete.completedAt ?? sessionToDelete.createdAt)
+            .toLocaleDateString(locale === "nl" ? "nl-NL" : "en-US", {
+              day: "numeric", month: "short", year: "numeric",
+            });
+          const deleteStyle = sessionToDelete.ridingStyle
+            ? messages.sessions.ridingStyle[sessionToDelete.ridingStyle]
+            : messages.nav.bikeFitting;
+          const deleteStatusConfig = getStatusConfig(sessionToDelete.status);
+          return (
+            <div className="mb-4 flex items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-muted/50 px-4 py-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-destructive/10">
+                <Trash2 className="h-4 w-4 text-destructive" />
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium text-foreground">{deleteStyle}</p>
+                <div className="mt-0.5 flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground">{deleteDate}</span>
+                  <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", deleteStatusConfig.className)}>
+                    {deleteStatusConfig.label}
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Warning panel */}
+        <div className="mb-5 flex items-start gap-3 rounded-[var(--radius-lg)] border border-destructive/20 bg-destructive/5 px-4 py-3">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
           <p className="text-sm leading-relaxed text-muted-foreground">
             {messages.fitHistory.delete.dialogDescription}
           </p>
         </div>
 
-        {/* Actions */}
-        <div className="flex justify-end gap-3">
-          <Button
-            variant="outline"
-            onClick={() => setSessionToDelete(null)}
-            disabled={isDeleting}
-          >
-            {messages.common.cancel}
-          </Button>
+        {/* Actions — full-width stacked */}
+        <div className="flex flex-col gap-2">
           <Button
             variant="destructive"
+            className="w-full"
             onClick={handleDelete}
             isLoading={isDeleting}
           >
             <Trash2 className="mr-1.5 h-4 w-4" />
             {messages.fitHistory.delete.confirm}
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => setSessionToDelete(null)}
+            disabled={isDeleting}
+          >
+            {messages.common.cancel}
           </Button>
         </div>
       </AccessibleDialog>
