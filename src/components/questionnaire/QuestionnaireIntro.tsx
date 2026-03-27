@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   Zap,
   Heart,
@@ -30,55 +31,60 @@ export function QuestionnaireIntro({ onStart }: QuestionnaireIntroProps) {
   const t = messages.questionnaire.intro;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
 
-      {/* Two-column layout: content + illustration */}
-      <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-8">
+      {/* Hero banner */}
+      <div className="relative overflow-hidden rounded-[var(--radius-lg)] bg-gradient-to-br from-primary to-primary/75 px-6 pt-7 pb-0 md:px-8 md:pt-8">
 
-        {/* Left: text content */}
-        <div className="flex-1 space-y-5">
-          <div>
-            <h2 className="text-xl font-semibold text-foreground">{t.title}</h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {t.description}
-            </p>
-          </div>
-
-          {/* Gains list */}
-          <div>
-            <p className="mb-3 text-sm font-semibold text-foreground">{t.gainTitle}</p>
-            <ul className="space-y-3">
-              {t.gains.map((gain, i) => {
-                const Icon = GAIN_ICONS[i] ?? CheckCircle2;
-                return (
-                  <li key={i} className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                      <Icon className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <span className="text-sm font-medium text-foreground">
-                        {gain.label}
-                      </span>
-                      <p className="text-xs leading-relaxed text-muted-foreground">
-                        {gain.detail}
-                      </p>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+        {/* Cyclist image — anchored to bottom-right */}
+        <div className="absolute right-0 bottom-0 w-44 md:w-56">
+          <Image
+            src="/cyclist.png"
+            alt={t.illustrationAlt}
+            width={448}
+            height={448}
+            className="w-full"
+            priority
+          />
         </div>
 
-        {/* Right: illustration placeholder */}
-        <div className="flex w-full shrink-0 items-center justify-center rounded-[var(--radius-lg)] border border-dashed border-border bg-muted md:w-52 md:self-stretch">
-          <div className="flex flex-col items-center gap-2 px-4 py-12 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-              <User className="h-8 w-8 text-primary/60" />
-            </div>
-            <p className="text-xs text-muted-foreground">{t.illustrationAlt}</p>
-          </div>
+        {/* Text — left side, padded away from image */}
+        <div className="relative z-10 max-w-[65%] pb-7 md:pb-8">
+          <h2 className="text-2xl font-bold leading-tight text-primary-foreground">
+            {t.title}
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-primary-foreground/80">
+            {t.description}
+          </p>
         </div>
+      </div>
+
+      {/* Gains grid */}
+      <div>
+        <p className="mb-3 text-sm font-semibold text-foreground">{t.gainTitle}</p>
+        <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {t.gains.map((gain, i) => {
+            const Icon = GAIN_ICONS[i] ?? CheckCircle2;
+            return (
+              <li
+                key={i}
+                className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-3"
+              >
+                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                  <Icon className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-foreground">
+                    {gain.label}
+                  </span>
+                  <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                    {gain.detail}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
       {/* CTA */}
