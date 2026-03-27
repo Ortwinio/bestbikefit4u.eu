@@ -323,6 +323,14 @@ const nl = {
         cookiesEssentialOnly: "Alleen essentiële cookies blijven actief.",
         bikeDeleted: "Fiets verwijderd.",
         bikeNotesSaved: "Fietsnotities opgeslagen.",
+        bikeDescriptionSaved: "Fietsbeschrijving opgeslagen.",
+        bikeDescriptionGenerated: "Concept voor fietsbeschrijving klaar.",
+        bikePhotoAdded: "Fietsfoto toegevoegd.",
+        bikePhotoRemoved: "Fietsfoto verwijderd.",
+        bikePhotoPrimaryUpdated: "Primaire fietsfoto bijgewerkt.",
+        bikeWheelsetSaved: "Wielset opgeslagen.",
+        bikeWheelsetRemoved: "Wielset verwijderd.",
+        bikeWheelsetActivated: "Wielset als actief ingesteld.",
         pressureNoteSaved: "Bandenspanningsnotitie opgeslagen.",
       },
     },
@@ -333,7 +341,7 @@ const nl = {
       newBike: "Nieuwe fiets",
       bikeFitting: "Fietsafstelling",
       myBikes: "Mijn fietsgarage",
-      profile: "Profiel",
+      profile: "Mijn profiel",
       tirePressure: "Bandenspanning",
       settings: "Instellingen",
     },
@@ -411,7 +419,7 @@ const nl = {
       weightLabel: "Lichaamsgewicht",
       weightMissing: "Voeg toe aan profiel",
       editProfile: "Profiel bewerken",
-      newFit: "Nieuwe fit",
+      newFit: "Start nieuwe fit-sessie",
       currentBikeTitle: "Huidige fiets",
       viewBike: "Bekijk fiets",
       noBikeTitle: "Nog geen fiets opgeslagen",
@@ -434,6 +442,7 @@ const nl = {
       confidence: "Vertrouwen",
       saddleHeight: "Zadelhoogte",
       handlebarDrop: "Stuurval",
+      handlebarReach: "Stuur reach",
       viewReport: "Bekijk rapport",
       startNewSession: "Start nieuwe fit-sessie",
       delete: {
@@ -445,6 +454,20 @@ const nl = {
         success: "Bike fitting verwijderd.",
         failed: "Kon de bike fitting niet verwijderen. Probeer het opnieuw.",
       },
+    },
+    bikeGarage: {
+      bikeUsageTitle: "Fietsgebruik",
+      fitAdviseTitle: "Fietsfit advies",
+      latestAdvice: "Laatste advies",
+      recalculateFit: "Herbereken fit",
+      climbingProfileIncluded: "Klimprofiel inbegrepen",
+      tirePressureTitle: "Bandenspanning",
+      currentMeasurement: "Huidig",
+      recalculatePressure: "Herbereken bandenspanning",
+      noFitYet: "Nog geen fit-sessie",
+      noFitDescription: "Start een fit-sessie om je fietsgebruik en aanbevelingen hier te zien.",
+      typeOfRiding: "Rijstijl",
+      reportedDiscomfort: "Gemeld ongemak",
     },
     bikeTypes: {
       road: {
@@ -493,6 +516,16 @@ const nl = {
       custom: "Aangepast",
     },
     fit: {
+      algorithm: {
+        title: "Hoe ons bike fit algoritme werkt",
+        subtitle:
+          "Een transparante blik op hoe we jouw lichaamsdata en rijdoelen vertalen naar precieze, gepersonaliseerde setup-aanbevelingen.",
+        backLink: "Terug naar fit",
+        inputsTitle: "Wat er ingaat",
+        processTitle: "Hoe we berekenen",
+        outputsTitle: "Wat je krijgt",
+        tipsTitle: "Haal het meeste uit je fit",
+      },
       loading: "Fit-instellingen laden...",
       title: "Start nieuwe fit-sessie",
       subtitle:
@@ -502,6 +535,11 @@ const nl = {
         description:
           "Je moet eerst je lichaamsmetingen invullen voordat je een fit-sessie start.",
         cta: "Ga naar profiel",
+      },
+      riderProfileWarning: {
+        title: "Vul je rijprofiel in",
+        description: "Beantwoord een paar vragen over je rijstijl voordat je een bikefitting start.",
+        cta: "Naar mijn profiel",
       },
       savedBikes: {
         loading: "Fietsen laden...",
@@ -582,37 +620,16 @@ const nl = {
       subtitle:
         "Beantwoord deze vragen zodat we je bikefit-aanbevelingen kunnen personaliseren.",
       intro: {
+        eyebrow: "Bike Fit",
         title: "Vertel ons over je rijstijl",
         description:
-          "Deze intake duurt ongeveer 5–7 minuten. Op basis van je antwoorden maken we een gepersonaliseerde bikefit met nauwkeurige metingen op maat van jouw lichaam, rijstijl en doelen. We analyseren hoe je lichaam wordt belast tijdens het fietsen en vertalen dit naar een optimale positie die comfort, efficiëntie en prestatie in balans brengt. Het resultaat is een opstelling die je direct op je fiets kunt toepassen.",
-        gainTitle: "Wat je ermee wint:",
-        gains: [
-          {
-            label: "Meer snelheid en efficiëntie",
-            detail: "Breng meer vermogen over in voorwaartse beweging zonder extra inspanning",
-          },
-          {
-            label: "Meer comfort op langere ritten",
-            detail: "Verminder druk op je rug, nek, schouders en handen",
-          },
-          {
-            label: "Minder kans op blessures",
-            detail: "Minimaliseer belasting op knieën, heupen en onderrug",
-          },
-          {
-            label: "Een opstelling op maat van jouw lichaam en doelen",
-            detail: "Gebaseerd op je metingen, flexibiliteit en rijprofiel",
-          },
-          {
-            label: "Direct toepasbare aanpassingen",
-            detail: "Met exacte waarden voor zadelhoogte, setback, reach en drop",
-          },
-        ],
+          "Ons fittingmodel is gebouwd op data van duizenden rijders en professioneel gevalideerde methoden. Beantwoord een paar vragen — we vertalen je lichaamsmetingen en rijstijl naar precieze, gepersonaliseerde setup-aanbevelingen.",
         progress: {
           timeRemaining: "~7 minuten resterend",
           percentComplete: "10% voltooid",
         },
         illustrationAlt: "Illustratie van fietser",
+        algorithmLink: "Meer over ons bike fit algoritme",
         start: "Start je bikefit",
       },
       sessionNotFound: {
@@ -847,6 +864,9 @@ const nl = {
       loading: "Fit-resultaten laden...",
       backToDashboard: "Terug naar dashboard",
       title: "Jouw bikefit-aanbevelingen",
+      mainProfileTab: "Jouw fit",
+      climbingProfileTab: "Klimprofiel",
+      climbingProfileNote: "Dit profiel is geoptimaliseerd voor klimmen — hogere sturen, aangepaste zadelpositie en kortere reach voor meer vermogen en comfort op lange beklimmingen.",
       subtitle:
         "Op basis van je metingen en rijvoorkeuren zijn dit je gepersonaliseerde bikefit-instellingen.",
       algorithmVersionLabel: "Algoritmeversie",
@@ -1135,7 +1155,7 @@ const nl = {
     },
     profile: {
       loading: "Profiel laden...",
-      title: "Jouw profiel",
+      title: "Mijn profiel",
       photo: {
         upload: "Foto uploaden",
         error: "Upload mislukt. Probeer opnieuw.",
@@ -1150,9 +1170,35 @@ const nl = {
         bodyMeasurements: "Lichaamsmetingen",
         flexibility: "Flexibiliteit",
         coreStability: "Core-stabiliteit",
+        comfort: "Comfort",
+      },
+      bmi: {
+        label: "BMI",
+        underweight: "Ondergewicht",
+        normal: "Normaal gewicht",
+        overweight: "Overgewicht",
+        obese: "Obesitas",
+        noWeight: "Voeg je gewicht toe om je BMI te zien",
+      },
+      ridingStyle: {
+        title: "Rijstijl",
+        editButton: "Bewerken",
+        description: "Je rijstijl speelt een belangrijke rol bij het bepalen van jouw optimale bikefitting. Factoren zoals je ervaringsniveau, wekelijks trainingsvolume, typische ritafstand en persoonlijke voorkeuren bepalen hoe agressief of ontspannen je positie moet zijn.",
+        incompleteTitle: "Vul je rijprofiel in",
+        incompleteDescription: "Beantwoord een paar vragen over je rijstijl om bikefitting te activeren.",
+        completeCta: "Nu invullen",
+        experienceLevel: "Ervaringsniveau",
+        weeklyHours: "Uren per week",
+        typicalRide: "Typische rit",
+        positionPriority: "Rijpositie prioriteit",
+        positionPriorityQuestion: "Wat is voor jou het belangrijkste in je rijpositie?",
+        saveButton: "Opslaan",
       },
       measurements: {
         summary: "Je opgeslagen lichaamsmetingen",
+        impactDescription:
+          "Je lengte, binnenbeenlengte, armlengte en torsolengte bepalen direct de geometrie van je ideale bikefitting. BMI geeft een globale indicatie van je gewicht ten opzichte van je lengte — het beïnvloedt zadeldruk, vermogen-gewichtsverhouding en gewrichtsbelasting op langere ritten.",
+        improveLink: "Hoe verbeter je je BMI",
         height: "Lengte",
         inseam: "Binnenbeenlengte",
         weight: "Lichaamsgewicht",
@@ -1165,7 +1211,7 @@ const nl = {
         femurLength: "Dijbeenlengte",
         howToMeasure: "Zo meet je het:",
         saveField: "Opslaan",
-        editAllButton: "Metingen bewerken",
+        editAllButton: "Bewerken",
         addOptional: "+ Optionele metingen toevoegen",
         heightSteps: [
           "Ga blootsvoets tegen een muur staan",
@@ -1194,9 +1240,35 @@ const nl = {
           "Meet van de liesplooi tot het midden van de knie",
         ],
       },
+      comfort: {
+        editButton: "Bewerken",
+        saveButton: "Opslaan",
+        severityLevels: {
+          none: "Geen",
+          mild: "Mild",
+          noticeable: "Merkbaar",
+          significant: "Significant",
+          severe: "Ernstig",
+          verySevere: "Zeer ernstig",
+        },
+        editInstructions: "Stel de ernst in voor elk gebied. Laat op Geen staan als je daar geen klachten hebt.",
+        impactDescription:
+          "Zelfs licht ongemak wijst meestal op een fitprobleem, niet op gewone vermoeidheid. Door bij te houden welke gebieden last geven en hoe ernstig, kunnen we gerichte aanpassingen doen aan reikwijdte, stuurhoogte en zadelstand — en van terugkerend ongemak een oplosbaar probleem maken.",
+        improveLink: "Hoe verbeter je je comfort",
+        noPain: "Geen ongemak",
+        painAreasLabel: "Gebieden met ongemak",
+        testInstructions: {
+          title: "Beoordeel je comfortniveau",
+          steps: [
+            "Denk aan je laatste 3–5 ritten van gemiddelde duur.",
+            "Kies het niveau dat je gemiddelde ervaring het beste omschrijft.",
+            "Als pijn veel varieert, kies het niveau dat het vaakst voorkomt.",
+          ],
+        },
+      },
       flexibility: {
         helper: "Hamstring-flexibiliteitsscore",
-        editButton: "Score aanpassen",
+        editButton: "Bewerken",
         improveLink: "Hoe verbeter je je flexibiliteit",
         levelLabel: "{label} ({index}/5)",
         saveButton: "Opslaan",
@@ -1215,7 +1287,7 @@ const nl = {
       },
       coreStability: {
         helper: "Plank-houding beoordeling",
-        editButton: "Opnieuw testen",
+        editButton: "Bewerken",
         improveLink: "Hoe verbeter je je rompstabiliteit",
         levelLabel: "{label} • {description}",
         saveButton: "Opslaan",
@@ -1272,6 +1344,26 @@ const nl = {
         dismissButton: "Nu niet",
       },
       improve: {
+        bodyMeasurements: {
+          title: "Hoe verbeter je je BMI",
+          subtitle:
+            "BMI geeft een globale indicatie van je gewicht ten opzichte van je lengte. Voor wielrenners verbetert een gezonde lichaamssamenstelling de vermogen-gewichtsverhouding, vermindert de gewrichtsbelasting en vergroot het uithoudingsvermogen op lange ritten.",
+          whatItMeansTitle: "Wat je BMI betekent voor je bike fit",
+          exercisesTitle: "Strategieën om je lichaamssamenstelling te verbeteren",
+          progressTitle: "Zo volg je je vooruitgang",
+          updateScoreCta: "Mijn metingen bijwerken",
+          backLink: "Terug naar profiel",
+        },
+        comfort: {
+          title: "Hoe verbeter je je rijcomfort",
+          subtitle:
+            "De meeste klachten tijdens het fietsen hebben een directe oorzaak in de fit. Kleine, gerichte aanpassingen aan zadelhoogte, reikwijdte of klikpedaalstand kunnen pijn volledig wegnemen.",
+          whatItMeansTitle: "Wat je comfortniveau betekent voor je bike fit",
+          exercisesTitle: "Fit-aanpassingen per pijngebied",
+          progressTitle: "Zo volg je je vooruitgang",
+          updateScoreCta: "Mijn comfortniveau bijwerken",
+          backLink: "Terug naar profiel",
+        },
         flexibility: {
           title: "Verbeter je flexibiliteit",
           subtitle:
@@ -1503,11 +1595,72 @@ const nl = {
         climbingDescription:
           "Gericht op zittende tractie, efficiëntie bij lage snelheid en lange beklimmingen.",
       },
+      identity: {
+        fallbackSubtitle: "Opgeslagen in je fietsgarage.",
+        emptyBrandModel: "Merk en model zijn nog niet toegevoegd.",
+        fitBadge: "Fit beschikbaar",
+        pressureBadge: "Spanning beschikbaar",
+      },
       sections: {
+        gallery: "Foto's",
+        description: "Beschrijving",
         geometry: "Geometrie",
+        wheelsets: "Wielsets",
         currentSetup: "Huidige setup",
         notes: "Notities",
         fittingHistory: "Afstellingsgeschiedenis",
+      },
+      gallery: {
+        title: "Fietsgalerij",
+        description:
+          "Voeg een paar foto's toe zodat deze fiets makkelijker herkenbaar is in je garage en fitgeschiedenis.",
+        emptyTitle: "Nog geen fietsfoto's",
+        emptyDescription:
+          "Upload nu een hoofdfoto en voeg later extra hoeken toe als je wilt.",
+        upload: "Foto uploaden",
+        setPrimary: "Als primaire foto instellen",
+        remove: "Foto verwijderen",
+        primaryBadge: "Primair",
+        captionLabel: "Bijschrift",
+      },
+      descriptionCard: {
+        title: "Fietsbeschrijving",
+        description:
+          "Een korte bewerkbare samenvatting van hoe je deze fiets gebruikt. Dit is alleen beschrijvende tekst, geen technische brondata.",
+        empty:
+          "Er is nog geen beschrijving opgeslagen. Voeg zelf een samenvatting toe of genereer een kort concept.",
+        placeholder:
+          "Beschrijf waar deze fiets voor bedoeld is, hoe hij aanvoelt en waar je er het meest mee rijdt.",
+        helper:
+          "Houd het praktisch. Vermijd geometrieclaims of exacte specificaties tenzij je die zelf elders hebt ingevoerd.",
+        generate: "Beschrijving genereren",
+        regenerate: "Opnieuw genereren",
+        edit: "Handmatig bewerken",
+        save: "Beschrijving opslaan",
+        generating: "Genereren...",
+        sourceGenerated: "AI-concept",
+        sourceManual: "Handmatige beschrijving",
+        sourceTemplate: "Startconcept",
+        disclaimer:
+          "Gegenereerde tekst is bewerkbare rijdergerichte copy, geen gezaghebbende fietsdata.",
+      },
+      wheelsetManager: {
+        title: "Wielsets",
+        description:
+          "Beheer alle wielsets die je met deze fiets gebruikt en houd er een actief voor bandenspanningsadviezen.",
+        emptyTitle: "Nog geen wielsets opgeslagen",
+        emptyDescription:
+          "Voeg je eerste wielset toe om bandensetupdetails aan deze fiets te koppelen.",
+        activeBadge: "Actief",
+        activeAction: "Actief maken",
+        add: "Wielset toevoegen",
+        save: "Wielset opslaan",
+        cancelAdd: "Annuleren",
+        rimType: "Velgtype",
+        frontWidth: "Interne breedte voor",
+        rearWidth: "Interne breedte achter",
+        tireSetup: "Bandensetup",
+        noTireSetup: "Nog geen bandensetup gekoppeld",
       },
       cards: {
         bikeSummary: "{bikeType} opgeslagen in je fietsoverzicht.",

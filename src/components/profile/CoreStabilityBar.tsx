@@ -4,11 +4,11 @@ import { cn } from "@/utils/cn";
 import { coreStabilityTests } from "@/lib/validations/profile";
 
 const scoreColorMap: Record<number, string> = {
-  1: "var(--danger)",
-  2: "var(--warning)",
-  3: "var(--warning)",
-  4: "var(--success)",
-  5: "var(--success)",
+  1: "var(--color-danger)",
+  2: "var(--color-warning)",
+  3: "var(--color-warning)",
+  4: "var(--color-success)",
+  5: "var(--color-success)",
 };
 
 export function getCoreStabilityMeta(score: number) {
@@ -47,7 +47,7 @@ export function CoreStabilityBar({
             className="h-3 flex-1 rounded-full"
             style={{
               backgroundColor:
-                segment <= meta.score ? meta.color : "var(--muted)",
+                segment <= meta.score ? meta.color : "var(--color-muted)",
             }}
           />
         ))}

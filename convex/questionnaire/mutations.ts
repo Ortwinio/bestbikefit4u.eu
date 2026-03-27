@@ -8,6 +8,7 @@ import {
   type QuestionResponseValue,
   questionResponseValueValidator,
 } from "./responseValidation";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 /**
  * Save a response to a question
@@ -138,23 +139,20 @@ export const completeQuestionnaire = mutation({
       status: "questionnaire_complete",
     });
 
-    const painAreasResponse = responses.find(
-      (r) => r.questionId === "pain_areas"
-    );
-    const painSeverityResponse = responses.find(
-      (r) => r.questionId === "pain_severity"
-    );
+    // Read pain and weekly hours data from the rider profile (not questionnaire responses).
+    // These questions have been removed from the questionnaire and are now part of the
+    // rider profile (experienceLevel, weeklyHours, hasPain, painAreas, painSeverity).
+    const userId = await getAuthUserId(ctx);
+    const profile = userId
+      ? await ctx.db
+          .query("profiles")
+          .withIndex("by_user", (q) => q.eq("userId", userId))
+          .unique()
+      : null;
 
-    if (
-      painAreasResponse &&
-      Array.isArray(painAreasResponse.response) &&
-      painAreasResponse.response.every((area) => typeof area === "string")
-    ) {
-      const severityValue =
-        typeof painSeverityResponse?.response === "number"
-          ? painSeverityResponse.response
-          : undefined;
-      const painPoints = painAreasResponse.response.map((area) => ({
+    if (profile?.hasPain === "yes" && profile.painAreas && profile.painAreas.length > 0) {
+      const severityValue = profile.painSeverity;
+      const painPoints = profile.painAreas.map((area) => ({
         area,
         frequency: "sometimes" as const,
         severity:
@@ -170,11 +168,8 @@ export const completeQuestionnaire = mutation({
       });
     }
 
-    // Extract weekly hours
-    const weeklyHoursResponse = responses.find(
-      (r) => r.questionId === "weekly_hours"
-    );
-    if (weeklyHoursResponse && typeof weeklyHoursResponse.response === "string") {
+    // Convert weeklyHours string from profile to a numeric value for the session.
+    if (profile?.weeklyHours) {
       const hoursMap: Record<string, number> = {
         "0-3": 2,
         "3-6": 5,
@@ -182,7 +177,7 @@ export const completeQuestionnaire = mutation({
         "10-15": 12,
         "15+": 18,
       };
-      const hours = hoursMap[weeklyHoursResponse.response] || 5;
+      const hours = hoursMap[profile.weeklyHours] ?? 5;
       await ctx.db.patch(args.sessionId, {
         weeklyHours: hours,
       });

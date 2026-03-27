@@ -322,6 +322,14 @@ const en = {
         cookiesEssentialOnly: "Only essential cookies will remain active.",
         bikeDeleted: "Bike deleted.",
         bikeNotesSaved: "Bike notes saved.",
+        bikeDescriptionSaved: "Bike description saved.",
+        bikeDescriptionGenerated: "Bike description draft is ready.",
+        bikePhotoAdded: "Bike photo added.",
+        bikePhotoRemoved: "Bike photo removed.",
+        bikePhotoPrimaryUpdated: "Primary bike photo updated.",
+        bikeWheelsetSaved: "Wheelset saved.",
+        bikeWheelsetRemoved: "Wheelset removed.",
+        bikeWheelsetActivated: "Wheelset set as active.",
         pressureNoteSaved: "Pressure note saved.",
       },
     },
@@ -332,7 +340,7 @@ const en = {
       newBike: "New Bike",
       bikeFitting: "Bike Fitting",
       myBikes: "My Bike Garage",
-      profile: "Profile",
+      profile: "My Profile",
       tirePressure: "Tire Pressure",
       settings: "Settings",
     },
@@ -410,7 +418,7 @@ const en = {
       weightLabel: "Body weight",
       weightMissing: "Add to profile",
       editProfile: "Edit profile",
-      newFit: "New fit",
+      newFit: "Start New Fit Session",
       currentBikeTitle: "Current bike",
       viewBike: "View bike",
       noBikeTitle: "No bike saved yet",
@@ -433,6 +441,7 @@ const en = {
       confidence: "Confidence",
       saddleHeight: "Saddle height",
       handlebarDrop: "Handlebar drop",
+      handlebarReach: "Handlebar reach",
       viewReport: "View report",
       startNewSession: "Start new fitting session",
       delete: {
@@ -444,6 +453,20 @@ const en = {
         success: "Bike fitting deleted.",
         failed: "Could not delete the bike fitting. Please try again.",
       },
+    },
+    bikeGarage: {
+      bikeUsageTitle: "Bike usage",
+      fitAdviseTitle: "Bikefitting advice",
+      latestAdvice: "Latest advice",
+      recalculateFit: "Recalculate fit",
+      climbingProfileIncluded: "Climbing profile included",
+      tirePressureTitle: "Tyre pressure",
+      currentMeasurement: "Current",
+      recalculatePressure: "Recalculate pressure",
+      noFitYet: "No fit session yet",
+      noFitDescription: "Start a fit session to see your bike usage and recommendations here.",
+      typeOfRiding: "Type of riding",
+      reportedDiscomfort: "Reported discomfort",
     },
     bikeTypes: {
       road: {
@@ -492,6 +515,16 @@ const en = {
       custom: "Custom",
     },
     fit: {
+      algorithm: {
+        title: "How Our Bike Fit Algorithm Works",
+        subtitle:
+          "A transparent look at how we translate your body data and riding goals into precise, personalised setup recommendations.",
+        backLink: "Back to fit",
+        inputsTitle: "What goes in",
+        processTitle: "How we calculate",
+        outputsTitle: "What you get",
+        tipsTitle: "Getting the most from your fit",
+      },
       loading: "Loading fit setup...",
       title: "Start New Fit Session",
       subtitle: "Choose your bike and riding goals to get personalized setup recommendations.",
@@ -499,6 +532,11 @@ const en = {
         title: "Complete your profile first",
         description: "You need to enter your body measurements before starting a fit session.",
         cta: "Go to Profile",
+      },
+      riderProfileWarning: {
+        title: "Complete your riding profile",
+        description: "Answer a few questions about your riding style before starting a fit session.",
+        cta: "Go to My Profile",
       },
       savedBikes: {
         loading: "Loading your bikes...",
@@ -577,37 +615,16 @@ const en = {
       title: "Tell Us About Your Riding",
       subtitle: "Answer these questions to help us personalize your bike fit recommendations.",
       intro: {
+        eyebrow: "Bike Fit",
         title: "Tell us about your riding style",
         description:
-          "This intake takes approximately 5–7 minutes to complete. Based on your answers, we create a personalized bike fit with precise measurements tailored to your body, riding style, and goals. We analyze how your body is loaded during cycling and translate this into an optimal position that balances comfort, efficiency, and performance. The result is a setup you can apply directly to your bike, helping you ride better, longer, and with more confidence.",
-        gainTitle: "What you gain:",
-        gains: [
-          {
-            label: "More speed and efficiency",
-            detail: "Transfer more power into forward motion without increasing effort",
-          },
-          {
-            label: "Greater comfort on longer rides",
-            detail: "Reduce pressure on your back, neck, shoulders, and hands",
-          },
-          {
-            label: "Lower risk of injuries",
-            detail: "Minimize strain on knees, hips, and lower back",
-          },
-          {
-            label: "A setup tailored to your body and goals",
-            detail: "Based on your measurements, flexibility, and riding profile",
-          },
-          {
-            label: "Actionable adjustments you can apply immediately",
-            detail: "Including exact values for saddle height, setback, reach, and drop",
-          },
-        ],
+          "Our fitting model is built on data from thousands of riders and professionally validated methods. Answer a few questions — we'll translate your body metrics and riding style into precise, personalised setup recommendations.",
         progress: {
           timeRemaining: "~7 minutes remaining",
           percentComplete: "10% complete",
         },
         illustrationAlt: "Cyclist illustration",
+        algorithmLink: "Learn more about our Bike Fitting Algorithm",
         start: "Start your bike fit",
       },
       sessionNotFound: {
@@ -841,6 +858,9 @@ const en = {
       loading: "Loading fit results...",
       backToDashboard: "Back to Dashboard",
       title: "Your Bike Fit Recommendations",
+      mainProfileTab: "Your fit",
+      climbingProfileTab: "Climbing fit",
+      climbingProfileNote: "This setup is optimised for climbing — higher bars, adjusted saddle setback, and shorter reach to improve power output and comfort on long ascents.",
       subtitle:
         "Based on your measurements and riding preferences, here are your personalized bike fit settings.",
       algorithmVersionLabel: "Algorithm version",
@@ -1127,7 +1147,7 @@ const en = {
     },
     profile: {
       loading: "Loading profile...",
-      title: "Your Profile",
+      title: "My Profile",
       photo: {
         upload: "Upload photo",
         error: "Upload failed. Please try again.",
@@ -1142,9 +1162,35 @@ const en = {
         bodyMeasurements: "Body Measurements",
         flexibility: "Flexibility",
         coreStability: "Core Stability",
+        comfort: "Comfort",
+      },
+      bmi: {
+        label: "BMI",
+        underweight: "Underweight",
+        normal: "Normal weight",
+        overweight: "Overweight",
+        obese: "Obese",
+        noWeight: "Add your weight to see your BMI",
+      },
+      ridingStyle: {
+        title: "Riding Style",
+        editButton: "Edit",
+        description: "Your riding style plays a key role in determining your optimal bike fit. Factors such as your experience level, weekly training volume, typical ride distance, and personal preferences influence how aggressive or relaxed your position should be.",
+        incompleteTitle: "Complete your riding profile",
+        incompleteDescription: "Answer a few questions about your riding style to enable bike fitting.",
+        completeCta: "Complete now",
+        experienceLevel: "Experience level",
+        weeklyHours: "Weekly hours",
+        typicalRide: "Typical ride",
+        positionPriority: "Position priority",
+        positionPriorityQuestion: "What's most important to you in your riding position?",
+        saveButton: "Save",
       },
       measurements: {
         summary: "Your saved rider measurements",
+        impactDescription:
+          "Your height, inseam, arm length, and torso length directly determine the geometry of your ideal bike fit. BMI gives a broad indication of weight relative to height — it influences saddle pressure, power-to-weight ratio, and joint load on longer rides.",
+        improveLink: "How to improve your BMI",
         height: "Height",
         inseam: "Inseam",
         weight: "Body weight",
@@ -1157,7 +1203,7 @@ const en = {
         femurLength: "Femur Length",
         howToMeasure: "How to measure:",
         saveField: "Save",
-        editAllButton: "Edit measurements",
+        editAllButton: "Edit",
         addOptional: "+ Add optional measurements",
         heightSteps: [
           "Stand barefoot against a wall",
@@ -1188,7 +1234,7 @@ const en = {
       },
       flexibility: {
         helper: "Hamstring flexibility score",
-        editButton: "Edit score",
+        editButton: "Edit",
         improveLink: "How to improve your flexibility",
         levelLabel: "{label} ({index}/5)",
         saveButton: "Save",
@@ -1205,9 +1251,35 @@ const en = {
         impactDescription:
           "Lower flexibility scores lead to a more upright position with less handlebar drop. Better flexibility allows a lower, more aerodynamic posture.",
       },
+      comfort: {
+        editButton: "Edit",
+        saveButton: "Save",
+        severityLevels: {
+          none: "None",
+          mild: "Mild",
+          noticeable: "Noticeable",
+          significant: "Significant",
+          severe: "Severe",
+          verySevere: "Very severe",
+        },
+        editInstructions: "Set the severity for each area. Leave on None if you have no discomfort there.",
+        impactDescription:
+          "Even minor discomfort usually signals a fit issue rather than just fatigue. By tracking which areas are affected and how severe, we can make precise adjustments to reach, handlebar height, and saddle position — turning recurring discomfort into a solvable problem.",
+        improveLink: "How to improve your comfort",
+        noPain: "No discomfort",
+        painAreasLabel: "Areas of discomfort",
+        testInstructions: {
+          title: "Rate your comfort level",
+          steps: [
+            "Think about your last 3–5 rides of typical duration.",
+            "Select the level that best describes your average experience.",
+            "If pain varies a lot, choose the level that occurs most often.",
+          ],
+        },
+      },
       coreStability: {
         helper: "Plank hold assessment",
-        editButton: "Re-test",
+        editButton: "Edit",
         improveLink: "How to improve your core stability",
         levelLabel: "{label} • {description}",
         saveButton: "Save",
@@ -1264,6 +1336,26 @@ const en = {
         dismissButton: "Not now",
       },
       improve: {
+        bodyMeasurements: {
+          title: "How to Improve Your BMI",
+          subtitle:
+            "BMI gives a broad indication of weight relative to height. For cyclists, managing body composition improves power-to-weight ratio, reduces joint load, and enhances long-ride endurance.",
+          whatItMeansTitle: "What your BMI means for your bike fit",
+          exercisesTitle: "Strategies to improve body composition",
+          progressTitle: "How to track your progress",
+          updateScoreCta: "Update my measurements",
+          backLink: "Back to Profile",
+        },
+        comfort: {
+          title: "How to Improve Your Riding Comfort",
+          subtitle:
+            "Most cycling discomfort has a direct fit cause. Small, targeted adjustments to saddle height, reach, or cleat position can eliminate pain entirely.",
+          whatItMeansTitle: "What your comfort level means for your bike fit",
+          exercisesTitle: "Fit adjustments by pain area",
+          progressTitle: "How to track your progress",
+          updateScoreCta: "Update my comfort level",
+          backLink: "Back to Profile",
+        },
         flexibility: {
           title: "Improve Your Flexibility",
           subtitle:
@@ -1499,11 +1591,72 @@ const en = {
         climbingDescription:
           "Focused on seated traction, low-speed efficiency, and long sustained climbs.",
       },
+      identity: {
+        fallbackSubtitle: "Saved in your bike garage.",
+        emptyBrandModel: "Brand and model not added yet.",
+        fitBadge: "Fit ready",
+        pressureBadge: "Pressure ready",
+      },
       sections: {
+        gallery: "Photos",
+        description: "Description",
         geometry: "Geometry",
+        wheelsets: "Wheelsets",
         currentSetup: "Current Setup",
         notes: "Notes",
         fittingHistory: "Fitting History",
+      },
+      gallery: {
+        title: "Bike gallery",
+        description:
+          "Add a few photos so this bike is easier to recognize in your garage and fit history.",
+        emptyTitle: "No bike photos yet",
+        emptyDescription:
+          "Upload a main photo now and add extra angles later if you want.",
+        upload: "Upload photo",
+        setPrimary: "Set as primary",
+        remove: "Remove photo",
+        primaryBadge: "Primary",
+        captionLabel: "Caption",
+      },
+      descriptionCard: {
+        title: "Bike description",
+        description:
+          "A short editable summary of how you use this bike. This is descriptive only, not technical source data.",
+        empty:
+          "No description saved yet. Add your own summary or generate a concise draft.",
+        placeholder:
+          "Describe what this bike is for, how it feels, and where you ride it most.",
+        helper:
+          "Keep it practical. Avoid geometry claims or exact specs unless you entered them yourself elsewhere.",
+        generate: "Generate description",
+        regenerate: "Regenerate",
+        edit: "Edit manually",
+        save: "Save description",
+        generating: "Generating...",
+        sourceGenerated: "AI-assisted draft",
+        sourceManual: "Manual description",
+        sourceTemplate: "Starter draft",
+        disclaimer:
+          "Generated text is editable rider-facing copy, not authoritative bike data.",
+      },
+      wheelsetManager: {
+        title: "Wheelsets",
+        description:
+          "Manage every wheelset you use with this bike and keep one active for pressure recommendations.",
+        emptyTitle: "No wheelsets saved yet",
+        emptyDescription:
+          "Add your first wheelset to connect tyre setup details to this bike.",
+        activeBadge: "Active",
+        activeAction: "Set active",
+        add: "Add wheelset",
+        save: "Save wheelset",
+        cancelAdd: "Cancel",
+        rimType: "Rim type",
+        frontWidth: "Front internal width",
+        rearWidth: "Rear internal width",
+        tireSetup: "Tyre setup",
+        noTireSetup: "No tyre setup linked yet",
       },
       cards: {
         bikeSummary: "{bikeType} saved in your bike garage.",

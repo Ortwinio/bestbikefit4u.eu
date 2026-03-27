@@ -12,11 +12,65 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function ImproveCoreStabilityPage() {
+export default async function ImproveCoreStabilityPage() {
+  const locale = await getRequestLocale();
+  const isNl = locale === "nl";
+
   return (
     <ProfileImproveGuideClient
       variant="coreStability"
-      exercises={[
+      exercises={isNl ? [
+        {
+          name: "Front plank",
+          detail: "Je referentie-oefening om stabiel te blijven onder belasting in een agressieve fietshouding.",
+          cadence: "3 sets, 3x per week",
+          steps: [
+            "Ga op je onderarmen en tenen staan met een rechte lijn van hoofd tot hielen.",
+            "Span je buikspieren aan en knijp je bilspieren samen.",
+            "Stop de set zodra de heupen gaan hangen of juist te hoog komen.",
+          ],
+        },
+        {
+          name: "Dead bug",
+          detail: "Bouwt anti-extensiecontrole op zodat je onderrug rustig blijft tijdens langere ritten.",
+          cadence: "3 sets van 10 herhalingen per kant, 3x per week",
+          steps: [
+            "Ga op je rug liggen met knieën in 90 graden en armen recht omhoog.",
+            "Laat langzaam de tegenoverliggende arm en het been zakken zonder je onderrug hol te trekken.",
+            "Kom terug naar het midden en wissel van kant.",
+          ],
+        },
+        {
+          name: "Bird dog",
+          detail: "Verbetert kruislingse stabiliteit, wat helpt wanneer je hard trapt of beweegt op ruwer terrein.",
+          cadence: "3 sets van 10 herhalingen per kant, 3x per week",
+          steps: [
+            "Begin op handen en knieën met een neutrale wervelkolom.",
+            "Strek één arm naar voren en het tegenoverliggende been naar achteren.",
+            "Houd 2-3 seconden vast en kom gecontroleerd terug.",
+          ],
+        },
+        {
+          name: "Side plank",
+          detail: "Richt zich op de laterale core zodat je minder door je romp gaat wiebelen wanneer je vermogen levert.",
+          cadence: "30 seconden per kant, 2x per week",
+          steps: [
+            "Houd schouders en heupen in één lijn.",
+            "Duw de vloer weg via je onderarm.",
+            "Blijf rustig ademen zonder dat je heupen wegzakken.",
+          ],
+        },
+        {
+          name: "Glute bridge",
+          detail: "Versterkt de achterste keten die je bekken en onderrug op de fiets ondersteunt.",
+          cadence: "3 sets van 15 herhalingen, 3x per week",
+          steps: [
+            "Ga op je rug liggen met platte voeten op de grond en gebogen knieën.",
+            "Duw via de hielen en til je heupen op tot je lichaam een rechte lijn vormt.",
+            "Pauzeer kort bovenin en zak langzaam terug.",
+          ],
+        },
+      ] : [
         {
           name: "Front plank",
           detail: "Your benchmark exercise for staying stable under load in an aggressive riding posture.",
@@ -68,7 +122,11 @@ export default function ImproveCoreStabilityPage() {
           ],
         },
       ]}
-      progressTips={[
+      progressTips={isNl ? [
+        "Train je core 3 keer per week op niet-opeenvolgende dagen voor gestage vooruitgang.",
+        "Test je front plank elke 4 weken opnieuw met strakke vorm, niet op maximale tijd met compensaties.",
+        "Werk je score in je profiel bij zodra je de volgende categorie consistent haalt.",
+      ] : [
         "Train core strength 3 times per week on non-consecutive days for steady progress.",
         "Retest your front plank every 4 weeks using strict form, not max time with compensation.",
         "When your hold time consistently reaches the next tier, update your score in the profile.",

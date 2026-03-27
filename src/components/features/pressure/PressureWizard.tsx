@@ -5,7 +5,9 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { Card } from "@/components/ui";
+import { Button, Card } from "@/components/ui";
+import { QuestionnaireProgressBar } from "@/components/questionnaire/QuestionnaireProgressBar";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { StepBikeSelect } from "./wizard/StepBikeSelect";
 import { StepWheelsetTires } from "./wizard/StepWheelsetTires";
 import { StepWeightGoal } from "./wizard/StepWeightGoal";
@@ -70,6 +72,22 @@ function PressureWizardContent({ initialBikeId }: PressureWizardProps) {
     messages.pressure.wizard.stepLabels.route,
     messages.pressure.wizard.stepLabels.result,
   ];
+  const totalSteps = steps.length;
+  const estimatedMinutesRemaining = Math.max(1, totalSteps - currentStep + 1);
+  const percentComplete = Math.round(((currentStep - 1) / (totalSteps - 1)) * 100);
+  const currentStepLabel = steps[currentStep - 1] ?? "";
+
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep((current) => (current - 1) as 1 | 2 | 3 | 4 | 5);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentStep < 5) {
+      setCurrentStep((current) => (current + 1) as 1 | 2 | 3 | 4 | 5);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -82,27 +100,19 @@ function PressureWizardContent({ initialBikeId }: PressureWizardProps) {
         </div>
       ) : null}
 
-      <Card variant="bordered" className="p-4">
-        <p className="text-sm font-medium text-[color:var(--muted-foreground)]">
+      <div className="space-y-3">
+        <QuestionnaireProgressBar
+          estimatedMinutes={estimatedMinutesRemaining}
+          percentComplete={percentComplete}
+        />
+        <p className="text-center text-sm text-[color:var(--muted-foreground)]">
           {messages.pressure.wizard.stepOf
             .replace("{current}", String(currentStep))
-            .replace("{total}", "5")}
+            .replace("{total}", String(totalSteps))}
+          <span className="ml-1">·</span>
+          <span className="ml-1">{currentStepLabel}</span>
         </p>
-        <div className="mt-3 grid grid-cols-5 gap-2">
-          {steps.map((label, index) => (
-            <div
-              key={label}
-              className={`rounded-full border px-3 py-2 text-center text-xs font-semibold transition-colors ${
-                index + 1 <= currentStep
-                  ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
-                  : "border-[color:var(--border)] bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]"
-              }`}
-            >
-              {label}
-            </div>
-          ))}
-        </div>
-      </Card>
+      </div>
 
       {currentStep === 1 ? (
         <StepBikeSelect
@@ -117,13 +127,11 @@ function PressureWizardContent({ initialBikeId }: PressureWizardProps) {
           }}
           onSelectDiscipline={setSelectedDiscipline}
           onContinueWithoutBike={() => setSelectedBikeId(null)}
-          onNext={() => setCurrentStep(2)}
           labels={{
             selectBike: messages.pressure.wizard.selectBike,
             noBikes: messages.pressure.wizard.noBikes,
             addBikeLink: messages.pressure.wizard.addBikeLink,
             continueWithoutBike: messages.pressure.wizard.continueWithoutBike,
-            next: messages.pressure.wizard.next,
           }}
         />
       ) : null}
@@ -152,13 +160,9 @@ function PressureWizardContent({ initialBikeId }: PressureWizardProps) {
           }}
           onSelectTireSetup={setSelectedTireSetupId}
           onInlineInputChange={setInlineTireInput}
-          onBack={() => setCurrentStep(1)}
-          onNext={() => setCurrentStep(3)}
           labels={{
             title: messages.pressure.wizard.selectWheelset,
             manualInput: messages.pressure.wizard.manualInput,
-            next: messages.pressure.wizard.next,
-            back: messages.pressure.wizard.back,
             widthFront: messages.pressure.wizard.widthFront,
             widthRear: messages.pressure.wizard.widthRear,
             maxPressure: messages.pressure.wizard.maxPressure,
@@ -187,8 +191,6 @@ function PressureWizardContent({ initialBikeId }: PressureWizardProps) {
             if ("currentFrontBar" in updates) setCurrentFrontBar(updates.currentFrontBar);
             if ("currentRearBar" in updates) setCurrentRearBar(updates.currentRearBar);
           }}
-          onBack={() => setCurrentStep(2)}
-          onNext={() => setCurrentStep(4)}
           labels={{
             title: messages.pressure.wizard.stepLabels.weightGoal,
             bodyWeightLabel: messages.pressure.form.bodyWeightLabel,
@@ -203,8 +205,6 @@ function PressureWizardContent({ initialBikeId }: PressureWizardProps) {
             goalSpeed: messages.pressure.form.ridingGoalSpeed,
             goalBalance: messages.pressure.form.ridingGoalBalance,
             goalComfort: messages.pressure.form.ridingGoalComfort,
-            next: messages.pressure.wizard.next,
-            back: messages.pressure.wizard.back,
           }}
         />
       ) : null}
@@ -222,16 +222,12 @@ function PressureWizardContent({ initialBikeId }: PressureWizardProps) {
             if ("routeElevationM" in updates) setRouteElevationM(updates.routeElevationM);
             if (updates.offRoadPercent !== undefined) setOffRoadPercent(updates.offRoadPercent);
           }}
-          onBack={() => setCurrentStep(3)}
-          onNext={() => setCurrentStep(5)}
           labels={{
             title: messages.pressure.wizard.stepLabels.route,
             surfaceLabel: messages.pressure.wizard.surfaceLabel,
             distanceLabel: messages.pressure.wizard.distanceLabel,
             elevationLabel: messages.pressure.wizard.elevationLabel,
             offRoadLabel: messages.pressure.wizard.offRoadLabel,
-            next: messages.pressure.wizard.next,
-            back: messages.pressure.wizard.back,
           }}
         />
       ) : null}
@@ -285,6 +281,19 @@ function PressureWizardContent({ initialBikeId }: PressureWizardProps) {
             useCaseCustom: messages.pressure.wizard.useCaseCustom,
           }}
         />
+      ) : null}
+
+      {currentStep < 5 ? (
+        <div className="flex items-center justify-between">
+          <Button variant="outline" onClick={handlePrevious} disabled={currentStep === 1}>
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            {messages.questionnaire.actions.previous}
+          </Button>
+          <Button onClick={handleNext}>
+            {messages.questionnaire.actions.next}
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
       ) : null}
     </div>
   );

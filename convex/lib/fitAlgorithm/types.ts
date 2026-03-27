@@ -5,6 +5,7 @@
 
 export type BikeCategory = "road" | "gravel" | "mtb" | "city";
 export type Ambition = "comfort" | "balanced" | "performance" | "aero";
+export type ClimbingLevel = "rarely" | "occasional" | "regular" | "climbing_focused";
 export type FlexibilityScore =
   | "very_limited"
   | "limited"
@@ -48,6 +49,9 @@ export interface FitInputs {
   stemLengthMm?: number;
   stemAngleDeg?: number;
   spacerMm?: number;
+
+  // Optional climbing context
+  climbingLevel?: ClimbingLevel;
 }
 
 // Output types

@@ -1,4 +1,4 @@
-import { Button, NumberInput, Selectable, Slider } from "@/components/ui";
+import { NumberInput, Selectable, Slider } from "@/components/ui";
 import { Field } from "@/components/ui/Field";
 
 interface StepWeightGoalProps {
@@ -20,8 +20,6 @@ interface StepWeightGoalProps {
       currentRearBar: number | undefined;
     }>
   ) => void;
-  onBack: () => void;
-  onNext: () => void;
   labels: {
     title: string;
     bodyWeightLabel: string;
@@ -36,8 +34,6 @@ interface StepWeightGoalProps {
     goalSpeed: string;
     goalBalance: string;
     goalComfort: string;
-    next: string;
-    back: string;
   };
 }
 
@@ -50,8 +46,6 @@ export function StepWeightGoal({
   currentFrontBar,
   currentRearBar,
   onUpdate,
-  onBack,
-  onNext,
   labels,
 }: StepWeightGoalProps) {
   return (
@@ -126,15 +120,6 @@ export function StepWeightGoal({
           ))}
         </div>
       </Field.Root>
-
-      <div className="flex gap-3">
-        <Button variant="outline" onClick={onBack}>
-          {labels.back}
-        </Button>
-        <Button onClick={onNext}>
-          {labels.next}
-        </Button>
-      </div>
     </div>
   );
 }

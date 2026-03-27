@@ -104,5 +104,20 @@ export const remove = mutation({
 
     await Promise.all(tireSetups.map((tireSetup) => ctx.db.delete(tireSetup._id)));
     await ctx.db.delete(args.wheelsetId);
+
+    if (wheelset.isActive) {
+      const siblings = await ctx.db
+        .query("wheelsets")
+        .withIndex("by_bike", (q) => q.eq("bikeId", wheelset.bikeId))
+        .collect();
+      const nextActive =
+        [...siblings].sort((a, b) => b.createdAt - a.createdAt)[0] ?? null;
+      if (nextActive) {
+        await ctx.db.patch(nextActive._id, {
+          isActive: true,
+          updatedAt: Date.now(),
+        });
+      }
+    }
   },
 });

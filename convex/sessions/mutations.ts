@@ -9,6 +9,7 @@ import {
 } from "../lib/authz";
 import { validateNumberRange, validateShortString } from "../lib/validation";
 import { buildBikeRoleBias } from "../recommendations/bikeRoleBias";
+import { isRiderProfileComplete } from "../profiles/queries";
 
 const WEEKLY_HOURS_RANGE = [0, 60] as const;
 const LONGEST_RIDE_KM_RANGE = [0, 600] as const;
@@ -141,6 +142,10 @@ export const create = mutation({
       .unique();
 
     if (!profile) throw new Error("Profile required to start a fit session");
+
+    if (!isRiderProfileComplete(profile)) {
+      throw new Error("Rider profile is incomplete. Complete your riding style questions first.");
+    }
 
     return await ctx.db.insert("fitSessions", {
       userId,

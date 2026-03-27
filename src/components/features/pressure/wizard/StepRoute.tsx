@@ -1,5 +1,5 @@
 import type { Surface } from "@/lib/pressure-engine";
-import { Button, NumberInput, Selectable, Slider } from "@/components/ui";
+import { NumberInput, Selectable, Slider } from "@/components/ui";
 import { Field } from "@/components/ui/Field";
 import { surfaceLabel } from "../shared";
 
@@ -17,16 +17,12 @@ interface StepRouteProps {
       offRoadPercent: number;
     }>
   ) => void;
-  onBack: () => void;
-  onNext: () => void;
   labels: {
     title: string;
     surfaceLabel: string;
     distanceLabel: string;
     elevationLabel: string;
     offRoadLabel: string;
-    next: string;
-    back: string;
   };
 }
 
@@ -37,8 +33,6 @@ export function StepRoute({
   routeElevationM,
   offRoadPercent,
   onUpdate,
-  onBack,
-  onNext,
   labels,
 }: StepRouteProps) {
   const surfaces: Surface[] = [
@@ -90,15 +84,6 @@ export function StepRoute({
           onChange={(value) => onUpdate({ offRoadPercent: value })}
           valueLabel={`${offRoadPercent}%`}
         />
-      </div>
-
-      <div className="flex gap-3">
-        <Button variant="outline" onClick={onBack}>
-          {labels.back}
-        </Button>
-        <Button onClick={onNext}>
-          {labels.next}
-        </Button>
       </div>
     </div>
   );

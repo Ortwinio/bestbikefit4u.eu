@@ -20,24 +20,27 @@ async function getExistingRecommendationId(
  * Stores the computed recommendation result and marks the session as completed.
  * Called by the generateAndStore action after the fit algorithm finishes.
  */
+const calculatedFitValidator = v.object({
+  recommendedStackMm: v.number(),
+  recommendedReachMm: v.number(),
+  effectiveTopTubeMm: v.number(),
+  saddleHeightMm: v.number(),
+  saddleSetbackMm: v.number(),
+  saddleHeightRange: v.object({ min: v.number(), max: v.number() }),
+  handlebarDropMm: v.number(),
+  handlebarReachMm: v.number(),
+  stemLengthMm: v.number(),
+  stemAngleRecommendation: v.string(),
+  crankLengthMm: v.number(),
+  handlebarWidthMm: v.number(),
+});
+
 export const storeResult = internalMutation({
   args: {
     sessionId: v.id("fitSessions"),
     userId: v.id("users"),
-    calculatedFit: v.object({
-      recommendedStackMm: v.number(),
-      recommendedReachMm: v.number(),
-      effectiveTopTubeMm: v.number(),
-      saddleHeightMm: v.number(),
-      saddleSetbackMm: v.number(),
-      saddleHeightRange: v.object({ min: v.number(), max: v.number() }),
-      handlebarDropMm: v.number(),
-      handlebarReachMm: v.number(),
-      stemLengthMm: v.number(),
-      stemAngleRecommendation: v.string(),
-      crankLengthMm: v.number(),
-      handlebarWidthMm: v.number(),
-    }),
+    calculatedFit: calculatedFitValidator,
+    climbingCalculatedFit: v.optional(calculatedFitValidator),
     comparisonSnapshot: v.optional(
       v.object({
         saddleHeightMm: v.number(),
@@ -140,6 +143,7 @@ export const storeResult = internalMutation({
       comparisonSnapshot: args.comparisonSnapshot,
       recommendationItems: args.recommendationItems,
       calculatedFit: args.calculatedFit,
+      climbingCalculatedFit: args.climbingCalculatedFit,
       confidenceScore: args.confidenceScore,
       algorithmVersion: args.algorithmVersion,
       frameSizeRecommendations: args.frameSizeRecommendations,

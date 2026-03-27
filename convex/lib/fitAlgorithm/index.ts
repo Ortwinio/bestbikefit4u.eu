@@ -34,7 +34,7 @@ import {
   calculateDeltas,
 } from "./calculations";
 
-import { ALGORITHM_VERSION } from "./constants";
+import { ALGORITHM_VERSION, CLIMBING_MODIFIERS } from "./constants";
 
 // Re-export types
 export type {
@@ -44,6 +44,7 @@ export type {
   BikeCategory,
   Ambition,
   FlexibilityScore,
+  ClimbingLevel,
 } from "./types";
 
 export { mapFlexibilityScore, mapCoreScore } from "./validation";
@@ -85,10 +86,31 @@ export function calculateBikeFit(inputs: FitInputs): FitOutputs {
 
   // Step 5: Saddle-to-Bar Reach
   const reachResult = calculateReach(ctx);
-  const saddleToBarReachMm = reachResult.reach;
+  let saddleToBarReachMm = reachResult.reach;
+
+  // Apply climbing modifiers after base calculations
+  let finalSaddleHeightMm = saddleHeightMm;
+  let finalSaddleSetbackMm = saddleSetbackMm;
+  let finalBarDropMm = barDropMm;
+  if (inputs.climbingLevel && inputs.climbingLevel !== "rarely") {
+    const mod = CLIMBING_MODIFIERS[inputs.climbingLevel];
+    finalSaddleHeightMm = Math.max(
+      saddleResult.range.min,
+      Math.min(saddleResult.range.max, finalSaddleHeightMm + mod.saddleHeightMm)
+    );
+    finalSaddleSetbackMm = finalSaddleSetbackMm + mod.saddleSetbackMm;
+    finalBarDropMm = Math.max(
+      dropResult.range.min,
+      Math.min(dropResult.range.max, finalBarDropMm + mod.barDropMm)
+    );
+    saddleToBarReachMm = Math.max(
+      reachResult.range.min,
+      Math.min(reachResult.range.max, saddleToBarReachMm + mod.reachMm)
+    );
+  }
 
   // Step 6: Saddle Tilt
-  const saddleTiltDeg = calculateSaddleTilt(inputs.category, barDropMm);
+  const saddleTiltDeg = calculateSaddleTilt(inputs.category, finalBarDropMm);
 
   // Step 7: Cleat Offset
   const cleatOffsetMm = calculateCleatOffset(inputs.category, inputs.ambition);
@@ -102,9 +124,9 @@ export function calculateBikeFit(inputs: FitInputs): FitOutputs {
 
   // Step 9: Frame Targets
   const frameTargets = calculateFrameTargets(
-    saddleHeightMm,
-    saddleSetbackMm,
-    barDropMm,
+    finalSaddleHeightMm,
+    finalSaddleSetbackMm,
+    finalBarDropMm,
     saddleToBarReachMm
   );
 
@@ -119,9 +141,9 @@ export function calculateBikeFit(inputs: FitInputs): FitOutputs {
 
   // Build partial outputs for warning generation
   const partialOutputs: Partial<FitOutputs> = {
-    saddleHeightMm,
-    saddleSetbackMm,
-    barDropMm,
+    saddleHeightMm: finalSaddleHeightMm,
+    saddleSetbackMm: finalSaddleSetbackMm,
+    barDropMm: finalBarDropMm,
     saddleToBarReachMm,
   };
 
@@ -138,10 +160,10 @@ export function calculateBikeFit(inputs: FitInputs): FitOutputs {
   // Build complete output
   const outputs: FitOutputs = {
     // Core measurements
-    saddleHeightMm,
-    saddleSetbackMm,
+    saddleHeightMm: finalSaddleHeightMm,
+    saddleSetbackMm: finalSaddleSetbackMm,
     saddleTiltDeg,
-    barDropMm,
+    barDropMm: finalBarDropMm,
     saddleToBarReachMm,
     crankLengthMm,
     handlebarWidthMm,
@@ -170,10 +192,10 @@ export function calculateBikeFit(inputs: FitInputs): FitOutputs {
 
     // Deltas (if current setup provided)
     deltas: calculateDeltas(inputs, {
-      saddleHeightMm,
-      saddleSetbackMm,
+      saddleHeightMm: finalSaddleHeightMm,
+      saddleSetbackMm: finalSaddleSetbackMm,
       saddleTiltDeg,
-      barDropMm,
+      barDropMm: finalBarDropMm,
       saddleToBarReachMm,
       crankLengthMm,
       handlebarWidthMm,

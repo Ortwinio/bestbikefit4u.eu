@@ -138,6 +138,47 @@ export const flexibilityTests = [
   },
 ];
 
+// Comfort level descriptions (derived from hasPain + painSeverity)
+export const comfortLevels = [
+  {
+    score: 1,
+    label: "Severe discomfort",
+    description: "Significant pain that limits or prevents riding",
+  },
+  {
+    score: 2,
+    label: "Significant discomfort",
+    description: "Recurring pain that affects your riding regularly",
+  },
+  {
+    score: 3,
+    label: "Moderate discomfort",
+    description: "Noticeable discomfort on longer or harder rides",
+  },
+  {
+    score: 4,
+    label: "Mild discomfort",
+    description: "Occasional minor discomfort, manageable",
+  },
+  {
+    score: 5,
+    label: "Comfortable",
+    description: "No pain or discomfort while cycling",
+  },
+];
+
+export function deriveComfortScore(
+  hasPain: string | undefined,
+  painSeverity: number | undefined
+): number {
+  if (!hasPain || hasPain === "no") return 5;
+  if (!painSeverity) return 3;
+  if (painSeverity >= 5) return 1;
+  if (painSeverity >= 3) return 2;
+  if (painSeverity === 2) return 3;
+  return 4; // severity 1
+}
+
 // Core stability test descriptions
 export const coreStabilityTests = [
   {

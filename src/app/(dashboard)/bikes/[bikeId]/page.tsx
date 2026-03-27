@@ -5,11 +5,21 @@ import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
+import { BikeDescriptionEditor } from "@/components/bikes/BikeDescriptionEditor";
 import { BikeFitHistorySection } from "@/components/bikes/BikeFitHistorySection";
 import { BikeNotesEditor } from "@/components/bikes/BikeNotesEditor";
-import { BikePhotoUpload } from "@/components/bikes/BikePhotoUpload";
+import { BikePhotoGallery } from "@/components/bikes/BikePhotoGallery";
+import { BikeWheelsetManager } from "@/components/bikes/BikeWheelsetManager";
 import { BikePressureSection } from "@/components/features/pressure/BikePressureSection";
-import { Card, CardContent, CardHeader, CardTitle, EmptyState, LoadingState } from "@/components/ui";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  EmptyState,
+  LoadingState,
+} from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getBikeTypeLabel } from "@/lib/bikes";
@@ -22,35 +32,17 @@ export default function BikeDetailPage({
   const { bikeId } = use(params);
   const { locale, messages } = useDashboardMessages();
 
-  const bike = useQuery(api.bikes.queries.getById, {
+  const bikeDetail = useQuery(api.bikes.queries.getDetail, {
     bikeId: bikeId as Id<"bikes">,
   });
   const ensureDefaultBikeProfile = useMutation(
     api.bikeProfiles.mutations.ensureDefaultForBike
   );
-  const bikeProfiles = useQuery(
-    api.bikeProfiles.queries.listByBike,
-    bike ? { bikeId: bike._id } : "skip"
-  );
-  const wheelsets = useQuery(
-    api.wheelsets.queries.listForBike,
-    bike ? { bikeId: bike._id } : "skip"
-  );
-  const recommendation = useQuery(
-    api.recommendations.queries.getLatestByBike,
-    bike ? { bikeId: bike._id } : "skip"
-  );
-
-  const activeWheelset =
-    wheelsets?.find((wheelset: (typeof wheelsets)[number]) => wheelset.isActive) ??
-    wheelsets?.[0];
-  const tireSetups = useQuery(
-    api.tireSetups.queries.listForWheelset,
-    activeWheelset ? { wheelsetId: activeWheelset._id } : "skip"
-  );
-  const activeTireSetup =
-    tireSetups?.find((tireSetup: (typeof tireSetups)[number]) => tireSetup.isActive) ??
-    tireSetups?.[0];
+  const bike = bikeDetail?.bike ?? null;
+  const bikeProfiles = bikeDetail?.bikeProfiles;
+  const activeWheelset = bikeDetail?.activeWheelset ?? null;
+  const activeTireSetup = bikeDetail?.activeTireSetup ?? null;
+  const recommendation = bikeDetail?.latestRecommendation ?? null;
   const shouldHaveClimbingProfile = [
     "road",
     "gravel",
@@ -75,7 +67,7 @@ export default function BikeDetailPage({
     }
   }, [bike, bikeProfiles, ensureDefaultBikeProfile, shouldHaveClimbingProfile]);
 
-  if (bike === undefined) {
+  if (bikeDetail === undefined) {
     return <LoadingState label={messages.bikeForm.edit.loading} />;
   }
 
@@ -117,6 +109,11 @@ export default function BikeDetailPage({
     }
     return null;
   };
+  const bikeSubtitle =
+    [bike.brand, bike.model].filter(Boolean).join(" ") ||
+    messages.bikes.identity.emptyBrandModel;
+  const hasFit = Boolean(recommendation);
+  const hasPressureSetup = Boolean(activeWheelset && activeTireSetup);
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -124,7 +121,7 @@ export default function BikeDetailPage({
         <div>
           <h1 className="text-2xl font-bold text-[color:var(--foreground)]">{bike.name}</h1>
           <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-            {[bike.brand, bike.model].filter(Boolean).join(" ") || getBikeTypeLabel(bike.bikeType, messages)}
+            {bikeSubtitle}
           </p>
         </div>
         <Link
@@ -135,10 +132,66 @@ export default function BikeDetailPage({
         </Link>
       </div>
 
+      <Card variant="bordered" className="dashboard-card-surface">
+        <CardContent className="flex flex-col gap-4 p-6 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-[color:var(--secondary)] px-3 py-1 text-xs font-semibold text-[color:var(--secondary-foreground)]">
+                {getBikeTypeLabel(bike.bikeType, messages)}
+              </span>
+              {hasFit ? (
+                <span className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs font-semibold text-[color:var(--foreground)]">
+                  {messages.bikes.identity.fitBadge}
+                </span>
+              ) : null}
+              {hasPressureSetup ? (
+                <span className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs font-semibold text-[color:var(--foreground)]">
+                  {messages.bikes.identity.pressureBadge}
+                </span>
+              ) : null}
+            </div>
+            <p className="max-w-2xl text-sm text-[color:var(--muted-foreground)]">
+              {messages.bikes.cards.bikeSummary.replace(
+                "{bikeType}",
+                getBikeTypeLabel(bike.bikeType, messages)
+              )}
+            </p>
+          </div>
+          <div className="grid gap-2 text-sm text-[color:var(--foreground)] sm:grid-cols-2">
+            <p>{messages.fit.sections.ridingStyle}: {ridingStyleLabel}</p>
+            <p>{messages.fit.sections.primaryGoal}: {primaryGoalLabel}</p>
+            <p>{messages.pressure.bikeDetail.activeWheelset}: {activeWheelset?.name ?? messages.pressure.bikeDetail.noWheelset}</p>
+            <p>{messages.pressure.bikeDetail.activeTireSetup}: {activeTireSetup?.name ?? messages.pressure.bikeDetail.noTireSetup}</p>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-        <BikePhotoUpload bikeId={bike._id} currentPhotoStorageId={bike.photoUrl} />
+        <Card variant="bordered" className="dashboard-card-surface">
+          <CardHeader>
+            <CardTitle>{messages.bikes.gallery.title}</CardTitle>
+            <CardDescription>{messages.bikes.gallery.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <BikePhotoGallery bikeId={bike._id} photos={bikeDetail.photos} />
+          </CardContent>
+        </Card>
 
         <div className="grid gap-6">
+          <Card variant="bordered" className="dashboard-card-surface">
+            <CardHeader>
+              <CardTitle>{messages.bikes.descriptionCard.title}</CardTitle>
+              <CardDescription>{messages.bikes.descriptionCard.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <BikeDescriptionEditor
+                bikeId={bike._id}
+                initialDescription={bike.description}
+                initialSource={bike.descriptionSource}
+              />
+            </CardContent>
+          </Card>
+
           <Card variant="bordered" className="dashboard-card-surface">
             <CardHeader>
               <CardTitle>{messages.bikes.sections.geometry}</CardTitle>
@@ -158,16 +211,11 @@ export default function BikeDetailPage({
 
           <Card variant="bordered" className="dashboard-card-surface">
             <CardHeader>
-              <CardTitle>{messages.pressure.bikeDetail.activeTireSetup}</CardTitle>
+              <CardTitle>{messages.bikes.wheelsetManager.title}</CardTitle>
+              <CardDescription>{messages.bikes.wheelsetManager.description}</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm text-[color:var(--foreground)]">
-              <p>{messages.pressure.bikeDetail.activeWheelset}: {activeWheelset?.name ?? messages.pressure.bikeDetail.noWheelset}</p>
-              <p>{messages.pressure.bikeDetail.activeTireSetup}: {activeTireSetup?.name ?? messages.pressure.bikeDetail.noTireSetup}</p>
-              {activeTireSetup ? (
-                <p>
-                  {activeTireSetup.widthFrontMm} / {activeTireSetup.widthRearMm} mm
-                </p>
-              ) : null}
+            <CardContent>
+              <BikeWheelsetManager bikeId={bike._id} wheelsets={bikeDetail.wheelsets} />
             </CardContent>
           </Card>
 

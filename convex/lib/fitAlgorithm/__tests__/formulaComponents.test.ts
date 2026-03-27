@@ -13,6 +13,7 @@ import {
   generateWarnings,
   solveStemAndSpacers,
 } from "../calculations";
+import { calculateBikeFit } from "../index";
 import { TOP_CAP_MM } from "../constants";
 
 function makeInputs(overrides: Partial<FitInputs> = {}): FitInputs {
@@ -300,5 +301,43 @@ describe("fit algorithm formula components", () => {
       barDropDelta: 7,
       reachDelta: 18,
     });
+  });
+});
+
+describe("climbing level modifiers", () => {
+  const BASE_INPUTS: FitInputs = {
+    category: "road",
+    ambition: "balanced",
+    heightMm: 1800,
+    inseamMm: 820,
+    flexibilityScore: 5,
+    coreScore: 5,
+    torsoMm: 590,
+    armMm: 620,
+  };
+
+  it("climbing_focused produces higher saddle, more setback, less drop, and shorter reach than rarely", () => {
+    const rarely = calculateBikeFit({ ...BASE_INPUTS, climbingLevel: "rarely" });
+    const climbingFocused = calculateBikeFit({ ...BASE_INPUTS, climbingLevel: "climbing_focused" });
+
+    expect(climbingFocused.saddleHeightMm).toBeGreaterThan(rarely.saddleHeightMm);
+    expect(climbingFocused.saddleSetbackMm).toBeGreaterThan(rarely.saddleSetbackMm);
+    expect(climbingFocused.barDropMm).toBeLessThan(rarely.barDropMm);
+    expect(climbingFocused.saddleToBarReachMm).toBeLessThan(rarely.saddleToBarReachMm);
+  });
+
+  it("all outputs remain within safety clamps for climbing_focused", () => {
+    const result = calculateBikeFit({ ...BASE_INPUTS, climbingLevel: "climbing_focused" });
+
+    expect(result.saddleHeightMm).toBeGreaterThanOrEqual(result.saddleHeightRange.min);
+    expect(result.saddleHeightMm).toBeLessThanOrEqual(result.saddleHeightRange.max);
+    expect(result.barDropMm).toBeGreaterThanOrEqual(result.barDropRange.min);
+    expect(result.barDropMm).toBeLessThanOrEqual(result.barDropRange.max);
+    expect(result.saddleToBarReachMm).toBeGreaterThanOrEqual(result.reachRange.min);
+    expect(result.saddleToBarReachMm).toBeLessThanOrEqual(result.reachRange.max);
+  });
+
+  it("omitting climbingLevel does not break the algorithm", () => {
+    expect(() => calculateBikeFit(BASE_INPUTS)).not.toThrow();
   });
 });

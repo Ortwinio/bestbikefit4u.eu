@@ -3,7 +3,7 @@
  * All lookup tables and constants from documentation
  */
 
-import type { BikeCategory, Ambition } from "./types";
+import type { BikeCategory, Ambition, ClimbingLevel } from "./types";
 
 // Algorithm version
 export const ALGORITHM_VERSION = "1.0.0";
@@ -257,6 +257,20 @@ export const DROP_RISK_CORE_DROP_THRESHOLD = 80; // BD > 80mm
 // ============================================
 // Validation Limits
 // ============================================
+
+// ============================================
+// Climbing Modifiers
+// ============================================
+
+export const CLIMBING_MODIFIERS: Record<
+  ClimbingLevel,
+  { saddleHeightMm: number; saddleSetbackMm: number; barDropMm: number; reachMm: number }
+> = {
+  rarely:           { saddleHeightMm: 0,  saddleSetbackMm: 0, barDropMm: 0,   reachMm: 0   },
+  occasional:       { saddleHeightMm: 1,  saddleSetbackMm: 0, barDropMm: -5,  reachMm: 0   },
+  regular:          { saddleHeightMm: 3,  saddleSetbackMm: 2, barDropMm: -10, reachMm: -5  },
+  climbing_focused: { saddleHeightMm: 4,  saddleSetbackMm: 3, barDropMm: -20, reachMm: -12 },
+};
 
 export const HEIGHT_MIN_MM = 1300;
 export const HEIGHT_MAX_MM = 2100;

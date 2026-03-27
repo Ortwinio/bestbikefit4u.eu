@@ -14,7 +14,6 @@ import {
   CardContent,
   LoadingState,
   ErrorState,
-  Selectable,
   useToast,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
@@ -23,6 +22,7 @@ import {
   getBikeTypeLabel,
   isAeroCompatibleBikeType,
 } from "@/lib/bikes";
+import { isRiderProfileComplete } from "@/lib/profile";
 import { reportClientError } from "@/lib/telemetry";
 import { cn } from "@/utils/cn";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -58,29 +58,19 @@ export default function NewFitSessionPage() {
   const logMarketingEvent = useMarketingEventLogger();
   const hasTrackedFitViewRef = useRef(false);
   const [selectedBikeId, setSelectedBikeId] = useState<Id<"bikes"> | null>(null);
-  const [selectedBikeProfileId, setSelectedBikeProfileId] = useState<
-    Id<"bikeProfiles"> | null
-  >(null);
   const [isCreating, setIsCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
 
   const profile = useQuery(api.profiles.queries.getMyProfile);
   const bikes = useQuery(api.bikes.queries.listByUser);
-  const bikeProfiles = useQuery(
-    api.bikeProfiles.queries.listByBike,
-    selectedBikeId ? { bikeId: selectedBikeId } : "skip"
-  );
   const createSession = useMutation(api.sessions.mutations.create);
   const requestedBikeId = searchParams?.get("bikeId") ?? null;
 
   const hasProfile = profile !== undefined && profile !== null;
+  const hasRiderProfile = isRiderProfileComplete(profile);
   const isLoadingProfile = profile === undefined;
   const isLoadingBikes = bikes === undefined;
-  const isLoadingBikeProfiles = selectedBikeId !== null && bikeProfiles === undefined;
   const selectedBike = bikes?.find((bike) => bike._id === selectedBikeId) || null;
-  const selectedBikeProfile =
-    bikeProfiles?.find((bikeProfile) => bikeProfile._id === selectedBikeProfileId) ??
-    null;
   const selectedBikeRoleBias = selectedBike
     ? buildBikeRoleBias({
         bikeName: selectedBike.name,
@@ -88,8 +78,6 @@ export default function NewFitSessionPage() {
         discipline: selectedBike.discipline,
         ridingStyle: selectedBike.ridingStyle,
         primaryGoal: selectedBike.primaryGoal,
-        profileName: selectedBikeProfile?.name,
-        profileType: selectedBikeProfile?.profileType,
       })
     : null;
   const effectiveBikeType = selectedBike?.bikeType ?? "";
@@ -109,6 +97,7 @@ export default function NewFitSessionPage() {
       !bikeNeedsAttributes &&
       isSelectedGoalAllowed &&
       hasProfile &&
+      hasRiderProfile &&
       !isCreating
   );
 
@@ -128,26 +117,7 @@ export default function NewFitSessionPage() {
     const requestedBike = bikes.find((bike) => bike._id === requestedBikeId);
     if (!requestedBike) return;
     setSelectedBikeId(requestedBike._id);
-    setSelectedBikeProfileId(null);
   }, [bikes, requestedBikeId, selectedBikeId]);
-
-  useEffect(() => {
-    if (!selectedBikeId || bikeProfiles === undefined) return;
-    if (!bikeProfiles || bikeProfiles.length === 0) {
-      setSelectedBikeProfileId(null);
-      return;
-    }
-    const hasCurrentSelection = bikeProfiles.some(
-      (bikeProfile) => bikeProfile._id === selectedBikeProfileId
-    );
-    if (hasCurrentSelection) return;
-    const defaultProfile =
-      bikeProfiles.find((bikeProfile) => bikeProfile.isDefault) ?? bikeProfiles[0];
-    setSelectedBikeProfileId(defaultProfile?._id ?? null);
-  }, [bikeProfiles, selectedBikeId, selectedBikeProfileId]);
-
-  const profileTypeLabel = (profileType: string) =>
-    (messages.bikeProfileTypes as Record<string, string>)[profileType] ?? profileType;
 
   const handleStartSession = async () => {
     if (!effectiveBikeType || !effectiveRidingStyle || !effectiveRidingGoal || bikeNeedsAttributes || !isSelectedGoalAllowed) return;
@@ -160,7 +130,6 @@ export default function NewFitSessionPage() {
         ridingStyle: effectiveRidingStyle as "recreational" | "fitness" | "sportive" | "racing" | "commuting" | "touring",
         primaryGoal: effectiveRidingGoal as PrimaryGoal,
         bikeId: selectedBike?._id,
-        bikeProfileId: selectedBikeProfileId ?? undefined,
       });
       toast.success({ description: messages.common.toasts.fitSessionStarted });
       router.push(withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale));
@@ -189,10 +158,10 @@ export default function NewFitSessionPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      {/* Hero header */}
-      <div className="mb-6 overflow-hidden rounded-[var(--radius-lg)] bg-gradient-to-br from-primary to-primary/75 px-6 py-7">
-        <h1 className="text-2xl font-bold text-primary-foreground">{messages.fit.title}</h1>
-        <p className="mt-1 text-sm text-primary-foreground/80">{messages.fit.subtitle}</p>
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-foreground">{messages.fit.title}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{messages.fit.subtitle}</p>
       </div>
 
       {/* Profile warning */}
@@ -220,6 +189,31 @@ export default function NewFitSessionPage() {
         </div>
       )}
 
+      {/* Rider profile warning */}
+      {!isLoadingProfile && hasProfile && !hasRiderProfile && (
+        <div className="mb-6 rounded-lg border border-warning/20 bg-warning/15 p-4">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="mt-0.5 h-5 w-5 text-warning" />
+            <div>
+              <p className="font-medium text-foreground">
+                {messages.fit.riderProfileWarning.title}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {messages.fit.riderProfileWarning.description}
+              </p>
+              <Button
+                render={<Link href={withLocalePrefix("/profile", locale)} />}
+                variant="outline"
+                size="sm"
+                className="mt-3"
+              >
+                {messages.fit.riderProfileWarning.cta}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Bike selection */}
       <Card variant="bordered" className="dashboard-card-surface mb-6">
         <CardHeader>
@@ -238,7 +232,6 @@ export default function NewFitSessionPage() {
                     type="button"
                     onClick={() => {
                       setSelectedBikeId(bike._id);
-                      setSelectedBikeProfileId(null);
                     }}
                     className={cn(
                       "relative w-full rounded-[var(--radius-lg)] border-2 p-4 text-left transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
@@ -299,63 +292,6 @@ export default function NewFitSessionPage() {
           )}
         </CardContent>
       </Card>
-
-      {/* Bike profiles */}
-      {selectedBike && (
-        <Card variant="bordered" className="dashboard-card-surface mb-6">
-          <CardHeader>
-            <CardTitle>{messages.fit.savedBikes.profilesTitle}</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              {messages.fit.savedBikes.profilesHint}
-            </p>
-          </CardHeader>
-          <CardContent>
-            {isLoadingBikeProfiles ? (
-              <p className="text-sm text-muted-foreground">{messages.fit.savedBikes.profilesLoading}</p>
-            ) : bikeProfiles && bikeProfiles.length > 0 ? (
-              <div className="grid gap-3 sm:grid-cols-2">
-                {bikeProfiles.map((bikeProfile) => {
-                  const isSelected = selectedBikeProfileId === bikeProfile._id;
-                  return (
-                    <button
-                      key={bikeProfile._id}
-                      type="button"
-                      onClick={() => setSelectedBikeProfileId(bikeProfile._id)}
-                      className={cn(
-                        "relative w-full rounded-[var(--radius-lg)] border-2 p-4 text-left transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
-                        isSelected
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border bg-card text-foreground hover:bg-accent"
-                      )}
-                    >
-                      <CheckCircle2
-                        className={cn(
-                          "absolute top-3 right-3 h-5 w-5 transition-opacity duration-150",
-                          isSelected ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                      <div className="pr-6 font-medium">{bikeProfile.name}</div>
-                      <div className={cn("mt-1 text-sm", isSelected ? "text-primary-foreground/80" : "text-muted-foreground")}>
-                        {profileTypeLabel(bikeProfile.profileType)}
-                      </div>
-                      {bikeProfile.isDefault && (
-                        <span className={cn(
-                          "mt-2 inline-block rounded-full px-2 py-0.5 text-xs font-semibold",
-                          isSelected ? "bg-primary-foreground/20 text-primary-foreground" : "bg-secondary text-secondary-foreground"
-                        )}>
-                          {messages.fit.savedBikes.defaultBadge}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">{messages.fit.savedBikes.noProfiles}</p>
-            )}
-          </CardContent>
-        </Card>
-      )}
 
       {/* Missing attributes warning */}
       {selectedBike && bikeNeedsAttributes && (

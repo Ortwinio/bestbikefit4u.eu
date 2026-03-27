@@ -148,10 +148,12 @@ export function QuestionnaireContainer({
     setActionError(null);
     setMissingRequiredQuestionIds([]);
 
-    if (currentResponse !== null) {
+    const responseToSave = currentResponse;
+
+    if (responseToSave !== null) {
       setIsSaving(true);
       try {
-        await onSaveResponse(currentQuestion.questionId, currentResponse);
+        await onSaveResponse(currentQuestion.questionId, responseToSave);
       } catch (error) {
         setActionError(
           reportClientError(error, {
@@ -168,7 +170,26 @@ export function QuestionnaireContainer({
       }
     }
 
-    if (isLastQuestion) {
+    // Recompute visible questions with the just-saved response included so that
+    // conditional questions (e.g. climbing_importance after wants_climbing_profile)
+    // are accounted for before deciding whether to complete or advance.
+    const updatedResponses =
+      responseToSave !== null
+        ? { ...responses, [currentQuestion.questionId]: responseToSave }
+        : responses;
+
+    const updatedVisibleQuestions = questions.filter((q) => {
+      if (!q.showCondition) return true;
+      const dep = updatedResponses[q.showCondition.dependsOnQuestionId];
+      if (!dep) return false;
+      const vals = Array.isArray(dep) ? dep : [dep];
+      return q.showCondition.requiredValues.some((rv) => vals.includes(rv as string));
+    });
+
+    const isActuallyLastQuestion =
+      currentIndex === updatedVisibleQuestions.length - 1;
+
+    if (isActuallyLastQuestion) {
       setIsCompleting(true);
       try {
         await onComplete();

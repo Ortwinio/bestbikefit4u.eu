@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -19,6 +20,8 @@ import { StepFlexibility } from "./StepFlexibility";
 import { StepCoreStability } from "./StepCoreStability";
 import { cn } from "@/utils/cn";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { withLocalePrefix } from "@/i18n/navigation";
 
 const wizardSchema = z.object({
   // Step 1: Required body measurements
@@ -65,6 +68,8 @@ export function MeasurementWizard({
 }: MeasurementWizardProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+  const { locale, messages } = useDashboardMessages();
 
   const methods = useForm<WizardFormData>({
     resolver: zodResolver(wizardSchema),
@@ -110,6 +115,8 @@ export function MeasurementWizard({
   const handlePrevious = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+    } else {
+      router.push(withLocalePrefix("/profile", locale));
     }
   };
 
@@ -214,20 +221,20 @@ export function MeasurementWizard({
             <form onSubmit={handleSubmit(onSubmit)}>
               {renderStep()}
 
-              <div className="mt-8 flex justify-between border-t border-[color:var(--border)] pt-6">
+              <div className="mt-8 flex items-center justify-between">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handlePrevious}
-                  disabled={currentStep === 1}
+                  disabled={isSubmitting}
                 >
                   <ChevronLeft className="mr-1 h-4 w-4" />
-                  Previous
+                  {messages.questionnaire.actions.previous}
                 </Button>
 
                 {currentStep < steps.length ? (
                   <Button type="button" onClick={handleNext}>
-                    Next
+                    {messages.questionnaire.actions.next}
                     <ChevronRight className="ml-1 h-4 w-4" />
                   </Button>
                 ) : (
@@ -236,7 +243,7 @@ export function MeasurementWizard({
                     isLoading={isSubmitting}
                     disabled={!formState.isValid}
                   >
-                    Save Profile
+                    {messages.common.save}
                     <Check className="ml-1 h-4 w-4" />
                   </Button>
                 )}

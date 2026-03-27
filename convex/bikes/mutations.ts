@@ -1,3 +1,4 @@
+import type { Id } from "../_generated/dataModel";
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
@@ -70,12 +71,17 @@ export const create = mutation({
     fitProfileId: v.optional(v.id("profiles")),
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
+    description: v.optional(v.string()),
+    descriptionSource: v.optional(
+      v.union(v.literal("manual"), v.literal("generated"), v.literal("template"))
+    ),
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     validateShortString(args.name, "name");
     if (args.brand !== undefined) validateShortString(args.brand, "brand");
     if (args.model !== undefined) validateShortString(args.model, "model");
+    if (args.description !== undefined) validateTextString(args.description, "description");
     if (args.notes !== undefined) validateTextString(args.notes, "notes");
     const userId = await requireUserId(ctx);
 
@@ -99,6 +105,9 @@ export const create = mutation({
       fitProfileId: args.fitProfileId,
       brand: args.brand,
       model: args.model,
+      description: args.description,
+      descriptionSource: args.descriptionSource ?? (args.description ? "manual" : undefined),
+      descriptionUpdatedAt: args.description ? Date.now() : undefined,
       notes: args.notes,
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -180,6 +189,10 @@ export const update = mutation({
     fitProfileId: v.optional(v.id("profiles")),
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
+    description: v.optional(v.string()),
+    descriptionSource: v.optional(
+      v.union(v.literal("manual"), v.literal("generated"), v.literal("template"))
+    ),
     bikeTypeSource: v.optional(
       v.union(
         v.literal("user"),
@@ -196,6 +209,7 @@ export const update = mutation({
     if (args.name !== undefined) validateShortString(args.name, "name");
     if (args.brand !== undefined) validateShortString(args.brand, "brand");
     if (args.model !== undefined) validateShortString(args.model, "model");
+    if (args.description !== undefined) validateTextString(args.description, "description");
     if (args.notes !== undefined) validateTextString(args.notes, "notes");
     const { bike } = await requireBikeOwner(ctx, args.bikeId);
     const updates: Record<string, unknown> = { updatedAt: Date.now() };
@@ -213,6 +227,15 @@ export const update = mutation({
     if (args.fitProfileId !== undefined) updates.fitProfileId = args.fitProfileId;
     if (args.brand !== undefined) updates.brand = args.brand;
     if (args.model !== undefined) updates.model = args.model;
+    if (args.description !== undefined) {
+      updates.description = args.description;
+      updates.descriptionUpdatedAt = Date.now();
+    }
+    if (args.descriptionSource !== undefined) {
+      updates.descriptionSource = args.descriptionSource;
+    } else if (args.description !== undefined) {
+      updates.descriptionSource = "manual";
+    }
     if (args.bikeTypeSource !== undefined) updates.bikeTypeSource = args.bikeTypeSource;
     if (args.needsTypeConfirmation !== undefined)
       updates.needsTypeConfirmation = args.needsTypeConfirmation;
@@ -247,7 +270,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { bikeId: v.id("bikes") },
   handler: async (ctx, args) => {
-    const { userId } = await requireBikeOwner(ctx, args.bikeId);
+    const { bike, userId } = await requireBikeOwner(ctx, args.bikeId);
 
     const fitSessions = await ctx.db
       .query("fitSessions")
@@ -299,6 +322,24 @@ export const remove = mutation({
         await ctx.db.delete(tireSetup._id);
       }
       await ctx.db.delete(wheelset._id);
+    }
+
+    const bikePhotos = await ctx.db
+      .query("bikePhotos")
+      .withIndex("by_bike", (q) => q.eq("bikeId", args.bikeId))
+      .collect();
+    const storageIdsToDelete = new Set<string>();
+    for (const bikePhoto of bikePhotos) {
+      storageIdsToDelete.add(bikePhoto.storageId);
+      await ctx.db.delete(bikePhoto._id);
+    }
+
+    if (typeof bike.photoUrl === "string" && bike.photoUrl.length > 0) {
+      storageIdsToDelete.add(bike.photoUrl);
+    }
+
+    for (const storageId of storageIdsToDelete) {
+      await ctx.storage.delete(storageId as Id<"_storage">);
     }
 
     await ctx.db.delete(args.bikeId);

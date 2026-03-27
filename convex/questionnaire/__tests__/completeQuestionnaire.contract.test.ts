@@ -73,7 +73,7 @@ describe("questionnaire.completeQuestionnaire contract", () => {
         { questionId: "typical_ride_length", response: "medium" },
         { questionId: "has_pain", response: "no" },
         { questionId: "position_priority", response: "balanced" },
-        { questionId: "current_position_feeling", response: "good" },
+        { questionId: "current_position_feeling", response: ["good"] },
       ],
     });
 

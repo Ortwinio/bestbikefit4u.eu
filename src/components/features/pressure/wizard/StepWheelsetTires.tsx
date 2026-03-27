@@ -1,5 +1,5 @@
 import type { Id } from "../../../../../convex/_generated/dataModel";
-import { Button, NumberInput, Selectable } from "@/components/ui";
+import { NumberInput, Selectable } from "@/components/ui";
 import { Field } from "@/components/ui/Field";
 import type { InlineTireInput } from "../shared";
 import { tubeTypeLabel } from "../shared";
@@ -28,13 +28,9 @@ interface StepWheelsetTiresProps {
   onSelectWheelset: (id: Id<"wheelsets">) => void;
   onSelectTireSetup: (id: Id<"tireSetups">) => void;
   onInlineInputChange: (input: InlineTireInput) => void;
-  onBack: () => void;
-  onNext: () => void;
   labels: {
     title: string;
     manualInput: string;
-    next: string;
-    back: string;
     widthFront: string;
     widthRear: string;
     maxPressure: string;
@@ -55,8 +51,6 @@ export function StepWheelsetTires({
   onSelectWheelset,
   onSelectTireSetup,
   onInlineInputChange,
-  onBack,
-  onNext,
   labels,
 }: StepWheelsetTiresProps) {
   const draft =
@@ -162,15 +156,6 @@ export function StepWheelsetTires({
           </Field.Root>
         </div>
       </Field.Root>
-
-      <div className="flex gap-3">
-        <Button variant="outline" onClick={onBack}>
-          {labels.back}
-        </Button>
-        <Button onClick={onNext}>
-          {labels.next}
-        </Button>
-      </div>
     </div>
   );
 }

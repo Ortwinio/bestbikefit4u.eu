@@ -101,12 +101,38 @@ export const getAllSessionsWithBikes = query({
       recommendations.map((recommendation) => [recommendation.sessionId, recommendation])
     );
 
+    // Batch-load questionnaire responses for all sessions in parallel
+    const sessionResponsePairs = await Promise.all(
+      sessions.map(async (session) => {
+        const rows = await ctx.db
+          .query("questionnaireResponses")
+          .withIndex("by_session", (q) => q.eq("sessionId", session._id))
+          .collect();
+        const map: Record<string, string | number | string[]> = {};
+        for (const r of rows) {
+          const response = r.response;
+          if (
+            typeof response === "string" ||
+            typeof response === "number" ||
+            (Array.isArray(response) && response.every((v) => typeof v === "string"))
+          ) {
+            map[r.questionId] = response as string | number | string[];
+          }
+        }
+        return { sessionId: session._id as string, map };
+      })
+    );
+    const responsesBySessionId = new Map(
+      sessionResponsePairs.map(({ sessionId, map }) => [sessionId, map])
+    );
+
     return sessions
       .sort((a, b) => b.createdAt - a.createdAt)
       .map((session) => ({
         session,
         bike: session.bikeId ? bikeById.get(session.bikeId) ?? null : null,
         recommendation: recommendationBySessionId.get(session._id) ?? null,
+        responses: responsesBySessionId.get(session._id as string) ?? {},
       }));
   },
 });

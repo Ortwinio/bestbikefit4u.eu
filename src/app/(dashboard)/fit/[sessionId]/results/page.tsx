@@ -61,6 +61,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"main" | "climbing">("main");
   const hasAutoTriggeredGenerationRef = useRef(false);
   const hasTrackedResultsViewRef = useRef(false);
 
@@ -71,9 +72,23 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   const user = useQuery(api.users.queries.getCurrentUser);
   const session = reportSource?.session ?? null;
   const recommendation = reportSource?.recommendation ?? null;
+  const hasClimbingProfile = Boolean(recommendation?.climbingCalculatedFit);
+
+  // Build the active report source — swap calculatedFit for climbingCalculatedFit when climbing tab is active
+  const activeReportSource =
+    reportSource && reportSource.recommendation && activeTab === "climbing" && hasClimbingProfile
+      ? {
+          ...reportSource,
+          recommendation: {
+            ...reportSource.recommendation,
+            calculatedFit: reportSource.recommendation.climbingCalculatedFit!,
+          },
+        }
+      : reportSource;
+
   const reportPayload =
-    reportSource && reportSource.recommendation
-      ? mapReportV2Payload(reportSource)
+    activeReportSource && activeReportSource.recommendation
+      ? mapReportV2Payload(activeReportSource)
       : null;
 
   const generateRecommendation = useMutation(
@@ -396,6 +411,39 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           {messages.results.algorithmVersionLabel}: {recommendation.algorithmVersion}
         </p>
       </div>
+
+      {/* Profile tab switcher */}
+      {hasClimbingProfile && (
+        <div className="mb-4 flex gap-2">
+          <button
+            onClick={() => setActiveTab("main")}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+              activeTab === "main"
+                ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
+                : "bg-[color:var(--muted)] text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)]"
+            }`}
+          >
+            {messages.results.mainProfileTab}
+          </button>
+          <button
+            onClick={() => setActiveTab("climbing")}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+              activeTab === "climbing"
+                ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
+                : "bg-[color:var(--muted)] text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)]"
+            }`}
+          >
+            {messages.results.climbingProfileTab}
+          </button>
+        </div>
+      )}
+
+      {/* Climbing profile info banner */}
+      {activeTab === "climbing" && (
+        <div className="mb-4 rounded-lg border border-[color:var(--primary)]/20 bg-[color:var(--primary)]/5 px-4 py-3 text-sm text-[color:var(--muted-foreground)]">
+          {messages.results.climbingProfileNote}
+        </div>
+      )}
 
       {/* Results Grid */}
       <div className="space-y-6">

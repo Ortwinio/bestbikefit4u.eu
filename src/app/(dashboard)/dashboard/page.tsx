@@ -158,10 +158,12 @@ export default function DashboardPage() {
               {messages.dashboardHome.editProfile}
             </Link>
             <Button
-              variant="primary"
+              variant="outline"
+              className="font-semibold shadow-sm"
               render={<Link href={withLocalePrefix("/fit", locale)} />}
             >
               {messages.dashboardHome.newFit}
+              <ArrowRight className="ml-1.5 h-4 w-4" />
             </Button>
           </div>
         </CardContent>

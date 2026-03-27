@@ -1,5 +1,5 @@
 import type { Id } from "../../../../../convex/_generated/dataModel";
-import { Button, Selectable } from "@/components/ui";
+import { Selectable } from "@/components/ui";
 import { disciplineLabel } from "../shared";
 
 interface BikeSummary {
@@ -18,13 +18,11 @@ interface StepBikeSelectProps {
   onSelectBike: (id: Id<"bikes">) => void;
   onSelectDiscipline: (discipline: "road" | "gravel" | "mtb" | "tt") => void;
   onContinueWithoutBike: () => void;
-  onNext: () => void;
   labels: {
     selectBike: string;
     noBikes: string;
     addBikeLink: string;
     continueWithoutBike: string;
-    next: string;
   };
 }
 
@@ -36,7 +34,6 @@ export function StepBikeSelect({
   onSelectBike,
   onSelectDiscipline,
   onContinueWithoutBike,
-  onNext,
   labels,
 }: StepBikeSelectProps) {
   return (
@@ -84,10 +81,6 @@ export function StepBikeSelect({
           ))}
         </div>
       </div>
-
-      <Button onClick={onNext}>
-        {labels.next}
-      </Button>
     </div>
   );
 }

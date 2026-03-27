@@ -25,7 +25,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         ref={ref}
         variant={cardVariant}
         className={cn(
-          variant === "bordered" ? "border border-[color:var(--border)]" : null,
+          variant === "bordered" ? "border border-[color:var(--border)] shadow-sm" : null,
           className
         )}
         {...props}

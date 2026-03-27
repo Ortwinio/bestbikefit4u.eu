@@ -4,6 +4,7 @@ import {
   mapFlexibilityScore,
   type Ambition,
   type BikeCategory,
+  type ClimbingLevel,
   type FitInputs,
   type FitOutputs,
   type FlexibilityScore,
@@ -25,6 +26,7 @@ export interface EngineV1SeedSource {
   frameStackMm?: number;
   frameReachMm?: number;
   experienceLevel?: "beginner" | "intermediate" | "advanced";
+  climbingLevel?: ClimbingLevel;
 }
 
 export interface EngineComparisonSnapshot {
@@ -115,6 +117,7 @@ export function buildEngineV1FitInputs(source: EngineV1SeedSource): FitInputs {
     frameStackMm: source.frameStackMm,
     frameReachMm: source.frameReachMm,
     experienceLevel: source.experienceLevel,
+    climbingLevel: source.climbingLevel,
   };
 }
 

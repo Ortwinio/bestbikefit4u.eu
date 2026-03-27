@@ -4,6 +4,7 @@ import type { Id } from "../_generated/dataModel";
 import { internal } from "../_generated/api";
 import { requireSessionOwner, requireUserId } from "../lib/authz";
 import { mapBikeCategory, mapAmbition } from "./inputMapping";
+import type { ClimbingLevel } from "../lib/fitAlgorithm";
 import { buildBikeRoleBias } from "./bikeRoleBias";
 
 /**
@@ -136,6 +137,22 @@ export const generate = mutation({
         ? (experienceLevelResponse!.response as ExperienceLevel)
         : undefined;
 
+    const VALID_CLIMBING_LEVELS = ["rarely", "occasional", "regular", "climbing_focused"] as const;
+    const climbingImportanceResponse = questionnaireResponses.find(
+      (r) => r.questionId === "climbing_importance"
+    );
+    const climbingLevel: ClimbingLevel | undefined =
+      VALID_CLIMBING_LEVELS.includes(
+        climbingImportanceResponse?.response as ClimbingLevel
+      )
+        ? (climbingImportanceResponse!.response as ClimbingLevel)
+        : undefined;
+
+    const wantsClimbingProfileResponse = questionnaireResponses.find(
+      (r) => r.questionId === "wants_climbing_profile"
+    );
+    const wantsClimbingProfile = wantsClimbingProfileResponse?.response === "yes";
+
     // Schedule the action — computation happens outside the mutation transaction
     await ctx.scheduler.runAfter(
       0,
@@ -158,6 +175,8 @@ export const generate = mutation({
         frameStackMm,
         frameReachMm,
         experienceLevel,
+        climbingLevel,
+        wantsClimbingProfile,
       }
     );
   },

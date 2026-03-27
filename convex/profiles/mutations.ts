@@ -1,6 +1,7 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { requireUserId } from "../lib/authz";
 import {
   validateNumberRange,
   validateShortString,
@@ -20,6 +21,7 @@ const PROFILE_RANGES = {
   coreStabilityScore: [1, 5],
   age: [10, 100],
   weightKg: [30, 250],
+  painSeverity: [1, 5],
 } as const;
 
 function validateProfileMeasurements(args: {
@@ -35,6 +37,7 @@ function validateProfileMeasurements(args: {
   coreStabilityScore?: number;
   age?: number;
   weightKg?: number;
+  painSeverity?: number;
 }) {
   if (args.heightCm !== undefined) {
     validateNumberRange(
@@ -135,6 +138,17 @@ function validateProfileMeasurements(args: {
       PROFILE_RANGES.weightKg[1]
     );
   }
+  if (args.painSeverity !== undefined) {
+    validateNumberRange(
+      args.painSeverity,
+      "painSeverity",
+      PROFILE_RANGES.painSeverity[0],
+      PROFILE_RANGES.painSeverity[1]
+    );
+    if (!Number.isInteger(args.painSeverity)) {
+      throw new Error("painSeverity must be a whole number");
+    }
+  }
 }
 
 // Create or update profile
@@ -182,6 +196,43 @@ export const upsert = mutation({
     // Additional info
     age: v.optional(v.number()),
     weightKg: v.optional(v.number()),
+
+    // Rider profile questions (all optional for upsert compatibility)
+    experienceLevel: v.optional(
+      v.union(
+        v.literal("beginner"),
+        v.literal("intermediate"),
+        v.literal("advanced")
+      )
+    ),
+    weeklyHours: v.optional(
+      v.union(
+        v.literal("0-3"),
+        v.literal("3-6"),
+        v.literal("6-10"),
+        v.literal("10-15"),
+        v.literal("15+")
+      )
+    ),
+    typicalRideLength: v.optional(
+      v.union(
+        v.literal("short"),
+        v.literal("medium"),
+        v.literal("long"),
+        v.literal("ultra")
+      )
+    ),
+    hasPain: v.optional(v.union(v.literal("yes"), v.literal("no"))),
+    painAreas: v.optional(v.array(v.string())),
+    kneePainTiming: v.optional(v.string()),
+    painSeverity: v.optional(v.number()),
+    positionPriority: v.optional(
+      v.union(
+        v.literal("comfort"),
+        v.literal("balanced"),
+        v.literal("performance")
+      )
+    ),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -202,6 +253,7 @@ export const upsert = mutation({
       coreStabilityScore: args.coreStabilityScore,
       age: args.age,
       weightKg: args.weightKg,
+      painSeverity: args.painSeverity,
     });
 
     // Validate string lengths for free-text fields
@@ -224,6 +276,31 @@ export const upsert = mutation({
         ? Date.now()
         : existingProfile?.weightUpdatedAt;
 
+    // Detect if any rider profile field changed to track staleness
+    const riderProfileFields = [
+      "experienceLevel",
+      "weeklyHours",
+      "typicalRideLength",
+      "hasPain",
+      "painAreas",
+      "kneePainTiming",
+      "painSeverity",
+      "positionPriority",
+    ] as const;
+    const hasRiderProfileChange =
+      existingProfile === null ||
+      riderProfileFields.some((field) => {
+        const newVal = args[field];
+        const oldVal = existingProfile[field];
+        if (Array.isArray(newVal) || Array.isArray(oldVal)) {
+          return JSON.stringify(newVal) !== JSON.stringify(oldVal);
+        }
+        return newVal !== undefined && newVal !== oldVal;
+      });
+    const riderProfileUpdatedAt = hasRiderProfileChange
+      ? Date.now()
+      : existingProfile?.riderProfileUpdatedAt;
+
     const profileData = {
       userId,
       heightCm: args.heightCm,
@@ -241,6 +318,15 @@ export const upsert = mutation({
       age: args.age,
       weightKg: args.weightKg,
       weightUpdatedAt,
+      experienceLevel: args.experienceLevel,
+      weeklyHours: args.weeklyHours,
+      typicalRideLength: args.typicalRideLength,
+      hasPain: args.hasPain,
+      painAreas: args.painAreas,
+      kneePainTiming: args.kneePainTiming,
+      painSeverity: args.painSeverity,
+      positionPriority: args.positionPriority,
+      riderProfileUpdatedAt,
       updatedAt: Date.now(),
     };
 
@@ -353,6 +439,116 @@ export const updateAssessment = mutation({
       flexibilityScore: args.flexibilityScore,
       coreStabilityScore: args.coreStabilityScore,
       updatedAt: Date.now(),
+    });
+
+    return profile._id;
+  },
+});
+
+// Update rider profile questions (bike-agnostic, asked once)
+export const updateRiderProfile = mutation({
+  args: {
+    experienceLevel: v.union(
+      v.literal("beginner"),
+      v.literal("intermediate"),
+      v.literal("advanced")
+    ),
+    weeklyHours: v.union(
+      v.literal("0-3"),
+      v.literal("3-6"),
+      v.literal("6-10"),
+      v.literal("10-15"),
+      v.literal("15+")
+    ),
+    typicalRideLength: v.union(
+      v.literal("short"),
+      v.literal("medium"),
+      v.literal("long"),
+      v.literal("ultra")
+    ),
+    hasPain: v.union(v.literal("yes"), v.literal("no")),
+    painAreas: v.array(v.string()),
+    kneePainTiming: v.optional(v.string()),
+    painSeverity: v.optional(v.number()),
+    positionPriority: v.union(
+      v.literal("comfort"),
+      v.literal("balanced"),
+      v.literal("performance")
+    ),
+  },
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+
+    const profile = await ctx.db
+      .query("profiles")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .unique();
+
+    if (!profile) {
+      throw new Error("Profile not found");
+    }
+
+    validateProfileMeasurements({ painSeverity: args.painSeverity });
+
+    // Detect if any rider profile field actually changed to avoid spurious
+    // staleness updates that would invalidate fit recommendations unnecessarily
+    const painAreasChanged =
+      JSON.stringify(args.painAreas) !== JSON.stringify(profile.painAreas);
+    const hasChange =
+      profile.experienceLevel !== args.experienceLevel ||
+      profile.weeklyHours !== args.weeklyHours ||
+      profile.typicalRideLength !== args.typicalRideLength ||
+      profile.hasPain !== args.hasPain ||
+      painAreasChanged ||
+      profile.kneePainTiming !== args.kneePainTiming ||
+      profile.painSeverity !== args.painSeverity ||
+      profile.positionPriority !== args.positionPriority;
+
+    await ctx.db.patch(profile._id, {
+      ...args,
+      updatedAt: Date.now(),
+      ...(hasChange ? { riderProfileUpdatedAt: Date.now() } : {}),
+    });
+
+    return profile._id;
+  },
+});
+
+export const updateComfort = mutation({
+  args: {
+    hasPain: v.union(v.literal("yes"), v.literal("no")),
+    painAreas: v.array(v.string()),
+    painSeverity: v.optional(v.number()),
+    painAreaSeverities: v.optional(v.record(v.string(), v.number())),
+  },
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+
+    const profile = await ctx.db
+      .query("profiles")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .unique();
+
+    if (!profile) {
+      throw new Error("Profile not found");
+    }
+
+    validateProfileMeasurements({ painSeverity: args.painSeverity });
+
+    const painAreasChanged =
+      JSON.stringify(args.painAreas) !== JSON.stringify(profile.painAreas);
+    const hasChange =
+      profile.hasPain !== args.hasPain ||
+      painAreasChanged ||
+      profile.painSeverity !== args.painSeverity;
+
+    await ctx.db.patch(profile._id, {
+      hasPain: args.hasPain,
+      painAreas: args.painAreas,
+      painSeverity: args.painSeverity,
+      painAreaSeverities: args.painAreaSeverities,
+      updatedAt: Date.now(),
+      ...(hasChange ? { riderProfileUpdatedAt: Date.now() } : {}),
     });
 
     return profile._id;

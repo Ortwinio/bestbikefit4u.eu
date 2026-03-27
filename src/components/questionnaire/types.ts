@@ -11,6 +11,7 @@ export interface QuestionDefinition {
   options?: Array<{
     value: string;
     label: string;
+    description?: string;
     followUpQuestionIds?: string[];
   }>;
   numericConfig?: {

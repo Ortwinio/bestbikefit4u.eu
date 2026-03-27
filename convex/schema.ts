@@ -119,6 +119,48 @@ export default defineSchema({
     weightKg: v.optional(v.number()),
     weightUpdatedAt: v.optional(v.number()),
 
+    // Rider profile questions (bike-agnostic, asked once)
+    experienceLevel: v.optional(
+      v.union(
+        v.literal("beginner"),
+        v.literal("intermediate"),
+        v.literal("advanced")
+      )
+    ),
+    weeklyHours: v.optional(
+      v.union(
+        v.literal("0-3"),
+        v.literal("3-6"),
+        v.literal("6-10"),
+        v.literal("10-15"),
+        v.literal("15+")
+      )
+    ),
+    typicalRideLength: v.optional(
+      v.union(
+        v.literal("short"),
+        v.literal("medium"),
+        v.literal("long"),
+        v.literal("ultra")
+      )
+    ),
+    hasPain: v.optional(v.union(v.literal("yes"), v.literal("no"))),
+    painAreas: v.optional(v.array(v.string())),
+    kneePainTiming: v.optional(v.string()),
+    painSeverity: v.optional(v.number()),
+    painAreaSeverities: v.optional(v.record(v.string(), v.number())),
+    positionPriority: v.optional(
+      v.union(
+        v.literal("comfort"),
+        v.literal("balanced"),
+        v.literal("performance")
+      )
+    ),
+
+    // Staleness tracking — set to Date.now() whenever any rider profile
+    // question field above changes. Used to invalidate fit recommendations.
+    riderProfileUpdatedAt: v.optional(v.number()),
+
     updatedAt: v.number(),
     adminNotes: v.optional(v.string()),
   }).index("by_user", ["userId"]),
@@ -331,6 +373,11 @@ export default defineSchema({
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
     bikeModelId: v.optional(v.id("bikeModels")),
+    description: v.optional(v.string()),
+    descriptionSource: v.optional(
+      v.union(v.literal("manual"), v.literal("generated"), v.literal("template"))
+    ),
+    descriptionUpdatedAt: v.optional(v.number()),
     notes: v.optional(v.string()),
     geometryRecordId: v.optional(v.id("geometry_records")),
 
@@ -376,6 +423,20 @@ export default defineSchema({
     .index("by_user_activity", ["userId", "stravaActivityId"])
     .index("by_user_bike", ["userId", "bikeId"])
     .index("by_user_start_at", ["userId", "startAt"]),
+
+  bikePhotos: defineTable({
+    userId: v.id("users"),
+    bikeId: v.id("bikes"),
+    storageId: v.string(),
+    caption: v.optional(v.string()),
+    isPrimary: v.boolean(),
+    sortOrder: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_bike", ["bikeId"])
+    .index("by_bike_primary", ["bikeId", "isPrimary"])
+    .index("by_storage", ["storageId"]),
 
   bikeProfiles: defineTable({
     userId: v.id("users"),
@@ -732,6 +793,34 @@ export default defineSchema({
       crankLengthMm: v.number(),
       handlebarWidthMm: v.number(),
     }),
+
+    // Optional climbing-optimised secondary fit profile
+    climbingCalculatedFit: v.optional(
+      v.object({
+        // Frame sizing
+        recommendedStackMm: v.number(),
+        recommendedReachMm: v.number(),
+        effectiveTopTubeMm: v.number(),
+
+        // Saddle position
+        saddleHeightMm: v.number(),
+        saddleSetbackMm: v.number(),
+        saddleHeightRange: v.object({
+          min: v.number(),
+          max: v.number(),
+        }),
+
+        // Handlebar position
+        handlebarDropMm: v.number(),
+        handlebarReachMm: v.number(),
+        stemLengthMm: v.number(),
+        stemAngleRecommendation: v.string(),
+
+        // Components
+        crankLengthMm: v.number(),
+        handlebarWidthMm: v.number(),
+      })
+    ),
 
     confidenceScore: v.number(),
     algorithmVersion: v.string(),

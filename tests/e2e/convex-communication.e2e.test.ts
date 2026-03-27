@@ -250,12 +250,12 @@ describe("convex communication e2e", () => {
     });
 
     await handlerOf<
-      { sessionId: string; questionId: string; response: string },
+      { sessionId: string; questionId: string; response: string[] },
       string
     >(saveResponse)(mutationCtx, {
       sessionId,
       questionId: "current_position_feeling",
-      response: "good",
+      response: ["good"],
     });
 
     await handlerOf<{ sessionId: string }, void>(completeQuestionnaire)(

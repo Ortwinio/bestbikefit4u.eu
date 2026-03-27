@@ -6,8 +6,9 @@
 import { internalAction } from "../_generated/server";
 import { v } from "convex/values";
 import { internal } from "../_generated/api";
-import type { FitInputs, FitOutputs } from "../lib/fitAlgorithm";
-import { runEngineV1Seed } from "./seedEngine";
+import type { FitInputs, FitOutputs, ClimbingLevel, Ambition } from "../lib/fitAlgorithm";
+import { calculateBikeFit } from "../lib/fitAlgorithm";
+import { runEngineV1Seed, mapStoredCalculatedFit } from "./seedEngine";
 import {
   buildShadowDeltas,
   isEngineV2ShadowEnabled,
@@ -87,6 +88,15 @@ export const generateFromData = internalAction({
         v.literal("advanced")
       )
     ),
+    climbingLevel: v.optional(
+      v.union(
+        v.literal("rarely"),
+        v.literal("occasional"),
+        v.literal("regular"),
+        v.literal("climbing_focused")
+      )
+    ),
+    wantsClimbingProfile: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const seed = runEngineV1Seed({
@@ -103,6 +113,7 @@ export const generateFromData = internalAction({
       frameStackMm: args.frameStackMm,
       frameReachMm: args.frameReachMm,
       experienceLevel: args.experienceLevel,
+      climbingLevel: args.climbingLevel,
     });
 
     const fitNotes = mergeFitNotes(
@@ -118,11 +129,20 @@ export const generateFromData = internalAction({
           }))
         : undefined;
 
+    // Generate secondary climbing profile when user explicitly requested it
+    const climbingFitOutputs = args.wantsClimbingProfile
+      ? generateClimbingProfile(seed.fitInputs)
+      : null;
+    const climbingCalculatedFit = climbingFitOutputs
+      ? mapStoredCalculatedFit(climbingFitOutputs)
+      : undefined;
+
     // Store the result via an internal mutation (serialised, idempotent)
     await ctx.runMutation(internal.recommendations.internalMutations.storeResult, {
       sessionId: args.sessionId,
       userId: args.userId,
       calculatedFit: seed.calculatedFit,
+      climbingCalculatedFit,
       comparisonSnapshot: seed.comparisonSnapshot,
       recommendationItems: seed.recommendationItems,
       confidenceScore: seed.confidenceScore,
@@ -263,6 +283,28 @@ export const runShadowComparison = internalAction({
     }
   },
 });
+
+// Generate secondary climbing profile when climbingLevel is regular or climbing_focused
+const CLIMBING_PROFILE_LEVELS: ClimbingLevel[] = ["regular", "climbing_focused"];
+
+const AMBITION_SHIFT: Record<Ambition, Ambition> = {
+  aero: "performance",
+  performance: "balanced",
+  balanced: "comfort",
+  comfort: "comfort",
+};
+
+function generateClimbingProfile(base: FitInputs): FitOutputs | null {
+  if (!base.climbingLevel || !CLIMBING_PROFILE_LEVELS.includes(base.climbingLevel)) {
+    return null;
+  }
+  const climbingInputs: FitInputs = {
+    ...base,
+    ambition: AMBITION_SHIFT[base.ambition],
+    climbingLevel: base.climbingLevel,
+  };
+  return calculateBikeFit(climbingInputs);
+}
 
 // Generate frame size recommendations
 function generateFrameSizeRecommendations(

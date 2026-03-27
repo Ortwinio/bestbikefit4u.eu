@@ -32,6 +32,8 @@ export interface QuestionDefinition {
   };
   baseOrder: number;
   isRequired: boolean;
+  /** True for questions whose answers are now sourced from the rider profile, not the questionnaire */
+  isProfileQuestion?: boolean;
 }
 
 /**
@@ -68,6 +70,7 @@ export const QUESTIONNAIRE_QUESTIONS: QuestionDefinition[] = [
     ],
     baseOrder: 10,
     isRequired: true,
+    isProfileQuestion: true,
   },
   {
     questionId: "weekly_hours",
@@ -83,6 +86,7 @@ export const QUESTIONNAIRE_QUESTIONS: QuestionDefinition[] = [
     ],
     baseOrder: 20,
     isRequired: true,
+    isProfileQuestion: true,
   },
   {
     questionId: "typical_ride_length",
@@ -97,6 +101,7 @@ export const QUESTIONNAIRE_QUESTIONS: QuestionDefinition[] = [
     ],
     baseOrder: 30,
     isRequired: true,
+    isProfileQuestion: true,
   },
 
   // ========================================
@@ -118,6 +123,7 @@ export const QUESTIONNAIRE_QUESTIONS: QuestionDefinition[] = [
     ],
     baseOrder: 40,
     isRequired: true,
+    isProfileQuestion: true,
   },
   {
     questionId: "pain_areas",
@@ -147,6 +153,7 @@ export const QUESTIONNAIRE_QUESTIONS: QuestionDefinition[] = [
     },
     baseOrder: 50,
     isRequired: false,
+    isProfileQuestion: true,
   },
   {
     questionId: "knee_pain_timing",
@@ -165,6 +172,7 @@ export const QUESTIONNAIRE_QUESTIONS: QuestionDefinition[] = [
     },
     baseOrder: 55,
     isRequired: false,
+    isProfileQuestion: true,
   },
   {
     questionId: "pain_severity",
@@ -183,6 +191,7 @@ export const QUESTIONNAIRE_QUESTIONS: QuestionDefinition[] = [
     },
     baseOrder: 60,
     isRequired: false,
+    isProfileQuestion: true,
   },
 
   // ========================================
@@ -209,39 +218,104 @@ export const QUESTIONNAIRE_QUESTIONS: QuestionDefinition[] = [
     ],
     baseOrder: 70,
     isRequired: true,
+    isProfileQuestion: true,
   },
   {
     questionId: "current_position_feeling",
     category: "position",
     questionText: "How does your current bike position feel?",
-    helpText: "If you don't have a current bike, select 'No current bike'",
-    responseType: "single_choice",
+    helpText: "Small discomforts often indicate misalignment in your setup. By identifying these early, we can adjust key parameters like reach, handlebar height, and saddle position to improve comfort and performance. Select all that apply — if you don't have a current bike, choose 'No current bike'.",
+    responseType: "multiple_choice",
     options: [
+      { value: "good", label: "Generally good, minor tweaks needed" },
+      { value: "no_bike", label: "Skip this step" },
       { value: "too_stretched", label: "Too stretched out - reaching too far" },
       { value: "too_compact", label: "Too compact - feel cramped" },
       { value: "too_low", label: "Handlebars feel too low" },
       { value: "too_high", label: "Handlebars feel too high" },
-      { value: "good", label: "Generally good, minor tweaks needed" },
-      { value: "no_bike", label: "No current bike / not sure" },
+      { value: "saddle_too_high", label: "Saddle feels too high" },
+      { value: "saddle_too_low", label: "Saddle feels too low" },
     ],
     baseOrder: 80,
-    isRequired: true,
+    isRequired: false,
   },
 
   // ========================================
   // BIKE-SPECIFIC (shown based on bike type)
   // ========================================
   {
+    questionId: "wants_climbing_profile",
+    category: "position",
+    questionText: "Would you like a climbing-specific fit profile?",
+    helpText:
+      "A climbing profile gives you a second set of recommendations optimised for seated climbing efficiency — adjusted saddle height, setback, and handlebar position.",
+    responseType: "single_choice",
+    options: [
+      { value: "yes", label: "Yes, add a climbing profile" },
+      { value: "no", label: "No, standard fit only" },
+    ],
+    baseOrder: 99,
+    isRequired: false,
+  },
+  {
+    questionId: "climbing_importance",
+    category: "position",
+    questionText: "How important is climbing in your riding?",
+    helpText:
+      "Climbing changes how your body interacts with the bike. We adjust your position to improve efficiency, comfort, and control on long or steep climbs.",
+    responseType: "single_choice",
+    options: [
+      { value: "rarely", label: "Rarely climb" },
+      { value: "occasional", label: "Occasional climbs" },
+      { value: "regular", label: "Regular climbing" },
+      { value: "climbing_focused", label: "Climbing-focused" },
+    ],
+    showCondition: {
+      dependsOnQuestionId: "wants_climbing_profile",
+      requiredValues: ["yes"],
+    },
+    baseOrder: 100,
+    isRequired: false,
+  },
+
+  {
     questionId: "road_riding_type",
     category: "bike_specific",
     questionText: "What type of road riding do you primarily do?",
+    helpText:
+      "Your riding type influences how aggressive and aerodynamic your position should be. We use this to tailor your setup for comfort, efficiency, or maximum performance.",
     responseType: "single_choice",
     options: [
-      { value: "casual", label: "Casual rides and fitness" },
-      { value: "group", label: "Group rides and sportives" },
-      { value: "training", label: "Structured training" },
-      { value: "racing", label: "Racing (crits, road races)" },
-      { value: "tt", label: "Time trials / triathlon" },
+      {
+        value: "casual",
+        label: "Casual rides and fitness",
+        description:
+          "Focused on comfort and enjoyment. We prioritize a more relaxed position with reduced strain on your back, neck, and hands.",
+      },
+      {
+        value: "group",
+        label: "Group rides and sportives",
+        description:
+          "A mix of endurance and pace. We balance comfort and efficiency to support longer rides with moderate intensity.",
+      },
+      {
+        value: "training",
+        label: "Structured training",
+        description:
+          "Regular training with specific goals. We optimize your position for efficiency and power transfer while maintaining sustainability.",
+      },
+      {
+        value: "racing",
+        label: "Racing (crits, road races)",
+        description:
+          "High intensity and performance-focused. We create a more aggressive position to improve speed, aerodynamics, and responsiveness.",
+      },
+      {
+        value: "tt",
+        label: "Time trials / triathlon",
+        description:
+          "Maximum aerodynamic efficiency. We position you lower and more forward to minimize air resistance and maximize sustained speed.",
+      },
     ],
     baseOrder: 90,
     isRequired: false,
@@ -250,8 +324,12 @@ export const QUESTIONNAIRE_QUESTIONS: QuestionDefinition[] = [
     questionId: "mtb_terrain",
     category: "bike_specific",
     questionText: "What terrain do you primarily ride?",
+    helpText:
+      "The terrain you ride has a major impact on your ideal bike setup. Smooth roads allow for a more aerodynamic position, while rough and technical terrain requires more control and stability. We use this to find the right balance between comfort, control, efficiency, and performance.",
     responseType: "single_choice",
     options: [
+      { value: "asphalt", label: "Only asphalt" },
+      { value: "paved", label: "Paved roads and light gravel" },
       { value: "xc", label: "Cross-country (smooth trails, climbing)" },
       { value: "trail", label: "Trail (varied terrain, some technical)" },
       { value: "enduro", label: "Enduro (technical descents, big climbs)" },
@@ -261,42 +339,6 @@ export const QUESTIONNAIRE_QUESTIONS: QuestionDefinition[] = [
     isRequired: false,
   },
 
-  // ========================================
-  // ADDITIONAL CONTEXT
-  // ========================================
-  {
-    questionId: "injury_history",
-    category: "health",
-    questionText: "Do you have any injuries or conditions affecting your riding?",
-    responseType: "single_choice",
-    options: [
-      { value: "none", label: "No injuries or conditions" },
-      {
-        value: "back",
-        label: "Back issues (herniated disc, chronic pain)",
-      },
-      { value: "knee", label: "Knee issues (previous injury, arthritis)" },
-      { value: "hip", label: "Hip issues (flexibility, replacement)" },
-      { value: "shoulder", label: "Shoulder/neck issues" },
-      { value: "other", label: "Other condition" },
-    ],
-    baseOrder: 100,
-    isRequired: false,
-  },
-  {
-    questionId: "flexibility_confidence",
-    category: "health",
-    questionText: "How confident are you in your flexibility assessment?",
-    helpText: "We asked about flexibility earlier - this helps us weight that data",
-    responseType: "single_choice",
-    options: [
-      { value: "very", label: "Very confident - I tested properly" },
-      { value: "somewhat", label: "Somewhat confident - rough estimate" },
-      { value: "unsure", label: "Not sure - I guessed" },
-    ],
-    baseOrder: 110,
-    isRequired: false,
-  },
 ];
 
 /**
@@ -309,10 +351,14 @@ export function getQuestionsByCategory(category: string): QuestionDefinition[] {
 }
 
 /**
- * Get all active questions sorted by order
+ * Get all active questionnaire questions sorted by order.
+ * Profile questions (isProfileQuestion === true) are excluded — their answers
+ * come from the rider profile, not the fit session questionnaire.
  */
 export function getAllQuestions(): QuestionDefinition[] {
-  return [...QUESTIONNAIRE_QUESTIONS].sort((a, b) => a.baseOrder - b.baseOrder);
+  return [...QUESTIONNAIRE_QUESTIONS]
+    .filter((q) => !q.isProfileQuestion)
+    .sort((a, b) => a.baseOrder - b.baseOrder);
 }
 
 /**

@@ -8,11 +8,11 @@ import { flexibilityTests } from "@/lib/validations/profile";
 type FlexibilityScore = (typeof flexibilityTests)[number]["score"];
 
 const scoreColorMap: Record<FlexibilityScore, string> = {
-  very_limited: "var(--danger)",
-  limited: "var(--warning)",
-  average: "var(--warning)",
-  good: "var(--success)",
-  excellent: "var(--success)",
+  very_limited: "var(--color-danger)",
+  limited: "var(--color-warning)",
+  average: "var(--color-warning)",
+  good: "var(--color-success)",
+  excellent: "var(--color-success)",
 };
 
 export function getFlexibilityMeta(score: FlexibilityScore) {
@@ -57,9 +57,6 @@ export function FlexibilityScale({
       <p className="text-sm text-[color:var(--muted-foreground)]">
         {meta.description}
       </p>
-      <div className="inline-flex rounded-full bg-[color:var(--secondary)] px-3 py-1 text-xs font-medium text-[color:var(--secondary-foreground)]">
-        {meta.testResult}
-      </div>
     </div>
   );
 }

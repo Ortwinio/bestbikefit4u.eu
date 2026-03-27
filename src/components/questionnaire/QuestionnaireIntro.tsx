@@ -1,97 +1,93 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import {
-  Zap,
-  Heart,
-  ShieldCheck,
-  User,
-  SlidersHorizontal,
-  ArrowRight,
-  CheckCircle2,
-  type LucideIcon,
-} from "lucide-react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-
-const GAIN_ICONS: LucideIcon[] = [
-  Zap,
-  Heart,
-  ShieldCheck,
-  User,
-  SlidersHorizontal,
-];
+import { withLocalePrefix } from "@/i18n/navigation";
+import {
+  HOME_QUOTES_BY_LOCALE,
+  HOME_QUOTES_SECTION_COPY,
+  selectRandomHomeQuotes,
+} from "@/content/homeQuotes";
 
 interface QuestionnaireIntroProps {
   onStart: () => void;
 }
 
 export function QuestionnaireIntro({ onStart }: QuestionnaireIntroProps) {
-  const { messages } = useDashboardMessages();
+  const { locale, messages } = useDashboardMessages();
   const t = messages.questionnaire.intro;
+  const quoteCopy = HOME_QUOTES_SECTION_COPY[locale];
+
+  const [quotes] = useState(() =>
+    selectRandomHomeQuotes(HOME_QUOTES_BY_LOCALE[locale], 3)
+  );
 
   return (
-    <div className="space-y-5">
-
-      {/* Hero banner */}
-      <div className="relative overflow-hidden rounded-[var(--radius-lg)] bg-gradient-to-br from-primary to-primary/75 px-6 pt-7 pb-0 md:px-8 md:pt-8">
-
-        {/* Cyclist image — anchored to bottom-right */}
-        <div className="absolute right-0 bottom-0 w-44 md:w-56">
-          <Image
-            src="/cyclist.png"
-            alt={t.illustrationAlt}
-            width={448}
-            height={448}
-            className="w-full"
-            priority
-          />
-        </div>
-
-        {/* Text — left side, padded away from image */}
-        <div className="relative z-10 max-w-[65%] pb-7 md:pb-8">
-          <h2 className="text-2xl font-bold leading-tight text-primary-foreground">
-            {t.title}
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-primary-foreground/80">
-            {t.description}
-          </p>
-        </div>
+    <div className="space-y-6">
+      {/* Text */}
+      <div className="text-center">
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          {t.eyebrow}
+        </p>
+        <h2 className="mt-2 text-2xl font-bold text-foreground">
+          {t.title}
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          {t.description}
+        </p>
       </div>
 
-      {/* Gains grid */}
-      <div>
-        <p className="mb-3 text-sm font-semibold text-foreground">{t.gainTitle}</p>
-        <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {t.gains.map((gain, i) => {
-            const Icon = GAIN_ICONS[i] ?? CheckCircle2;
-            return (
-              <li
-                key={i}
-                className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-3"
-              >
-                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                  <Icon className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <span className="text-sm font-medium text-foreground">
-                    {gain.label}
-                  </span>
-                  <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                    {gain.detail}
-                  </p>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+      {/* Illustration */}
+      <div className="-mt-10 mb-2 relative h-80 overflow-hidden">
+        <Image
+          src="/profile-complete.png"
+          alt={t.illustrationAlt}
+          width={448}
+          height={448}
+          className="absolute left-1/2 top-1/2 h-[48rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-md"
+          priority
+        />
+      </div>
+
+      {/* Quotes */}
+      <div className="space-y-3">
+        <p className="text-sm font-semibold text-[color:var(--foreground)]">
+          {quoteCopy.title}
+        </p>
+        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1">
+          {quotes.map((quote, i) => (
+            <div
+              key={i}
+              className="min-w-[14rem] max-w-[14rem] snap-start rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--muted)]/40 p-4"
+            >
+              <p className="text-sm italic leading-relaxed text-[color:var(--foreground)]">
+                &ldquo;{quote}&rdquo;
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* CTA */}
-      <Button onClick={onStart} className="w-full">
+      <Button onClick={onStart} size="lg" className="w-full">
         {t.start}
         <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
+
+      {/* Algorithm link */}
+      <div className="flex justify-center">
+        <Link
+          href={withLocalePrefix("/fit/how-it-works", locale)}
+          className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
+        >
+          {t.algorithmLink}
+          <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+        </Link>
+      </div>
     </div>
   );
 }
