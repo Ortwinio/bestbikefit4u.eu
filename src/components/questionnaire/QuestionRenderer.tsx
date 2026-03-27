@@ -11,6 +11,7 @@ import { MultipleChoiceQuestion } from "./questions/MultipleChoice";
 import { ScaleQuestion } from "./questions/ScaleQuestion";
 import { NumericQuestion } from "./questions/NumericQuestion";
 import { TextQuestion } from "./questions/TextQuestion";
+import Image from "next/image";
 import { HelpCircle } from "lucide-react";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
@@ -109,6 +110,19 @@ export function QuestionRenderer({
             value={(value as string[]) || []}
             onChange={onChange}
           />
+        )}
+
+        {question.questionId === "position_priority" && (
+          <div className="mb-4 overflow-hidden rounded-[var(--radius-lg)] border border-border">
+            <Image
+              src="/riding-position.png"
+              alt="Riding position illustration"
+              width={1024}
+              height={1024}
+              className="h-auto max-h-56 w-full object-cover"
+              priority
+            />
+          </div>
         )}
 
         {question.responseType === "single_choice" &&
