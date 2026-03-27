@@ -227,14 +227,6 @@ export function QuestionnaireContainer({
 
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="sticky top-16 z-20 mb-6 rounded-lg border border-border bg-card/95 p-3 backdrop-blur md:top-4">
-        <ProgressBar
-          current={currentIndex + 1}
-          total={totalQuestions}
-          estimatedMinutes={estimatedMinutesRemaining}
-        />
-      </div>
-
       {missingRequiredQuestionIds.length > 0 && (
         <div className="mb-6 rounded-lg border border-border bg-destructive-soft p-4">
           <p className="text-sm font-medium text-destructive">

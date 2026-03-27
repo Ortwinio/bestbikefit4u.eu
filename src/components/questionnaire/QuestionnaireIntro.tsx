@@ -33,6 +33,19 @@ export function QuestionnaireIntro({ onStart }: QuestionnaireIntroProps) {
   return (
     <div className="space-y-6">
 
+      {/* Progress strip */}
+      <div className="flex items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-muted/50 px-4 py-3">
+        <Clock className="h-4 w-4 shrink-0 text-primary" />
+        <span className="text-sm text-muted-foreground">{t.progress.timeRemaining}</span>
+        <span className="mx-1 text-border">·</span>
+        <div className="flex items-center gap-1.5">
+          <div className="h-1.5 w-24 overflow-hidden rounded-full bg-border">
+            <div className="h-full w-[10%] rounded-full bg-primary" />
+          </div>
+          <span className="text-sm text-muted-foreground">{t.progress.percentComplete}</span>
+        </div>
+      </div>
+
       {/* Two-column layout: content + illustration */}
       <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-8">
 
@@ -79,19 +92,6 @@ export function QuestionnaireIntro({ onStart }: QuestionnaireIntroProps) {
             </div>
             <p className="text-xs text-muted-foreground">{t.illustrationAlt}</p>
           </div>
-        </div>
-      </div>
-
-      {/* Progress badges */}
-      <div className="flex items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-muted/50 px-4 py-3">
-        <Clock className="h-4 w-4 shrink-0 text-primary" />
-        <span className="text-sm text-muted-foreground">{t.progress.timeRemaining}</span>
-        <span className="mx-1 text-border">·</span>
-        <div className="flex items-center gap-1.5">
-          <div className="h-1.5 w-24 overflow-hidden rounded-full bg-border">
-            <div className="h-full w-[10%] rounded-full bg-primary" />
-          </div>
-          <span className="text-sm text-muted-foreground">{t.progress.percentComplete}</span>
         </div>
       </div>
 
