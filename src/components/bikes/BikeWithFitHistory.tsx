@@ -18,6 +18,15 @@ import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { getBikeTypeLabel } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import {
+  ArrowRight,
+  Trash2,
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  ChevronRight,
+} from "lucide-react";
+import { cn } from "@/utils/cn";
 
 function formatConfidence(score: number) {
   return Math.max(0, Math.min(100, Math.round(score)));
@@ -33,23 +42,14 @@ interface BikeWithFitHistoryProps {
 
 function FitHistoryBikeImage({ source }: { source?: string }) {
   const imageUrl = useResolvedImageUrl(source);
-
-  if (!imageUrl) {
-    return (
-      <img
-        src="/default-bike.svg"
-        alt=""
-        className="h-24 w-36 rounded-[var(--radius-md)] object-cover"
-      />
-    );
-  }
-
   return (
-    <img
-      src={imageUrl}
-      alt=""
-      className="h-24 w-36 rounded-[var(--radius-md)] object-cover"
-    />
+    <div className="flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-md)] bg-muted">
+      <img
+        src={imageUrl ?? "/default-bike.svg"}
+        alt=""
+        className="h-full w-full object-contain p-1"
+      />
+    </div>
   );
 }
 
@@ -60,150 +60,192 @@ export function BikeWithFitHistory({
   const { locale, messages } = useDashboardMessages();
   const toast = useToast();
   const removeSession = useMutation(api.sessions.mutations.remove);
-  const [sessionToDelete, setSessionToDelete] = useState<Doc<"fitSessions"> | null>(
-    null
-  );
+  const [sessionToDelete, setSessionToDelete] = useState<Doc<"fitSessions"> | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const getStatusLabel = (status: string) => {
+  const getStatusConfig = (status: string) => {
     switch (status) {
       case "completed":
-        return messages.sessions.status.completed;
+        return { label: messages.sessions.status.completed, className: "bg-success/15 text-success" };
       case "in_progress":
-        return messages.sessions.status.inProgress;
+        return { label: messages.sessions.status.inProgress, className: "bg-primary/10 text-primary" };
       case "processing":
-        return messages.sessions.status.processing;
+        return { label: messages.sessions.status.processing, className: "bg-warning/15 text-warning" };
       case "archived":
-        return messages.sessions.status.archived;
+        return { label: messages.sessions.status.archived, className: "bg-muted text-muted-foreground" };
       default:
-        return status.replaceAll("_", " ");
+        return { label: status.replaceAll("_", " "), className: "bg-muted text-muted-foreground" };
     }
   };
 
   const bikeTitle =
     bike?.name || (bike ? getBikeTypeLabel(bike.bikeType, messages) : messages.fitHistory.noBikeLinked);
   const bikeSubtitle = bike
-    ? [bike.brand, bike.model].filter(Boolean).join(" ") ||
-      getBikeTypeLabel(bike.bikeType, messages)
+    ? [bike.brand, bike.model].filter(Boolean).join(" ") || getBikeTypeLabel(bike.bikeType, messages)
     : messages.fitHistory.bikeWithoutName;
 
   const handleDelete = async () => {
-    if (!sessionToDelete) {
-      return;
-    }
-
+    if (!sessionToDelete) return;
     setIsDeleting(true);
     try {
       await removeSession({ sessionId: sessionToDelete._id });
       toast.success({ description: messages.fitHistory.delete.success });
       setSessionToDelete(null);
-    } catch (error) {
-      console.error("Failed to delete fit session:", error);
+    } catch {
       toast.error({ description: messages.fitHistory.delete.failed });
+    } finally {
       setIsDeleting(false);
-      return;
     }
-    setIsDeleting(false);
   };
 
   return (
     <>
-      <Card variant="bordered" className="dashboard-card-surface">
-        <CardHeader>
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="flex items-start gap-4">
+      <Card variant="bordered" className="dashboard-card-surface overflow-hidden">
+
+        {/* Bike header */}
+        <CardHeader className="border-b border-border pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
               <FitHistoryBikeImage source={bike?.photoUrl} />
               <div>
-                <CardTitle>{bikeTitle}</CardTitle>
-                <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">{bikeSubtitle}</p>
+                <CardTitle className="text-base">{bikeTitle}</CardTitle>
+                <p className="mt-0.5 text-sm text-muted-foreground">{bikeSubtitle}</p>
               </div>
             </div>
-            <Link
-              href={withLocalePrefix(
-                bike ? `/fit?bikeId=${bike._id}` : "/fit",
-                locale
-              )}
-              className="text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
+            <Button
+              size="sm"
+              variant="outline"
+              render={
+                <Link
+                  href={withLocalePrefix(bike ? `/fit?bikeId=${bike._id}` : "/fit", locale)}
+                />
+              }
             >
               {messages.fitHistory.startNewSession}
-            </Link>
+              <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+            </Button>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {sessions.map(({ session, recommendation }) => (
-              <div
-                key={session._id}
-                className="rounded-[var(--radius-md)] border border-[color:var(--border)] p-4"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold text-[color:var(--foreground)]">
-                      {session.ridingStyle
-                        ? messages.sessions.ridingStyle[session.ridingStyle]
-                        : messages.nav.bikeFitting}
-                    </p>
-                    <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                      {new Date(
-                        session.completedAt ?? session.createdAt
-                      ).toLocaleDateString(locale === "nl" ? "nl-NL" : "en-US")}
-                    </p>
-                    <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                      {getStatusLabel(session.status)}
-                    </p>
-                    {recommendation ? (
-                      <div className="mt-2 space-y-1 text-sm text-[color:var(--foreground)]">
-                        <p>
-                          {messages.fitHistory.saddleHeight}:{" "}
-                          {recommendation.calculatedFit.saddleHeightMm} mm
-                        </p>
-                        <p>
-                          {messages.fitHistory.handlebarDrop}:{" "}
-                          {recommendation.calculatedFit.handlebarDropMm} mm
-                        </p>
-                        <p>
-                          {messages.fitHistory.confidence}:{" "}
-                          {formatConfidence(recommendation.confidenceScore)}%
-                        </p>
-                      </div>
-                    ) : (
-                      <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
-                        {messages.fitHistory.noRecommendationYet}
-                      </p>
-                    )}
+
+        {/* Sessions */}
+        <CardContent className="p-0">
+          <div className="divide-y divide-border">
+            {sessions.map(({ session, recommendation }) => {
+              const statusConfig = getStatusConfig(session.status);
+              const date = new Date(session.completedAt ?? session.createdAt)
+                .toLocaleDateString(locale === "nl" ? "nl-NL" : "en-US", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                });
+              const ridingStyleLabel = session.ridingStyle
+                ? messages.sessions.ridingStyle[session.ridingStyle]
+                : messages.nav.bikeFitting;
+
+              return (
+                <div key={session._id} className="px-6 py-4">
+                  {/* Top row: riding style + date + status */}
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-foreground">{ridingStyleLabel}</span>
+                      <span
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-xs font-medium",
+                          statusConfig.className
+                        )}
+                      >
+                        {statusConfig.label}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                      <Clock className="h-3.5 w-3.5" />
+                      {date}
+                    </div>
                   </div>
-                  <div className="flex flex-col items-end gap-2">
-                    <Link
-                      href={withLocalePrefix(`/fit/${session._id}/results`, locale)}
-                      className="text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
+
+                  {/* Metrics */}
+                  {recommendation ? (
+                    <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1">
+                      <div className="flex items-center gap-1.5">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-success" />
+                        <span className="text-sm text-muted-foreground">
+                          {messages.fitHistory.saddleHeight}:{" "}
+                          <span className="font-medium text-foreground">
+                            {recommendation.calculatedFit.saddleHeightMm} mm
+                          </span>
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-success" />
+                        <span className="text-sm text-muted-foreground">
+                          {messages.fitHistory.handlebarDrop}:{" "}
+                          <span className="font-medium text-foreground">
+                            {recommendation.calculatedFit.handlebarDropMm} mm
+                          </span>
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-success" />
+                        <span className="text-sm text-muted-foreground">
+                          {messages.fitHistory.confidence}:{" "}
+                          <span className="font-medium text-foreground">
+                            {formatConfidence(recommendation.confidenceScore)}%
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {messages.fitHistory.noRecommendationYet}
+                    </p>
+                  )}
+
+                  {/* Actions */}
+                  <div className="mt-3 flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      render={<Link href={withLocalePrefix(`/fit/${session._id}/results`, locale)} />}
                     >
                       {messages.fitHistory.viewReport}
-                    </Link>
-                    <button
-                      type="button"
+                      <ChevronRight className="ml-1 h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
                       onClick={() => setSessionToDelete(session)}
-                      className="text-sm font-semibold text-[color:var(--danger)] hover:opacity-80"
+                      className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                     >
+                      <Trash2 className="mr-1.5 h-3.5 w-3.5" />
                       {messages.fitHistory.delete.action}
-                    </button>
+                    </Button>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </CardContent>
       </Card>
 
+      {/* Delete confirmation dialog */}
       <AccessibleDialog
         open={sessionToDelete !== null}
         title={messages.fitHistory.delete.dialogTitle}
-        description={messages.fitHistory.delete.dialogDescription}
         onClose={() => {
-          if (!isDeleting) {
-            setSessionToDelete(null);
-          }
+          if (!isDeleting) setSessionToDelete(null);
         }}
       >
+        {/* Warning icon + description */}
+        <div className="mb-5 flex gap-4">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-destructive/10">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+          </div>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {messages.fitHistory.delete.dialogDescription}
+          </p>
+        </div>
+
+        {/* Actions */}
         <div className="flex justify-end gap-3">
           <Button
             variant="outline"
@@ -217,6 +259,7 @@ export function BikeWithFitHistory({
             onClick={handleDelete}
             isLoading={isDeleting}
           >
+            <Trash2 className="mr-1.5 h-4 w-4" />
             {messages.fitHistory.delete.confirm}
           </Button>
         </div>

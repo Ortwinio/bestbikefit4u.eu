@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type ReactNode, type ReactElement } from "react";
 import {
   Dialog,
   DialogClose,
@@ -15,7 +15,7 @@ import { Button } from "./Button";
 export interface AccessibleDialogProps {
   open: boolean;
   title: string;
-  description?: string;
+  description?: ReactNode;
   onClose: () => void;
   children: ReactNode;
 }
