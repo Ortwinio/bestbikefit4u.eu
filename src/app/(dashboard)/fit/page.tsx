@@ -21,23 +21,14 @@ import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTr
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import {
   getBikeTypeLabel,
-  getBikeTypeOptions,
   isAeroCompatibleBikeType,
-  type BikeType,
 } from "@/lib/bikes";
 import { reportClientError } from "@/lib/telemetry";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { ArrowRight, AlertCircle } from "lucide-react";
+import { ArrowRight, AlertCircle, PlusCircle, Bike } from "lucide-react";
 import { buildBikeRoleBias } from "../../../../convex/recommendations/bikeRoleBias";
 
-type RidingStyle =
-  | "recreational"
-  | "fitness"
-  | "sportive"
-  | "racing"
-  | "commuting"
-  | "touring";
 type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
 
 function SavedBikeImage({ source }: { source?: string }) {
@@ -70,13 +61,10 @@ export default function NewFitSessionPage() {
   const pagePath = withLocalePrefix("/fit", locale);
   const logMarketingEvent = useMarketingEventLogger();
   const hasTrackedFitViewRef = useRef(false);
-  const [bikeType, setBikeType] = useState<BikeType | "">("");
   const [selectedBikeId, setSelectedBikeId] = useState<Id<"bikes"> | null>(null);
   const [selectedBikeProfileId, setSelectedBikeProfileId] = useState<
     Id<"bikeProfiles"> | null
   >(null);
-  const [ridingStyle, setRidingStyle] = useState<RidingStyle | "">("");
-  const [ridingGoal, setRidingGoal] = useState<PrimaryGoal | "">("");
   const [isCreating, setIsCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
 
@@ -108,92 +96,28 @@ export default function NewFitSessionPage() {
         profileType: selectedBikeProfile?.profileType,
       })
     : null;
-  const effectiveBikeType = selectedBike?.bikeType ?? bikeType;
+  const effectiveBikeType = selectedBike?.bikeType ?? "";
   const effectiveRidingStyle =
-    selectedBike?.ridingStyle ??
-    ridingStyle ??
-    selectedBikeRoleBias?.suggestedRidingStyle ??
-    "";
+    selectedBike?.ridingStyle ?? selectedBikeRoleBias?.suggestedRidingStyle ?? "";
   const effectiveRidingGoal =
-    selectedBike?.primaryGoal ??
-    ridingGoal ??
-    selectedBikeRoleBias?.suggestedPrimaryGoal ??
-    "";
-  const visibleBikeRoleBias =
-    selectedBikeRoleBias?.source !== "none" ? selectedBikeRoleBias : null;
-  const bikeNeedsAttributes = Boolean(selectedBike) && (!effectiveRidingStyle || !effectiveRidingGoal);
+    selectedBike?.primaryGoal ?? selectedBikeRoleBias?.suggestedPrimaryGoal ?? "";
+  const bikeNeedsAttributes =
+    Boolean(selectedBike) && (!effectiveRidingStyle || !effectiveRidingGoal);
   const isSelectedGoalAllowed =
     effectiveRidingGoal !== "aerodynamics" ||
     isAeroCompatibleBikeType(effectiveBikeType);
 
   const canStart = Boolean(
-    effectiveBikeType &&
-      effectiveRidingStyle &&
-      effectiveRidingGoal &&
+    selectedBikeId &&
+      effectiveBikeType &&
       !bikeNeedsAttributes &&
       isSelectedGoalAllowed &&
       hasProfile &&
       !isCreating
   );
-  const ridingStyles = [
-    {
-      value: "recreational" as const,
-      label: messages.fit.ridingStyles.recreational.label,
-      description: messages.fit.ridingStyles.recreational.description,
-    },
-    {
-      value: "fitness" as const,
-      label: messages.fit.ridingStyles.fitness.label,
-      description: messages.fit.ridingStyles.fitness.description,
-    },
-    {
-      value: "sportive" as const,
-      label: messages.fit.ridingStyles.sportive.label,
-      description: messages.fit.ridingStyles.sportive.description,
-    },
-    {
-      value: "racing" as const,
-      label: messages.fit.ridingStyles.racing.label,
-      description: messages.fit.ridingStyles.racing.description,
-    },
-    {
-      value: "commuting" as const,
-      label: messages.fit.ridingStyles.commuting.label,
-      description: messages.fit.ridingStyles.commuting.description,
-    },
-    {
-      value: "touring" as const,
-      label: messages.fit.ridingStyles.touring.label,
-      description: messages.fit.ridingStyles.touring.description,
-    },
-  ];
-  const ridingGoals = [
-    {
-      value: "comfort" as const,
-      label: messages.fit.goals.comfort.label,
-      description: messages.fit.goals.comfort.description,
-    },
-    {
-      value: "balanced" as const,
-      label: messages.fit.goals.balanced.label,
-      description: messages.fit.goals.balanced.description,
-    },
-    {
-      value: "performance" as const,
-      label: messages.fit.goals.performance.label,
-      description: messages.fit.goals.performance.description,
-    },
-    {
-      value: "aerodynamics" as const,
-      label: messages.fit.goals.aerodynamics.label,
-      description: messages.fit.goals.aerodynamics.description,
-    },
-  ];
 
   useEffect(() => {
-    if (hasTrackedFitViewRef.current) {
-      return;
-    }
+    if (hasTrackedFitViewRef.current) return;
     hasTrackedFitViewRef.current = true;
     logMarketingEvent({
       eventType: "funnel_fit_view",
@@ -204,78 +128,41 @@ export default function NewFitSessionPage() {
   }, [locale, logMarketingEvent, pagePath]);
 
   useEffect(() => {
-    if (!requestedBikeId || !bikes || selectedBikeId) {
-      return;
-    }
-
+    if (!requestedBikeId || !bikes || selectedBikeId) return;
     const requestedBike = bikes.find((bike) => bike._id === requestedBikeId);
-    if (!requestedBike) {
-      return;
-    }
-
+    if (!requestedBike) return;
     setSelectedBikeId(requestedBike._id);
     setSelectedBikeProfileId(null);
-    setBikeType(requestedBike.bikeType);
   }, [bikes, requestedBikeId, selectedBikeId]);
 
   useEffect(() => {
-    if (!selectedBikeId || bikeProfiles === undefined) {
-      return;
-    }
-
+    if (!selectedBikeId || bikeProfiles === undefined) return;
     if (!bikeProfiles || bikeProfiles.length === 0) {
       setSelectedBikeProfileId(null);
       return;
     }
-
     const hasCurrentSelection = bikeProfiles.some(
       (bikeProfile) => bikeProfile._id === selectedBikeProfileId
     );
-    if (hasCurrentSelection) {
-      return;
-    }
-
+    if (hasCurrentSelection) return;
     const defaultProfile =
       bikeProfiles.find((bikeProfile) => bikeProfile.isDefault) ?? bikeProfiles[0];
     setSelectedBikeProfileId(defaultProfile?._id ?? null);
   }, [bikeProfiles, selectedBikeId, selectedBikeProfileId]);
 
-  const profileTypeLabel = (profileType: string) => {
-    return (
-      (messages.bikeProfileTypes as Record<string, string>)[profileType] ??
-      profileType
-    );
-  };
-
-  const handleSelectBike = (bikeId: Id<"bikes">, selectedType: BikeType) => {
-    setSelectedBikeId(bikeId);
-    setSelectedBikeProfileId(null);
-    setBikeType(selectedType);
-  };
-
-  const handleUseCustomBikeType = () => {
-    setSelectedBikeId(null);
-    setSelectedBikeProfileId(null);
-  };
+  const profileTypeLabel = (profileType: string) =>
+    (messages.bikeProfileTypes as Record<string, string>)[profileType] ?? profileType;
 
   const handleStartSession = async () => {
-    if (
-      !effectiveBikeType ||
-      !effectiveRidingStyle ||
-      !effectiveRidingGoal ||
-      bikeNeedsAttributes ||
-      !isSelectedGoalAllowed
-    ) {
-      return;
-    }
+    if (!effectiveBikeType || !effectiveRidingStyle || !effectiveRidingGoal || bikeNeedsAttributes || !isSelectedGoalAllowed) return;
 
     setCreateError(null);
     setIsCreating(true);
     try {
       const sessionId = await createSession({
         bikeType: effectiveBikeType,
-        ridingStyle: effectiveRidingStyle,
-        primaryGoal: effectiveRidingGoal,
+        ridingStyle: effectiveRidingStyle as "recreational" | "fitness" | "sportive" | "racing" | "commuting" | "touring",
+        primaryGoal: effectiveRidingGoal as PrimaryGoal,
         bikeId: selectedBike?._id,
         bikeProfileId: selectedBikeProfileId ?? undefined,
       });
@@ -305,14 +192,14 @@ export default function NewFitSessionPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="mx-auto max-w-2xl">
+      {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">{messages.fit.title}</h1>
-        <p className="mt-2 text-muted-foreground">
-          {messages.fit.subtitle}
-        </p>
+        <p className="mt-2 text-muted-foreground">{messages.fit.subtitle}</p>
       </div>
 
+      {/* Profile warning */}
       {!isLoadingProfile && !hasProfile && (
         <div className="mb-6 rounded-lg border border-warning/20 bg-warning/15 p-4">
           <div className="flex items-start gap-3">
@@ -337,30 +224,23 @@ export default function NewFitSessionPage() {
         </div>
       )}
 
-      {isLoadingBikes && (
-        <div className="mb-6 rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
-          {messages.fit.savedBikes.loading}
-        </div>
-      )}
-
-      {bikes && bikes.length > 0 && (
-        <Card variant="bordered" className="dashboard-card-surface mb-6">
-          <CardHeader>
-            <div className="flex items-center justify-between gap-3">
-              <CardTitle>{messages.fit.savedBikes.title}</CardTitle>
-              {selectedBikeId && (
-                <Button variant="outline" size="sm" onClick={handleUseCustomBikeType}>
-                  {messages.fit.savedBikes.useCustomType}
-                </Button>
-              )}
-            </div>
-          </CardHeader>
-          <CardContent>
+      {/* Bike selection */}
+      <Card variant="bordered" className="dashboard-card-surface mb-6">
+        <CardHeader>
+          <CardTitle>{messages.fit.savedBikes.title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoadingBikes ? (
+            <p className="text-sm text-muted-foreground">{messages.fit.savedBikes.loading}</p>
+          ) : bikes && bikes.length > 0 ? (
             <div className="grid gap-3 sm:grid-cols-2">
               {bikes.map((bike) => (
                 <Selectable
                   key={bike._id}
-                  onClick={() => handleSelectBike(bike._id, bike.bikeType)}
+                  onClick={() => {
+                    setSelectedBikeId(bike._id);
+                    setSelectedBikeProfileId(null);
+                  }}
                   selected={selectedBikeId === bike._id}
                   variant="card"
                   label={
@@ -376,34 +256,42 @@ export default function NewFitSessionPage() {
                   }
                 />
               ))}
+
+              {/* Add new bike card */}
+              <Link
+                href={withLocalePrefix("/bikes/new", locale)}
+                className="flex flex-col items-center justify-center gap-2 rounded-[var(--radius-lg)] border border-dashed border-border bg-card p-4 text-center transition-colors hover:bg-accent"
+              >
+                <PlusCircle className="h-6 w-6 text-muted-foreground" />
+                <span className="text-sm font-medium text-muted-foreground">
+                  {messages.fit.savedBikes.addNewBike}
+                </span>
+              </Link>
             </div>
-
-            {!selectedBikeId ? (
-              <div className="mt-6 space-y-3">
-                <div className="border-t border-border pt-6">
-                  <p className="text-sm font-medium text-foreground">
-                    {messages.fit.sections.bikeType}
-                  </p>
-                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                    {getBikeTypeOptions(messages).map((type) => (
-                      <Selectable
-                        key={type.value}
-                        onClick={() => setBikeType(type.value)}
-                        selected={bikeType === type.value}
-                        variant="card"
-                        label={type.label}
-                        description={type.description}
-                      />
-                    ))}
-                  </div>
-                </div>
+          ) : (
+            /* No bikes yet */
+            <div className="flex flex-col items-center gap-4 py-8 text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted">
+                <Bike className="h-7 w-7 text-muted-foreground" />
               </div>
-            ) : null}
-          </CardContent>
-        </Card>
-      )}
+              <div>
+                <p className="font-medium text-foreground">{messages.fit.savedBikes.noBikes}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{messages.fit.savedBikes.noBikesHint}</p>
+              </div>
+              <Button
+                render={<Link href={withLocalePrefix("/bikes/new", locale)} />}
+                variant="outline"
+              >
+                <PlusCircle className="mr-2 h-4 w-4" />
+                {messages.fit.savedBikes.addFirstBike}
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-      {selectedBike ? (
+      {/* Bike profiles */}
+      {selectedBike && (
         <Card variant="bordered" className="dashboard-card-surface mb-6">
           <CardHeader>
             <CardTitle>{messages.fit.savedBikes.profilesTitle}</CardTitle>
@@ -413,9 +301,7 @@ export default function NewFitSessionPage() {
           </CardHeader>
           <CardContent>
             {isLoadingBikeProfiles ? (
-              <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
-                {messages.fit.savedBikes.profilesLoading}
-              </div>
+              <p className="text-sm text-muted-foreground">{messages.fit.savedBikes.profilesLoading}</p>
             ) : bikeProfiles && bikeProfiles.length > 0 ? (
               <div className="grid gap-3 sm:grid-cols-2">
                 {bikeProfiles.map((bikeProfile) => (
@@ -437,194 +323,58 @@ export default function NewFitSessionPage() {
                 ))}
               </div>
             ) : (
-              <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
-                {messages.fit.savedBikes.noProfiles}
-              </div>
+              <p className="text-sm text-muted-foreground">{messages.fit.savedBikes.noProfiles}</p>
             )}
           </CardContent>
         </Card>
-      ) : null}
+      )}
 
-      {selectedBike && visibleBikeRoleBias ? (
-        <Card variant="bordered" className="dashboard-card-surface mb-6">
-          <CardHeader>
-            <CardTitle>Imported bike usage context</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="rounded-lg border border-border bg-card p-4 text-sm text-foreground">
-              <p>{visibleBikeRoleBias.summary}</p>
-              <p className="mt-2 text-muted-foreground">
-                Confidence: {visibleBikeRoleBias.confidence}. This stays advisory; rider
-                measurements and explicit fit inputs still control the session.
+      {/* Missing attributes warning */}
+      {selectedBike && bikeNeedsAttributes && (
+        <div className="mb-6 rounded-lg border border-warning/20 bg-warning/15 p-4">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="mt-0.5 h-5 w-5 text-warning" />
+            <div>
+              <p className="font-medium text-foreground">
+                {messages.fit.savedBikes.missingBikeAttribute}
               </p>
-              {visibleBikeRoleBias.suggestedRidingStyle && visibleBikeRoleBias.suggestedPrimaryGoal ? (
-                <p className="mt-2 text-muted-foreground">
-                  Suggested bias:{" "}
-                  <span className="font-medium text-foreground">
-                    {messages.fit.ridingStyles[
-                      visibleBikeRoleBias.suggestedRidingStyle as RidingStyle
-                    ]?.label ?? visibleBikeRoleBias.suggestedRidingStyle}
-                  </span>{" "}
-                  /{" "}
-                  <span className="font-medium text-foreground">
-                    {messages.fit.goals[visibleBikeRoleBias.suggestedPrimaryGoal as PrimaryGoal]
-                      ?.label ?? visibleBikeRoleBias.suggestedPrimaryGoal}
-                  </span>
-                  .
-                </p>
-              ) : null}
+              <Button
+                render={
+                  <Link href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)} />
+                }
+                variant="outline"
+                size="sm"
+                className="mt-3"
+              >
+                {messages.fit.savedBikes.completeBikeSetup}
+              </Button>
             </div>
-          </CardContent>
-        </Card>
-      ) : null}
+          </div>
+        </div>
+      )}
 
-      <Card variant="bordered" className="dashboard-card-surface mb-6">
-        <CardHeader>
-          <CardTitle>{messages.fit.sections.ridingStyle}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {selectedBike ? (
-            <div className="rounded-lg border border-border bg-card p-4 text-sm text-foreground">
-              {selectedBike.ridingStyle ? (
-                <>
-                  {messages.fit.savedBikes.usingBikeAttribute}{" "}
-                  <span className="font-semibold">
-                    {messages.fit.ridingStyles[selectedBike.ridingStyle].label}
-                  </span>
-                  .
-                </>
-              ) : selectedBikeRoleBias?.suggestedRidingStyle ? (
-                <>
-                  Bike usage context suggests{" "}
-                  <span className="font-semibold">
-                    {messages.fit.ridingStyles[
-                      selectedBikeRoleBias.suggestedRidingStyle as RidingStyle
-                    ]?.label ?? selectedBikeRoleBias.suggestedRidingStyle}
-                  </span>
-                  . This is advisory and will be carried into the session if you continue.
-                  <Link
-                    href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)}
-                    className="ml-2 font-semibold text-primary hover:text-primary-dark"
-                  >
-                    {messages.fit.savedBikes.completeBikeSetup}
-                  </Link>
-                </>
-              ) : (
-                <>
-                  {messages.fit.savedBikes.missingBikeAttribute}{" "}
-                  <Link
-                    href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)}
-                    className="font-semibold text-primary hover:text-primary-dark"
-                  >
-                    {messages.fit.savedBikes.completeBikeSetup}
-                  </Link>
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {ridingStyles.map((style) => (
-                <Selectable
-                  key={style.value}
-                  onClick={() => setRidingStyle(style.value)}
-                  selected={ridingStyle === style.value}
-                  variant="card"
-                  label={style.label}
-                  description={style.description}
-                />
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {/* CTA */}
+      <Button
+        size="lg"
+        className="w-full"
+        disabled={!canStart}
+        isLoading={isCreating}
+        onClick={handleStartSession}
+      >
+        {messages.fit.continueCta}
+        <ArrowRight className="ml-2 h-4 w-4" />
+      </Button>
 
-      <Card variant="bordered" className="dashboard-card-surface mb-6">
-        <CardHeader>
-          <CardTitle>{messages.fit.sections.primaryGoal}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {selectedBike ? (
-            <div className="rounded-lg border border-border bg-card p-4 text-sm text-foreground">
-              {selectedBike.primaryGoal ? (
-                <>
-                  {messages.fit.savedBikes.usingBikeAttribute}{" "}
-                  <span className="font-semibold">
-                    {messages.fit.goals[selectedBike.primaryGoal].label}
-                  </span>
-                  .
-                </>
-              ) : selectedBikeRoleBias?.suggestedPrimaryGoal ? (
-                <>
-                  Bike usage context suggests{" "}
-                  <span className="font-semibold">
-                    {messages.fit.goals[selectedBikeRoleBias.suggestedPrimaryGoal as PrimaryGoal]
-                      ?.label ?? selectedBikeRoleBias.suggestedPrimaryGoal}
-                  </span>
-                  . This stays advisory and is folded into the start flow if you continue.
-                  <Link
-                    href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)}
-                    className="ml-2 font-semibold text-primary hover:text-primary-dark"
-                  >
-                    {messages.fit.savedBikes.completeBikeSetup}
-                  </Link>
-                </>
-              ) : (
-                <>
-                  {messages.fit.savedBikes.missingBikeAttribute}{" "}
-                  <Link
-                    href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)}
-                    className="font-semibold text-primary hover:text-primary-dark"
-                  >
-                    {messages.fit.savedBikes.completeBikeSetup}
-                  </Link>
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {ridingGoals
-                .filter(
-                  (goal) =>
-                    goal.value !== "aerodynamics" ||
-                    isAeroCompatibleBikeType(effectiveBikeType)
-                )
-                .map((goal) => (
-                  <Selectable
-                    key={goal.value}
-                    onClick={() => setRidingGoal(goal.value)}
-                    selected={ridingGoal === goal.value}
-                    variant="card"
-                    label={goal.label}
-                    description={goal.description}
-                  />
-                ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <div className="flex justify-end">
-        <Button
-          size="lg"
-          disabled={!canStart}
-          isLoading={isCreating}
-          onClick={handleStartSession}
-        >
-          {messages.fit.continueCta}
-          <ArrowRight className="h-4 w-4 ml-2" />
-        </Button>
-      </div>
-
-      {createError ? (
+      {createError && (
         <ErrorState
-          className="mt-2"
+          className="mt-4"
           title={messages.fit.errors.startFailedTitle}
           description={createError}
         />
-      ) : null}
+      )}
 
-      {!canStart && effectiveBikeType && effectiveRidingStyle && effectiveRidingGoal && !hasProfile && (
-        <p className="mt-2 text-right text-sm text-muted-foreground">
+      {!canStart && selectedBikeId && !bikeNeedsAttributes && !hasProfile && (
+        <p className="mt-2 text-center text-sm text-muted-foreground">
           {messages.fit.profileRequirementHint}
         </p>
       )}
