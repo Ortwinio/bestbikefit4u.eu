@@ -13,7 +13,7 @@ import { QuestionRenderer } from "./QuestionRenderer";
 import { QuestionnaireIntro } from "./QuestionnaireIntro";
 import { QuestionnaireProgressBar } from "./QuestionnaireProgressBar";
 import { getErrorMessage, reportClientError } from "@/lib/telemetry";
-import { ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { ChevronRight, Check } from "lucide-react";
 import { formatMessage } from "@/i18n/dashboardMessages";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import type { QuestionDefinition, QuestionnaireResponseValue } from "./types";
@@ -277,45 +277,34 @@ export function QuestionnaireContainer({
 
       {!showIntro && (
         <>
-          <div className="flex items-center justify-between">
-            <Button
-              variant="outline"
-              onClick={handlePrevious}
-              disabled={currentIndex === 0 || isSaving || isCompleting}
-            >
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              {messages.questionnaire.actions.previous}
-            </Button>
-
-            <div className="flex items-center gap-2">
-              {!currentQuestion.isRequired && !isLastQuestion && (
-                <Button
-                  variant="ghost"
-                  onClick={handleSkip}
-                  disabled={isSaving || isCompleting}
-                >
-                  {messages.questionnaire.actions.skip}
-                </Button>
-              )}
-
+          <div className="flex items-center justify-end gap-2">
+            {!currentQuestion.isRequired && !isLastQuestion && (
               <Button
-                onClick={handleNext}
-                disabled={!canProceed || isSaving || isCompleting}
-                isLoading={isSaving || isCompleting}
+                variant="ghost"
+                onClick={handleSkip}
+                disabled={isSaving || isCompleting}
               >
-                {isLastQuestion ? (
-                  <>
-                    {messages.questionnaire.actions.complete}
-                    <Check className="h-4 w-4 ml-1" />
-                  </>
-                ) : (
-                  <>
-                    {messages.questionnaire.actions.next}
-                    <ChevronRight className="h-4 w-4 ml-1" />
-                  </>
-                )}
+                {messages.questionnaire.actions.skip}
               </Button>
-            </div>
+            )}
+
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed || isSaving || isCompleting}
+              isLoading={isSaving || isCompleting}
+            >
+              {isLastQuestion ? (
+                <>
+                  {messages.questionnaire.actions.complete}
+                  <Check className="h-4 w-4 ml-1" />
+                </>
+              ) : (
+                <>
+                  {messages.questionnaire.actions.next}
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </>
+              )}
+            </Button>
           </div>
 
           {actionError ? (
