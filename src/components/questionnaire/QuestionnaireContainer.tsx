@@ -11,7 +11,7 @@ import {
 } from "@/components/ui";
 import { QuestionRenderer } from "./QuestionRenderer";
 import { QuestionnaireIntro } from "./QuestionnaireIntro";
-import { ProgressBar } from "./ProgressBar";
+import { QuestionnaireProgressBar } from "./QuestionnaireProgressBar";
 import { getErrorMessage, reportClientError } from "@/lib/telemetry";
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { formatMessage } from "@/i18n/dashboardMessages";
@@ -102,6 +102,9 @@ export function QuestionnaireContainer({
     1,
     Math.ceil((remainingQuestions * 40) / 60)
   );
+  const percentComplete = showIntro
+    ? 0
+    : Math.round((currentIndex / totalQuestions) * 100);
 
   useEffect(() => {
     if (totalQuestions > 0 && currentIndex > totalQuestions - 1) {
@@ -227,6 +230,13 @@ export function QuestionnaireContainer({
 
   return (
     <div className="mx-auto max-w-2xl">
+      <div className="mb-6">
+        <QuestionnaireProgressBar
+          estimatedMinutes={estimatedMinutesRemaining}
+          percentComplete={percentComplete}
+        />
+      </div>
+
       {missingRequiredQuestionIds.length > 0 && (
         <div className="mb-6 rounded-lg border border-border bg-destructive-soft p-4">
           <p className="text-sm font-medium text-destructive">
