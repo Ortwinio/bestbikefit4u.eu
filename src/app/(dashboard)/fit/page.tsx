@@ -24,9 +24,10 @@ import {
   isAeroCompatibleBikeType,
 } from "@/lib/bikes";
 import { reportClientError } from "@/lib/telemetry";
+import { cn } from "@/utils/cn";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { ArrowRight, AlertCircle, PlusCircle, Bike } from "lucide-react";
+import { ArrowRight, AlertCircle, PlusCircle, Bike, CheckCircle2 } from "lucide-react";
 import { buildBikeRoleBias } from "../../../../convex/recommendations/bikeRoleBias";
 
 type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
@@ -193,10 +194,10 @@ export default function NewFitSessionPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">{messages.fit.title}</h1>
-        <p className="mt-2 text-muted-foreground">{messages.fit.subtitle}</p>
+      {/* Hero header */}
+      <div className="mb-6 overflow-hidden rounded-[var(--radius-lg)] bg-gradient-to-br from-primary to-primary/75 px-6 py-7">
+        <h1 className="text-2xl font-bold text-primary-foreground">{messages.fit.title}</h1>
+        <p className="mt-1 text-sm text-primary-foreground/80">{messages.fit.subtitle}</p>
       </div>
 
       {/* Profile warning */}
@@ -234,33 +235,47 @@ export default function NewFitSessionPage() {
             <p className="text-sm text-muted-foreground">{messages.fit.savedBikes.loading}</p>
           ) : bikes && bikes.length > 0 ? (
             <div className="grid gap-3 sm:grid-cols-2">
-              {bikes.map((bike) => (
-                <Selectable
-                  key={bike._id}
-                  onClick={() => {
-                    setSelectedBikeId(bike._id);
-                    setSelectedBikeProfileId(null);
-                  }}
-                  selected={selectedBikeId === bike._id}
-                  variant="card"
-                  label={
-                    <div className="space-y-3">
-                      <SavedBikeImage source={bike.photoUrl} />
-                      <div>
-                        <div className="font-medium">{bike.name}</div>
-                        <div className="mt-1 text-sm text-muted-foreground">
-                          {getBikeTypeLabel(bike.bikeType, messages)}
-                        </div>
+              {bikes.map((bike) => {
+                const isSelected = selectedBikeId === bike._id;
+                return (
+                  <button
+                    key={bike._id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedBikeId(bike._id);
+                      setSelectedBikeProfileId(null);
+                    }}
+                    className={cn(
+                      "relative w-full rounded-[var(--radius-lg)] border-2 p-4 text-left transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+                      isSelected
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border bg-card text-foreground hover:bg-accent"
+                    )}
+                  >
+                    {/* Selection indicator */}
+                    <CheckCircle2
+                      className={cn(
+                        "absolute top-3 right-3 h-5 w-5 transition-opacity duration-150",
+                        isSelected ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+
+                    <SavedBikeImage source={bike.photoUrl} />
+
+                    <div className="mt-3">
+                      <div className="pr-6 font-medium">{bike.name}</div>
+                      <div className={cn("mt-1 text-sm", isSelected ? "text-primary-foreground/80" : "text-muted-foreground")}>
+                        {getBikeTypeLabel(bike.bikeType, messages)}
                       </div>
                     </div>
-                  }
-                />
-              ))}
+                  </button>
+                );
+              })}
 
               {/* Add new bike card */}
               <Link
                 href={withLocalePrefix("/bikes/new", locale)}
-                className="flex flex-col items-center justify-center gap-2 rounded-[var(--radius-lg)] border border-dashed border-border bg-card p-4 text-center transition-colors hover:bg-accent"
+                className="flex min-h-[140px] flex-col items-center justify-center gap-2 rounded-[var(--radius-lg)] border-2 border-dashed border-border bg-card p-4 text-center transition-colors hover:bg-accent"
               >
                 <PlusCircle className="h-6 w-6 text-muted-foreground" />
                 <span className="text-sm font-medium text-muted-foreground">
@@ -304,23 +319,41 @@ export default function NewFitSessionPage() {
               <p className="text-sm text-muted-foreground">{messages.fit.savedBikes.profilesLoading}</p>
             ) : bikeProfiles && bikeProfiles.length > 0 ? (
               <div className="grid gap-3 sm:grid-cols-2">
-                {bikeProfiles.map((bikeProfile) => (
-                  <Selectable
-                    key={bikeProfile._id}
-                    onClick={() => setSelectedBikeProfileId(bikeProfile._id)}
-                    selected={selectedBikeProfileId === bikeProfile._id}
-                    variant="card"
-                    label={bikeProfile.name}
-                    description={profileTypeLabel(bikeProfile.profileType)}
-                    badge={
-                      bikeProfile.isDefault ? (
-                        <span className="rounded-full bg-secondary px-2 py-1 text-xs font-semibold text-secondary-foreground">
+                {bikeProfiles.map((bikeProfile) => {
+                  const isSelected = selectedBikeProfileId === bikeProfile._id;
+                  return (
+                    <button
+                      key={bikeProfile._id}
+                      type="button"
+                      onClick={() => setSelectedBikeProfileId(bikeProfile._id)}
+                      className={cn(
+                        "relative w-full rounded-[var(--radius-lg)] border-2 p-4 text-left transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+                        isSelected
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border bg-card text-foreground hover:bg-accent"
+                      )}
+                    >
+                      <CheckCircle2
+                        className={cn(
+                          "absolute top-3 right-3 h-5 w-5 transition-opacity duration-150",
+                          isSelected ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      <div className="pr-6 font-medium">{bikeProfile.name}</div>
+                      <div className={cn("mt-1 text-sm", isSelected ? "text-primary-foreground/80" : "text-muted-foreground")}>
+                        {profileTypeLabel(bikeProfile.profileType)}
+                      </div>
+                      {bikeProfile.isDefault && (
+                        <span className={cn(
+                          "mt-2 inline-block rounded-full px-2 py-0.5 text-xs font-semibold",
+                          isSelected ? "bg-primary-foreground/20 text-primary-foreground" : "bg-secondary text-secondary-foreground"
+                        )}>
                           {messages.fit.savedBikes.defaultBadge}
                         </span>
-                      ) : null
-                    }
-                  />
-                ))}
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">{messages.fit.savedBikes.noProfiles}</p>
