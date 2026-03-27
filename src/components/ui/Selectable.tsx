@@ -30,11 +30,11 @@ const variantClassMap = {
   card: {
     base: "rounded-[var(--radius-lg)] border-2 p-4 text-left",
     selected:
-      "border-[color:var(--primary)] bg-[color:color-mix(in_oklch,var(--card)_86%,var(--primary)_14%)] text-[color:var(--foreground)]",
+      "border-primary bg-primary text-primary-foreground",
     idle:
       "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] hover-only:hover:border-[color:color-mix(in_oklch,var(--border)_70%,var(--foreground)_30%)] hover-only:hover:bg-[color:var(--accent)]",
     semantic:
-      "rounded-[var(--radius-lg)] border-2 p-4 text-left transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth motion-reduce:transition-none focus-visible:focus-ring motion-safe:active:scale-[0.98] data-checked:border-[color:var(--primary)] data-checked:bg-[color:color-mix(in_oklch,var(--card)_86%,var(--primary)_14%)] data-checked:text-[color:var(--foreground)] data-unchecked:border-[color:var(--border)] data-unchecked:bg-[color:var(--card)] data-unchecked:text-[color:var(--foreground)] hover-only:hover:border-[color:color-mix(in_oklch,var(--border)_70%,var(--foreground)_30%)] hover-only:hover:bg-[color:var(--accent)]",
+      "rounded-[var(--radius-lg)] border-2 p-4 text-left transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth motion-reduce:transition-none focus-visible:focus-ring motion-safe:active:scale-[0.98] data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground data-unchecked:border-[color:var(--border)] data-unchecked:bg-[color:var(--card)] data-unchecked:text-[color:var(--foreground)] hover-only:hover:border-[color:color-mix(in_oklch,var(--border)_70%,var(--foreground)_30%)] hover-only:hover:bg-[color:var(--accent)]",
   },
   pill: {
     base: "rounded-full px-4 py-2 text-sm",
@@ -82,8 +82,12 @@ export const Selectable = forwardRef<HTMLButtonElement, SelectableProps>(
       (variant === "card" ? (
         <Check
           className={cn(
-            "h-5 w-5 shrink-0 text-[color:var(--primary)]",
-            semantic ? "opacity-0 transition-opacity group-data-checked:opacity-100" : ""
+            "h-5 w-5 shrink-0",
+            semantic
+              ? "text-[color:var(--primary)] opacity-0 transition-opacity group-data-checked:opacity-100 group-data-checked:text-primary-foreground"
+              : selected
+                ? "text-primary-foreground"
+                : "text-[color:var(--primary)]"
           )}
         />
       ) : null);
@@ -100,7 +104,16 @@ export const Selectable = forwardRef<HTMLButtonElement, SelectableProps>(
             </div>
           ) : null}
           {description ? (
-            <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+            <div
+              className={cn(
+                "mt-1 text-sm",
+                semantic
+                  ? "text-[color:var(--muted-foreground)] group-data-checked:text-primary-foreground/80"
+                  : selected
+                    ? "text-primary-foreground/80"
+                    : "text-[color:var(--muted-foreground)]"
+              )}
+            >
               {description}
             </div>
           ) : null}
