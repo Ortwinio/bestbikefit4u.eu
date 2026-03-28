@@ -2,13 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useMutation } from "convex/react";
-import { PencilLine } from "lucide-react";
+import { Bike, PencilLine } from "lucide-react";
 import { api } from "../../../../convex/_generated/api";
 import type { Doc } from "../../../../convex/_generated/dataModel";
 import { getBikeTypeLabel } from "@/lib/bikes";
 import { reportClientError } from "@/lib/telemetry";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { Button, Card, CardContent, CardHeader, CardTitle, Textarea, useToast } from "@/components/ui";
+import { Button, Card, CardContent, InfoBox, MeasurementTile, SectionHeader, Textarea, useToast } from "@/components/ui";
 
 interface BikePressureCardProps {
   bike: Doc<"bikes">;
@@ -101,15 +101,10 @@ export function BikePressureCard({
       variant="bordered"
       className="dashboard-card-surface h-full border-[color:var(--border)] bg-[color:var(--card)]"
     >
-      <CardHeader>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <CardTitle>{bike.name}</CardTitle>
-            <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-              {[bike.brand, bike.model].filter(Boolean).join(" ") ||
-                getBikeTypeLabel(bike.bikeType, messages)}
-            </p>
-          </div>
+      <SectionHeader
+        icon={<Bike className="h-4 w-4 text-[color:var(--primary)]" />}
+        title={bike.name}
+        action={
           <Button
             variant="outline"
             size="sm"
@@ -120,34 +115,24 @@ export function BikePressureCard({
               ? messages.pressure.overview.recalculate
               : messages.pressure.overview.noCalculationCta}
           </Button>
-        </div>
-      </CardHeader>
+        }
+      />
       <CardContent className="space-y-4">
+        <p className="text-sm text-[color:var(--muted-foreground)]">
+          {[bike.brand, bike.model].filter(Boolean).join(" ") ||
+            getBikeTypeLabel(bike.bikeType, messages)}
+        </p>
         {latestCalculation ? (
           <>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                  {messages.pressure.overview.frontPressure}
-                </p>
-                <p className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
-                  {latestCalculation.recommendedFrontBar} {messages.pressure.result.bar}
-                </p>
-                <p className="text-sm text-[color:var(--muted-foreground)]">
-                  {latestCalculation.recommendedFrontPsi} {messages.pressure.result.psi}
-                </p>
-              </div>
-              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                  {messages.pressure.overview.rearPressure}
-                </p>
-                <p className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
-                  {latestCalculation.recommendedRearBar} {messages.pressure.result.bar}
-                </p>
-                <p className="text-sm text-[color:var(--muted-foreground)]">
-                  {latestCalculation.recommendedRearPsi} {messages.pressure.result.psi}
-                </p>
-              </div>
+            <div className="grid grid-cols-2 gap-3">
+              <MeasurementTile
+                label={messages.pressure.overview.frontPressure}
+                value={`${latestCalculation.recommendedFrontBar} ${messages.pressure.result.bar}`}
+              />
+              <MeasurementTile
+                label={messages.pressure.overview.rearPressure}
+                value={`${latestCalculation.recommendedRearBar} ${messages.pressure.result.bar}`}
+              />
             </div>
 
             <p className="text-sm text-[color:var(--muted-foreground)]">
@@ -156,9 +141,7 @@ export function BikePressureCard({
             </p>
 
             {autoNote ? (
-              <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--info)_32%,var(--border))] bg-[color:color-mix(in_oklch,var(--card)_92%,var(--info)_8%)] px-4 py-3 text-sm text-[color:var(--info-foreground)]">
-                {autoNote}
-              </div>
+              <InfoBox variant="primary">{autoNote}</InfoBox>
             ) : null}
 
             <div className="space-y-3 rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">

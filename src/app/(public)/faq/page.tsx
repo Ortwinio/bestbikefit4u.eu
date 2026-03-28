@@ -48,6 +48,9 @@ type FAQJsonLd = {
   }>;
 };
 
+const sectionShellClass =
+  "rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-sm sm:p-10";
+
 function linkButtonProps(href: string): ButtonProps {
   return {
     render: <Link href={href} />,
@@ -326,18 +329,23 @@ export default async function FAQPage() {
   const faqJsonLd = buildFaqJsonLd(page.sections);
 
   return (
-    <div className="py-16">
+    <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_40%,var(--background)_60%)_100%)] py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
-        <p className="mt-4 text-xl text-muted-foreground">{page.intro}</p>
+        <section className="rounded-[2.25rem] border border-border/70 bg-card/95 px-6 py-10 shadow-sm sm:px-10 sm:py-12">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+            {locale === "nl" ? "Snel antwoord" : "Quick answers"}
+          </p>
+          <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">{page.title}</h1>
+          <p className="mt-4 text-xl text-muted-foreground">{page.intro}</p>
+        </section>
 
         <div className="mt-12 space-y-12">
           {page.sections.map((section) => (
-            <section key={section.id} aria-labelledby={`${section.id}-title`}>
+            <section key={section.id} aria-labelledby={`${section.id}-title`} className={sectionShellClass}>
               <h2
                 id={`${section.id}-title`}
                 className="text-2xl font-semibold text-foreground"
@@ -348,7 +356,7 @@ export default async function FAQPage() {
                 {section.items.map((item) => (
                   <details
                     key={item.id}
-                    className="group rounded-lg border border-border bg-card p-5"
+                    className="group rounded-[1.5rem] border border-border/70 bg-muted/35 p-5 shadow-sm"
                   >
                     <summary className="cursor-pointer list-none text-lg text-foreground marker:hidden">
                       <strong>{item.question}</strong>
@@ -361,7 +369,7 @@ export default async function FAQPage() {
           ))}
         </div>
 
-        <section className="mt-14 rounded-xl border border-border bg-muted p-6">
+        <section className="mt-14 rounded-[2rem] border border-border/70 bg-muted/70 p-8 shadow-sm sm:p-10">
           <h2 className="text-2xl font-semibold text-foreground">{page.guideTitle}</h2>
           <p className="mt-2 text-muted-foreground">{page.guideBody}</p>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -369,7 +377,7 @@ export default async function FAQPage() {
               <Link
                 key={link.href}
                 href={withLocalePrefix(link.href, locale)}
-                className="rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-primary hover:bg-secondary"
+                className="rounded-2xl border border-border/70 bg-background/90 px-4 py-3 text-sm font-medium text-primary shadow-sm transition hover:bg-secondary/70"
               >
                 {link.label}
               </Link>
@@ -377,12 +385,15 @@ export default async function FAQPage() {
           </div>
         </section>
 
-        <div className="mt-16 rounded-2xl bg-primary-soft p-8 text-center">
-          <h2 className="text-2xl font-semibold text-foreground">{page.ctaTitle}</h2>
-          <p className="mt-2 text-muted-foreground">{page.ctaSubtitle}</p>
-          <div className="mt-6 flex justify-center gap-4">
+        <div className="mt-16 rounded-[2rem] bg-primary px-6 py-12 text-center shadow-lg sm:px-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary-foreground/70">
+            {locale === "nl" ? "Nog niet gevonden?" : "Still deciding?"}
+          </p>
+          <h2 className="mt-3 text-2xl font-semibold text-primary-foreground">{page.ctaTitle}</h2>
+          <p className="mt-2 text-primary-foreground/80">{page.ctaSubtitle}</p>
+          <div className="mt-6 flex flex-col justify-center gap-4 sm:flex-row">
             <Button
-              variant="outline"
+              variant="secondary"
               {...linkButtonProps(withLocalePrefix("/contact", locale))}
             >
               {page.contactButton}

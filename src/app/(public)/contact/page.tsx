@@ -28,6 +28,9 @@ type ContactCopy = {
   directContactHint: string;
 };
 
+const panelClass =
+  "rounded-[1.75rem] border border-border/70 bg-card/95 p-6 shadow-sm sm:p-8";
+
 const content: Record<Locale, ContactCopy> = {
   en: {
     metadata: {
@@ -105,14 +108,19 @@ export default async function ContactPage() {
   const page = content[locale];
 
   return (
-    <div className="py-16 text-foreground">
+    <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_32%,var(--background)_68%)_100%)] py-16 text-foreground">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
-        <p className="mt-4 text-xl text-muted-foreground">{page.subtitle}</p>
+        <section className="rounded-[2.25rem] border border-border/70 bg-card/95 px-6 py-10 shadow-sm sm:px-10 sm:py-12">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+            {locale === "nl" ? "We helpen je verder" : "We can help"}
+          </p>
+          <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">{page.title}</h1>
+          <p className="mt-4 text-xl text-muted-foreground">{page.subtitle}</p>
+        </section>
 
         <div className="mt-12 grid gap-8 md:grid-cols-2">
           <div className="space-y-6">
-            <div className="rounded-lg border border-border bg-card p-6">
+            <div className={panelClass}>
               <div className="flex items-center gap-3">
                 <Mail className="h-6 w-6 text-primary" />
                 <h2 className="text-lg font-semibold text-foreground">{page.emailTitle}</h2>
@@ -126,7 +134,7 @@ export default async function ContactPage() {
               </a>
             </div>
 
-            <div className="rounded-lg border border-border bg-card p-6">
+            <div className={panelClass}>
               <div className="flex items-center gap-3">
                 <MessageSquare className="h-6 w-6 text-primary" />
                 <h2 className="text-lg font-semibold text-foreground">{page.faqTitle}</h2>
@@ -140,7 +148,7 @@ export default async function ContactPage() {
               </Link>
             </div>
 
-            <div className="rounded-lg bg-muted p-6">
+            <div className="rounded-[1.75rem] border border-border/70 bg-muted/55 p-6 shadow-sm">
               <h3 className="font-medium text-foreground">{page.responseTimes}</h3>
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                 {page.responseItems.map((item) => (
@@ -150,18 +158,21 @@ export default async function ContactPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border bg-card p-6">
-            <h2 className="text-lg font-semibold text-foreground">
+          <div className="rounded-[2rem] bg-primary px-6 py-8 shadow-lg sm:px-8">
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary-foreground/70">
+              {locale === "nl" ? "Direct contact" : "Direct contact"}
+            </p>
+            <h2 className="mt-3 text-lg font-semibold text-primary-foreground">
               {page.directContactTitle}
             </h2>
-            <p className="mt-3 text-muted-foreground">{page.directContactBody}</p>
+            <p className="mt-3 text-primary-foreground/80">{page.directContactBody}</p>
             <a
               href="mailto:support@bestbikefit4u.eu"
               className="mt-4 inline-block"
             >
-              <Button>{page.directContactCta}</Button>
+              <Button className="bg-background text-primary hover:bg-muted">{page.directContactCta}</Button>
             </a>
-            <p className="mt-3 text-xs text-muted-foreground">{page.directContactHint}</p>
+            <p className="mt-3 text-xs text-primary-foreground/70">{page.directContactHint}</p>
           </div>
         </div>
       </div>

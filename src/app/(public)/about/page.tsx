@@ -46,6 +46,13 @@ type AboutCopy = {
   ctaButton: string;
 };
 
+const framedSectionClass =
+  "rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-sm sm:p-10";
+const mutedPanelClass =
+  "rounded-[1.75rem] border border-border/70 p-6 shadow-sm sm:p-8";
+const bulletPanelClass =
+  "rounded-2xl border border-border/70 bg-background/90 px-4 py-3 text-sm text-foreground shadow-sm";
+
 const content: Record<Locale, AboutCopy> = {
   en: {
     metadata: {
@@ -261,56 +268,75 @@ export default async function AboutPage() {
   const pagePath = withLocalePrefix("/about", locale);
 
   return (
-    <div className="py-16">
+    <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_35%,var(--background)_65%)_100%)] py-16">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
-        <p className="mt-4 text-xl text-muted-foreground">{page.subtitle}</p>
+        <section className="rounded-[2.25rem] border border-border/70 bg-card/95 px-6 py-10 shadow-sm sm:px-10 sm:py-12">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+            {locale === "nl" ? "Methodiek" : "Methodology"}
+          </p>
+          <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">{page.title}</h1>
+          <p className="mt-4 max-w-3xl text-xl text-muted-foreground">{page.subtitle}</p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <div className="rounded-2xl border border-border/70 bg-muted/40 p-4 text-sm text-muted-foreground">
+              {locale === "nl" ? "Bewezen biomechanische uitgangspunten." : "Built on proven biomechanical principles."}
+            </div>
+            <div className="rounded-2xl border border-border/70 bg-muted/40 p-4 text-sm text-muted-foreground">
+              {locale === "nl" ? "Vertaald naar praktische afstelstappen." : "Translated into practical setup adjustments."}
+            </div>
+            <div className="rounded-2xl border border-border/70 bg-muted/40 p-4 text-sm text-muted-foreground">
+              {locale === "nl" ? "Gemaakt voor echte rijders en echte ritten." : "Made for real riders and real riding conditions."}
+            </div>
+          </div>
+        </section>
 
         <div className="mt-12 space-y-12">
-          <section>
+          <section className={framedSectionClass}>
             <h2 className="text-2xl font-semibold text-foreground">{page.scienceTitle}</h2>
-            <p className="mt-4 leading-relaxed text-muted-foreground">{page.scienceBody}</p>
+            <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">{page.scienceBody}</p>
           </section>
 
-          <section className="rounded-lg border border-border bg-primary-soft -mx-4 px-4 py-8 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+          <section className={`${mutedPanelClass} bg-primary-soft/70`}>
             <h3 className="text-xl font-semibold text-foreground">{page.saddleTitle}</h3>
             <p className="mt-4 leading-relaxed text-muted-foreground">{page.saddleBody1}</p>
             <p className="mt-4 leading-relaxed text-muted-foreground">{page.saddleBody2}</p>
-            <ul className="mt-4 list-inside list-disc space-y-2 text-muted-foreground">
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
               {page.saddleBullets.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item} className={bulletPanelClass}>{item}</li>
               ))}
             </ul>
           </section>
 
-          <section>
+          <section className={framedSectionClass}>
             <h3 className="text-xl font-semibold text-foreground">{page.reachTitle}</h3>
             <p className="mt-4 leading-relaxed text-muted-foreground">{page.reachBody1}</p>
             <p className="mt-4 leading-relaxed text-muted-foreground">{page.reachBody2}</p>
-            <ul className="mt-4 list-inside list-disc space-y-2 text-muted-foreground">
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
               {page.reachBullets.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item} className={bulletPanelClass}>{item}</li>
               ))}
             </ul>
           </section>
 
-          <section className="rounded-lg border border-border bg-secondary -mx-4 px-4 py-8 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+          <section className={`${mutedPanelClass} bg-secondary/70`}>
             <h3 className="text-xl font-semibold text-foreground">{page.dropTitle}</h3>
             <p className="mt-4 leading-relaxed text-muted-foreground">{page.dropBody1}</p>
             <p className="mt-4 leading-relaxed text-muted-foreground">{page.dropBody2}</p>
-            <ul className="mt-4 list-inside list-disc space-y-2 text-muted-foreground">
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
               {page.dropBullets.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item} className={bulletPanelClass}>{item}</li>
               ))}
             </ul>
           </section>
 
-          <section>
+          <section className={framedSectionClass}>
             <h3 className="text-xl font-semibold text-foreground">{page.componentsTitle}</h3>
             <p className="mt-4 leading-relaxed text-muted-foreground">{page.componentsBody}</p>
             <div className="mt-6 grid gap-6 md:grid-cols-2">
-              {page.componentCards.map((card) => (
-                <div key={card.title} className="rounded-lg border border-border bg-card p-6">
+              {page.componentCards.map((card, index) => (
+                <div key={card.title} className="rounded-[1.75rem] border border-border/70 bg-muted/35 p-6 shadow-sm">
+                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
+                    {index + 1 < 10 ? `0${index + 1}` : index + 1}
+                  </p>
                   <h4 className="font-semibold text-foreground">{card.title}</h4>
                   <p className="mt-2 text-sm text-muted-foreground">{card.text}</p>
                 </div>
@@ -318,12 +344,12 @@ export default async function AboutPage() {
             </div>
           </section>
 
-          <section>
+          <section className={framedSectionClass}>
             <h2 className="text-2xl font-semibold text-foreground">{page.considerTitle}</h2>
-            <p className="mt-4 leading-relaxed text-muted-foreground">{page.considerBody}</p>
+            <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">{page.considerBody}</p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {page.considerBullets.map((item) => (
-                <div key={item} className="flex items-center gap-2">
+                <div key={item} className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/35 px-4 py-3 shadow-sm">
                   <svg className="h-5 w-5 flex-shrink-0 text-primary" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
@@ -337,7 +363,7 @@ export default async function AboutPage() {
             </div>
           </section>
 
-          <section className="rounded-lg border border-border bg-muted p-6">
+          <section className={`${mutedPanelClass} bg-muted/70`}>
             <h2 className="text-2xl font-semibold text-foreground">{page.guideTitle}</h2>
             <p className="mt-3 text-muted-foreground">{page.guideBody}</p>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -345,7 +371,7 @@ export default async function AboutPage() {
                 <Link
                   key={link.href}
                   href={withLocalePrefix(link.href, locale)}
-                  className="rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-primary hover:bg-secondary"
+                  className="rounded-2xl border border-border/70 bg-background/90 px-4 py-3 text-sm font-medium text-primary shadow-sm transition hover:bg-secondary/70"
                 >
                   {link.label}
                 </Link>
@@ -353,8 +379,11 @@ export default async function AboutPage() {
             </div>
           </section>
 
-          <section className="rounded-lg bg-primary -mx-4 px-4 py-12 text-center sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-            <h2 className="text-2xl font-bold text-primary-foreground">{page.ctaTitle}</h2>
+          <section className="rounded-[2rem] bg-primary px-6 py-12 text-center shadow-lg sm:px-10">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary-foreground/70">
+              {locale === "nl" ? "Start je fit" : "Start your fit"}
+            </p>
+            <h2 className="mt-3 text-2xl font-bold text-primary-foreground">{page.ctaTitle}</h2>
             <p className="mx-auto mt-4 max-w-2xl text-primary-foreground/80">{page.ctaBody}</p>
             <Button
               render={

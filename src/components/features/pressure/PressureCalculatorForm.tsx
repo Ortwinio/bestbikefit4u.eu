@@ -136,7 +136,23 @@ export function PressureCalculatorForm({
   return (
     <section className="py-14">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:px-8">
-        <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
+        <div className="rounded-[calc(var(--radius-lg)+8px)] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm sm:p-8">
+          <div className="max-w-2xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--primary)]">
+              Inputs
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
+              Build your pressure baseline
+            </h2>
+            <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
+              Start with the essentials first. Advanced options are there when you want to refine the recommendation further.
+            </p>
+          </div>
+
+          <div className="mt-6 rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4 text-sm text-[color:var(--muted-foreground)]">
+            Rider weight, tire width, surface, and tube type drive the biggest changes. Use riding goal and bike weight only when you want a finer adjustment.
+          </div>
+
           <div className="space-y-6">
             <Field.Root className="space-y-3">
               <Field.Label className="text-sm font-medium text-[color:var(--foreground)]">
@@ -279,14 +295,25 @@ export function PressureCalculatorForm({
           </div>
         </div>
 
-        <div className="lg:sticky lg:top-24 lg:self-start">
+        <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
           {result ? (
             <PressureResultCard result={result} labels={resultLabels} />
           ) : (
-            <div className="rounded-[var(--radius-lg)] border border-dashed border-[color:var(--border)] bg-[color:var(--card)] p-6 text-sm text-[color:var(--muted-foreground)]">
+            <div className="rounded-[calc(var(--radius-lg)+8px)] border border-dashed border-[color:var(--border)] bg-[color:var(--card)] p-6 text-sm text-[color:var(--muted-foreground)]">
               {labels.resultPlaceholder}
             </div>
           )}
+
+          <div className="rounded-[calc(var(--radius-lg)+8px)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-5 text-sm text-[color:var(--muted-foreground)] shadow-sm">
+            <p className="font-semibold text-[color:var(--foreground)]">
+              What changes the result most
+            </p>
+            <ul className="mt-3 space-y-2">
+              <li>Weight and tire width shift the baseline fastest.</li>
+              <li>Surface and tire type change how low you can safely go.</li>
+              <li>Use the output as a starting point, then validate with ride feel.</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>

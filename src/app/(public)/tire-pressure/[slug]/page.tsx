@@ -103,29 +103,54 @@ export default async function ProgrammaticTirePressurePage({
         ]}
       />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-[color:var(--foreground)]">
-          Tire Pressure for {weight}kg {label.en} Rider
-        </h1>
-        <p className="mt-4 max-w-3xl text-lg text-[color:var(--muted-foreground)]">
-          This landing page gives a static starting recommendation for a {weight} kg rider on a{" "}
-          {label.en} with common tire widths. Use it as a quick reference, then move to the full
-          calculator for your exact setup.
-        </p>
+        <section className="rounded-[28px] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--primary)_12%)] p-8 shadow-sm sm:p-10">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
+              BestBikeFit4U pressure guide
+            </p>
+            <h1 className="mt-4 text-4xl font-bold text-[color:var(--foreground)] sm:text-5xl">
+              Tire Pressure for {weight}kg {label.en} Rider
+            </h1>
+            <p className="mt-4 max-w-3xl text-lg text-[color:var(--muted-foreground)]">
+              This landing page gives a static starting recommendation for a {weight} kg rider on a{" "}
+              {label.en} with common tire widths. Use it as a quick reference, then move to the full
+              calculator for your exact setup.
+            </p>
+          </div>
+        </section>
 
         <section className="mt-10 grid gap-6 md:grid-cols-2">
-          <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-secondary)] p-6">
+          <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface-secondary)] p-6 shadow-sm">
             <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Tubeless recommendation</h2>
             <p className="mt-4 text-[color:var(--foreground)]">Front: {tubeless.frontBar} bar / {tubeless.frontPsi} PSI</p>
             <p className="mt-1 text-[color:var(--foreground)]">Rear: {tubeless.rearBar} bar / {tubeless.rearPsi} PSI</p>
             <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">{tubeless.explanation}</p>
           </div>
-          <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6">
+          <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
             <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Inner-tube comparison</h2>
             <p className="mt-4 text-[color:var(--foreground)]">Front: {innerTube.frontBar} bar / {innerTube.frontPsi} PSI</p>
             <p className="mt-1 text-[color:var(--foreground)]">Rear: {innerTube.rearBar} bar / {innerTube.rearPsi} PSI</p>
             <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">
               Inner tubes typically require slightly higher pressure to reduce pinch-flat risk.
             </p>
+          </div>
+        </section>
+
+        <section className="mt-10 rounded-3xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-6 shadow-sm sm:p-8">
+          <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">How to use this baseline</h2>
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            {[
+              "Use it as a starting point, not as a fixed race-day pressure.",
+              "Exact tire width, surface, and casing construction can still move the recommendation.",
+              "Switch to the full calculator when you want setup-specific numbers.",
+            ].map((item) => (
+              <div
+                key={item}
+                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-4 text-sm text-[color:var(--muted-foreground)]"
+              >
+                {item}
+              </div>
+            ))}
           </div>
         </section>
 
@@ -141,14 +166,20 @@ export default async function ProgrammaticTirePressurePage({
           </div>
         </section>
 
-        <div className="mt-8 flex flex-wrap gap-3">
+        <section className="mt-8 rounded-3xl border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--secondary)_12%)] p-6 shadow-sm sm:p-8">
+          <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Next step</h2>
+          <p className="mt-3 max-w-2xl text-[color:var(--muted-foreground)]">
+            If you want a recommendation tied to your exact tire width, terrain, and tube type, use the full calculator next.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
           <Button render={<Link href="/bandenspanning-calculator" />}>
             Open Tire Pressure Calculator
           </Button>
           <Button render={<Link href={label.guideHref} />} variant="outline">
             Read {label.en[0].toUpperCase() + label.en.slice(1)} Fit Guide
           </Button>
-        </div>
+          </div>
+        </section>
 
         <RelatedLinksSection
           title="Related tools and guides"

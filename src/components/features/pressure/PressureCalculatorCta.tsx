@@ -51,6 +51,9 @@ export function PressureCalculatorCta({
                 {labels.loginLink}
               </Link>
             </p>
+            <div className="mt-6 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-4 text-sm text-[color:var(--muted-foreground)] shadow-sm">
+              Save your setup, compare bikes, and keep the recommendation tied to your full fit context instead of isolated calculator results.
+            </div>
           </CardContent>
         </Card>
       </div>

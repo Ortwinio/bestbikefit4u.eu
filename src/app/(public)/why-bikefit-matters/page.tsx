@@ -100,6 +100,9 @@ const considerFitItems = [
   "You want a more aerodynamic position without losing comfort",
 ] as const;
 
+const framedSectionClass =
+  "rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-sm sm:p-10";
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
 
@@ -121,25 +124,31 @@ export default async function WhyBikeFitMattersPage() {
   const quotes = HOME_QUOTES_BY_LOCALE[locale];
 
   return (
-    <div className="py-16">
+    <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_35%,var(--background)_65%)_100%)] py-16">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-foreground">
-          Why so many riders feel the difference after a good bike fit
-        </h1>
+        <section className="rounded-[2.25rem] border border-border/70 bg-card/95 px-6 py-10 shadow-sm sm:px-10 sm:py-12">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+            {locale === "nl" ? "Waarom bike fit telt" : "Why bike fit matters"}
+          </p>
+          <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">
+            Why so many riders feel the difference after a good bike fit
+          </h1>
 
-        <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-          Most riders do not need a new bike to feel better and ride faster. They need
-          a position that matches their body, flexibility, goals, and the terrain they
-          ride. A proper bike fit turns vague problems (&quot;something feels off&quot;) into
-          measurable adjustments in millimeters and degrees, then confirms those
-          changes on the bike.
-        </p>
-        <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-          What people often find surprising: small changes create big results,
-          especially on longer rides.
-        </p>
+          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+            Most riders do not need a new bike to feel better and ride faster. They need
+            a position that matches their body, flexibility, goals, and the terrain they
+            ride. A proper bike fit turns vague problems (&quot;something feels off&quot;) into
+            measurable adjustments in millimeters and degrees, then confirms those
+            changes on the bike.
+          </p>
+          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+            What people often find surprising: small changes create big results,
+            especially on longer rides.
+          </p>
+        </section>
 
         <section className="mt-14">
+          <div className={framedSectionClass}>
           <h2 className="text-3xl font-semibold text-foreground">
             What riders notice after a proper fit
           </h2>
@@ -164,9 +173,11 @@ export default async function WhyBikeFitMattersPage() {
             areas a fit influences: comfort, joint load, breathing space, stability,
             and repeatability.
           </p>
+          </div>
         </section>
 
         <section className="mt-14">
+          <div className={framedSectionClass}>
           <h2 className="text-3xl font-semibold text-foreground">
             Why a bike fit works (and why millimeters matter)
           </h2>
@@ -190,15 +201,17 @@ export default async function WhyBikeFitMattersPage() {
             thousands of times per hour. A minor misalignment can be harmless for 20
             minutes and become a real issue after 2-4 hours.
           </p>
+          </div>
         </section>
 
         <section className="mt-14">
+          <div className={framedSectionClass}>
           <h2 className="text-3xl font-semibold text-foreground">
             The most common reasons riders feel immediate benefits
           </h2>
           <div className="mt-6 space-y-8">
             {benefitBlocks.map((block, index) => (
-              <article key={block.title}>
+              <article key={block.title} className="rounded-[1.75rem] border border-border/70 bg-muted/35 p-6 shadow-sm">
                 <h3 className="text-xl font-semibold text-foreground">
                   {index + 1}) {block.title}
                 </h3>
@@ -217,9 +230,11 @@ export default async function WhyBikeFitMattersPage() {
               </article>
             ))}
           </div>
+          </div>
         </section>
 
         <section className="mt-14">
+          <div className={framedSectionClass}>
           <h2 className="text-3xl font-semibold text-foreground">
             What actually gets adjusted in a professional bike fit
           </h2>
@@ -237,9 +252,11 @@ export default async function WhyBikeFitMattersPage() {
               <li key={item}>{item}</li>
             ))}
           </ul>
+          </div>
         </section>
 
         <section className="mt-14">
+          <div className={framedSectionClass}>
           <h2 className="text-3xl font-semibold text-foreground">
             When you should consider a fit
           </h2>
@@ -251,12 +268,17 @@ export default async function WhyBikeFitMattersPage() {
               <li key={item}>{item}</li>
             ))}
           </ul>
+          </div>
         </section>
       </div>
 
-      <section className="mt-16 bg-primary py-16">
+      <section className="mt-16 py-16">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-primary-foreground">
+          <div className="rounded-[2rem] bg-primary px-6 py-12 shadow-lg sm:px-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary-foreground/70">
+            {locale === "nl" ? "Persoonlijke aanbevelingen" : "Personal recommendations"}
+          </p>
+          <h2 className="mt-3 text-3xl font-bold text-primary-foreground">
             Start your free bike fit today
           </h2>
           <p className="mt-4 text-lg text-primary-foreground/80">
@@ -279,6 +301,7 @@ export default async function WhyBikeFitMattersPage() {
             >
               Start Free Fit
             </Button>
+          </div>
           </div>
         </div>
       </section>

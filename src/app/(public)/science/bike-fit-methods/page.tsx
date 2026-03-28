@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { BookOpen, Compass, Ruler } from "lucide-react";
+import {
+  PublicHero,
+  PublicIllustrationPanel,
+  PublicPageShell,
+  PublicSection,
+  PublicSurfaceCard,
+} from "@/components/public";
+import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
+import { getRequestLocale } from "@/i18n/request";
 
 export const metadata: Metadata = {
   title: "Bike Fit Methods Comparison | BestBikeFit4U Science",
@@ -48,7 +57,8 @@ const links = [
   { href: "/guides/mountain-bike-fit-guide", label: "Mountain Bike Fit Guide" },
 ];
 
-export default function BikeFitMethodsPage() {
+export default async function BikeFitMethodsPage() {
+  const locale = await getRequestLocale();
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -63,56 +73,81 @@ export default function BikeFitMethodsPage() {
   };
 
   return (
-    <div className="py-16 text-foreground">
+    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_22%,var(--background)_78%)_100%)] text-foreground">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-foreground">Bike Fit Methods</h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          Modern fitting combines foundational formulas with rider-specific
-          context. No single method solves everything in isolation.
-        </p>
 
-        <div className="mt-10 space-y-4">
+      <PublicHero
+        eyebrow="Science"
+        title="Bike Fit Methods"
+        description="Modern fitting combines foundational formulas with rider-specific context. No single method solves everything in isolation."
+        chips={["LeMond / Hamley", "KOPS", "Dynamic fit"]}
+        illustration={
+          <PublicIllustrationPanel
+            caption="Different methods answer different questions inside the full fit workflow."
+            className="w-full"
+          >
+            <div className="grid w-full gap-3">
+              {[
+                { icon: <Ruler className="h-5 w-5" />, label: "Baseline geometry" },
+                { icon: <Compass className="h-5 w-5" />, label: "Saddle position reference" },
+                { icon: <BookOpen className="h-5 w-5" />, label: "Dynamic movement validation" },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="flex items-center gap-3 rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-3"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary-soft)] text-[color:var(--primary)]">
+                    {item.icon}
+                  </div>
+                  <span className="text-sm font-semibold text-[color:var(--foreground)]">
+                    {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </PublicIllustrationPanel>
+        }
+      />
+
+      <PublicSection
+        header={{
+          eyebrow: "Comparison",
+          title: "Where each method fits",
+          description:
+            "Use formulas as strong starting points, then validate them against the rider’s stability, flexibility, and real riding context.",
+        }}
+      >
+        <div className="grid gap-5">
           {methods.map((method) => (
-            <article
+            <PublicSurfaceCard
               key={method.name}
-              className="rounded-xl border border-border bg-card p-6"
+              title={method.name}
+              description={method.focus}
+              leading={<Ruler className="h-5 w-5" />}
             >
-              <h2 className="text-xl font-semibold text-foreground">{method.name}</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">Focus:</span>{" "}
-                {method.focus}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">Strength:</span>{" "}
-                {method.strength}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">Limit:</span>{" "}
-                {method.limit}
-              </p>
-            </article>
+              <div className="space-y-2 text-sm leading-6">
+                <p className="text-[color:var(--muted-foreground)]">
+                  <span className="font-semibold text-[color:var(--foreground)]">
+                    Strength:
+                  </span>{" "}
+                  {method.strength}
+                </p>
+                <p className="text-[color:var(--muted-foreground)]">
+                  <span className="font-semibold text-[color:var(--foreground)]">
+                    Limit:
+                  </span>{" "}
+                  {method.limit}
+                </p>
+              </div>
+            </PublicSurfaceCard>
           ))}
         </div>
+      </PublicSection>
 
-        <section className="mt-12 rounded-xl border border-border bg-muted p-6">
-          <h2 className="text-xl font-semibold text-foreground">Related Resources</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-primary hover:bg-secondary"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        </section>
-      </div>
-    </div>
+      <RelatedLinksSection title="Related resources" links={links} locale={locale} />
+    </PublicPageShell>
   );
 }

@@ -1,4 +1,5 @@
-import { Card, CardContent } from "@/components/ui";
+import { AlertTriangle, Gauge } from "lucide-react";
+import { Card, CardContent, InfoBox, MeasurementTile, SectionHeader } from "@/components/ui";
 import type { PressureOutput } from "@/lib/pressure-engine";
 import type { PressureResultLabels } from "./shared";
 
@@ -18,45 +19,39 @@ export function PressureResultCard({
 
   return (
     <Card variant="bordered" className="overflow-hidden">
+      <SectionHeader
+        icon={<Gauge className="h-4 w-4 text-[color:var(--primary)]" />}
+        title={labels.explanation}
+      />
       <CardContent className="space-y-5 p-6">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
-            <p className="text-sm font-medium text-[color:var(--foreground)]">{labels.front}</p>
-            <p className="mt-2 text-3xl font-bold text-[color:var(--foreground)]">
-              {result.frontBar} {labels.bar}
-            </p>
-            <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-              {result.frontPsi} {labels.psi}
-            </p>
-          </div>
-          <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
-            <p className="text-sm font-medium text-[color:var(--foreground)]">{labels.rear}</p>
-            <p className="mt-2 text-3xl font-bold text-[color:var(--foreground)]">
-              {result.rearBar} {labels.bar}
-            </p>
-            <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-              {result.rearPsi} {labels.psi}
-            </p>
-          </div>
+        <div className="grid grid-cols-2 gap-4">
+          <MeasurementTile
+            label={labels.front}
+            value={`${result.frontBar} ${labels.bar}`}
+          />
+          <MeasurementTile
+            label={labels.rear}
+            value={`${result.rearBar} ${labels.bar}`}
+          />
         </div>
 
-        <div>
-          <p className="text-sm font-semibold text-[color:var(--foreground)]">{labels.explanation}</p>
-          <p className="mt-1 text-sm leading-6 text-[color:var(--muted-foreground)]">
-            {result.explanation}
-          </p>
-        </div>
+        <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
+          {result.explanation}
+        </p>
 
-        <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_10%,var(--card)_90%)] p-4">
-          <p className="text-sm font-semibold text-[color:var(--warning-foreground)]">
+        <InfoBox
+          variant="warning"
+          icon={<AlertTriangle className="h-4 w-4 text-[color:var(--warning)]" />}
+        >
+          <p className="font-semibold text-[color:var(--warning-foreground)]">
             {labels.warningsTitle}
           </p>
-          <ul className="mt-2 space-y-2 text-sm text-[color:var(--warning-foreground)]">
+          <ul className="mt-2 space-y-2">
             {allWarnings.map((warning, index) => (
-              <li key={`${warning}-${index}`}>{warning}</li>
+              <li key={`${warning}-${index}`} className="text-[color:var(--warning-foreground)]">{warning}</li>
             ))}
           </ul>
-        </div>
+        </InfoBox>
 
         {(result.comfortScore !== undefined ||
           result.gripScore !== undefined ||

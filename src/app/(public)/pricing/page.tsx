@@ -37,6 +37,9 @@ type PricingCopy = {
   ctaButton: string;
 };
 
+const sectionShellClass =
+  "rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-sm sm:p-10";
+
 const content: Record<Locale, PricingCopy> = {
   en: {
     metadata: {
@@ -271,25 +274,28 @@ export default async function PricingPage() {
   const pagePath = withLocalePrefix("/pricing", locale);
 
   return (
-    <div className="py-16">
+    <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_42%,var(--background)_58%)_100%)] py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
+        <section className="rounded-[2.25rem] border border-border/70 bg-card/95 px-6 py-10 text-center shadow-sm sm:px-10 sm:py-12">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+            {locale === "nl" ? "Plannen voor elke rijder" : "Plans for every rider"}
+          </p>
+          <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">{page.title}</h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">{page.subtitle}</p>
-        </div>
+        </section>
 
         <div className="mt-16 grid gap-8 md:grid-cols-3">
           {page.tiers.map((tier) => (
             <div
               key={tier.name}
-              className={`rounded-2xl p-8 ${
+              className={`rounded-[2rem] border p-8 shadow-sm transition md:h-full ${
                 tier.highlighted
-                  ? "bg-primary text-primary-foreground ring-1 ring-primary scale-105"
-                  : "bg-card ring-1 ring-border"
+                  ? "border-primary bg-primary text-primary-foreground shadow-lg md:-translate-y-2"
+                  : "border-border/70 bg-card/95"
               }`}
             >
               {tier.highlighted && (
-                <p className="mb-4 text-sm font-semibold text-primary-foreground/80">{page.popular}</p>
+                <p className="mb-4 text-sm font-semibold uppercase tracking-[0.22em] text-primary-foreground/80">{page.popular}</p>
               )}
               <h3 className={`text-lg font-semibold ${tier.highlighted ? "text-primary-foreground" : "text-foreground"}`}>
                 {tier.name}
@@ -342,10 +348,13 @@ export default async function PricingPage() {
         </div>
 
         <div className="mt-20">
-          <h2 className="text-center text-2xl font-bold text-foreground">{page.comparisonTitle}</h2>
-          <div className="mt-8 overflow-x-auto">
+          <div className={sectionShellClass}>
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-2xl font-bold text-foreground">{page.comparisonTitle}</h2>
+          </div>
+          <div className="mt-8 overflow-x-auto rounded-[1.5rem] border border-border/70 bg-background/90 shadow-sm">
             <table className="w-full">
-              <thead>
+              <thead className="bg-muted/40">
                 <tr className="border-b border-border">
                   {page.comparisonHeaders.map((header, index) => (
                     <th
@@ -371,13 +380,16 @@ export default async function PricingPage() {
               </tbody>
             </table>
           </div>
+          </div>
         </div>
 
         <div className="mt-20">
-          <h2 className="text-center text-2xl font-bold text-foreground">{page.faqTitle}</h2>
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-2xl font-bold text-foreground">{page.faqTitle}</h2>
+          </div>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             {page.faqs.map((faq) => (
-              <div key={faq.question} className="rounded-lg border border-border bg-muted p-6">
+              <div key={faq.question} className="rounded-[1.75rem] border border-border/70 bg-muted/40 p-6 shadow-sm">
                 <h3 className="font-semibold text-foreground">{faq.question}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{faq.answer}</p>
               </div>
@@ -386,8 +398,12 @@ export default async function PricingPage() {
         </div>
 
         <div className="mt-20 text-center">
-          <h2 className="text-2xl font-bold text-foreground">{page.ctaTitle}</h2>
-          <p className="mt-4 text-muted-foreground">{page.ctaSubtitle}</p>
+          <div className="rounded-[2rem] bg-primary px-6 py-12 shadow-lg sm:px-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary-foreground/70">
+            {locale === "nl" ? "Klaar voor een betere fit" : "Ready for a better fit"}
+          </p>
+          <h2 className="mt-3 text-2xl font-bold text-primary-foreground">{page.ctaTitle}</h2>
+          <p className="mt-4 text-primary-foreground/80">{page.ctaSubtitle}</p>
           <Button
             render={
               <TrackedCtaLink
@@ -399,10 +415,11 @@ export default async function PricingPage() {
               />
             }
             size="lg"
-            className="mt-8"
+            className="mt-8 bg-background text-primary hover:bg-muted"
           >
             {page.ctaButton}
           </Button>
+          </div>
         </div>
       </div>
     </div>

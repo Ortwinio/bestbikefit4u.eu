@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Calculator, ShieldCheck, SlidersHorizontal } from "lucide-react";
+import {
+  PublicHero,
+  PublicIllustrationPanel,
+  PublicPageShell,
+  PublicSection,
+  PublicSurfaceCard,
+} from "@/components/public";
+import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
+import { getRequestLocale } from "@/i18n/request";
 
 export const metadata: Metadata = {
   title: "Bike Fit Calculation Engine | BestBikeFit4U Science",
@@ -28,7 +37,8 @@ const relatedLinks = [
   { href: "/guides/triathlon-bike-fit-guide", label: "Triathlon Bike Fit Guide" },
 ];
 
-export default function CalculationEnginePage() {
+export default async function CalculationEnginePage() {
+  const locale = await getRequestLocale();
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -43,70 +53,78 @@ export default function CalculationEnginePage() {
   };
 
   return (
-    <div className="py-16 text-foreground">
+    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_24%,var(--background)_76%)_100%)] text-foreground">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-foreground">Calculation Engine</h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          The BestBikeFit4U engine combines validated measurement rules with proven
-          bike-fit equations to produce actionable setup recommendations.
-        </p>
 
-        <div className="mt-10 space-y-8">
-          <section className="rounded-xl border border-border bg-card p-6">
-            <h2 className="text-2xl font-semibold text-foreground">1. Input Validation</h2>
-            <p className="mt-3 text-muted-foreground">
-              Required measurements are checked against hard limits. Invalid
-              inputs are rejected before any fit values are computed.
-            </p>
-          </section>
+      <PublicHero
+        eyebrow="Science"
+        title="Calculation Engine"
+        description="The BestBikeFit4U engine combines validated measurement rules with proven bike-fit equations to produce actionable setup recommendations."
+        chips={["Input validation", "Geometry outputs", "Safety guardrails"]}
+        illustration={
+          <PublicIllustrationPanel
+            caption="The engine reduces raw rider input into repeatable setup targets."
+            className="w-full"
+          >
+            <div className="grid w-full gap-3">
+              {[
+                { icon: <Calculator className="h-5 w-5" />, label: "Measurements in" },
+                { icon: <SlidersHorizontal className="h-5 w-5" />, label: "Fit targets out" },
+                { icon: <ShieldCheck className="h-5 w-5" />, label: "Guardrails applied" },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="flex items-center gap-3 rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-3"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary-soft)] text-[color:var(--primary)]">
+                    {item.icon}
+                  </div>
+                  <span className="text-sm font-semibold text-[color:var(--foreground)]">
+                    {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </PublicIllustrationPanel>
+        }
+      />
 
-          <section className="rounded-xl border border-border bg-card p-6">
-            <h2 className="text-2xl font-semibold text-foreground">2. Core Geometry Outputs</h2>
-            <p className="mt-3 text-muted-foreground">
-              The algorithm calculates crank length, saddle height, setback, bar
-              drop, and saddle-to-bar reach from inseam, category, flexibility,
-              core stability, and ambition profile.
-            </p>
-          </section>
-
-          <section className="rounded-xl border border-border bg-card p-6">
-            <h2 className="text-2xl font-semibold text-foreground">3. Frame Targets</h2>
-            <p className="mt-3 text-muted-foreground">
-              Recommended stack and reach targets are derived from saddle and
-              cockpit coordinates, then translated into practical stem and spacer
-              combinations.
-            </p>
-          </section>
-
-          <section className="rounded-xl border border-primary/20 bg-primary-soft p-6">
-            <h2 className="text-2xl font-semibold text-foreground">4. Safety Guardrails</h2>
-            <p className="mt-3 text-muted-foreground">
-              Warning rules flag aggressive drop, out-of-range reach, and risky
-              saddle heights to reduce injury risk and guide conservative setup
-              changes.
-            </p>
-          </section>
+      <PublicSection
+        header={{
+          eyebrow: "Pipeline",
+          title: "How the engine works",
+          description:
+            "Each layer narrows uncertainty: first clean the input, then calculate fit values, then translate those values into practical setup guidance.",
+        }}
+      >
+        <div className="grid gap-5">
+          <PublicSurfaceCard
+            title="1. Input Validation"
+            description="Required measurements are checked against hard limits before the fit calculation begins."
+            leading={<ShieldCheck className="h-5 w-5" />}
+          />
+          <PublicSurfaceCard
+            title="2. Core Geometry Outputs"
+            description="The engine calculates crank length, saddle height, setback, drop, and reach from inseam, category, flexibility, core stability, and ambition profile."
+            leading={<Calculator className="h-5 w-5" />}
+          />
+          <PublicSurfaceCard
+            title="3. Frame Targets"
+            description="Stack and reach targets are derived from saddle and cockpit coordinates, then translated into realistic stem and spacer combinations."
+            leading={<SlidersHorizontal className="h-5 w-5" />}
+          />
+          <PublicSurfaceCard
+            title="4. Safety Guardrails"
+            description="Warnings flag aggressive drop, out-of-range reach, and risky saddle heights so riders can apply changes more conservatively."
+            leading={<ShieldCheck className="h-5 w-5" />}
+          />
         </div>
+      </PublicSection>
 
-        <section className="mt-12 rounded-xl border border-border bg-muted p-6">
-          <h2 className="text-xl font-semibold text-foreground">Related Guides</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {relatedLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-primary hover:bg-secondary"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        </section>
-      </div>
-    </div>
+      <RelatedLinksSection title="Related guides" links={relatedLinks} locale={locale} />
+    </PublicPageShell>
   );
 }

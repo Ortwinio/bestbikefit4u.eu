@@ -20,6 +20,11 @@ import {
 const featureIcons = [Ruler, Target, FileText, Bike, Activity, Shield];
 const reasonsIcons = [Activity, Target, Bike, Shield, FileText];
 const trustIcons = [Shield, Ruler, FileText];
+const framedSectionClass =
+  "rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-sm sm:p-10";
+const sectionHeaderWidthClass = "mx-auto max-w-3xl text-center";
+const softCardClass =
+  "rounded-3xl border border-border/70 bg-background/95 p-6 shadow-sm";
 
 function linkButtonProps(href: string): ButtonProps {
   return {
@@ -114,7 +119,7 @@ export default async function HomePage() {
         ];
 
   return (
-    <div>
+    <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_35%,var(--background)_65%)_100%)]">
       <TrackMarketingEventOnView
         eventType="funnel_landing_view"
         locale={locale}
@@ -123,12 +128,15 @@ export default async function HomePage() {
       />
       <JsonLd schema={structuredData} />
       <section
-        className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-24"
+        className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-24 sm:py-28"
         style={{ backgroundImage: "url('/bestbikefit4u-home.gif')" }}
       >
-        <div className="absolute inset-0 bg-black/45" aria-hidden="true" />
+        <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
+          <div className="mx-auto max-w-4xl rounded-[2rem] border border-primary-foreground/20 bg-black/35 px-6 py-10 text-center shadow-2xl backdrop-blur-sm sm:px-10 sm:py-12">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary-foreground/70">
+              {locale === "nl" ? "Persoonlijke bike fit, overal" : "Personal bike fit, anywhere"}
+            </p>
             <h1 className="text-4xl font-bold tracking-tight text-primary-foreground sm:text-5xl md:text-6xl">
               {home.hero.title}
               <span className="block text-primary-foreground/80">{home.hero.titleAccent}</span>
@@ -136,7 +144,7 @@ export default async function HomePage() {
             <p className="mx-auto mt-6 max-w-2xl text-lg text-primary-foreground/90">
               {home.hero.description}
             </p>
-            <div className="mt-10 flex justify-center gap-4">
+            <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
               <Button
                 render={
                   <TrackedCtaLink
@@ -160,6 +168,17 @@ export default async function HomePage() {
                 {home.hero.secondaryCta}
               </Button>
             </div>
+            <div className="mt-8 grid gap-3 text-left text-sm text-primary-foreground/80 sm:grid-cols-3">
+              <div className="rounded-2xl border border-primary-foreground/15 bg-primary-foreground/10 px-4 py-3">
+                {locale === "nl" ? "Fitadvies gebaseerd op je lichaam en doel." : "Fit guidance matched to your body and goals."}
+              </div>
+              <div className="rounded-2xl border border-primary-foreground/15 bg-primary-foreground/10 px-4 py-3">
+                {locale === "nl" ? "Praktische aanpassingen in millimeters." : "Practical changes in measurable millimeters."}
+              </div>
+              <div className="rounded-2xl border border-primary-foreground/15 bg-primary-foreground/10 px-4 py-3">
+                {locale === "nl" ? "Snel van klacht naar duidelijke volgende stap." : "A faster path from pain point to the right next step."}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -167,7 +186,8 @@ export default async function HomePage() {
 
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
+          <div className={framedSectionClass}>
+          <div className={sectionHeaderWidthClass}>
             <h2 className="text-3xl font-bold text-foreground">
               {home.howItWorks.title}
             </h2>
@@ -175,8 +195,8 @@ export default async function HomePage() {
           </div>
           <div className="mt-16 grid gap-8 md:grid-cols-3">
             {home.howItWorks.steps.map((step, index) => (
-              <div key={step.title} className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary-soft">
+              <div key={step.title} className="rounded-3xl border border-border/70 bg-muted/35 p-6 text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary-soft shadow-sm">
                   <span className="text-2xl font-bold text-primary">
                     {index + 1}
                   </span>
@@ -188,12 +208,13 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
+          </div>
         </div>
       </section>
 
-      <section className="bg-secondary py-20">
+      <section className="bg-secondary/55 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
+          <div className={sectionHeaderWidthClass}>
             <h2 className="text-3xl font-bold text-foreground">
               {home.reasonsToStart.title}
             </h2>
@@ -206,8 +227,8 @@ export default async function HomePage() {
               const Icon = reasonsIcons[index] ?? Activity;
 
               return (
-                <div key={reason.title} className="rounded-xl border border-border bg-card p-6 shadow-sm">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-soft">
+                <div key={reason.title} className={softCardClass}>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-soft shadow-sm">
                     <Icon className="h-5 w-5 text-primary" />
                   </div>
                   <h3 className="mt-4 text-lg font-semibold text-foreground">
@@ -221,9 +242,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-muted py-20">
+      <section className="bg-muted/70 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
+          <div className={framedSectionClass}>
+          <div className={sectionHeaderWidthClass}>
             <h2 className="text-3xl font-bold text-foreground">
               {home.features.title}
             </h2>
@@ -234,24 +256,26 @@ export default async function HomePage() {
               const Icon = featureIcons[index] ?? Ruler;
 
               return (
-                <div key={feature.title} className="rounded-lg border border-border bg-card p-6 shadow-sm">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-soft">
+                <div key={feature.title} className="rounded-3xl border border-border/70 bg-background/90 p-6 shadow-sm">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-soft shadow-sm">
                     <Icon className="h-6 w-6 text-primary" />
                   </div>
                   <h3 className="mt-4 text-lg font-semibold text-foreground">
                     {feature.title}
                   </h3>
-                  <p className="mt-2 text-muted-foreground">{feature.description}</p>
-                </div>
-              );
-            })}
+                <p className="mt-2 text-muted-foreground">{feature.description}</p>
+              </div>
+            );
+          })}
+          </div>
           </div>
         </div>
       </section>
 
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
+          <div className={framedSectionClass}>
+          <div className={sectionHeaderWidthClass}>
             <h2 className="text-3xl font-bold text-foreground">
               {locale === "nl" ? "Populaire calculators" : "Popular Calculators"}
             </h2>
@@ -266,18 +290,19 @@ export default async function HomePage() {
               <Link
                 key={tool.href}
                 href={withLocalePrefix(tool.href, locale)}
-                className="rounded-xl border border-border bg-card px-5 py-4 text-sm font-semibold text-primary shadow-sm hover:bg-secondary"
+                className="rounded-2xl border border-border/70 bg-muted/35 px-5 py-4 text-sm font-semibold text-primary shadow-sm transition hover:bg-secondary/70"
               >
                 {tool.label}
               </Link>
             ))}
+          </div>
           </div>
         </div>
       </section>
 
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
+          <div className={sectionHeaderWidthClass}>
             <h2 className="text-3xl font-bold text-foreground">
               {home.trustSection.title}
             </h2>
@@ -288,8 +313,8 @@ export default async function HomePage() {
               const Icon = trustIcons[index] ?? Shield;
 
               return (
-                <div key={item.title} className="rounded-xl border border-border bg-background p-6">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+                <div key={item.title} className="rounded-3xl border border-border/70 bg-card/80 p-6 shadow-sm">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-muted shadow-sm">
                     <Icon className="h-5 w-5 text-foreground" />
                   </div>
                   <h3 className="mt-4 text-lg font-semibold text-foreground">{item.title}</h3>
@@ -301,9 +326,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-muted py-20">
+      <section className="bg-muted/70 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
+          <div className={framedSectionClass}>
+          <div className={sectionHeaderWidthClass}>
             <h2 className="text-3xl font-bold text-foreground">
               {locale === "nl" ? "Populaire bikefitting gidsen" : "Popular Bike Fitting Guides"}
             </h2>
@@ -318,7 +344,7 @@ export default async function HomePage() {
               <Link
                 key={guide.href}
                 href={withLocalePrefix(guide.href, locale)}
-                className="rounded-lg border border-border bg-card px-5 py-4 text-sm font-medium text-primary hover:bg-secondary"
+                className="rounded-2xl border border-border/70 bg-background/90 px-5 py-4 text-sm font-medium text-primary shadow-sm transition hover:bg-secondary/70"
               >
                 {guide.label}
               </Link>
@@ -332,12 +358,14 @@ export default async function HomePage() {
               {locale === "nl" ? "Bekijk alle gidsen" : "View all guides"}
             </Link>
           </div>
+          </div>
         </div>
       </section>
 
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
+          <div className={framedSectionClass}>
+          <div className={sectionHeaderWidthClass}>
             <h2 className="text-3xl font-bold text-foreground">
               {locale === "nl" ? "Rijsituaties en klachten" : "Riding Scenarios and Pain Points"}
             </h2>
@@ -352,7 +380,7 @@ export default async function HomePage() {
               <Link
                 key={item.href}
                 href={withLocalePrefix(item.href, locale)}
-                className="rounded-xl border border-border bg-card px-5 py-4 text-sm font-semibold text-primary shadow-sm hover:bg-secondary"
+                className="rounded-2xl border border-border/70 bg-muted/35 px-5 py-4 text-sm font-semibold text-primary shadow-sm transition hover:bg-secondary/70"
               >
                 {item.label}
               </Link>
@@ -366,13 +394,14 @@ export default async function HomePage() {
               {locale === "nl" ? "Bekijk alle use cases" : "View all use cases"}
             </Link>
           </div>
+          </div>
         </div>
       </section>
 
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="items-center lg:grid lg:grid-cols-2 lg:gap-16">
-            <div>
+          <div className="items-center gap-10 rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-sm lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:p-10">
+            <div className="max-w-2xl">
               <h2 className="text-3xl font-bold text-foreground">
                 {home.recommendationSection.title}
               </h2>
@@ -401,7 +430,10 @@ export default async function HomePage() {
               </ul>
             </div>
             <div className="mt-12 lg:mt-0">
-              <div className="rounded-2xl bg-gradient-to-br from-primary to-primary-dark p-8 text-primary-foreground">
+              <div className="rounded-[1.75rem] bg-gradient-to-br from-primary to-primary-dark p-8 text-primary-foreground shadow-lg">
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary-foreground/70">
+                  {locale === "nl" ? "Volgende stap" : "Next step"}
+                </p>
                 <h3 className="text-2xl font-bold">
                   {home.recommendationSection.cardTitle}
                 </h3>
@@ -429,10 +461,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-primary py-16">
+      <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-primary-foreground">{home.cta.title}</h2>
-          <p className="mt-4 text-lg text-primary-foreground/80">{home.cta.description}</p>
+          <div className="rounded-[2rem] bg-primary px-6 py-12 shadow-lg sm:px-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary-foreground/70">
+            {locale === "nl" ? "Start sterker" : "Start stronger"}
+          </p>
+          <h2 className="mt-3 text-3xl font-bold text-primary-foreground">{home.cta.title}</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-primary-foreground/80">{home.cta.description}</p>
           <div className="mt-8">
             <Button
               render={
@@ -449,6 +485,7 @@ export default async function HomePage() {
             >
               {home.cta.button}
             </Button>
+          </div>
           </div>
         </div>
       </section>

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
+import { CheckCircle } from "lucide-react";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
-import { Button, Card, CardContent, Input, Select } from "@/components/ui";
+import { Button, Card, CardContent, InfoBox, Input, Select, StatRow } from "@/components/ui";
 import { calculateAdvancedPressure } from "@/lib/pressure-engine";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { PressureResultCard } from "../PressureResultCard";
@@ -213,21 +214,28 @@ export function StepResult({
 
       {(currentFrontBar !== undefined || currentRearBar !== undefined) && (
         <Card variant="bordered">
-          <CardContent className="space-y-1 p-4">
-            <p className="text-sm text-[color:var(--foreground)]">
-              {wizardLabels.currentPressureSummary}: {currentFrontBar ?? "-"} / {currentRearBar ?? "-"} bar
-            </p>
-            <p className="text-sm text-[color:var(--foreground)]">
-              {wizardLabels.recommendedPressureSummary}: {result.frontBar} / {result.rearBar} bar
-            </p>
+          <CardContent className="p-4">
+            <dl className="divide-y divide-[color:var(--border)]">
+              <StatRow
+                label={wizardLabels.currentPressureSummary}
+                value={`${currentFrontBar ?? "-"} / ${currentRearBar ?? "-"} bar`}
+              />
+              <StatRow
+                label={wizardLabels.recommendedPressureSummary}
+                value={`${result.frontBar} / ${result.rearBar} bar`}
+              />
+            </dl>
           </CardContent>
         </Card>
       )}
 
       {saveMessage ? (
-        <div className="rounded-xl border border-[color:color-mix(in_oklch,var(--success)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--success)_10%,var(--card)_90%)] px-4 py-3 text-sm text-[color:var(--success-foreground)]">
+        <InfoBox
+          variant="success"
+          icon={<CheckCircle className="h-4 w-4 text-[color:var(--success)]" />}
+        >
           {saveMessage}
-        </div>
+        </InfoBox>
       ) : null}
 
       <div className="flex flex-wrap gap-3">

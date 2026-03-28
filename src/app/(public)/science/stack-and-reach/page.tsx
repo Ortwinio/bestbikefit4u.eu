@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { ArrowUpDown, Bike, MoveHorizontal } from "lucide-react";
+import {
+  PublicHero,
+  PublicIllustrationPanel,
+  PublicPageShell,
+  PublicSection,
+  PublicSurfaceCard,
+} from "@/components/public";
+import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
+import { getRequestLocale } from "@/i18n/request";
 
 export const metadata: Metadata = {
   title: "Stack and Reach Explained | BestBikeFit4U Science",
@@ -27,7 +36,8 @@ const links = [
   { href: "/guides/gravel-bike-fit-guide", label: "Gravel Bike Fit Guide" },
 ];
 
-export default function StackAndReachPage() {
+export default async function StackAndReachPage() {
+  const locale = await getRequestLocale();
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -42,62 +52,73 @@ export default function StackAndReachPage() {
   };
 
   return (
-    <div className="py-16 text-foreground">
+    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_20%,var(--background)_80%)_100%)] text-foreground">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-foreground">Stack and Reach</h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          Stack and reach provide a consistent way to compare bike frames across
-          brands without relying on inconsistent size labels.
-        </p>
 
-        <div className="mt-10 grid gap-6">
-          <section className="rounded-xl border border-border bg-card p-6">
-            <h2 className="text-2xl font-semibold text-foreground">What Is Stack?</h2>
-            <p className="mt-3 text-muted-foreground">
-              Stack is the vertical distance from the bottom bracket to the top
-              center of the head tube. Higher stack generally means a more
-              upright riding posture.
-            </p>
-          </section>
+      <PublicHero
+        eyebrow="Science"
+        title="Stack and Reach"
+        description="Stack and reach provide a consistent way to compare bike frames across brands without relying on inconsistent size labels."
+        chips={["Vertical fit", "Horizontal fit", "Frame comparison"]}
+        illustration={
+          <PublicIllustrationPanel
+            caption="These two coordinates say more about rider position than a nominal frame size alone."
+            className="w-full"
+          >
+            <div className="grid w-full gap-3">
+              {[
+                { icon: <ArrowUpDown className="h-5 w-5" />, label: "Stack = vertical distance" },
+                { icon: <MoveHorizontal className="h-5 w-5" />, label: "Reach = horizontal distance" },
+                { icon: <Bike className="h-5 w-5" />, label: "Useful across brands" },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="flex items-center gap-3 rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-3"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary-soft)] text-[color:var(--primary)]">
+                    {item.icon}
+                  </div>
+                  <span className="text-sm font-semibold text-[color:var(--foreground)]">
+                    {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </PublicIllustrationPanel>
+        }
+      />
 
-          <section className="rounded-xl border border-border bg-card p-6">
-            <h2 className="text-2xl font-semibold text-foreground">What Is Reach?</h2>
-            <p className="mt-3 text-muted-foreground">
-              Reach is the horizontal distance from the bottom bracket to that
-              same head-tube reference point. Longer reach usually creates a
-              more stretched cockpit.
-            </p>
-          </section>
-
-          <section className="rounded-xl border border-primary/20 bg-primary-soft p-6">
-            <h2 className="text-2xl font-semibold text-foreground">Why It Matters</h2>
-            <p className="mt-3 text-muted-foreground">
-              Seat tube size alone can hide major geometry differences. Stack
-              and reach reflect real rider position and are the best baseline
-              when matching a frame to fit targets.
-            </p>
-          </section>
+      <PublicSection
+        header={{
+          eyebrow: "Core concepts",
+          title: "The geometry references that actually travel between frames",
+          description:
+            "Seat-tube sizing hides too much variation. Stack and reach give you a cleaner baseline when you want to compare positions from one frame to another.",
+        }}
+      >
+        <div className="grid gap-5">
+          <PublicSurfaceCard
+            title="What is stack?"
+            description="Stack is the vertical distance from the bottom bracket to the top center of the head tube. Higher stack generally means a more upright riding posture."
+            leading={<ArrowUpDown className="h-5 w-5" />}
+          />
+          <PublicSurfaceCard
+            title="What is reach?"
+            description="Reach is the horizontal distance from the bottom bracket to the same head-tube reference point. Longer reach usually creates a more stretched cockpit."
+            leading={<MoveHorizontal className="h-5 w-5" />}
+          />
+          <PublicSurfaceCard
+            title="Why it matters"
+            description="Stack and reach reflect real rider position and are the best baseline when matching a frame to fit targets."
+            leading={<Bike className="h-5 w-5" />}
+          />
         </div>
+      </PublicSection>
 
-        <section className="mt-12 rounded-xl border border-border bg-muted p-6">
-          <h2 className="text-xl font-semibold text-foreground">Continue Reading</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-primary hover:bg-secondary"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        </section>
-      </div>
-    </div>
+      <RelatedLinksSection title="Continue reading" links={links} locale={locale} />
+    </PublicPageShell>
   );
 }

@@ -103,29 +103,54 @@ export default async function ProgrammaticBandenspanningPage({
         ]}
       />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-[color:var(--foreground)]">
-          Bandenspanning voor {weight}kg {label.nl}
-        </h1>
-        <p className="mt-4 max-w-3xl text-lg text-[color:var(--muted-foreground)]">
-          Deze pagina geeft een statisch startadvies voor een rijder van {weight} kg op een{" "}
-          {label.nl} met gangbare bandbreedtes. Gebruik het als snelle referentie en ga daarna
-          verder naar de volledige calculator voor jouw exacte setup.
-        </p>
+        <section className="rounded-[28px] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--primary)_12%)] p-8 shadow-sm sm:p-10">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
+              BestBikeFit4U pressure guide
+            </p>
+            <h1 className="mt-4 text-4xl font-bold text-[color:var(--foreground)] sm:text-5xl">
+              Bandenspanning voor {weight}kg {label.nl}
+            </h1>
+            <p className="mt-4 max-w-3xl text-lg text-[color:var(--muted-foreground)]">
+              Deze pagina geeft een statisch startadvies voor een rijder van {weight} kg op een{" "}
+              {label.nl} met gangbare bandbreedtes. Gebruik het als snelle referentie en ga daarna
+              verder naar de volledige calculator voor jouw exacte setup.
+            </p>
+          </div>
+        </section>
 
         <section className="mt-10 grid gap-6 md:grid-cols-2">
-          <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-secondary)] p-6">
+          <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface-secondary)] p-6 shadow-sm">
             <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Tubeless advies</h2>
             <p className="mt-4 text-[color:var(--foreground)]">Voor: {tubeless.frontBar} bar / {tubeless.frontPsi} PSI</p>
             <p className="mt-1 text-[color:var(--foreground)]">Achter: {tubeless.rearBar} bar / {tubeless.rearPsi} PSI</p>
             <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">{tubeless.explanation}</p>
           </div>
-          <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6">
+          <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
             <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Vergelijking met binnenband</h2>
             <p className="mt-4 text-[color:var(--foreground)]">Voor: {innerTube.frontBar} bar / {innerTube.frontPsi} PSI</p>
             <p className="mt-1 text-[color:var(--foreground)]">Achter: {innerTube.rearBar} bar / {innerTube.rearPsi} PSI</p>
             <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">
               Binnenband vraagt meestal iets meer druk om stootlekken te beperken.
             </p>
+          </div>
+        </section>
+
+        <section className="mt-10 rounded-3xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-6 shadow-sm sm:p-8">
+          <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Zo gebruik je deze waarde</h2>
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            {[
+              "Gebruik dit als startpunt, niet als definitieve wedstrijdspanning.",
+              "Bandbreedte, ondergrond en bandtype kunnen je echte ideale druk nog verschuiven.",
+              "Ga voor je exacte setup daarna naar de volledige calculator.",
+            ].map((item) => (
+              <div
+                key={item}
+                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-4 text-sm text-[color:var(--muted-foreground)]"
+              >
+                {item}
+              </div>
+            ))}
           </div>
         </section>
 
@@ -141,14 +166,20 @@ export default async function ProgrammaticBandenspanningPage({
           </div>
         </section>
 
-        <div className="mt-8 flex flex-wrap gap-3">
+        <section className="mt-8 rounded-3xl border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--secondary)_12%)] p-6 shadow-sm sm:p-8">
+          <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Volgende stap</h2>
+          <p className="mt-3 max-w-2xl text-[color:var(--muted-foreground)]">
+            Wil je een advies op basis van jouw precieze bandbreedte, ondergrond en bandtype, gebruik dan de volledige calculator.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
           <Button render={<Link href="/bandenspanning-calculator" />}>
             Open bandenspanning calculator
           </Button>
           <Button render={<Link href={label.guideHref} />} variant="outline">
             Lees {label.nl} fit gids
           </Button>
-        </div>
+          </div>
+        </section>
 
         <RelatedLinksSection
           title="Gerelateerde tools en gidsen"

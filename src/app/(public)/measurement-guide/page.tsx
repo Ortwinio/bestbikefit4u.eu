@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button, type ButtonProps } from "@/components/ui";
+import { Ruler, ScanLine, UserRound } from "lucide-react";
+import {
+  PublicCtaBand,
+  PublicHero,
+  PublicIllustrationPanel,
+  PublicPageShell,
+  PublicSection,
+  PublicSurfaceCard,
+} from "@/components/public";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -379,88 +388,137 @@ export default async function MeasurementGuidePage() {
   const page = content[locale];
 
   return (
-    <div className="py-16">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
-        <p className="mt-4 text-xl text-muted-foreground">{page.subtitle}</p>
+    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_24%,var(--background)_76%)_100%)]">
+      <PublicHero
+        eyebrow={locale === "nl" ? "Metingen" : "Measurements"}
+        title={page.title}
+        description={page.subtitle}
+        chips={[
+          page.requiredLabel,
+          page.optionalLabel,
+          locale === "nl" ? "Nauwkeuriger fitrapport" : "Better fit precision",
+        ]}
+        illustration={
+          <PublicIllustrationPanel
+            caption={locale === "nl" ? "Goede metingen geven betere cockpit- en stabiliteitsaanbevelingen." : "Better measurements produce better cockpit and stability recommendations."}
+            className="w-full"
+          >
+            <div className="grid w-full gap-3">
+              {[
+                { icon: <UserRound className="h-5 w-5" />, label: locale === "nl" ? "Twee verplichte metingen" : "Two required measurements" },
+                { icon: <Ruler className="h-5 w-5" />, label: locale === "nl" ? "Extra cockpitcontext" : "Extra cockpit context" },
+                { icon: <ScanLine className="h-5 w-5" />, label: locale === "nl" ? "Minder giswerk in je setup" : "Less guesswork in your setup" },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center gap-3 rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary-soft)] text-[color:var(--primary)]">
+                    {item.icon}
+                  </div>
+                  <span className="text-sm font-semibold text-[color:var(--foreground)]">{item.label}</span>
+                </div>
+              ))}
+            </div>
+          </PublicIllustrationPanel>
+        }
+      />
 
-        <section className="mt-10 rounded-xl border border-border bg-primary-soft p-6">
-          <h2 className="text-xl font-semibold text-foreground">{page.beforeStartTitle}</h2>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-foreground">
-            {page.beforeStartBullets.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
-
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {page.items.map((item) => (
-            <article key={item.id} className="rounded-xl border border-border bg-card p-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-foreground">{item.name}</h2>
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${
-                    item.required ? "bg-destructive-soft text-destructive" : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {item.required ? page.requiredLabel : page.optionalLabel}
-                </span>
-              </div>
-
-              <p className="mt-2 text-sm text-muted-foreground">
-                {page.unitLabel}: {item.unit}
-                {item.targetRange ? ` | ${page.rangeLabel}: ${item.targetRange}` : ""}
-              </p>
-
-              <h3 className="mt-4 text-sm font-semibold text-foreground">{page.toolsLabel}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{item.tools.join(" • ")}</p>
-
-              <h3 className="mt-4 text-sm font-semibold text-foreground">{page.measureLabel}</h3>
-              <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-foreground">
-                {item.steps.map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
-              </ol>
-
-              <h3 className="mt-4 text-sm font-semibold text-foreground">{page.mistakesLabel}</h3>
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-foreground">
-                {item.mistakes.map((mistake) => (
-                  <li key={mistake}>{mistake}</li>
-                ))}
-              </ul>
-            </article>
+      <PublicSection
+        header={{
+          eyebrow: locale === "nl" ? "Voorbereiding" : "Preparation",
+          title: page.beforeStartTitle,
+          description:
+            locale === "nl"
+              ? "Gebruik deze checklist voordat je begint met meten."
+              : "Use this checklist before you start measuring.",
+        }}
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          {page.beforeStartBullets.map((item) => (
+            <PublicSurfaceCard key={item} compact title={item} leading={<Ruler className="h-4 w-4" />} />
           ))}
         </div>
+      </PublicSection>
 
-        <section className="mt-12 rounded-xl border border-border bg-muted p-6">
-          <h2 className="text-xl font-semibold text-foreground">{page.remeasureTitle}</h2>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-foreground">
-            {page.remeasureBullets.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="mt-12 rounded-2xl bg-primary p-8 text-center">
-          <h2 className="text-2xl font-semibold text-primary-foreground">{page.ctaTitle}</h2>
-          <p className="mt-2 text-primary-foreground/80">{page.ctaBody}</p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Button
-              className="bg-background text-primary hover:bg-muted"
-              {...linkButtonProps(withLocalePrefix("/profile", locale))}
+      <PublicSection
+        header={{
+          eyebrow: locale === "nl" ? "Metingen" : "Measurements",
+          title: locale === "nl" ? "Werk stap voor stap" : "Work step by step",
+          description:
+            locale === "nl"
+              ? "Begin met de verplichte velden en voeg daarna optionele metingen toe voor een rijker fitprofiel."
+              : "Start with the required fields, then add optional measurements for a richer fit profile.",
+        }}
+      >
+        <div className="grid gap-6 md:grid-cols-2">
+          {page.items.map((item) => (
+            <PublicSurfaceCard
+              key={item.id}
+              title={item.name}
+              description={`${item.required ? page.requiredLabel : page.optionalLabel} • ${page.unitLabel}: ${item.unit}${item.targetRange ? ` • ${page.rangeLabel}: ${item.targetRange}` : ""}`}
+              leading={<ScanLine className="h-5 w-5" />}
             >
+              <div className="space-y-4 text-sm">
+                <div>
+                  <p className="font-semibold text-[color:var(--foreground)]">{page.toolsLabel}</p>
+                  <p className="mt-1 leading-6 text-[color:var(--muted-foreground)]">{item.tools.join(" • ")}</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-[color:var(--foreground)]">{page.measureLabel}</p>
+                  <ol className="mt-2 list-decimal space-y-1 pl-5 text-[color:var(--muted-foreground)]">
+                    {item.steps.map((step) => (
+                      <li key={step}>{step}</li>
+                    ))}
+                  </ol>
+                </div>
+                <div>
+                  <p className="font-semibold text-[color:var(--foreground)]">{page.mistakesLabel}</p>
+                  <ul className="mt-2 list-disc space-y-1 pl-5 text-[color:var(--muted-foreground)]">
+                    {item.mistakes.map((mistake) => (
+                      <li key={mistake}>{mistake}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </PublicSurfaceCard>
+          ))}
+        </div>
+      </PublicSection>
+
+      <PublicSection
+        header={{
+          eyebrow: locale === "nl" ? "Hercontrole" : "Recheck",
+          title: page.remeasureTitle,
+          description:
+            locale === "nl"
+              ? "Herhaal je metingen wanneer de kwaliteit van de input twijfelachtig is."
+              : "Repeat your measurements when the quality of the input is uncertain.",
+        }}
+      >
+        <div className="grid gap-4 md:grid-cols-3">
+          {page.remeasureBullets.map((item) => (
+            <PublicSurfaceCard key={item} compact title={item} leading={<UserRound className="h-4 w-4" />} />
+          ))}
+        </div>
+      </PublicSection>
+
+      <PublicCtaBand
+        eyebrow={locale === "nl" ? "Volgende stap" : "Next step"}
+        title={page.ctaTitle}
+        description={page.ctaBody}
+        actions={
+          <>
+            <Button size="lg" {...linkButtonProps(withLocalePrefix("/profile", locale))}>
               {page.ctaProfile}
             </Button>
             <Button
               variant="outline"
-              className="border-primary-foreground bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
+              size="lg"
               {...linkButtonProps(withLocalePrefix("/fit", locale))}
             >
               {page.ctaFit}
             </Button>
-          </div>
-        </section>
-      </div>
-    </div>
+          </>
+        }
+      />
+    </PublicPageShell>
   );
 }

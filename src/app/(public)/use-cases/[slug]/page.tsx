@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Button, type ButtonProps } from "@/components/ui";
+import { notFound } from "next/navigation";
+import { Compass, HelpCircle, Target, Wrench } from "lucide-react";
+import { Button, Card, CardContent, type ButtonProps } from "@/components/ui";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -89,38 +90,142 @@ export default async function UseCaseDetailPage({ params }: UseCasePageProps) {
         ]}
       />
 
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-foreground">{copy.h1}</h1>
-        <p className="mt-4 text-lg text-muted-foreground">{copy.intro}</p>
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
+          <Card className="dashboard-card-surface border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_92%,var(--primary)_8%)]">
+            <CardContent className="p-8 sm:p-10">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
+                <Compass className="h-3.5 w-3.5" />
+                {isNl ? "Use case" : "Use case"}
+              </div>
+              <h1 className="mt-5 text-4xl font-semibold tracking-tight text-[color:var(--foreground)] sm:text-5xl">
+                {copy.h1}
+              </h1>
+              <p className="mt-4 text-lg leading-8 text-[color:var(--muted-foreground)]">
+                {copy.intro}
+              </p>
+            </CardContent>
+          </Card>
 
-        <section className="mt-10 rounded-2xl border border-border bg-card p-6">
-          <h2 className="text-2xl font-semibold text-foreground">{copy.challengesTitle}</h2>
-          <ul className="mt-4 list-inside list-disc space-y-2 text-foreground">
+          <Card className="dashboard-card-surface overflow-hidden border-[color:var(--border)] bg-[linear-gradient(160deg,color-mix(in_oklch,var(--primary)_12%,var(--card)_88%),color-mix(in_oklch,var(--warning)_10%,var(--card)_90%))]">
+            <CardContent className="flex h-full flex-col justify-between p-8">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
+                  {isNl ? "Scenarioframe" : "Scenario frame"}
+                </p>
+                <div className="mt-5 grid gap-3">
+                  <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)]/80 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">
+                      {isNl ? "Uitdagingen" : "Challenges"}
+                    </p>
+                    <p className="mt-2 text-3xl font-semibold text-[color:var(--foreground)]">
+                      {copy.challenges.length}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)]/80 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">
+                      {isNl ? "Oplossingen" : "Solutions"}
+                    </p>
+                    <p className="mt-2 text-3xl font-semibold text-[color:var(--foreground)]">
+                      {copy.solutions.length}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 rounded-2xl border border-dashed border-[color:var(--border)] bg-[color:var(--background)]/70 p-4">
+                <div className="flex items-start gap-3">
+                  <Target className="mt-0.5 h-5 w-5 text-[color:var(--warning)]" />
+                  <p className="text-sm leading-6 text-[color:var(--foreground)]">
+                    {isNl
+                      ? "Deze pagina helpt je de juiste vraag te stellen voordat je gaat meten of aanpassen."
+                      : "This page is designed to help you ask the right fit question before measuring or adjusting."}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        <section className="mt-10 rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm sm:p-8">
+          <div className="flex items-start gap-4">
+            <div className="rounded-2xl bg-[color:var(--warning)]/14 p-3 text-[color:var(--warning)]">
+              <Target className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
+                {isNl ? "Waar je tegenaan loopt" : "What riders usually run into"}
+              </p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[color:var(--foreground)]">
+                {copy.challengesTitle}
+              </h2>
+            </div>
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
             {copy.challenges.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="mt-8 rounded-2xl border border-border bg-primary-soft p-6">
-          <h2 className="text-2xl font-semibold text-foreground">{copy.solutionsTitle}</h2>
-          <ol className="mt-4 list-inside list-decimal space-y-2 text-foreground">
-            {copy.solutions.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ol>
-        </section>
-
-        <section className="mt-8 rounded-2xl border border-border bg-card p-6">
-          <h2 className="text-2xl font-semibold text-foreground">{copy.faqTitle}</h2>
-          <dl className="mt-4 space-y-4">
-            {copy.faqs.map((faq) => (
-              <div key={faq.q}>
-                <dt className="text-base font-semibold text-foreground">{faq.q}</dt>
-                <dd className="mt-1 text-muted-foreground">{faq.a}</dd>
+              <div
+                key={item}
+                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] p-5"
+              >
+                <p className="text-sm leading-7 text-[color:var(--foreground)]">{item}</p>
               </div>
             ))}
-          </dl>
+          </div>
+        </section>
+
+        <section className="mt-8 rounded-3xl border border-[color:var(--border)] bg-[color:var(--primary-soft)] p-6 shadow-sm sm:p-8">
+          <div className="flex items-start gap-4">
+            <div className="rounded-2xl bg-[color:var(--background)] p-3 text-[color:var(--primary)]">
+              <Wrench className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
+                {isNl ? "Wat je ermee doet" : "How to respond"}
+              </p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[color:var(--foreground)]">
+                {copy.solutionsTitle}
+              </h2>
+            </div>
+          </div>
+          <div className="mt-6 grid gap-4">
+            {copy.solutions.map((item, index) => (
+              <div
+                key={item}
+                className="grid gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] p-5 sm:grid-cols-[auto_1fr]"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-semibold text-[color:var(--primary-foreground)]">
+                  {index + 1}
+                </div>
+                <p className="text-sm leading-7 text-[color:var(--foreground)]">{item}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-8 rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm sm:p-8">
+          <div className="flex items-start gap-4">
+            <div className="rounded-2xl bg-[color:var(--primary-soft)] p-3 text-[color:var(--primary)]">
+              <HelpCircle className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
+                {isNl ? "FAQ" : "FAQ"}
+              </p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[color:var(--foreground)]">
+                {copy.faqTitle}
+              </h2>
+            </div>
+          </div>
+          <div className="mt-6 grid gap-4">
+            {copy.faqs.map((faq) => (
+              <article
+                key={faq.q}
+                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] p-5"
+              >
+                <h3 className="text-base font-semibold text-[color:var(--foreground)]">{faq.q}</h3>
+                <p className="mt-2 text-sm leading-7 text-[color:var(--muted-foreground)]">{faq.a}</p>
+              </article>
+            ))}
+          </div>
         </section>
 
         <RelatedLinksSection
@@ -129,18 +234,18 @@ export default async function UseCaseDetailPage({ params }: UseCasePageProps) {
           locale={locale}
         />
 
-        <section className="mt-10 rounded-2xl bg-primary p-8 text-center">
-          <h2 className="text-2xl font-bold text-primary-foreground">
+        <section className="mt-10 rounded-[2rem] bg-[linear-gradient(160deg,color-mix(in_oklch,var(--primary)_92%,black_8%),color-mix(in_oklch,var(--primary)_72%,var(--warning)_28%))] p-8 text-center shadow-sm sm:p-10">
+          <h2 className="text-2xl font-bold text-[color:var(--primary-foreground)] sm:text-3xl">
             {isNl ? "Wil je dit vertalen naar jouw eigen setup?" : "Ready to turn this into your own setup?"}
           </h2>
-          <p className="mt-3 text-primary-foreground/80">
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[color:var(--primary-foreground)]/84 sm:text-base">
             {isNl
               ? "Gebruik de gratis bike fit calculator als startpunt en ga daarna verder met je volledige dashboard-fit."
               : "Use the free bike-fit calculator as a starting point, then continue with your full dashboard fit."}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button
-              className="bg-background text-primary hover:bg-muted"
+              className="bg-[color:var(--background)] text-[color:var(--primary)] hover:bg-[color:var(--muted)]"
               {...linkButtonProps(withLocalePrefix("/calculators/bike-fit", locale))}
             >
               {isNl ? "Open bike fit calculator" : "Open Bike Fit Calculator"}
@@ -156,7 +261,7 @@ export default async function UseCaseDetailPage({ params }: UseCasePageProps) {
                 />
               }
               variant="outline"
-              className="border-primary-foreground bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
+              className="border-[color:var(--primary-foreground)] bg-transparent text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-foreground)]/10"
             >
               {copy.primaryCta}
             </Button>

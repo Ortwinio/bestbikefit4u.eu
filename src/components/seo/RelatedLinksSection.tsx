@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { withLocalePrefix } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
+import { PublicSection, PublicSurfaceCard } from "@/components/public";
+import { ArrowRight } from "lucide-react";
 
 export type RelatedLink = {
   href: string;
@@ -24,24 +26,42 @@ export function RelatedLinksSection({
   }
 
   return (
-    <section className="mt-10 rounded-2xl border border-gray-200 bg-gray-50 p-6">
-      <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+    <PublicSection
+      className="mt-10"
+      header={{
+        eyebrow: "Explore more",
+        title,
+        description:
+          "Keep going with related guides and calculators that build on what you just learned.",
+      }}
+      contentClassName="pt-5"
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
         {links.map((link) => (
-          <Link
+          <PublicSurfaceCard
             key={link.href}
-            href={withLocalePrefix(link.href, locale)}
-            className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-left text-sm font-medium text-blue-700 hover:bg-blue-50"
+            compact
+            className="transition-transform duration-150 hover:-translate-y-0.5"
+            title={
+              <Link
+                href={withLocalePrefix(link.href, locale)}
+                className="inline-flex items-center gap-2 text-[color:var(--foreground)] outline-none transition-colors hover:text-[color:var(--primary)] focus-visible:text-[color:var(--primary)]"
+              >
+                <span>{link.label}</span>
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            }
+            description={link.description ?? "Open the next page in this topic cluster."}
           >
-            <span className="block">{link.label}</span>
-            {link.description ? (
-              <span className="mt-1 block text-xs font-normal text-gray-600">
-                {link.description}
-              </span>
-            ) : null}
-          </Link>
+            <Link
+              href={withLocalePrefix(link.href, locale)}
+              className="inline-flex items-center text-sm font-medium text-[color:var(--primary)] underline-offset-4 outline-none transition-colors hover:text-[color:color-mix(in_oklch,var(--primary)_82%,var(--foreground)_18%)] hover:underline focus-visible:underline"
+            >
+              Read more
+            </Link>
+          </PublicSurfaceCard>
         ))}
       </div>
-    </section>
+    </PublicSection>
   );
 }

@@ -7,7 +7,8 @@ import { api } from "../../../../convex/_generated/api";
 import type { Doc } from "../../../../convex/_generated/dataModel";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { Button, Card, CardContent, CardHeader, CardTitle, EmptyState } from "@/components/ui";
+import { Settings2 } from "lucide-react";
+import { Button, Card, CardContent, EmptyState, SectionHeader } from "@/components/ui";
 import { BikePressureCard } from "./BikePressureCard";
 import { PressureWizard } from "./PressureWizard";
 
@@ -105,9 +106,10 @@ export function PressureCalculatorDashboard({
       </section>
 
       <Card variant="bordered" id="pressure-wizard" className="dashboard-card-surface">
-        <CardHeader>
-          <CardTitle>{messages.pressure.overview.startNew}</CardTitle>
-        </CardHeader>
+        <SectionHeader
+          icon={<Settings2 className="h-4 w-4 text-[color:var(--primary)]" />}
+          title={messages.pressure.overview.startNew}
+        />
         <CardContent>
           <PressureWizard initialBikeId={selectedBikeId} />
         </CardContent>
