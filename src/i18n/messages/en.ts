@@ -1613,11 +1613,18 @@ const en = {
         emptyTitle: "No bike photos yet",
         emptyDescription:
           "Upload a main photo now and add extra angles later if you want.",
+        countOne: "1 photo",
+        countMany: "{count} photos",
+        help: "Choose a thumbnail to change the main preview or open the photo fullscreen.",
         upload: "Upload photo",
         setPrimary: "Set as primary",
         remove: "Remove photo",
         primaryBadge: "Primary",
         captionLabel: "Caption",
+        openLightbox: "Open fullscreen photo viewer",
+        closeLightbox: "Close fullscreen viewer",
+        previousPhoto: "Previous photo",
+        nextPhoto: "Next photo",
       },
       descriptionCard: {
         title: "Bike description",

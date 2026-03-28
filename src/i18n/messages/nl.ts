@@ -1617,11 +1617,18 @@ const nl = {
         emptyTitle: "Nog geen fietsfoto's",
         emptyDescription:
           "Upload nu een hoofdfoto en voeg later extra hoeken toe als je wilt.",
+        countOne: "1 foto",
+        countMany: "{count} foto's",
+        help: "Kies een thumbnail om de hoofdweergave te wijzigen of open de foto fullscreen.",
         upload: "Foto uploaden",
         setPrimary: "Als primaire foto instellen",
         remove: "Foto verwijderen",
         primaryBadge: "Primair",
         captionLabel: "Bijschrift",
+        openLightbox: "Open fullscreen fotoviewer",
+        closeLightbox: "Sluit fullscreen viewer",
+        previousPhoto: "Vorige foto",
+        nextPhoto: "Volgende foto",
       },
       descriptionCard: {
         title: "Fietsbeschrijving",

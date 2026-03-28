@@ -59,8 +59,27 @@ export const create = mutation({
     const { userId, bike } = await requireBikeOwner(ctx, args.bikeId);
     const now = Date.now();
     const existingPhotos = await listBikePhotos(ctx, bike._id);
-    const shouldBePrimary =
-      args.isPrimary === true || existingPhotos.length === 0;
+    let photoCount = existingPhotos.length;
+
+    if (
+      photoCount === 0 &&
+      typeof bike.photoUrl === "string" &&
+      bike.photoUrl.length > 0 &&
+      bike.photoUrl !== args.storageId
+    ) {
+      await ctx.db.insert("bikePhotos", {
+        userId,
+        bikeId: bike._id,
+        storageId: bike.photoUrl,
+        isPrimary: args.isPrimary !== true,
+        sortOrder: 0,
+        createdAt: now,
+        updatedAt: now,
+      });
+      photoCount += 1;
+    }
+
+    const shouldBePrimary = args.isPrimary === true || photoCount === 0;
 
     if (shouldBePrimary) {
       await Promise.all(
@@ -76,7 +95,7 @@ export const create = mutation({
       storageId: args.storageId,
       caption: args.caption,
       isPrimary: shouldBePrimary,
-      sortOrder: existingPhotos.length,
+      sortOrder: photoCount,
       createdAt: now,
       updatedAt: now,
     });

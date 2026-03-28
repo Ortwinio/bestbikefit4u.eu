@@ -7,6 +7,82 @@ function sortNewestFirst<T extends { createdAt: number }>(rows: T[]) {
   return [...rows].sort((a, b) => b.createdAt - a.createdAt);
 }
 
+function buildBikeDetailPhotos({
+  bikeId,
+  bikePhotoUrl,
+  bikeUpdatedAt,
+  photos,
+}: {
+  bikeId: string;
+  bikePhotoUrl?: string;
+  bikeUpdatedAt: number;
+  photos: Array<{
+    _id: string;
+    storageId: string;
+    caption?: string;
+    isPrimary: boolean;
+    sortOrder?: number;
+    createdAt: number;
+    updatedAt: number;
+  }>;
+}) {
+  const orderedPhotos = [...photos].sort((a, b) => {
+    if (a.isPrimary !== b.isPrimary) {
+      return a.isPrimary ? -1 : 1;
+    }
+    const leftSort = a.sortOrder ?? Number.MAX_SAFE_INTEGER;
+    const rightSort = b.sortOrder ?? Number.MAX_SAFE_INTEGER;
+    if (leftSort !== rightSort) {
+      return leftSort - rightSort;
+    }
+    return b.createdAt - a.createdAt;
+  });
+
+  const hasLegacyOnlyPhoto =
+    typeof bikePhotoUrl === "string" &&
+    bikePhotoUrl.length > 0 &&
+    !orderedPhotos.some((photo) => photo.storageId === bikePhotoUrl);
+
+  const legacyPhoto = hasLegacyOnlyPhoto
+    ? {
+        id: `legacy:${bikeId}`,
+        storageId: bikePhotoUrl!,
+        caption: undefined,
+        isPrimary: true,
+        isLegacy: true,
+        createdAt: bikeUpdatedAt,
+        updatedAt: bikeUpdatedAt,
+      }
+    : null;
+
+  const detailPhotos = [
+    ...(legacyPhoto ? [legacyPhoto] : []),
+    ...orderedPhotos.map((photo) => ({
+      id: String(photo._id),
+      storageId: photo.storageId,
+      caption: photo.caption,
+      isPrimary: legacyPhoto ? false : photo.isPrimary,
+      isLegacy: false,
+      createdAt: photo.createdAt,
+      updatedAt: photo.updatedAt,
+    })),
+  ];
+
+  const activePhotoStorageId =
+    legacyPhoto?.storageId ??
+    orderedPhotos.find((photo) => photo.isPrimary)?.storageId ??
+    orderedPhotos[0]?.storageId ??
+    bikePhotoUrl ??
+    null;
+
+  return {
+    detailPhotos,
+    activePhotoStorageId,
+  };
+}
+
+export { buildBikeDetailPhotos };
+
 export const getById = query({
   args: { bikeId: v.id("bikes") },
   handler: async (ctx, args) => {
@@ -60,32 +136,20 @@ export const getDetail = query({
           .collect(),
       ]);
 
-    const orderedPhotos = [...photos].sort((a, b) => {
-      if (a.isPrimary !== b.isPrimary) {
-        return a.isPrimary ? -1 : 1;
-      }
-      const leftSort = a.sortOrder ?? Number.MAX_SAFE_INTEGER;
-      const rightSort = b.sortOrder ?? Number.MAX_SAFE_INTEGER;
-      if (leftSort !== rightSort) {
-        return leftSort - rightSort;
-      }
-      return b.createdAt - a.createdAt;
+    const photoState = buildBikeDetailPhotos({
+      bikeId: String(bike._id),
+      bikePhotoUrl: bike.photoUrl,
+      bikeUpdatedAt: bike.updatedAt,
+      photos: photos.map((photo) => ({
+        _id: String(photo._id),
+        storageId: photo.storageId,
+        caption: photo.caption,
+        isPrimary: photo.isPrimary,
+        sortOrder: photo.sortOrder,
+        createdAt: photo.createdAt,
+        updatedAt: photo.updatedAt,
+      })),
     });
-
-    const legacyPhotos =
-      orderedPhotos.length === 0 && bike.photoUrl
-        ? [
-            {
-              id: `legacy:${bike._id}`,
-              storageId: bike.photoUrl,
-              caption: undefined,
-              isPrimary: true,
-              isLegacy: true,
-              createdAt: bike.updatedAt,
-              updatedAt: bike.updatedAt,
-            },
-          ]
-        : [];
 
     const wheelsetsWithTireSetups = await Promise.all(
       sortNewestFirst(wheelsets).map(async (wheelset) => {
@@ -117,23 +181,8 @@ export const getDetail = query({
     return {
       bike,
       bikeProfiles: sortNewestFirst(bikeProfiles),
-      photos: [
-        ...orderedPhotos.map((photo) => ({
-          id: String(photo._id),
-          storageId: photo.storageId,
-          caption: photo.caption,
-          isPrimary: photo.isPrimary,
-          isLegacy: false,
-          createdAt: photo.createdAt,
-          updatedAt: photo.updatedAt,
-        })),
-        ...legacyPhotos,
-      ],
-      activePhotoStorageId:
-        orderedPhotos.find((photo) => photo.isPrimary)?.storageId ??
-        orderedPhotos[0]?.storageId ??
-        bike.photoUrl ??
-        null,
+      photos: photoState.detailPhotos,
+      activePhotoStorageId: photoState.activePhotoStorageId,
       wheelsets: wheelsetsWithTireSetups,
       activeWheelset,
       activeTireSetup: activeWheelset?.activeTireSetup ?? null,

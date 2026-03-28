@@ -55,7 +55,6 @@ export function CreateBikeForm() {
   const [primaryGoal, setPrimaryGoal] = useState<PrimaryGoal>("balanced");
   const [notes, setNotes] = useState("");
   const [bikeWeightKg, setBikeWeightKg] = useState("");
-  const [photoUrl, setPhotoUrl] = useState("");
 
   const [wheelsetName, setWheelsetName] = useState("");
   const [rimType, setRimType] = useState<"hooked" | "hookless">("hooked");
@@ -166,7 +165,6 @@ export function CreateBikeForm() {
         model: model.trim() || undefined,
         notes: notes.trim() || undefined,
         bikeWeightKg: bikeWeightKg ? Number(bikeWeightKg) : undefined,
-        photoUrl: photoUrl.trim() || undefined,
       });
       setNewBikeId(bikeId);
       setStep("saved");
@@ -286,12 +284,6 @@ export function CreateBikeForm() {
                 placeholder={messages.bikeForm.fields.bikeWeightKg.placeholder}
                 error={bikeWeightError}
                 unit="kg"
-              />
-              <Input
-                label={messages.bikeForm.fields.photoUrl.label}
-                value={photoUrl}
-                onChange={(event) => setPhotoUrl(event.target.value)}
-                placeholder={messages.bikeForm.fields.photoUrl.placeholder}
               />
               <Select
                 label={messages.fit.sections.ridingStyle}
