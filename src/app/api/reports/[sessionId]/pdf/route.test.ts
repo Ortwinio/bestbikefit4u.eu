@@ -106,6 +106,37 @@ describe("pdf report route", () => {
     fitNotes: ["Reassess after 2 weeks of riding"],
   };
 
+  const reportSourceFixture = {
+    session: sessionFixture,
+    recommendation: recommendationFixture,
+    bike: {
+      name: "Race Machine",
+      bikeType: "road",
+      photoUrl: null,
+    },
+    bikeProfile: null,
+    profile: {
+      heightCm: 182,
+      inseamCm: 86,
+      armLengthCm: 63,
+      torsoLengthCm: 61,
+      shoulderWidthCm: 41,
+      flexibilityScore: "good",
+      coreStabilityScore: 4,
+    },
+    latestPressureCalculation: null,
+    user: {
+      displayName: "Ortwin",
+    },
+    questionnaireResponses: [
+      {
+        questionId: "road_riding_type",
+        questionOrder: 1,
+        response: "training",
+      },
+    ],
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.NEXT_PUBLIC_CONVEX_URL = "https://example.convex.cloud";
@@ -169,10 +200,7 @@ describe("pdf report route", () => {
 
   it("returns 200 with rich renderer output for authorized users", async () => {
     mocks.token.mockResolvedValue("token-abc");
-    mocks.query.mockResolvedValueOnce({
-      session: sessionFixture,
-      recommendation: recommendationFixture,
-    });
+    mocks.query.mockResolvedValueOnce(reportSourceFixture);
 
     const response = await GET(new Request("http://localhost?locale=nl"), {
       params: Promise.resolve({ sessionId: "session_3" }),
@@ -189,8 +217,7 @@ describe("pdf report route", () => {
     expect(text.startsWith("%PDF-1.4")).toBe(true);
     expect(text).toContain("rich");
     expect(mocks.mapReportV2Payload).toHaveBeenCalledWith({
-      session: sessionFixture,
-      recommendation: recommendationFixture,
+      ...reportSourceFixture,
       bikeImageUrl: null,
     });
     expect(mocks.renderPdfReportHtml).toHaveBeenCalledTimes(1);
@@ -200,10 +227,7 @@ describe("pdf report route", () => {
 
   it("falls back to simple renderer when rich renderer fails", async () => {
     mocks.token.mockResolvedValue("token-fallback");
-    mocks.query.mockResolvedValueOnce({
-      session: sessionFixture,
-      recommendation: recommendationFixture,
-    });
+    mocks.query.mockResolvedValueOnce(reportSourceFixture);
     mocks.renderPdfFromHtml.mockRejectedValueOnce(new Error("no chromium"));
 
     const response = await GET(new Request("http://localhost"), {
@@ -225,10 +249,7 @@ describe("pdf report route", () => {
   it("uses simple renderer directly when rich rendering is disabled by env", async () => {
     process.env.PDF_RICH_RENDER_ENABLED = "false";
     mocks.token.mockResolvedValue("token-env-flag");
-    mocks.query.mockResolvedValueOnce({
-      session: sessionFixture,
-      recommendation: recommendationFixture,
-    });
+    mocks.query.mockResolvedValueOnce(reportSourceFixture);
 
     const response = await GET(new Request("http://localhost"), {
       params: Promise.resolve({ sessionId: "session_3" }),

@@ -7,6 +7,8 @@ const copy = getReportV2Copy("en");
 const report = mapReportV2Payload({
   session: {
     _id: "session_abc",
+    createdAt: Date.UTC(2026, 2, 20, 10, 0, 0),
+    completedAt: Date.UTC(2026, 2, 21, 14, 30, 0),
     bikeType: "road",
     ridingStyle: "sportive",
     primaryGoal: "performance",
@@ -41,12 +43,32 @@ const report = mapReportV2Payload({
     },
   },
   bike: {
+    name: "Canyon Endurace",
     bikeType: "road",
+    brand: "Canyon",
+    model: "CF 7",
+    ridingStyle: "sportive",
+    primaryGoal: "performance",
+    description: "An endurance road bike tuned for long fast rides.",
     bikeWeightKg: 8.2,
     currentSetup: { saddleHeightMm: 750 },
   },
   bikeProfile: null,
-  profile: { weightKg: 72 },
+  profile: {
+    heightCm: 180,
+    weightKg: 72,
+    inseamCm: 84,
+    armLengthCm: 62,
+    torsoLengthCm: 60,
+    shoulderWidthCm: 40,
+    flexibilityScore: "good",
+    coreStabilityScore: 4,
+    hasPain: "yes",
+    painSeverity: 2,
+  },
+  user: {
+    displayName: "Ortwin",
+  },
   latestPressureCalculation: {
     recommendedFrontPsi: 67,
     recommendedRearPsi: 71,
@@ -67,7 +89,12 @@ describe("pdf layout template", () => {
   it("renders required report-v2 sections", () => {
     const html = renderPdfReportHtml({ report, copy });
 
-    expect(html).toContain(copy.sections.profile);
+    expect(html).toContain(copy.sections.about);
+    expect(html).toContain(copy.sections.rider);
+    expect(html).toContain(copy.sections.flexibility);
+    expect(html).toContain(copy.sections.coreStability);
+    expect(html).toContain(copy.sections.comfort.replace("&", "&amp;"));
+    expect(html).toContain(copy.sections.yourBike);
     expect(html).toContain(copy.sections.prioritySummary);
     expect(html).toContain(copy.sections.detailedFit);
     expect(html).toContain(copy.sections.adjustmentSequence);
@@ -78,26 +105,97 @@ describe("pdf layout template", () => {
   it("includes expected fixture metrics in rendered HTML", () => {
     const html = renderPdfReportHtml({ report, copy });
 
+    expect(html).toContain("BestBikeFit4U");
+    expect(html).toContain(copy.shell.dateLabel);
+    expect(html).toContain(copy.shell.aboutTitle);
+    expect(html).toContain("Ortwin");
+    expect(html).toContain("Canyon Endurace");
+    expect(html).toContain("72");
     expect(html).toContain("754 mm");
     expect(html).toContain("731 mm - 774 mm");
     expect(html).toContain("98 mm");
     expect(html).toContain("67 psi");
     expect(html).toContain("Confirm long-ride comfort after each adjustment.");
+    expect(html).toContain("status-badge");
+    expect(html).toContain("adj-list");
+    expect(html).toContain("fit-notes-box");
+    expect(html.match(/class="status-badge /g)?.length).toBe(report.prioritySummary.length);
+    expect(html.match(/class="adj-item"/g)?.length).toBe(report.adjustmentSequence.length);
   });
 
   it("renders bike image when available", () => {
     const html = renderPdfReportHtml({
       report: {
         ...report,
-        profile: {
-          ...report.profile,
-          bikeImageUrl: "https://example.com/bike.jpg",
+        bike: {
+          ...report.bike,
+          imageUrl: "https://example.com/bike.jpg",
         },
       },
       copy,
     });
 
     expect(html).toContain("https://example.com/bike.jpg");
-    expect(html).toContain("Bike photo");
+    expect(html).toContain("Canyon Endurace");
+  });
+
+  it("renders locale-aware html lang and localized cover copy", () => {
+    const dutchCopy = getReportV2Copy("nl");
+    const html = renderPdfReportHtml({ report, copy: dutchCopy });
+
+    expect(html).toContain('<html lang="nl">');
+    expect(html).toContain(dutchCopy.sections.about);
+    expect(html).toContain(dutchCopy.shell.aboutTitle);
+    expect(html).toContain(dutchCopy.shell.dateLabel);
+    expect(html).toContain("Racefiets");
+    expect(html).toContain("Sportief");
+    expect(html).toContain("Prestatie");
+  });
+
+  it("hides rider score sections cleanly when rider data is missing", () => {
+    const html = renderPdfReportHtml({
+      report: {
+        ...report,
+        rider: {
+          name: null,
+          heightCm: null,
+          weightKg: null,
+          inseamCm: null,
+          armLengthCm: null,
+          torsoLengthCm: null,
+          shoulderWidthCm: null,
+          bmi: null,
+          bmiCategory: null,
+          flexibilityScore: null,
+          flexibilityLabel: null,
+          coreStabilityScore: null,
+          comfortScore: null,
+        },
+      },
+      copy,
+    });
+
+    expect(html).not.toContain(copy.sections.flexibility);
+    expect(html).not.toContain(copy.sections.coreStability);
+    expect(html).not.toContain(copy.sections.comfort);
+    expect(html).not.toContain("undefined");
+    expect(html).not.toContain("null");
+  });
+
+  it("includes explicit print-safety rules for long content and heading breaks", () => {
+    const html = renderPdfReportHtml({
+      report: {
+        ...report,
+        bike: {
+          ...report.bike,
+          description: "Long description ".repeat(80),
+        },
+      },
+      copy,
+    });
+
+    expect(html).toContain("overflow-wrap: anywhere");
+    expect(html).toContain("page-break-after: avoid");
+    expect(html).toContain("Long description Long description");
   });
 });

@@ -1,11 +1,18 @@
 import type { Doc } from "../../../convex/_generated/dataModel";
+import {
+  deriveComfortScore,
+  flexibilityTests,
+} from "@/lib/validations/profile";
 import type {
   ReportAdjustmentStep,
+  ReportBikeSection,
   ReportDelta,
   ReportDetailedRow,
   ReportItemStatus,
   ReportParameterKey,
   ReportPriorityRow,
+  ReportQuestionnaireContext,
+  ReportRiderSection,
   ReportTirePressureSection,
   ReportV2Payload,
 } from "./reportV2Types";
@@ -17,6 +24,8 @@ type ReportV2Source = {
   bikeProfile: Doc<"bikeProfiles"> | null;
   profile: Doc<"profiles"> | null;
   latestPressureCalculation: Doc<"pressureCalculations"> | null;
+  user?: Doc<"users"> | null;
+  questionnaireResponses?: Doc<"questionnaireResponses">[] | null;
   bikeImageUrl?: string | null;
 };
 
@@ -41,6 +50,14 @@ const QUICK_START_TABLE: QuickStartRow[] = [
   { weightLabel: "70-80 kg", tireSizeLabel: "28 mm", psiLabel: "72-79 psi" },
   { weightLabel: "80-90 kg", tireSizeLabel: "30 mm", psiLabel: "62-70 psi" },
 ];
+
+const FLEXIBILITY_NUMERIC_SCORES = {
+  very_limited: 1,
+  limited: 2,
+  average: 3,
+  good: 4,
+  excellent: 5,
+} as const;
 
 function normalizeParameterKey(value: string): ReportParameterKey | null {
   switch (value) {
@@ -70,12 +87,138 @@ function formatMm(value: number): string {
   return `${formatNumber(value, value % 1 === 0 ? 0 : 1)} mm`;
 }
 
-
 function humanizeEnum(value: string | undefined): string {
   if (!value) return "n/a";
   return value
     .replaceAll("_", " ")
     .replace(/\b\w/g, (match) => match.toUpperCase());
+}
+
+function toRenderString(value: string | undefined | null): string | null {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : null;
+}
+
+function getDisplayName(user: Doc<"users"> | null | undefined): string | null {
+  const emailName = user?.email?.split("@")[0]?.trim();
+  return (
+    toRenderString(user?.displayName) ??
+    toRenderString(user?.name) ??
+    toRenderString(user?.googleName) ??
+    toRenderString(emailName) ??
+    null
+  );
+}
+
+function buildQuestionnaireResponseMap(
+  responses: Doc<"questionnaireResponses">[] | null | undefined
+): Map<string, Doc<"questionnaireResponses">["response"]> {
+  return new Map(
+    (responses ?? []).map((response) => [response.questionId, response.response])
+  );
+}
+
+function normalizeSingleChoiceValue(value: unknown): string | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+  return value;
+}
+
+function getReportDateIso(source: ReportV2Source): string {
+  const timestamp =
+    source.session.completedAt ?? source.session.createdAt ?? Date.now();
+  return new Date(timestamp).toISOString();
+}
+
+function getQuestionnaireContext(source: ReportV2Source): ReportQuestionnaireContext {
+  const responseMap = buildQuestionnaireResponseMap(source.questionnaireResponses);
+  const profile = source.profile;
+
+  return {
+    experienceLevel: normalizeSingleChoiceValue(
+      responseMap.get("experience_level") ?? profile?.experienceLevel
+    ),
+    weeklyHours: normalizeSingleChoiceValue(
+      responseMap.get("weekly_hours") ?? profile?.weeklyHours
+    ),
+    rideLength: normalizeSingleChoiceValue(
+      responseMap.get("typical_ride_length") ?? profile?.typicalRideLength
+    ),
+    positionPriority: normalizeSingleChoiceValue(
+      responseMap.get("position_priority") ?? profile?.positionPriority
+    ),
+    typeOfRiding:
+      normalizeSingleChoiceValue(responseMap.get("road_riding_type")) ??
+      normalizeSingleChoiceValue(responseMap.get("mtb_terrain")),
+  };
+}
+
+function mapRiderSection(source: ReportV2Source): ReportRiderSection {
+  const profile = source.profile;
+  const weightKg = profile?.weightKg ?? null;
+  const heightCm = profile?.heightCm ?? null;
+  const bmi =
+    typeof weightKg === "number" && typeof heightCm === "number" && heightCm > 0
+      ? Math.round((weightKg / ((heightCm / 100) * (heightCm / 100))) * 10) / 10
+      : null;
+  const flexibilityScore = profile?.flexibilityScore
+    ? FLEXIBILITY_NUMERIC_SCORES[profile.flexibilityScore]
+    : null;
+  const flexibilityLabel =
+    flexibilityTests.find((test) => test.score === profile?.flexibilityScore)?.label ??
+    null;
+
+  return {
+    name: getDisplayName(source.user),
+    heightCm,
+    weightKg,
+    inseamCm: profile?.inseamCm ?? null,
+    armLengthCm: profile?.armLengthCm ?? null,
+    torsoLengthCm: profile?.torsoLengthCm ?? null,
+    shoulderWidthCm: profile?.shoulderWidthCm ?? null,
+    bmi,
+    bmiCategory:
+      bmi === null
+        ? null
+        : bmi < 18.5
+          ? "underweight"
+          : bmi < 25
+            ? "normal"
+            : bmi < 30
+              ? "overweight"
+              : "obese",
+    flexibilityScore,
+    flexibilityLabel,
+    coreStabilityScore: profile?.coreStabilityScore ?? null,
+    comfortScore:
+      !profile ||
+      (profile.hasPain === undefined && profile.painSeverity === undefined)
+        ? null
+        : deriveComfortScore(profile.hasPain, profile.painSeverity),
+  };
+}
+
+function mapBikeSection(source: ReportV2Source): ReportBikeSection {
+  return {
+    name: toRenderString(source.bike?.name) ?? "Unnamed bike",
+    bikeType: source.bike?.bikeType ?? source.session.bikeType ?? "unknown",
+    brand: toRenderString(source.bike?.brand),
+    model: toRenderString(source.bike?.model),
+    ridingStyle: source.bike?.ridingStyle
+      ? source.bike.ridingStyle
+      : source.session.ridingStyle
+        ? source.session.ridingStyle
+        : null,
+    goal: source.bike?.primaryGoal
+      ? source.bike.primaryGoal
+      : source.session.primaryGoal
+        ? source.session.primaryGoal
+        : null,
+    description: toRenderString(source.bike?.description),
+    imageUrl: source.bikeImageUrl ?? null,
+    questionnaire: getQuestionnaireContext(source),
+  };
 }
 
 function getTargetLabelForKey(
@@ -344,6 +487,9 @@ export function mapReportV2Payload(source: ReportV2Source): ReportV2Payload {
   const missingData = getMissingData(source);
 
   return {
+    reportDate: getReportDateIso(source),
+    rider: mapRiderSection(source),
+    bike: mapBikeSection(source),
     profile: {
       sessionId: source.session._id,
       bikeType: humanizeEnum(source.session.bikeType ?? source.bike?.bikeType),

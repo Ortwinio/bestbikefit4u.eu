@@ -114,6 +114,11 @@ export const getReportV2 = query({
       ? await ctx.db.get(session.bikeProfileId)
       : null;
     const profile = await ctx.db.get(session.profileId);
+    const user = await ctx.db.get(session.userId);
+    const questionnaireResponses = await ctx.db
+      .query("questionnaireResponses")
+      .withIndex("by_session", (q) => q.eq("sessionId", args.sessionId))
+      .collect();
 
     const latestPressureCalculation = session.bikeId
       ? (
@@ -130,6 +135,10 @@ export const getReportV2 = query({
       bike,
       bikeProfile,
       profile,
+      user,
+      questionnaireResponses: questionnaireResponses.sort(
+        (a, b) => a.questionOrder - b.questionOrder
+      ),
       latestPressureCalculation,
     };
   },
