@@ -6,6 +6,7 @@
 
 const MAX_SHORT_STRING = 100;
 const MAX_TEXT_STRING = 500;
+const MAX_LONG_TEXT_STRING = 5000;
 
 export function validateStringLength(
   value: string,
@@ -25,6 +26,10 @@ export function validateShortString(value: string, fieldName: string): void {
 
 export function validateTextString(value: string, fieldName: string): void {
   validateStringLength(value, fieldName, MAX_TEXT_STRING);
+}
+
+export function validateLongTextString(value: string, fieldName: string): void {
+  validateStringLength(value, fieldName, MAX_LONG_TEXT_STRING);
 }
 
 export function validateFiniteNumber(value: number, fieldName: string): void {

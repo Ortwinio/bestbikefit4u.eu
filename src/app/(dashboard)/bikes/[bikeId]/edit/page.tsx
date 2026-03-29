@@ -34,6 +34,7 @@ export default function EditBikePage({ params }: EditBikePageProps) {
     await updateBike({
       bikeId: bikeId as Id<"bikes">,
       name: payload.name,
+      bikeType: payload.bikeType,
       ridingStyle: payload.ridingStyle,
       primaryGoal: payload.primaryGoal,
       notes: payload.notes,
@@ -78,7 +79,6 @@ export default function EditBikePage({ params }: EditBikePageProps) {
         description={messages.bikeForm.edit.description}
         submitLabel={messages.bikeForm.actions.saveChanges}
         initialData={initialData}
-        showBikeTypeSelect={false}
         onSubmit={handleUpdate}
         onDelete={handleDelete}
         cancelHref={withLocalePrefix("/bikes", locale)}

@@ -2,7 +2,7 @@ import type { Id } from "../_generated/dataModel";
 import { mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
-import { validateShortString, validateTextString } from "../lib/validation";
+import { validateLongTextString, validateShortString, validateTextString } from "../lib/validation";
 import {
   getSystemClimbingBikeProfile,
   getSystemDefaultBikeProfile,
@@ -114,7 +114,7 @@ export async function createBikeWithProfiles(
   validateShortString(args.name, "name");
   if (args.brand !== undefined) validateShortString(args.brand, "brand");
   if (args.model !== undefined) validateShortString(args.model, "model");
-  if (args.description !== undefined) validateTextString(args.description, "description");
+  if (args.description !== undefined) validateLongTextString(args.description, "description");
   if (args.notes !== undefined) validateTextString(args.notes, "notes");
   if (args.importSourceUrl !== undefined)
     validateTextString(args.importSourceUrl, "importSourceUrl");
@@ -303,7 +303,7 @@ export const update = mutation({
     if (args.name !== undefined) validateShortString(args.name, "name");
     if (args.brand !== undefined) validateShortString(args.brand, "brand");
     if (args.model !== undefined) validateShortString(args.model, "model");
-    if (args.description !== undefined) validateTextString(args.description, "description");
+    if (args.description !== undefined) validateLongTextString(args.description, "description");
     if (args.notes !== undefined) validateTextString(args.notes, "notes");
     const { bike } = await requireBikeOwner(ctx, args.bikeId);
     const updates: Record<string, unknown> = { updatedAt: Date.now() };

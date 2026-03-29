@@ -2,7 +2,7 @@ import type { Id } from "../_generated/dataModel";
 import { internalMutation, mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import { requireUserId } from "../lib/authz";
-import { validateShortString, validateTextString } from "../lib/validation";
+import { validateLongTextString, validateShortString, validateTextString } from "../lib/validation";
 import { createBikePhotoRecord } from "../bikePhotos/mutations";
 import { createBikeWithProfiles } from "../bikes/mutations";
 import {
@@ -214,7 +214,7 @@ export const updateDraft = mutation({
       validateShortString(args.draftBike.model, "model");
     }
     if (args.draftBike.description !== undefined) {
-      validateTextString(args.draftBike.description, "description");
+      validateLongTextString(args.draftBike.description, "description");
     }
     if (
       args.draftBike.primaryImageUrl !== undefined &&
@@ -287,7 +287,7 @@ export const beginSave = internalMutation({
       validateShortString(args.saveRequest.model, "model");
     }
     if (args.saveRequest.description !== undefined) {
-      validateTextString(args.saveRequest.description, "description");
+      validateLongTextString(args.saveRequest.description, "description");
     }
     if (
       args.saveRequest.primaryImageUrl !== undefined &&
