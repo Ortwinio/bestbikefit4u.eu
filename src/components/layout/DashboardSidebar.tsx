@@ -72,7 +72,7 @@ export function DashboardSidebar() {
   const profileImageSource = getEffectiveProfileImageSource(user);
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-80 border-r border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)]">
+    <aside className="panel-surface-base panel-theme-context fixed left-0 top-0 z-40 h-screen w-80 border-r">
       <div className="flex h-full flex-col">
         <div className="flex min-h-fit items-center border-b border-[color:var(--border)] px-4 py-4">
           <BrandLogo
@@ -100,8 +100,8 @@ export function DashboardSidebar() {
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--secondary)_86%)] text-[color:var(--foreground)] shadow-sm"
-                      : "text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+                      ? "dashboard-nav-item-active"
+                      : "dashboard-nav-item hover:dashboard-nav-item-hover"
                   )}
                 >
                   <item.icon className="h-5 w-5" />
@@ -120,8 +120,8 @@ export function DashboardSidebar() {
                 className={cn(
                   "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   internalPathname.startsWith("/admin")
-                    ? "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--secondary)_86%)] text-[color:var(--foreground)] shadow-sm"
-                    : "text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+                    ? "dashboard-nav-item-active"
+                    : "dashboard-nav-item hover:dashboard-nav-item-hover"
                 )}
               >
                 <CircuitBoard className="h-5 w-5 shrink-0" />
@@ -156,8 +156,8 @@ export function DashboardSidebar() {
                                 className={cn(
                                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                                   isActive
-                                    ? "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--secondary)_86%)] text-[color:var(--foreground)] shadow-sm"
-                                    : "text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+                                    ? "dashboard-nav-item-active"
+                                    : "dashboard-nav-item hover:dashboard-nav-item-hover"
                                 )}
                               >
                                 <item.icon className="h-4 w-4 shrink-0" />

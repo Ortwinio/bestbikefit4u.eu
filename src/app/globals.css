@@ -282,6 +282,21 @@
   background: oklch(var(--panel-backdrop));
 }
 
+@utility dashboard-nav-item {
+  color: oklch(var(--panel-muted-foreground));
+}
+
+@utility dashboard-nav-item-active {
+  background: color-mix(in oklch, oklch(var(--primary)) 14%, oklch(var(--secondary)) 86%);
+  color: oklch(var(--panel-foreground));
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.08);
+}
+
+@utility dashboard-nav-item-hover {
+  background: color-mix(in oklch, oklch(var(--panel-surface-subtle)) 86%, oklch(var(--primary)) 14%);
+  color: oklch(var(--panel-foreground));
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

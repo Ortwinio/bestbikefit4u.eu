@@ -25,6 +25,9 @@ export const DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME =
 export const DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME =
   "panel-surface-base panel-theme-context fixed inset-y-0 left-0 z-40 w-72 overflow-y-auto border-r p-4 md:hidden";
 
+const DASHBOARD_MOBILE_LINK_CLASSNAME =
+  "dashboard-nav-item block rounded-md px-3 py-2 text-sm hover:dashboard-nav-item-hover";
+
 export default function DashboardLayout({
   children,
 }: {
@@ -124,7 +127,7 @@ export default function DashboardLayout({
                   key={item.href}
                   href={toLocalizedPath(item.href)}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+                  className={DASHBOARD_MOBILE_LINK_CLASSNAME}
                 >
                   {item.label}
                 </Link>
@@ -143,7 +146,7 @@ export default function DashboardLayout({
                   key={item.href}
                   href={toLocalizedPath(item.href)}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+                  className={DASHBOARD_MOBILE_LINK_CLASSNAME}
                 >
                   {item.label}
                 </Link>
@@ -166,7 +169,7 @@ export default function DashboardLayout({
                             key={item.href}
                             href={item.href}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+                            className={DASHBOARD_MOBILE_LINK_CLASSNAME}
                           >
                             {item.label}
                           </Link>
