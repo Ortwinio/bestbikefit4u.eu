@@ -270,7 +270,8 @@ export default defineSchema({
       v.union(
         v.literal("manual"),
         v.literal("strava"),
-        v.literal("admin_import")
+        v.literal("admin_import"),
+        v.literal("marketplace_import")
       )
     ),
     stravaGearId: v.optional(v.string()),
@@ -375,9 +376,19 @@ export default defineSchema({
     bikeModelId: v.optional(v.id("bikeModels")),
     description: v.optional(v.string()),
     descriptionSource: v.optional(
-      v.union(v.literal("manual"), v.literal("generated"), v.literal("template"))
+      v.union(
+        v.literal("manual"),
+        v.literal("generated"),
+        v.literal("template"),
+        v.literal("marketplace_import")
+      )
     ),
     descriptionUpdatedAt: v.optional(v.number()),
+    importSourceName: v.optional(v.literal("marktplaats")),
+    importSourceUrl: v.optional(v.string()),
+    importCanonicalUrl: v.optional(v.string()),
+    importedAdvertTitle: v.optional(v.string()),
+    bikeImportId: v.optional(v.id("bikeImports")),
     notes: v.optional(v.string()),
     geometryRecordId: v.optional(v.id("geometry_records")),
 
@@ -386,6 +397,7 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_geometry_record", ["geometryRecordId"])
+    .index("by_bike_import", ["bikeImportId"])
     .index("by_strava_gear", ["stravaGearId"]),
 
   bikeActivities: defineTable({
@@ -437,6 +449,122 @@ export default defineSchema({
     .index("by_bike", ["bikeId"])
     .index("by_bike_primary", ["bikeId", "isPrimary"])
     .index("by_storage", ["storageId"]),
+
+  bikeImports: defineTable({
+    userId: v.id("users"),
+    sourceName: v.literal("marktplaats"),
+    sourceUrl: v.string(),
+    sourceUrlNormalized: v.string(),
+    canonicalUrl: v.optional(v.string()),
+    canonicalUrlNormalized: v.optional(v.string()),
+    advertTitle: v.optional(v.string()),
+    status: v.union(
+      v.literal("pending_fetch"),
+      v.literal("parsed"),
+      v.literal("needs_review"),
+      v.literal("importing"),
+      v.literal("imported"),
+      v.literal("failed")
+    ),
+    parsedAdvert: v.optional(
+      v.object({
+        parserVersion: v.string(),
+        fetchedAt: v.number(),
+        sourceUrl: v.string(),
+        canonicalUrl: v.optional(v.string()),
+        advertTitle: v.optional(v.string()),
+        description: v.optional(v.string()),
+        imageCandidates: v.array(
+          v.object({
+            url: v.string(),
+            normalizedUrl: v.string(),
+            sortOrder: v.number(),
+            selectedByDefault: v.boolean(),
+            caption: v.optional(v.string()),
+            width: v.optional(v.number()),
+            height: v.optional(v.number()),
+          })
+        ),
+        candidateBrand: v.object({
+          value: v.optional(v.string()),
+          confidence: v.union(
+            v.literal("high"),
+            v.literal("medium"),
+            v.literal("low"),
+            v.literal("none")
+          ),
+        }),
+        candidateModel: v.object({
+          value: v.optional(v.string()),
+          confidence: v.union(
+            v.literal("high"),
+            v.literal("medium"),
+            v.literal("low"),
+            v.literal("none")
+          ),
+        }),
+        candidateBikeType: v.object({
+          value: v.optional(
+            v.union(
+              v.literal("road"),
+              v.literal("gravel"),
+              v.literal("mountain"),
+              v.literal("hybrid"),
+              v.literal("tt_triathlon"),
+              v.literal("cyclocross"),
+              v.literal("touring"),
+              v.literal("city")
+            )
+          ),
+          confidence: v.union(
+            v.literal("high"),
+            v.literal("medium"),
+            v.literal("low"),
+            v.literal("none")
+          ),
+        }),
+      })
+    ),
+    draftBike: v.optional(
+      v.object({
+        name: v.string(),
+        brand: v.optional(v.string()),
+        model: v.optional(v.string()),
+        bikeType: v.optional(
+          v.union(
+            v.literal("road"),
+            v.literal("gravel"),
+            v.literal("mountain"),
+            v.literal("hybrid"),
+            v.literal("tt_triathlon"),
+            v.literal("cyclocross"),
+            v.literal("touring"),
+            v.literal("city")
+          )
+        ),
+        description: v.optional(v.string()),
+        selectedImageUrls: v.array(v.string()),
+        primaryImageUrl: v.optional(v.string()),
+      })
+    ),
+    saveAttemptCount: v.optional(v.number()),
+    lastSaveStartedAt: v.optional(v.number()),
+    imageAttemptCount: v.optional(v.number()),
+    imageImportedCount: v.optional(v.number()),
+    imageFailedCount: v.optional(v.number()),
+    duplicateBikeId: v.optional(v.id("bikes")),
+    failureCode: v.optional(v.string()),
+    telemetryJson: v.optional(v.string()),
+    failureReason: v.optional(v.string()),
+    createdBikeId: v.optional(v.id("bikes")),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_status", ["userId", "status"])
+    .index("by_user_source_url", ["userId", "sourceName", "sourceUrlNormalized"])
+    .index("by_user_canonical_url", ["userId", "sourceName", "canonicalUrlNormalized"])
+    .index("by_created_bike", ["createdBikeId"]),
 
   bikeProfiles: defineTable({
     userId: v.id("users"),

@@ -66,6 +66,12 @@ interface ProfileData {
   shoulderWidthCm?: number;
   flexibilityScore: FlexibilityScore;
   coreStabilityScore: number;
+  hasPain?: string;
+  painSeverity?: number;
+  experienceLevel?: string;
+  weeklyHours?: string;
+  typicalRideLength?: string;
+  positionPriority?: string;
 }
 
 type MeasurementConfig = {
@@ -97,7 +103,21 @@ function getDefaultValues(profile: ProfileData): Partial<WizardFormData> {
     shoulderWidthCm: profile.shoulderWidthCm,
     flexibilityScore: profile.flexibilityScore,
     coreStabilityScore: profile.coreStabilityScore,
+    comfortScore: deriveComfortScore(profile.hasPain, profile.painSeverity),
+    experienceLevel: profile.experienceLevel as WizardFormData["experienceLevel"],
+    weeklyHours: profile.weeklyHours as WizardFormData["weeklyHours"],
+    typicalRideLength: profile.typicalRideLength as WizardFormData["typicalRideLength"],
+    positionPriority: profile.positionPriority as WizardFormData["positionPriority"],
   };
+}
+
+/** Map a wizard comfort score (1–5) back to hasPain + painSeverity for storage */
+function comfortScoreToFields(score: number): { hasPain: "yes" | "no"; painSeverity?: number } {
+  if (score >= 5) return { hasPain: "no" };
+  if (score === 4) return { hasPain: "yes", painSeverity: 1 };
+  if (score === 3) return { hasPain: "yes", painSeverity: 2 };
+  if (score === 2) return { hasPain: "yes", painSeverity: 4 };
+  return { hasPain: "yes", painSeverity: 5 };
 }
 
 function BMISlider({
@@ -1079,6 +1099,10 @@ export default function ProfilePage() {
     try {
       const previousWeight = profileData?.weightKg;
 
+      const comfortFields = data.comfortScore != null
+        ? comfortScoreToFields(data.comfortScore)
+        : {};
+
       await upsertProfile({
         heightCm: data.heightCm,
         inseamCm: data.inseamCm,
@@ -1089,6 +1113,11 @@ export default function ProfilePage() {
         shoulderWidthCm: data.shoulderWidthCm,
         flexibilityScore: data.flexibilityScore,
         coreStabilityScore: data.coreStabilityScore,
+        ...comfortFields,
+        experienceLevel: data.experienceLevel,
+        weeklyHours: data.weeklyHours,
+        typicalRideLength: data.typicalRideLength,
+        positionPriority: data.positionPriority,
       });
 
       setIsEditing(false);

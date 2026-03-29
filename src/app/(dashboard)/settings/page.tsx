@@ -21,6 +21,7 @@ import {
   StatRow,
 } from "@/components/ui";
 import { StravaBikeImportSection } from "@/components/settings/StravaBikeImportSection";
+import { IPhoneAppInstallCard } from "@/components/settings/IPhoneAppInstallCard";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -295,6 +296,8 @@ export default function SettingsPage() {
             </div>
           </CardContent>
         </Card>
+
+        <IPhoneAppInstallCard />
 
         <Card variant="bordered" className="dashboard-card-surface">
           <SectionHeader

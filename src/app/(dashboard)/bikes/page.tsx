@@ -41,13 +41,21 @@ export default function BikesPage() {
           <h1 className="text-2xl font-bold text-foreground">{messages.nav.myBikes}</h1>
           <p className="mt-2 text-sm text-muted-foreground">{messages.bikes.subtitle}</p>
         </div>
-        <Link
-          href={withLocalePrefix("/bikes/new", locale)}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-dark"
-        >
-          <Plus className="h-4 w-4" />
-          {messages.nav.newBike}
-        </Link>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            variant="outline"
+            {...linkButtonProps(withLocalePrefix("/bikes/import/marktplaats", locale))}
+          >
+            {messages.bikeForm.marktplaatsImport.entryCta}
+          </Button>
+          <Link
+            href={withLocalePrefix("/bikes/new", locale)}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-dark"
+          >
+            <Plus className="h-4 w-4" />
+            {messages.nav.newBike}
+          </Link>
+        </div>
       </div>
 
       {bikes.length === 0 ? (
@@ -57,9 +65,17 @@ export default function BikesPage() {
               title={messages.bikes.empty.title}
               description={messages.bikes.empty.description}
               action={
-                <Button {...linkButtonProps(withLocalePrefix("/bikes/new", locale))}>
-                  {messages.bikes.empty.cta}
-                </Button>
+                <div className="flex flex-wrap justify-center gap-3">
+                  <Button {...linkButtonProps(withLocalePrefix("/bikes/new", locale))}>
+                    {messages.bikes.empty.cta}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    {...linkButtonProps(withLocalePrefix("/bikes/import/marktplaats", locale))}
+                  >
+                    {messages.bikeForm.marktplaatsImport.entryCta}
+                  </Button>
+                </div>
               }
               className="border-0 p-0 shadow-none"
             />

@@ -1277,7 +1277,7 @@ const nl = {
         invalidType: "Gebruik JPG, PNG of WEBP.",
       },
       actions: {
-        editMeasurements: "Metingen bewerken",
+        editMeasurements: "Profielwizard",
         editInline: "Bewerken",
       },
       sections: {
@@ -1540,6 +1540,42 @@ const nl = {
         light: "Licht",
         dark: "Donker",
         system: "Systeem",
+      },
+      appInstall: {
+        settingsTitle: "Installeren op iPhone",
+        settingsDescription:
+          "Maak een iPhone-startschermapp voor BestBikeFit4U. Wanneer je die via het icoon opent, ga je direct naar je dashboard zolang je nog bent ingelogd.",
+        eyebrow: "iPhone-app",
+        title: "Installeer BestBikeFit4U op je iPhone",
+        description:
+          "Bewaar BestBikeFit4U op het startscherm van je iPhone voor een app-achtige ervaring met directe dashboardstart.",
+        quickStepsTitle: "Snelle stappen",
+        openInstallPage: "Installatiepagina openen",
+        openDashboard: "Dashboard openen",
+        backToSettings: "Terug naar instellingen",
+        installedTitle: "App geïnstalleerd",
+        installedDescription:
+          "BestBikeFit4U draait al in startschermmodus op dit apparaat.",
+        openInSafariTitle: "Open dit in Safari",
+        openInSafariDescription:
+          "Installeren op het iPhone-startscherm werkt alleen vanuit Safari. Open deze pagina in Safari en kies daarna Deel en Zet op beginscherm.",
+        dashboardLaunchTitle: "Dashboardstart",
+        dashboardLaunchDescription:
+          "Nadat je deze pagina aan je startscherm hebt toegevoegd, opent het icoon je dashboard zodra je sessie nog actief is.",
+        steps: [
+          {
+            title: "Open deze pagina in Safari",
+            description: "Blijf op deze installatiepagina zodat het startschermicoon naar de app-launcher verwijst.",
+          },
+          {
+            title: "Tik op Deel",
+            description: "Gebruik de Safari-deelknop onderaan of bovenaan je scherm.",
+          },
+          {
+            title: "Zet op beginscherm",
+            description: "Geef de app een naam, sla op en open hem daarna vanaf je iPhone-startscherm.",
+          },
+        ] as Array<{ title: string; description: string }>,
       },
       integrations: {
         title: "Integraties",
@@ -1863,6 +1899,102 @@ const nl = {
         typeRequired: "Fietstype is verplicht.",
         saveFailed: "Kon fiets niet opslaan. Probeer opnieuw.",
         deleteFailed: "Kon fiets niet verwijderen. Probeer opnieuw.",
+      },
+      marktplaatsImport: {
+        entryCta: "Importeer vanuit Marktplaats",
+        title: "Importeer een fiets vanuit Marktplaats",
+        description:
+          "Plak één Marktplaats-advertentie-URL, controleer het geparste concept en sla de fiets pas op nadat je de gegevens hebt bevestigd.",
+        entryTitle: "Plak een Marktplaats-advertentie-URL",
+        entryDescription:
+          "De advertentie wordt server-side geparsed. Je controleert en bewerkt eerst het fietsconcept voordat er iets in je garage wordt aangemaakt.",
+        previewTitle: "Controleer het geïmporteerde concept",
+        previewDescription:
+          "Controleer de geparste velden, pas onzekere waarden aan en kies welke foto's je wilt bewaren voordat je opslaat.",
+        findingsTitle: "Wat we in deze advertentie hebben gevonden",
+        findingsDescription:
+          "Dit is het gestructureerde concept dat we uit de advertentie konden halen. Controleer onzekere onderdelen voordat je opslaat.",
+        findingsCount: "{count} bevindingen",
+        findingDescriptionSummary: "Geïmporteerde beschrijving beschikbaar ({characters} tekens).",
+        findingPhotoSummary: "{count} advertentiefoto's gevonden.",
+        findingLabels: {
+          name: "Fietsnaam",
+          brand: "Merk",
+          model: "Model",
+          bikeType: "Fietstype",
+          description: "Beschrijving",
+          photos: "Foto's",
+        },
+        photosTitle: "Geïmporteerde foto's",
+        photosDescription:
+          "Selecteer de advertentiefoto's die je bij deze fiets wilt bewaren. Opslaan zonder foto's blijft toegestaan.",
+        photoVerificationTitle: "Fotoverificatie",
+        photoCountSummary: "{selected} van {total} geselecteerd",
+        primaryPhotoTitle: "Primaire voorbeeldfoto",
+        primaryPhotoDescription:
+          "Gebruik de thumbnailstrook om de advertentiefoto's te controleren. De gekozen primaire foto wordt als eerste opgeslagen.",
+        photoActiveBadge: "Actief voorbeeld",
+        photoPreviewBadge: "Bekijk foto",
+        photosEmptyTitle: "Geen importeerbare foto's gevonden",
+        photosEmptyDescription:
+          "Deze advertentie gaf geen bruikbare foto's terug. Je kunt het fietsconcept alsnog opslaan en later foto's toevoegen.",
+        photoFallbackLabel: "Advertentiefoto",
+        photoSelected: "Geselecteerd voor import",
+        photoDeselected: "Niet geselecteerd",
+        photoBadgeSelected: "Geselecteerd",
+        photoBadgeOptional: "Optioneel",
+        nameHint:
+          "De fietsnaam is volledig bewerkbaar. Die hoeft niet gelijk te zijn aan de advertentietitel.",
+        warningsTitle: "Controle nodig",
+        confidenceBadge: "{level} vertrouwen",
+        success: "Fietsconcept aangemaakt vanuit Marktplaats.",
+        loading: {
+          preview: "Marktplaats-advertentie wordt geparsed...",
+        },
+        actions: {
+          preview: "Importvoorbeeld laden",
+          previewLoading: "Voorbeeld laden...",
+          save: "Fietsconcept opslaan",
+          saveLoading: "Fiets opslaan...",
+          cancel: "Terug naar garage",
+          startOver: "Opnieuw beginnen",
+        },
+        fields: {
+          url: {
+            label: "Marktplaats-URL",
+            placeholder: "https://www.marktplaats.nl/...",
+          },
+          name: {
+            label: "Fietsnaam",
+            placeholder: "Kies de rijdergerichte fietsnaam",
+          },
+          brand: {
+            label: "Merk",
+            placeholder: "Controleer het merk",
+          },
+          model: {
+            label: "Model",
+            placeholder: "Controleer het model",
+          },
+          bikeType: {
+            label: "Fietstype",
+          },
+          description: {
+            label: "Beschrijving",
+            placeholder: "Geïmporteerde advertentietekst verschijnt hier en blijft bewerkbaar.",
+          },
+        },
+        errors: {
+          title: "Import heeft aandacht nodig",
+          unsupportedUrl:
+            "Gebruik een geldige Marktplaats-advertentie-URL. Links van niet-ondersteunde marktplaatsen worden geweigerd.",
+          previewFailed:
+            "Het importvoorbeeld kon niet worden geladen. Controleer de URL of probeer het zo opnieuw.",
+          saveFailed:
+            "Het fietsconcept kon niet worden opgeslagen. Probeer opnieuw.",
+          backendUnavailable:
+            "De Marktplaats-importbackend is nog niet beschikbaar in deze workspace. De rider-flow staat klaar, maar preview en opslaan kunnen pas afronden zodra het backendcontract er is.",
+        },
       },
       delete: {
         confirm: "Deze fiets verwijderen? Deze actie kan niet ongedaan worden gemaakt.",

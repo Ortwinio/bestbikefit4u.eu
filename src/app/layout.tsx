@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   applicationName: BRAND.name,
   title: BRAND.name,
   description: "Precision bike fitting for comfort, alignment, and performance.",
+  appleWebApp: {
+    capable: true,
+    title: BRAND.name,
+    statusBarStyle: "default",
+  },
   icons: {
     icon: [
       {

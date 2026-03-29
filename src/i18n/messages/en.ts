@@ -1269,7 +1269,7 @@ const en = {
         invalidType: "Use JPG, PNG, or WEBP.",
       },
       actions: {
-        editMeasurements: "Edit Measurements",
+        editMeasurements: "Profile Wizard",
         editInline: "Edit",
       },
       sections: {
@@ -1532,6 +1532,42 @@ const en = {
         light: "Light",
         dark: "Dark",
         system: "System",
+      },
+      appInstall: {
+        settingsTitle: "Install on iPhone",
+        settingsDescription:
+          "Create an iPhone home-screen app for BestBikeFit4U. When you open it from the icon, the app will take you straight into your dashboard if you're still signed in.",
+        eyebrow: "iPhone app",
+        title: "Install BestBikeFit4U on your iPhone",
+        description:
+          "Save BestBikeFit4U to your iPhone home screen for an app-like experience with direct dashboard launch.",
+        quickStepsTitle: "Quick steps",
+        openInstallPage: "Open install page",
+        openDashboard: "Open dashboard",
+        backToSettings: "Back to settings",
+        installedTitle: "App installed",
+        installedDescription:
+          "BestBikeFit4U is already running in home-screen mode on this device.",
+        openInSafariTitle: "Open this in Safari",
+        openInSafariDescription:
+          "iPhone home-screen install only works from Safari. Open this page in Safari, then use Share and Add to Home Screen.",
+        dashboardLaunchTitle: "Dashboard launch",
+        dashboardLaunchDescription:
+          "After you add this page to your home screen, opening the icon will route to your dashboard when your session is still active.",
+        steps: [
+          {
+            title: "Open this page in Safari",
+            description: "Stay on this install page so the home-screen icon points to the app launcher.",
+          },
+          {
+            title: "Tap Share",
+            description: "Use the Safari share button at the bottom or top of the screen.",
+          },
+          {
+            title: "Add to Home Screen",
+            description: "Name the app, save it, and launch it from your iPhone home screen.",
+          },
+        ] as Array<{ title: string; description: string }>,
       },
       integrations: {
         title: "Integrations",
@@ -1853,6 +1889,102 @@ const en = {
         typeRequired: "Bike type is required.",
         saveFailed: "Could not save bike. Please try again.",
         deleteFailed: "Could not delete bike. Please try again.",
+      },
+      marktplaatsImport: {
+        entryCta: "Import from Marktplaats",
+        title: "Import a bike from Marktplaats",
+        description:
+          "Paste one Marktplaats advert URL, review the parsed draft, and save the bike only after you confirm the details.",
+        entryTitle: "Paste a Marktplaats advert URL",
+        entryDescription:
+          "The advert is parsed on the server. You review and edit the bike draft before anything is created in your garage.",
+        previewTitle: "Review imported draft",
+        previewDescription:
+          "Check the parsed fields, adjust any uncertain values, and decide which photos to keep before saving.",
+        findingsTitle: "What we found in this advert",
+        findingsDescription:
+          "This is the structured draft we could recover from the advert. Review anything that looks uncertain before saving.",
+        findingsCount: "{count} findings",
+        findingDescriptionSummary: "Imported description available ({characters} characters).",
+        findingPhotoSummary: "{count} advert photos found.",
+        findingLabels: {
+          name: "Bike name",
+          brand: "Brand",
+          model: "Model",
+          bikeType: "Bike type",
+          description: "Description",
+          photos: "Photos",
+        },
+        photosTitle: "Imported photos",
+        photosDescription:
+          "Select the advert photos you want to keep with this bike. Saving without photos is allowed.",
+        photoVerificationTitle: "Photo verification",
+        photoCountSummary: "{selected} of {total} selected",
+        primaryPhotoTitle: "Primary preview image",
+        primaryPhotoDescription:
+          "Use the thumbnail strip to inspect the advert photos. The selected primary image is saved first.",
+        photoActiveBadge: "Active preview",
+        photoPreviewBadge: "View photo",
+        photosEmptyTitle: "No importable photos found",
+        photosEmptyDescription:
+          "This advert did not expose reusable photos. You can still save the bike draft and add photos later.",
+        photoFallbackLabel: "Advert photo",
+        photoSelected: "Selected for import",
+        photoDeselected: "Not selected",
+        photoBadgeSelected: "Selected",
+        photoBadgeOptional: "Optional",
+        nameHint:
+          "The bike name is fully editable. It does not have to match the advert title.",
+        warningsTitle: "Needs review",
+        confidenceBadge: "{level} confidence",
+        success: "Bike draft created from Marktplaats.",
+        loading: {
+          preview: "Parsing Marktplaats advert...",
+        },
+        actions: {
+          preview: "Preview import",
+          previewLoading: "Loading preview...",
+          save: "Save bike draft",
+          saveLoading: "Saving bike...",
+          cancel: "Back to garage",
+          startOver: "Start over",
+        },
+        fields: {
+          url: {
+            label: "Marktplaats URL",
+            placeholder: "https://www.marktplaats.nl/...",
+          },
+          name: {
+            label: "Bike name",
+            placeholder: "Choose the rider-facing bike name",
+          },
+          brand: {
+            label: "Brand",
+            placeholder: "Confirm the brand",
+          },
+          model: {
+            label: "Model",
+            placeholder: "Confirm the model",
+          },
+          bikeType: {
+            label: "Bike type",
+          },
+          description: {
+            label: "Description",
+            placeholder: "Imported advert text appears here and stays editable.",
+          },
+        },
+        errors: {
+          title: "Import needs attention",
+          unsupportedUrl:
+            "Use a valid Marktplaats advert URL. Unsupported marketplace links are not accepted.",
+          previewFailed:
+            "The advert preview could not be loaded. Please check the URL or try again in a moment.",
+          saveFailed:
+            "The bike draft could not be saved. Please try again.",
+          backendUnavailable:
+            "The Marktplaats import backend is not available in this workspace yet. The rider flow is wired, but preview/save cannot complete until the backend contract lands.",
+        },
       },
       delete: {
         confirm: "Delete this bike? This action cannot be undone.",

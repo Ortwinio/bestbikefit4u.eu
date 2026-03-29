@@ -162,7 +162,7 @@ export default async function HomePage() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-primary-foreground/70 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20"
+                className="border-primary-foreground/70 bg-primary-foreground/10 !text-primary-foreground after:!bg-transparent hover:bg-primary-foreground/20"
                 {...linkButtonProps(withLocalePrefix("/about", locale))}
               >
                 {home.hero.secondaryCta}

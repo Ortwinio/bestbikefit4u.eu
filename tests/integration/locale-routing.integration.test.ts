@@ -18,6 +18,21 @@ describe("locale routing integration", () => {
     });
   });
 
+  it("redirects authenticated root visits to the localized dashboard", () => {
+    const decision = decideProxyAction({
+      pathname: "/",
+      cookieLocale: "nl",
+      acceptLanguageHeader: "en-US,en;q=0.9",
+      isAuthenticated: true,
+    });
+
+    expect(decision).toEqual({
+      type: "redirect",
+      pathname: "/nl/dashboard",
+      locale: "nl",
+    });
+  });
+
   it("uses cookie locale over accept-language for redirects", () => {
     const decision = decideProxyAction({
       pathname: "/pricing",

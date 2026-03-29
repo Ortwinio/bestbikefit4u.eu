@@ -5,7 +5,6 @@ import {
   LOCALE_HEADER_NAME,
   type Locale,
 } from "@/i18n/config";
-import { isProtectedAppPath } from "@/i18n/navigation";
 import { decideProxyAction } from "@/i18n/proxyDecision";
 
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
@@ -40,9 +39,7 @@ const convexAuthProxy = convexAuthNextjsMiddleware(
       return NextResponse.next();
     }
 
-    const isAuthenticated = isProtectedAppPath(pathname)
-      ? await convexAuth.isAuthenticated()
-      : true;
+    const isAuthenticated = await convexAuth.isAuthenticated();
     const decision = decideProxyAction({
       pathname,
       cookieLocale: request.cookies.get(LOCALE_COOKIE_NAME)?.value,

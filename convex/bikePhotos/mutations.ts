@@ -47,6 +47,74 @@ async function markPrimaryPhoto(
   await syncPrimaryPhoto(ctx, bikeId, primaryStorageId);
 }
 
+type CreateBikePhotoInput = {
+  userId: Id<"users">;
+  bikeId: Id<"bikes">;
+  storageId: string;
+  caption?: string;
+  isPrimary?: boolean;
+};
+
+export async function createBikePhotoRecord(
+  ctx: MutationCtx,
+  args: CreateBikePhotoInput
+) {
+  if (args.caption !== undefined) validateShortString(args.caption, "caption");
+  const bike = await ctx.db.get(args.bikeId);
+  if (!bike || bike.userId !== args.userId) {
+    throw new Error("Bike not found");
+  }
+
+  const now = Date.now();
+  const existingPhotos = await listBikePhotos(ctx, bike._id);
+  let photoCount = existingPhotos.length;
+
+  if (
+    photoCount === 0 &&
+    typeof bike.photoUrl === "string" &&
+    bike.photoUrl.length > 0 &&
+    bike.photoUrl !== args.storageId
+  ) {
+    await ctx.db.insert("bikePhotos", {
+      userId: args.userId,
+      bikeId: bike._id,
+      storageId: bike.photoUrl,
+      isPrimary: args.isPrimary !== true,
+      sortOrder: 0,
+      createdAt: now,
+      updatedAt: now,
+    });
+    photoCount += 1;
+  }
+
+  const shouldBePrimary = args.isPrimary === true || photoCount === 0;
+
+  if (shouldBePrimary) {
+    await Promise.all(
+      existingPhotos.map((photo) =>
+        ctx.db.patch(photo._id, { isPrimary: false, updatedAt: now })
+      )
+    );
+  }
+
+  const photoId = await ctx.db.insert("bikePhotos", {
+    userId: args.userId,
+    bikeId: bike._id,
+    storageId: args.storageId,
+    caption: args.caption,
+    isPrimary: shouldBePrimary,
+    sortOrder: photoCount,
+    createdAt: now,
+    updatedAt: now,
+  });
+
+  if (shouldBePrimary) {
+    await syncPrimaryPhoto(ctx, bike._id, args.storageId);
+  }
+
+  return photoId;
+}
+
 export const create = mutation({
   args: {
     bikeId: v.id("bikes"),
@@ -55,56 +123,14 @@ export const create = mutation({
     isPrimary: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    if (args.caption !== undefined) validateShortString(args.caption, "caption");
     const { userId, bike } = await requireBikeOwner(ctx, args.bikeId);
-    const now = Date.now();
-    const existingPhotos = await listBikePhotos(ctx, bike._id);
-    let photoCount = existingPhotos.length;
-
-    if (
-      photoCount === 0 &&
-      typeof bike.photoUrl === "string" &&
-      bike.photoUrl.length > 0 &&
-      bike.photoUrl !== args.storageId
-    ) {
-      await ctx.db.insert("bikePhotos", {
-        userId,
-        bikeId: bike._id,
-        storageId: bike.photoUrl,
-        isPrimary: args.isPrimary !== true,
-        sortOrder: 0,
-        createdAt: now,
-        updatedAt: now,
-      });
-      photoCount += 1;
-    }
-
-    const shouldBePrimary = args.isPrimary === true || photoCount === 0;
-
-    if (shouldBePrimary) {
-      await Promise.all(
-        existingPhotos.map((photo) =>
-          ctx.db.patch(photo._id, { isPrimary: false, updatedAt: now })
-        )
-      );
-    }
-
-    const photoId = await ctx.db.insert("bikePhotos", {
+    return await createBikePhotoRecord(ctx, {
       userId,
       bikeId: bike._id,
       storageId: args.storageId,
       caption: args.caption,
-      isPrimary: shouldBePrimary,
-      sortOrder: photoCount,
-      createdAt: now,
-      updatedAt: now,
+      isPrimary: args.isPrimary,
     });
-
-    if (shouldBePrimary) {
-      await syncPrimaryPhoto(ctx, bike._id, args.storageId);
-    }
-
-    return photoId;
   },
 });
 

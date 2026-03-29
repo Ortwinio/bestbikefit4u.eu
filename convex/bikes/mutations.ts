@@ -1,5 +1,5 @@
 import type { Id } from "../_generated/dataModel";
-import { mutation } from "../_generated/server";
+import { mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
 import { validateShortString, validateTextString } from "../lib/validation";
@@ -7,6 +7,17 @@ import {
   getSystemClimbingBikeProfile,
   getSystemDefaultBikeProfile,
 } from "../bikeProfiles/defaults";
+
+export const bikeTypeValidator = v.union(
+  v.literal("road"),
+  v.literal("gravel"),
+  v.literal("mountain"),
+  v.literal("hybrid"),
+  v.literal("tt_triathlon"),
+  v.literal("cyclocross"),
+  v.literal("touring"),
+  v.literal("city")
+);
 
 const disciplineValidator = v.union(
   v.literal("road"),
@@ -31,19 +42,165 @@ const primaryGoalValidator = v.union(
   v.literal("aerodynamics")
 );
 
+export const bikeSourceValidator = v.union(
+  v.literal("manual"),
+  v.literal("strava"),
+  v.literal("admin_import"),
+  v.literal("marketplace_import")
+);
+
+export const descriptionSourceValidator = v.union(
+  v.literal("manual"),
+  v.literal("generated"),
+  v.literal("template"),
+  v.literal("marketplace_import")
+);
+
+type CreateBikeInput = {
+  userId: Id<"users">;
+  name: string;
+  bikeType: "road" | "gravel" | "mountain" | "hybrid" | "tt_triathlon" | "cyclocross" | "touring" | "city";
+  source: "manual" | "strava" | "admin_import" | "marketplace_import";
+  currentGeometry?: {
+    stackMm?: number;
+    reachMm?: number;
+    seatTubeAngle?: number;
+    headTubeAngle?: number;
+    frameSize?: string;
+  };
+  currentSetup?: {
+    saddleHeightMm?: number;
+    saddleSetbackMm?: number;
+    stemLengthMm?: number;
+    stemAngle?: number;
+    handlebarWidthMm?: number;
+    crankLengthMm?: number;
+  };
+  discipline?: "road" | "gravel" | "mtb" | "tt";
+  ridingStyle?: "recreational" | "fitness" | "sportive" | "racing" | "commuting" | "touring";
+  primaryGoal?: "comfort" | "balanced" | "performance" | "aerodynamics";
+  bikeWeightKg?: number;
+  photoUrl?: string;
+  fitProfileId?: Id<"profiles">;
+  brand?: string;
+  model?: string;
+  description?: string;
+  descriptionSource?: "manual" | "generated" | "template" | "marketplace_import";
+  notes?: string;
+  bikeTypeSource?:
+    | "user"
+    | "strava_frame_type"
+    | "fallback_pending_confirmation"
+    | "inferred_from_usage"
+    | "admin_matched";
+  needsTypeConfirmation?: boolean;
+  stravaGearId?: string;
+  stravaPrimary?: boolean;
+  lifetimeDistanceMeters?: number;
+  lastStravaSync?: number;
+  importSourceName?: "marktplaats";
+  importSourceUrl?: string;
+  importCanonicalUrl?: string;
+  importedAdvertTitle?: string;
+  bikeImportId?: Id<"bikeImports">;
+  createdAt?: number;
+  updatedAt?: number;
+};
+
+export async function createBikeWithProfiles(
+  ctx: MutationCtx,
+  args: CreateBikeInput
+) {
+  validateShortString(args.name, "name");
+  if (args.brand !== undefined) validateShortString(args.brand, "brand");
+  if (args.model !== undefined) validateShortString(args.model, "model");
+  if (args.description !== undefined) validateTextString(args.description, "description");
+  if (args.notes !== undefined) validateTextString(args.notes, "notes");
+  if (args.importSourceUrl !== undefined)
+    validateTextString(args.importSourceUrl, "importSourceUrl");
+  if (args.importCanonicalUrl !== undefined)
+    validateTextString(args.importCanonicalUrl, "importCanonicalUrl");
+  if (args.importedAdvertTitle !== undefined)
+    validateTextString(args.importedAdvertTitle, "importedAdvertTitle");
+
+  const now = args.createdAt ?? Date.now();
+  const updatedAt = args.updatedAt ?? now;
+  const defaultProfile = getSystemDefaultBikeProfile({
+    bikeType: args.bikeType,
+    ridingStyle: args.ridingStyle,
+  });
+
+  const bikeId = await ctx.db.insert("bikes", {
+    userId: args.userId,
+    name: args.name,
+    bikeType: args.bikeType,
+    source: args.source,
+    currentGeometry: args.currentGeometry,
+    currentSetup: args.currentSetup,
+    discipline: args.discipline,
+    ridingStyle: args.ridingStyle,
+    primaryGoal: args.primaryGoal,
+    bikeWeightKg: args.bikeWeightKg,
+    photoUrl: args.photoUrl,
+    fitProfileId: args.fitProfileId,
+    brand: args.brand,
+    model: args.model,
+    description: args.description,
+    descriptionSource:
+      args.descriptionSource ?? (args.description ? "manual" : undefined),
+    descriptionUpdatedAt: args.description ? now : undefined,
+    notes: args.notes,
+    bikeTypeSource: args.bikeTypeSource,
+    needsTypeConfirmation: args.needsTypeConfirmation,
+    stravaGearId: args.stravaGearId,
+    stravaPrimary: args.stravaPrimary,
+    lifetimeDistanceMeters: args.lifetimeDistanceMeters,
+    lastStravaSync: args.lastStravaSync,
+    importSourceName: args.importSourceName,
+    importSourceUrl: args.importSourceUrl,
+    importCanonicalUrl: args.importCanonicalUrl,
+    importedAdvertTitle: args.importedAdvertTitle,
+    bikeImportId: args.bikeImportId,
+    createdAt: now,
+    updatedAt,
+  });
+
+  await ctx.db.insert("bikeProfiles", {
+    userId: args.userId,
+    bikeId,
+    name: defaultProfile.name,
+    profileType: defaultProfile.profileType,
+    isDefault: true,
+    status: "active",
+    source: "system_default",
+    createdAt: now,
+    updatedAt,
+  });
+
+  const climbingProfile = getSystemClimbingBikeProfile({
+    bikeType: args.bikeType,
+  });
+  if (climbingProfile) {
+    await ctx.db.insert("bikeProfiles", {
+      userId: args.userId,
+      bikeId,
+      name: climbingProfile.name,
+      profileType: climbingProfile.profileType,
+      isDefault: false,
+      status: "active",
+      source: "system_default",
+      createdAt: now,
+      updatedAt,
+    });
+  }
+
+  return bikeId;
+}
+
 export const create = mutation({
   args: {
     name: v.string(),
-    bikeType: v.union(
-      v.literal("road"),
-      v.literal("gravel"),
-      v.literal("mountain"),
-      v.literal("hybrid"),
-      v.literal("tt_triathlon"),
-      v.literal("cyclocross"),
-      v.literal("touring"),
-      v.literal("city")
-    ),
+    bikeType: bikeTypeValidator,
     currentGeometry: v.optional(
       v.object({
         stackMm: v.optional(v.number()),
@@ -72,77 +229,16 @@ export const create = mutation({
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
     description: v.optional(v.string()),
-    descriptionSource: v.optional(
-      v.union(v.literal("manual"), v.literal("generated"), v.literal("template"))
-    ),
+    descriptionSource: v.optional(descriptionSourceValidator),
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    validateShortString(args.name, "name");
-    if (args.brand !== undefined) validateShortString(args.brand, "brand");
-    if (args.model !== undefined) validateShortString(args.model, "model");
-    if (args.description !== undefined) validateTextString(args.description, "description");
-    if (args.notes !== undefined) validateTextString(args.notes, "notes");
     const userId = await requireUserId(ctx);
-
-    const defaultProfile = getSystemDefaultBikeProfile({
-      bikeType: args.bikeType,
-      ridingStyle: args.ridingStyle,
-    });
-
-    const bikeId = await ctx.db.insert("bikes", {
+    return await createBikeWithProfiles(ctx, {
+      ...args,
       userId,
-      name: args.name,
-      bikeType: args.bikeType,
       source: "manual",
-      currentGeometry: args.currentGeometry,
-      currentSetup: args.currentSetup,
-      discipline: args.discipline,
-      ridingStyle: args.ridingStyle,
-      primaryGoal: args.primaryGoal,
-      bikeWeightKg: args.bikeWeightKg,
-      photoUrl: args.photoUrl,
-      fitProfileId: args.fitProfileId,
-      brand: args.brand,
-      model: args.model,
-      description: args.description,
-      descriptionSource: args.descriptionSource ?? (args.description ? "manual" : undefined),
-      descriptionUpdatedAt: args.description ? Date.now() : undefined,
-      notes: args.notes,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
     });
-
-    await ctx.db.insert("bikeProfiles", {
-      userId,
-      bikeId,
-      name: defaultProfile.name,
-      profileType: defaultProfile.profileType,
-      isDefault: true,
-      status: "active",
-      source: "system_default",
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
-
-    const climbingProfile = getSystemClimbingBikeProfile({
-      bikeType: args.bikeType,
-    });
-    if (climbingProfile) {
-      await ctx.db.insert("bikeProfiles", {
-        userId,
-        bikeId,
-        name: climbingProfile.name,
-        profileType: climbingProfile.profileType,
-        isDefault: false,
-        status: "active",
-        source: "system_default",
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
-    }
-
-    return bikeId;
   },
 });
 
@@ -190,9 +286,7 @@ export const update = mutation({
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
     description: v.optional(v.string()),
-    descriptionSource: v.optional(
-      v.union(v.literal("manual"), v.literal("generated"), v.literal("template"))
-    ),
+    descriptionSource: v.optional(descriptionSourceValidator),
     bikeTypeSource: v.optional(
       v.union(
         v.literal("user"),

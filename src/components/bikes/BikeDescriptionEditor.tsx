@@ -10,7 +10,7 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 interface BikeDescriptionEditorProps {
   bikeId: Id<"bikes">;
   initialDescription?: string;
-  initialSource?: "manual" | "generated" | "template";
+  initialSource?: "manual" | "generated" | "template" | "marketplace_import";
 }
 
 export function BikeDescriptionEditor({
@@ -44,6 +44,9 @@ export function BikeDescriptionEditor({
     }
     if (savedSource === "template") {
       return messages.bikes.descriptionCard.sourceTemplate;
+    }
+    if (savedSource === "marketplace_import") {
+      return messages.bikes.descriptionCard.sourceManual;
     }
     return messages.bikes.descriptionCard.sourceManual;
   }, [messages.bikes.descriptionCard, savedSource]);
