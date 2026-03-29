@@ -1,8 +1,8 @@
 "use client";
 
 import { Controller, useFormContext } from "react-hook-form";
-import { NumberInput } from "@/components/ui";
-import { Info } from "lucide-react";
+import { NumberInput, InfoBox } from "@/components/ui";
+import { Info, HelpCircle, Sparkles } from "lucide-react";
 
 export function StepAdvancedMeasurements() {
   const {
@@ -11,21 +11,20 @@ export function StepAdvancedMeasurements() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 p-4">
-        <div className="flex items-start gap-3">
-          <Info className="mt-0.5 h-5 w-5 text-[color:var(--primary)]" />
-          <div>
-            <p className="font-medium text-[color:var(--foreground)]">
-              Optional but recommended
-            </p>
-            <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-              These measurements improve the accuracy of reach and handlebar
-              recommendations. Skip if unsure, and we&apos;ll estimate based on your
-              height.
-            </p>
-          </div>
-        </div>
-      </div>
+      <InfoBox
+        variant="primary"
+        icon={<HelpCircle className="h-4 w-4 text-[color:var(--primary)]" />}
+      >
+        <p className="font-medium text-[color:var(--foreground)]">
+          Optional — but worth it
+        </p>
+        <p className="mt-1 text-[color:var(--muted-foreground)]">
+          These measurements are not required, but each one refines a different part of your fit.
+          Torso and arm length determine handlebar reach. Shoulder width influences
+          handlebar width. Femur length fine-tunes saddle setback. The more you provide,
+          the more personalised the recommendation.
+        </p>
+      </InfoBox>
 
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="space-y-2">
@@ -52,15 +51,17 @@ export function StepAdvancedMeasurements() {
               />
             )}
           />
-          <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 p-4 text-sm text-[color:var(--muted-foreground)]">
-            <p className="mb-1 font-medium text-[color:var(--foreground)]">
-              How to measure
+          <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
+            <p className="font-medium text-[color:var(--foreground)]">How to measure torso length</p>
+            <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
+              <li>Sit upright on a firm chair, back straight</li>
+              <li>Measure from the seat surface to the bony bump at the base of your neck (C7 vertebra)</li>
+              <li>Typical range: 45–75 cm</li>
+            </ul>
+            <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+              <span className="font-medium">Affects:</span> handlebar reach and stack
             </p>
-            <p>
-              Sit upright. Measure from top of hip bone (iliac crest) to top of
-              shoulder (acromion).
-            </p>
-          </div>
+          </InfoBox>
         </div>
 
         <div className="space-y-2">
@@ -87,15 +88,17 @@ export function StepAdvancedMeasurements() {
               />
             )}
           />
-          <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 p-4 text-sm text-[color:var(--muted-foreground)]">
-            <p className="mb-1 font-medium text-[color:var(--foreground)]">
-              How to measure
+          <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
+            <p className="font-medium text-[color:var(--foreground)]">How to measure arm length</p>
+            <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
+              <li>Stand with arm relaxed at your side</li>
+              <li>Measure from the bony shoulder tip (acromion) to the middle finger tip</li>
+              <li>Typical range: 45–75 cm</li>
+            </ul>
+            <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+              <span className="font-medium">Affects:</span> handlebar reach and stem length
             </p>
-            <p>
-              Arm extended slightly forward. Measure from shoulder bone to wrist
-              crease.
-            </p>
-          </div>
+          </InfoBox>
         </div>
 
         <div className="space-y-2">
@@ -122,14 +125,17 @@ export function StepAdvancedMeasurements() {
               />
             )}
           />
-          <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 p-4 text-sm text-[color:var(--muted-foreground)]">
-            <p className="mb-1 font-medium text-[color:var(--foreground)]">
-              How to measure
+          <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
+            <p className="font-medium text-[color:var(--foreground)]">How to measure shoulder width</p>
+            <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
+              <li>Stand relaxed with arms at sides</li>
+              <li>Measure between the outermost bony points of both shoulders (acromion to acromion)</li>
+              <li>Typical range: 30–55 cm</li>
+            </ul>
+            <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+              <span className="font-medium">Affects:</span> handlebar width recommendation
             </p>
-            <p>
-              Measure from back side, outer shoulder bone to outer shoulder bone.
-            </p>
-          </div>
+          </InfoBox>
         </div>
 
         <div className="space-y-2">
@@ -156,43 +162,32 @@ export function StepAdvancedMeasurements() {
               />
             )}
           />
-          <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 p-4 text-sm text-[color:var(--muted-foreground)]">
-            <p className="mb-1 font-medium text-[color:var(--foreground)]">
-              How to measure
+          <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
+            <p className="font-medium text-[color:var(--foreground)]">How to measure femur length</p>
+            <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
+              <li>Sit on a hard surface with your thigh horizontal</li>
+              <li>Measure from the bony hip point (greater trochanter) to the outside of the knee</li>
+              <li>Typical range: 35–60 cm</li>
+            </ul>
+            <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+              <span className="font-medium">Affects:</span> saddle setback and fore-aft position
             </p>
-            <p>
-              Measure from the hip joint (greater trochanter) to the center of
-              the knee while standing naturally.
-            </p>
-          </div>
+          </InfoBox>
         </div>
       </div>
 
-      <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
-        <h4 className="mb-3 font-medium text-[color:var(--foreground)]">
-          How these improve your fit
-        </h4>
-        <div className="space-y-2 text-sm text-[color:var(--muted-foreground)]">
-          <p>
-            <span className="font-medium text-[color:var(--foreground)]">
-              Torso + Arm length:
-            </span>{" "}
-            Together, these determine your optimal handlebar reach and stem length.
-          </p>
-          <p>
-            <span className="font-medium text-[color:var(--foreground)]">
-              Shoulder width:
-            </span>{" "}
-            Used to calculate handlebar width for road, gravel, and MTB.
-          </p>
-          <p>
-            <span className="font-medium text-[color:var(--foreground)]">
-              Femur length:
-            </span>{" "}
-            Improves saddle setback and stability confidence scoring.
-          </p>
-        </div>
-      </div>
+      <InfoBox
+        variant="primary"
+        icon={<Sparkles className="h-4 w-4 text-[color:var(--primary)]" />}
+      >
+        <p className="font-medium text-[color:var(--foreground)]">How advanced measurements improve your fit</p>
+        <p className="mt-1 text-[color:var(--muted-foreground)]">
+          A basic fit uses height and inseam only. Adding torso and arm length lets us
+          calculate reach precisely, rather than estimating it from height alone. Shoulder
+          width gives a starting point for handlebar width. Femur length refines saddle
+          setback. Each additional measurement reduces the range of uncertainty in the final numbers.
+        </p>
+      </InfoBox>
     </div>
   );
 }

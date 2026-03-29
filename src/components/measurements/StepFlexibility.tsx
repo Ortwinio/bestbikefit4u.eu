@@ -1,43 +1,60 @@
 "use client";
 
-import { useFormContext, Controller } from "react-hook-form";
+import { useFormContext, Controller, useWatch } from "react-hook-form";
 import { RadioGroup } from "@base-ui/react/radio-group";
-import { Selectable } from "@/components/ui";
+import { Selectable, InfoBox } from "@/components/ui";
+import { FlexibilityScale } from "@/components/profile/FlexibilityScale";
 import { flexibilityTests } from "@/lib/validations/profile";
+import { HelpCircle, Info, Activity } from "lucide-react";
 
 export function StepFlexibility() {
   const { control } = useFormContext();
+  const selectedScore = useWatch({ control, name: "flexibilityScore" });
 
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="mb-2 text-lg font-medium text-[color:var(--foreground)]">
-          Hamstring Flexibility Test
-        </h3>
-        <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
-          Your flexibility affects how aggressive your riding position can be.
-          Complete this simple test to help us personalize your fit.
+
+      {/* 1. Why this matters */}
+      <InfoBox
+        variant="primary"
+        icon={<HelpCircle className="h-4 w-4 text-[color:var(--primary)]" />}
+      >
+        <p className="font-medium text-[color:var(--foreground)]">
+          Why flexibility matters for your bike fit
         </p>
-      </div>
+        <p className="mt-1 text-[color:var(--muted-foreground)]">
+          Hip flexor and hamstring flexibility directly determines how far forward
+          and how low you can comfortably ride. A rider with limited flexibility
+          needs a more upright, relaxed position — more handlebar height and less
+          reach. A flexible rider can sustain a lower, more aerodynamic position
+          without back or hip strain. This test helps us set the right limits
+          for your handlebar drop and saddle-to-bar reach.
+        </p>
+      </InfoBox>
 
-      <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 p-4">
-        <h4 className="mb-2 font-medium text-[color:var(--foreground)]">
-          How to perform the test
-        </h4>
-        <ol className="list-inside list-decimal space-y-1 text-sm text-[color:var(--muted-foreground)]">
-          <li>Sit on the floor with legs straight out in front</li>
-          <li>Keep your knees flat on the ground</li>
-          <li>Reach forward with both hands toward your toes</li>
-          <li>Note how far you can comfortably reach</li>
+      {/* 2. How to perform the test */}
+      <InfoBox
+        variant="secondary"
+        icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
+      >
+        <p className="font-medium text-[color:var(--foreground)]">
+          Hamstring flexibility test — how to do it
+        </p>
+        <ol className="mt-1 list-inside list-decimal space-y-1 text-[color:var(--muted-foreground)]">
+          <li>Sit on the floor with both legs straight out in front of you</li>
+          <li>Keep your knees flat against the floor — do not bend them</li>
+          <li>Sit up tall, then slowly reach forward with both hands toward your toes</li>
+          <li>Note how far you can comfortably reach without forcing</li>
+          <li>Choose the option below that best describes your result</li>
         </ol>
-      </div>
+      </InfoBox>
 
+      {/* 3. Selection */}
       <Controller
         name="flexibilityScore"
         control={control}
         render={({ field }) => {
           const legendId = `${field.name}-legend`;
-
           return (
             <fieldset className="space-y-3">
               <legend
@@ -46,7 +63,7 @@ export function StepFlexibility() {
               >
                 Select your result
               </legend>
-              <RadioGroup<number>
+              <RadioGroup
                 aria-labelledby={legendId}
                 className="grid gap-3"
                 name={field.name}
@@ -74,16 +91,42 @@ export function StepFlexibility() {
         }}
       />
 
-      <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
-        <h4 className="mb-2 font-medium text-[color:var(--foreground)]">
-          How this affects your fit
-        </h4>
-        <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
-          Lower flexibility scores will result in a more upright position with
-          less handlebar drop. This protects your lower back and reduces strain.
-          Higher flexibility allows for a more aggressive, aerodynamic position.
+      {/* 4. Live preview of the selected score — same card as My Profile */}
+      {selectedScore && (
+        <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[color:var(--muted-foreground)]">
+            Your flexibility result
+          </p>
+          <FlexibilityScale score={selectedScore} />
+        </div>
+      )}
+
+      {/* 5. How this affects the fit */}
+      <InfoBox
+        variant="primary"
+        icon={<Activity className="h-4 w-4 text-[color:var(--primary)]" />}
+      >
+        <p className="font-medium text-[color:var(--foreground)]">
+          How this shapes your bike fit
         </p>
-      </div>
+        <div className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
+          <div>
+            <p className="font-medium text-[color:var(--foreground)]">Low flexibility</p>
+            <p className="text-[color:var(--muted-foreground)]">
+              More upright position, higher handlebars, shorter reach.
+              Protects lower back and hip flexors on longer rides.
+            </p>
+          </div>
+          <div>
+            <p className="font-medium text-[color:var(--foreground)]">High flexibility</p>
+            <p className="text-[color:var(--muted-foreground)]">
+              Lower, more aggressive position possible. More handlebar drop and
+              longer reach for aerodynamics and power.
+            </p>
+          </div>
+        </div>
+      </InfoBox>
+
     </div>
   );
 }

@@ -1,45 +1,56 @@
 "use client";
 
-import { useFormContext, Controller } from "react-hook-form";
+import { useFormContext, Controller, useWatch } from "react-hook-form";
 import { RadioGroup } from "@base-ui/react/radio-group";
-import { Selectable } from "@/components/ui";
+import { Selectable, InfoBox } from "@/components/ui";
+import { CoreStabilityBar } from "@/components/profile/CoreStabilityBar";
 import { coreStabilityTests } from "@/lib/validations/profile";
-import { Timer } from "lucide-react";
+import { HelpCircle, Timer, Dumbbell } from "lucide-react";
 
 export function StepCoreStability() {
   const { control } = useFormContext();
+  const selectedScore = useWatch({ control, name: "coreStabilityScore" });
 
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="mb-2 text-lg font-medium text-[color:var(--foreground)]">
-          Core Stability Test
-        </h3>
-        <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
-          Your core strength determines how long you can maintain an aggressive
-          position without fatigue. This helps us set appropriate reach and drop
-          limits.
+
+      {/* 1. Why this matters */}
+      <InfoBox
+        variant="primary"
+        icon={<HelpCircle className="h-4 w-4 text-[color:var(--primary)]" />}
+      >
+        <p className="font-medium text-[color:var(--foreground)]">
+          Why core stability determines your riding position
         </p>
-      </div>
+        <p className="mt-1 text-[color:var(--muted-foreground)]">
+          Your core muscles — abs, lower back, and stabilisers — are what hold
+          your torso steady on the bike. A weak core means your body will
+          compensate by shifting weight onto the hands and shoulders, causing
+          neck and wrist pain. A strong core lets you sustain a lower, longer
+          position for longer. This test helps us decide how aggressive a
+          position your body can actually maintain on a real ride.
+        </p>
+      </InfoBox>
 
-      <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 p-4">
-        <div className="flex items-start gap-3">
-          <Timer className="mt-0.5 h-5 w-5 text-[color:var(--primary)]" />
-          <div>
-            <h4 className="mb-2 font-medium text-[color:var(--foreground)]">
-              Front Plank Hold Test
-            </h4>
-            <ol className="list-inside list-decimal space-y-1 text-sm text-[color:var(--muted-foreground)]">
-              <li>Get into a front plank position on forearms and toes</li>
-              <li>Keep a straight line from head to heels</li>
-              <li>No sagging or piking, which means raising hips</li>
-              <li>Time how long you can hold with proper form</li>
-              <li>Stop when form breaks down</li>
-            </ol>
-          </div>
-        </div>
-      </div>
+      {/* 2. Test instructions */}
+      <InfoBox
+        variant="secondary"
+        icon={<Timer className="h-4 w-4 text-[color:var(--primary)]" />}
+      >
+        <p className="font-medium text-[color:var(--foreground)]">
+          Front plank hold test — how to do it
+        </p>
+        <ol className="mt-1 list-inside list-decimal space-y-1 text-[color:var(--muted-foreground)]">
+          <li>Get into a front plank position — forearms on the floor, toes on the floor</li>
+          <li>Keep a straight line from your head through your heels — no sagging hips</li>
+          <li>Do not let your hips rise (piking) or sink (sagging)</li>
+          <li>Start a timer and hold with perfect form</li>
+          <li>Stop the timer the moment your form breaks down</li>
+          <li>Choose the result below that matches your hold time</li>
+        </ol>
+      </InfoBox>
 
+      {/* 3. Selection */}
       <Controller
         name="coreStabilityScore"
         control={control}
@@ -52,14 +63,14 @@ export function StepCoreStability() {
                 id={legendId}
                 className="text-sm font-medium text-[color:var(--foreground)]"
               >
-                How long can you hold a plank?
+                How long can you hold a plank with perfect form?
               </legend>
               <RadioGroup<number>
                 aria-labelledby={legendId}
                 className="grid gap-3"
                 name={field.name}
                 value={field.value ?? undefined}
-                onValueChange={(next) => field.onChange(next)}
+                onValueChange={(next) => field.onChange(Number(next))}
               >
                 {coreStabilityTests.map((test) => (
                   <Selectable
@@ -82,17 +93,42 @@ export function StepCoreStability() {
         }}
       />
 
-      <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
-        <h4 className="mb-2 font-medium text-[color:var(--foreground)]">
-          How this affects your fit
-        </h4>
-        <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
-          Lower core stability means we&apos;ll limit how far you reach and how low
-          your handlebars can be. This prevents fatigue and shoulder/neck pain.
-          Stronger core allows for a more stretched-out, performance-oriented
-          position.
+      {/* 4. Live preview — same card as My Profile */}
+      {selectedScore && (
+        <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[color:var(--muted-foreground)]">
+            Your core stability result
+          </p>
+          <CoreStabilityBar score={Number(selectedScore)} />
+        </div>
+      )}
+
+      {/* 5. How this affects the fit */}
+      <InfoBox
+        variant="primary"
+        icon={<Dumbbell className="h-4 w-4 text-[color:var(--primary)]" />}
+      >
+        <p className="font-medium text-[color:var(--foreground)]">
+          How this shapes your bike fit
         </p>
-      </div>
+        <div className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
+          <div>
+            <p className="font-medium text-[color:var(--foreground)]">Low stability (1–2)</p>
+            <p className="text-[color:var(--muted-foreground)]">
+              We limit reach and handlebar drop to reduce shoulder and neck load.
+              More weight through the sit bones, less through the hands.
+            </p>
+          </div>
+          <div>
+            <p className="font-medium text-[color:var(--foreground)]">Good stability (4–5)</p>
+            <p className="text-[color:var(--muted-foreground)]">
+              A stretched-out, performance-oriented position becomes sustainable.
+              Greater reach and lower bars are viable without pain or fatigue.
+            </p>
+          </div>
+        </div>
+      </InfoBox>
+
     </div>
   );
 }

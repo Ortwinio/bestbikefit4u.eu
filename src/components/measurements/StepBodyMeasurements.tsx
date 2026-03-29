@@ -1,10 +1,10 @@
 "use client";
 
 import { Controller, useFormContext } from "react-hook-form";
-import { NumberInput } from "@/components/ui";
+import { NumberInput, InfoBox } from "@/components/ui";
 import { validateInseamRatio } from "@/lib/validations/profile";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { AlertCircle, Info } from "lucide-react";
+import { AlertCircle, Info, Ruler, HelpCircle } from "lucide-react";
 
 export function StepBodyMeasurements() {
   const {
@@ -21,10 +21,18 @@ export function StepBodyMeasurements() {
 
   return (
     <div className="space-y-6">
-      <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
-        These two measurements are essential for calculating your bike fit.
-        Accurate measurements lead to better recommendations.
-      </p>
+      <InfoBox
+        variant="primary"
+        icon={<HelpCircle className="h-4 w-4 text-[color:var(--primary)]" />}
+      >
+        <p className="font-medium text-[color:var(--foreground)]">Why we need your measurements</p>
+        <p className="mt-1 text-[color:var(--muted-foreground)]">
+          Your height and inseam are the two most important inputs for a bike fit.
+          Height sets the overall frame size and reach, while inseam is the primary driver
+          for saddle height — the single most impactful adjustment for comfort and power.
+          Without accurate measurements, every recommendation is just an estimate.
+        </p>
+      </InfoBox>
 
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="space-y-2">
@@ -50,21 +58,17 @@ export function StepBodyMeasurements() {
               />
             )}
           />
-          <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 p-4">
-            <div className="flex items-start gap-2">
-              <Info className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--primary)]" />
-              <div className="space-y-1 text-sm text-[color:var(--muted-foreground)]">
-                <p className="font-medium text-[color:var(--foreground)]">
-                  How to measure
-                </p>
-                <ul className="list-inside list-disc space-y-1">
-                  <li>Stand barefoot against a wall</li>
-                  <li>Place a book flat on your head</li>
-                  <li>Mark the wall and measure from floor</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          <InfoBox
+            variant="secondary"
+            icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
+          >
+            <p className="font-medium text-[color:var(--foreground)]">How to measure your height</p>
+            <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
+              <li>Stand barefoot against a wall</li>
+              <li>Place a book flat on top of your head, touching the wall</li>
+              <li>Mark the wall and measure from the floor to the mark</li>
+            </ul>
+          </InfoBox>
         </div>
 
         <div className="space-y-2">
@@ -90,21 +94,17 @@ export function StepBodyMeasurements() {
               />
             )}
           />
-          <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 p-4">
-            <div className="flex items-start gap-2">
-              <Info className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--primary)]" />
-              <div className="space-y-1 text-sm text-[color:var(--muted-foreground)]">
-                <p className="font-medium text-[color:var(--foreground)]">
-                  How to measure
-                </p>
-                <ul className="list-inside list-disc space-y-1">
-                  <li>Stand barefoot against a wall</li>
-                  <li>Place a book firmly between legs like a saddle</li>
-                  <li>Measure from floor to top of book</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          <InfoBox
+            variant="secondary"
+            icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
+          >
+            <p className="font-medium text-[color:var(--foreground)]">How to measure your inseam</p>
+            <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
+              <li>Stand barefoot with feet 10–15 cm apart</li>
+              <li>Press a hardcover book firmly up between your legs, simulating a saddle</li>
+              <li>Measure from the floor to the top of the book spine</li>
+            </ul>
+          </InfoBox>
         </div>
       </div>
 
@@ -133,37 +133,45 @@ export function StepBodyMeasurements() {
         />
       </div>
 
-      {ratioWarning ? (
-        <div className="rounded-[var(--radius-lg)] border border-[color:var(--warning)]/30 bg-[color:var(--warning)]/10 p-4">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="mt-0.5 h-5 w-5 text-[color:var(--warning)]" />
-            <div>
-              <p className="font-medium text-[color:var(--warning)]">
-                Measurement Check
-              </p>
-              <p className="mt-1 text-sm text-[color:var(--foreground)]">
-                {ratioWarning}
-              </p>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      {ratioWarning && (
+        <InfoBox
+          variant="warning"
+          icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
+        >
+          <p className="font-medium">Measurement check</p>
+          <p className="mt-1 text-[color:var(--muted-foreground)]">{ratioWarning}</p>
+        </InfoBox>
+      )}
 
-      <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
-        <h4 className="mb-3 font-medium text-[color:var(--foreground)]">
-          Why these measurements matter
-        </h4>
-        <div className="grid gap-4 text-sm text-[color:var(--muted-foreground)] sm:grid-cols-2">
+      <InfoBox
+        variant="primary"
+        icon={<Ruler className="h-4 w-4 text-[color:var(--primary)]" />}
+      >
+        <p className="font-medium text-[color:var(--foreground)]">How these measurements shape your fit</p>
+        <div className="mt-2 grid gap-3 text-sm sm:grid-cols-2">
           <div>
             <p className="font-medium text-[color:var(--foreground)]">Height</p>
-            <p>Used for frame size estimation and reach calculations.</p>
+            <p className="text-[color:var(--muted-foreground)]">
+              Sets the overall frame size range and forms the baseline for reach,
+              stack, and handlebar position calculations.
+            </p>
           </div>
           <div>
             <p className="font-medium text-[color:var(--foreground)]">Inseam</p>
-            <p>Primary driver for saddle height and crank length recommendations.</p>
+            <p className="text-[color:var(--muted-foreground)]">
+              The primary driver for saddle height — the most critical fit variable.
+              Also informs crank length and cleat position.
+            </p>
+          </div>
+          <div>
+            <p className="font-medium text-[color:var(--foreground)]">Weight (optional)</p>
+            <p className="text-[color:var(--muted-foreground)]">
+              Used to calculate BMI and refine tyre pressure recommendations.
+              Does not affect saddle height or reach calculations.
+            </p>
           </div>
         </div>
-      </div>
+      </InfoBox>
     </div>
   );
 }

@@ -9,17 +9,14 @@ import {
   Button,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
-  Progress,
 } from "@/components/ui";
 import { StepBodyMeasurements } from "./StepBodyMeasurements";
 import { StepAdvancedMeasurements } from "./StepAdvancedMeasurements";
 import { StepFlexibility } from "./StepFlexibility";
 import { StepCoreStability } from "./StepCoreStability";
-import { cn } from "@/utils/cn";
-import { Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { ListChecks, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
 
@@ -51,10 +48,30 @@ const wizardSchema = z.object({
 export type WizardFormData = z.infer<typeof wizardSchema>;
 
 const steps = [
-  { id: 1, title: "Body Measurements", description: "Height and inseam" },
-  { id: 2, title: "Advanced (Optional)", description: "Torso, arms, shoulders" },
-  { id: 3, title: "Flexibility", description: "Hamstring mobility" },
-  { id: 4, title: "Core Stability", description: "Plank test" },
+  {
+    id: 1,
+    title: "Body Measurements",
+    description: "Height and inseam",
+    category: "Rider Profile · Step 1 of 4",
+  },
+  {
+    id: 2,
+    title: "Advanced Measurements",
+    description: "Torso, arms, shoulders",
+    category: "Rider Profile · Step 2 of 4",
+  },
+  {
+    id: 3,
+    title: "Flexibility",
+    description: "Hamstring mobility test",
+    category: "Rider Profile · Step 3 of 4",
+  },
+  {
+    id: 4,
+    title: "Core Stability",
+    description: "Plank hold test",
+    category: "Rider Profile · Step 4 of 4",
+  },
 ];
 
 interface MeasurementWizardProps {
@@ -148,76 +165,37 @@ export function MeasurementWizard({
     <FormProvider {...methods}>
       <div className="mx-auto max-w-2xl">
         <Card variant="bordered" className="overflow-hidden">
-          <CardHeader className="border-b border-[color:var(--border)] bg-[color:var(--secondary)]/30 px-6 py-5">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <p className="text-sm font-medium text-[color:var(--muted-foreground)]">
-                  Step {currentStep} of {steps.length}
-                </p>
-                <CardTitle className="text-lg text-[color:var(--foreground)]">
-                  {activeStep.title}
-                </CardTitle>
+          <CardHeader className="border-b border-[color:var(--border)] px-6 py-5">
+            <div className="mb-4 flex items-center gap-3 rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--muted)]/50 px-4 py-3">
+              <ListChecks className="h-4 w-4 shrink-0 text-[color:var(--primary)]" />
+              <span className="text-sm text-[color:var(--muted-foreground)]">
+                Step {currentStep} of {steps.length}
+              </span>
+              <span className="text-[color:var(--border)]">·</span>
+              <div className="flex flex-1 items-center gap-2">
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[color:var(--border)]">
+                  <div
+                    className="h-full rounded-full bg-[color:var(--primary)] transition-[width] duration-500 ease-out"
+                    style={{ width: `${Math.round((currentStep / steps.length) * 100)}%` }}
+                  />
+                </div>
+                <span className="shrink-0 text-sm text-[color:var(--muted-foreground)]">
+                  {Math.round((currentStep / steps.length) * 100)}%
+                </span>
               </div>
-              <CardDescription className="max-w-xs text-right">
-                {activeStep.description}
-              </CardDescription>
             </div>
-            <Progress
-              value={currentStep - 1}
-              max={steps.length - 1}
-              label="Measurement wizard progress"
-            />
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-[color:var(--muted-foreground)]">
+                {activeStep.category}
+              </p>
+              <CardTitle className="mt-1 text-xl text-[color:var(--foreground)]">
+                {activeStep.title}
+              </CardTitle>
+            </div>
           </CardHeader>
 
           <CardContent className="px-6 py-6">
-            <nav className="mb-8" aria-label="Measurement steps">
-              <ol className="flex items-center justify-between gap-2">
-                {steps.map((step, index) => (
-                  <li key={step.id} className="flex min-w-0 items-center">
-                    <div className="flex flex-col items-center">
-                      <div
-                        className={cn(
-                          "flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-medium transition-colors",
-                          currentStep > step.id
-                            ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
-                            : currentStep === step.id
-                              ? "border-[color:var(--primary)] bg-[color:var(--card)] text-[color:var(--primary)]"
-                              : "border-[color:var(--border)] bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]"
-                        )}
-                      >
-                        {currentStep > step.id ? <Check className="h-5 w-5" /> : step.id}
-                      </div>
-                      <div className="mt-2 text-center">
-                        <p
-                          className={cn(
-                            "text-sm font-medium",
-                            currentStep >= step.id
-                              ? "text-[color:var(--foreground)]"
-                              : "text-[color:var(--muted-foreground)]"
-                          )}
-                        >
-                          {step.title}
-                        </p>
-                        <p className="hidden text-xs text-[color:var(--muted-foreground)] sm:block">
-                          {step.description}
-                        </p>
-                      </div>
-                    </div>
-                    {index < steps.length - 1 && (
-                      <div
-                        className={cn(
-                          "mx-2 mt-[-24px] h-0.5 w-12 sm:w-24",
-                          currentStep > step.id
-                            ? "bg-[color:var(--primary)]"
-                            : "bg-[color:var(--border)]"
-                        )}
-                      />
-                    )}
-                  </li>
-                ))}
-              </ol>
-            </nav>
-
             <form onSubmit={handleSubmit(onSubmit)}>
               {renderStep()}
 
