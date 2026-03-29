@@ -1,17 +1,31 @@
 "use client";
 
+import { useRef, useEffect, useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { InfoBox } from "@/components/ui";
-import { validateInseamRatio } from "@/lib/validations/profile";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { AlertCircle, Info, Ruler, HelpCircle } from "lucide-react";
 import { cn } from "@/utils/cn";
 
-// Continuous numeric slider styled identically to SliderQuestion in RidingStyleCard
+// Predicted values based on height
+function predictedInseam(heightCm: number) {
+  return Math.round(heightCm * 0.47); // ~47% of height is average inseam for cyclists
+}
+
+function predictedWeight(heightCm: number) {
+  return Math.round(22 * Math.pow(heightCm / 100, 2)); // BMI 22 midpoint
+}
+
+function deviation(actual: number, predicted: number) {
+  return Math.abs(actual - predicted) / predicted;
+}
+
+// Continuous numeric slider — same visual style as SliderQuestion in RidingStyleCard
 function NumberSlider({
   label,
   value,
   onChange,
+  onUserInteract,
   min,
   max,
   step = 1,
@@ -21,6 +35,7 @@ function NumberSlider({
   label: string;
   value: number | undefined;
   onChange: (value: number) => void;
+  onUserInteract?: () => void;
   min: number;
   max: number;
   step?: number;
@@ -28,15 +43,8 @@ function NumberSlider({
   error?: string;
 }) {
   const hasValue = typeof value === "number" && !Number.isNaN(value);
-  const fillPercent = hasValue ? ((value - min) / (max - min)) * 100 : 0;
-
-  // Same fill-width formula as SliderQuestion (px-1 container = 4px each side = 8px total)
-  const fillWidth = hasValue
-    ? `calc(${fillPercent}% * (100% - 8px) / 100 + ${fillPercent > 0 ? "4px" : "0px"})`
-    : "0px";
-
-  // Thumb center aligns with fill end: left-1 offset + fillPercent of (100% - 8px)
-  const thumbLeft = `calc(4px + ${fillPercent}% * (100% - 8px) / 100)`;
+  // Unitless 0–1 fraction — valid multiplier in CSS calc()
+  const pct = hasValue ? (value - min) / (max - min) : 0;
 
   return (
     <div className="space-y-2">
@@ -50,39 +58,42 @@ function NumberSlider({
         )}
       </div>
 
-      {/* Track area — same h-10, px-1 as SliderQuestion */}
+      {/* Track area: 12px inset each side so thumb stays inside bounds */}
       <div className="relative h-10">
         {/* Track background */}
-        <div className="pointer-events-none absolute inset-x-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary/15" />
+        <div className="pointer-events-none absolute inset-x-3 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary/15" />
 
-        {/* Fill — same formula as SliderQuestion */}
+        {/* Fill — width: unitless_fraction * (100% - 24px), valid CSS calc */}
         {hasValue && (
           <div
-            className="pointer-events-none absolute left-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary transition-[width] duration-150 ease-out"
-            style={{ width: fillWidth }}
+            className="pointer-events-none absolute left-3 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary"
+            style={{ width: `calc(${pct} * (100% - 24px))` }}
           />
         )}
 
-        {/* Custom thumb — identical to SliderQuestion active dot */}
+        {/* Custom thumb — same style as SliderQuestion active dot */}
         {hasValue && (
           <div
-            className="pointer-events-none absolute top-1/2 size-6 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-background bg-primary shadow-md transition-[left] duration-150 ease-out"
-            style={{ left: thumbLeft }}
+            className={cn(
+              "pointer-events-none absolute top-1/2 size-6",
+              "-translate-x-1/2 -translate-y-1/2",
+              "rounded-full border-4 border-background bg-primary shadow-md"
+            )}
+            style={{ left: `calc(12px + ${pct} * (100% - 24px))` }}
           />
         )}
 
-        {/* Native range input (transparent overlay, handles all interaction) */}
+        {/* Native range input — transparent, covers full area, handles all interaction */}
         <input
           type="range"
           min={min}
           max={max}
           step={step}
           value={hasValue ? value : min}
+          onMouseDown={onUserInteract}
+          onTouchStart={onUserInteract}
           onChange={(e) => onChange(Number(e.target.value))}
-          className={cn(
-            "absolute inset-0 w-full cursor-pointer opacity-0",
-            "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          )}
+          className="absolute inset-0 w-full cursor-pointer opacity-0"
           aria-label={label}
           aria-valuemin={min}
           aria-valuemax={max}
@@ -109,15 +120,51 @@ function NumberSlider({
 export function StepBodyMeasurements() {
   const {
     watch,
+    setValue,
     formState: { errors },
   } = useFormContext();
   const { messages } = useDashboardMessages();
 
-  const heightCm = watch("heightCm");
-  const inseamCm = watch("inseamCm");
+  const heightCm = watch("heightCm") as number | undefined;
+  const inseamCm = watch("inseamCm") as number | undefined;
+  const weightKg = watch("weightKg") as number | undefined;
 
-  const ratioWarning =
-    heightCm && inseamCm ? validateInseamRatio(heightCm, inseamCm) : null;
+  // Track whether the user has manually moved inseam/weight sliders
+  const userEditedInseam = useRef(false);
+  const userEditedWeight = useRef(false);
+
+  // When height changes, auto-update inseam and weight if not yet manually set
+  useEffect(() => {
+    if (!heightCm) return;
+    if (!userEditedInseam.current) {
+      setValue("inseamCm", predictedInseam(heightCm), { shouldValidate: true });
+    }
+    if (!userEditedWeight.current) {
+      setValue("weightKg", predictedWeight(heightCm), { shouldValidate: true });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [heightCm]);
+
+  // Warnings: show when value deviates >20% from expected for the given height
+  const inseamWarning = useMemo(() => {
+    if (!heightCm || !inseamCm) return null;
+    const pred = predictedInseam(heightCm);
+    if (deviation(inseamCm, pred) > 0.2) {
+      const dir = inseamCm > pred ? "longer" : "shorter";
+      return `Your inseam (${inseamCm} cm) is more than 20% ${dir} than expected for your height. Expected around ${pred} cm — please double-check your measurement.`;
+    }
+    return null;
+  }, [heightCm, inseamCm]);
+
+  const weightWarning = useMemo(() => {
+    if (!heightCm || !weightKg) return null;
+    const pred = predictedWeight(heightCm);
+    if (deviation(weightKg, pred) > 0.2) {
+      const dir = weightKg > pred ? "heavier" : "lighter";
+      return `Your weight (${weightKg} kg) is more than 20% ${dir} than expected for your height. Expected around ${pred} kg — please verify the value is correct.`;
+    }
+    return null;
+  }, [heightCm, weightKg]);
 
   return (
     <div className="space-y-6">
@@ -150,7 +197,10 @@ export function StepBodyMeasurements() {
                   ? field.value
                   : undefined
               }
-              onChange={(v) => { field.onChange(v); field.onBlur(); }}
+              onChange={(v) => {
+                field.onChange(v);
+                field.onBlur();
+              }}
               error={errors.heightCm?.message as string}
             />
           )}
@@ -184,7 +234,13 @@ export function StepBodyMeasurements() {
                   ? field.value
                   : undefined
               }
-              onChange={(v) => { field.onChange(v); field.onBlur(); }}
+              onChange={(v) => {
+                field.onChange(v);
+                field.onBlur();
+              }}
+              onUserInteract={() => {
+                userEditedInseam.current = true;
+              }}
               error={errors.inseamCm?.message as string}
             />
           )}
@@ -200,6 +256,15 @@ export function StepBodyMeasurements() {
             <li>Measure from the floor to the top of the book spine</li>
           </ul>
         </InfoBox>
+        {inseamWarning && (
+          <InfoBox
+            variant="warning"
+            icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
+          >
+            <p className="font-medium">Check your inseam</p>
+            <p className="mt-1 text-[color:var(--muted-foreground)]">{inseamWarning}</p>
+          </InfoBox>
+        )}
       </div>
 
       {/* Weight (optional) */}
@@ -218,23 +283,28 @@ export function StepBodyMeasurements() {
                   ? field.value
                   : undefined
               }
-              onChange={(v) => { field.onChange(v); field.onBlur(); }}
+              onChange={(v) => {
+                field.onChange(v);
+                field.onBlur();
+              }}
+              onUserInteract={() => {
+                userEditedWeight.current = true;
+              }}
               error={errors.weightKg?.message as string}
             />
           )}
         />
         <p className="text-xs text-muted-foreground">{messages.profile.measurements.weightHelper}</p>
+        {weightWarning && (
+          <InfoBox
+            variant="warning"
+            icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
+          >
+            <p className="font-medium">Check your weight</p>
+            <p className="mt-1 text-[color:var(--muted-foreground)]">{weightWarning}</p>
+          </InfoBox>
+        )}
       </div>
-
-      {ratioWarning && (
-        <InfoBox
-          variant="warning"
-          icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
-        >
-          <p className="font-medium">Measurement check</p>
-          <p className="mt-1 text-[color:var(--muted-foreground)]">{ratioWarning}</p>
-        </InfoBox>
-      )}
 
       <InfoBox
         variant="primary"
