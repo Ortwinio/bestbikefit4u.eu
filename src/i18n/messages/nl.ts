@@ -1922,8 +1922,10 @@ const nl = {
           brand: "Merk",
           model: "Model",
           bikeType: "Fietstype",
-          description: "Beschrijving",
-          photos: "Foto's",
+          size: "Maatvermelding",
+          components: "Onderdelen",
+          condition: "Conditie",
+          maintenance: "Onderhoud",
         },
         photosTitle: "Geïmporteerde foto's",
         photosDescription:
@@ -1947,6 +1949,27 @@ const nl = {
           "De fietsnaam is volledig bewerkbaar. Die hoeft niet gelijk te zijn aan de advertentietitel.",
         warningsTitle: "Controle nodig",
         confidenceBadge: "{level} vertrouwen",
+        warningMessages: {
+          limited_description:
+            "De advertentiebeschrijving is kort, waardoor details kunnen ontbreken.",
+          no_images_found:
+            "Er zijn geen herbruikbare advertentiefoto's gevonden.",
+          missing_advert_title:
+            "De advertentietitel kon niet volledig worden herkend.",
+          brand_needs_review: "Merk moet gecontroleerd worden.",
+          model_needs_review: "Model moet gecontroleerd worden.",
+          bike_type_needs_review: "Fietstype moet gecontroleerd worden.",
+          no_size_mention_found:
+            "Er is geen duidelijke framemaatvermelding in de advertentietekst gevonden.",
+          already_imported:
+            "Deze advertentie is eerder al voor deze rider geïmporteerd.",
+          one_photo_only:
+            "Er is maar één advertentiefoto beschikbaar, controleer dus extra goed of dit de juiste fiets is.",
+          no_photos_selected:
+            "Er zijn momenteel geen foto's geselecteerd. Opslaan zonder foto's blijft toegestaan.",
+          partial_photo_selection:
+            "Alleen de geselecteerde foto's worden met deze fiets geïmporteerd.",
+        },
         success: "Fietsconcept aangemaakt vanuit Marktplaats.",
         loading: {
           preview: "Marktplaats-advertentie wordt geparsed...",

@@ -10,6 +10,20 @@ Improve the Marktplaats bike import flow so the rider can:
 
 This is a follow-up to the existing implemented feature in [plans/feature-marktplaats-bike-import/README.md](/Users/ortwinverreck/Developer/bestbikefit4u/plans/feature-marktplaats-bike-import/README.md).
 
+## Status
+
+Implemented on 2026-03-29.
+
+Validation completed:
+
+- `npx vitest run convex/marktplaats/__tests__/parser.test.ts convex/marktplaats/__tests__/actions.preview.test.ts src/components/features/bikes/marktplaatsImport.test.ts`
+- `npm run build:vercel`
+
+Artifacts:
+
+- [output-01-preview-upgrade-audit.md](/Users/ortwinverreck/Developer/bestbikefit4u/plans/bugfix-marktplaats-import-preview-upgrade/output-01-preview-upgrade-audit.md)
+- [output-02-closeout.md](/Users/ortwinverreck/Developer/bestbikefit4u/plans/bugfix-marktplaats-import-preview-upgrade/output-02-closeout.md)
+
 ## Scope
 
 This plan covers:

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAction } from "convex/react";
@@ -54,6 +54,223 @@ function confidenceTone(confidence: ImportConfidence) {
   }
 }
 
+function translateWarning(
+  warning: string,
+  warningMessages: Record<string, string>
+) {
+  return warningMessages[warning] ?? warning;
+}
+
+type MarktplaatsImportMessages =
+  ReturnType<typeof useDashboardMessages>["messages"]["bikeForm"]["marktplaatsImport"];
+
+export function MarktplaatsAdvertFindingsPreview({
+  t,
+  findings,
+}: {
+  t: MarktplaatsImportMessages;
+  findings: ReturnType<typeof getAdvertFindings>;
+}) {
+  if (findings.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)] p-5">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h3 className="text-base font-semibold text-foreground">{t.findingsTitle}</h3>
+          <p className="mt-1 text-sm text-muted-foreground">{t.findingsDescription}</p>
+        </div>
+        <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+          {formatMessage(t.findingsCount, { count: findings.length })}
+        </span>
+      </div>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {findings.map((finding) => (
+          <div
+            key={finding.key}
+            className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                {t.findingLabels[finding.key]}
+              </p>
+              <span
+                className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${confidenceTone(finding.confidence)}`}
+              >
+                {formatMessage(t.confidenceBadge, { level: finding.confidence })}
+              </span>
+            </div>
+            <p className="mt-2 text-sm text-foreground">{finding.value}</p>
+            {finding.note ? (
+              <p className="mt-2 text-xs text-muted-foreground">{finding.note}</p>
+            ) : null}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function MarktplaatsPhotoVerificationPreview({
+  t,
+  preview,
+  draft,
+  photoReview,
+  translatedPhotoWarnings,
+  setDraft,
+}: {
+  t: MarktplaatsImportMessages;
+  preview: MarktplaatsImportPreview;
+  draft: MarktplaatsDraft;
+  photoReview: ReturnType<typeof getPhotoReview>;
+  translatedPhotoWarnings: string[];
+  setDraft: Dispatch<SetStateAction<MarktplaatsDraft | null>>;
+}) {
+  return (
+    <>
+      {translatedPhotoWarnings.length > 0 ? (
+        <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--warning)_35%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_10%,var(--card)_90%)] px-4 py-3 text-sm text-[color:var(--foreground)]">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="font-semibold">{t.photoVerificationTitle}</p>
+            <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+              {formatMessage(t.photoCountSummary, {
+                selected: photoReview.selectedCount,
+                total: photoReview.totalCount,
+              })}
+            </span>
+          </div>
+          <ul className="mt-2 list-disc pl-5">
+            {translatedPhotoWarnings.map((warning) => (
+              <li key={warning}>{warning}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {!photoReview.hasPhotos ? (
+        <EmptyState
+          title={t.photosEmptyTitle}
+          description={t.photosEmptyDescription}
+          className="border-0 p-0 shadow-none"
+        />
+      ) : (
+        <div className="space-y-4">
+          <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={photoReview.activePhotoUrl}
+              alt={preview.photos.find((photo) => photo.url === photoReview.activePhotoUrl)?.alt ?? ""}
+              className="aspect-[4/3] w-full object-cover"
+            />
+            <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+              <div>
+                <p className="text-sm font-semibold text-foreground">{t.primaryPhotoTitle}</p>
+                <p className="text-xs text-muted-foreground">{t.primaryPhotoDescription}</p>
+              </div>
+              <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                {formatMessage(t.photoCountSummary, {
+                  selected: photoReview.selectedCount,
+                  total: photoReview.totalCount,
+                })}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex gap-3 overflow-x-auto pb-1">
+            {preview.photos.map((photo) => {
+              const selected = draft.selectedImageUrls.includes(photo.url);
+              const active = photo.url === photoReview.activePhotoUrl;
+
+              return (
+                <button
+                  key={photo.url}
+                  type="button"
+                  onClick={() =>
+                    setDraft((current) =>
+                      current
+                        ? {
+                            ...current,
+                            primaryImageUrl: photo.url,
+                          }
+                        : current
+                    )
+                  }
+                  className={`min-w-[7rem] overflow-hidden rounded-[var(--radius-md)] border text-left transition ${
+                    active
+                      ? "border-[color:var(--primary)] ring-2 ring-[color:color-mix(in_oklch,var(--primary)_20%,transparent)]"
+                      : "border-[color:var(--border)]"
+                  } ${selected ? "bg-[color:var(--background)]" : "bg-[color:var(--secondary)] opacity-80"}`}
+                  aria-pressed={active}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={photo.url}
+                    alt={photo.alt ?? ""}
+                    className="aspect-video w-full object-cover"
+                  />
+                  <div className="space-y-1 px-2 py-2">
+                    <p className="text-xs font-semibold text-foreground">
+                      {active ? t.photoActiveBadge : t.photoPreviewBadge}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {selected ? t.photoSelected : t.photoDeselected}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {preview.photos.map((photo) => {
+              const selected = draft.selectedImageUrls.includes(photo.url);
+              return (
+                <Selectable
+                  key={photo.url}
+                  mode="button"
+                  variant="card"
+                  selected={selected}
+                  onClick={() => {
+                    const nextSelected = togglePhotoSelection(draft.selectedImageUrls, photo.url);
+                    setDraft((current) =>
+                      current
+                        ? {
+                            ...current,
+                            selectedImageUrls: nextSelected,
+                            primaryImageUrl: nextSelected.includes(current.primaryImageUrl ?? "")
+                              ? current.primaryImageUrl
+                              : nextSelected[0],
+                          }
+                        : current
+                    );
+                  }}
+                  label={photo.alt ?? t.photoFallbackLabel}
+                  description={selected ? t.photoSelected : t.photoDeselected}
+                  badge={
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {selected ? t.photoBadgeSelected : t.photoBadgeOptional}
+                    </span>
+                  }
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={photo.url}
+                    alt={photo.alt ?? ""}
+                    className="mt-4 aspect-video w-full rounded-[var(--radius-md)] object-cover"
+                  />
+                </Selectable>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 export function MarktplaatsBikeImportFlow() {
   const router = useRouter();
   const toast = useToast();
@@ -77,6 +294,12 @@ export function MarktplaatsBikeImportFlow() {
     saveState !== "saving";
   const findings = preview ? getAdvertFindings(preview) : [];
   const photoReview = preview && draft ? getPhotoReview(preview, draft) : null;
+  const translatedPreviewWarnings = preview
+    ? preview.warnings.map((warning) => translateWarning(warning, t.warningMessages))
+    : [];
+  const translatedPhotoWarnings = photoReview
+    ? photoReview.warnings.map((warning) => translateWarning(warning, t.warningMessages))
+    : [];
 
   async function handlePreviewSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -257,15 +480,7 @@ export function MarktplaatsBikeImportFlow() {
                           </span>
                         </div>
                         <p className="mt-2 text-sm text-foreground">
-                          {finding.key === "description"
-                            ? formatMessage(t.findingDescriptionSummary, {
-                                characters: finding.value.length,
-                              })
-                            : finding.key === "photos"
-                              ? formatMessage(t.findingPhotoSummary, {
-                                  count: finding.value,
-                                })
-                              : finding.value}
+                          {finding.value}
                         </p>
                         {finding.note ? (
                           <p className="mt-2 text-xs text-muted-foreground">{finding.note}</p>
@@ -276,11 +491,11 @@ export function MarktplaatsBikeImportFlow() {
                 </div>
               ) : null}
 
-              {preview.warnings.length > 0 ? (
+              {translatedPreviewWarnings.length > 0 ? (
                 <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--warning)_35%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] px-4 py-3 text-sm text-[color:var(--foreground)]">
                   <p className="font-semibold">{t.warningsTitle}</p>
                   <ul className="mt-2 list-disc pl-5">
-                    {preview.warnings.map((warning) => (
+                    {translatedPreviewWarnings.map((warning) => (
                       <li key={warning}>{warning}</li>
                     ))}
                   </ul>
@@ -356,7 +571,7 @@ export function MarktplaatsBikeImportFlow() {
                 <CardDescription className="mt-2">{t.photosDescription}</CardDescription>
               </div>
 
-              {photoReview && photoReview.warnings.length > 0 ? (
+              {photoReview && translatedPhotoWarnings.length > 0 ? (
                 <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--warning)_35%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_10%,var(--card)_90%)] px-4 py-3 text-sm text-[color:var(--foreground)]">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <p className="font-semibold">{t.photoVerificationTitle}</p>
@@ -368,7 +583,7 @@ export function MarktplaatsBikeImportFlow() {
                     </span>
                   </div>
                   <ul className="mt-2 list-disc pl-5">
-                    {photoReview.warnings.map((warning) => (
+                    {translatedPhotoWarnings.map((warning) => (
                       <li key={warning}>{warning}</li>
                     ))}
                   </ul>

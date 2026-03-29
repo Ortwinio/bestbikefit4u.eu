@@ -1912,8 +1912,10 @@ const en = {
           brand: "Brand",
           model: "Model",
           bikeType: "Bike type",
-          description: "Description",
-          photos: "Photos",
+          size: "Size mention",
+          components: "Components",
+          condition: "Condition",
+          maintenance: "Maintenance",
         },
         photosTitle: "Imported photos",
         photosDescription:
@@ -1937,6 +1939,27 @@ const en = {
           "The bike name is fully editable. It does not have to match the advert title.",
         warningsTitle: "Needs review",
         confidenceBadge: "{level} confidence",
+        warningMessages: {
+          limited_description:
+            "The advert description is short, so some details may still be missing.",
+          no_images_found:
+            "No reusable advert photos were found in this advert.",
+          missing_advert_title:
+            "The advert title could not be recovered cleanly.",
+          brand_needs_review: "Brand needs review.",
+          model_needs_review: "Model needs review.",
+          bike_type_needs_review: "Bike type needs review.",
+          no_size_mention_found:
+            "No clear frame-size mention was detected in the advert text.",
+          already_imported:
+            "This advert was already imported before for this rider.",
+          one_photo_only:
+            "Only one advert photo is available, so double-check that it shows the right bike.",
+          no_photos_selected:
+            "No photos are currently selected. Saving without photos is still allowed.",
+          partial_photo_selection:
+            "Only the selected photos will be imported with this bike.",
+        },
         success: "Bike draft created from Marktplaats.",
         loading: {
           preview: "Parsing Marktplaats advert...",
