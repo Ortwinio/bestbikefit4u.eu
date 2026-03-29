@@ -58,3 +58,16 @@ export { LoadingState, EmptyState, ErrorState } from "./States";
 export { AccessibleDialog, type AccessibleDialogProps } from "./AccessibleDialog";
 export { ThemeToggle } from "./ThemeToggle";
 export { ToastProvider, useToast } from "./Toast";
+export { SectionHeader } from "./SectionHeader";
+export { MeasurementTile } from "./MeasurementTile";
+export { InfoBox } from "./InfoBox";
+export { StatRow } from "./StatRow";
+export {
+  PublicSection,
+  PublicSectionHeader,
+  PublicSurfaceCard,
+  PublicInfoPanel,
+  PublicMetricPanel,
+  PublicCtaBand,
+  PublicIllustrationPanel,
+} from "@/components/public";
