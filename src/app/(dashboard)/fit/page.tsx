@@ -9,12 +9,11 @@ import type { Id } from "../../../../convex/_generated/dataModel";
 import {
   Button,
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   LoadingState,
-  ErrorState,
   useToast,
+  SectionHeader,
+  InfoBox,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
@@ -160,65 +159,58 @@ export default function NewFitSessionPage() {
     <div className="mx-auto max-w-2xl">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">{messages.fit.title}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">{messages.fit.subtitle}</p>
+        <h1 className="text-2xl font-bold text-[color:var(--foreground)]">{messages.fit.title}</h1>
+        <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">{messages.fit.subtitle}</p>
       </div>
 
       {/* Profile warning */}
       {!isLoadingProfile && !hasProfile && (
-        <div className="mb-6 rounded-lg border border-warning/20 bg-warning/15 p-4">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="mt-0.5 h-5 w-5 text-warning" />
-            <div>
-              <p className="font-medium text-foreground">
-                {messages.fit.profileWarning.title}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {messages.fit.profileWarning.description}
-              </p>
-              <Button
-                render={<Link href={withLocalePrefix("/profile", locale)} />}
-                variant="outline"
-                size="sm"
-                className="mt-3"
-              >
-                {messages.fit.profileWarning.cta}
-              </Button>
-            </div>
-          </div>
-        </div>
+        <InfoBox
+          variant="warning"
+          icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
+          className="mb-6"
+        >
+          <p className="font-medium">{messages.fit.profileWarning.title}</p>
+          <p className="mt-1 text-[color:var(--muted-foreground)]">
+            {messages.fit.profileWarning.description}
+          </p>
+          <Link
+            href={withLocalePrefix("/profile", locale)}
+            className="mt-2 inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
+          >
+            {messages.fit.profileWarning.cta}
+            <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+          </Link>
+        </InfoBox>
       )}
 
       {/* Rider profile warning */}
       {!isLoadingProfile && hasProfile && !hasRiderProfile && (
-        <div className="mb-6 rounded-lg border border-warning/20 bg-warning/15 p-4">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="mt-0.5 h-5 w-5 text-warning" />
-            <div>
-              <p className="font-medium text-foreground">
-                {messages.fit.riderProfileWarning.title}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {messages.fit.riderProfileWarning.description}
-              </p>
-              <Button
-                render={<Link href={withLocalePrefix("/profile", locale)} />}
-                variant="outline"
-                size="sm"
-                className="mt-3"
-              >
-                {messages.fit.riderProfileWarning.cta}
-              </Button>
-            </div>
-          </div>
-        </div>
+        <InfoBox
+          variant="warning"
+          icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
+          className="mb-6"
+        >
+          <p className="font-medium">{messages.fit.riderProfileWarning.title}</p>
+          <p className="mt-1 text-[color:var(--muted-foreground)]">
+            {messages.fit.riderProfileWarning.description}
+          </p>
+          <Link
+            href={withLocalePrefix("/profile", locale)}
+            className="mt-2 inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
+          >
+            {messages.fit.riderProfileWarning.cta}
+            <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+          </Link>
+        </InfoBox>
       )}
 
       {/* Bike selection */}
       <Card variant="bordered" className="dashboard-card-surface mb-6">
-        <CardHeader>
-          <CardTitle>{messages.fit.savedBikes.title}</CardTitle>
-        </CardHeader>
+        <SectionHeader
+          icon={<Bike className="h-5 w-5 text-[color:var(--primary)]" />}
+          title={messages.fit.savedBikes.title}
+        />
         <CardContent>
           {isLoadingBikes ? (
             <p className="text-sm text-muted-foreground">{messages.fit.savedBikes.loading}</p>
@@ -295,26 +287,20 @@ export default function NewFitSessionPage() {
 
       {/* Missing attributes warning */}
       {selectedBike && bikeNeedsAttributes && (
-        <div className="mb-6 rounded-lg border border-warning/20 bg-warning/15 p-4">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="mt-0.5 h-5 w-5 text-warning" />
-            <div>
-              <p className="font-medium text-foreground">
-                {messages.fit.savedBikes.missingBikeAttribute}
-              </p>
-              <Button
-                render={
-                  <Link href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)} />
-                }
-                variant="outline"
-                size="sm"
-                className="mt-3"
-              >
-                {messages.fit.savedBikes.completeBikeSetup}
-              </Button>
-            </div>
-          </div>
-        </div>
+        <InfoBox
+          variant="warning"
+          icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
+          className="mb-6"
+        >
+          <p className="font-medium">{messages.fit.savedBikes.missingBikeAttribute}</p>
+          <Link
+            href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)}
+            className="mt-2 inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
+          >
+            {messages.fit.savedBikes.completeBikeSetup}
+            <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+          </Link>
+        </InfoBox>
       )}
 
       {/* CTA */}
@@ -330,11 +316,14 @@ export default function NewFitSessionPage() {
       </Button>
 
       {createError && (
-        <ErrorState
+        <InfoBox
+          variant="danger"
+          icon={<AlertCircle className="h-4 w-4 text-[color:var(--danger)]" />}
           className="mt-4"
-          title={messages.fit.errors.startFailedTitle}
-          description={createError}
-        />
+        >
+          <p className="font-medium">{messages.fit.errors.startFailedTitle}</p>
+          <p className="mt-1 text-[color:var(--muted-foreground)]">{createError}</p>
+        </InfoBox>
       )}
 
       {!canStart && selectedBikeId && !bikeNeedsAttributes && !hasProfile && (

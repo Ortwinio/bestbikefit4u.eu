@@ -6,11 +6,24 @@ import type { Id } from "../../../../../../convex/_generated/dataModel";
 import { BRAND } from "@/config/brand";
 import { createSimplePdfFromLines } from "@/lib/pdf/simplePdf";
 import { renderPdfFromHtml } from "@/lib/pdf/htmlPdf";
-import { renderPdfReportHtml } from "@/lib/reports/pdfLayoutTemplate";
+import {
+  renderPdfFooterTemplate,
+  renderPdfHeaderTemplate,
+  renderPdfReportHtml,
+} from "@/lib/reports/pdfLayoutTemplate";
 import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
 import { buildRecommendationPdfLines } from "@/lib/reports/recommendationPdf";
-import type { Locale } from "@/i18n/config";
+import {
+  DEFAULT_LOCALE,
+  LOCALE_COOKIE_NAME,
+  LOCALE_HEADER_NAME,
+  normalizeLocale,
+  resolvePreferredLocale,
+  type Locale,
+} from "@/i18n/config";
+import { extractLocaleFromPathname } from "@/i18n/navigation";
+import { getEffectiveProfileImageSource } from "@/lib/userIdentity";
 
 interface PdfRouteContext {
   params: Promise<{ sessionId: string }>;
@@ -21,6 +34,56 @@ export const runtime = "nodejs";
 function isDirectUrl(source?: string | null): source is string {
   return Boolean(
     source && (source.startsWith("http://") || source.startsWith("https://"))
+  );
+}
+
+function getCookieValue(cookieHeader: string | null, name: string): string | null {
+  if (!cookieHeader) {
+    return null;
+  }
+
+  for (const part of cookieHeader.split(";")) {
+    const [rawKey, ...valueParts] = part.trim().split("=");
+    if (rawKey === name) {
+      return decodeURIComponent(valueParts.join("="));
+    }
+  }
+
+  return null;
+}
+
+function resolvePdfLocale(request: Request): Locale {
+  const requestUrl = new URL(request.url);
+  const queryLocale = normalizeLocale(requestUrl.searchParams.get("locale"));
+  if (queryLocale) {
+    return queryLocale;
+  }
+
+  const headerLocale = normalizeLocale(request.headers.get(LOCALE_HEADER_NAME));
+  if (headerLocale) {
+    return headerLocale;
+  }
+
+  const referer = request.headers.get("referer");
+  if (referer) {
+    try {
+      const refererLocale = extractLocaleFromPathname(new URL(referer).pathname);
+      if (refererLocale) {
+        return refererLocale;
+      }
+    } catch {
+      // Ignore malformed referrers and continue to the next locale source.
+    }
+  }
+
+  return (
+    resolvePreferredLocale({
+      cookieLocale: getCookieValue(
+        request.headers.get("cookie"),
+        LOCALE_COOKIE_NAME
+      ),
+      acceptLanguageHeader: request.headers.get("accept-language"),
+    }) ?? DEFAULT_LOCALE
   );
 }
 
@@ -43,8 +106,7 @@ export async function GET(
     }
 
     const { sessionId } = await context.params;
-    const locale =
-      (new URL(request.url).searchParams.get("locale") as Locale | null) ?? "en";
+    const locale = resolvePdfLocale(request);
 
     const convex = new ConvexHttpClient(convexUrl);
     convex.setAuth(token);
@@ -103,15 +165,29 @@ export async function GET(
                 storageId: bikeImageSource,
               })
             : null;
+        const riderImageSource = getEffectiveProfileImageSource(reportSource.user);
+        const riderImageUrl = isDirectUrl(riderImageSource)
+          ? riderImageSource
+          : riderImageSource
+            ? await convex.query(api.files.actions.getUrl, {
+                storageId: riderImageSource,
+              })
+            : null;
         const mappedReport = mapReportV2Payload({
           ...reportSource,
           bikeImageUrl,
+          riderImageUrl,
         });
+        const copy = getReportV2Copy(locale);
         const html = renderPdfReportHtml({
           report: mappedReport,
-          copy: getReportV2Copy(locale),
+          copy,
         });
-        pdfBytes = await renderPdfFromHtml({ html });
+        pdfBytes = await renderPdfFromHtml({
+          html,
+          headerTemplate: renderPdfHeaderTemplate({ report: mappedReport, copy }),
+          footerTemplate: renderPdfFooterTemplate(),
+        });
       } catch (richRenderError) {
         console.error("Rich PDF render failed, using simple fallback.", {
           sessionId,
@@ -121,12 +197,14 @@ export async function GET(
               : String(richRenderError),
         });
 
-        const lines = buildRecommendationPdfLines({ session, recommendation });
-        pdfBytes = createSimplePdfFromLines(lines);
+        pdfBytes = createSimplePdfFromLines(
+          buildRecommendationPdfLines({ session, recommendation, locale })
+        );
       }
     } else {
-      const lines = buildRecommendationPdfLines({ session, recommendation });
-      pdfBytes = createSimplePdfFromLines(lines);
+      pdfBytes = createSimplePdfFromLines(
+        buildRecommendationPdfLines({ session, recommendation, locale })
+      );
     }
 
     const pdfBuffer = new ArrayBuffer(pdfBytes.byteLength);

@@ -14,6 +14,7 @@ import {
   LoadingState,
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
   useToast,
@@ -29,6 +30,7 @@ import { RiderProfileCard } from "./components/RiderProfileCard";
 import { PriorityTable } from "./components/PriorityTable";
 import { DetailedFitTable } from "./components/DetailedFitTable";
 import { AdjustmentSequence } from "./components/AdjustmentSequence";
+import { BikeContextCard } from "./components/BikeContextCard";
 import { TirePressureSection } from "./components/TirePressureSection";
 import { ValidationPlan } from "./components/ValidationPlan";
 import {
@@ -90,6 +92,13 @@ export default function ResultsPage({ params }: ResultsPageProps) {
     activeReportSource && activeReportSource.recommendation
       ? mapReportV2Payload(activeReportSource)
       : null;
+  const reportDateLabel = reportPayload
+    ? new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(new Date(reportPayload.reportDate))
+    : null;
 
   const generateRecommendation = useMutation(
     api.recommendations.mutations.generate
@@ -388,8 +397,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         )}
       </AccessibleDialog>
 
-      {/* Header */}
-      <div className="mb-8">
+      <div className="mb-4">
         <Link
           href={withLocalePrefix("/dashboard", locale)}
           className="mb-4 inline-flex items-center text-sm text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)]"
@@ -397,20 +405,81 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           <ArrowLeft className="h-4 w-4 mr-1" />
           {messages.results.backToDashboard}
         </Link>
-
-        <div className="flex items-center gap-3 mb-2">
-          <CheckCircle className="h-8 w-8 text-[color:var(--success)]" />
-          <h1 className="text-2xl font-bold text-[color:var(--foreground)]">
-            {messages.results.title}
-          </h1>
-        </div>
-        <p className="text-[color:var(--muted-foreground)]">
-          {messages.results.subtitle}
-        </p>
-        <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-          {messages.results.algorithmVersionLabel}: {recommendation.algorithmVersion}
-        </p>
       </div>
+
+      <Card
+        variant="bordered"
+        className="mb-6 overflow-hidden border-[color:color-mix(in_oklch,var(--primary)_22%,var(--border))]"
+      >
+        <div className="bg-[linear-gradient(135deg,color-mix(in_oklch,var(--primary)_16%,white_84%)_0%,color-mix(in_oklch,var(--secondary)_28%,white_72%)_100%)]">
+          <CardContent className="grid gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.72fr)] lg:items-start">
+            <div>
+              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/70 bg-white/85 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--primary)] shadow-sm">
+                <CheckCircle className="h-3.5 w-3.5" />
+                {reportCopy.sections.about}
+              </div>
+              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-[color:var(--foreground)] sm:text-4xl">
+                {reportCopy.introTitle}
+              </h1>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)] sm:text-base">
+                {reportCopy.introBody}
+              </p>
+              <p className="mt-4 text-sm font-medium text-[color:var(--foreground)]/85">
+                {reportCopy.shell.coverSupport}
+              </p>
+            </div>
+
+            <div className="rounded-[var(--radius-xl)] border border-white/70 bg-white/88 p-5 shadow-sm backdrop-blur">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 px-4 py-3">
+                  <p className="text-xs uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+                    {reportCopy.shell.dateLabel}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-[color:var(--foreground)]">
+                    {reportDateLabel}
+                  </p>
+                </div>
+                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 px-4 py-3">
+                  <p className="text-xs uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+                    {messages.results.algorithmVersionLabel}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-[color:var(--foreground)]">
+                    {recommendation.algorithmVersion}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    trackFeedbackSignal(
+                      pagePath,
+                      "open_email_report",
+                      "Opened the fit report email dialog"
+                    );
+                    setShowEmailModal(true);
+                  }}
+                >
+                  <Mail className="mr-2 h-4 w-4" />
+                  {messages.results.actions.emailReport}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleDownloadPdf}
+                  isLoading={isDownloading}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  {messages.results.actions.downloadPdf}
+                </Button>
+                <Button render={<Link href={withLocalePrefix("/fit", locale)} />}>
+                  {messages.results.actions.startNewFit}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </div>
+      </Card>
 
       {/* Profile tab switcher */}
       {hasClimbingProfile && (
@@ -449,11 +518,41 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       <div className="space-y-6">
         {reportPayload ? (
           <>
+            <Card variant="bordered">
+              <CardHeader>
+                <CardTitle>{reportCopy.sections.about}</CardTitle>
+                <CardDescription>{reportCopy.shell.aboutBody}</CardDescription>
+              </CardHeader>
+              <CardContent className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(260px,0.8fr)]">
+                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--primary)_6%,white_94%)_0%,white_100%)] px-5 py-5">
+                  <p className="text-base font-semibold text-[color:var(--foreground)]">
+                    {reportCopy.shell.aboutTitle}
+                  </p>
+                  <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">
+                    {reportCopy.introBody}
+                  </p>
+                </div>
+                <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_8%,var(--card)_92%)] px-5 py-5">
+                  <p className="text-sm font-semibold text-[color:var(--foreground)]">
+                    {reportCopy.shell.aboutTitle}
+                  </p>
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
+                    {reportCopy.shell.aboutBullets.map((bullet) => (
+                      <li key={bullet} className="flex gap-2">
+                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[color:var(--primary)]" />
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
             <RiderProfileCard
               profile={reportPayload.profile}
               frameTargets={reportPayload.frameTargets}
               copy={reportCopy}
             />
+            <BikeContextCard bike={reportPayload.bike} copy={reportCopy} />
             <PriorityTable rows={reportPayload.prioritySummary} copy={reportCopy} />
             <DetailedFitTable rows={reportPayload.detailedFit} copy={reportCopy} />
             <AdjustmentSequence
@@ -483,42 +582,13 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           </>
         ) : null}
       </div>
-
-      {/* Action buttons */}
-      <div className="mt-8 flex flex-wrap gap-3 pb-8">
-        <Button
-          variant="outline"
-          onClick={() => {
-            trackFeedbackSignal(
-              pagePath,
-              "open_email_report",
-              "Opened the fit report email dialog"
-            );
-            setShowEmailModal(true);
-          }}
-        >
-          <Mail className="h-4 w-4 mr-2" />
-          {messages.results.actions.emailReport}
-        </Button>
-        <Button
-          variant="outline"
-          onClick={handleDownloadPdf}
-          isLoading={isDownloading}
-        >
-          <Download className="h-4 w-4 mr-2" />
-          {messages.results.actions.downloadPdf}
-        </Button>
-        <Button render={<Link href={withLocalePrefix("/fit", locale)} />}>
-          {messages.results.actions.startNewFit}
-        </Button>
-      </div>
       {downloadError ? (
         <ErrorState
-          className="mt-2"
+          className="mt-6 pb-8"
           title={messages.results.errors.downloadTitle}
           description={downloadError}
         />
-      ) : null}
+      ) : <div className="pb-8" />}
     </div>
   );
 }

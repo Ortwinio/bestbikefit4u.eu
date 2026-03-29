@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth } from "convex/react";
 import { Button } from "@/components/ui";
+import { BrandLogo } from "@/components/branding";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { Menu, X } from "lucide-react";
@@ -56,6 +57,11 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
 
       {isOpen && (
         <div className="absolute inset-x-0 top-full z-50 border-b border-[color:var(--border)] bg-[color:var(--popover)] px-4 py-4 text-[color:var(--popover-foreground)] shadow-lg">
+          <BrandLogo
+            href={withLocalePrefix("/", locale)}
+            asset="primary"
+            className="mb-4 block w-[324px]"
+          />
           <nav className="space-y-2">
             <Link
               href={withLocalePrefix("/about", locale)}

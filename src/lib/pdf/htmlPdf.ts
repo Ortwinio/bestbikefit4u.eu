@@ -1,11 +1,13 @@
 type RenderPdfFromHtmlParams = {
   html: string;
+  headerTemplate?: string;
+  footerTemplate?: string;
 };
 
 export async function renderPdfFromHtml(
   params: RenderPdfFromHtmlParams
 ): Promise<Uint8Array> {
-  const { html } = params;
+  const { html, headerTemplate, footerTemplate } = params;
 
   const { chromium } = await import("playwright");
 
@@ -20,7 +22,15 @@ export async function renderPdfFromHtml(
     const pdf = await page.pdf({
       format: "A4",
       printBackground: true,
-      margin: { top: "18mm", right: "18mm", bottom: "16mm", left: "18mm" },
+      displayHeaderFooter: Boolean(headerTemplate || footerTemplate),
+      headerTemplate: headerTemplate ?? "<div></div>",
+      footerTemplate: footerTemplate ?? "<div></div>",
+      margin: {
+        top: headerTemplate ? "28mm" : "18mm",
+        right: "18mm",
+        bottom: footerTemplate ? "24mm" : "16mm",
+        left: "18mm",
+      },
     });
 
     return new Uint8Array(pdf);

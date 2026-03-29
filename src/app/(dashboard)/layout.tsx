@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useConvexAuth, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
+import { BrandLogo } from "@/components/branding";
 import { Button, LoadingState } from "@/components/ui";
 import { DashboardMessageSurface } from "@/components/dashboard-messages";
 import { StravaAutoImportTrigger } from "@/components/integrations/StravaAutoImportTrigger";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
-import { BRAND } from "@/config/brand";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { Menu, X } from "lucide-react";
@@ -31,7 +31,6 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isLoading, isAuthenticated } = useConvexAuth();
   const user = useQuery(api.users.queries.getCurrentUser);
@@ -64,12 +63,13 @@ export default function DashboardLayout({
       </div>
 
       <div className={DASHBOARD_MOBILE_HEADER_CLASSNAME}>
-        <Link
+        <BrandLogo
           href={toLocalizedPath("/dashboard")}
-          className="text-lg font-semibold text-foreground"
-        >
-          {BRAND.name}
-        </Link>
+          asset="appIcon"
+          className="block w-10 shrink-0"
+          imageClassName="block"
+          ariaLabel={messages.nav.dashboard}
+        />
         <div className="flex items-center gap-2">
           <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
           <Button
@@ -98,6 +98,13 @@ export default function DashboardLayout({
             className={DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME}
           />
           <nav className={DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME}>
+            <BrandLogo
+              href={toLocalizedPath("/dashboard")}
+              asset="appIcon"
+              className="mb-5 block w-14"
+              imageClassName="block"
+              ariaLabel={messages.nav.dashboard}
+            />
             <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               {messages.layout.sections.dashboard}
             </p>
@@ -174,7 +181,7 @@ export default function DashboardLayout({
         </>
       )}
 
-      <div className="md:pl-64">
+      <div className="md:pl-80">
         <main id="main-content" tabIndex={-1} className="p-4 sm:p-6 md:p-8">
           <StravaAutoImportTrigger
             userId={user?._id ?? null}

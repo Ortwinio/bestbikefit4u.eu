@@ -427,6 +427,8 @@ const nl = {
       pressureStale: "Herberekenen aanbevolen",
       pressureWarnings: "{count} waarschuwingen in je fit- en spanningslaag",
       viewAllFits: "Alles bekijken",
+      welcomeBack: "Welkom terug",
+      startFit: "Start fit",
     },
     fitHistory: {
       title: "Afstellingsgeschiedenis",

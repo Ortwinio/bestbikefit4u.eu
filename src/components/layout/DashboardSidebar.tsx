@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { BRAND } from "@/config/brand";
+import { BrandLogo } from "@/components/branding";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
@@ -72,15 +72,16 @@ export function DashboardSidebar() {
   const profileImageSource = getEffectiveProfileImageSource(user);
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)]">
+    <aside className="fixed left-0 top-0 z-40 h-screen w-80 border-r border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)]">
       <div className="flex h-full flex-col">
-        <div className="flex h-16 items-center border-b border-[color:var(--border)] px-6">
-          <Link
+        <div className="flex min-h-fit items-center border-b border-[color:var(--border)] px-4 py-4">
+          <BrandLogo
             href={toLocalizedPath("/")}
-            className="text-xl font-bold text-[color:var(--foreground)]"
-          >
-            {BRAND.name}
-          </Link>
+            asset="primary"
+            className="block w-[264px]"
+            imageClassName="block"
+            ariaLabel={messages.layout.website.home}
+          />
         </div>
         <div className="border-b border-[color:var(--border)] px-4 py-3">
           <LanguageSwitch locale={locale} labels={languageSwitchLabels} />

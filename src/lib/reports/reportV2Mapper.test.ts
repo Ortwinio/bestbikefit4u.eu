@@ -138,6 +138,7 @@ describe("reportV2Mapper", () => {
     expect(payload.reportDate).toBe("2026-03-26T12:00:00.000Z");
     expect(payload.rider).toMatchObject({
       name: "Ortwin",
+      imageUrl: null,
       heightCm: 182,
       weightKg: 74,
       bmi: 22.3,
@@ -194,6 +195,7 @@ describe("reportV2Mapper", () => {
     expect(payload.reportDate).toBe("2026-03-25T09:30:00.000Z");
     expect(payload.rider).toEqual({
       name: "fallback-name",
+      imageUrl: null,
       heightCm: null,
       weightKg: null,
       inseamCm: null,

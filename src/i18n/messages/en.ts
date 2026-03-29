@@ -426,6 +426,8 @@ const en = {
       pressureStale: "Recalculate recommended",
       pressureWarnings: "{count} warnings in your fit & pressure layer",
       viewAllFits: "View all",
+      welcomeBack: "Welcome back",
+      startFit: "Start fit",
     },
     fitHistory: {
       title: "Bike Fitting History",

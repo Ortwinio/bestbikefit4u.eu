@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import type { Doc } from "../../../convex/_generated/dataModel";
-import { Button, Card, CardContent, CardHeader, CardTitle, EmptyState } from "@/components/ui";
+import { Button, Card, CardContent, EmptyState, SectionHeader, MeasurementTile, InfoBox, StatRow } from "@/components/ui";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getBikeTypeLabel } from "@/lib/bikes";
-import { Mountain, Gauge } from "lucide-react";
+import { Mountain, Gauge, Bike, Activity, Ruler, AlertCircle, ArrowRight } from "lucide-react";
 
 type DashboardMessages = ReturnType<typeof useDashboardMessages>["messages"];
 
@@ -79,10 +79,6 @@ function formatDate(timestamp: number, locale: Locale) {
     month: "short",
     year: "numeric",
   });
-}
-
-function formatConfidence(score: number) {
-  return Math.max(0, Math.min(100, Math.round(score)));
 }
 
 function linkButtonProps(href: string) {
@@ -169,25 +165,6 @@ function resolveLabel(map: Record<string, string>, value: string | undefined): s
   return map[value] ?? null;
 }
 
-function FitStatTile({
-  label,
-  value,
-  className,
-}: {
-  label: string;
-  value: string;
-  className: string;
-}) {
-  return (
-    <div className={`rounded-[var(--radius-md)] px-3 py-3 ${className}`}>
-      <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-        {label}
-      </p>
-      <p className="mt-1 text-sm font-semibold text-[color:var(--foreground)]">{value}</p>
-    </div>
-  );
-}
-
 export function BikeGarageRow({
   bike,
   latestFit,
@@ -199,11 +176,6 @@ export function BikeGarageRow({
   locale: Locale;
   messages: DashboardMessages;
 }) {
-  const dashboardTileClassName =
-    "bg-[color:color-mix(in_oklch,var(--secondary)_88%,black_4%)]";
-  const actionLinkClassName =
-    "inline-flex items-center text-sm font-semibold text-[color:var(--primary)] hover:opacity-80";
-
   const fitName = latestFit?.session.ridingStyle
     ? messages.sessions.ridingStyle[latestFit.session.ridingStyle]
     : null;
@@ -224,9 +196,10 @@ export function BikeGarageRow({
     <div className="grid gap-4 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)_minmax(0,0.95fr)]">
       {/* Card 1: Bike info */}
       <Card variant="bordered" className="dashboard-card-surface h-full">
-        <CardHeader>
-          <CardTitle>{bike.name}</CardTitle>
-        </CardHeader>
+        <SectionHeader
+          icon={<Bike className="h-5 w-5 text-[color:var(--primary)]" />}
+          title={bike.name}
+        />
         <CardContent className="space-y-4">
           <BikeImage source={bike.photoUrl} alt={bike.name} />
           <div className="space-y-1">
@@ -239,29 +212,22 @@ export function BikeGarageRow({
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
-              <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                {messages.fit.sections.ridingStyle}
-              </p>
-              <p className="mt-1 text-sm font-semibold text-[color:var(--foreground)]">
-                {bike.ridingStyle ? messages.sessions.ridingStyle[bike.ridingStyle] : "-"}
-              </p>
-            </div>
-            <div className={`rounded-[var(--radius-md)] px-4 py-3 ${dashboardTileClassName}`}>
-              <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                {messages.fit.sections.primaryGoal}
-              </p>
-              <p className="mt-1 text-sm font-semibold text-[color:var(--foreground)]">
-                {bike.primaryGoal ? messages.fit.goals[bike.primaryGoal].label : "-"}
-              </p>
-            </div>
+            <MeasurementTile
+              label={messages.fit.sections.ridingStyle}
+              value={bike.ridingStyle ? messages.sessions.ridingStyle[bike.ridingStyle] : "-"}
+            />
+            <MeasurementTile
+              label={messages.fit.sections.primaryGoal}
+              value={bike.primaryGoal ? messages.fit.goals[bike.primaryGoal].label : "-"}
+            />
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
               href={withLocalePrefix(`/bikes/${bike._id}`, locale)}
-              className={actionLinkClassName}
+              className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
             >
               {messages.dashboardHome.viewBike}
+              <ArrowRight className="h-3.5 w-3.5 shrink-0" />
             </Link>
             <Button
               variant="primary"
@@ -275,9 +241,10 @@ export function BikeGarageRow({
 
       {/* Card 2: Bike usage */}
       <Card variant="bordered" className="dashboard-card-surface h-full">
-        <CardHeader>
-          <CardTitle>{messages.bikeGarage.bikeUsageTitle}</CardTitle>
-        </CardHeader>
+        <SectionHeader
+          icon={<Activity className="h-5 w-5 text-[color:var(--primary)]" />}
+          title={messages.bikeGarage.bikeUsageTitle}
+        />
         <CardContent className="space-y-4">
           {latestFit && rec ? (() => {
             const r = latestFit.responses ?? {};
@@ -298,48 +265,34 @@ export function BikeGarageRow({
                 {(fitName || goalLabel) && (
                   <div className="grid gap-2 grid-cols-2">
                     {fitName && (
-                      <div className={`rounded-[var(--radius-md)] px-3 py-3 ${dashboardTileClassName}`}>
-                        <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                          {messages.fit.sections.ridingStyle}
-                        </p>
-                        <p className="mt-1 text-sm font-semibold text-[color:var(--foreground)]">{fitName}</p>
-                      </div>
+                      <MeasurementTile
+                        label={messages.fit.sections.ridingStyle}
+                        value={fitName}
+                      />
                     )}
                     {goalLabel && (
-                      <div className={`rounded-[var(--radius-md)] px-3 py-3 ${dashboardTileClassName}`}>
-                        <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                          {messages.fit.sections.primaryGoal}
-                        </p>
-                        <p className="mt-1 text-sm font-semibold text-[color:var(--foreground)]">{goalLabel}</p>
-                      </div>
+                      <MeasurementTile
+                        label={messages.fit.sections.primaryGoal}
+                        value={goalLabel}
+                      />
                     )}
                   </div>
                 )}
 
                 {/* Rider profile data from questionnaire */}
-                <div className="space-y-1.5">
-                  {[
-                    { label: messages.profile.ridingStyle.experienceLevel, value: experienceLabel },
-                    { label: messages.profile.ridingStyle.weeklyHours, value: weeklyHoursLabel },
-                    { label: messages.profile.ridingStyle.typicalRide, value: rideLengthLabel },
-                    { label: messages.profile.ridingStyle.positionPriority, value: positionLabel },
-                    { label: messages.bikeGarage.typeOfRiding, value: roadRidingLabel ?? terrainLabel },
-                  ]
-                    .filter(({ value }) => value)
-                    .map(({ label, value }) => (
-                      <div key={label} className="flex items-baseline justify-between gap-2 text-sm">
-                        <span className="text-[color:var(--muted-foreground)]">{label}</span>
-                        <span className="font-medium text-[color:var(--foreground)] text-right">{value}</span>
-                      </div>
-                    ))}
-                </div>
+                <dl className="divide-y divide-[color:var(--border)]">
+                  <StatRow label={messages.profile.ridingStyle.experienceLevel} value={experienceLabel} />
+                  <StatRow label={messages.profile.ridingStyle.weeklyHours} value={weeklyHoursLabel} />
+                  <StatRow label={messages.profile.ridingStyle.typicalRide} value={rideLengthLabel} />
+                  <StatRow label={messages.profile.ridingStyle.positionPriority} value={positionLabel} />
+                  <StatRow label={messages.bikeGarage.typeOfRiding} value={roadRidingLabel ?? terrainLabel} />
+                </dl>
 
                 {/* Climbing */}
                 {wantsClimbing && climbingLabel && (
-                  <div className="flex items-center gap-2 rounded-[var(--radius-md)] border border-[color:var(--primary)]/20 bg-[color:var(--primary)]/5 px-3 py-2">
-                    <Mountain className="h-3.5 w-3.5 shrink-0 text-[color:var(--primary)]" />
-                    <span className="text-sm text-[color:var(--foreground)]">{climbingLabel}</span>
-                  </div>
+                  <InfoBox variant="primary" icon={<Mountain className="h-4 w-4 text-[color:var(--primary)]" />}>
+                    {climbingLabel}
+                  </InfoBox>
                 )}
 
                 {/* Pain / discomfort */}
@@ -364,15 +317,17 @@ export function BikeGarageRow({
                 <div className="flex flex-wrap gap-3 pt-1">
                   <Link
                     href={withLocalePrefix(`/fit/${latestFit.session._id}/results`, locale)}
-                    className={actionLinkClassName}
+                    className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
                   >
                     {messages.fitHistory.viewReport}
+                    <ArrowRight className="h-3.5 w-3.5 shrink-0" />
                   </Link>
                   <Link
                     href={withLocalePrefix(`/fit?bikeId=${bike._id}`, locale)}
-                    className={actionLinkClassName}
+                    className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
                   >
                     {messages.bikeGarage.recalculateFit}
+                    <ArrowRight className="h-3.5 w-3.5 shrink-0" />
                   </Link>
                 </div>
               </>
@@ -394,59 +349,57 @@ export function BikeGarageRow({
 
       {/* Card 3: Bikefitting advice */}
       <Card variant="bordered" className="dashboard-card-surface h-full">
-        <CardHeader>
-          <CardTitle>{messages.bikeGarage.fitAdviseTitle}</CardTitle>
-        </CardHeader>
+        <SectionHeader
+          icon={<Ruler className="h-5 w-5 text-[color:var(--primary)]" />}
+          title={messages.bikeGarage.fitAdviseTitle}
+        />
         <CardContent className="space-y-4">
           {rec ? (
             <>
               {/* Fit profile */}
               <div className="space-y-2">
                 <div className="grid grid-cols-3 gap-2">
-                  <FitStatTile
+                  <MeasurementTile
                     label={messages.fitHistory.saddleHeight}
-                    value={`${rec.calculatedFit.saddleHeightMm} mm`}
-                    className={dashboardTileClassName}
+                    value={rec.calculatedFit.saddleHeightMm}
+                    unit="mm"
                   />
-                  <FitStatTile
+                  <MeasurementTile
                     label={messages.fitHistory.handlebarDrop}
-                    value={`${rec.calculatedFit.handlebarDropMm} mm`}
-                    className={dashboardTileClassName}
+                    value={rec.calculatedFit.handlebarDropMm != null ? Math.round(rec.calculatedFit.handlebarDropMm) : null}
+                    unit="mm"
                   />
-                  <FitStatTile
+                  <MeasurementTile
                     label={messages.fitHistory.handlebarReach}
-                    value={`${rec.calculatedFit.handlebarReachMm} mm`}
-                    className={dashboardTileClassName}
+                    value={rec.calculatedFit.handlebarReachMm != null ? Math.round(rec.calculatedFit.handlebarReachMm) : null}
+                    unit="mm"
                   />
                 </div>
 
                 {/* Climbing profile */}
                 {hasClimbingProfile && rec.climbingCalculatedFit ? (
-                  <div className="rounded-[var(--radius-md)] border border-[color:var(--primary)]/20 bg-[color:var(--primary)]/5 px-3 py-3">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Mountain className="h-3.5 w-3.5 text-[color:var(--primary)]" />
-                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--primary)]">
-                        {messages.bikeGarage.climbingProfileIncluded}
-                      </p>
-                    </div>
+                  <InfoBox variant="success" icon={<Mountain className="h-4 w-4 text-[color:var(--success)]" />}>
+                    <p className="text-xs font-semibold uppercase tracking-wide mb-2">
+                      {messages.bikeGarage.climbingProfileIncluded}
+                    </p>
                     <div className="grid grid-cols-3 gap-2">
-                      <FitStatTile
+                      <MeasurementTile
                         label={messages.fitHistory.saddleHeight}
-                        value={`${rec.climbingCalculatedFit.saddleHeightMm} mm`}
-                        className="bg-[color:var(--primary)]/10"
+                        value={rec.climbingCalculatedFit.saddleHeightMm}
+                        unit="mm"
                       />
-                      <FitStatTile
+                      <MeasurementTile
                         label={messages.fitHistory.handlebarDrop}
-                        value={`${rec.climbingCalculatedFit.handlebarDropMm} mm`}
-                        className="bg-[color:var(--primary)]/10"
+                        value={rec.climbingCalculatedFit.handlebarDropMm != null ? Math.round(rec.climbingCalculatedFit.handlebarDropMm) : null}
+                        unit="mm"
                       />
-                      <FitStatTile
+                      <MeasurementTile
                         label={messages.fitHistory.handlebarReach}
-                        value={`${rec.climbingCalculatedFit.handlebarReachMm} mm`}
-                        className="bg-[color:var(--primary)]/10"
+                        value={rec.climbingCalculatedFit.handlebarReachMm != null ? Math.round(rec.climbingCalculatedFit.handlebarReachMm) : null}
+                        unit="mm"
                       />
                     </div>
-                  </div>
+                  </InfoBox>
                 ) : null}
               </div>
 
@@ -465,7 +418,7 @@ export function BikeGarageRow({
                 {bike.advisedPressureSummary ? (
                   <>
                     <div className="grid grid-cols-2 gap-2">
-                      <div className={`rounded-[var(--radius-md)] px-3 py-3 ${dashboardTileClassName}`}>
+                      <div className="rounded-[var(--radius-md)] px-3 py-3 bg-[color:var(--surface-secondary)]">
                         <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                           {messages.pressure.overview.frontPressure}
                         </p>
@@ -481,7 +434,7 @@ export function BikeGarageRow({
                           </p>
                         ) : null}
                       </div>
-                      <div className={`rounded-[var(--radius-md)] px-3 py-3 ${dashboardTileClassName}`}>
+                      <div className="rounded-[var(--radius-md)] px-3 py-3 bg-[color:var(--surface-secondary)]">
                         <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
                           {messages.pressure.overview.rearPressure}
                         </p>
@@ -499,15 +452,16 @@ export function BikeGarageRow({
                       </div>
                     </div>
                     {bike.pressureStateSummary.isStale ? (
-                      <div className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900 dark:bg-amber-900/30 dark:text-amber-300">
+                      <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}>
                         {messages.dashboardHome.pressureStale}
-                      </div>
+                      </InfoBox>
                     ) : null}
                     <Link
                       href={withLocalePrefix(`/pressure-calculator?bikeId=${bike._id}`, locale)}
-                      className={actionLinkClassName}
+                      className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
                     >
                       {messages.bikeGarage.recalculatePressure}
+                      <ArrowRight className="h-3.5 w-3.5 shrink-0" />
                     </Link>
                   </>
                 ) : (
@@ -517,9 +471,10 @@ export function BikeGarageRow({
                     </p>
                     <Link
                       href={withLocalePrefix(`/pressure-calculator?bikeId=${bike._id}`, locale)}
-                      className={actionLinkClassName}
+                      className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
                     >
                       {messages.pressure.overview.noCalculationCta}
+                      <ArrowRight className="h-3.5 w-3.5 shrink-0" />
                     </Link>
                   </div>
                 )}

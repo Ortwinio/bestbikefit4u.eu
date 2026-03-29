@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import type { Messages } from "@/i18n/getDictionary";
+import { BrandLogo } from "@/components/branding";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { HeaderAuthActions } from "./HeaderAuthActions";
 import { HeaderMobileMenu } from "./HeaderMobileMenu";
@@ -23,12 +24,14 @@ export function Header({ locale, labels }: HeaderProps) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative flex min-h-16 items-center justify-between gap-3 py-3">
           <div className="flex items-center gap-6">
-            <Link
+            <BrandLogo
               href={withLocalePrefix("/", locale)}
-              className="text-xl font-bold text-[color:var(--foreground)]"
-            >
-              {labels.nav.brand}
-            </Link>
+              asset="primary"
+              priority
+              className="block w-[324px] shrink-0 lg:w-[360px]"
+              imageClassName="block"
+              ariaLabel={labels.nav.brand}
+            />
             <nav className="hidden items-center gap-6 md:flex">
               <Link
                 href={withLocalePrefix("/about", locale)}

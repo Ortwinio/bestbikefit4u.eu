@@ -10,9 +10,10 @@ import {
   Button,
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
   useToast,
+  SectionHeader,
+  InfoBox,
+  StatRow,
 } from "@/components/ui";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { getBikeTypeLabel } from "@/lib/bikes";
@@ -22,9 +23,9 @@ import {
   ArrowRight,
   Trash2,
   AlertTriangle,
-  CheckCircle2,
   Clock,
   ChevronRight,
+  Bike,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 
@@ -66,15 +67,30 @@ export function BikeWithFitHistory({
   const getStatusConfig = (status: string) => {
     switch (status) {
       case "completed":
-        return { label: messages.sessions.status.completed, className: "bg-success/15 text-success" };
+        return {
+          label: messages.sessions.status.completed,
+          className: "bg-[color:color-mix(in_oklch,var(--success)_12%,var(--card)_88%)] text-[color:var(--success)]",
+        };
       case "in_progress":
-        return { label: messages.sessions.status.inProgress, className: "bg-primary/10 text-primary" };
+        return {
+          label: messages.sessions.status.inProgress,
+          className: "bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--card)_88%)] text-[color:var(--primary)]",
+        };
       case "processing":
-        return { label: messages.sessions.status.processing, className: "bg-warning/15 text-warning" };
+        return {
+          label: messages.sessions.status.processing,
+          className: "bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] text-[color:var(--warning)]",
+        };
       case "archived":
-        return { label: messages.sessions.status.archived, className: "bg-muted text-muted-foreground" };
+        return {
+          label: messages.sessions.status.archived,
+          className: "bg-[color:color-mix(in_oklch,var(--muted-foreground)_10%,var(--card)_90%)] text-[color:var(--muted-foreground)]",
+        };
       default:
-        return { label: status.replaceAll("_", " "), className: "bg-muted text-muted-foreground" };
+        return {
+          label: status.replaceAll("_", " "),
+          className: "bg-[color:color-mix(in_oklch,var(--muted-foreground)_10%,var(--card)_90%)] text-[color:var(--muted-foreground)]",
+        };
     }
   };
 
@@ -103,15 +119,10 @@ export function BikeWithFitHistory({
       <Card variant="bordered" className="dashboard-card-surface overflow-hidden">
 
         {/* Bike header */}
-        <CardHeader className="border-b border-border pb-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <FitHistoryBikeImage source={bike?.photoUrl} />
-              <div>
-                <CardTitle className="text-base">{bikeTitle}</CardTitle>
-                <p className="mt-0.5 text-sm text-muted-foreground">{bikeSubtitle}</p>
-              </div>
-            </div>
+        <SectionHeader
+          icon={<Bike className="h-5 w-5 text-[color:var(--primary)]" />}
+          title={bikeTitle}
+          action={
             <Button
               size="sm"
               variant="outline"
@@ -124,8 +135,8 @@ export function BikeWithFitHistory({
               {messages.fitHistory.startNewSession}
               <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
             </Button>
-          </div>
-        </CardHeader>
+          }
+        />
 
         {/* Sessions */}
         <CardContent className="p-0">
@@ -150,7 +161,7 @@ export function BikeWithFitHistory({
                       <span className="font-medium text-foreground">{ridingStyleLabel}</span>
                       <span
                         className={cn(
-                          "rounded-full px-2 py-0.5 text-xs font-medium",
+                          "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
                           statusConfig.className
                         )}
                       >
@@ -165,35 +176,20 @@ export function BikeWithFitHistory({
 
                   {/* Metrics */}
                   {recommendation ? (
-                    <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1">
-                      <div className="flex items-center gap-1.5">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-success" />
-                        <span className="text-sm text-muted-foreground">
-                          {messages.fitHistory.saddleHeight}:{" "}
-                          <span className="font-medium text-foreground">
-                            {recommendation.calculatedFit.saddleHeightMm} mm
-                          </span>
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-success" />
-                        <span className="text-sm text-muted-foreground">
-                          {messages.fitHistory.handlebarDrop}:{" "}
-                          <span className="font-medium text-foreground">
-                            {recommendation.calculatedFit.handlebarDropMm} mm
-                          </span>
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-success" />
-                        <span className="text-sm text-muted-foreground">
-                          {messages.fitHistory.confidence}:{" "}
-                          <span className="font-medium text-foreground">
-                            {formatConfidence(recommendation.confidenceScore)}%
-                          </span>
-                        </span>
-                      </div>
-                    </div>
+                    <dl className="mt-2 divide-y divide-[color:var(--border)]">
+                      <StatRow
+                        label={messages.fitHistory.saddleHeight}
+                        value={recommendation.calculatedFit.saddleHeightMm != null ? `${recommendation.calculatedFit.saddleHeightMm} mm` : null}
+                      />
+                      <StatRow
+                        label={messages.fitHistory.handlebarDrop}
+                        value={recommendation.calculatedFit.handlebarDropMm != null ? `${recommendation.calculatedFit.handlebarDropMm} mm` : null}
+                      />
+                      <StatRow
+                        label={messages.fitHistory.confidence}
+                        value={`${formatConfidence(recommendation.confidenceScore)}%`}
+                      />
+                    </dl>
                   ) : (
                     <p className="mt-2 text-sm text-muted-foreground">
                       {messages.fitHistory.noRecommendationYet}
@@ -254,7 +250,7 @@ export function BikeWithFitHistory({
                 <p className="truncate text-sm font-medium text-foreground">{deleteStyle}</p>
                 <div className="mt-0.5 flex items-center gap-2">
                   <span className="text-xs text-muted-foreground">{deleteDate}</span>
-                  <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", deleteStatusConfig.className)}>
+                  <span className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium", deleteStatusConfig.className)}>
                     {deleteStatusConfig.label}
                   </span>
                 </div>
@@ -264,12 +260,13 @@ export function BikeWithFitHistory({
         })()}
 
         {/* Warning panel */}
-        <div className="mb-5 flex items-start gap-3 rounded-[var(--radius-lg)] border border-destructive/20 bg-destructive/5 px-4 py-3">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            {messages.fitHistory.delete.dialogDescription}
-          </p>
-        </div>
+        <InfoBox
+          variant="danger"
+          icon={<AlertTriangle className="h-4 w-4 text-[color:var(--danger)]" />}
+          className="mb-5"
+        >
+          {messages.fitHistory.delete.dialogDescription}
+        </InfoBox>
 
         {/* Actions — full-width stacked */}
         <div className="flex flex-col gap-2">

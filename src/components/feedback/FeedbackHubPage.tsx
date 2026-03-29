@@ -228,10 +228,9 @@ export function FeedbackHubPage() {
                 <div className="flex flex-wrap gap-3">
                   <Link
                     href={withLocalePrefix("/dashboard", locale)}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--primary)] hover:underline"
+                    className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
                   >
-                    <ArrowRight className="h-4 w-4" />
-                    {copy.page.backToDashboard}
+                    {copy.page.backToDashboard} <ArrowRight className="h-3.5 w-3.5 shrink-0" />
                   </Link>
                   <Button type="button" variant="default" onClick={() => openFeedbackPanel()}>
                     <Plus className="h-4 w-4" />

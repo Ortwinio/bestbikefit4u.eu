@@ -9,8 +9,6 @@ import { api } from "../../../../convex/_generated/api";
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
   Button,
   AccessibleDialog,
   ErrorState,
@@ -18,6 +16,9 @@ import {
   RadioGroup,
   Selectable,
   useToast,
+  SectionHeader,
+  InfoBox,
+  StatRow,
 } from "@/components/ui";
 import { StravaBikeImportSection } from "@/components/settings/StravaBikeImportSection";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
@@ -30,7 +31,7 @@ import {
 } from "@/lib/userIdentity";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { CheckCircle2, Trash2 } from "lucide-react";
+import { CheckCircle2, Trash2, User, Palette, Zap, Shield, AlertCircle, Info } from "lucide-react";
 
 // Separate component so useSearchParams() is inside a Suspense boundary
 function StravaCallbackToast() {
@@ -181,9 +182,10 @@ export default function SettingsPage() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card variant="bordered" className="dashboard-card-surface">
-          <CardHeader>
-            <CardTitle>{messages.settings.account.title}</CardTitle>
-          </CardHeader>
+          <SectionHeader
+            icon={<User className="h-5 w-5 text-[color:var(--primary)]" />}
+            title={messages.settings.account.title}
+          />
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
               <ProfilePhotoUpload source={profileImageSource} size="settings" />
@@ -210,14 +212,11 @@ export default function SettingsPage() {
                 {messages.settings.account.saveDisplayName}
               </Button>
             </div>
-            <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] px-4 py-3">
-              <span className="text-sm text-[color:var(--muted-foreground)]">{messages.settings.account.type}</span>
-              <span className="rounded-full bg-[color:var(--primary)] px-3 py-1 text-xs font-semibold text-[color:var(--primary-foreground)]">
-                {accountType}
-              </span>
-            </div>
+            <dl className="divide-y divide-[color:var(--border)]">
+              <StatRow label={messages.settings.account.type} value={accountType} />
+            </dl>
             {user?.tier !== "pro" && user?.tier !== "premium" ? (
-              <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] px-4 py-3 text-sm text-[color:var(--warning-foreground)]">
+              <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}>
                 <p className="font-medium">{messages.settings.account.upgrade}</p>
                 <p className="mt-1">{messages.settings.account.upgradeDescription}</p>
                 <Link
@@ -226,7 +225,7 @@ export default function SettingsPage() {
                 >
                   {messages.settings.account.upgradeCta}
                 </Link>
-              </div>
+              </InfoBox>
             ) : null}
             <Button
               variant="outline"
@@ -241,9 +240,10 @@ export default function SettingsPage() {
         </Card>
 
         <Card variant="bordered" className="dashboard-card-surface">
-          <CardHeader>
-            <CardTitle>{messages.settings.preferences.title}</CardTitle>
-          </CardHeader>
+          <SectionHeader
+            icon={<Palette className="h-5 w-5 text-[color:var(--primary)]" />}
+            title={messages.settings.preferences.title}
+          />
           <CardContent className="space-y-5">
             <div>
               <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
@@ -297,11 +297,12 @@ export default function SettingsPage() {
         </Card>
 
         <Card variant="bordered" className="dashboard-card-surface">
-          <CardHeader>
-            <CardTitle>{messages.settings.integrations.title}</CardTitle>
-          </CardHeader>
+          <SectionHeader
+            icon={<Zap className="h-5 w-5 text-[color:var(--primary)]" />}
+            title={messages.settings.integrations.title}
+          />
           <CardContent className="space-y-4">
-            <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] px-4 py-4">
+            <InfoBox variant="secondary" className="p-4">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="font-semibold text-[color:var(--foreground)]">
@@ -388,7 +389,7 @@ export default function SettingsPage() {
               </div>
 
               {strava?.accessStatus !== "active" && showStravaConsentInline ? (
-                <div className="mt-4 rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--primary)_20%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_8%,var(--card)_92%)] p-4">
+                <InfoBox variant="primary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />} className="mt-4">
                   <div className="space-y-4 text-sm">
                     <div>
                       <p className="font-semibold text-[color:var(--foreground)]">
@@ -439,16 +440,17 @@ export default function SettingsPage() {
                       {messages.settings.integrations.consent.confirm}
                     </Button>
                   </div>
-                </div>
+                </InfoBox>
               ) : null}
-            </div>
+            </InfoBox>
           </CardContent>
         </Card>
 
         <Card variant="bordered" className="dashboard-card-surface">
-          <CardHeader>
-            <CardTitle>{messages.settings.privacy.title}</CardTitle>
-          </CardHeader>
+          <SectionHeader
+            icon={<Shield className="h-5 w-5 text-[color:var(--primary)]" />}
+            title={messages.settings.privacy.title}
+          />
           <CardContent className="space-y-2 text-sm text-[color:var(--muted-foreground)]">
             <p>{messages.settings.privacy.description}</p>
             <div className="flex flex-wrap gap-4">
@@ -469,11 +471,10 @@ export default function SettingsPage() {
           variant="bordered"
           className="dashboard-card-surface border-[color:color-mix(in_oklch,var(--destructive)_28%,var(--border))]"
         >
-          <CardHeader>
-            <CardTitle className="text-[color:var(--destructive)]">
-              {messages.profile.dangerZone.title}
-            </CardTitle>
-          </CardHeader>
+          <SectionHeader
+            icon={<Trash2 className="h-5 w-5 text-[color:var(--destructive)]" />}
+            title={messages.profile.dangerZone.title}
+          />
           <CardContent className="space-y-4">
             {deleteError ? <ErrorState description={deleteError} /> : null}
             <p className="text-sm text-[color:var(--muted-foreground)]">

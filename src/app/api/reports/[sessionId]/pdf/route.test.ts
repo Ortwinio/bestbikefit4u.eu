@@ -49,6 +49,8 @@ vi.mock("@/lib/reports/reportV2Mapper", () => ({
 
 vi.mock("@/lib/reports/pdfLayoutTemplate", () => ({
   renderPdfReportHtml: mocks.renderPdfReportHtml,
+  renderPdfHeaderTemplate: vi.fn(() => "<div>header</div>"),
+  renderPdfFooterTemplate: vi.fn(() => "<div>footer</div>"),
 }));
 
 vi.mock("@/lib/pdf/htmlPdf", () => ({
@@ -127,6 +129,7 @@ describe("pdf report route", () => {
     latestPressureCalculation: null,
     user: {
       displayName: "Ortwin",
+      image: "https://images.example.com/rider.jpg",
     },
     questionnaireResponses: [
       {
@@ -219,9 +222,16 @@ describe("pdf report route", () => {
     expect(mocks.mapReportV2Payload).toHaveBeenCalledWith({
       ...reportSourceFixture,
       bikeImageUrl: null,
+      riderImageUrl: "https://images.example.com/rider.jpg",
     });
     expect(mocks.renderPdfReportHtml).toHaveBeenCalledTimes(1);
-    expect(mocks.renderPdfFromHtml).toHaveBeenCalledTimes(1);
+    expect(mocks.renderPdfFromHtml).toHaveBeenCalledWith(
+      expect.objectContaining({
+        html: "<html>report</html>",
+        headerTemplate: "<div>header</div>",
+        footerTemplate: "<div>footer</div>",
+      })
+    );
     expect(mocks.createSimplePdfFromLines).not.toHaveBeenCalled();
   });
 
@@ -239,6 +249,7 @@ describe("pdf report route", () => {
     expect(mocks.buildRecommendationPdfLines).toHaveBeenCalledWith({
       session: sessionFixture,
       recommendation: recommendationFixture,
+      locale: "en",
     });
     expect(mocks.createSimplePdfFromLines).toHaveBeenCalledTimes(1);
 
@@ -257,8 +268,33 @@ describe("pdf report route", () => {
 
     expect(response.status).toBe(200);
     expect(mocks.renderPdfFromHtml).not.toHaveBeenCalled();
-    expect(mocks.buildRecommendationPdfLines).toHaveBeenCalledTimes(1);
+    expect(mocks.buildRecommendationPdfLines).toHaveBeenCalledWith({
+      session: sessionFixture,
+      recommendation: recommendationFixture,
+      locale: "en",
+    });
     expect(mocks.createSimplePdfFromLines).toHaveBeenCalledTimes(1);
+  });
+
+  it("resolves the locale from the referrer path when the query parameter is missing", async () => {
+    mocks.token.mockResolvedValue("token-referrer");
+    mocks.query.mockResolvedValueOnce(reportSourceFixture);
+
+    const response = await GET(
+      new Request("http://localhost/api/reports/session_3/pdf", {
+        headers: {
+          referer: "http://localhost/nl/fit/session_3/results",
+        },
+      }),
+      {
+        params: Promise.resolve({ sessionId: "session_3" }),
+      }
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Disposition")).toContain(
+      `${BRAND.reportSlug}-session_3-nl.pdf`
+    );
   });
 
   it("returns 500 on generation failures", async () => {

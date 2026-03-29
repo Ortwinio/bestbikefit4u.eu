@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { renderPdfReportHtml } from "@/lib/reports/pdfLayoutTemplate";
+import {
+  renderPdfFooterTemplate,
+  renderPdfHeaderTemplate,
+  renderPdfReportHtml,
+} from "@/lib/reports/pdfLayoutTemplate";
 import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
 
@@ -59,7 +63,7 @@ const report = mapReportV2Payload({
     weightKg: 72,
     inseamCm: 84,
     armLengthCm: 62,
-    torsoLengthCm: 60,
+    torsoLengthCm: 60.4,
     shoulderWidthCm: 40,
     flexibilityScore: "good",
     coreStabilityScore: 4,
@@ -69,6 +73,7 @@ const report = mapReportV2Payload({
   user: {
     displayName: "Ortwin",
   },
+  riderImageUrl: "https://example.com/rider.jpg",
   latestPressureCalculation: {
     recommendedFrontPsi: 67,
     recommendedRearPsi: 71,
@@ -110,11 +115,15 @@ describe("pdf layout template", () => {
     expect(html).toContain(copy.shell.aboutTitle);
     expect(html).toContain("Ortwin");
     expect(html).toContain("Canyon Endurace");
+    expect(html).toContain("https://example.com/rider.jpg");
     expect(html).toContain("72");
     expect(html).toContain("754 mm");
     expect(html).toContain("731 mm - 774 mm");
     expect(html).toContain("98 mm");
     expect(html).toContain("67 psi");
+    expect(html).toContain("tp-visual-track");
+    expect(html).toContain("tp-visual-fill");
+    expect(html).toContain("60 <span class=\"tile-unit\">cm</span>");
     expect(html).toContain("Confirm long-ride comfort after each adjustment.");
     expect(html).toContain("status-badge");
     expect(html).toContain("adj-list");
@@ -150,6 +159,18 @@ describe("pdf layout template", () => {
     expect(html).toContain("Racefiets");
     expect(html).toContain("Sportief");
     expect(html).toContain("Prestatie");
+  });
+
+  it("renders localized print header and footer templates", () => {
+    const dutchCopy = getReportV2Copy("nl");
+    const header = renderPdfHeaderTemplate({ report, copy: dutchCopy });
+    const footer = renderPdfFooterTemplate();
+
+    expect(header).toContain("Rapportdatum");
+    expect(header).toContain("Engine-gestuurd fitrapport");
+    expect(header).toContain("data:image/svg+xml");
+    expect(footer).toContain("Copyrights BestBikefit4U.eu");
+    expect(footer).toContain("pageNumber");
   });
 
   it("hides rider score sections cleanly when rider data is missing", () => {

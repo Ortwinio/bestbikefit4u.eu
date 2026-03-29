@@ -252,6 +252,8 @@ function renderDocumentStyles(): string {
     .tp-pos { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; }
     .tp-psi { font-size: 22px; font-weight: 700; color: #0369a1; }
     .tp-bar { font-size: 12px; color: #64748b; }
+    .tp-visual-track { width: 100%; height: 10px; border-radius: 999px; background: #dbeafe; overflow: hidden; margin: 10px 0 8px; }
+    .tp-visual-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #38bdf8 0%, #089BE9 55%, #0369a1 100%); }
     .fit-notes-box { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 14px 16px; }
     .fit-notes-box ul { margin: 0; padding-left: 18px; }
     .fit-notes-box li { margin-bottom: 6px; font-size: 12px; color: #0c4a6e; }
@@ -265,6 +267,50 @@ function formatReportDate(locale: ReportV2Copy["locale"], reportDate: string): s
     month: "long",
     day: "numeric",
   }).format(date);
+}
+
+function getPrintHeaderLogoDataUri(): string {
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 36" width="220" height="36">
+      <circle cx="18" cy="18" r="14" fill="#089BE9"/>
+      <path d="M10 22c3-6 6-10 8-12 2 2 5 5 8 12" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="42" y="23" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#1C1F29">BestBikeFit4U</text>
+    </svg>
+  `.trim();
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+export function renderPdfHeaderTemplate(params: {
+  report: ReportV2Payload;
+  copy: ReportV2Copy;
+}): string {
+  const { report, copy } = params;
+  return `
+    <div style="width:100%;font-family:Arial, Helvetica, sans-serif;font-size:9px;color:#475569;padding:0 18mm;">
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;border-bottom:1px solid #dbe3ec;padding:6px 0 7px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="${getPrintHeaderLogoDataUri()}" alt="${escapeHtml(copy.shell.brandAlt)}" style="height:18px;width:auto;" />
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;white-space:nowrap;">
+          <span style="font-weight:600;color:#1C1F29;">${escapeHtml(copy.introTitle)}</span>
+          <span>${escapeHtml(copy.shell.dateLabel)}: ${escapeHtml(
+            formatReportDate(copy.locale, report.reportDate)
+          )}</span>
+        </div>
+      </div>
+    </div>
+  `.trim();
+}
+
+export function renderPdfFooterTemplate(): string {
+  return `
+    <div style="width:100%;font-family:Arial, Helvetica, sans-serif;font-size:9px;color:#475569;padding:0 18mm;">
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;border-top:1px solid #dbe3ec;padding:6px 0 0;">
+        <span>Copyrights BestBikefit4U.eu</span>
+        <span><span class="pageNumber"></span></span>
+      </div>
+    </div>
+  `.trim();
 }
 
 function renderSection(title: string, body: string): string {
@@ -363,6 +409,9 @@ function renderAdjustmentSteps(
 
 function renderTirePressure(report: ReportV2Payload["tirePressure"], copy: ReportV2Copy): string {
   if (report.status === "ready") {
+    const pressureScaleMax = Math.max(120, Math.ceil(Math.max(report.frontPsi, report.rearPsi) / 10) * 10);
+    const frontWidth = Math.max(0, Math.min(100, (report.frontPsi / pressureScaleMax) * 100));
+    const rearWidth = Math.max(0, Math.min(100, (report.rearPsi / pressureScaleMax) * 100));
     const inputs = report.inputs
       .map(
         (input) =>
@@ -383,11 +432,13 @@ function renderTirePressure(report: ReportV2Payload["tirePressure"], copy: Repor
     <div class="tp-reading-tile">
       <div class="tp-pos">${escapeHtml(copy.tirePressure.front)}</div>
       <div class="tp-psi">${Math.round(report.frontPsi)} psi</div>
+      <div class="tp-visual-track"><div class="tp-visual-fill" style="width:${frontWidth.toFixed(1)}%"></div></div>
       <div class="tp-bar">${report.frontBar.toFixed(1)} bar</div>
     </div>
     <div class="tp-reading-tile">
       <div class="tp-pos">${escapeHtml(copy.tirePressure.rear)}</div>
       <div class="tp-psi">${Math.round(report.rearPsi)} psi</div>
+      <div class="tp-visual-track"><div class="tp-visual-fill" style="width:${rearWidth.toFixed(1)}%"></div></div>
       <div class="tp-bar">${report.rearBar.toFixed(1)} bar</div>
     </div>
   </div>
@@ -535,7 +586,11 @@ function renderRiderSection(rider: ReportRiderSection, copy: ReportV2Copy): stri
   return renderSection(
     copy.sections.rider,
     `<div class="rider-summary">
-  <div class="rider-avatar">${escapeHtml(getInitials(rider.name ?? copy.rider.anonymousRider))}</div>
+  ${
+    rider.imageUrl
+      ? `<img class="rider-avatar" src="${escapeHtml(rider.imageUrl)}" alt="${escapeHtml(rider.name ?? copy.rider.anonymousRider)}" style="object-fit:cover;" />`
+      : `<div class="rider-avatar">${escapeHtml(getInitials(rider.name ?? copy.rider.anonymousRider))}</div>`
+  }
   <div>
     <div class="rider-name">${escapeHtml(rider.name ?? copy.rider.anonymousRider)}</div>
     <div class="muted">${escapeHtml(copy.rider.subtitle)}</div>

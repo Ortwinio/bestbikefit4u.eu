@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useQuery } from "convex/react";
-import { ArrowRight, CalendarDays, Gauge, Sparkles } from "lucide-react";
+import { ArrowRight, CalendarDays, History } from "lucide-react";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { api } from "../../../convex/_generated/api";
-import { Button, Card, CardContent, CardHeader, CardTitle, LoadingState, EmptyState } from "@/components/ui";
+import { Button, Card, CardContent, LoadingState, EmptyState, SectionHeader, MeasurementTile } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
@@ -49,12 +49,10 @@ export function BikeFitHistorySection({
 
   return (
     <Card variant="bordered" className="dashboard-card-surface overflow-hidden">
-      <CardHeader className="border-b border-[color:var(--border)] bg-[linear-gradient(135deg,color-mix(in_oklch,var(--secondary)_70%,var(--background)_30%),color-mix(in_oklch,var(--card)_88%,var(--primary)_12%))]">
-        <CardTitle>{messages.bikes.sections.fittingHistory}</CardTitle>
-        <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
-          {messages.fitHistory.subtitle}
-        </p>
-      </CardHeader>
+      <SectionHeader
+        icon={<History className="h-5 w-5 text-[color:var(--primary)]" />}
+        title={messages.bikes.sections.fittingHistory}
+      />
       <CardContent className="p-6">
         {history.length === 0 ? (
           <EmptyState
@@ -88,34 +86,22 @@ export function BikeFitHistorySection({
                     </div>
 
                     {recommendation ? (
-                      <div className="grid gap-3 sm:grid-cols-3">
-                        <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/85 px-4 py-3">
-                          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
-                            <Sparkles className="h-4 w-4" />
-                            {messages.fitHistory.saddleHeight}
-                          </p>
-                          <p className="mt-2 text-sm font-semibold text-[color:var(--foreground)]">
-                            {recommendation.calculatedFit.saddleHeightMm} mm
-                          </p>
-                        </div>
-                        <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/85 px-4 py-3">
-                          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
-                            <Gauge className="h-4 w-4" />
-                            {messages.fitHistory.handlebarDrop}
-                          </p>
-                          <p className="mt-2 text-sm font-semibold text-[color:var(--foreground)]">
-                            {recommendation.calculatedFit.handlebarDropMm} mm
-                          </p>
-                        </div>
-                        <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/85 px-4 py-3">
-                          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
-                            <ArrowRight className="h-4 w-4" />
-                            {messages.fitHistory.handlebarReach}
-                          </p>
-                          <p className="mt-2 text-sm font-semibold text-[color:var(--foreground)]">
-                            {recommendation.calculatedFit.handlebarReachMm} mm
-                          </p>
-                        </div>
+                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                        <MeasurementTile
+                          label={messages.fitHistory.saddleHeight}
+                          value={recommendation.calculatedFit.saddleHeightMm}
+                          unit="mm"
+                        />
+                        <MeasurementTile
+                          label={messages.fitHistory.handlebarDrop}
+                          value={recommendation.calculatedFit.handlebarDropMm != null ? Math.round(recommendation.calculatedFit.handlebarDropMm) : null}
+                          unit="mm"
+                        />
+                        <MeasurementTile
+                          label={messages.fitHistory.handlebarReach}
+                          value={recommendation.calculatedFit.handlebarReachMm != null ? Math.round(recommendation.calculatedFit.handlebarReachMm) : null}
+                          unit="mm"
+                        />
                       </div>
                     ) : (
                       <p className="text-sm text-[color:var(--muted-foreground)]">

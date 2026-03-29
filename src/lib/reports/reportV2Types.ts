@@ -37,6 +37,7 @@ export type ReportQuestionnaireContext = {
 
 export type ReportRiderSection = {
   name: string | null;
+  imageUrl: string | null;
   heightCm: number | null;
   weightKg: number | null;
   inseamCm: number | null;

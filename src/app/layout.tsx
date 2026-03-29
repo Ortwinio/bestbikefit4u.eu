@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "./ConvexClientProvider";
@@ -13,8 +13,50 @@ const GTM_ID = "GTM-KH48ZSSC";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND.siteUrl),
+  applicationName: BRAND.name,
   title: BRAND.name,
-  description: "AI-powered bike fitting application",
+  description: "Precision bike fitting for comfort, alignment, and performance.",
+  icons: {
+    icon: [
+      {
+        url: "/logo/bestbikefit4u_mark.svg",
+        type: "image/svg+xml",
+      },
+      {
+        url: "/logo/bestbikefit4u_mark.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+    shortcut: [
+      {
+        url: "/logo/bestbikefit4u_mark.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+    apple: [
+      {
+        url: "/logo/bestbikefit4u_icon_app.png",
+        sizes: "1024x1024",
+        type: "image/png",
+      },
+    ],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/logo/bestbikefit4u_mark.svg",
+        color: "#089BE9",
+      },
+    ],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#089BE9" },
+    { media: "(prefers-color-scheme: dark)", color: "#1C1F29" },
+  ],
 };
 
 export default async function RootLayout({

@@ -1,4 +1,5 @@
 import { BRAND } from "@/config/brand";
+import type { Locale } from "@/i18n/config";
 
 type FitSessionForPdf = {
   _id: string;
@@ -136,23 +137,21 @@ function expectedBenefitForComponent(component: string): {
 export function buildRecommendationPdfLines(params: {
   session: FitSessionForPdf;
   recommendation: RecommendationForPdf;
+  locale?: Locale;
 }): string[] {
-  const { session, recommendation } = params;
+  const { session, recommendation, locale = "en" } = params;
   const fit = recommendation.calculatedFit;
-  const goalFocus = buildGoalFocusLines(session.primaryGoal);
+  const goalFocus = buildGoalFocusLines(session.primaryGoal)[locale];
   const sortedAdjustments = [...recommendation.adjustmentPriorities].sort(
     (a, b) => a.priority - b.priority
   );
+  const isDutch = locale === "nl";
 
   const executiveSummaryLines = sortedAdjustments
     .slice(0, 3)
     .map((item, index) => {
-      const benefit = expectedBenefitForComponent(item.component);
-      return [
-        `${index + 1}. ${item.component}: ${item.recommendedValue}`,
-        `   EN: ${benefit.en}`,
-        `   NL: ${benefit.nl}`,
-      ];
+      const benefit = expectedBenefitForComponent(item.component)[locale];
+      return [`${index + 1}. ${item.component}: ${item.recommendedValue}`, `   ${benefit}`];
     });
 
   const frameRecommendations = recommendation.frameSizeRecommendations
@@ -167,7 +166,9 @@ export function buildRecommendationPdfLines(params: {
     .slice(0, 8)
     .map(
       (item, index) =>
-        `${index + 1}. ${item.component} | Current: ${item.currentValue ?? "n/a"} | Target: ${item.recommendedValue} | ${item.rationale}`
+        `${index + 1}. ${item.component} | ${isDutch ? "Huidig" : "Current"}: ${
+          item.currentValue ?? "n/a"
+        } | ${isDutch ? "Doel" : "Target"}: ${item.recommendedValue} | ${item.rationale}`
     );
 
   const noteLines = recommendation.fitNotes
@@ -178,116 +179,145 @@ export function buildRecommendationPdfLines(params: {
     BRAND.reportTitle,
     "======================================",
     "",
-    `Session ID: ${session._id}`,
-    `Created: ${formatDate(session.createdAt)}`,
-    `Completed: ${formatDate(session.completedAt)}`,
-    `Bike Type: ${humanizeValue(session.bikeType)}`,
-    `Riding Style: ${humanizeValue(session.ridingStyle)}`,
-    `Primary Goal: ${humanizeValue(session.primaryGoal)}`,
-    `Algorithm Version: ${recommendation.algorithmVersion}`,
-    `Confidence Score: ${recommendation.confidenceScore}%`,
+    `${isDutch ? "Sessie-ID" : "Session ID"}: ${session._id}`,
+    `${isDutch ? "Aangemaakt" : "Created"}: ${formatDate(session.createdAt)}`,
+    `${isDutch ? "Voltooid" : "Completed"}: ${formatDate(session.completedAt)}`,
+    `${isDutch ? "Fietstype" : "Bike Type"}: ${humanizeValue(session.bikeType)}`,
+    `${isDutch ? "Rijstijl" : "Riding Style"}: ${humanizeValue(session.ridingStyle)}`,
+    `${isDutch ? "Hoofddoel" : "Primary Goal"}: ${humanizeValue(session.primaryGoal)}`,
+    `${isDutch ? "Algoritmeversie" : "Algorithm Version"}: ${recommendation.algorithmVersion}`,
+    `${isDutch ? "Betrouwbaarheidsscore" : "Confidence Score"}: ${recommendation.confidenceScore}%`,
     "",
-    "Executive Summary / Samenvatting",
-    "--------------------------------",
+    isDutch ? "Samenvatting" : "Executive Summary",
+    "-----------------",
     ...(executiveSummaryLines.length > 0
       ? executiveSummaryLines.flat()
+      : [isDutch ? "Geen prioritaire aanpassingen gegenereerd." : "No priority adjustments generated."]),
+    "",
+    isDutch ? "Waarom bikefitting belangrijk is" : "Why Bike Fitting Matters",
+    "-------------------------------------",
+    ...(isDutch
+      ? [
+          "- Vermindert herhaalde overbelasting bij veelvoorkomende klachten.",
+          "- Verbetert trapefficientie en praktische krachtoverdracht.",
+          "- Verhoogt controle en vertrouwen op langere ritten.",
+          "- Voorkomt compensaties die chronische klachten kunnen worden.",
+          `Doelfocus: ${goalFocus}`,
+        ]
       : [
-          "EN: No priority adjustments generated.",
-          "NL: Geen prioritaire aanpassingen gegenereerd.",
+          "- Reduces repetitive overload linked to common rider pain patterns.",
+          "- Improves pedaling efficiency and practical power transfer.",
+          "- Increases control and confidence for longer rides.",
+          "- Prevents compensations that can become chronic discomfort.",
+          `Goal Focus: ${goalFocus}`,
         ]),
     "",
-    "Why Bike Fitting Matters / Waarom bikefitting relevant is",
-    "---------------------------------------------------------",
-    "- EN: Reduces repetitive overload linked to common rider pain patterns.",
-    "- NL: Vermindert herhaalde overbelasting bij veelvoorkomende klachten.",
-    "- EN: Improves pedaling efficiency and practical power transfer.",
-    "- NL: Verbetert trapefficientie en praktische krachtoverdracht.",
-    "- EN: Increases control and confidence for longer rides.",
-    "- NL: Verhoogt controle en vertrouwen op langere ritten.",
-    "- EN: Prevents compensations that can become chronic discomfort.",
-    "- NL: Voorkomt compensaties die chronische klachten kunnen worden.",
-    `Goal Focus EN: ${goalFocus.en}`,
-    `Doelfocus NL: ${goalFocus.nl}`,
+    isDutch ? "Wetenschappelijke basis" : "Scientific Basis",
+    "--------------------",
+    ...(isDutch
+      ? [
+          "- Gebouwd op erkende bikefitting formules en fitprincipes.",
+          "- Combineert metingen, fietstype en doelspecifieke correcties.",
+          "- Gebruikt stack/reach-doelen voor consistente framevergelijking.",
+          "- Beste praktijk is stapsgewijs valideren: een wijziging per keer.",
+        ]
+      : [
+          "- Built from established bike fitting formulas and fit principles.",
+          "- Combines measurements, bike type, and goal-specific corrections.",
+          "- Uses stack/reach targets for geometry consistency across brands.",
+          "- Best practice is progressive validation: one change at a time.",
+        ]),
     "",
-    "Scientific Basis / Wetenschappelijke basis",
-    "------------------------------------------",
-    "- EN: Built from established bike fitting formulas and fit principles.",
-    "- NL: Gebouwd op erkende bikefitting formules en fitprincipes.",
-    "- EN: Combines measurements, bike type, and goal-specific corrections.",
-    "- NL: Combineert metingen, fietstype en doelspecifieke correcties.",
-    "- EN: Uses stack/reach targets for geometry consistency across brands.",
-    "- NL: Gebruikt stack/reach-doelen voor consistente framevergelijking.",
-    "- EN: Best practice is progressive validation: one change at a time.",
-    "- NL: Beste praktijk is stapsgewijs valideren: een wijziging per keer.",
-    "",
-    "Core Fit Metrics / Kern fitwaarden",
-    "-----------------------------------",
-    `EN Saddle Height: ${fit.saddleHeightMm} mm (range ${fit.saddleHeightRange.min}-${fit.saddleHeightRange.max} mm)`,
-    `NL Zadelhoogte: ${fit.saddleHeightMm} mm (bereik ${fit.saddleHeightRange.min}-${fit.saddleHeightRange.max} mm)`,
-    `EN Saddle Setback: ${fit.saddleSetbackMm} mm`,
-    `NL Zadelterugstand: ${fit.saddleSetbackMm} mm`,
-    `EN Handlebar Drop: ${fit.handlebarDropMm} mm`,
-    `NL Stuurdrop: ${fit.handlebarDropMm} mm`,
-    `EN Handlebar Reach: ${fit.handlebarReachMm} mm`,
-    `NL Stuur-reach: ${fit.handlebarReachMm} mm`,
-    `EN Stem: ${fit.stemLengthMm} mm | ${fit.stemAngleRecommendation}`,
-    `NL Stuurpen: ${fit.stemLengthMm} mm | ${fit.stemAngleRecommendation}`,
-    `EN Crank Length: ${fit.crankLengthMm} mm`,
-    `NL Cranklengte: ${fit.crankLengthMm} mm`,
-    `EN Handlebar Width: ${fit.handlebarWidthMm} mm`,
-    `NL Stuurbreedte: ${fit.handlebarWidthMm} mm`,
-    `EN Frame Stack Target: ${fit.recommendedStackMm} mm`,
-    `NL Doel frame stack: ${fit.recommendedStackMm} mm`,
-    `EN Frame Reach Target: ${fit.recommendedReachMm} mm`,
-    `NL Doel frame reach: ${fit.recommendedReachMm} mm`,
-    `EN Effective Top Tube: ${fit.effectiveTopTubeMm} mm`,
-    `NL Effectieve bovenbuis: ${fit.effectiveTopTubeMm} mm`,
-    "",
-    "Adjustment Order",
+    isDutch ? "Kern fitwaarden" : "Core Fit Metrics",
     "----------------",
-    ...(adjustmentLines.length > 0 ? adjustmentLines : ["No adjustment priorities generated."]),
+    ...(isDutch
+      ? [
+          `Zadelhoogte: ${fit.saddleHeightMm} mm (bereik ${fit.saddleHeightRange.min}-${fit.saddleHeightRange.max} mm)`,
+          `Zadelterugstand: ${fit.saddleSetbackMm} mm`,
+          `Stuurdrop: ${fit.handlebarDropMm} mm`,
+          `Stuur-reach: ${fit.handlebarReachMm} mm`,
+          `Stuurpen: ${fit.stemLengthMm} mm | ${fit.stemAngleRecommendation}`,
+          `Cranklengte: ${fit.crankLengthMm} mm`,
+          `Stuurbreedte: ${fit.handlebarWidthMm} mm`,
+          `Doel frame stack: ${fit.recommendedStackMm} mm`,
+          `Doel frame reach: ${fit.recommendedReachMm} mm`,
+          `Effectieve bovenbuis: ${fit.effectiveTopTubeMm} mm`,
+        ]
+      : [
+          `Saddle Height: ${fit.saddleHeightMm} mm (range ${fit.saddleHeightRange.min}-${fit.saddleHeightRange.max} mm)`,
+          `Saddle Setback: ${fit.saddleSetbackMm} mm`,
+          `Handlebar Drop: ${fit.handlebarDropMm} mm`,
+          `Handlebar Reach: ${fit.handlebarReachMm} mm`,
+          `Stem: ${fit.stemLengthMm} mm | ${fit.stemAngleRecommendation}`,
+          `Crank Length: ${fit.crankLengthMm} mm`,
+          `Handlebar Width: ${fit.handlebarWidthMm} mm`,
+          `Frame Stack Target: ${fit.recommendedStackMm} mm`,
+          `Frame Reach Target: ${fit.recommendedReachMm} mm`,
+          `Effective Top Tube: ${fit.effectiveTopTubeMm} mm`,
+        ]),
     "",
-    "Frame Recommendation Summary",
+    isDutch ? "Volgorde van aanpassingen" : "Adjustment Order",
+    "------------------------",
+    ...(adjustmentLines.length > 0
+      ? adjustmentLines
+      : [isDutch ? "Geen prioritaire aanpassingen gegenereerd." : "No adjustment priorities generated."]),
+    "",
+    isDutch ? "Samenvatting framemaatadvies" : "Frame Recommendation Summary",
     "----------------------------",
     ...(frameRecommendations.length > 0
       ? frameRecommendations
-      : ["No frame-size recommendations available."]),
+      : [isDutch ? "Geen framemaatadvies beschikbaar." : "No frame-size recommendations available."]),
     "",
-    "14-Day Implementation Plan / 14-daags implementatieplan",
-    "-------------------------------------------------------",
-    "EN Days 1-3: apply priority 1 only (2-5 mm max), test easy rides.",
-    "NL Dagen 1-3: pas alleen prioriteit 1 toe (max 2-5 mm), test rustig.",
-    "EN Days 4-7: if stable, apply priority 2 and reassess comfort/control.",
-    "NL Dagen 4-7: bij stabiliteit prioriteit 2 toepassen en opnieuw beoordelen.",
-    "EN Days 8-14: apply priority 3 and lock settings after repeated checks.",
-    "NL Dagen 8-14: prioriteit 3 toepassen en settings vastzetten na hercontrole.",
-    "EN Track pain score, pressure points, control, and pedaling feel each ride.",
-    "NL Volg per rit pijnscore, drukpunten, controle en trapgevoel op.",
+    isDutch ? "14-daags implementatieplan" : "14-Day Implementation Plan",
+    "----------------------------",
+    ...(isDutch
+      ? [
+          "Dagen 1-3: pas alleen prioriteit 1 toe (max 2-5 mm), test rustig.",
+          "Dagen 4-7: bij stabiliteit prioriteit 2 toepassen en opnieuw beoordelen.",
+          "Dagen 8-14: prioriteit 3 toepassen en settings vastzetten na hercontrole.",
+          "Volg per rit pijnscore, drukpunten, controle en trapgevoel op.",
+        ]
+      : [
+          "Days 1-3: apply priority 1 only (2-5 mm max), test easy rides.",
+          "Days 4-7: if stable, apply priority 2 and reassess comfort/control.",
+          "Days 8-14: apply priority 3 and lock settings after repeated checks.",
+          "Track pain score, pressure points, control, and pedaling feel each ride.",
+        ]),
     "",
-    "Fit Notes",
+    isDutch ? "Fitnotities" : "Fit Notes",
     "---------",
-    ...(noteLines.length > 0 ? noteLines : ["No additional fit notes."]),
+    ...(noteLines.length > 0 ? noteLines : [isDutch ? "Geen aanvullende fitnotities." : "No additional fit notes."]),
     "",
-    "Safety Disclaimer / Veiligheidsdisclaimer",
-    "-----------------------------------------",
-    "EN: This report is a guidance tool and not medical advice.",
-    "NL: Dit rapport is een hulpmiddel en geen medisch advies.",
-    "EN: Apply adjustments in small steps (2-5 mm), one at a time.",
-    "NL: Pas aanpassingen stapsgewijs toe (2-5 mm), een per keer.",
-    "EN: Stop riding and consult a fitter or clinician if pain persists.",
-    "NL: Stop met rijden en raadpleeg fitter of arts bij aanhoudende pijn.",
+    isDutch ? "Veiligheidsdisclaimer" : "Safety Disclaimer",
+    "-------------------",
+    ...(isDutch
+      ? [
+          "Dit rapport is een hulpmiddel en geen medisch advies.",
+          "Pas aanpassingen stapsgewijs toe (2-5 mm), een per keer.",
+          "Stop met rijden en raadpleeg fitter of arts bij aanhoudende pijn.",
+        ]
+      : [
+          "This report is a guidance tool and not medical advice.",
+          "Apply adjustments in small steps (2-5 mm), one at a time.",
+          "Stop riding and consult a fitter or clinician if pain persists.",
+        ]),
     "",
-    "Motivational Close / Motiverende afsluiting",
-    "-------------------------------------------",
-    "EN: Bike fit is a process, not a one-day perfection task.",
-    "NL: Bikefit is een proces, geen taak die in een dag perfect moet zijn.",
-    "EN: Small consistent improvements reduce pain and improve ride quality.",
-    "NL: Kleine consistente verbeteringen verminderen pijn en verhogen kwaliteit.",
-    "EN: Use this plan step-by-step and evaluate after each change.",
-    "NL: Gebruik dit plan stap voor stap en evalueer na elke aanpassing.",
-    "EN: Share this report with your bike shop, coach, or training partner.",
-    "NL: Deel dit rapport met je fietsenmaker, coach of trainingspartner.",
-    "EN: A better position now can unlock stronger and longer riding for years.",
-    "NL: Een betere positie nu kan jaren sterker en langer fietsen opleveren.",
+    isDutch ? "Afsluiting" : "Motivational Close",
+    "------------------",
+    ...(isDutch
+      ? [
+          "Bikefit is een proces, geen taak die in een dag perfect moet zijn.",
+          "Kleine consistente verbeteringen verminderen pijn en verhogen kwaliteit.",
+          "Gebruik dit plan stap voor stap en evalueer na elke aanpassing.",
+          "Deel dit rapport met je fietsenmaker, coach of trainingspartner.",
+          "Een betere positie nu kan jaren sterker en langer fietsen opleveren.",
+        ]
+      : [
+          "Bike fit is a process, not a one-day perfection task.",
+          "Small consistent improvements reduce pain and improve ride quality.",
+          "Use this plan step-by-step and evaluate after each change.",
+          "Share this report with your bike shop, coach, or training partner.",
+          "A better position now can unlock stronger and longer riding for years.",
+        ]),
   ];
 }

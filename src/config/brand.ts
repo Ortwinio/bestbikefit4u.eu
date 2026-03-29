@@ -7,4 +7,11 @@ export const BRAND = {
   supportEmail: "support@bestbikefit4u.eu",
   reportTitle: "BestBikeFit4U - Fit Recommendation Report",
   reportSlug: "bestbikefit4u-report",
+  assets: {
+    logoPrimary: "/logo/bestbikefit4u-logo.png",
+    logoDark: "/logo/bestbikefit4u-logo.png",
+    mark: "/logo/bestbikefit4u_mark.svg",
+    appIconSvg: "/logo/bestbikefit4u_icon_app.svg",
+    appIconPng: "/logo/bestbikefit4u_icon_app.png",
+  },
 } as const;

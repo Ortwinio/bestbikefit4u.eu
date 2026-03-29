@@ -27,6 +27,7 @@ type ReportV2Source = {
   user?: Doc<"users"> | null;
   questionnaireResponses?: Doc<"questionnaireResponses">[] | null;
   bikeImageUrl?: string | null;
+  riderImageUrl?: string | null;
 };
 
 type QuickStartRow = {
@@ -168,14 +169,19 @@ function mapRiderSection(source: ReportV2Source): ReportRiderSection {
   const flexibilityLabel =
     flexibilityTests.find((test) => test.score === profile?.flexibilityScore)?.label ??
     null;
+  const torsoLengthCm =
+    typeof profile?.torsoLengthCm === "number"
+      ? Math.round(profile.torsoLengthCm)
+      : null;
 
   return {
     name: getDisplayName(source.user),
+    imageUrl: source.riderImageUrl ?? null,
     heightCm,
     weightKg,
     inseamCm: profile?.inseamCm ?? null,
     armLengthCm: profile?.armLengthCm ?? null,
-    torsoLengthCm: profile?.torsoLengthCm ?? null,
+    torsoLengthCm,
     shoulderWidthCm: profile?.shoulderWidthCm ?? null,
     bmi,
     bmiCategory:
