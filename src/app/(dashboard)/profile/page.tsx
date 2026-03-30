@@ -6,9 +6,10 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { RadioGroup } from "@base-ui/react/radio-group";
 import { useMutation, useQuery } from "convex/react";
-import { Activity, ArrowRight, Dumbbell, Edit2, HeartPulse, Info, PencilLine, Ruler } from "lucide-react";
+import { Activity, AlertCircle, ArrowRight, Dumbbell, Edit2, HeartPulse, Info, PencilLine, Ruler } from "lucide-react";
 import { api } from "../../../../convex/_generated/api";
 import { MeasurementWizard, type WizardFormData } from "@/components/measurements";
+import { NumberSlider, ReadOnlyNumberSlider } from "@/components/measurements/NumberSlider";
 import {
   AccessibleDialog,
   Button,
@@ -17,8 +18,8 @@ import {
   CardHeader,
   CardTitle,
   ErrorState,
+  InfoBox,
   LoadingState,
-  NumberInput,
   Selectable,
   useToast,
 } from "@/components/ui";
@@ -34,7 +35,6 @@ import {
   coreStabilityTests,
   deriveComfortScore,
   flexibilityTests,
-  validateInseamRatio,
 } from "@/lib/validations/profile";
 import {
   getEffectiveDisplayName,
@@ -73,17 +73,6 @@ interface ProfileData {
   typicalRideLength?: string;
   positionPriority?: string;
 }
-
-type MeasurementConfig = {
-  key: keyof MeasurementValues;
-  label: string;
-  unit: string;
-  min: number;
-  max: number;
-  step?: number;
-  value?: number;
-  steps: string[];
-};
 
 function linkButtonProps(href: string) {
   return {
@@ -295,76 +284,35 @@ function BodyMeasurementsEditor({
     }
   };
 
-  const ratioWarning =
-    values.heightCm && values.inseamCm
-      ? validateInseamRatio(values.heightCm, values.inseamCm)
-      : null;
+  // Deviation warnings (>20% from height-based prediction)
+  const inseamWarning = useMemo(() => {
+    if (!values.heightCm || !values.inseamCm) return null;
+    const pred = Math.round(values.heightCm * 0.47);
+    if (Math.abs(values.inseamCm - pred) / pred > 0.2) {
+      const dir = values.inseamCm > pred ? "longer" : "shorter";
+      return `${values.inseamCm} cm is more than 20% ${dir} than expected for your height (${pred} cm) — double-check your measurement.`;
+    }
+    return null;
+  }, [values.heightCm, values.inseamCm]);
 
-  const configs: MeasurementConfig[] = [
-    {
-      key: "heightCm",
-      label: messages.profile.measurements.height,
-      unit: "cm",
-      min: 130,
-      max: 210,
-      value: profile.heightCm,
-      steps: messages.profile.measurements.heightSteps,
-    },
-    {
-      key: "inseamCm",
-      label: messages.profile.measurements.inseam,
-      unit: "cm",
-      min: 55,
-      max: 105,
-      value: profile.inseamCm,
-      steps: messages.profile.measurements.inseamSteps,
-    },
-    {
-      key: "weightKg",
-      label: messages.profile.measurements.weight,
-      unit: "kg",
-      min: 30,
-      max: 200,
-      value: profile.weightKg,
-      steps: [],
-    },
-    {
-      key: "torsoLengthCm",
-      label: messages.profile.measurements.torso,
-      unit: "cm",
-      min: 45,
-      max: 75,
-      value: profile.torsoLengthCm,
-      steps: messages.profile.measurements.torsoSteps,
-    },
-    {
-      key: "armLengthCm",
-      label: messages.profile.measurements.armLength,
-      unit: "cm",
-      min: 45,
-      max: 75,
-      value: profile.armLengthCm,
-      steps: messages.profile.measurements.armSteps,
-    },
-    {
-      key: "shoulderWidthCm",
-      label: messages.profile.measurements.shoulderWidth,
-      unit: "cm",
-      min: 30,
-      max: 55,
-      value: profile.shoulderWidthCm,
-      steps: messages.profile.measurements.shoulderSteps,
-    },
-    {
-      key: "femurLengthCm",
-      label: messages.profile.measurements.femurLength,
-      unit: "cm",
-      min: 35,
-      max: 60,
-      value: profile.femurLengthCm,
-      steps: messages.profile.measurements.femurSteps,
-    },
-  ];
+  const weightWarning = useMemo(() => {
+    if (!values.heightCm || !values.weightKg) return null;
+    const pred = Math.round(22 * Math.pow(values.heightCm / 100, 2));
+    if (Math.abs(values.weightKg - pred) / pred > 0.2) {
+      const dir = values.weightKg > pred ? "heavier" : "lighter";
+      return `${values.weightKg} kg is more than 20% ${dir} than expected for your height (${pred} kg) — verify the value is correct.`;
+    }
+    return null;
+  }, [values.heightCm, values.weightKg]);
+
+  const set = (key: keyof MeasurementValues) => (v: number) =>
+    setValues((cur) => ({ ...cur, [key]: v }));
+
+  const hasAdvanced =
+    profile.torsoLengthCm != null ||
+    profile.armLengthCm != null ||
+    profile.shoulderWidthCm != null ||
+    profile.femurLengthCm != null;
 
   return (
     <div className="space-y-4">
@@ -375,84 +323,177 @@ function BodyMeasurementsEditor({
       />
 
       {!isEditing ? (
-        <>
-          <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5">
-            {configs.map((config) =>
-              config.value !== undefined ? (
-                <div key={config.key}>
-                  <dt className="text-xs text-[color:var(--muted-foreground)]">{config.label}</dt>
-                  <dd className="text-sm font-semibold text-[color:var(--foreground)]">
-                    {config.key === "torsoLengthCm" ? Math.round(config.value) : config.value} {config.unit}
-                  </dd>
-                </div>
-              ) : null
-            )}
-            {profile.weightKg === undefined ? (
-              <p className="col-span-2 text-sm italic text-[color:var(--muted-foreground)]">
-                {messages.profile.measurements.weightNotSet}
+        <div className="space-y-3">
+          <ReadOnlyNumberSlider
+            label={messages.profile.measurements.height}
+            value={profile.heightCm}
+            min={130}
+            max={210}
+            unit="cm"
+          />
+          <ReadOnlyNumberSlider
+            label={messages.profile.measurements.inseam}
+            value={profile.inseamCm}
+            min={55}
+            max={105}
+            unit="cm"
+          />
+          <ReadOnlyNumberSlider
+            label={messages.profile.measurements.weight}
+            value={profile.weightKg}
+            min={30}
+            max={200}
+            unit="kg"
+          />
+
+          {hasAdvanced && (
+            <>
+              <p className="pt-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                Advanced measurements
               </p>
-            ) : null}
-          </dl>
-          <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
+              {profile.torsoLengthCm != null && (
+                <ReadOnlyNumberSlider
+                  label={messages.profile.measurements.torso}
+                  value={profile.torsoLengthCm}
+                  min={45}
+                  max={75}
+                  unit="cm"
+                />
+              )}
+              {profile.armLengthCm != null && (
+                <ReadOnlyNumberSlider
+                  label={messages.profile.measurements.armLength}
+                  value={profile.armLengthCm}
+                  min={45}
+                  max={75}
+                  unit="cm"
+                />
+              )}
+              {profile.shoulderWidthCm != null && (
+                <ReadOnlyNumberSlider
+                  label={messages.profile.measurements.shoulderWidth}
+                  value={profile.shoulderWidthCm}
+                  min={30}
+                  max={55}
+                  unit="cm"
+                />
+              )}
+              {profile.femurLengthCm != null && (
+                <ReadOnlyNumberSlider
+                  label={messages.profile.measurements.femurLength}
+                  value={profile.femurLengthCm}
+                  min={35}
+                  max={60}
+                  unit="cm"
+                />
+              )}
+            </>
+          )}
+
+          <p className="pt-1 text-sm leading-6 text-muted-foreground">
             {messages.profile.measurements.impactDescription}
           </p>
-          <Link href={withLocalePrefix("/profile/improve/body-measurements", locale)} className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20">
+          <Link
+            href={withLocalePrefix("/profile/improve/body-measurements", locale)}
+            className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
+          >
             {messages.profile.measurements.improveLink}
             <ArrowRight className="h-3.5 w-3.5 shrink-0" />
           </Link>
-        </>
+        </div>
       ) : (
-        <div className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            {configs.map((config) => (
-              <NumberInput
-                key={config.key}
-                label={config.label}
-                tooltip={
-                  config.key === "weightKg"
-                    ? messages.profile.measurements.weightTooltip
-                    : undefined
-                }
-                helperText={
-                  config.key === "weightKg"
-                    ? messages.profile.measurements.weightHelper
-                    : undefined
-                }
-                min={config.min}
-                max={config.max}
-                step={config.key === "weightKg" ? 0.5 : 0.5}
-                value={values[config.key] ?? null}
-                onChange={(nextValue) =>
-                  setValues((current) => ({ ...current, [config.key]: nextValue }))
-                }
-                unit={config.unit}
-              />
-            ))}
-          </div>
+        <div className="space-y-5">
+          <NumberSlider
+            label={messages.profile.measurements.height}
+            min={130}
+            max={210}
+            step={1}
+            unit="cm"
+            value={values.heightCm ?? undefined}
+            onChange={set("heightCm")}
+          />
 
-          {ratioWarning ? (
-            <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] px-4 py-3 text-sm text-[color:var(--warning-foreground)]">
-              {ratioWarning}
-            </div>
-          ) : null}
+          <NumberSlider
+            label={messages.profile.measurements.inseam}
+            min={55}
+            max={105}
+            step={1}
+            unit="cm"
+            value={values.inseamCm ?? undefined}
+            onChange={set("inseamCm")}
+          />
+          {inseamWarning && (
+            <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-warning" />}>
+              <p className="text-sm text-warning-foreground">{inseamWarning}</p>
+            </InfoBox>
+          )}
 
-          <div className="grid gap-4 md:grid-cols-2">
-            {configs
-              .filter((config) => config.steps.length > 0)
-              .map((config) => (
-                <MeasurementInfoBox
-                  key={config.key}
-                  title={`${messages.profile.measurements.howToMeasure} ${config.label}`}
-                  steps={config.steps}
-                />
-              ))}
-          </div>
+          <NumberSlider
+            label={`${messages.profile.measurements.weight} (optional)`}
+            min={30}
+            max={200}
+            step={1}
+            unit="kg"
+            value={values.weightKg ?? undefined}
+            onChange={set("weightKg")}
+          />
+          {weightWarning && (
+            <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-warning" />}>
+              <p className="text-sm text-warning-foreground">{weightWarning}</p>
+            </InfoBox>
+          )}
 
-          <div className="flex justify-end gap-2">
+          <p className="pt-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            Advanced measurements (optional)
+          </p>
+
+          <NumberSlider
+            label={messages.profile.measurements.torso}
+            min={45}
+            max={75}
+            step={1}
+            unit="cm"
+            value={values.torsoLengthCm ?? undefined}
+            onChange={set("torsoLengthCm")}
+          />
+          <NumberSlider
+            label={messages.profile.measurements.armLength}
+            min={45}
+            max={75}
+            step={1}
+            unit="cm"
+            value={values.armLengthCm ?? undefined}
+            onChange={set("armLengthCm")}
+          />
+          <NumberSlider
+            label={messages.profile.measurements.shoulderWidth}
+            min={30}
+            max={55}
+            step={1}
+            unit="cm"
+            value={values.shoulderWidthCm ?? undefined}
+            onChange={set("shoulderWidthCm")}
+          />
+          <NumberSlider
+            label={messages.profile.measurements.femurLength}
+            min={35}
+            max={60}
+            step={1}
+            unit="cm"
+            value={values.femurLengthCm ?? undefined}
+            onChange={set("femurLengthCm")}
+          />
+
+          <div className="flex justify-end gap-2 pt-2">
             <Button variant="ghost" size="sm" onClick={onCancel}>
               {messages.common.cancel}
             </Button>
-            <Button size="sm" onClick={() => void handleSave()} isLoading={isSaving}>
+            <Button
+              size="sm"
+              onClick={() => void handleSave()}
+              isLoading={isSaving}
+              disabled={values.heightCm === null || values.inseamCm === null}
+            >
               {messages.profile.measurements.saveField}
             </Button>
           </div>
