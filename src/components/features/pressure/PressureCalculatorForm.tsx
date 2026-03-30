@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Button, NumberInput, Selectable, Slider } from "@/components/ui";
+import { Button, Selectable, Slider } from "@/components/ui";
 import { Field } from "@/components/ui/Field";
 import { calculateBasicPressure, type PressureOutput, type RidingGoal, type Surface, type ValidationError, validatePressureInput } from "@/lib/pressure-engine";
 import { PressureResultCard } from "./PressureResultCard";
@@ -69,10 +69,12 @@ export function PressureCalculatorForm({
   const [tubeType, setTubeType] = useState<"inner_tube" | "latex_tube" | "tubeless">("tubeless");
   const [surface, setSurface] = useState<Surface>("average_asphalt");
   const [ridingGoal, setRidingGoal] = useState<RidingGoal | undefined>(undefined);
-  const [bikeWeightKg, setBikeWeightKg] = useState<number | undefined>(undefined);
+  const [bikeWeightKg, setBikeWeightKg] = useState<number>(8);
   const [hasManualRearWidth, setHasManualRearWidth] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const widthRearMm = hasManualRearWidth ? manualWidthRearMm : widthFrontMm;
+
+  const effectiveBikeWeightKg = showAdvanced ? bikeWeightKg : undefined;
 
   const errors: ValidationError[] = useMemo(
     () =>
@@ -83,10 +85,10 @@ export function PressureCalculatorForm({
         discipline,
         tubeType,
         surface,
-        bikeWeightKg,
+        bikeWeightKg: effectiveBikeWeightKg,
         ridingGoal,
       }),
-    [bikeWeightKg, bodyWeightKg, discipline, ridingGoal, surface, tubeType, widthFrontMm, widthRearMm]
+    [effectiveBikeWeightKg, bodyWeightKg, discipline, ridingGoal, surface, tubeType, widthFrontMm, widthRearMm]
   );
 
   const result: PressureOutput | null = useMemo(() => {
@@ -102,9 +104,9 @@ export function PressureCalculatorForm({
       tubeType,
       surface,
       ridingGoal,
-      bikeWeightKg,
+      bikeWeightKg: effectiveBikeWeightKg,
     });
-  }, [bikeWeightKg, bodyWeightKg, discipline, errors, ridingGoal, surface, tubeType, widthFrontMm, widthRearMm]);
+  }, [effectiveBikeWeightKg, bodyWeightKg, discipline, errors, ridingGoal, surface, tubeType, widthFrontMm, widthRearMm]);
 
   const disciplineButtons: Array<{ value: "road" | "gravel" | "mtb"; label: string }> = [
     { value: "road", label: labels.disciplineRoad },
@@ -278,16 +280,15 @@ export function PressureCalculatorForm({
                     </div>
                   </Field.Root>
 
-                  <NumberInput
+                  <Slider
                     label={labels.bikeWeightLabel}
                     min={3}
                     max={20}
                     step={0.1}
-                    placeholder="ca. 8"
-                    value={bikeWeightKg ?? null}
-                    onChange={(value) => setBikeWeightKg(value ?? undefined)}
+                    value={bikeWeightKg}
+                    onChange={setBikeWeightKg}
+                    valueLabel={`${bikeWeightKg} kg`}
                     error={findError(errors, "bikeWeightKg")}
-                    unit="kg"
                   />
                 </div>
               ) : null}
