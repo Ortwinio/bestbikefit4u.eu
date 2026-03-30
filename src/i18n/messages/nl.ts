@@ -910,6 +910,20 @@ const nl = {
         downloadPdf: "PDF downloaden",
         startNewFit: "Start nieuwe fit-sessie",
       },
+      viewer: {
+        title: "Rapportviewer",
+        description:
+          "Bekijk hier je PDF-rapport. Je kunt het ook downloaden of naar je e-mailadres sturen.",
+        loading: "PDF-rapport laden...",
+        iframeTitle: "Voorvertoning van bikefit PDF-rapport",
+        emailMissing: "Er is geen e-mailadres beschikbaar voor je account.",
+        inlineFailed:
+          "De PDF kon niet in de viewer worden getoond. Open het rapport fullscreen of download het bestand.",
+        unsupported:
+          "Deze browser kon de PDF niet in de viewer tonen. Open het rapport in een nieuw tabblad of download het bestand.",
+        openInNewTab: "Open in nieuw tabblad",
+        openFullPage: "Open fullscreen",
+      },
       errors: {
         pdfGenerateFailed: "Genereren van PDF-rapport mislukt.",
         downloadTitle: "Downloaden van PDF mislukt",

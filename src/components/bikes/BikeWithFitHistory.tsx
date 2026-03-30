@@ -19,12 +19,12 @@ import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { getBikeTypeLabel } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { FitReportActionGroup } from "@/components/reports";
 import {
   ArrowRight,
   Trash2,
   AlertTriangle,
   Clock,
-  ChevronRight,
   Bike,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
@@ -198,14 +198,13 @@ export function BikeWithFitHistory({
 
                   {/* Actions */}
                   <div className="mt-3 flex items-center gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      render={<Link href={withLocalePrefix(`/fit/${session._id}/results`, locale)} />}
-                    >
-                      {messages.fitHistory.viewReport}
-                      <ChevronRight className="ml-1 h-3.5 w-3.5" />
-                    </Button>
+                    {recommendation ? (
+                      <FitReportActionGroup
+                        sessionId={session._id}
+                        pagePath={withLocalePrefix("/fit-history", locale)}
+                        className="flex flex-wrap gap-2"
+                      />
+                    ) : null}
                     <Button
                       size="sm"
                       variant="ghost"

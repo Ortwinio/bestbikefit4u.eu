@@ -235,6 +235,23 @@ describe("pdf report route", () => {
     expect(mocks.createSimplePdfFromLines).not.toHaveBeenCalled();
   });
 
+  it("returns inline disposition when explicitly requested for the viewer", async () => {
+    mocks.token.mockResolvedValue("token-inline");
+    mocks.query.mockResolvedValueOnce(reportSourceFixture);
+
+    const response = await GET(
+      new Request("http://localhost?locale=en&disposition=inline"),
+      {
+        params: Promise.resolve({ sessionId: "session_3" }),
+      }
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Disposition")).toBe(
+      `${"inline"}; filename="${BRAND.reportSlug}-session_3-en.pdf"`
+    );
+  });
+
   it("falls back to simple renderer when rich renderer fails", async () => {
     mocks.token.mockResolvedValue("token-fallback");
     mocks.query.mockResolvedValueOnce(reportSourceFixture);

@@ -87,6 +87,18 @@ function resolvePdfLocale(request: Request): Locale {
   );
 }
 
+function resolveContentDisposition(request: Request, sessionId: string, locale: Locale) {
+  const requestUrl = new URL(request.url);
+  const disposition = requestUrl.searchParams.get("disposition");
+  const filename = `${BRAND.reportSlug}-${sessionId}-${locale}.pdf`;
+
+  if (disposition === "inline") {
+    return `inline; filename="${filename}"`;
+  }
+
+  return `attachment; filename="${filename}"`;
+}
+
 export async function GET(
   request: Request,
   context: PdfRouteContext
@@ -107,6 +119,7 @@ export async function GET(
 
     const { sessionId } = await context.params;
     const locale = resolvePdfLocale(request);
+    const contentDisposition = resolveContentDisposition(request, sessionId, locale);
 
     const convex = new ConvexHttpClient(convexUrl);
     convex.setAuth(token);
@@ -214,7 +227,7 @@ export async function GET(
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${BRAND.reportSlug}-${sessionId}-${locale}.pdf"`,
+        "Content-Disposition": contentDisposition,
         "Cache-Control": "no-store",
       },
     });

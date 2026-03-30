@@ -8,6 +8,7 @@ import { api } from "../../../convex/_generated/api";
 import { Button, Card, CardContent, LoadingState, EmptyState, SectionHeader, MeasurementTile } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { FitReportActionGroup } from "@/components/reports";
 
 interface BikeFitHistorySectionProps {
   bikeId: Id<"bikes">;
@@ -109,14 +110,12 @@ export function BikeFitHistorySection({
                       </p>
                     )}
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    {...linkButtonProps(withLocalePrefix(`/fit/${session._id}/results`, locale))}
-                  >
-                    {messages.home.recentSessions.actions.viewResults}
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
+                  {recommendation ? (
+                    <FitReportActionGroup
+                      sessionId={session._id}
+                      pagePath={withLocalePrefix(`/bikes/${bikeId}`, locale)}
+                    />
+                  ) : null}
                 </div>
               </div>
             ))}

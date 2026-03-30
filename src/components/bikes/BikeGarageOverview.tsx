@@ -9,6 +9,7 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getBikeTypeLabel } from "@/lib/bikes";
 import { Mountain, Gauge, Bike, Activity, Ruler, AlertCircle, ArrowRight } from "lucide-react";
+import { FitReportActionGroup } from "@/components/reports";
 
 type DashboardMessages = ReturnType<typeof useDashboardMessages>["messages"];
 
@@ -315,13 +316,10 @@ export function BikeGarageRow({
                 )}
 
                 <div className="flex flex-wrap gap-3 pt-1">
-                  <Link
-                    href={withLocalePrefix(`/fit/${latestFit.session._id}/results`, locale)}
-                    className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
-                  >
-                    {messages.fitHistory.viewReport}
-                    <ArrowRight className="h-3.5 w-3.5 shrink-0" />
-                  </Link>
+                  <FitReportActionGroup
+                    sessionId={latestFit.session._id}
+                    pagePath={withLocalePrefix("/dashboard", locale)}
+                  />
                   <Link
                     href={withLocalePrefix(`/fit?bikeId=${bike._id}`, locale)}
                     className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"

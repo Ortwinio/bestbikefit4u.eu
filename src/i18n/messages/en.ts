@@ -903,6 +903,20 @@ const en = {
         downloadPdf: "Download PDF",
         startNewFit: "Start New Fit Session",
       },
+      viewer: {
+        title: "Report viewer",
+        description:
+          "Preview your PDF report here. You can also download it or send it to your email address.",
+        loading: "Loading PDF report...",
+        iframeTitle: "Bike fit report PDF preview",
+        emailMissing: "No email address is available for your account.",
+        inlineFailed:
+          "The PDF could not be shown inside the viewer. Open it full page or download it instead.",
+        unsupported:
+          "This browser could not display the PDF inside the viewer. Open it in a new tab or download it instead.",
+        openInNewTab: "Open in new tab",
+        openFullPage: "Open full page",
+      },
       errors: {
         pdfGenerateFailed: "Failed to generate PDF report.",
         downloadTitle: "Failed to download PDF",
