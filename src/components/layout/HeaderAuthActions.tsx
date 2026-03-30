@@ -11,12 +11,14 @@ type HeaderAuthActionsProps = {
   locale: Locale;
   loginLabel: string;
   getStartedLabel: string;
+  dashboardLabel: string;
 };
 
 export function HeaderAuthActions({
   locale,
   loginLabel,
   getStartedLabel,
+  dashboardLabel,
 }: HeaderAuthActionsProps) {
   const { isAuthenticated, isLoading } = useConvexAuth();
 
@@ -32,7 +34,7 @@ export function HeaderAuthActions({
           variant="outline"
           size="sm"
         >
-          Dashboard
+          {dashboardLabel}
         </Button>
         <UserMenu />
       </div>

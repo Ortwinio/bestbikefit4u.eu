@@ -42,10 +42,7 @@ export function decideProxyAction({
   if (!pathLocale) {
     return {
       type: "redirect",
-      pathname:
-        pathname === "/" && isAuthenticated
-          ? withLocalePrefix("/dashboard", preferredLocale)
-          : withLocalePrefix(pathname, preferredLocale),
+      pathname: withLocalePrefix(pathname, preferredLocale),
       locale: preferredLocale,
     };
   }
@@ -64,14 +61,6 @@ export function decideProxyAction({
     return {
       type: "auth_redirect",
       pathname: withLocalePrefix("/login", pathLocale),
-      locale: pathLocale,
-    };
-  }
-
-  if (internalPathname === "/" && isAuthenticated) {
-    return {
-      type: "auth_redirect",
-      pathname: withLocalePrefix("/dashboard", pathLocale),
       locale: pathLocale,
     };
   }

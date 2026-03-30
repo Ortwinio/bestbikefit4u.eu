@@ -60,6 +60,7 @@ export function Header({ locale, labels }: HeaderProps) {
                 locale={locale}
                 loginLabel={labels.nav.login}
                 getStartedLabel={labels.nav.getStarted}
+                dashboardLabel={labels.dashboardNav.dashboard}
               />
             </div>
             <HeaderMobileMenu

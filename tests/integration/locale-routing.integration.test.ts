@@ -18,7 +18,7 @@ describe("locale routing integration", () => {
     });
   });
 
-  it("redirects authenticated root visits to the localized dashboard", () => {
+  it("keeps authenticated root visits on the localized public homepage", () => {
     const decision = decideProxyAction({
       pathname: "/",
       cookieLocale: "nl",
@@ -28,8 +28,23 @@ describe("locale routing integration", () => {
 
     expect(decision).toEqual({
       type: "redirect",
-      pathname: "/nl/dashboard",
+      pathname: "/nl",
       locale: "nl",
+    });
+  });
+
+  it("rewrites localized homepage for authenticated users instead of forcing dashboard", () => {
+    const decision = decideProxyAction({
+      pathname: "/en",
+      cookieLocale: "en",
+      acceptLanguageHeader: null,
+      isAuthenticated: true,
+    });
+
+    expect(decision).toEqual({
+      type: "rewrite",
+      pathname: "/",
+      locale: "en",
     });
   });
 
