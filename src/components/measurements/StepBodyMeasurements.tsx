@@ -5,6 +5,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { InfoBox } from "@/components/ui";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { AlertCircle, Info, Ruler, HelpCircle } from "lucide-react";
+import { IllustratedMeasurementHelp } from "./IllustratedMeasurementHelp";
 import { NumberSlider } from "./NumberSlider";
 
 // Predicted values based on height
@@ -108,17 +109,19 @@ export function StepBodyMeasurements() {
             />
           )}
         />
-        <InfoBox
-          variant="secondary"
-          icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
-        >
-          <p className="font-medium text-[color:var(--foreground)]">How to measure your height</p>
-          <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
-            <li>Stand barefoot against a wall</li>
-            <li>Place a book flat on top of your head, touching the wall</li>
-            <li>Mark the wall and measure from the floor to the mark</li>
-          </ul>
-        </InfoBox>
+        <IllustratedMeasurementHelp measurement="height">
+          <InfoBox
+            variant="secondary"
+            icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
+          >
+            <p className="font-medium text-[color:var(--foreground)]">How to measure your height</p>
+            <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
+              <li>Stand barefoot against a wall</li>
+              <li>Place a book flat on top of your head, touching the wall</li>
+              <li>Mark the wall and measure from the floor to the mark</li>
+            </ul>
+          </InfoBox>
+        </IllustratedMeasurementHelp>
       </div>
 
       {/* Inseam */}
@@ -148,17 +151,19 @@ export function StepBodyMeasurements() {
             />
           )}
         />
-        <InfoBox
-          variant="secondary"
-          icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
-        >
-          <p className="font-medium text-[color:var(--foreground)]">How to measure your inseam</p>
-          <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
-            <li>Stand barefoot with feet 10–15 cm apart</li>
-            <li>Press a hardcover book firmly up between your legs, simulating a saddle</li>
-            <li>Measure from the floor to the top of the book spine</li>
-          </ul>
-        </InfoBox>
+        <IllustratedMeasurementHelp measurement="inseam">
+          <InfoBox
+            variant="secondary"
+            icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
+          >
+            <p className="font-medium text-[color:var(--foreground)]">How to measure your inseam</p>
+            <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
+              <li>Stand barefoot with feet 10–15 cm apart</li>
+              <li>Press a hardcover book firmly up between your legs, simulating a saddle</li>
+              <li>Measure from the floor to the top of the book spine</li>
+            </ul>
+          </InfoBox>
+        </IllustratedMeasurementHelp>
         {inseamWarning && (
           <InfoBox
             variant="warning"

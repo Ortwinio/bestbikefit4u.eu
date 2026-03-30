@@ -4,6 +4,7 @@ import { useRef, useEffect, useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { InfoBox } from "@/components/ui";
 import { AlertCircle, Info, HelpCircle, Sparkles } from "lucide-react";
+import { IllustratedMeasurementHelp } from "./IllustratedMeasurementHelp";
 import { NumberSlider } from "./NumberSlider";
 
 // Anthropometric predictions based on height
@@ -147,16 +148,18 @@ export function StepAdvancedMeasurements() {
             />
           )}
         />
-        <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
-          <p className="font-medium text-[color:var(--foreground)]">How to measure torso length</p>
-          <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
-            <li>Sit upright on a firm chair, back straight</li>
-            <li>Measure from the seat surface to the bony bump at the base of your neck (C7 vertebra)</li>
-          </ul>
-          <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
-            <span className="font-medium">Affects:</span> handlebar reach and stack
-          </p>
-        </InfoBox>
+        <IllustratedMeasurementHelp measurement="torsoLength">
+          <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
+            <p className="font-medium text-[color:var(--foreground)]">How to measure torso length</p>
+            <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
+              <li>Sit upright on a firm chair, back straight</li>
+              <li>Measure from the seat surface to the bony bump at the base of your neck (C7 vertebra)</li>
+            </ul>
+            <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+              <span className="font-medium">Affects:</span> handlebar reach and stack
+            </p>
+          </InfoBox>
+        </IllustratedMeasurementHelp>
         {torsoWarning && (
           <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}>
             <p className="font-medium">Check your torso measurement</p>
@@ -187,16 +190,18 @@ export function StepAdvancedMeasurements() {
             />
           )}
         />
-        <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
-          <p className="font-medium text-[color:var(--foreground)]">How to measure arm length</p>
-          <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
-            <li>Stand with arm relaxed at your side</li>
-            <li>Measure from the bony shoulder tip (acromion) to the middle finger tip</li>
-          </ul>
-          <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
-            <span className="font-medium">Affects:</span> handlebar reach and stem length
-          </p>
-        </InfoBox>
+        <IllustratedMeasurementHelp measurement="armLength">
+          <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
+            <p className="font-medium text-[color:var(--foreground)]">How to measure arm length</p>
+            <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
+              <li>Stand with arm relaxed at your side</li>
+              <li>Measure from the bony shoulder tip (acromion) to the middle finger tip</li>
+            </ul>
+            <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+              <span className="font-medium">Affects:</span> handlebar reach and stem length
+            </p>
+          </InfoBox>
+        </IllustratedMeasurementHelp>
         {armWarning && (
           <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}>
             <p className="font-medium">Check your arm measurement</p>
@@ -227,16 +232,18 @@ export function StepAdvancedMeasurements() {
             />
           )}
         />
-        <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
-          <p className="font-medium text-[color:var(--foreground)]">How to measure shoulder width</p>
-          <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
-            <li>Stand relaxed with arms at sides</li>
-            <li>Measure between the outermost bony points of both shoulders (acromion to acromion)</li>
-          </ul>
-          <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
-            <span className="font-medium">Affects:</span> handlebar width recommendation
-          </p>
-        </InfoBox>
+        <IllustratedMeasurementHelp measurement="shoulderWidth">
+          <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
+            <p className="font-medium text-[color:var(--foreground)]">How to measure shoulder width</p>
+            <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
+              <li>Stand relaxed with arms at sides</li>
+              <li>Measure between the outermost bony points of both shoulders (acromion to acromion)</li>
+            </ul>
+            <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+              <span className="font-medium">Affects:</span> handlebar width recommendation
+            </p>
+          </InfoBox>
+        </IllustratedMeasurementHelp>
         {shoulderWarning && (
           <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}>
             <p className="font-medium">Check your shoulder measurement</p>
