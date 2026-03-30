@@ -241,12 +241,13 @@ export function MeasurementWizard({
             </Button>
 
             {currentStep < steps.length ? (
-              <Button type="button" onClick={handleNext}>
+              <Button key="next" type="button" onClick={handleNext}>
                 {messages.questionnaire.actions.next}
                 <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             ) : (
               <Button
+                key="save"
                 type="submit"
                 isLoading={isSubmitting}
                 disabled={!formState.isValid}
