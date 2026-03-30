@@ -2005,6 +2005,8 @@ const en = {
             "The advert preview could not be loaded. Please check the URL or try again in a moment.",
           saveFailed:
             "The bike draft could not be saved. Please try again.",
+          saveInProgress:
+            "This bike import is still being finalized. Please wait a moment and try again.",
           backendUnavailable:
             "The Marktplaats import backend is not available in this workspace yet. The rider flow is wired, but preview/save cannot complete until the backend contract lands.",
         },

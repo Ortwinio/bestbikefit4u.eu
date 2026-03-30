@@ -429,3 +429,20 @@ export function normalizeCreatedBikeId(payload: unknown): string | null {
     null
   );
 }
+
+export function normalizeImportSaveStatus(
+  payload: unknown
+): "imported" | "duplicate_reused" | "already_processing" | "unknown" {
+  if (!payload || typeof payload !== "object") {
+    return "unknown";
+  }
+  const record = payload as Record<string, unknown>;
+  if (
+    record.status === "imported" ||
+    record.status === "duplicate_reused" ||
+    record.status === "already_processing"
+  ) {
+    return record.status;
+  }
+  return "unknown";
+}

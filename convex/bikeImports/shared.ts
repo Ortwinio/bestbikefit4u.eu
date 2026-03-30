@@ -211,7 +211,12 @@ export function normalizeMarktplaatsImportUrl(input: string): string {
 
   const hostname = parsed.hostname.toLowerCase();
   const isMarktplaatsHost =
-    hostname === "marktplaats.nl" || hostname === "www.marktplaats.nl";
+    hostname === "marktplaats.nl" ||
+    hostname === "www.marktplaats.nl" ||
+    hostname === "marktplaats.com" ||
+    hostname === "www.marktplaats.com" ||
+    hostname.endsWith(".marktplaats.nl") ||
+    hostname.endsWith(".marktplaats.com");
   if (!isMarktplaatsHost) {
     throw new Error("Only Marktplaats URLs are supported");
   }

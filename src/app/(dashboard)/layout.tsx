@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useConvexAuth, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
@@ -11,13 +11,14 @@ import { Button, LoadingState } from "@/components/ui";
 import { DashboardMessageSurface } from "@/components/dashboard-messages";
 import { StravaAutoImportTrigger } from "@/components/integrations/StravaAutoImportTrigger";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
-import { withLocalePrefix } from "@/i18n/navigation";
+import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { cn } from "@/utils/cn";
 import { Menu, X } from "lucide-react";
 import { adminNavigationGroups } from "@/components/admin/layout/admin-navigation";
 
 export const DASHBOARD_MOBILE_HEADER_CLASSNAME =
-  "sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card px-4 py-3 md:hidden";
+  "panel-surface-base panel-theme-context sticky top-0 z-30 flex items-center justify-between border-b px-4 py-3 md:hidden";
 
 export const DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME =
   "panel-backdrop fixed inset-0 z-30 md:hidden";
@@ -25,20 +26,19 @@ export const DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME =
 export const DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME =
   "panel-surface-base panel-theme-context fixed inset-y-0 left-0 z-40 w-72 overflow-y-auto border-r p-4 md:hidden";
 
-const DASHBOARD_MOBILE_LINK_CLASSNAME =
-  "dashboard-nav-item block rounded-md px-3 py-2 text-sm hover:dashboard-nav-item-hover";
-
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isLoading, isAuthenticated } = useConvexAuth();
   const user = useQuery(api.users.queries.getCurrentUser);
   const isSuperAdmin = user?.adminRole === "super_admin";
   const { locale, messages, languageSwitchLabels } = useDashboardMessages();
+  const internalPathname = stripLocalePrefix(pathname ?? "/");
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
   const loginPath = toLocalizedPath("/login");
 
@@ -67,11 +67,11 @@ export default function DashboardLayout({
 
       <div className={DASHBOARD_MOBILE_HEADER_CLASSNAME}>
         <BrandLogo
-          href={toLocalizedPath("/dashboard")}
+          href={toLocalizedPath("/")}
           asset="appIcon"
           className="block w-10 shrink-0"
           imageClassName="block"
-          ariaLabel={messages.nav.dashboard}
+          ariaLabel={messages.layout.website.home}
         />
         <div className="flex items-center gap-2">
           <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
@@ -85,7 +85,7 @@ export default function DashboardLayout({
                 : messages.layout.mobileMenu.openAria
             }
             onClick={() => setIsMobileMenuOpen((current) => !current)}
-            className="inline-flex h-9 w-9 items-center justify-center px-0 text-muted-foreground"
+            className="inline-flex h-9 w-9 items-center justify-center border-[color:var(--panel-border)] bg-[color:var(--panel-surface-subtle)] px-0 text-[color:var(--panel-foreground)] hover:bg-[color:var(--panel-surface-subtle)]/90"
           >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
@@ -102,13 +102,13 @@ export default function DashboardLayout({
           />
           <nav className={DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME}>
             <BrandLogo
-              href={toLocalizedPath("/dashboard")}
+              href={toLocalizedPath("/")}
               asset="appIcon"
               className="mb-5 block w-14"
               imageClassName="block"
-              ariaLabel={messages.nav.dashboard}
+              ariaLabel={messages.layout.website.home}
             />
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--panel-foreground)]/75">
               {messages.layout.sections.dashboard}
             </p>
             <div className="space-y-1">
@@ -127,13 +127,18 @@ export default function DashboardLayout({
                   key={item.href}
                   href={toLocalizedPath(item.href)}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={DASHBOARD_MOBILE_LINK_CLASSNAME}
+                  className={cn(
+                    "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                    internalPathname === item.href || internalPathname.startsWith(`${item.href}/`)
+                      ? "dashboard-nav-item-active"
+                      : "dashboard-nav-item hover:dashboard-nav-item-hover"
+                  )}
                 >
                   {item.label}
                 </Link>
               ))}
             </div>
-            <p className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <p className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wide text-[color:var(--panel-foreground)]/75">
               {messages.layout.sections.website}
             </p>
             <div className="space-y-1">
@@ -146,7 +151,12 @@ export default function DashboardLayout({
                   key={item.href}
                   href={toLocalizedPath(item.href)}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={DASHBOARD_MOBILE_LINK_CLASSNAME}
+                  className={cn(
+                    "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                    internalPathname === item.href || internalPathname.startsWith(`${item.href}/`)
+                      ? "dashboard-nav-item-active"
+                      : "dashboard-nav-item hover:dashboard-nav-item-hover"
+                  )}
                 >
                   {item.label}
                 </Link>
@@ -154,13 +164,13 @@ export default function DashboardLayout({
             </div>
             {isSuperAdmin && (
               <>
-                <p className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <p className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wide text-[color:var(--panel-foreground)]/75">
                   {messages.layout.sections.admin}
                 </p>
                 <div className="space-y-4">
                   {adminNavigationGroups.map((group) => (
                     <div key={group.label}>
-                      <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--panel-foreground)]/70">
                         {group.label}
                       </p>
                       <div className="space-y-0.5">
@@ -169,7 +179,12 @@ export default function DashboardLayout({
                             key={item.href}
                             href={item.href}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className={DASHBOARD_MOBILE_LINK_CLASSNAME}
+                            className={cn(
+                              "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                              internalPathname === item.href || internalPathname.startsWith(`${item.href}/`)
+                                ? "dashboard-nav-item-active"
+                                : "dashboard-nav-item hover:dashboard-nav-item-hover"
+                            )}
                           >
                             {item.label}
                           </Link>

@@ -2015,6 +2015,8 @@ const nl = {
             "Het importvoorbeeld kon niet worden geladen. Controleer de URL of probeer het zo opnieuw.",
           saveFailed:
             "Het fietsconcept kon niet worden opgeslagen. Probeer opnieuw.",
+          saveInProgress:
+            "Deze fietsimport wordt nog afgerond. Wacht even en probeer het daarna opnieuw.",
           backendUnavailable:
             "De Marktplaats-importbackend is nog niet beschikbaar in deze workspace. De rider-flow staat klaar, maar preview en opslaan kunnen pas afronden zodra het backendcontract er is.",
         },

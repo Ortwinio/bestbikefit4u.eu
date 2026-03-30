@@ -168,6 +168,7 @@ describe("bike import persistence contract", () => {
     expect(result).toEqual({
       status: "imported",
       bikeId: "bike_1",
+      createdBikeId: "bike_1",
       imageImportedCount: 1,
       imageFailedCount: 1,
     });

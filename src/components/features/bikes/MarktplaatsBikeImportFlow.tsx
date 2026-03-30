@@ -31,6 +31,7 @@ import {
   getPhotoReview,
   isSupportedMarktplaatsUrl,
   normalizeCreatedBikeId,
+  normalizeImportSaveStatus,
   normalizeMarktplaatsPreview,
   togglePhotoSelection,
   type ImportConfidence,
@@ -359,6 +360,10 @@ export function MarktplaatsBikeImportFlow() {
           primaryImageUrl: draft.primaryImageUrl,
         },
       });
+      const saveStatus = normalizeImportSaveStatus(payload);
+      if (saveStatus === "already_processing") {
+        throw new Error(t.errors.saveInProgress);
+      }
       const bikeId = normalizeCreatedBikeId(payload);
       if (!bikeId) {
         throw new Error("missing_bike_id");

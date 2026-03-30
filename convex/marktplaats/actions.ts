@@ -1,7 +1,7 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { action } from "../_generated/server";
 import { api, internal } from "../_generated/api";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { parseMarktplaatsAdvert, normalizeMarktplaatsUrl, type ParsedBikeType } from "./parser";
 import { deriveBikeImportDraft, type ParsedMarktplaatsAdvert } from "../bikeImports/shared";
 
@@ -83,12 +83,14 @@ export const previewBikeImport = action({
           status: "failed",
           failureReason: `Advert fetch failed (${response.status})`,
         });
-        throw new Error(`Could not fetch this Marktplaats advert (${response.status}). Reference: ${importId}`);
+        throw new ConvexError(
+          `Could not fetch this Marktplaats advert (${response.status}). Reference: ${importId}`
+        );
       }
 
       const html = await response.text();
       if (!html.trim()) {
-        throw new Error("The advert returned an empty response.");
+        throw new ConvexError("The advert returned an empty response.");
       }
 
       const parsed = parseMarktplaatsAdvert({ sourceUrl, html });
@@ -175,7 +177,7 @@ export const previewBikeImport = action({
         status: "failed",
         failureReason,
       });
-      throw new Error(failureReason);
+      throw new ConvexError(failureReason);
     }
   },
 });

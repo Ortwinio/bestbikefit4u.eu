@@ -3,7 +3,7 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { internal } from "../_generated/api";
 import { action } from "../_generated/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import type { Id } from "../_generated/dataModel";
 import { bikeImportSaveRequestValidator } from "./shared";
 
@@ -11,10 +11,10 @@ const MAX_IMPORTED_IMAGES = 8;
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const IMAGE_FETCH_TIMEOUT_MS = 12_000;
 
-const allowedMarketplaceHostnames = new Set([
+const allowedMarketplaceHostSuffixes = [
   "marktplaats.nl",
-  "www.marktplaats.nl",
-]);
+  "marktplaats.com",
+];
 
 const allowedImageHostSuffixes = [
   "marktplaats.nl",
@@ -73,7 +73,10 @@ function normalizeRemoteUrl(url: string, kind: "source" | "image"): URL {
   }
 
   if (kind === "source") {
-    if (!allowedMarketplaceHostnames.has(hostname)) {
+    const allowedHost = allowedMarketplaceHostSuffixes.some(
+      (suffix) => hostname === suffix || hostname.endsWith(`.${suffix}`)
+    );
+    if (!allowedHost) {
       throw new Error("source_url_host_unsupported");
     }
     return parsed;
@@ -146,7 +149,7 @@ export const saveConfirmedImport = action({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) {
-      throw new Error("Not authenticated");
+      throw new ConvexError("Not authenticated");
     }
 
     const start = (await ctx.runMutation(internal.bikeImports.mutations.beginSave, {
@@ -159,6 +162,7 @@ export const saveConfirmedImport = action({
       return {
         status: "duplicate_reused" as const,
         bikeId: start.bikeId,
+        createdBikeId: start.bikeId,
         imageImportedCount: 0,
         imageFailedCount: 0,
       };
@@ -170,16 +174,16 @@ export const saveConfirmedImport = action({
       };
     }
 
-    normalizeRemoteUrl(start.sourceUrl, "source");
-    if (start.canonicalUrl) {
-      normalizeRemoteUrl(start.canonicalUrl, "source");
-    }
-
     let bikeId: Id<"bikes"> | null = null;
     let imageImportedCount = 0;
     let imageFailedCount = 0;
 
     try {
+      normalizeRemoteUrl(start.sourceUrl, "source");
+      if (start.canonicalUrl) {
+        normalizeRemoteUrl(start.canonicalUrl, "source");
+      }
+
       bikeId = (await ctx.runMutation(internal.bikeImports.mutations.createImportedBike, {
         userId,
         importId: args.saveRequest.importId,
@@ -230,6 +234,7 @@ export const saveConfirmedImport = action({
       return {
         status: "imported" as const,
         bikeId,
+        createdBikeId: bikeId,
         imageImportedCount,
         imageFailedCount,
       };
@@ -239,11 +244,17 @@ export const saveConfirmedImport = action({
         stage: "save",
         failureCode: error instanceof Error ? error.message : "save_failed",
         failureReason:
-          bikeId === null
+          error instanceof Error && error.message.trim().length > 0
+            ? error.message
+            : bikeId === null
             ? "Marktplaats import could not create a bike draft."
             : "Marktplaats import created the bike draft but failed to finalize the import state.",
       });
-      throw error;
+      throw new ConvexError(
+        error instanceof Error && error.message.trim().length > 0
+          ? error.message
+          : "Marktplaats import could not be saved."
+      );
     }
   },
 });

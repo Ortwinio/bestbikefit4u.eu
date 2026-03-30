@@ -51,6 +51,12 @@ describe("bike import shared contract", () => {
       )
     ).toBe("https://www.marktplaats.nl/v/fietsen/m123?foo=bar");
 
+    expect(
+      normalizeMarktplaatsImportUrl(
+        "https://images.marktplaats.com/api/v1/listing?id=123#fragment"
+      )
+    ).toBe("https://images.marktplaats.com/api/v1/listing?id=123");
+
     expect(() =>
       normalizeMarktplaatsImportUrl("https://example.com/not-marktplaats")
     ).toThrow("Only Marktplaats URLs are supported");
