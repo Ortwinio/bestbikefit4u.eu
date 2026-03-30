@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Button, Selectable, Slider } from "@/components/ui";
+import { Button, Selectable } from "@/components/ui";
 import { Field } from "@/components/ui/Field";
+import { NumberSlider } from "@/components/measurements/NumberSlider";
 import { calculateBasicPressure, type PressureOutput, type RidingGoal, type Surface, type ValidationError, validatePressureInput } from "@/lib/pressure-engine";
 import { PressureResultCard } from "./PressureResultCard";
 import type { PressureResultLabels } from "./shared";
@@ -174,39 +175,39 @@ export function PressureCalculatorForm({
               </div>
             </Field.Root>
 
-            <Slider
+            <NumberSlider
               label={labels.bodyWeightLabel}
               min={35}
               max={160}
               step={1}
+              unit="kg"
               value={bodyWeightKg}
               onChange={setBodyWeightKg}
-              valueLabel={`${bodyWeightKg} kg`}
               error={findError(errors, "bodyWeightKg")}
             />
 
-            <Slider
+            <NumberSlider
               label={labels.widthFrontLabel}
               min={18}
               max={80}
               step={1}
+              unit="mm"
               value={widthFrontMm}
               onChange={setWidthFrontMm}
-              valueLabel={`${widthFrontMm} mm`}
               error={findError(errors, "widthFrontMm")}
             />
 
-            <Slider
+            <NumberSlider
               label={labels.widthRearLabel}
               min={18}
               max={80}
               step={1}
+              unit="mm"
               value={widthRearMm}
               onChange={(value) => {
                 setHasManualRearWidth(true);
                 setManualWidthRearMm(value);
               }}
-              valueLabel={`${widthRearMm} mm`}
               error={findError(errors, "widthRearMm")}
             />
 
@@ -280,14 +281,14 @@ export function PressureCalculatorForm({
                     </div>
                   </Field.Root>
 
-                  <Slider
+                  <NumberSlider
                     label={labels.bikeWeightLabel}
                     min={3}
                     max={20}
                     step={0.1}
+                    unit="kg"
                     value={bikeWeightKg}
                     onChange={setBikeWeightKg}
-                    valueLabel={`${bikeWeightKg} kg`}
                     error={findError(errors, "bikeWeightKg")}
                   />
                 </div>
