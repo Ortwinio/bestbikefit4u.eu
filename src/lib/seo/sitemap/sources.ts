@@ -1,5 +1,6 @@
 import { GUIDE_SLUGS } from "@/app/(public)/guides/data";
 import { USE_CASE_SLUGS } from "@/app/(public)/use-cases/data";
+import { PAIN_PAGE_SLUGS } from "@/content/painPages";
 import { SUPPORTED_LOCALES, type Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getProgrammaticCalculatorEntries } from "@/lib/seo/programmatic/tirePressure";
@@ -57,6 +58,27 @@ const PAGE_ROUTE_SEEDS: readonly RouteSeed[] = [
   { id: "pricing", path: "/pricing", lastmod: "2026-02-19", changefreq: "weekly", priority: 0.9 },
   { id: "faq", path: "/faq", lastmod: "2026-02-23", changefreq: "weekly", priority: 0.8 },
   { id: "contact", path: "/contact", lastmod: "2026-02-19", changefreq: "monthly", priority: 0.7 },
+  {
+    id: "pain-index",
+    path: "/pain",
+    lastmod: "2026-03-31",
+    changefreq: "weekly",
+    priority: 0.8,
+  },
+  ...PAIN_PAGE_SLUGS.map<RouteSeed>((slug) => ({
+    id: `pain-${slug}`,
+    path: `/pain/${slug}`,
+    lastmod: "2026-03-31",
+    changefreq: "weekly",
+    priority: 0.8,
+  })),
+  {
+    id: "case-study",
+    path: "/case-study",
+    lastmod: "2026-03-31",
+    changefreq: "weekly",
+    priority: 0.75,
+  },
   {
     id: "measurement-guide",
     path: "/measurement-guide",

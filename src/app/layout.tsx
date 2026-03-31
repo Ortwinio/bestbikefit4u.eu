@@ -3,13 +3,12 @@ import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { BRAND } from "@/config/brand";
+import { ANALYTICS_CONFIG } from "@/config/analytics";
 import { getRequestLocale } from "@/i18n/request";
 import { CookieConsentBanner } from "@/components/layout/CookieConsentBanner";
 import { GTMConsentLoader } from "@/components/analytics/GTMConsentLoader";
 import { FeedbackPanelProvider } from "@/components/feedback";
 import { ToastProvider } from "@/components/ui";
-
-const GTM_ID = "GTM-KH48ZSSC";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND.siteUrl),
@@ -88,7 +87,7 @@ export default async function RootLayout({
           >
             Skip to main content
           </a>
-          <GTMConsentLoader gtmId={GTM_ID} />
+          <GTMConsentLoader gtmId={ANALYTICS_CONFIG.gtmId} />
           <ToastProvider>
             <ConvexClientProvider>
               <FeedbackPanelProvider>{children}</FeedbackPanelProvider>

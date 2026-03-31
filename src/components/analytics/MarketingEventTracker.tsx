@@ -5,24 +5,10 @@ import { useMutation } from "convex/react";
 import { makeFunctionReference } from "convex/server";
 import type { Locale } from "@/i18n/config";
 import { canTrackMarketing } from "@/lib/cookieConsent";
-
-export type MarketingEventType =
-  | "cta_click"
-  | "login_code_requested"
-  | "login_code_resent"
-  | "login_google_started"
-  | "login_google_error"
-  | "login_verified"
-  | "funnel_landing_view"
-  | "funnel_login_view"
-  | "funnel_profile_view"
-  | "funnel_fit_view"
-  | "funnel_questionnaire_complete"
-  | "funnel_results_view"
-  | "login_send_error"
-  | "login_verify_error"
-  | "questionnaire_complete_error"
-  | "report_send_error";
+import {
+  pushDataLayerEvent,
+  type MarketingEventType,
+} from "@/lib/analytics/marketing";
 
 export type LogMarketingEventArgs = {
   eventType: MarketingEventType;
@@ -50,6 +36,10 @@ export function useMarketingEventLogger() {
       return;
     }
 
+    pushDataLayerEvent({
+      event: "bbf_marketing_event",
+      ...args,
+    });
     void logMarketingEvent(args);
   }, [logMarketingEvent]);
 }

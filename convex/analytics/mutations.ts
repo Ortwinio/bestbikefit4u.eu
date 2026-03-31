@@ -3,40 +3,21 @@ import type { MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { validateShortString, validateTextString } from "../lib/validation";
+import {
+  ANONYMOUS_MARKETING_EVENT_TYPES,
+  MARKETING_EVENT_TYPES,
+  type MarketingEventType,
+} from "../../src/lib/analytics/marketing";
 
 const marketingEventType = v.union(
-  v.literal("cta_click"),
-  v.literal("login_code_requested"),
-  v.literal("login_code_resent"),
-  v.literal("login_verified"),
-  v.literal("funnel_landing_view"),
-  v.literal("funnel_login_view"),
-  v.literal("funnel_profile_view"),
-  v.literal("funnel_fit_view"),
-  v.literal("funnel_questionnaire_complete"),
-  v.literal("funnel_results_view"),
-  v.literal("login_send_error"),
-  v.literal("login_verify_error"),
-  v.literal("questionnaire_complete_error"),
-  v.literal("report_send_error")
+  ...(MARKETING_EVENT_TYPES.map((eventType) => v.literal(eventType)) as [
+    ReturnType<typeof v.literal<MarketingEventType>>,
+    ...Array<ReturnType<typeof v.literal<MarketingEventType>>>
+  ])
 );
 
 type MarketingEventDoc = {
-  eventType:
-    | "cta_click"
-    | "login_code_requested"
-    | "login_code_resent"
-    | "login_verified"
-    | "funnel_landing_view"
-    | "funnel_login_view"
-    | "funnel_profile_view"
-    | "funnel_fit_view"
-    | "funnel_questionnaire_complete"
-    | "funnel_results_view"
-    | "login_send_error"
-    | "login_verify_error"
-    | "questionnaire_complete_error"
-    | "report_send_error";
+  eventType: MarketingEventType;
   locale: "en" | "nl";
   pagePath: string;
   section?: string;
@@ -56,15 +37,9 @@ const MAX_AUTHENTICATED_EVENTS_PER_WINDOW = 300;
 const MAX_EVENT_SKEW_FUTURE_MS = 5 * 60 * 1000;
 const MAX_EVENT_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
-const anonymousAllowedEventTypes = new Set<MarketingEventDoc["eventType"]>([
-  "cta_click",
-  "funnel_landing_view",
-  "funnel_login_view",
-  "login_code_requested",
-  "login_code_resent",
-  "login_send_error",
-  "login_verify_error",
-]);
+const anonymousAllowedEventTypes = new Set<MarketingEventDoc["eventType"]>(
+  ANONYMOUS_MARKETING_EVENT_TYPES
+);
 
 const sourceTagPattern = /^[A-Za-z0-9/_:-]{1,120}$/;
 

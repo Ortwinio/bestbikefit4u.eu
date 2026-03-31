@@ -1,6 +1,10 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { authTables } from "@convex-dev/auth/server";
+import {
+  MARKETING_EVENT_TYPES,
+  type MarketingEventType,
+} from "../src/lib/analytics/marketing";
 
 const questionnaireResponseValue = v.union(
   v.string(),
@@ -1276,20 +1280,10 @@ export default defineSchema({
   // Public-site marketing and conversion events (SEO/content iteration)
   marketingEvents: defineTable({
     eventType: v.union(
-      v.literal("cta_click"),
-      v.literal("login_code_requested"),
-      v.literal("login_code_resent"),
-      v.literal("login_verified"),
-      v.literal("funnel_landing_view"),
-      v.literal("funnel_login_view"),
-      v.literal("funnel_profile_view"),
-      v.literal("funnel_fit_view"),
-      v.literal("funnel_questionnaire_complete"),
-      v.literal("funnel_results_view"),
-      v.literal("login_send_error"),
-      v.literal("login_verify_error"),
-      v.literal("questionnaire_complete_error"),
-      v.literal("report_send_error")
+      ...(MARKETING_EVENT_TYPES.map((eventType) => v.literal(eventType)) as [
+        ReturnType<typeof v.literal<MarketingEventType>>,
+        ...Array<ReturnType<typeof v.literal<MarketingEventType>>>
+      ])
     ),
     locale: v.union(v.literal("en"), v.literal("nl")),
     pagePath: v.string(),
@@ -1303,6 +1297,22 @@ export default defineSchema({
     .index("by_event_type_occurred_at", ["eventType", "occurredAt"])
     .index("by_locale_occurred_at", ["locale", "occurredAt"])
     .index("by_page_occurred_at", ["pagePath", "occurredAt"]),
+
+  caseStudyLeads: defineTable({
+    userId: v.optional(v.id("users")),
+    locale: v.union(v.literal("en"), v.literal("nl")),
+    sourcePath: v.string(),
+    painSlug: v.optional(v.string()),
+    name: v.string(),
+    email: v.string(),
+    ridingGoal: v.optional(v.string()),
+    painSummary: v.string(),
+    consentAccepted: v.boolean(),
+    createdAt: v.number(),
+  })
+    .index("by_created_at", ["createdAt"])
+    .index("by_email", ["email"])
+    .index("by_pain_slug_created_at", ["painSlug", "createdAt"]),
 
   integrations: defineTable({
     userId: v.id("users"),

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button, type ButtonProps } from "@/components/ui";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { getCommercialFaqCopy, PRODUCT_LIVE_FLAGS } from "@/config/commercial";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -101,8 +102,11 @@ function buildFaqJsonLd(sections: FAQSection[]): FAQJsonLd {
   };
 }
 
-const contentRaw: Record<Locale, RawFAQCopy> = {
-  en: {
+function getRawContent(locale: Locale): RawFAQCopy {
+  const commercialFaq = getCommercialFaqCopy(locale);
+
+  if (locale === "en") {
+    return {
     metadata: {
       title: "BestBikeFit4U FAQ | Online Bike Fitting, Saddle Height, Frame Size & Pain Fixes",
       description:
@@ -144,7 +148,7 @@ const contentRaw: Record<Locale, RawFAQCopy> = {
           },
           {
             q: "Can I get a fit for multiple bikes?",
-            a: "Yes. With a Pro or Premium plan, you can create unlimited bike profiles and run separate fit sessions for each. Each session considers the specific bike type and your goals for that bike.",
+            a: commercialFaq.multipleBikeProfiles,
           },
           {
             q: "How does flexibility affect my fit?",
@@ -169,7 +173,7 @@ const contentRaw: Record<Locale, RawFAQCopy> = {
           },
           {
             q: "Is PDF export available?",
-            a: "PDF export is being rolled out. You can already email your results and review previous sessions from your dashboard.",
+            a: commercialFaq.pdfReport,
           },
         ],
       },
@@ -178,7 +182,9 @@ const contentRaw: Record<Locale, RawFAQCopy> = {
         questions: [
           {
             q: "Is there a money-back guarantee?",
-            a: "Yes, we offer a 30-day money-back guarantee on paid plans.",
+            a: PRODUCT_LIVE_FLAGS.moneyBackGuarantee
+              ? "Yes, an active public money-back guarantee is listed on the pricing page."
+              : "No. There is currently no public money-back guarantee claim on BestBikeFit4U.",
           },
           {
             q: "Can I change my plan later?",
@@ -199,8 +205,10 @@ const contentRaw: Record<Locale, RawFAQCopy> = {
     ctaSubtitle: "Get in touch or start your free fit session.",
     contactButton: "Contact Us",
     startButton: "Start Free Fit",
-  },
-  nl: {
+    };
+  }
+
+  return {
     metadata: {
       title: "BestBikeFit4U FAQ | Online bikefitting, zadelhoogte, framemaat & klachten oplossen",
       description:
@@ -242,7 +250,7 @@ const contentRaw: Record<Locale, RawFAQCopy> = {
           },
           {
             q: "Kan ik meerdere fietsen fitten?",
-            a: "Ja. Met Pro of Premium kun je meerdere fietsprofielen toevoegen en per fiets een aparte fit-sessie uitvoeren.",
+            a: commercialFaq.multipleBikeProfiles,
           },
           {
             q: "Hoe beinvloedt flexibiliteit mijn fit?",
@@ -267,7 +275,7 @@ const contentRaw: Record<Locale, RawFAQCopy> = {
           },
           {
             q: "Is PDF-export beschikbaar?",
-            a: "PDF-export wordt uitgerold. Je kunt je resultaten nu al e-mailen en eerdere sessies in je dashboard bekijken.",
+            a: commercialFaq.pdfReport,
           },
         ],
       },
@@ -276,7 +284,9 @@ const contentRaw: Record<Locale, RawFAQCopy> = {
         questions: [
           {
             q: "Is er een geld-terug-garantie?",
-            a: "Ja, op betaalde plannen geldt een 30-dagen geld-terug-garantie.",
+            a: PRODUCT_LIVE_FLAGS.moneyBackGuarantee
+              ? "Ja, er staat op dit moment een publieke geld-terug-garantie op de prijzenpagina."
+              : "Nee. BestBikeFit4U doet op dit moment geen publieke claim over een geld-terug-garantie.",
           },
           {
             q: "Kan ik later van plan wisselen?",
@@ -297,17 +307,16 @@ const contentRaw: Record<Locale, RawFAQCopy> = {
     ctaSubtitle: "Neem contact op of start direct je gratis fit-sessie.",
     contactButton: "Neem contact op",
     startButton: "Start gratis fit",
-  },
-};
+  };
+}
 
-const content: Record<Locale, FAQCopy> = {
-  en: normalizeFAQCopy(contentRaw.en),
-  nl: normalizeFAQCopy(contentRaw.nl),
-};
+function getContent(locale: Locale): FAQCopy {
+  return normalizeFAQCopy(getRawContent(locale));
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
-  const page = content[locale];
+  const page = getContent(locale);
 
   return {
     title: page.metadata.title,
@@ -324,7 +333,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function FAQPage() {
   const locale = await getRequestLocale();
-  const page = content[locale];
+  const page = getContent(locale);
   const pagePath = withLocalePrefix("/faq", locale);
   const faqJsonLd = buildFaqJsonLd(page.sections);
 

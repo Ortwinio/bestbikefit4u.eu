@@ -6,6 +6,13 @@ import { useMutation } from "convex/react";
 import { makeFunctionReference } from "convex/server";
 import type { Locale } from "@/i18n/config";
 import { canTrackMarketing } from "@/lib/cookieConsent";
+import {
+  trackAdConversion,
+  type MarketingConversionKey,
+} from "@/lib/analytics/conversions";
+import {
+  pushDataLayerEvent,
+} from "@/lib/analytics/marketing";
 
 type TrackedCtaLinkProps = Omit<ComponentPropsWithoutRef<typeof Link>, "href"> & {
   href: string;
@@ -13,6 +20,7 @@ type TrackedCtaLinkProps = Omit<ComponentPropsWithoutRef<typeof Link>, "href"> &
   pagePath: string;
   section: string;
   ctaLabel: string;
+  conversionKey?: MarketingConversionKey;
 };
 
 type LogMarketingEventArgs = {
@@ -58,6 +66,7 @@ export const TrackedCtaLink = forwardRef<HTMLAnchorElement, TrackedCtaLinkProps>
   pagePath,
   section,
   ctaLabel,
+  conversionKey,
   onClick,
   ...props
 }, ref) {
@@ -85,6 +94,25 @@ export const TrackedCtaLink = forwardRef<HTMLAnchorElement, TrackedCtaLinkProps>
       ctaTargetPath: href,
       sourceTag,
     });
+
+    pushDataLayerEvent({
+      event: "bbf_cta_click",
+      locale,
+      pagePath,
+      section,
+      ctaLabel,
+      ctaTargetPath: href,
+      sourceTag,
+    });
+
+    if (conversionKey) {
+      trackAdConversion(conversionKey, {
+        locale,
+        pagePath,
+        section,
+        ctaLabel,
+      });
+    }
   };
 
   return (

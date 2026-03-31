@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getSubscriptionTermsCopy } from "@/config/commercial";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
 import { buildLocaleAlternates } from "@/i18n/metadata";
@@ -23,8 +24,9 @@ type TermsCopy = {
   sections: TermsSection[];
 };
 
-const content: Record<Locale, TermsCopy> = {
-  en: {
+function getContent(locale: Locale): TermsCopy {
+  if (locale === "en") {
+    return {
     metadata: {
       title: "Terms of Service - BestBikeFit4U",
       description: "Read the terms and conditions for using BestBikeFit4U.",
@@ -68,7 +70,7 @@ const content: Record<Locale, TermsCopy> = {
       },
       {
         title: "6. Subscription Plans",
-        body: "BestBikeFit4U offers Free, Pro, and Premium plans. Paid plans are billed monthly and can be cancelled at any time.",
+        body: getSubscriptionTermsCopy(locale),
       },
       {
         title: "7. Limitation of Liability",
@@ -87,8 +89,10 @@ const content: Record<Locale, TermsCopy> = {
         body: "For questions about these terms, contact support@bestbikefit4u.eu.",
       },
     ],
-  },
-  nl: {
+    };
+  }
+
+  return {
     metadata: {
       title: "Gebruiksvoorwaarden - BestBikeFit4U",
       description: "Lees de voorwaarden voor het gebruik van BestBikeFit4U.",
@@ -132,7 +136,7 @@ const content: Record<Locale, TermsCopy> = {
       },
       {
         title: "6. Abonnementsplannen",
-        body: "BestBikeFit4U biedt Free, Pro en Premium. Betaalde plannen worden maandelijks gefactureerd en kunnen op elk moment worden opgezegd.",
+        body: getSubscriptionTermsCopy(locale),
       },
       {
         title: "7. Beperking van aansprakelijkheid",
@@ -151,12 +155,12 @@ const content: Record<Locale, TermsCopy> = {
         body: "Voor vragen over deze voorwaarden: support@bestbikefit4u.eu.",
       },
     ],
-  },
-};
+  };
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
-  const page = content[locale];
+  const page = getContent(locale);
 
   return {
     title: page.metadata.title,
@@ -173,7 +177,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function TermsPage() {
   const locale = await getRequestLocale();
-  const page = content[locale];
+  const page = getContent(locale);
 
   return (
     <div className="py-16 text-foreground">

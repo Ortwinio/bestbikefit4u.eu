@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui";
 import { Mail, MessageSquare } from "lucide-react";
+import { getSupportResponseItems } from "@/config/commercial";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -31,8 +32,9 @@ type ContactCopy = {
 const panelClass =
   "rounded-[1.75rem] border border-border/70 bg-card/95 p-6 shadow-sm sm:p-8";
 
-const content: Record<Locale, ContactCopy> = {
-  en: {
+function getContent(locale: Locale): ContactCopy {
+  if (locale === "en") {
+    return {
     metadata: {
       title: "Contact Us - BestBikeFit4U",
       description:
@@ -47,18 +49,16 @@ const content: Record<Locale, ContactCopy> = {
     faqText: "Check our FAQ for instant answers to common questions.",
     faqLink: "View FAQ ->",
     responseTimes: "Response Times",
-    responseItems: [
-      "Free plan: within 3 business days",
-      "Pro plan: within 1 business day",
-      "Premium plan: within 4 hours",
-    ],
+    responseItems: getSupportResponseItems(locale),
     directContactTitle: "Send us an email directly",
     directContactBody:
       "For now, the fastest support route is direct email. Include your bike type, goal, and where you are stuck so we can help quickly.",
     directContactCta: "Open email app",
     directContactHint: "Address: support@bestbikefit4u.eu",
-  },
-  nl: {
+    };
+  }
+
+  return {
     metadata: {
       title: "Contact - BestBikeFit4U",
       description:
@@ -73,22 +73,18 @@ const content: Record<Locale, ContactCopy> = {
     faqText: "Bekijk onze FAQ voor directe antwoorden op veelgestelde vragen.",
     faqLink: "Bekijk FAQ ->",
     responseTimes: "Responstijden",
-    responseItems: [
-      "Free-plan: binnen 3 werkdagen",
-      "Pro-plan: binnen 1 werkdag",
-      "Premium-plan: binnen 4 uur",
-    ],
+    responseItems: getSupportResponseItems(locale),
     directContactTitle: "Mail ons direct",
     directContactBody:
       "Op dit moment helpen we je het snelst via directe e-mail. Vermeld je fietstype, doel en waar je vastloopt voor sneller antwoord.",
     directContactCta: "Open e-mailapp",
     directContactHint: "Adres: support@bestbikefit4u.eu",
-  },
-};
+  };
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
-  const page = content[locale];
+  const page = getContent(locale);
 
   return {
     title: page.metadata.title,
@@ -105,7 +101,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ContactPage() {
   const locale = await getRequestLocale();
-  const page = content[locale];
+  const page = getContent(locale);
 
   return (
     <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_32%,var(--background)_68%)_100%)] py-16 text-foreground">

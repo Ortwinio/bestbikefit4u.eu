@@ -33,6 +33,7 @@ import type * as bikes_actions from "../bikes/actions.js";
 import type * as bikes_description from "../bikes/description.js";
 import type * as bikes_mutations from "../bikes/mutations.js";
 import type * as bikes_queries from "../bikes/queries.js";
+import type * as caseStudyLeads_mutations from "../caseStudyLeads/mutations.js";
 import type * as crons from "../crons.js";
 import type * as emails_actions from "../emails/actions.js";
 import type * as emails_mutations from "../emails/mutations.js";
@@ -132,6 +133,7 @@ declare const fullApi: ApiFromModules<{
   "bikes/description": typeof bikes_description;
   "bikes/mutations": typeof bikes_mutations;
   "bikes/queries": typeof bikes_queries;
+  "caseStudyLeads/mutations": typeof caseStudyLeads_mutations;
   crons: typeof crons;
   "emails/actions": typeof emails_actions;
   "emails/mutations": typeof emails_mutations;
