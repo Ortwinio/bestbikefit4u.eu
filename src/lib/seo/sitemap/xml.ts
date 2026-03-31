@@ -62,7 +62,29 @@ function buildEtag(payload: string): string {
 
 type XmlResponseOptions = {
   cacheControl?: string;
+  lastModified?: string;
 };
+
+function createXmlHeaders(
+  payload: string,
+  etag: string,
+  options: XmlResponseOptions = {}
+): Headers {
+  const headers = new Headers({
+    "Content-Type": "text/xml; charset=utf-8",
+    "Cache-Control": options.cacheControl ?? DEFAULT_SITEMAP_CACHE_CONTROL,
+    ETag: etag,
+    "X-Content-Type-Options": "nosniff",
+    "X-Robots-Tag": "index, follow",
+    "Content-Length": Buffer.byteLength(payload, "utf8").toString(),
+  });
+
+  if (options.lastModified) {
+    headers.set("Last-Modified", new Date(options.lastModified).toUTCString());
+  }
+
+  return headers;
+}
 
 export function buildXmlResponse(
   request: Request,
@@ -74,19 +96,32 @@ export function buildXmlResponse(
   if (ifNoneMatch === etag) {
     return new Response(null, {
       status: 304,
-      headers: {
-        ETag: etag,
-        "Cache-Control": options.cacheControl ?? DEFAULT_SITEMAP_CACHE_CONTROL,
-      },
+      headers: createXmlHeaders(payload, etag, options),
     });
   }
 
   return new Response(payload, {
     status: 200,
-    headers: {
-      "Content-Type": "application/xml; charset=utf-8",
-      "Cache-Control": options.cacheControl ?? DEFAULT_SITEMAP_CACHE_CONTROL,
-      ETag: etag,
-    },
+    headers: createXmlHeaders(payload, etag, options),
+  });
+}
+
+export function buildXmlHeadResponse(
+  request: Request,
+  payload: string,
+  options: XmlResponseOptions = {}
+): Response {
+  const etag = buildEtag(payload);
+  const ifNoneMatch = request.headers.get("if-none-match");
+  if (ifNoneMatch === etag) {
+    return new Response(null, {
+      status: 304,
+      headers: createXmlHeaders(payload, etag, options),
+    });
+  }
+
+  return new Response(null, {
+    status: 200,
+    headers: createXmlHeaders(payload, etag, options),
   });
 }
