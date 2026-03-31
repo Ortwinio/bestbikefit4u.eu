@@ -1,0 +1,4 @@
+brand_slug,brand_name,model_name,model_year,category,size_label,stack,reach,seat_tube_angle,head_tube_angle,wheelbase,chainstay,bb_drop,effective_top_tube,standover,fork_rake,head_tube_length,seat_tube_length,rider_height_min_cm,rider_height_max_cm,saddle_height_min_mm,saddle_height_max_mm,source,source_url
+canyon,Canyon,Endurace CF SLX,2025,endurance,54,571,387,73.5,72.5,998,415,70,548,778,50,143,500,172,180,690,760,geometry_geeks,https://geometrygeeks.bike/
+specialized,Specialized,Tarmac SL8,2024,race_road,56,565,395,73.5,73.5,990,410,72,565,801,44,155,520,175,183,705,775,geometry_geeks,https://geometrygeeks.bike/
+trek,Trek,Domane SL Gen 4,2024,endurance,56,591,383,73.3,71.9,1002,420,80,560,790,47,170,540,175,185,700,780,geometry_geeks,https://geometrygeeks.bike/

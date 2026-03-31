@@ -6,6 +6,8 @@ import { useQuery } from "convex/react";
 import { Button, Card, CardContent, CardHeader, CardTitle, EmptyState, LoadingState } from "@/components/ui";
 import { ErrorState } from "@/components/ui";
 
+const GEOMETRY_TEMPLATE_PATH = "/templates/geometry-import-template.csv";
+
 export default function GeometryHubPage() {
   const brands = useQuery(api.admin.queries.listGeometryBrands, {});
 
@@ -41,7 +43,12 @@ export default function GeometryHubPage() {
             <div className="text-sm text-[color:var(--muted-foreground)]">
               CSV import preview runs live, but persistence is still backend-limited.
             </div>
-            <Button render={<Link href="/admin/geometry/import" />}>Preview CSV import</Button>
+            <div className="flex flex-wrap gap-2">
+              <Button render={<Link href="/admin/geometry/import" />}>Preview CSV import</Button>
+              <Button variant="outline" render={<Link href={GEOMETRY_TEMPLATE_PATH} download />}>
+                Download CSV template
+              </Button>
+            </div>
           </CardContent>
         </Card>
         <Card>

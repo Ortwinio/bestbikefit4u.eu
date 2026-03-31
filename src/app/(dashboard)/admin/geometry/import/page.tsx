@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { api } from "../../../../../../convex/_generated/api";
 import { useAction } from "convex/react";
@@ -16,32 +17,42 @@ import {
 import { ErrorState } from "@/components/ui";
 import { StatusPill as SharedStatusPill } from "@/components/admin/shared/StatusPill";
 
+const GEOMETRY_TEMPLATE_PATH = "/templates/geometry-import-template.csv";
+const GEOMETRY_TEMPLATE_CSV = `brand_slug,brand_name,model_name,model_year,category,size_label,stack,reach,seat_tube_angle,head_tube_angle,wheelbase,chainstay,bb_drop,effective_top_tube,standover,fork_rake,head_tube_length,seat_tube_length,rider_height_min_cm,rider_height_max_cm,saddle_height_min_mm,saddle_height_max_mm,source,source_url
+canyon,Canyon,Endurace CF SLX,2025,endurance,54,571,387,73.5,72.5,998,415,70,548,778,50,143,500,172,180,690,760,geometry_geeks,https://geometrygeeks.bike/
+specialized,Specialized,Tarmac SL8,2024,race_road,56,565,395,73.5,73.5,990,410,72,565,801,44,155,520,175,183,705,775,geometry_geeks,https://geometrygeeks.bike/`;
+
 function parsePreviewRows(csv: string) {
   const lines = csv.trim().split("\n").filter(Boolean);
   if (lines.length < 2) {
     return [];
   }
 
+  const headers = lines[0].split(",").map((header) => header.trim());
+
   return lines.slice(1, 6).map((line, index) => {
-    const [brandSlug, modelName, category, sizeLabel, stack, reach] = line.split(",");
+    const values = line.split(",");
+    const row = Object.fromEntries(
+      headers.map((header, headerIndex) => [header, values[headerIndex]?.trim() ?? ""])
+    );
     return {
-      id: `${index}-${sizeLabel ?? "row"}`,
-      brandSlug: brandSlug?.trim() ?? "",
-      modelName: modelName?.trim() ?? "",
-      category: category?.trim() ?? "",
-      sizeLabel: sizeLabel?.trim() ?? "",
-      stack: stack?.trim() ?? "",
-      reach: reach?.trim() ?? "",
+      id: `${index}-${row.size_label ?? "row"}`,
+      brandSlug: row.brand_slug ?? "",
+      modelName: row.model_name ?? "",
+      modelYear: row.model_year ?? "",
+      category: row.category ?? "",
+      sizeLabel: row.size_label ?? "",
+      stack: row.stack ?? "",
+      reach: row.reach ?? "",
+      source: row.source ?? "",
     };
   });
 }
 
 export default function GeometryImportPage() {
   const importGeometryFromCsv = useAction(api.admin.actions.importGeometryFromCsv);
-  const [csv, setCsv] = useState(
-    "brand_slug,model_name,category,size_label,stack,reach\ncanyon,Endurace CF SLX,endurance,54,571,387"
-  );
-  const [fileName, setFileName] = useState("manual-paste.csv");
+  const [csv, setCsv] = useState(GEOMETRY_TEMPLATE_CSV);
+  const [fileName, setFileName] = useState("geometry-import-template.csv");
   const [previewResult, setPreviewResult] = useState<{
     rowsProcessed: number;
     recordsCreated: number;
@@ -74,6 +85,14 @@ export default function GeometryImportPage() {
           <CardTitle>Preview live import input</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="flex flex-wrap items-center gap-2 rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+            <div className="flex-1 text-sm text-[color:var(--muted-foreground)]">
+              Download the geometry CSV template first, then paste matching rows here for preview.
+            </div>
+            <Button variant="outline" render={<Link href={GEOMETRY_TEMPLATE_PATH} download />}>
+              Download geometry CSV template
+            </Button>
+          </div>
           <Input
             label="File name"
             value={fileName}
@@ -92,14 +111,12 @@ export default function GeometryImportPage() {
             <Button
               variant="outline"
               onClick={() => {
-                setCsv(
-                  "brand_slug,model_name,category,size_label,stack,reach\ncanyon,Endurace CF SLX,endurance,54,571,387"
-                );
-                setFileName("manual-paste.csv");
+                setCsv(GEOMETRY_TEMPLATE_CSV);
+                setFileName("geometry-import-template.csv");
                 setPreviewResult(null);
               }}
             >
-              Reset sample
+              Reset template sample
             </Button>
           </div>
         </CardContent>
@@ -155,9 +172,11 @@ export default function GeometryImportPage() {
                   <tr>
                     <th className="px-4 py-3 font-medium">Brand</th>
                     <th className="px-4 py-3 font-medium">Model</th>
+                    <th className="px-4 py-3 font-medium">Year</th>
                     <th className="px-4 py-3 font-medium">Category</th>
                     <th className="px-4 py-3 font-medium">Size</th>
                     <th className="px-4 py-3 font-medium">Stack / Reach</th>
+                    <th className="px-4 py-3 font-medium">Source</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -165,11 +184,13 @@ export default function GeometryImportPage() {
                     <tr key={row.id} className="border-t border-[color:var(--border)]">
                       <td className="px-4 py-4">{row.brandSlug}</td>
                       <td className="px-4 py-4">{row.modelName}</td>
+                      <td className="px-4 py-4">{row.modelYear}</td>
                       <td className="px-4 py-4">{row.category}</td>
                       <td className="px-4 py-4">{row.sizeLabel}</td>
                       <td className="px-4 py-4">
                         {row.stack} / {row.reach}
                       </td>
+                      <td className="px-4 py-4">{row.source}</td>
                     </tr>
                   ))}
                 </tbody>
