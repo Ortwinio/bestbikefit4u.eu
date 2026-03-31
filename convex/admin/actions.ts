@@ -191,10 +191,110 @@ export const importGeometryFromCsv = action({
       .map((line) => line.trim())
       .filter(Boolean);
 
+    if (rows.length < 2) {
+      return {
+        rowsProcessed: 0,
+        recordsCreated: 0,
+        recordsSkipped: 0,
+        errors: ["The CSV must include a header row and at least one data row."],
+        previewRows: [] as string[],
+      };
+    }
+
+    const headers = rows[0].split(",").map((header) => header.trim());
+    const importJobId = `geometry-csv-${admin._id}-${Date.now()}`;
+    let recordsCreated = 0;
+    let recordsSkipped = 0;
+    const errors: string[] = [];
+
+    const parseOptionalNumber = (value: string | undefined) => {
+      const trimmed = value?.trim();
+      if (!trimmed) {
+        return undefined;
+      }
+      const parsed = Number(trimmed);
+      return Number.isFinite(parsed) ? parsed : undefined;
+    };
+
+    const normalizeCategory = (value: string | undefined) => {
+      const normalized = value?.trim().toLowerCase() ?? "";
+      switch (normalized) {
+        case "road":
+        case "gravel":
+        case "mtb":
+        case "tt":
+        case "endurance":
+        case "city":
+        case "other":
+          return normalized;
+        case "race_road":
+          return "road";
+        case "mountain":
+          return "mtb";
+        case "tt_triathlon":
+          return "tt";
+        default:
+          return "other";
+      }
+    };
+
+    for (const [rowIndex, rawLine] of rows.slice(1).entries()) {
+      const values = rawLine.split(",");
+      const row = Object.fromEntries(
+        headers.map((header, headerIndex) => [header, values[headerIndex]?.trim() ?? ""])
+      );
+
+      try {
+        if (!row.brand_slug || !row.brand_name || !row.model_name || !row.size_label) {
+          throw new Error("Missing required columns: brand_slug, brand_name, model_name, or size_label.");
+        }
+
+        const result = await ctx.runMutation(api.admin.mutations.importGeometryCsvRow, {
+          brandSlug: row.brand_slug,
+          brandName: row.brand_name,
+          modelName: row.model_name,
+          modelYear: parseOptionalNumber(row.model_year),
+          category: normalizeCategory(row.category) as
+            | "road"
+            | "gravel"
+            | "mtb"
+            | "tt"
+            | "endurance"
+            | "city"
+            | "other",
+          sizeLabel: row.size_label,
+          stack: parseOptionalNumber(row.stack),
+          reach: parseOptionalNumber(row.reach),
+          seatTubeAngle: parseOptionalNumber(row.seat_tube_angle),
+          headTubeAngle: parseOptionalNumber(row.head_tube_angle),
+          wheelbase: parseOptionalNumber(row.wheelbase),
+          chainstay: parseOptionalNumber(row.chainstay),
+          bbDrop: parseOptionalNumber(row.bb_drop),
+          effectiveTopTube: parseOptionalNumber(row.effective_top_tube),
+          standover: parseOptionalNumber(row.standover),
+          forkRake: parseOptionalNumber(row.fork_rake),
+          headTubeLength: parseOptionalNumber(row.head_tube_length),
+          sourceUrl: row.source_url || undefined,
+          importJobId,
+        }) as { imported: boolean; skipped: boolean };
+
+        if (result.imported) {
+          recordsCreated += 1;
+        } else if (result.skipped) {
+          recordsSkipped += 1;
+        }
+      } catch (error) {
+        errors.push(
+          `Row ${rowIndex + 2}: ${error instanceof Error ? error.message : "Import failed."}`
+        );
+      }
+    }
+
     return {
       rowsProcessed: Math.max(0, rows.length - 1),
-      recordsCreated: Math.max(0, rows.length - 1),
-      errors: [] as string[],
+      recordsCreated,
+      recordsSkipped,
+      errors,
       previewRows: rows.slice(0, 10),
     };
   },

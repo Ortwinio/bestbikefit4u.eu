@@ -58,6 +58,7 @@ export default function GeometryImportPage() {
   const [previewResult, setPreviewResult] = useState<{
     rowsProcessed: number;
     recordsCreated: number;
+    recordsSkipped: number;
     errors: string[];
     previewRows: string[];
   } | null>(null);
@@ -117,12 +118,12 @@ export default function GeometryImportPage() {
     <div className="space-y-6">
       <div>
         <div className="text-sm text-[color:var(--muted-foreground)]">Geometry import</div>
-        <h1 className="text-3xl font-semibold tracking-tight">CSV import preview</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">CSV geometry import</h1>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Preview live import input</CardTitle>
+          <CardTitle>Import geometry CSV</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-2 rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
@@ -180,7 +181,7 @@ export default function GeometryImportPage() {
           />
           <div className="flex flex-wrap gap-2">
             <Button isLoading={isPreviewing} onClick={() => void handlePreview()}>
-              Run import preview
+              Import CSV
             </Button>
             <Button
               variant="outline"
@@ -196,31 +197,26 @@ export default function GeometryImportPage() {
         </CardContent>
       </Card>
 
-      <ErrorState
-        title="Geometry import persistence is still backend-limited"
-        description="The action can parse CSV and return a preview, but there is no end-to-end persisted import pipeline yet. Use this page to validate the incoming payload before wiring a real importer."
-      />
-
       {previewResult === null ? (
         <EmptyState
-          title="No preview run yet"
-          description="Run the preview to inspect parsed rows before any future persistence work."
+          title="No import run yet"
+          description="Import a CSV to create draft geometry records in the geometry library."
         />
       ) : previewResult.errors.length > 0 ? (
         <ErrorState
-          title="Import preview reported issues"
+          title="Geometry import reported issues"
           description={previewResult.errors.join(" • ")}
         />
       ) : (
         <Card>
           <CardHeader className="flex-row items-center justify-between">
-            <CardTitle>Preview results</CardTitle>
+            <CardTitle>Import results</CardTitle>
             <SharedStatusPill tone="success">
-              {previewResult.recordsCreated} records ready
+              {previewResult.recordsCreated} draft records created
             </SharedStatusPill>
           </CardHeader>
           <CardContent className="space-y-4 p-0">
-            <div className="grid gap-4 px-4 pt-4 md:grid-cols-3">
+            <div className="grid gap-4 px-4 pt-4 md:grid-cols-4">
               <Card variant="bordered">
                 <CardContent className="pt-6">
                   <div className="text-sm text-[color:var(--muted-foreground)]">Rows processed</div>
@@ -237,6 +233,12 @@ export default function GeometryImportPage() {
                 <CardContent className="pt-6">
                   <div className="text-sm text-[color:var(--muted-foreground)]">Preview rows</div>
                   <div className="mt-2 text-sm">{parsedRows.length}</div>
+                </CardContent>
+              </Card>
+              <Card variant="bordered">
+                <CardContent className="pt-6">
+                  <div className="text-sm text-[color:var(--muted-foreground)]">Skipped rows</div>
+                  <div className="mt-2 text-3xl font-semibold">{previewResult.recordsSkipped}</div>
                 </CardContent>
               </Card>
             </div>

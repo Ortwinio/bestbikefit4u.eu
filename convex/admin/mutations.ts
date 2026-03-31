@@ -390,6 +390,199 @@ export const createGeometryBrand = mutation({
   },
 });
 
+export const importGeometryCsvRow = mutation({
+  args: {
+    brandSlug: v.string(),
+    brandName: v.string(),
+    modelName: v.string(),
+    modelYear: v.optional(v.number()),
+    category: v.union(
+      v.literal("road"),
+      v.literal("gravel"),
+      v.literal("mtb"),
+      v.literal("tt"),
+      v.literal("endurance"),
+      v.literal("city"),
+      v.literal("other")
+    ),
+    sizeLabel: v.string(),
+    stack: v.optional(v.number()),
+    reach: v.optional(v.number()),
+    seatTubeAngle: v.optional(v.number()),
+    headTubeAngle: v.optional(v.number()),
+    wheelbase: v.optional(v.number()),
+    chainstay: v.optional(v.number()),
+    bbDrop: v.optional(v.number()),
+    effectiveTopTube: v.optional(v.number()),
+    standover: v.optional(v.number()),
+    forkRake: v.optional(v.number()),
+    headTubeLength: v.optional(v.number()),
+    sourceUrl: v.optional(v.string()),
+    importJobId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const adminId = await requireAnyRole(ctx, ["super_admin", "geometry_manager"]);
+    const now = Date.now();
+
+    const normalizedSlug = args.brandSlug.trim().toLowerCase();
+    const normalizedModelName = args.modelName.trim();
+    const normalizedSizeLabel = args.sizeLabel.trim();
+
+    let brand = await ctx.db
+      .query("geometry_brands")
+      .withIndex("by_slug", (q) => q.eq("slug", normalizedSlug))
+      .unique();
+
+    if (!brand) {
+      const brandId = await ctx.db.insert("geometry_brands", {
+        name: args.brandName.trim(),
+        slug: normalizedSlug,
+        createdAt: now,
+        createdBy: adminId,
+      });
+      brand = await ctx.db.get(brandId);
+      await writeAuditLog(ctx, {
+        adminUserId: adminId,
+        action: "geometry.brand_create",
+        targetType: "geometry_brand",
+        targetId: brandId,
+        payload: { name: args.brandName.trim(), slug: normalizedSlug },
+      });
+    }
+
+    if (!brand) {
+      throw new Error("Geometry brand could not be created");
+    }
+
+    const existingModels = await ctx.db
+      .query("geometry_models")
+      .withIndex("by_brand", (q) => q.eq("brandId", brand._id))
+      .collect();
+
+    let model =
+      existingModels.find(
+        (entry) =>
+          entry.name.trim().toLowerCase() === normalizedModelName.toLowerCase() &&
+          entry.category === args.category &&
+          (entry.yearStart ?? undefined) === (args.modelYear ?? undefined) &&
+          (entry.yearEnd ?? undefined) === (args.modelYear ?? undefined)
+      ) ??
+      existingModels.find(
+        (entry) => entry.name.trim().toLowerCase() === normalizedModelName.toLowerCase()
+      ) ??
+      null;
+
+    if (!model) {
+      const modelId = await ctx.db.insert("geometry_models", {
+        brandId: brand._id,
+        name: normalizedModelName,
+        category: args.category,
+        yearStart: args.modelYear,
+        yearEnd: args.modelYear,
+        createdAt: now,
+        createdBy: adminId,
+      });
+      model = await ctx.db.get(modelId);
+      await writeAuditLog(ctx, {
+        adminUserId: adminId,
+        action: "geometry.model_create",
+        targetType: "geometry_model",
+        targetId: modelId,
+        payload: {
+          brandId: brand._id,
+          name: normalizedModelName,
+          category: args.category,
+          yearStart: args.modelYear,
+          yearEnd: args.modelYear,
+        },
+      });
+    }
+
+    if (!model) {
+      throw new Error("Geometry model could not be created");
+    }
+
+    const existingRecords = await ctx.db
+      .query("geometry_records")
+      .withIndex("by_model_size", (q) =>
+        q.eq("modelId", model._id).eq("sizeLabel", normalizedSizeLabel)
+      )
+      .collect();
+
+    const latestRecord = existingRecords.sort((a, b) => b.version - a.version)[0] ?? null;
+    const isSameAsLatest =
+      latestRecord !== null &&
+      latestRecord.stack === args.stack &&
+      latestRecord.reach === args.reach &&
+      latestRecord.seatTubeAngle === args.seatTubeAngle &&
+      latestRecord.headTubeAngle === args.headTubeAngle &&
+      latestRecord.wheelbase === args.wheelbase &&
+      latestRecord.chainstay === args.chainstay &&
+      latestRecord.bbDrop === args.bbDrop &&
+      latestRecord.effectiveTopTube === args.effectiveTopTube &&
+      latestRecord.standover === args.standover &&
+      latestRecord.forkRake === args.forkRake &&
+      latestRecord.headTubeLength === args.headTubeLength &&
+      latestRecord.source === "admin_import" &&
+      (latestRecord.sourceUrl ?? undefined) === (args.sourceUrl ?? undefined);
+
+    if (isSameAsLatest) {
+      return {
+        brandId: brand._id,
+        modelId: model._id,
+        recordId: latestRecord._id,
+        imported: false,
+        skipped: true,
+      };
+    }
+
+    const recordId = await ctx.db.insert("geometry_records", {
+      modelId: model._id,
+      brandId: brand._id,
+      sizeLabel: normalizedSizeLabel,
+      stack: args.stack,
+      reach: args.reach,
+      seatTubeAngle: args.seatTubeAngle,
+      headTubeAngle: args.headTubeAngle,
+      wheelbase: args.wheelbase,
+      chainstay: args.chainstay,
+      bbDrop: args.bbDrop,
+      effectiveTopTube: args.effectiveTopTube,
+      standover: args.standover,
+      forkRake: args.forkRake,
+      headTubeLength: args.headTubeLength,
+      source: "admin_import",
+      sourceUrl: args.sourceUrl,
+      importJobId: args.importJobId,
+      status: "draft",
+      version: existingRecords.length + 1,
+      createdAt: now,
+      createdBy: adminId,
+    });
+
+    await writeAuditLog(ctx, {
+      adminUserId: adminId,
+      action: "geometry.create",
+      targetType: "geometry_record",
+      targetId: recordId,
+      payload: {
+        modelId: model._id,
+        brandId: brand._id,
+        sizeLabel: normalizedSizeLabel,
+        importJobId: args.importJobId,
+      },
+    });
+
+    return {
+      brandId: brand._id,
+      modelId: model._id,
+      recordId,
+      imported: true,
+      skipped: false,
+    };
+  },
+});
+
 export const createGeometryModel = mutation({
   args: {
     brandId: v.id("geometry_brands"),

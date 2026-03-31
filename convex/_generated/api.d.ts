@@ -39,6 +39,8 @@ import type * as caseStudyLeads_mutations from "../caseStudyLeads/mutations.js";
 import type * as caseStudyLeads_queries from "../caseStudyLeads/queries.js";
 import type * as crons from "../crons.js";
 import type * as emails_actions from "../emails/actions.js";
+import type * as emails_fitpass from "../emails/fitpass.js";
+import type * as emails_fitpassData from "../emails/fitpassData.js";
 import type * as emails_htmlHelpers from "../emails/htmlHelpers.js";
 import type * as emails_lifecycle from "../emails/lifecycle.js";
 import type * as emails_lifecycleData from "../emails/lifecycleData.js";
@@ -147,6 +149,8 @@ declare const fullApi: ApiFromModules<{
   "caseStudyLeads/queries": typeof caseStudyLeads_queries;
   crons: typeof crons;
   "emails/actions": typeof emails_actions;
+  "emails/fitpass": typeof emails_fitpass;
+  "emails/fitpassData": typeof emails_fitpassData;
   "emails/htmlHelpers": typeof emails_htmlHelpers;
   "emails/lifecycle": typeof emails_lifecycle;
   "emails/lifecycleData": typeof emails_lifecycleData;
