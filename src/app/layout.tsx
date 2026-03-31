@@ -9,6 +9,8 @@ import { CookieConsentBanner } from "@/components/layout/CookieConsentBanner";
 import { GTMConsentLoader } from "@/components/analytics/GTMConsentLoader";
 import { FeedbackPanelProvider } from "@/components/feedback";
 import { ToastProvider } from "@/components/ui";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND.siteUrl),
@@ -94,6 +96,8 @@ export default async function RootLayout({
             </ConvexClientProvider>
             <CookieConsentBanner locale={locale} />
           </ToastProvider>
+          <Analytics />
+          <SpeedInsights />
         </body>
       </html>
     </ConvexAuthNextjsServerProvider>

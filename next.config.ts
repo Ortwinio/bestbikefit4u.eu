@@ -33,9 +33,9 @@ const nextConfig: NextConfig = {
               // In dev, the local Convex server runs on ws://127.0.0.1:*
               isDev
                 ? `connect-src 'self' http://127.0.0.1:* ws://127.0.0.1:* https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com`
-                : `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com`,
+                : `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com`,
               // GTM is loaded dynamically after consent — the external script origin must be whitelisted
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net",
               "style-src 'self' 'unsafe-inline'",
               // Convex storage URLs serve user-uploaded images (e.g. bike/profile photos)
               // Depending on deployment/runtime these can resolve on convex.cloud or convex.site.
