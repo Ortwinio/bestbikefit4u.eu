@@ -73,6 +73,7 @@ export default async function CaseStudyPage({
             <div className="mt-6 flex flex-wrap gap-3">
               <Button
                 variant="outline"
+                className="text-[color:var(--foreground)] before:from-[color:var(--primary)]/18 before:via-[color:var(--border)] before:to-[color:var(--border-dark)] after:bg-[color:var(--card)] hover-only:after:bg-[color:var(--accent)]"
                 render={
                   <TrackedCtaLink
                     href={withLocalePrefix("/pain", locale)}
@@ -86,7 +87,7 @@ export default async function CaseStudyPage({
                 {isNl ? "Bekijk pijnpagina's" : "Browse pain pages"}
               </Button>
               <Button
-                variant="outline"
+                className="shadow-lg shadow-[color:color-mix(in_oklch,var(--primary)_18%,transparent)]"
                 render={
                   <TrackedCtaLink
                     href={withLocalePrefix("/pricing", locale)}

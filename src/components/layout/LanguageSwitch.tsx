@@ -38,7 +38,7 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
   return (
     <nav
       aria-label={labels.language}
-      className="flex items-center rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-secondary)] p-1"
+      className="flex items-center rounded-lg border border-[color:var(--border)] bg-[color:var(--card)] p-1 shadow-sm"
     >
       <a
         href={enHref}
@@ -47,8 +47,8 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
         className={cn(
           sharedClasses,
           activeLocale === "en"
-            ? "bg-[color:var(--background)] text-[color:var(--primary)] shadow-sm"
-            : "text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)]"
+            ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] shadow-sm"
+            : "text-[color:var(--foreground)]/80 hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
         )}
       >
         EN
@@ -60,8 +60,8 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
         className={cn(
           sharedClasses,
           activeLocale === "nl"
-            ? "bg-[color:var(--background)] text-[color:var(--primary)] shadow-sm"
-            : "text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)]"
+            ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] shadow-sm"
+            : "text-[color:var(--foreground)]/80 hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
         )}
       >
         NL
