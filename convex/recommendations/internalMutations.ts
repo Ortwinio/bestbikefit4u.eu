@@ -1,6 +1,7 @@
 import { internalMutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import type { Id } from "../_generated/dataModel";
+import { internal } from "../_generated/api";
 import { computePressureInsights } from "../lib/pressureFitInteraction";
 
 async function getExistingRecommendationId(
@@ -158,6 +159,13 @@ export const storeResult = internalMutation({
       status: "completed",
       completedAt: Date.now(),
     });
+
+    // Schedule results recap email — 60s delay to let user view results first
+    await ctx.scheduler.runAfter(
+      60 * 1000,
+      internal.emails.lifecycle.sendResultsRecap,
+      { userId: args.userId, sessionId: args.sessionId }
+    );
 
     return recId;
   },

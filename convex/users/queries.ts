@@ -1,4 +1,5 @@
-import { query } from "../_generated/server";
+import { query, internalQuery } from "../_generated/server";
+import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
 /**
@@ -25,5 +26,15 @@ export const isAuthenticated = query({
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
     return userId !== null;
+  },
+});
+
+/**
+ * Internal: get a user by ID (used by lifecycle email actions)
+ */
+export const getUserById = internalQuery({
+  args: { userId: v.id("users") },
+  handler: async (ctx, { userId }) => {
+    return await ctx.db.get(userId);
   },
 });

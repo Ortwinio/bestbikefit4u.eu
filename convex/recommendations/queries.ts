@@ -1,7 +1,22 @@
-import { query } from "../_generated/server";
+import { query, internalQuery } from "../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { requireRecommendationOwner } from "../lib/authz";
+
+/**
+ * Internal: get the oldest recommendation for a session (used by lifecycle email actions)
+ */
+export const getBySessionInternal = internalQuery({
+  args: { sessionId: v.id("fitSessions") },
+  handler: async (ctx, { sessionId }) => {
+    const recommendations = await ctx.db
+      .query("recommendations")
+      .withIndex("by_session", (q) => q.eq("sessionId", sessionId))
+      .collect();
+    if (recommendations.length === 0) return null;
+    return recommendations.sort((a, b) => a.createdAt - b.createdAt)[0] ?? null;
+  },
+});
 
 export const getBySession = query({
   args: { sessionId: v.id("fitSessions") },

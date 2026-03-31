@@ -1783,4 +1783,13 @@ export default defineSchema({
     .index("by_received_at", ["receivedAt"])
     .index("by_subject", ["subjectUserId"])
     .index("by_status", ["status"]),
+
+  lifecycleEmailLog: defineTable({
+    userId: v.id("users"),
+    emailType: v.string(), // e.g. "fit_reminder", "results_recap", "upgrade_nudge", "winback"
+    sentAt: v.number(),    // Date.now()
+    sessionId: v.optional(v.id("fitSessions")),
+  })
+    .index("by_user_type", ["userId", "emailType"])
+    .index("by_user_type_session", ["userId", "emailType", "sessionId"]),
 });

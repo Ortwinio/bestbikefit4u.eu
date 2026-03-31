@@ -1,6 +1,7 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { internal } from "../_generated/api";
 import {
   validateLongTextString,
   validateShortString,
@@ -46,7 +47,7 @@ export const submit = mutation({
     }
 
     const userId = await getAuthUserId(ctx);
-    return await ctx.db.insert("caseStudyLeads", {
+    const id = await ctx.db.insert("caseStudyLeads", {
       userId: userId ?? undefined,
       locale: args.locale,
       sourcePath: args.sourcePath.trim(),
@@ -58,5 +59,10 @@ export const submit = mutation({
       consentAccepted: true,
       createdAt: Date.now(),
     });
+
+    await ctx.scheduler.runAfter(0, internal.caseStudyLeads.emails.sendLeadNotification, { leadId: id });
+    await ctx.scheduler.runAfter(0, internal.caseStudyLeads.emails.sendCaseStudyConfirmation, { leadId: id });
+
+    return id;
   },
 });
