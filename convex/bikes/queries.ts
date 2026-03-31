@@ -2,6 +2,7 @@ import { query } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
 import { isPressureStale } from "../lib/pressureStaleness";
+import { buildBikePassportPreview, findBikeByPassportId } from "./passport";
 
 function sortNewestFirst<T extends { createdAt: number }>(rows: T[]) {
   return [...rows].sort((a, b) => b.createdAt - a.createdAt);
@@ -339,5 +340,47 @@ export const getCurrentBike = query({
       .collect();
 
     return [...bikes].sort((a, b) => b.createdAt - a.createdAt)[0] ?? null;
+  },
+});
+
+export const lookupByPassportId = query({
+  args: { bikePassportId: v.string() },
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+
+    const sourceBike = await findBikeByPassportId(ctx, args.bikePassportId);
+
+    if (!sourceBike) {
+      return { status: "not_found" as const };
+    }
+    if (sourceBike.userId === userId) {
+      return {
+        status: "self_owned" as const,
+        bikeId: sourceBike._id,
+        bikePassportId: sourceBike.bikePassportId ?? null,
+      };
+    }
+
+    const existingImport = sourceBike.bikePassportId
+      ? (
+          await ctx.db
+            .query("bikes")
+            .withIndex("by_user_imported_from_passport", (q) =>
+              q
+                .eq("userId", userId)
+                .eq("importedFromBikePassportId", sourceBike.bikePassportId!)
+            )
+            .collect()
+        ).sort((left, right) => right.createdAt - left.createdAt)[0] ?? null
+      : null;
+
+    return buildBikePassportPreview({
+      bike: sourceBike,
+      photos: await ctx.db
+        .query("bikePhotos")
+        .withIndex("by_bike", (q) => q.eq("bikeId", sourceBike._id))
+        .collect(),
+      existingBikeId: existingImport?._id ?? null,
+    });
   },
 });

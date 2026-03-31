@@ -930,7 +930,7 @@ const nl = {
       },
       reportV2: {
         locale: "nl",
-        introTitle: "Engine-gestuurd fitrapport",
+        introTitle: "Jouw fitrapport",
         introBody:
           "Gebruik dit rapport als praktische volgorde voor aanpassingen. Verander steeds een ding tegelijk, valideer op de fiets en noteer wat je voelt na elke rit.",
         shell: {
@@ -938,7 +938,7 @@ const nl = {
           dateLabel: "Rapportdatum",
           aboutTitle: "Over dit rapport",
           aboutBody:
-            "Dit rapport vertaalt je fitsessie naar een helder aanpasplan dat je op de fiets of samen met je fitter kunt gebruiken.",
+            "Dit rapport vertaalt je fitsessie naar een helder aanpasplan dat je op de fiets kunt gebruiken of kunt bespreken met een fitter of fietsenwinkel.",
           aboutBullets: [
             "Volg de volgorde stap voor stap.",
             "Valideer elke wijziging tijdens een echte rit.",
@@ -946,7 +946,7 @@ const nl = {
             "Vergelijk je fietscontext en lichaamsprofiel voordat je onderdelen verandert.",
           ] as string[],
           coverSupport:
-            "Ontwikkeld om je langer te laten rijden, minder vaak pijn te laten ervaren en beter te laten presteren.",
+            "Ontwikkeld om je huidige setup met duidelijkere vervolgstappen te beoordelen.",
         },
         sections: {
           about: "Over je rapport",
@@ -1764,6 +1764,13 @@ const nl = {
         emptyBrandModel: "Merk en model zijn nog niet toegevoegd.",
         fitBadge: "Fit beschikbaar",
         pressureBadge: "Spanning beschikbaar",
+        passportLabel: "Bike-passport ID",
+        passportDescription:
+          "Deel deze ID met een andere rider als je wilt dat die een eigen bewerkbare kopie van deze fiets maakt. Wijzigingen aan hun kopie veranderen jouw fiets nooit.",
+        passportMissing: "Bike-passport ID is nog niet beschikbaar.",
+        passportCopyAction: "ID kopiëren",
+        passportCopied: "Bike-passport ID gekopieerd.",
+        passportCopyFailed: "Kon de bike-passport ID niet kopiëren.",
       },
       sections: {
         gallery: "Foto's",
@@ -2034,6 +2041,103 @@ const nl = {
           backendUnavailable:
             "De Marktplaats-importbackend is nog niet beschikbaar in deze workspace. De rider-flow staat klaar, maar preview en opslaan kunnen pas afronden zodra het backendcontract er is.",
         },
+      },
+      createChooser: {
+        title: "Hoe wil je deze fiets toevoegen?",
+        description:
+          "Kies de route die past bij de informatie die je al hebt. Je kunt de fiets later altijd nog aanpassen.",
+        manual: {
+          title: "Fiets handmatig aanmaken",
+          description:
+            "Begin vanaf nul en voer zelf de fietsgegevens, geometrie en setup in.",
+          cta: "Start handmatige invoer",
+        },
+        marktplaats: {
+          title: "Importeren vanuit Marktplaats",
+          description:
+            "Plak één advertentie-URL, controleer wat we hebben gevonden en sla pas op nadat je het concept hebt bevestigd.",
+          cta: "Open Marktplaats-import",
+        },
+        passport: {
+          title: "Gebruik bike-passport ID",
+          description:
+            "Plak een bike-passport ID van een andere rider en maak in enkele seconden je eigen bewerkbare kopie.",
+          cta: "Gebruik bike-passport ID",
+        },
+      },
+      passportImport: {
+        entryCta: "Gebruik bike-passport ID",
+        title: "Importeer een fiets met een bike-passport ID",
+        description:
+          "Plak een gedeelde bike-passport ID, bekijk de fietsgegevens en maak daarna je eigen bewerkbare kopie.",
+        entryTitle: "Plak een bike-passport ID",
+        entryDescription:
+          "Een bike-passport ID is veilig om te delen. Je kunt er een nieuwe kopie van een andere rider's fiets mee importeren zonder eigenaar te worden van het origineel.",
+        previewTitle: "Bekijk je geïmporteerde kopie",
+        previewDescription:
+          "Controleer de gedeelde fietsgegevens voordat je jouw eigen versie in de garage aanmaakt.",
+        previewBikeLabel: "Gedeelde bronfiets",
+        emptyBrandModel: "Merk en model zijn niet gedeeld.",
+        noDescription: "Er is geen gedeelde beschrijving voor deze fiets beschikbaar.",
+        confirmationTitle: "Wat er nu gebeurt",
+        confirmationDescription:
+          "Deze actie voegt een nieuwe fiets toe aan jouw garage onder jouw account. Je kunt hem daarna vrij bewerken en de originele fiets van de andere rider blijft ongewijzigd.",
+        photoCopied: "Deze preview bevat de gedeelde hoofdfoto van de fiets als die beschikbaar is.",
+        photoNotCopied: "Deze fiets kan in deze eerste versie zonder foto's worden geïmporteerd.",
+        photoMissing: "Er is geen gedeelde fietsfoto beschikbaar voor deze passport-preview.",
+        copyCard: {
+          eyebrow: "Veilig delen tussen riders",
+          title: "Bike-passport IDs maken persoonlijke kopieën",
+          description:
+            "Deze importroute is bedoeld voor hergebruik, niet voor gedeeld eigenaarschap. Je krijgt vanaf het begin je eigen versie van de fiets.",
+          ownCopy: "Je maakt je eigen bewerkbare kopie in je garage.",
+          sourceUnaffected: "Wijzigingen die jij maakt raken de oorspronkelijke fiets nooit.",
+          shareableId: "De passport ID is het enige dat de andere rider hoeft te delen.",
+        },
+        summary: {
+          type: "Fietstype",
+          photos: "Gedeelde foto's",
+          photoCount: "{count} foto's beschikbaar",
+          frameSize: "Framemaat",
+          geometry: "Geometrie",
+          geometryValue: "Stack {stack} / Reach {reach}",
+          geometryMissing: "Geen gedeelde geometriewaarden",
+        },
+        loading: {
+          preview: "Bike-passport preview laden...",
+        },
+        actions: {
+          preview: "Bekijk fiets",
+          previewLoading: "Preview laden...",
+          import: "Maak mijn bewerkbare kopie",
+          importLoading: "Fiets aanmaken...",
+          startOver: "Gebruik een andere passport ID",
+          back: "Terug naar fietsopties",
+        },
+        fields: {
+          passportId: {
+            label: "Bike-passport ID",
+            placeholder: "BBF-AB12-CD34",
+            helper:
+              "Plak de bike-passport exact zoals die met je gedeeld is. Letters en cijfers zijn toegestaan.",
+          },
+        },
+        errors: {
+          title: "Bike-passport import heeft aandacht nodig",
+          invalidPassport:
+            "Gebruik een geldige bike-passport ID. Alleen letters, cijfers en koppeltekens zijn toegestaan.",
+          notFound:
+            "We konden geen fiets vinden voor deze bike-passport ID. Controleer de ID en probeer opnieuw.",
+          alreadyOwned:
+            "Deze bike-passport hoort al bij een fiets van jou, dus er is niets nieuws om te importeren.",
+          previewFailed:
+            "De bike-passport preview kon nu niet worden geladen. Probeer het opnieuw.",
+          saveFailed:
+            "Je bewerkbare fietskopie kon niet worden aangemaakt. Probeer het opnieuw.",
+          backendUnavailable:
+            "De bike-passport backend is nog niet beschikbaar in deze workspace. De rider-flow staat klaar, maar preview en import hebben het backendcontract nog nodig.",
+        },
+        success: "{bikeName} staat nu in je fietsgarage.",
       },
       delete: {
         confirm: "Deze fiets verwijderen? Deze actie kan niet ongedaan worden gemaakt.",

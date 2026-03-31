@@ -278,7 +278,8 @@ export default defineSchema({
         v.literal("manual"),
         v.literal("strava"),
         v.literal("admin_import"),
-        v.literal("marketplace_import")
+        v.literal("marketplace_import"),
+        v.literal("passport_import")
       )
     ),
     stravaGearId: v.optional(v.string()),
@@ -396,6 +397,8 @@ export default defineSchema({
     importCanonicalUrl: v.optional(v.string()),
     importedAdvertTitle: v.optional(v.string()),
     bikeImportId: v.optional(v.id("bikeImports")),
+    bikePassportId: v.optional(v.string()),
+    importedFromBikePassportId: v.optional(v.string()),
     notes: v.optional(v.string()),
     geometryRecordId: v.optional(v.id("geometry_records")),
 
@@ -403,6 +406,8 @@ export default defineSchema({
     updatedAt: v.number(),
   })
     .index("by_user", ["userId"])
+    .index("by_bike_passport_id", ["bikePassportId"])
+    .index("by_user_imported_from_passport", ["userId", "importedFromBikePassportId"])
     .index("by_geometry_record", ["geometryRecordId"])
     .index("by_bike_import", ["bikeImportId"])
     .index("by_strava_gear", ["stravaGearId"]),
@@ -1294,12 +1299,30 @@ export default defineSchema({
     ctaLabel: v.optional(v.string()),
     ctaTargetPath: v.optional(v.string()),
     sourceTag: v.optional(v.string()),
+    valueCents: v.optional(v.number()),
+    currency: v.optional(v.literal("EUR")),
     occurredAt: v.number(),
   })
     .index("by_occurred_at", ["occurredAt"])
     .index("by_event_type_occurred_at", ["eventType", "occurredAt"])
     .index("by_locale_occurred_at", ["locale", "occurredAt"])
     .index("by_page_occurred_at", ["pagePath", "occurredAt"]),
+
+  fitPassPurchases: defineTable({
+    userId: v.id("users"),
+    sessionId: v.id("fitSessions"),
+    stripeCheckoutSessionId: v.string(),
+    stripePaymentIntentId: v.optional(v.string()),
+    amountCents: v.number(),
+    currency: v.literal("EUR"),
+    locale: v.union(v.literal("en"), v.literal("nl")),
+    status: v.literal("completed"),
+    purchasedAt: v.number(),
+    onboardingEmailSentAt: v.optional(v.number()),
+  })
+    .index("by_user_session", ["userId", "sessionId"])
+    .index("by_session", ["sessionId"])
+    .index("by_checkout_session", ["stripeCheckoutSessionId"]),
 
   caseStudyLeads: defineTable({
     userId: v.optional(v.id("users")),

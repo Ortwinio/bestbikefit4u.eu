@@ -3,7 +3,7 @@
 import { use, useEffect } from "react";
 import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
-import { ArrowRight, Gauge, Route, Ruler, Target } from "lucide-react";
+import { ArrowRight, Copy, Gauge, Route, Ruler, Target } from "lucide-react";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
 import { BikeDescriptionEditor } from "@/components/bikes/BikeDescriptionEditor";
@@ -21,6 +21,7 @@ import {
   CardTitle,
   EmptyState,
   LoadingState,
+  useToast,
 } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -33,12 +34,16 @@ export default function BikeDetailPage({
 }) {
   const { bikeId } = use(params);
   const { locale, messages } = useDashboardMessages();
+  const toast = useToast();
 
   const bikeDetail = useQuery(api.bikes.queries.getDetail, {
     bikeId: bikeId as Id<"bikes">,
   });
   const ensureDefaultBikeProfile = useMutation(
     api.bikeProfiles.mutations.ensureDefaultForBike
+  );
+  const ensurePassportIdForBike = useMutation(
+    api.bikes.mutations.ensurePassportIdForBike
   );
   const bike = bikeDetail?.bike ?? null;
   const bikeProfiles = bikeDetail?.bikeProfiles;
@@ -67,7 +72,21 @@ export default function BikeDetailPage({
     if (!hasDefaultProfile || (shouldHaveClimbingProfile && !hasClimbingProfile)) {
       void ensureDefaultBikeProfile({ bikeId: bike._id });
     }
-  }, [bike, bikeProfiles, ensureDefaultBikeProfile, shouldHaveClimbingProfile]);
+    const ensuredBikePassportId =
+      "bikePassportId" in bike
+        ? ((bike as { bikePassportId?: string }).bikePassportId ?? null)
+        : null;
+
+    if (!ensuredBikePassportId) {
+      void ensurePassportIdForBike({ bikeId: bike._id });
+    }
+  }, [
+    bike,
+    bikeProfiles,
+    ensureDefaultBikeProfile,
+    ensurePassportIdForBike,
+    shouldHaveClimbingProfile,
+  ]);
 
   if (bikeDetail === undefined) {
     return <LoadingState label={messages.bikeForm.edit.loading} />;
@@ -116,6 +135,10 @@ export default function BikeDetailPage({
     messages.bikes.identity.emptyBrandModel;
   const hasFit = Boolean(recommendation);
   const hasPressureSetup = Boolean(activeWheelset && activeTireSetup);
+  const bikePassportId =
+    typeof (bike as { bikePassportId?: unknown }).bikePassportId === "string"
+      ? ((bike as { bikePassportId?: string }).bikePassportId ?? null)
+      : null;
   const geometryItems = [
     {
       label: messages.bikeForm.fields.type.staticLabel,
@@ -207,6 +230,42 @@ export default function BikeDetailPage({
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
+              <div className="sm:col-span-2 rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/80 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+                      {messages.bikes.identity.passportLabel}
+                    </p>
+                    <p className="mt-2 font-mono text-lg font-semibold text-[color:var(--foreground)]">
+                      {bikePassportId ?? messages.bikes.identity.passportMissing}
+                    </p>
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
+                      {messages.bikes.identity.passportDescription}
+                    </p>
+                  </div>
+                  {bikePassportId ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={async () => {
+                        try {
+                          await navigator.clipboard.writeText(bikePassportId);
+                          toast.success({
+                            description: messages.bikes.identity.passportCopied,
+                          });
+                        } catch {
+                          toast.error({
+                            description: messages.bikes.identity.passportCopyFailed,
+                          });
+                        }
+                      }}
+                    >
+                      <Copy className="h-4 w-4" />
+                      {messages.bikes.identity.passportCopyAction}
+                    </Button>
+                  ) : null}
+                </div>
+              </div>
               <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/80 p-4">
                 <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
                   <Route className="h-4 w-4" />

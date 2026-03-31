@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
-import { useQuery } from "convex/react";
+import { useEffect, useMemo } from "react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { BikeGarageRow, buildLatestFitByBike } from "@/components/bikes/BikeGarageOverview";
 import { Button, Card, CardContent, EmptyState, LoadingState } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { Plus } from "lucide-react";
+import { CopyPlus, Plus, Store } from "lucide-react";
 
 function linkButtonProps(href: string) {
   return {
@@ -21,6 +21,9 @@ export default function BikesPage() {
   const { locale, messages } = useDashboardMessages();
   const bikes = useQuery(api.bikes.queries.listSummariesByUser);
   const sessionsWithBikes = useQuery(api.sessions.queries.getAllSessionsWithBikes);
+  const ensurePassportIdsForOwnedBikes = useMutation(
+    api.bikes.mutations.ensurePassportIdsForOwnedBikes
+  );
 
   const latestFitByBike = useMemo(
     () =>
@@ -29,6 +32,22 @@ export default function BikesPage() {
       ),
     [sessionsWithBikes]
   );
+
+  useEffect(() => {
+    if (
+      !bikes?.some((bike) => {
+        const bikePassportId =
+          "bikePassportId" in bike
+            ? ((bike as { bikePassportId?: string }).bikePassportId ?? null)
+            : null;
+        return !bikePassportId;
+      })
+    ) {
+      return;
+    }
+
+    void ensurePassportIdsForOwnedBikes({});
+  }, [bikes, ensurePassportIdsForOwnedBikes]);
 
   if (bikes === undefined || sessionsWithBikes === undefined) {
     return <LoadingState label={messages.bikes.loading} />;
@@ -46,7 +65,15 @@ export default function BikesPage() {
             variant="outline"
             {...linkButtonProps(withLocalePrefix("/bikes/import/marktplaats", locale))}
           >
+            <Store className="h-4 w-4" />
             {messages.bikeForm.marktplaatsImport.entryCta}
+          </Button>
+          <Button
+            variant="outline"
+            {...linkButtonProps(withLocalePrefix("/bikes/import/passport", locale))}
+          >
+            <CopyPlus className="h-4 w-4" />
+            {messages.bikeForm.passportImport.entryCta}
           </Button>
           <Link
             href={withLocalePrefix("/bikes/new", locale)}
@@ -74,6 +101,12 @@ export default function BikesPage() {
                     {...linkButtonProps(withLocalePrefix("/bikes/import/marktplaats", locale))}
                   >
                     {messages.bikeForm.marktplaatsImport.entryCta}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    {...linkButtonProps(withLocalePrefix("/bikes/import/passport", locale))}
+                  >
+                    {messages.bikeForm.passportImport.entryCta}
                   </Button>
                 </div>
               }

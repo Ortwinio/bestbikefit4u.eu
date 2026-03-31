@@ -923,7 +923,7 @@ const en = {
       },
       reportV2: {
         locale: "en",
-        introTitle: "Engine-powered fit report",
+        introTitle: "Your fit report",
         introBody:
           "Use this report as a practical adjustment sequence. Change one variable at a time, validate on the bike, and keep notes after each ride.",
         shell: {
@@ -931,7 +931,7 @@ const en = {
           dateLabel: "Report date",
           aboutTitle: "About this report",
           aboutBody:
-            "This report translates your fit session into a clear adjustment plan you can use on the bike or with your fitter.",
+            "This report translates your fit session into a clear adjustment plan you can use on the bike or review with a fitter or bike shop.",
           aboutBullets: [
             "Follow the sequence one step at a time.",
             "Validate each change during a real ride.",
@@ -939,7 +939,7 @@ const en = {
             "Compare your bike context and your body profile before changing components.",
           ] as string[],
           coverSupport:
-            "Built to help you ride longer, hurt less often, and perform better.",
+            "Built to help you review your current setup with clearer next steps.",
         },
         sections: {
           about: "About your report",
@@ -1760,6 +1760,13 @@ const en = {
         emptyBrandModel: "Brand and model not added yet.",
         fitBadge: "Fit ready",
         pressureBadge: "Pressure ready",
+        passportLabel: "Bike-passport ID",
+        passportDescription:
+          "Share this ID with another rider if you want them to create their own editable copy of this bike. Their edits never change your bike.",
+        passportMissing: "Passport ID not available yet.",
+        passportCopyAction: "Copy ID",
+        passportCopied: "Bike-passport ID copied.",
+        passportCopyFailed: "Could not copy the bike-passport ID.",
       },
       sections: {
         gallery: "Photos",
@@ -2024,6 +2031,103 @@ const en = {
           backendUnavailable:
             "The Marktplaats import backend is not available in this workspace yet. The rider flow is wired, but preview/save cannot complete until the backend contract lands.",
         },
+      },
+      createChooser: {
+        title: "How would you like to add this bike?",
+        description:
+          "Choose the path that matches the information you already have. You can always edit the bike later.",
+        manual: {
+          title: "Create bike manually",
+          description:
+            "Start from scratch and enter the bike details, geometry, and setup yourself.",
+          cta: "Start manual bike",
+        },
+        marktplaats: {
+          title: "Import from Marktplaats",
+          description:
+            "Paste one advert URL, review what we found, and save only after you confirm the draft.",
+          cta: "Open Marktplaats import",
+        },
+        passport: {
+          title: "Use bike-passport ID",
+          description:
+            "Paste a bike-passport ID from another rider and create your own editable copy in seconds.",
+          cta: "Use bike-passport ID",
+        },
+      },
+      passportImport: {
+        entryCta: "Use bike-passport ID",
+        title: "Import a bike with a bike-passport ID",
+        description:
+          "Paste a shared bike-passport ID, preview the bike details, and create your own editable copy.",
+        entryTitle: "Paste a bike-passport ID",
+        entryDescription:
+          "A bike-passport ID is safe to share. It lets you import a fresh copy of another rider's bike without taking ownership of the original.",
+        previewTitle: "Preview your imported copy",
+        previewDescription:
+          "Review the shared bike details before you create your own version in the garage.",
+        previewBikeLabel: "Shared source bike",
+        emptyBrandModel: "Brand and model were not shared.",
+        noDescription: "No shared description was included with this bike.",
+        confirmationTitle: "What happens next",
+        confirmationDescription:
+          "Creating this bike adds a new bike to your garage under your account. You can edit it freely, and the original rider's bike stays unchanged.",
+        photoCopied: "This preview includes the main shared bike photo when available.",
+        photoNotCopied: "This bike may import without photos in this first release.",
+        photoMissing: "No shared bike photo is available for this passport preview.",
+        copyCard: {
+          eyebrow: "Rider-safe sharing",
+          title: "Bike-passport IDs create personal copies",
+          description:
+            "This import path is designed for reuse, not shared ownership. You get your own version of the bike from the start.",
+          ownCopy: "You create your own editable copy in your garage.",
+          sourceUnaffected: "Changes you make never affect the original rider's bike.",
+          shareableId: "The passport ID is the only thing the other rider has to share.",
+        },
+        summary: {
+          type: "Bike type",
+          photos: "Shared photos",
+          photoCount: "{count} photos available",
+          frameSize: "Frame size",
+          geometry: "Geometry",
+          geometryValue: "Stack {stack} / Reach {reach}",
+          geometryMissing: "No shared geometry values",
+        },
+        loading: {
+          preview: "Loading bike-passport preview...",
+        },
+        actions: {
+          preview: "Preview bike",
+          previewLoading: "Loading preview...",
+          import: "Create my editable copy",
+          importLoading: "Creating bike...",
+          startOver: "Use another passport ID",
+          back: "Back to bike options",
+        },
+        fields: {
+          passportId: {
+            label: "Bike-passport ID",
+            placeholder: "BBF-AB12-CD34",
+            helper:
+              "Paste the bike-passport exactly as it was shared with you. Letters and numbers are accepted.",
+          },
+        },
+        errors: {
+          title: "Bike-passport import needs attention",
+          invalidPassport:
+            "Use a valid bike-passport ID. Letters, numbers, and hyphens only.",
+          notFound:
+            "We could not find a bike for that bike-passport ID. Check the ID and try again.",
+          alreadyOwned:
+            "This bike-passport already belongs to one of your bikes, so there is nothing new to import.",
+          previewFailed:
+            "The bike-passport preview could not be loaded right now. Please try again.",
+          saveFailed:
+            "Your editable bike copy could not be created. Please try again.",
+          backendUnavailable:
+            "The bike-passport backend is not available in this workspace yet. The rider flow is ready, but preview and import need the backend contract to finish.",
+        },
+        success: "{bikeName} is now in your bike garage.",
       },
       delete: {
         confirm: "Delete this bike? This action cannot be undone.",

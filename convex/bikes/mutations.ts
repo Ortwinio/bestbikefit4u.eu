@@ -7,6 +7,15 @@ import {
   getSystemClimbingBikeProfile,
   getSystemDefaultBikeProfile,
 } from "../bikeProfiles/defaults";
+import {
+  assignBikePassportId,
+  buildPassportPhotoCopyPlan,
+  findBikeByPassportId,
+  generateUniqueBikePassportId,
+  getCopyableBikeFields,
+  isValidBikePassportId,
+  normalizeBikePassportId,
+} from "./passport";
 
 export const bikeTypeValidator = v.union(
   v.literal("road"),
@@ -46,7 +55,8 @@ export const bikeSourceValidator = v.union(
   v.literal("manual"),
   v.literal("strava"),
   v.literal("admin_import"),
-  v.literal("marketplace_import")
+  v.literal("marketplace_import"),
+  v.literal("passport_import")
 );
 
 export const descriptionSourceValidator = v.union(
@@ -60,7 +70,12 @@ type CreateBikeInput = {
   userId: Id<"users">;
   name: string;
   bikeType: "road" | "gravel" | "mountain" | "hybrid" | "tt_triathlon" | "cyclocross" | "touring" | "city";
-  source: "manual" | "strava" | "admin_import" | "marketplace_import";
+  source:
+    | "manual"
+    | "strava"
+    | "admin_import"
+    | "marketplace_import"
+    | "passport_import";
   currentGeometry?: {
     stackMm?: number;
     reachMm?: number;
@@ -103,6 +118,8 @@ type CreateBikeInput = {
   importCanonicalUrl?: string;
   importedAdvertTitle?: string;
   bikeImportId?: Id<"bikeImports">;
+  bikePassportId?: string;
+  importedFromBikePassportId?: string;
   createdAt?: number;
   updatedAt?: number;
 };
@@ -125,6 +142,7 @@ export async function createBikeWithProfiles(
 
   const now = args.createdAt ?? Date.now();
   const updatedAt = args.updatedAt ?? now;
+  const bikePassportId = args.bikePassportId ?? (await generateUniqueBikePassportId(ctx));
   const defaultProfile = getSystemDefaultBikeProfile({
     bikeType: args.bikeType,
     ridingStyle: args.ridingStyle,
@@ -161,6 +179,8 @@ export async function createBikeWithProfiles(
     importCanonicalUrl: args.importCanonicalUrl,
     importedAdvertTitle: args.importedAdvertTitle,
     bikeImportId: args.bikeImportId,
+    bikePassportId,
+    importedFromBikePassportId: args.importedFromBikePassportId,
     createdAt: now,
     updatedAt,
   });
@@ -437,5 +457,163 @@ export const remove = mutation({
     }
 
     await ctx.db.delete(args.bikeId);
+  },
+});
+
+export const importByPassport = mutation({
+  args: {
+    bikePassportId: v.string(),
+    name: v.optional(v.string()),
+    brand: v.optional(v.string()),
+    model: v.optional(v.string()),
+    bikeType: v.optional(bikeTypeValidator),
+    description: v.optional(v.string()),
+    copyPhotos: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    validateTextString(args.bikePassportId, "bikePassportId");
+    if (args.name !== undefined) {
+      validateShortString(args.name, "name");
+    }
+    if (args.brand !== undefined) {
+      validateShortString(args.brand, "brand");
+    }
+    if (args.model !== undefined) {
+      validateShortString(args.model, "model");
+    }
+    if (args.description !== undefined) {
+      validateLongTextString(args.description, "description");
+    }
+
+    const userId = await requireUserId(ctx);
+    const normalizedPassportId = normalizeBikePassportId(args.bikePassportId);
+    if (!isValidBikePassportId(normalizedPassportId)) {
+      throw new Error("invalid_bike_passport_id");
+    }
+    const sourceBike = await findBikeByPassportId(ctx, normalizedPassportId);
+
+    if (!sourceBike) {
+      throw new Error("bike_passport_not_found");
+    }
+    if (sourceBike.userId === userId) {
+      throw new Error("bike_passport_owned_by_user");
+    }
+    if (!sourceBike.bikePassportId) {
+      throw new Error("bike_passport_not_ready");
+    }
+
+    const existingImport = (
+      await ctx.db
+        .query("bikes")
+        .withIndex("by_user_imported_from_passport", (q) =>
+          q
+            .eq("userId", userId)
+            .eq("importedFromBikePassportId", sourceBike.bikePassportId!)
+        )
+        .collect()
+    )
+      .sort((left, right) => right.createdAt - left.createdAt)[0] ?? null;
+
+    if (existingImport) {
+      return {
+        status: "duplicate_reused" as const,
+        bikeId: existingImport._id,
+        createdBikeId: existingImport._id,
+        sourceBikePassportId: sourceBike.bikePassportId,
+        copiedPhotoCount: 0,
+      };
+    }
+
+    const copyable = getCopyableBikeFields(sourceBike);
+    const sourcePhotos =
+      args.copyPhotos === false
+        ? []
+        : await ctx.db
+            .query("bikePhotos")
+            .withIndex("by_bike", (q) => q.eq("bikeId", sourceBike._id))
+            .collect();
+    const photoPlan =
+      args.copyPhotos === false
+        ? { safePhotos: [], primaryPhotoUrl: undefined }
+        : buildPassportPhotoCopyPlan({
+            bike: sourceBike,
+            photos: sourcePhotos,
+          });
+
+    const bikeId = await createBikeWithProfiles(ctx, {
+      userId,
+      name: args.name ?? copyable.name,
+      bikeType: args.bikeType ?? copyable.bikeType,
+      source: "passport_import",
+      currentGeometry: copyable.currentGeometry,
+      currentSetup: copyable.currentSetup,
+      discipline: copyable.discipline,
+      ridingStyle: copyable.ridingStyle,
+      primaryGoal: copyable.primaryGoal,
+      bikeWeightKg: copyable.bikeWeightKg,
+      photoUrl: photoPlan.primaryPhotoUrl,
+      brand: args.brand ?? copyable.brand,
+      model: args.model ?? copyable.model,
+      description: args.description ?? copyable.description,
+      descriptionSource:
+        args.description !== undefined || copyable.description ? "template" : undefined,
+      importedFromBikePassportId: sourceBike.bikePassportId,
+    });
+
+    if (photoPlan.safePhotos.length > 0) {
+      const now = Date.now();
+      for (const photo of photoPlan.safePhotos) {
+        await ctx.db.insert("bikePhotos", {
+          userId,
+          bikeId,
+          storageId: photo.storageId,
+          caption: photo.caption,
+          isPrimary: photo.isPrimary,
+          sortOrder: photo.sortOrder,
+          createdAt: now,
+          updatedAt: now,
+        });
+      }
+    }
+
+    return {
+      status: "imported" as const,
+      bikeId,
+      sourceBikePassportId: sourceBike.bikePassportId ?? null,
+      createdBikeId: bikeId,
+      copiedPhotoCount: photoPlan.safePhotos.length,
+    };
+  },
+});
+
+export const ensurePassportIdForBike = mutation({
+  args: {
+    bikeId: v.id("bikes"),
+  },
+  handler: async (ctx, args) => {
+    const { bike } = await requireBikeOwner(ctx, args.bikeId);
+    return await assignBikePassportId(ctx, bike._id);
+  },
+});
+
+export const ensurePassportIdsForOwnedBikes = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await requireUserId(ctx);
+    const bikes = await ctx.db
+      .query("bikes")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+
+    let updatedCount = 0;
+    for (const bike of bikes) {
+      if (bike.bikePassportId) {
+        continue;
+      }
+      await assignBikePassportId(ctx, bike._id);
+      updatedCount += 1;
+    }
+
+    return { updatedCount };
   },
 });
