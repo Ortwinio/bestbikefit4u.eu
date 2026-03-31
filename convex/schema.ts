@@ -65,6 +65,9 @@ export default defineSchema({
     suspendedAt: v.optional(v.number()),
     suspendedReason: v.optional(v.string()),
     trialEndsAt: v.optional(v.number()),
+    proSince: v.optional(v.number()),
+    stripeCustomerId: v.optional(v.string()),
+    stripeSubscriptionId: v.optional(v.string()),
   })
     .index("by_token", ["tokenIdentifier"])
     .index("email", ["email"])

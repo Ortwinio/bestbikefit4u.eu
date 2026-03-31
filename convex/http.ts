@@ -1,6 +1,7 @@
 import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
+import { Id } from "./_generated/dataModel";
 import { auth } from "./auth";
 import { fetchStravaAthlete } from "./integrations/strava";
 
@@ -133,6 +134,113 @@ http.route({
     });
 
     return Response.redirect(`${siteUrl}/settings?strava=connected`);
+  }),
+});
+
+// Stripe webhook — Stripe sends POST to ${CONVEX_SITE_URL}/stripe/webhook
+http.route({
+  path: "/stripe/webhook",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    if (!webhookSecret) {
+      console.error("[stripe/webhook] STRIPE_WEBHOOK_SECRET not configured");
+      return new Response("Server misconfigured", { status: 500 });
+    }
+
+    const sig = request.headers.get("stripe-signature");
+    if (!sig) {
+      return new Response("Missing stripe-signature header", { status: 400 });
+    }
+
+    const payload = await request.text();
+
+    // Parse the stripe-signature header: t=timestamp,v1=hash
+    const sigParts: Record<string, string[]> = {};
+    for (const part of sig.split(",")) {
+      const [key, ...rest] = part.split("=");
+      if (!sigParts[key]) sigParts[key] = [];
+      sigParts[key].push(rest.join("="));
+    }
+
+    const timestamp = sigParts["t"]?.[0];
+    const signatures = sigParts["v1"] ?? [];
+
+    if (!timestamp || signatures.length === 0) {
+      return new Response("Invalid stripe-signature format", { status: 400 });
+    }
+
+    // Verify timestamp is within tolerance (5 minutes)
+    const tolerance = 300;
+    if (Math.abs(Date.now() / 1000 - Number(timestamp)) > tolerance) {
+      return new Response("Webhook timestamp out of tolerance", { status: 400 });
+    }
+
+    // Compute expected HMAC-SHA256
+    const signedPayload = `${timestamp}.${payload}`;
+    const secretBytes = new TextEncoder().encode(webhookSecret);
+    const payloadBytes = new TextEncoder().encode(signedPayload);
+    const cryptoKey = await crypto.subtle.importKey(
+      "raw",
+      secretBytes,
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const hmacBuffer = await crypto.subtle.sign("HMAC", cryptoKey, payloadBytes);
+    const hmacHex = Array.from(new Uint8Array(hmacBuffer))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+
+    const isValid = signatures.some((s) => s === hmacHex);
+    if (!isValid) {
+      return new Response("Invalid webhook signature", { status: 400 });
+    }
+
+    // Parse event
+    let event: { type: string; data: { object: Record<string, unknown> } };
+    try {
+      event = JSON.parse(payload) as typeof event;
+    } catch {
+      return new Response("Invalid JSON", { status: 400 });
+    }
+
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+      const metadata = session["metadata"] as Record<string, string> | null;
+      const userId = metadata?.["userId"];
+      const stripeCustomerId = session["customer"] as string | null;
+      const subscriptionId = session["subscription"] as string | null;
+
+      if (userId) {
+        try {
+          await ctx.runMutation(internal.stripe.mutations.upgradeToPro, {
+            userId: userId as Id<"users">,
+            stripeCustomerId: stripeCustomerId ?? undefined,
+            stripeSubscriptionId: subscriptionId ?? undefined,
+          });
+          // TODO P06: schedule sendProWelcome
+        } catch (err) {
+          console.error("[stripe/webhook] Failed to upgrade user", { userId, err });
+        }
+      } else {
+        console.error("[stripe/webhook] checkout.session.completed missing userId in metadata", { session });
+      }
+    } else if (event.type === "customer.subscription.deleted") {
+      const subscription = event.data.object;
+      const stripeCustomerId = subscription["customer"] as string | null;
+      if (stripeCustomerId) {
+        try {
+          await ctx.runMutation(internal.stripe.mutations.downgradeToPro, {
+            stripeCustomerId,
+          });
+        } catch (err) {
+          console.error("[stripe/webhook] Failed to downgrade user", { stripeCustomerId, err });
+        }
+      }
+    }
+
+    return new Response("ok", { status: 200 });
   }),
 });
 

@@ -96,6 +96,7 @@ import type * as rideFeedback_mutations from "../rideFeedback/mutations.js";
 import type * as rideFeedback_queries from "../rideFeedback/queries.js";
 import type * as sessions_mutations from "../sessions/mutations.js";
 import type * as sessions_queries from "../sessions/queries.js";
+import type * as stripe_mutations from "../stripe/mutations.js";
 import type * as system_queries from "../system/queries.js";
 import type * as tireSetups_mutations from "../tireSetups/mutations.js";
 import type * as tireSetups_queries from "../tireSetups/queries.js";
@@ -201,6 +202,7 @@ declare const fullApi: ApiFromModules<{
   "rideFeedback/queries": typeof rideFeedback_queries;
   "sessions/mutations": typeof sessions_mutations;
   "sessions/queries": typeof sessions_queries;
+  "stripe/mutations": typeof stripe_mutations;
   "system/queries": typeof system_queries;
   "tireSetups/mutations": typeof tireSetups_mutations;
   "tireSetups/queries": typeof tireSetups_queries;
