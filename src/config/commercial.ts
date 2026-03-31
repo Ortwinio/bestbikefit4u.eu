@@ -261,24 +261,28 @@ export const PUBLIC_PLANS: ReadonlyArray<{
   },
 ] as const;
 
+// FIT_PASS_PRODUCT is the marketing wrapper for the Pro subscription tier.
+// priceCents must stay in sync with PUBLIC_PLANS[pro].priceCentsMonthly and the Stripe price.
 export const FIT_PASS_PRODUCT = {
   key: "fit_pass",
-  priceCents: 1900,
+  priceCents: 900, // €9/month — must match Pro plan and STRIPE_PRO_PRICE_ID
   currency: COMMERCIAL_CURRENCY,
   copy: {
     en: {
       name: "Fit Pass",
-      title: "Unlock the full bike fit report",
+      title: "Your full report is one step away.",
       description:
-        "Get the complete fit table, adjustment sequence, PDF export, email report, and validation plan for this session.",
+        "Fit Pass gives you a downloadable PDF, the full adjustment sequence, unlimited sessions, and multiple bike profiles.",
       cta: "Unlock Fit Pass",
+      priceSuffix: "/ month",
     },
     nl: {
       name: "Fit Pass",
-      title: "Ontgrendel het volledige bike fit-rapport",
+      title: "Je volledige rapport is één stap verwijderd.",
       description:
-        "Ontvang de complete fittabel, aanpasvolgorde, PDF-export, e-mailrapport en validatieplan voor deze sessie.",
-      cta: "Ontgrendel Fit Pass",
+        "Met Fit Pass krijg je een downloadbaar PDF, de volledige aanpassingsvolgorde, onbeperkte sessies en meerdere fietsprofielen.",
+      cta: "Fit Pass activeren",
+      priceSuffix: "/ maand",
     },
   },
 } as const;

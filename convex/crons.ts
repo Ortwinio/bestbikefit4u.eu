@@ -40,4 +40,12 @@ crons.weekly(
   internal.emails.lifecycle.runWinbackBatch
 );
 
+// Daily: 24h nudge for new Pro users explaining their fit numbers
+crons.daily(
+  "24h pro nudge emails",
+  { hourUTC: 10, minuteUTC: 0 },
+  internal.emails.fitpass.run24hProNudgeBatch,
+  {}
+);
+
 export default crons;

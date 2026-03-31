@@ -143,8 +143,11 @@ export function FitPassPaywall({
         <p className="mt-5 text-2xl font-bold text-[color:var(--foreground)]">
           {priceLabel}
           <span className="ml-2 text-sm font-medium text-[color:var(--muted-foreground)]">
-            {isNl ? "eenmalig voor deze sessie" : "one-time for this session"}
+            {FIT_PASS_PRODUCT.copy[isNl ? "nl" : "en"].priceSuffix}
           </span>
+        </p>
+        <p className="mt-1 text-xs text-[color:var(--muted-foreground)]">
+          {isNl ? "Opzegbaar via accountinstellingen" : "Cancel any time from account settings"}
         </p>
 
         {error ? (

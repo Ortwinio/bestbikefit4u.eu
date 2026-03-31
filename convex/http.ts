@@ -219,7 +219,9 @@ http.route({
             stripeCustomerId: stripeCustomerId ?? undefined,
             stripeSubscriptionId: subscriptionId ?? undefined,
           });
-          // TODO P06: schedule sendProWelcome
+          await ctx.scheduler.runAfter(0, internal.emails.fitpass.sendProWelcome, {
+            userId: userId as Id<"users">,
+          });
         } catch (err) {
           console.error("[stripe/webhook] Failed to upgrade user", { userId, err });
         }

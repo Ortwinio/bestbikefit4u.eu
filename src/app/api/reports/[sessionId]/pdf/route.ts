@@ -131,6 +131,11 @@ export async function GET(
     const convex = new ConvexHttpClient(convexUrl);
     convex.setAuth(token);
 
+    const currentUser = await convex.query(api.users.queries.getCurrentUser);
+    if (!currentUser || currentUser.tier !== "pro") {
+      return NextResponse.json({ error: "pro_required" }, { status: 403 });
+    }
+
     const typedSessionId = sessionId as Id<"fitSessions">;
 
     const allowed = await convex.mutation(
