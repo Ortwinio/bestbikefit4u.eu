@@ -18,6 +18,7 @@ import { buildLocaleAlternates } from "@/i18n/metadata";
 import { BRAND } from "@/config/brand";
 import { buildArticleSchema, buildFaqPageSchema } from "@/lib/seo/jsonLd";
 import { GUIDE_SLUGS, getGuideBySlug, getGuideCopy } from "../data";
+import { FitDisclaimer } from "@/components/content/FitDisclaimer";
 
 interface GuidePageProps {
   params: Promise<{ slug: string }>;
@@ -243,6 +244,8 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
           links={copy.relatedLinks}
           locale={locale}
         />
+
+        {guide.cluster === "pain" && <FitDisclaimer locale={locale} />}
 
         <section className="mt-10 rounded-[2rem] bg-[linear-gradient(160deg,color-mix(in_oklch,var(--primary)_92%,black_8%),color-mix(in_oklch,var(--primary)_72%,var(--warning)_28%))] p-8 text-center shadow-sm sm:p-10">
           <h2 className="text-2xl font-bold text-[color:var(--primary-foreground)] sm:text-3xl">

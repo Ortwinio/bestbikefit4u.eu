@@ -156,7 +156,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
           },
           {
             q: "What if I have existing pain while riding?",
-            a: "During the fit questionnaire, you can report pain points (knees, back, hands, neck, etc.). Our algorithm factors these in and provides specific solutions, such as saddle-height changes for knee pain and cockpit changes for hand numbness.",
+            a: "During the fit questionnaire, you can report the discomfort areas that matter most to you. BestBikeFit4U uses that context to help you review fit-related setup factors first, but persistent or severe pain may still require an in-person fitter or medical assessment.",
           },
         ],
       },
@@ -258,7 +258,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
           },
           {
             q: "Wat als ik nu al pijnklachten heb?",
-            a: "Tijdens de vragenlijst kun je pijnpunten aangeven (knie, rug, handen, nek, enz.). Het algoritme verwerkt deze signalen en geeft gerichte aanpassingen.",
+            a: "Tijdens de fit-vragenlijst kun je aangeven waar je vooral ongemak ervaart. BestBikeFit4U gebruikt die context om fitgerelateerde afstelfactoren eerst te laten controleren, maar aanhoudende of hevige pijnklachten kunnen alsnog een fysieke fitter of medische beoordeling vragen.",
           },
         ],
       },
@@ -317,6 +317,7 @@ function getContent(locale: Locale): FAQCopy {
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const page = getContent(locale);
+  const alternates = buildLocaleAlternates("/faq", locale);
 
   return {
     title: page.metadata.title,
@@ -326,8 +327,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: page.metadata.title,
       description: page.metadata.description,
       type: "website",
+      url: alternates.canonical,
     },
-    alternates: buildLocaleAlternates("/faq", locale),
+    alternates,
   };
 }
 

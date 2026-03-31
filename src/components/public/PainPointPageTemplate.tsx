@@ -1,15 +1,16 @@
-import Link from "next/link";
 import { Activity, HelpCircle, Stethoscope, Target } from "lucide-react";
 import { Button } from "@/components/ui";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
-import { buildArticleSchema, buildFaqPageSchema } from "@/lib/seo/jsonLd";
+import { buildArticleSchema } from "@/lib/seo/jsonLd";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { BRAND } from "@/config/brand";
 import type { PainPageCopy } from "@/content/painPages";
+import { FitDisclaimer } from "@/components/content/FitDisclaimer";
+import { PainFitIllustration } from "@/components/content/PublicPageIllustrations";
 
 export function PainPointPageTemplate({
   locale,
@@ -39,7 +40,6 @@ export function PainPointPageTemplate({
             url: pageUrl,
             inLanguage: locale,
           }),
-          buildFaqPageSchema(copy.faqs),
         ]}
       />
 
@@ -87,10 +87,11 @@ export function PainPointPageTemplate({
           </div>
 
           <div className="dashboard-card-surface rounded-[2rem] border border-border/70 bg-[linear-gradient(160deg,color-mix(in_oklch,var(--primary)_12%,var(--card)_88%),color-mix(in_oklch,var(--warning)_8%,var(--card)_92%))] p-8 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
+            <PainFitIllustration locale={locale} />
+            <p className="mt-6 text-xs font-semibold uppercase tracking-[0.24em] text-primary">
               {locale === "nl" ? "Snelle check" : "Quick check"}
             </p>
-            <div className="mt-5 space-y-3">
+            <div className="mt-4 space-y-3">
               {copy.riderChecklist.map((item) => (
                 <div
                   key={item}
@@ -163,6 +164,8 @@ export function PainPointPageTemplate({
 
         <RelatedLinksSection title={copy.relatedTitle} links={copy.relatedLinks} locale={locale} />
 
+        <FitDisclaimer locale={locale} />
+
         <section className="mt-10 rounded-[2rem] bg-primary px-8 py-10 text-center shadow-lg">
           <h2 className="text-2xl font-semibold text-primary-foreground">
             {locale === "nl"
@@ -193,7 +196,15 @@ export function PainPointPageTemplate({
             <Button
               variant="outline"
               className="border-primary-foreground/50 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
-              render={<Link href={withLocalePrefix(`/case-study?pain=${slug}`, locale)} />}
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix(`/case-study?pain=${slug}`, locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="pain_footer_secondary_cta"
+                  ctaLabel={copy.secondaryCta}
+                />
+              }
             >
               {copy.secondaryCta}
             </Button>

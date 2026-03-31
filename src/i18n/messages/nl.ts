@@ -37,10 +37,10 @@ const nl = {
     metadata: {
       title: `${BRAND.name} - Online bikefitting voor comfort en prestaties`,
       description:
-        "Verminder fietsklachten, verbeter je efficientie en fiets langer met persoonlijke bikefitting-aanbevelingen op basis van je metingen en doelen.",
+        "Ontvang persoonlijke bike fit-doelwaarden passend bij jouw lichaam en rijstijl. Verbeter comfort, verfijn je positie en fiets met meer vertrouwen.",
       openGraphTitle: `${BRAND.name} - Online bikefitting voor comfort en prestaties`,
       openGraphDescription:
-        "Minder klachten en betere prestaties met een persoonlijk bikefitting-plan.",
+        "Praktische bikefitting-begeleiding voor comfort, prestaties en betere fietskeuzes.",
       keywords: [
         "bike fit",
         "bike fitting",
@@ -54,12 +54,12 @@ const nl = {
       ],
     },
     hero: {
-      title: "Fiets langer.",
-      titleAccent: "Met minder klachten en meer controle.",
+      title: "Online bikefitting",
+      titleAccent: "voor comfort en prestaties.",
       description:
-        "Start je gratis bikefitting en krijg concrete afstelwaarden om comfortabeler, efficienter en met meer vertrouwen te fietsen.",
-      primaryCta: "Start gratis bikefitting",
-      secondaryCta: "Bekijk hoe het werkt",
+        "Start je gratis bikefitting en krijg afstelwaarden passend bij jouw lichaam en rijstijl, met een duidelijkere volgende stap voor comfort, positie en vertrouwen.",
+      primaryCta: "Start gratis fit",
+      secondaryCta: "Bekijk prijzen",
     },
     howItWorks: {
       title: "Hoe het werkt",
@@ -85,32 +85,32 @@ const nl = {
     reasonsToStart: {
       title: "Waarom nu starten met bikefitting?",
       subtitle:
-        "Veel fietsers wachten te lang. Kleine aanpassingen nu kunnen maanden aan klachten schelen.",
+        "Veel rijders wachten tot het setup-probleem groter wordt. Kleine aanpassingen nu geven sneller duidelijke volgende stappen.",
       items: [
         {
-          title: "Minder terugkerende pijnklachten",
+          title: "Sneller meer comfort",
           description:
-            "Pak knie-, onderrug-, nek-, hand- en zadelklachten gericht aan met positie-aanpassingen.",
+            "Bekijk de afstelfactoren die lange ritten vaak onnodig zwaar laten aanvoelen.",
         },
         {
-          title: "Meer vermogen met minder verspilling",
+          title: "Verfijn je rijpositie",
           description:
-            "Stem zadelhoogte, reach en cockpit beter af zodat je efficienter en stabieler trapt.",
+            "Werk met duidelijkere doelwaarden voor zadelhoogte, reach en cockpitbalans.",
         },
         {
-          title: "Meer comfort op lange ritten",
+          title: "Rijd langer met meer vertrouwen",
           description:
-            "Een betere gewichtsverdeling en houding maken lange ritten rustiger en minder vermoeiend.",
+            "Een beter passende positie voelt vaak stabieler en langer vol te houden.",
         },
         {
-          title: "Kleinere kans op overbelasting",
+          title: "Maak betere fietskeuzes",
           description:
-            "Voorkom dat je maandenlang rijdt in een houding die niet past bij jouw mobiliteit en core-stabiliteit.",
+            "Gebruik fitcontext om te beoordelen of een nieuwe fiets of setupverandering echt bij je past.",
         },
         {
-          title: "Meer controle en vertrouwen",
+          title: "Meer controle en duidelijkheid",
           description:
-            "Een gebalanceerde positie geeft meer controle op klimmen, dalen en technisch terrein.",
+            "Een gebalanceerde positie helpt je sneller zien wat je eerst moet aanpassen en waarom.",
         },
       ],
     },
@@ -120,9 +120,9 @@ const nl = {
         "Heldere aanbevelingen die je zelf kunt toepassen of met je lokale fietsenmaker",
       items: [
         {
-          title: "Nauwkeurige metingen",
+          title: "Praktische fit-input",
           description:
-            "Voer je lichaamsmetingen in en ontvang berekeningen op basis van bewezen LeMond/Hamley-methoden.",
+            "Begin met de metingen en rijcontext die het meest relevant zijn voor echte setupkeuzes.",
         },
         {
           title: "Doelgerichte afstelling",
@@ -130,24 +130,24 @@ const nl = {
             "Je fit past zich aan op comfort, uithoudingsvermogen, prestaties of aerodynamica.",
         },
         {
-          title: "Uitgebreide rapporten",
+          title: "Heldere afsteldoelen",
           description:
-            "Je ontvangt duidelijke afstelwaarden voor zadelhoogte, reach, stuurpenlengte en meer.",
+            "Bekijk fit-output voor zadelpositie, cockpitbalans en prioriteiten voor de volgende stap.",
         },
         {
-          title: "Voor elk type fiets",
+          title: "Fietsgerichte context",
           description:
-            "Race, gravel, mountainbike of stadsfiets - ons algoritme past zich aan jouw discipline aan.",
+            "Houd je fitwerk gekoppeld aan de fiets en rijcontext die je echt gebruikt.",
         },
         {
-          title: "Klachtgerichte aanpassingen",
+          title: "Gerichte volgorde van aanpassingen",
           description:
-            "Geef aan waar je klachten ervaart en krijg gerichte aanpassingen om eerst te testen.",
+            "Zie wat je eerst moet controleren in plaats van meerdere variabelen tegelijk te veranderen.",
         },
         {
-          title: "Wetenschappelijk onderbouwd",
+          title: "Gemaakt voor echte ritten",
           description:
-            "Gebouwd op tientallen jaren bikefitting-onderzoek en biomechanische principes.",
+            "Gebruik een proces dat rijders helpt setupveranderingen in een praktische volgorde te testen.",
         },
       ],
     },

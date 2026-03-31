@@ -33,6 +33,7 @@ import { AdjustmentSequence } from "./components/AdjustmentSequence";
 import { BikeContextCard } from "./components/BikeContextCard";
 import { TirePressureSection } from "./components/TirePressureSection";
 import { ValidationPlan } from "./components/ValidationPlan";
+import { CaseStudyOptIn } from "@/components/features/casestudy/CaseStudyOptIn";
 import {
   ArrowLeft,
   CheckCircle,
@@ -581,6 +582,13 @@ export default function ResultsPage({ params }: ResultsPageProps) {
             ) : null}
           </>
         ) : null}
+        {user && session && (
+          <CaseStudyOptIn
+            locale={locale}
+            sessionId={sessionId}
+            userEmail={user.email ?? ""}
+          />
+        )}
       </div>
       {downloadError ? (
         <ErrorState

@@ -36,10 +36,10 @@ const en = {
     metadata: {
       title: `${BRAND.name} - Online Bike Fitting for Comfort and Performance`,
       description:
-        "Reduce cycling pain, improve efficiency, and ride longer with personalized bike fitting recommendations based on your measurements, goals, and riding style.",
+        "Get personalized bike fit targets matched to your body and riding style. Improve comfort, refine your position, and ride with more confidence.",
       openGraphTitle: `${BRAND.name} - Online Bike Fitting for Comfort and Performance`,
       openGraphDescription:
-        "Reduce pain and improve performance with a personalized bike fit plan.",
+        "Get practical bike fit guidance for comfort, performance, and better bike decisions.",
       keywords: [
         "bike fit",
         "bike fitting",
@@ -53,12 +53,12 @@ const en = {
       ],
     },
     hero: {
-      title: "Ride Longer.",
-      titleAccent: "Hurt Less. Perform Better.",
+      title: "Online Bike Fitting",
+      titleAccent: "for Comfort and Performance.",
       description:
-        "Start your free bike fit and get practical setup targets to reduce pain, improve power transfer, and ride with more confidence.",
-      primaryCta: "Start Your Free Fit",
-      secondaryCta: "See How It Works",
+        "Start your free bike fit and get setup targets matched to your body and riding style — with a clearer next step for comfort, position, and confidence.",
+      primaryCta: "Start Free Fit",
+      secondaryCta: "View Pricing",
     },
     howItWorks: {
       title: "How It Works",
@@ -84,32 +84,32 @@ const en = {
     reasonsToStart: {
       title: "Why start bike fitting now?",
       subtitle:
-        "Most riders wait until discomfort gets worse. Small changes now can prevent months of frustration.",
+        "Most riders wait until the setup problem becomes bigger. Small changes now can create much clearer next steps.",
       items: [
         {
-          title: "Reduce recurring pain",
+          title: "Improve comfort sooner",
           description:
-            "Address knee, lower-back, neck, hand numbness, and saddle-pressure complaints with focused position changes.",
+            "Review the setup factors that often make long rides feel rougher than they should.",
         },
         {
-          title: "Transfer more power with less effort",
+          title: "Refine your riding position",
           description:
-            "Align saddle height, reach, and cockpit setup so your pedaling is more efficient and stable.",
+            "Use clearer setup targets for saddle height, reach, and cockpit balance.",
         },
         {
-          title: "Ride longer in comfort",
+          title: "Ride longer with more confidence",
           description:
-            "Improve weight distribution and posture so endurance rides feel smoother and less fatiguing.",
+            "A better-matched position can feel steadier and easier to sustain over time.",
         },
         {
-          title: "Lower overuse injury risk",
+          title: "Make better bike decisions",
           description:
-            "Avoid riding for months in a position your mobility and core support cannot sustain.",
+            "Use fit context when deciding whether a new bike or setup change actually suits you.",
         },
         {
-          title: "Gain control and confidence",
+          title: "Gain control and clarity",
           description:
-            "A balanced riding position improves control on climbs, descents, and technical terrain.",
+            "A more balanced position helps riders understand what to adjust first and why.",
         },
       ],
     },
@@ -119,9 +119,9 @@ const en = {
         "Clear recommendations you can apply yourself or together with your local bike shop",
       items: [
         {
-          title: "Precision Measurements",
+          title: "Practical Fit Inputs",
           description:
-            "Input your body measurements and get calculations based on proven LeMond/Hamley methods.",
+            "Start with the measurements and riding context that matter most for real setup decisions.",
         },
         {
           title: "Goal-Based Setup",
@@ -129,24 +129,24 @@ const en = {
             "Your fit adapts to comfort, endurance, performance, or aero priorities.",
         },
         {
-          title: "Detailed Reports",
+          title: "Clear Setup Targets",
           description:
-            "Get clear setup targets for saddle height, reach, stem length, and more.",
+            "Review fit outputs for saddle position, cockpit balance, and next-step priorities.",
         },
         {
-          title: "All Bike Types",
+          title: "Bike-Specific Context",
           description:
-            "Road, gravel, mountain, or city bikes - our algorithm adapts to your discipline.",
+            "Keep fit work connected to the bike and riding context you actually use.",
         },
         {
-          title: "Pain-Aware Adjustments",
+          title: "Focused Adjustment Order",
           description:
-            "Share your discomfort areas and receive targeted position changes to test first.",
+            "See what to review first instead of changing multiple setup variables at once.",
         },
         {
-          title: "Science-Based",
+          title: "Built for Real Riding",
           description:
-            "Built on decades of bike fitting research and biomechanical principles.",
+            "Use a process designed to help riders test fit changes in a practical order.",
         },
       ],
     },
