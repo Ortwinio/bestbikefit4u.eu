@@ -332,7 +332,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="mx-auto max-w-6xl">
       <AccessibleDialog
         open={showEmailModal}
         onClose={() => {
@@ -516,7 +516,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       )}
 
       {/* Results Grid */}
-      <div className="space-y-6">
+      <div className="space-y-8">
         {reportPayload ? (
           <>
             <Card variant="bordered">
@@ -549,6 +549,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
               </CardContent>
             </Card>
             <RiderProfileCard
+              rider={reportPayload.rider}
               profile={reportPayload.profile}
               frameTargets={reportPayload.frameTargets}
               copy={reportCopy}

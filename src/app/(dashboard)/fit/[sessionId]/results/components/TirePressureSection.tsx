@@ -1,9 +1,9 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import type { ReportTirePressureSection as ReportTirePressurePayload } from "@/lib/reports/reportV2Types";
 import type { ReportV2Copy } from "@/lib/reports/reportV2Copy";
 import { getSurfaceLabel } from "./format";
+import { MetricTile, ResultsSection, StatusPill } from "./ResultsPrimitives";
 
 type TirePressureSectionProps = {
   tirePressure: ReportTirePressurePayload;
@@ -17,48 +17,39 @@ export function TirePressureSection({
   copy,
 }: TirePressureSectionProps) {
   return (
-    <Card variant="bordered">
-      <CardHeader>
-        <CardTitle>{copy.sections.tirePressure}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <ResultsSection
+      eyebrow={copy.sections.tirePressure}
+      title={copy.sections.tirePressure}
+      description={copy.tirePressure.quickStartNote}
+      tone="highlight"
+    >
+      <div className="space-y-4">
         {tirePressure.status === "ready" ? (
           <>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] px-4 py-3">
-                <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                  {copy.tirePressure.front}
-                </p>
-                <p className="mt-1 text-lg font-semibold">
-                  {Math.round(tirePressure.frontPsi)} psi / {tirePressure.frontBar.toFixed(1)} bar
-                </p>
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <MetricTile
+                  label={copy.tirePressure.front}
+                  value={`${Math.round(tirePressure.frontPsi)} psi`}
+                  detail={`${tirePressure.frontBar.toFixed(1)} bar`}
+                  emphasis="primary"
+                />
+                <MetricTile
+                  label={copy.tirePressure.rear}
+                  value={`${Math.round(tirePressure.rearPsi)} psi`}
+                  detail={`${tirePressure.rearBar.toFixed(1)} bar`}
+                  emphasis="primary"
+                />
               </div>
-              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] px-4 py-3">
-                <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                  {copy.tirePressure.rear}
-                </p>
-                <p className="mt-1 text-lg font-semibold">
-                  {Math.round(tirePressure.rearPsi)} psi / {tirePressure.rearBar.toFixed(1)} bar
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] px-4 py-3">
-                <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                  {copy.tirePressure.confidence}
-                </p>
-                <p className="mt-1 text-sm font-medium">
-                  {tirePressure.confidence ? `${tirePressure.confidence}%` : "n/a"}
-                </p>
-              </div>
-              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] px-4 py-3">
-                <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                  {copy.tirePressure.inputLabels.surface}
-                </p>
-                <p className="mt-1 text-sm font-medium">
-                  {getSurfaceLabel(tirePressure.surface, copy)}
-                </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <MetricTile
+                  label={copy.tirePressure.confidence}
+                  value={tirePressure.confidence ? `${tirePressure.confidence}%` : "n/a"}
+                />
+                <MetricTile
+                  label={copy.tirePressure.inputLabels.surface}
+                  value={getSurfaceLabel(tirePressure.surface, copy)}
+                />
               </div>
             </div>
 
@@ -68,7 +59,7 @@ export function TirePressureSection({
                 {tirePressure.inputs.map((input) => (
                   <span
                     key={input.label}
-                    className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--muted-foreground)]"
+                    className="rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-1 text-xs text-[color:var(--muted-foreground)]"
                   >
                     {copy.tirePressure.inputLabels[
                       input.label as keyof typeof copy.tirePressure.inputLabels
@@ -93,9 +84,7 @@ export function TirePressureSection({
                   ))}
                 </div>
               ) : (
-                <p className="mt-2 text-sm text-success">
-                  {copy.tirePressure.noWarnings}
-                </p>
+                <StatusPill tone="success">{copy.tirePressure.noWarnings}</StatusPill>
               )}
             </div>
           </>
@@ -109,7 +98,7 @@ export function TirePressureSection({
               {tirePressure.required.map((item) => (
                 <span
                   key={item}
-                  className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--muted-foreground)]"
+                  className="rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-1 text-xs text-[color:var(--muted-foreground)]"
                 >
                   {copy.tirePressure.missingDataLabels[
                     item as keyof typeof copy.tirePressure.missingDataLabels
@@ -145,7 +134,7 @@ export function TirePressureSection({
             </div>
           </>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </ResultsSection>
   );
 }

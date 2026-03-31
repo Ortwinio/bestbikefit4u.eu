@@ -4,17 +4,56 @@ type RenderPdfFromHtmlParams = {
   footerTemplate?: string;
 };
 
-export async function renderPdfFromHtml(
-  params: RenderPdfFromHtmlParams
-): Promise<Uint8Array> {
-  const { html, headerTemplate, footerTemplate } = params;
+export type PdfRenderStrategy = "playwright" | "serverless-chromium";
+
+export type RenderPdfFromHtmlResult = {
+  pdf: Uint8Array;
+  strategy: PdfRenderStrategy;
+};
+
+function isServerlessRuntime() {
+  return Boolean(
+    process.env.VERCEL ||
+      process.env.AWS_REGION ||
+      process.env.AWS_EXECUTION_ENV ||
+      process.env.LAMBDA_TASK_ROOT
+  );
+}
+
+async function launchBrowser() {
+  if (isServerlessRuntime()) {
+    const [{ chromium }, chromiumPackage] = await Promise.all([
+      import("playwright-core"),
+      import("@sparticuz/chromium"),
+    ]);
+    const chromiumBinary = chromiumPackage.default;
+
+    return {
+      strategy: "serverless-chromium" as const,
+      browser: await chromium.launch({
+        headless: true,
+        executablePath: await chromiumBinary.executablePath(),
+        args: [...chromiumBinary.args, "--hide-scrollbars", "--font-render-hinting=none"],
+      }),
+    };
+  }
 
   const { chromium } = await import("playwright");
+  return {
+    strategy: "playwright" as const,
+    browser: await chromium.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    }),
+  };
+}
 
-  const browser = await chromium.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
+export async function renderPdfFromHtml(
+  params: RenderPdfFromHtmlParams
+): Promise<RenderPdfFromHtmlResult> {
+  const { html, headerTemplate, footerTemplate } = params;
+
+  const { browser, strategy } = await launchBrowser();
 
   try {
     const page = await browser.newPage();
@@ -33,7 +72,10 @@ export async function renderPdfFromHtml(
       },
     });
 
-    return new Uint8Array(pdf);
+    return {
+      pdf: new Uint8Array(pdf),
+      strategy,
+    };
   } finally {
     await browser.close();
   }

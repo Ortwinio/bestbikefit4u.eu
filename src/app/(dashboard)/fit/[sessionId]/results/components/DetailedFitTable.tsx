@@ -1,9 +1,9 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import type { ReportDetailedRow } from "@/lib/reports/reportV2Types";
 import type { ReportV2Copy } from "@/lib/reports/reportV2Copy";
 import { getDeltaLabel, getStatusLabel } from "./format";
+import { MetricTile, ResultsSection, StatusPill } from "./ResultsPrimitives";
 
 type DetailedFitTableProps = {
   rows: ReportDetailedRow[];
@@ -14,11 +14,13 @@ export function DetailedFitTable({ rows, copy }: DetailedFitTableProps) {
   const showDeltaColumn = rows.some((row) => row.delta || row.currentLabel);
 
   return (
-    <Card variant="bordered">
-      <CardHeader>
-        <CardTitle>{copy.sections.detailedFit}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <ResultsSection
+      eyebrow={copy.sections.detailedFit}
+      title={copy.sections.detailedFit}
+      description={copy.adjustmentGuideline}
+      tone="muted"
+    >
+      <div className="space-y-4">
         {rows.map((row) => {
           const parameter = copy.parameters[row.key];
           const deltaLabel = getDeltaLabel(row.delta, copy);
@@ -26,7 +28,7 @@ export function DetailedFitTable({ rows, copy }: DetailedFitTableProps) {
           return (
             <div
               key={row.key}
-              className="rounded-[var(--radius-md)] border border-[color:var(--border)] px-4 py-4"
+              className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)] px-4 py-4"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
@@ -35,37 +37,17 @@ export function DetailedFitTable({ rows, copy }: DetailedFitTableProps) {
                     {parameter.methodLabel}
                   </p>
                 </div>
-                <span className="rounded-full bg-[color:var(--secondary)] px-3 py-1 text-xs font-medium">
+                <StatusPill tone={row.status === "ready" ? "success" : row.status === "pending_data" ? "warning" : "default"}>
                   {getStatusLabel(row.status, copy)}
-                </span>
+                </StatusPill>
               </div>
 
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <div>
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                    {copy.table.target}
-                  </p>
-                  <p className="mt-1 text-sm font-medium">{row.targetLabel}</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                    {copy.table.range}
-                  </p>
-                  <p className="mt-1 text-sm font-medium">{row.rangeLabel ?? "n/a"}</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                    {copy.table.confidence}
-                  </p>
-                  <p className="mt-1 text-sm font-medium">{row.confidence}%</p>
-                </div>
+                <MetricTile label={copy.table.target} value={row.targetLabel} emphasis="primary" />
+                <MetricTile label={copy.table.range} value={row.rangeLabel ?? "n/a"} />
+                <MetricTile label={copy.table.confidence} value={`${row.confidence}%`} />
                 {showDeltaColumn ? (
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                      {copy.table.delta}
-                    </p>
-                    <p className="mt-1 text-sm font-medium">{deltaLabel ?? row.currentLabel ?? "n/a"}</p>
-                  </div>
+                  <MetricTile label={copy.table.delta} value={deltaLabel ?? row.currentLabel ?? "n/a"} />
                 ) : null}
               </div>
 
@@ -91,8 +73,7 @@ export function DetailedFitTable({ rows, copy }: DetailedFitTableProps) {
             </div>
           );
         })}
-      </CardContent>
-    </Card>
+      </div>
+    </ResultsSection>
   );
 }
-

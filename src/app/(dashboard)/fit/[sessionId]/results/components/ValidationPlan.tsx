@@ -1,7 +1,7 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import type { ReportV2Copy } from "@/lib/reports/reportV2Copy";
+import { ResultsSection } from "./ResultsPrimitives";
 
 type ValidationPlanProps = {
   copy: ReportV2Copy;
@@ -9,11 +9,13 @@ type ValidationPlanProps = {
 
 export function ValidationPlan({ copy }: ValidationPlanProps) {
   return (
-    <Card variant="bordered">
-      <CardHeader>
-        <CardTitle>{copy.sections.validationPlan}</CardTitle>
-      </CardHeader>
-      <CardContent className="overflow-x-auto">
+    <ResultsSection
+      eyebrow={copy.sections.validationPlan}
+      title={copy.sections.validationPlan}
+      description={copy.adjustmentGuideline}
+      tone="muted"
+    >
+      <div className="overflow-x-auto">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead>
             <tr className="border-b border-[color:var(--border)]">
@@ -34,7 +36,7 @@ export function ValidationPlan({ copy }: ValidationPlanProps) {
             ))}
           </tbody>
         </table>
-      </CardContent>
-    </Card>
+      </div>
+    </ResultsSection>
   );
 }

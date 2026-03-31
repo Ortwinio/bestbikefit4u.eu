@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { BRAND } from "@/config/brand";
 
 const mocks = vi.hoisted(() => {
@@ -68,6 +68,9 @@ vi.mock("@/lib/pdf/simplePdf", () => ({
 import { GET } from "./route";
 
 describe("pdf report route", () => {
+  let infoSpy: ReturnType<typeof vi.spyOn>;
+  let errorSpy: ReturnType<typeof vi.spyOn>;
+
   const sessionFixture = {
     _id: "session_3",
     createdAt: 1734307200000,
@@ -142,6 +145,8 @@ describe("pdf report route", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+    errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     process.env.NEXT_PUBLIC_CONVEX_URL = "https://example.convex.cloud";
     delete process.env.PDF_RICH_RENDER_ENABLED;
     // By default the rate limit check allows the request
@@ -151,9 +156,10 @@ describe("pdf report route", () => {
       profile: { sessionId: "session_3" },
     });
     mocks.renderPdfReportHtml.mockReturnValue("<html>report</html>");
-    mocks.renderPdfFromHtml.mockResolvedValue(
-      new TextEncoder().encode("%PDF-1.4 rich")
-    );
+    mocks.renderPdfFromHtml.mockResolvedValue({
+      pdf: new TextEncoder().encode("%PDF-1.4 rich"),
+      strategy: "playwright",
+    });
     mocks.buildRecommendationPdfLines.mockReturnValue([
       BRAND.reportTitle,
       "Fallback content",
@@ -161,6 +167,10 @@ describe("pdf report route", () => {
     mocks.createSimplePdfFromLines.mockReturnValue(
       new TextEncoder().encode("%PDF-1.4 fallback")
     );
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it("returns 401 when user is not authenticated", async () => {
@@ -214,6 +224,9 @@ describe("pdf report route", () => {
     expect(response.headers.get("Content-Disposition")).toContain(
       `${BRAND.reportSlug}-session_3-nl.pdf`
     );
+    expect(response.headers.get("X-Report-Render-Mode")).toBe("rich");
+    expect(response.headers.get("X-Report-Render-Strategy")).toBe("playwright");
+    expect(response.headers.get("X-Report-Render-Fallback-Reason")).toBeNull();
 
     const buffer = await response.arrayBuffer();
     const text = new TextDecoder().decode(buffer);
@@ -233,6 +246,11 @@ describe("pdf report route", () => {
       })
     );
     expect(mocks.createSimplePdfFromLines).not.toHaveBeenCalled();
+    expect(infoSpy).toHaveBeenCalledWith("PDF rich render succeeded.", {
+      sessionId: "session_3",
+      locale: "nl",
+      strategy: "playwright",
+    });
   });
 
   it("returns inline disposition when explicitly requested for the viewer", async () => {
@@ -269,9 +287,22 @@ describe("pdf report route", () => {
       locale: "en",
     });
     expect(mocks.createSimplePdfFromLines).toHaveBeenCalledTimes(1);
+    expect(response.headers.get("X-Report-Render-Mode")).toBe("simple");
+    expect(response.headers.get("X-Report-Render-Strategy")).toBe("simple");
+    expect(response.headers.get("X-Report-Render-Fallback-Reason")).toBe(
+      "no chromium"
+    );
 
     const bodyText = new TextDecoder().decode(await response.arrayBuffer());
     expect(bodyText).toContain("fallback");
+    expect(errorSpy).toHaveBeenCalledWith(
+      "Rich PDF render failed, using simple fallback.",
+      {
+        sessionId: "session_3",
+        locale: "en",
+        fallbackReason: "no chromium",
+      }
+    );
   });
 
   it("uses simple renderer directly when rich rendering is disabled by env", async () => {
@@ -291,6 +322,18 @@ describe("pdf report route", () => {
       locale: "en",
     });
     expect(mocks.createSimplePdfFromLines).toHaveBeenCalledTimes(1);
+    expect(response.headers.get("X-Report-Render-Mode")).toBe("simple");
+    expect(response.headers.get("X-Report-Render-Strategy")).toBe("simple");
+    expect(response.headers.get("X-Report-Render-Fallback-Reason")).toBe(
+      "rich-render-disabled"
+    );
+    expect(infoSpy).toHaveBeenCalledWith(
+      "PDF rich render disabled, using simple renderer.",
+      {
+        sessionId: "session_3",
+        locale: "en",
+      }
+    );
   });
 
   it("resolves the locale from the referrer path when the query parameter is missing", async () => {

@@ -24,6 +24,7 @@ import {
 } from "@/i18n/config";
 import { extractLocaleFromPathname } from "@/i18n/navigation";
 import { getEffectiveProfileImageSource } from "@/lib/userIdentity";
+import type { PdfRenderStrategy } from "@/lib/pdf/htmlPdf";
 
 interface PdfRouteContext {
   params: Promise<{ sessionId: string }>;
@@ -99,6 +100,12 @@ function resolveContentDisposition(request: Request, sessionId: string, locale: 
   return `attachment; filename="${filename}"`;
 }
 
+type PdfResponseMetadata = {
+  mode: "rich" | "simple";
+  strategy: PdfRenderStrategy | "simple";
+  fallbackReason?: string;
+};
+
 export async function GET(
   request: Request,
   context: PdfRouteContext
@@ -164,6 +171,10 @@ export async function GET(
     }
 
     let pdfBytes: Uint8Array;
+    let responseMetadata: PdfResponseMetadata = {
+      mode: "simple",
+      strategy: "simple",
+    };
 
     const richRenderingEnabled =
       process.env.PDF_RICH_RENDER_ENABLED?.toLowerCase() !== "false";
@@ -196,28 +207,54 @@ export async function GET(
           report: mappedReport,
           copy,
         });
-        pdfBytes = await renderPdfFromHtml({
+        const richResult = await renderPdfFromHtml({
           html,
           headerTemplate: renderPdfHeaderTemplate({ report: mappedReport, copy }),
           footerTemplate: renderPdfFooterTemplate(),
         });
+        pdfBytes = richResult.pdf;
+        responseMetadata = {
+          mode: "rich",
+          strategy: richResult.strategy,
+        };
+        console.info("PDF rich render succeeded.", {
+          sessionId,
+          locale,
+          strategy: richResult.strategy,
+        });
       } catch (richRenderError) {
+        const fallbackReason =
+          richRenderError instanceof Error
+            ? richRenderError.message
+            : String(richRenderError);
         console.error("Rich PDF render failed, using simple fallback.", {
           sessionId,
-          error:
-            richRenderError instanceof Error
-              ? richRenderError.message
-              : String(richRenderError),
+          locale,
+          fallbackReason,
         });
 
         pdfBytes = createSimplePdfFromLines(
           buildRecommendationPdfLines({ session, recommendation, locale })
         );
+        responseMetadata = {
+          mode: "simple",
+          strategy: "simple",
+          fallbackReason,
+        };
       }
     } else {
+      console.info("PDF rich render disabled, using simple renderer.", {
+        sessionId,
+        locale,
+      });
       pdfBytes = createSimplePdfFromLines(
         buildRecommendationPdfLines({ session, recommendation, locale })
       );
+      responseMetadata = {
+        mode: "simple",
+        strategy: "simple",
+        fallbackReason: "rich-render-disabled",
+      };
     }
 
     const pdfBuffer = new ArrayBuffer(pdfBytes.byteLength);
@@ -229,6 +266,13 @@ export async function GET(
         "Content-Type": "application/pdf",
         "Content-Disposition": contentDisposition,
         "Cache-Control": "no-store",
+        "X-Report-Render-Mode": responseMetadata.mode,
+        "X-Report-Render-Strategy": responseMetadata.strategy,
+        ...(responseMetadata.fallbackReason
+          ? {
+              "X-Report-Render-Fallback-Reason": responseMetadata.fallbackReason,
+            }
+          : {}),
       },
     });
   } catch (error) {

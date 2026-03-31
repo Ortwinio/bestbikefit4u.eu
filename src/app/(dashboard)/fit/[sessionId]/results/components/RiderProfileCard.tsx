@@ -1,90 +1,118 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 import type { ReportV2Payload } from "@/lib/reports/reportV2Types";
 import type { ReportV2Copy } from "@/lib/reports/reportV2Copy";
+import { MetricTile, ResultsSection, StatusPill } from "./ResultsPrimitives";
 
 type RiderProfileCardProps = {
+  rider: ReportV2Payload["rider"];
   profile: ReportV2Payload["profile"];
   frameTargets: ReportV2Payload["frameTargets"];
   copy: ReportV2Copy;
 };
 
 export function RiderProfileCard({
+  rider,
   profile,
   frameTargets,
   copy,
 }: RiderProfileCardProps) {
-  const info = [
+  const overview = [
     [copy.profileFields.sessionId, profile.sessionId],
     [copy.profileFields.bikeType, profile.bikeType],
     [copy.profileFields.ridingStyle, profile.ridingStyle],
     [copy.profileFields.goal, profile.goal],
     [copy.profileFields.algorithmVersion, profile.algorithmVersion],
     [copy.profileFields.engineVersion, profile.engineVersion],
-    [copy.profileFields.confidence, `${profile.globalConfidence}%`],
-    [
-      copy.profileFields.dataQuality,
-      profile.dataQualityStatus === "complete"
-        ? copy.dataQuality.complete
-        : copy.dataQuality.partial,
-    ],
   ] as const;
 
+  const measurements = [
+    ["Height", rider.heightCm ? `${rider.heightCm} cm` : null],
+    ["Inseam", rider.inseamCm ? `${rider.inseamCm} cm` : null],
+    ["Torso", rider.torsoLengthCm ? `${rider.torsoLengthCm} cm` : null],
+    ["Arm", rider.armLengthCm ? `${rider.armLengthCm} cm` : null],
+    ["Shoulder", rider.shoulderWidthCm ? `${rider.shoulderWidthCm} cm` : null],
+    ["Weight", rider.weightKg ? `${rider.weightKg} kg` : null],
+  ].filter((entry): entry is [string, string] => Boolean(entry[1]));
+
   return (
-    <Card variant="bordered">
-      <CardHeader>
-        <CardTitle>{copy.sections.profile}</CardTitle>
-        <CardDescription>{copy.introBody}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <ResultsSection
+      eyebrow={copy.sections.profile}
+      title={rider.name ?? copy.sections.profile}
+      description={copy.introBody}
+      tone="highlight"
+    >
+      <div className="space-y-6">
+        <div className="flex flex-wrap gap-3">
+          <StatusPill tone={profile.dataQualityStatus === "complete" ? "success" : "warning"}>
+            {profile.dataQualityStatus === "complete"
+              ? copy.dataQuality.complete
+              : copy.dataQuality.partial}
+          </StatusPill>
+          <StatusPill tone="primary">
+            {copy.profileFields.confidence}: {profile.globalConfidence}%
+          </StatusPill>
+        </div>
+
         {profile.dataQualityStatus === "partial" ? (
           <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] px-4 py-3 text-sm text-[color:var(--warning-foreground)]">
             {copy.dataQuality.banner}
           </div>
         ) : null}
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          {info.map(([label, value]) => (
-            <div
-              key={label}
-              className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 px-4 py-3"
-            >
-              <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                {label}
-              </p>
-              <p className="mt-1 text-sm font-medium text-[color:var(--foreground)]">
-                {value}
-              </p>
-            </div>
-          ))}
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <div className="grid gap-3 sm:grid-cols-2">
+            {overview.map(([label, value]) => (
+              <MetricTile key={label} label={label} value={value} />
+            ))}
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            {measurements.map(([label, value]) => (
+              <MetricTile key={label} label={label} value={value} emphasis="primary" />
+            ))}
+            {rider.bmi !== null ? (
+              <MetricTile
+                label="BMI"
+                value={rider.bmi.toFixed(1)}
+                detail={rider.bmiCategory ?? undefined}
+                emphasis="success"
+              />
+            ) : null}
+            {rider.flexibilityScore !== null ? (
+              <MetricTile
+                label={copy.sections.flexibility}
+                value={`${rider.flexibilityScore}/5`}
+                detail={rider.flexibilityLabel ?? undefined}
+              />
+            ) : null}
+            {rider.coreStabilityScore !== null ? (
+              <MetricTile
+                label={copy.sections.coreStability}
+                value={`${rider.coreStabilityScore}/5`}
+              />
+            ) : null}
+            {rider.comfortScore !== null ? (
+              <MetricTile
+                label={copy.sections.comfort}
+                value={`${rider.comfortScore}/5`}
+              />
+            ) : null}
+          </div>
         </div>
 
-        <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] px-4 py-4">
+        <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--primary)_20%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_7%,var(--card)_93%)] px-5 py-5">
           <p className="text-sm font-semibold text-[color:var(--foreground)]">
             {copy.sections.frameTargets}
           </p>
-          <div className="mt-3 grid gap-3 sm:grid-cols-3">
-            <div>
-              <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                Stack
-              </p>
-              <p className="mt-1 text-sm font-medium">{frameTargets.stackMm} mm</p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                Reach
-              </p>
-              <p className="mt-1 text-sm font-medium">{frameTargets.reachMm} mm</p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
-                ETT
-              </p>
-              <p className="mt-1 text-sm font-medium">
-                {frameTargets.effectiveTopTubeMm} mm
-              </p>
-            </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <MetricTile label="Stack" value={`${frameTargets.stackMm} mm`} emphasis="primary" />
+            <MetricTile label="Reach" value={`${frameTargets.reachMm} mm`} emphasis="primary" />
+            <MetricTile
+              label="ETT"
+              value={`${frameTargets.effectiveTopTubeMm} mm`}
+              emphasis="primary"
+            />
           </div>
           {frameTargets.recommendedFrameLabel ? (
             <p className="mt-3 text-sm text-[color:var(--muted-foreground)]">
@@ -102,7 +130,7 @@ export function RiderProfileCard({
               {profile.missingData.map((item) => (
                 <span
                   key={item}
-                  className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--muted-foreground)]"
+                  className="rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-1 text-xs text-[color:var(--muted-foreground)]"
                 >
                   {copy.tirePressure.missingDataLabels[
                     item as keyof typeof copy.tirePressure.missingDataLabels
@@ -112,7 +140,7 @@ export function RiderProfileCard({
             </div>
           </div>
         ) : null}
-      </CardContent>
-    </Card>
+      </div>
+    </ResultsSection>
   );
 }

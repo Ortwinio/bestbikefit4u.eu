@@ -1,13 +1,7 @@
 "use client";
 
 import { Bike, Gauge, Route, Target } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui";
+import { MetricTile, ResultsSection, StatusPill } from "./ResultsPrimitives";
 import type { ReportV2Copy } from "@/lib/reports/reportV2Copy";
 import type { ReportV2Payload } from "@/lib/reports/reportV2Types";
 
@@ -195,11 +189,7 @@ export function BikeContextCard({ bike, copy }: BikeContextCardProps) {
     [copy.bike.model, bike.model],
     [
       copy.bike.experienceLevel,
-      localizeValue(
-        copy.locale,
-        "experienceLevel",
-        bike.questionnaire.experienceLevel
-      ),
+      localizeValue(copy.locale, "experienceLevel", bike.questionnaire.experienceLevel),
     ],
     [
       copy.bike.weeklyHours,
@@ -211,31 +201,24 @@ export function BikeContextCard({ bike, copy }: BikeContextCardProps) {
     ],
     [
       copy.bike.positionPriority,
-      localizeValue(
-        copy.locale,
-        "positionPriority",
-        bike.questionnaire.positionPriority
-      ),
+      localizeValue(copy.locale, "positionPriority", bike.questionnaire.positionPriority),
     ],
-  ].filter(([, value]) => Boolean(value));
+  ].filter((entry): entry is [string, string] => Boolean(entry[1]));
 
   return (
-    <Card variant="bordered" className="overflow-hidden">
-      <div className="border-b border-[color:var(--border)] bg-[linear-gradient(135deg,color-mix(in_oklch,var(--primary)_15%,white_85%)_0%,color-mix(in_oklch,var(--secondary)_28%,white_72%)_100%)]">
-        <CardHeader className="pb-5">
-          <div className="inline-flex w-fit rounded-full border border-[color:var(--border)]/80 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--primary)] shadow-sm">
-            {copy.sections.yourBike}
-          </div>
-          <CardTitle className="text-2xl text-[color:var(--foreground)]">
-            {bike.name}
-          </CardTitle>
-          <CardDescription className="max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
-            {bike.description ?? copy.bike.descriptionFallback}
-          </CardDescription>
-        </CardHeader>
-      </div>
+    <ResultsSection
+      eyebrow={copy.sections.yourBike}
+      title={bike.name}
+      description={bike.description ?? copy.bike.descriptionFallback}
+      tone="highlight"
+    >
+      <div className="space-y-6">
+        <div className="flex flex-wrap gap-3">
+          {bike.brand ? <StatusPill tone="primary">{bike.brand}</StatusPill> : null}
+          {bike.model ? <StatusPill>{bike.model}</StatusPill> : null}
+          <StatusPill>{localizeValue(copy.locale, "bikeType", bike.bikeType) ?? bike.bikeType}</StatusPill>
+        </div>
 
-      <CardContent className="space-y-6 px-6 py-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
           <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--primary)_8%,white_92%)_0%,white_100%)]">
             {bike.imageUrl ? (
@@ -272,25 +255,13 @@ export function BikeContextCard({ bike, copy }: BikeContextCardProps) {
         </div>
 
         {secondaryContext.length ? (
-          <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-white px-5 py-5">
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {secondaryContext.map(([label, value]) => (
-                <div
-                  key={label}
-                  className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/30 px-4 py-3"
-                >
-                  <p className="text-xs uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
-                    {label}
-                  </p>
-                  <p className="mt-1 text-sm font-medium text-[color:var(--foreground)]">
-                    {value}
-                  </p>
-                </div>
-              ))}
-            </div>
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {secondaryContext.map(([label, value]) => (
+              <MetricTile key={label} label={label} value={value} />
+            ))}
           </div>
         ) : null}
-      </CardContent>
-    </Card>
+      </div>
+    </ResultsSection>
   );
 }
