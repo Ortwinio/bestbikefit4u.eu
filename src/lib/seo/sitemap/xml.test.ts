@@ -16,6 +16,13 @@ describe("sitemap xml responses", () => {
     expect(await response.text()).toBe("<urlset></urlset>");
   });
 
+  it("marks non-production sitemap hosts as noindex", () => {
+    const request = new Request("https://preview-bestbikefit4u.vercel.app/sitemap.xml");
+    const response = buildXmlResponse(request, "<urlset></urlset>");
+
+    expect(response.headers.get("x-robots-tag")).toBe("noindex, nofollow, noarchive");
+  });
+
   it("returns header-only responses for HEAD requests", async () => {
     const request = new Request("https://bestbikefit4u.eu/sitemap.xml", {
       method: "HEAD",

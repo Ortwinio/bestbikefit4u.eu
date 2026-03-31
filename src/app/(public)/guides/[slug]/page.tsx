@@ -15,7 +15,11 @@ import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { BRAND } from "@/config/brand";
-import { buildArticleSchema } from "@/lib/seo/jsonLd";
+import {
+  buildArticleSchema,
+  buildBreadcrumbListSchema,
+  buildFaqPageSchema,
+} from "@/lib/seo/jsonLd";
 import { GUIDE_SLUGS, getGuideBySlug, getGuideCopy } from "../data";
 import { FitDisclaimer } from "@/components/content/FitDisclaimer";
 
@@ -73,6 +77,8 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
   const isNl = locale === "nl";
   const pagePath = withLocalePrefix(`/guides/${guide.slug}`, locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
+  const guidesIndexUrl = new URL(withLocalePrefix("/guides", locale), BRAND.siteUrl).toString();
+  const homeUrl = new URL(withLocalePrefix("/", locale), BRAND.siteUrl).toString();
 
   return (
     <div className="py-16">
@@ -84,6 +90,12 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
             url: pageUrl,
             inLanguage: locale,
           }),
+          buildFaqPageSchema(copy.faqs),
+          buildBreadcrumbListSchema([
+            { name: isNl ? "Home" : "Home", item: homeUrl },
+            { name: isNl ? "Gidsen" : "Guides", item: guidesIndexUrl },
+            { name: copy.h1, item: pageUrl },
+          ]),
         ]}
       />
 

@@ -2,6 +2,7 @@ import type {
   BasicPressureInput,
   Discipline,
 } from "@/lib/pressure-engine";
+import { BRAND } from "@/config/brand";
 
 export const WEIGHT_STEPS = [55, 60, 65, 70, 75, 80, 85, 90, 95, 100] as const;
 
@@ -139,4 +140,23 @@ export function getProgrammaticCalculatorEntries() {
       priority: 0.7,
     }))
   );
+}
+
+export function buildPressureAlternates(
+  weight: number,
+  bikeType: EnBikeType,
+  locale: "en" | "nl"
+) {
+  const englishPath = `/en/tire-pressure/${buildEnglishPressureSlug(weight, bikeType)}`;
+  const dutchPath = `/nl/bandenspanning/${buildDutchPressureSlug(weight, bikeType)}`;
+  const canonicalPath = locale === "nl" ? dutchPath : englishPath;
+
+  return {
+    canonical: `${BRAND.siteUrl}${canonicalPath}`,
+    languages: {
+      en: `${BRAND.siteUrl}${englishPath}`,
+      nl: `${BRAND.siteUrl}${dutchPath}`,
+      "x-default": `${BRAND.siteUrl}${englishPath}`,
+    },
+  } as const;
 }

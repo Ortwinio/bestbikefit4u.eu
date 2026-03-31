@@ -1,6 +1,7 @@
 import { BRAND } from "@/config/brand";
 
 type FaqItem = { q: string; a: string };
+type BreadcrumbItem = { name: string; item: string };
 
 export function buildOrganizationSchema() {
   return {
@@ -77,6 +78,19 @@ export function buildFaqPageSchema(faqs: FaqItem[]) {
         "@type": "Answer",
         text: faq.a,
       },
+    })),
+  };
+}
+
+export function buildBreadcrumbListSchema(items: BreadcrumbItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((entry, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: entry.name,
+      item: entry.item,
     })),
   };
 }

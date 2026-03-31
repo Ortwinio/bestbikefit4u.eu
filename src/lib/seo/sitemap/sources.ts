@@ -189,7 +189,13 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
     changefreq: "weekly",
     priority: 0.9,
   },
-  ...getProgrammaticCalculatorEntries(),
+  ...getProgrammaticCalculatorEntries().map<RouteSeed>((entry) => ({
+    ...entry,
+    localizedPaths: {
+      en: withLocalePrefix(entry.localizedPaths.en, "en"),
+      nl: withLocalePrefix(entry.localizedPaths.nl, "nl"),
+    },
+  })),
 ] as const;
 
 const GUIDE_ROUTE_SEEDS: readonly RouteSeed[] = [
@@ -326,8 +332,16 @@ const SITEMAP_SECTION_ORDER: readonly SitemapSection[] = [
 ];
 
 export function getSitemapIndexNodes(): SitemapIndexNode[] {
-  return SITEMAP_SECTION_ORDER.map((section) => ({
-    loc: toAbsoluteUrl(SITEMAP_SECTION_PATHS[section]),
-    lastmod: getSitemapSectionLastmod(section),
-  }));
+  return SITEMAP_SECTION_ORDER.flatMap((section) => {
+    if (getSitemapEntries(section).length === 0) {
+      return [];
+    }
+
+    return [
+      {
+        loc: toAbsoluteUrl(SITEMAP_SECTION_PATHS[section]),
+        lastmod: getSitemapSectionLastmod(section),
+      },
+    ];
+  });
 }

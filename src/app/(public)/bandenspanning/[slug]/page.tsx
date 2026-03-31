@@ -9,6 +9,7 @@ import {
   BIKE_TYPE_LABELS,
   EN_BIKE_TYPES,
   WEIGHT_STEPS,
+  buildPressureAlternates,
   buildDutchPressureSlug,
   buildEnglishPressureSlug,
   buildPressureInput,
@@ -51,22 +52,12 @@ export async function generateMetadata({
       `${label.nl} bandenspanning ${parsed.weight}kg`,
       `${label.nl} bandendruk advies`,
     ],
-    alternates: {
-      canonical: `${BRAND.siteUrl}/nl/bandenspanning/${slug}`,
-      languages: {
-        en: `${BRAND.siteUrl}/en/tire-pressure/${buildEnglishPressureSlug(
-          parsed.weight,
-          parsed.bikeType
-        )}`,
-        nl: `${BRAND.siteUrl}/nl/bandenspanning/${slug}`,
-        "x-default": `${BRAND.siteUrl}/nl/bandenspanning/${slug}`,
-      },
-    },
+    alternates: buildPressureAlternates(parsed.weight, parsed.bikeType, "nl"),
     openGraph: {
       title: `Bandenspanning voor ${parsed.weight}kg ${label.nl} | BestBikeFit4U`,
       description: `Aanbevolen voor- en achterdruk voor een rijder van ${parsed.weight} kg op een ${label.nl}, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.`,
       type: "website",
-      url: `${BRAND.siteUrl}/nl/bandenspanning/${slug}`,
+      url: buildPressureAlternates(parsed.weight, parsed.bikeType, "nl").canonical,
     },
   };
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Check } from "lucide-react";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
@@ -14,6 +15,7 @@ import { buildLocaleAlternates } from "@/i18n/metadata";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
+import { buildFaqPageSchema } from "@/lib/seo/jsonLd";
 
 const comparisonKeys = [
   "monthlyFitSession",
@@ -99,9 +101,24 @@ export default async function PricingPage() {
   const plans = getVisiblePublicPlans();
   const commercialFaq = getCommercialFaqCopy(locale);
   const pagePath = withLocalePrefix("/pricing", locale);
+  const pricingFaqs = [
+    {
+      q: locale === "nl" ? "Kan ik meerdere fietsen beheren?" : "Can I manage multiple bikes?",
+      a: commercialFaq.multipleBikeProfiles,
+    },
+    {
+      q: locale === "nl" ? "Krijg ik rapporten?" : "Do I get reports?",
+      a: commercialFaq.pdfReport,
+    },
+    {
+      q: locale === "nl" ? "Hoe werkt de prijs?" : "How does pricing work?",
+      a: commercialFaq.pricing,
+    },
+  ];
 
   return (
     <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_42%,var(--background)_58%)_100%)] py-16">
+      <JsonLd schema={buildFaqPageSchema(pricingFaqs)} />
       <TrackMarketingEventOnView
         eventType="pricing_view"
         locale={locale}
@@ -222,19 +239,15 @@ export default async function PricingPage() {
 
         <section className="mt-16 grid gap-6 md:grid-cols-3">
           <div className="rounded-[1.75rem] border border-border/70 bg-card/95 p-6 shadow-sm">
-            <h3 className="font-semibold text-foreground">
-              {locale === "nl" ? "Meerdere fietsen" : "Multiple bikes"}
-            </h3>
+            <h3 className="font-semibold text-foreground">{pricingFaqs[0].q}</h3>
             <p className="mt-2 text-sm text-muted-foreground">{commercialFaq.multipleBikeProfiles}</p>
           </div>
           <div className="rounded-[1.75rem] border border-border/70 bg-card/95 p-6 shadow-sm">
-            <h3 className="font-semibold text-foreground">
-              {locale === "nl" ? "Rapporten" : "Reports"}
-            </h3>
+            <h3 className="font-semibold text-foreground">{pricingFaqs[1].q}</h3>
             <p className="mt-2 text-sm text-muted-foreground">{commercialFaq.pdfReport}</p>
           </div>
           <div className="rounded-[1.75rem] border border-border/70 bg-card/95 p-6 shadow-sm">
-            <h3 className="font-semibold text-foreground">{page.faqTitle}</h3>
+            <h3 className="font-semibold text-foreground">{pricingFaqs[2].q}</h3>
             <p className="mt-2 text-sm text-muted-foreground">{commercialFaq.pricing}</p>
           </div>
         </section>
@@ -244,22 +257,40 @@ export default async function PricingPage() {
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-primary-foreground/82">
             {page.ctaBody}
           </p>
-          <Button
-            render={
-              <TrackedCtaLink
-                href={withLocalePrefix("/login", locale)}
-                locale={locale}
-                pagePath={pagePath}
-                section="pricing_footer_cta"
-                ctaLabel={locale === "nl" ? "Start gratis fit" : "Start free fit"}
-                conversionKey="pricing_signup"
-              />
-            }
-            size="lg"
-            className="mt-8 bg-background text-primary hover:bg-muted"
-          >
-            {locale === "nl" ? "Start gratis fit" : "Start free fit"}
-          </Button>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/login", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="pricing_footer_cta"
+                  ctaLabel={locale === "nl" ? "Start gratis fit" : "Start free fit"}
+                  conversionKey="pricing_signup"
+                />
+              }
+              size="lg"
+              className="bg-background text-primary hover:bg-muted"
+            >
+              {locale === "nl" ? "Start gratis fit" : "Start free fit"}
+            </Button>
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/case-study", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="pricing_footer_case_study_cta"
+                  ctaLabel={locale === "nl" ? "Bekijk rider cases" : "Browse rider cases"}
+                />
+              }
+              size="lg"
+              variant="outline"
+              className="border-primary-foreground/50 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
+            >
+              {locale === "nl" ? "Bekijk rider cases" : "Browse rider cases"}
+            </Button>
+          </div>
         </section>
       </div>
     </div>

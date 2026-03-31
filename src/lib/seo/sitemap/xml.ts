@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { BRAND } from "@/config/brand";
 import { DEFAULT_SITEMAP_CACHE_CONTROL } from "./config";
 import type { SitemapIndexNode, SitemapUrlNode } from "./types";
 
@@ -65,7 +66,13 @@ type XmlResponseOptions = {
   lastModified?: string;
 };
 
+function getSitemapRobotsTag(request: Request): string {
+  const hostname = new URL(request.url).hostname;
+  return hostname === BRAND.host ? "index, follow" : "noindex, nofollow, noarchive";
+}
+
 function createXmlHeaders(
+  request: Request,
   payload: string,
   etag: string,
   options: XmlResponseOptions = {}
@@ -75,7 +82,7 @@ function createXmlHeaders(
     "Cache-Control": options.cacheControl ?? DEFAULT_SITEMAP_CACHE_CONTROL,
     ETag: etag,
     "X-Content-Type-Options": "nosniff",
-    "X-Robots-Tag": "index, follow",
+    "X-Robots-Tag": getSitemapRobotsTag(request),
     "Content-Length": Buffer.byteLength(payload, "utf8").toString(),
   });
 
@@ -96,13 +103,13 @@ export function buildXmlResponse(
   if (ifNoneMatch === etag) {
     return new Response(null, {
       status: 304,
-      headers: createXmlHeaders(payload, etag, options),
+      headers: createXmlHeaders(request, payload, etag, options),
     });
   }
 
   return new Response(payload, {
     status: 200,
-    headers: createXmlHeaders(payload, etag, options),
+    headers: createXmlHeaders(request, payload, etag, options),
   });
 }
 
@@ -116,12 +123,12 @@ export function buildXmlHeadResponse(
   if (ifNoneMatch === etag) {
     return new Response(null, {
       status: 304,
-      headers: createXmlHeaders(payload, etag, options),
+      headers: createXmlHeaders(request, payload, etag, options),
     });
   }
 
   return new Response(null, {
     status: 200,
-    headers: createXmlHeaders(payload, etag, options),
+    headers: createXmlHeaders(request, payload, etag, options),
   });
 }

@@ -6,7 +6,11 @@ import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { BRAND } from "@/config/brand";
-import { buildArticleSchema } from "@/lib/seo/jsonLd";
+import {
+  buildArticleSchema,
+  buildBreadcrumbListSchema,
+  buildFaqPageSchema,
+} from "@/lib/seo/jsonLd";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { type Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
@@ -69,6 +73,8 @@ export default async function UseCaseDetailPage({ params }: UseCasePageProps) {
   const copy = getUseCaseCopy(useCase, locale);
   const pagePath = withLocalePrefix(`/use-cases/${slug}`, locale);
   const pageUrl = buildPageUrl(locale, slug);
+  const useCasesIndexUrl = new URL(withLocalePrefix("/use-cases", locale), BRAND.siteUrl).toString();
+  const homeUrl = new URL(withLocalePrefix("/", locale), BRAND.siteUrl).toString();
 
   return (
     <div className="py-16">
@@ -80,6 +86,12 @@ export default async function UseCaseDetailPage({ params }: UseCasePageProps) {
             url: pageUrl,
             inLanguage: locale,
           }),
+          buildFaqPageSchema(copy.faqs),
+          buildBreadcrumbListSchema([
+            { name: isNl ? "Home" : "Home", item: homeUrl },
+            { name: isNl ? "Use cases" : "Use cases", item: useCasesIndexUrl },
+            { name: copy.h1, item: pageUrl },
+          ]),
         ]}
       />
 

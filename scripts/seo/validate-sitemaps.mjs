@@ -6,10 +6,10 @@ const expectedSitemapPaths = [
   "/sitemap-pages.xml",
   "/sitemap-calculators.xml",
   "/sitemap-guides.xml",
-  "/sitemap-blog.xml",
 ];
 
 const disallowedUrlPathPrefixes = [
+  "/admin",
   "/api/",
   "/trpc/",
   "/dashboard",
@@ -24,6 +24,18 @@ const disallowedUrlPathPrefixes = [
   "/profile",
   "/en/profile",
   "/nl/profile",
+  "/settings",
+  "/en/settings",
+  "/nl/settings",
+  "/fit-history",
+  "/en/fit-history",
+  "/nl/fit-history",
+  "/pressure-calculator",
+  "/en/pressure-calculator",
+  "/nl/pressure-calculator",
+  "/feedback",
+  "/en/feedback",
+  "/nl/feedback",
   "/login",
   "/en/login",
   "/nl/login",
@@ -136,10 +148,16 @@ function validateSitemapIndex(indexPayload) {
   const sitemapBlocks = extractBlocks(indexPayload, "sitemap");
   const locs = sitemapBlocks
     .map((block) => extractFirstLoc(block))
-    .filter((value) => typeof value === "string");
+    .filter((value) => typeof value === "string")
+    .map((value) => {
+      try {
+        return new URL(value).pathname;
+      } catch {
+        return value;
+      }
+    });
 
-  const expectedLocs = expectedSitemapPaths.map((path) => toAbsoluteUrl(path));
-  for (const expected of expectedLocs) {
+  for (const expected of expectedSitemapPaths) {
     if (!locs.includes(expected)) {
       fail(`sitemap index is missing child sitemap URL: ${expected}`);
     }
@@ -228,6 +246,18 @@ function validateUrlSet(pathname, payload) {
 
 async function main() {
   ok(`Validating sitemap endpoints against ${baseUrl}`);
+
+  const robotsResponse = await fetch(toAbsoluteUrl("/robots.txt"), { redirect: "manual" });
+  if (robotsResponse.status !== 200) {
+    fail(`/robots.txt returned status ${robotsResponse.status} (expected 200).`);
+  } else {
+    const robotsPayload = await robotsResponse.text();
+    for (const disallowedPath of disallowedUrlPathPrefixes) {
+      if (!robotsPayload.includes(`Disallow: ${disallowedPath}`)) {
+        fail(`/robots.txt is missing disallow rule: ${disallowedPath}`);
+      }
+    }
+  }
 
   const indexResponse = await fetchXml(sitemapIndexPath);
   if (!indexResponse) {

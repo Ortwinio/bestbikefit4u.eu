@@ -3,7 +3,11 @@ import { Button } from "@/components/ui";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
-import { buildArticleSchema } from "@/lib/seo/jsonLd";
+import {
+  buildArticleSchema,
+  buildBreadcrumbListSchema,
+  buildFaqPageSchema,
+} from "@/lib/seo/jsonLd";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -23,6 +27,8 @@ export function PainPointPageTemplate({
 }) {
   const pagePath = withLocalePrefix(`/pain/${slug}`, locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
+  const painIndexUrl = new URL(withLocalePrefix("/pain", locale), BRAND.siteUrl).toString();
+  const homeUrl = new URL(withLocalePrefix("/", locale), BRAND.siteUrl).toString();
 
   return (
     <div className="py-16">
@@ -40,6 +46,15 @@ export function PainPointPageTemplate({
             url: pageUrl,
             inLanguage: locale,
           }),
+          buildFaqPageSchema(copy.faqs),
+          buildBreadcrumbListSchema([
+            { name: locale === "nl" ? "Home" : "Home", item: homeUrl },
+            {
+              name: locale === "nl" ? "Pijnklachten" : "Pain points",
+              item: painIndexUrl,
+            },
+            { name: copy.title, item: pageUrl },
+          ]),
         ]}
       />
 

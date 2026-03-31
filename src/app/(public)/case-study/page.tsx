@@ -145,6 +145,32 @@ export default async function CaseStudyPage({
               <li>{isNl ? "Een route naar bruikbare follow-up vragen in plaats van losse feedback." : "A path toward usable follow-up questions instead of scattered feedback."}</li>
               <li>{isNl ? "De kans om mee te helpen aan sterkere rider proof voor toekomstige rijders." : "A chance to help build stronger rider proof for future cyclists."}</li>
             </ul>
+            <div className="mt-8 rounded-2xl border border-border/70 bg-background/80 p-5">
+              <p className="text-sm font-semibold text-foreground">
+                {isNl ? "Eerst meer context nodig?" : "Need more context first?"}
+              </p>
+              <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                {isNl
+                  ? "Bekijk eerst onze gidsen en pijnpagina's als je je situatie scherper wilt beschrijven voordat je je case instuurt."
+                  : "Browse the guides and pain pages first if you want to describe your situation more clearly before submitting your case."}
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Button
+                  variant="outline"
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/guides", locale)}
+                      locale={locale}
+                      pagePath={sourcePath}
+                      section="case_study_sidebar_guides_cta"
+                      ctaLabel={isNl ? "Bekijk gidsen" : "Browse guides"}
+                    />
+                  }
+                >
+                  {isNl ? "Bekijk gidsen" : "Browse guides"}
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

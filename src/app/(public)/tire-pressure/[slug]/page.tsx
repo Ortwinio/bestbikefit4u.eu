@@ -9,6 +9,7 @@ import {
   BIKE_TYPE_LABELS,
   EN_BIKE_TYPES,
   WEIGHT_STEPS,
+  buildPressureAlternates,
   buildDutchPressureSlug,
   buildEnglishPressureSlug,
   buildPressureInput,
@@ -51,22 +52,12 @@ export async function generateMetadata({
       `${label.en} tire pressure ${parsed.weight}kg`,
       `${label.en} cyclist tire pressure`,
     ],
-    alternates: {
-      canonical: `${BRAND.siteUrl}/en/tire-pressure/${slug}`,
-      languages: {
-        en: `${BRAND.siteUrl}/en/tire-pressure/${slug}`,
-        nl: `${BRAND.siteUrl}/nl/bandenspanning/${buildDutchPressureSlug(
-          parsed.weight,
-          parsed.bikeType
-        )}`,
-        "x-default": `${BRAND.siteUrl}/en/tire-pressure/${slug}`,
-      },
-    },
+    alternates: buildPressureAlternates(parsed.weight, parsed.bikeType, "en"),
     openGraph: {
       title: `Tire Pressure for ${parsed.weight}kg ${label.en} Rider | BestBikeFit4U`,
       description: `Recommended front and rear tire pressure for a ${parsed.weight} kg ${label.en} rider, with bar and PSI values plus a quick tube-type comparison.`,
       type: "website",
-      url: `${BRAND.siteUrl}/en/tire-pressure/${slug}`,
+      url: buildPressureAlternates(parsed.weight, parsed.bikeType, "en").canonical,
     },
   };
 }

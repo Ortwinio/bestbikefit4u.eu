@@ -21,6 +21,7 @@ export const BLOG_SITEMAP_CACHE_CONTROL =
   "public, s-maxage=900, stale-while-revalidate=86400";
 
 export const ROBOTS_DISALLOW_PATHS = [
+  "/admin",
   "/api/",
   "/trpc/",
   "/dashboard",
@@ -35,6 +36,18 @@ export const ROBOTS_DISALLOW_PATHS = [
   "/profile",
   "/en/profile",
   "/nl/profile",
+  "/settings",
+  "/en/settings",
+  "/nl/settings",
+  "/fit-history",
+  "/en/fit-history",
+  "/nl/fit-history",
+  "/pressure-calculator",
+  "/en/pressure-calculator",
+  "/nl/pressure-calculator",
+  "/feedback",
+  "/en/feedback",
+  "/nl/feedback",
   "/login",
   "/en/login",
   "/nl/login",
