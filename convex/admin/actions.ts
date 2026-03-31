@@ -187,6 +187,7 @@ export const importGeometryFromCsv = action({
       throw new Error("Not authorized: requires geometry role");
     }
     const rows = csvContent
+      .replace(/^\uFEFF/, "")
       .split(/\r?\n/)
       .map((line) => line.trim())
       .filter(Boolean);
@@ -201,7 +202,20 @@ export const importGeometryFromCsv = action({
       };
     }
 
-    const headers = rows[0].split(",").map((header) => header.trim());
+    const detectDelimiter = (line: string) => {
+      const commaCount = (line.match(/,/g) ?? []).length;
+      const semicolonCount = (line.match(/;/g) ?? []).length;
+      return semicolonCount > commaCount ? ";" : ",";
+    };
+
+    const splitCsvLine = (line: string, delimiter: string) =>
+      line
+        .replace(/^\uFEFF/, "")
+        .split(delimiter)
+        .map((value) => value.trim());
+
+    const delimiter = detectDelimiter(rows[0] ?? "");
+    const headers = splitCsvLine(rows[0] ?? "", delimiter);
     const importJobId = `geometry-csv-${admin._id}-${Date.now()}`;
     let recordsCreated = 0;
     let recordsSkipped = 0;
@@ -239,7 +253,7 @@ export const importGeometryFromCsv = action({
     };
 
     for (const [rowIndex, rawLine] of rows.slice(1).entries()) {
-      const values = rawLine.split(",");
+      const values = splitCsvLine(rawLine, delimiter);
       const row = Object.fromEntries(
         headers.map((header, headerIndex) => [header, values[headerIndex]?.trim() ?? ""])
       );

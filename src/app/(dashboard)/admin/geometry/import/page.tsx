@@ -22,16 +22,30 @@ const GEOMETRY_TEMPLATE_CSV = `brand_slug,brand_name,model_name,model_year,categ
 canyon,Canyon,Endurace CF SLX,2025,endurance,54,571,387,73.5,72.5,998,415,70,548,778,50,143,500,172,180,690,760,geometry_geeks,https://geometrygeeks.bike/
 specialized,Specialized,Tarmac SL8,2024,race_road,56,565,395,73.5,73.5,990,410,72,565,801,44,155,520,175,183,705,775,geometry_geeks,https://geometrygeeks.bike/`;
 
+function detectCsvDelimiter(line: string) {
+  const commaCount = (line.match(/,/g) ?? []).length;
+  const semicolonCount = (line.match(/;/g) ?? []).length;
+  return semicolonCount > commaCount ? ";" : ",";
+}
+
+function splitCsvLine(line: string, delimiter: string) {
+  return line
+    .replace(/^\uFEFF/, "")
+    .split(delimiter)
+    .map((value) => value.trim());
+}
+
 function parsePreviewRows(csv: string) {
   const lines = csv.trim().split("\n").filter(Boolean);
   if (lines.length < 2) {
     return [];
   }
 
-  const headers = lines[0].split(",").map((header) => header.trim());
+  const delimiter = detectCsvDelimiter(lines[0] ?? "");
+  const headers = splitCsvLine(lines[0] ?? "", delimiter);
 
   return lines.slice(1, 6).map((line, index) => {
-    const values = line.split(",");
+    const values = splitCsvLine(line, delimiter);
     const row = Object.fromEntries(
       headers.map((header, headerIndex) => [header, values[headerIndex]?.trim() ?? ""])
     );
@@ -137,7 +151,7 @@ export default function GeometryImportPage() {
           <div className="space-y-3 rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
             <div className="text-sm font-medium">Upload geometry CSV</div>
             <div className="text-sm text-[color:var(--muted-foreground)]">
-              Choose a `.csv` file that follows the geometry import template. The file content will be loaded into the preview editor below.
+              Choose a `.csv` file that follows the geometry import template. Comma-separated and semicolon-separated CSV files are both supported.
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <Button
@@ -154,8 +168,8 @@ export default function GeometryImportPage() {
             <input
               ref={fileInputRef}
               type="file"
-              accept=".csv,text/csv"
-              className="hidden"
+              accept=".csv,text/csv,text/plain,application/vnd.ms-excel"
+              className="block w-full rounded-[var(--radius-md)] border border-[color:var(--border)] bg-background px-3 py-2 text-sm text-[color:var(--foreground)] file:mr-3 file:rounded-[var(--radius-sm)] file:border-0 file:bg-[color:var(--secondary)] file:px-3 file:py-2 file:text-sm file:font-medium"
               onChange={(event) => void handleFileChange(event)}
             />
             {uploadError ? (
