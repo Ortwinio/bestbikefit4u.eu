@@ -1,3 +1,5 @@
+import { BRAND } from "@/config/brand";
+
 export const MARKETING_EVENT_TYPES = [
   "cta_click",
   "login_code_requested",
@@ -48,8 +50,20 @@ declare global {
   }
 }
 
-export function pushDataLayerEvent(payload: Record<string, unknown>) {
+export function isProductionMarketingHost(hostname?: string | null): boolean {
+  return typeof hostname === "string" && hostname === BRAND.host;
+}
+
+function canUseBrowserMarketing(): boolean {
   if (typeof window === "undefined") {
+    return false;
+  }
+
+  return isProductionMarketingHost(window.location.hostname);
+}
+
+export function pushDataLayerEvent(payload: Record<string, unknown>) {
+  if (!canUseBrowserMarketing()) {
     return;
   }
 

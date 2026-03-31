@@ -5,6 +5,7 @@ import {
   readCookieConsent,
   subscribeToCookieConsent,
 } from "@/lib/cookieConsent";
+import { isProductionMarketingHost } from "@/lib/analytics/marketing";
 
 declare global {
   interface Window {
@@ -26,6 +27,10 @@ export function GTMConsentLoader({ gtmId }: GTMConsentLoaderProps) {
 
   useEffect(() => {
     if (consent !== "accepted") {
+      return;
+    }
+
+    if (!isProductionMarketingHost(window.location.hostname)) {
       return;
     }
 

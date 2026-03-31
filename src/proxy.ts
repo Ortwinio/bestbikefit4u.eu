@@ -1,5 +1,6 @@
 import { convexAuthNextjsMiddleware } from "@convex-dev/auth/nextjs/server";
 import { NextResponse, type NextRequest } from "next/server";
+import { BRAND } from "@/config/brand";
 import {
   LOCALE_COOKIE_NAME,
   LOCALE_HEADER_NAME,
@@ -26,6 +27,18 @@ function redirectToPath(request: NextRequest, pathname: string): NextResponse {
   return NextResponse.redirect(url);
 }
 
+function shouldApplyNoIndexHeader(hostname: string): boolean {
+  return hostname !== BRAND.host;
+}
+
+function applyDeploymentHeaders(request: NextRequest, response: NextResponse): NextResponse {
+  if (shouldApplyNoIndexHeader(request.nextUrl.hostname)) {
+    response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+  }
+
+  return response;
+}
+
 const convexAuthProxy = convexAuthNextjsMiddleware(
   async (request, { convexAuth }) => {
     const { pathname } = request.nextUrl;
@@ -34,9 +47,9 @@ const convexAuthProxy = convexAuthNextjsMiddleware(
     if (pathname.startsWith("/admin")) {
       const isAuthenticated = await convexAuth.isAuthenticated();
       if (!isAuthenticated) {
-        return redirectToPath(request, "/login");
+        return applyDeploymentHeaders(request, redirectToPath(request, "/login"));
       }
-      return NextResponse.next();
+      return applyDeploymentHeaders(request, NextResponse.next());
     }
 
     const isAuthenticated = await convexAuth.isAuthenticated();
@@ -48,13 +61,13 @@ const convexAuthProxy = convexAuthNextjsMiddleware(
     });
 
     if (decision.type === "bypass") {
-      return;
+      return applyDeploymentHeaders(request, NextResponse.next());
     }
 
     if (decision.type === "redirect" || decision.type === "auth_redirect") {
       const response = redirectToPath(request, decision.pathname);
       setLocaleCookie(response, decision.locale);
-      return response;
+      return applyDeploymentHeaders(request, response);
     }
 
     const rewriteUrl = request.nextUrl.clone();
@@ -70,7 +83,7 @@ const convexAuthProxy = convexAuthNextjsMiddleware(
     });
 
     setLocaleCookie(response, decision.locale);
-    return response;
+    return applyDeploymentHeaders(request, response);
   }
 );
 
