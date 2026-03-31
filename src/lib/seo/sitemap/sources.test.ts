@@ -11,6 +11,8 @@ describe("sitemap sources", () => {
     expect(localizedPaths).toContain("/nl/pain");
     expect(localizedPaths).toContain("/en/case-study");
     expect(localizedPaths).toContain("/nl/case-study");
+    expect(localizedPaths).toContain("/en/how-it-works");
+    expect(localizedPaths).toContain("/nl/how-it-works");
 
     for (const slug of PAIN_PAGE_SLUGS) {
       expect(localizedPaths).toContain(`/en/pain/${slug}`);

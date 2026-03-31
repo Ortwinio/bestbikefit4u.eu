@@ -64,7 +64,7 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
           />
           <nav className="space-y-2">
             <Link
-              href={withLocalePrefix("/about", locale)}
+              href={withLocalePrefix("/how-it-works", locale)}
               onClick={close}
               className="block rounded-md px-3 py-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
             >

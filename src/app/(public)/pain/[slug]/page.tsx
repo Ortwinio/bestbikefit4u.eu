@@ -26,6 +26,7 @@ export async function generateMetadata({
   }
 
   const copy = getPainPageCopy(page, locale);
+  const alternates = buildLocaleAlternates(`/pain/${slug}`, locale);
 
   return {
     title: copy.seoTitle,
@@ -35,8 +36,9 @@ export async function generateMetadata({
       title: copy.seoTitle,
       description: copy.seoDescription,
       type: "article",
+      url: alternates.canonical,
     },
-    alternates: buildLocaleAlternates(`/pain/${slug}`, locale),
+    alternates,
   };
 }
 

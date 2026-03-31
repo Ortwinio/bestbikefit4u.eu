@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
+import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { CaseStudyRecruitmentForm } from "@/components/public/CaseStudyRecruitmentForm";
+import { CaseStudyIllustration } from "@/components/content/PublicPageIllustrations";
 import { Button } from "@/components/ui";
-import Link from "next/link";
 import { getRequestLocale } from "@/i18n/request";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
+  const alternates = buildLocaleAlternates("/case-study", locale);
   return {
     title:
       locale === "nl"
@@ -18,7 +20,19 @@ export async function generateMetadata(): Promise<Metadata> {
       locale === "nl"
         ? "Deel je fietsgerelateerde pijn- of comfortprobleem en help ons echte rider case studies opbouwen."
         : "Share your fit-related pain or comfort challenge and help us build real rider case studies.",
-    alternates: buildLocaleAlternates("/case-study", locale),
+    openGraph: {
+      title:
+        locale === "nl"
+          ? "Case-study deelname | BestBikeFit4U"
+          : "Case study recruitment | BestBikeFit4U",
+      description:
+        locale === "nl"
+          ? "Deel je fietsgerelateerde pijn- of comfortprobleem en help ons echte rider case studies opbouwen."
+          : "Share your fit-related pain or comfort challenge and help us build real rider case studies.",
+      type: "website",
+      url: alternates.canonical,
+    },
+    alternates,
   };
 }
 
@@ -41,28 +55,53 @@ export default async function CaseStudyPage({
         section={pain ?? "general"}
       />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <section className="rounded-[2rem] border border-border/70 bg-card/95 px-6 py-10 shadow-sm sm:px-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
-            {isNl ? "Rider recruitment" : "Rider recruitment"}
-          </p>
-          <h1 className="mt-4 text-4xl font-semibold text-foreground sm:text-5xl">
-            {isNl
-              ? "Help ons echte case studies opbouwen"
-              : "Help us build real rider case studies"}
-          </h1>
-          <p className="mt-4 max-w-3xl text-lg text-muted-foreground">
-            {isNl
-              ? "We zoeken rijders met terugkerende klachten of duidelijke fit-uitdagingen. Deel je situatie en we nemen contact op als jouw case past bij een nieuwe publicatie of validatieronde."
-              : "We are recruiting riders with recurring pain or clear fit challenges. Share your situation and we will reach out if your case fits a new publication or validation round."}
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Button variant="outline" render={<Link href={withLocalePrefix("/pain", locale)} />}>
-              {isNl ? "Bekijk pijnpagina's" : "Browse pain pages"}
-            </Button>
-            <Button variant="outline" render={<Link href={withLocalePrefix("/pricing", locale)} />}>
-              {isNl ? "Bekijk prijzen" : "View pricing"}
-            </Button>
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)]">
+          <div className="rounded-[2rem] border border-border/70 bg-card/95 px-6 py-10 shadow-sm sm:px-10">
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
+              {isNl ? "Rijders gezocht" : "Rider recruitment"}
+            </p>
+            <h1 className="mt-4 text-4xl font-semibold text-foreground sm:text-5xl">
+              {isNl
+                ? "Help ons echte case studies opbouwen"
+                : "Help us build real rider case studies"}
+            </h1>
+            <p className="mt-4 max-w-3xl text-lg text-muted-foreground">
+              {isNl
+                ? "We zoeken rijders met terugkerende klachten of duidelijke fit-uitdagingen. Deel je situatie en we nemen contact op als jouw case past bij een nieuwe publicatie of validatieronde."
+                : "We are recruiting riders with recurring pain or clear fit challenges. Share your situation and we will reach out if your case fits a new publication or validation round."}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Button
+                variant="outline"
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/pain", locale)}
+                    locale={locale}
+                    pagePath={sourcePath}
+                    section="case_study_header_pain_cta"
+                    ctaLabel={isNl ? "Bekijk pijnpagina's" : "Browse pain pages"}
+                  />
+                }
+              >
+                {isNl ? "Bekijk pijnpagina's" : "Browse pain pages"}
+              </Button>
+              <Button
+                variant="outline"
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/pricing", locale)}
+                    locale={locale}
+                    pagePath={sourcePath}
+                    section="case_study_header_pricing_cta"
+                    ctaLabel={isNl ? "Bekijk prijzen" : "View pricing"}
+                  />
+                }
+              >
+                {isNl ? "Bekijk prijzen" : "View pricing"}
+              </Button>
+            </div>
           </div>
+          <CaseStudyIllustration locale={locale} />
         </section>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
@@ -97,6 +136,14 @@ export default async function CaseStudyPage({
               <li>{isNl ? "Welke fiets en discipline je gebruikt." : "Which bike and discipline you are riding."}</li>
               <li>{isNl ? "Welke aanpassingen je al hebt geprobeerd." : "Which adjustments you have already tried."}</li>
               <li>{isNl ? "Of je openstaat voor follow-up vragen." : "Whether you are open to follow-up questions."}</li>
+            </ul>
+            <h2 className="mt-8 text-2xl font-semibold text-foreground">
+              {isNl ? "Wat deelnemers terugkrijgen" : "What participants get back"}
+            </h2>
+            <ul className="mt-5 space-y-3 text-sm leading-7 text-muted-foreground">
+              <li>{isNl ? "Een duidelijkere structuur om je startsituatie en verbeteringen vast te leggen." : "A clearer structure for capturing your starting point and improvements."}</li>
+              <li>{isNl ? "Een route naar bruikbare follow-up vragen in plaats van losse feedback." : "A path toward usable follow-up questions instead of scattered feedback."}</li>
+              <li>{isNl ? "De kans om mee te helpen aan sterkere rider proof voor toekomstige rijders." : "A chance to help build stronger rider proof for future cyclists."}</li>
             </ul>
           </div>
         </div>

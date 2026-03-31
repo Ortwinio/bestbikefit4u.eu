@@ -64,7 +64,7 @@ export function BikeFitProcessIllustration({ locale }: { locale: "en" | "nl" }) 
 export function PainFitIllustration({ locale }: { locale: "en" | "nl" }) {
   return (
     <IllustrationShell
-      eyebrow={locale === "nl" ? "Fit-first review" : "Fit-first review"}
+      eyebrow={locale === "nl" ? "Fitgerichte check" : "Fit-first review"}
       title={locale === "nl" ? "Bekijk belasting, houding en ondersteuning samen" : "Review load, posture, and support together"}
     >
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -102,7 +102,7 @@ export function PainFitIllustration({ locale }: { locale: "en" | "nl" }) {
 export function CaseStudyIllustration({ locale }: { locale: "en" | "nl" }) {
   return (
     <IllustrationShell
-      eyebrow={locale === "nl" ? "Case-study flow" : "Case-study flow"}
+      eyebrow={locale === "nl" ? "Case-study traject" : "Case-study flow"}
       title={locale === "nl" ? "Van startsituatie naar bruikbare inzichten" : "From starting point to usable rider proof"}
     >
       <div className="mt-5 flex items-center justify-between gap-3">

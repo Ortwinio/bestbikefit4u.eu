@@ -55,6 +55,13 @@ function toEntry(seed: RouteSeed): SitemapContentEntry {
 const PAGE_ROUTE_SEEDS: readonly RouteSeed[] = [
   { id: "home", path: "/", lastmod: "2026-02-23", changefreq: "weekly", priority: 1 },
   { id: "about", path: "/about", lastmod: "2026-02-19", changefreq: "monthly", priority: 0.8 },
+  {
+    id: "how-it-works",
+    path: "/how-it-works",
+    lastmod: "2026-03-31",
+    changefreq: "weekly",
+    priority: 0.85,
+  },
   { id: "pricing", path: "/pricing", lastmod: "2026-02-19", changefreq: "weekly", priority: 0.9 },
   { id: "faq", path: "/faq", lastmod: "2026-02-23", changefreq: "weekly", priority: 0.8 },
   { id: "contact", path: "/contact", lastmod: "2026-02-19", changefreq: "monthly", priority: 0.7 },

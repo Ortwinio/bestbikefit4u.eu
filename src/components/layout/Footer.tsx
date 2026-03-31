@@ -25,7 +25,7 @@ export function Footer({ locale, labels }: FooterProps) {
             <ul className="mt-4 space-y-2">
               <li>
                 <Link
-                  href={withLocalePrefix("/about", locale)}
+                  href={withLocalePrefix("/how-it-works", locale)}
                   className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
                   {labels.howItWorks}

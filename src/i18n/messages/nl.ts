@@ -37,7 +37,7 @@ const nl = {
     metadata: {
       title: `${BRAND.name} - Online bikefitting voor comfort en prestaties`,
       description:
-        "Ontvang persoonlijke bike fit-doelwaarden passend bij jouw lichaam en rijstijl. Verbeter comfort, verfijn je positie en fiets met meer vertrouwen.",
+        "Ontvang praktische bikefit-begeleiding passend bij jouw lichaam en rijstijl. Verbeter comfort, verfijn je positie en fiets met meer vertrouwen.",
       openGraphTitle: `${BRAND.name} - Online bikefitting voor comfort en prestaties`,
       openGraphDescription:
         "Praktische bikefitting-begeleiding voor comfort, prestaties en betere fietskeuzes.",
@@ -57,28 +57,28 @@ const nl = {
       title: "Online bikefitting",
       titleAccent: "voor comfort en prestaties.",
       description:
-        "Start je gratis bikefitting en krijg afstelwaarden passend bij jouw lichaam en rijstijl, met een duidelijkere volgende stap voor comfort, positie en vertrouwen.",
+        "Start je gratis bikefitting en bekijk afstelbegeleiding passend bij jouw lichaam en rijstijl, met een duidelijkere volgende stap voor comfort, positie en vertrouwen.",
       primaryCta: "Start gratis fit",
       secondaryCta: "Bekijk prijzen",
     },
     howItWorks: {
       title: "Hoe het werkt",
-      subtitle: "In drie eenvoudige stappen naar een concreet fit-plan",
+      subtitle: "Bekijk de fitflow in drie duidelijke stappen",
       steps: [
         {
           title: "Vul je metingen in",
           description:
-            "Geef je lichaamsmetingen door, zoals lengte, binnenbeenlengte en armlengte, en vul een flexibiliteitscheck in.",
+            "Geef je lichaamsmetingen door, zoals lengte, binnenbeenlengte en armlengte, en vul een korte flexibiliteitscheck in.",
         },
         {
           title: "Beantwoord vragen",
           description:
-            "Vertel ons over je rijstijl, doelen, trainingsuren per week en eventuele pijnklachten op de fiets.",
+            "Vertel over je rijstijl, doelen, trainingsuren per week en de ongemakken die op de fiets het belangrijkst zijn.",
         },
         {
-          title: "Ontvang je fit-rapport",
+          title: "Bekijk je aanbevelingen",
           description:
-            "Krijg gedetailleerde aanbevelingen voor zadelhoogte, reach, stuurpositie, cranklengte en meer.",
+            "Bekijk praktische aanbevelingen voor zadelhoogte, reach, stuurpositie, cranklengte en wat je als eerste wilt controleren.",
         },
       ],
     },

@@ -34,7 +34,7 @@ export function Header({ locale, labels }: HeaderProps) {
             />
             <nav className="hidden items-center gap-6 md:flex">
               <Link
-                href={withLocalePrefix("/about", locale)}
+                href={withLocalePrefix("/how-it-works", locale)}
                 className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
               >
                 {labels.nav.howItWorks}

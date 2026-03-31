@@ -37,6 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const dictionary = await getDictionary(locale);
   const { metadata } = dictionary.home;
+  const alternates = buildLocaleAlternates("/", locale);
 
   return {
     title: metadata.title,
@@ -46,8 +47,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: metadata.openGraphTitle,
       description: metadata.openGraphDescription,
       type: "website",
+      url: alternates.canonical,
     },
-    alternates: buildLocaleAlternates("/", locale),
+    alternates,
   };
 }
 
@@ -163,7 +165,15 @@ export default async function HomePage() {
                 variant="outline"
                 size="lg"
                 className="border-primary-foreground/70 bg-primary-foreground/10 !text-primary-foreground after:!bg-transparent hover:bg-primary-foreground/20"
-                {...linkButtonProps(withLocalePrefix("/about", locale))}
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/pricing", locale)}
+                    locale={locale}
+                    pagePath={homePath}
+                    section="hero_secondary"
+                    ctaLabel={home.hero.secondaryCta}
+                  />
+                }
               >
                 {home.hero.secondaryCta}
               </Button>

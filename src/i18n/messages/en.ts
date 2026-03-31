@@ -36,7 +36,7 @@ const en = {
     metadata: {
       title: `${BRAND.name} - Online Bike Fitting for Comfort and Performance`,
       description:
-        "Get personalized bike fit targets matched to your body and riding style. Improve comfort, refine your position, and ride with more confidence.",
+        "Get practical bike fit guidance matched to your body and riding style. Improve comfort, refine your position, and ride with more confidence.",
       openGraphTitle: `${BRAND.name} - Online Bike Fitting for Comfort and Performance`,
       openGraphDescription:
         "Get practical bike fit guidance for comfort, performance, and better bike decisions.",
@@ -56,28 +56,28 @@ const en = {
       title: "Online Bike Fitting",
       titleAccent: "for Comfort and Performance.",
       description:
-        "Start your free bike fit and get setup targets matched to your body and riding style — with a clearer next step for comfort, position, and confidence.",
+        "Start your free bike fit and review setup guidance matched to your body and riding style, with a clearer next step for comfort, position, and confidence.",
       primaryCta: "Start Free Fit",
       secondaryCta: "View Pricing",
     },
     howItWorks: {
       title: "How It Works",
-      subtitle: "Get an actionable fit plan in three simple steps",
+      subtitle: "See the fit flow in three clear steps",
       steps: [
         {
           title: "Enter Your Measurements",
           description:
-            "Provide your body measurements including height, inseam, arm length, and complete a flexibility assessment.",
+            "Provide your body measurements including height, inseam, arm length, and a short flexibility assessment.",
         },
         {
           title: "Answer Questions",
           description:
-            "Tell us about your riding style, goals, weekly hours, and any pain points you're experiencing on the bike.",
+            "Tell us about your riding style, goals, weekly hours, and the discomfort points that matter most on the bike.",
         },
         {
-          title: "Get Your Fit Report",
+          title: "Review Your Recommendations",
           description:
-            "Receive detailed recommendations for saddle height, reach, handlebar position, crank length, and more.",
+            "Review practical recommendations for saddle height, reach, handlebar position, crank length, and what to check first.",
         },
       ],
     },

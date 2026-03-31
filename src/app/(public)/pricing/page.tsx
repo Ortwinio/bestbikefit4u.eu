@@ -77,6 +77,7 @@ const copy: Record<
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const page = copy[locale];
+  const alternates = buildLocaleAlternates("/pricing", locale);
 
   return {
     title: page.metadata.title,
@@ -86,8 +87,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: page.metadata.title,
       description: page.metadata.description,
       type: "website",
+      url: alternates.canonical,
     },
-    alternates: buildLocaleAlternates("/pricing", locale),
+    alternates,
   };
 }
 
