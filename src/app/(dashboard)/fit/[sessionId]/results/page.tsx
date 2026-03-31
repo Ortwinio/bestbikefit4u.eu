@@ -2,6 +2,7 @@
 
 import { use, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
@@ -25,6 +26,8 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
+import { trackAdConversion } from "@/lib/analytics/conversions";
+import { COMMERCIAL_CURRENCY, FIT_PASS_PRODUCT } from "@/config/commercial";
 import { trackFeedbackSignal } from "@/components/feedback/feedback-activity";
 import { RiderProfileCard } from "./components/RiderProfileCard";
 import { PriorityTable } from "./components/PriorityTable";
@@ -34,6 +37,7 @@ import { BikeContextCard } from "./components/BikeContextCard";
 import { TirePressureSection } from "./components/TirePressureSection";
 import { ValidationPlan } from "./components/ValidationPlan";
 import { CaseStudyOptIn } from "@/components/features/casestudy/CaseStudyOptIn";
+import { FitPassPaywall } from "@/components/features/fitpass/FitPassPaywall";
 import {
   ArrowLeft,
   CheckCircle,
@@ -51,9 +55,12 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   const { sessionId } = use(params);
   const { locale, messages } = useDashboardMessages();
   const toast = useToast();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const pagePath = withLocalePrefix(`/fit/${sessionId}/results`, locale);
   const logMarketingEvent = useMarketingEventLogger();
   const reportCopy = getReportV2Copy(locale);
+  const isNl = locale === "nl";
 
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [email, setEmail] = useState("");
@@ -73,9 +80,13 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   });
 
   const user = useQuery(api.users.queries.getCurrentUser);
+  const sessionAccess = useQuery(api.fitPass.queries.getSessionAccess, {
+    sessionId: sessionId as Id<"fitSessions">,
+  });
   const session = reportSource?.session ?? null;
   const recommendation = reportSource?.recommendation ?? null;
   const hasClimbingProfile = Boolean(recommendation?.climbingCalculatedFit);
+  const hasPaidReportAccess = sessionAccess?.hasAccess ?? user?.tier === "pro";
 
   // Build the active report source — swap calculatedFit for climbingCalculatedFit when climbing tab is active
   const activeReportSource =
@@ -167,6 +178,45 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       setEmail(user.email);
     }
   }, [user, email]);
+
+  // Handle checkout success redirect
+  useEffect(() => {
+    if (!searchParams) return;
+    const checkoutParam = searchParams.get("checkout");
+    if (checkoutParam !== "success") return;
+
+    const storageKey = `fitpass_success_shown_${sessionId}`;
+    if (sessionStorage.getItem(storageKey)) return;
+
+    sessionStorage.setItem(storageKey, "1");
+    toast.success({
+      description: isNl
+        ? "Fit Pass geactiveerd. Je volledige rapport is nu beschikbaar."
+        : "Fit Pass activated. Your full report is now available.",
+    });
+    logMarketingEvent({
+      eventType: "fit_pass_checkout_completed",
+      locale,
+      pagePath,
+      section: "fit_pass_paywall",
+      valueCents: FIT_PASS_PRODUCT.priceCents,
+      currency: COMMERCIAL_CURRENCY,
+    });
+    trackAdConversion("fit_pass_purchase", {
+      locale,
+      value: FIT_PASS_PRODUCT.priceCents / 100,
+      currency: COMMERCIAL_CURRENCY,
+    });
+
+    // Clean checkout params from URL
+    const cleanParams = new URLSearchParams(searchParams.toString());
+    cleanParams.delete("checkout");
+    cleanParams.delete("checkout_session_id");
+    const cleanPath = cleanParams.toString()
+      ? `${window.location.pathname}?${cleanParams.toString()}`
+      : window.location.pathname;
+    router.replace(cleanPath);
+  }, [searchParams, sessionId, toast, isNl, logMarketingEvent, locale, pagePath, router]);
 
   const handleSendEmail = async () => {
     if (!email || !recommendation) return;
@@ -454,6 +504,14 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                 <Button
                   variant="outline"
                   onClick={() => {
+                    if (!hasPaidReportAccess) {
+                      toast.info({
+                        description: isNl
+                          ? "Fit Pass of Pro is nodig om het volledige rapport te e-mailen."
+                          : "Fit Pass or Pro is required to email the full report.",
+                      });
+                      return;
+                    }
                     trackFeedbackSignal(
                       pagePath,
                       "open_email_report",
@@ -463,16 +521,37 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                   }}
                 >
                   <Mail className="mr-2 h-4 w-4" />
-                  {messages.results.actions.emailReport}
+                  {hasPaidReportAccess
+                    ? messages.results.actions.emailReport
+                    : isNl
+                      ? "E-mail rapport — Fit Pass"
+                      : "Email report — Fit Pass"}
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleDownloadPdf}
-                  isLoading={isDownloading}
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  {messages.results.actions.downloadPdf}
-                </Button>
+                {hasPaidReportAccess ? (
+                  <Button
+                    variant="outline"
+                    onClick={handleDownloadPdf}
+                    isLoading={isDownloading}
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    {messages.results.actions.downloadPdf}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    disabled
+                    onClick={() => {
+                      toast.info({
+                        description: isNl
+                          ? "Fit Pass of Pro is nodig om je PDF te downloaden."
+                          : "Fit Pass or Pro is required to download your PDF.",
+                      });
+                    }}
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    {isNl ? "PDF — Fit Pass of Pro" : "PDF — Fit Pass or Pro"}
+                  </Button>
+                )}
                 <Button render={<Link href={withLocalePrefix("/fit", locale)} />}>
                   {messages.results.actions.startNewFit}
                 </Button>
@@ -515,6 +594,50 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         </div>
       )}
 
+      {/* Primary numbers hero stats */}
+      {(() => {
+        const fit = recommendation.calculatedFit;
+        const primaryStats = [
+          {
+            key: "saddleHeight",
+            label: isNl ? "Zadelhoogte" : "Saddle height",
+            value: fit.saddleHeightMm,
+          },
+          {
+            key: "saddleSetback",
+            label: isNl ? "Zadelteruggang" : "Saddle setback",
+            value: fit.saddleSetbackMm,
+          },
+          {
+            key: "handlebarDrop",
+            label: isNl ? "Stuurhoogteverschil" : "Handlebar drop",
+            value: fit.handlebarDropMm,
+          },
+          {
+            key: "stemLength",
+            label: isNl ? "Stuurpenlengte" : "Stem length",
+            value: fit.stemLengthMm,
+          },
+        ];
+        return (
+          <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {primaryStats.map((stat) => (
+              <div
+                key={stat.key}
+                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-center"
+              >
+                <p className="text-xs font-medium uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+                  {stat.label}
+                </p>
+                <p className="mt-2 text-2xl font-bold text-[color:var(--foreground)]">
+                  {stat.value}mm
+                </p>
+              </div>
+            ))}
+          </div>
+        );
+      })()}
+
       {/* Results Grid */}
       <div className="space-y-8">
         {reportPayload ? (
@@ -556,31 +679,63 @@ export default function ResultsPage({ params }: ResultsPageProps) {
             />
             <BikeContextCard bike={reportPayload.bike} copy={reportCopy} />
             <PriorityTable rows={reportPayload.prioritySummary} copy={reportCopy} />
-            <DetailedFitTable rows={reportPayload.detailedFit} copy={reportCopy} />
-            <AdjustmentSequence
-              steps={reportPayload.adjustmentSequence}
-              copy={reportCopy}
-            />
-            <TirePressureSection
-              tirePressure={reportPayload.tirePressure}
-              warningMessages={messages.results.pressureInsights.warningMessages}
-              copy={reportCopy}
-            />
-            <ValidationPlan copy={reportCopy} />
-            {reportPayload.fitNotes.length ? (
+            {hasPaidReportAccess ? (
+              <>
+                <DetailedFitTable rows={reportPayload.detailedFit} copy={reportCopy} />
+                <AdjustmentSequence
+                  steps={reportPayload.adjustmentSequence}
+                  copy={reportCopy}
+                />
+                <TirePressureSection
+                  tirePressure={reportPayload.tirePressure}
+                  warningMessages={messages.results.pressureInsights.warningMessages}
+                  copy={reportCopy}
+                />
+                <ValidationPlan copy={reportCopy} />
+                {reportPayload.fitNotes.length ? (
+                  <Card variant="bordered">
+                    <CardHeader>
+                      <CardTitle>{reportCopy.sections.fitNotes}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2 text-sm text-[color:var(--muted-foreground)]">
+                        {reportPayload.fitNotes.map((note) => (
+                          <li key={note}>{note}</li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                ) : null}
+              </>
+            ) : (
               <Card variant="bordered">
                 <CardHeader>
-                  <CardTitle>{reportCopy.sections.fitNotes}</CardTitle>
+                  <CardTitle>
+                    {isNl ? "Volledig rapport ontgrendelen" : "Unlock the full report"}
+                  </CardTitle>
+                  <CardDescription>
+                    {isNl
+                      ? "De gratis weergave laat je belangrijkste getallen en prioriteiten zien. Fit Pass voegt de complete aanpasvolgorde, PDF-download, e-mailrapport en validatieplan toe."
+                      : "The free view shows your core numbers and priorities. Fit Pass adds the full adjustment sequence, PDF download, email report, and validation plan."}
+                  </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-sm text-[color:var(--muted-foreground)]">
-                    {reportPayload.fitNotes.map((note) => (
-                      <li key={note}>{note}</li>
-                    ))}
-                  </ul>
+                <CardContent className="grid gap-3 sm:grid-cols-2">
+                  {[
+                    isNl ? "Gedetailleerde fittabel" : "Detailed fit table",
+                    isNl ? "Volledige aanpasvolgorde" : "Full adjustment sequence",
+                    isNl ? "Bandenspanning en waarschuwingen" : "Tire pressure and warnings",
+                    isNl ? "14-daags validatieplan" : "14-day validation plan",
+                  ].map((item) => (
+                    <div
+                      key={item}
+                      className="rounded-[var(--radius-lg)] border border-dashed border-[color:var(--border)] bg-[color:var(--muted)]/40 px-4 py-4 text-sm text-[color:var(--muted-foreground)]"
+                    >
+                      {item}
+                    </div>
+                  ))}
                 </CardContent>
               </Card>
-            ) : null}
+            )}
           </>
         ) : null}
         {user && session && (
@@ -589,6 +744,9 @@ export default function ResultsPage({ params }: ResultsPageProps) {
             sessionId={sessionId}
             userEmail={user.email ?? ""}
           />
+        )}
+        {user && !hasPaidReportAccess && (
+          <FitPassPaywall locale={locale} sessionId={sessionId} userTier={user.tier} />
         )}
       </div>
       {downloadError ? (

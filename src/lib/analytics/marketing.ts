@@ -1,4 +1,4 @@
-import { BRAND } from "@/config/brand";
+import { BRAND } from "../../config/brand";
 
 export const MARKETING_EVENT_TYPES = [
   "cta_click",
@@ -26,6 +26,15 @@ export const MARKETING_EVENT_TYPES = [
   "login_verify_error",
   "questionnaire_complete_error",
   "report_send_error",
+  "fit_pass_landing_view",
+  "fit_pass_paywall_view",
+  "fit_pass_checkout_started",
+  "fit_pass_checkout_completed",
+  "paywall_viewed",
+  "paywall_cta_clicked",
+  "paywall_dismissed",
+  "purchase_completed",
+  "checkout_initiated",
 ] as const;
 
 export type MarketingEventType = (typeof MARKETING_EVENT_TYPES)[number];
