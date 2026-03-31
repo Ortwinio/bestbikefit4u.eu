@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   BookOpen,
   CheckCircle2,
@@ -16,7 +15,7 @@ import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { BRAND } from "@/config/brand";
-import { buildArticleSchema, buildFaqPageSchema } from "@/lib/seo/jsonLd";
+import { buildArticleSchema } from "@/lib/seo/jsonLd";
 import { GUIDE_SLUGS, getGuideBySlug, getGuideCopy } from "../data";
 import { FitDisclaimer } from "@/components/content/FitDisclaimer";
 
@@ -45,6 +44,7 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
   }
 
   const copy = getGuideCopy(guide, locale);
+  const alternates = buildLocaleAlternates(`/guides/${guide.slug}`, locale);
 
   return {
     title: copy.seoTitle,
@@ -54,8 +54,9 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
       title: copy.seoTitle,
       description: copy.seoDescription,
       type: "article",
+      url: alternates.canonical,
     },
-    alternates: buildLocaleAlternates(`/guides/${guide.slug}`, locale),
+    alternates,
   };
 }
 
@@ -83,7 +84,6 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
             url: pageUrl,
             inLanguage: locale,
           }),
-          buildFaqPageSchema(copy.faqs),
         ]}
       />
 
@@ -119,7 +119,7 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
                 <div className="mt-5 grid gap-3">
                   <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)]/80 p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">
-                      {isNl ? "Takeaways" : "Takeaways"}
+                      {isNl ? "Kernpunten" : "Takeaways"}
                     </p>
                     <p className="mt-2 text-3xl font-semibold text-[color:var(--foreground)]">
                       {copy.takeaways.length}
@@ -249,12 +249,12 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
 
         <section className="mt-10 rounded-[2rem] bg-[linear-gradient(160deg,color-mix(in_oklch,var(--primary)_92%,black_8%),color-mix(in_oklch,var(--primary)_72%,var(--warning)_28%))] p-8 text-center shadow-sm sm:p-10">
           <h2 className="text-2xl font-bold text-[color:var(--primary-foreground)] sm:text-3xl">
-            {isNl ? "Wil je jouw fit concreet laten berekenen?" : "Ready to calculate your personalized fit?"}
+            {isNl ? "Wil je dit vertalen naar je eigen setup?" : "Ready to turn this into your own setup?"}
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[color:var(--primary-foreground)]/84 sm:text-base">
             {isNl
-              ? "Start gratis en ontvang afstelwaarden met duidelijke prioriteiten."
-              : "Start free and get setup targets with clear adjustment priorities."}
+              ? "Start gratis en bekijk fitbegeleiding met duidelijke prioriteiten."
+              : "Start free and review fit guidance with clear adjustment priorities."}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button
@@ -272,7 +272,15 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
               {copy.primaryCta}
             </Button>
             <Button
-              render={<Link href={withLocalePrefix("/about", locale)} />}
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/how-it-works", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="guide_secondary_cta"
+                  ctaLabel={copy.secondaryCta}
+                />
+              }
               variant="outline"
               className="border-[color:var(--primary-foreground)] bg-transparent text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-foreground)]/10"
             >

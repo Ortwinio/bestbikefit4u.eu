@@ -30,7 +30,7 @@ export const USE_CASES: UseCase[] = [
     slug: "endurance-cycling-fit",
     en: {
       seoTitle: "Bike Fit for Endurance Cyclists | BestBikeFit4U",
-      seoDescription: "Reduce fatigue and stay comfortable on long rides with a fit that supports steady power over hours in the saddle.",
+      seoDescription: "Stay more comfortable on long rides with a fit that supports steady power over hours in the saddle.",
       seoKeywords: ["endurance cycling bike fit", "long distance cycling position", "bike fit for long rides"],
       cardTitle: "Bike Fit for Endurance Cyclists",
       cardDescription: "Stay efficient and comfortable on rides that last for hours.",
@@ -295,7 +295,7 @@ export const USE_CASES: UseCase[] = [
     slug: "back-pain-cycling",
     en: {
       seoTitle: "Bike Fit for Lower Back Pain | BestBikeFit4U",
-      seoDescription: "Reduce cycling-related lower back pain by correcting reach, drop, and saddle support with a structured fit approach.",
+      seoDescription: "Review cycling-related lower back pain by correcting reach, drop, and saddle support with a structured fit approach.",
       seoKeywords: ["lower back pain cycling", "bike fit back pain", "cycling back pain fit"],
       cardTitle: "Bike Fit for Lower Back Pain",
       cardDescription: "Find the setup errors that often trigger back pain on the bike.",
@@ -320,7 +320,7 @@ export const USE_CASES: UseCase[] = [
     },
     nl: {
       seoTitle: "Bikefit bij lage rugklachten | BestBikeFit4U",
-      seoDescription: "Verminder lage rugklachten op de fiets door reach, drop en zadelondersteuning gericht te corrigeren.",
+      seoDescription: "Beoordeel lage rugklachten op de fiets door reach, drop en zadelondersteuning gericht te corrigeren.",
       seoKeywords: ["lage rugklachten fietsen", "bikefit rugpijn", "rugpijn op de fiets"],
       cardTitle: "Bikefit bij lage rugklachten",
       cardDescription: "Vind de afstelfouten die vaak lage rugpijn op de fiets veroorzaken.",
@@ -348,10 +348,10 @@ export const USE_CASES: UseCase[] = [
     slug: "short-torso-bike-fit",
     en: {
       seoTitle: "Bike Fit for a Shorter Torso | BestBikeFit4U",
-      seoDescription: "Reduce overreach and improve comfort if you have a shorter torso relative to your height.",
+      seoDescription: "Review overreach and improve comfort if you have a shorter torso relative to your height.",
       seoKeywords: ["short torso bike fit", "bike fit shorter torso", "cycling position short torso"],
       cardTitle: "Bike Fit for a Shorter Torso",
-      cardDescription: "Fix the over-stretched feeling common on standard bike setups.",
+      cardDescription: "Address the over-stretched feeling common on standard bike setups.",
       h1: "Bike Fit for Riders with a Shorter Torso",
       intro: "Riders with a shorter torso often end up on setups that feel too long even when frame size looks correct on paper.",
       challengesTitle: "Common shorter-torso fit problems",
@@ -373,7 +373,7 @@ export const USE_CASES: UseCase[] = [
     },
     nl: {
       seoTitle: "Bikefit voor een kortere romp | BestBikeFit4U",
-      seoDescription: "Verminder overreach en verbeter comfort als je romp relatief korter is ten opzichte van je lengte.",
+      seoDescription: "Beoordeel overreach en verbeter comfort als je romp relatief korter is ten opzichte van je lengte.",
       seoKeywords: ["korte romp bikefit", "bikefit kortere romp", "fietspositie korte romp"],
       cardTitle: "Bikefit voor een kortere romp",
       cardDescription: "Los het uitgerekte gevoel op dat vaak ontstaat bij standaard setups.",

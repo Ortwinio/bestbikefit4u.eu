@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Compass, HelpCircle, Target, Wrench } from "lucide-react";
-import { Button, Card, CardContent, type ButtonProps } from "@/components/ui";
+import { Button, Card, CardContent } from "@/components/ui";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { BRAND } from "@/config/brand";
-import { buildArticleSchema, buildFaqPageSchema } from "@/lib/seo/jsonLd";
+import { buildArticleSchema } from "@/lib/seo/jsonLd";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { type Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
@@ -20,13 +19,6 @@ interface UseCasePageProps {
 
 export function generateStaticParams() {
   return USE_CASE_SLUGS.map((slug) => ({ slug }));
-}
-
-function linkButtonProps(href: string): ButtonProps {
-  return {
-    render: <Link href={href} />,
-    nativeButton: false,
-  } as ButtonProps;
 }
 
 export async function generateMetadata({
@@ -44,6 +36,7 @@ export async function generateMetadata({
   }
 
   const copy = getUseCaseCopy(useCase, locale);
+  const alternates = buildLocaleAlternates(`/use-cases/${slug}`, locale);
 
   return {
     title: copy.seoTitle,
@@ -53,8 +46,9 @@ export async function generateMetadata({
       title: copy.seoTitle,
       description: copy.seoDescription,
       type: "article",
+      url: alternates.canonical,
     },
-    alternates: buildLocaleAlternates(`/use-cases/${slug}`, locale),
+    alternates,
   };
 }
 
@@ -86,7 +80,6 @@ export default async function UseCaseDetailPage({ params }: UseCasePageProps) {
             url: pageUrl,
             inLanguage: locale,
           }),
-          buildFaqPageSchema(copy.faqs),
         ]}
       />
 
@@ -96,7 +89,7 @@ export default async function UseCaseDetailPage({ params }: UseCasePageProps) {
             <CardContent className="p-8 sm:p-10">
               <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
                 <Compass className="h-3.5 w-3.5" />
-                {isNl ? "Use case" : "Use case"}
+                {isNl ? "Scenario" : "Use case"}
               </div>
               <h1 className="mt-5 text-4xl font-semibold tracking-tight text-[color:var(--foreground)] sm:text-5xl">
                 {copy.h1}
@@ -240,15 +233,23 @@ export default async function UseCaseDetailPage({ params }: UseCasePageProps) {
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[color:var(--primary-foreground)]/84 sm:text-base">
             {isNl
-              ? "Gebruik de gratis bike fit calculator als startpunt en ga daarna verder met je volledige dashboard-fit."
-              : "Use the free bike-fit calculator as a starting point, then continue with your full dashboard fit."}
+              ? "Gebruik de gratis bike fit calculator als startpunt en ga daarna verder met meer detail in je fitflow."
+              : "Use the free bike-fit calculator as a starting point, then continue with more detail in your fit flow."}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button
               className="bg-[color:var(--background)] text-[color:var(--primary)] hover:bg-[color:var(--muted)]"
-              {...linkButtonProps(withLocalePrefix("/calculators/bike-fit", locale))}
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/calculators/bike-fit", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="use_case_calculator_cta"
+                  ctaLabel={isNl ? "Open bike fit-calculator" : "Open Bike Fit Calculator"}
+                />
+              }
             >
-              {isNl ? "Open bike fit calculator" : "Open Bike Fit Calculator"}
+              {isNl ? "Open bike fit-calculator" : "Open Bike Fit Calculator"}
             </Button>
             <Button
               render={

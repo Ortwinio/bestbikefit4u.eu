@@ -46,7 +46,7 @@ export const GUIDES: Guide[] = [
       ],
       cardTitle: "Bike Fitting for Knee Pain",
       cardDescription:
-        "Fix common knee pain causes with step-by-step setup checks.",
+        "Review common knee pain causes with step-by-step setup checks.",
       h1: "Bike Fitting for Knee Pain",
       intro:
         "Most cycling knee pain comes from setup mismatch, not training alone. Start with conservative, measurable changes and evaluate one variable at a time.",
@@ -59,7 +59,7 @@ export const GUIDES: Guide[] = [
       ],
       adjustmentsTitle: "Practical adjustment order",
       adjustments: [
-        "Set saddle height to your fit report target",
+        "Set saddle height to the target from your fit guidance",
         "Re-check saddle setback and pedaling line",
         "Shorten cockpit if you slide forward under load",
         "Test each change for 2-3 rides before making another",
@@ -108,7 +108,7 @@ export const GUIDES: Guide[] = [
       ],
       adjustmentsTitle: "Praktische volgorde van aanpassingen",
       adjustments: [
-        "Zet zadelhoogte op de doelwaarde uit je fitrapport",
+        "Zet zadelhoogte op de doelwaarde uit je fitbegeleiding",
         "Controleer daarna zadelterugstand",
         "Verkort de cockpit als je naar voren schuift tijdens belasting",
         "Test elke wijziging 2-3 ritten voordat je verder aanpast",
@@ -140,7 +140,7 @@ export const GUIDES: Guide[] = [
     en: {
       seoTitle: "Bike Fitting for Lower Back Pain | BestBikeFit4U",
       seoDescription:
-        "Reduce lower back discomfort on the bike by improving cockpit length, drop, and pelvic stability with a structured fit process.",
+        "Review lower back discomfort on the bike by improving cockpit length, drop, and pelvic stability with a structured fit process.",
       seoKeywords: [
         "bike fitting lower back pain",
         "cycling back pain fit",
@@ -189,7 +189,7 @@ export const GUIDES: Guide[] = [
     nl: {
       seoTitle: "Bikefitting bij lage rugklachten | BestBikeFit4U",
       seoDescription:
-        "Verminder lage rugklachten op de fiets door reach, stuurdrop en bekkenstabiliteit gericht af te stemmen.",
+        "Beoordeel lage rugklachten op de fiets door reach, stuurdrop en bekkenstabiliteit gericht af te stemmen.",
       seoKeywords: [
         "bikefitting lage rugklachten",
         "rugpijn fietsen afstelling",
