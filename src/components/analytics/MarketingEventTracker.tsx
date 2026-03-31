@@ -18,6 +18,8 @@ export type LogMarketingEventArgs = {
   ctaLabel?: string;
   ctaTargetPath?: string;
   sourceTag?: string;
+  valueCents?: number;
+  currency?: "EUR";
 };
 
 type LogMarketingEventFn = (args: LogMarketingEventArgs) => Promise<unknown>;

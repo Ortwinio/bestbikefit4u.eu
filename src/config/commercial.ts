@@ -283,6 +283,28 @@ export const PUBLIC_PLANS: ReadonlyArray<{
   },
 ] as const;
 
+export const FIT_PASS_PRODUCT = {
+  key: "fit_pass",
+  priceCents: 1900,
+  currency: COMMERCIAL_CURRENCY,
+  copy: {
+    en: {
+      name: "Fit Pass",
+      title: "Unlock the full bike fit report",
+      description:
+        "Get the complete fit table, adjustment sequence, PDF export, email report, and validation plan for this session.",
+      cta: "Unlock Fit Pass",
+    },
+    nl: {
+      name: "Fit Pass",
+      title: "Ontgrendel het volledige bike fit-rapport",
+      description:
+        "Ontvang de complete fittabel, aanpasvolgorde, PDF-export, e-mailrapport en validatieplan voor deze sessie.",
+      cta: "Ontgrendel Fit Pass",
+    },
+  },
+} as const;
+
 export function formatEuroPriceFromCents(
   valueCents: number,
   locale: Locale

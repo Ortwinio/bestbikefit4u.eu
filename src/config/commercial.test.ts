@@ -34,6 +34,12 @@ describe("commercial config", () => {
     expect(PRODUCT_LIVE_FLAGS.pdfReport).toBe(true);
   });
 
+  it("exports fit pass pricing in EUR", () => {
+    expect(FIT_PASS_PRODUCT.key).toBe("fit_pass");
+    expect(FIT_PASS_PRODUCT.currency).toBe("EUR");
+    expect(FIT_PASS_PRODUCT.priceCents).toBeGreaterThan(0);
+  });
+
   it("keeps support and commercial copy aligned with public plans", () => {
     expect(getCommercialFaqCopy("en").pricing).toContain("Free and Pro");
     expect(getCommercialFaqCopy("en").pricing).toContain("EUR");

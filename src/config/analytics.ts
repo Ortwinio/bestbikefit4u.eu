@@ -7,7 +7,12 @@ export const ANALYTICS_CONFIG = {
       process.env.NEXT_PUBLIC_GOOGLE_ADS_PRICING_SIGNUP_LABEL || null,
     caseStudyLeadLabel:
       process.env.NEXT_PUBLIC_GOOGLE_ADS_CASE_STUDY_LABEL || null,
+    fitPassPurchaseLabel:
+      process.env.NEXT_PUBLIC_GOOGLE_ADS_FIT_PASS_PURCHASE_LABEL || null,
   },
 } as const;
 
-export type MarketingConversionKey = "pricing_signup" | "case_study_lead";
+export type MarketingConversionKey =
+  | "pricing_signup"
+  | "case_study_lead"
+  | "fit_pass_purchase";

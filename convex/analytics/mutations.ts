@@ -24,6 +24,8 @@ type MarketingEventDoc = {
   ctaLabel?: string;
   ctaTargetPath?: string;
   sourceTag?: string;
+  valueCents?: number;
+  currency?: "EUR";
   occurredAt: number;
 };
 
@@ -131,6 +133,8 @@ export const logMarketingEvent = mutation({
     ctaLabel: v.optional(v.string()),
     ctaTargetPath: v.optional(v.string()),
     sourceTag: v.optional(v.string()),
+    valueCents: v.optional(v.number()),
+    currency: v.optional(v.literal("EUR")),
     occurredAt: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
@@ -160,6 +164,13 @@ export const logMarketingEvent = mutation({
       throw new Error("Invalid occurredAt timestamp");
     }
 
+    if (
+      args.valueCents !== undefined &&
+      (!Number.isFinite(args.valueCents) || args.valueCents < 0)
+    ) {
+      throw new Error("Invalid valueCents");
+    }
+
     await consumeRateLimitToken(
       ctx,
       buildRateLimitIdentifier({
@@ -182,6 +193,8 @@ export const logMarketingEvent = mutation({
       ctaLabel: args.ctaLabel,
       ctaTargetPath,
       sourceTag,
+      valueCents: args.valueCents,
+      currency: args.currency,
       occurredAt,
     });
   },

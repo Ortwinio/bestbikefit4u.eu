@@ -10,7 +10,9 @@ export function trackAdConversion(
   const googleAdsLabel =
     conversionKey === "pricing_signup"
       ? ANALYTICS_CONFIG.conversions.pricingSignupLabel
-      : ANALYTICS_CONFIG.conversions.caseStudyLeadLabel;
+      : conversionKey === "fit_pass_purchase"
+        ? ANALYTICS_CONFIG.conversions.fitPassPurchaseLabel
+        : ANALYTICS_CONFIG.conversions.caseStudyLeadLabel;
 
   pushDataLayerEvent({
     event: "bbf_conversion",

@@ -48,8 +48,6 @@ import type * as feedback_mutations from "../feedback/mutations.js";
 import type * as feedback_queries from "../feedback/queries.js";
 import type * as feedback_shared from "../feedback/shared.js";
 import type * as files_actions from "../files/actions.js";
-import type * as fitPass_actions from "../fitPass/actions.js";
-import type * as fitPass_mutations from "../fitPass/mutations.js";
 import type * as fitPass_queries from "../fitPass/queries.js";
 import type * as http from "../http.js";
 import type * as integrations_actions from "../integrations/actions.js";
@@ -158,8 +156,6 @@ declare const fullApi: ApiFromModules<{
   "feedback/queries": typeof feedback_queries;
   "feedback/shared": typeof feedback_shared;
   "files/actions": typeof files_actions;
-  "fitPass/actions": typeof fitPass_actions;
-  "fitPass/mutations": typeof fitPass_mutations;
   "fitPass/queries": typeof fitPass_queries;
   http: typeof http;
   "integrations/actions": typeof integrations_actions;
