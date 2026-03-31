@@ -58,7 +58,7 @@ const content: Record<Locale, AboutCopy> = {
     metadata: {
       title: "How BestBikeFit4U Works | Bike Fitting Methodology",
       description:
-        "Learn how BestBikeFit4U calculates your fit report using proven bike fitting methods, rider-specific inputs, and practical adjustment priorities.",
+        "Learn how BestBikeFit4U turns proven bike fitting methods, rider-specific inputs, and practical adjustment priorities into clearer fit guidance.",
       keywords: [
         "bike fitting methodology",
         "LeMond method",
@@ -138,22 +138,22 @@ const content: Record<Locale, AboutCopy> = {
     ],
     guideTitle: "Continue with practical fit guides",
     guideBody:
-      "Use targeted guides for pain points and riding disciplines, then apply your personalized report.",
+      "Use targeted guides for pain points and riding disciplines, then apply the next fit steps to your own setup.",
     guideLinks: [
       { href: "/guides/bike-fitting-for-knee-pain", label: "Bike Fitting for Knee Pain" },
       { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
       { href: "/guides/triathlon-bike-fit-guide", label: "Triathlon Bike Fit Guide" },
     ],
-    ctaTitle: "Ready to Find Your Perfect Fit?",
+    ctaTitle: "Ready for a clearer next fit step?",
     ctaBody:
-      "Start a free fit session and receive a personalized fit report based on proven bike fitting methods.",
+      "Start a free fit session and review practical fit guidance based on proven bike fitting methods.",
     ctaButton: "Start Free Fit",
   },
   nl: {
     metadata: {
       title: "Hoe BestBikeFit4U werkt | Bikefitting methodiek",
       description:
-        "Lees hoe BestBikeFit4U je fitrapport berekent met bewezen bikefitting-methodes, persoonlijke input en praktische afstelprioriteiten.",
+        "Lees hoe BestBikeFit4U bewezen bikefitting-methodes, persoonlijke input en praktische afstelprioriteiten vertaalt naar duidelijkere fitbegeleiding.",
       keywords: [
         "bikefitting methodiek",
         "LeMond methode",
@@ -232,15 +232,15 @@ const content: Record<Locale, AboutCopy> = {
     ],
     guideTitle: "Praktische vervolggidsen",
     guideBody:
-      "Bekijk gerichte gidsen voor klachten en disciplines en vertaal dat naar je eigen fitrapport.",
+      "Bekijk gerichte gidsen voor klachten en disciplines en vertaal dat naar je eigen fitbegeleiding.",
     guideLinks: [
       { href: "/guides/bike-fitting-for-knee-pain", label: "Bikefitting bij kniepijn" },
       { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
       { href: "/guides/triathlon-bike-fit-guide", label: "Triathlon fit gids" },
     ],
-    ctaTitle: "Klaar om je perfecte fit te vinden?",
+    ctaTitle: "Klaar voor een duidelijkere volgende fitstap?",
     ctaBody:
-      "Start een gratis fitsessie en ontvang een persoonlijk fitrapport op basis van bewezen bikefitting-methodes.",
+      "Start een gratis fitsessie en bekijk praktische fitbegeleiding op basis van bewezen bikefitting-methodes.",
     ctaButton: "Start gratis fit",
   },
 };
@@ -248,6 +248,7 @@ const content: Record<Locale, AboutCopy> = {
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const page = content[locale];
+  const alternates = buildLocaleAlternates("/about", locale);
 
   return {
     title: page.metadata.title,
@@ -257,8 +258,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: page.metadata.title,
       description: page.metadata.description,
       type: "website",
+      url: alternates.canonical,
     },
-    alternates: buildLocaleAlternates("/about", locale),
+    alternates,
   };
 }
 

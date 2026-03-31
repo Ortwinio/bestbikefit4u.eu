@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Button } from "@/components/ui";
 import { Mail, MessageSquare } from "lucide-react";
+import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { getSupportResponseItems } from "@/config/commercial";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
@@ -85,6 +85,7 @@ function getContent(locale: Locale): ContactCopy {
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const page = getContent(locale);
+  const alternates = buildLocaleAlternates("/contact", locale);
 
   return {
     title: page.metadata.title,
@@ -94,14 +95,16 @@ export async function generateMetadata(): Promise<Metadata> {
       title: page.metadata.title,
       description: page.metadata.description,
       type: "website",
+      url: alternates.canonical,
     },
-    alternates: buildLocaleAlternates("/contact", locale),
+    alternates,
   };
 }
 
 export default async function ContactPage() {
   const locale = await getRequestLocale();
   const page = getContent(locale);
+  const pagePath = withLocalePrefix("/contact", locale);
 
   return (
     <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_32%,var(--background)_68%)_100%)] py-16 text-foreground">
@@ -136,12 +139,16 @@ export default async function ContactPage() {
                 <h2 className="text-lg font-semibold text-foreground">{page.faqTitle}</h2>
               </div>
               <p className="mt-2 text-muted-foreground">{page.faqText}</p>
-              <Link
+              <TrackedCtaLink
                 href={withLocalePrefix("/faq", locale)}
+                locale={locale}
+                pagePath={pagePath}
+                section="contact_faq_link"
+                ctaLabel={page.faqLink}
                 className="mt-1 inline-block text-primary hover:text-primary-dark"
               >
                 {page.faqLink}
-              </Link>
+              </TrackedCtaLink>
             </div>
 
             <div className="rounded-[1.75rem] border border-border/70 bg-muted/55 p-6 shadow-sm">
@@ -156,18 +163,26 @@ export default async function ContactPage() {
 
           <div className="rounded-[2rem] bg-primary px-6 py-8 shadow-lg sm:px-8">
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary-foreground/70">
-              {locale === "nl" ? "Direct contact" : "Direct contact"}
+              {locale === "nl" ? "Direct contact opnemen" : "Direct contact"}
             </p>
             <h2 className="mt-3 text-lg font-semibold text-primary-foreground">
               {page.directContactTitle}
             </h2>
             <p className="mt-3 text-primary-foreground/80">{page.directContactBody}</p>
-            <a
-              href="mailto:support@bestbikefit4u.eu"
-              className="mt-4 inline-block"
+            <Button
+              className="mt-4 bg-background text-primary hover:bg-muted"
+              render={
+                <TrackedCtaLink
+                  href="mailto:support@bestbikefit4u.eu"
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="contact_email_cta"
+                  ctaLabel={page.directContactCta}
+                />
+              }
             >
-              <Button className="bg-background text-primary hover:bg-muted">{page.directContactCta}</Button>
-            </a>
+              {page.directContactCta}
+            </Button>
             <p className="mt-3 text-xs text-primary-foreground/70">{page.directContactHint}</p>
           </div>
         </div>

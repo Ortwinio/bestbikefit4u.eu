@@ -25,6 +25,7 @@ function getUseCaseIcon(slug: string): LucideIcon {
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const isNl = locale === "nl";
+  const alternates = buildLocaleAlternates("/use-cases", locale);
 
   return {
     title: isNl
@@ -36,7 +37,17 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: isNl
       ? ["bikefit use cases", "rugklachten fietsen", "triathlon bikefit"]
       : ["bike fit use cases", "cycling back pain", "triathlon bike fit"],
-    alternates: buildLocaleAlternates("/use-cases", locale),
+    openGraph: {
+      title: isNl
+        ? "Bikefit use cases voor klachten en rijstijlen | BestBikeFit4U"
+        : "Bike Fit Use Cases for Pain Points and Riding Styles | BestBikeFit4U",
+      description: isNl
+        ? "Bekijk use cases voor bikefit bij duurritten, rugklachten, triathlon, gravel, MTB en meer."
+        : "Explore bike-fit use cases for endurance riding, back pain, triathlon, gravel, MTB, and more.",
+      type: "website",
+      url: alternates.canonical,
+    },
+    alternates,
   };
 }
 
@@ -177,9 +188,17 @@ export default async function UseCasesIndexPage() {
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button
               className="bg-[color:var(--background)] text-[color:var(--primary)] hover:bg-[color:var(--muted)]"
-              {...linkButtonProps(withLocalePrefix("/calculators/bike-fit", locale))}
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/calculators/bike-fit", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="use_cases_calculator_cta"
+                  ctaLabel={isNl ? "Open Bike Fit Calculator" : "Open Bike Fit Calculator"}
+                />
+              }
             >
-              {isNl ? "Open bike fit calculator" : "Open Bike Fit Calculator"}
+              {isNl ? "Open Bike Fit Calculator" : "Open Bike Fit Calculator"}
             </Button>
             <Button
               render={

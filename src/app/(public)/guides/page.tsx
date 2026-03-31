@@ -19,6 +19,7 @@ import { GUIDES, getGuideClusterLabel, getGuideCopy } from "./data";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const isNl = locale === "nl";
+  const alternates = buildLocaleAlternates("/guides", locale);
 
   return {
     title: isNl
@@ -48,8 +49,9 @@ export async function generateMetadata(): Promise<Metadata> {
         ? "Praktische gidsen voor betere comfort, controle en prestaties op de fiets."
         : "Practical guides to improve comfort, control, and performance on the bike.",
       type: "website",
+      url: alternates.canonical,
     },
-    alternates: buildLocaleAlternates("/guides", locale),
+    alternates,
   };
 }
 
@@ -174,7 +176,7 @@ export default async function GuidesHubPage() {
                     <Sparkles className="h-4 w-4" />
                   </div>
                   <p className="text-sm font-medium text-[color:var(--foreground)]">
-                    {isNl ? "Elke gids eindigt met een directe stap richting calculator of fitrapport." : "Every guide ends with a direct next step into the calculator or full fit flow."}
+                    {isNl ? "Elke gids eindigt met een directe stap richting calculator of volledige fitflow." : "Every guide ends with a direct next step into the calculator or full fit flow."}
                   </p>
                 </div>
               </div>
@@ -316,12 +318,12 @@ export default async function GuidesHubPage() {
 
         <section className="mt-14 rounded-[2rem] bg-[linear-gradient(160deg,color-mix(in_oklch,var(--primary)_92%,black_8%),color-mix(in_oklch,var(--primary)_72%,var(--warning)_28%))] p-8 text-center shadow-sm sm:p-10">
           <h2 className="text-2xl font-bold text-[color:var(--primary-foreground)] sm:text-3xl">
-            {isNl ? "Klaar voor je persoonlijke fitrapport?" : "Ready for your personalized fit report?"}
+            {isNl ? "Klaar voor je volgende fitstap?" : "Ready for your next fit step?"}
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[color:var(--primary-foreground)]/84 sm:text-base">
             {isNl
-              ? "Start gratis en ontvang afstelwaarden die passen bij jouw lichaam, doelen en rijstijl."
-              : "Start free and get setup targets matched to your body, goals, and riding style."}
+              ? "Start gratis en bekijk afstelbegeleiding die past bij jouw lichaam, doelen en rijstijl."
+              : "Start free and review setup guidance matched to your body, goals, and riding style."}
           </p>
           <Button
             render={

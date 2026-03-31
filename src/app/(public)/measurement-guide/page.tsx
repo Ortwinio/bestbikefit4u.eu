@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Button, type ButtonProps } from "@/components/ui";
+import { Button } from "@/components/ui";
+import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { Ruler, ScanLine, UserRound } from "lucide-react";
 import {
   PublicCtaBand,
@@ -359,16 +359,10 @@ const content: Record<Locale, MeasurementGuideCopy> = {
   },
 };
 
-function linkButtonProps(href: string): ButtonProps {
-  return {
-    render: <Link href={href} />,
-    nativeButton: false,
-  } as ButtonProps;
-}
-
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const page = content[locale];
+  const alternates = buildLocaleAlternates("/measurement-guide", locale);
 
   return {
     title: page.metadata.title,
@@ -378,14 +372,16 @@ export async function generateMetadata(): Promise<Metadata> {
       title: page.metadata.title,
       description: page.metadata.description,
       type: "website",
+      url: alternates.canonical,
     },
-    alternates: buildLocaleAlternates("/measurement-guide", locale),
+    alternates,
   };
 }
 
 export default async function MeasurementGuidePage() {
   const locale = await getRequestLocale();
   const page = content[locale];
+  const pagePath = withLocalePrefix("/measurement-guide", locale);
 
   return (
     <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_24%,var(--background)_76%)_100%)]">
@@ -506,13 +502,33 @@ export default async function MeasurementGuidePage() {
         description={page.ctaBody}
         actions={
           <>
-            <Button size="lg" {...linkButtonProps(withLocalePrefix("/profile", locale))}>
+            <Button
+              size="lg"
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/login", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="measurement_guide_primary_cta"
+                  ctaLabel={page.ctaProfile}
+                  conversionKey="pricing_signup"
+                />
+              }
+            >
               {page.ctaProfile}
             </Button>
             <Button
               variant="outline"
               size="lg"
-              {...linkButtonProps(withLocalePrefix("/fit", locale))}
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/calculators/bike-fit", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="measurement_guide_secondary_cta"
+                  ctaLabel={page.ctaFit}
+                />
+              }
             >
               {page.ctaFit}
             </Button>

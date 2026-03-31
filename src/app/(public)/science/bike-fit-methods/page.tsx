@@ -8,68 +8,204 @@ import {
   PublicSurfaceCard,
 } from "@/components/public";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
+import type { Locale } from "@/i18n/config";
+import { buildLocaleAlternates } from "@/i18n/metadata";
+import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
+import { BRAND } from "@/config/brand";
 
-export const metadata: Metadata = {
-  title: "Bike Fit Methods Comparison | BestBikeFit4U Science",
-  description:
-    "Compare common bike fitting methods including LeMond, KOPS, and dynamic fit systems, and see where each method is useful.",
-  keywords: [
-    "bike fit methods",
-    "LeMond method",
-    "KOPS bike fit",
-    "bike fitting comparison",
-  ],
-  openGraph: {
-    title: "Bike Fit Methods Comparison",
-    description:
-      "A practical comparison of major bike fitting methods and where they fit in modern workflows.",
-    type: "article",
+type MethodItem = {
+  name: string;
+  focus: string;
+  strength: string;
+  limit: string;
+};
+
+const copy: Record<
+  Locale,
+  {
+    metadata: { title: string; description: string; keywords: string[] };
+    hero: {
+      eyebrow: string;
+      title: string;
+      description: string;
+      chips: string[];
+      caption: string;
+      labels: string[];
+    };
+    section: {
+      eyebrow: string;
+      title: string;
+      description: string;
+      strengthLabel: string;
+      limitLabel: string;
+    };
+    methods: MethodItem[];
+    linksTitle: string;
+    links: Array<{ href: string; label: string }>;
+  }
+> = {
+  en: {
+    metadata: {
+      title: "Bike Fit Methods Comparison | BestBikeFit4U Science",
+      description:
+        "Compare common bike fitting methods including LeMond, KOPS, and dynamic fit systems, and see where each method is useful.",
+      keywords: [
+        "bike fit methods",
+        "LeMond method",
+        "KOPS bike fit",
+        "bike fitting comparison",
+      ],
+    },
+    hero: {
+      eyebrow: "Science",
+      title: "Bike Fit Methods",
+      description:
+        "Modern fitting combines foundational formulas with rider-specific context. No single method solves everything in isolation.",
+      chips: ["LeMond / Hamley", "KOPS", "Dynamic fit"],
+      caption:
+        "Different methods answer different questions inside the full fit workflow.",
+      labels: [
+        "Baseline geometry",
+        "Saddle position reference",
+        "Dynamic movement validation",
+      ],
+    },
+    section: {
+      eyebrow: "Comparison",
+      title: "Where each method fits",
+      description:
+        "Use formulas as strong starting points, then validate them against the rider's stability, flexibility, and real riding context.",
+      strengthLabel: "Strength",
+      limitLabel: "Limit",
+    },
+    methods: [
+      {
+        name: "LeMond / Hamley Saddle Height",
+        focus: "Baseline saddle height from inseam",
+        strength: "Simple and repeatable starting point",
+        limit: "Needs personal adjustment for flexibility and goals",
+      },
+      {
+        name: "KOPS (Knee Over Pedal Spindle)",
+        focus: "Saddle fore-aft reference",
+        strength: "Easy workshop reference",
+        limit: "Not a complete performance model",
+      },
+      {
+        name: "Dynamic / Motion-Capture Fit",
+        focus: "Joint angles under pedaling load",
+        strength: "Rich movement data",
+        limit: "Requires equipment and specialist time",
+      },
+    ],
+    linksTitle: "Related resources",
+    links: [
+      { href: "/science/calculation-engine", label: "Calculation Engine" },
+      { href: "/science/stack-and-reach", label: "Stack and Reach Guide" },
+      { href: "/calculators/crank-length", label: "Crank Length Calculator" },
+      { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
+      { href: "/guides/mountain-bike-fit-guide", label: "Mountain Bike Fit Guide" },
+    ],
+  },
+  nl: {
+    metadata: {
+      title: "Vergelijking van bikefit-methodes | BestBikeFit4U Science",
+      description:
+        "Vergelijk veelgebruikte bikefitting-methodes zoals LeMond, KOPS en dynamische fitsystemen en bekijk waar elke methode bruikbaar is.",
+      keywords: [
+        "bikefit methodes",
+        "LeMond methode",
+        "KOPS bikefit",
+        "vergelijking bikefitting",
+      ],
+    },
+    hero: {
+      eyebrow: "Wetenschap",
+      title: "Bikefit-methodes",
+      description:
+        "Moderne bikefitting combineert basale formules met rijderspecifieke context. Geen enkele methode lost alles op zichzelf op.",
+      chips: ["LeMond / Hamley", "KOPS", "Dynamische fit"],
+      caption:
+        "Verschillende methodes beantwoorden verschillende vragen binnen dezelfde fitflow.",
+      labels: [
+        "Basisgeometrie",
+        "Referentie voor zadelpositie",
+        "Dynamische bewegingscontrole",
+      ],
+    },
+    section: {
+      eyebrow: "Vergelijking",
+      title: "Waar elke methode het best past",
+      description:
+        "Gebruik formules als sterke startpunten en toets ze daarna aan stabiliteit, flexibiliteit en de echte rijcontext van de rijder.",
+      strengthLabel: "Sterkte",
+      limitLabel: "Beperking",
+    },
+    methods: [
+      {
+        name: "LeMond / Hamley-zadelhoogte",
+        focus: "Basis-zadelhoogte vanuit binnenbeenlengte",
+        strength: "Eenvoudig en herhaalbaar startpunt",
+        limit: "Heeft persoonlijke correctie nodig voor flexibiliteit en doelen",
+      },
+      {
+        name: "KOPS (Knee Over Pedal Spindle)",
+        focus: "Referentie voor zadel-voor/achter",
+        strength: "Handige werkplaatsreferentie",
+        limit: "Geen compleet prestatiemodel",
+      },
+      {
+        name: "Dynamische / motion-capture fit",
+        focus: "Gewrichtshoeken onder pedaalbelasting",
+        strength: "Rijke bewegingsdata",
+        limit: "Vraagt apparatuur en specialistische tijd",
+      },
+    ],
+    linksTitle: "Gerelateerde bronnen",
+    links: [
+      { href: "/science/calculation-engine", label: "Calculatiemotor" },
+      { href: "/science/stack-and-reach", label: "Stack en reach gids" },
+      { href: "/calculators/crank-length", label: "Cranklengte calculator" },
+      { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
+      { href: "/guides/mountain-bike-fit-guide", label: "MTB fit gids" },
+    ],
   },
 };
 
-const methods = [
-  {
-    name: "LeMond / Hamley Saddle Height",
-    focus: "Baseline saddle height from inseam",
-    strength: "Simple and repeatable starting point",
-    limit: "Needs personal adjustment for flexibility and goals",
-  },
-  {
-    name: "KOPS (Knee Over Pedal Spindle)",
-    focus: "Saddle fore-aft reference",
-    strength: "Easy workshop reference",
-    limit: "Not a complete performance model",
-  },
-  {
-    name: "Dynamic / Motion-Capture Fit",
-    focus: "Joint angles under pedaling load",
-    strength: "Rich movement data",
-    limit: "Requires equipment and specialist time",
-  },
-];
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const page = copy[locale];
+  const alternates = buildLocaleAlternates("/science/bike-fit-methods", locale);
 
-const links = [
-  { href: "/science/calculation-engine", label: "Calculation Engine" },
-  { href: "/science/stack-and-reach", label: "Stack and Reach Guide" },
-  { href: "/calculators/crank-length", label: "Crank Length Calculator" },
-  { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
-  { href: "/guides/mountain-bike-fit-guide", label: "Mountain Bike Fit Guide" },
-];
+  return {
+    title: page.metadata.title,
+    description: page.metadata.description,
+    keywords: page.metadata.keywords,
+    openGraph: {
+      title: page.metadata.title,
+      description: page.metadata.description,
+      type: "article",
+      url: alternates.canonical,
+    },
+    alternates,
+  };
+}
 
 export default async function BikeFitMethodsPage() {
   const locale = await getRequestLocale();
+  const page = copy[locale];
+  const pageUrl = new URL(withLocalePrefix("/science/bike-fit-methods", locale), BRAND.siteUrl).toString();
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: "Bike Fit Methods Comparison",
-    description:
-      "Comparison of LeMond, KOPS, and dynamic fitting approaches.",
+    headline: page.metadata.title,
+    description: page.metadata.description,
     author: {
       "@type": "Organization",
       name: "BestBikeFit4U",
     },
-    mainEntityOfPage: "/science/bike-fit-methods",
+    mainEntityOfPage: pageUrl,
   };
 
   return (
@@ -80,20 +216,17 @@ export default async function BikeFitMethodsPage() {
       />
 
       <PublicHero
-        eyebrow="Science"
-        title="Bike Fit Methods"
-        description="Modern fitting combines foundational formulas with rider-specific context. No single method solves everything in isolation."
-        chips={["LeMond / Hamley", "KOPS", "Dynamic fit"]}
+        eyebrow={page.hero.eyebrow}
+        title={page.hero.title}
+        description={page.hero.description}
+        chips={page.hero.chips}
         illustration={
-          <PublicIllustrationPanel
-            caption="Different methods answer different questions inside the full fit workflow."
-            className="w-full"
-          >
+          <PublicIllustrationPanel caption={page.hero.caption} className="w-full">
             <div className="grid w-full gap-3">
               {[
-                { icon: <Ruler className="h-5 w-5" />, label: "Baseline geometry" },
-                { icon: <Compass className="h-5 w-5" />, label: "Saddle position reference" },
-                { icon: <BookOpen className="h-5 w-5" />, label: "Dynamic movement validation" },
+                { icon: <Ruler className="h-5 w-5" />, label: page.hero.labels[0] },
+                { icon: <Compass className="h-5 w-5" />, label: page.hero.labels[1] },
+                { icon: <BookOpen className="h-5 w-5" />, label: page.hero.labels[2] },
               ].map((item) => (
                 <div
                   key={item.label}
@@ -114,14 +247,13 @@ export default async function BikeFitMethodsPage() {
 
       <PublicSection
         header={{
-          eyebrow: "Comparison",
-          title: "Where each method fits",
-          description:
-            "Use formulas as strong starting points, then validate them against the rider’s stability, flexibility, and real riding context.",
+          eyebrow: page.section.eyebrow,
+          title: page.section.title,
+          description: page.section.description,
         }}
       >
         <div className="grid gap-5">
-          {methods.map((method) => (
+          {page.methods.map((method) => (
             <PublicSurfaceCard
               key={method.name}
               title={method.name}
@@ -131,13 +263,13 @@ export default async function BikeFitMethodsPage() {
               <div className="space-y-2 text-sm leading-6">
                 <p className="text-[color:var(--muted-foreground)]">
                   <span className="font-semibold text-[color:var(--foreground)]">
-                    Strength:
+                    {page.section.strengthLabel}:
                   </span>{" "}
                   {method.strength}
                 </p>
                 <p className="text-[color:var(--muted-foreground)]">
                   <span className="font-semibold text-[color:var(--foreground)]">
-                    Limit:
+                    {page.section.limitLabel}:
                   </span>{" "}
                   {method.limit}
                 </p>
@@ -147,7 +279,7 @@ export default async function BikeFitMethodsPage() {
         </div>
       </PublicSection>
 
-      <RelatedLinksSection title="Related resources" links={links} locale={locale} />
+      <RelatedLinksSection title={page.linksTitle} links={page.links} locale={locale} />
     </PublicPageShell>
   );
 }
