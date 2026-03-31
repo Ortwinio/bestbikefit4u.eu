@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { api } from "../../../../../../convex/_generated/api";
 import { useAction } from "convex/react";
 import {
@@ -51,8 +51,10 @@ function parsePreviewRows(csv: string) {
 
 export default function GeometryImportPage() {
   const importGeometryFromCsv = useAction(api.admin.actions.importGeometryFromCsv);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [csv, setCsv] = useState(GEOMETRY_TEMPLATE_CSV);
   const [fileName, setFileName] = useState("geometry-import-template.csv");
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [previewResult, setPreviewResult] = useState<{
     rowsProcessed: number;
     recordsCreated: number;
@@ -60,6 +62,7 @@ export default function GeometryImportPage() {
     previewRows: string[];
   } | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
+  const [isUploadingFile, setIsUploadingFile] = useState(false);
 
   const parsedRows = parsePreviewRows(csv);
 
@@ -70,6 +73,43 @@ export default function GeometryImportPage() {
       setPreviewResult(result);
     } finally {
       setIsPreviewing(false);
+    }
+  }
+
+  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    setIsUploadingFile(true);
+    setUploadError(null);
+
+    try {
+      const isCsvFile =
+        file.name.toLowerCase().endsWith(".csv") ||
+        file.type === "text/csv" ||
+        file.type === "application/vnd.ms-excel";
+
+      if (!isCsvFile) {
+        throw new Error("Please upload a .csv file.");
+      }
+
+      const nextCsv = await file.text();
+      if (!nextCsv.trim()) {
+        throw new Error("The selected CSV file is empty.");
+      }
+
+      setCsv(nextCsv);
+      setFileName(file.name);
+      setPreviewResult(null);
+    } catch (error) {
+      setUploadError(
+        error instanceof Error ? error.message : "Could not read the selected CSV file."
+      );
+    } finally {
+      setIsUploadingFile(false);
+      event.target.value = "";
     }
   }
 
@@ -87,22 +127,56 @@ export default function GeometryImportPage() {
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-2 rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
             <div className="flex-1 text-sm text-[color:var(--muted-foreground)]">
-              Download the geometry CSV template first, then paste matching rows here for preview.
+              Download the geometry CSV template first, then upload the completed file or paste matching rows here for preview.
             </div>
             <Button variant="outline" render={<Link href={GEOMETRY_TEMPLATE_PATH} download />}>
               Download geometry CSV template
             </Button>
           </div>
+          <div className="space-y-3 rounded-[var(--radius-lg)] border border-[color:var(--border)] p-4">
+            <div className="text-sm font-medium">Upload geometry CSV</div>
+            <div className="text-sm text-[color:var(--muted-foreground)]">
+              Choose a `.csv` file that follows the geometry import template. The file content will be loaded into the preview editor below.
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                variant="outline"
+                isLoading={isUploadingFile}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                Upload CSV file
+              </Button>
+              <span className="text-sm text-[color:var(--muted-foreground)]">
+                {fileName || "No file selected"}
+              </span>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv,text/csv"
+              className="hidden"
+              onChange={(event) => void handleFileChange(event)}
+            />
+            {uploadError ? (
+              <p className="text-sm text-[color:var(--destructive)]">{uploadError}</p>
+            ) : null}
+          </div>
           <Input
             label="File name"
             value={fileName}
-            onChange={(event) => setFileName(event.target.value)}
+            onChange={(event) => {
+              setUploadError(null);
+              setFileName(event.target.value);
+            }}
           />
           <Textarea
             label="CSV content"
             rows={10}
             value={csv}
-            onChange={(event) => setCsv(event.target.value)}
+            onChange={(event) => {
+              setUploadError(null);
+              setCsv(event.target.value);
+            }}
           />
           <div className="flex flex-wrap gap-2">
             <Button isLoading={isPreviewing} onClick={() => void handlePreview()}>
