@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Button } from "@/components/ui";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { BRAND } from "@/config/brand";
-import { buildFaqPageSchema, buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { getRequestLocale } from "@/i18n/request";
@@ -15,23 +14,25 @@ import { BikeFitCalculatorForm } from "./BikeFitCalculatorForm";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const isNl = locale === "nl";
+  const alternates = buildLocaleAlternates("/calculators/bike-fit", locale);
 
   return {
     title: isNl ? "Gratis bike fit calculator | BestBikeFit4U" : "Free Bike Fit Calculator | BestBikeFit4U",
     description: isNl
-      ? "Bereken gratis zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel."
-      : "Calculate saddle height, reach, drop, and frame targets for free based on your body measurements and riding goal.",
+      ? "Bereken een gratis eerste inschatting voor zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel."
+      : "Calculate a free first-pass estimate for saddle height, reach, drop, and frame targets based on your body measurements and riding goal.",
     keywords: isNl
       ? ["bike fit calculator", "gratis bikefit", "online bikefitting"]
       : ["bike fit calculator", "free bike fit", "online bike fitting tool"],
     openGraph: {
       title: isNl ? "Gratis bike fit calculator" : "Free Bike Fit Calculator",
       description: isNl
-        ? "Krijg direct een eerste bike fit advies op basis van jouw maten."
-        : "Get an immediate first-pass bike-fit recommendation from your measurements.",
+        ? "Krijg direct een eerste bike-fit inschatting op basis van je maten."
+        : "Get a practical first-pass bike-fit estimate from your measurements.",
       type: "website",
+      url: alternates.canonical,
     },
-    alternates: buildLocaleAlternates("/calculators/bike-fit", locale),
+    alternates,
   };
 }
 
@@ -40,21 +41,21 @@ function buildFaqs(isNl: boolean) {
     ? [
         {
           q: "Hoe nauwkeurig is deze gratis bike fit calculator?",
-          a: "De calculator geeft een sterke eerste inschatting op basis van de productielogica uit de fit-engine. Voor een volledige analyse heb je in het dashboard meer context en vergelijking met je huidige setup.",
+          a: "De calculator geeft een bruikbare eerste inschatting op basis van je maten en rijdoel. In het dashboard kun je daarna verder verfijnen met meer context rond je huidige setup.",
         },
         {
           q: "Welke waarde moet ik als eerste aanpassen?",
-          a: "Begin meestal met zadelhoogte en algemene cockpitbalans. Daarna kun je reach, drop en framedoelen verfijnen.",
+          a: "Begin meestal met zadelhoogte en algemene cockpitbalans. Daarna kun je reach, drop en framedoelen stap voor stap verfijnen.",
         },
       ]
     : [
         {
           q: "How accurate is this free bike-fit calculator?",
-          a: "It provides a strong first-pass estimate based on the production fit-engine logic. The dashboard fit goes deeper with more context and comparison against your current setup.",
+          a: "It provides a useful first-pass estimate based on your measurements and riding goal. Inside the dashboard you can refine it further with more context around your current setup.",
         },
         {
           q: "Which value should I adjust first?",
-          a: "Start with saddle height and overall cockpit balance. Then refine reach, drop, and frame targets.",
+          a: "Start with saddle height and overall cockpit balance. Then refine reach, drop, and frame targets step by step.",
         },
       ];
 }
@@ -73,16 +74,15 @@ export default async function BikeFitCalculatorPage() {
           buildWebApplicationSchema({
             name: isNl ? "BestBikeFit4U bike fit calculator" : "BestBikeFit4U Bike Fit Calculator",
             description: isNl
-              ? "Gratis bike fit calculator voor zadelhoogte, reach, drop en framedoelen."
-              : "Free bike-fit calculator for saddle height, reach, drop, and frame targets.",
+              ? "Gratis bike fit calculator voor een eerste inschatting van zadelhoogte, reach, drop en framedoelen."
+              : "Free bike-fit calculator for a practical first-pass estimate of saddle height, reach, drop, and frame targets.",
             url: pageUrl,
           }),
-          buildFaqPageSchema(faqs),
           buildHowToSchema({
             name: isNl ? "Hoe gebruik je de bike fit calculator" : "How to use the bike-fit calculator",
             description: isNl
-              ? "Meet lengte en binnenbeenlengte, kies je rijdoel en beoordeel flexibiliteit en core."
-              : "Measure height and inseam, choose your riding goal, and rate flexibility and core stability.",
+              ? "Meet lengte en binnenbeenlengte, kies je rijdoel en beoordeel flexibiliteit en core als startpunt."
+              : "Measure height and inseam, choose your riding goal, and rate flexibility and core stability as a starting point.",
             steps: isNl
               ? [
                   "Meet lengte en binnenbeenlengte zorgvuldig.",
@@ -110,8 +110,8 @@ export default async function BikeFitCalculatorPage() {
             </h1>
             <p className="mt-4 text-lg text-muted-foreground">
               {isNl
-                ? "Bereken zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel. Dit is dezelfde fit-logica als in de app, verpakt als snelle publieke intake."
-                : "Calculate saddle height, reach, drop, and frame targets from your body measurements and riding goal. It uses the same fit logic as the app, packaged as a faster public intake."}
+                ? "Bereken een eerste inschatting voor zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel. Het is een snelle publieke intake die je helpt met je volgende stap."
+                : "Calculate a first-pass estimate for saddle height, reach, drop, and frame targets from your body measurements and riding goal. It is a fast public intake that helps you decide the next step."}
             </p>
           </div>
         </section>
@@ -135,14 +135,22 @@ export default async function BikeFitCalculatorPage() {
                   locale={locale}
                   pagePath={pagePath}
                   section="bike_fit_result"
-                  ctaLabel={isNl ? "Ga verder in dashboard" : "Continue in Dashboard"}
+                  ctaLabel={isNl ? "Ga verder in dashboard" : "Continue in dashboard"}
                 />
               }
             >
-              {isNl ? "Ga verder in dashboard" : "Continue in Dashboard"}
+              {isNl ? "Ga verder in dashboard" : "Continue in dashboard"}
             </Button>
             <Button
-              render={<Link href={withLocalePrefix("/bandenspanning-calculator", locale)} />}
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/bandenspanning-calculator", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="bike_fit_tire_pressure_cta"
+                  ctaLabel={isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"}
+                />
+              }
               variant="outline"
             >
               {isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"}

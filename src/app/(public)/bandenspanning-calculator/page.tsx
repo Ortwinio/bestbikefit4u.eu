@@ -7,24 +7,35 @@ import { PressureCalculatorForm } from "@/components/features/pressure/PressureC
 import { PressureCalculatorHero } from "@/components/features/pressure/PressureCalculatorHero";
 import { BRAND } from "@/config/brand";
 import { getDictionary } from "@/i18n/getDictionary";
+import { buildLocaleAlternates } from "@/i18n/metadata";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 
-export const metadata: Metadata = {
-  title: "Bandenspanningscalculator | BestBikeFit4U",
-  description:
-    "Bereken gratis de ideale bandenspanning voor jouw racefiets, gravelbike of MTB. Voer je gewicht en bandmaat in en krijg direct een advies in bar en PSI.",
-  alternates: {
-    canonical: "https://bestbikefit4u.eu/bandenspanning-calculator",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const dictionary = await getDictionary(locale);
+  const alternates = buildLocaleAlternates("/bandenspanning-calculator", locale);
+
+  return {
+    title: dictionary.pressure.publicPage.title,
+    description: dictionary.pressure.publicPage.description,
+    openGraph: {
+      title: dictionary.pressure.publicPage.title,
+      description: dictionary.pressure.publicPage.description,
+      type: "website",
+      url: alternates.canonical,
+    },
+    alternates,
+  };
+}
 
 export default async function BandenspanningCalculatorPage() {
   const locale = await getRequestLocale();
   const dictionary = await getDictionary(locale);
-  const pageUrl = new URL(withLocalePrefix("/bandenspanning-calculator", locale), BRAND.siteUrl).toString();
+  const pagePath = withLocalePrefix("/bandenspanning-calculator", locale);
+  const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
 
   return (
     <div>
@@ -39,6 +50,7 @@ export default async function BandenspanningCalculatorPage() {
         })}
       />
       <PressureCalculatorHero
+        locale={locale}
         title={dictionary.pressure.publicPage.h1}
         subtitle={dictionary.pressure.publicPage.subtitle}
         chips={dictionary.pressure.publicPage.chips}
@@ -55,7 +67,11 @@ export default async function BandenspanningCalculatorPage() {
           locale={locale}
         />
       </div>
-      <PressureCalculatorCta locale={locale} labels={dictionary.pressure.cta} />
+      <PressureCalculatorCta
+        locale={locale}
+        pagePath={pagePath}
+        labels={dictionary.pressure.cta}
+      />
     </div>
   );
 }

@@ -42,25 +42,8 @@ export function PressureCalculatorFaq({ locale }: PressureCalculatorFaqProps) {
           ],
         };
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: content.items.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.a,
-      },
-    })),
-  };
-
   return (
     <section className="py-14">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-[color:var(--foreground)]">{content.title}</h2>
         <div className="mt-8 space-y-4">

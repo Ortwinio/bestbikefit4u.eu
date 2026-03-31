@@ -44,12 +44,53 @@ const GUIDANCE_POINTS = [
   "Flexibility and core stability matter because they change how sustainable the position feels.",
 ];
 
-export function SaddleHeightCalculatorForm() {
+export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean }) {
   const [inseamCm, setInseamCm] = useState<number | undefined>(undefined);
   const [category, setCategory] = useState<BikeCategory>("road");
   const [ambition, setAmbition] = useState<Ambition>("balanced");
   const [flexibility, setFlexibility] = useState("3");
   const [core, setCore] = useState("3");
+  const categoryOptions = isNl
+    ? [
+        { key: "road", label: "Race" },
+        { key: "gravel", label: "Gravel" },
+        { key: "mtb", label: "Mountainbike" },
+        { key: "city", label: "Stadsfiets" },
+      ]
+    : CATEGORY_OPTIONS;
+  const ambitionOptions = isNl
+    ? [
+        { key: "comfort", label: "Comfort" },
+        { key: "balanced", label: "Balans" },
+        { key: "performance", label: "Prestatie" },
+        { key: "aero", label: "Aero" },
+      ]
+    : AMBITION_OPTIONS;
+  const flexibilityOptions = isNl
+    ? [
+        { key: "1", label: "Zeer beperkt" },
+        { key: "2", label: "Beperkt" },
+        { key: "3", label: "Gemiddeld" },
+        { key: "4", label: "Goed" },
+        { key: "5", label: "Uitstekend" },
+      ]
+    : FLEXIBILITY_OPTIONS;
+  const coreOptions = isNl
+    ? [
+        { key: "1", label: "Zeer laag" },
+        { key: "2", label: "Laag" },
+        { key: "3", label: "Gemiddeld" },
+        { key: "4", label: "Goed" },
+        { key: "5", label: "Uitstekend" },
+      ]
+    : CORE_OPTIONS;
+  const guidancePoints = isNl
+    ? [
+        "Gebruik een zorgvuldige binnenbeenmeting op blote voeten in plaats van je broekmaat.",
+        "Zie de uitkomst als startpunt en controleer die daarna in een paar ritten.",
+        "Flexibiliteit en core-stabiliteit tellen mee omdat ze bepalen hoe houdbaar de positie aanvoelt.",
+      ]
+    : GUIDANCE_POINTS;
 
   const recommendation = useMemo(() => {
     if (!inseamCm || inseamCm < 55 || inseamCm > 105) return null;
@@ -88,18 +129,20 @@ export function SaddleHeightCalculatorForm() {
         <div className="space-y-8 rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-              Inputs
+              {isNl ? "Invoer" : "Inputs"}
             </p>
             <h2 className="mt-2 text-2xl font-semibold text-foreground">
-              Build your starting point
+              {isNl ? "Bouw je startpunt" : "Build your starting point"}
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Inseam sets the baseline. Category, ambition, flexibility, and core help refine how aggressive the recommendation can be.
+              {isNl
+                ? "Binnenbeenlengte zet de basis. Categorie, rijdoel, flexibiliteit en core helpen om dat startpunt verder te verfijnen."
+                : "Inseam sets the baseline. Category, ambition, flexibility, and core help refine how progressive the starting point can be."}
             </p>
           </div>
 
           <NumberSlider
-            label="Inseam"
+            label={isNl ? "Binnenbeenlengte" : "Inseam"}
             min={55}
             max={105}
             step={0.5}
@@ -109,29 +152,29 @@ export function SaddleHeightCalculatorForm() {
           />
 
           <SliderQuestion
-            label="Bike Category"
-            options={CATEGORY_OPTIONS}
+            label={isNl ? "Fietscategorie" : "Bike Category"}
+            options={categoryOptions}
             value={category}
             onChange={(v) => setCategory(v as BikeCategory)}
           />
 
           <SliderQuestion
-            label="Riding Goal"
-            options={AMBITION_OPTIONS}
+            label={isNl ? "Rijdoel" : "Riding Goal"}
+            options={ambitionOptions}
             value={ambition}
             onChange={(v) => setAmbition(v as Ambition)}
           />
 
           <SliderQuestion
-            label="Flexibility"
-            options={FLEXIBILITY_OPTIONS}
+            label={isNl ? "Flexibiliteit" : "Flexibility"}
+            options={flexibilityOptions}
             value={flexibility}
             onChange={setFlexibility}
           />
 
           <SliderQuestion
-            label="Core Stability"
-            options={CORE_OPTIONS}
+            label={isNl ? "Core-stabiliteit" : "Core Stability"}
+            options={coreOptions}
             value={core}
             onChange={setCore}
           />
@@ -141,10 +184,10 @@ export function SaddleHeightCalculatorForm() {
         <aside>
           <div className="rounded-3xl border border-border bg-[color:var(--secondary)] p-6 shadow-sm">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-              Guidance
+              {isNl ? "Richtlijnen" : "Guidance"}
             </p>
             <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-              {GUIDANCE_POINTS.map((point) => (
+              {guidancePoints.map((point) => (
                 <li
                   key={point}
                   className="rounded-2xl border border-border/60 bg-card px-4 py-3"
@@ -160,23 +203,31 @@ export function SaddleHeightCalculatorForm() {
       {/* Output — updates live */}
       <section className="mt-6 rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-          Output
+          {isNl ? "Uitkomst" : "Output"}
         </p>
-        <h2 className="mt-2 text-2xl font-semibold text-foreground">Your baseline</h2>
+        <h2 className="mt-2 text-2xl font-semibold text-foreground">
+          {isNl ? "Jouw basislijn" : "Your baseline"}
+        </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Use this as a safe starting point, not as the final word.
+          {isNl
+            ? "Gebruik dit als veilig startpunt, niet als definitief eindwoord."
+            : "Use this as a safe starting point, not as the final word."}
         </p>
 
         {recommendation ? (
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="rounded-2xl border border-primary/20 bg-primary-soft p-5">
-              <p className="text-sm text-muted-foreground">Recommended saddle height</p>
+              <p className="text-sm text-muted-foreground">
+                {isNl ? "Aanbevolen zadelhoogte" : "Recommended saddle height"}
+              </p>
               <p className="mt-2 text-3xl font-semibold text-foreground">
                 {recommendation.saddleHeightMm} mm
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-[color:var(--secondary)] p-5">
-              <p className="text-sm text-muted-foreground">Safe starting band</p>
+              <p className="text-sm text-muted-foreground">
+                {isNl ? "Veilige startzone" : "Safe starting band"}
+              </p>
               <p className="mt-2 text-2xl font-semibold text-foreground">
                 {recommendation.minMm}–{recommendation.maxMm} mm
               </p>
@@ -184,7 +235,9 @@ export function SaddleHeightCalculatorForm() {
           </div>
         ) : (
           <div className="mt-6 rounded-2xl border border-dashed border-border bg-[color:var(--secondary)] px-4 py-5 text-sm text-muted-foreground">
-            Move the inseam slider to generate a first-pass saddle-height recommendation.
+            {isNl
+              ? "Verplaats de slider voor binnenbeenlengte om een eerste zadelhoogte-startpunt te berekenen."
+              : "Move the inseam slider to generate a first-pass saddle-height starting point."}
           </div>
         )}
       </section>

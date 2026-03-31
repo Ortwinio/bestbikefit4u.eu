@@ -1,16 +1,41 @@
 import { Card } from "@/components/ui";
 
 interface PressureCalculatorHeroProps {
+  locale: "en" | "nl";
   title: string;
   subtitle: string;
   chips: [string, string, string];
 }
 
 export function PressureCalculatorHero({
+  locale,
   title,
   subtitle,
   chips,
 }: PressureCalculatorHeroProps) {
+  const highlights =
+    locale === "nl"
+      ? [
+          {
+            title: "Snel startpunt",
+            body: "Vul gewicht, bandbreedte, ondergrond en bandtype in voor een bruikbaar eerste drukadvies.",
+          },
+          {
+            title: "Gemaakt om te verfijnen",
+            body: "Begin hier en test daarna kleine aanpassingen op gevoel, terrein en feedback uit echte ritten.",
+          },
+        ]
+      : [
+          {
+            title: "Fast starting point",
+            body: "Set weight, tyre width, surface, and tyre type to generate a practical first pressure baseline.",
+          },
+          {
+            title: "Built for refinement",
+            body: "Start here, then test small changes based on feel, terrain, and real ride feedback.",
+          },
+        ];
+
   return (
     <section className="py-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -42,22 +67,19 @@ export function PressureCalculatorHero({
             </div>
 
             <div className="space-y-3 self-start">
-              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-4 shadow-sm">
-                <p className="text-sm font-semibold text-[color:var(--foreground)]">
-                  Fast first-pass setup
-                </p>
-                <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
-                  Set weight, tire width, surface, and tire type to generate a trustworthy baseline.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-4 shadow-sm">
-                <p className="text-sm font-semibold text-[color:var(--foreground)]">
-                  Built for refinement
-                </p>
-                <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
-                  Start here, then test small changes based on feel, terrain, and real ride feedback.
-                </p>
-              </div>
+              {highlights.map((highlight) => (
+                <div
+                  key={highlight.title}
+                  className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-4 shadow-sm"
+                >
+                  <p className="text-sm font-semibold text-[color:var(--foreground)]">
+                    {highlight.title}
+                  </p>
+                  <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
+                    {highlight.body}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </Card>

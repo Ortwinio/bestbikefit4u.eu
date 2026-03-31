@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { Button } from "@/components/ui";
@@ -14,9 +14,10 @@ import {
   buildPressureInput,
   parseEnglishPressureSlug,
 } from "@/lib/seo/programmatic/tirePressure";
-import { buildFaqPageSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { BRAND } from "@/config/brand";
+import { withLocalePrefix } from "@/i18n/navigation";
 
 interface ProgrammaticPressurePageProps {
   params: Promise<{ slug: string }>;
@@ -51,7 +52,7 @@ export async function generateMetadata({
       `${label.en} cyclist tire pressure`,
     ],
     alternates: {
-      canonical: `${BRAND.siteUrl}/tire-pressure/${slug}`,
+      canonical: `${BRAND.siteUrl}/en/tire-pressure/${slug}`,
       languages: {
         en: `${BRAND.siteUrl}/en/tire-pressure/${slug}`,
         nl: `${BRAND.siteUrl}/nl/bandenspanning/${buildDutchPressureSlug(
@@ -60,6 +61,12 @@ export async function generateMetadata({
         )}`,
         "x-default": `${BRAND.siteUrl}/en/tire-pressure/${slug}`,
       },
+    },
+    openGraph: {
+      title: `Tire Pressure for ${parsed.weight}kg ${label.en} Rider | BestBikeFit4U`,
+      description: `Recommended front and rear tire pressure for a ${parsed.weight} kg ${label.en} rider, with bar and PSI values plus a quick tube-type comparison.`,
+      type: "website",
+      url: `${BRAND.siteUrl}/en/tire-pressure/${slug}`,
     },
   };
 }
@@ -78,7 +85,8 @@ export default async function ProgrammaticTirePressurePage({
   const label = BIKE_TYPE_LABELS[bikeType];
   const tubeless = calculateBasicPressure(buildPressureInput(weight, bikeType, "tubeless"));
   const innerTube = calculateBasicPressure(buildPressureInput(weight, bikeType, "inner_tube"));
-  const pageUrl = `${BRAND.siteUrl}/tire-pressure/${slug}`;
+  const pagePath = withLocalePrefix(`/tire-pressure/${slug}`, "en");
+  const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
   const faqs = [
     {
       q: `Is ${tubeless.frontBar}/${tubeless.rearBar} bar a fixed pressure for every ${weight}kg rider?`,
@@ -99,7 +107,6 @@ export default async function ProgrammaticTirePressurePage({
             description: `Static tire-pressure recommendation page for a ${weight} kg ${label.en} rider.`,
             url: pageUrl,
           }),
-          buildFaqPageSchema(faqs),
         ]}
       />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -172,12 +179,33 @@ export default async function ProgrammaticTirePressurePage({
             If you want a recommendation tied to your exact tire width, terrain, and tube type, use the full calculator next.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-          <Button render={<Link href="/bandenspanning-calculator" />}>
-            Open Tire Pressure Calculator
-          </Button>
-          <Button render={<Link href={label.guideHref} />} variant="outline">
-            Read {label.en[0].toUpperCase() + label.en.slice(1)} Fit Guide
-          </Button>
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/bandenspanning-calculator", "en")}
+                  locale="en"
+                  pagePath={pagePath}
+                  section="programmatic_pressure_primary_cta"
+                  ctaLabel="Open Tire Pressure Calculator"
+                />
+              }
+            >
+              Open Tire Pressure Calculator
+            </Button>
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix(label.guideHref, "en")}
+                  locale="en"
+                  pagePath={pagePath}
+                  section="programmatic_pressure_secondary_cta"
+                  ctaLabel={`Read ${label.en[0].toUpperCase() + label.en.slice(1)} Fit Guide`}
+                />
+              }
+              variant="outline"
+            >
+              Read {label.en[0].toUpperCase() + label.en.slice(1)} Fit Guide
+            </Button>
           </div>
         </section>
 
