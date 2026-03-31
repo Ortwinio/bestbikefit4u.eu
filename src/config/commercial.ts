@@ -2,6 +2,28 @@ import type { Locale } from "@/i18n/config";
 
 export const COMMERCIAL_CURRENCY = "EUR" as const;
 
+export const FIT_PASS_PRODUCT = {
+  key: "fit_pass",
+  priceCents: 1900,
+  currency: COMMERCIAL_CURRENCY,
+  copy: {
+    en: {
+      name: "Fit Pass",
+      title: "Unlock the full report for this fit session",
+      description:
+        "A one-time unlock for one completed fit session. Use it when you want the full report, PDF export, and email delivery without moving to Pro yet.",
+      cta: "Unlock Fit Pass",
+    },
+    nl: {
+      name: "Fit Pass",
+      title: "Ontgrendel het volledige rapport voor deze fitsessie",
+      description:
+        "Een eenmalige ontgrendeling voor één voltooide fitsessie. Gebruik het wanneer je het volledige rapport, PDF-export en e-maillevering wilt zonder direct naar Pro te gaan.",
+      cta: "Ontgrendel Fit Pass",
+    },
+  },
+} as const;
+
 export const PRODUCT_LIVE_FLAGS = {
   pdfReport: true,
   emailReport: true,

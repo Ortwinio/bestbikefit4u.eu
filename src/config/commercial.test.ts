@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   COMMERCIAL_CURRENCY,
+  FIT_PASS_PRODUCT,
   PRODUCT_LIVE_FLAGS,
   PUBLIC_PLANS,
   getCommercialFaqCopy,
@@ -13,6 +14,8 @@ describe("commercial config", () => {
   it("uses EUR for every public plan", () => {
     expect(COMMERCIAL_CURRENCY).toBe("EUR");
     expect(PUBLIC_PLANS.every((plan) => plan.priceCentsMonthly >= 0)).toBe(true);
+    expect(FIT_PASS_PRODUCT.currency).toBe("EUR");
+    expect(FIT_PASS_PRODUCT.priceCents).toBeGreaterThan(0);
   });
 
   it("shows only supported public plans", () => {
