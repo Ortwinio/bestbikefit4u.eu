@@ -60,6 +60,22 @@ export function createBikeGeometryFallbackState(
     };
   }
 
+  if (brand || model) {
+    return {
+      standardBrandId: brandId,
+      standardBrand: brand,
+      standardModelFamilyKey: modelFamilyKey,
+      standardModelId: modelId,
+      standardModel: model,
+      geometrySizeLabel,
+      geometryRecordId: undefined,
+      customBrandEnabled: false,
+      customBrand: "",
+      customModelEnabled: false,
+      customModel: "",
+    };
+  }
+
   return {
     standardBrandId: undefined,
     standardBrand: undefined,

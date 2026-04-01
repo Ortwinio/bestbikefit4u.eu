@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   AccessibleDialog,
@@ -15,10 +15,16 @@ import {
   Selectable,
   Textarea,
 } from "@/components/ui";
+import { BikeGeometryLibraryFields } from "./BikeGeometryLibraryFields";
 import {
   BikePublicFitControls,
   type PublicFitGeometryQuality,
 } from "./BikePublicFitControls";
+import {
+  createBikeGeometryFallbackState,
+  normalizeBikeGeometryIdentityPayload,
+  type BikeGeometryFallbackState,
+} from "./bikeFormGeometry";
 import { Field } from "@/components/ui/Field";
 import { getBikeTypeLabel, getBikeTypeOptions, type BikeType } from "@/lib/bikes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -126,13 +132,19 @@ export function BikeForm({
 }: BikeFormProps) {
   const { messages } = useDashboardMessages();
   const [name, setName] = useState(initialData?.name ?? "");
-  const [brand, setBrand] = useState(initialData?.brand ?? "");
-  const [model, setModel] = useState(initialData?.model ?? "");
   const [notes, setNotes] = useState(initialData?.notes ?? "");
   const [bikeType, setBikeType] = useState<BikeType | "">(initialData?.bikeType ?? "");
+  const [geometryFallbackState, setGeometryFallbackState] =
+    useState<BikeGeometryFallbackState>(() =>
+      createBikeGeometryFallbackState({
+        brand: initialData?.brand,
+        model: initialData?.model,
+        geometryRecordId: initialData?.geometryRecordId ?? null,
+        geometrySizeLabel: initialData?.currentGeometry?.frameSize ?? null,
+      })
+    );
   const [ridingStyle, setRidingStyle] = useState<RidingStyle | "">(initialData?.ridingStyle ?? "");
   const [primaryGoal, setPrimaryGoal] = useState<PrimaryGoal | "">(initialData?.primaryGoal ?? "");
-  const [geometryRecordId] = useState<string | null>(initialData?.geometryRecordId ?? null);
   const [stackMm, setStackMm] = useState(initialData?.currentGeometry?.stackMm?.toString() ?? "");
   const [reachMm, setReachMm] = useState(initialData?.currentGeometry?.reachMm?.toString() ?? "");
   const [seatTubeAngle, setSeatTubeAngle] = useState(initialData?.currentGeometry?.seatTubeAngle?.toString() ?? "");
@@ -148,6 +160,19 @@ export function BikeForm({
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const sizeLabel = geometryFallbackState.geometrySizeLabel;
+    if (!sizeLabel) {
+      return;
+    }
+
+    setFrameSize((current) =>
+      current === sizeLabel
+        ? current
+        : sizeLabel
+    );
+  }, [geometryFallbackState.geometrySizeLabel]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -178,15 +203,18 @@ export function BikeForm({
       handlebarWidthMm: numberFromInput(handlebarWidthMm),
       crankLengthMm: numberFromInput(crankLengthMm),
     };
+    const normalizedIdentity = normalizeBikeGeometryIdentityPayload(
+      geometryFallbackState
+    );
 
     setIsSubmitting(true);
     try {
       await onSubmit({
         name: trimmedName,
         bikeType,
-        brand: brand.trim() || undefined,
-        model: model.trim() || undefined,
-        geometryRecordId,
+        brand: normalizedIdentity.brand,
+        model: normalizedIdentity.model,
+        geometryRecordId: normalizedIdentity.geometryRecordId ?? null,
         ridingStyle: ridingStyle || undefined,
         primaryGoal: primaryGoal || undefined,
         notes: notes.trim() || undefined,
@@ -258,20 +286,11 @@ export function BikeForm({
               required
             />
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Input
-                label={messages.bikeForm.fields.brand.label}
-                value={brand}
-                onChange={(event) => setBrand(event.target.value)}
-                placeholder={messages.bikeForm.fields.brand.placeholder}
-              />
-              <Input
-                label={messages.bikeForm.fields.model.label}
-                value={model}
-                onChange={(event) => setModel(event.target.value)}
-                placeholder={messages.bikeForm.fields.model.placeholder}
-              />
-            </div>
+            <BikeGeometryLibraryFields
+              state={geometryFallbackState}
+              onChange={setGeometryFallbackState}
+              messages={messages}
+            />
 
             {showBikeTypeSelect ? (
               <Field.Root className="space-y-3">

@@ -2314,6 +2314,8 @@ const nl = {
             "Kies je fiets uit de geometriebibliotheek wanneer die beschikbaar is. Staat hij er niet in, dan kun je je fiets alsnog opslaan met je eigen merk en model.",
           loadingBrands: "Standaard merken laden...",
           loadingModels: "Modellen voor het gekozen merk laden...",
+          noBrands:
+            "Er zijn nog geen standaardmerken met actieve geometrie beschikbaar. Je kunt je fiets nog steeds opslaan met je eigen merk en model.",
           selectBrandFirst:
             "Begin met een standaard merk om deze fiets aan opgeslagen geometriegegevens te koppelen.",
           selectModelFirst:

@@ -232,6 +232,20 @@ export function BikeGeometryLibraryFields({
       value: String(option.recordId),
       label: option.sizeLabel,
     })) ?? [];
+  const brandHelperText =
+    brands === undefined
+      ? messages.bikeForm.fields.geometryLink.loadingBrands
+      : selectedBrandOptions.length === 0
+        ? messages.bikeForm.fields.geometryLink.noBrands
+        : messages.bikeForm.fields.geometryLink.standardBrand.helper;
+  const modelHelperText =
+    !state.standardBrandId
+      ? messages.bikeForm.fields.geometryLink.selectBrandFirst
+      : models === undefined
+        ? messages.bikeForm.fields.geometryLink.loadingModels
+        : modelOptions.length === 0
+          ? messages.bikeForm.fields.geometryLink.noModels
+          : messages.bikeForm.fields.geometryLink.standardModel.helper;
 
   return (
     <div className="space-y-4 rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
@@ -259,6 +273,7 @@ export function BikeGeometryLibraryFields({
         <Select
           label={messages.bikeForm.fields.geometryLink.standardBrand.label}
           value={state.standardBrandId ?? ""}
+          helperText={brandHelperText}
           onChange={(event) => {
             const brandId = event.target.value;
             const brand = brands?.find((item) => String(item.brandId) === brandId);
@@ -283,6 +298,7 @@ export function BikeGeometryLibraryFields({
         <Select
           label={messages.bikeForm.fields.geometryLink.standardModel.label}
           value={state.standardModelFamilyKey ?? ""}
+          helperText={modelHelperText}
           onChange={(event) => {
             const modelKey = event.target.value;
             const family = models?.find((item) => item.modelKey === modelKey);
@@ -301,6 +317,7 @@ export function BikeGeometryLibraryFields({
           }}
           options={modelOptions}
           placeholder={messages.bikeForm.fields.geometryLink.standardModel.placeholder}
+          disabled={!state.standardBrandId || models === undefined || modelOptions.length === 0}
         />
       ) : null}
 
@@ -311,6 +328,7 @@ export function BikeGeometryLibraryFields({
         <Select
           label={messages.bikeForm.fields.geometryLink.year.label}
           value={state.standardModelId ?? ""}
+          helperText={messages.bikeForm.fields.geometryLink.year.helper}
           onChange={(event) => {
             const modelId = event.target.value;
             const option = selectedModelFamily.yearOptions.find(
@@ -342,6 +360,7 @@ export function BikeGeometryLibraryFields({
         <Select
           label={messages.bikeForm.fields.geometryLink.size.label}
           value={state.geometryRecordId ?? ""}
+          helperText={messages.bikeForm.fields.geometryLink.size.helper}
           onChange={(event) => {
             const recordId = event.target.value;
             const size = sizes.sizeOptions.find((item) => String(item.recordId) === recordId);

@@ -31,6 +31,21 @@ describe("bikeFormGeometry", () => {
     });
   });
 
+  it("keeps existing brand and model in standard-ready mode without forcing custom fallback", () => {
+    const state = createBikeGeometryFallbackState({
+      brand: "Canyon",
+      model: "Endurace CF 7",
+    });
+
+    expect(state).toMatchObject({
+      standardBrand: "Canyon",
+      standardModel: "Endurace CF 7",
+      customBrandEnabled: false,
+      customModelEnabled: false,
+      geometryRecordId: undefined,
+    });
+  });
+
   it("switches from linked geometry to custom brand and clears the stale link", () => {
     const state = enableCustomBrandFallback(
       createBikeGeometryFallbackState({

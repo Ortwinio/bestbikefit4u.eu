@@ -2304,6 +2304,8 @@ const en = {
             "Choose your bike from the geometry library when it is available. If it is not listed, you can still save your bike with your own brand and model.",
           loadingBrands: "Loading standard brands...",
           loadingModels: "Loading models for the selected brand...",
+          noBrands:
+            "No standard brands with active geometry are available yet. You can still save your bike with your own brand and model.",
           selectBrandFirst:
             "Start with a standard brand to connect this bike to stored geometry data.",
           selectModelFirst:
