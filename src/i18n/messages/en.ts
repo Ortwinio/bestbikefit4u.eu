@@ -191,6 +191,99 @@ const en = {
         "Start free and get personalized setup targets in minutes.",
       cardCta: "Start Free Fit",
     },
+    bikeQuickCheck: {
+      badge: "Bike passport quick check",
+      collapsedTitle: "Check whether this bike could suit your size",
+      collapsedDescription:
+        "Use one shared bike code to screen a second-hand bike before you spend more time on it.",
+      expandLabel: "Check a shared bike code",
+      codeLabel: "Shared bike code",
+      codePlaceholder: "Enter the bike code",
+      codeHelper:
+        "This is a limited screening tool. We only use the shared bike code, your height, and the bike geometry that is available.",
+      lookupButton: "Preview this bike",
+      lookupLoading: "Checking the shared bike code…",
+      invalidTitle: "This code is not available right now",
+      invalidDescription:
+        "The code may be wrong, expired, or no longer shared. Please check the code and try again.",
+      invalidRetry: "Start again",
+      rateLimitedTitle: "Too many attempts for now",
+      rateLimitedDescription:
+        "Please wait before trying another shared bike code.",
+      rateLimitedRetry: "Try again",
+      previewTitle: "Bike preview",
+      previewDescription:
+        "We found the shared bike. Enter your height for a first estimate.",
+      previewHeightPrompt: "Enter your height for a first estimate",
+      previewSupport: "Estimate based on height and available geometry.",
+      previewButton: "Run quick check",
+      previewLoading: "Calculating a limited estimate…",
+      heightLabel: "Your height (cm)",
+      heightPlaceholder: "e.g. 178",
+      bikeSummaryLabel: "Shared bike",
+      sizeLabel: "Frame size",
+      geometryLabel: "Geometry quality",
+      geometryLimited: "Limited geometry data",
+      noPhoto: "No shared bike photo available",
+      resultTitle: "Quick check result",
+      resultSupport: "Estimate based on height and available geometry.",
+      scoreLabel: "Quick check score",
+      scoreSuffix: "/75",
+      confidenceLabel: "Confidence",
+      inseamEstimateLabel: "Estimated inseam",
+      limitedEstimate:
+        "Use this as a first screening step, not as a final fit decision.",
+      geometryWeakNote:
+        "Weak geometry data keeps this estimate limited.",
+      ctaTitle: "Want a better estimate?",
+      ctaDescription:
+        "Add your inseam and rider profile for a better estimate.",
+      ctaButton: "Create a free account",
+      ctaSecondary:
+        "A full rider profile improves precision beyond this first screen.",
+      signedInCtaTitle: "Want a better estimate?",
+      signedInCtaDescription:
+        "Use this quick check as a first screen. Add your rider profile or start a bike-fit flow for a better estimate.",
+      signedInPrimaryCta: "Add rider profile",
+      signedInSecondaryCta: "Open bike fit",
+      confidenceLevels: {
+        high: "High",
+        medium: "Medium",
+        limited: "Limited",
+      },
+      scoreBands: {
+        could_fit: "Could suit your size",
+        borderline: "Worth a closer look",
+        weak: "Looks uncertain on paper",
+        unlikely: "Probably not the right size",
+      },
+      geometryQualityLabels: {
+        full: "Full geometry available",
+        partial: "Partial geometry available",
+        none: "Limited geometry data",
+      },
+      explanationCodes: {
+        frame_size_close: "The frame size looks close to your height on paper.",
+        frame_size_borderline:
+          "The frame size sits near the edge of the expected range for your height.",
+        cockpit_close:
+          "The available stack and reach look workable for a first screen.",
+        limited_geometry:
+          "This bike has limited shared geometry, so the estimate stays cautious.",
+        limited_geometry_data:
+          "This bike has limited shared geometry, so the estimate stays cautious.",
+        geometry_looks_compatible:
+          "The available geometry looks reasonably compatible on paper for a first screen.",
+        mixed_geometry_signals:
+          "Some geometry signals look workable, but this still needs a closer check.",
+        weak_geometry_match:
+          "The available geometry gives a weak match on paper.",
+        unlikely_geometry_match:
+          "The available geometry looks unlikely to suit your size on paper.",
+        cockpit_check_needed:
+          "Frame size looks workable, but the cockpit dimensions need a closer check.",
+      },
+    },
     cta: {
       title: "Start your free bike fit today",
       description:
@@ -1767,6 +1860,36 @@ const en = {
         passportCopyAction: "Copy ID",
         passportCopied: "Bike-passport ID copied.",
         passportCopyFailed: "Could not copy the bike-passport ID.",
+      },
+      publicFit: {
+        title: "Second-hand fit preview",
+        description:
+          "Let potential buyers run a limited size check for this bike with a shared fit code.",
+        enabledBadge: "Preview enabled",
+        disabledBadge: "Preview disabled",
+        codeLabel: "Public fit code",
+        codeHint:
+          "This code stays stable when you disable and re-enable the preview.",
+        copyAction: "Copy fit code",
+        enableAction: "Enable preview",
+        reenableAction: "Re-enable preview",
+        disableAction: "Disable preview",
+        copied: "Public fit code copied.",
+        copyFailed: "Could not copy the public fit code.",
+        privacyNote:
+          "Only bike size and geometry preview data are shared. Personal account details are not shared.",
+        weakGeometryTitle: "Preview quality is limited",
+        weakGeometryNote: "Add fuller bike geometry for a better public estimate.",
+        geometryQuality: {
+          full: "Full geometry available",
+          partial: "Partial geometry available",
+          none: "No geometry shared yet",
+        },
+        followUpTitle: "Get a better estimate with your inseam and rider profile",
+        followUpDescription:
+          "Use the quick check as a first screen. Add your rider data for a better estimate.",
+        followUpProfileCta: "Add rider profile",
+        followUpFitCta: "Open bike fit",
       },
       sections: {
         gallery: "Photos",

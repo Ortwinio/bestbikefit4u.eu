@@ -33,6 +33,7 @@ import type * as bikes_actions from "../bikes/actions.js";
 import type * as bikes_description from "../bikes/description.js";
 import type * as bikes_mutations from "../bikes/mutations.js";
 import type * as bikes_passport from "../bikes/passport.js";
+import type * as bikes_publicFit from "../bikes/publicFit.js";
 import type * as bikes_queries from "../bikes/queries.js";
 import type * as caseStudyLeads_emails from "../caseStudyLeads/emails.js";
 import type * as caseStudyLeads_mutations from "../caseStudyLeads/mutations.js";
@@ -144,6 +145,7 @@ declare const fullApi: ApiFromModules<{
   "bikes/description": typeof bikes_description;
   "bikes/mutations": typeof bikes_mutations;
   "bikes/passport": typeof bikes_passport;
+  "bikes/publicFit": typeof bikes_publicFit;
   "bikes/queries": typeof bikes_queries;
   "caseStudyLeads/emails": typeof caseStudyLeads_emails;
   "caseStudyLeads/mutations": typeof caseStudyLeads_mutations;

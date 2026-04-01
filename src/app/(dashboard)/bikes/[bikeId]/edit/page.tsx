@@ -28,6 +28,8 @@ export default function EditBikePage({ params }: EditBikePageProps) {
     bikeId: bikeId as Id<"bikes">,
   });
   const updateBike = useMutation(api.bikes.mutations.update);
+  const assignPublicFitCode = useMutation(api.bikes.mutations.assignPublicFitCode);
+  const revokePublicFitCode = useMutation(api.bikes.mutations.revokePublicFitCode);
   const removeBike = useMutation(api.bikes.mutations.remove);
 
   const handleUpdate = async (payload: BikeFormPayload) => {
@@ -88,11 +90,24 @@ export default function EditBikePage({ params }: EditBikePageProps) {
   return (
     <div className="space-y-6">
       <BikeForm
+        bikeId={bikeId}
         title={messages.bikeForm.edit.title}
         description={messages.bikeForm.edit.description}
         submitLabel={messages.bikeForm.actions.saveChanges}
         initialData={initialData}
         bikePassportId={bikePassportId}
+        publicFitState={{
+          publicFitCode:
+            typeof bike.publicFitCode === "string" ? bike.publicFitCode : null,
+          publicFitEnabled: bike.publicFitEnabled === true,
+          geometryQuality: bike.publicFitSnapshot?.geometryQuality ?? null,
+        }}
+        onEnablePublicFitPreview={async () => {
+          await assignPublicFitCode({ bikeId: bikeId as Id<"bikes"> });
+        }}
+        onDisablePublicFitPreview={async () => {
+          await revokePublicFitCode({ bikeId: bikeId as Id<"bikes"> });
+        }}
         onSubmit={handleUpdate}
         onDelete={handleDelete}
         cancelHref={withLocalePrefix("/bikes", locale)}

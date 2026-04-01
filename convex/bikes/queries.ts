@@ -3,6 +3,14 @@ import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
 import { isPressureStale } from "../lib/pressureStaleness";
 import { buildBikePassportPreview, findBikeByPassportId } from "./passport";
+import {
+  buildPublicFitPhotoSources,
+  buildPublicFitPreviewInternal,
+  isPublicFitPreviewActive,
+  isValidPublicFitCode,
+  normalizePublicFitCode,
+  resolvePublicFitSnapshot,
+} from "./publicFit";
 
 function sortNewestFirst<T extends { createdAt: number }>(rows: T[]) {
   return [...rows].sort((a, b) => b.createdAt - a.createdAt);
@@ -499,5 +507,64 @@ export const lookupByPassportId = query({
         .collect(),
       existingBikeId: existingImport?._id ?? null,
     });
+  },
+});
+
+export const getByPublicFitCode = query({
+  args: { publicFitCode: v.string() },
+  handler: async (ctx, args) => {
+    const normalizedCode = normalizePublicFitCode(args.publicFitCode);
+    if (!isValidPublicFitCode(normalizedCode)) {
+      return null;
+    }
+
+    const bike = await ctx.db
+      .query("bikes")
+      .withIndex("by_public_fit_code", (q) =>
+        q.eq("publicFitCode", normalizedCode)
+      )
+      .unique();
+
+    if (!bike || !isPublicFitPreviewActive(bike)) {
+      return null;
+    }
+
+    const [snapshot, photos] = await Promise.all([
+      resolvePublicFitSnapshot(ctx, bike),
+      ctx.db
+        .query("bikePhotos")
+        .withIndex("by_bike", (q) => q.eq("bikeId", bike._id))
+        .collect(),
+    ]);
+    const photoSources = buildPublicFitPhotoSources({
+      bike,
+      photos,
+    });
+
+    return buildPublicFitPreviewInternal({
+      bike,
+      snapshot,
+      primaryPhotoSource: photoSources.primaryPhotoSource,
+      thumbnailSources: photoSources.thumbnailSources,
+    });
+  },
+});
+
+export const getPublicFitByBikeId = query({
+  args: { bikeId: v.id("bikes") },
+  handler: async (ctx, args) => {
+    const bike = await ctx.db.get(args.bikeId);
+    if (!bike || !isPublicFitPreviewActive(bike)) {
+      return null;
+    }
+
+    const snapshot = await resolvePublicFitSnapshot(ctx, bike);
+
+    return {
+      bikeId: bike._id,
+      tokenVersion: snapshot.snapshotUpdatedAt,
+      publicFitEnabled: bike.publicFitEnabled === true,
+      snapshot,
+    };
   },
 });

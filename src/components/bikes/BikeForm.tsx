@@ -15,6 +15,10 @@ import {
   Selectable,
   Textarea,
 } from "@/components/ui";
+import {
+  BikePublicFitControls,
+  type PublicFitGeometryQuality,
+} from "./BikePublicFitControls";
 import { Field } from "@/components/ui/Field";
 import { getBikeTypeLabel, getBikeTypeOptions, type BikeType } from "@/lib/bikes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -69,6 +73,7 @@ export interface BikeFormInitialData {
 }
 
 interface BikeFormProps {
+  bikeId?: string;
   title: string;
   description: string;
   submitLabel: string;
@@ -76,6 +81,13 @@ interface BikeFormProps {
   showBikeTypeSelect?: boolean;
   cancelHref?: string;
   bikePassportId?: string | null;
+  publicFitState?: {
+    publicFitCode: string | null;
+    publicFitEnabled: boolean;
+    geometryQuality: PublicFitGeometryQuality;
+  };
+  onEnablePublicFitPreview?: () => Promise<void>;
+  onDisablePublicFitPreview?: () => Promise<void>;
   onSubmit: (payload: BikeFormPayload) => Promise<void>;
   onDelete?: () => Promise<void>;
 }
@@ -98,6 +110,7 @@ function numberToInputValue(value: string) {
 }
 
 export function BikeForm({
+  bikeId,
   title,
   description,
   submitLabel,
@@ -105,6 +118,9 @@ export function BikeForm({
   showBikeTypeSelect = true,
   cancelHref = "/bikes",
   bikePassportId = null,
+  publicFitState,
+  onEnablePublicFitPreview,
+  onDisablePublicFitPreview,
   onSubmit,
   onDelete,
 }: BikeFormProps) {
@@ -208,6 +224,17 @@ export function BikeForm({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {bikeId && publicFitState && onEnablePublicFitPreview && onDisablePublicFitPreview ? (
+          <BikePublicFitControls
+            bikeId={bikeId}
+            publicFitCode={publicFitState.publicFitCode}
+            publicFitEnabled={publicFitState.publicFitEnabled}
+            geometryQuality={publicFitState.geometryQuality}
+            onEnable={onEnablePublicFitPreview}
+            onDisable={onDisablePublicFitPreview}
+          />
+        ) : null}
+
         <Card variant="bordered" className="dashboard-card-surface">
           <CardHeader>
             <CardTitle>{messages.bikeForm.sections.basics}</CardTitle>

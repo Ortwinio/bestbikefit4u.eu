@@ -14,6 +14,7 @@ import { BikePhotoGallery } from "@/components/bikes/BikePhotoGallery";
 import { BikeWheelsetManager } from "@/components/bikes/BikeWheelsetManager";
 import { BikePressureSection } from "@/components/features/pressure/BikePressureSection";
 import { GeometryLinkCard, type GeometryLinkState } from "./GeometryLinkCard";
+import { SignedInFitFollowUpCard } from "./SignedInFitFollowUpCard";
 import {
   Button,
   Card,
@@ -173,6 +174,10 @@ export default function BikeDetailPage({
     typeof (bike as { bikePassportId?: unknown }).bikePassportId === "string"
       ? ((bike as { bikePassportId?: string }).bikePassportId ?? null)
       : null;
+  const publicFitEnabled =
+    typeof (bike as { publicFitEnabled?: unknown }).publicFitEnabled === "boolean"
+      ? ((bike as { publicFitEnabled?: boolean }).publicFitEnabled ?? false)
+      : false;
   const geometryItems = [
     {
       label: messages.bikeForm.fields.type.staticLabel,
@@ -419,6 +424,29 @@ export default function BikeDetailPage({
           </div>
         </CardContent>
       </Card>
+
+      {publicFitEnabled ? (
+        <SignedInFitFollowUpCard
+          locale={locale}
+          copy={{
+            title: messages.bikes.publicFit.followUpTitle,
+            description: messages.bikes.publicFit.followUpDescription,
+            profileCta: messages.bikes.publicFit.followUpProfileCta,
+            fitCta: messages.bikes.publicFit.followUpFitCta,
+          }}
+          onCtaClick={(targetPath, ctaLabel) => {
+            logMarketingEvent({
+              eventType: "bike_public_fit_signup_cta_clicked",
+              locale,
+              pagePath: withLocalePrefix(`/bikes/${bike._id}`, locale),
+              section: "bike_public_fit_signed_in_follow_up",
+              ctaLabel,
+              ctaTargetPath: targetPath,
+              sourceTag: bike.publicFitSnapshot?.geometryQuality ?? "none",
+            });
+          }}
+        />
+      ) : null}
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <Card variant="bordered" className="dashboard-card-surface">

@@ -399,6 +399,37 @@ export default defineSchema({
     bikeImportId: v.optional(v.id("bikeImports")),
     bikePassportId: v.optional(v.string()),
     importedFromBikePassportId: v.optional(v.string()),
+    publicFitCode: v.optional(v.string()),
+    publicFitEnabled: v.optional(v.boolean()),
+    publicFitCodeCreatedAt: v.optional(v.number()),
+    publicFitSnapshot: v.optional(
+      v.object({
+        bikeType: v.union(
+          v.literal("road"),
+          v.literal("gravel"),
+          v.literal("mountain"),
+          v.literal("hybrid"),
+          v.literal("tt_triathlon"),
+          v.literal("cyclocross"),
+          v.literal("touring"),
+          v.literal("city")
+        ),
+        sizeLabel: v.optional(v.string()),
+        stackMm: v.optional(v.number()),
+        reachMm: v.optional(v.number()),
+        geometryQuality: v.union(
+          v.literal("full"),
+          v.literal("partial"),
+          v.literal("none")
+        ),
+        source: v.union(
+          v.literal("geometry_record"),
+          v.literal("manual_geometry"),
+          v.literal("none")
+        ),
+        snapshotUpdatedAt: v.number(),
+      })
+    ),
     notes: v.optional(v.string()),
     geometryRecordId: v.optional(v.id("geometry_records")),
 
@@ -407,6 +438,7 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_bike_passport_id", ["bikePassportId"])
+    .index("by_public_fit_code", ["publicFitCode"])
     .index("by_user_imported_from_passport", ["userId", "importedFromBikePassportId"])
     .index("by_geometry_record", ["geometryRecordId"])
     .index("by_bike_import", ["bikeImportId"])

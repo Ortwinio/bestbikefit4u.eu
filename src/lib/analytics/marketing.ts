@@ -42,6 +42,15 @@ export const MARKETING_EVENT_TYPES = [
   "bike_geometry_year_selected",
   "bike_geometry_record_linked",
   "bike_geometry_custom_fallback_enabled",
+  "bike_public_fit_enabled",
+  "bike_public_fit_disabled",
+  "bike_public_fit_code_copied",
+  "bike_public_fit_lookup_submitted",
+  "bike_public_fit_lookup_succeeded",
+  "bike_public_fit_lookup_failed",
+  "bike_public_fit_rate_limited",
+  "bike_public_fit_quick_match_completed",
+  "bike_public_fit_signup_cta_clicked",
 ] as const;
 
 export type MarketingEventType = (typeof MARKETING_EVENT_TYPES)[number];
@@ -58,6 +67,12 @@ export const ANONYMOUS_MARKETING_EVENT_TYPES = [
   "login_code_resent",
   "login_send_error",
   "login_verify_error",
+  "bike_public_fit_lookup_submitted",
+  "bike_public_fit_lookup_succeeded",
+  "bike_public_fit_lookup_failed",
+  "bike_public_fit_rate_limited",
+  "bike_public_fit_quick_match_completed",
+  "bike_public_fit_signup_cta_clicked",
 ] as const satisfies readonly MarketingEventType[];
 
 declare global {

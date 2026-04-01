@@ -16,6 +16,10 @@ import {
   isValidBikePassportId,
   normalizeBikePassportId,
 } from "./passport";
+import {
+  assignOrReusePublicFitCode,
+  resolvePublicFitSnapshot,
+} from "./publicFit";
 
 export const bikeTypeValidator = v.union(
   v.literal("road"),
@@ -219,6 +223,35 @@ export async function createBikeWithProfiles(
   return bikeId;
 }
 
+async function maybeRefreshPublicFitSnapshot(
+  ctx: MutationCtx,
+  bikeId: Id<"bikes">,
+  currentBike: {
+    publicFitCode?: string;
+    publicFitEnabled?: boolean;
+    publicFitSnapshot?: unknown;
+  }
+) {
+  if (
+    !currentBike.publicFitCode &&
+    !currentBike.publicFitEnabled &&
+    currentBike.publicFitSnapshot === undefined
+  ) {
+    return;
+  }
+
+  const bike = await ctx.db.get(bikeId);
+  if (!bike) {
+    return;
+  }
+
+  const publicFitSnapshot = await resolvePublicFitSnapshot(ctx, bike);
+  await ctx.db.patch(bikeId, {
+    publicFitSnapshot,
+    updatedAt: Date.now(),
+  });
+}
+
 export const create = mutation({
   args: {
     name: v.string(),
@@ -363,6 +396,13 @@ export const update = mutation({
     if (args.notes !== undefined) updates.notes = args.notes;
 
     await ctx.db.patch(args.bikeId, updates);
+    if (
+      args.bikeType !== undefined ||
+      args.currentGeometry !== undefined ||
+      args.geometryRecordId !== undefined
+    ) {
+      await maybeRefreshPublicFitSnapshot(ctx, args.bikeId, bike);
+    }
 
     if (args.ridingStyle !== undefined || args.bikeType !== undefined) {
       const nextBike = {
@@ -385,6 +425,52 @@ export const update = mutation({
         });
       }
     }
+  },
+});
+
+export const assignPublicFitCode = mutation({
+  args: { bikeId: v.id("bikes") },
+  handler: async (ctx, args) => {
+    const { bike } = await requireBikeOwner(ctx, args.bikeId);
+    const codeState = await assignOrReusePublicFitCode(ctx, bike);
+    const publicFitSnapshot = await resolvePublicFitSnapshot(
+      ctx,
+      bike,
+      codeState.publicFitCodeCreatedAt
+    );
+
+    await ctx.db.patch(args.bikeId, {
+      publicFitCode: codeState.publicFitCode,
+      publicFitEnabled: true,
+      publicFitCodeCreatedAt: codeState.publicFitCodeCreatedAt,
+      publicFitSnapshot,
+      updatedAt: codeState.publicFitCodeCreatedAt,
+    });
+
+    return {
+      publicFitCode: codeState.publicFitCode,
+      publicFitEnabled: true,
+      publicFitCodeCreatedAt: codeState.publicFitCodeCreatedAt,
+      publicFitSnapshot,
+    };
+  },
+});
+
+export const revokePublicFitCode = mutation({
+  args: { bikeId: v.id("bikes") },
+  handler: async (ctx, args) => {
+    const { bike } = await requireBikeOwner(ctx, args.bikeId);
+
+    await ctx.db.patch(args.bikeId, {
+      publicFitEnabled: false,
+      updatedAt: Date.now(),
+    });
+
+    return {
+      publicFitCode: bike.publicFitCode ?? null,
+      publicFitEnabled: false,
+      publicFitCodeCreatedAt: bike.publicFitCodeCreatedAt ?? null,
+    };
   },
 });
 

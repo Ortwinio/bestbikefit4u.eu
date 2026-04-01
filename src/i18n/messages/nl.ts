@@ -192,6 +192,99 @@ const nl = {
         "Start gratis en ontvang binnen enkele minuten persoonlijke afstelwaarden.",
       cardCta: "Start gratis fit",
     },
+    bikeQuickCheck: {
+      badge: "Bike passport quick check",
+      collapsedTitle: "Check of deze fiets bij jouw maat zou kunnen passen",
+      collapsedDescription:
+        "Gebruik één gedeelde fiets-code om een tweedehands fiets snel te screenen voordat je er meer tijd in steekt.",
+      expandLabel: "Check een gedeelde fiets-code",
+      codeLabel: "Gedeelde fiets-code",
+      codePlaceholder: "Vul de fiets-code in",
+      codeHelper:
+        "Dit is een beperkte screeningstool. We gebruiken alleen de gedeelde fiets-code, je lengte en de beschikbare fietsgeometrie.",
+      lookupButton: "Bekijk deze fiets",
+      lookupLoading: "De gedeelde fiets-code wordt gecontroleerd…",
+      invalidTitle: "Deze code is nu niet beschikbaar",
+      invalidDescription:
+        "De code kan onjuist zijn, verlopen zijn of niet meer gedeeld worden. Controleer de code en probeer opnieuw.",
+      invalidRetry: "Opnieuw beginnen",
+      rateLimitedTitle: "Te veel pogingen voor nu",
+      rateLimitedDescription:
+        "Wacht even voordat je nog een gedeelde fiets-code probeert.",
+      rateLimitedRetry: "Probeer opnieuw",
+      previewTitle: "Fietsvoorbeeld",
+      previewDescription:
+        "We hebben de gedeelde fiets gevonden. Vul je lengte in voor een eerste inschatting.",
+      previewHeightPrompt: "Vul je lengte in voor een eerste inschatting",
+      previewSupport: "Schatting op basis van lengte en beschikbare geometrie.",
+      previewButton: "Start quick check",
+      previewLoading: "Een beperkte schatting wordt berekend…",
+      heightLabel: "Je lengte (cm)",
+      heightPlaceholder: "bijv. 178",
+      bikeSummaryLabel: "Gedeelde fiets",
+      sizeLabel: "Framemaat",
+      geometryLabel: "Kwaliteit van geometrie",
+      geometryLimited: "Beperkte geometriegegevens",
+      noPhoto: "Geen gedeelde fietsfoto beschikbaar",
+      resultTitle: "Resultaat van de quick check",
+      resultSupport: "Schatting op basis van lengte en beschikbare geometrie.",
+      scoreLabel: "Quick check score",
+      scoreSuffix: "/75",
+      confidenceLabel: "Vertrouwen",
+      inseamEstimateLabel: "Geschatte binnenbeenlengte",
+      limitedEstimate:
+        "Gebruik dit als eerste screeningstap, niet als definitieve fitbeslissing.",
+      geometryWeakNote:
+        "Zwakke geometriegegevens houden deze schatting beperkt.",
+      ctaTitle: "Wil je een betere inschatting?",
+      ctaDescription:
+        "Voeg je binnenbeenlengte en rijdersprofiel toe voor een betere inschatting.",
+      ctaButton: "Maak een gratis account",
+      ctaSecondary:
+        "Een volledig rijdersprofiel geeft meer precisie dan deze eerste screening.",
+      signedInCtaTitle: "Wil je een betere inschatting?",
+      signedInCtaDescription:
+        "Gebruik deze quick check als eerste screening. Voeg je rijdersprofiel toe of start een bike-fit flow voor een betere inschatting.",
+      signedInPrimaryCta: "Voeg rijdersprofiel toe",
+      signedInSecondaryCta: "Open bike fit",
+      confidenceLevels: {
+        high: "Hoog",
+        medium: "Gemiddeld",
+        limited: "Beperkt",
+      },
+      scoreBands: {
+        could_fit: "Zou bij jouw maat kunnen passen",
+        borderline: "Verdient een extra check",
+        weak: "Lijkt op papier onzeker",
+        unlikely: "Waarschijnlijk niet de juiste maat",
+      },
+      geometryQualityLabels: {
+        full: "Volledige geometrie beschikbaar",
+        partial: "Gedeeltelijke geometrie beschikbaar",
+        none: "Beperkte geometriegegevens",
+      },
+      explanationCodes: {
+        frame_size_close: "De framemaat lijkt op papier dicht bij jouw lengte te liggen.",
+        frame_size_borderline:
+          "De framemaat zit aan de rand van het verwachte bereik voor jouw lengte.",
+        cockpit_close:
+          "De beschikbare stack en reach lijken werkbaar voor een eerste screening.",
+        limited_geometry:
+          "Deze fiets heeft beperkte gedeelde geometrie, dus de schatting blijft voorzichtig.",
+        limited_geometry_data:
+          "Deze fiets heeft beperkte gedeelde geometrie, dus de schatting blijft voorzichtig.",
+        geometry_looks_compatible:
+          "De beschikbare geometrie lijkt op papier redelijk compatibel voor een eerste screening.",
+        mixed_geometry_signals:
+          "Sommige geometriesignalen lijken werkbaar, maar dit vraagt nog een extra check.",
+        weak_geometry_match:
+          "De beschikbare geometrie geeft op papier een zwakke overeenkomst.",
+        unlikely_geometry_match:
+          "De beschikbare geometrie lijkt op papier waarschijnlijk niet bij jouw maat te passen.",
+        cockpit_check_needed:
+          "De framemaat lijkt werkbaar, maar de cockpitmaten vragen een extra check.",
+      },
+    },
     cta: {
       title: "Start vandaag met je gratis bikefitting",
       description:
@@ -1771,6 +1864,36 @@ const nl = {
         passportCopyAction: "ID kopiëren",
         passportCopied: "Bike-passport ID gekopieerd.",
         passportCopyFailed: "Kon de bike-passport ID niet kopiëren.",
+      },
+      publicFit: {
+        title: "Tweedehands fit-preview",
+        description:
+          "Laat potentiële kopers een beperkte maatcheck voor deze fiets doen met een gedeelde fitcode.",
+        enabledBadge: "Preview actief",
+        disabledBadge: "Preview uitgeschakeld",
+        codeLabel: "Publieke fitcode",
+        codeHint:
+          "Deze code blijft hetzelfde wanneer je de preview uitschakelt en later weer inschakelt.",
+        copyAction: "Fitcode kopiëren",
+        enableAction: "Preview inschakelen",
+        reenableAction: "Preview opnieuw inschakelen",
+        disableAction: "Preview uitschakelen",
+        copied: "Publieke fitcode gekopieerd.",
+        copyFailed: "Kon de publieke fitcode niet kopiëren.",
+        privacyNote:
+          "Alleen previewdata van fietsmaten en geometrie worden gedeeld. Persoonlijke accountgegevens worden niet gedeeld.",
+        weakGeometryTitle: "Previewkwaliteit is beperkt",
+        weakGeometryNote: "Voeg completere fietsgeometrie toe voor een betere publieke inschatting.",
+        geometryQuality: {
+          full: "Volledige geometrie beschikbaar",
+          partial: "Gedeeltelijke geometrie beschikbaar",
+          none: "Nog geen geometrie gedeeld",
+        },
+        followUpTitle: "Krijg een betere inschatting met je binnenbeenlengte en rider-profiel",
+        followUpDescription:
+          "Gebruik de quick check als eerste screening. Voeg je rider-data toe voor een betere inschatting.",
+        followUpProfileCta: "Rider-profiel toevoegen",
+        followUpFitCta: "Bike fit openen",
       },
       sections: {
         gallery: "Foto's",

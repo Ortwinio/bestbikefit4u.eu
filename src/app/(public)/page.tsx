@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { Button, type ButtonProps } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { Ruler, Target, FileText, Bike, Activity, Shield } from "lucide-react";
 import type { Metadata } from "next";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { QuotesCarousel } from "@/components/home/QuotesCarousel";
+import { BikeQuickCheckCard } from "@/components/public/BikeQuickCheckCard";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getDictionary } from "@/i18n/getDictionary";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -25,13 +26,6 @@ const framedSectionClass =
 const sectionHeaderWidthClass = "mx-auto max-w-3xl text-center";
 const softCardClass =
   "rounded-3xl border border-border/70 bg-background/95 p-6 shadow-sm";
-
-function linkButtonProps(href: string): ButtonProps {
-  return {
-    render: <Link href={href} />,
-    nativeButton: false,
-  } as ButtonProps;
-}
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -189,6 +183,20 @@ export default async function HomePage() {
                 {locale === "nl" ? "Snel van klacht naar duidelijke volgende stap." : "A faster path from pain point to the right next step."}
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+      <section className="-mt-10 pb-8 sm:-mt-14 sm:pb-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            <BikeQuickCheckCard
+              locale={locale}
+              pagePath={homePath}
+              loginHref={withLocalePrefix("/login", locale)}
+              profileHref={withLocalePrefix("/profile", locale)}
+              fitHref={withLocalePrefix("/fit", locale)}
+              copy={home.bikeQuickCheck}
+            />
           </div>
         </div>
       </section>
