@@ -67,7 +67,12 @@ export function normalizeBikePassportPreview(
   requestedPassportId: string
 ): BikePassportImportPreview | null {
   const record = asObject(payload);
-  if (!record || record.status !== "ready") {
+  if (!record) {
+    return null;
+  }
+
+  const status = asNonEmptyString(record.status);
+  if (status !== "available" && status !== "ready") {
     return null;
   }
 

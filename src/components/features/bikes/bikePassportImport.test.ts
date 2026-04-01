@@ -20,7 +20,7 @@ describe("bikePassportImport helpers", () => {
   it("normalizes the backend passport preview payload", () => {
     const preview = normalizeBikePassportPreview(
       {
-        status: "ready",
+        status: "available",
         bikePassportId: "BBF-AB12-CD34",
         existingBikeId: "bike_existing",
         copyIncludesPhotos: false,
@@ -58,6 +58,24 @@ describe("bikePassportImport helpers", () => {
       name: "Canyon Endurace CF SLX",
       bikeType: "road",
     });
+  });
+
+  it("still accepts legacy ready status for compatibility", () => {
+    const preview = normalizeBikePassportPreview(
+      {
+        status: "ready",
+        bikePassportId: "BBF-AB12-CD34",
+        copyIncludesPhotos: false,
+        bike: {
+          name: "Canyon Endurace CF SLX",
+          bikeType: "road",
+        },
+      },
+      "BBF-AB12-CD34"
+    );
+
+    expect(preview?.bikePassportId).toBe("BBF-AB12-CD34");
+    expect(preview?.name).toBe("Canyon Endurace CF SLX");
   });
 
   it("normalizes created bike ids and bike type labels", () => {
