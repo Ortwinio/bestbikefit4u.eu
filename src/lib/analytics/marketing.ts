@@ -35,6 +35,13 @@ export const MARKETING_EVENT_TYPES = [
   "paywall_dismissed",
   "purchase_completed",
   "checkout_initiated",
+  "bike_geometry_card_viewed",
+  "bike_geometry_unlinked_state_viewed",
+  "bike_geometry_brand_selected",
+  "bike_geometry_model_selected",
+  "bike_geometry_year_selected",
+  "bike_geometry_record_linked",
+  "bike_geometry_custom_fallback_enabled",
 ] as const;
 
 export type MarketingEventType = (typeof MARKETING_EVENT_TYPES)[number];

@@ -118,6 +118,7 @@ type CreateBikeInput = {
   importCanonicalUrl?: string;
   importedAdvertTitle?: string;
   bikeImportId?: Id<"bikeImports">;
+  geometryRecordId?: Id<"geometry_records"> | null;
   bikePassportId?: string;
   importedFromBikePassportId?: string;
   createdAt?: number;
@@ -179,6 +180,7 @@ export async function createBikeWithProfiles(
     importCanonicalUrl: args.importCanonicalUrl,
     importedAdvertTitle: args.importedAdvertTitle,
     bikeImportId: args.bikeImportId,
+    geometryRecordId: args.geometryRecordId ?? undefined,
     bikePassportId,
     importedFromBikePassportId: args.importedFromBikePassportId,
     createdAt: now,
@@ -246,6 +248,7 @@ export const create = mutation({
     bikeWeightKg: v.optional(v.number()),
     photoUrl: v.optional(v.string()),
     fitProfileId: v.optional(v.id("profiles")),
+    geometryRecordId: v.optional(v.union(v.id("geometry_records"), v.null())),
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
     description: v.optional(v.string()),
@@ -303,6 +306,7 @@ export const update = mutation({
     bikeWeightKg: v.optional(v.number()),
     photoUrl: v.optional(v.string()),
     fitProfileId: v.optional(v.id("profiles")),
+    geometryRecordId: v.optional(v.union(v.id("geometry_records"), v.null())),
     brand: v.optional(v.string()),
     model: v.optional(v.string()),
     description: v.optional(v.string()),
@@ -339,6 +343,9 @@ export const update = mutation({
     if (args.bikeWeightKg !== undefined) updates.bikeWeightKg = args.bikeWeightKg;
     if (args.photoUrl !== undefined) updates.photoUrl = args.photoUrl;
     if (args.fitProfileId !== undefined) updates.fitProfileId = args.fitProfileId;
+    if (args.geometryRecordId !== undefined) {
+      updates.geometryRecordId = args.geometryRecordId ?? undefined;
+    }
     if (args.brand !== undefined) updates.brand = args.brand;
     if (args.model !== undefined) updates.model = args.model;
     if (args.description !== undefined) {

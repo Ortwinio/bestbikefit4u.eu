@@ -8,6 +8,70 @@ function sortNewestFirst<T extends { createdAt: number }>(rows: T[]) {
   return [...rows].sort((a, b) => b.createdAt - a.createdAt);
 }
 
+function buildGeometryModelYearLabel({
+  yearStart,
+  yearEnd,
+}: {
+  yearStart?: number;
+  yearEnd?: number;
+}) {
+  if (yearStart && yearEnd && yearStart !== yearEnd) {
+    return `${yearStart}-${yearEnd}`;
+  }
+
+  return yearStart ?? yearEnd ?? null;
+}
+
+function buildLinkedGeometryDetail({
+  record,
+  brand,
+  model,
+}: {
+  record: {
+    _id: string;
+    sizeLabel: string;
+    stack?: number;
+    reach?: number;
+    seatTubeAngle?: number;
+    headTubeAngle?: number;
+    source:
+      | "manufacturer"
+      | "admin_import"
+      | "admin_manual"
+      | "user_entered";
+    sourceUrl?: string;
+    status: "draft" | "active" | "superseded" | "rejected";
+    version: number;
+    supersededBy?: string;
+  };
+  brand: { name: string } | null;
+  model: {
+    name: string;
+    yearStart?: number;
+    yearEnd?: number;
+  } | null;
+}) {
+  return {
+    recordId: record._id,
+    brandName: brand?.name ?? null,
+    modelName: model?.name ?? null,
+    modelYearLabel: buildGeometryModelYearLabel({
+      yearStart: model?.yearStart,
+      yearEnd: model?.yearEnd,
+    }),
+    sizeLabel: record.sizeLabel,
+    stack: record.stack ?? null,
+    reach: record.reach ?? null,
+    seatTubeAngle: record.seatTubeAngle ?? null,
+    headTubeAngle: record.headTubeAngle ?? null,
+    source: record.source,
+    sourceUrl: record.sourceUrl ?? null,
+    status: record.status,
+    version: record.version,
+    supersededByRecordId: record.supersededBy ?? null,
+  };
+}
+
 function buildBikeDetailPhotos({
   bikeId,
   bikePhotoUrl,
@@ -83,6 +147,7 @@ function buildBikeDetailPhotos({
 }
 
 export { buildBikeDetailPhotos };
+export { buildLinkedGeometryDetail };
 
 export const getById = query({
   args: { bikeId: v.id("bikes") },
@@ -109,7 +174,15 @@ export const getDetail = query({
   handler: async (ctx, args) => {
     const { bike } = await requireBikeOwner(ctx, args.bikeId);
 
-    const [profile, bikeProfiles, wheelsets, recommendation, pressureCalculations, photos] =
+    const [
+      profile,
+      bikeProfiles,
+      wheelsets,
+      recommendation,
+      pressureCalculations,
+      photos,
+      linkedGeometryRecord,
+    ] =
       await Promise.all([
         ctx.db
           .query("profiles")
@@ -135,7 +208,15 @@ export const getDetail = query({
           .query("bikePhotos")
           .withIndex("by_bike", (q) => q.eq("bikeId", bike._id))
           .collect(),
+        bike.geometryRecordId ? ctx.db.get(bike.geometryRecordId) : null,
       ]);
+
+    const [linkedGeometryBrand, linkedGeometryModel] = linkedGeometryRecord
+      ? await Promise.all([
+          ctx.db.get(linkedGeometryRecord.brandId),
+          ctx.db.get(linkedGeometryRecord.modelId),
+        ])
+      : [null, null];
 
     const photoState = buildBikeDetailPhotos({
       bikeId: String(bike._id),
@@ -178,6 +259,11 @@ export const getDetail = query({
       null;
     const latestRecommendation = sortNewestFirst(recommendation)[0] ?? null;
     const latestPressureCalculation = sortNewestFirst(pressureCalculations)[0] ?? null;
+    const geometryLinkState = linkedGeometryRecord
+      ? "linked"
+      : bike.geometryRecordId
+        ? "missing_record"
+        : "unlinked";
 
     return {
       bike,
@@ -189,6 +275,37 @@ export const getDetail = query({
       activeTireSetup: activeWheelset?.activeTireSetup ?? null,
       latestRecommendation,
       latestPressureCalculation,
+      geometryLinkState,
+      linkedGeometry:
+        linkedGeometryRecord
+          ? buildLinkedGeometryDetail({
+              record: {
+                _id: String(linkedGeometryRecord._id),
+                sizeLabel: linkedGeometryRecord.sizeLabel,
+                stack: linkedGeometryRecord.stack,
+                reach: linkedGeometryRecord.reach,
+                seatTubeAngle: linkedGeometryRecord.seatTubeAngle,
+                headTubeAngle: linkedGeometryRecord.headTubeAngle,
+                source: linkedGeometryRecord.source,
+                sourceUrl: linkedGeometryRecord.sourceUrl,
+                status: linkedGeometryRecord.status,
+                version: linkedGeometryRecord.version,
+                supersededBy: linkedGeometryRecord.supersededBy
+                  ? String(linkedGeometryRecord.supersededBy)
+                  : undefined,
+              },
+              brand: linkedGeometryBrand
+                ? { name: linkedGeometryBrand.name }
+                : null,
+              model: linkedGeometryModel
+                ? {
+                    name: linkedGeometryModel.name,
+                    yearStart: linkedGeometryModel.yearStart,
+                    yearEnd: linkedGeometryModel.yearEnd,
+                  }
+                : null,
+            })
+          : null,
       pressureStateSummary: {
         isStale: isPressureStale(
           latestPressureCalculation,

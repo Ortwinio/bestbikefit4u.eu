@@ -2184,6 +2184,54 @@ const nl = {
           label: "Model",
           placeholder: "bijv. Endurace CF 7",
         },
+        geometryLink: {
+          title: "Fietsgeometrie koppelen",
+          description:
+            "Kies je fiets uit de geometriebibliotheek wanneer die beschikbaar is. Staat hij er niet in, dan kun je je fiets alsnog opslaan met je eigen merk en model.",
+          loadingBrands: "Standaard merken laden...",
+          loadingModels: "Modellen voor het gekozen merk laden...",
+          selectBrandFirst:
+            "Begin met een standaard merk om deze fiets aan opgeslagen geometriegegevens te koppelen.",
+          selectModelFirst:
+            "Selecteer het model dat bij je fiets past. Alleen modellen van het gekozen merk worden getoond.",
+          noModels:
+            "Er zijn nog geen standaard modellen beschikbaar voor dit merk. Je kunt de fiets nog steeds opslaan zonder match in de geometriebibliotheek.",
+          selectionSummary: "Geselecteerde standaard fietsidentiteit",
+          selectionSummaryEmpty:
+            "Er is nog geen standaard pad uit de geometriebibliotheek gekozen.",
+          linkedTitle: "Gekoppelde geometrie blijft bewaard",
+          linkedDescription:
+            "Deze fiets is nu gekoppeld aan een referentie-record uit de bibliotheek. Zodra je de custom fallback start, wordt die koppeling voor deze opslag verwijderd.",
+          standardBrand: {
+            label: "Standaard merk",
+            placeholder: "Kies een standaard merk",
+            helper:
+              "Begin met een standaard merk om deze fiets aan opgeslagen geometriegegevens te koppelen.",
+          },
+          standardModel: {
+            label: "Standaard model",
+            placeholder: "Kies een standaard model",
+            helper:
+              "Selecteer het model dat bij je fiets past. Alleen modellen van het gekozen merk worden getoond.",
+          },
+          year: {
+            label: "Modeljaar",
+            placeholder: "Kies een jaar",
+            helper:
+              "Selecteer het jaar alleen wanneer er meerdere modeljaarvarianten in de bibliotheek bestaan.",
+            unknownOptionLabel: "Jaar niet opgegeven ({count})",
+          },
+          size: {
+            label: "Framemaat",
+            placeholder: "bijv. 54, 56, M, L",
+            helper:
+              "Kies de maatvermelding die bij je fiets past. Die wordt op je fiets opgeslagen, ook wanneer er nog geen record uit de geometriebibliotheek beschikbaar is.",
+          },
+          customBrandAction: "Mijn merk staat er niet tussen",
+          customModelAction: "Mijn model staat er niet tussen",
+          customExplanation:
+            "Custom merk- en modelwaarden worden alleen op jouw fiets opgeslagen. Ze veranderen de gedeelde geometriebibliotheek niet.",
+        },
         bikeWeightKg: {
           label: "Fietsgewicht (kg)",
           placeholder: "ca. 8",

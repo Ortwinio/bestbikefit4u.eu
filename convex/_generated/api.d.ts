@@ -51,6 +51,7 @@ import type * as feedback_queries from "../feedback/queries.js";
 import type * as feedback_shared from "../feedback/shared.js";
 import type * as files_actions from "../files/actions.js";
 import type * as fitPass_queries from "../fitPass/queries.js";
+import type * as geometry_queries from "../geometry/queries.js";
 import type * as http from "../http.js";
 import type * as integrations_actions from "../integrations/actions.js";
 import type * as integrations_activitySync from "../integrations/activitySync.js";
@@ -161,6 +162,7 @@ declare const fullApi: ApiFromModules<{
   "feedback/shared": typeof feedback_shared;
   "files/actions": typeof files_actions;
   "fitPass/queries": typeof fitPass_queries;
+  "geometry/queries": typeof geometry_queries;
   http: typeof http;
   "integrations/actions": typeof integrations_actions;
   "integrations/activitySync": typeof integrations_activitySync;

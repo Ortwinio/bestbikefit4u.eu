@@ -2174,6 +2174,54 @@ const en = {
           label: "Model",
           placeholder: "e.g. Endurace CF 7",
         },
+        geometryLink: {
+          title: "Link bike geometry",
+          description:
+            "Choose your bike from the geometry library when it is available. If it is not listed, you can still save your bike with your own brand and model.",
+          loadingBrands: "Loading standard brands...",
+          loadingModels: "Loading models for the selected brand...",
+          selectBrandFirst:
+            "Start with a standard brand to connect this bike to stored geometry data.",
+          selectModelFirst:
+            "Select the model that matches your bike. Only models for the selected brand are shown.",
+          noModels:
+            "No standard models are available for this brand yet. You can still save the bike without a geometry-library match.",
+          selectionSummary: "Selected standard bike identity",
+          selectionSummaryEmpty:
+            "No standard geometry-library path selected yet.",
+          linkedTitle: "Linked geometry record kept",
+          linkedDescription:
+            "This bike is currently linked to a reference geometry record. Starting a custom fallback clears that linked record for this save.",
+          standardBrand: {
+            label: "Standard brand",
+            placeholder: "Choose a standard brand",
+            helper:
+              "Start with a standard brand to connect this bike to stored geometry data.",
+          },
+          standardModel: {
+            label: "Standard model",
+            placeholder: "Choose a standard model",
+            helper:
+              "Select the model that matches your bike. Only models for the selected brand are shown.",
+          },
+          year: {
+            label: "Model year",
+            placeholder: "Choose a year",
+            helper:
+              "Select the year only when multiple model-year variants exist in the library.",
+            unknownOptionLabel: "Year not specified ({count})",
+          },
+          size: {
+            label: "Frame size",
+            placeholder: "e.g. 54, 56, M, L",
+            helper:
+              "Choose the size label that matches your bike. This is saved on your bike even when a geometry-library record is not available yet.",
+          },
+          customBrandAction: "My brand is not listed",
+          customModelAction: "My model is not listed",
+          customExplanation:
+            "Custom brand and model values are saved only on your bike. They do not change the shared geometry library.",
+        },
         bikeWeightKg: {
           label: "Bike weight (kg)",
           placeholder: "Approx. 8",

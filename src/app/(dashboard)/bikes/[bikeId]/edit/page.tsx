@@ -9,7 +9,7 @@ import {
   BikeForm,
   type BikeFormInitialData,
   type BikeFormPayload,
-} from "@/components/bikes";
+} from "../../../../../components/bikes/BikeForm";
 import { BikePressureSection } from "@/components/features/pressure/BikePressureSection";
 import { EmptyState, LoadingState } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -35,6 +35,11 @@ export default function EditBikePage({ params }: EditBikePageProps) {
       bikeId: bikeId as Id<"bikes">,
       name: payload.name,
       bikeType: payload.bikeType,
+      brand: payload.brand,
+      model: payload.model,
+      geometryRecordId: payload.geometryRecordId
+        ? (payload.geometryRecordId as Id<"geometry_records">)
+        : null,
       ridingStyle: payload.ridingStyle,
       primaryGoal: payload.primaryGoal,
       notes: payload.notes,
@@ -65,6 +70,9 @@ export default function EditBikePage({ params }: EditBikePageProps) {
   const initialData: BikeFormInitialData = {
     name: bike.name,
     bikeType: bike.bikeType,
+    brand: bike.brand,
+    model: bike.model,
+    geometryRecordId: bike.geometryRecordId ? String(bike.geometryRecordId) : null,
     ridingStyle: bike.ridingStyle,
     primaryGoal: bike.primaryGoal,
     notes: bike.notes,

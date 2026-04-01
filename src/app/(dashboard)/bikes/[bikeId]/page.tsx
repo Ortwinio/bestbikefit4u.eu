@@ -1,17 +1,19 @@
 "use client";
 
-import { use, useEffect } from "react";
+import { use, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
 import { ArrowRight, Copy, Gauge, Route, Ruler, Target } from "lucide-react";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
+import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { BikeDescriptionEditor } from "@/components/bikes/BikeDescriptionEditor";
 import { BikeFitHistorySection } from "@/components/bikes/BikeFitHistorySection";
 import { BikeNotesEditor } from "@/components/bikes/BikeNotesEditor";
 import { BikePhotoGallery } from "@/components/bikes/BikePhotoGallery";
 import { BikeWheelsetManager } from "@/components/bikes/BikeWheelsetManager";
 import { BikePressureSection } from "@/components/features/pressure/BikePressureSection";
+import { GeometryLinkCard, type GeometryLinkState } from "./GeometryLinkCard";
 import {
   Button,
   Card,
@@ -35,6 +37,8 @@ export default function BikeDetailPage({
   const { bikeId } = use(params);
   const { locale, messages } = useDashboardMessages();
   const toast = useToast();
+  const logMarketingEvent = useMarketingEventLogger();
+  const geometryViewTrackedRef = useRef<string | null>(null);
 
   const bikeDetail = useQuery(api.bikes.queries.getDetail, {
     bikeId: bikeId as Id<"bikes">,
@@ -47,6 +51,12 @@ export default function BikeDetailPage({
   );
   const bike = bikeDetail?.bike ?? null;
   const bikeProfiles = bikeDetail?.bikeProfiles;
+  const linkedGeometry = bikeDetail?.linkedGeometry ?? null;
+  const geometryLinkState: GeometryLinkState =
+    bikeDetail?.geometryLinkState === "linked" ||
+    bikeDetail?.geometryLinkState === "missing_record"
+      ? bikeDetail.geometryLinkState
+      : "unlinked";
   const activeWheelset = bikeDetail?.activeWheelset ?? null;
   const activeTireSetup = bikeDetail?.activeTireSetup ?? null;
   const recommendation = bikeDetail?.latestRecommendation ?? null;
@@ -87,6 +97,30 @@ export default function BikeDetailPage({
     ensurePassportIdForBike,
     shouldHaveClimbingProfile,
   ]);
+
+  useEffect(() => {
+    if (!bike) {
+      return;
+    }
+
+    const eventType =
+      geometryLinkState === "linked"
+        ? "bike_geometry_card_viewed"
+        : "bike_geometry_unlinked_state_viewed";
+    const trackingKey = `${bike._id}:${geometryLinkState}`;
+    if (geometryViewTrackedRef.current === trackingKey) {
+      return;
+    }
+    geometryViewTrackedRef.current = trackingKey;
+
+    logMarketingEvent({
+      eventType,
+      locale,
+      pagePath: withLocalePrefix(`/bikes/${bike._id}`, locale),
+      section: "bike_detail_geometry_reference",
+      sourceTag: geometryLinkState,
+    });
+  }, [bike, geometryLinkState, locale, logMarketingEvent]);
 
   if (bikeDetail === undefined) {
     return <LoadingState label={messages.bikeForm.edit.loading} />;
@@ -177,6 +211,10 @@ export default function BikeDetailPage({
       value: bike.currentGeometry?.frameSize ?? "-",
     },
   ];
+  const savedGeometryDescription =
+    locale === "nl"
+      ? "Dit zijn de opgeslagen fietsvelden en eventuele handmatig ingevoerde geometriewaarden op deze fiets."
+      : "These are the saved bike fields and any manually entered geometry values on this bike.";
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -394,6 +432,12 @@ export default function BikeDetailPage({
         </Card>
 
         <div className="grid gap-6">
+          <GeometryLinkCard
+            locale={locale}
+            state={geometryLinkState}
+            linkedGeometry={linkedGeometry}
+          />
+
           <Card variant="bordered" className="dashboard-card-surface">
             <CardHeader>
               <CardTitle>{messages.bikes.descriptionCard.title}</CardTitle>
@@ -411,7 +455,7 @@ export default function BikeDetailPage({
           <Card variant="bordered" className="dashboard-card-surface">
             <CardHeader>
               <CardTitle>{messages.bikes.sections.geometry}</CardTitle>
-              <CardDescription>{bikeSubtitle}</CardDescription>
+              <CardDescription>{savedGeometryDescription}</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-3 sm:grid-cols-2">
               {geometryItems.map((item) => (

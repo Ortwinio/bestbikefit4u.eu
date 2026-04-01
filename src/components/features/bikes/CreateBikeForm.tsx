@@ -3,10 +3,18 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useMutation } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
+import { api } from "../../../../convex/_generated/api";
 import { Button, Input, NumberInput, Select, Selectable, Textarea } from "@/components/ui";
 import { Field } from "@/components/ui/Field";
+import {
+  BikeGeometryLibraryFields,
+} from "@/components/bikes/BikeGeometryLibraryFields";
+import {
+  createBikeGeometryFallbackState,
+  normalizeBikeGeometryIdentityPayload,
+  type BikeGeometryFallbackState,
+} from "@/components/bikes/bikeFormGeometry";
 import { getBikeTypeOptions, type BikeType } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -49,8 +57,8 @@ export function CreateBikeForm() {
 
   const [name, setName] = useState("");
   const [bikeType, setBikeType] = useState<BikeType>("road");
-  const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
+  const [geometryFallbackState, setGeometryFallbackState] =
+    useState<BikeGeometryFallbackState>(() => createBikeGeometryFallbackState({}));
   const [ridingStyle, setRidingStyle] = useState<RidingStyle>("fitness");
   const [primaryGoal, setPrimaryGoal] = useState<PrimaryGoal>("balanced");
   const [notes, setNotes] = useState("");
@@ -155,14 +163,23 @@ export function CreateBikeForm() {
     setError(null);
     setIsSaving(true);
     try {
+      const normalizedIdentity = normalizeBikeGeometryIdentityPayload(
+        geometryFallbackState
+      );
       const bikeId = await createBike({
         name: name.trim(),
         bikeType,
         discipline: deriveDiscipline(bikeType),
         ridingStyle,
         primaryGoal,
-        brand: brand.trim() || undefined,
-        model: model.trim() || undefined,
+        brand: normalizedIdentity.brand,
+        model: normalizedIdentity.model,
+        geometryRecordId: geometryFallbackState.geometryRecordId
+          ? (geometryFallbackState.geometryRecordId as Id<"geometry_records">)
+          : null,
+        currentGeometry: geometryFallbackState.geometrySizeLabel
+          ? { frameSize: geometryFallbackState.geometrySizeLabel }
+          : undefined,
         notes: notes.trim() || undefined,
         bikeWeightKg: bikeWeightKg ? Number(bikeWeightKg) : undefined,
       });
@@ -261,19 +278,15 @@ export function CreateBikeForm() {
               </div>
             </Field.Root>
 
+            <div className="space-y-4">
+              <BikeGeometryLibraryFields
+                state={geometryFallbackState}
+                onChange={setGeometryFallbackState}
+                messages={messages}
+              />
+            </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
-              <Input
-                label={messages.bikeForm.fields.brand.label}
-                value={brand}
-                onChange={(event) => setBrand(event.target.value)}
-                placeholder={messages.bikeForm.fields.brand.placeholder}
-              />
-              <Input
-                label={messages.bikeForm.fields.model.label}
-                value={model}
-                onChange={(event) => setModel(event.target.value)}
-                placeholder={messages.bikeForm.fields.model.placeholder}
-              />
               <NumberInput
                 label={messages.bikeForm.fields.bikeWeightKg.label}
                 min={3}
