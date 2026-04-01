@@ -48,12 +48,12 @@ export default function EditBikePage({ params }: EditBikePageProps) {
       currentGeometry: payload.currentGeometry,
       currentSetup: payload.currentSetup,
     });
-    router.push(withLocalePrefix("/bikes", locale));
+    router.replace(withLocalePrefix("/bikes", locale));
   };
 
   const handleDelete = async () => {
     await removeBike({ bikeId: bikeId as Id<"bikes"> });
-    router.push(withLocalePrefix("/bikes", locale));
+    router.replace(withLocalePrefix("/bikes", locale));
   };
 
   if (bike === undefined) {

@@ -13,6 +13,7 @@ import {
   findBikeByPassportId,
   generateUniqueBikePassportId,
   getCopyableBikeFields,
+  isCopyablePassportPhotoStorageId,
   isValidBikePassportId,
   normalizeBikePassportId,
 } from "./passport";
@@ -69,6 +70,12 @@ export const descriptionSourceValidator = v.union(
   v.literal("template"),
   v.literal("marketplace_import")
 );
+
+export function isManagedBikeStorageId(
+  value: string | undefined | null
+): value is string {
+  return isCopyablePassportPhotoStorageId(value);
+}
 
 type CreateBikeInput = {
   userId: Id<"users">;
@@ -541,7 +548,7 @@ export const remove = mutation({
       await ctx.db.delete(bikePhoto._id);
     }
 
-    if (typeof bike.photoUrl === "string" && bike.photoUrl.length > 0) {
+    if (isManagedBikeStorageId(bike.photoUrl)) {
       storageIdsToDelete.add(bike.photoUrl);
     }
 
