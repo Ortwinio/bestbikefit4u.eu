@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, type ComponentType, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useAction, useMutation } from "convex/react";
-import { Bike, CopyPlus, Images, Link2, ShieldCheck } from "lucide-react";
+import { Bike, CopyPlus, Images, Link2, LoaderCircle, ShieldCheck } from "lucide-react";
 import { api } from "../../../../convex/_generated/api";
 import {
   Button,
@@ -13,7 +13,6 @@ import {
   CardDescription,
   ErrorState,
   Input,
-  LoadingState,
   Select,
   Textarea,
   useToast,
@@ -242,7 +241,21 @@ export function BikePassportImportFlow() {
         </CardContent>
       </Card>
 
-      {previewState === "loading" ? <LoadingState label={t.loading.preview} /> : null}
+      {previewState === "loading" ? (
+        <Card variant="bordered" className="dashboard-card-surface">
+          <CardContent className="flex items-start gap-4 pt-6">
+            <div className="mt-0.5 rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)]/50 p-2">
+              <LoaderCircle className="h-4 w-4 animate-spin text-[color:var(--primary)]" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm font-semibold text-[color:var(--foreground)]">
+                {t.loading.preview}
+              </p>
+              <p className="text-sm text-[color:var(--muted-foreground)]">{t.loading.hint}</p>
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
 
       {previewState === "error" && errorMessage ? (
         <ErrorState title={t.errors.title} description={errorMessage} />

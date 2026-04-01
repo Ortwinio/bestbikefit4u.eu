@@ -55,7 +55,7 @@ async function previewImportByPassportIdHandler(
   });
 
   const timeoutPromise = new Promise<never>((_, reject) => {
-    setTimeout(() => reject(new Error("passport_preview_timeout")), 8000);
+    setTimeout(() => reject(new Error("passport_preview_timeout")), 3500);
   });
 
   try {

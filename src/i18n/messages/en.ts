@@ -2096,6 +2096,7 @@ const en = {
         },
         loading: {
           preview: "Loading bike-passport preview...",
+          hint: "This usually takes a few seconds. If it does not load quickly, try again.",
         },
         actions: {
           preview: "Preview bike",

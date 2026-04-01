@@ -2106,6 +2106,7 @@ const nl = {
         },
         loading: {
           preview: "Bike-passport preview laden...",
+          hint: "Dit duurt normaal een paar seconden. Duurt het langer, probeer het dan opnieuw.",
         },
         actions: {
           preview: "Bekijk fiets",
