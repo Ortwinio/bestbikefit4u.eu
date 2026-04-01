@@ -537,6 +537,48 @@ export const listGeometryBrands = query({
   },
 });
 
+export const getGeometryHubSummary = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireGovernanceRead(ctx);
+
+    const [brands, models, records] = await Promise.all([
+      ctx.db.query("geometry_brands").collect(),
+      ctx.db.query("geometry_models").collect(),
+      ctx.db.query("geometry_records").collect(),
+    ]);
+
+    const brandsById = new Map(brands.map((brand) => [String(brand._id), brand]));
+    const modelsById = new Map(models.map((model) => [String(model._id), model]));
+    const recentRecords = [...records]
+      .sort((left, right) => right.createdAt - left.createdAt)
+      .slice(0, 12)
+      .map((record) => {
+        const brand = brandsById.get(String(record.brandId)) ?? null;
+        const model = modelsById.get(String(record.modelId)) ?? null;
+        return {
+          _id: record._id,
+          brandName: brand?.name ?? "Unknown brand",
+          modelName: model?.name ?? "Unknown model",
+          sizeLabel: record.sizeLabel,
+          status: record.status,
+          source: record.source,
+          version: record.version,
+          createdAt: record.createdAt,
+        };
+      });
+
+    return {
+      brandCount: brands.length,
+      modelCount: models.length,
+      recordCount: records.length,
+      draftRecordCount: records.filter((record) => record.status === "draft").length,
+      activeRecordCount: records.filter((record) => record.status === "active").length,
+      recentRecords,
+    };
+  },
+});
+
 export const listGeometryModels = query({
   args: { brandId: v.id("geometry_brands") },
   handler: async (ctx, { brandId }) => {
