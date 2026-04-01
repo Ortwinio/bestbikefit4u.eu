@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "convex/react";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { Button, Input, Select } from "@/components/ui";
@@ -41,12 +41,35 @@ function trackGeometrySelection(eventType: string, payload: Record<string, unkno
   });
 }
 
+function matchesAutocompleteQuery(label: string, query: string) {
+  const normalizedQuery = query.trim().toLowerCase();
+  if (!normalizedQuery) {
+    return true;
+  }
+
+  return label.toLowerCase().includes(normalizedQuery);
+}
+
+function compareAutocompleteMatches(left: string, right: string, query: string) {
+  const normalizedQuery = query.trim().toLowerCase();
+  const leftStarts = left.toLowerCase().startsWith(normalizedQuery);
+  const rightStarts = right.toLowerCase().startsWith(normalizedQuery);
+
+  if (leftStarts !== rightStarts) {
+    return leftStarts ? -1 : 1;
+  }
+
+  return left.localeCompare(right, undefined, { sensitivity: "base" });
+}
+
 export function BikeGeometryLibraryFields({
   state,
   onChange,
   messages,
 }: BikeGeometryLibraryFieldsProps) {
   const setState = asStateSetter(onChange);
+  const [brandQuery, setBrandQuery] = useState(state.standardBrand ?? "");
+  const [modelQuery, setModelQuery] = useState(state.standardModel ?? "");
   const brands = useQuery(api.geometry.queries.listBrandsForRider, {});
   const models = useQuery(
     api.geometry.queries.listModelsForRiderBrand,
@@ -68,6 +91,14 @@ export function BikeGeometryLibraryFields({
   const selectedModelFamily = models?.find(
     (family) => family.modelKey === state.standardModelFamilyKey
   );
+
+  useEffect(() => {
+    setBrandQuery(state.standardBrand ?? "");
+  }, [state.standardBrand]);
+
+  useEffect(() => {
+    setModelQuery(state.standardModel ?? "");
+  }, [state.standardModel]);
 
   useEffect(() => {
     if (!brands || state.customBrandEnabled || state.standardBrandId || !state.standardBrand) {
@@ -232,6 +263,34 @@ export function BikeGeometryLibraryFields({
       value: String(option.recordId),
       label: option.sizeLabel,
     })) ?? [];
+  const brandSuggestions = useMemo(() => {
+    if (!brands || state.customBrandEnabled) {
+      return [];
+    }
+
+    return brands
+      .filter((brand) => brand.hasUsableModels)
+      .filter((brand) => matchesAutocompleteQuery(brand.name, brandQuery))
+      .sort((left, right) => {
+        const querySort = compareAutocompleteMatches(left.name, right.name, brandQuery);
+        if (querySort !== 0) {
+          return querySort;
+        }
+        return right.activeSizeRecordCount - left.activeSizeRecordCount;
+      })
+      .slice(0, 8);
+  }, [brandQuery, brands, state.customBrandEnabled]);
+  const modelSuggestions = useMemo(() => {
+    if (!models || state.customBrandEnabled || state.customModelEnabled) {
+      return [];
+    }
+
+    return models
+      .filter((family) => family.hasUsableSizes)
+      .filter((family) => matchesAutocompleteQuery(family.name, modelQuery))
+      .sort((left, right) => compareAutocompleteMatches(left.name, right.name, modelQuery))
+      .slice(0, 8);
+  }, [modelQuery, models, state.customBrandEnabled, state.customModelEnabled]);
   const brandHelperText =
     brands === undefined
       ? messages.bikeForm.fields.geometryLink.loadingBrands
@@ -270,55 +329,115 @@ export function BikeGeometryLibraryFields({
       ) : null}
 
       {!state.customBrandEnabled ? (
-        <Select
+        <div className="space-y-2">
+          <Input
           label={messages.bikeForm.fields.geometryLink.standardBrand.label}
-          value={state.standardBrandId ?? ""}
+          value={brandQuery}
           helperText={brandHelperText}
+          placeholder={messages.bikeForm.fields.geometryLink.standardBrand.placeholder}
           onChange={(event) => {
-            const brandId = event.target.value;
-            const brand = brands?.find((item) => String(item.brandId) === brandId);
-            setState((current) =>
-              applyStandardBrandSelection(current, {
-                brandId,
-                brandName: brand?.name,
-              })
-            );
-            if (brand) {
-              trackGeometrySelection("bike_geometry_brand_selected", {
-                brandName: brand.name,
-              });
+            const nextQuery = event.target.value;
+            setBrandQuery(nextQuery);
+            if (
+              state.standardBrandId &&
+              nextQuery.trim().toLowerCase() !== state.standardBrand?.trim().toLowerCase()
+            ) {
+              setState((current) =>
+                applyStandardBrandSelection(current, {
+                  brandId: undefined,
+                  brandName: undefined,
+                })
+              );
             }
           }}
-          options={selectedBrandOptions}
-          placeholder={messages.bikeForm.fields.geometryLink.standardBrand.placeholder}
+          autoComplete="off"
         />
+
+          {brandSuggestions.length > 0 ? (
+            <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--card)] p-2">
+              <div className="flex flex-wrap gap-2">
+                {brandSuggestions.map((brand) => (
+                  <button
+                    key={String(brand.brandId)}
+                    type="button"
+                    className="rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] px-3 py-1.5 text-sm text-[color:var(--foreground)] transition hover:border-[color:var(--primary)] hover:bg-[color:var(--accent)]"
+                    onClick={() => {
+                      setBrandQuery(brand.name);
+                      setState((current) =>
+                        applyStandardBrandSelection(current, {
+                          brandId: String(brand.brandId),
+                          brandName: brand.name,
+                        })
+                      );
+                      trackGeometrySelection("bike_geometry_brand_selected", {
+                        brandName: brand.name,
+                      });
+                    }}
+                  >
+                    {brand.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </div>
       ) : null}
 
       {!state.customBrandEnabled && state.standardBrandId ? (
-        <Select
+        <div className="space-y-2">
+          <Input
           label={messages.bikeForm.fields.geometryLink.standardModel.label}
-          value={state.standardModelFamilyKey ?? ""}
+          value={modelQuery}
           helperText={modelHelperText}
+          placeholder={messages.bikeForm.fields.geometryLink.standardModel.placeholder}
           onChange={(event) => {
-            const modelKey = event.target.value;
-            const family = models?.find((item) => item.modelKey === modelKey);
-            setState((current) =>
-              applyStandardModelFamilySelection(current, {
-                modelFamilyKey: modelKey,
-                modelName: family?.name,
-              })
-            );
-            if (family) {
-              trackGeometrySelection("bike_geometry_model_selected", {
-                brandName: state.standardBrand,
-                modelName: family.name,
-              });
+            const nextQuery = event.target.value;
+            setModelQuery(nextQuery);
+            if (
+              state.standardModelFamilyKey &&
+              nextQuery.trim().toLowerCase() !== state.standardModel?.trim().toLowerCase()
+            ) {
+              setState((current) =>
+                applyStandardModelFamilySelection(current, {
+                  modelFamilyKey: undefined,
+                  modelName: undefined,
+                })
+              );
             }
           }}
-          options={modelOptions}
-          placeholder={messages.bikeForm.fields.geometryLink.standardModel.placeholder}
-          disabled={!state.standardBrandId || models === undefined || modelOptions.length === 0}
+          disabled={!state.standardBrandId}
+          autoComplete="off"
         />
+
+          {modelSuggestions.length > 0 ? (
+            <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--card)] p-2">
+              <div className="flex flex-wrap gap-2">
+                {modelSuggestions.map((family) => (
+                  <button
+                    key={family.modelKey}
+                    type="button"
+                    className="rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] px-3 py-1.5 text-sm text-[color:var(--foreground)] transition hover:border-[color:var(--primary)] hover:bg-[color:var(--accent)]"
+                    onClick={() => {
+                      setModelQuery(family.name);
+                      setState((current) =>
+                        applyStandardModelFamilySelection(current, {
+                          modelFamilyKey: family.modelKey,
+                          modelName: family.name,
+                        })
+                      );
+                      trackGeometrySelection("bike_geometry_model_selected", {
+                        brandName: state.standardBrand,
+                        modelName: family.name,
+                      });
+                    }}
+                  >
+                    {family.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </div>
       ) : null}
 
       {!state.customBrandEnabled &&
