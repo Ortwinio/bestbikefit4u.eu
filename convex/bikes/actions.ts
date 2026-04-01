@@ -3,6 +3,7 @@
 import { action } from "../_generated/server";
 import { api } from "../_generated/api";
 import { v } from "convex/values";
+import type { ActionCtx } from "../_generated/server";
 import { generateBikeDescription } from "./description";
 
 export const generateDescription = action({
@@ -43,4 +44,33 @@ export const generateDescription = action({
 
     return result;
   },
+});
+
+async function previewImportByPassportIdHandler(
+  ctx: ActionCtx,
+  args: { bikePassportId: string }
+): Promise<unknown> {
+  const previewPromise: Promise<unknown> = ctx.runQuery(api.bikes.queries.lookupByPassportId, {
+    bikePassportId: args.bikePassportId,
+  });
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    setTimeout(() => reject(new Error("passport_preview_timeout")), 8000);
+  });
+
+  try {
+    return await Promise.race([previewPromise, timeoutPromise]);
+  } catch (error) {
+    if (error instanceof Error && error.message === "passport_preview_timeout") {
+      throw new Error("backend_unavailable");
+    }
+    throw error;
+  }
+}
+
+export const previewImportByPassportId = action({
+  args: {
+    bikePassportId: v.string(),
+  },
+  handler: previewImportByPassportIdHandler,
 });

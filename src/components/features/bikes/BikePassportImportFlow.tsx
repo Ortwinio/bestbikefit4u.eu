@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, type ComponentType, type FormEvent } from "react";
+import { useState, type ComponentType, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { useMutation, useQuery } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { Bike, CopyPlus, Images, Link2, ShieldCheck } from "lucide-react";
 import { api } from "../../../../convex/_generated/api";
 import {
@@ -91,52 +91,14 @@ export function BikePassportImportFlow() {
   const bikeTypeOptions = getBikeTypeOptions(messages);
 
   const importByPassport = useMutation(api.bikes.mutations.importByPassport);
+  const previewImportByPassportId = useAction(api.bikes.actions.previewImportByPassportId);
 
   const [passportId, setPassportId] = useState("");
-  const [submittedPassportId, setSubmittedPassportId] = useState<string | null>(null);
   const [previewState, setPreviewState] = useState<PreviewState>("idle");
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [preview, setPreview] = useState<BikePassportImportPreview | null>(null);
   const [draft, setDraft] = useState<BikePassportDraft | null>(null);
-
-  const rawPreview = useQuery(
-    api.bikes.queries.lookupByPassportId,
-    submittedPassportId ? { bikePassportId: submittedPassportId } : "skip"
-  );
-
-  useEffect(() => {
-    if (!submittedPassportId) {
-      return;
-    }
-    if (rawPreview === undefined) {
-      setPreviewState("loading");
-      return;
-    }
-
-    const record = rawPreview as Record<string, unknown> | null;
-    if (record && record.status === "self_owned") {
-      setPreviewState("error");
-      setPreview(null);
-      setDraft(null);
-      setErrorMessage(t.errors.alreadyOwned);
-      return;
-    }
-
-    const normalized = normalizeBikePassportPreview(rawPreview, submittedPassportId);
-    if (!normalized) {
-      setPreviewState("error");
-      setPreview(null);
-      setDraft(null);
-      setErrorMessage(t.errors.notFound);
-      return;
-    }
-
-    setPreview(normalized);
-    setDraft(buildBikePassportDraft(normalized));
-    setPreviewState("ready");
-    setErrorMessage(null);
-  }, [rawPreview, submittedPassportId, t.errors.alreadyOwned, t.errors.notFound]);
 
   async function handlePreview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -148,11 +110,37 @@ export function BikePassportImportFlow() {
       return;
     }
 
-    setSubmittedPassportId(normalizedPassportId);
     setPreviewState("loading");
     setErrorMessage(null);
     setPreview(null);
     setDraft(null);
+
+    try {
+      const rawPreview = await previewImportByPassportId({
+        bikePassportId: normalizedPassportId,
+      });
+
+      const record = rawPreview as Record<string, unknown> | null;
+      if (record && record.status === "self_owned") {
+        setPreviewState("error");
+        setErrorMessage(t.errors.alreadyOwned);
+        return;
+      }
+
+      const normalized = normalizeBikePassportPreview(rawPreview, normalizedPassportId);
+      if (!normalized) {
+        setPreviewState("error");
+        setErrorMessage(t.errors.notFound);
+        return;
+      }
+
+      setPreview(normalized);
+      setDraft(buildBikePassportDraft(normalized));
+      setPreviewState("ready");
+    } catch (error) {
+      setPreviewState("error");
+      setErrorMessage(translatePassportError(error, t.errors.notFound, t.errors));
+    }
   }
 
   async function handleImport() {
