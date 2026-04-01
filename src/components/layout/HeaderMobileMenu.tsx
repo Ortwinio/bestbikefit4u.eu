@@ -60,7 +60,7 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
           <BrandLogo
             href={withLocalePrefix("/", locale)}
             asset="primary"
-            className="mb-4 block w-[324px]"
+            className="mb-4 block w-full max-w-[260px]"
           />
           <nav className="space-y-2">
             <Link

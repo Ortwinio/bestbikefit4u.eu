@@ -20,15 +20,15 @@ type HeaderProps = {
 
 export function Header({ locale, labels }: HeaderProps) {
   return (
-    <header className="border-b border-[color:var(--border)] bg-[color:var(--background)] text-[color:var(--foreground)]">
+    <header className="relative border-b border-[color:var(--border)] bg-[color:var(--background)] text-[color:var(--foreground)]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="relative flex min-h-16 items-center justify-between gap-3 py-3">
-          <div className="flex items-center gap-6">
+        <div className="flex min-h-16 items-center justify-between gap-3 py-3">
+          <div className="flex min-w-0 items-center gap-6">
             <BrandLogo
               href={withLocalePrefix("/", locale)}
               asset="primary"
               priority
-              className="block w-[324px] shrink-0 lg:w-[360px]"
+              className="block w-[160px] shrink-0 sm:w-[260px] lg:w-[360px]"
               imageClassName="block"
               ariaLabel={labels.nav.brand}
             />

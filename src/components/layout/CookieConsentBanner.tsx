@@ -86,11 +86,12 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
           </Link>
           .
         </p>
-        <div className="mt-4 flex flex-wrap items-center gap-2">
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
           <Button
             type="button"
             size="sm"
             variant="outline"
+            className="w-full sm:w-auto"
             onClick={() => handleConsent("essential")}
           >
             {copy.essentialLabel}
@@ -98,6 +99,7 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
           <Button
             type="button"
             size="sm"
+            className="w-full sm:w-auto"
             onClick={() => handleConsent("accepted")}
           >
             {copy.acceptLabel}
