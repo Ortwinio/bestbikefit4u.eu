@@ -1892,6 +1892,7 @@ const en = {
         loading: "Loading bike...",
         title: "Edit Bike",
         description: "Update bike details and current setup values.",
+        passportHelper: "This bike-passport ID is generated automatically and cannot be edited.",
         notFound: {
           title: "Bike not found",
           description: "This bike does not exist or you do not have access to it.",

@@ -1901,6 +1901,7 @@ const nl = {
         loading: "Fiets laden...",
         title: "Fiets bewerken",
         description: "Werk fietsdetails en huidige setupwaarden bij.",
+        passportHelper: "Deze bike-passport ID wordt automatisch aangemaakt en kan niet worden bewerkt.",
         notFound: {
           title: "Fiets niet gevonden",
           description:

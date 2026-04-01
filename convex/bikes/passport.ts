@@ -1,5 +1,6 @@
+import { v } from "convex/values";
 import type { Doc, Id } from "../_generated/dataModel";
-import type { MutationCtx, QueryCtx } from "../_generated/server";
+import { internalMutation, type MutationCtx, type QueryCtx } from "../_generated/server";
 
 type DbCtx = Pick<QueryCtx, "db"> | Pick<MutationCtx, "db">;
 
@@ -182,3 +183,27 @@ export async function assignBikePassportId(
   });
   return bikePassportId;
 }
+
+export const backfillMissingPassportIds = internalMutation({
+  args: {
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = Math.max(1, Math.min(args.limit ?? 250, 1000));
+    const bikes = await ctx.db.query("bikes").collect();
+    const missing = bikes
+      .filter((bike) => !bike.bikePassportId)
+      .sort((left, right) => left.createdAt - right.createdAt);
+    const batch = missing.slice(0, limit);
+
+    for (const bike of batch) {
+      await assignBikePassportId(ctx, bike._id);
+    }
+
+    return {
+      scanned: bikes.length,
+      updated: batch.length,
+      remaining: Math.max(0, missing.length - batch.length),
+    };
+  },
+});

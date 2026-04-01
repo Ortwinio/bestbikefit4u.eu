@@ -80,6 +80,7 @@ interface BikeFormProps {
   description: string;
   submitLabel: string;
   initialData?: BikeFormInitialData;
+  bikePassportId?: string | null;
   showBikeTypeSelect?: boolean;
   cancelHref?: string;
   onSubmit: (payload: BikeFormPayload) => Promise<void>;
@@ -110,6 +111,7 @@ export function BikeForm({
   description,
   submitLabel,
   initialData,
+  bikePassportId = null,
   showBikeTypeSelect = true,
   cancelHref = "/bikes",
   onSubmit,
@@ -261,6 +263,18 @@ export function BikeForm({
             <CardTitle>{messages.bikeForm.sections.basics}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {bikePassportId ? (
+              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] px-3 py-3 text-sm">
+                <p className="font-medium text-[color:var(--foreground)]">
+                  {messages.bikes.identity.passportLabel}
+                </p>
+                <p className="mt-1 font-mono text-[color:var(--foreground)]">{bikePassportId}</p>
+                <p className="mt-1 text-[color:var(--muted-foreground)]">
+                  {messages.bikeForm.edit.passportHelper}
+                </p>
+              </div>
+            ) : null}
+
             <Input
               label={messages.bikeForm.fields.name.label}
               tooltip={messages.bikeForm.fields.name.tooltip}

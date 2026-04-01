@@ -14,6 +14,7 @@ import {
   createBikeWithProfiles,
   importByPassport,
 } from "../mutations";
+import { backfillMissingPassportIds } from "../passport";
 import { lookupByPassportId } from "../queries";
 
 type BikeRow = {
@@ -144,6 +145,7 @@ function makeCtx({
         query: vi.fn((table: string) => {
           if (table === "bikes") {
             return {
+              collect: vi.fn(async () => [...bikeState]),
               withIndex: vi.fn(
                 (
                   indexName: string,
@@ -431,5 +433,59 @@ describe("bike passport contract", () => {
       bikeId: "bike_2",
       createdBikeId: "bike_2",
     });
+  });
+
+  it("backfills passport ids for existing bikes without one", async () => {
+    const handler = (backfillMissingPassportIds as unknown as { _handler: TestHandler })._handler;
+    const testCtx = makeCtx({
+      bikes: [
+        {
+          _id: "bike_legacy_1",
+          userId: "user_source",
+          name: "Legacy One",
+          bikeType: "road",
+          createdAt: 100,
+          updatedAt: 100,
+        },
+        {
+          _id: "bike_legacy_2",
+          userId: "user_source",
+          name: "Legacy Two",
+          bikeType: "gravel",
+          bikePassportId: "BBF-AB12-CD34",
+          createdAt: 101,
+          updatedAt: 101,
+        },
+        {
+          _id: "bike_legacy_3",
+          userId: "user_source",
+          name: "Legacy Three",
+          bikeType: "tt_triathlon",
+          createdAt: 102,
+          updatedAt: 102,
+        },
+      ],
+    });
+
+    const result = await handler(testCtx.ctx, { limit: 10 }) as {
+      scanned: number;
+      updated: number;
+      remaining: number;
+    };
+
+    expect(result).toEqual({
+      scanned: 3,
+      updated: 2,
+      remaining: 0,
+    });
+    expect(testCtx.bikeState.find((bike) => bike._id === "bike_legacy_1")?.bikePassportId).toMatch(
+      /^BBF-[A-F0-9]{4}-[A-F0-9]{4}$/
+    );
+    expect(testCtx.bikeState.find((bike) => bike._id === "bike_legacy_3")?.bikePassportId).toMatch(
+      /^BBF-[A-F0-9]{4}-[A-F0-9]{4}$/
+    );
+    expect(testCtx.bikeState.find((bike) => bike._id === "bike_legacy_2")?.bikePassportId).toBe(
+      "BBF-AB12-CD34"
+    );
   });
 });

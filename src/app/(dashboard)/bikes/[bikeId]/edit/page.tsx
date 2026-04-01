@@ -72,6 +72,11 @@ export default function EditBikePage({ params }: EditBikePageProps) {
     currentSetup: bike.currentSetup,
   };
 
+  const bikePassportId =
+    typeof (bike as { bikePassportId?: unknown }).bikePassportId === "string"
+      ? ((bike as { bikePassportId?: string }).bikePassportId ?? null)
+      : null;
+
   return (
     <div className="space-y-6">
       <BikeForm
@@ -79,6 +84,7 @@ export default function EditBikePage({ params }: EditBikePageProps) {
         description={messages.bikeForm.edit.description}
         submitLabel={messages.bikeForm.actions.saveChanges}
         initialData={initialData}
+        bikePassportId={bikePassportId}
         onSubmit={handleUpdate}
         onDelete={handleDelete}
         cancelHref={withLocalePrefix("/bikes", locale)}
