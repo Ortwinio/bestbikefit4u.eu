@@ -186,7 +186,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-      <section className="relative z-20 -mt-6 pb-8 sm:-mt-10 sm:pb-10">
+      <section className="relative z-20 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--muted)_35%,var(--background)_65%)_0%,var(--background)_100%)] py-8 sm:py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
             <BikeQuickCheckCard

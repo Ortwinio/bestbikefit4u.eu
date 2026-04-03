@@ -337,12 +337,16 @@ export function BikeQuickCheckCard({
                 required
               />
               <div className="flex flex-wrap gap-3">
-                <Button type="submit" className="min-w-44">
+                <Button
+                  type="submit"
+                  className="min-w-44 bg-[color:var(--primary)] text-white hover:bg-[color:color-mix(in_oklch,var(--primary)_88%,black_12%)]"
+                >
                   {copy.lookupButton}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
+                  className="border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] hover:bg-[color:var(--secondary)]"
                   onClick={() => {
                     setIsExpanded(false);
                     setViewState("collapsed");
@@ -445,12 +449,16 @@ export function BikeQuickCheckCard({
               />
               <InfoBox variant="secondary">{copy.previewSupport}</InfoBox>
               <div className="flex flex-wrap gap-3">
-                <Button type="submit" className="min-w-44">
+                <Button
+                  type="submit"
+                  className="min-w-44 bg-[color:var(--primary)] text-white hover:bg-[color:color-mix(in_oklch,var(--primary)_88%,black_12%)]"
+                >
                   {copy.previewButton}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
+                  className="border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] hover:bg-[color:var(--secondary)]"
                   onClick={() => {
                     setMatch(null);
                     setLookup(null);
