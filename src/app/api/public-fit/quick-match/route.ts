@@ -22,7 +22,9 @@ const requestSchema = z.object({
 
 type PublicFitBikeState = {
   bikeId: string;
-  tokenVersion: number;
+  bikePassportId: string | null;
+  publicFitTokenVersion: number;
+  passportTokenVersion: number;
   publicFitEnabled: boolean;
   snapshot: Parameters<typeof runQuickMatch>[1];
 };
@@ -84,9 +86,13 @@ export async function POST(request: Request): Promise<Response> {
       !bikeState ||
       !isPreviewTokenAuthorizedForBike({
         payload: verified.payload,
-        bikeId: bikeState.bikeId,
+        bike: {
+          bikeId: bikeState.bikeId,
+          bikePassportId: bikeState.bikePassportId,
+        },
         publicFitEnabled: bikeState.publicFitEnabled,
-        tokenVersion: bikeState.tokenVersion,
+        publicFitTokenVersion: bikeState.publicFitTokenVersion,
+        passportTokenVersion: bikeState.passportTokenVersion,
       })
     ) {
       return NextResponse.json(

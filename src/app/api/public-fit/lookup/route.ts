@@ -16,6 +16,7 @@ export const runtime = "nodejs";
 type PublicFitLookupInternalResult = {
   bikeId: string;
   tokenVersion: number;
+  accessMode: "public_fit_code" | "bike_passport";
   preview: {
     brand: string | null;
     model: string | null;
@@ -142,6 +143,7 @@ export async function POST(request: Request): Promise<Response> {
         previewToken: issuePreviewToken({
           bikeId: lookup.bikeId,
           tokenVersion: lookup.tokenVersion,
+          accessMode: lookup.accessMode,
         }),
       },
       {

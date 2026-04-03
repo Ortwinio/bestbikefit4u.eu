@@ -195,21 +195,21 @@ const en = {
       badge: "Bike passport quick check",
       collapsedTitle: "Check whether this bike could suit your size",
       collapsedDescription:
-        "Use one shared bike code to screen a second-hand bike before you spend more time on it.",
-      expandLabel: "Check a shared bike code",
-      codeLabel: "Shared bike code",
-      codePlaceholder: "Enter the bike code",
+        "Use a bike-passport ID or shared bike code to screen a second-hand bike before you spend more time on it.",
+      expandLabel: "Check a shared bike",
+      codeLabel: "Bike-passport ID or shared code",
+      codePlaceholder: "Enter the bike-passport ID or shared code",
       codeHelper:
-        "This is a limited screening tool. We only use the shared bike code, your height, and the bike geometry that is available.",
+        "This is a limited screening tool. We use the shared bike identifier, your height, and the bike geometry that is available.",
       lookupButton: "Preview this bike",
-      lookupLoading: "Checking the shared bike code…",
+      lookupLoading: "Checking the shared bike…",
       invalidTitle: "This code is not available right now",
       invalidDescription:
-        "The code may be wrong, expired, or no longer shared. Please check the code and try again.",
+        "The bike-passport ID or shared code may be wrong, expired, or no longer shared. Please check it and try again.",
       invalidRetry: "Start again",
       rateLimitedTitle: "Too many attempts for now",
       rateLimitedDescription:
-        "Please wait before trying another shared bike code.",
+        "Please wait before trying another bike-passport ID or shared code.",
       rateLimitedRetry: "Try again",
       previewTitle: "Bike preview",
       previewDescription:
@@ -2305,7 +2305,7 @@ const en = {
           loadingBrands: "Loading standard brands...",
           loadingModels: "Loading models for the selected brand...",
           noBrands:
-            "No standard brands with active geometry are available yet. You can still save your bike with your own brand and model.",
+            "No standard brands with geometry are available yet. You can still save your bike with your own brand and model.",
           selectBrandFirst:
             "Start with a standard brand to connect this bike to stored geometry data.",
           selectModelFirst:
@@ -2320,15 +2320,15 @@ const en = {
             "This bike is currently linked to a reference geometry record. Starting a custom fallback clears that linked record for this save.",
           standardBrand: {
             label: "Standard brand",
-            placeholder: "Choose a standard brand",
+            placeholder: "Start typing a brand",
             helper:
-              "Start with a standard brand to connect this bike to stored geometry data.",
+              "Start typing and choose the brand that matches your bike. Press Enter to use the best match.",
           },
           standardModel: {
             label: "Standard model",
-            placeholder: "Choose a standard model",
+            placeholder: "Start typing a model",
             helper:
-              "Select the model that matches your bike. Only models for the selected brand are shown.",
+              "Start typing and choose the model that matches your bike. Press Enter to use the best match.",
           },
           year: {
             label: "Model year",
@@ -2342,6 +2342,18 @@ const en = {
             placeholder: "e.g. 54, 56, M, L",
             helper:
               "Choose the size label that matches your bike. This is saved on your bike even when a geometry-library record is not available yet.",
+          },
+          preview: {
+            title: "Linked geometry preview",
+            description:
+              "This bike will link to the reference geometry for {brand} {model} in size {size}.",
+            year: "Year",
+            size: "Frame size",
+            stack: "Stack",
+            reach: "Reach",
+            seatTubeAngle: "Seat tube angle",
+            headTubeAngle: "Head tube angle",
+            unavailable: "Unavailable",
           },
           customBrandAction: "My brand is not listed",
           customModelAction: "My model is not listed",

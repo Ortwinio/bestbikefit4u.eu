@@ -3,6 +3,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 export type PreviewTokenPayload = {
   bikeId: string;
   tokenVersion: number;
+  accessMode: "public_fit_code" | "bike_passport";
   iat: number;
   exp: number;
 };
@@ -50,11 +51,13 @@ function signPreviewTokenParts(header: string, payload: string, secret: string) 
 export function issuePreviewToken({
   bikeId,
   tokenVersion,
+  accessMode,
   now = Math.floor(Date.now() / 1000),
   ttlSeconds = DEFAULT_TTL_SECONDS,
 }: {
   bikeId: string;
   tokenVersion: number;
+  accessMode: PreviewTokenPayload["accessMode"];
   now?: number;
   ttlSeconds?: number;
 }) {
@@ -68,6 +71,7 @@ export function issuePreviewToken({
     JSON.stringify({
       bikeId,
       tokenVersion,
+      accessMode,
       iat: now,
       exp: now + ttlSeconds,
     } satisfies PreviewTokenPayload)
@@ -109,6 +113,8 @@ export function verifyPreviewToken(
   if (
     typeof parsedPayload.bikeId !== "string" ||
     typeof parsedPayload.tokenVersion !== "number" ||
+    (parsedPayload.accessMode !== "public_fit_code" &&
+      parsedPayload.accessMode !== "bike_passport") ||
     typeof parsedPayload.iat !== "number" ||
     typeof parsedPayload.exp !== "number"
   ) {
@@ -127,21 +133,37 @@ export function verifyPreviewToken(
 
 export function isPreviewTokenAuthorizedForBike({
   payload,
-  bikeId,
+  bike,
   publicFitEnabled,
-  tokenVersion,
+  publicFitTokenVersion,
+  passportTokenVersion,
 }: {
   payload: PreviewTokenPayload;
-  bikeId: string;
+  bike: {
+    bikeId: string;
+    bikePassportId: string | null;
+  };
   publicFitEnabled: boolean;
-  tokenVersion: number | null | undefined;
+  publicFitTokenVersion: number | null | undefined;
+  passportTokenVersion: number | null | undefined;
 }) {
+  if (payload.bikeId !== bike.bikeId) {
+    return false;
+  }
+
+  if (payload.accessMode === "public_fit_code") {
+    return Boolean(
+      publicFitEnabled &&
+        publicFitTokenVersion !== null &&
+        publicFitTokenVersion !== undefined &&
+        payload.tokenVersion === publicFitTokenVersion
+    );
+  }
+
   return Boolean(
-    publicFitEnabled &&
-      payload.bikeId === bikeId &&
-      tokenVersion !== null &&
-      tokenVersion !== undefined &&
-      payload.tokenVersion === tokenVersion
+    bike.bikePassportId &&
+      passportTokenVersion !== null &&
+      passportTokenVersion !== undefined &&
+      payload.tokenVersion === passportTokenVersion
   );
 }
-

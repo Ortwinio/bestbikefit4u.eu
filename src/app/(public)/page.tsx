@@ -186,9 +186,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-      <section className="-mt-10 pb-8 sm:-mt-14 sm:pb-10">
+      <section className="relative z-20 -mt-6 pb-8 sm:-mt-10 sm:pb-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto max-w-4xl">
             <BikeQuickCheckCard
               locale={locale}
               pagePath={homePath}

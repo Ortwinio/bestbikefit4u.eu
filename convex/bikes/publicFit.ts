@@ -170,15 +170,21 @@ export function buildPublicFitPreviewInternal({
   snapshot,
   primaryPhotoSource,
   thumbnailSources,
+  accessMode = "public_fit_code",
 }: {
   bike: Pick<Doc<"bikes">, "_id" | "brand" | "model" | "publicFitCodeCreatedAt">;
   snapshot: PublicFitSnapshot;
   primaryPhotoSource: PublicFitSourceValue;
   thumbnailSources: string[];
+  accessMode?: "public_fit_code" | "bike_passport";
 }) {
   return {
     bikeId: bike._id,
-    tokenVersion: bike.publicFitCodeCreatedAt ?? snapshot.snapshotUpdatedAt,
+    tokenVersion:
+      accessMode === "bike_passport"
+        ? snapshot.snapshotUpdatedAt
+        : bike.publicFitCodeCreatedAt ?? snapshot.snapshotUpdatedAt,
+    accessMode,
     preview: {
       brand: bike.brand ?? null,
       model: bike.model ?? null,

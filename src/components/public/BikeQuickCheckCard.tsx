@@ -283,7 +283,7 @@ export function BikeQuickCheckCard({
   return (
     <PublicSurfaceCard
       compact
-      className="w-full overflow-hidden border-[color:color-mix(in_oklch,var(--primary)_16%,var(--border))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--card)_92%,var(--primary)_8%)_0%,color-mix(in_oklch,var(--card)_96%,var(--secondary)_4%)_100%)]"
+      className="relative w-full overflow-hidden border-[color:color-mix(in_oklch,var(--primary)_20%,var(--border))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--card)_95%,var(--primary)_5%)_0%,color-mix(in_oklch,var(--card)_98%,var(--secondary)_2%)_100%)] shadow-[0_22px_70px_-28px_color-mix(in_oklch,var(--foreground)_34%,transparent)]"
       leading={<Search className="h-5 w-5" />}
       title={copy.collapsedTitle}
       description={copy.collapsedDescription}
@@ -337,7 +337,9 @@ export function BikeQuickCheckCard({
                 required
               />
               <div className="flex flex-wrap gap-3">
-                <Button type="submit">{copy.lookupButton}</Button>
+                <Button type="submit" className="min-w-44">
+                  {copy.lookupButton}
+                </Button>
                 <Button
                   type="button"
                   variant="outline"
@@ -443,7 +445,9 @@ export function BikeQuickCheckCard({
               />
               <InfoBox variant="secondary">{copy.previewSupport}</InfoBox>
               <div className="flex flex-wrap gap-3">
-                <Button type="submit">{copy.previewButton}</Button>
+                <Button type="submit" className="min-w-44">
+                  {copy.previewButton}
+                </Button>
                 <Button
                   type="button"
                   variant="outline"

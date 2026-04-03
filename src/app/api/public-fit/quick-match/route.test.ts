@@ -41,13 +41,16 @@ describe("public fit quick-match route", () => {
     const previewToken = issuePreviewToken({
       bikeId: "bike_1",
       tokenVersion: 789,
+      accessMode: "public_fit_code",
       now: Math.floor(Date.now() / 1000),
       ttlSeconds: 600,
     });
 
     mocks.query.mockResolvedValueOnce({
       bikeId: "bike_1",
-      tokenVersion: 789,
+      bikePassportId: "BBF-A1B2-C3D4",
+      publicFitTokenVersion: 789,
+      passportTokenVersion: 700,
       publicFitEnabled: true,
       snapshot: {
         bikeType: "road",
@@ -84,6 +87,7 @@ describe("public fit quick-match route", () => {
     const previewToken = issuePreviewToken({
       bikeId: "bike_1",
       tokenVersion: 123,
+      accessMode: "public_fit_code",
       now: Math.floor(Date.now() / 1000),
       ttlSeconds: 600,
     });
@@ -110,6 +114,7 @@ describe("public fit quick-match route", () => {
     const expiredToken = issuePreviewToken({
       bikeId: "bike_1",
       tokenVersion: 123,
+      accessMode: "public_fit_code",
       now: Math.floor(Date.now() / 1000) - 601,
       ttlSeconds: 600,
     });
@@ -134,13 +139,16 @@ describe("public fit quick-match route", () => {
     const previewToken = issuePreviewToken({
       bikeId: "bike_1",
       tokenVersion: 789,
+      accessMode: "public_fit_code",
       now: Math.floor(Date.now() / 1000),
       ttlSeconds: 600,
     });
 
     mocks.query.mockResolvedValueOnce({
       bikeId: "bike_1",
-      tokenVersion: 790,
+      bikePassportId: "BBF-A1B2-C3D4",
+      publicFitTokenVersion: 790,
+      passportTokenVersion: 790,
       publicFitEnabled: false,
       snapshot: {
         bikeType: "road",
@@ -163,6 +171,49 @@ describe("public fit quick-match route", () => {
     expect(response.status).toBe(401);
     expect(await response.json()).toEqual({
       error: "preview_token_invalid",
+    });
+  });
+
+  it("accepts a valid bike-passport preview token even when public fit is disabled", async () => {
+    const previewToken = issuePreviewToken({
+      bikeId: "bike_2",
+      tokenVersion: 456,
+      accessMode: "bike_passport",
+      now: Math.floor(Date.now() / 1000),
+      ttlSeconds: 600,
+    });
+
+    mocks.query.mockResolvedValueOnce({
+      bikeId: "bike_2",
+      bikePassportId: "BBF-A1B2-C3D4",
+      publicFitTokenVersion: 999,
+      passportTokenVersion: 456,
+      publicFitEnabled: false,
+      snapshot: {
+        bikeType: "road",
+        sizeLabel: "54",
+        stackMm: 545,
+        reachMm: 387,
+        geometryQuality: "full",
+        source: "geometry_record",
+        snapshotUpdatedAt: 456,
+      },
+    });
+
+    const response = await POST(
+      new Request("http://localhost/api/public-fit/quick-match", {
+        method: "POST",
+        body: JSON.stringify({ previewToken, heightCm: 172 }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({
+      scoreMax: 75,
+      calcVersion: "qm_v1",
     });
   });
 

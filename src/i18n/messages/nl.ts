@@ -196,21 +196,21 @@ const nl = {
       badge: "Bike passport quick check",
       collapsedTitle: "Check of deze fiets bij jouw maat zou kunnen passen",
       collapsedDescription:
-        "Gebruik één gedeelde fiets-code om een tweedehands fiets snel te screenen voordat je er meer tijd in steekt.",
-      expandLabel: "Check een gedeelde fiets-code",
-      codeLabel: "Gedeelde fiets-code",
-      codePlaceholder: "Vul de fiets-code in",
+        "Gebruik een bike-passport ID of gedeelde fiets-code om een tweedehands fiets snel te screenen voordat je er meer tijd in steekt.",
+      expandLabel: "Check een gedeelde fiets",
+      codeLabel: "Bike-passport ID of gedeelde code",
+      codePlaceholder: "Vul de bike-passport ID of gedeelde code in",
       codeHelper:
-        "Dit is een beperkte screeningstool. We gebruiken alleen de gedeelde fiets-code, je lengte en de beschikbare fietsgeometrie.",
+        "Dit is een beperkte screeningstool. We gebruiken alleen de gedeelde fietsidentificatie, je lengte en de beschikbare fietsgeometrie.",
       lookupButton: "Bekijk deze fiets",
-      lookupLoading: "De gedeelde fiets-code wordt gecontroleerd…",
+      lookupLoading: "De gedeelde fiets wordt gecontroleerd…",
       invalidTitle: "Deze code is nu niet beschikbaar",
       invalidDescription:
-        "De code kan onjuist zijn, verlopen zijn of niet meer gedeeld worden. Controleer de code en probeer opnieuw.",
+        "De bike-passport ID of gedeelde code kan onjuist zijn, verlopen zijn of niet meer gedeeld worden. Controleer dit en probeer opnieuw.",
       invalidRetry: "Opnieuw beginnen",
       rateLimitedTitle: "Te veel pogingen voor nu",
       rateLimitedDescription:
-        "Wacht even voordat je nog een gedeelde fiets-code probeert.",
+        "Wacht even voordat je nog een bike-passport ID of gedeelde code probeert.",
       rateLimitedRetry: "Probeer opnieuw",
       previewTitle: "Fietsvoorbeeld",
       previewDescription:
@@ -2315,7 +2315,7 @@ const nl = {
           loadingBrands: "Standaard merken laden...",
           loadingModels: "Modellen voor het gekozen merk laden...",
           noBrands:
-            "Er zijn nog geen standaardmerken met actieve geometrie beschikbaar. Je kunt je fiets nog steeds opslaan met je eigen merk en model.",
+            "Er zijn nog geen standaardmerken met geometrie beschikbaar. Je kunt je fiets nog steeds opslaan met je eigen merk en model.",
           selectBrandFirst:
             "Begin met een standaard merk om deze fiets aan opgeslagen geometriegegevens te koppelen.",
           selectModelFirst:
@@ -2330,15 +2330,15 @@ const nl = {
             "Deze fiets is nu gekoppeld aan een referentie-record uit de bibliotheek. Zodra je de custom fallback start, wordt die koppeling voor deze opslag verwijderd.",
           standardBrand: {
             label: "Standaard merk",
-            placeholder: "Kies een standaard merk",
+            placeholder: "Begin met typen voor een merk",
             helper:
-              "Begin met een standaard merk om deze fiets aan opgeslagen geometriegegevens te koppelen.",
+              "Begin met typen en kies het merk dat bij je fiets past. Druk op Enter om de beste match te gebruiken.",
           },
           standardModel: {
             label: "Standaard model",
-            placeholder: "Kies een standaard model",
+            placeholder: "Begin met typen voor een model",
             helper:
-              "Selecteer het model dat bij je fiets past. Alleen modellen van het gekozen merk worden getoond.",
+              "Begin met typen en kies het model dat bij je fiets past. Druk op Enter om de beste match te gebruiken.",
           },
           year: {
             label: "Modeljaar",
@@ -2352,6 +2352,18 @@ const nl = {
             placeholder: "bijv. 54, 56, M, L",
             helper:
               "Kies de maatvermelding die bij je fiets past. Die wordt op je fiets opgeslagen, ook wanneer er nog geen record uit de geometriebibliotheek beschikbaar is.",
+          },
+          preview: {
+            title: "Voorbeeld gekoppelde geometrie",
+            description:
+              "Deze fiets wordt gekoppeld aan de referentiegeometrie voor {brand} {model} in maat {size}.",
+            year: "Jaar",
+            size: "Framemaat",
+            stack: "Stack",
+            reach: "Reach",
+            seatTubeAngle: "Zitbuishoek",
+            headTubeAngle: "Balhoofdhoek",
+            unavailable: "Niet beschikbaar",
           },
           customBrandAction: "Mijn merk staat er niet tussen",
           customModelAction: "Mijn model staat er niet tussen",

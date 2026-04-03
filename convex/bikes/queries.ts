@@ -157,6 +157,34 @@ function buildBikeDetailPhotos({
 export { buildBikeDetailPhotos };
 export { buildLinkedGeometryDetail };
 
+function buildGarageLinkedGeometrySummary({
+  record,
+  brand,
+  model,
+}: {
+  record: {
+    sizeLabel: string;
+  };
+  brand: { name: string } | null;
+  model: {
+    name: string;
+    yearStart?: number;
+    yearEnd?: number;
+  } | null;
+}) {
+  return {
+    brandName: brand?.name ?? null,
+    modelName: model?.name ?? null,
+    modelYearLabel: buildGeometryModelYearLabel({
+      yearStart: model?.yearStart,
+      yearEnd: model?.yearEnd,
+    }),
+    sizeLabel: record.sizeLabel,
+  };
+}
+
+export { buildGarageLinkedGeometrySummary };
+
 export const getById = query({
   args: { bikeId: v.id("bikes") },
   handler: async (ctx, args) => {
@@ -367,42 +395,71 @@ export const listSummariesByUser = query({
 
     return await Promise.all(
       bikes.map(async (bike) => {
-        const wheelsets = await ctx.db
-          .query("wheelsets")
-          .withIndex("by_bike", (q) => q.eq("bikeId", bike._id))
-          .collect();
+        const [
+          wheelsets,
+          calculations,
+          recommendations,
+          linkedGeometryRecord,
+        ] = await Promise.all([
+          ctx.db
+            .query("wheelsets")
+            .withIndex("by_bike", (q) => q.eq("bikeId", bike._id))
+            .collect(),
+          ctx.db
+            .query("pressureCalculations")
+            .withIndex("by_bike", (q) => q.eq("bikeId", bike._id))
+            .collect(),
+          ctx.db
+            .query("recommendations")
+            .withIndex("by_bike", (q) => q.eq("bikeId", bike._id))
+            .collect(),
+          bike.geometryRecordId ? ctx.db.get(bike.geometryRecordId) : null,
+        ]);
         const activeWheelset =
           wheelsets.find((wheelset) => wheelset.isActive) ??
           [...wheelsets].sort((a, b) => b.createdAt - a.createdAt)[0] ??
           null;
 
-        const tireSetups = activeWheelset
-          ? await ctx.db
-              .query("tireSetups")
-              .withIndex("by_wheelset", (q) => q.eq("wheelsetId", activeWheelset._id))
-              .collect()
-          : [];
+        const [tireSetups, linkedGeometryBrand, linkedGeometryModel] = await Promise.all([
+          activeWheelset
+            ? ctx.db
+                .query("tireSetups")
+                .withIndex("by_wheelset", (q) => q.eq("wheelsetId", activeWheelset._id))
+                .collect()
+            : Promise.resolve([]),
+          linkedGeometryRecord ? ctx.db.get(linkedGeometryRecord.brandId) : Promise.resolve(null),
+          linkedGeometryRecord ? ctx.db.get(linkedGeometryRecord.modelId) : Promise.resolve(null),
+        ]);
         const activeTireSetup =
           tireSetups.find((tireSetup) => tireSetup.isActive) ??
           [...tireSetups].sort((a, b) => b.createdAt - a.createdAt)[0] ??
           null;
 
-        const calculations = await ctx.db
-          .query("pressureCalculations")
-          .withIndex("by_bike", (q) => q.eq("bikeId", bike._id))
-          .collect();
         const latestCalculation =
           [...calculations].sort((a, b) => b.createdAt - a.createdAt)[0] ?? null;
 
-        const recommendations = await ctx.db
-          .query("recommendations")
-          .withIndex("by_bike", (q) => q.eq("bikeId", bike._id))
-          .collect();
         const latestRecommendation =
           [...recommendations].sort((a, b) => b.createdAt - a.createdAt)[0] ?? null;
 
         return {
           ...bike,
+          linkedGeometrySummary: linkedGeometryRecord
+            ? buildGarageLinkedGeometrySummary({
+                record: {
+                  sizeLabel: linkedGeometryRecord.sizeLabel,
+                },
+                brand: linkedGeometryBrand
+                  ? { name: linkedGeometryBrand.name }
+                  : null,
+                model: linkedGeometryModel
+                  ? {
+                      name: linkedGeometryModel.name,
+                      yearStart: linkedGeometryModel.yearStart,
+                      yearEnd: linkedGeometryModel.yearEnd,
+                    }
+                  : null,
+              })
+            : null,
           latestRecommendationSummary: latestRecommendation
             ? {
                 sessionId: latestRecommendation.sessionId,
@@ -514,16 +571,17 @@ export const getByPublicFitCode = query({
   args: { publicFitCode: v.string() },
   handler: async (ctx, args) => {
     const normalizedCode = normalizePublicFitCode(args.publicFitCode);
-    if (!isValidPublicFitCode(normalizedCode)) {
-      return null;
-    }
-
-    const bike = await ctx.db
-      .query("bikes")
-      .withIndex("by_public_fit_code", (q) =>
-        q.eq("publicFitCode", normalizedCode)
-      )
-      .unique();
+    const accessMode = isValidPublicFitCode(normalizedCode)
+      ? ("public_fit_code" as const)
+      : ("bike_passport" as const);
+    const bike = accessMode === "public_fit_code"
+      ? await ctx.db
+          .query("bikes")
+          .withIndex("by_public_fit_code", (q) =>
+            q.eq("publicFitCode", normalizedCode)
+          )
+          .unique()
+      : await findBikeByPassportId(ctx, args.publicFitCode);
 
     if (!bike || !isPublicFitPreviewActive(bike)) {
       return null;
@@ -546,6 +604,7 @@ export const getByPublicFitCode = query({
       snapshot,
       primaryPhotoSource: photoSources.primaryPhotoSource,
       thumbnailSources: photoSources.thumbnailSources,
+      accessMode,
     });
   },
 });
@@ -562,7 +621,9 @@ export const getPublicFitByBikeId = query({
 
     return {
       bikeId: bike._id,
-      tokenVersion: snapshot.snapshotUpdatedAt,
+      bikePassportId: bike.bikePassportId ?? null,
+      publicFitTokenVersion: bike.publicFitCodeCreatedAt ?? snapshot.snapshotUpdatedAt,
+      passportTokenVersion: snapshot.snapshotUpdatedAt,
       publicFitEnabled: bike.publicFitEnabled === true,
       snapshot,
     };

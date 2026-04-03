@@ -69,6 +69,7 @@ describe("public fit lookup route", () => {
       .mockResolvedValueOnce({
         bikeId: "bike_1",
         tokenVersion: 789,
+        accessMode: "public_fit_code",
         preview: {
           brand: "Canyon",
           model: "Ultimate",
@@ -108,6 +109,7 @@ describe("public fit lookup route", () => {
     expect(mocks.issuePreviewToken).toHaveBeenCalledWith({
       bikeId: "bike_1",
       tokenVersion: 789,
+      accessMode: "public_fit_code",
     });
     expect(mocks.query).toHaveBeenNthCalledWith(
       1,
@@ -129,6 +131,46 @@ describe("public fit lookup route", () => {
 
     expect(response.status).toBe(404);
     expect(await response.json()).toEqual({ error: "Preview unavailable." });
+  });
+
+  it("accepts a bike-passport id for quick-check lookup when preview data is available", async () => {
+    mocks.query.mockResolvedValueOnce({
+      bikeId: "bike_2",
+      tokenVersion: 456,
+      accessMode: "bike_passport",
+      preview: {
+        brand: "Ridley",
+        model: "Dean",
+        bikeType: "tt_triathlon",
+        sizeLabel: "S",
+        geometryQuality: "partial",
+        primaryPhotoSource: null,
+        thumbnailSources: [],
+      },
+    });
+
+    const response = await POST(
+      new Request("http://localhost/api/public-fit/lookup", {
+        method: "POST",
+        body: JSON.stringify({ code: "BBF-A1B2-C3D4" }),
+        headers: { "Content-Type": "application/json" },
+      })
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({
+      brand: "Ridley",
+      model: "Dean",
+      bikeType: "tt_triathlon",
+      sizeLabel: "S",
+      geometryQuality: "partial",
+      previewToken: "preview-token",
+    });
+    expect(mocks.issuePreviewToken).toHaveBeenCalledWith({
+      bikeId: "bike_2",
+      tokenVersion: 456,
+      accessMode: "bike_passport",
+    });
   });
 
   it("rate limits the fourth request", async () => {

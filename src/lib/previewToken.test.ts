@@ -5,11 +5,14 @@ import {
   verifyPreviewToken,
 } from "./previewToken";
 
+process.env.PREVIEW_TOKEN_SECRET = "preview-token-test-secret";
+
 describe("previewToken", () => {
   it("issues and verifies a signed preview token", () => {
     const token = issuePreviewToken({
       bikeId: "bike_1",
       tokenVersion: 123,
+      accessMode: "public_fit_code",
       now: 1_000,
       ttlSeconds: 60,
     });
@@ -21,6 +24,7 @@ describe("previewToken", () => {
       payload: {
         bikeId: "bike_1",
         tokenVersion: 123,
+        accessMode: "public_fit_code",
         iat: 1_000,
         exp: 1_060,
       },
@@ -31,6 +35,7 @@ describe("previewToken", () => {
     const token = issuePreviewToken({
       bikeId: "bike_1",
       tokenVersion: 123,
+      accessMode: "public_fit_code",
       now: 1_000,
       ttlSeconds: 60,
     });
@@ -45,6 +50,7 @@ describe("previewToken", () => {
     const token = issuePreviewToken({
       bikeId: "bike_1",
       tokenVersion: 123,
+      accessMode: "public_fit_code",
       now: 1_000,
       ttlSeconds: 60,
     });
@@ -61,6 +67,7 @@ describe("previewToken", () => {
       issuePreviewToken({
         bikeId: "bike_1",
         tokenVersion: 123,
+        accessMode: "public_fit_code",
         now: 1_000,
         ttlSeconds: 60,
       }),
@@ -75,28 +82,71 @@ describe("previewToken", () => {
     expect(
       isPreviewTokenAuthorizedForBike({
         payload: issued.payload,
-        bikeId: "bike_1",
+        bike: {
+          bikeId: "bike_1",
+          bikePassportId: "BBF-A1B2-C3D4",
+        },
         publicFitEnabled: true,
-        tokenVersion: 123,
+        publicFitTokenVersion: 123,
+        passportTokenVersion: 999,
       })
     ).toBe(true);
 
     expect(
       isPreviewTokenAuthorizedForBike({
         payload: issued.payload,
-        bikeId: "bike_1",
+        bike: {
+          bikeId: "bike_1",
+          bikePassportId: "BBF-A1B2-C3D4",
+        },
         publicFitEnabled: false,
-        tokenVersion: 123,
+        publicFitTokenVersion: 123,
+        passportTokenVersion: 999,
       })
     ).toBe(false);
 
     expect(
       isPreviewTokenAuthorizedForBike({
         payload: issued.payload,
-        bikeId: "bike_1",
+        bike: {
+          bikeId: "bike_1",
+          bikePassportId: "BBF-A1B2-C3D4",
+        },
         publicFitEnabled: true,
-        tokenVersion: 456,
+        publicFitTokenVersion: 456,
+        passportTokenVersion: 999,
       })
     ).toBe(false);
+  });
+
+  it("authorizes a bike-passport preview token without requiring public-fit sharing", () => {
+    const issued = verifyPreviewToken(
+      issuePreviewToken({
+        bikeId: "bike_2",
+        tokenVersion: 456,
+        accessMode: "bike_passport",
+        now: 1_000,
+        ttlSeconds: 60,
+      }),
+      1_030
+    );
+
+    expect(issued.valid).toBe(true);
+    if (!issued.valid) {
+      throw new Error("Expected a valid token payload.");
+    }
+
+    expect(
+      isPreviewTokenAuthorizedForBike({
+        payload: issued.payload,
+        bike: {
+          bikeId: "bike_2",
+          bikePassportId: "BBF-1234-ABCD",
+        },
+        publicFitEnabled: false,
+        publicFitTokenVersion: 999,
+        passportTokenVersion: 456,
+      })
+    ).toBe(true);
   });
 });
