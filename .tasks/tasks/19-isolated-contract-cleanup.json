@@ -1,0 +1,22 @@
+{
+  "_version": 1,
+  "id": 19,
+  "title": "Isolated contract cleanup: clear remaining low-count failures in case-study leads, bike photos, and PDF layout tests",
+  "status": "todo",
+  "priority": 3,
+  "assigned": "repo-health-owner",
+  "depends_on": ["Recommendation contract recovery", "Questionnaire contract refresh", "Dashboard/provider harness fixes"],
+  "files": [
+    "convex/caseStudyLeads/mutations.test.ts",
+    "convex/caseStudyLeads/mutations.ts",
+    "convex/bikePhotos/__tests__/mutations.contract.test.ts",
+    "convex/lib/storageReferences.ts",
+    "src/lib/reports/pdfLayoutTemplate.test.ts"
+  ],
+  "acceptance": [
+    "Case-study lead mutation tests pass",
+    "Bike-photo storage reference expectations match implementation",
+    "PDF layout template tests pass with the current fixture shape"
+  ],
+  "notes": "Use this cleanup bucket only after the larger validation clusters are reduced."
+}

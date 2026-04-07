@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
-import { Button } from "@/components/ui";
+import { Compass, Gauge, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/prototyper-ui/ui/button";
+import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import {
+  PublicCtaBand,
+  PublicFeatureCard,
+  PublicHero,
+  PublicPageShell,
+  PublicSection,
+} from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
-import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { BRAND } from "@/config/brand";
+import { buildLocaleAlternates } from "@/i18n/metadata";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { getRequestLocale } from "@/i18n/request";
 import { buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
-import { buildLocaleAlternates } from "@/i18n/metadata";
-import { getRequestLocale } from "@/i18n/request";
-import { withLocalePrefix } from "@/i18n/navigation";
 import { BikeFitCalculatorForm } from "./BikeFitCalculatorForm";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -17,7 +25,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const alternates = buildLocaleAlternates("/calculators/bike-fit", locale);
 
   return {
-    title: isNl ? "Gratis bike fit calculator | BestBikeFit4U" : "Free Bike Fit Calculator | BestBikeFit4U",
+    title: isNl
+      ? "Gratis bike fit calculator | BestBikeFit4U"
+      : "Free Bike Fit Calculator | BestBikeFit4U",
     description: isNl
       ? "Bereken een gratis eerste inschatting voor zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel."
       : "Calculate a free first-pass estimate for saddle height, reach, drop, and frame targets based on your body measurements and riding goal.",
@@ -66,9 +76,50 @@ export default async function BikeFitCalculatorPage() {
   const pagePath = withLocalePrefix("/calculators/bike-fit", locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
   const faqs = buildFaqs(isNl);
+  const trustPoints = isNl
+    ? [
+        {
+          title: "Heldere start, geen loze precisie",
+          description:
+            "Je ziet direct welke richting logisch is voor zadelhoogte, reach en drop, zonder te doen alsof een publieke intake al je volledige fit vervangt.",
+          icon: <ShieldCheck className="h-5 w-5" />,
+        },
+        {
+          title: "Zelfde rekenmotor als het product",
+          description:
+            "Deze calculator gebruikt dezelfde fitlogica als het dashboard. De publieke versie houdt het alleen bewust bij een veilige eerste stap.",
+          icon: <Gauge className="h-5 w-5" />,
+        },
+        {
+          title: "Gebouwd voor de volgende beslissing",
+          description:
+            "Gebruik de uitkomst om een huidige setup, een nieuwe fiets of een verdere fitanalyse beter te beoordelen.",
+          icon: <Compass className="h-5 w-5" />,
+        },
+      ]
+    : [
+        {
+          title: "Clear starting point, no fake precision",
+          description:
+            "You immediately see a sensible direction for saddle height, reach, and drop, without pretending a public intake replaces a full fit.",
+          icon: <ShieldCheck className="h-5 w-5" />,
+        },
+        {
+          title: "Same fit engine as the product",
+          description:
+            "This calculator uses the same fit logic as the dashboard. The public version simply keeps the output to a safe first step.",
+          icon: <Gauge className="h-5 w-5" />,
+        },
+        {
+          title: "Built for the next decision",
+          description:
+            "Use the result to assess your current setup, shortlist a new bike, or decide whether you need deeper fit work.",
+          icon: <Compass className="h-5 w-5" />,
+        },
+      ];
 
   return (
-    <div className="py-16 text-foreground">
+    <PublicPageShell className="text-foreground">
       <JsonLd
         schema={[
           buildWebApplicationSchema({
@@ -99,35 +150,59 @@ export default async function BikeFitCalculatorPage() {
           }),
         ]}
       />
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <section className="rounded-[28px] border border-border bg-[color:color-mix(in_oklch,var(--card)_88%,var(--primary)_12%)] p-8 shadow-sm sm:p-10">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
-              BestBikeFit4U calculator
-            </p>
-            <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">
-              {isNl ? "Gratis bike fit calculator" : "Free Bike Fit Calculator"}
-            </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-              {isNl
-                ? "Bereken een eerste inschatting voor zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel. Het is een snelle publieke intake die je helpt met je volgende stap."
-                : "Calculate a first-pass estimate for saddle height, reach, drop, and frame targets from your body measurements and riding goal. It is a fast public intake that helps you decide the next step."}
-            </p>
-          </div>
-        </section>
 
-        <BikeFitCalculatorForm isNl={isNl} />
+      <PublicHero
+        eyebrow="BestBikeFit4U calculator"
+        title={isNl ? "Gratis bike fit calculator" : "Free Bike Fit Calculator"}
+        description={
+          isNl
+            ? "Bereken een eerste inschatting voor zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel. Het is een snelle publieke intake die je helpt met je volgende stap."
+            : "Calculate a first-pass estimate for saddle height, reach, drop, and frame targets from your body measurements and riding goal. It is a fast public intake that helps you decide the next step."
+        }
+        chips={
+          isNl
+            ? ["NL en EN beschikbaar", "Gratis publieke intake", "Veilig startpunt"]
+            : ["Available in Dutch and English", "Free public intake", "Safe starting point"]
+        }
+      />
 
-        <section className="mt-10 rounded-3xl border border-border bg-[color:color-mix(in_oklch,var(--card)_88%,var(--secondary)_12%)] p-6 shadow-sm sm:p-8">
-          <h2 className="text-2xl font-semibold text-foreground">
-            {isNl ? "Volgende stap" : "Next step"}
-          </h2>
-          <p className="mt-3 max-w-2xl text-muted-foreground">
-            {isNl
-              ? "Gebruik dit als vertrekpunt en verfijn daarna je setup, druk en huidige fietsgegevens in het dashboard."
-              : "Use this as your starting point, then refine the setup, tire pressure, and current bike details inside the dashboard."}
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
+      <PublicSection
+        className="mt-10"
+        header={{
+          eyebrow: isNl ? "Waarom rijders hiermee starten" : "Why riders start here",
+          title: isNl
+            ? "Betrouwbaar genoeg om de juiste volgende stap te kiezen"
+            : "Reliable enough to choose the right next step",
+          description: isNl
+            ? "De publieke calculator is bedoeld om je richting te geven, niet om schijnzekerheid te verkopen."
+            : "The public calculator is built to give you direction, not to sell false certainty.",
+        }}
+      >
+        <div className="grid gap-4 md:grid-cols-3">
+          {trustPoints.map((point) => (
+            <PublicFeatureCard
+              key={point.title}
+              icon={point.icon}
+              title={point.title}
+              description={point.description}
+            />
+          ))}
+        </div>
+      </PublicSection>
+
+      <BikeFitCalculatorForm isNl={isNl} />
+
+      <PublicCtaBand
+        className="mt-10"
+        eyebrow={isNl ? "Hoe verder?" : "What's next?"}
+        title={isNl ? "Verfijn de uitkomst in je account" : "Refine the result in your account"}
+        description={
+          isNl
+            ? "Maak een gratis account aan om deze resultaten op te slaan, je setup met meer detail te verfijnen en veranderingen bij te houden."
+            : "Create a free account to save these results, refine your setup with more detail, and track changes over time."
+        }
+        actions={
+          <>
             <Button
               render={
                 <TrackedCtaLink
@@ -135,11 +210,25 @@ export default async function BikeFitCalculatorPage() {
                   locale={locale}
                   pagePath={pagePath}
                   section="bike_fit_result"
-                  ctaLabel={isNl ? "Ga verder in dashboard" : "Continue in dashboard"}
+                  ctaLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
                 />
               }
             >
-              {isNl ? "Ga verder in dashboard" : "Continue in dashboard"}
+              {isNl ? "Maak account aan of log in" : "Create account or sign in"}
+            </Button>
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/pricing", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="bike_fit_pricing_cta"
+                  ctaLabel={isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
+                />
+              }
+              variant="outline"
+            >
+              {isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
             </Button>
             <Button
               render={
@@ -148,34 +237,53 @@ export default async function BikeFitCalculatorPage() {
                   locale={locale}
                   pagePath={pagePath}
                   section="bike_fit_tire_pressure_cta"
-                  ctaLabel={isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"}
+                  ctaLabel={
+                    isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"
+                  }
                 />
               }
               variant="outline"
             >
               {isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"}
             </Button>
-          </div>
-        </section>
+          </>
+        }
+        aside={
+          isNl
+            ? "De calculator geeft een praktisch startpunt. Een persoonlijke fitter kan toegevoegde waarde bieden bij complexe biomechanische kwesties."
+            : "The calculator gives a practical starting point. An in-person fitter can add value for complex biomechanical issues."
+        }
+      />
 
-        <section className="mt-10 rounded-2xl border border-border bg-card p-6">
-          <h2 className="text-2xl font-semibold text-foreground">FAQ</h2>
-          <div className="mt-4 space-y-4">
-            {faqs.map((faq) => (
-              <div key={faq.q}>
-                <h3 className="font-semibold text-foreground">{faq.q}</h3>
-                <p className="mt-1 text-muted-foreground">{faq.a}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+      <PublicSection
+        className="mt-10"
+        header={{
+          title: "FAQ",
+          description: isNl
+            ? "Korte antwoorden op de belangrijkste vragen."
+            : "Short answers to the most common questions.",
+        }}
+      >
+        <div className="space-y-4">
+          {faqs.map((faq) => (
+            <div
+              key={faq.q}
+              className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
+            >
+              <h3 className="font-semibold text-foreground">{faq.q}</h3>
+              <p className="mt-2 text-muted-foreground">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      </PublicSection>
 
+      <section className="mt-10">
         <RelatedLinksSection
           title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}
           links={getRelatedLinks("bike-fit", locale)}
           locale={locale}
         />
-      </div>
-    </div>
+      </section>
+    </PublicPageShell>
   );
 }

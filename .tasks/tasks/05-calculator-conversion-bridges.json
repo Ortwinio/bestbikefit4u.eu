@@ -1,0 +1,27 @@
+{
+  "_version": 1,
+  "id": 5,
+  "title": "Calculator conversion bridges: standardize post-result next-step sections across bike-fit, saddle-height, frame-size, crank-length, and tire-pressure with consistent CTA hierarchy, account-creation bridge, and EN/NL copy",
+  "status": "done",
+  "priority": 3,
+  "assigned": "codex-d",
+  "depends_on": [
+    "UX contract and design direction",
+    "Homepage value-first redesign"
+  ],
+  "files": [
+    "src/app/(public)/calculators/bike-fit/page.tsx",
+    "src/app/(public)/calculators/saddle-height/page.tsx",
+    "src/app/(public)/calculators/frame-size/page.tsx",
+    "src/app/(public)/calculators/crank-length/page.tsx",
+    "src/app/(public)/bandenspanning-calculator/page.tsx"
+  ],
+  "acceptance": [
+    "Every calculator has a deliberate next-step module after results",
+    "CTA hierarchy consistent across all calculators (primary: save/refine, secondary: pricing)",
+    "Disclaimers paired with practical value statements",
+    "EN/NL copy consistent across calculators",
+    "Tire-pressure quality level matched by other calculators"
+  ],
+  "notes": "All 5 calculators standardized: heading Hoe verder?/What is next?, primary CTA to login, pricing secondary, cross-calculator tertiary, disclaimer line. Bike-fit and frame-size page.tsx restored after accidental deletion. Tire-pressure CTA updated via PressureCalculatorCta.tsx."
+}

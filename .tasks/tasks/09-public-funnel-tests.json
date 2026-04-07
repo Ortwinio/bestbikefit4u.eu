@@ -1,0 +1,18 @@
+{
+  "_version": 1,
+  "id": 9,
+  "title": "Public funnel tests: add/update tests for homepage CTA rendering, auth messaging, pricing proof modules, calculator next-step CTAs, and bilingual copy blocks across touched public pages",
+  "status": "done",
+  "priority": 5,
+  "assigned": "orchestrator",
+  "depends_on": ["Homepage value-first redesign", "Auth/login reframe", "Pricing conversion upgrade", "Calculator conversion bridges"],
+  "acceptance": [
+    "Homepage CTA destination and label tests pass",
+    "Auth page messaging tests cover both new and returning user paths",
+    "Pricing proof module and plan framing tests pass",
+    "Calculator next-step rendering tests pass",
+    "Theme provider system/light/dark resolution tested",
+    "EN/NL copy block rendering tested on key pages"
+  ],
+  "notes": "Added or validated tests for homepage, login, pricing, FAQ, contact, bike-fit, frame-size, saddle-height, crank-length, tire-pressure CTA, bike quick check, header auth actions, theme provider, and i18n parity. Public funnel suite passed: 15 files, 31 tests."
+}

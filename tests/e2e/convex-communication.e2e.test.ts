@@ -16,6 +16,8 @@ import {
   completeQuestionnaire,
 } from "../../convex/questionnaire/mutations";
 import { generate as generateRecommendation } from "../../convex/recommendations/mutations";
+import { generateFromData } from "../../convex/recommendations/actions";
+import { storeResult } from "../../convex/recommendations/internalMutations";
 import { getBySession as getRecommendationBySession } from "../../convex/recommendations/queries";
 import { sendFitReport } from "../../convex/emails/actions";
 import { getCurrentUser } from "../../convex/users/queries";
@@ -158,6 +160,41 @@ function handlerOf<TArgs, TResult>(
     ._handler;
 }
 
+async function runRecommendationFlow(db: InMemoryDb, sessionId: string) {
+  const generateFromDataHandler = handlerOf<Record<string, unknown>, void>(generateFromData);
+  const storeResultHandler = handlerOf<Record<string, unknown>, string>(storeResult);
+
+  const scheduler = {
+    runAfter: vi.fn(async (_delay: number, ref: unknown, args: Record<string, unknown>) => {
+      if (ref === api.recommendations.actions.generateFromData) {
+        await generateFromDataHandler(
+          {
+            scheduler: { runAfter: vi.fn(async () => undefined) },
+            runMutation: async (mutationRef: unknown, mutationArgs: Record<string, unknown>) => {
+              if (mutationRef === api.recommendations.internalMutations.storeResult) {
+                return await storeResultHandler(
+                  { db, scheduler: { runAfter: vi.fn(async () => undefined) } },
+                  mutationArgs
+                );
+              }
+
+              return null;
+            },
+          },
+          args
+        );
+      }
+
+      return undefined;
+    }),
+  };
+
+  await handlerOf<{ sessionId: string }, void>(generateRecommendation)(
+    { db, scheduler },
+    { sessionId }
+  );
+}
+
 describe("convex communication e2e", () => {
   let currentUserId: string | null;
 
@@ -181,6 +218,11 @@ describe("convex communication e2e", () => {
         inseamCm: number;
         flexibilityScore: "average";
         coreStabilityScore: number;
+        experienceLevel: "intermediate";
+        weeklyHours: "3-6";
+        typicalRideLength: "medium";
+        hasPain: "no";
+        positionPriority: "balanced";
       },
       string
     >(upsertProfile)(mutationCtx, {
@@ -188,6 +230,11 @@ describe("convex communication e2e", () => {
       inseamCm: 81,
       flexibilityScore: "average",
       coreStabilityScore: 3,
+      experienceLevel: "intermediate",
+      weeklyHours: "3-6",
+      typicalRideLength: "medium",
+      hasPain: "no",
+      positionPriority: "balanced",
     });
 
     const sessionId = await handlerOf<
@@ -263,10 +310,7 @@ describe("convex communication e2e", () => {
       { sessionId }
     );
 
-    const recommendationId = await handlerOf<{ sessionId: string }, string>(
-      generateRecommendation
-    )(mutationCtx, { sessionId });
-    expect(recommendationId).toBeTruthy();
+    await runRecommendationFlow(db, sessionId);
 
     const recommendation = await handlerOf<
       { sessionId: string },
@@ -338,6 +382,11 @@ describe("convex communication e2e", () => {
         inseamCm: number;
         flexibilityScore: "good";
         coreStabilityScore: number;
+        experienceLevel: "intermediate";
+        weeklyHours: "3-6";
+        typicalRideLength: "medium";
+        hasPain: "no";
+        positionPriority: "balanced";
       },
       string
     >(upsertProfile)({ db }, {
@@ -345,6 +394,11 @@ describe("convex communication e2e", () => {
       inseamCm: 83,
       flexibilityScore: "good",
       coreStabilityScore: 4,
+      experienceLevel: "intermediate",
+      weeklyHours: "3-6",
+      typicalRideLength: "medium",
+      hasPain: "no",
+      positionPriority: "balanced",
     });
     expect(profileId).toBeTruthy();
 
@@ -363,10 +417,7 @@ describe("convex communication e2e", () => {
     >(getRecommendationBySession)({ db }, { sessionId });
     expect(before).toBeNull();
 
-    await handlerOf<{ sessionId: string }, string>(generateRecommendation)(
-      { db },
-      { sessionId }
-    );
+    await runRecommendationFlow(db, sessionId);
 
     const after = await handlerOf<
       { sessionId: string },
@@ -386,6 +437,11 @@ describe("convex communication e2e", () => {
         inseamCm: number;
         flexibilityScore: "average";
         coreStabilityScore: number;
+        experienceLevel: "intermediate";
+        weeklyHours: "3-6";
+        typicalRideLength: "medium";
+        hasPain: "no";
+        positionPriority: "balanced";
       },
       string
     >(upsertProfile)({ db }, {
@@ -393,6 +449,11 @@ describe("convex communication e2e", () => {
       inseamCm: 82,
       flexibilityScore: "average",
       coreStabilityScore: 3,
+      experienceLevel: "intermediate",
+      weeklyHours: "3-6",
+      typicalRideLength: "medium",
+      hasPain: "no",
+      positionPriority: "balanced",
     });
 
     const sessionId = await handlerOf<
@@ -404,10 +465,7 @@ describe("convex communication e2e", () => {
       primaryGoal: "balanced",
     });
 
-    await handlerOf<{ sessionId: string }, string>(generateRecommendation)(
-      { db },
-      { sessionId }
-    );
+    await runRecommendationFlow(db, sessionId);
 
     const usersGetCurrentUserHandler = handlerOf<
       Record<string, never>,
@@ -462,6 +520,11 @@ describe("convex communication e2e", () => {
         inseamCm: number;
         flexibilityScore: "excellent";
         coreStabilityScore: number;
+        experienceLevel: "advanced";
+        weeklyHours: "6-10";
+        typicalRideLength: "long";
+        hasPain: "no";
+        positionPriority: "performance";
       },
       string
     >(upsertProfile)({ db }, {
@@ -469,6 +532,11 @@ describe("convex communication e2e", () => {
       inseamCm: 84,
       flexibilityScore: "excellent",
       coreStabilityScore: 5,
+      experienceLevel: "advanced",
+      weeklyHours: "6-10",
+      typicalRideLength: "long",
+      hasPain: "no",
+      positionPriority: "performance",
     });
     const sessionId = await handlerOf<
       { bikeType: "road"; ridingStyle: "racing"; primaryGoal: "performance" },
@@ -478,10 +546,7 @@ describe("convex communication e2e", () => {
       ridingStyle: "racing",
       primaryGoal: "performance",
     });
-    await handlerOf<{ sessionId: string }, string>(generateRecommendation)(
-      { db },
-      { sessionId }
-    );
+    await runRecommendationFlow(db, sessionId);
 
     currentUserId = otherId;
     const recommendation = await handlerOf<
@@ -502,6 +567,11 @@ describe("convex communication e2e", () => {
         inseamCm: number;
         flexibilityScore: "good";
         coreStabilityScore: number;
+        experienceLevel: "intermediate";
+        weeklyHours: "3-6";
+        typicalRideLength: "medium";
+        hasPain: "no";
+        positionPriority: "comfort";
       },
       string
     >(upsertProfile)({ db }, {
@@ -509,6 +579,11 @@ describe("convex communication e2e", () => {
       inseamCm: 80,
       flexibilityScore: "good",
       coreStabilityScore: 4,
+      experienceLevel: "intermediate",
+      weeklyHours: "3-6",
+      typicalRideLength: "medium",
+      hasPain: "no",
+      positionPriority: "comfort",
     });
 
     const sessionId = await handlerOf<
@@ -519,6 +594,8 @@ describe("convex communication e2e", () => {
       ridingStyle: "commuting",
       primaryGoal: "comfort",
     });
+
+    await runRecommendationFlow(db, sessionId);
     await handlerOf<{ sessionId: string }, string>(generateRecommendation)(
       { db },
       { sessionId }

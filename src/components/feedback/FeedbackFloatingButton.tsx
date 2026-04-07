@@ -1,7 +1,7 @@
 "use client";
 
 import { MessageSquarePlus } from "lucide-react";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import { cn } from "@/utils/cn";
 
 export const FEEDBACK_FLOATING_BUTTON_PLACEMENT_CLASSNAME =

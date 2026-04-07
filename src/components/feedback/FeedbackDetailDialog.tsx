@@ -1,7 +1,9 @@
 "use client";
 
 import { useQuery } from "convex/react";
-import { AccessibleDialog, Card, LoadingState, EmptyState } from "@/components/ui";
+import { AccessibleDialog } from "@/components/prototyper-ui/ui/accessible-dialog";
+import { Card } from "@/components/prototyper-ui/ui/card";
+import { EmptyState, LoadingState } from "@/components/prototyper-ui/ui/states";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getFeedbackCopy, getFeedbackLocale } from "./feedback-copy";
 import { feedbackApi } from "./feedback-api";

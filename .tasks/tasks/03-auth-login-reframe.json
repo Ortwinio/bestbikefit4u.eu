@@ -1,0 +1,28 @@
+{
+  "_version": 1,
+  "id": 3,
+  "title": "Auth/login reframe: convert /login into combined create-account/sign-in page with proof-of-value panel, passwordless explanation, support reassurance, and EN/NL copy improvements \u2014 no auth logic changes",
+  "status": "done",
+  "priority": 2,
+  "assigned": "codex-c",
+  "depends_on": [
+    "UX contract and design direction"
+  ],
+  "files": [
+    "src/app/(auth)/login/page.tsx"
+  ],
+  "handoffs": [
+    "plans/feature-commercial-saas-ux-upgrade/handoff-auth-reframe.md"
+  ],
+  "acceptance": [
+    "Page title and copy serve both new and returning users",
+    "USP panel shows what you GET after signup, not why fitting matters",
+    "Passwordless flow explained for both audiences",
+    "Support reassurance visible",
+    "Auth mechanics unchanged (magic code + Google + localhost dev)",
+    "sourceTag and all marketing events preserved",
+    "EN/NL semantic parity",
+    "Light/dark/system readability verified"
+  ],
+  "notes": "Title reframed, USP rewritten to proof-of-value, passwordless hint updated, accountCreationHint and supportHint added. EN/NL done. Needs final acceptance review."
+}

@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import {
+  PublicCtaBand,
+  PublicHero,
+  PublicPageShell,
+  PublicSection,
+  PublicSurfaceCard,
+} from "@/components/public";
 import { HOME_QUOTES_BY_LOCALE } from "@/content/homeQuotes";
 import type { Locale } from "@/i18n/config";
 import { buildLocaleAlternates } from "@/i18n/metadata";
@@ -52,14 +59,14 @@ const copy: Record<
       title: "Why so many riders feel the difference after a good bike fit",
       paragraphs: [
         "Most riders do not need a new bike to feel better and ride more confidently. They need a position that matches their body, flexibility, goals, and the terrain they ride.",
-        "A proper bike fit turns vague problems into measurable adjustments in millimeters and degrees, then confirms those changes on the bike. Small changes often matter most on longer rides.",
+        "A proper bike fit turns vague problems into measurable adjustments in millimeters and degrees, then confirms those changes on the bike.",
       ],
     },
     quotesTitle: "What riders notice after a proper fit",
     quotesIntro:
       "These are typical outcomes riders describe after getting their position dialed in:",
     quotesOutro:
-      "These are not cosmetic improvements. They map directly to the core areas a fit influences: comfort, joint load, breathing space, stability, and repeatability.",
+      "These are not cosmetic improvements. They map directly to comfort, joint load, breathing space, stability, and repeatability.",
     whyTitle: "Why a bike fit works",
     whyIntro:
       "A bike fit is not magic. It is biomechanics and basic physics applied to three contact points:",
@@ -70,7 +77,7 @@ const copy: Record<
     ],
     whyParagraphs: [
       "If one of these contact points is wrong, your body compensates. Compensation is what creates many recurring issues: numb hands, knee pain, hot foot, neck tightness, low-back fatigue, unstable descending, and flat-feeling power on climbs.",
-      "Small adjustments matter because the body repeats the same movement thousands of times per hour. A minor misalignment can feel harmless for 20 minutes and become a real issue after 2 to 4 hours.",
+      "Small adjustments matter because the body repeats the same movement thousands of times per hour.",
     ],
     benefitsTitle: "The most common reasons riders feel immediate benefits",
     adjustmentsTitle: "What actually gets adjusted in a bike fit",
@@ -88,7 +95,7 @@ const copy: Record<
       {
         title: "Reduced pain and overload",
         paragraphs: [
-          'Many riders start from a "tolerance-based" position: it works until it does not. A fit reduces unnecessary joint stress by aligning the knee-ankle-hip chain and stabilizing the pelvis.',
+          'Many riders start from a "tolerance-based" position. A fit reduces unnecessary joint stress by aligning the knee-ankle-hip chain and stabilizing the pelvis.',
           "Typical wins:",
         ],
         bullets: [
@@ -106,32 +113,26 @@ const copy: Record<
       },
       {
         title: "Better control and confidence",
-        paragraphs: [
-          "Handling improves when your center of mass is balanced between saddle and bars. Riders often notice this first on:",
-        ],
+        paragraphs: ["Handling improves when your center of mass is balanced between saddle and bars."],
         bullets: [
-          'Descents with more control and less "nervous" steering',
+          "Descents with more control and less nervous steering",
           "Rough surfaces with less bouncing and more stability",
           "Long rides with less fatigue-driven wobble",
         ],
       },
       {
         title: "A position that matches your terrain",
-        paragraphs: [
-          "A good fit is not one fixed setup for everything. The position should change with your riding style:",
-        ],
+        paragraphs: ["A good fit is not one fixed setup for everything. The position should change with your riding style:"],
         bullets: [
-          "Mountain or technical riding: more stability, less aggressive drop, more room to move",
-          "Endurance: comfort-first, reduced lumbar load, sustainable reach",
+          "Mountain or technical riding: more stability and more room to move",
+          "Endurance: comfort-first and sustainable reach",
           "Performance or race: more aerodynamic while keeping the hip angle workable",
           "TT or triathlon: very aero, but sensitive to saddle position, hip angle, and cockpit length",
         ],
       },
       {
         title: "Clarity through repeatable numbers",
-        paragraphs: [
-          "Most riders guess their setup. A proper fit produces exact values in millimeters and degrees so you can:",
-        ],
+        paragraphs: ["A proper fit produces exact values in millimeters and degrees so you can:"],
         bullets: [
           "Rebuild your position after travel or maintenance",
           "Replicate it on a new frame",
@@ -147,7 +148,7 @@ const copy: Record<
       "Handlebar drop (mm)",
       "Stem length suggestion",
       "Crank length suggestion where relevant",
-      "Cleat position (fore-aft, angle, stance width)",
+      "Cleat position",
       "Frame size range based on stack and reach",
     ],
     fitMethodItems: [
@@ -176,14 +177,14 @@ const copy: Record<
       title: "Waarom zoveel rijders direct verschil voelen na een goede bike fit",
       paragraphs: [
         "De meeste rijders hebben geen nieuwe fiets nodig om zich beter te voelen of met meer vertrouwen te rijden. Ze hebben een positie nodig die past bij hun lichaam, flexibiliteit, doelen en het terrein waarop ze rijden.",
-        "Een goede bike fit vertaalt vage problemen naar meetbare aanpassingen in millimeters en graden en controleert die veranderingen daarna op de fiets. Kleine verschillen tellen juist op langere ritten.",
+        "Een goede bike fit vertaalt vage problemen naar meetbare aanpassingen in millimeters en graden en controleert die veranderingen daarna op de fiets.",
       ],
     },
     quotesTitle: "Wat rijders merken na een goede fit",
     quotesIntro:
       "Dit zijn typische uitkomsten die rijders beschrijven nadat hun positie beter is afgesteld:",
     quotesOutro:
-      "Dit zijn geen cosmetische verbeteringen. Ze raken precies de gebieden die een fit beinvloedt: comfort, gewrichtsbelasting, ademruimte, stabiliteit en herhaalbaarheid.",
+      "Dit zijn geen cosmetische verbeteringen. Ze raken precies comfort, gewrichtsbelasting, ademruimte, stabiliteit en herhaalbaarheid.",
     whyTitle: "Waarom een bike fit werkt",
     whyIntro:
       "Een bike fit is geen magie. Het is biomechanica en basisfysica toegepast op drie contactpunten:",
@@ -193,8 +194,8 @@ const copy: Record<
       "Handen en bovenlichaam (reach, drop, stuurvorm, remgreeppositie)",
     ],
     whyParagraphs: [
-      "Als een van deze contactpunten niet klopt, gaat je lichaam compenseren. Compensatie veroorzaakt veel terugkerende klachten: dove handen, kniepijn, brandende voeten, nekspanning, lage-rugvermoeidheid, onrustige afdalingen en vlak aanvoelende kracht op klimmen.",
-      "Kleine aanpassingen doen ertoe omdat het lichaam dezelfde beweging duizenden keren per uur herhaalt. Een kleine misalignering kan 20 minuten onschuldig voelen en na 2 tot 4 uur een echt probleem worden.",
+      "Als een van deze contactpunten niet klopt, gaat je lichaam compenseren. Compensatie veroorzaakt veel terugkerende klachten zoals dove handen, kniepijn, brandende voeten en rugvermoeidheid.",
+      "Kleine aanpassingen doen ertoe omdat het lichaam dezelfde beweging duizenden keren per uur herhaalt.",
     ],
     benefitsTitle: "De meest voorkomende redenen waarom rijders direct voordeel merken",
     adjustmentsTitle: "Wat er daadwerkelijk wordt aangepast in een bike fit",
@@ -212,50 +213,44 @@ const copy: Record<
       {
         title: "Minder pijn en overbelasting",
         paragraphs: [
-          'Veel rijders vertrekken vanuit een "tolerantiepositie": het werkt tot het niet meer werkt. Een fit verlaagt onnodige gewrichtsbelasting door de knie-enkel-heuplijn beter uit te lijnen en het bekken te stabiliseren.',
+          'Veel rijders vertrekken vanuit een "tolerantiepositie". Een fit verlaagt onnodige gewrichtsbelasting door de knie-enkel-heuplijn beter uit te lijnen en het bekken te stabiliseren.',
           "Typische winst:",
         ],
         bullets: [
-          "Minder belasting aan de voorkant van de knie door zadelhoogte en schoenplaatjes te corrigeren",
-          "Minder lage-rugspanning door reach, drop en bekkencontrole beter te balanceren",
-          "Minder dove handen door betere gewichtsverdeling en remgreeppositie",
+          "Minder belasting aan de voorkant van de knie",
+          "Minder lage-rugspanning door reach en drop beter te balanceren",
+          "Minder dove handen door betere gewichtsverdeling",
         ],
       },
       {
         title: "Betere krachtoverdracht zonder geforceerde houding",
         paragraphs: [
-          "Comfort en prestaties zijn geen tegenpolen. Het doel is stabiliteit zodat je vermogen kunt leveren zonder te schuiven, te wiegen of spanning in de schouders op te bouwen.",
+          "Comfort en prestaties zijn geen tegenpolen.",
           "Als het bekken stabiel is en de voeten goed ondersteund zijn, wordt de pedaalslag gelijkmatiger en efficienter.",
         ],
       },
       {
         title: "Meer controle en vertrouwen",
-        paragraphs: [
-          "Sturen voelt beter zodra het zwaartepunt evenwichtiger tussen zadel en stuur ligt. Rijders merken dat vaak als eerste op:",
-        ],
+        paragraphs: ["Sturen voelt beter zodra het zwaartepunt evenwichtiger tussen zadel en stuur ligt."],
         bullets: [
-          "Afdalingen met meer controle en minder nerveus stuurgedrag",
-          "Ruwe ondergrond met minder stuiteren en meer stabiliteit",
+          "Afdalingen met meer controle",
+          "Ruwe ondergrond met minder stuiteren",
           "Lange ritten met minder slingeren door vermoeidheid",
         ],
       },
       {
         title: "Een positie die past bij je terrein",
-        paragraphs: [
-          "Een goede fit is geen vaste setup voor alles. De positie moet veranderen met je rijstijl:",
-        ],
+        paragraphs: ["Een goede fit is geen vaste setup voor alles. De positie moet veranderen met je rijstijl:"],
         bullets: [
-          "Mountainbike of technisch terrein: meer stabiliteit, minder agressieve drop, meer bewegingsruimte",
-          "Endurance: comfort eerst, minder lumbale belasting, duurzame reach",
+          "Mountainbike of technisch terrein: meer stabiliteit en bewegingsruimte",
+          "Endurance: comfort eerst en duurzame reach",
           "Prestatie of koers: aerodynamischer terwijl de heuphoek werkbaar blijft",
-          "TT of triathlon: zeer aero, maar gevoelig voor zadelpositie, heuphoek en cockpitlengte",
+          "TT of triathlon: zeer aero, maar gevoelig voor zadelpositie en cockpitlengte",
         ],
       },
       {
         title: "Duidelijkheid door herhaalbare getallen",
-        paragraphs: [
-          "Veel rijders gokken hun setup. Een goede fit levert exacte waarden in millimeters en graden op zodat je:",
-        ],
+        paragraphs: ["Een goede fit levert exacte waarden in millimeters en graden op zodat je:"],
         bullets: [
           "Je positie opnieuw kunt opbouwen na onderhoud of reizen",
           "Die op een nieuw frame kunt reproduceren",
@@ -271,13 +266,13 @@ const copy: Record<
       "Stuurdrop (mm)",
       "Advies voor stuurpenlengte",
       "Advies voor cranklengte waar relevant",
-      "Schoenplaatjespositie (voor-achter, hoek, stance width)",
+      "Schoenplaatjespositie",
       "Framemaatbereik op basis van stack en reach",
     ],
     fitMethodItems: [
-      "LeMond als startpunt voor zadelhoogte op basis van binnenbeenlengte",
+      "LeMond als startpunt voor zadelhoogte",
       "Holmes als controle op kniehoeken",
-      "KOPS als referentiepunt voor knie- en pedaallijn, niet als vaste regel",
+      "KOPS als referentiepunt, niet als vaste regel",
       "Stack en reach voor framekeuze en cockpitbalans",
     ],
     considerFitItems: [
@@ -290,9 +285,6 @@ const copy: Record<
     ],
   },
 };
-
-const framedSectionClass =
-  "rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-sm sm:p-10";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -319,147 +311,143 @@ export default async function WhyBikeFitMattersPage() {
   const quotes = HOME_QUOTES_BY_LOCALE[locale];
 
   return (
-    <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_35%,var(--background)_65%)_100%)] py-16">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <section className="rounded-[2.25rem] border border-border/70 bg-card/95 px-6 py-10 shadow-sm sm:px-10 sm:py-12">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
-            {page.hero.eyebrow}
-          </p>
-          <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">
-            {page.hero.title}
-          </h1>
-          {page.hero.paragraphs.map((paragraph) => (
-            <p key={paragraph} className="mt-5 text-lg leading-relaxed text-muted-foreground">
-              {paragraph}
-            </p>
-          ))}
-        </section>
+    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_35%,var(--background)_65%)_100%)]">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <PublicHero
+          eyebrow={page.hero.eyebrow}
+          title={page.hero.title}
+          description={page.hero.paragraphs.join(" ")}
+          chips={
+            locale === "nl"
+              ? ["Comfort en controle", "Meetbare aanpassingen", "NL en EN beschikbaar"]
+              : ["Comfort and control", "Measurable adjustments", "Available in Dutch and English"]
+          }
+        />
 
-        <section className="mt-14">
-          <div className={framedSectionClass}>
-            <h2 className="text-3xl font-semibold text-foreground">{page.quotesTitle}</h2>
-            <p className="mt-4 text-muted-foreground">{page.quotesIntro}</p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {quotes.map((quote) => (
-                <article
-                  key={quote}
-                  className="rounded-xl border border-border bg-card p-5 shadow-sm"
-                >
-                  <blockquote className="text-base font-bold italic leading-relaxed text-primary">
-                    &ldquo;{quote}&rdquo;
-                  </blockquote>
-                </article>
-              ))}
-            </div>
-            <p className="mt-6 text-muted-foreground">{page.quotesOutro}</p>
-          </div>
-        </section>
-
-        <section className="mt-14">
-          <div className={framedSectionClass}>
-            <h2 className="text-3xl font-semibold text-foreground">{page.whyTitle}</h2>
-            <p className="mt-4 text-muted-foreground">{page.whyIntro}</p>
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
-              {page.contactPoints.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            {page.whyParagraphs.map((paragraph) => (
-              <p key={paragraph} className="mt-4 text-muted-foreground">
-                {paragraph}
-              </p>
+        <PublicSection
+          className="mt-10"
+          header={{ title: page.quotesTitle, description: page.quotesIntro }}
+        >
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {quotes.map((quote) => (
+              <PublicSurfaceCard key={quote}>
+                <blockquote className="text-base font-bold italic leading-relaxed text-primary">
+                  &ldquo;{quote}&rdquo;
+                </blockquote>
+              </PublicSurfaceCard>
             ))}
           </div>
-        </section>
+          <p className="mt-6 text-muted-foreground">{page.quotesOutro}</p>
+        </PublicSection>
 
-        <section className="mt-14">
-          <div className={framedSectionClass}>
-            <h2 className="text-3xl font-semibold text-foreground">{page.benefitsTitle}</h2>
-            <div className="mt-6 space-y-8">
-              {page.benefits.map((block, index) => (
-                <article key={block.title} className="rounded-[1.75rem] border border-border/70 bg-muted/35 p-6 shadow-sm">
-                  <h3 className="text-xl font-semibold text-foreground">
-                    {index + 1}) {block.title}
-                  </h3>
-                  {block.paragraphs.map((paragraph) => (
-                    <p key={paragraph} className="mt-3 text-muted-foreground">
-                      {paragraph}
-                    </p>
-                  ))}
-                  {block.bullets ? (
-                    <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
-                      {block.bullets.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </article>
+        <PublicSection
+          className="mt-10"
+          header={{ title: page.whyTitle, description: page.whyIntro }}
+        >
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+            <PublicSurfaceCard>
+              <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
+                {page.contactPoints.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </PublicSurfaceCard>
+            <PublicSurfaceCard>
+              {page.whyParagraphs.map((paragraph) => (
+                <p key={paragraph} className="text-sm leading-7 text-muted-foreground">
+                  {paragraph}
+                </p>
               ))}
-            </div>
+            </PublicSurfaceCard>
           </div>
-        </section>
+        </PublicSection>
 
-        <section className="mt-14">
-          <div className={framedSectionClass}>
-            <h2 className="text-3xl font-semibold text-foreground">{page.adjustmentsTitle}</h2>
-            <p className="mt-4 text-muted-foreground">{page.adjustmentsIntro}</p>
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
-              {page.fitAdjustmentItems.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            <p className="mt-6 text-muted-foreground">{page.methodsIntro}</p>
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
-              {page.fitMethodItems.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+        <PublicSection className="mt-10" header={{ title: page.benefitsTitle }}>
+          <div className="space-y-6">
+            {page.benefits.map((block) => (
+              <PublicSurfaceCard key={block.title} title={block.title}>
+                {block.paragraphs.map((paragraph) => (
+                  <p key={paragraph} className="text-sm leading-7 text-muted-foreground">
+                    {paragraph}
+                  </p>
+                ))}
+                {block.bullets ? (
+                  <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
+                    {block.bullets.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                ) : null}
+              </PublicSurfaceCard>
+            ))}
           </div>
-        </section>
+        </PublicSection>
 
-        <section className="mt-14">
-          <div className={framedSectionClass}>
-            <h2 className="text-3xl font-semibold text-foreground">{page.considerTitle}</h2>
-            <p className="mt-4 text-muted-foreground">{page.considerIntro}</p>
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
-              {page.considerFitItems.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+        <PublicSection
+          className="mt-10"
+          header={{ title: page.adjustmentsTitle, description: page.adjustmentsIntro }}
+        >
+          <div className="grid gap-6 lg:grid-cols-2">
+            <PublicSurfaceCard
+              title={locale === "nl" ? "Wat er wordt aangepast" : "What gets adjusted"}
+            >
+              <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
+                {page.fitAdjustmentItems.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </PublicSurfaceCard>
+            <PublicSurfaceCard
+              title={locale === "nl" ? "Veelgebruikte principes" : "Common principles"}
+              description={page.methodsIntro}
+            >
+              <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
+                {page.fitMethodItems.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </PublicSurfaceCard>
           </div>
-        </section>
-      </div>
+        </PublicSection>
 
-      <section className="mt-16 py-16">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <div className="rounded-[2rem] bg-primary px-6 py-12 shadow-lg sm:px-10">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary-foreground/70">
-              {page.ctaEyebrow}
-            </p>
-            <h2 className="mt-3 text-3xl font-bold text-primary-foreground">
-              {page.ctaTitle}
-            </h2>
-            <p className="mt-4 text-lg text-primary-foreground/80">{page.ctaBody}</p>
-            <div className="mt-8">
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/login", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="why_bikefit_matters_final_cta"
-                    ctaLabel={page.ctaLabel}
-                  />
-                }
-                size="lg"
-                className="bg-background text-primary hover:bg-muted"
+        <PublicSection
+          className="mt-10"
+          header={{ title: page.considerTitle, description: page.considerIntro }}
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
+            {page.considerFitItems.map((item) => (
+              <div
+                key={item}
+                className="rounded-2xl border border-border/70 bg-card px-4 py-3 text-foreground shadow-sm"
               >
-                {page.ctaLabel}
-              </Button>
-            </div>
+                {item}
+              </div>
+            ))}
           </div>
-        </div>
-      </section>
-    </div>
+        </PublicSection>
+
+        <PublicCtaBand
+          className="mt-12"
+          eyebrow={page.ctaEyebrow}
+          title={page.ctaTitle}
+          description={page.ctaBody}
+          actions={
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/login", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="why_bikefit_matters_final_cta"
+                  ctaLabel={page.ctaLabel}
+                />
+              }
+            >
+              {page.ctaLabel}
+            </Button>
+          }
+        />
+      </div>
+    </PublicPageShell>
   );
 }

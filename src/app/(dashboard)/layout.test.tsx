@@ -33,6 +33,10 @@ vi.mock("@/components/layout/DashboardSidebar", () => ({
   DashboardSidebar: () => <aside data-testid="sidebar" />,
 }));
 
+vi.mock("@/components/branding", () => ({
+  BrandLogo: () => <div data-testid="brand-logo" />,
+}));
+
 vi.mock("@/components/layout/LanguageSwitch", () => ({
   LanguageSwitch: () => <div data-testid="language-switch" />,
 }));

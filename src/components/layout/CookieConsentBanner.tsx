@@ -2,11 +2,9 @@
 
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
-import { useToast } from "@/components/ui";
-import { getDashboardMessages } from "@/i18n/dashboardMessages";
 import {
   type CookieConsentChoice,
   readCookieConsent,
@@ -47,8 +45,6 @@ const copyByLocale: Record<
 export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
   const [isDismissed, setIsDismissed] = useState(false);
   const copy = copyByLocale[locale];
-  const dashboardMessages = getDashboardMessages(locale);
-  const toast = useToast();
 
   const showBanner = useSyncExternalStore(
     subscribeToCookieConsent,
@@ -60,12 +56,6 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
   const handleConsent = (choice: CookieConsentChoice) => {
     writeCookieConsent(choice);
     setIsDismissed(true);
-    toast.success({
-      description:
-        choice === "accepted"
-          ? dashboardMessages.common.toasts.cookiesAccepted
-          : dashboardMessages.common.toasts.cookiesEssentialOnly,
-    });
   };
 
   if (!isVisible) {
@@ -74,7 +64,7 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[95] p-4">
-      <div className="panel-surface-base panel-theme-context pointer-events-auto mx-auto max-w-5xl rounded-2xl border p-4 shadow-xl sm:p-5">
+      <div className="panel-surface-base panel-theme-context pointer-events-auto mx-auto max-w-5xl rounded-[1.75rem] border p-4 shadow-[0_22px_60px_-36px_color-mix(in_oklch,var(--foreground)_45%,transparent)] sm:p-5">
         <h2 className="text-sm font-semibold text-[color:var(--foreground)]">{copy.title}</h2>
         <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
           {copy.body}{" "}

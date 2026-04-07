@@ -21,16 +21,18 @@ type ThemeContextValue = {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-function resolveTheme(theme: ThemePreference) {
-  if (
-    theme === "dark" ||
-    (theme === "system" &&
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches)
-  ) {
-    return "dark" as const;
+function readSystemTheme() {
+  if (typeof window === "undefined") {
+    return "light" as const;
   }
-  return "light" as const;
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? ("dark" as const)
+    : ("light" as const);
+}
+
+function resolveTheme(theme: ThemePreference, systemTheme = readSystemTheme()) {
+  return theme === "system" ? systemTheme : theme;
 }
 
 function readStoredTheme(): ThemePreference {
@@ -65,23 +67,35 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const user = useQuery(api.users.queries.getCurrentUser);
   const updateProfile = useMutation(api.users.mutations.updateProfile);
   const [theme, setThemeState] = useState<ThemePreference>(readStoredTheme);
-  const resolvedTheme = useMemo(() => resolveTheme(theme), [theme]);
+  const [systemTheme, setSystemTheme] = useState<"light" | "dark">(
+    readSystemTheme
+  );
+  const resolvedTheme = useMemo(
+    () => resolveTheme(theme, systemTheme),
+    [systemTheme, theme]
+  );
+
+  useEffect(() => {
+    if (theme !== "system") {
+      return undefined;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const syncTheme = (event?: MediaQueryListEvent) => {
+      setSystemTheme(event?.matches ?? mediaQuery.matches ? "dark" : "light");
+    };
+
+    syncTheme();
+    mediaQuery.addEventListener("change", syncTheme);
+    return () => mediaQuery.removeEventListener("change", syncTheme);
+  }, [theme]);
 
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle("dark", resolvedTheme === "dark");
 
-    if (theme === "system") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      const syncTheme = () => {
-        root.classList.toggle("dark", mediaQuery.matches);
-      };
-      mediaQuery.addEventListener("change", syncTheme);
-      return () => mediaQuery.removeEventListener("change", syncTheme);
-    }
-
     return undefined;
-  }, [resolvedTheme, theme]);
+  }, [resolvedTheme]);
 
   const setTheme = (nextTheme: ThemePreference) => {
     applyThemePreference(nextTheme, setThemeState);

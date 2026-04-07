@@ -102,7 +102,8 @@ describe("recommendations.internalMutations.storeResult contract", () => {
     };
 
     const handler = (storeResult as unknown as { _handler: TestHandler })._handler;
-    const result = await handler({ db }, args);
+    const scheduler = { runAfter: vi.fn(async () => undefined) };
+    const result = await handler({ db, scheduler }, args);
 
     expect(result).toBe("rec_1");
     expect(db.insert).toHaveBeenCalledWith(
@@ -114,5 +115,6 @@ describe("recommendations.internalMutations.storeResult contract", () => {
         recommendationItems: args.recommendationItems,
       })
     );
+    expect(scheduler.runAfter).toHaveBeenCalledTimes(1);
   });
 });

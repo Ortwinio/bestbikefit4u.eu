@@ -3,10 +3,12 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/Card";
+} from "@/components/prototyper-ui/ui/card";
 import { cn } from "@/utils/cn";
+import { PublicIconBadge } from "./PublicIconBadge";
 
 type PublicSurfaceCardProps = Omit<ComponentPropsWithoutRef<typeof Card>, "title"> & {
   title?: ReactNode;
@@ -28,9 +30,9 @@ export function PublicSurfaceCard({
 }: PublicSurfaceCardProps) {
   return (
     <Card
-      variant="bordered"
+      variant="secondary"
       className={cn(
-        "h-full border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--card)_92%,var(--background)_8%)] shadow-[0_12px_30px_-24px_color-mix(in_oklch,var(--foreground)_24%,transparent)]",
+        "public-card-surface-subtle h-full gap-0 border",
         className
       )}
       {...props}
@@ -39,9 +41,9 @@ export function PublicSurfaceCard({
         <CardHeader className={cn(compact ? "px-4 py-4" : "px-5 py-5", "gap-3")}>
           <div className="flex items-start gap-3">
             {leading ? (
-              <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_80%,var(--background)_20%)] text-[color:var(--primary)]">
+              <PublicIconBadge className="mt-0.5">
                 {leading}
-              </div>
+              </PublicIconBadge>
             ) : null}
             <div className="space-y-1">
               {title ? (
@@ -62,7 +64,14 @@ export function PublicSurfaceCard({
         {children}
       </CardContent>
       {footer ? (
-        <div className={cn(compact ? "px-4 pb-4" : "px-5 pb-5 sm:px-6 sm:pb-6")}>{footer}</div>
+        <CardFooter
+          className={cn(
+            compact ? "px-4 pb-4" : "px-5 pb-5 sm:px-6 sm:pb-6",
+            "items-start"
+          )}
+        >
+          {footer}
+        </CardFooter>
       ) : null}
     </Card>
   );

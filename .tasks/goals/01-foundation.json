@@ -1,0 +1,6 @@
+{
+  "_version": 1,
+  "title": "01 Foundation: UX contract, design direction, and conversion strategy agreed before implementation starts",
+  "status": "done",
+  "description": "Define CTA hierarchy, proof modules, disclaimer rules, component reuse direction, and page-level conversion requirements. Output: ux-contract.md"
+}

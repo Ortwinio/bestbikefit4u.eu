@@ -1,0 +1,30 @@
+{
+  "_version": 1,
+  "id": 2,
+  "title": "Homepage value-first redesign: restructure hero CTA to calculator, move calculators above education content, add trust strip, rewrite EN/NL hero and section copy for conversion framing, keep returning-user sign-in tertiary",
+  "status": "done",
+  "priority": 1,
+  "assigned": "codex-b",
+  "depends_on": [
+    "UX contract and design direction"
+  ],
+  "files": [
+    "src/app/(public)/page.tsx",
+    "src/i18n/messages/en.ts",
+    "src/i18n/messages/nl.ts"
+  ],
+  "handoffs": [
+    "plans/feature-commercial-saas-ux-upgrade/handoff-homepage-structure.md",
+    "plans/feature-commercial-saas-ux-upgrade/handoff-homepage-copy.md"
+  ],
+  "acceptance": [
+    "Hero primary CTA opens /calculators/bike-fit, not /login",
+    "Calculator grid visible before education sections",
+    "Trust strip visible near hero",
+    "Tertiary sign-in link present",
+    "EN/NL copy has semantic parity and conversion framing",
+    "All TrackedCtaLink analytics props preserved",
+    "Mobile scroll path reaches a useful tool faster"
+  ],
+  "notes": "Hero CTA changed to /calculators/bike-fit, tertiary sign-in added, EN/NL copy updated, prototyper-ui migrated. Gate B in progress. Needs final acceptance review."
+}

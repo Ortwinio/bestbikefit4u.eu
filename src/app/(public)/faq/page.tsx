@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button, type ButtonProps } from "@/components/ui";
+import { Languages, ShieldCheck, Stethoscope } from "lucide-react";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import {
+  PublicCtaBand,
+  PublicFeatureCard,
+  PublicHero,
+  PublicPageShell,
+  PublicSection,
+} from "@/components/public";
 import { getCommercialFaqCopy, PRODUCT_LIVE_FLAGS } from "@/config/commercial";
 import type { Locale } from "@/i18n/config";
-import { getRequestLocale } from "@/i18n/request";
-import { withLocalePrefix } from "@/i18n/navigation";
 import { buildLocaleAlternates } from "@/i18n/metadata";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { getRequestLocale } from "@/i18n/request";
 
 type RawFAQItem = { q: string; a: string };
 type RawFAQSection = { category: string; questions: RawFAQItem[] };
@@ -23,9 +31,13 @@ type RawFAQCopy = {
   title: string;
   intro: string;
   sections: RawFAQSection[];
+  trustParagraph: string;
   guideTitle: string;
   guideBody: string;
   guideLinks: FAQLink[];
+  nextStepTitle: string;
+  nextStepPrimaryCta: string;
+  nextStepSecondaryCta: string;
   ctaTitle: string;
   ctaSubtitle: string;
   contactButton: string;
@@ -51,13 +63,6 @@ type FAQJsonLd = {
 
 const sectionShellClass =
   "rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-sm sm:p-10";
-
-function linkButtonProps(href: string): ButtonProps {
-  return {
-    render: <Link href={href} />,
-    nativeButton: false,
-  } as ButtonProps;
-}
 
 function toId(input: string): string {
   return input
@@ -107,110 +112,117 @@ function getRawContent(locale: Locale): RawFAQCopy {
 
   if (locale === "en") {
     return {
-    metadata: {
-      title: "BestBikeFit4U FAQ | Online Bike Fitting, Saddle Height, Frame Size & Pain Fixes",
-      description:
-        "Answers about BestBikeFit4U online bike fitting: measurements, saddle height, setback, reach & drop, stack & reach, MTB/gravel/TT setups, pain troubleshooting, plans, exports, and safety guardrails.",
-      keywords: [
-        "online bike fitting FAQ",
-        "saddle height",
-        "frame size",
-        "reach and drop",
-        "stack and reach",
+      metadata: {
+        title:
+          "BestBikeFit4U FAQ | Online Bike Fitting, Saddle Height, Frame Size & Pain Fixes",
+        description:
+          "Answers about BestBikeFit4U online bike fitting: measurements, saddle height, setback, reach & drop, stack & reach, MTB/gravel/TT setups, pain troubleshooting, plans, exports, and safety guardrails.",
+        keywords: [
+          "online bike fitting FAQ",
+          "saddle height",
+          "frame size",
+          "reach and drop",
+          "stack and reach",
+        ],
+      },
+      title: "Frequently Asked Questions",
+      intro: "Everything you need to know about BestBikeFit4U.",
+      sections: [
+        {
+          category: "Getting Started",
+          questions: [
+            {
+              q: "How accurate is BestBikeFit4U?",
+              a: "BestBikeFit4U uses established biomechanical formulas, including LeMond/Hamley for saddle height and KOPS-based logic for setback. For most riders, results are close to what a professional fitter would recommend. Adding optional measurements improves accuracy further.",
+            },
+            {
+              q: "What measurements do I need?",
+              a: "You need two required measurements: your height and inseam length. For improved accuracy, we also accept optional measurements including torso length, arm length, and shoulder width. See our measurement guide for detailed instructions.",
+            },
+            {
+              q: "Do I need any special equipment to measure myself?",
+              a: "You need a tape measure and a flat wall. For the inseam measurement, a hardcover book is helpful. All measurements can be taken at home.",
+            },
+          ],
+        },
+        {
+          category: "Bike Fitting",
+          questions: [
+            {
+              q: "What types of bikes does BestBikeFit4U support?",
+              a: "We support road bikes, gravel bikes, mountain bikes, time trial or triathlon bikes, city or commuter bikes, and touring bikes. Each bike type uses category-specific fitting logic.",
+            },
+            {
+              q: "Can I get a fit for multiple bikes?",
+              a: commercialFaq.multipleBikeProfiles,
+            },
+            {
+              q: "How does flexibility affect my fit?",
+              a: "Your flexibility score adjusts bar drop, saddle height, and reach. Riders with limited flexibility get a more upright position with less bar drop, while flexible riders can sustain more aggressive positions.",
+            },
+            {
+              q: "What if I have existing pain while riding?",
+              a: "During the fit questionnaire, you can report the discomfort areas that matter most to you. BestBikeFit4U uses that context to help you review fit-related setup factors first, but persistent or severe pain may still require an in-person fitter or medical assessment.",
+            },
+          ],
+        },
+        {
+          category: "Results and Reports",
+          questions: [
+            {
+              q: "What do I get in a fit report?",
+              a: "Your fit report includes saddle height, saddle setback, handlebar drop, reach, stem length and angle, crank length, handlebar width, frame size recommendation, and a prioritized adjustment guide.",
+            },
+            {
+              q: "Can I email my results?",
+              a: "Yes, you can email your fit report directly from the results page.",
+            },
+            {
+              q: "Is PDF export available?",
+              a: commercialFaq.pdfReport,
+            },
+          ],
+        },
+        {
+          category: "Account and Pricing",
+          questions: [
+            {
+              q: "Is there a money-back guarantee?",
+              a: PRODUCT_LIVE_FLAGS.moneyBackGuarantee
+                ? "Yes, an active public money-back guarantee is listed on the pricing page."
+                : "No. There is currently no public money-back guarantee claim on BestBikeFit4U.",
+            },
+            {
+              q: "Can I change my plan later?",
+              a: "Yes, you can upgrade or downgrade your plan from account settings.",
+            },
+          ],
+        },
       ],
-    },
-    title: "Frequently Asked Questions",
-    intro: "Everything you need to know about BestBikeFit4U.",
-    sections: [
-      {
-        category: "Getting Started",
-        questions: [
-          {
-            q: "How accurate is BestBikeFit4U?",
-            a: "BestBikeFit4U uses established biomechanical formulas, including LeMond/Hamley for saddle height and KOPS-based logic for setback. For most riders, results are close to what a professional fitter would recommend. Adding optional measurements (torso, arm length, shoulder width) improves accuracy further.",
-          },
-          {
-            q: "What measurements do I need?",
-            a: "You need two required measurements: your height and inseam length. For improved accuracy, we also accept optional measurements including torso length, arm length, and shoulder width. See our measurement guide for detailed instructions on how to take each measurement.",
-          },
-          {
-            q: "Do I need any special equipment to measure myself?",
-            a: "You need a tape measure and a flat wall. For the inseam measurement, a hardcover book is helpful. All measurements can be taken at home; see our measurement guide for step-by-step instructions.",
-          },
-        ],
-      },
-      {
-        category: "Bike Fitting",
-        questions: [
-          {
-            q: "What types of bikes does BestBikeFit4U support?",
-            a: "We support road bikes (endurance and race geometry), gravel bikes, mountain bikes (XC, trail, enduro), time trial/triathlon bikes, city/commuter bikes, and touring bikes. Each bike type uses category-specific multipliers and offset tables.",
-          },
-          {
-            q: "Can I get a fit for multiple bikes?",
-            a: commercialFaq.multipleBikeProfiles,
-          },
-          {
-            q: "How does flexibility affect my fit?",
-            a: "Your flexibility score adjusts bar drop, saddle height, and reach. Riders with limited flexibility get a more upright position with less bar drop, while flexible riders can sustain more aggressive positions.",
-          },
-          {
-            q: "What if I have existing pain while riding?",
-            a: "During the fit questionnaire, you can report the discomfort areas that matter most to you. BestBikeFit4U uses that context to help you review fit-related setup factors first, but persistent or severe pain may still require an in-person fitter or medical assessment.",
-          },
-        ],
-      },
-      {
-        category: "Results and Reports",
-        questions: [
-          {
-            q: "What do I get in a fit report?",
-            a: "Your fit report includes saddle height, saddle setback, handlebar drop, reach, stem length and angle, crank length, handlebar width, frame size recommendation, and a prioritized adjustment guide.",
-          },
-          {
-            q: "Can I email my results?",
-            a: "Yes, you can email your fit report directly from the results page.",
-          },
-          {
-            q: "Is PDF export available?",
-            a: commercialFaq.pdfReport,
-          },
-        ],
-      },
-      {
-        category: "Account and Pricing",
-        questions: [
-          {
-            q: "Is there a money-back guarantee?",
-            a: PRODUCT_LIVE_FLAGS.moneyBackGuarantee
-              ? "Yes, an active public money-back guarantee is listed on the pricing page."
-              : "No. There is currently no public money-back guarantee claim on BestBikeFit4U.",
-          },
-          {
-            q: "Can I change my plan later?",
-            a: "Yes, you can upgrade or downgrade your plan from account settings.",
-          },
-        ],
-      },
-    ],
-    guideTitle: "Popular next-step guides",
-    guideBody:
-      "If you came here for a specific pain point or bike type, these guides are the fastest next step.",
-    guideLinks: [
-      { href: "/guides/bike-fitting-for-knee-pain", label: "Bike Fitting for Knee Pain" },
-      { href: "/guides/gravel-bike-fit-guide", label: "Gravel Bike Fit Guide" },
-      { href: "/guides/mountain-bike-fit-guide", label: "Mountain Bike Fit Guide" },
-    ],
-    ctaTitle: "Still have questions?",
-    ctaSubtitle: "Get in touch or start your free fit session.",
-    contactButton: "Contact Us",
-    startButton: "Start Free Fit",
+      trustParagraph:
+        "BestBikeFit4U uses established bike fitting methodology to give you practical, measurable setup targets. The free calculator is a strong starting point, and Pro adds deeper analysis, multiple bikes, and downloadable reports.",
+      guideTitle: "Popular next-step guides",
+      guideBody:
+        "If you came here for a specific pain point or bike type, these guides are the fastest next step.",
+      guideLinks: [
+        { href: "/guides/bike-fitting-for-knee-pain", label: "Bike Fitting for Knee Pain" },
+        { href: "/guides/gravel-bike-fit-guide", label: "Gravel Bike Fit Guide" },
+        { href: "/guides/mountain-bike-fit-guide", label: "Mountain Bike Fit Guide" },
+      ],
+      nextStepTitle: "Ready to get started?",
+      nextStepPrimaryCta: "Try the Free Bike Fit Calculator",
+      nextStepSecondaryCta: "Compare Free vs Pro",
+      ctaTitle: "Still have questions?",
+      ctaSubtitle: "Get in touch or start your free fit session.",
+      contactButton: "Contact Us",
+      startButton: "Start Free Fit",
     };
   }
 
   return {
     metadata: {
-      title: "BestBikeFit4U FAQ | Online bikefitting, zadelhoogte, framemaat & klachten oplossen",
+      title:
+        "BestBikeFit4U FAQ | Online bikefitting, zadelhoogte, framemaat & klachten oplossen",
       description:
         "Antwoorden over BestBikeFit4U online bikefitting: metingen, zadelhoogte, zadelterugstand, reach & drop, stack & reach, MTB/gravel/TT, klachten, abonnementen, exports en veiligheidsregels.",
       keywords: [
@@ -229,7 +241,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
         questions: [
           {
             q: "Hoe nauwkeurig is BestBikeFit4U?",
-            a: "BestBikeFit4U gebruikt bewezen biomechanische formules, waaronder de LeMond/Hamley-methode voor zadelhoogte. Voor de meeste rijders zitten de uitkomsten dicht bij een professionele fitting, zeker met extra metingen zoals torso-, arm- en schouderbreedte.",
+            a: "BestBikeFit4U gebruikt bewezen biomechanische formules, waaronder de LeMond/Hamley-methode voor zadelhoogte. Voor de meeste rijders zitten de uitkomsten dicht bij een professionele fitting, zeker met extra metingen.",
           },
           {
             q: "Welke metingen heb ik nodig?",
@@ -246,15 +258,15 @@ function getRawContent(locale: Locale): RawFAQCopy {
         questions: [
           {
             q: "Welke fietstypes ondersteunt BestBikeFit4U?",
-            a: "We ondersteunen racefietsen, gravel, mountainbike, tijdrit/triathlon, stads- en tourfietsen. Elk type gebruikt specifieke correctiefactoren.",
+            a: "We ondersteunen racefietsen, gravel, mountainbike, tijdrit of triathlon, stads- en tourfietsen. Elk type gebruikt specifieke fitlogica.",
           },
           {
             q: "Kan ik meerdere fietsen fitten?",
             a: commercialFaq.multipleBikeProfiles,
           },
           {
-            q: "Hoe beinvloedt flexibiliteit mijn fit?",
-            a: "Je flexibiliteitsscore beinvloedt onder meer stuurdrop, zadelhoogte en reach. Minder flexibiliteit leidt meestal tot een rechtere en comfortabelere positie.",
+            q: "Hoe beïnvloedt flexibiliteit mijn fit?",
+            a: "Je flexibiliteitsscore beïnvloedt onder meer stuurdrop, zadelhoogte en reach. Minder flexibiliteit leidt meestal tot een rechtere en comfortabelere positie.",
           },
           {
             q: "Wat als ik nu al pijnklachten heb?",
@@ -295,14 +307,18 @@ function getRawContent(locale: Locale): RawFAQCopy {
         ],
       },
     ],
+    trustParagraph:
+      "BestBikeFit4U gebruikt beproefde bikefitting-methodologie om je praktische, meetbare afstelwaarden te geven. De gratis calculator is een sterk startpunt, en Pro voegt diepere analyse, meerdere fietsen en downloadbare rapporten toe.",
     guideTitle: "Populaire vervolggidsen",
-    guideBody:
-      "Zoek je hulp bij een specifieke klacht of discipline? Start met een van deze gidsen.",
+    guideBody: "Zoek je hulp bij een specifieke klacht of discipline? Start met een van deze gidsen.",
     guideLinks: [
       { href: "/guides/bike-fitting-for-knee-pain", label: "Bikefitting bij kniepijn" },
       { href: "/guides/gravel-bike-fit-guide", label: "Gravel fit gids" },
       { href: "/guides/mountain-bike-fit-guide", label: "MTB fit gids" },
     ],
+    nextStepTitle: "Klaar om te beginnen?",
+    nextStepPrimaryCta: "Probeer de gratis bikefit-calculator",
+    nextStepSecondaryCta: "Vergelijk Gratis vs Pro",
     ctaTitle: "Nog vragen?",
     ctaSubtitle: "Neem contact op of start direct je gratis fit-sessie.",
     contactButton: "Neem contact op",
@@ -338,29 +354,102 @@ export default async function FAQPage() {
   const page = getContent(locale);
   const pagePath = withLocalePrefix("/faq", locale);
   const faqJsonLd = buildFaqJsonLd(page.sections);
+  const trustPoints =
+    locale === "nl"
+      ? [
+          {
+            title: "Antwoorden afgestemd op wat echt live staat",
+            description:
+              "Deze pagina verwijst naar publieke productclaims en supportroutes die aansluiten op de huidige commerciële configuratie.",
+            icon: <ShieldCheck className="h-5 w-5" />,
+          },
+          {
+            title: "Eerlijk over grenzen van online fitting",
+            description:
+              "We benoemen bewust waar online advies stopt en wanneer een fysieke fitter of medische beoordeling verstandiger is.",
+            icon: <Stethoscope className="h-5 w-5" />,
+          },
+          {
+            title: "Beschikbaar in Nederlands en Engels",
+            description:
+              "De FAQ blijft inhoudelijk bruikbaar in beide talen zodat je dezelfde kerninformatie houdt in NL en EN.",
+            icon: <Languages className="h-5 w-5" />,
+          },
+        ]
+      : [
+          {
+            title: "Answers aligned with what is actually live",
+            description:
+              "This page points to public product claims and support routes that match the current commercial configuration.",
+            icon: <ShieldCheck className="h-5 w-5" />,
+          },
+          {
+            title: "Honest about the limits of online fitting",
+            description:
+              "We deliberately state where online guidance stops and when an in-person fitter or medical review is the wiser next step.",
+            icon: <Stethoscope className="h-5 w-5" />,
+          },
+          {
+            title: "Available in Dutch and English",
+            description:
+              "The FAQ stays substantively useful in both languages so the core information remains available in NL and EN.",
+            icon: <Languages className="h-5 w-5" />,
+          },
+        ];
 
   return (
-    <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_40%,var(--background)_60%)_100%)] py-16">
+    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_40%,var(--background)_60%)_100%)]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <section className="rounded-[2.25rem] border border-border/70 bg-card/95 px-6 py-10 shadow-sm sm:px-10 sm:py-12">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
-            {locale === "nl" ? "Snel antwoord" : "Quick answers"}
-          </p>
-          <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">{page.title}</h1>
-          <p className="mt-4 text-xl text-muted-foreground">{page.intro}</p>
-        </section>
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <PublicHero
+          eyebrow={locale === "nl" ? "Snel antwoord" : "Quick answers"}
+          title={page.title}
+          description={page.intro}
+          chips={
+            locale === "nl"
+              ? ["NL en EN beschikbaar", "Product en support", "Publieke claims"]
+              : ["Available in Dutch and English", "Product and support", "Public claims"]
+          }
+        />
+
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow:
+              locale === "nl" ? "Waarom deze FAQ betrouwbaar is" : "Why this FAQ is trustworthy",
+            title:
+              locale === "nl"
+                ? "Duidelijke antwoorden zonder marketingruis"
+                : "Clear answers without marketing noise",
+            description:
+              locale === "nl"
+                ? "De inhoud is bedoeld om twijfel weg te nemen, niet om meer zekerheid te claimen dan online fitting kan bieden."
+                : "The content is designed to remove uncertainty, not to claim more certainty than online fitting can reasonably offer.",
+          }}
+        >
+          <div className="grid gap-4 md:grid-cols-3">
+            {trustPoints.map((point) => (
+              <PublicFeatureCard
+                key={point.title}
+                icon={point.icon}
+                title={point.title}
+                description={point.description}
+              />
+            ))}
+          </div>
+        </PublicSection>
 
         <div className="mt-12 space-y-12">
           {page.sections.map((section) => (
-            <section key={section.id} aria-labelledby={`${section.id}-title`} className={sectionShellClass}>
-              <h2
-                id={`${section.id}-title`}
-                className="text-2xl font-semibold text-foreground"
-              >
+            <section
+              key={section.id}
+              aria-labelledby={`${section.id}-title`}
+              className={sectionShellClass}
+            >
+              <h2 id={`${section.id}-title`} className="text-2xl font-semibold text-foreground">
                 {section.title}
               </h2>
               <div className="mt-6 space-y-4">
@@ -380,6 +469,10 @@ export default async function FAQPage() {
           ))}
         </div>
 
+        <section className={`mt-14 ${sectionShellClass}`}>
+          <p className="leading-relaxed text-muted-foreground">{page.trustParagraph}</p>
+        </section>
+
         <section className="mt-14 rounded-[2rem] border border-border/70 bg-muted/70 p-8 shadow-sm sm:p-10">
           <h2 className="text-2xl font-semibold text-foreground">{page.guideTitle}</h2>
           <p className="mt-2 text-muted-foreground">{page.guideBody}</p>
@@ -396,35 +489,71 @@ export default async function FAQPage() {
           </div>
         </section>
 
-        <div className="mt-16 rounded-[2rem] bg-primary px-6 py-12 text-center shadow-lg sm:px-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary-foreground/70">
-            {locale === "nl" ? "Nog niet gevonden?" : "Still deciding?"}
-          </p>
-          <h2 className="mt-3 text-2xl font-semibold text-primary-foreground">{page.ctaTitle}</h2>
-          <p className="mt-2 text-primary-foreground/80">{page.ctaSubtitle}</p>
+        <section className={`mt-14 ${sectionShellClass} text-center`}>
+          <h2 className="text-2xl font-semibold text-foreground">{page.nextStepTitle}</h2>
           <div className="mt-6 flex flex-col justify-center gap-4 sm:flex-row">
-            <Button
-              variant="secondary"
-              {...linkButtonProps(withLocalePrefix("/contact", locale))}
-            >
-              {page.contactButton}
-            </Button>
             <Button
               render={
                 <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
+                  href={withLocalePrefix("/calculators/bike-fit", locale)}
                   locale={locale}
                   pagePath={pagePath}
-                  section="faq_final_cta"
-                  ctaLabel={page.startButton}
+                  section="faq_bottom_primary"
+                  ctaLabel={page.nextStepPrimaryCta}
                 />
               }
             >
-              {page.startButton}
+              {page.nextStepPrimaryCta}
+            </Button>
+            <Button
+              variant="secondary"
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/pricing", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="faq_bottom_secondary"
+                  ctaLabel={page.nextStepSecondaryCta}
+                />
+              }
+            >
+              {page.nextStepSecondaryCta}
             </Button>
           </div>
-        </div>
+        </section>
+
+        <PublicCtaBand
+          className="mt-16"
+          eyebrow={locale === "nl" ? "Nog niet gevonden?" : "Still deciding?"}
+          title={page.ctaTitle}
+          description={page.ctaSubtitle}
+          actions={
+            <>
+              <Button variant="outline" render={<Link href={withLocalePrefix("/contact", locale)} />}>
+                {page.contactButton}
+              </Button>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/login", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="faq_final_cta"
+                    ctaLabel={page.startButton}
+                  />
+                }
+              >
+                {page.startButton}
+              </Button>
+            </>
+          }
+          aside={
+            locale === "nl"
+              ? "Contact, support en FAQ blijven beschikbaar in zowel Nederlands als Engels."
+              : "Contact, support, and FAQ remain available in both Dutch and English."
+          }
+        />
       </div>
-    </div>
+    </PublicPageShell>
   );
 }

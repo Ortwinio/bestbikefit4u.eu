@@ -1,5 +1,5 @@
 import { AlertTriangle, Gauge } from "lucide-react";
-import { Card, CardContent, InfoBox, MeasurementTile, SectionHeader } from "@/components/ui";
+import { PublicInfoPanel, PublicSurfaceCard } from "@/components/public";
 import type { PressureOutput } from "@/lib/pressure-engine";
 import type { PressureResultLabels } from "./shared";
 
@@ -8,50 +8,50 @@ interface PressureResultCardProps {
   labels: PressureResultLabels;
 }
 
-export function PressureResultCard({
-  result,
-  labels,
-}: PressureResultCardProps) {
+export function PressureResultCard({ result, labels }: PressureResultCardProps) {
   const allWarnings =
     result.warnings.length > 0
       ? [labels.disclaimer, ...result.warnings.map((warning) => labels.warningMessages[warning])]
       : [labels.disclaimer];
 
   return (
-    <Card variant="bordered" className="overflow-hidden">
-      <SectionHeader
-        icon={<Gauge className="h-4 w-4 text-[color:var(--primary)]" />}
-        title={labels.explanation}
-      />
-      <CardContent className="space-y-5 p-6">
+    <PublicSurfaceCard
+      title={labels.explanation}
+      leading={<Gauge className="h-5 w-5" />}
+      className="rounded-[1.75rem]"
+    >
+      <div className="space-y-5">
         <div className="grid grid-cols-2 gap-4">
-          <MeasurementTile
-            label={labels.front}
-            value={`${result.frontBar} ${labels.bar}`}
-          />
-          <MeasurementTile
-            label={labels.rear}
-            value={`${result.rearBar} ${labels.bar}`}
-          />
+          <div className="rounded-2xl border border-primary/20 bg-primary-soft p-4">
+            <p className="text-sm text-muted-foreground">{labels.front}</p>
+            <p className="mt-1 text-2xl font-semibold text-foreground">
+              {result.frontBar} {labels.bar}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-primary/20 bg-primary-soft p-4">
+            <p className="text-sm text-muted-foreground">{labels.rear}</p>
+            <p className="mt-1 text-2xl font-semibold text-foreground">
+              {result.rearBar} {labels.bar}
+            </p>
+          </div>
         </div>
 
         <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
           {result.explanation}
         </p>
 
-        <InfoBox
-          variant="warning"
-          icon={<AlertTriangle className="h-4 w-4 text-[color:var(--warning)]" />}
+        <PublicInfoPanel
+          tone="warning"
+          title={labels.warningsTitle}
+          icon={<AlertTriangle />}
+          role="note"
         >
-          <p className="font-semibold text-[color:var(--warning-foreground)]">
-            {labels.warningsTitle}
-          </p>
-          <ul className="mt-2 space-y-2">
+          <ul className="space-y-2">
             {allWarnings.map((warning, index) => (
-              <li key={`${warning}-${index}`} className="text-[color:var(--warning-foreground)]">{warning}</li>
+              <li key={`${warning}-${index}`}>{warning}</li>
             ))}
           </ul>
-        </InfoBox>
+        </PublicInfoPanel>
 
         {(result.comfortScore !== undefined ||
           result.gripScore !== undefined ||
@@ -64,7 +64,7 @@ export function PressureResultCard({
             ].map(([label, score]) => (
               <div
                 key={label}
-                className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-3"
+                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-3"
               >
                 <p className="text-sm text-[color:var(--muted-foreground)]">{label}</p>
                 <p className="mt-1 text-xl font-semibold text-[color:var(--foreground)]">
@@ -74,7 +74,7 @@ export function PressureResultCard({
             ))}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </PublicSurfaceCard>
   );
 }

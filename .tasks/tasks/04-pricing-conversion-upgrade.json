@@ -1,0 +1,30 @@
+{
+  "_version": 1,
+  "id": 4,
+  "title": "Pricing conversion upgrade: reframe Free vs Pro by rider outcome, add proof module and confidence mechanism, improve CTA labels, update EN/NL plan descriptions and page copy \u2014 no billing logic changes",
+  "status": "done",
+  "priority": 2,
+  "assigned": "codex-c",
+  "depends_on": [
+    "UX contract and design direction"
+  ],
+  "files": [
+    "src/app/(public)/pricing/page.tsx",
+    "src/config/commercial.ts"
+  ],
+  "handoffs": [
+    "plans/feature-commercial-saas-ux-upgrade/handoff-pricing-upgrade.md"
+  ],
+  "acceptance": [
+    "Free vs Pro described in rider outcome terms",
+    "Proof module visible near plan cards",
+    "Confidence mechanism grounded in real product (no contract, cancel anytime)",
+    "CTA labels explicit about next step",
+    "Footer CTA points to calculator (value-first)",
+    "No unsupported claims introduced",
+    "PRODUCT_LIVE_FLAGS respected",
+    "CTA tracking intact",
+    "EN/NL semantic parity"
+  ],
+  "notes": "Proof module added (3 items), confidence line, plan descriptions rewritten with outcome framing, CTA labels updated, EN/NL parity. commercial.ts updated. Needs final acceptance review."
+}

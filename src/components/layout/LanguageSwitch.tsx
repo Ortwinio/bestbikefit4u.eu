@@ -33,12 +33,12 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
   });
 
   const sharedClasses =
-    "rounded-md px-2.5 py-1.5 text-xs font-semibold transition-colors";
+    "rounded-lg px-3 py-1.5 text-xs font-semibold transition-[background-color,color,box-shadow] duration-150";
 
   return (
     <nav
       aria-label={labels.language}
-      className="flex items-center rounded-lg border border-[color:var(--border)] bg-[color:var(--card)] p-1 shadow-sm"
+      className="flex items-center rounded-xl border border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)] p-1 shadow-[0_10px_24px_-20px_color-mix(in_oklch,var(--foreground)_30%,transparent)]"
     >
       <a
         href={enHref}
@@ -48,7 +48,7 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
           sharedClasses,
           activeLocale === "en"
             ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] shadow-sm"
-            : "text-[color:var(--foreground)]/80 hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+            : "text-[color:var(--foreground)]/80 hover:bg-[color:var(--accent)]/70 hover:text-[color:var(--foreground)]"
         )}
       >
         EN
@@ -61,7 +61,7 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
           sharedClasses,
           activeLocale === "nl"
             ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] shadow-sm"
-            : "text-[color:var(--foreground)]/80 hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+            : "text-[color:var(--foreground)]/80 hover:bg-[color:var(--accent)]/70 hover:text-[color:var(--foreground)]"
         )}
       >
         NL

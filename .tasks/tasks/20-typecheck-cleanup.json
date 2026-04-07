@@ -1,0 +1,21 @@
+{
+  "_version": 1,
+  "id": 20,
+  "title": "Typecheck cleanup: clear remaining repo-wide TypeScript blockers after functional regressions are resolved",
+  "status": "todo",
+  "priority": 4,
+  "assigned": "repo-health-owner",
+  "depends_on": ["PDF route regression", "Session/profile completeness regression", "Recommendation contract recovery", "Questionnaire contract refresh", "Dashboard/provider harness fixes", "Isolated contract cleanup"],
+  "files": [
+    ".next/types",
+    "convex/authLocalDev.test.ts",
+    "src/lib/rateLimiter.test.ts",
+    "src/lib/reports/pdfLayoutTemplate.test.ts"
+  ],
+  "acceptance": [
+    "Stale generated type references are cleared or excluded appropriately",
+    "Tests stop mutating read-only process.env.NODE_ENV",
+    "npm run typecheck passes"
+  ],
+  "notes": "Do this after the functional clusters so the remaining TypeScript issues are easier to isolate and verify."
+}

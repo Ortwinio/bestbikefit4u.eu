@@ -57,9 +57,9 @@ const nl = {
       title: "Online bikefitting",
       titleAccent: "voor comfort en prestaties.",
       description:
-        "Start je gratis bikefitting en bekijk afstelbegeleiding passend bij jouw lichaam en rijstijl, met een duidelijkere volgende stap voor comfort, positie en vertrouwen.",
-      primaryCta: "Start gratis fit",
-      secondaryCta: "Bekijk prijzen",
+        "Probeer eerst de gratis bike fit calculator en beslis daarna pas of je diepere afstelbegeleiding wilt voor jouw lichaam, rijstijl en volgende fietskeuze.",
+      primaryCta: "Probeer de gratis bike fit calculator",
+      secondaryCta: "Vergelijk Free vs Pro",
     },
     howItWorks: {
       title: "Hoe het werkt",
@@ -286,10 +286,10 @@ const nl = {
       },
     },
     cta: {
-      title: "Start vandaag met je gratis bikefitting",
+      title: "Start vandaag met de gratis bike fit calculator",
       description:
-        "Geen giswerk en geen algemene tips, maar afstelwaarden die passen bij jouw lichaam en doelen.",
-      button: "Start gratis fit",
+        "Gebruik eerst de gratis calculator en upgrade alleen als je een dieper rapport en scherpere vervolgstappen wilt.",
+      button: "Open de gratis bike fit calculator",
     },
   },
   auth: {
@@ -388,11 +388,11 @@ const nl = {
       efficiencyScore: "Efficiëntie",
     },
     cta: {
-      heading: "Wil je dit opslaan voor je fiets?",
+      heading: "Hoe verder?",
       body:
-        "Maak gratis een account aan en bewaar je ideale bandenspanning per fiets, wielset en ondergrond.",
-      primaryButton: "Gratis account maken",
-      secondaryButton: "Meer informatie",
+        "Maak een gratis account aan om deze resultaten op te slaan, je setup met meer detail te verfijnen en veranderingen bij te houden.",
+      primaryButton: "Maak account aan of log in",
+      secondaryButton: "Vergelijk Free vs Pro",
       loginPrompt: "Heb je al een account?",
       loginLink: "Log in",
     },

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PublicPageShell } from "@/components/public";
 import { PressureCalculatorCta } from "@/components/features/pressure/PressureCalculatorCta";
 import { PressureCalculatorFaq } from "@/components/features/pressure/PressureCalculatorFaq";
 import { PressureCalculatorForm } from "@/components/features/pressure/PressureCalculatorForm";
@@ -32,7 +33,7 @@ export default async function BandenspanningMtbPage() {
   const pagePath = withLocalePrefix("/bandenspanning/mtb", locale);
 
   return (
-    <div>
+    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_26%,var(--background)_74%)_100%)]">
       <PressureCalculatorHero
         locale={locale}
         title={dictionary.pressure.mtbPage.h1}
@@ -40,6 +41,7 @@ export default async function BandenspanningMtbPage() {
         chips={dictionary.pressure.publicPage.chips}
       />
       <PressureCalculatorForm
+        locale={locale}
         defaultDiscipline="mtb"
         labels={dictionary.pressure.form}
         resultLabels={dictionary.pressure.result}
@@ -50,6 +52,6 @@ export default async function BandenspanningMtbPage() {
         pagePath={pagePath}
         labels={dictionary.pressure.cta}
       />
-    </div>
+    </PublicPageShell>
   );
 }

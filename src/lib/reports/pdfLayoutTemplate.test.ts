@@ -167,7 +167,7 @@ describe("pdf layout template", () => {
     const footer = renderPdfFooterTemplate();
 
     expect(header).toContain("Rapportdatum");
-    expect(header).toContain("Engine-gestuurd fitrapport");
+    expect(header).toContain(dutchCopy.introTitle);
     expect(header).toContain("data:image/svg+xml");
     expect(footer).toContain("Copyrights BestBikefit4U.eu");
     expect(footer).toContain("pageNumber");
@@ -191,6 +191,7 @@ describe("pdf layout template", () => {
           flexibilityLabel: null,
           coreStabilityScore: null,
           comfortScore: null,
+          imageUrl: null,
         },
       },
       copy,

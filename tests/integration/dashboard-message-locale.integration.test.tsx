@@ -53,6 +53,10 @@ vi.mock("@/components/layout/DashboardSidebar", () => ({
   DashboardSidebar: () => <aside data-testid="sidebar" />,
 }));
 
+vi.mock("@/components/branding", () => ({
+  BrandLogo: () => <div data-testid="brand-logo" />,
+}));
+
 vi.mock("@/components/layout/LanguageSwitch", () => ({
   LanguageSwitch: () => <div data-testid="language-switch" />,
 }));
@@ -111,6 +115,10 @@ describe("dashboard message locale integration", () => {
   it("renders a locale-targeted dashboard banner in the shell", () => {
     usePathnameMock.mockReturnValue("/nl/dashboard");
     useQueryMock.mockImplementation((_fn: unknown, args?: unknown) => {
+      if (args === undefined) {
+        return { _id: "user_1", adminRole: null };
+      }
+
       expect(args).toEqual({ locale: "nl" });
       return [
         {

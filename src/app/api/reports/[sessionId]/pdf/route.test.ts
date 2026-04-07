@@ -173,6 +173,15 @@ describe("pdf report route", () => {
     vi.restoreAllMocks();
   });
 
+  function mockCurrentUser(overrides?: Partial<{ tier: string }>) {
+    mocks.query.mockResolvedValueOnce({
+      _id: "user_1",
+      email: "rider@example.com",
+      tier: "pro",
+      ...overrides,
+    });
+  }
+
   it("returns 401 when user is not authenticated", async () => {
     mocks.token.mockResolvedValue(undefined);
 
@@ -187,6 +196,7 @@ describe("pdf report route", () => {
 
   it("returns 429 when the report rate limit is exceeded", async () => {
     mocks.token.mockResolvedValue("token-rl");
+    mockCurrentUser();
     mocks.mutation.mockResolvedValue(false);
 
     const response = await GET(new Request("http://localhost"), {
@@ -195,11 +205,12 @@ describe("pdf report route", () => {
 
     expect(response.status).toBe(429);
     expect(response.headers.get("Retry-After")).toBe("30");
-    expect(mocks.query).not.toHaveBeenCalled();
+    expect(mocks.query).toHaveBeenCalledTimes(1);
   });
 
   it("returns 404 when the session is missing or not owned", async () => {
     mocks.token.mockResolvedValue("token-123");
+    mockCurrentUser();
     mocks.query.mockResolvedValueOnce(null);
 
     const response = await GET(new Request("http://localhost"), {
@@ -213,6 +224,7 @@ describe("pdf report route", () => {
 
   it("returns 200 with rich renderer output for authorized users", async () => {
     mocks.token.mockResolvedValue("token-abc");
+    mockCurrentUser();
     mocks.query.mockResolvedValueOnce(reportSourceFixture);
 
     const response = await GET(new Request("http://localhost?locale=nl"), {
@@ -255,6 +267,7 @@ describe("pdf report route", () => {
 
   it("returns inline disposition when explicitly requested for the viewer", async () => {
     mocks.token.mockResolvedValue("token-inline");
+    mockCurrentUser();
     mocks.query.mockResolvedValueOnce(reportSourceFixture);
 
     const response = await GET(
@@ -272,6 +285,7 @@ describe("pdf report route", () => {
 
   it("falls back to simple renderer when rich renderer fails", async () => {
     mocks.token.mockResolvedValue("token-fallback");
+    mockCurrentUser();
     mocks.query.mockResolvedValueOnce(reportSourceFixture);
     mocks.renderPdfFromHtml.mockRejectedValueOnce(new Error("no chromium"));
 
@@ -308,6 +322,7 @@ describe("pdf report route", () => {
   it("uses simple renderer directly when rich rendering is disabled by env", async () => {
     process.env.PDF_RICH_RENDER_ENABLED = "false";
     mocks.token.mockResolvedValue("token-env-flag");
+    mockCurrentUser();
     mocks.query.mockResolvedValueOnce(reportSourceFixture);
 
     const response = await GET(new Request("http://localhost"), {
@@ -338,6 +353,7 @@ describe("pdf report route", () => {
 
   it("resolves the locale from the referrer path when the query parameter is missing", async () => {
     mocks.token.mockResolvedValue("token-referrer");
+    mockCurrentUser();
     mocks.query.mockResolvedValueOnce(reportSourceFixture);
 
     const response = await GET(
@@ -359,6 +375,7 @@ describe("pdf report route", () => {
 
   it("returns 500 on generation failures", async () => {
     mocks.token.mockResolvedValue("token-xyz");
+    mockCurrentUser();
     mocks.query.mockRejectedValue(new Error("boom"));
 
     const response = await GET(new Request("http://localhost"), {
@@ -373,6 +390,7 @@ describe("pdf report route", () => {
 
   it("returns 409 when recommendation is missing", async () => {
     mocks.token.mockResolvedValue("token-wait");
+    mockCurrentUser();
     mocks.query.mockResolvedValueOnce({
       session: sessionFixture,
       recommendation: null,

@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
-import { Card, CardContent } from "@/components/ui/Card";
+import { Card, CardContent } from "@/components/prototyper-ui/ui/card";
 import { cn } from "@/utils/cn";
 
 type PublicSectionHeaderProps = {
@@ -91,8 +91,8 @@ export function PublicSection<T extends ElementType = "section">({
   return (
     <Component className={className} {...props}>
       <Card
-        variant="bordered"
-        className="overflow-hidden border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--card)_90%,var(--background)_10%)] shadow-[0_16px_40px_-28px_color-mix(in_oklch,var(--foreground)_28%,transparent)]"
+        variant="secondary"
+        className="overflow-hidden gap-0 border border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--card)_90%,var(--background)_10%)] shadow-[0_16px_40px_-28px_color-mix(in_oklch,var(--foreground)_28%,transparent)]"
       >
         <div className="h-1 w-full bg-[linear-gradient(90deg,color-mix(in_oklch,var(--primary)_72%,transparent)_0%,color-mix(in_oklch,var(--secondary)_82%,var(--background)_18%)_100%)]" />
         {header ? <PublicSectionHeader {...header} /> : null}

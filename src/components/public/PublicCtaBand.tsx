@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Card, CardContent } from "@/components/ui/Card";
+import { Card, CardContent } from "@/components/prototyper-ui/ui/card";
 import { cn } from "@/utils/cn";
 
 type PublicCtaBandProps = {
@@ -21,9 +21,9 @@ export function PublicCtaBand({
 }: PublicCtaBandProps) {
   return (
     <Card
-      variant="bordered"
+      variant="secondary"
       className={cn(
-        "overflow-hidden border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] bg-[linear-gradient(135deg,color-mix(in_oklch,var(--primary)_10%,var(--card)_90%)_0%,color-mix(in_oklch,var(--secondary)_76%,var(--background)_24%)_100%)] shadow-[0_18px_40px_-28px_color-mix(in_oklch,var(--foreground)_28%,transparent)]",
+        "public-cta-surface overflow-hidden gap-0 border",
         className
       )}
     >

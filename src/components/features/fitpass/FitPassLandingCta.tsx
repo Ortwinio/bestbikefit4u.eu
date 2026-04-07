@@ -4,8 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { Button } from "@/components/ui";
-import { withLocalePrefix } from "@/i18n/navigation";
+import { Button } from "@/components/prototyper-ui/ui/button";
 
 interface FitPassLandingCtaProps {
   locale: string;
@@ -80,7 +79,7 @@ export function FitPassLandingCta({
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <Button onClick={handleCheckout} isLoading={isLoading} className="min-w-[200px]">
+      <Button onClick={handleCheckout} isPending={isLoading} className="min-w-[200px]">
         {label}
       </Button>
       {error && (

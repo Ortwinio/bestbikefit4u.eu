@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Check } from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { Button } from "@/components/ui";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { Button } from "@/components/prototyper-ui/ui/button";
+import { Card, CardContent } from "@/components/prototyper-ui/ui/card";
+import { PublicSection } from "@/components/public/PublicSection";
+import { PublicSurfaceCard } from "@/components/public/PublicSurfaceCard";
 import {
   COMMERCIAL_FEATURE_COPY,
   formatEuroPriceFromCents,
@@ -38,6 +41,11 @@ const copy: Record<
     faqTitle: string;
     ctaTitle: string;
     ctaBody: string;
+    proofTitle: string;
+    proofItems: Array<{ title: string; body: string }>;
+    confidenceLine: string;
+    featureCompareTitle: string;
+    featureLabel: string;
   }
 > = {
   en: {
@@ -49,13 +57,31 @@ const copy: Record<
     },
     title: "Clear pricing for real riders",
     subtitle:
-      "Start free, then upgrade to Pro when you need unlimited sessions, multiple bikes, and PDF reports.",
+      "Start with a free fit check, then move to Pro when you want to track multiple bikes, repeat fit sessions, and keep downloadable reports.",
     eyebrow: "Public plans",
     monthlySuffix: "/ month",
     faqTitle: "Pricing FAQ",
-    ctaTitle: "Start free. Upgrade when you need more.",
+    ctaTitle: "Start with a free bike fit check",
     ctaBody:
-      "The public pricing page only shows live plans and live features. No unsupported categories, no placeholder claims.",
+      "No account needed for the calculator. See what your fit report includes before you decide whether Pro is worth it for your riding.",
+    proofTitle: "Why riders trust this as a first step",
+    proofItems: [
+      {
+        title: "Method-backed calculations",
+        body: "Recommendations are based on established bike fitting formulas plus rider-specific corrections for your body and riding style.",
+      },
+      {
+        title: "Concrete fit outputs",
+        body: "Saddle height, reach, drop, crank length, and handlebar position in millimeters, plus a prioritized adjustment order.",
+      },
+      {
+        title: "Honest about limits",
+        body: "Online fitting gives you a strong starting point. For complex pain or injury, an in-person fitter is the better next step.",
+      },
+    ],
+    confidenceLine: "No contract. Start free and upgrade or cancel at any time.",
+    featureCompareTitle: "Compare live features",
+    featureLabel: "Feature",
   },
   nl: {
     metadata: {
@@ -66,13 +92,32 @@ const copy: Record<
     },
     title: "Heldere prijzen voor echte rijders",
     subtitle:
-      "Start gratis en upgrade naar Pro wanneer je onbeperkte sessies, meerdere fietsen en PDF-rapporten nodig hebt.",
+      "Begin met een gratis fit check en kies Pro wanneer je meerdere fietsen wilt volgen, vaker wilt herhalen en downloadbare rapporten nodig hebt.",
     eyebrow: "Publieke plannen",
     monthlySuffix: "/ maand",
     faqTitle: "Prijs-FAQ",
-    ctaTitle: "Start gratis. Upgrade wanneer je meer nodig hebt.",
+    ctaTitle: "Begin met een gratis bike fit check",
     ctaBody:
-      "Deze publieke prijzenpagina toont alleen live plannen en live functies. Geen unsupported categorieën en geen placeholder-claims.",
+      "Voor de calculator heb je geen account nodig. Bekijk eerst wat je fitrapport bevat voordat je beslist of Pro past bij jouw gebruik.",
+    proofTitle: "Waarom rijders dit vertrouwen als eerste stap",
+    proofItems: [
+      {
+        title: "Onderbouwde methode",
+        body: "Aanbevelingen zijn gebaseerd op beproefde bikefitting-formules plus correcties voor jouw lichaam en rijstijl.",
+      },
+      {
+        title: "Concrete output",
+        body: "Zadelhoogte, reach, drop, cranklengte en stuurpositie in millimeters, inclusief een prioriteitsvolgorde voor aanpassingen.",
+      },
+      {
+        title: "Eerlijk over grenzen",
+        body: "Online fitting geeft een sterke basis. Bij complexe klachten of blessures is een persoonlijke fitter de betere volgende stap.",
+      },
+    ],
+    confidenceLine:
+      "Geen contract. Start gratis en upgrade of annuleer op elk moment.",
+    featureCompareTitle: "Vergelijk live functies",
+    featureLabel: "Functie",
   },
 };
 
@@ -126,21 +171,21 @@ export default async function PricingPage() {
         section="pricing"
       />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <section className="rounded-[2.25rem] border border-border/70 bg-card/95 px-6 py-10 text-center shadow-sm sm:px-10 sm:py-12">
+        <Card className="gap-0 rounded-[2.25rem] border border-border/70 bg-card/95 px-6 py-10 text-center shadow-sm sm:px-10 sm:py-12">
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
             {page.eyebrow}
           </p>
           <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">{page.title}</h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">{page.subtitle}</p>
-        </section>
+        </Card>
 
         <div className={`mt-14 grid gap-8 ${plans.length > 1 ? "md:grid-cols-2" : "md:grid-cols-1 md:max-w-xl"} mx-auto`}>
           {plans.map((plan) => {
             const localized = plan.copy[locale];
             return (
-              <article
+              <Card
                 key={plan.id}
-                className={`rounded-[2rem] border p-8 shadow-sm transition ${plan.highlighted ? "border-primary bg-primary text-primary-foreground shadow-lg" : "border-border/70 bg-card/95"}`}
+                className={`gap-0 rounded-[2rem] border p-8 shadow-sm transition ${plan.highlighted ? "border-primary bg-primary text-primary-foreground shadow-lg" : "border-border/70 bg-card/95"}`}
               >
                 {localized.badge ? (
                   <p className="mb-4 text-sm font-semibold uppercase tracking-[0.22em] text-current/80">
@@ -180,79 +225,105 @@ export default async function PricingPage() {
                       section={`pricing_${plan.id}_cta`}
                       ctaLabel={localized.cta}
                       conversionKey="pricing_signup"
-                      className="block"
                     />
                   }
-                  className={`mt-8 w-full ${plan.highlighted ? "bg-background text-primary hover:bg-muted" : ""}`}
-                  variant={plan.highlighted ? "secondary" : "primary"}
+                  className={`mt-8 w-full ${plan.highlighted ? "border-background/50 bg-background text-primary after:bg-background hover-only:after:bg-muted" : ""}`}
+                  variant={plan.highlighted ? "outline" : "default"}
                 >
                   {localized.cta}
                 </Button>
-              </article>
+              </Card>
             );
           })}
         </div>
 
-        <section className="mt-16 rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-sm sm:p-10">
-          <h2 className="text-2xl font-semibold text-foreground">
-            {locale === "nl" ? "Vergelijk live functies" : "Compare live features"}
-          </h2>
-          <div className="mt-6 overflow-x-auto rounded-[1.5rem] border border-border/70 bg-background/90">
-            <table className="w-full">
-              <thead className="bg-muted/40">
-                <tr className="border-b border-border">
-                  <th className="px-4 py-4 text-left font-semibold text-foreground">
-                    {locale === "nl" ? "Functie" : "Feature"}
-                  </th>
-                  {plans.map((plan) => (
-                    <th key={plan.id} className="px-4 py-4 text-center font-semibold text-foreground">
-                      {plan.copy[locale].name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {comparisonKeys.map((key) => (
-                  <tr key={key}>
-                    <td className="px-4 py-4 text-sm text-foreground">
-                      {COMMERCIAL_FEATURE_COPY[key][locale].title}
-                    </td>
-                    <td className="px-4 py-4 text-center text-sm text-muted-foreground">
-                      {COMMERCIAL_FEATURE_COPY[key][locale].valueFree}
-                    </td>
-                    <td className="px-4 py-4 text-center text-sm font-medium text-primary">
-                      {COMMERCIAL_FEATURE_COPY[key][locale].valuePro}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {!PRODUCT_LIVE_FLAGS.moneyBackGuarantee ? (
-            <p className="mt-4 text-sm text-muted-foreground">
-              {locale === "nl"
-                ? "Er wordt op dit moment geen publieke geld-terug-garantie geclaimd."
-                : "No public money-back guarantee is claimed at this time."}
-            </p>
-          ) : null}
-        </section>
+        <div className="mt-14">
+          <PublicSection
+            header={{
+              title: page.proofTitle,
+              align: "start",
+            }}
+            contentClassName="pt-6"
+          >
+            <div className="grid gap-6 md:grid-cols-3">
+            {page.proofItems.map((item) => (
+              <PublicSurfaceCard
+                key={item.title}
+                title={item.title}
+                description={item.body}
+              >
+                <div />
+              </PublicSurfaceCard>
+            ))}
+            </div>
+          </PublicSection>
+        </div>
+
+        <p className="mt-6 text-center text-sm text-muted-foreground">{page.confidenceLine}</p>
+
+        <div className="mt-16">
+          <PublicSection
+            header={{
+              title: page.featureCompareTitle,
+            }}
+            contentClassName="pt-6"
+          >
+            <Card className="gap-0 overflow-hidden rounded-[1.5rem] border border-border/70 bg-background/90 shadow-none">
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-muted/40">
+                      <tr className="border-b border-border">
+                        <th className="px-4 py-4 text-left font-semibold text-foreground">{page.featureLabel}</th>
+                        {plans.map((plan) => (
+                          <th key={plan.id} className="px-4 py-4 text-center font-semibold text-foreground">
+                            {plan.copy[locale].name}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {comparisonKeys.map((key) => (
+                        <tr key={key}>
+                          <td className="px-4 py-4 text-sm text-foreground">
+                            {COMMERCIAL_FEATURE_COPY[key][locale].title}
+                          </td>
+                          <td className="px-4 py-4 text-center text-sm text-muted-foreground">
+                            {COMMERCIAL_FEATURE_COPY[key][locale].valueFree}
+                          </td>
+                          <td className="px-4 py-4 text-center text-sm font-medium text-primary">
+                            {COMMERCIAL_FEATURE_COPY[key][locale].valuePro}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+            {!PRODUCT_LIVE_FLAGS.moneyBackGuarantee ? (
+              <p className="mt-4 text-sm text-muted-foreground">
+                {locale === "nl"
+                  ? "Er wordt op dit moment geen publieke geld-terug-garantie geclaimd."
+                  : "No public money-back guarantee is claimed at this time."}
+              </p>
+            ) : null}
+          </PublicSection>
+        </div>
 
         <section className="mt-16 grid gap-6 md:grid-cols-3">
-          <div className="rounded-[1.75rem] border border-border/70 bg-card/95 p-6 shadow-sm">
-            <h3 className="font-semibold text-foreground">{pricingFaqs[0].q}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{commercialFaq.multipleBikeProfiles}</p>
-          </div>
-          <div className="rounded-[1.75rem] border border-border/70 bg-card/95 p-6 shadow-sm">
-            <h3 className="font-semibold text-foreground">{pricingFaqs[1].q}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{commercialFaq.pdfReport}</p>
-          </div>
-          <div className="rounded-[1.75rem] border border-border/70 bg-card/95 p-6 shadow-sm">
-            <h3 className="font-semibold text-foreground">{pricingFaqs[2].q}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{commercialFaq.pricing}</p>
-          </div>
+          <PublicSurfaceCard title={pricingFaqs[0].q} description={commercialFaq.multipleBikeProfiles}>
+            <div />
+          </PublicSurfaceCard>
+          <PublicSurfaceCard title={pricingFaqs[1].q} description={commercialFaq.pdfReport}>
+            <div />
+          </PublicSurfaceCard>
+          <PublicSurfaceCard title={pricingFaqs[2].q} description={commercialFaq.pricing}>
+            <div />
+          </PublicSurfaceCard>
         </section>
 
-        <section className="mt-16 rounded-[2rem] bg-primary px-6 py-12 text-center shadow-lg sm:px-10">
+        <Card className="mt-16 gap-0 rounded-[2rem] bg-primary px-6 py-12 text-center text-primary-foreground shadow-lg sm:px-10">
           <h2 className="text-2xl font-semibold text-primary-foreground">{page.ctaTitle}</h2>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-primary-foreground/82">
             {page.ctaBody}
@@ -261,16 +332,16 @@ export default async function PricingPage() {
             <Button
               render={
                 <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
+                  href={withLocalePrefix("/calculators/bike-fit", locale)}
                   locale={locale}
                   pagePath={pagePath}
-                  section="pricing_footer_cta"
+                  section="pricing_footer_cta_primary"
                   ctaLabel={locale === "nl" ? "Start gratis fit" : "Start free fit"}
-                  conversionKey="pricing_signup"
                 />
               }
               size="lg"
-              className="bg-background text-primary hover:bg-muted"
+              variant="outline"
+              className="border-background/50 bg-background text-primary after:bg-background hover-only:after:bg-muted"
             >
               {locale === "nl" ? "Start gratis fit" : "Start free fit"}
             </Button>
@@ -286,12 +357,12 @@ export default async function PricingPage() {
               }
               size="lg"
               variant="outline"
-              className="border-primary-foreground/50 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
+              className="border-primary-foreground/50 bg-transparent text-primary-foreground after:bg-transparent hover-only:after:bg-primary-foreground/10"
             >
               {locale === "nl" ? "Bekijk rider cases" : "Browse rider cases"}
             </Button>
           </div>
-        </section>
+        </Card>
       </div>
     </div>
   );

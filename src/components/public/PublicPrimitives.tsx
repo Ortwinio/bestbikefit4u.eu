@@ -1,7 +1,14 @@
 import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, InfoBox } from "@/components/ui";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/prototyper-ui/ui/card";
 import { cn } from "@/utils/cn";
+import { PublicIconBadge } from "./PublicIconBadge";
 
 type PublicPageShellProps = {
   children: ReactNode;
@@ -41,15 +48,6 @@ type PublicIllustrationPanelProps = {
   className?: string;
 };
 
-type PublicCtaBandProps = {
-  eyebrow?: string;
-  title: string;
-  description: string;
-  action: ReactNode;
-  aside?: ReactNode;
-  className?: string;
-};
-
 export function PublicPageShell({ children, className }: PublicPageShellProps) {
   return (
     <div className={cn("py-16 md:py-20", className)}>
@@ -69,9 +67,8 @@ export function PublicHero({
 }: PublicHeroProps) {
   return (
     <Card
-      variant="bordered"
       className={cn(
-        "relative overflow-hidden border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--primary)_12%)]",
+        "public-hero-surface relative overflow-hidden gap-0 border",
         className
       )}
     >
@@ -151,17 +148,16 @@ export function PublicFeatureCard({
 }: PublicFeatureCardProps) {
   return (
     <Card
-      variant="bordered"
       className={cn(
-        "h-full border-[color:var(--border)] bg-[color:var(--card)] shadow-sm",
+        "public-card-surface h-full gap-0 border",
         className
       )}
     >
       <CardHeader className="space-y-4">
         {icon ? (
-          <div className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-lg)] bg-[color:var(--primary-soft)] text-[color:var(--primary)]">
+          <PublicIconBadge>
             {icon}
-          </div>
+          </PublicIconBadge>
         ) : null}
         <div>
           <CardTitle className="text-lg">{title}</CardTitle>
@@ -183,17 +179,19 @@ export function PublicIllustrationPanel({
 }: PublicIllustrationPanelProps) {
   return (
     <Card
-      variant="bordered"
       className={cn(
-        "overflow-hidden border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_78%,var(--card)_22%)]",
+        "overflow-hidden gap-0 border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_78%,var(--card)_22%)]",
         className
       )}
     >
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[var(--radius-xl)] bg-[color:var(--card)] text-[color:var(--primary)] shadow-sm">
+          <PublicIconBadge
+            size="lg"
+            className="border-[color:var(--border)]/70 bg-[color:var(--card)]"
+          >
             {icon ?? <ArrowRight className="h-6 w-6" />}
-          </div>
+          </PublicIconBadge>
           <div>
             <h3 className="text-lg font-semibold text-[color:var(--foreground)]">{title}</h3>
             <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
@@ -214,47 +212,4 @@ export function PublicIllustrationPanel({
       </CardContent>
     </Card>
   );
-}
-
-export function PublicCtaBand({
-  eyebrow,
-  title,
-  description,
-  action,
-  aside,
-  className,
-}: PublicCtaBandProps) {
-  return (
-    <Card
-      className={cn(
-        "mt-16 overflow-hidden border-[color:color-mix(in_oklch,var(--primary)_20%,var(--border))] bg-[linear-gradient(135deg,color-mix(in_oklch,var(--primary)_12%,var(--card)_88%),color-mix(in_oklch,var(--secondary)_68%,var(--card)_32%))]",
-        className
-      )}
-      variant="bordered"
-    >
-      <CardContent className="grid gap-6 px-6 py-8 md:grid-cols-[minmax(0,1fr)_auto] md:px-8 md:py-10">
-        <div>
-          {eyebrow ? (
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--primary)]">
-              {eyebrow}
-            </p>
-          ) : null}
-          <h2 className="mt-2 text-2xl font-bold text-[color:var(--foreground)] md:text-3xl">
-            {title}
-          </h2>
-          <p className="mt-3 max-w-3xl text-base leading-7 text-[color:var(--muted-foreground)]">
-            {description}
-          </p>
-        </div>
-        <div className="flex flex-col items-start justify-center gap-3 md:items-end">
-          {action}
-          {aside ? <div className="text-sm text-[color:var(--muted-foreground)]">{aside}</div> : null}
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-export function PublicInfoPanel(props: React.ComponentProps<typeof InfoBox>) {
-  return <InfoBox variant="secondary" {...props} />;
 }

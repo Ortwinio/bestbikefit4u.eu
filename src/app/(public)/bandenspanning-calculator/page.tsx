@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PublicPageShell } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { PressureCalculatorCta } from "@/components/features/pressure/PressureCalculatorCta";
@@ -38,7 +39,7 @@ export default async function BandenspanningCalculatorPage() {
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
 
   return (
-    <div>
+    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_26%,var(--background)_74%)_100%)]">
       <JsonLd
         schema={buildWebApplicationSchema({
           name: locale === "nl" ? "Bandenspanning calculator" : "Tire Pressure Calculator",
@@ -56,11 +57,12 @@ export default async function BandenspanningCalculatorPage() {
         chips={dictionary.pressure.publicPage.chips}
       />
       <PressureCalculatorForm
+        locale={locale}
         labels={dictionary.pressure.form}
         resultLabels={dictionary.pressure.result}
       />
       <PressureCalculatorFaq locale={locale} />
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto mt-10 max-w-4xl px-4 sm:px-6 lg:px-8">
         <RelatedLinksSection
           title={locale === "nl" ? "Gerelateerde tools en gidsen" : "Related tools and guides"}
           links={getRelatedLinks("tire-pressure", locale)}
@@ -72,6 +74,6 @@ export default async function BandenspanningCalculatorPage() {
         pagePath={pagePath}
         labels={dictionary.pressure.cta}
       />
-    </div>
+    </PublicPageShell>
   );
 }

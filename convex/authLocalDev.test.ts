@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   isAllowedLocalhostHost,
   isProductionEnvironment,
@@ -9,6 +9,10 @@ import {
 } from "./authLocalDev";
 
 describe("authLocalDev helpers", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("accepts localhost hostnames only", () => {
     expect(isAllowedLocalhostHost("localhost")).toBe(true);
     expect(isAllowedLocalhostHost("127.0.0.1")).toBe(true);
@@ -49,21 +53,15 @@ describe("authLocalDev helpers", () => {
   });
 
   it("detects production by env", () => {
-    const originalNodeEnv = process.env.NODE_ENV;
-    const originalVercelEnv = process.env.VERCEL_ENV;
-
-    process.env.NODE_ENV = "development";
-    process.env.VERCEL_ENV = "preview";
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("VERCEL_ENV", "preview");
     expect(isProductionEnvironment()).toBe(false);
 
-    process.env.NODE_ENV = "production";
+    vi.stubEnv("NODE_ENV", "production");
     expect(isProductionEnvironment()).toBe(true);
 
-    process.env.NODE_ENV = "development";
-    process.env.VERCEL_ENV = "production";
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("VERCEL_ENV", "production");
     expect(isProductionEnvironment()).toBe(true);
-
-    process.env.NODE_ENV = originalNodeEnv;
-    process.env.VERCEL_ENV = originalVercelEnv;
   });
 });

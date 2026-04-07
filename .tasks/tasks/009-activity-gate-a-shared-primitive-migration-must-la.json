@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "009",
+  "title": "Activity gate A: shared primitive migration must land before dependent page migrations. Validation = PublicPrimitives/PublicCtaBand/PublicSurfaceCard/PublicInfoPanel/PublicSection/BikeQuickCheckCard no longer use non-approved website UI patterns.",
+  "description": "",
+  "goal": "4",
+  "status": "done",
+  "assignee": null,
+  "priority": 2,
+  "created": "2026-04-07T20:50:15.508Z",
+  "updated": "2026-04-07T21:21:24.777Z",
+  "tags": [],
+  "proof": {
+    "notes": "Patched shared public primitives to remove old website UI usage from PublicSurfaceCard, PublicInfoPanel, PublicSection, PublicCtaBand, PublicPrimitives, and BikeQuickCheckCard. Validation: rg clean for old imports/InfoBox in touched shared files; focused tests passed with 31/31 tests green via npx vitest run src/components/public/BikeQuickCheckCard.test.tsx src/components/ui/primitives.test.tsx. Note: repo-wide tsc still fails in unrelated pre-existing tests outside this activity gate."
+  },
+  "milestone": null,
+  "specialty": null,
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

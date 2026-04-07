@@ -5,7 +5,7 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import { api } from "../../../convex/_generated/api";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getEffectiveDisplayName } from "@/lib/userIdentity";
@@ -59,23 +59,23 @@ export function UserMenu() {
       <Button
         onClick={() => setIsOpen(!isOpen)}
         variant="ghost"
-        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+        className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted"
       >
-        <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-          <User className="h-4 w-4 text-blue-600" />
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-soft">
+          <User className="h-4 w-4 text-primary" />
         </div>
-        <span className="text-sm font-medium text-gray-700 hidden sm:block">
+        <span className="hidden text-sm font-medium text-foreground sm:block">
           {displayName}
         </span>
-        <ChevronDown className="h-4 w-4 text-gray-400" />
+        <ChevronDown className="h-4 w-4 text-muted-foreground" />
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+        <div className="absolute right-0 z-50 mt-2 w-64 rounded-xl border border-border bg-card py-2 shadow-overlay">
           {/* User info */}
-          <div className="px-4 py-3 border-b border-gray-100">
-            <p className="text-sm font-medium text-gray-900">{displayName}</p>
-            <p className="text-xs text-gray-500 truncate">{email}</p>
+          <div className="border-b border-border px-4 py-3">
+            <p className="text-sm font-medium text-foreground">{displayName}</p>
+            <p className="truncate text-xs text-muted-foreground">{email}</p>
           </div>
 
           {/* Menu items */}
@@ -85,9 +85,9 @@ export function UserMenu() {
               onClick={() => {
                 navigate("/dashboard");
               }}
-              className="flex w-full items-center justify-start gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+              className="flex w-full items-center justify-start gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted"
             >
-              <LayoutDashboard className="h-4 w-4 text-gray-400" />
+              <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
               {messages.userMenu.dashboard}
             </Button>
             <Button
@@ -95,9 +95,9 @@ export function UserMenu() {
               onClick={() => {
                 navigate("/fit");
               }}
-              className="flex w-full items-center justify-start gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+              className="flex w-full items-center justify-start gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted"
             >
-              <Settings className="h-4 w-4 text-gray-400" />
+              <Settings className="h-4 w-4 text-muted-foreground" />
               {messages.userMenu.newFitSession}
             </Button>
             <Button
@@ -105,9 +105,9 @@ export function UserMenu() {
               onClick={() => {
                 navigate("/bikes");
               }}
-              className="flex w-full items-center justify-start gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+              className="flex w-full items-center justify-start gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted"
             >
-              <Bike className="h-4 w-4 text-gray-400" />
+              <Bike className="h-4 w-4 text-muted-foreground" />
               {messages.userMenu.myBikes}
             </Button>
             <Button
@@ -115,19 +115,19 @@ export function UserMenu() {
               onClick={() => {
                 navigate("/profile");
               }}
-              className="flex w-full items-center justify-start gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+              className="flex w-full items-center justify-start gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted"
             >
-              <Settings className="h-4 w-4 text-gray-400" />
+              <Settings className="h-4 w-4 text-muted-foreground" />
               {messages.userMenu.profileSettings}
             </Button>
           </div>
 
           {/* Sign out */}
-          <div className="border-t border-gray-100 pt-1">
+          <div className="border-t border-border pt-1">
             <Button
               variant="ghost"
               onClick={handleSignOut}
-              className="flex w-full items-center justify-start gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+              className="flex w-full items-center justify-start gap-3 px-4 py-2 text-sm text-destructive hover:bg-destructive-soft"
             >
               <LogOut className="h-4 w-4" />
               {messages.common.signOut}

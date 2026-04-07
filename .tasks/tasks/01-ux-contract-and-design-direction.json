@@ -1,0 +1,9 @@
+{
+  "_version": 1,
+  "id": 1,
+  "title": "UX contract and design direction: define CTA hierarchy, proof modules, disclaimer rules, component reuse boundaries, and page-level conversion requirements for all public surfaces",
+  "status": "done",
+  "priority": 1,
+  "assigned": "orchestrator",
+  "notes": "Completed. Output: plans/feature-commercial-saas-ux-upgrade/ux-contract.md. Defines primary/secondary/tertiary CTA hierarchy, required proof modules, disclaimer pairing rule, page-level requirements for homepage/auth/pricing/calculators/FAQ/contact, component reuse direction, and visual system rules."
+}

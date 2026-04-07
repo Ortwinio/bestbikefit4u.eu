@@ -56,9 +56,9 @@ const en = {
       title: "Online Bike Fitting",
       titleAccent: "for Comfort and Performance.",
       description:
-        "Start your free bike fit and review setup guidance matched to your body and riding style, with a clearer next step for comfort, position, and confidence.",
-      primaryCta: "Start Free Fit",
-      secondaryCta: "View Pricing",
+        "Try the free bike fit calculator first, then decide whether you want deeper setup guidance for your body, riding style, and next bike decision.",
+      primaryCta: "Try the Free Bike Fit Calculator",
+      secondaryCta: "Compare Free vs Pro",
     },
     howItWorks: {
       title: "How It Works",
@@ -285,10 +285,10 @@ const en = {
       },
     },
     cta: {
-      title: "Start your free bike fit today",
+      title: "Start with the free bike fit calculator today",
       description:
-        "No guesswork. No generic tips. Get fit targets matched to your body and riding goals.",
-      button: "Start Free Fit",
+        "Use the free calculator first, then upgrade only if you want a deeper report and more precise next steps.",
+      button: "Open the Free Bike Fit Calculator",
     },
   },
   auth: {
@@ -387,11 +387,11 @@ const en = {
       efficiencyScore: "Efficiency",
     },
     cta: {
-      heading: "Want to save this for your bike?",
+      heading: "What's next?",
       body:
-        "Create a free account to save your ideal tyre pressure per bike, wheelset and surface.",
-      primaryButton: "Create free account",
-      secondaryButton: "Learn more",
+        "Create a free account to save these results, refine your setup with more detail, and track changes over time.",
+      primaryButton: "Create account or sign in",
+      secondaryButton: "Compare Free vs Pro",
       loginPrompt: "Already have an account?",
       loginLink: "Log in",
     },

@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "011",
+  "title": "Activity gate D: calculators plus FAQ/contact migration and tests. Validation = calculator forms/results and FAQ/contact pages use approved Prototyper UI patterns only, no SliderQuestion remains on public calculators, tests pass.",
+  "description": "",
+  "goal": "7",
+  "status": "done",
+  "assignee": null,
+  "priority": 2,
+  "created": "2026-04-07T20:50:15.513Z",
+  "updated": "2026-04-07T22:12:49.966Z",
+  "tags": [],
+  "proof": {
+    "notes": "Public calculator/FAQ/contact migration completed. Validation: npx vitest run src/app/(public)/calculators/crank-length/page.test.tsx src/app/(public)/faq/page.test.tsx src/app/(public)/contact/page.test.tsx passed; public/auth/feedback/public-component grep for @/components/ui, InfoBox, SliderQuestion, variant=\"bordered\" is clean for website surfaces."
+  },
+  "milestone": null,
+  "specialty": null,
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

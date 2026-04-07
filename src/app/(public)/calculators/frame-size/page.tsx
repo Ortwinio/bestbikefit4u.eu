@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
+import { Compass, Ruler, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import {
+  PublicCtaBand,
+  PublicFeatureCard,
+  PublicHero,
+  PublicPageShell,
+  PublicSection,
+} from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
-import { Button } from "@/components/ui";
 import { BRAND } from "@/config/brand";
+import { buildLocaleAlternates } from "@/i18n/metadata";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { getRequestLocale } from "@/i18n/request";
 import { buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
-import { buildLocaleAlternates } from "@/i18n/metadata";
-import { getRequestLocale } from "@/i18n/request";
-import { withLocalePrefix } from "@/i18n/navigation";
 import { FrameSizeCalculatorForm } from "./FrameSizeCalculatorForm";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -62,9 +70,50 @@ export default async function FrameSizeCalculatorPage() {
           a: "It strongly affects saddle height and overall proportions, which influence which size ranges are realistic.",
         },
       ];
+  const trustPoints = isNl
+    ? [
+        {
+          title: "Slimmer shortlistten",
+          description:
+            "Deze tool helpt je eerst onlogische maten te schrappen voordat je tijd steekt in detailvergelijkingen.",
+          icon: <Compass className="h-5 w-5" />,
+        },
+        {
+          title: "Gebaseerd op echte proporties",
+          description:
+            "Lengte alleen is te grof. Binnenbeenlengte maakt de inschatting bruikbaarder en geloofwaardiger.",
+          icon: <Ruler className="h-5 w-5" />,
+        },
+        {
+          title: "Geen vervanging voor geometrievergelijking",
+          description:
+            "Een framemaatlabel is nooit het hele verhaal. Daarom blijft stack, reach en cockpitcontrole de volgende stap.",
+          icon: <ShieldCheck className="h-5 w-5" />,
+        },
+      ]
+    : [
+        {
+          title: "Shortlist smarter",
+          description:
+            "This tool helps you remove implausible sizes before you spend time on detailed comparisons.",
+          icon: <Compass className="h-5 w-5" />,
+        },
+        {
+          title: "Based on real proportions",
+          description:
+            "Height alone is too rough. Inseam makes the estimate more usable and more credible.",
+          icon: <Ruler className="h-5 w-5" />,
+        },
+        {
+          title: "Not a replacement for geometry comparison",
+          description:
+            "A frame-size label is never the whole story. That is why stack, reach, and cockpit checks still come next.",
+          icon: <ShieldCheck className="h-5 w-5" />,
+        },
+      ];
 
   return (
-    <div className="py-16 text-foreground">
+    <PublicPageShell className="text-foreground">
       <JsonLd
         schema={[
           buildWebApplicationSchema({
@@ -76,35 +125,86 @@ export default async function FrameSizeCalculatorPage() {
           }),
         ]}
       />
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <section className="rounded-[28px] border border-border bg-[color:color-mix(in_oklch,var(--card)_88%,var(--primary)_12%)] p-8 shadow-sm sm:p-10">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
-              BestBikeFit4U calculator
-            </p>
-            <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">
-              {isNl ? "Framemaat calculator" : "Frame Size Calculator"}
-            </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-              {isNl
-                ? "Maak eerst een realistische shortlist van framematen voordat je fietsen, onderdelen of afstellingen vergelijkt."
-                : "Shortlist realistic frame sizes before you compare bikes, parts, and setup changes."}
-            </p>
-          </div>
-        </section>
 
-        <FrameSizeCalculatorForm isNl={isNl} />
+      <PublicHero
+        eyebrow="BestBikeFit4U calculator"
+        title={isNl ? "Framemaat calculator" : "Frame Size Calculator"}
+        description={
+          isNl
+            ? "Maak eerst een realistische shortlist van framematen voordat je fietsen, onderdelen of afstellingen vergelijkt."
+            : "Shortlist realistic frame sizes before you compare bikes, parts, and setup changes."
+        }
+        chips={
+          isNl
+            ? ["NL en EN beschikbaar", "Snelle shortlist", "Bruikbaar thuis"]
+            : ["Available in Dutch and English", "Fast shortlist", "Useful from home"]
+        }
+      />
 
-        <section className="mt-10 rounded-3xl border border-border bg-[color:color-mix(in_oklch,var(--card)_88%,var(--secondary)_12%)] p-6 shadow-sm sm:p-8">
-          <h2 className="text-2xl font-semibold text-foreground">
-            {isNl ? "Volgende stap" : "Next step"}
-          </h2>
-          <p className="mt-3 max-w-2xl text-muted-foreground">
-            {isNl
-              ? "Als je de waarschijnlijke maatrange kent, vergelijk je reach, stack en het totale fit-doel zodat de fiets in de praktijk werkt."
-              : "Once you know the likely size range, compare reach, stack, and overall fit targets so the bike works in practice, not just on paper."}
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
+      <PublicSection
+        className="mt-10"
+        header={{
+          eyebrow: isNl ? "Wat deze tool betrouwbaar maakt" : "What makes this tool trustworthy",
+          title: isNl
+            ? "Goed om opties te filteren, eerlijk over wat nog ontbreekt"
+            : "Good at filtering options, honest about what is still missing",
+          description: isNl
+            ? "De waarde zit in het sneller uitsluiten van verkeerde maten, niet in het oversimplificeren van de volledige fit."
+            : "The value is in ruling out wrong sizes faster, not in oversimplifying the full fit problem.",
+        }}
+      >
+        <div className="grid gap-4 md:grid-cols-3">
+          {trustPoints.map((point) => (
+            <PublicFeatureCard
+              key={point.title}
+              icon={point.icon}
+              title={point.title}
+              description={point.description}
+            />
+          ))}
+        </div>
+      </PublicSection>
+
+      <FrameSizeCalculatorForm isNl={isNl} />
+
+      <PublicCtaBand
+        className="mt-10"
+        eyebrow={isNl ? "Hoe verder?" : "What's next?"}
+        title={isNl ? "Verfijn de uitkomst in je account" : "Refine the result in your account"}
+        description={
+          isNl
+            ? "Maak een gratis account aan om deze resultaten op te slaan, je setup met meer detail te verfijnen en veranderingen bij te houden."
+            : "Create a free account to save these results, refine your setup with more detail, and track changes over time."
+        }
+        actions={
+          <>
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/login", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="frame_size_result"
+                  ctaLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
+                />
+              }
+            >
+              {isNl ? "Maak account aan of log in" : "Create account or sign in"}
+            </Button>
+            <Button
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/pricing", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="frame_size_pricing_cta"
+                  ctaLabel={isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
+                />
+              }
+              variant="outline"
+            >
+              {isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
+            </Button>
             <Button
               render={
                 <TrackedCtaLink
@@ -115,46 +215,46 @@ export default async function FrameSizeCalculatorPage() {
                   ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
                 />
               }
+              variant="outline"
             >
               {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
             </Button>
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="frame_size_dashboard_cta"
-                  ctaLabel={isNl ? "Ga verder in dashboard" : "Continue in dashboard"}
-                />
-              }
-              variant="outline"
+          </>
+        }
+        aside={
+          isNl
+            ? "De calculator geeft een praktisch startpunt. Een persoonlijke fitter kan toegevoegde waarde bieden bij complexe biomechanische kwesties."
+            : "The calculator gives a practical starting point. An in-person fitter can add value for complex biomechanical issues."
+        }
+      />
+
+      <PublicSection
+        className="mt-10"
+        header={{
+          title: isNl ? "Veelgestelde vragen" : "FAQ",
+          description: isNl ? "Korte antwoorden over framemaat en wat deze tool wel en niet doet." : "Short answers about frame size and what this tool does and does not do.",
+        }}
+      >
+        <div className="space-y-4">
+          {faqs.map((faq) => (
+            <div
+              key={faq.q}
+              className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
             >
-              {isNl ? "Ga verder in dashboard" : "Continue in dashboard"}
-            </Button>
-          </div>
-        </section>
+              <h3 className="font-semibold text-foreground">{faq.q}</h3>
+              <p className="mt-2 text-muted-foreground">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      </PublicSection>
 
-        <section className="mt-10 rounded-2xl border border-border bg-card p-6">
-          <h2 className="text-2xl font-semibold text-foreground">
-            {isNl ? "Veelgestelde vragen" : "FAQ"}
-          </h2>
-          <div className="mt-4 space-y-4">
-            {faqs.map((faq) => (
-              <div key={faq.q}>
-                <h3 className="font-semibold text-foreground">{faq.q}</h3>
-                <p className="mt-1 text-muted-foreground">{faq.a}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
+      <section className="mt-10">
         <RelatedLinksSection
           title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}
           links={getRelatedLinks("frame-size", locale)}
           locale={locale}
         />
-      </div>
-    </div>
+      </section>
+    </PublicPageShell>
   );
 }

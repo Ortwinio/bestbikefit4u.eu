@@ -1,0 +1,19 @@
+{
+  "_version": 1,
+  "id": 17,
+  "title": "Questionnaire contract refresh: update stale mocks and expectations to match current profile-table access",
+  "status": "todo",
+  "priority": 2,
+  "assigned": "questionnaire-owner",
+  "depends_on": ["Session/profile completeness regression"],
+  "files": [
+    "convex/questionnaire/__tests__/completeQuestionnaire.contract.test.ts",
+    "convex/questionnaire/mutations.ts"
+  ],
+  "acceptance": [
+    "Questionnaire contract tests pass",
+    "Mocked table/query expectations match current implementation",
+    "Required-question behavior remains covered"
+  ],
+  "notes": "Validation output suggests test mocks are stale relative to current profile access patterns rather than a confirmed product regression."
+}

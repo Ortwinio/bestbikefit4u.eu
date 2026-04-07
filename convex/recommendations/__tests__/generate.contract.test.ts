@@ -48,6 +48,7 @@ function makeCtx(params: {
     _id: string;
     userId: string;
     profileId: string;
+    status: "questionnaire_complete" | "processing" | "completed";
     bikeType?: string;
     bikeId?: string;
     ridingStyle: string;
@@ -68,6 +69,7 @@ function makeCtx(params: {
 }) {
   const { session, profile, bike, existingRecommendation = null } = params;
   const sessionId = session._id;
+  const schedulerRunAfter = vi.fn(async () => undefined);
 
   const db = {
     get: vi.fn(async (id: string) => {
@@ -92,7 +94,12 @@ function makeCtx(params: {
     patch: vi.fn(async () => undefined),
   };
 
-  return { db, sessionId } as const;
+  return {
+    db,
+    sessionId,
+    scheduler: { runAfter: schedulerRunAfter },
+    schedulerRunAfter,
+  } as const;
 }
 
 describe("recommendations.generate contract", () => {
@@ -108,6 +115,7 @@ describe("recommendations.generate contract", () => {
         _id: "session_1",
         userId: "user_1",
         profileId: "profile_1",
+        status: "questionnaire_complete",
         bikeType: "mountain",
         bikeId: "bike_1",
         ridingStyle: "commuting",
@@ -131,10 +139,11 @@ describe("recommendations.generate contract", () => {
     const handler = (generate as unknown as { _handler: TestHandler })._handler;
     const recId = await handler(ctx, { sessionId: ctx.sessionId });
 
-    expect(recId).toBe("rec_1");
-    expect(calculateBikeFitMock).toHaveBeenCalledTimes(1);
-    expect(calculateBikeFitMock.mock.calls[0]?.[0]).toEqual(
-      expect.objectContaining({ category: "mtb" })
+    expect(recId).toBeUndefined();
+    expect(ctx.db.patch).toHaveBeenCalledWith("session_1", { status: "processing" });
+    expect(ctx.schedulerRunAfter).toHaveBeenCalledTimes(1);
+    expect(ctx.schedulerRunAfter.mock.calls[0]?.[2]).toEqual(
+      expect.objectContaining({ bikeCategory: "mtb" })
     );
     expect(ctx.db.get).not.toHaveBeenCalledWith("bike_1");
   });
@@ -145,6 +154,7 @@ describe("recommendations.generate contract", () => {
         _id: "session_1",
         userId: "user_1",
         profileId: "profile_1",
+        status: "questionnaire_complete",
         bikeId: "bike_1",
         ridingStyle: "fitness",
         primaryGoal: "comfort",
@@ -167,8 +177,9 @@ describe("recommendations.generate contract", () => {
     const handler = (generate as unknown as { _handler: TestHandler })._handler;
     await handler(ctx, { sessionId: ctx.sessionId });
 
-    expect(calculateBikeFitMock.mock.calls[0]?.[0]).toEqual(
-      expect.objectContaining({ category: "gravel" })
+    expect(ctx.schedulerRunAfter).toHaveBeenCalledTimes(1);
+    expect(ctx.schedulerRunAfter.mock.calls[0]?.[2]).toEqual(
+      expect.objectContaining({ bikeCategory: "gravel" })
     );
     expect(ctx.db.get).toHaveBeenCalledWith("bike_1");
   });
@@ -179,6 +190,7 @@ describe("recommendations.generate contract", () => {
         _id: "session_1",
         userId: "user_1",
         profileId: "profile_1",
+        status: "completed",
         bikeType: "road",
         ridingStyle: "racing",
         primaryGoal: "performance",
@@ -197,8 +209,8 @@ describe("recommendations.generate contract", () => {
     const handler = (generate as unknown as { _handler: TestHandler })._handler;
     const recId = await handler(ctx, { sessionId: ctx.sessionId });
 
-    expect(recId).toBe("rec_existing");
-    expect(calculateBikeFitMock).not.toHaveBeenCalled();
+    expect(recId).toBeUndefined();
+    expect(ctx.schedulerRunAfter).not.toHaveBeenCalled();
     expect(ctx.db.insert).not.toHaveBeenCalled();
     expect(ctx.db.patch).not.toHaveBeenCalled();
   });

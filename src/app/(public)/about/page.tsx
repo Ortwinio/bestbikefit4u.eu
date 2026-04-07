@@ -1,7 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { CheckCircle2, Gauge, Ruler, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import {
+  PublicCtaBand,
+  PublicFeatureCard,
+  PublicHero,
+  PublicPageShell,
+  PublicSection,
+  PublicSurfaceCard,
+} from "@/components/public";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -45,13 +54,6 @@ type AboutCopy = {
   ctaBody: string;
   ctaButton: string;
 };
-
-const framedSectionClass =
-  "rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-sm sm:p-10";
-const mutedPanelClass =
-  "rounded-[1.75rem] border border-border/70 p-6 shadow-sm sm:p-8";
-const bulletPanelClass =
-  "rounded-2xl border border-border/70 bg-background/90 px-4 py-3 text-sm text-foreground shadow-sm";
 
 const content: Record<Locale, AboutCopy> = {
   en: {
@@ -268,125 +270,189 @@ export default async function AboutPage() {
   const locale = await getRequestLocale();
   const page = content[locale];
   const pagePath = withLocalePrefix("/about", locale);
+  const trustPoints =
+    locale === "nl"
+      ? [
+          {
+            title: "Bewezen biomechanische uitgangspunten",
+            description:
+              "We vertrekken vanuit bekende fitmethodes en vertalen die naar praktische beslissingen in plaats van losse theorie.",
+            icon: <ShieldCheck className="h-5 w-5" />,
+          },
+          {
+            title: "Meetbaar en herhaalbaar",
+            description:
+              "De uitkomst is bedoeld om setups vergelijkbaar en opnieuw opbouwbaar te maken in millimeters en graden.",
+            icon: <Ruler className="h-5 w-5" />,
+          },
+          {
+            title: "Gebouwd voor echte ritten",
+            description:
+              "Doelen, terrein, flexibiliteit en comfort blijven onderdeel van de interpretatie, niet alleen de formule.",
+            icon: <Gauge className="h-5 w-5" />,
+          },
+        ]
+      : [
+          {
+            title: "Built on proven biomechanics",
+            description:
+              "We start from established fit methods and translate them into practical decisions instead of abstract theory.",
+            icon: <ShieldCheck className="h-5 w-5" />,
+          },
+          {
+            title: "Measurable and repeatable",
+            description:
+              "The output is designed to make setups comparable and rebuildable in millimeters and degrees.",
+            icon: <Ruler className="h-5 w-5" />,
+          },
+          {
+            title: "Built for real rides",
+            description:
+              "Goals, terrain, flexibility, and comfort remain part of the interpretation, not just the formula.",
+            icon: <Gauge className="h-5 w-5" />,
+          },
+        ];
 
   return (
-    <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_35%,var(--background)_65%)_100%)] py-16">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <section className="rounded-[2.25rem] border border-border/70 bg-card/95 px-6 py-10 shadow-sm sm:px-10 sm:py-12">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
-            {locale === "nl" ? "Methodiek" : "Methodology"}
-          </p>
-          <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">{page.title}</h1>
-          <p className="mt-4 max-w-3xl text-xl text-muted-foreground">{page.subtitle}</p>
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-border/70 bg-muted/40 p-4 text-sm text-muted-foreground">
-              {locale === "nl" ? "Bewezen biomechanische uitgangspunten." : "Built on proven biomechanical principles."}
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/40 p-4 text-sm text-muted-foreground">
-              {locale === "nl" ? "Vertaald naar praktische afstelstappen." : "Translated into practical setup adjustments."}
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/40 p-4 text-sm text-muted-foreground">
-              {locale === "nl" ? "Gemaakt voor echte rijders en echte ritten." : "Made for real riders and real riding conditions."}
-            </div>
+    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_35%,var(--background)_65%)_100%)]">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <PublicHero
+          eyebrow={locale === "nl" ? "Methodiek" : "Methodology"}
+          title={page.title}
+          description={page.subtitle}
+          chips={
+            locale === "nl"
+              ? ["Biomechanische basis", "Praktische afstelstappen", "NL en EN beschikbaar"]
+              : ["Biomechanical foundation", "Practical setup steps", "Available in Dutch and English"]
+          }
+        />
+
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: locale === "nl" ? "Waarom dit betrouwbaar voelt" : "Why this feels trustworthy",
+            title:
+              locale === "nl"
+                ? "Methodiek zonder schijnnauwkeurigheid"
+                : "Methodology without false precision",
+            description:
+              locale === "nl"
+                ? "Deze pagina laat zien hoe BestBikeFit4U van fitprincipes naar bruikbare keuzes komt."
+                : "This page shows how BestBikeFit4U moves from fitting principles to usable decisions.",
+          }}
+        >
+          <div className="grid gap-4 md:grid-cols-3">
+            {trustPoints.map((point) => (
+              <PublicFeatureCard
+                key={point.title}
+                icon={point.icon}
+                title={point.title}
+                description={point.description}
+              />
+            ))}
           </div>
-        </section>
+        </PublicSection>
 
-        <div className="mt-12 space-y-12">
-          <section className={framedSectionClass}>
-            <h2 className="text-2xl font-semibold text-foreground">{page.scienceTitle}</h2>
-            <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">{page.scienceBody}</p>
-          </section>
+        <PublicSection
+          className="mt-10"
+          header={{ title: page.scienceTitle, description: page.scienceBody }}
+        >
+          <div className="grid gap-6 md:grid-cols-3">
+            <PublicSurfaceCard title={page.saddleTitle} description={page.saddleBody1}>
+              <p className="text-sm leading-6 text-muted-foreground">{page.saddleBody2}</p>
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {page.saddleBullets.map((item) => (
+                  <li key={item} className="rounded-2xl border border-border/70 bg-background px-4 py-3 text-sm text-foreground">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </PublicSurfaceCard>
+            <PublicSurfaceCard title={page.reachTitle} description={page.reachBody1}>
+              <p className="text-sm leading-6 text-muted-foreground">{page.reachBody2}</p>
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {page.reachBullets.map((item) => (
+                  <li key={item} className="rounded-2xl border border-border/70 bg-background px-4 py-3 text-sm text-foreground">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </PublicSurfaceCard>
+            <PublicSurfaceCard title={page.dropTitle} description={page.dropBody1}>
+              <p className="text-sm leading-6 text-muted-foreground">{page.dropBody2}</p>
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {page.dropBullets.map((item) => (
+                  <li key={item} className="rounded-2xl border border-border/70 bg-background px-4 py-3 text-sm text-foreground">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </PublicSurfaceCard>
+          </div>
+        </PublicSection>
 
-          <section className={`${mutedPanelClass} bg-primary-soft/70`}>
-            <h3 className="text-xl font-semibold text-foreground">{page.saddleTitle}</h3>
-            <p className="mt-4 leading-relaxed text-muted-foreground">{page.saddleBody1}</p>
-            <p className="mt-4 leading-relaxed text-muted-foreground">{page.saddleBody2}</p>
-            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-              {page.saddleBullets.map((item) => (
-                <li key={item} className={bulletPanelClass}>{item}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section className={framedSectionClass}>
-            <h3 className="text-xl font-semibold text-foreground">{page.reachTitle}</h3>
-            <p className="mt-4 leading-relaxed text-muted-foreground">{page.reachBody1}</p>
-            <p className="mt-4 leading-relaxed text-muted-foreground">{page.reachBody2}</p>
-            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-              {page.reachBullets.map((item) => (
-                <li key={item} className={bulletPanelClass}>{item}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section className={`${mutedPanelClass} bg-secondary/70`}>
-            <h3 className="text-xl font-semibold text-foreground">{page.dropTitle}</h3>
-            <p className="mt-4 leading-relaxed text-muted-foreground">{page.dropBody1}</p>
-            <p className="mt-4 leading-relaxed text-muted-foreground">{page.dropBody2}</p>
-            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-              {page.dropBullets.map((item) => (
-                <li key={item} className={bulletPanelClass}>{item}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section className={framedSectionClass}>
-            <h3 className="text-xl font-semibold text-foreground">{page.componentsTitle}</h3>
-            <p className="mt-4 leading-relaxed text-muted-foreground">{page.componentsBody}</p>
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
-              {page.componentCards.map((card, index) => (
-                <div key={card.title} className="rounded-[1.75rem] border border-border/70 bg-muted/35 p-6 shadow-sm">
-                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
+        <PublicSection
+          className="mt-10"
+          header={{ title: page.componentsTitle, description: page.componentsBody }}
+        >
+          <div className="grid gap-6 md:grid-cols-2">
+            {page.componentCards.map((card, index) => (
+              <PublicSurfaceCard
+                key={card.title}
+                title={card.title}
+                description={card.text}
+                footer={
+                  <span className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
                     {index + 1 < 10 ? `0${index + 1}` : index + 1}
-                  </p>
-                  <h4 className="font-semibold text-foreground">{card.title}</h4>
-                  <p className="mt-2 text-sm text-muted-foreground">{card.text}</p>
-                </div>
-              ))}
-            </div>
-          </section>
+                  </span>
+                }
+              >
+                <div />
+              </PublicSurfaceCard>
+            ))}
+          </div>
+        </PublicSection>
 
-          <section className={framedSectionClass}>
-            <h2 className="text-2xl font-semibold text-foreground">{page.considerTitle}</h2>
-            <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">{page.considerBody}</p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {page.considerBullets.map((item) => (
-                <div key={item} className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/35 px-4 py-3 shadow-sm">
-                  <svg className="h-5 w-5 flex-shrink-0 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-foreground">{item}</span>
-                </div>
-              ))}
-            </div>
-          </section>
+        <PublicSection
+          className="mt-10"
+          header={{ title: page.considerTitle, description: page.considerBody }}
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
+            {page.considerBullets.map((item) => (
+              <div
+                key={item}
+                className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3 shadow-sm"
+              >
+                <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-primary" />
+                <span className="text-foreground">{item}</span>
+              </div>
+            ))}
+          </div>
+        </PublicSection>
 
-          <section className={`${mutedPanelClass} bg-muted/70`}>
-            <h2 className="text-2xl font-semibold text-foreground">{page.guideTitle}</h2>
-            <p className="mt-3 text-muted-foreground">{page.guideBody}</p>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              {page.guideLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={withLocalePrefix(link.href, locale)}
-                  className="rounded-2xl border border-border/70 bg-background/90 px-4 py-3 text-sm font-medium text-primary shadow-sm transition hover:bg-secondary/70"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </section>
+        <PublicSection
+          className="mt-10"
+          header={{ title: page.guideTitle, description: page.guideBody }}
+        >
+          <div className="grid gap-3 sm:grid-cols-2">
+            {page.guideLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={withLocalePrefix(link.href, locale)}
+                className="rounded-2xl border border-border/70 bg-background/90 px-4 py-3 text-sm font-medium text-primary shadow-sm transition hover:bg-secondary/70"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </PublicSection>
 
-          <section className="rounded-[2rem] bg-primary px-6 py-12 text-center shadow-lg sm:px-10">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary-foreground/70">
-              {locale === "nl" ? "Start je fit" : "Start your fit"}
-            </p>
-            <h2 className="mt-3 text-2xl font-bold text-primary-foreground">{page.ctaTitle}</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-primary-foreground/80">{page.ctaBody}</p>
+        <PublicCtaBand
+          className="mt-12"
+          eyebrow={locale === "nl" ? "Start je fit" : "Start your fit"}
+          title={page.ctaTitle}
+          description={page.ctaBody}
+          actions={
             <Button
               render={
                 <TrackedCtaLink
@@ -397,14 +463,12 @@ export default async function AboutPage() {
                   ctaLabel={page.ctaButton}
                 />
               }
-              size="lg"
-              className="mt-8 bg-background text-primary hover:bg-muted"
             >
               {page.ctaButton}
             </Button>
-          </section>
-        </div>
+          }
+        />
       </div>
-    </div>
+    </PublicPageShell>
   );
 }

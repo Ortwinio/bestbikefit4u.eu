@@ -1,8 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { NumberSlider } from "@/components/measurements/NumberSlider";
-import { SliderQuestion } from "@/components/profile/RidingStyleCard";
+import { useMemo, useState } from "react";
+import { ShieldCheck } from "lucide-react";
+import {
+  PublicInfoPanel,
+  PublicNumberField,
+  PublicSelectField,
+  PublicSurfaceCard,
+} from "@/components/public";
 import {
   calculateBikeFit,
   calculateQuickEstimate,
@@ -12,33 +17,33 @@ import {
 import type { Ambition, BikeCategory } from "../../../../../convex/lib/fitAlgorithm/types";
 
 const CATEGORY_OPTIONS = [
-  { key: "road", label: "Road" },
-  { key: "gravel", label: "Gravel" },
-  { key: "mtb", label: "Mountain" },
-  { key: "city", label: "City" },
+  { value: "road", label: "Road" },
+  { value: "gravel", label: "Gravel" },
+  { value: "mtb", label: "Mountain" },
+  { value: "city", label: "City" },
 ];
 
 const AMBITION_OPTIONS = [
-  { key: "comfort", label: "Comfort" },
-  { key: "balanced", label: "Balanced" },
-  { key: "performance", label: "Performance" },
-  { key: "aero", label: "Aero" },
+  { value: "comfort", label: "Comfort" },
+  { value: "balanced", label: "Balanced" },
+  { value: "performance", label: "Performance" },
+  { value: "aero", label: "Aero" },
 ];
 
 const FLEXIBILITY_OPTIONS = [
-  { key: "1", label: "Very Limited" },
-  { key: "2", label: "Limited" },
-  { key: "3", label: "Average" },
-  { key: "4", label: "Good" },
-  { key: "5", label: "Excellent" },
+  { value: "1", label: "Very Limited" },
+  { value: "2", label: "Limited" },
+  { value: "3", label: "Average" },
+  { value: "4", label: "Good" },
+  { value: "5", label: "Excellent" },
 ];
 
 const CORE_OPTIONS = [
-  { key: "1", label: "Very Low" },
-  { key: "2", label: "Low" },
-  { key: "3", label: "Average" },
-  { key: "4", label: "Good" },
-  { key: "5", label: "Excellent" },
+  { value: "1", label: "Very Low" },
+  { value: "2", label: "Low" },
+  { value: "3", label: "Average" },
+  { value: "4", label: "Good" },
+  { value: "5", label: "Excellent" },
 ];
 
 interface Props {
@@ -131,96 +136,144 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
   return (
     <>
       <section className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
-        {/* Form card */}
-        <div className="space-y-8 rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
-          <div>
+        <PublicSurfaceCard
+          title={isNl ? "Bouw je eerste fitprofiel" : "Build your first fit profile"}
+          description={
+            isNl
+              ? "Vul je maten en rijcontext in. De uitkomst is bedoeld als sterk startpunt, niet als eindafstelling."
+              : "Enter your measurements and riding context. The result is designed as a strong starting point, not the final setup."
+          }
+          className="rounded-[1.75rem]"
+        >
+          <div className="space-y-6">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
               {isNl ? "Input" : "Inputs"}
             </p>
-            <h2 className="mt-2 text-2xl font-semibold text-foreground">
-              {isNl ? "Bouw je eerste fitprofiel" : "Build your first fit profile"}
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {isNl
-                ? "Vul je maten en rijcontext in. De uitkomst is bedoeld als sterk startpunt, niet als eindafstelling."
-                : "Enter your measurements and riding context. The result is designed as a strong starting point, not the final setup."}
-            </p>
+            <div className="grid gap-5 md:grid-cols-2">
+              <PublicNumberField
+                label={isNl ? "Lengte" : "Height"}
+                description={
+                  isNl
+                    ? "Meet rechtop zonder schoenen."
+                    : "Measure standing tall without shoes."
+                }
+                min={140}
+                max={220}
+                step={1}
+                unit="cm"
+                value={heightCm}
+                onChange={setHeightCm}
+                placeholder={isNl ? "Bijv. 178" : "e.g. 178"}
+              />
+              <PublicNumberField
+                label={isNl ? "Binnenbeenlengte" : "Inseam"}
+                description={
+                  isNl
+                    ? "Gebruik een boek tegen de wand voor een betrouwbare maat."
+                    : "Use a book against the wall for a reliable measurement."
+                }
+                min={55}
+                max={105}
+                step={0.5}
+                unit="cm"
+                value={inseamCm}
+                onChange={setInseamCm}
+                placeholder={isNl ? "Bijv. 84.5" : "e.g. 84.5"}
+              />
+            </div>
+
+            <div className="grid gap-5 md:grid-cols-2">
+              <PublicSelectField
+                label={isNl ? "Fietscategorie" : "Bike category"}
+                description={
+                  isNl
+                    ? "Kies de discipline waarvoor je de positie wilt starten."
+                    : "Choose the discipline you want to start the position for."
+                }
+                options={CATEGORY_OPTIONS}
+                value={category}
+                onChange={(value) => setCategory(value as BikeCategory)}
+              />
+              <PublicSelectField
+                label={isNl ? "Rijdoel" : "Riding goal"}
+                description={
+                  isNl
+                    ? "Dit bepaalt hoe progressief de cockpit mag worden."
+                    : "This sets how progressive the cockpit can become."
+                }
+                options={AMBITION_OPTIONS}
+                value={ambition}
+                onChange={(value) => setAmbition(value as Ambition)}
+              />
+              <PublicSelectField
+                label={isNl ? "Flexibiliteit" : "Flexibility"}
+                description={
+                  isNl
+                    ? "Wees conservatief als je niet zeker bent."
+                    : "Be conservative if you are unsure."
+                }
+                options={FLEXIBILITY_OPTIONS}
+                value={flexibility}
+                onChange={setFlexibility}
+              />
+              <PublicSelectField
+                label={isNl ? "Core-stabiliteit" : "Core stability"}
+                description={
+                  isNl
+                    ? "Dit helpt bepalen hoeveel reach en drop houdbaar zijn."
+                    : "This helps determine how much reach and drop are sustainable."
+                }
+                options={CORE_OPTIONS}
+                value={core}
+                onChange={setCore}
+              />
+            </div>
           </div>
+        </PublicSurfaceCard>
 
-          <NumberSlider
-            label={isNl ? "Lengte" : "Height"}
-            min={140}
-            max={220}
-            step={1}
-            unit="cm"
-            value={heightCm}
-            onChange={setHeightCm}
-          />
-
-          <NumberSlider
-            label={isNl ? "Binnenbeenlengte" : "Inseam"}
-            min={55}
-            max={105}
-            step={0.5}
-            unit="cm"
-            value={inseamCm}
-            onChange={setInseamCm}
-          />
-
-          <SliderQuestion
-            label={isNl ? "Fietscategorie" : "Bike Category"}
-            options={CATEGORY_OPTIONS}
-            value={category}
-            onChange={(v) => setCategory(v as BikeCategory)}
-          />
-
-          <SliderQuestion
-            label={isNl ? "Rijdoel" : "Riding Goal"}
-            options={AMBITION_OPTIONS}
-            value={ambition}
-            onChange={(v) => setAmbition(v as Ambition)}
-          />
-
-          <SliderQuestion
-            label={isNl ? "Flexibiliteit" : "Flexibility"}
-            options={FLEXIBILITY_OPTIONS}
-            value={flexibility}
-            onChange={setFlexibility}
-          />
-
-          <SliderQuestion
-            label={isNl ? "Core-stabiliteit" : "Core Stability"}
-            options={CORE_OPTIONS}
-            value={core}
-            onChange={setCore}
-          />
-        </div>
-
-        {/* Guidance sidebar */}
         <aside>
-          <div className="rounded-3xl border border-border bg-[color:var(--secondary)] p-6 shadow-sm">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-              {isNl ? "Uitleg" : "Guidance"}
-            </p>
-            <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-              {guidancePoints.map((point) => (
-                <li key={point} className="rounded-2xl border border-border/60 bg-card px-4 py-3">
-                  {point}
-                </li>
-              ))}
-            </ul>
+          <div className="space-y-4">
+            <PublicInfoPanel
+              tone="secondary"
+              title={isNl ? "Waarom deze intake helpt" : "Why this intake helps"}
+              icon={<ShieldCheck />}
+            >
+              {isNl
+                ? "Deze publieke calculator gebruikt dezelfde fitlogica als het product, maar toont bewust een eerste veilige richting in plaats van een volledige eindafstelling."
+                : "This public calculator uses the same fit logic as the product, but it intentionally exposes a safe first direction rather than a full final fit prescription."}
+            </PublicInfoPanel>
+            <PublicSurfaceCard
+              title={isNl ? "Uitleg" : "Guidance"}
+              compact
+              className="rounded-[1.5rem]"
+            >
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                {guidancePoints.map((point) => (
+                  <li
+                    key={point}
+                    className="rounded-2xl border border-border/60 bg-card px-4 py-3"
+                  >
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </PublicSurfaceCard>
           </div>
         </aside>
       </section>
 
-      {/* Output — updates live */}
-      <section className="mt-6 rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
+      <PublicSurfaceCard
+        title={isNl ? "Jouw eerste fitadvies" : "Your first-pass fit recommendation"}
+        description={
+          isNl
+            ? "Controleer de uitkomst daarna altijd op je huidige fiets en bouw veranderingen stap voor stap op."
+            : "Always validate the result on your current bike afterwards and build changes step by step."
+        }
+        className="mt-6 rounded-[1.75rem]"
+      >
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
           {isNl ? "Output" : "Output"}
         </p>
-        <h2 className="mt-2 text-2xl font-semibold text-foreground">
-          {isNl ? "Jouw eerste fitadvies" : "Your first-pass fit recommendation"}
-        </h2>
 
         {result ? (
           <>
@@ -275,11 +328,11 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
         ) : (
           <div className="mt-6 rounded-2xl border border-dashed border-border bg-[color:var(--secondary)] px-4 py-5 text-sm text-muted-foreground">
             {isNl
-              ? "Beweeg de lengte- en binnenbeenschuifregelaars om een eerste bike-fitadvies te genereren."
-              : "Move the height and inseam sliders to generate a first-pass bike-fit recommendation."}
+              ? "Vul lengte en binnenbeenlengte in om een eerste fit-startpunt te berekenen."
+              : "Enter height and inseam to calculate a first-pass fit starting point."}
           </div>
         )}
-      </section>
+      </PublicSurfaceCard>
     </>
   );
 }

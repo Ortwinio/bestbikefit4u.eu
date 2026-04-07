@@ -5,16 +5,17 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
 import { ArrowRight, Check, MessageSquarePlus, Plus } from "lucide-react";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import {
-  Button,
   Card,
   CardContent,
   CardFooter,
-  EmptyState,
-  LoadingState,
+} from "@/components/prototyper-ui/ui/card";
+import { EmptyState, LoadingState } from "@/components/prototyper-ui/ui/states";
+import {
   SegmentedControl,
   SegmentedControlItem,
-} from "@/components/ui";
+} from "@/components/prototyper-ui/ui/segmented-control";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { cn } from "@/utils/cn";

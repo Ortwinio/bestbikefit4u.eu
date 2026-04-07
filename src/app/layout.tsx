@@ -8,7 +8,7 @@ import { getRequestLocale } from "@/i18n/request";
 import { CookieConsentBanner } from "@/components/layout/CookieConsentBanner";
 import { GTMConsentLoader } from "@/components/analytics/GTMConsentLoader";
 import { FeedbackPanelProvider } from "@/components/feedback";
-import { ToastProvider } from "@/components/ui";
+import { ToastProvider } from "@/components/prototyper-ui/ui/toast";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 

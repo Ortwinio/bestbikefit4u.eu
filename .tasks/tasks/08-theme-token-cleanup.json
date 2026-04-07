@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "id": 8,
+  "title": "Theme token cleanup: refine globals.css public surface hierarchy for light/dark/system, strengthen CTA contrast, remove one-off color drift on public pages",
+  "status": "done",
+  "priority": 4,
+  "assigned": "orchestrator",
+  "depends_on": ["Homepage value-first redesign", "Pricing conversion upgrade"],
+  "files": [
+    "src/app/globals.css",
+    "src/components/providers/ThemeProvider.tsx"
+  ],
+  "acceptance": [
+    "Surface hierarchy explicitly defined in globals.css",
+    "Public pages rely on shared tokens, not one-off color-mix values",
+    "Light and dark themes both preserve emphasis and readability",
+    "system theme behavior remains correct",
+    "CTA contrast strong on homepage, pricing, login, calculators"
+  ],
+  "notes": [
+    "Defined named public shell, card, subtle, hero, CTA, and dashboard surface aliases in globals.css for both light and dark themes.",
+    "Replaced public utility one-off background mixes and body background composition with shared surface tokens.",
+    "Fixed ThemeProvider so resolvedTheme updates when OS theme changes while the saved preference is system.",
+    "Validated with ThemeProvider tests plus homepage, pricing, login, calculator, and tire-pressure CTA funnel smoke tests."
+  ]
+}

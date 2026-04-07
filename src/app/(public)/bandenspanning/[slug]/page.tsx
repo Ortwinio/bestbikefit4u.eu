@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import { calculateBasicPressure } from "@/lib/pressure-engine";
 import {
   BIKE_TYPE_LABELS,

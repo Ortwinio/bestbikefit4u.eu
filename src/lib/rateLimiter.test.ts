@@ -2,18 +2,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { consumeRateLimit, resetMemoryRateLimiterForTests } from "./rateLimiter";
 
 describe("rateLimiter", () => {
-  const originalNodeEnv = process.env.NODE_ENV;
-
   beforeEach(() => {
     resetMemoryRateLimiterForTests();
     delete process.env.UPSTASH_REDIS_REST_URL;
     delete process.env.UPSTASH_REDIS_REST_TOKEN;
     delete process.env.PUBLIC_FIT_RATE_LIMIT_MODE;
-    process.env.NODE_ENV = originalNodeEnv;
+    vi.unstubAllEnvs();
   });
 
   afterEach(() => {
-    process.env.NODE_ENV = originalNodeEnv;
+    vi.unstubAllEnvs();
     vi.restoreAllMocks();
   });
 
@@ -52,7 +50,7 @@ describe("rateLimiter", () => {
   });
 
   it("fails open with a warning when the remote rate limiter is unavailable", async () => {
-    process.env.NODE_ENV = "production";
+    vi.stubEnv("NODE_ENV", "production");
     const fetchSpy = vi.spyOn(global, "fetch").mockRejectedValue(new Error("offline"));
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 

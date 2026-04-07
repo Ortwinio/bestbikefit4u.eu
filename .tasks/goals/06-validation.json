@@ -1,0 +1,6 @@
+{
+  "_version": 1,
+  "title": "06 Validation: unit tests, theme validation, analytics sanity checks, conversion baseline, and QA closeout artifact",
+  "status": "todo",
+  "description": "Tests for all touched surfaces. Mobile/desktop review. Light/dark/system review. Closeout artifact with residual risks. Tests owned per matrix, closeout owned by Lead. Repo-wide validation recovery now tracked through tasks 13-21 and plans/feature-commercial-saas-ux-upgrade/repo-validation-recovery-queue.md."
+}

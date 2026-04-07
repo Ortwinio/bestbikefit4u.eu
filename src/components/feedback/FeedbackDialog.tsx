@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { useConvexAuth, useMutation } from "convex/react";
 import { CheckCircle2 } from "lucide-react";
-import { Button, Card, Input, Selectable, Textarea } from "@/components/ui";
+import * as BaseField from "@base-ui/react/field";
+import { Button } from "@/components/prototyper-ui/ui/button";
+import { Card } from "@/components/prototyper-ui/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +14,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/prototyper-ui/ui/dialog";
+import { Input } from "@/components/prototyper-ui/ui/input";
+import { Label } from "@/components/prototyper-ui/ui/label";
+import { Selectable } from "@/components/prototyper-ui/ui/selectable";
+import { Textarea } from "@/components/prototyper-ui/ui/textarea";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { stripLocalePrefix } from "@/i18n/navigation";
 import { cn } from "@/utils/cn";
@@ -44,6 +50,26 @@ export interface FeedbackDialogProps {
 }
 
 const typeOrder: FeedbackType[] = ["bug", "feature_request", "support_case", "review"];
+
+function FeedbackField({
+  id,
+  label,
+  error,
+  children,
+}: {
+  id: string;
+  label: string;
+  error?: string;
+  children: ReactNode;
+}) {
+  return (
+    <BaseField.Field.Root className="grid gap-2">
+      <Label htmlFor={id}>{label}</Label>
+      {children}
+      {error ? <p className="text-sm text-[color:var(--danger)]">{error}</p> : null}
+    </BaseField.Field.Root>
+  );
+}
 
 function feedbackTypeTone(type: FeedbackType) {
   if (type === "bug") return "border-[color:color-mix(in_oklch,var(--danger)_30%,var(--border))]";
@@ -314,69 +340,99 @@ export function FeedbackDialog({
           <div className="grid gap-4">
             {!isAuthenticated ? (
               <div className="grid gap-4 sm:grid-cols-2">
-                <Input
-                  label={copy.dialog.contactNameLabel}
-                  value={form.contactName}
-                  onChange={(event) => updateField("contactName", event.target.value)}
-                  placeholder={copy.dialog.placeholders.contactName}
-                />
-                <Input
-                  label={copy.dialog.contactEmailLabel}
-                  type="email"
-                  value={form.contactEmail}
-                  onChange={(event) => updateField("contactEmail", event.target.value)}
-                  placeholder={copy.dialog.placeholders.contactEmail}
-                />
+                <FeedbackField id="feedback-contact-name" label={copy.dialog.contactNameLabel}>
+                  <Input
+                    id="feedback-contact-name"
+                    value={form.contactName}
+                    onChange={(event) => updateField("contactName", event.target.value)}
+                    placeholder={copy.dialog.placeholders.contactName}
+                  />
+                </FeedbackField>
+                <FeedbackField id="feedback-contact-email" label={copy.dialog.contactEmailLabel}>
+                  <Input
+                    id="feedback-contact-email"
+                    type="email"
+                    value={form.contactEmail}
+                    onChange={(event) => updateField("contactEmail", event.target.value)}
+                    placeholder={copy.dialog.placeholders.contactEmail}
+                  />
+                </FeedbackField>
               </div>
             ) : null}
-            <Textarea
+            <FeedbackField
+              id="feedback-title"
               label={copy.dialog.titleLabel}
-              value={form.title}
-              onChange={(event) => updateField("title", event.target.value)}
               error={errors.title ? validationMessageForField("title", copy) : undefined}
-              placeholder={
-                selectedType === "bug"
-                  ? copy.dialog.placeholders.bugTitle
-                  : selectedType === "feature_request"
-                    ? copy.dialog.placeholders.featureRequestTitle
-                    : selectedType === "review"
-                    ? copy.dialog.placeholders.reviewTitle
-                      : copy.dialog.placeholders.supportCaseTitle
-              }
-              rows={2}
-            />
+            >
+              <Textarea
+                id="feedback-title"
+                value={form.title}
+                onChange={(event) => updateField("title", event.target.value)}
+                placeholder={
+                  selectedType === "bug"
+                    ? copy.dialog.placeholders.bugTitle
+                    : selectedType === "feature_request"
+                      ? copy.dialog.placeholders.featureRequestTitle
+                      : selectedType === "review"
+                        ? copy.dialog.placeholders.reviewTitle
+                        : copy.dialog.placeholders.supportCaseTitle
+                }
+                rows={2}
+              />
+            </FeedbackField>
 
-            <Textarea
+            <FeedbackField
+              id="feedback-description"
               label={copy.dialog.descriptionLabel}
-              value={form.description}
-              onChange={(event) => updateField("description", event.target.value)}
-              error={errors.description ? validationMessageForField("description", copy) : undefined}
-              placeholder={copy.dialog.placeholders.description}
-              rows={5}
-            />
+              error={
+                errors.description ? validationMessageForField("description", copy) : undefined
+              }
+            >
+              <Textarea
+                id="feedback-description"
+                value={form.description}
+                onChange={(event) => updateField("description", event.target.value)}
+                placeholder={copy.dialog.placeholders.description}
+                rows={5}
+              />
+            </FeedbackField>
 
             {selectedType === "bug" ? (
               <>
-                <Textarea
+                <FeedbackField
+                  id="feedback-expected-result"
                   label={copy.dialog.expectedResultLabel}
-                  value={form.expectedResult}
-                  onChange={(event) => updateField("expectedResult", event.target.value)}
                   error={
-                    errors.expectedResult ? validationMessageForField("expectedResult", copy) : undefined
+                    errors.expectedResult
+                      ? validationMessageForField("expectedResult", copy)
+                      : undefined
                   }
-                  placeholder={copy.dialog.placeholders.expectedResult}
-                  rows={3}
-                />
-                <Textarea
+                >
+                  <Textarea
+                    id="feedback-expected-result"
+                    value={form.expectedResult}
+                    onChange={(event) => updateField("expectedResult", event.target.value)}
+                    placeholder={copy.dialog.placeholders.expectedResult}
+                    rows={3}
+                  />
+                </FeedbackField>
+                <FeedbackField
+                  id="feedback-actual-result"
                   label={copy.dialog.actualResultLabel}
-                  value={form.actualResult}
-                  onChange={(event) => updateField("actualResult", event.target.value)}
                   error={
-                    errors.actualResult ? validationMessageForField("actualResult", copy) : undefined
+                    errors.actualResult
+                      ? validationMessageForField("actualResult", copy)
+                      : undefined
                   }
-                  placeholder={copy.dialog.placeholders.actualResult}
-                  rows={3}
-                />
+                >
+                  <Textarea
+                    id="feedback-actual-result"
+                    value={form.actualResult}
+                    onChange={(event) => updateField("actualResult", event.target.value)}
+                    placeholder={copy.dialog.placeholders.actualResult}
+                    rows={3}
+                  />
+                </FeedbackField>
               </>
             ) : null}
 

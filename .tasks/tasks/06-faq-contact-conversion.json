@@ -1,0 +1,24 @@
+{
+  "_version": 1,
+  "id": 6,
+  "title": "FAQ and contact conversion pass: turn support pages into trust-and-conversion surfaces with next-step CTAs, support reassurance, proof paragraph, and EN/NL copy improvements",
+  "status": "done",
+  "priority": 3,
+  "assigned": "codex-d",
+  "depends_on": [
+    "UX contract and design direction"
+  ],
+  "files": [
+    "src/app/(public)/faq/page.tsx",
+    "src/app/(public)/contact/page.tsx"
+  ],
+  "acceptance": [
+    "FAQ has next-step CTA after last item",
+    "FAQ has trust/proof paragraph",
+    "Contact has conversion reassurance",
+    "Contact has next-step CTA",
+    "Both pages support buying decisions, not just support",
+    "EN/NL semantic parity"
+  ],
+  "notes": "Trust paragraph, next-step CTAs (calculator primary, pricing secondary), support reassurance on contact. EN/NL parity. TrackedCtaLink used throughout."
+}

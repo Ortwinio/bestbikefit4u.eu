@@ -1,0 +1,25 @@
+{
+  "_version": 1,
+  "id": 7,
+  "title": "Icon system consistency: audit public icon usage, define canonical meanings and wrappers, unify sizes/colors across homepage, pricing, calculators, FAQ, contact, header, and footer",
+  "status": "done",
+  "priority": 4,
+  "assigned": "codex-d",
+  "depends_on": [
+    "Homepage value-first redesign",
+    "Calculator conversion bridges"
+  ],
+  "files": [
+    "src/app/(public)/page.tsx",
+    "src/components/public/PublicPrimitives.tsx",
+    "src/components/layout/Header.tsx",
+    "src/components/layout/Footer.tsx"
+  ],
+  "acceptance": [
+    "Canonical icon meanings documented or self-evident from code",
+    "Shared icon wrapper treatment consistent",
+    "Decorative-only icon drift reduced",
+    "Light and dark theme legibility verified"
+  ],
+  "notes": "Audit complete. ShieldCheck standardized for trust semantics on homepage. PublicFeatureCard icon container unified to h-10 w-10 rounded-full matching PublicSurfaceCard and PublicSectionHeader. Homepage index-mapped icon arrays noted but left as-is (redesign out of scope). Pricing/contact patterns confirmed appropriate."
+}

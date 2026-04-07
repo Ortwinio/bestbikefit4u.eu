@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useConvexAuth } from "convex/react";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { UserMenu } from "@/components/auth/UserMenu";

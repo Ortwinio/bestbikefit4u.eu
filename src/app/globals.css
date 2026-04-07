@@ -64,9 +64,23 @@
 }
 
 :root {
+  --public-shell-background: 99.20% 0.004 248.0;
+  --public-shell-elevated: 97.80% 0.010 244.0;
+  --public-card: 98.90% 0.002 248.0;
+  --public-card-subtle: 97.10% 0.010 243.0;
+  --public-card-strong: 96.40% 0.020 242.0;
+  --public-band: 95.60% 0.018 242.3;
+  --public-hero: 96.20% 0.022 241.0;
+  --public-cta: 94.80% 0.026 240.0;
+  --public-border-soft: 90.80% 0.016 242.3;
+  --public-border-strong: 84.20% 0.032 241.0;
+  --public-shadow: 0 12px 30px -24px color-mix(in oklch, oklch(var(--foreground)) 24%, transparent);
+  --public-shadow-strong: 0 18px 40px -28px color-mix(in oklch, oklch(var(--foreground)) 28%, transparent);
+  --public-shell-glow: 66.11% 0.156 242.3 / 0.16;
+  --dashboard-card: 98.10% 0.007 246.0;
   --background: 100.00% 0.000 0.0;
   --foreground: 24.08% 0.020 271.8;
-  --card: 98.92% 0.002 248.0;
+  --card: var(--public-card);
   --card-foreground: 24.08% 0.020 271.8;
   --popover: 100.00% 0.000 0.0;
   --popover-foreground: 24.08% 0.020 271.8;
@@ -75,9 +89,9 @@
   --primary-light: 78.00% 0.092 240.0;
   --primary-middle: 71.50% 0.122 241.5;
   --primary-dark: 57.00% 0.145 242.3;
-  --secondary: 96.40% 0.015 242.3;
+  --secondary: var(--public-band);
   --secondary-foreground: 31.00% 0.032 242.3;
-  --muted: 97.10% 0.005 248.0;
+  --muted: 96.60% 0.006 248.0;
   --muted-foreground: 50.04% 0.040 238.3;
   --accent: 95.20% 0.032 60.0;
   --accent-foreground: 31.00% 0.060 48.0;
@@ -94,7 +108,7 @@
   --border-dark: 79.00% 0.025 238.3;
   --input: 90.80% 0.016 242.3;
   --ring: 66.11% 0.156 242.3;
-  --surface: 98.92% 0.002 248.0;
+  --surface: var(--public-card);
   --surface-foreground: 24.08% 0.020 271.8;
   --overlay: 100.00% 0.000 0.0;
   --overlay-foreground: 24.08% 0.020 271.8;
@@ -126,8 +140,8 @@
   --primary-soft-hover: color-mix(in oklab, oklch(66.11% 0.156 242.3) 20%, transparent);
   --destructive-soft: color-mix(in oklab, oklch(63.68% 0.208 8.0) 15%, transparent);
   --destructive-soft-hover: color-mix(in oklab, oklch(63.68% 0.208 8.0) 20%, transparent);
-  --surface-secondary: color-mix(in oklab, oklch(98.92% 0.002 248.0) 92%, oklch(66.11% 0.156 242.3) 8%);
-  --surface-tertiary: color-mix(in oklab, oklch(98.92% 0.002 248.0) 88%, oklch(50.04% 0.040 238.3) 12%);
+  --surface-secondary: var(--public-card-subtle);
+  --surface-tertiary: var(--public-hero);
   --field-border: oklch(0% 0 0 / 0.12);
   --field-border-hover: oklch(0% 0 0 / 0.22);
   --field-border-invalid: oklch(63.68% 0.208 8.0);
@@ -141,9 +155,23 @@
 }
 
 .dark {
+  --public-shell-background: 22.80% 0.019 268.0;
+  --public-shell-elevated: 26.20% 0.022 262.0;
+  --public-card: 29.20% 0.021 259.0;
+  --public-card-subtle: 32.40% 0.024 256.0;
+  --public-card-strong: 35.20% 0.035 247.0;
+  --public-band: 35.00% 0.032 246.0;
+  --public-hero: 36.00% 0.040 244.0;
+  --public-cta: 38.00% 0.046 242.0;
+  --public-border-soft: 38.00% 0.022 242.3;
+  --public-border-strong: 46.00% 0.035 241.0;
+  --public-shadow: 0 14px 34px -26px color-mix(in oklch, oklch(var(--foreground)) 18%, transparent);
+  --public-shadow-strong: 0 20px 44px -30px color-mix(in oklch, oklch(var(--foreground)) 22%, transparent);
+  --public-shell-glow: 72.00% 0.145 242.3 / 0.22;
+  --dashboard-card: 31.20% 0.024 258.0;
   --background: 24.08% 0.020 271.8;
   --foreground: 98.48% 0.000 0.0;
-  --card: 28.00% 0.020 260.0;
+  --card: var(--public-card);
   --card-foreground: 98.48% 0.000 0.0;
   --popover: 24.08% 0.020 271.8;
   --popover-foreground: 98.48% 0.000 0.0;
@@ -152,26 +180,26 @@
   --primary-light: 80.00% 0.110 240.0;
   --primary-middle: 75.50% 0.128 241.5;
   --primary-dark: 63.00% 0.135 242.3;
-  --secondary: 34.00% 0.028 242.3;
+  --secondary: var(--public-band);
   --secondary-foreground: 98.43% 0.019 243.0;
   --muted: 30.00% 0.014 255.0;
   --muted-foreground: 76.00% 0.018 240.0;
   --accent: 36.00% 0.060 60.0;
   --accent-foreground: 92.00% 0.024 80.0;
-  --destructive: 39.59% 0.133 8.0;
+  --destructive: 55.00% 0.180 8.0;
   --destructive-foreground: 98.50% 0.000 0.0;
   --success: 79.99% 0.182 160.3;
   --success-foreground: 14.00% 0.004 286.0;
   --warning: 78.00% 0.145 60.0;
   --warning-foreground: 24.08% 0.020 271.8;
   --info: 72.00% 0.145 242.3;
-  --info-foreground: 24.08% 0.020 271.8;
+  --info-foreground: 98.50% 0.000 0.0;
   --border: 38.00% 0.022 242.3;
   --border-light: 46.00% 0.024 240.0;
   --border-dark: 29.00% 0.018 258.0;
   --input: 30.00% 0.014 255.0;
   --ring: 72.00% 0.145 242.3;
-  --surface: 28.00% 0.020 260.0;
+  --surface: var(--public-card);
   --surface-foreground: 98.48% 0.000 0.0;
   --overlay: 21.00% 0.018 265.0;
   --overlay-foreground: 98.48% 0.000 0.0;
@@ -195,19 +223,19 @@
 
   /* Derived */
   --primary-hover: color-mix(in oklab, oklch(72.00% 0.145 242.3) 88%, oklch(98.50% 0.000 0.0) 12%);
-  --destructive-hover: color-mix(in oklab, oklch(39.59% 0.133 8.0) 90%, oklch(98.50% 0.000 0.0) 10%);
+  --destructive-hover: color-mix(in oklab, oklch(55.00% 0.180 8.0) 90%, oklch(98.50% 0.000 0.0) 10%);
   --success-hover: color-mix(in oklab, oklch(79.99% 0.182 160.3) 90%, oklch(14.00% 0.004 286.0) 10%);
   --warning-hover: color-mix(in oklab, oklch(78.00% 0.145 60.0) 88%, oklch(24.08% 0.020 271.8) 12%);
   --accent-hover: color-mix(in oklab, oklch(36.00% 0.060 60.0) 88%, oklch(78.00% 0.145 60.0) 12%);
   --primary-soft: color-mix(in oklab, oklch(72.00% 0.145 242.3) 18%, transparent);
   --primary-soft-hover: color-mix(in oklab, oklch(72.00% 0.145 242.3) 24%, transparent);
-  --destructive-soft: color-mix(in oklab, oklch(39.59% 0.133 8.0) 15%, transparent);
-  --destructive-soft-hover: color-mix(in oklab, oklch(39.59% 0.133 8.0) 20%, transparent);
-  --surface-secondary: color-mix(in oklab, oklch(28.00% 0.020 260.0) 92%, oklch(72.00% 0.145 242.3) 8%);
-  --surface-tertiary: color-mix(in oklab, oklch(28.00% 0.020 260.0) 86%, oklch(74.09% 0.168 60.0) 14%);
+  --destructive-soft: color-mix(in oklab, oklch(55.00% 0.180 8.0) 15%, transparent);
+  --destructive-soft-hover: color-mix(in oklab, oklch(55.00% 0.180 8.0) 20%, transparent);
+  --surface-secondary: var(--public-card-subtle);
+  --surface-tertiary: var(--public-hero);
   --field-border: oklch(100% 0 0 / 0.12);
   --field-border-hover: oklch(100% 0 0 / 0.22);
-  --field-border-invalid: oklch(39.59% 0.133 8.0);
+  --field-border-invalid: oklch(55.00% 0.180 8.0);
 }
 
 @utility focus-ring {
@@ -245,7 +273,41 @@
 }
 
 @utility dashboard-card-surface {
-  background: color-mix(in oklch, oklch(var(--card)) 90%, black 3%);
+  background: oklch(var(--dashboard-card));
+}
+
+@utility public-card-surface {
+  background: oklch(var(--public-card));
+  border-color: oklch(var(--public-border-soft));
+  box-shadow: var(--public-shadow);
+}
+
+@utility public-card-surface-subtle {
+  background: color-mix(in oklch, oklch(var(--public-card-subtle)) 86%, oklch(var(--background)) 14%);
+  border-color: oklch(var(--public-border-soft));
+  box-shadow: var(--public-shadow);
+}
+
+@utility public-hero-surface {
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in oklch, oklch(var(--public-hero)) 90%, oklch(var(--primary)) 10%),
+      color-mix(in oklch, oklch(var(--public-card)) 88%, oklch(var(--secondary)) 12%)
+    );
+  border-color: oklch(var(--public-border-strong));
+  box-shadow: var(--public-shadow-strong);
+}
+
+@utility public-cta-surface {
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in oklch, oklch(var(--public-card-strong)) 78%, oklch(var(--primary)) 22%) 0%,
+      color-mix(in oklch, oklch(var(--public-cta)) 82%, oklch(var(--secondary)) 18%) 100%
+    );
+  border-color: color-mix(in oklch, oklch(var(--public-border-strong)) 68%, oklch(var(--primary)) 32%);
+  box-shadow: var(--public-shadow-strong);
 }
 
 @utility panel-surface-base {
@@ -317,12 +379,9 @@
   body {
     min-height: 100vh;
     background:
-      radial-gradient(circle at top, color-mix(in oklch, oklch(var(--primary)) 14%, transparent), transparent 30%),
-      linear-gradient(
-        180deg,
-        color-mix(in oklch, oklch(var(--background)) 96%, white 4%),
-        color-mix(in oklch, oklch(var(--background)) 90%, oklch(var(--secondary)) 10%)
-      );
+      radial-gradient(circle at top, oklch(var(--public-shell-glow)), transparent 32%),
+      radial-gradient(circle at 18% 12%, color-mix(in oklch, oklch(var(--primary)) 8%, transparent), transparent 26%),
+      linear-gradient(180deg, oklch(var(--public-shell-background)), oklch(var(--public-shell-elevated)));
     color: oklch(var(--foreground));
     font-family: var(--font-sans);
   }

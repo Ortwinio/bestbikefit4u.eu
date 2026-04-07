@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-import { CheckCircle2, FileDown, Repeat, Bike } from "lucide-react";
-import { getRequestLocale } from "@/i18n/request";
+import { Bike, CheckCircle2, FileDown, Repeat, Sparkles } from "lucide-react";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { getRequestLocale } from "@/i18n/request";
 import { BRAND } from "@/config/brand";
 import { PUBLIC_PLANS, formatEuroPriceFromCents } from "@/config/commercial";
 import { FitPassLandingCta } from "@/components/features/fitpass/FitPassLandingCta";
+import {
+  PublicCtaBand,
+  PublicFeatureCard,
+  PublicHero,
+  PublicPageShell,
+  PublicSection,
+  PublicSurfaceCard,
+} from "@/components/public";
 import type { Locale } from "@/i18n/config";
 
 const proPlan = PUBLIC_PLANS.find((p) => p.id === "pro")!;
@@ -33,12 +41,12 @@ const copy: Record<
     metadata: {
       title: "Fit Pass — Full report, unlimited sessions | BestBikeFit4U",
       description:
-        "Fit Pass gives you a downloadable PDF with all your bike fit values, unlimited sessions, and multiple bike profiles. €9/month.",
+        "Fit Pass gives you a downloadable PDF with all your bike fit values, unlimited sessions, and multiple bike profiles. EUR9/month.",
     },
     eyebrow: "Fit Pass",
     hero: "Your full bike fit report, ready to download.",
     subhero:
-      "Fit Pass gives you a PDF with every adjustment value and priority — based on your measurements, your bike, and your riding style.",
+      "Fit Pass gives you a PDF with every adjustment value and priority, based on your measurements, your bike, and your riding style.",
     cta: `Get Fit Pass — ${formatEuroPriceFromCents(proPlan.priceCentsMonthly, "en")}/month`,
     alreadyActive: "Fit Pass is active",
     whatYouGet: "What you get",
@@ -51,33 +59,33 @@ const copy: Record<
       {
         icon: "sequence",
         title: "Full adjustment sequence",
-        body: "Every step, in the right order. Start with saddle height, work through to handlebar reach — nothing left out.",
+        body: "Every step, in the right order. Start with saddle height, work through to handlebar reach, with nothing left out.",
       },
       {
         icon: "sessions",
         title: "Unlimited sessions and bike profiles",
-        body: "Re-run your fit any time — after a new bike, a weight change, or a position experiment. Each bike gets its own profile.",
+        body: "Re-run your fit after a new bike, a weight change, or a position experiment. Each bike gets its own profile.",
       },
     ],
     howItWorksTitle: "How it works",
     steps: [
-      { label: "Complete a fit session", body: "Enter your measurements and answer the questionnaire. Takes about 10 minutes." },
-      { label: "Upgrade to Fit Pass", body: "One click. €9/month, cancel any time from account settings." },
-      { label: "Download your PDF", body: "Your full report is available immediately. All values are the same as your on-screen results." },
+      { label: "Complete a fit session", body: "Enter your measurements and answer the questionnaire. It takes about 10 minutes." },
+      { label: "Upgrade to Fit Pass", body: "One click. EUR9/month, and you can cancel any time from account settings." },
+      { label: "Download your PDF", body: "Your full report is available immediately, with the same values you see on screen." },
     ],
     faqTitle: "Questions",
     faqs: [
       {
         q: "What is Fit Pass?",
-        a: "Fit Pass is the paid tier for BestBikeFit4U (also called Pro). It unlocks PDF reports, unlimited fit sessions, and unlimited bike profiles.",
+        a: "Fit Pass is the paid tier for BestBikeFit4U, also called Pro. It unlocks PDF reports, unlimited fit sessions, and unlimited bike profiles.",
       },
       {
         q: "Can I cancel?",
-        a: "Yes. You can cancel at any time from your account settings. Access continues until the end of the billing period.",
+        a: "Yes. You can cancel any time from your account settings. Access continues until the end of the billing period.",
       },
       {
         q: "Do I need a bike already?",
-        a: "No. You can run a fit session without a specific bike — the results give you reference values for what to look for when buying, or what to adjust on your current setup.",
+        a: "No. You can run a fit session without a specific bike. The results give you reference values for what to buy or what to adjust on your current setup.",
       },
     ],
     finalCta: `Get Fit Pass — ${formatEuroPriceFromCents(proPlan.priceCentsMonthly, "en")}/month`,
@@ -87,12 +95,12 @@ const copy: Record<
     metadata: {
       title: "Fit Pass — Volledig rapport, onbeperkte sessies | BestBikeFit4U",
       description:
-        "Met Fit Pass krijg je een downloadbaar PDF met alle bikefitting-waarden, onbeperkte sessies en meerdere fietsprofielen. €9/maand.",
+        "Met Fit Pass krijg je een downloadbaar PDF met alle bikefitting-waarden, onbeperkte sessies en meerdere fietsprofielen. EUR9/maand.",
     },
     eyebrow: "Fit Pass",
     hero: "Jouw complete bikefitting-rapport, klaar om te downloaden.",
     subhero:
-      "Met Fit Pass ontvang je een PDF met alle aanpassingswaarden en prioriteiten — gebaseerd op jouw lichaamsmetingen, fiets en rijstijl.",
+      "Met Fit Pass ontvang je een PDF met alle aanpassingswaarden en prioriteiten, gebaseerd op jouw lichaamsmetingen, fiets en rijstijl.",
     cta: `Fit Pass activeren — ${formatEuroPriceFromCents(proPlan.priceCentsMonthly, "nl")}/maand`,
     alreadyActive: "Fit Pass is actief",
     whatYouGet: "Wat je krijgt",
@@ -105,25 +113,25 @@ const copy: Record<
       {
         icon: "sequence",
         title: "Volledige aanpassingsvolgorde",
-        body: "Elke stap, in de juiste volgorde. Begin met zadelhoogte, werk door naar stuurpenlengte — niets overgeslagen.",
+        body: "Elke stap, in de juiste volgorde. Begin met zadelhoogte en werk door naar je cockpit, zonder hiaten.",
       },
       {
         icon: "sessions",
         title: "Onbeperkte sessies en fietsprofielen",
-        body: "Voer je fit opnieuw uit na een nieuwe fiets, gewichtsverandering of positie-experiment. Elke fiets krijgt zijn eigen profiel.",
+        body: "Voer je fit opnieuw uit na een nieuwe fiets, gewichtsverandering of positie-experiment. Elke fiets krijgt een eigen profiel.",
       },
     ],
     howItWorksTitle: "Hoe het werkt",
     steps: [
-      { label: "Voltooi een fit-sessie", body: "Voer je metingen in en beantwoord de vragenlijst. Duurt ongeveer 10 minuten." },
-      { label: "Activeer Fit Pass", body: "Één klik. €9/maand, op elk moment opzegbaar via je accountinstellingen." },
-      { label: "Download je PDF", body: "Je volledige rapport is direct beschikbaar. Alle waarden zijn gelijk aan je schermresultaten." },
+      { label: "Voltooi een fit-sessie", body: "Voer je metingen in en beantwoord de vragenlijst. Dit duurt ongeveer 10 minuten." },
+      { label: "Activeer Fit Pass", body: "Eén klik. EUR9/maand, op elk moment opzegbaar via je accountinstellingen." },
+      { label: "Download je PDF", body: "Je volledige rapport is direct beschikbaar, met dezelfde waarden als op je scherm." },
     ],
     faqTitle: "Vragen",
     faqs: [
       {
         q: "Wat is Fit Pass?",
-        a: "Fit Pass is het betaalde abonnement van BestBikeFit4U (ook wel Pro genoemd). Het geeft toegang tot PDF-rapporten, onbeperkte fit-sessies en onbeperkte fietsprofielen.",
+        a: "Fit Pass is het betaalde abonnement van BestBikeFit4U, ook wel Pro genoemd. Het geeft toegang tot PDF-rapporten, onbeperkte fit-sessies en onbeperkte fietsprofielen.",
       },
       {
         q: "Kan ik opzeggen?",
@@ -131,7 +139,7 @@ const copy: Record<
       },
       {
         q: "Heb ik al een fiets nodig?",
-        a: "Nee. Je kunt een fit-sessie uitvoeren zonder specifieke fiets — de resultaten geven referentiewaarden die je helpen bij het kopen van een fiets of het aanpassen van je huidige positie.",
+        a: "Nee. Je kunt een fit-sessie uitvoeren zonder specifieke fiets. De resultaten geven referentiewaarden voor aankoop of aanpassing van je huidige setup.",
       },
     ],
     finalCta: `Fit Pass activeren — ${formatEuroPriceFromCents(proPlan.priceCentsMonthly, "nl")}/maand`,
@@ -164,25 +172,23 @@ const featureIcon = (icon: "pdf" | "sessions" | "sequence") => {
 export default async function FitPassPage() {
   const locale = await getRequestLocale();
   const c = copy[locale];
-  const loginHref = withLocalePrefix(`/login?redirect=/fit-pass`, locale);
+  const isNl = locale === "nl";
+  const loginHref = withLocalePrefix("/login?redirect=/fit-pass", locale);
   const dashboardHref = withLocalePrefix("/dashboard", locale);
 
   return (
-    <div className="py-16">
+    <PublicPageShell>
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-
-        {/* Hero */}
-        <section className="text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
-            {c.eyebrow}
-          </div>
-          <h1 className="mt-5 text-4xl font-semibold tracking-tight text-[color:var(--foreground)] sm:text-5xl">
-            {c.hero}
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[color:var(--muted-foreground)]">
-            {c.subhero}
-          </p>
-          <div className="mt-8">
+        <PublicHero
+          eyebrow={c.eyebrow}
+          title={c.hero}
+          description={c.subhero}
+          chips={
+            isNl
+              ? ["PDF rapport", "Onbeperkte sessies", "NL en EN beschikbaar"]
+              : ["PDF report", "Unlimited sessions", "Available in Dutch and English"]
+          }
+          actions={
             <FitPassLandingCta
               locale={locale}
               label={c.cta}
@@ -190,81 +196,84 @@ export default async function FitPassPage() {
               loginHref={loginHref}
               dashboardHref={dashboardHref}
             />
-          </div>
-        </section>
+          }
+        />
 
-        {/* What you get */}
-        <section className="mt-16">
-          <h2 className="text-center text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
-            {c.whatYouGet}
-          </h2>
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: c.whatYouGet,
+            title: isNl ? "Wat Fit Pass concreet toevoegt" : "What Fit Pass adds in practice",
+            description: isNl
+              ? "Dit is bedoeld voor rijders die hun aanbevelingen willen bewaren, delen en opnieuw willen valideren over meerdere sessies."
+              : "This is built for riders who want to save, share, and revisit their recommendations across multiple sessions.",
+          }}
+        >
+          <div className="grid gap-4 sm:grid-cols-3">
             {c.features.map((feature) => (
-              <div
+              <PublicFeatureCard
                 key={feature.title}
-                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6"
-              >
-                <div className="mb-3 inline-flex rounded-xl bg-[color:var(--primary-soft)] p-2.5 text-[color:var(--primary)]">
-                  {featureIcon(feature.icon)}
-                </div>
-                <h3 className="text-base font-semibold text-[color:var(--foreground)]">
-                  {feature.title}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
-                  {feature.body}
-                </p>
-              </div>
+                icon={featureIcon(feature.icon)}
+                title={feature.title}
+                description={feature.body}
+              />
             ))}
           </div>
-        </section>
+        </PublicSection>
 
-        {/* How it works */}
-        <section className="mt-14">
-          <h2 className="text-center text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
-            {c.howItWorksTitle}
-          </h2>
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: c.howItWorksTitle,
+            title: isNl ? "Van fit-sessie naar downloadbaar rapport" : "From fit session to downloadable report",
+            description: isNl
+              ? "De flow blijft eenvoudig: je doet eerst de gratis fit, en activeert daarna Fit Pass wanneer je de volledige output wilt bewaren."
+              : "The flow stays simple: complete the free fit first, then activate Fit Pass when you want to keep the full output.",
+          }}
+        >
+          <div className="grid gap-4">
             {c.steps.map((step, i) => (
-              <div key={step.label} className="flex gap-4">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-bold text-[color:var(--primary-foreground)]">
+              <div
+                key={step.label}
+                className="grid gap-4 rounded-[var(--radius-xl)] border border-border/80 bg-card px-5 py-5 sm:grid-cols-[auto_1fr]"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                   {i + 1}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-[color:var(--foreground)]">{step.label}</p>
-                  <p className="mt-1 text-sm leading-6 text-[color:var(--muted-foreground)]">{step.body}</p>
+                  <p className="text-sm font-semibold text-foreground">{step.label}</p>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">{step.body}</p>
                 </div>
               </div>
             ))}
           </div>
-        </section>
+        </PublicSection>
 
-        {/* FAQ */}
-        <section className="mt-14">
-          <h2 className="text-center text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
-            {c.faqTitle}
-          </h2>
-          <div className="mt-6 grid gap-4">
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: c.faqTitle,
+            title: isNl ? "Wat rijders meestal willen weten" : "What riders usually want to know",
+            description: isNl
+              ? "Duidelijke verwachtingen vergroten vertrouwen, vooral rond toegang, opzeggen en gebruik zonder vaste fiets."
+              : "Clear expectations matter here, especially around access, cancellation, and using the product before you have a final bike.",
+          }}
+        >
+          <div className="grid gap-4">
             {c.faqs.map((faq) => (
-              <article
-                key={faq.q}
-                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-5"
-              >
-                <h3 className="text-base font-semibold text-[color:var(--foreground)]">{faq.q}</h3>
-                <p className="mt-2 text-sm leading-7 text-[color:var(--muted-foreground)]">{faq.a}</p>
-              </article>
+              <PublicSurfaceCard key={faq.q} title={faq.q} description={faq.a} leading={<CheckCircle2 className="h-5 w-5" />}>
+                <div />
+              </PublicSurfaceCard>
             ))}
           </div>
-        </section>
+        </PublicSection>
 
-        {/* Final CTA */}
-        <section className="mt-14 rounded-[2rem] bg-[linear-gradient(160deg,color-mix(in_oklch,var(--primary)_92%,black_8%),color-mix(in_oklch,var(--primary)_72%,var(--warning)_28%))] p-8 text-center sm:p-10">
-          <h2 className="text-2xl font-bold text-[color:var(--primary-foreground)] sm:text-3xl">
-            {c.hero}
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[color:var(--primary-foreground)]/84">
-            {c.subhero}
-          </p>
-          <div className="mt-6 flex justify-center">
+        <PublicCtaBand
+          className="mt-12"
+          eyebrow={c.eyebrow}
+          title={c.hero}
+          description={c.subhero}
+          actions={
             <FitPassLandingCta
               locale={locale}
               label={c.finalCta}
@@ -272,10 +281,17 @@ export default async function FitPassPage() {
               loginHref={loginHref}
               dashboardHref={dashboardHref}
             />
-          </div>
-        </section>
-
+          }
+          aside={
+            <span className="inline-flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" />
+              {isNl
+                ? `Gebaseerd op dezelfde fitlogica als de gratis flow, met bewaarde output voor later gebruik.`
+                : "Built on the same fit logic as the free flow, with saved output for later use."}
+            </span>
+          }
+        />
       </div>
-    </div>
+    </PublicPageShell>
   );
 }

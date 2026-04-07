@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { Button } from "@/components/prototyper-ui/ui/button";
+import { PublicSection } from "@/components/public/PublicSection";
+import { PublicSurfaceCard } from "@/components/public/PublicSurfaceCard";
 import type { Locale } from "@/i18n/config";
 import { HOME_QUOTES_SECTION_COPY } from "@/content/homeQuotes";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -25,40 +28,42 @@ export function QuotesCarousel({
   return (
     <section
       aria-labelledby="home-quotes-title"
-      className={cn("bg-white py-14 sm:py-16", className)}
+      className={cn("bg-background py-14 sm:py-16", className)}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 id="home-quotes-title" className="text-3xl font-bold text-gray-900">
-            {copy.title}
-          </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-600">
-            {copy.subtitle}
-          </p>
-        </div>
-        <div
-          className="mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-4 md:overflow-visible md:pb-0"
-          aria-label={copy.title}
+        <PublicSection
+          header={{
+            title: copy.title,
+            description: copy.subtitle,
+            align: "center",
+          }}
+          contentClassName="pt-8"
         >
-          {quotes.map((quote, index) => (
-            <article
-              key={`${index}-${quote}`}
-              className="min-w-[16rem] snap-start rounded-xl border border-gray-200 bg-gray-50 p-5 shadow-sm md:min-w-0"
-            >
-              <blockquote className="text-base font-bold italic leading-relaxed text-blue-700">
-                &ldquo;{quote}&rdquo;
-              </blockquote>
-            </article>
-          ))}
-        </div>
-        <div className="mt-8 text-center">
-          <Link
-            href={readMoreHref}
-            className="inline-flex text-sm font-semibold text-blue-700 hover:text-blue-800"
+          <div
+            className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-4 md:overflow-visible md:pb-0"
+            aria-label={copy.title}
           >
-            {copy.readMoreLabel}
-          </Link>
-        </div>
+            {quotes.map((quote, index) => (
+              <PublicSurfaceCard
+                key={`${index}-${quote}`}
+                className="min-w-[16rem] snap-start md:min-w-0"
+              >
+                <blockquote className="text-base font-semibold italic leading-relaxed text-primary">
+                  &ldquo;{quote}&rdquo;
+                </blockquote>
+              </PublicSurfaceCard>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Button
+              variant="link"
+              className="text-sm font-semibold"
+              render={<Link href={readMoreHref} />}
+            >
+              {copy.readMoreLabel}
+            </Button>
+          </div>
+        </PublicSection>
       </div>
     </section>
   );

@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
+import { Gauge, Ruler, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import {
+  PublicCtaBand,
+  PublicFeatureCard,
+  PublicHero,
+  PublicPageShell,
+  PublicSection,
+} from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
-import { Button } from "@/components/ui";
 import { BRAND } from "@/config/brand";
+import { buildLocaleAlternates } from "@/i18n/metadata";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { getRequestLocale } from "@/i18n/request";
 import { buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
-import { buildLocaleAlternates } from "@/i18n/metadata";
-import { getRequestLocale } from "@/i18n/request";
-import { withLocalePrefix } from "@/i18n/navigation";
 import { SaddleHeightCalculatorForm } from "./SaddleHeightCalculatorForm";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -64,9 +72,50 @@ export default async function SaddleHeightCalculatorPage() {
           a: "The calculator combines inseam with riding context. Flexibility and core affect the wider fit posture around the saddle, which matters when choosing a safe starting point.",
         },
       ];
+  const trustPoints = isNl
+    ? [
+        {
+          title: "Veilige basiszone",
+          description:
+            "Je krijgt bewust een conservatieve bandbreedte om te testen, in plaats van een te absolute eindwaarde.",
+          icon: <ShieldCheck className="h-5 w-5" />,
+        },
+        {
+          title: "Gebouwd op meetdiscipline",
+          description:
+            "Een zorgvuldige binnenbeenlengte is hier belangrijker dan extra complexiteit. Dat maakt de uitkomst beter uitlegbaar en betrouwbaarder.",
+          icon: <Ruler className="h-5 w-5" />,
+        },
+        {
+          title: "Onderdeel van het totale fitplaatje",
+          description:
+            "Zadelhoogte staat niet los van reach, drop en comfort. Daarom blijft dit een startpunt binnen een groter systeem.",
+          icon: <Gauge className="h-5 w-5" />,
+        },
+      ]
+    : [
+        {
+          title: "Safe baseline band",
+          description:
+            "You intentionally get a conservative test band rather than an overly absolute final number.",
+          icon: <ShieldCheck className="h-5 w-5" />,
+        },
+        {
+          title: "Built on measurement discipline",
+          description:
+            "A careful inseam matters more here than extra complexity. That makes the output easier to trust and explain.",
+          icon: <Ruler className="h-5 w-5" />,
+        },
+        {
+          title: "Part of the full fit picture",
+          description:
+            "Saddle height does not live in isolation from reach, drop, and comfort. That is why this remains a starting point inside a wider system.",
+          icon: <Gauge className="h-5 w-5" />,
+        },
+      ];
 
   return (
-    <div className="py-16 text-foreground">
+    <PublicPageShell className="text-foreground">
       <JsonLd
         schema={[
           buildWebApplicationSchema({
@@ -81,12 +130,8 @@ export default async function SaddleHeightCalculatorPage() {
               ? "Een rustig proces om een veilig startpunt voor zadelhoogte te krijgen."
               : "A short process for getting a safe saddle-height starting point.",
             steps: [
-              isNl
-                ? "Meet je binnenbeenlengte zorgvuldig."
-                : "Measure your inseam carefully.",
-              isNl
-                ? "Kies je fietscategorie en rijdoel."
-                : "Choose bike category and riding goal.",
+              isNl ? "Meet je binnenbeenlengte zorgvuldig." : "Measure your inseam carefully.",
+              isNl ? "Kies je fietscategorie en rijdoel." : "Choose bike category and riding goal.",
               isNl
                 ? "Beoordeel flexibiliteit en core-stabiliteit."
                 : "Rate flexibility and core stability.",
@@ -97,35 +142,59 @@ export default async function SaddleHeightCalculatorPage() {
           }),
         ]}
       />
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <section className="rounded-[28px] border border-border bg-[color:color-mix(in_oklch,var(--card)_88%,var(--primary)_12%)] p-8 shadow-sm sm:p-10">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
-              BestBikeFit4U calculator
-            </p>
-            <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">
-              {isNl ? "Zadelhoogte calculator" : "Saddle Height Calculator"}
-            </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-              {isNl
-                ? "Bereken een rustige, conservatieve zadelhoogte als startpunt voordat je grotere aanpassingen doet."
-                : "Calculate a clean, conservative saddle-height starting point before making larger fit changes."}
-            </p>
-          </div>
-        </section>
 
-        <SaddleHeightCalculatorForm isNl={isNl} />
+      <PublicHero
+        eyebrow="BestBikeFit4U calculator"
+        title={isNl ? "Zadelhoogte calculator" : "Saddle Height Calculator"}
+        description={
+          isNl
+            ? "Bereken een rustige, conservatieve zadelhoogte als startpunt voordat je grotere aanpassingen doet."
+            : "Calculate a clean, conservative saddle-height starting point before making larger fit changes."
+        }
+        chips={
+          isNl
+            ? ["NL en EN beschikbaar", "Conservatief startpunt", "Meetbaar thuis"]
+            : ["Available in Dutch and English", "Conservative baseline", "Measurable at home"]
+        }
+      />
 
-        <section className="mt-10 rounded-3xl border border-border bg-[color:color-mix(in_oklch,var(--card)_88%,var(--secondary)_12%)] p-6 shadow-sm sm:p-8">
-          <h2 className="text-2xl font-semibold text-foreground">
-            {isNl ? "Volgende stap" : "Next step"}
-          </h2>
-          <p className="mt-3 max-w-2xl text-muted-foreground">
-            {isNl
-              ? "Als je de zadelbasis kent, vergelijk je die met reach, drop en framedoelen zodat de totale positie logisch blijft."
-              : "Once you know the saddle baseline, compare it with reach, drop, and frame targets so the full position stays coherent."}
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
+      <PublicSection
+        className="mt-10"
+        header={{
+          eyebrow: isNl ? "Waarom dit vertrouwen wekt" : "Why this builds trust",
+          title: isNl
+            ? "Eerst een veilige basis, daarna pas grotere aanpassingen"
+            : "A safe baseline first, larger changes only afterwards",
+          description: isNl
+            ? "Deze calculator is bedoeld om overshooting te voorkomen en je eerste testzone geloofwaardig te houden."
+            : "This calculator is designed to prevent overshooting and keep your first test zone credible.",
+        }}
+      >
+        <div className="grid gap-4 md:grid-cols-3">
+          {trustPoints.map((point) => (
+            <PublicFeatureCard
+              key={point.title}
+              icon={point.icon}
+              title={point.title}
+              description={point.description}
+            />
+          ))}
+        </div>
+      </PublicSection>
+
+      <SaddleHeightCalculatorForm isNl={isNl} />
+
+      <PublicCtaBand
+        className="mt-10"
+        eyebrow={isNl ? "Volgende stap" : "Next step"}
+        title={isNl ? "Plaats zadelhoogte in het totale fitbeeld" : "Put saddle height into the full fit picture"}
+        description={
+          isNl
+            ? "Als je de zadelbasis kent, vergelijk je die met reach, drop en framedoelen zodat de totale positie logisch blijft."
+            : "Once you know the saddle baseline, compare it with reach, drop, and frame targets so the full position stays coherent."
+        }
+        actions={
+          <>
             <Button
               render={
                 <TrackedCtaLink
@@ -153,29 +222,42 @@ export default async function SaddleHeightCalculatorPage() {
             >
               {isNl ? "Ga verder in dashboard" : "Continue in dashboard"}
             </Button>
-          </div>
-        </section>
+          </>
+        }
+        aside={
+          isNl
+            ? "Gebruik een fysieke fitter of arts bij aanhoudende pijn, blessures of complexe asymmetrie."
+            : "Use an in-person fitter or clinician for persistent pain, injury, or complex asymmetry."
+        }
+      />
 
-        <section className="mt-10 rounded-2xl border border-border bg-card p-6">
-          <h2 className="text-2xl font-semibold text-foreground">
-            {isNl ? "Veelgestelde vragen" : "FAQ"}
-          </h2>
-          <div className="mt-4 space-y-4">
-            {faqs.map((faq) => (
-              <div key={faq.q}>
-                <h3 className="font-semibold text-foreground">{faq.q}</h3>
-                <p className="mt-1 text-muted-foreground">{faq.a}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+      <PublicSection
+        className="mt-10"
+        header={{
+          title: isNl ? "Veelgestelde vragen" : "FAQ",
+          description: isNl ? "Korte antwoorden op de belangrijkste meetvragen." : "Short answers to the key measurement questions.",
+        }}
+      >
+        <div className="space-y-4">
+          {faqs.map((faq) => (
+            <div
+              key={faq.q}
+              className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
+            >
+              <h3 className="font-semibold text-foreground">{faq.q}</h3>
+              <p className="mt-2 text-muted-foreground">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      </PublicSection>
 
+      <section className="mt-10">
         <RelatedLinksSection
           title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}
           links={getRelatedLinks("saddle-height", locale)}
           locale={locale}
         />
-      </div>
-    </div>
+      </section>
+    </PublicPageShell>
   );
 }

@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "012",
+  "title": "Activity gate E: layout/theme/cleanup/security closeout. Validation = header/mobile menu/language switch/cookie/footer follow approved patterns, dead code removed, security review note exists, light/dark/system checks complete.",
+  "description": "",
+  "goal": "4",
+  "status": "done",
+  "assignee": null,
+  "priority": 2,
+  "created": "2026-04-07T20:50:15.516Z",
+  "updated": "2026-04-07T22:14:02.965Z",
+  "tags": [],
+  "proof": {
+    "notes": "Gate E validation recorded in plans/feature-commercial-saas-ux-upgrade/output-03-gate-e-validation.md. Website surface grep for legacy UI imports is clean; ThemeProvider tests passed; focused website regression suite passed (9 files, 16 tests); security review documented the static JSON-LD dangerouslySetInnerHTML exception with no user-input XSS path."
+  },
+  "milestone": null,
+  "specialty": null,
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

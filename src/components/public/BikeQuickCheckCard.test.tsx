@@ -47,11 +47,11 @@ vi.mock("next/image", () => ({
     <img alt={alt} src={src} {...props} />,
 }));
 
-vi.mock("@/components/ui", () => ({
+vi.mock("@/components/prototyper-ui/ui/button", () => ({
   Button: ({
     children,
     render,
-    ...props
+  ...props
   }: {
     children?: ReactNode;
     render?: ReactElement;
@@ -62,19 +62,30 @@ vi.mock("@/components/ui", () => ({
     ) : (
       <button {...props}>{children}</button>
     ),
-  Input: ({
-    label,
-    ...props
+}));
+
+vi.mock("@/components/prototyper-ui/ui/input", () => ({
+  Input: ({ ...props }: { [key: string]: unknown }) => <input {...props} />,
+}));
+
+vi.mock("@/components/prototyper-ui/ui/label", () => ({
+  Label: ({
+    children,
+    htmlFor,
   }: {
-    label?: string;
-    [key: string]: unknown;
-  }) => (
-    <label>
-      <span>{label}</span>
-      <input {...props} />
-    </label>
-  ),
-  InfoBox: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
+    children?: ReactNode;
+    htmlFor?: string;
+  }) => <label htmlFor={htmlFor}>{children}</label>,
+}));
+
+vi.mock("@base-ui/react/field", () => ({
+  Field: {
+    Root: ({
+      children,
+    }: {
+      children?: ReactNode;
+    }) => <div>{children}</div>,
+  },
 }));
 
 vi.mock("./PublicSurfaceCard", () => ({

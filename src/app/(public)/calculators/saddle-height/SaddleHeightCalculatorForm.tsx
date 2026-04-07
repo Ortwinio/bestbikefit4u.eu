@@ -1,41 +1,45 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { NumberSlider } from "@/components/measurements/NumberSlider";
-import { SliderQuestion } from "@/components/profile/RidingStyleCard";
+import { useMemo, useState } from "react";
+import { ShieldCheck } from "lucide-react";
+import {
+  PublicInfoPanel,
+  PublicNumberField,
+  PublicSelectField,
+  PublicSurfaceCard,
+} from "@/components/public";
 import { mapCoreScore, mapFlexibilityScore } from "../../../../../convex/lib/fitAlgorithm";
 import { calculateSaddleHeight } from "../../../../../convex/lib/fitAlgorithm/calculations";
-import type { Ambition, BikeCategory } from "../../../../../convex/lib/fitAlgorithm/types";
-import type { CalculationContext } from "../../../../../convex/lib/fitAlgorithm/types";
+import type { Ambition, BikeCategory, CalculationContext } from "../../../../../convex/lib/fitAlgorithm/types";
 
 const CATEGORY_OPTIONS = [
-  { key: "road", label: "Road" },
-  { key: "gravel", label: "Gravel" },
-  { key: "mtb", label: "Mountain" },
-  { key: "city", label: "City" },
+  { value: "road", label: "Road" },
+  { value: "gravel", label: "Gravel" },
+  { value: "mtb", label: "Mountain" },
+  { value: "city", label: "City" },
 ];
 
 const AMBITION_OPTIONS = [
-  { key: "comfort", label: "Comfort" },
-  { key: "balanced", label: "Balanced" },
-  { key: "performance", label: "Performance" },
-  { key: "aero", label: "Aero" },
+  { value: "comfort", label: "Comfort" },
+  { value: "balanced", label: "Balanced" },
+  { value: "performance", label: "Performance" },
+  { value: "aero", label: "Aero" },
 ];
 
 const FLEXIBILITY_OPTIONS = [
-  { key: "1", label: "Very Limited" },
-  { key: "2", label: "Limited" },
-  { key: "3", label: "Average" },
-  { key: "4", label: "Good" },
-  { key: "5", label: "Excellent" },
+  { value: "1", label: "Very Limited" },
+  { value: "2", label: "Limited" },
+  { value: "3", label: "Average" },
+  { value: "4", label: "Good" },
+  { value: "5", label: "Excellent" },
 ];
 
 const CORE_OPTIONS = [
-  { key: "1", label: "Very Low" },
-  { key: "2", label: "Low" },
-  { key: "3", label: "Average" },
-  { key: "4", label: "Good" },
-  { key: "5", label: "Excellent" },
+  { value: "1", label: "Very Low" },
+  { value: "2", label: "Low" },
+  { value: "3", label: "Average" },
+  { value: "4", label: "Good" },
+  { value: "5", label: "Excellent" },
 ];
 
 const GUIDANCE_POINTS = [
@@ -52,36 +56,36 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
   const [core, setCore] = useState("3");
   const categoryOptions = isNl
     ? [
-        { key: "road", label: "Race" },
-        { key: "gravel", label: "Gravel" },
-        { key: "mtb", label: "Mountainbike" },
-        { key: "city", label: "Stadsfiets" },
+        { value: "road", label: "Race" },
+        { value: "gravel", label: "Gravel" },
+        { value: "mtb", label: "Mountainbike" },
+        { value: "city", label: "Stadsfiets" },
       ]
     : CATEGORY_OPTIONS;
   const ambitionOptions = isNl
     ? [
-        { key: "comfort", label: "Comfort" },
-        { key: "balanced", label: "Balans" },
-        { key: "performance", label: "Prestatie" },
-        { key: "aero", label: "Aero" },
+        { value: "comfort", label: "Comfort" },
+        { value: "balanced", label: "Balans" },
+        { value: "performance", label: "Prestatie" },
+        { value: "aero", label: "Aero" },
       ]
     : AMBITION_OPTIONS;
   const flexibilityOptions = isNl
     ? [
-        { key: "1", label: "Zeer beperkt" },
-        { key: "2", label: "Beperkt" },
-        { key: "3", label: "Gemiddeld" },
-        { key: "4", label: "Goed" },
-        { key: "5", label: "Uitstekend" },
+        { value: "1", label: "Zeer beperkt" },
+        { value: "2", label: "Beperkt" },
+        { value: "3", label: "Gemiddeld" },
+        { value: "4", label: "Goed" },
+        { value: "5", label: "Uitstekend" },
       ]
     : FLEXIBILITY_OPTIONS;
   const coreOptions = isNl
     ? [
-        { key: "1", label: "Zeer laag" },
-        { key: "2", label: "Laag" },
-        { key: "3", label: "Gemiddeld" },
-        { key: "4", label: "Goed" },
-        { key: "5", label: "Uitstekend" },
+        { value: "1", label: "Zeer laag" },
+        { value: "2", label: "Laag" },
+        { value: "3", label: "Gemiddeld" },
+        { value: "4", label: "Goed" },
+        { value: "5", label: "Uitstekend" },
       ]
     : CORE_OPTIONS;
   const guidancePoints = isNl
@@ -125,93 +129,115 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
   return (
     <>
       <section className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
-        {/* Form card */}
-        <div className="space-y-8 rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
-          <div>
+        <PublicSurfaceCard
+          title={isNl ? "Bouw je startpunt" : "Build your starting point"}
+          description={
+            isNl
+              ? "Binnenbeenlengte zet de basis. Categorie, rijdoel, flexibiliteit en core helpen om dat startpunt verder te verfijnen."
+              : "Inseam sets the baseline. Category, ambition, flexibility, and core help refine how progressive the starting point can be."
+          }
+          className="rounded-[1.75rem]"
+        >
+          <div className="space-y-6">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
               {isNl ? "Invoer" : "Inputs"}
             </p>
-            <h2 className="mt-2 text-2xl font-semibold text-foreground">
-              {isNl ? "Bouw je startpunt" : "Build your starting point"}
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {isNl
-                ? "Binnenbeenlengte zet de basis. Categorie, rijdoel, flexibiliteit en core helpen om dat startpunt verder te verfijnen."
-                : "Inseam sets the baseline. Category, ambition, flexibility, and core help refine how progressive the starting point can be."}
-            </p>
+            <PublicNumberField
+              label={isNl ? "Binnenbeenlengte" : "Inseam"}
+              description={
+                isNl
+                  ? "Meet op blote voeten met een boek tegen de muur."
+                  : "Measure barefoot with a book firmly against the wall."
+              }
+              min={55}
+              max={105}
+              step={0.5}
+              unit="cm"
+              value={inseamCm}
+              onChange={setInseamCm}
+              placeholder={isNl ? "Bijv. 84.5" : "e.g. 84.5"}
+            />
+            <div className="grid gap-5 md:grid-cols-2">
+              <PublicSelectField
+                label={isNl ? "Fietscategorie" : "Bike category"}
+                description={
+                  isNl
+                    ? "Kies de discipline waarvoor je het zadel startpunt wilt bepalen."
+                    : "Choose the discipline you want the saddle starting point for."
+                }
+                options={categoryOptions}
+                value={category}
+                onChange={(value) => setCategory(value as BikeCategory)}
+              />
+              <PublicSelectField
+                label={isNl ? "Rijdoel" : "Riding goal"}
+                description={
+                  isNl
+                    ? "Dit bepaalt of het startpunt rustiger of progressiever mag zijn."
+                    : "This sets whether the starting point should stay calmer or more progressive."
+                }
+                options={ambitionOptions}
+                value={ambition}
+                onChange={(value) => setAmbition(value as Ambition)}
+              />
+              <PublicSelectField
+                label={isNl ? "Flexibiliteit" : "Flexibility"}
+                options={flexibilityOptions}
+                value={flexibility}
+                onChange={setFlexibility}
+              />
+              <PublicSelectField
+                label={isNl ? "Core-stabiliteit" : "Core stability"}
+                options={coreOptions}
+                value={core}
+                onChange={setCore}
+              />
+            </div>
           </div>
+        </PublicSurfaceCard>
 
-          <NumberSlider
-            label={isNl ? "Binnenbeenlengte" : "Inseam"}
-            min={55}
-            max={105}
-            step={0.5}
-            unit="cm"
-            value={inseamCm}
-            onChange={setInseamCm}
-          />
-
-          <SliderQuestion
-            label={isNl ? "Fietscategorie" : "Bike Category"}
-            options={categoryOptions}
-            value={category}
-            onChange={(v) => setCategory(v as BikeCategory)}
-          />
-
-          <SliderQuestion
-            label={isNl ? "Rijdoel" : "Riding Goal"}
-            options={ambitionOptions}
-            value={ambition}
-            onChange={(v) => setAmbition(v as Ambition)}
-          />
-
-          <SliderQuestion
-            label={isNl ? "Flexibiliteit" : "Flexibility"}
-            options={flexibilityOptions}
-            value={flexibility}
-            onChange={setFlexibility}
-          />
-
-          <SliderQuestion
-            label={isNl ? "Core-stabiliteit" : "Core Stability"}
-            options={coreOptions}
-            value={core}
-            onChange={setCore}
-          />
-        </div>
-
-        {/* Guidance sidebar */}
         <aside>
-          <div className="rounded-3xl border border-border bg-[color:var(--secondary)] p-6 shadow-sm">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-              {isNl ? "Richtlijnen" : "Guidance"}
-            </p>
-            <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-              {guidancePoints.map((point) => (
-                <li
-                  key={point}
-                  className="rounded-2xl border border-border/60 bg-card px-4 py-3"
-                >
-                  {point}
-                </li>
-              ))}
-            </ul>
+          <div className="space-y-4">
+            <PublicInfoPanel
+              tone="secondary"
+              title={isNl ? "Waarom dit conservatief blijft" : "Why this stays conservative"}
+              icon={<ShieldCheck />}
+            >
+              {isNl
+                ? "De publieke zadelhoogtecalculator geeft bewust een veilige basiszone. Zo verklein je de kans op te grote aanpassingen voordat je op de fiets hebt gevalideerd."
+                : "The public saddle-height calculator intentionally gives a safe baseline band. That reduces the risk of making large changes before you validate on the bike."}
+            </PublicInfoPanel>
+            <PublicSurfaceCard
+              title={isNl ? "Richtlijnen" : "Guidance"}
+              compact
+              className="rounded-[1.5rem]"
+            >
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                {guidancePoints.map((point) => (
+                  <li
+                    key={point}
+                    className="rounded-2xl border border-border/60 bg-card px-4 py-3"
+                  >
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </PublicSurfaceCard>
           </div>
         </aside>
       </section>
 
-      {/* Output — updates live */}
-      <section className="mt-6 rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
+      <PublicSurfaceCard
+        title={isNl ? "Jouw basislijn" : "Your baseline"}
+        description={
+          isNl
+            ? "Gebruik dit als veilig startpunt, niet als definitief eindwoord."
+            : "Use this as a safe starting point, not as the final word."
+        }
+        className="mt-6 rounded-[1.75rem]"
+      >
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
           {isNl ? "Uitkomst" : "Output"}
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold text-foreground">
-          {isNl ? "Jouw basislijn" : "Your baseline"}
-        </h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {isNl
-            ? "Gebruik dit als veilig startpunt, niet als definitief eindwoord."
-            : "Use this as a safe starting point, not as the final word."}
         </p>
 
         {recommendation ? (
@@ -236,11 +262,11 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
         ) : (
           <div className="mt-6 rounded-2xl border border-dashed border-border bg-[color:var(--secondary)] px-4 py-5 text-sm text-muted-foreground">
             {isNl
-              ? "Verplaats de slider voor binnenbeenlengte om een eerste zadelhoogte-startpunt te berekenen."
-              : "Move the inseam slider to generate a first-pass saddle-height starting point."}
+              ? "Vul je binnenbeenlengte in om een eerste zadelhoogte-startpunt te berekenen."
+              : "Enter your inseam to generate a first-pass saddle-height starting point."}
           </div>
         )}
-      </section>
+      </PublicSurfaceCard>
     </>
   );
 }

@@ -1,17 +1,19 @@
 "use client";
 
+import * as BaseField from "@base-ui/react/field";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth } from "convex/react";
 import {
-  Button,
-  Input,
   Card,
+  CardContent,
   CardHeader,
   CardTitle,
-  CardContent,
-} from "@/components/ui";
+} from "@/components/prototyper-ui/ui/card";
+import { Button } from "@/components/prototyper-ui/ui/button";
+import { Input } from "@/components/prototyper-ui/ui/input";
+import { Label } from "@/components/prototyper-ui/ui/label";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
 import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
@@ -24,6 +26,7 @@ type LoginCopy = {
   uspTitle: string;
   uspSubtitle: string;
   uspItems: string[];
+  accountCreationHint: string;
   successTitle: string;
   successSubtitle: string;
   back: string;
@@ -53,6 +56,7 @@ type LoginCopy = {
   continueWithEmail: string;
   noPasswordHint: string;
   legalHint: string;
+  supportHint: string;
   localhostDevLoginLabel: string;
   localhostDevLoginHint: string;
   localhostDevLoginError: string;
@@ -60,13 +64,15 @@ type LoginCopy = {
 
 const loginCopy: Record<Locale, LoginCopy> = {
   en: {
-    uspTitle: "Why a proper bike fit matters",
-    uspSubtitle: "BestBikeFit4U helps you ride better from your very first session.",
+    uspTitle: "What you get after signing up",
+    uspSubtitle: "Your free account includes:",
     uspItems: [
-      "Reduce knee, back, neck, and hand discomfort",
-      "Improve pedaling efficiency and sustainable power",
-      "Get practical setup targets for your exact bike and goals",
+      "Personalized saddle height, reach, and handlebar targets",
+      "Prioritized adjustment sequence so you know what to change first",
+      "Email report with your complete fit analysis",
     ],
+    accountCreationHint:
+      "New here? We create your account as soon as you confirm the code.",
     successTitle: "Welcome to BestBikeFit4U",
     successSubtitle: "Redirecting to your dashboard...",
     back: "Back",
@@ -85,7 +91,7 @@ const loginCopy: Record<Locale, LoginCopy> = {
     changeEmailAction: "Use a different email",
     codeSentSuccess: "Verification code sent. Enter it below to continue.",
     spamHint: "Check your spam folder if you don't see the email.",
-    signInTitle: "Sign in to BestBikeFit4U",
+    signInTitle: "Create your account or sign in",
     emailLabel: "Email address",
     emailPlaceholder: "you@example.com",
     emailTooltip:
@@ -96,9 +102,12 @@ const loginCopy: Record<Locale, LoginCopy> = {
     googleSignIn: "Continue with Google",
     googleSignInError: "Google sign-in could not be started. Please try again.",
     continueWithEmail: "Or continue with email",
-    noPasswordHint: "No password needed. We'll send you a secure code to sign in.",
+    noPasswordHint:
+      "No password needed. We send you a secure code that works for both new and existing accounts.",
     legalHint:
       "By signing in, you agree to our Terms of Service and Privacy Policy.",
+    supportHint:
+      "Need help? Email support if your code does not arrive or you get stuck.",
     localhostDevLoginLabel: "Localhost dev admin sign-in",
     localhostDevLoginHint:
       "Available only on localhost when the local dev login env vars are configured.",
@@ -106,13 +115,15 @@ const loginCopy: Record<Locale, LoginCopy> = {
       "Localhost dev login failed. Check your local env vars and try again.",
   },
   nl: {
-    uspTitle: "Waarom een goede bikefitting belangrijk is",
-    uspSubtitle: "Met BestBikeFit4U rijd je vanaf je eerste sessie beter.",
+    uspTitle: "Wat je krijgt na het aanmelden",
+    uspSubtitle: "Je gratis account bevat:",
     uspItems: [
-      "Minder knie-, rug-, nek- en handklachten",
-      "Efficiënter trappen en vermogen langer vasthouden",
-      "Concrete afstelwaarden voor jouw fiets en doelen",
+      "Persoonlijke afstelwaarden voor zadelhoogte, reach en stuur",
+      "Een prioriteitsvolgorde zodat je weet wat je eerst aanpast",
+      "Een e-mailrapport met je complete fitanalyse",
     ],
+    accountCreationHint:
+      "Nieuw hier? We maken je account aan zodra je de code bevestigt.",
     successTitle: "Welkom bij BestBikeFit4U",
     successSubtitle: "Je wordt doorgestuurd naar je dashboard...",
     back: "Terug",
@@ -131,7 +142,7 @@ const loginCopy: Record<Locale, LoginCopy> = {
     changeEmailAction: "Ander e-mailadres gebruiken",
     codeSentSuccess: "Verificatiecode verzonden. Voer de code hieronder in.",
     spamHint: "Controleer je spammap als je de e-mail niet ziet.",
-    signInTitle: "Log in bij BestBikeFit4U",
+    signInTitle: "Maak je account aan of log in",
     emailLabel: "E-mailadres",
     emailPlaceholder: "jij@example.com",
     emailTooltip:
@@ -143,9 +154,11 @@ const loginCopy: Record<Locale, LoginCopy> = {
     googleSignInError: "Google-login kon niet worden gestart. Probeer het opnieuw.",
     continueWithEmail: "Of ga verder met e-mail",
     noPasswordHint:
-      "Geen wachtwoord nodig. We sturen je een veilige code om in te loggen.",
+      "Geen wachtwoord nodig. We sturen je een veilige code die werkt voor nieuwe en bestaande accounts.",
     legalHint:
       "Door in te loggen ga je akkoord met onze Voorwaarden en Privacyverklaring.",
+    supportHint:
+      "Hulp nodig? Mail support als je code niet aankomt of je vastloopt.",
     localhostDevLoginLabel: "Localhost dev admin-login",
     localhostDevLoginHint:
       "Alleen beschikbaar op localhost als de lokale dev-login omgevingsvariabelen zijn ingesteld.",
@@ -187,6 +200,30 @@ function GoogleIcon() {
         fill="#EA4335"
       />
     </svg>
+  );
+}
+
+function AuthField({
+  id,
+  label,
+  tooltip,
+  className,
+  ...props
+}: React.ComponentProps<typeof Input> & {
+  id: string;
+  label: string;
+  tooltip?: string;
+}) {
+  return (
+    <BaseField.Field.Root className="space-y-2">
+      <div className="flex items-start justify-between gap-3">
+        <Label htmlFor={id}>{label}</Label>
+        {tooltip ? (
+          <p className="max-w-xs text-right text-xs leading-5 text-muted-foreground">{tooltip}</p>
+        ) : null}
+      </div>
+      <Input id={id} className={className} {...props} />
+    </BaseField.Field.Root>
   );
 }
 
@@ -244,14 +281,23 @@ export default function LoginPage() {
   }, []);
 
   const uspPanel = (
-    <section className="rounded-lg border border-border bg-primary-soft p-4">
-      <h2 className="text-base font-semibold text-primary">{text.uspTitle}</h2>
-      <p className="mt-1 text-sm text-muted-foreground">{text.uspSubtitle}</p>
-      <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-foreground">
+    <section className="rounded-[1.75rem] border border-border/70 bg-card/90 p-6 shadow-sm">
+      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
+        {locale === "nl" ? "Gratis account" : "Free account"}
+      </p>
+      <h2 className="mt-3 text-xl font-semibold text-foreground">{text.uspTitle}</h2>
+      <p className="mt-2 text-sm text-muted-foreground">{text.uspSubtitle}</p>
+      <ul className="mt-4 space-y-3 text-sm text-foreground">
         {text.uspItems.map((item) => (
-          <li key={item}>{item}</li>
+          <li key={item} className="flex items-start gap-3">
+            <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />
+            <span>{item}</span>
+          </li>
         ))}
       </ul>
+      <p className="mt-4 rounded-2xl bg-primary-soft px-4 py-3 text-sm text-foreground">
+        {text.accountCreationHint}
+      </p>
     </section>
   );
 
@@ -464,7 +510,7 @@ export default function LoginPage() {
 
   if (step === "success") {
     return (
-      <Card variant="bordered">
+      <Card className="gap-0 rounded-[2rem] border border-border/70 bg-card/95 shadow-sm">
         <CardContent className="pt-8 pb-8 text-center">
           <CheckCircle className="mx-auto mb-4 h-16 w-16 text-success" />
           <h2 className="mb-2 text-xl font-semibold text-foreground">
@@ -478,26 +524,26 @@ export default function LoginPage() {
 
   if (step === "code") {
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
         {uspPanel}
-        <Card variant="bordered">
-          <CardHeader>
+        <Card className="gap-0 rounded-[2rem] border border-border/70 bg-card/95 shadow-sm">
+          <CardHeader className="space-y-4">
             <Button
               type="button"
               variant="ghost"
               onClick={handleChangeEmail}
-              className="mb-2 flex items-center px-0 text-sm text-muted-foreground hover:text-foreground"
+              className="w-fit px-0 text-sm text-muted-foreground hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
               {text.back}
             </Button>
             <CardTitle>{text.enterVerificationCode}</CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="mb-4 text-muted-foreground">
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
               {text.codeSentTo} <strong>{email}</strong>
             </p>
-            <div className="mb-4 flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <Button
                 type="button"
                 variant="ghost"
@@ -514,7 +560,8 @@ export default function LoginPage() {
             </div>
 
             <form onSubmit={handleVerifyCode} className="space-y-4">
-              <Input
+              <AuthField
+                id="verification-code"
                 label={text.verificationCodeLabel}
                 tooltip={text.verificationCodeTooltip}
                 type="text"
@@ -539,12 +586,12 @@ export default function LoginPage() {
                 </p>
               )}
 
-              <Button type="submit" className="w-full" isLoading={isLoading}>
+              <Button type="submit" className="w-full" isPending={isLoading}>
                 {text.verifyCode}
               </Button>
             </form>
 
-            <div className="mt-4 text-center">
+            <div className="text-center">
               <Button
                 type="button"
                 variant="ghost"
@@ -558,9 +605,10 @@ export default function LoginPage() {
               </Button>
             </div>
 
-            <p className="mt-4 text-center text-xs text-muted-foreground">
-              {text.spamHint}
-            </p>
+            <div className="rounded-2xl border border-border/70 bg-background/80 px-4 py-3 text-center text-xs text-muted-foreground">
+              <p>{text.spamHint}</p>
+              <p className="mt-2">{text.supportHint}</p>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -568,11 +616,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {uspPanel}
-      <Card variant="bordered">
-        <CardHeader>
+      <Card className="gap-0 rounded-[2rem] border border-border/70 bg-card/95 shadow-sm">
+        <CardHeader className="space-y-2">
           <CardTitle>{text.signInTitle}</CardTitle>
+          <p className="text-sm text-muted-foreground">{text.noPasswordHint}</p>
         </CardHeader>
         <CardContent>
           {googleAuthEnabled ? (
@@ -582,7 +631,7 @@ export default function LoginPage() {
                 variant="outline"
                 className="w-full"
                 onClick={() => void handleGoogleSignIn()}
-                isLoading={isLoading}
+                isPending={isLoading}
               >
                 <GoogleIcon />
                 {text.googleSignIn}
@@ -599,7 +648,8 @@ export default function LoginPage() {
           ) : null}
 
           <form onSubmit={handleSendCode} className="space-y-4">
-            <Input
+            <AuthField
+              id="login-email"
               label={text.emailLabel}
               tooltip={text.emailTooltip}
               type="email"
@@ -616,15 +666,11 @@ export default function LoginPage() {
               </p>
             )}
 
-            <Button type="submit" className="w-full" isLoading={isLoading}>
+            <Button type="submit" className="w-full" isPending={isLoading}>
               <Mail className="h-4 w-4 mr-2" />
               {text.sendCode}
             </Button>
           </form>
-
-          <p className="mt-4 text-center text-sm text-muted-foreground">
-            {text.noPasswordHint}
-          </p>
 
           {localhostDevReady ? (
             <div className="mt-6 rounded-lg border border-primary/25 bg-primary-soft p-4">
@@ -636,7 +682,7 @@ export default function LoginPage() {
                 variant="outline"
                 className="mt-3 w-full"
                 onClick={() => void handleLocalhostDevLogin()}
-                isLoading={isLoading}
+                isPending={isLoading}
               >
                 {text.localhostDevLoginLabel}
               </Button>
@@ -646,6 +692,9 @@ export default function LoginPage() {
           <div className="mt-6 border-t border-border pt-6">
             <p className="text-center text-xs text-muted-foreground">
               {text.legalHint}
+            </p>
+            <p className="mt-3 text-center text-xs text-muted-foreground">
+              {text.supportHint}
             </p>
           </div>
         </CardContent>

@@ -1,0 +1,23 @@
+{
+  "_version": 1,
+  "id": 10,
+  "title": "Final QA and closeout: mobile/desktop review, light/dark/system theme review, analytics/CTA route sanity check, conversion baseline documentation, and closeout artifact with residual risks",
+  "status": "done",
+  "priority": 6,
+  "assigned": "orchestrator",
+  "depends_on": ["All implementation tasks complete", "Public funnel tests"],
+  "acceptance": [
+    "Mobile and desktop layout quality verified on all touched pages",
+    "Light, dark, and system theme modes verified",
+    "Analytics hooks and CTA destinations match intended funnel",
+    "Conversion event baseline documented for future measurement",
+    "Written QA summary saved in plan folder with residual risks and follow-ups",
+    "No major regressions in usability, clarity, or responsiveness"
+  ],
+  "notes": [
+    "Saved final closeout artifact in plans/feature-commercial-saas-ux-upgrade/output-04-final-qa-closeout.md.",
+    "Re-ran the full public funnel regression suite: 15 files, 31 tests passed.",
+    "Fixed touched closeout regressions in src/app/(auth)/login/page.tsx and src/components/feedback/FeedbackDialog.tsx caused by Base UI field API and button pending-prop mismatches.",
+    "npm run typecheck remains blocked only by pre-existing unrelated test typing issues in convex/authLocalDev.test.ts, src/lib/rateLimiter.test.ts, and src/lib/reports/pdfLayoutTemplate.test.ts."
+  ]
+}

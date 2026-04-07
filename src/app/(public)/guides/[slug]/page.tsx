@@ -1,27 +1,36 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import {
   BookOpen,
   CheckCircle2,
   HelpCircle,
   ShieldCheck,
+  Sparkles,
   Wrench,
 } from "lucide-react";
-import { notFound } from "next/navigation";
-import { Button, Card, CardContent } from "@/components/ui";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { FitDisclaimer } from "@/components/content/FitDisclaimer";
+import {
+  PublicCtaBand,
+  PublicHero,
+  PublicMetricPanel,
+  PublicPageShell,
+  PublicSection,
+  PublicSurfaceCard,
+} from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
-import { getRequestLocale } from "@/i18n/request";
-import { withLocalePrefix } from "@/i18n/navigation";
-import { buildLocaleAlternates } from "@/i18n/metadata";
 import { BRAND } from "@/config/brand";
+import { buildLocaleAlternates } from "@/i18n/metadata";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { getRequestLocale } from "@/i18n/request";
 import {
   buildArticleSchema,
   buildBreadcrumbListSchema,
   buildFaqPageSchema,
 } from "@/lib/seo/jsonLd";
 import { GUIDE_SLUGS, getGuideBySlug, getGuideCopy } from "../data";
-import { FitDisclaimer } from "@/components/content/FitDisclaimer";
 
 interface GuidePageProps {
   params: Promise<{ slug: string }>;
@@ -81,7 +90,7 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
   const homeUrl = new URL(withLocalePrefix("/", locale), BRAND.siteUrl).toString();
 
   return (
-    <div className="py-16">
+    <PublicPageShell>
       <JsonLd
         schema={[
           buildArticleSchema({
@@ -100,207 +109,209 @@ export default async function GuideDetailPage({ params }: GuidePageProps) {
       />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
-          <Card className="dashboard-card-surface overflow-hidden border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_92%,var(--primary)_8%)]">
-            <CardContent className="p-8 sm:p-10">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
-                <BookOpen className="h-3.5 w-3.5" />
-                {guide.cluster === "pain"
-                  ? isNl
-                    ? "Klachtgids"
-                    : "Pain guide"
-                  : isNl
-                    ? "Disciplinegids"
-                    : "Discipline guide"}
-              </div>
-              <h1 className="mt-5 text-4xl font-semibold tracking-tight text-[color:var(--foreground)] sm:text-5xl">
-                {copy.h1}
-              </h1>
-              <p className="mt-4 text-lg leading-8 text-[color:var(--muted-foreground)]">
-                {copy.intro}
-              </p>
-            </CardContent>
-          </Card>
+        <PublicHero
+          eyebrow={
+            guide.cluster === "pain"
+              ? isNl
+                ? "Klachtgids"
+                : "Pain guide"
+              : isNl
+                ? "Disciplinegids"
+                : "Discipline guide"
+          }
+          title={copy.h1}
+          description={copy.intro}
+          chips={
+            isNl
+              ? [`${copy.takeaways.length} kernpunten`, `${copy.adjustments.length} acties`, "NL en EN beschikbaar"]
+              : [`${copy.takeaways.length} takeaways`, `${copy.adjustments.length} actions`, "Available in Dutch and English"]
+          }
+          actions={
+            <Button
+              variant="outline"
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/guides", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="guide_breadcrumb_cta"
+                  ctaLabel={isNl ? "Terug naar gidsen" : "Back to guides"}
+                />
+              }
+            >
+              {isNl ? "Terug naar gidsen" : "Back to guides"}
+            </Button>
+          }
+        />
 
-          <Card className="dashboard-card-surface overflow-hidden border-[color:var(--border)] bg-[linear-gradient(160deg,color-mix(in_oklch,var(--primary)_12%,var(--card)_88%),color-mix(in_oklch,var(--warning)_10%,var(--card)_90%))]">
-            <CardContent className="flex h-full flex-col justify-between p-8">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
-                  {isNl ? "Wat je hier krijgt" : "What you get here"}
-                </p>
-                <div className="mt-5 grid gap-3">
-                  <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)]/80 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">
-                      {isNl ? "Kernpunten" : "Takeaways"}
-                    </p>
-                    <p className="mt-2 text-3xl font-semibold text-[color:var(--foreground)]">
-                      {copy.takeaways.length}
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)]/80 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">
-                      {isNl ? "Acties" : "Actions"}
-                    </p>
-                    <p className="mt-2 text-3xl font-semibold text-[color:var(--foreground)]">
-                      {copy.adjustments.length}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-6 rounded-2xl border border-dashed border-[color:var(--border)] bg-[color:var(--background)]/70 p-4">
-                <div className="flex items-start gap-3">
-                  <ShieldCheck className="mt-0.5 h-5 w-5 text-[color:var(--primary)]" />
-                  <p className="text-sm leading-6 text-[color:var(--foreground)]">
-                    {isNl
-                      ? "Gebruik deze gids als filter voor je eerste keuzes. Laat de calculator daarna de exacte afstelwaarden bepalen."
-                      : "Use this guide to narrow your first decisions, then let the calculator define the exact setup values."}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        <section className="mt-10 rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm sm:p-8">
-          <div className="flex items-start gap-4">
-            <div className="rounded-2xl bg-[color:var(--primary-soft)] p-3 text-[color:var(--primary)]">
-              <CheckCircle2 className="h-5 w-5" />
+        <PublicSection className="mt-10">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,0.8fr)]">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <PublicMetricPanel
+                label={isNl ? "Kernpunten" : "Takeaways"}
+                value={copy.takeaways.length}
+                description={
+                  isNl
+                    ? "Snelle samenvatting van wat je wilt onthouden."
+                    : "A fast summary of what you want to remember."
+                }
+                icon={<CheckCircle2 className="h-5 w-5" />}
+              />
+              <PublicMetricPanel
+                label={isNl ? "Acties" : "Actions"}
+                value={copy.adjustments.length}
+                description={
+                  isNl
+                    ? "Praktische volgorde voor je volgende checks."
+                    : "A practical order for your next setup checks."
+                }
+                icon={<Wrench className="h-5 w-5" />}
+                accent="warning"
+              />
             </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
-                {isNl ? "Snelle samenvatting" : "Quick summary"}
-              </p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[color:var(--foreground)]">
-                {copy.takeawaysTitle}
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
+            <PublicSurfaceCard
+              title={isNl ? "Hoe je deze gids gebruikt" : "How to use this guide"}
+              description={
+                isNl
+                  ? "Gebruik deze pagina als filter voor je eerste keuzes en laat een calculator of volledige fit daarna de exacte waarden bepalen."
+                  : "Use this page to filter your first decisions, then let a calculator or full fit define the exact numbers."
+              }
+              leading={<ShieldCheck className="h-5 w-5" />}
+            >
+              <div className="rounded-2xl border border-border/70 bg-background px-4 py-3 text-sm text-foreground">
                 {isNl
-                  ? "Gebruik deze blokken om snel te scannen wat je wilt onthouden voordat je gaat aanpassen."
-                  : "Use these blocks to scan the key decisions before you start changing your setup."}
-              </p>
-            </div>
-          </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {copy.takeaways.map((item) => (
-              <div
-                key={item}
-                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] p-5"
-              >
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 text-[color:var(--warning)]" />
-                  <p className="text-sm leading-7 text-[color:var(--foreground)]">{item}</p>
-                </div>
+                  ? "Een gids geeft richting. Hij vervangt geen persoonlijke beoordeling wanneer comfort of klachten blijven terugkomen."
+                  : "A guide provides direction. It does not replace personal review when discomfort keeps returning."}
               </div>
+            </PublicSurfaceCard>
+          </div>
+        </PublicSection>
+
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: isNl ? "Snelle samenvatting" : "Quick summary",
+            title: copy.takeawaysTitle,
+            description: isNl
+              ? "Gebruik deze blokken om snel te scannen wat je wilt onthouden voordat je gaat aanpassen."
+              : "Use these blocks to scan the key decisions before you start changing your setup.",
+            icon: <CheckCircle2 className="h-5 w-5" />,
+          }}
+        >
+          <div className="grid gap-4 md:grid-cols-2">
+            {copy.takeaways.map((item) => (
+              <PublicSurfaceCard
+                key={item}
+                title={item}
+                leading={<CheckCircle2 className="h-5 w-5" />}
+              >
+                <div />
+              </PublicSurfaceCard>
             ))}
           </div>
-        </section>
+        </PublicSection>
 
-        <section className="mt-8 rounded-3xl border border-[color:var(--border)] bg-[color:var(--primary-soft)] p-6 shadow-sm sm:p-8">
-          <div className="flex items-start gap-4">
-            <div className="rounded-2xl bg-[color:var(--background)] p-3 text-[color:var(--primary)]">
-              <Wrench className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
-                {isNl ? "Praktische volgorde" : "Practical order"}
-              </p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[color:var(--foreground)]">
-                {copy.adjustmentsTitle}
-              </h2>
-            </div>
-          </div>
-          <div className="mt-6 grid gap-4">
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: isNl ? "Praktische volgorde" : "Practical order",
+            title: copy.adjustmentsTitle,
+            description: isNl
+              ? "Werk in kleine stappen en test telkens op dezelfde rit of dezelfde context."
+              : "Work in small steps and validate on the same ride or in the same context each time.",
+            icon: <Wrench className="h-5 w-5" />,
+          }}
+        >
+          <div className="grid gap-4">
             {copy.adjustments.map((item, index) => (
               <div
                 key={item}
-                className="grid gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] p-5 sm:grid-cols-[auto_1fr]"
+                className="grid gap-4 rounded-[var(--radius-xl)] border border-border/80 bg-card px-5 py-5 sm:grid-cols-[auto_1fr]"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-semibold text-[color:var(--primary-foreground)]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                   {index + 1}
                 </div>
-                <p className="text-sm leading-7 text-[color:var(--foreground)]">{item}</p>
+                <p className="text-sm leading-7 text-foreground">{item}</p>
               </div>
             ))}
           </div>
-        </section>
+        </PublicSection>
 
-        <section className="mt-8 rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm sm:p-8">
-          <div className="flex items-start gap-4">
-            <div className="rounded-2xl bg-[color:var(--warning)]/14 p-3 text-[color:var(--warning)]">
-              <HelpCircle className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
-                {isNl ? "Veelgestelde vragen" : "Frequently asked questions"}
-              </p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[color:var(--foreground)]">
-                {copy.faqTitle}
-              </h2>
-            </div>
-          </div>
-          <div className="mt-6 grid gap-4">
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: isNl ? "Veelgestelde vragen" : "Frequently asked questions",
+            title: copy.faqTitle,
+            icon: <HelpCircle className="h-5 w-5" />,
+          }}
+        >
+          <div className="grid gap-4">
             {copy.faqs.map((faq) => (
-              <article
-                key={faq.q}
-                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--background)] p-5"
-              >
-                <h3 className="text-base font-semibold text-[color:var(--foreground)]">{faq.q}</h3>
-                <p className="mt-2 text-sm leading-7 text-[color:var(--muted-foreground)]">{faq.a}</p>
-              </article>
+              <PublicSurfaceCard key={faq.q} title={faq.q} description={faq.a} leading={<BookOpen className="h-5 w-5" />}>
+                <div />
+              </PublicSurfaceCard>
             ))}
           </div>
-        </section>
+        </PublicSection>
 
-        <RelatedLinksSection
-          title={copy.relatedTitle}
-          links={copy.relatedLinks}
-          locale={locale}
-        />
+        <RelatedLinksSection title={copy.relatedTitle} links={copy.relatedLinks} locale={locale} />
 
-        {guide.cluster === "pain" && <FitDisclaimer locale={locale} />}
+        {guide.cluster === "pain" ? <FitDisclaimer locale={locale} /> : null}
 
-        <section className="mt-10 rounded-[2rem] bg-[linear-gradient(160deg,color-mix(in_oklch,var(--primary)_92%,black_8%),color-mix(in_oklch,var(--primary)_72%,var(--warning)_28%))] p-8 text-center shadow-sm sm:p-10">
-          <h2 className="text-2xl font-bold text-[color:var(--primary-foreground)] sm:text-3xl">
-            {isNl ? "Wil je dit vertalen naar je eigen setup?" : "Ready to turn this into your own setup?"}
-          </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[color:var(--primary-foreground)]/84 sm:text-base">
-            {isNl
+        <PublicCtaBand
+          className="mt-10"
+          eyebrow={isNl ? "Volgende stap" : "Next step"}
+          title={
+            isNl
+              ? "Wil je dit vertalen naar je eigen setup?"
+              : "Ready to turn this into your own setup?"
+          }
+          description={
+            isNl
               ? "Start gratis en bekijk fitbegeleiding met duidelijke prioriteiten."
-              : "Start free and review fit guidance with clear adjustment priorities."}
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="guide_final_cta"
-                  ctaLabel={copy.primaryCta}
-                />
-              }
-              className="bg-[color:var(--background)] text-[color:var(--primary)] hover:bg-[color:var(--muted)]"
-            >
-              {copy.primaryCta}
-            </Button>
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/how-it-works", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="guide_secondary_cta"
-                  ctaLabel={copy.secondaryCta}
-                />
-              }
-              variant="outline"
-              className="border-[color:var(--primary-foreground)] bg-transparent text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-foreground)]/10"
-            >
-              {copy.secondaryCta}
-            </Button>
-          </div>
-        </section>
+              : "Start free and review fit guidance with clear adjustment priorities."
+          }
+          actions={
+            <>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/login", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="guide_final_cta"
+                    ctaLabel={copy.primaryCta}
+                  />
+                }
+              >
+                {copy.primaryCta}
+              </Button>
+              <Button
+                variant="outline"
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/how-it-works", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="guide_secondary_cta"
+                    ctaLabel={copy.secondaryCta}
+                  />
+                }
+              >
+                {copy.secondaryCta}
+              </Button>
+            </>
+          }
+          aside={
+            <span className="inline-flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" />
+              {isNl
+                ? "Gebruik de gids om sneller te prioriteren en laat de calculator daarna de details aanscherpen."
+                : "Use the guide to prioritize faster, then let the calculator refine the details."}
+            </span>
+          }
+        />
       </div>
-    </div>
+    </PublicPageShell>
   );
 }

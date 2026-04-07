@@ -1,15 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Field as BaseField } from "@base-ui/react/field";
 import { useQuery } from "convex/react";
 import Image from "next/image";
 import { AlertTriangle, Bike, Loader2, LockKeyhole, Search, ShieldCheck } from "lucide-react";
-import { Button, Input, InfoBox } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { Button } from "@/components/prototyper-ui/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/prototyper-ui/ui/card";
+import { Input as PrototyperInput } from "@/components/prototyper-ui/ui/input";
+import { Label } from "@/components/prototyper-ui/ui/label";
 import { api } from "../../../convex/_generated/api";
 import type { Locale } from "@/i18n/config";
-import { PublicSurfaceCard } from "./PublicSurfaceCard";
+import { PublicInfoPanel } from "./PublicInfoPanel";
 
 type LookupResponse = {
   brand?: string;
@@ -140,6 +150,26 @@ function scoreTone(scoreBand: QuickMatchResponse["scoreBand"]) {
     default:
       return "text-[color:var(--danger)]";
   }
+}
+
+function QuickCheckInput({
+  id,
+  label,
+  value,
+  onChange,
+  ...props
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+} & Omit<React.ComponentProps<typeof PrototyperInput>, "id" | "value" | "onChange">) {
+  return (
+    <BaseField.Root className="flex w-full flex-col gap-2" name={id}>
+      <Label htmlFor={id}>{label}</Label>
+      <PrototyperInput id={id} value={value} onChange={onChange} {...props} />
+    </BaseField.Root>
+  );
 }
 
 export function BikeQuickCheckCard({
@@ -281,34 +311,48 @@ export function BikeQuickCheckCard({
   const bikeLabel = lookup ? formatBikeLabel(lookup) : null;
 
   return (
-    <PublicSurfaceCard
-      compact
+    <Card
+      variant="default"
       className="relative w-full overflow-hidden border-[color:color-mix(in_oklch,var(--primary)_20%,var(--border))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--card)_95%,var(--primary)_5%)_0%,color-mix(in_oklch,var(--card)_98%,var(--secondary)_2%)_100%)] shadow-[0_22px_70px_-28px_color-mix(in_oklch,var(--foreground)_34%,transparent)]"
-      leading={<Search className="h-5 w-5" />}
-      title={copy.collapsedTitle}
-      description={copy.collapsedDescription}
     >
-      <div className="space-y-4">
-        <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--primary)]">
-          <span>{copy.badge}</span>
-        </div>
-
-        {viewState === "collapsed" ? (
-          <div className="space-y-4">
-            <InfoBox variant="secondary" icon={<ShieldCheck className="mt-0.5 h-4 w-4" />}>
-              {copy.codeHelper}
-            </InfoBox>
-            {!isExpanded ? (
-              <Button
-                type="button"
-                onClick={() => setIsExpanded(true)}
-                className="w-full sm:w-auto"
-              >
-                {copy.expandLabel}
-              </Button>
-            ) : null}
+      <CardHeader className="gap-3 px-5 py-5 sm:px-6">
+        <div className="flex items-start gap-3">
+          <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_80%,var(--background)_20%)] text-[color:var(--primary)]">
+            <Search className="h-5 w-5" />
           </div>
-        ) : null}
+          <div className="space-y-1">
+            <CardTitle className="text-lg font-semibold tracking-tight text-[color:var(--foreground)]">
+              {copy.collapsedTitle}
+            </CardTitle>
+            <CardDescription className="text-sm leading-6 text-[color:var(--muted-foreground)]">
+              {copy.collapsedDescription}
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+
+      <CardContent className="px-5 pb-5 sm:px-6 sm:pb-6">
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--primary)]">
+            <span>{copy.badge}</span>
+          </div>
+
+          {viewState === "collapsed" ? (
+            <div className="space-y-4">
+              <PublicInfoPanel tone="secondary" icon={<ShieldCheck className="mt-0.5 h-4 w-4" />}>
+                {copy.codeHelper}
+              </PublicInfoPanel>
+              {!isExpanded ? (
+                <Button
+                  type="button"
+                  onClick={() => setIsExpanded(true)}
+                  className="w-full sm:w-auto"
+                >
+                  {copy.expandLabel}
+                </Button>
+              ) : null}
+            </div>
+          ) : null}
 
         {viewState === "loading_lookup" ? (
           <div className="flex min-h-44 flex-col items-center justify-center gap-3 rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-8 text-center">
@@ -319,14 +363,17 @@ export function BikeQuickCheckCard({
 
         {viewState === "invalid" ? (
           <div className="space-y-4">
-            <InfoBox variant="warning" icon={<AlertTriangle className="mt-0.5 h-4 w-4" />}>
-              <div className="space-y-1">
-                <p className="font-medium">{copy.invalidTitle}</p>
-                <p>{copy.invalidDescription}</p>
-              </div>
-            </InfoBox>
+            <PublicInfoPanel
+              title={copy.invalidTitle}
+              tone="warning"
+              role="alert"
+              icon={<AlertTriangle className="mt-0.5 h-4 w-4" />}
+            >
+              {copy.invalidDescription}
+            </PublicInfoPanel>
             <form className="space-y-3" onSubmit={handleLookupSubmit}>
-              <Input
+              <QuickCheckInput
+                id="bike-quick-check-code-invalid"
                 label={copy.codeLabel}
                 value={code}
                 onChange={(event) => setCode(event.target.value)}
@@ -361,14 +408,14 @@ export function BikeQuickCheckCard({
 
         {viewState === "rate_limited" ? (
           <div className="space-y-4">
-            <InfoBox variant="danger" icon={<LockKeyhole className="mt-0.5 h-4 w-4" />}>
-              <div className="space-y-1">
-                <p className="font-medium">{copy.rateLimitedTitle}</p>
-                <p>
-                  {copy.rateLimitedDescription} {formatRetrySeconds(retryAfterSeconds)}s
-                </p>
-              </div>
-            </InfoBox>
+            <PublicInfoPanel
+              title={copy.rateLimitedTitle}
+              tone="danger"
+              role="alert"
+              icon={<LockKeyhole className="mt-0.5 h-4 w-4" />}
+            >
+              {copy.rateLimitedDescription} {formatRetrySeconds(retryAfterSeconds)}s
+            </PublicInfoPanel>
             <div className="flex flex-wrap gap-3">
               <Button
                 type="button"
@@ -438,7 +485,8 @@ export function BikeQuickCheckCard({
             </div>
 
             <form className="space-y-3" onSubmit={handleQuickMatchSubmit}>
-              <Input
+              <QuickCheckInput
+                id="bike-quick-check-height"
                 label={copy.heightLabel}
                 value={heightCm}
                 onChange={(event) => setHeightCm(event.target.value)}
@@ -447,7 +495,7 @@ export function BikeQuickCheckCard({
                 pattern="[0-9]*"
                 required
               />
-              <InfoBox variant="secondary">{copy.previewSupport}</InfoBox>
+              <PublicInfoPanel tone="secondary">{copy.previewSupport}</PublicInfoPanel>
               <div className="flex flex-wrap gap-3">
                 <Button
                   type="submit"
@@ -514,14 +562,12 @@ export function BikeQuickCheckCard({
                 </div>
 
                 <div className="space-y-3">
-                  <InfoBox variant={match.confidence === "limited" ? "warning" : "secondary"}>
-                    <div className="space-y-1">
-                      <p className="font-medium">
-                        {copy.explanationCodes[match.explanationCode] ?? copy.limitedEstimate}
-                      </p>
-                      <p>{copy.limitedEstimate}</p>
-                    </div>
-                  </InfoBox>
+                  <PublicInfoPanel
+                    tone={match.confidence === "limited" ? "warning" : "secondary"}
+                    title={copy.explanationCodes[match.explanationCode] ?? copy.limitedEstimate}
+                  >
+                    {copy.limitedEstimate}
+                  </PublicInfoPanel>
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-3 text-sm">
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
@@ -608,39 +654,40 @@ export function BikeQuickCheckCard({
           </div>
         ) : null}
 
-      </div>
-
-      {isExpanded &&
-      viewState === "collapsed" ? (
-        <form className="mt-4 space-y-3" onSubmit={handleLookupSubmit}>
-          <p className="text-sm text-[color:var(--muted-foreground)]">{copy.previewHeightPrompt}</p>
-          <Input
-            label={copy.codeLabel}
-            value={code}
-            onChange={(event) => setCode(event.target.value)}
-            placeholder={copy.codePlaceholder}
-            autoCapitalize="characters"
-            autoCorrect="off"
-            spellCheck={false}
-            required
-          />
-          <div className="flex flex-wrap gap-3">
-            <Button type="submit" className="w-full sm:w-auto">
-              {copy.lookupButton}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                setIsExpanded(false);
-                setCode("");
-              }}
-            >
-              {copy.invalidRetry}
-            </Button>
-          </div>
-        </form>
-      ) : null}
-    </PublicSurfaceCard>
+          {isExpanded &&
+          viewState === "collapsed" ? (
+            <form className="mt-4 space-y-3" onSubmit={handleLookupSubmit}>
+              <p className="text-sm text-[color:var(--muted-foreground)]">{copy.previewHeightPrompt}</p>
+              <QuickCheckInput
+                id="bike-quick-check-code"
+                label={copy.codeLabel}
+                value={code}
+                onChange={(event) => setCode(event.target.value)}
+                placeholder={copy.codePlaceholder}
+                autoCapitalize="characters"
+                autoCorrect="off"
+                spellCheck={false}
+                required
+              />
+              <div className="flex flex-wrap gap-3">
+                <Button type="submit" className="w-full sm:w-auto">
+                  {copy.lookupButton}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setIsExpanded(false);
+                    setCode("");
+                  }}
+                >
+                  {copy.invalidRetry}
+                </Button>
+              </div>
+            </form>
+          ) : null}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

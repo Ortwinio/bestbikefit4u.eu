@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { CheckCircle } from "lucide-react";
-import { Button, Card, CardContent } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
+import { Button } from "@/components/prototyper-ui/ui/button";
+import { Card, CardContent } from "@/components/prototyper-ui/ui/card";
 import {
   COMMERCIAL_CURRENCY,
   FIT_PASS_PRODUCT,
@@ -114,8 +115,8 @@ export function FitPassPaywall({
 
   return (
     <Card
-      variant="bordered"
-      className="mt-6 overflow-hidden border-[color:color-mix(in_oklch,var(--primary)_22%,var(--border))]"
+      variant="secondary"
+      className="mt-6 overflow-hidden border border-[color:color-mix(in_oklch,var(--primary)_22%,var(--border))]"
     >
       <CardContent className="px-6 py-6">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--primary)]">
@@ -155,7 +156,7 @@ export function FitPassPaywall({
         ) : null}
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <Button onClick={handleUpgrade} isLoading={isLoading}>
+          <Button onClick={handleUpgrade} isPending={isLoading}>
             {FIT_PASS_PRODUCT.copy[isNl ? "nl" : "en"].cta}
           </Button>
           <button

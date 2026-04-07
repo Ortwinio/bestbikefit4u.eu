@@ -1,0 +1,32 @@
+{
+  "_version": 1,
+  "id": 21,
+  "title": "Lint error cleanup: clear blocking ESLint errors by rule family across the remaining repo-health files",
+  "status": "todo",
+  "priority": 5,
+  "assigned": "repo-health-owner",
+  "depends_on": ["Typecheck cleanup"],
+  "files": [
+    "src/app/app/page.tsx",
+    "src/components/bikes/BikeGeometryLibraryFields.tsx",
+    "src/components/branding/BrandLogo.tsx",
+    "src/components/dashboard-messages/use-dashboard-message-feed.ts",
+    "src/components/settings/IPhoneAppInstallCard.tsx",
+    "src/components/features/fitpass/FitPassPaywall.tsx",
+    "src/components/admin/feedback/feedback-ui.ts",
+    "src/components/admin/messages/message-ui.ts",
+    "src/components/ui/CheckboxGroup.tsx",
+    "src/components/ui/RadioGroup.tsx",
+    "src/lib/rateLimiter.ts",
+    "convex/sessions/mutations.ts"
+  ],
+  "acceptance": [
+    "react-hooks/set-state-in-effect errors are resolved",
+    "react-hooks/rules-of-hooks errors are resolved",
+    "react/no-children-prop errors are resolved",
+    "@typescript-eslint/no-empty-object-type errors are resolved",
+    "@typescript-eslint/no-explicit-any errors are resolved",
+    "npm run lint passes"
+  ],
+  "notes": "Group fixes by rule family, not by file, to reduce rework and get to green faster."
+}

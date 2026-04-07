@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "010",
+  "title": "Activity gate B: homepage migration and tests. Validation = homepage uses approved Prototyper UI patterns only on touched surfaces, hero primary CTA points to first-value action, EN/NL copy aligned, homepage tests pass.",
+  "description": "",
+  "goal": "5",
+  "status": "done",
+  "assignee": null,
+  "priority": 2,
+  "created": "2026-04-07T20:50:15.509Z",
+  "updated": "2026-04-07T21:27:55.200Z",
+  "tags": [],
+  "proof": {
+    "notes": "Implemented homepage migration in src/app/(public)/page.tsx and src/components/home/QuotesCarousel.tsx. Replaced touched CTA and card surfaces with Prototyper button/card primitives plus shared PublicSection/PublicSurfaceCard. Validation: npx vitest run src/app/(public)/page.test.tsx src/components/public/BikeQuickCheckCard.test.tsx -> 9/9 tests passed; rg clean for old website UI/color drift patterns on touched homepage surfaces. Note: repo still contains unrelated modified auth/pricing files and pre-existing wider migration work outside this gate."
+  },
+  "milestone": null,
+  "specialty": null,
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

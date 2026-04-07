@@ -4,6 +4,7 @@ import { submit } from "./mutations";
 type TestHandler = (
   ctx: {
     db: { insert: ReturnType<typeof vi.fn> };
+    scheduler: { runAfter: ReturnType<typeof vi.fn> };
   },
   args: Record<string, unknown>
 ) => Promise<unknown>;
@@ -15,10 +16,11 @@ vi.mock("@convex-dev/auth/server", () => ({
 describe("caseStudyLeads.submit", () => {
   it("stores a normalized lead when consent is granted", async () => {
     const insert = vi.fn(async () => "lead_1");
+    const runAfter = vi.fn(async () => undefined);
     const handler = (submit as unknown as { _handler: TestHandler })._handler;
 
     const result = await handler(
-      { db: { insert } },
+      { db: { insert }, scheduler: { runAfter } },
       {
         locale: "en",
         sourcePath: "/pain/knee-pain-cycling",
@@ -40,6 +42,7 @@ describe("caseStudyLeads.submit", () => {
         sourcePath: "/pain/knee-pain-cycling",
       })
     );
+    expect(runAfter).toHaveBeenCalledTimes(2);
   });
 
   it("rejects submission when consent is missing", async () => {
@@ -47,7 +50,7 @@ describe("caseStudyLeads.submit", () => {
 
     await expect(
       handler(
-        { db: { insert: vi.fn() } },
+        { db: { insert: vi.fn() }, scheduler: { runAfter: vi.fn() } },
         {
           locale: "en",
           sourcePath: "/pain/knee-pain-cycling",

@@ -1,0 +1,6 @@
+{
+  "_version": 1,
+  "title": "05 Visual consistency: icon system, theme tokens, public component language, spacing, and CTA hierarchy across all public surfaces",
+  "status": "todo",
+  "description": "Icon audit and semantic unification. Theme token cleanup in globals.css. Consistent readability in light/dark/system. Owned by Codex D."
+}

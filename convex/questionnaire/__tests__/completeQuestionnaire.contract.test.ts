@@ -15,8 +15,20 @@ import { completeQuestionnaire } from "../mutations";
 function makeCtx(params: {
   session?: { _id: string; userId: string } | null;
   responses: Array<{ questionId: string; response: string | number | string[] }>;
+  profile?: {
+    _id: string;
+    userId: string;
+    weeklyHours?: "0-3" | "3-6" | "6-10" | "10-15" | "15+";
+    hasPain?: "yes" | "no";
+    painAreas?: string[];
+    painSeverity?: number;
+  } | null;
 }) {
-  const { session = { _id: "session_1", userId: "user_1" }, responses } = params;
+  const {
+    session = { _id: "session_1", userId: "user_1" },
+    responses,
+    profile = null,
+  } = params;
 
   const db = {
     get: vi.fn(async (id: string) => {
@@ -26,14 +38,23 @@ function makeCtx(params: {
       return null;
     }),
     query: vi.fn((table: string) => {
-      if (table !== "questionnaireResponses") {
-        throw new Error(`Unexpected table query: ${table}`);
+      if (table === "questionnaireResponses") {
+        return {
+          withIndex: vi.fn(() => ({
+            collect: vi.fn(async () => responses),
+          })),
+        };
       }
-      return {
-        withIndex: vi.fn(() => ({
-          collect: vi.fn(async () => responses),
-        })),
-      };
+
+      if (table === "profiles") {
+        return {
+          withIndex: vi.fn(() => ({
+            unique: vi.fn(async () => profile),
+          })),
+        };
+      }
+
+      throw new Error(`Unexpected table query: ${table}`);
     }),
     patch: vi.fn(async () => undefined),
   };
@@ -75,6 +96,12 @@ describe("questionnaire.completeQuestionnaire contract", () => {
         { questionId: "position_priority", response: "balanced" },
         { questionId: "current_position_feeling", response: ["good"] },
       ],
+      profile: {
+        _id: "profile_1",
+        userId: "user_1",
+        weeklyHours: "6-10",
+        hasPain: "no",
+      },
     });
 
     const handler = (

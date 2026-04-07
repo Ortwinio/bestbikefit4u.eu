@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
-import { Bike, ClipboardList, Target } from "lucide-react";
-import { Button } from "@/components/ui";
+import { Bike, ClipboardList, ShieldCheck, Target } from "lucide-react";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import {
+  PublicCtaBand,
+  PublicFeatureCard,
+  PublicHero,
+  PublicPageShell,
+  PublicSection,
+  PublicSurfaceCard,
+} from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { BikeFitProcessIllustration } from "@/components/content/PublicPageIllustrations";
 import type { Locale } from "@/i18n/config";
@@ -41,16 +49,12 @@ const copy: Record<
       title: "How It Works | BestBikeFit4U",
       description:
         "See how BestBikeFit4U turns your measurements, riding goals, and bike context into practical fit guidance.",
-      keywords: [
-        "how online bike fit works",
-        "bike fit process",
-        "digital bike fitting",
-      ],
+      keywords: ["how online bike fit works", "bike fit process", "digital bike fitting"],
     },
     eyebrow: "Transparent process",
     title: "How BestBikeFit4U works",
     intro:
-      "BestBikeFit4U combines your body measurements, riding goals, and bike context to help you make clearer fit decisions. The goal is not abstract theory. The goal is a better next step on the bike you actually ride.",
+      "BestBikeFit4U combines your body measurements, riding goals, and bike context to help you make clearer fit decisions. The goal is a better next step on the bike you actually ride.",
     sectionTitle: "What happens in the fit flow",
     sectionIntro:
       "The flow is designed to move from useful inputs to practical recommendations without forcing riders through unnecessary complexity.",
@@ -82,16 +86,12 @@ const copy: Record<
       title: "Hoe het werkt | BestBikeFit4U",
       description:
         "Bekijk hoe BestBikeFit4U jouw metingen, rijdoelen en fietscontext omzet in praktische fit-aanbevelingen.",
-      keywords: [
-        "hoe online bikefit werkt",
-        "bikefit proces",
-        "digitale bikefitting",
-      ],
+      keywords: ["hoe online bikefit werkt", "bikefit proces", "digitale bikefitting"],
     },
     eyebrow: "Transparant proces",
     title: "Hoe BestBikeFit4U werkt",
     intro:
-      "BestBikeFit4U combineert je lichaamsmetingen, rijdoelen en fietscontext om je te helpen duidelijkere fitbeslissingen te nemen. Het doel is geen abstracte theorie, maar een betere volgende stap op de fiets die je echt rijdt.",
+      "BestBikeFit4U combineert je lichaamsmetingen, rijdoelen en fietscontext om je te helpen duidelijkere fitbeslissingen te nemen. Het doel is een betere volgende stap op de fiets die je echt rijdt.",
     sectionTitle: "Wat er in de fitflow gebeurt",
     sectionIntro:
       "De flow is opgezet om van bruikbare input naar praktische aanbevelingen te gaan zonder rijders door onnodige complexiteit te trekken.",
@@ -146,7 +146,7 @@ export default async function HowItWorksPage() {
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
 
   return (
-    <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_42%,var(--background)_58%)_100%)] py-16">
+    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_42%,var(--background)_58%)_100%)]">
       <TrackMarketingEventOnView
         eventType="how_it_works_view"
         locale={locale}
@@ -170,16 +170,12 @@ export default async function HowItWorksPage() {
       />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)]">
-          <div className="rounded-[2rem] border border-border/70 bg-card/95 px-6 py-10 shadow-sm sm:px-10">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
-              {page.eyebrow}
-            </p>
-            <h1 className="mt-4 text-4xl font-semibold text-foreground sm:text-5xl">
-              {page.title}
-            </h1>
-            <p className="mt-4 max-w-3xl text-lg text-muted-foreground">{page.intro}</p>
-            <div className="mt-6 flex flex-wrap gap-3">
+        <PublicHero
+          eyebrow={page.eyebrow}
+          title={page.title}
+          description={page.intro}
+          actions={
+            <>
               <Button
                 render={
                   <TrackedCtaLink
@@ -208,47 +204,111 @@ export default async function HowItWorksPage() {
               >
                 {page.secondaryCta}
               </Button>
-            </div>
-          </div>
+            </>
+          }
+          illustration={<BikeFitProcessIllustration locale={locale} />}
+        />
 
-          <BikeFitProcessIllustration locale={locale} />
-        </section>
-
-        <section className="mt-10 rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-sm sm:p-10">
-          <h2 className="text-2xl font-semibold text-foreground">{page.sectionTitle}</h2>
-          <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground">
-            {page.sectionIntro}
-          </p>
-          <div className="mt-8 grid gap-5 lg:grid-cols-3">
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: locale === "nl" ? "Waarom deze flow werkt" : "Why this flow works",
+            title:
+              locale === "nl"
+                ? "Van bruikbare input naar praktische volgende stap"
+                : "From usable input to a practical next step",
+            description: page.sectionIntro,
+          }}
+        >
+          <div className="grid gap-5 lg:grid-cols-3">
             {page.steps.map((step, index) => {
               const Icon = stepIcons[index] ?? Target;
               return (
-                <article
+                <PublicFeatureCard
                   key={step.title}
-                  className="rounded-[1.75rem] border border-border/70 bg-background/90 p-6 shadow-sm"
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-soft text-primary">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <h2 className="mt-5 text-xl font-semibold text-foreground">{step.title}</h2>
-                  <p className="mt-3 text-sm leading-7 text-muted-foreground">{step.body}</p>
-                </article>
+                  icon={<Icon className="h-5 w-5" />}
+                  title={step.title}
+                  description={step.body}
+                />
               );
             })}
           </div>
-        </section>
+        </PublicSection>
 
-        <section className="mt-8 grid gap-6 lg:grid-cols-2">
-          <article className="rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-sm">
-            <h2 className="text-2xl font-semibold text-foreground">{page.prepTitle}</h2>
-            <p className="mt-4 text-sm leading-7 text-muted-foreground">{page.prepBody}</p>
-          </article>
-          <article className="rounded-[2rem] border border-border/70 bg-primary-soft p-8 shadow-sm">
-            <h2 className="text-2xl font-semibold text-foreground">{page.afterTitle}</h2>
-            <p className="mt-4 text-sm leading-7 text-muted-foreground">{page.afterBody}</p>
-          </article>
-        </section>
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: locale === "nl" ? "Wat je kunt verwachten" : "What to expect",
+            title:
+              locale === "nl"
+                ? "Voorbereiding en resultaat in één oogopslag"
+                : "Preparation and output at a glance",
+          }}
+        >
+          <div className="grid gap-6 lg:grid-cols-2">
+            <PublicSurfaceCard
+              title={page.prepTitle}
+              description={page.prepBody}
+              leading={<ClipboardList className="h-5 w-5" />}
+            >
+              <div />
+            </PublicSurfaceCard>
+            <PublicSurfaceCard
+              title={page.afterTitle}
+              description={page.afterBody}
+              leading={<ShieldCheck className="h-5 w-5" />}
+            >
+              <div />
+            </PublicSurfaceCard>
+          </div>
+        </PublicSection>
+
+        <PublicCtaBand
+          className="mt-12"
+          eyebrow={locale === "nl" ? "Volgende stap" : "Next step"}
+          title={
+            locale === "nl"
+              ? "Gebruik de volledige flow of begin eerst met de calculator"
+              : "Use the full flow or start with the calculator first"
+          }
+          description={
+            locale === "nl"
+              ? "De gratis fitflow geeft meer context. De calculator geeft een snelle eerste richting als je nog niet klaar bent voor de volledige intake."
+              : "The free fit flow gives you more context. The calculator gives a quick first direction if you are not ready for the full intake yet."
+          }
+          actions={
+            <>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/login", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="how_it_works_footer_primary"
+                    ctaLabel={page.primaryCta}
+                  />
+                }
+              >
+                {page.primaryCta}
+              </Button>
+              <Button
+                variant="outline"
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/calculators/bike-fit", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="how_it_works_footer_secondary"
+                    ctaLabel={page.secondaryCta}
+                  />
+                }
+              >
+                {page.secondaryCta}
+              </Button>
+            </>
+          }
+        />
       </div>
-    </div>
+    </PublicPageShell>
   );
 }

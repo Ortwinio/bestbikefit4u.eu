@@ -25,7 +25,16 @@ type BikeProfileDoc = {
   userId: string;
   bikeId: string;
 } | null;
-type ProfileDoc = { _id: string; userId: string } | null;
+type ProfileDoc = {
+  _id: string;
+  userId: string;
+  experienceLevel: "beginner" | "intermediate" | "advanced";
+  weeklyHours: "0-3" | "3-6" | "6-10" | "10-15" | "15+";
+  typicalRideLength: "short" | "medium" | "long" | "ultra";
+  hasPain: "yes" | "no";
+  positionPriority: "comfort" | "balanced" | "performance";
+  painAreas?: string[];
+} | null;
 
 function makeCtx(params: {
   profile: ProfileDoc;
@@ -60,6 +69,16 @@ function makeCtx(params: {
 }
 
 describe("sessions.create contract", () => {
+  const completeProfile: Exclude<ProfileDoc, null> = {
+    _id: "profile_1",
+    userId: "user_1",
+    experienceLevel: "intermediate",
+    weeklyHours: "3-6",
+    typicalRideLength: "medium",
+    hasPain: "no",
+    positionPriority: "balanced",
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -67,7 +86,7 @@ describe("sessions.create contract", () => {
   it("persists explicit bikeType in fit session", async () => {
     getAuthUserIdMock.mockResolvedValue("user_1");
     const ctx = makeCtx({
-      profile: { _id: "profile_1", userId: "user_1" },
+      profile: completeProfile,
       bike: null,
     });
 
@@ -92,7 +111,7 @@ describe("sessions.create contract", () => {
   it("rejects bikeId + bikeType mismatch", async () => {
     getAuthUserIdMock.mockResolvedValue("user_1");
     const ctx = makeCtx({
-      profile: { _id: "profile_1", userId: "user_1" },
+      profile: completeProfile,
       bike: { _id: "bike_1", userId: "user_1", bikeType: "road" },
     });
 
@@ -113,7 +132,7 @@ describe("sessions.create contract", () => {
   it("attaches bikeProfileId and marks the session as bike-profile flow", async () => {
     getAuthUserIdMock.mockResolvedValue("user_1");
     const ctx = makeCtx({
-      profile: { _id: "profile_1", userId: "user_1" },
+      profile: completeProfile,
       bike: {
         _id: "bike_1",
         userId: "user_1",
@@ -148,7 +167,7 @@ describe("sessions.create contract", () => {
   it("backfills riding context from bike usage when it is missing on the bike", async () => {
     getAuthUserIdMock.mockResolvedValue("user_1");
     const ctx = makeCtx({
-      profile: { _id: "profile_1", userId: "user_1" },
+      profile: completeProfile,
       bike: {
         _id: "bike_1",
         userId: "user_1",
@@ -176,7 +195,7 @@ describe("sessions.create contract", () => {
   it("rejects bike profile when it does not belong to the selected bike", async () => {
     getAuthUserIdMock.mockResolvedValue("user_1");
     const ctx = makeCtx({
-      profile: { _id: "profile_1", userId: "user_1" },
+      profile: completeProfile,
       bike: { _id: "bike_1", userId: "user_1", bikeType: "road" },
       additionalBikes: [{ _id: "bike_2", userId: "user_1", bikeType: "road" }],
       bikeProfile: { _id: "bike_profile_1", userId: "user_1", bikeId: "bike_2" },

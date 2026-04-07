@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui";
+import { PublicSection, PublicSurfaceCard } from "@/components/public";
 
 interface PressureCalculatorFaqProps {
   locale: "en" | "nl";
@@ -9,6 +9,7 @@ export function PressureCalculatorFaq({ locale }: PressureCalculatorFaqProps) {
     locale === "nl"
       ? {
           title: "Veelgestelde vragen",
+          description: "Korte antwoorden op de belangrijkste vragen over publieke drukadviezen.",
           items: [
             {
               q: "Hoe nauwkeurig is deze calculator?",
@@ -26,6 +27,7 @@ export function PressureCalculatorFaq({ locale }: PressureCalculatorFaqProps) {
         }
       : {
           title: "Frequently asked questions",
+          description: "Short answers to the main questions about public pressure guidance.",
           items: [
             {
               q: "How accurate is this calculator?",
@@ -43,20 +45,14 @@ export function PressureCalculatorFaq({ locale }: PressureCalculatorFaqProps) {
         };
 
   return (
-    <section className="py-14">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-[color:var(--foreground)]">{content.title}</h2>
-        <div className="mt-8 space-y-4">
-          {content.items.map((item) => (
-            <Card key={item.q} variant="bordered" className="shadow-sm">
-              <CardContent className="p-5">
-                <h3 className="text-lg font-semibold text-[color:var(--foreground)]">{item.q}</h3>
-                <p className="mt-2 text-[color:var(--muted-foreground)]">{item.a}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+    <PublicSection className="mt-10" header={{ title: content.title, description: content.description }}>
+      <div className="space-y-4">
+        {content.items.map((item) => (
+          <PublicSurfaceCard key={item.q} title={item.q} description={item.a}>
+            <div />
+          </PublicSurfaceCard>
+        ))}
       </div>
-    </section>
+    </PublicSection>
   );
 }

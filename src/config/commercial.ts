@@ -193,8 +193,9 @@ export const PUBLIC_PLANS: ReadonlyArray<{
     copy: {
       en: {
         name: "Free",
-        description: "For riders who want a first fit baseline without commitment.",
-        cta: "Start free fit",
+        description:
+          "Try the bike fit tools and see your setup targets. Perfect for a first check on saddle height, reach, and cockpit balance.",
+        cta: "Start free",
         features: [
           "1 guided fit session each month",
           "Core fit outputs for saddle, cockpit, and setup priorities",
@@ -204,8 +205,9 @@ export const PUBLIC_PLANS: ReadonlyArray<{
       },
       nl: {
         name: "Free",
-        description: "Voor rijders die zonder verplichting een eerste fit-basis willen.",
-        cta: "Start gratis fit",
+        description:
+          "Probeer de bikefit-tools en bekijk je afstelwaarden. Ideaal voor een eerste check op zadelhoogte, reach en cockpitbalans.",
+        cta: "Start gratis",
         features: [
           "1 begeleide fit-sessie per maand",
           "Kernoutput voor zadel, cockpit en prioriteiten",
@@ -231,8 +233,9 @@ export const PUBLIC_PLANS: ReadonlyArray<{
     copy: {
       en: {
         name: "Pro",
-        description: "For committed riders managing multiple bikes and repeated fit iterations.",
-        cta: "Upgrade to Pro",
+        description:
+          "Track fit changes across multiple bikes, refine your position over time, and download detailed PDF reports.",
+        cta: "Start Pro - EUR 9/month",
         badge: "Most popular",
         features: [
           "Unlimited fit sessions",
@@ -245,8 +248,9 @@ export const PUBLIC_PLANS: ReadonlyArray<{
       },
       nl: {
         name: "Pro",
-        description: "Voor fanatieke rijders met meerdere fietsen en terugkerende fit-iteraties.",
-        cta: "Upgrade naar Pro",
+        description:
+          "Volg fitveranderingen over meerdere fietsen, verfijn je positie over tijd en download gedetailleerde PDF-rapporten.",
+        cta: "Start Pro - EUR 9/maand",
         badge: "Meest gekozen",
         features: [
           "Onbeperkte fit-sessies",

@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
-import { Button } from "@/components/ui";
-import { Mail, MessageSquare } from "lucide-react";
+import { Languages, Mail, MessageSquare, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import {
+  PublicCtaBand,
+  PublicFeatureCard,
+  PublicHero,
+  PublicPageShell,
+  PublicSection,
+  PublicSurfaceCard,
+} from "@/components/public";
 import { getSupportResponseItems } from "@/config/commercial";
 import type { Locale } from "@/i18n/config";
-import { getRequestLocale } from "@/i18n/request";
-import { withLocalePrefix } from "@/i18n/navigation";
 import { buildLocaleAlternates } from "@/i18n/metadata";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { getRequestLocale } from "@/i18n/request";
 
 type ContactCopy = {
   metadata: {
@@ -29,32 +37,29 @@ type ContactCopy = {
   directContactHint: string;
 };
 
-const panelClass =
-  "rounded-[1.75rem] border border-border/70 bg-card/95 p-6 shadow-sm sm:p-8";
-
 function getContent(locale: Locale): ContactCopy {
   if (locale === "en") {
     return {
-    metadata: {
-      title: "Contact Us - BestBikeFit4U",
-      description:
-        "Get in touch with the BestBikeFit4U team. We are here to help with your bike fitting questions and support needs.",
-      keywords: ["contact BestBikeFit4U", "bike fit support", "cycling help"],
-    },
-    title: "Contact Us",
-    subtitle: "Have a question or need help? We'd love to hear from you.",
-    emailTitle: "Email",
-    emailSupportText: "For general questions and support:",
-    faqTitle: "FAQ",
-    faqText: "Check our FAQ for instant answers to common questions.",
-    faqLink: "View FAQ ->",
-    responseTimes: "Response Times",
-    responseItems: getSupportResponseItems(locale),
-    directContactTitle: "Send us an email directly",
-    directContactBody:
-      "For now, the fastest support route is direct email. Include your bike type, goal, and where you are stuck so we can help quickly.",
-    directContactCta: "Open email app",
-    directContactHint: "Address: support@bestbikefit4u.eu",
+      metadata: {
+        title: "Contact Us - BestBikeFit4U",
+        description:
+          "Get in touch with the BestBikeFit4U team. We are here to help with your bike fitting questions and support needs.",
+        keywords: ["contact BestBikeFit4U", "bike fit support", "cycling help"],
+      },
+      title: "Contact Us",
+      subtitle: "Have a question or need help? We'd love to hear from you.",
+      emailTitle: "Email",
+      emailSupportText: "For general questions and support:",
+      faqTitle: "FAQ",
+      faqText: "Check our FAQ for instant answers to common questions.",
+      faqLink: "View FAQ",
+      responseTimes: "Response Times",
+      responseItems: getSupportResponseItems(locale),
+      directContactTitle: "Send us an email directly",
+      directContactBody:
+        "For now, the fastest support route is direct email. Include your bike type, goal, and where you are stuck so we can help quickly.",
+      directContactCta: "Open email app",
+      directContactHint: "Address: support@bestbikefit4u.eu",
     };
   }
 
@@ -71,7 +76,7 @@ function getContent(locale: Locale): ContactCopy {
     emailSupportText: "Voor algemene vragen en support:",
     faqTitle: "FAQ",
     faqText: "Bekijk onze FAQ voor directe antwoorden op veelgestelde vragen.",
-    faqLink: "Bekijk FAQ ->",
+    faqLink: "Bekijk FAQ",
     responseTimes: "Responstijden",
     responseItems: getSupportResponseItems(locale),
     directContactTitle: "Mail ons direct",
@@ -105,88 +110,154 @@ export default async function ContactPage() {
   const locale = await getRequestLocale();
   const page = getContent(locale);
   const pagePath = withLocalePrefix("/contact", locale);
+  const trustPoints =
+    locale === "nl"
+      ? [
+          {
+            title: "Directe supportroute",
+            description:
+              "Je ziet meteen welke contactroute het snelst werkt, zonder verborgen formulierstappen.",
+            icon: <Mail className="h-5 w-5" />,
+          },
+          {
+            title: "Duidelijke verwachtingen",
+            description:
+              "We tonen responstijden en vragen om de informatie die nodig is om sneller en nauwkeuriger te helpen.",
+            icon: <ShieldCheck className="h-5 w-5" />,
+          },
+          {
+            title: "NL en EN beschikbaar",
+            description:
+              "Contact, FAQ en vervolgstappen blijven bruikbaar in zowel Nederlands als Engels.",
+            icon: <Languages className="h-5 w-5" />,
+          },
+        ]
+      : [
+          {
+            title: "Direct support route",
+            description:
+              "You immediately see the fastest contact path, without hidden form steps.",
+            icon: <Mail className="h-5 w-5" />,
+          },
+          {
+            title: "Clear expectations",
+            description:
+              "We show response times and ask for the context that helps us respond faster and more accurately.",
+            icon: <ShieldCheck className="h-5 w-5" />,
+          },
+          {
+            title: "Available in Dutch and English",
+            description:
+              "Contact, FAQ, and next steps stay usable in both Dutch and English.",
+            icon: <Languages className="h-5 w-5" />,
+          },
+        ];
 
   return (
-    <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_32%,var(--background)_68%)_100%)] py-16 text-foreground">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <section className="rounded-[2.25rem] border border-border/70 bg-card/95 px-6 py-10 shadow-sm sm:px-10 sm:py-12">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
-            {locale === "nl" ? "We helpen je verder" : "We can help"}
-          </p>
-          <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">{page.title}</h1>
-          <p className="mt-4 text-xl text-muted-foreground">{page.subtitle}</p>
-        </section>
+    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_32%,var(--background)_68%)_100%)] text-foreground">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <PublicHero
+          eyebrow={locale === "nl" ? "We helpen je verder" : "We can help"}
+          title={page.title}
+          description={page.subtitle}
+          chips={
+            locale === "nl"
+              ? ["NL en EN beschikbaar", "Directe e-mailroute", "Heldere responstijden"]
+              : ["Available in Dutch and English", "Direct email route", "Clear response times"]
+          }
+        />
+
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: locale === "nl" ? "Waarom dit betrouwbaar voelt" : "Why this feels trustworthy",
+            title:
+              locale === "nl"
+                ? "Contact zonder omwegen"
+                : "Contact without unnecessary friction",
+            description:
+              locale === "nl"
+                ? "De contactpagina maakt duidelijk hoe je ons bereikt, wat je kunt verwachten en hoe je sneller een bruikbaar antwoord krijgt."
+                : "The contact page makes it clear how to reach us, what to expect, and how to get a more useful answer faster.",
+          }}
+        >
+          <div className="grid gap-4 md:grid-cols-3">
+            {trustPoints.map((point) => (
+              <PublicFeatureCard
+                key={point.title}
+                icon={point.icon}
+                title={point.title}
+                description={point.description}
+              />
+            ))}
+          </div>
+        </PublicSection>
 
         <div className="mt-12 grid gap-8 md:grid-cols-2">
           <div className="space-y-6">
-            <div className={panelClass}>
-              <div className="flex items-center gap-3">
-                <Mail className="h-6 w-6 text-primary" />
-                <h2 className="text-lg font-semibold text-foreground">{page.emailTitle}</h2>
-              </div>
-              <p className="mt-2 text-muted-foreground">{page.emailSupportText}</p>
+            <PublicSurfaceCard
+              title={page.emailTitle}
+              description={page.emailSupportText}
+              leading={<Mail className="h-5 w-5" />}
+            >
               <a
                 href="mailto:support@bestbikefit4u.eu"
-                className="mt-1 inline-block text-primary hover:text-primary-dark"
+                className="inline-block text-primary hover:text-primary-dark"
               >
                 support@bestbikefit4u.eu
               </a>
-            </div>
+            </PublicSurfaceCard>
 
-            <div className={panelClass}>
-              <div className="flex items-center gap-3">
-                <MessageSquare className="h-6 w-6 text-primary" />
-                <h2 className="text-lg font-semibold text-foreground">{page.faqTitle}</h2>
-              </div>
-              <p className="mt-2 text-muted-foreground">{page.faqText}</p>
+            <PublicSurfaceCard
+              title={page.faqTitle}
+              description={page.faqText}
+              leading={<MessageSquare className="h-5 w-5" />}
+            >
               <TrackedCtaLink
                 href={withLocalePrefix("/faq", locale)}
                 locale={locale}
                 pagePath={pagePath}
                 section="contact_faq_link"
                 ctaLabel={page.faqLink}
-                className="mt-1 inline-block text-primary hover:text-primary-dark"
+                className="inline-block text-primary hover:text-primary-dark"
               >
                 {page.faqLink}
               </TrackedCtaLink>
-            </div>
+            </PublicSurfaceCard>
 
-            <div className="rounded-[1.75rem] border border-border/70 bg-muted/55 p-6 shadow-sm">
-              <h3 className="font-medium text-foreground">{page.responseTimes}</h3>
-              <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+            <PublicSurfaceCard title={page.responseTimes}>
+              <ul className="space-y-1 text-sm text-muted-foreground">
                 {page.responseItems.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-            </div>
+            </PublicSurfaceCard>
           </div>
 
-          <div className="rounded-[2rem] bg-primary px-6 py-8 shadow-lg sm:px-8">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary-foreground/70">
-              {locale === "nl" ? "Direct contact opnemen" : "Direct contact"}
-            </p>
-            <h2 className="mt-3 text-lg font-semibold text-primary-foreground">
-              {page.directContactTitle}
-            </h2>
-            <p className="mt-3 text-primary-foreground/80">{page.directContactBody}</p>
-            <Button
-              className="mt-4 bg-background text-primary hover:bg-muted"
-              render={
-                <TrackedCtaLink
-                  href="mailto:support@bestbikefit4u.eu"
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="contact_email_cta"
-                  ctaLabel={page.directContactCta}
-                />
-              }
-            >
-              {page.directContactCta}
-            </Button>
-            <p className="mt-3 text-xs text-primary-foreground/70">{page.directContactHint}</p>
-          </div>
+          <PublicCtaBand
+            eyebrow={locale === "nl" ? "Direct contact opnemen" : "Direct contact"}
+            title={page.directContactTitle}
+            description={page.directContactBody}
+            actions={
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href="mailto:support@bestbikefit4u.eu"
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="contact_email_cta"
+                    ctaLabel={page.directContactCta}
+                  />
+                }
+                variant="outline"
+              >
+                {page.directContactCta}
+              </Button>
+            }
+            aside={page.directContactHint}
+          />
         </div>
       </div>
-    </div>
+    </PublicPageShell>
   );
 }

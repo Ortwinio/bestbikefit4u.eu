@@ -2,7 +2,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/components/ui", () => ({
+vi.mock("@/components/prototyper-ui/ui/button", () => ({
   Button: ({
     children,
     className,
