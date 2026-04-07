@@ -81,6 +81,7 @@ describe("publicFit contract", () => {
     expect(preview).toEqual({
       bikeId: "bike_1",
       tokenVersion: 789,
+      accessMode: "public_fit_code",
       preview: {
         brand: "Canyon",
         model: "Endurace",
