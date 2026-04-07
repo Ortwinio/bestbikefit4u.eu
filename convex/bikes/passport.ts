@@ -19,6 +19,7 @@ export type CopyableBikeFields = Pick<
   | "brand"
   | "model"
   | "bikeModelId"
+  | "geometryRecordId"
   | "description"
   | "descriptionSource"
 >;
@@ -83,6 +84,7 @@ export function getCopyableBikeFields(bike: Doc<"bikes">): CopyableBikeFields {
     brand: bike.brand,
     model: bike.model,
     bikeModelId: bike.bikeModelId,
+    geometryRecordId: bike.geometryRecordId,
     description: bike.description,
     descriptionSource: bike.descriptionSource,
   };

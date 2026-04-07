@@ -3,6 +3,7 @@ import { mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
 import { validateShortString } from "../lib/validation";
+import { findUnreferencedStorageIdsForBikes } from "../lib/storageReferences";
 
 async function listBikePhotos(ctx: MutationCtx, bikeId: Id<"bikes">) {
   return await ctx.db
@@ -178,8 +179,16 @@ export const remove = mutation({
     const siblings = (await listBikePhotos(ctx, photo.bikeId)).filter(
       (row) => row._id !== photo._id
     );
-    await ctx.storage.delete(photo.storageId as Id<"_storage">);
     await ctx.db.delete(photo._id);
+
+    const deletableStorageIds = await findUnreferencedStorageIdsForBikes({
+      ctx,
+      candidateStorageIds: [photo.storageId],
+      ignoredBikeIds: [photo.bikeId],
+    });
+    for (const storageId of deletableStorageIds) {
+      await ctx.storage.delete(storageId as Id<"_storage">);
+    }
 
     if (photo.isPrimary) {
       const nextPrimary = [...siblings].sort((a, b) => a.createdAt - b.createdAt)[0];

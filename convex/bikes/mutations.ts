@@ -21,6 +21,7 @@ import {
   assignOrReusePublicFitCode,
   resolvePublicFitSnapshot,
 } from "./publicFit";
+import { findUnreferencedStorageIdsForBikes } from "../lib/storageReferences";
 
 export const bikeTypeValidator = v.union(
   v.literal("road"),
@@ -108,6 +109,7 @@ type CreateBikeInput = {
   bikeWeightKg?: number;
   photoUrl?: string;
   fitProfileId?: Id<"profiles">;
+  bikeModelId?: Id<"bikeModels">;
   brand?: string;
   model?: string;
   description?: string;
@@ -173,6 +175,7 @@ export async function createBikeWithProfiles(
     bikeWeightKg: args.bikeWeightKg,
     photoUrl: args.photoUrl,
     fitProfileId: args.fitProfileId,
+    bikeModelId: args.bikeModelId,
     brand: args.brand,
     model: args.model,
     description: args.description,
@@ -552,7 +555,13 @@ export const remove = mutation({
       storageIdsToDelete.add(bike.photoUrl);
     }
 
-    for (const storageId of storageIdsToDelete) {
+    const deletableStorageIds = await findUnreferencedStorageIdsForBikes({
+      ctx,
+      candidateStorageIds: [...storageIdsToDelete],
+      ignoredBikeIds: [args.bikeId],
+    });
+
+    for (const storageId of deletableStorageIds) {
       await ctx.storage.delete(storageId as Id<"_storage">);
     }
 
@@ -652,11 +661,13 @@ export const importByPassport = mutation({
       primaryGoal: copyable.primaryGoal,
       bikeWeightKg: copyable.bikeWeightKg,
       photoUrl: photoPlan.primaryPhotoUrl,
+      bikeModelId: copyable.bikeModelId,
       brand: args.brand ?? copyable.brand,
       model: args.model ?? copyable.model,
       description: args.description ?? copyable.description,
       descriptionSource:
         args.description !== undefined || copyable.description ? "template" : undefined,
+      geometryRecordId: copyable.geometryRecordId,
       importedFromBikePassportId: sourceBike.bikePassportId,
     });
 
