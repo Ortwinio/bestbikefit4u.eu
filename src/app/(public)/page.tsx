@@ -8,7 +8,9 @@ import {
   Shield,
   ShieldCheck,
   CheckCircle2,
+  Gauge,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
@@ -55,6 +57,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
+  type PopularTool = {
+    href: string;
+    label: string;
+    icon: LucideIcon;
+    iconClassName: string;
+  };
+
   const locale = await getRequestLocale();
   const dictionary = await getDictionary(locale);
   const { home } = dictionary;
@@ -92,19 +101,67 @@ export default async function HomePage() {
     locale,
     HOME_QUOTES_DISPLAY_COUNT
   );
-  const popularTools =
+  const popularTools: PopularTool[] =
     locale === "nl"
       ? [
-          { href: "/calculators/bike-fit", label: "Bike fit calculator" },
-          { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
-          { href: "/calculators/frame-size", label: "Framemaat calculator" },
-          { href: "/bandenspanning-calculator", label: "Bandenspanning calculator" },
+          {
+            href: "/calculators/bike-fit",
+            label: "Bike fit calculator",
+            icon: Bike,
+            iconClassName:
+              "bg-[color:color-mix(in_oklch,var(--primary)_16%,var(--background)_84%)] text-[color:color-mix(in_oklch,var(--primary-dark)_78%,var(--foreground)_22%)]",
+          },
+          {
+            href: "/calculators/saddle-height",
+            label: "Zadelhoogte calculator",
+            icon: Ruler,
+            iconClassName:
+              "bg-[color:color-mix(in_oklch,var(--success)_16%,var(--background)_84%)] text-[color:color-mix(in_oklch,var(--success)_82%,var(--foreground)_18%)]",
+          },
+          {
+            href: "/calculators/frame-size",
+            label: "Framemaat calculator",
+            icon: Target,
+            iconClassName:
+              "bg-[color:color-mix(in_oklch,var(--warning)_18%,var(--background)_82%)] text-[color:color-mix(in_oklch,var(--warning)_78%,var(--foreground)_22%)]",
+          },
+          {
+            href: "/bandenspanning-calculator",
+            label: "Bandenspanning calculator",
+            icon: Gauge,
+            iconClassName:
+              "bg-[color:color-mix(in_oklch,var(--secondary)_70%,var(--background)_30%)] text-[color:color-mix(in_oklch,var(--primary)_80%,var(--foreground)_20%)]",
+          },
         ]
       : [
-          { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
-          { href: "/calculators/saddle-height", label: "Saddle Height Calculator" },
-          { href: "/calculators/frame-size", label: "Frame Size Calculator" },
-          { href: "/bandenspanning-calculator", label: "Tire Pressure Calculator" },
+          {
+            href: "/calculators/bike-fit",
+            label: "Bike Fit Calculator",
+            icon: Bike,
+            iconClassName:
+              "bg-[color:color-mix(in_oklch,var(--primary)_16%,var(--background)_84%)] text-[color:color-mix(in_oklch,var(--primary-dark)_78%,var(--foreground)_22%)]",
+          },
+          {
+            href: "/calculators/saddle-height",
+            label: "Saddle Height Calculator",
+            icon: Ruler,
+            iconClassName:
+              "bg-[color:color-mix(in_oklch,var(--success)_16%,var(--background)_84%)] text-[color:color-mix(in_oklch,var(--success)_82%,var(--foreground)_18%)]",
+          },
+          {
+            href: "/calculators/frame-size",
+            label: "Frame Size Calculator",
+            icon: Target,
+            iconClassName:
+              "bg-[color:color-mix(in_oklch,var(--warning)_18%,var(--background)_82%)] text-[color:color-mix(in_oklch,var(--warning)_78%,var(--foreground)_22%)]",
+          },
+          {
+            href: "/bandenspanning-calculator",
+            label: "Tire Pressure Calculator",
+            icon: Gauge,
+            iconClassName:
+              "bg-[color:color-mix(in_oklch,var(--secondary)_70%,var(--background)_30%)] text-[color:color-mix(in_oklch,var(--primary)_80%,var(--foreground)_20%)]",
+          },
         ];
   const riderScenarios =
     locale === "nl"
@@ -166,7 +223,7 @@ export default async function HomePage() {
               <Button
                 variant="outline"
                 size="lg"
-                className="min-h-12 rounded-full border-primary-foreground/45 bg-primary-foreground/10 px-6 text-base text-primary-foreground after:bg-transparent hover-only:after:bg-primary-foreground/6"
+                className="min-h-12 rounded-full border-primary-foreground/25 bg-[color:color-mix(in_oklch,var(--background)_88%,white_12%)] px-6 text-base text-[color:var(--foreground)] shadow-[0_12px_32px_-18px_color-mix(in_oklch,var(--foreground)_28%,transparent)] after:bg-[color:color-mix(in_oklch,var(--background)_92%,white_8%)] hover-only:after:bg-[color:color-mix(in_oklch,var(--muted)_70%,var(--background)_30%)]"
                 render={
                   <TrackedCtaLink
                     href={withLocalePrefix("/pricing", locale)}
@@ -244,7 +301,14 @@ export default async function HomePage() {
                   className="h-auto min-h-20 justify-start rounded-2xl px-5 py-4 text-left text-sm font-semibold"
                   render={<Link href={withLocalePrefix(tool.href, locale)} />}
                 >
-                  {tool.label}
+                  <span className="flex items-center gap-3">
+                    <span
+                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-black/5 ${tool.iconClassName}`}
+                    >
+                      <tool.icon className="h-5 w-5" />
+                    </span>
+                    <span className="leading-6">{tool.label}</span>
+                  </span>
                 </Button>
               ))}
             </div>

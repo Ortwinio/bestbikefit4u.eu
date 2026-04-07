@@ -27,10 +27,6 @@ export function FitPassPaywall({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (userTier === "pro" || userTier === "premium") {
-    return null;
-  }
-
   const isNl = locale === "nl";
   const pagePath = `${isNl ? "/nl" : ""}/fit/${sessionId}/results`;
   const priceLabel = formatEuroPriceFromCents(
@@ -48,6 +44,10 @@ export function FitPassPaywall({
       currency: COMMERCIAL_CURRENCY,
     });
   }, [isNl, logMarketingEvent, pagePath]);
+
+  if (userTier === "pro" || userTier === "premium") {
+    return null;
+  }
 
   const features = isNl
     ? [
