@@ -69,6 +69,7 @@ import type * as lib_fitAlgorithm_types from "../lib/fitAlgorithm/types.js";
 import type * as lib_fitAlgorithm_validation from "../lib/fitAlgorithm/validation.js";
 import type * as lib_pressureFitInteraction from "../lib/pressureFitInteraction.js";
 import type * as lib_pressureStaleness from "../lib/pressureStaleness.js";
+import type * as lib_storageReferences from "../lib/storageReferences.js";
 import type * as lib_validation from "../lib/validation.js";
 import type * as marktplaats_actions from "../marktplaats/actions.js";
 import type * as marktplaats_mutations from "../marktplaats/mutations.js";
@@ -181,6 +182,7 @@ declare const fullApi: ApiFromModules<{
   "lib/fitAlgorithm/validation": typeof lib_fitAlgorithm_validation;
   "lib/pressureFitInteraction": typeof lib_pressureFitInteraction;
   "lib/pressureStaleness": typeof lib_pressureStaleness;
+  "lib/storageReferences": typeof lib_storageReferences;
   "lib/validation": typeof lib_validation;
   "marktplaats/actions": typeof marktplaats_actions;
   "marktplaats/mutations": typeof marktplaats_mutations;
