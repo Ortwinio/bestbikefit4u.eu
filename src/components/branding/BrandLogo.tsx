@@ -49,6 +49,7 @@ export function BrandLogo({
   ariaLabel,
 }: BrandLogoProps) {
   const { resolvedTheme } = useTheme();
+  const isAppIcon = asset === "appIcon";
 
   const selectedAsset =
     asset === "primary"
@@ -57,9 +58,30 @@ export function BrandLogo({
         : resolvedTheme === "dark"
           ? LOGO_ASSETS.dark
           : LOGO_ASSETS.primary
+      : isAppIcon
+        ? LOGO_ASSETS.mark
       : LOGO_ASSETS[asset];
 
-  const image = (
+  const image = isAppIcon ? (
+    <span
+      className={cn(
+        "flex aspect-square w-full items-center justify-center overflow-hidden rounded-[22%] border p-[18%] shadow-[0_14px_28px_-20px_color-mix(in_oklch,var(--foreground)_28%,transparent)] transition-colors",
+        resolvedTheme === "dark"
+          ? "border-[color:color-mix(in_oklch,var(--dashboard-border-strong)_56%,transparent)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--dashboard-sidebar-elevated)_88%,var(--primary)_12%)_0%,color-mix(in_oklch,var(--dashboard-sidebar)_92%,var(--background)_8%)_100%)]"
+          : "border-[color:color-mix(in_oklch,var(--dashboard-border-soft)_88%,transparent)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--background)_96%,white_4%)_0%,color-mix(in_oklch,var(--dashboard-surface-muted)_94%,var(--background)_6%)_100%)]",
+        imageClassName
+      )}
+    >
+      <Image
+        src={selectedAsset.src}
+        alt={ariaLabel ?? BRAND.name}
+        width={selectedAsset.width}
+        height={selectedAsset.height}
+        priority={priority === true || priority === "dark"}
+        className="h-auto w-full"
+      />
+    </span>
+  ) : (
     <Image
       src={selectedAsset.src}
       alt={ariaLabel ?? BRAND.name}
