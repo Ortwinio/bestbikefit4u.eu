@@ -186,10 +186,11 @@ Result:
 ### Not Fully Closed
 
 - browser-based acceptance was executed and recorded in `output-06-browser-acceptance-report.md`
-- the closeout still cannot move to `ready` because the browser pass found blockers:
-  - hydration mismatches on touched public/auth surfaces
-  - mobile overflow on login
-  - inconclusive primary CTA browser-path verification for key conversion actions
+- a stable production-like rerun was completed on `http://localhost:3002`
+- CTA browser-path verification now passes for homepage, pricing, and tire-pressure
+- the closeout still cannot move to `ready` because the production-backed browser pass found blockers:
+  - real React production runtime errors (`#418`) on login and calculator routes
+  - local-only Vercel script 404 noise still inflates raw route-failure counts until filtered from the harness
 - kanban task registry remains inconsistent for some non-zero-padded task IDs, so board state is less reliable than workspace state
 
 ## Residual Risks
@@ -198,11 +199,12 @@ Result:
 - dashboard-only surfaces still contain legacy UI imports outside this website scope
 - manual visual QA could still expose spacing or contrast issues that are not visible in unit tests
 - browser acceptance already exposed real runtime issues that still need correction before merge closeout
+- the production-like rerun narrowed the remaining real blocker class to runtime React issues on auth/calculator surfaces rather than CTA routing
 
 ## Deferred Follow-Ups
 
 - rename remaining public uses of `dashboard-card-surface` to a website-specific utility to remove naming ambiguity
-- fix the browser-pass blockers documented in `output-06-browser-acceptance-report.md`
+- fix the production React runtime blockers documented in `output-06-browser-acceptance-report.md`
 - re-run browser-based mobile and desktop route checks for homepage, login, pricing, calculators, FAQ, and contact
 - re-run explicit analytics sanity verification for primary CTA paths in a local browser session
 - extend the Prototyper-only migration into dashboard surfaces if that rule is intended repo-wide rather than website-only

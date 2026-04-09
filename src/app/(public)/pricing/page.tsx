@@ -3,15 +3,19 @@ import { Check } from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { Card, CardContent } from "@/components/prototyper-ui/ui/card";
 import { PublicSection } from "@/components/public/PublicSection";
 import { PublicSurfaceCard } from "@/components/public/PublicSurfaceCard";
 import {
   COMMERCIAL_FEATURE_COPY,
+  CONSUMER_CAMPAIGN_CONFIG,
   formatEuroPriceFromCents,
+  getConsumerCampaignCopy,
   getCommercialFaqCopy,
   getVisiblePublicPlans,
+  isConsumerCampaignActive,
   PRODUCT_LIVE_FLAGS,
 } from "@/config/commercial";
 import { buildLocaleAlternates } from "@/i18n/metadata";
@@ -124,15 +128,30 @@ const copy: Record<
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const page = copy[locale];
+  const campaignActive = isConsumerCampaignActive();
+  const campaign = getConsumerCampaignCopy(locale);
   const alternates = buildLocaleAlternates("/pricing", locale);
+  const metadata = campaignActive
+    ? {
+        title:
+          locale === "nl"
+            ? "Tijdelijk gratis bike fit | BestBikeFit4U"
+            : "Temporary Free Bike Fit | BestBikeFit4U",
+        description: campaign.pricingDescription,
+        keywords:
+          locale === "nl"
+            ? ["gratis bike fit", "vrijwillige donatie", "Alpe d'HuZes", "tijdelijke campagne"]
+            : ["free bike fit", "voluntary donation", "Alpe d'HuZes", "temporary campaign"],
+      }
+    : page.metadata;
 
   return {
-    title: page.metadata.title,
-    description: page.metadata.description,
-    keywords: page.metadata.keywords,
+    title: metadata.title,
+    description: metadata.description,
+    keywords: metadata.keywords,
     openGraph: {
-      title: page.metadata.title,
-      description: page.metadata.description,
+      title: metadata.title,
+      description: metadata.description,
       type: "website",
       url: alternates.canonical,
     },
@@ -143,6 +162,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PricingPage() {
   const locale = await getRequestLocale();
   const page = copy[locale];
+  const campaignActive = isConsumerCampaignActive();
+  const campaign = getConsumerCampaignCopy(locale);
   const plans = getVisiblePublicPlans();
   const commercialFaq = getCommercialFaqCopy(locale);
   const pagePath = withLocalePrefix("/pricing", locale);
@@ -179,63 +200,95 @@ export default async function PricingPage() {
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">{page.subtitle}</p>
         </Card>
 
-        <div className={`mt-14 grid gap-8 ${plans.length > 1 ? "md:grid-cols-2" : "md:grid-cols-1 md:max-w-xl"} mx-auto`}>
-          {plans.map((plan) => {
-            const localized = plan.copy[locale];
-            return (
-              <Card
-                key={plan.id}
-                className={`gap-0 rounded-[2rem] border p-8 shadow-sm transition ${plan.highlighted ? "border-primary bg-primary text-primary-foreground shadow-lg" : "border-border/70 bg-card/95"}`}
-              >
-                {localized.badge ? (
-                  <p className="mb-4 text-sm font-semibold uppercase tracking-[0.22em] text-current/80">
-                    {localized.badge}
-                  </p>
-                ) : null}
-                <h2 className="text-2xl font-semibold">{localized.name}</h2>
-                <p className={`mt-2 text-sm ${plan.highlighted ? "text-primary-foreground/85" : "text-muted-foreground"}`}>
-                  {localized.description}
-                </p>
-                <div className="mt-6 flex items-end gap-2">
-                  <span className="text-4xl font-bold">
-                    {formatEuroPriceFromCents(plan.priceCentsMonthly, locale)}
-                  </span>
-                  <span className={`pb-1 text-sm ${plan.highlighted ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
-                    {page.monthlySuffix}
-                  </span>
-                </div>
-
-                <ul className="mt-8 space-y-3">
-                  {localized.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
-                      <Check className={`mt-0.5 h-5 w-5 shrink-0 ${plan.highlighted ? "text-primary-foreground/90" : "text-primary"}`} />
-                      <span className={`text-sm ${plan.highlighted ? "text-primary-foreground" : "text-muted-foreground"}`}>
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/login", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section={`pricing_${plan.id}_cta`}
-                      ctaLabel={localized.cta}
-                      conversionKey="pricing_signup"
-                    />
-                  }
-                  className={`mt-8 w-full ${plan.highlighted ? "border-background/50 bg-background text-primary after:bg-background hover-only:after:bg-muted" : ""}`}
-                  variant={plan.highlighted ? "outline" : "default"}
+        {campaignActive ? (
+          <Card className="public-card-surface mt-14 gap-0 rounded-[2rem] border px-6 py-8 shadow-sm sm:px-8">
+            <CardContent className="px-0 py-0">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
+                {campaign.pricingTitle}
+              </p>
+              <h2 className="mt-4 text-3xl font-semibold text-foreground sm:text-4xl">
+                {campaign.homepageTitle}
+              </h2>
+              <p className="mt-4 max-w-3xl text-base leading-7 text-muted-foreground">
+                {campaign.pricingDescription}
+              </p>
+              <div className="mt-6">
+                <CampaignCtaGroup
+                  locale={locale}
+                  pagePath={pagePath}
+                  startHref={withLocalePrefix("/calculators/bike-fit", locale)}
+                  startSection="pricing_campaign_start"
+                  donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+                  donateSection="pricing_campaign_donate"
+                  startLabel={campaign.startFreeCta}
+                  donateLabel={locale === "nl" ? "Doneer voor Alpe d'HuZes" : "Make a donation"}
+                  buttonSize="lg"
+                />
+              </div>
+              <p className="mt-4 text-sm text-muted-foreground">
+                {campaign.optionalNote}
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className={`mt-14 grid gap-8 ${plans.length > 1 ? "md:grid-cols-2" : "md:grid-cols-1 md:max-w-xl"} mx-auto`}>
+            {plans.map((plan) => {
+              const localized = plan.copy[locale];
+              return (
+                <Card
+                  key={plan.id}
+                  className={`gap-0 rounded-[2rem] border p-8 shadow-sm transition ${plan.highlighted ? "border-primary bg-primary text-primary-foreground shadow-lg" : "border-border/70 bg-card/95"}`}
                 >
-                  {localized.cta}
-                </Button>
-              </Card>
-            );
-          })}
-        </div>
+                  {localized.badge ? (
+                    <p className="mb-4 text-sm font-semibold uppercase tracking-[0.22em] text-current/80">
+                      {localized.badge}
+                    </p>
+                  ) : null}
+                  <h2 className="text-2xl font-semibold">{localized.name}</h2>
+                  <p className={`mt-2 text-sm ${plan.highlighted ? "text-primary-foreground/85" : "text-muted-foreground"}`}>
+                    {localized.description}
+                  </p>
+                  <div className="mt-6 flex items-end gap-2">
+                    <span className="text-4xl font-bold">
+                      {formatEuroPriceFromCents(plan.priceCentsMonthly, locale)}
+                    </span>
+                    <span className={`pb-1 text-sm ${plan.highlighted ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
+                      {page.monthlySuffix}
+                    </span>
+                  </div>
+
+                  <ul className="mt-8 space-y-3">
+                    {localized.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-3">
+                        <Check className={`mt-0.5 h-5 w-5 shrink-0 ${plan.highlighted ? "text-primary-foreground/90" : "text-primary"}`} />
+                        <span className={`text-sm ${plan.highlighted ? "text-primary-foreground" : "text-muted-foreground"}`}>
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Button
+                    render={
+                      <TrackedCtaLink
+                        href={withLocalePrefix("/login", locale)}
+                        locale={locale}
+                        pagePath={pagePath}
+                        section={`pricing_${plan.id}_cta`}
+                        ctaLabel={localized.cta}
+                        conversionKey="pricing_signup"
+                      />
+                    }
+                    className={`mt-8 w-full ${plan.highlighted ? "border-background/50 bg-background text-primary after:bg-background hover-only:after:bg-muted" : ""}`}
+                    variant={plan.highlighted ? "outline" : "default"}
+                  >
+                    {localized.cta}
+                  </Button>
+                </Card>
+              );
+            })}
+          </div>
+        )}
 
         <div className="mt-14">
           <PublicSection

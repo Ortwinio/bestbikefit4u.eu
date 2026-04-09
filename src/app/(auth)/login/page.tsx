@@ -1,7 +1,6 @@
 "use client";
 
-import * as BaseField from "@base-ui/react/field";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth } from "convex/react";
@@ -12,10 +11,16 @@ import {
   CardTitle,
 } from "@/components/prototyper-ui/ui/card";
 import { Button } from "@/components/prototyper-ui/ui/button";
-import { Input } from "@/components/prototyper-ui/ui/input";
 import { Label } from "@/components/prototyper-ui/ui/label";
+import { Input } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
+import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
+import {
+  CONSUMER_CAMPAIGN_CONFIG,
+  getConsumerCampaignCopy,
+  isConsumerCampaignActive,
+} from "@/config/commercial";
 import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
 import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
 
@@ -209,21 +214,39 @@ function AuthField({
   tooltip,
   className,
   ...props
-}: React.ComponentProps<typeof Input> & {
+}: Omit<ComponentProps<typeof Input>, "label" | "tooltip"> & {
   id: string;
   label: string;
   tooltip?: string;
 }) {
+  const [isMounted] = useState(() => typeof window !== "undefined");
+  const nativeInputProps = props as ComponentProps<"input">;
+
   return (
-    <BaseField.Field.Root className="space-y-2">
-      <div className="flex items-start justify-between gap-3">
+    <div className="space-y-2">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
         <Label htmlFor={id}>{label}</Label>
         {tooltip ? (
-          <p className="max-w-xs text-right text-xs leading-5 text-muted-foreground">{tooltip}</p>
+          <p className="max-w-none text-left text-xs leading-5 text-muted-foreground sm:max-w-xs sm:text-right">
+            {tooltip}
+          </p>
         ) : null}
       </div>
-      <Input id={id} className={className} {...props} />
-    </BaseField.Field.Root>
+      {isMounted ? (
+        <Input id={id} tooltip={tooltip} className={className} {...props} />
+      ) : (
+        <input
+          id={id}
+          className={[
+            "border-field-border bg-field-background h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base shadow-field outline-none md:text-sm placeholder:text-muted-foreground",
+            className,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          {...nativeInputProps}
+        />
+      )}
+    </div>
   );
 }
 
@@ -242,6 +265,8 @@ export default function LoginPage() {
   );
   const text = loginCopy[locale];
   const pagePath = withLocalePrefix("/login", locale);
+  const campaignActive = isConsumerCampaignActive();
+  const campaign = getConsumerCampaignCopy(locale);
   const sourceTag = searchParams?.get("src") ?? undefined;
 
   const [step, setStep] = useState<AuthStep>("email");
@@ -618,6 +643,30 @@ export default function LoginPage() {
   return (
     <div className="space-y-5">
       {uspPanel}
+      {campaignActive ? (
+        <Card className="public-card-surface gap-0 rounded-[1.75rem] border">
+          <CardContent className="space-y-4 px-6 py-6">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
+                {campaign.loginTitle}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                {campaign.loginDescription}
+              </p>
+            </div>
+            <CampaignCtaGroup
+              locale={locale}
+              pagePath={pagePath}
+              startHref={withLocalePrefix("/calculators/bike-fit", locale)}
+              startSection="login_campaign_start"
+              donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+              donateSection="login_campaign_donate"
+              startLabel={campaign.startFreeCta}
+            />
+            <p className="text-xs text-muted-foreground">{campaign.optionalNote}</p>
+          </CardContent>
+        </Card>
+      ) : null}
       <Card className="gap-0 rounded-[2rem] border border-border/70 bg-card/95 shadow-sm">
         <CardHeader className="space-y-2">
           <CardTitle>{text.signInTitle}</CardTitle>

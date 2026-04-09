@@ -15,7 +15,7 @@ export function AdminStatusPill({
   className,
 }: {
   tone?: AdminStatusTone;
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
 }) {
   return (

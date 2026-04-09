@@ -125,14 +125,7 @@ export function OrganizationDetailClient({ orgId }: { orgId: string }) {
     setMaxSeats(detail.organization.maxSeats?.toString() ?? "");
     setBillingEmail(detail.organization.billingEmail ?? "");
     setNotes(detail.organization.notes ?? "");
-  }, [
-    detail?.organization?._id,
-    detail?.organization?.name,
-    detail?.organization?.type,
-    detail?.organization?.maxSeats,
-    detail?.organization?.billingEmail,
-    detail?.organization?.notes,
-  ]);
+  }, [detail?.organization]);
 
   if (detail === undefined || orgMembers === undefined) {
     return <LoadingState label="Loading organization..." />;

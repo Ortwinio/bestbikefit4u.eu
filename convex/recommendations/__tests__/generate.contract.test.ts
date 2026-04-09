@@ -79,16 +79,25 @@ function makeCtx(params: {
       return null;
     }),
     query: vi.fn((table: string) => {
-      if (table !== "recommendations") {
-        throw new Error(`Unexpected table query: ${table}`);
+      if (table === "recommendations") {
+        return {
+          withIndex: vi.fn(() => ({
+            collect: vi.fn(async () =>
+              existingRecommendation ? [existingRecommendation] : []
+            ),
+          })),
+        };
       }
-      return {
-        withIndex: vi.fn(() => ({
-          collect: vi.fn(async () =>
-            existingRecommendation ? [existingRecommendation] : []
-          ),
-        })),
-      };
+
+      if (table === "questionnaireResponses") {
+        return {
+          withIndex: vi.fn(() => ({
+            collect: vi.fn(async () => []),
+          })),
+        };
+      }
+
+      throw new Error(`Unexpected table query: ${table}`);
     }),
     insert: vi.fn(async () => "rec_1"),
     patch: vi.fn(async () => undefined),
@@ -142,10 +151,13 @@ describe("recommendations.generate contract", () => {
     expect(recId).toBeUndefined();
     expect(ctx.db.patch).toHaveBeenCalledWith("session_1", { status: "processing" });
     expect(ctx.schedulerRunAfter).toHaveBeenCalledTimes(1);
-    expect(ctx.schedulerRunAfter.mock.calls[0]?.[2]).toEqual(
+    const firstScheduledArgs = (ctx.schedulerRunAfter.mock.calls as unknown[][])[0]?.[2] as
+      | Record<string, unknown>
+      | undefined;
+    expect(firstScheduledArgs).toEqual(
       expect.objectContaining({ bikeCategory: "mtb" })
     );
-    expect(ctx.db.get).not.toHaveBeenCalledWith("bike_1");
+    expect(ctx.db.get).toHaveBeenCalledWith("bike_1");
   });
 
   it("falls back to linked bike type when session bikeType is missing", async () => {
@@ -178,7 +190,10 @@ describe("recommendations.generate contract", () => {
     await handler(ctx, { sessionId: ctx.sessionId });
 
     expect(ctx.schedulerRunAfter).toHaveBeenCalledTimes(1);
-    expect(ctx.schedulerRunAfter.mock.calls[0]?.[2]).toEqual(
+    const firstScheduledArgs = (ctx.schedulerRunAfter.mock.calls as unknown[][])[0]?.[2] as
+      | Record<string, unknown>
+      | undefined;
+    expect(firstScheduledArgs).toEqual(
       expect.objectContaining({ bikeCategory: "gravel" })
     );
     expect(ctx.db.get).toHaveBeenCalledWith("bike_1");

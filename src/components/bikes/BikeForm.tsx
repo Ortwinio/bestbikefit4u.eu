@@ -324,6 +324,7 @@ export function BikeForm({
 
             <Select
               label={messages.fit.sections.ridingStyle}
+              tooltip={messages.fit.sections.ridingStyleTooltip}
               value={ridingStyle}
               onChange={(event) => setRidingStyle(event.target.value as RidingStyle)}
               options={[
@@ -339,6 +340,7 @@ export function BikeForm({
 
             <Select
               label={messages.fit.sections.primaryGoal}
+              tooltip={messages.fit.sections.primaryGoalTooltip}
               value={primaryGoal}
               onChange={(event) => setPrimaryGoal(event.target.value as PrimaryGoal)}
               options={[

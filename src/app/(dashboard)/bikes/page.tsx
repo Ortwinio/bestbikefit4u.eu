@@ -55,56 +55,69 @@ export default function BikesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">{messages.nav.myBikes}</h1>
-          <p className="mt-2 text-sm text-muted-foreground">{messages.bikes.subtitle}</p>
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button
-            variant="outline"
-            {...linkButtonProps(withLocalePrefix("/bikes/import/marktplaats", locale))}
-          >
-            <Store className="h-4 w-4" />
-            {messages.bikeForm.marktplaatsImport.entryCta}
-          </Button>
-          <Button
-            variant="outline"
-            {...linkButtonProps(withLocalePrefix("/bikes/import/passport", locale))}
-          >
-            <CopyPlus className="h-4 w-4" />
-            {messages.bikeForm.passportImport.entryCta}
-          </Button>
-          <Link
-            href={withLocalePrefix("/bikes/new", locale)}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-dark"
-          >
-            <Plus className="h-4 w-4" />
-            {messages.nav.newBike}
-          </Link>
-        </div>
-      </div>
+      <Card variant="bordered" className="dashboard-hero-surface overflow-hidden">
+        <CardContent className="flex flex-col gap-6 p-6 md:p-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="space-y-3">
+            <h1 className="text-3xl font-semibold tracking-tight text-[color:var(--foreground)]">
+              {messages.nav.myBikes}
+            </h1>
+            <p className="max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
+              {messages.bikes.subtitle}
+            </p>
+          </div>
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap lg:justify-end">
+            <Button
+              {...linkButtonProps(withLocalePrefix("/bikes/new", locale))}
+              className="w-full justify-center sm:w-auto"
+            >
+              <Plus className="h-4 w-4" />
+              {messages.nav.newBike}
+            </Button>
+            <Button
+              variant="outline"
+              {...linkButtonProps(withLocalePrefix("/bikes/import/marktplaats", locale))}
+              className="w-full justify-center sm:w-auto"
+            >
+              <Store className="h-4 w-4" />
+              {messages.bikeForm.marktplaatsImport.entryCta}
+            </Button>
+            <Button
+              variant="outline"
+              {...linkButtonProps(withLocalePrefix("/bikes/import/passport", locale))}
+              className="w-full justify-center sm:w-auto"
+            >
+              <CopyPlus className="h-4 w-4" />
+              {messages.bikeForm.passportImport.entryCta}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {bikes.length === 0 ? (
-        <Card variant="bordered" className="dashboard-card-surface">
+        <Card variant="bordered" className="dashboard-card-surface-muted">
           <CardContent className="pt-6">
             <EmptyState
               title={messages.bikes.empty.title}
               description={messages.bikes.empty.description}
               action={
-                <div className="flex flex-wrap justify-center gap-3">
-                  <Button {...linkButtonProps(withLocalePrefix("/bikes/new", locale))}>
+                <div className="flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
+                  <Button
+                    {...linkButtonProps(withLocalePrefix("/bikes/new", locale))}
+                    className="w-full justify-center sm:w-auto"
+                  >
                     {messages.bikes.empty.cta}
                   </Button>
                   <Button
                     variant="outline"
                     {...linkButtonProps(withLocalePrefix("/bikes/import/marktplaats", locale))}
+                    className="w-full justify-center sm:w-auto"
                   >
                     {messages.bikeForm.marktplaatsImport.entryCta}
                   </Button>
                   <Button
                     variant="outline"
                     {...linkButtonProps(withLocalePrefix("/bikes/import/passport", locale))}
+                    className="w-full justify-center sm:w-auto"
                   >
                     {messages.bikeForm.passportImport.entryCta}
                   </Button>

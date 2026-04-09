@@ -81,10 +81,7 @@ export function FeedbackTypePill({
   type: FeedbackType;
   children?: ReactNode;
 }) {
-  return createElement(
-    AdminStatusPill,
-    { tone: feedbackTypeTone(type), children: children ?? feedbackTypeLabel(type) }
-  );
+  return createElement(AdminStatusPill, { tone: feedbackTypeTone(type) }, children ?? feedbackTypeLabel(type));
 }
 
 export function FeedbackStatusPill({
@@ -94,10 +91,7 @@ export function FeedbackStatusPill({
   status: FeedbackStatus;
   children?: ReactNode;
 }) {
-  return createElement(
-    AdminStatusPill,
-    { tone: feedbackStatusTone(status), children: children ?? feedbackStatusLabel(status) }
-  );
+  return createElement(AdminStatusPill, { tone: feedbackStatusTone(status) }, children ?? feedbackStatusLabel(status));
 }
 
 export function FeedbackPriorityPill({
@@ -109,6 +103,7 @@ export function FeedbackPriorityPill({
 }) {
   return createElement(
     AdminStatusPill,
-    { tone: feedbackPriorityTone(priority), children: children ?? feedbackPriorityLabel(priority) }
+    { tone: feedbackPriorityTone(priority) },
+    children ?? feedbackPriorityLabel(priority)
   );
 }

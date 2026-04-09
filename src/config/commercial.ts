@@ -2,6 +2,86 @@ import type { Locale } from "@/i18n/config";
 
 export const COMMERCIAL_CURRENCY = "EUR" as const;
 
+export const CONSUMER_CAMPAIGN_CONFIG = {
+  campaignMode: true,
+  campaignEndDate: "2026-06-04T23:59:59+02:00",
+  donationUrl:
+    "https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756",
+} as const;
+
+export function isConsumerCampaignActive(now = new Date()): boolean {
+  if (!CONSUMER_CAMPAIGN_CONFIG.campaignMode) {
+    return false;
+  }
+
+  return (
+    now.getTime() <= new Date(CONSUMER_CAMPAIGN_CONFIG.campaignEndDate).getTime()
+  );
+}
+
+export function getConsumerCampaignEndLabel(locale: Locale): string {
+  return locale === "nl" ? "4 juni 2026" : "June 4, 2026";
+}
+
+export function getConsumerCampaignCopy(locale: Locale) {
+  const endLabel = getConsumerCampaignEndLabel(locale);
+
+  return locale === "nl"
+    ? {
+        endLabel,
+        startFreeCta: "Start gratis bike fit",
+        donateCta: "Doneer via onze Alpe d'HuZes-pagina",
+        announcement:
+          `BestBikeFit4U is tijdelijk gratis tot ${endLabel}. Wil je onze Alpe d'HuZes-campagne steunen, dan kun je een vrijwillige donatie doen.`,
+        homepageEyebrow: "Tijdelijke gratis toegang voor Alpe d'HuZes",
+        homepageTitle: "Gebruik BestBikeFit4U gratis tot 4 juni 2026",
+        homepageDescription:
+          "Tot 4 juni 2026 kun je BestBikeFit4U gratis gebruiken. In plaats van een verplichte betaling nodigen we je uit om, als je wilt, onze Alpe d'HuZes-fundraisingcampagne te steunen met een vrijwillige donatie.",
+        pricingTitle: "Tijdelijke gratis campagne",
+        pricingDescription:
+          "Tot 4 juni 2026 is BestBikeFit4U gratis voor consumenten. Vind je het waardevol, dan kun je onze Alpe d'HuZes-fundraisingcampagne steunen met een vrijwillige donatie.",
+        loginTitle: "Tijdelijk gratis toegang",
+        loginDescription:
+          "Je account blijft gewoon nodig om je sessie op te slaan, je rapport te mailen en je resultaten terug te vinden. Betalen is tijdens deze campagne niet nodig.",
+        fitStartTitle: "Je fit is tijdelijk gratis",
+        fitStartDescription:
+          "Tijdens onze Alpe d'HuZes-campagne kun je deze consumenten-bikefit gratis starten en afronden tot 4 juni 2026. Wil je ons steunen, dan kun je vrijblijvend doneren.",
+        paywallTitle: "Je kunt deze bike fit gratis gebruiken tijdens onze Alpe d'HuZes-campagne.",
+        paywallDescription:
+          "Er is geen verplichte betaling. Wil je ons steunen, dan kun je via onze fundraisingpagina een vrijwillige donatie doen.",
+        continueFreeCta: "Ga gratis verder",
+        donateFirstCta: "Doneer eerst",
+        optionalNote: "Doneren is volledig optioneel.",
+      }
+    : {
+        endLabel,
+        startFreeCta: "Start free bike fit",
+        donateCta: "Donate via our Alpe d'HuZes page",
+        announcement:
+          `BestBikeFit4U is temporarily free until ${endLabel}. If you would like to support our Alpe d'HuZes campaign, you can make a voluntary donation.`,
+        homepageEyebrow: "Temporary free access for Alpe d'HuZes",
+        homepageTitle: "Use BestBikeFit4U for free until June 4, 2026",
+        homepageDescription:
+          "Until June 4, 2026, you can use BestBikeFit4U for free. Instead of a required payment, we invite you to support our Alpe d'HuZes fundraising campaign with a voluntary donation if you want to.",
+        pricingTitle: "Temporary free campaign",
+        pricingDescription:
+          "Until June 4, 2026, BestBikeFit4U is free for consumer users. If you find it valuable, you can support our Alpe d'HuZes fundraising campaign with a voluntary donation.",
+        loginTitle: "Temporary free access",
+        loginDescription:
+          "You still need an account to save your session, email your report, and come back to your results. During this campaign there is no required payment.",
+        fitStartTitle: "Your fit is temporarily free",
+        fitStartDescription:
+          "During our Alpe d'HuZes campaign you can start and complete this consumer bike fit for free until June 4, 2026. If you would like to support us, you can make an optional donation.",
+        paywallTitle:
+          "You can use this bike fit for free during our Alpe d'HuZes campaign.",
+        paywallDescription:
+          "There is no required payment. If you would like to support us, you can make a voluntary donation through our fundraising page.",
+        continueFreeCta: "Continue for free",
+        donateFirstCta: "Donate first",
+        optionalNote: "Donating is entirely optional.",
+      };
+}
+
 export const PRODUCT_LIVE_FLAGS = {
   pdfReport: true,
   emailReport: true,
@@ -313,6 +393,22 @@ export function getVisiblePublicPlans() {
 }
 
 export function getCommercialFaqCopy(locale: Locale) {
+  if (isConsumerCampaignActive()) {
+    const campaign = getConsumerCampaignCopy(locale);
+
+    return {
+      multipleBikeProfiles:
+        locale === "nl"
+          ? "Ja. Je kunt tijdens de campagne nog steeds meerdere fietsen beheren zodra je account hebt aangemaakt."
+          : "Yes. During the campaign you can still manage multiple bikes once you have created your account.",
+      pdfReport:
+        locale === "nl"
+          ? "Ja. Tijdens de campagne kun je je volledige rapport zonder verplichte betaling gebruiken."
+          : "Yes. During the campaign you can use your full report without a required payment.",
+      pricing: campaign.pricingDescription,
+    };
+  }
+
   return {
     multipleBikeProfiles:
       locale === "nl"
@@ -342,6 +438,14 @@ export function getSupportResponseItems(locale: Locale): string[] {
 }
 
 export function getSubscriptionTermsCopy(locale: Locale): string {
+  if (isConsumerCampaignActive()) {
+    const campaign = getConsumerCampaignCopy(locale);
+
+    return locale === "nl"
+      ? `BestBikeFit4U is tijdelijk gratis voor consumenten tot ${campaign.endLabel}. Vrijwillige donaties verlopen via onze Alpe d'HuZes-pagina en zijn niet verplicht.`
+      : `BestBikeFit4U is temporarily free for consumer users until ${campaign.endLabel}. Voluntary donations go through our Alpe d'HuZes page and are never required.`;
+  }
+
   return locale === "nl"
     ? "BestBikeFit4U toont publiek Free en Pro. Betaalde Pro-plannen worden maandelijks in euro gefactureerd en kunnen op elk moment worden opgezegd."
     : "BestBikeFit4U publicly offers Free and Pro. Paid Pro plans are billed monthly in EUR and can be cancelled at any time.";

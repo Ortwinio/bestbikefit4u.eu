@@ -3,7 +3,6 @@ import { Bike, CheckCircle2, FileDown, Repeat, Sparkles } from "lucide-react";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import { BRAND } from "@/config/brand";
 import { PUBLIC_PLANS, formatEuroPriceFromCents } from "@/config/commercial";
 import { FitPassLandingCta } from "@/components/features/fitpass/FitPassLandingCta";
 import {

@@ -185,7 +185,10 @@ export function FitReportActionGroup({
             </Button>
           </div>
 
-          <Card variant="bordered" className="min-h-0 flex-1 overflow-hidden">
+          <Card
+            variant="bordered"
+            className="dashboard-card-surface min-h-0 flex-1 overflow-hidden"
+          >
             <CardContent className="flex h-full min-h-0 flex-col p-0">
               {pdfError ? (
                 <div className="flex h-full flex-col items-center justify-center gap-4 p-6 text-center">

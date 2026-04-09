@@ -9,8 +9,7 @@ const checkboxGroupClassName = "grid gap-3";
 const checkboxGroupItemClassName =
   "group no-highlight transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth motion-reduce:transition-none focus-visible:focus-ring motion-safe:active:scale-[0.98]";
 
-export interface CheckboxGroupProps
-  extends ComponentPropsWithoutRef<typeof BaseCheckboxGroup> {}
+export type CheckboxGroupProps = ComponentPropsWithoutRef<typeof BaseCheckboxGroup>;
 
 export const CheckboxGroup = forwardRef<HTMLDivElement, CheckboxGroupProps>(
   ({ className, ...props }, ref) => (
@@ -25,8 +24,7 @@ export const CheckboxGroup = forwardRef<HTMLDivElement, CheckboxGroupProps>(
 
 CheckboxGroup.displayName = "CheckboxGroup";
 
-export interface CheckboxGroupItemProps
-  extends ComponentPropsWithoutRef<typeof Checkbox.Root> {}
+export type CheckboxGroupItemProps = ComponentPropsWithoutRef<typeof Checkbox.Root>;
 
 export const CheckboxGroupItem = forwardRef<HTMLButtonElement, CheckboxGroupItemProps>(
   ({ className, ...props }, ref) => (

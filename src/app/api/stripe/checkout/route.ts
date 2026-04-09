@@ -3,8 +3,6 @@ import Stripe from "stripe";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../../../convex/_generated/api";
-import type { Id } from "../../../../../convex/_generated/dataModel";
-import { PUBLIC_PLANS } from "@/config/commercial";
 
 export const runtime = "nodejs";
 

@@ -7,6 +7,7 @@ import {
   type Locale,
 } from "@/i18n/config";
 import { decideProxyAction } from "@/i18n/proxyDecision";
+import { extractLocaleFromPathname, stripLocalePrefix } from "@/i18n/navigation";
 
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
 
@@ -27,6 +28,27 @@ function redirectToPath(request: NextRequest, pathname: string): NextResponse {
   return NextResponse.redirect(url);
 }
 
+function rewriteToLocalizedInternalPath(
+  request: NextRequest,
+  pathname: string,
+  locale: Locale
+): NextResponse {
+  const rewriteUrl = request.nextUrl.clone();
+  rewriteUrl.pathname = stripLocalePrefix(pathname);
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(LOCALE_HEADER_NAME, locale);
+
+  const response = NextResponse.rewrite(rewriteUrl, {
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
+  setLocaleCookie(response, locale);
+  return response;
+}
+
 function shouldApplyNoIndexHeader(hostname: string): boolean {
   return hostname !== BRAND.host;
 }
@@ -41,10 +63,10 @@ function applyDeploymentHeaders(request: NextRequest, response: NextResponse): N
 
 const convexAuthProxy = convexAuthNextjsMiddleware(
   async (request, { convexAuth }) => {
-    const { pathname } = request.nextUrl;
+    const rawPathname = new URL(request.url).pathname;
 
     // Admin paths: protected, non-locale-prefixed — let the (dashboard) layout handle auth
-    if (pathname.startsWith("/admin")) {
+    if (rawPathname.startsWith("/admin")) {
       const isAuthenticated = await convexAuth.isAuthenticated();
       if (!isAuthenticated) {
         return applyDeploymentHeaders(request, redirectToPath(request, "/login"));
@@ -54,7 +76,7 @@ const convexAuthProxy = convexAuthNextjsMiddleware(
 
     const isAuthenticated = await convexAuth.isAuthenticated();
     const decision = decideProxyAction({
-      pathname,
+      pathname: rawPathname,
       cookieLocale: request.cookies.get(LOCALE_COOKIE_NAME)?.value,
       acceptLanguageHeader: request.headers.get("accept-language"),
       isAuthenticated,
@@ -65,24 +87,22 @@ const convexAuthProxy = convexAuthNextjsMiddleware(
     }
 
     if (decision.type === "redirect" || decision.type === "auth_redirect") {
+      if (decision.pathname === rawPathname) {
+        const locale = extractLocaleFromPathname(rawPathname) ?? decision.locale;
+        const response = rewriteToLocalizedInternalPath(request, rawPathname, locale);
+        return applyDeploymentHeaders(request, response);
+      }
+
       const response = redirectToPath(request, decision.pathname);
       setLocaleCookie(response, decision.locale);
       return applyDeploymentHeaders(request, response);
     }
 
-    const rewriteUrl = request.nextUrl.clone();
-    rewriteUrl.pathname = decision.pathname;
-
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set(LOCALE_HEADER_NAME, decision.locale);
-
-    const response = NextResponse.rewrite(rewriteUrl, {
-      request: {
-        headers: requestHeaders,
-      },
-    });
-
-    setLocaleCookie(response, decision.locale);
+    const response = rewriteToLocalizedInternalPath(
+      request,
+      decision.pathname,
+      decision.locale
+    );
     return applyDeploymentHeaders(request, response);
   }
 );

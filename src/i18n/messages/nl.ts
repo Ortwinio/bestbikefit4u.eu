@@ -657,7 +657,11 @@ const nl = {
       sections: {
         bikeType: "Welk type fiets?",
         ridingStyle: "Hoe fiets je meestal?",
+        ridingStyleTooltip:
+          "Kies de rijstijl die het best past bij hoe je deze fiets meestal gebruikt, zodat fit-aanbevelingen comfort, handling en positie goed kunnen afwegen.",
         primaryGoal: "Wat is je belangrijkste doel?",
+        primaryGoalTooltip:
+          "Kies het belangrijkste resultaat dat je met deze fiets wilt bereiken, zodat opgeslagen fietsprofielen en fit-sessies daarop kunnen sturen.",
       },
       continueCta: "Ga door naar vragen",
       profileRequirementHint: "Vul je profiel in om verder te gaan",

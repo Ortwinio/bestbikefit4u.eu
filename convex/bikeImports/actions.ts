@@ -3,7 +3,7 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { internal } from "../_generated/api";
 import { action } from "../_generated/server";
-import { ConvexError, v } from "convex/values";
+import { ConvexError } from "convex/values";
 import type { Id } from "../_generated/dataModel";
 import { bikeImportSaveRequestValidator } from "./shared";
 

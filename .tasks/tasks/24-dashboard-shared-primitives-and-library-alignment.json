@@ -1,0 +1,24 @@
+{
+  "_version": 1,
+  "id": 24,
+  "title": "Dashboard shared primitives and library alignment: classify dashboard wrappers, normalize approved Prototyper-backed primitives, and preserve slider exception surfaces",
+  "status": "done",
+  "priority": 2,
+  "assigned": "design-system-owner",
+  "depends_on": ["Dashboard audit and implementation matrix", "Dashboard token and shell contract"],
+  "files": [
+    "src/components/ui/*",
+    "src/components/prototyper-ui/ui/*",
+    "src/components/dashboard-messages/*",
+    "src/components/reports/*",
+    "src/components/profile/*",
+    "src/components/measurements/*"
+  ],
+  "acceptance": [
+    "Dashboard-facing wrappers are classified as approved wrapper, direct Prototyper usage, or migration target",
+    "High-visibility dashboard wrappers are visually aligned with the new contract",
+    "Slider-based controls remain on the approved slider path only",
+    "Residual out-of-scope legacy components are explicitly listed"
+  ],
+  "notes": "Completed. Confirmed the dashboard relies mainly on approved Prototyper-backed wrappers, preserved the slider exception path, aligned dashboard message chrome in src/components/dashboard-messages/shared.tsx, aligned the report viewer surface in src/components/reports/FitReportActionGroup.tsx, and documented remaining out-of-scope legacy surfaces in plans/feature-dashboard-look-and-feel-harmony/output-03-dashboard-shared-primitives-and-library-alignment.md."
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Button, Card, CardContent, InfoBox, SectionHeader } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -33,15 +33,7 @@ function readInstallEnvironment() {
 
 export function IPhoneAppInstallCard() {
   const { locale, messages } = useDashboardMessages();
-  const [environment, setEnvironment] = useState({
-    isAppleMobile: false,
-    isSafari: false,
-    isStandalone: false,
-  });
-
-  useEffect(() => {
-    setEnvironment(readInstallEnvironment());
-  }, []);
+  const [environment] = useState(() => readInstallEnvironment());
 
   return (
     <Card variant="bordered" className="dashboard-card-surface">

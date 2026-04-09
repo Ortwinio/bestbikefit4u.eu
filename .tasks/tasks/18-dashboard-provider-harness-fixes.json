@@ -2,7 +2,7 @@
   "_version": 1,
   "id": 18,
   "title": "Dashboard/provider harness fixes: align dashboard tests with current ThemeProvider and locale query requirements",
-  "status": "todo",
+  "status": "done",
   "priority": 3,
   "assigned": "dashboard-owner",
   "depends_on": ["Validation scope cleanup"],
@@ -17,5 +17,8 @@
     "ThemeProvider-related test failures are resolved",
     "Locale query expectations are aligned with current dashboard behavior"
   ],
-  "notes": "This appears to be primarily a test-harness mismatch rather than a broad runtime regression."
+  "notes": [
+    "Dashboard/provider harness expectations are aligned with the current ThemeProvider and locale behavior.",
+    "Confirmed on 2026-04-09: src/app/(dashboard)/layout.test.tsx and tests/integration/dashboard-message-locale.integration.test.tsx pass."
+  ]
 }

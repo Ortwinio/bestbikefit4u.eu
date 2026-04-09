@@ -34,6 +34,13 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { CheckCircle2, Trash2, User, Palette, Zap, Shield, AlertCircle, Info } from "lucide-react";
 
+function linkButtonProps(href: string) {
+  return {
+    render: <Link href={href} />,
+    nativeButton: false as const,
+  };
+}
+
 // Separate component so useSearchParams() is inside a Suspense boundary
 function StravaCallbackToast() {
   const router = useRouter();
@@ -92,6 +99,7 @@ export default function SettingsPage() {
     messages.userMenu.fallbackUserName
   );
   const profileImageSource = getEffectiveProfileImageSource(user);
+  const localeLabel = locale === "nl" ? languageSwitchLabels.dutch : languageSwitchLabels.english;
   const storedDisplayName =
     user &&
     "displayName" in user &&
@@ -176,10 +184,46 @@ export default function SettingsPage() {
       <Suspense>
         <StravaCallbackToast />
       </Suspense>
-      <div>
-        <h1 className="text-2xl font-bold text-[color:var(--foreground)]">{messages.settings.title}</h1>
-        <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">{messages.settings.subtitle}</p>
-      </div>
+      <Card variant="bordered" className="dashboard-hero-surface overflow-hidden">
+        <CardContent className="grid gap-6 p-6 md:p-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)] lg:items-end">
+          <div className="space-y-4">
+            <SectionHeader
+              icon={<User className="h-5 w-5 text-[color:var(--primary)]" />}
+              title={messages.settings.title}
+            />
+            <p className="max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
+              {messages.settings.subtitle}
+            </p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Button
+                variant="outline"
+                {...linkButtonProps(withLocalePrefix("/profile", locale))}
+                className="w-full justify-center sm:w-auto"
+              >
+                {messages.settings.privacy.manageProfile}
+              </Button>
+              <Button
+                variant="ghost"
+                {...linkButtonProps(withLocalePrefix("/privacy", locale))}
+                className="w-full justify-center sm:w-auto"
+              >
+                {messages.settings.privacy.privacyPolicy}
+              </Button>
+            </div>
+          </div>
+
+          <div className="dashboard-card-surface-muted rounded-[var(--radius-2xl)] border p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
+              {messages.settings.account.title}
+            </p>
+            <dl className="mt-3 divide-y divide-[color:var(--border)]">
+              <StatRow label={messages.settings.account.type} value={accountType} />
+              <StatRow label={messages.settings.account.displayNameLabel} value={effectiveDisplayName} />
+              <StatRow label={messages.settings.preferences.language} value={localeLabel} />
+            </dl>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card variant="bordered" className="dashboard-card-surface">
@@ -188,7 +232,7 @@ export default function SettingsPage() {
             title={messages.settings.account.title}
           />
           <CardContent className="space-y-4">
-            <div className="flex items-center gap-4">
+            <div className="dashboard-card-surface-muted flex items-center gap-4 rounded-[var(--radius-2xl)] border p-4">
               <ProfilePhotoUpload source={profileImageSource} size="settings" />
               <div>
                 <p className="font-semibold text-[color:var(--foreground)]">
@@ -206,7 +250,6 @@ export default function SettingsPage() {
               />
               {displayNameError ? <ErrorState description={displayNameError} /> : null}
               <Button
-                variant="outline"
                 onClick={() => void handleSaveDisplayName()}
                 isLoading={isSavingDisplayName}
               >
@@ -220,20 +263,22 @@ export default function SettingsPage() {
               <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}>
                 <p className="font-medium">{messages.settings.account.upgrade}</p>
                 <p className="mt-1">{messages.settings.account.upgradeDescription}</p>
-                <Link
-                  href={withLocalePrefix("/pricing", locale)}
-                  className="mt-3 inline-flex font-semibold text-[color:var(--warning-foreground)] underline"
+                <Button
+                  variant="outline"
+                  {...linkButtonProps(withLocalePrefix("/pricing", locale))}
+                  className="mt-3 w-full justify-center sm:w-auto"
                 >
                   {messages.settings.account.upgradeCta}
-                </Link>
+                </Button>
               </InfoBox>
             ) : null}
             <Button
-              variant="outline"
+              variant="ghost"
               onClick={async () => {
                 await signOut();
                 router.push(withLocalePrefix("/", locale));
               }}
+              className="w-full justify-start"
             >
               {messages.common.signOut}
             </Button>
@@ -246,13 +291,13 @@ export default function SettingsPage() {
             title={messages.settings.preferences.title}
           />
           <CardContent className="space-y-5">
-            <div>
+            <div className="dashboard-card-surface-muted rounded-[var(--radius-2xl)] border p-4">
               <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
                 {messages.settings.preferences.language}
               </p>
               <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
             </div>
-            <div>
+            <div className="dashboard-card-surface-muted rounded-[var(--radius-2xl)] border p-4">
               <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
                 {messages.settings.preferences.appearance}
               </p>
@@ -264,7 +309,7 @@ export default function SettingsPage() {
                 }}
               />
             </div>
-            <div>
+            <div className="dashboard-card-surface-muted rounded-[var(--radius-2xl)] border p-4">
               <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
                 {messages.settings.preferences.units}
               </p>
@@ -456,16 +501,28 @@ export default function SettingsPage() {
           />
           <CardContent className="space-y-2 text-sm text-[color:var(--muted-foreground)]">
             <p>{messages.settings.privacy.description}</p>
-            <div className="flex flex-wrap gap-4">
-              <Link href={withLocalePrefix("/privacy", locale)} className="font-semibold text-[color:var(--primary)]">
+            <div className="flex flex-wrap gap-3">
+              <Button
+                variant="ghost"
+                {...linkButtonProps(withLocalePrefix("/privacy", locale))}
+                className="px-0 text-[color:var(--primary)]"
+              >
                 {messages.settings.privacy.privacyPolicy}
-              </Link>
-              <Link href={withLocalePrefix("/terms", locale)} className="font-semibold text-[color:var(--primary)]">
+              </Button>
+              <Button
+                variant="ghost"
+                {...linkButtonProps(withLocalePrefix("/terms", locale))}
+                className="px-0 text-[color:var(--primary)]"
+              >
                 {messages.settings.privacy.terms}
-              </Link>
-              <Link href={withLocalePrefix("/profile", locale)} className="font-semibold text-[color:var(--primary)]">
+              </Button>
+              <Button
+                variant="ghost"
+                {...linkButtonProps(withLocalePrefix("/profile", locale))}
+                className="px-0 text-[color:var(--primary)]"
+              >
                 {messages.settings.privacy.manageProfile}
-              </Link>
+              </Button>
             </div>
           </CardContent>
         </Card>

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Doc } from "../../../../../../convex/_generated/dataModel";
 import { api } from "../../../../../../convex/_generated/api";
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Progress } from "@/components/ui";
+import { Button, Card, CardDescription, CardHeader, CardTitle, Progress } from "@/components/ui";
 import {
   AdminMetricCard,
   AdminPageHeader,

@@ -293,17 +293,7 @@ function PlanFormContent({ mode, planId }: { mode: "new" | "edit"; planId?: stri
     setBillingInterval(detail.plan.billingInterval ?? "custom");
     setSeatLimit(detail.plan.seatLimit ?? null);
     setIsActive(detail.plan.isActive);
-  }, [
-    detail?.plan?._id,
-    detail?.plan?.billingInterval,
-    detail?.plan?.isActive,
-    detail?.plan?.key,
-    detail?.plan?.name,
-    detail?.plan?.priceCents,
-    detail?.plan?.seatLimit,
-    detail?.plan?.tier,
-    mode,
-  ]);
+  }, [detail?.plan, mode]);
 
   if (currentAdmin === undefined || (mode === "edit" && detail === undefined)) {
     return <BillingLoadingShell label={mode === "new" ? "Loading plan form..." : "Loading plan..."} />;

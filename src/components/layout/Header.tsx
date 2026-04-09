@@ -4,6 +4,7 @@ import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import type { Messages } from "@/i18n/getDictionary";
 import { BrandLogo } from "@/components/branding";
+import { CampaignAnnouncementBar } from "@/components/campaign/CampaignAnnouncementBar";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { HeaderAuthActions } from "./HeaderAuthActions";
 import { HeaderMobileMenu } from "./HeaderMobileMenu";
@@ -40,6 +41,7 @@ export function Header({ locale, labels }: HeaderProps) {
 
   return (
     <header className="relative border-b border-[color:var(--border)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--background)_94%,var(--secondary)_6%)_0%,var(--background)_100%)] text-[color:var(--foreground)]">
+      <CampaignAnnouncementBar locale={locale} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex min-h-[4.5rem] items-center justify-between gap-3 py-3">
           <div className="flex min-w-0 items-center gap-6">

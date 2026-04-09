@@ -102,7 +102,6 @@ export default async function FitRunsPage({
 
   const needsReview = runViews.filter((run) => run.run.reviewStatus === "required").length;
   const reviewed = runViews.filter((run) => run.run.reviewStatus === "reviewed").length;
-  const overridden = runViews.filter((run) => run.run.reviewStatus === "overridden").length;
   const confidenceValues = runViews.flatMap((run) =>
     typeof run.run.confidenceScore === "number" ? [run.run.confidenceScore] : []
   );

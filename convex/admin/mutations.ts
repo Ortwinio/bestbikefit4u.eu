@@ -2,7 +2,7 @@ import { v } from "convex/values";
 import type { Doc, Id } from "../_generated/dataModel";
 import { mutation, type MutationCtx } from "../_generated/server";
 import { writeAuditLog } from "./audit";
-import { requireAnyRole, requireAdminRole, requireAdminUserId } from "./authz";
+import { requireAnyRole, requireAdminRole } from "./authz";
 
 type DashboardMessageTargetInput = {
   targetType: string;

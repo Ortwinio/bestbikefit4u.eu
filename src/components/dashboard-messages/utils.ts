@@ -6,14 +6,6 @@ const bannerTypes = new Set<DashboardMessage["type"]>([
   "safety_alert",
 ]);
 
-const homeCardTypes = new Set<DashboardMessage["type"]>([
-  "inbox_card",
-  "release_announcement",
-  "upgrade_prompt",
-  "re_fit_reminder",
-  "support_reply",
-]);
-
 const modalTypes = new Set<DashboardMessage["type"]>(["modal"]);
 
 const priorityRank: Record<DashboardMessage["priority"], number> = {
@@ -103,4 +95,3 @@ export function formatDashboardMessageCount(value: number, noun: string) {
 export function isExternalMessageUrl(url: string) {
   return /^https?:\/\//i.test(url);
 }
-

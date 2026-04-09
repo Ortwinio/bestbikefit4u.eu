@@ -2,7 +2,7 @@
   "_version": 1,
   "id": 14,
   "title": "PDF route regression: restore expected status behavior for report PDF requests after unexpected 403 failures",
-  "status": "todo",
+  "status": "done",
   "priority": 1,
   "assigned": "reporting-owner",
   "depends_on": ["Validation scope cleanup"],
@@ -15,5 +15,8 @@
     "Expected 200, 404, 409, and 429 route responses are restored",
     "Related report authorization logic remains consistent with production behavior"
   ],
-  "notes": "Large single-cluster failure area from the April 8 validation run and the highest-leverage functional fix after validation noise cleanup."
+  "notes": [
+    "PDF route behavior was restored and then extended for the temporary consumer campaign in src/app/api/reports/[sessionId]/pdf/route.ts.",
+    "Confirmed on 2026-04-09: src/app/api/reports/[sessionId]/pdf/route.test.ts passes, including expected 200, 404, 409, and 429 responses."
+  ]
 }

@@ -4,7 +4,6 @@ import Link from "next/link";
 import type { Doc } from "../../../convex/_generated/dataModel";
 import { Button, Card, CardContent, EmptyState, SectionHeader, MeasurementTile, InfoBox, StatRow } from "@/components/ui";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
-import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getBikeTypeLabel } from "@/lib/bikes";
@@ -72,14 +71,6 @@ function BikeImage({
       className="aspect-video w-full rounded-[var(--radius-lg)] object-cover"
     />
   );
-}
-
-function formatDate(timestamp: number, locale: Locale) {
-  return new Date(timestamp).toLocaleDateString(locale === "nl" ? "nl-NL" : "en-US", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
 }
 
 function linkButtonProps(href: string) {
@@ -186,12 +177,6 @@ export function BikeGarageRow({
 
   const rec = latestFit?.recommendation ?? null;
   const hasClimbingProfile = Boolean(rec?.climbingCalculatedFit);
-  const fitDate = latestFit
-    ? formatDate(
-        latestFit.session.completedAt ?? latestFit.session.createdAt,
-        locale
-      )
-    : null;
 
   return (
     <div className="grid gap-4 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)_minmax(0,0.95fr)]">

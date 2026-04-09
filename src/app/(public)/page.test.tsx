@@ -55,6 +55,25 @@ vi.mock("@/components/public/BikeQuickCheckCard", () => ({
   BikeQuickCheckCard: () => <div>Bike Quick Check</div>,
 }));
 
+vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
+  CampaignCtaGroup: ({
+    startHref,
+    donateHref,
+    startLabel,
+    donateLabel,
+  }: {
+    startHref: string;
+    donateHref: string;
+    startLabel?: string;
+    donateLabel?: string;
+  }) => (
+    <div>
+      <a href={startHref}>{startLabel ?? "Start free bike fit"}</a>
+      <a href={donateHref}>{donateLabel ?? "Donate via our Alpe d'HuZes page"}</a>
+    </div>
+  ),
+}));
+
 vi.mock("@/components/home/QuotesCarousel", () => ({
   QuotesCarousel: () => <section>Quotes Section</section>,
 }));
@@ -172,15 +191,19 @@ describe("home page", () => {
     const ui = await HomePage();
     const { container } = render(ui);
 
-    expect(screen.getAllByText("Start free fit")[0].closest("a")?.getAttribute("href")).toBe(
+    expect(screen.getAllByText("Start free bike fit")[0].closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"
     );
-    expect(screen.getAllByText("View pricing")[0].closest("a")?.getAttribute("href")).toBe(
-      "/en/pricing"
-    );
+    expect(
+      screen
+        .getAllByText("Donate via our Alpe d'HuZes page")[0]
+        .closest("a")
+        ?.getAttribute("href")
+    ).toBe("https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756");
     expect(
       screen.getByText("Already have an account? Sign in").closest("a")?.getAttribute("href")
     ).toBe("/en/login");
+    expect(screen.queryByText("View pricing")).toBeNull();
 
     const pageText = container.textContent ?? "";
     expect(pageText.indexOf("Popular Calculators")).toBeGreaterThan(-1);
@@ -196,12 +219,15 @@ describe("home page", () => {
     const ui = await HomePage();
     render(ui);
 
-    expect(screen.getAllByText("Start gratis fit")[0].closest("a")?.getAttribute("href")).toBe(
+    expect(screen.getAllByText("Start gratis bike fit")[0].closest("a")?.getAttribute("href")).toBe(
       "/nl/calculators/bike-fit"
     );
-    expect(screen.getAllByText("Bekijk prijzen")[0].closest("a")?.getAttribute("href")).toBe(
-      "/nl/pricing"
-    );
+    expect(
+      screen
+        .getAllByText("Doneer via onze Alpe d'HuZes-pagina")[0]
+        .closest("a")
+        ?.getAttribute("href")
+    ).toBe("https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756");
     expect(screen.getByText("Heb je al een account? Log in")).toBeTruthy();
     expect(screen.getByText("Populaire calculators")).toBeTruthy();
   });

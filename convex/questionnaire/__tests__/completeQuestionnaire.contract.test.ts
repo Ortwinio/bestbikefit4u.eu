@@ -68,7 +68,7 @@ describe("questionnaire.completeQuestionnaire contract", () => {
     getAuthUserIdMock.mockResolvedValue("user_1");
   });
 
-  it("rejects completion when required questions are missing", async () => {
+  it("completes when only profile-owned questions are absent from the questionnaire", async () => {
     const ctx = makeCtx({
       responses: [
         { questionId: "experience_level", response: "intermediate" },
@@ -80,10 +80,10 @@ describe("questionnaire.completeQuestionnaire contract", () => {
       completeQuestionnaire as unknown as { _handler: TestHandler }
     )._handler;
 
-    await expect(handler(ctx, { sessionId: "session_1" })).rejects.toThrow(
-      /Missing required responses/
-    );
-    expect(ctx.db.patch).not.toHaveBeenCalled();
+    await expect(handler(ctx, { sessionId: "session_1" })).resolves.toBeUndefined();
+    expect(ctx.db.patch).toHaveBeenCalledWith("session_1", {
+      status: "questionnaire_complete",
+    });
   });
 
   it("marks questionnaire complete when all required visible questions are answered", async () => {

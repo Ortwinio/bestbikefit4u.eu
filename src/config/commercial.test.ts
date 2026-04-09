@@ -1,58 +1,30 @@
 import { describe, expect, it } from "vitest";
 import {
-  COMMERCIAL_CURRENCY,
-  FIT_PASS_PRODUCT,
-  PRODUCT_LIVE_FLAGS,
-  PUBLIC_PLANS,
-  getCommercialFaqCopy,
-  getSubscriptionTermsCopy,
-  getSupportResponseItems,
-  getVisiblePublicPlans,
+  CONSUMER_CAMPAIGN_CONFIG,
+  getConsumerCampaignCopy,
+  isConsumerCampaignActive,
 } from "./commercial";
 
-describe("commercial config", () => {
-  it("uses EUR for every public plan", () => {
-    expect(COMMERCIAL_CURRENCY).toBe("EUR");
-    expect(PUBLIC_PLANS.every((plan) => plan.priceCentsMonthly >= 0)).toBe(true);
-    expect(FIT_PASS_PRODUCT.currency).toBe("EUR");
-    expect(FIT_PASS_PRODUCT.priceCents).toBeGreaterThan(0);
+describe("consumer fundraising campaign config", () => {
+  it("stays active before the campaign end date", () => {
+    expect(isConsumerCampaignActive(new Date("2026-06-04T12:00:00+02:00"))).toBe(
+      true
+    );
   });
 
-  it("shows only supported public plans", () => {
-    const visiblePlanIds = getVisiblePublicPlans().map((plan) => plan.id);
-    expect(visiblePlanIds).toEqual(["free", "pro"]);
+  it("switches off automatically after the campaign end date", () => {
+    expect(isConsumerCampaignActive(new Date("2026-06-05T00:00:00+02:00"))).toBe(
+      false
+    );
   });
 
-  it("does not advertise unsupported premium capabilities publicly", () => {
-    expect(PRODUCT_LIVE_FLAGS.premiumPlanPublic).toBe(false);
-    expect(PRODUCT_LIVE_FLAGS.brandedPdf).toBe(false);
-    expect(PRODUCT_LIVE_FLAGS.apiAccess).toBe(false);
-    expect(PRODUCT_LIVE_FLAGS.clientManagement).toBe(false);
-  });
+  it("exposes the fundraising URL and date-specific copy", () => {
+    const englishCopy = getConsumerCampaignCopy("en");
 
-  it("only allows PDF claims because the feature is live", () => {
-    expect(PRODUCT_LIVE_FLAGS.pdfReport).toBe(true);
-  });
-
-  it("exports fit pass pricing in EUR", () => {
-    expect(FIT_PASS_PRODUCT.key).toBe("fit_pass");
-    expect(FIT_PASS_PRODUCT.currency).toBe("EUR");
-    expect(FIT_PASS_PRODUCT.priceCents).toBeGreaterThan(0);
-  });
-
-  it("keeps support and commercial copy aligned with public plans", () => {
-    expect(getCommercialFaqCopy("en").pricing).toContain("Free and Pro");
-    expect(getCommercialFaqCopy("en").pricing).toContain("EUR");
-    expect(getCommercialFaqCopy("en").pdfReport).toContain("live");
-    expect(getCommercialFaqCopy("en").pdfReport).not.toContain("rolled out");
-    expect(getCommercialFaqCopy("nl").pricing).toContain("Free en Pro");
-    expect(getSupportResponseItems("en")).toEqual([
-      "Free plan: usually within 3 business days",
-      "Pro plan: usually within 1 business day",
-    ]);
-    expect(getSupportResponseItems("en").join(" ")).not.toContain("Premium");
-    expect(getSubscriptionTermsCopy("en")).toContain("Free and Pro");
-    expect(getSubscriptionTermsCopy("en")).toContain("EUR");
-    expect(getSubscriptionTermsCopy("en")).not.toContain("Premium");
+    expect(CONSUMER_CAMPAIGN_CONFIG.donationUrl).toContain(
+      "inschrijving.opgevenisgeenoptie.nl"
+    );
+    expect(englishCopy.announcement).toContain("June 4, 2026");
+    expect(englishCopy.optionalNote).toContain("optional");
   });
 });

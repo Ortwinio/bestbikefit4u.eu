@@ -20,7 +20,7 @@ type MemoryEntry = {
 
 const memoryBuckets = new Map<string, MemoryEntry>();
 
-function useMemoryRateLimiter() {
+function shouldUseMemoryRateLimiter() {
   return (
     process.env.PUBLIC_FIT_RATE_LIMIT_MODE === "memory" ||
     process.env.NODE_ENV === "test"
@@ -157,7 +157,7 @@ async function consumeUpstashRateLimit({
 }
 
 export async function consumeRateLimit(args: RateLimitArgs): Promise<RateLimitResult> {
-  if (useMemoryRateLimiter()) {
+  if (shouldUseMemoryRateLimiter()) {
     return consumeMemoryRateLimit(args);
   }
 
@@ -167,4 +167,3 @@ export async function consumeRateLimit(args: RateLimitArgs): Promise<RateLimitRe
 export function resetMemoryRateLimiterForTests() {
   memoryBuckets.clear();
 }
-

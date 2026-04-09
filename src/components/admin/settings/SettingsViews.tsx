@@ -9,7 +9,6 @@ import {
   ErrorState,
   Input,
   LoadingState,
-  Select,
   SegmentedControl,
   SegmentedControlItem,
   Textarea,
@@ -25,13 +24,11 @@ import {
   AdminTableRow,
 } from "@/components/admin/layout/AdminUi";
 import {
-  ADMIN_ROLE_OPTIONS,
   FEATURE_FLAG_ROLES,
   ROLE_MANAGEMENT_ROLES,
   formatAdminDateTime,
   getAdminRoleTone,
   isAllowedRole,
-  type AdminRole,
 } from "./settings-utils";
 
 type SettingsTab = "roles" | "flags" | "gdpr" | "system";

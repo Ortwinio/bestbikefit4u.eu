@@ -79,15 +79,10 @@ export function useDashboardMessageFeed(): UseDashboardMessageFeedResult {
   const clickMutation = useMutation(api.messages.mutations.markMessageClicked);
   const dismissMutation = useMutation(api.messages.mutations.markMessageDismissed);
   const acknowledgeMutation = useMutation(api.messages.mutations.markMessageAcknowledged);
-  const [isReady, setIsReady] = useState(false);
+  const [isReady] = useState(() => typeof window !== "undefined");
   const [suppressedModalIds, setSuppressedModalIds] = useState<Set<string>>(() =>
-    new Set()
+    readStoredSet(SUPPRESSED_MODAL_STORAGE_KEY)
   );
-
-  useEffect(() => {
-    setSuppressedModalIds(readStoredSet(SUPPRESSED_MODAL_STORAGE_KEY));
-    setIsReady(true);
-  }, []);
 
   useEffect(() => {
     if (!isReady) {

@@ -15,7 +15,6 @@ import {
   InfoBox,
   StatRow,
 } from "@/components/ui";
-import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { getBikeTypeLabel } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -39,19 +38,6 @@ interface BikeWithFitHistoryProps {
     session: Doc<"fitSessions">;
     recommendation: Doc<"recommendations"> | null;
   }>;
-}
-
-function FitHistoryBikeImage({ source }: { source?: string }) {
-  const imageUrl = useResolvedImageUrl(source);
-  return (
-    <div className="flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-md)] bg-muted">
-      <img
-        src={imageUrl ?? "/default-bike.svg"}
-        alt=""
-        className="h-full w-full object-contain p-1"
-      />
-    </div>
-  );
 }
 
 export function BikeWithFitHistory({
@@ -96,10 +82,6 @@ export function BikeWithFitHistory({
 
   const bikeTitle =
     bike?.name || (bike ? getBikeTypeLabel(bike.bikeType, messages) : messages.fitHistory.noBikeLinked);
-  const bikeSubtitle = bike
-    ? [bike.brand, bike.model].filter(Boolean).join(" ") || getBikeTypeLabel(bike.bikeType, messages)
-    : messages.fitHistory.bikeWithoutName;
-
   const handleDelete = async () => {
     if (!sessionToDelete) return;
     setIsDeleting(true);

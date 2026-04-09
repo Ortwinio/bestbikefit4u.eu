@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, type ReactElement } from "react";
+import { type ReactNode } from "react";
 import {
   Dialog,
   DialogClose,

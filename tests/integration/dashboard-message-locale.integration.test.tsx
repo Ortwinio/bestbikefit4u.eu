@@ -68,6 +68,10 @@ vi.mock("@/components/feedback", () => ({
   FeedbackDialog: () => <div data-testid="feedback-dialog" />,
 }));
 
+vi.mock("@/components/integrations/StravaAutoImportTrigger", () => ({
+  StravaAutoImportTrigger: () => null,
+}));
+
 vi.mock("@/i18n/useDashboardMessages", () => ({
   useDashboardMessages: () => ({
     locale: "nl",

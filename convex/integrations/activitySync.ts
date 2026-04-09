@@ -102,13 +102,6 @@ const KNOWN_STYLE_TOKENS: Record<RidingStyle, string[]> = {
   touring: ["tour", "touring", "adventure", "long"],
 };
 
-const KNOWN_GOAL_TOKENS: Record<PrimaryGoal, string[]> = {
-  comfort: ["comfort", "commute", "touring"],
-  balanced: ["balanced", "endurance", "fitness"],
-  performance: ["performance", "race", "racing", "fast"],
-  aerodynamics: ["aero", "aerodynamic", "tt", "time trial"],
-};
-
 const KNOWN_DISCIPLINE_TOKENS: Record<Discipline, string[]> = {
   road: ["road", "endurance", "race"],
   gravel: ["gravel", "allroad", "mixed"],
@@ -129,10 +122,6 @@ function hasAnyToken(text: string, tokens: string[]): boolean {
 
 function countMatches<T>(items: T[], predicate: (item: T) => boolean): number {
   return items.reduce((count, item) => count + (predicate(item) ? 1 : 0), 0);
-}
-
-function activityToken(activity: Pick<NormalizedBikeActivity, "activityType" | "sportType" | "activityName">): string {
-  return normalizeText([activity.sportType, activity.activityType, activity.activityName].filter(Boolean).join(" "));
 }
 
 export function normalizeStravaActivity(

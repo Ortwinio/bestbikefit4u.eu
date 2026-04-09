@@ -172,23 +172,6 @@ function SnapshotCard({
   );
 }
 
-function LinkedSnapshot({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
-      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
-        {title}
-      </p>
-      <div className="mt-2 text-sm leading-6 text-[color:var(--foreground)]">{children}</div>
-    </div>
-  );
-}
-
 function feedbackBikeLabel(bike: Pick<Doc<"bikes">, "name" | "brand" | "model" | "bikeType"> | null | undefined) {
   if (!bike) {
     return "Unknown bike";

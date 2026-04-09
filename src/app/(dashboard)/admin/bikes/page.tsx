@@ -44,6 +44,7 @@ function formatDate(value?: number | string | null) {
 function BikePhoto({ photoUrl, name }: { photoUrl?: string | null; name: string }) {
   if (photoUrl) {
     return (
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={photoUrl}
         alt={name}

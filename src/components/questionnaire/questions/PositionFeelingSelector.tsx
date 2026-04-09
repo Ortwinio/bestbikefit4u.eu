@@ -97,7 +97,6 @@ export function PositionFeelingSelector({
       <div role="radiogroup" className="grid grid-cols-2 divide-x divide-border border-t border-border">
         {exclusiveOptions.map((option) => {
           const isSelected = value.includes(option.value);
-          const details = OPTION_DETAILS[option.value];
           return (
             <button
               key={option.value}
@@ -141,7 +140,6 @@ export function PositionFeelingSelector({
       >
         {multiOptions.map((option) => {
           const isSelected = value.includes(option.value);
-          const details = OPTION_DETAILS[option.value];
           return (
             <button
               key={option.value}

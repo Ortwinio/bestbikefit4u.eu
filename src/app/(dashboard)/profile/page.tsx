@@ -24,14 +24,13 @@ import {
   useToast,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
-import { ComfortLevelBar, getComfortMeta } from "@/components/profile/ComfortLevelBar";
-import { CoreStabilityBar, getCoreStabilityMeta } from "@/components/profile/CoreStabilityBar";
+import { ComfortLevelBar } from "@/components/profile/ComfortLevelBar";
+import { CoreStabilityBar } from "@/components/profile/CoreStabilityBar";
 import { FlexibilityScale, getFlexibilityMeta } from "@/components/profile/FlexibilityScale";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { RidingStyleCard, SliderQuestion, ReadOnlySlider, type RiderProfileData } from "@/components/profile/RidingStyleCard";
 import { reportClientError } from "@/lib/telemetry";
 import {
-  comfortLevels,
   coreStabilityTests,
   deriveComfortScore,
   flexibilityTests,
@@ -217,7 +216,6 @@ function BodyMeasurementsEditor({
   messages,
   locale,
   isEditing,
-  onEdit,
   onCancel,
   onSave,
 }: {
@@ -225,7 +223,6 @@ function BodyMeasurementsEditor({
   messages: ReturnType<typeof useDashboardMessages>["messages"];
   locale: Locale;
   isEditing: boolean;
-  onEdit: () => void;
   onCancel: () => void;
   onSave: (values: MeasurementValues) => Promise<void>;
 }) {
@@ -693,8 +690,6 @@ function FlexibilityCard({
     setDraftScore(score);
   }, [score, editing]);
 
-  const meta = getFlexibilityMeta(score);
-
   const handleSave = async () => {
     setIsSaving(true);
     try {
@@ -801,8 +796,6 @@ function CoreStabilityCard({
   useEffect(() => {
     setDraftScore(score);
   }, [score, editing]);
-
-  const meta = getCoreStabilityMeta(score);
 
   const handleSave = async () => {
     setIsSaving(true);

@@ -2,7 +2,7 @@
   "_version": 1,
   "id": 16,
   "title": "Recommendation contract recovery: restore expected recommendation IDs and scheduled-work behavior in contract tests",
-  "status": "todo",
+  "status": "done",
   "priority": 2,
   "assigned": "recommendations-owner",
   "depends_on": ["Session/profile completeness regression"],
@@ -16,5 +16,8 @@
     "Returned IDs and persisted records match contract expectations",
     "Scheduler-dependent behavior is either implemented or explicitly mocked in tests"
   ],
-  "notes": "Failures indicate undefined IDs and missing scheduler behavior. Treat this as the next backend cluster after session flow stabilization."
+  "notes": [
+    "Recommendation contract behavior is back in sync with the current implementation.",
+    "Confirmed on 2026-04-09: convex/recommendations/__tests__/generate.contract.test.ts and convex/recommendations/__tests__/internalMutations.contract.test.ts pass."
+  ]
 }

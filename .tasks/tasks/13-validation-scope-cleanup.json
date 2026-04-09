@@ -2,7 +2,7 @@
   "_version": 1,
   "id": 13,
   "title": "Validation scope cleanup: exclude .tmp validation noise so typecheck, lint, and test reflect only the real repo tree",
-  "status": "todo",
+  "status": "done",
   "priority": 1,
   "assigned": "lead",
   "depends_on": ["Final QA and closeout"],
@@ -18,5 +18,8 @@
     "npm run lint no longer traverses .tmp/bbf4u-geometry-push",
     "npm run typecheck no longer traverses .tmp/bbf4u-geometry-push"
   ],
-  "notes": "Created from the 2026-04-08 repo-wide validation run. Fastest path to green starts by removing duplicate failure noise before functional fixes."
+  "notes": [
+    "Validation no longer traverses .tmp noise in a way that blocks repo-health commands.",
+    "Confirmed from the current worktree on 2026-04-09: npm test, npm run lint, and npm run typecheck all complete successfully against the real repo tree."
+  ]
 }

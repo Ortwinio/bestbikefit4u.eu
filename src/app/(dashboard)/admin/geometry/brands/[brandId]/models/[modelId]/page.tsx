@@ -17,7 +17,6 @@ import {
   LoadingState,
   NumberInput,
   Select,
-  Textarea,
 } from "@/components/ui";
 import { StatusPill as SharedStatusPill } from "@/components/admin/shared/StatusPill";
 

@@ -77,7 +77,27 @@
   --public-shadow: 0 12px 30px -24px color-mix(in oklch, oklch(var(--foreground)) 24%, transparent);
   --public-shadow-strong: 0 18px 40px -28px color-mix(in oklch, oklch(var(--foreground)) 28%, transparent);
   --public-shell-glow: 66.11% 0.156 242.3 / 0.16;
-  --dashboard-card: 98.10% 0.007 246.0;
+  --dashboard-shell: 98.60% 0.006 246.0;
+  --dashboard-shell-elevated: 97.50% 0.012 243.0;
+  --dashboard-sidebar: 95.60% 0.019 241.8;
+  --dashboard-sidebar-elevated: 97.20% 0.012 244.2;
+  --dashboard-surface: 98.10% 0.007 246.0;
+  --dashboard-surface-muted: 96.70% 0.014 242.0;
+  --dashboard-surface-strong: 95.90% 0.022 241.0;
+  --dashboard-hero: 95.80% 0.022 241.2;
+  --dashboard-border-soft: 86.80% 0.024 241.8;
+  --dashboard-border-strong: 79.80% 0.040 241.0;
+  --dashboard-shadow: 0 14px 32px -24px color-mix(in oklch, oklch(var(--foreground)) 18%, transparent);
+  --dashboard-shadow-strong: 0 22px 46px -30px color-mix(in oklch, oklch(var(--foreground)) 22%, transparent);
+  --dashboard-nav-foreground: 33.50% 0.032 241.0;
+  --dashboard-nav-foreground-strong: 24.50% 0.026 246.0;
+  --dashboard-nav-hover-surface: 93.80% 0.024 241.0;
+  --dashboard-nav-active-surface: 90.60% 0.038 240.8;
+  --dashboard-backdrop: 26.00% 0.012 264.0 / 0.38;
+  --dashboard-field-background: 99.40% 0.002 248.0;
+  --dashboard-field-border: oklch(0% 0 0 / 0.10);
+  --dashboard-field-border-hover: oklch(0% 0 0 / 0.18);
+  --dashboard-card: var(--dashboard-surface);
   --background: 100.00% 0.000 0.0;
   --foreground: 24.08% 0.020 271.8;
   --card: var(--public-card);
@@ -113,18 +133,18 @@
   --overlay: 100.00% 0.000 0.0;
   --overlay-foreground: 24.08% 0.020 271.8;
   --field-background: 100.00% 0.000 0.0;
-  --panel-surface: 24.08% 0.020 271.8;
-  --panel-surface-subtle: 30.00% 0.022 258.0;
-  --panel-foreground: 98.48% 0.000 0.0;
-  --panel-muted-foreground: 84.00% 0.012 240.0;
-  --panel-border: 50.04% 0.040 238.3;
-  --panel-border-light: 66.11% 0.156 242.3;
-  --panel-border-dark: 31.00% 0.024 258.0;
-  --panel-backdrop: 0% 0 0 / 0.72;
-  --panel-field-background: 27.00% 0.020 258.0;
-  --panel-field-border: oklch(100% 0 0 / 0.18);
-  --panel-field-border-hover: oklch(100% 0 0 / 0.28);
-  --panel-shell-background: 100.00% 0.000 0.0;
+  --panel-surface: var(--dashboard-sidebar);
+  --panel-surface-subtle: var(--dashboard-surface-muted);
+  --panel-foreground: var(--foreground);
+  --panel-muted-foreground: var(--dashboard-nav-foreground);
+  --panel-border: var(--dashboard-border-soft);
+  --panel-border-light: var(--dashboard-border-strong);
+  --panel-border-dark: var(--dashboard-border-soft);
+  --panel-backdrop: var(--dashboard-backdrop);
+  --panel-field-background: var(--dashboard-field-background);
+  --panel-field-border: var(--dashboard-field-border);
+  --panel-field-border-hover: var(--dashboard-field-border-hover);
+  --panel-shell-background: var(--dashboard-shell);
 
   /* Backwards-compat alias */
   --danger: var(--destructive);
@@ -168,7 +188,27 @@
   --public-shadow: 0 14px 34px -26px color-mix(in oklch, oklch(var(--foreground)) 18%, transparent);
   --public-shadow-strong: 0 20px 44px -30px color-mix(in oklch, oklch(var(--foreground)) 22%, transparent);
   --public-shell-glow: 72.00% 0.145 242.3 / 0.22;
-  --dashboard-card: 31.20% 0.024 258.0;
+  --dashboard-shell: 24.80% 0.020 266.0;
+  --dashboard-shell-elevated: 27.60% 0.022 261.0;
+  --dashboard-sidebar: 26.60% 0.024 257.0;
+  --dashboard-sidebar-elevated: 30.00% 0.028 252.0;
+  --dashboard-surface: 31.20% 0.024 258.0;
+  --dashboard-surface-muted: 34.00% 0.024 254.0;
+  --dashboard-surface-strong: 37.40% 0.036 246.0;
+  --dashboard-hero: 36.60% 0.040 244.0;
+  --dashboard-border-soft: 43.00% 0.026 242.0;
+  --dashboard-border-strong: 52.00% 0.040 241.0;
+  --dashboard-shadow: 0 16px 36px -26px color-mix(in oklch, oklch(var(--foreground)) 14%, transparent);
+  --dashboard-shadow-strong: 0 24px 52px -34px color-mix(in oklch, oklch(var(--foreground)) 18%, transparent);
+  --dashboard-nav-foreground: 87.00% 0.020 240.0;
+  --dashboard-nav-foreground-strong: 97.50% 0.010 245.0;
+  --dashboard-nav-hover-surface: 38.00% 0.034 246.5;
+  --dashboard-nav-active-surface: 44.20% 0.050 241.0;
+  --dashboard-backdrop: 0% 0 0 / 0.52;
+  --dashboard-field-background: 29.40% 0.020 258.0;
+  --dashboard-field-border: oklch(100% 0 0 / 0.12);
+  --dashboard-field-border-hover: oklch(100% 0 0 / 0.22);
+  --dashboard-card: var(--dashboard-surface);
   --background: 24.08% 0.020 271.8;
   --foreground: 98.48% 0.000 0.0;
   --card: var(--public-card);
@@ -204,18 +244,18 @@
   --overlay: 21.00% 0.018 265.0;
   --overlay-foreground: 98.48% 0.000 0.0;
   --field-background: 28.00% 0.020 260.0;
-  --panel-surface: 100.00% 0.000 0.0;
-  --panel-surface-subtle: 97.40% 0.006 248.0;
-  --panel-foreground: 24.08% 0.020 271.8;
-  --panel-muted-foreground: 48.00% 0.028 240.0;
-  --panel-border: 82.00% 0.014 242.3;
-  --panel-border-light: 90.00% 0.010 248.0;
-  --panel-border-dark: 74.00% 0.020 238.3;
-  --panel-backdrop: 0% 0 0 / 0.36;
-  --panel-field-background: 100.00% 0.000 0.0;
-  --panel-field-border: oklch(0% 0 0 / 0.12);
-  --panel-field-border-hover: oklch(0% 0 0 / 0.22);
-  --panel-shell-background: 100.00% 0.000 0.0;
+  --panel-surface: var(--dashboard-sidebar);
+  --panel-surface-subtle: var(--dashboard-surface-muted);
+  --panel-foreground: var(--foreground);
+  --panel-muted-foreground: var(--dashboard-nav-foreground);
+  --panel-border: var(--dashboard-border-soft);
+  --panel-border-light: var(--dashboard-border-strong);
+  --panel-border-dark: var(--dashboard-border-soft);
+  --panel-backdrop: var(--dashboard-backdrop);
+  --panel-field-background: var(--dashboard-field-background);
+  --panel-field-border: var(--dashboard-field-border);
+  --panel-field-border-hover: var(--dashboard-field-border-hover);
+  --panel-shell-background: var(--dashboard-shell);
 
   /* Backwards-compat alias */
   --danger: var(--destructive);
@@ -273,7 +313,65 @@
 }
 
 @utility dashboard-card-surface {
-  background: oklch(var(--dashboard-card));
+  background: oklch(var(--dashboard-surface));
+  border-color: oklch(var(--dashboard-border-soft));
+  box-shadow: var(--dashboard-shadow);
+}
+
+@utility dashboard-card-surface-muted {
+  background: color-mix(in oklch, oklch(var(--dashboard-surface-muted)) 88%, oklch(var(--background)) 12%);
+  border-color: oklch(var(--dashboard-border-soft));
+  box-shadow: var(--dashboard-shadow);
+}
+
+@utility dashboard-hero-surface {
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in oklch, oklch(var(--dashboard-hero)) 88%, oklch(var(--primary)) 12%),
+      color-mix(in oklch, oklch(var(--dashboard-surface)) 82%, oklch(var(--secondary)) 18%)
+    );
+  border-color: color-mix(in oklch, oklch(var(--dashboard-border-strong)) 74%, oklch(var(--primary)) 26%);
+  box-shadow: var(--dashboard-shadow-strong);
+}
+
+@utility dashboard-shell-surface {
+  background:
+    radial-gradient(circle at top, oklch(var(--public-shell-glow)), transparent 38%),
+    linear-gradient(180deg, oklch(var(--dashboard-shell)), oklch(var(--dashboard-shell-elevated)));
+}
+
+@utility dashboard-sidebar-surface {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklch, oklch(var(--dashboard-sidebar)) 94%, oklch(var(--dashboard-shell)) 6%),
+      color-mix(in oklch, oklch(var(--dashboard-sidebar-elevated)) 82%, oklch(var(--dashboard-shell-elevated)) 18%)
+    );
+  color: oklch(var(--foreground));
+  border-color: oklch(var(--dashboard-border-soft));
+  box-shadow:
+    inset -1px 0 0 color-mix(in oklch, oklch(var(--dashboard-border-strong)) 58%, transparent),
+    var(--dashboard-shadow);
+}
+
+@utility dashboard-theme-context {
+  --background: var(--dashboard-shell);
+  --foreground: var(--foreground);
+  --card: var(--dashboard-surface);
+  --card-foreground: var(--foreground);
+  --secondary: var(--dashboard-surface-muted);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--dashboard-surface-muted);
+  --muted-foreground: var(--dashboard-nav-foreground);
+  --accent: var(--dashboard-surface-strong);
+  --accent-foreground: var(--foreground);
+  --border: var(--dashboard-border-soft);
+  --border-light: var(--dashboard-border-strong);
+  --border-dark: var(--dashboard-border-soft);
+  --field-background: var(--dashboard-field-background);
+  --field-border: var(--dashboard-field-border);
+  --field-border-hover: var(--dashboard-field-border-hover);
 }
 
 @utility public-card-surface {
@@ -345,18 +443,20 @@
 }
 
 @utility dashboard-nav-item {
-  color: oklch(var(--panel-muted-foreground));
+  color: oklch(var(--dashboard-nav-foreground));
 }
 
 @utility dashboard-nav-item-active {
-  background: color-mix(in oklch, oklch(var(--primary)) 14%, oklch(var(--secondary)) 86%);
-  color: oklch(var(--panel-foreground));
-  box-shadow: 0 1px 2px rgb(15 23 42 / 0.08);
+  background: color-mix(in oklch, oklch(var(--dashboard-nav-active-surface)) 84%, oklch(var(--primary)) 16%);
+  color: oklch(var(--dashboard-nav-foreground-strong));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, oklch(var(--dashboard-border-strong)) 44%, transparent),
+    0 10px 24px -20px color-mix(in oklch, oklch(var(--foreground)) 24%, transparent);
 }
 
 @utility dashboard-nav-item-hover {
-  background: color-mix(in oklch, oklch(var(--panel-surface-subtle)) 86%, oklch(var(--primary)) 14%);
-  color: oklch(var(--panel-foreground));
+  background: color-mix(in oklch, oklch(var(--dashboard-nav-hover-surface)) 88%, oklch(var(--primary)) 12%);
+  color: oklch(var(--dashboard-nav-foreground-strong));
 }
 
 .no-scrollbar::-webkit-scrollbar {

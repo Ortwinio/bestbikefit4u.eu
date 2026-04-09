@@ -135,26 +135,6 @@ function computeInferenceConfidence(summary: {
   );
 }
 
-function stravaBikeRoleToBikeDefaults(role?: StravaBikeRole | null) {
-  switch (role) {
-    case "commute":
-      return { ridingStyle: "commuting" as const, primaryGoal: "comfort" as const, discipline: "road" as const };
-    case "training":
-      return { ridingStyle: "fitness" as const, primaryGoal: "balanced" as const, discipline: "road" as const };
-    case "gravel":
-      return { ridingStyle: "sportive" as const, primaryGoal: "balanced" as const, discipline: "gravel" as const };
-    case "mountain":
-      return { ridingStyle: "recreational" as const, primaryGoal: "comfort" as const, discipline: "mtb" as const };
-    case "tt_triathlon":
-      return { ridingStyle: "racing" as const, primaryGoal: "aerodynamics" as const, discipline: "tt" as const };
-    case "race_road":
-      return { ridingStyle: "racing" as const, primaryGoal: "performance" as const, discipline: "road" as const };
-    case "endurance_road":
-    default:
-      return { ridingStyle: "sportive" as const, primaryGoal: "balanced" as const, discipline: "road" as const };
-  }
-}
-
 export const upsertStravaIntegration = internalMutation({
   args: {
     userId: v.id("users"),

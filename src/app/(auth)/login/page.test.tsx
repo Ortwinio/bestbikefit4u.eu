@@ -30,13 +30,34 @@ vi.mock("@/components/analytics/MarketingEventTracker", () => ({
   useMarketingEventLogger: () => logMarketingEventMock,
 }));
 
+vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
+  CampaignCtaGroup: ({
+    startHref,
+    donateHref,
+    startLabel,
+    donateLabel,
+  }: {
+    startHref: string;
+    donateHref: string;
+    startLabel?: string;
+    donateLabel?: string;
+  }) => (
+    <div>
+      <a href={startHref}>{startLabel ?? "Start free bike fit"}</a>
+      <a href={donateHref}>{donateLabel ?? "Donate first"}</a>
+    </div>
+  ),
+}));
+
 vi.mock("@base-ui/react/field", () => ({
   Field: {
     Root: ({
       children,
+      invalid,
       ...props
     }: {
       children?: React.ReactNode;
+      invalid?: boolean;
       [key: string]: unknown;
     }) => <div {...props}>{children}</div>,
   },
@@ -60,10 +81,12 @@ vi.mock("@/components/prototyper-ui/ui/button", () => ({
 
 vi.mock("@/components/prototyper-ui/ui/input", () => ({
   Input: ({
+    invalid,
     ...props
   }: {
+    invalid?: boolean;
     [key: string]: unknown;
-  }) => <input {...props} />,
+  }) => <input {...(invalid ? { "aria-invalid": true } : {})} {...props} />,
 }));
 
 vi.mock("@/components/prototyper-ui/ui/label", () => ({
@@ -129,6 +152,10 @@ describe("login page", () => {
       section: "login_page",
       sourceTag: "pricing_free_cta",
     });
+    expect(screen.getByText("Temporary free access")).toBeTruthy();
+    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
+      "/en/calculators/bike-fit"
+    );
   });
 
   it("submits the email flow without losing source attribution", async () => {
@@ -174,5 +201,6 @@ describe("login page", () => {
     expect(
       screen.getByText("Hulp nodig? Mail support als je code niet aankomt of je vastloopt.")
     ).toBeTruthy();
+    expect(screen.getByText("Tijdelijk gratis toegang")).toBeTruthy();
   });
 });

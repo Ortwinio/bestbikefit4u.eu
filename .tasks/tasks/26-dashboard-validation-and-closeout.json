@@ -1,0 +1,27 @@
+{
+  "_version": 1,
+  "id": 26,
+  "title": "Dashboard validation and closeout: verify touched dashboard surfaces across themes and devices, confirm component/library alignment, and record residual gaps",
+  "status": "done",
+  "priority": 3,
+  "assigned": "orchestrator",
+  "depends_on": ["Dashboard high-traffic page harmony"],
+  "files": [
+    "plans/feature-dashboard-look-and-feel-harmony/05-dashboard-validation-and-closeout.md",
+    "src/app/(dashboard)/layout.tsx",
+    "src/components/layout/DashboardSidebar.tsx",
+    "src/app/(dashboard)/dashboard/page.tsx",
+    "src/app/(dashboard)/fit/page.tsx",
+    "src/app/(dashboard)/settings/page.tsx",
+    "src/app/(dashboard)/bikes/page.tsx",
+    "src/app/(dashboard)/fit/[sessionId]/results/page.tsx"
+  ],
+  "acceptance": [
+    "Touched dashboard surfaces are reviewed in light, dark, and system themes",
+    "Desktop and mobile checks are completed",
+    "Touched files follow the intended Prototyper UI or approved-wrapper path",
+    "Slider exception surfaces remain compliant",
+    "A closeout note records validation evidence and residual gaps"
+  ],
+  "notes": "Completed. Validation recorded in plans/feature-dashboard-look-and-feel-harmony/output-05-dashboard-validation-and-closeout.md. `npm test -- 'src/app/(dashboard)/layout.test.tsx'` and targeted ESLint passed. `npm run typecheck` still fails only on the known unrelated baseline files: src/app/(dashboard)/profile/page.tsx, src/components/admin/messages/MessageViews.tsx, src/components/bikes/BikeGarageOverview.tsx, and src/components/feedback/FeedbackHubPage.tsx."
+}

@@ -184,7 +184,7 @@ export function UserDetailClient({ userId }: { userId: string }) {
     setTier(liveUser.tier ?? "free");
     setAdminRole(liveUser.adminRole ?? "none");
     setSuspendReason(liveUser.suspendedReason ?? "");
-  }, [liveUser?._id, liveUser?.tier, liveUser?.adminRole, liveUser?.suspendedReason]);
+  }, [liveUser]);
 
   if (detail === undefined || riderData === undefined || currentAdmin === undefined) {
     return <LoadingState label="Loading user..." />;

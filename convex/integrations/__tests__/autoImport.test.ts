@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { internal } from "../../_generated/api";
 import { getMissingStravaGearIds, shouldTriggerStravaBikeAutoImport, syncMissingStravaBikesForUser, scanStravaAutoImportCandidates } from "../actions";
 
 type TestHandler = (ctx: unknown, args: unknown) => Promise<unknown>;

@@ -9,6 +9,7 @@ import {
   Card,
   CardContent,
   EmptyState,
+  InfoBox,
   LoadingState,
   SectionHeader,
   MeasurementTile,
@@ -62,39 +63,43 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <DashboardMessageSurface showBanners={false} showModal={false} />
 
-      {/* Gradient hero / welcome card */}
-      <div className="rounded-[var(--radius-xl)] bg-gradient-to-br from-primary to-primary/75 p-6 text-primary-foreground">
-        <div className="flex items-center gap-4">
-          <ProfilePhotoUpload source={profileImageSource} size="hero" />
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary-foreground/60">
-              {messages.dashboardHome.welcomeBack}
-            </p>
-            <p className="text-xl font-bold text-primary-foreground">{displayName}</p>
-            <p className="mt-0.5 text-sm text-primary-foreground/75">
-              {messages.dashboardHome.subtitle}
-            </p>
+      <Card variant="bordered" className="dashboard-hero-surface overflow-hidden">
+        <CardContent className="px-6 py-6 sm:px-7 sm:py-7">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="flex items-center gap-4">
+              <ProfilePhotoUpload source={profileImageSource} size="hero" />
+              <div className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted-foreground)]">
+                  {messages.dashboardHome.welcomeBack}
+                </p>
+                <h1 className="text-2xl font-semibold text-[color:var(--foreground)] sm:text-3xl">
+                  {displayName}
+                </h1>
+                <p className="max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
+                  {messages.dashboardHome.subtitle}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button
+                size="sm"
+                render={<Link href={withLocalePrefix("/fit", locale)} />}
+              >
+                {messages.dashboardHome.startFit}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                render={<Link href={withLocalePrefix("/bikes/new", locale)} />}
+              >
+                <Plus className="h-4 w-4" />
+                {messages.nav.newBike}
+              </Button>
+            </div>
           </div>
-        </div>
-        <div className="mt-4 flex gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            render={<Link href={withLocalePrefix("/fit", locale)} />}
-            className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
-          >
-            {messages.dashboardHome.startFit}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Button>
-          <Link
-            href={withLocalePrefix("/bikes/new", locale)}
-            className="inline-flex items-center gap-2 rounded-[var(--radius-md)] bg-primary-foreground/10 px-3 py-1.5 text-sm font-semibold text-primary-foreground hover:bg-primary-foreground/20"
-          >
-            <Plus className="h-4 w-4" />
-            {messages.nav.newBike}
-          </Link>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Rider profile card */}
       <Card variant="bordered" className={dashboardCardClassName}>
@@ -102,15 +107,16 @@ export default function DashboardPage() {
           icon={<User className="h-5 w-5 text-[color:var(--primary)]" />}
           title={messages.dashboardHome.riderCardTitle}
           action={
-            <Link
-              href={withLocalePrefix("/profile", locale)}
-              className="inline-flex items-center rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20"
+            <Button
+              variant="outline"
+              size="sm"
+              render={<Link href={withLocalePrefix("/profile", locale)} />}
             >
               {messages.dashboardHome.editProfile}
-            </Link>
+            </Button>
           }
         />
-        <CardContent className="space-y-4 pt-4">
+        <CardContent className="space-y-5 pt-5">
           {profile ? (
             <div className="space-y-4">
               <div className="grid gap-3 sm:grid-cols-3">
@@ -132,7 +138,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="grid gap-3 lg:grid-cols-2">
-                <div className="rounded-[var(--radius-md)] bg-[color:var(--surface-secondary)] px-4 py-4">
+                <div className="dashboard-card-surface-muted rounded-[var(--radius-xl)] border px-4 py-4">
                   <SectionHeader
                     icon={<Activity className="h-4 w-4 text-[color:var(--primary)]" />}
                     title={messages.profile.sections.flexibility}
@@ -141,7 +147,7 @@ export default function DashboardPage() {
                   />
                   <FlexibilityScale score={profile.flexibilityScore} />
                 </div>
-                <div className="rounded-[var(--radius-md)] bg-[color:var(--surface-secondary)] px-4 py-4">
+                <div className="dashboard-card-surface-muted rounded-[var(--radius-xl)] border px-4 py-4">
                   <SectionHeader
                     icon={<Dumbbell className="h-4 w-4 text-[color:var(--primary)]" />}
                     title={messages.profile.sections.coreStability}
@@ -153,15 +159,22 @@ export default function DashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="rounded-[var(--radius-md)] border border-warning/20 bg-warning/15 px-4 py-3 text-sm text-foreground">
-              {messages.home.profileWarning.description}
-            </div>
+            <InfoBox
+              variant="warning"
+              icon={<User className="mt-0.5 h-4 w-4 text-[color:var(--warning)]" />}
+              className="text-sm"
+            >
+              <p className="font-medium">{messages.home.profileWarning.title}</p>
+              <p className="mt-1 text-[color:var(--muted-foreground)]">
+                {messages.home.profileWarning.description}
+              </p>
+            </InfoBox>
           )}
 
           <div className="flex flex-wrap gap-3">
             <Button
               variant="outline"
-              className="font-semibold shadow-sm"
+              size="sm"
               render={<Link href={withLocalePrefix("/fit", locale)} />}
             >
               {messages.dashboardHome.newFit}
@@ -178,22 +191,24 @@ export default function DashboardPage() {
             icon={<Bike className="h-5 w-5 text-[color:var(--primary)]" />}
             title={messages.bikes.title}
             action={
-              <Link
-                href={withLocalePrefix("/bikes", locale)}
-                className="inline-flex items-center gap-1 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20"
+              <Button
+                variant="outline"
+                size="sm"
+                render={<Link href={withLocalePrefix("/bikes", locale)} />}
               >
                 {messages.nav.myBikes}
                 <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+              </Button>
             }
           />
-          <CardContent className="pt-4">
+          <CardContent className="pt-5">
             {bikes.length === 0 ? (
               <EmptyState
                 title={messages.dashboardHome.noBikeTitle}
                 description={messages.dashboardHome.noBikeDescription}
                 action={
                   <Button
+                    size="sm"
                     render={<Link href={withLocalePrefix("/bikes/new", locale)} />}
                   >
                     {messages.bikes.actions.addBike}

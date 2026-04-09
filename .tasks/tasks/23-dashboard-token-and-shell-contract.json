@@ -1,0 +1,22 @@
+{
+  "_version": 1,
+  "id": 23,
+  "title": "Dashboard token and shell contract: define dashboard surface hierarchy related to public tokens and align dashboard layout plus sidebar to the new contract",
+  "status": "done",
+  "priority": 1,
+  "assigned": "shell-owner",
+  "depends_on": ["Dashboard audit and implementation matrix"],
+  "files": [
+    "src/app/globals.css",
+    "src/components/providers/ThemeProvider.tsx",
+    "src/app/(dashboard)/layout.tsx",
+    "src/components/layout/DashboardSidebar.tsx"
+  ],
+  "acceptance": [
+    "Dashboard token roles are explicitly defined",
+    "Dashboard shell and sidebar use the new token contract",
+    "The dashboard visual contract feels intentionally related to the public contract",
+    "Light, dark, and system themes remain correct"
+  ],
+  "notes": "Completed. Added explicit dashboard shell/surface/nav tokens and shared utilities in src/app/globals.css, aligned src/app/(dashboard)/layout.tsx and src/components/layout/DashboardSidebar.tsx to the new contract, and preserved panel aliases for compatibility with shared dialog/panel surfaces. Validation: npm test -- 'src/app/(dashboard)/layout.test.tsx'."
+}

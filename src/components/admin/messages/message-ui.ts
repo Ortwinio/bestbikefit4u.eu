@@ -84,10 +84,7 @@ export function MessageTypePill({
   type: DashboardMessageType;
   children?: ReactNode;
 }) {
-  return createElement(
-    AdminStatusPill,
-    { tone: messageTypeTone(type), children: children ?? messageTypeLabel(type) }
-  );
+  return createElement(AdminStatusPill, { tone: messageTypeTone(type) }, children ?? messageTypeLabel(type));
 }
 
 export function MessageStatusPill({
@@ -97,10 +94,7 @@ export function MessageStatusPill({
   status: DashboardMessageStatus;
   children?: ReactNode;
 }) {
-  return createElement(
-    AdminStatusPill,
-    { tone: messageStatusTone(status), children: children ?? messageStatusLabel(status) }
-  );
+  return createElement(AdminStatusPill, { tone: messageStatusTone(status) }, children ?? messageStatusLabel(status));
 }
 
 export function MessagePriorityPill({
@@ -112,6 +106,7 @@ export function MessagePriorityPill({
 }) {
   return createElement(
     AdminStatusPill,
-    { tone: messagePriorityTone(priority), children: children ?? messagePriorityLabel(priority) }
+    { tone: messagePriorityTone(priority) },
+    children ?? messagePriorityLabel(priority)
   );
 }

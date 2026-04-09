@@ -14,10 +14,12 @@ import type { LucideIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
+import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { QuotesCarousel } from "@/components/home/QuotesCarousel";
 import { BikeQuickCheckCard } from "@/components/public/BikeQuickCheckCard";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { Card, CardContent } from "@/components/prototyper-ui/ui/card";
+import { PublicCtaBand } from "@/components/public/PublicCtaBand";
 import { PublicSection } from "@/components/public/PublicSection";
 import { PublicSurfaceCard } from "@/components/public/PublicSurfaceCard";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -26,6 +28,11 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { BRAND } from "@/config/brand";
+import {
+  CONSUMER_CAMPAIGN_CONFIG,
+  getConsumerCampaignCopy,
+  isConsumerCampaignActive,
+} from "@/config/commercial";
 import { buildOrganizationSchema, buildWebSiteSchema } from "@/lib/seo/jsonLd";
 import {
   HOME_QUOTES_DISPLAY_COUNT,
@@ -67,6 +74,8 @@ export default async function HomePage() {
   const locale = await getRequestLocale();
   const dictionary = await getDictionary(locale);
   const { home } = dictionary;
+  const campaignActive = isConsumerCampaignActive();
+  const campaign = getConsumerCampaignCopy(locale);
   const homePath = withLocalePrefix("/", locale);
   const localizedHomeUrl = new URL(
     homePath,
@@ -204,39 +213,62 @@ export default async function HomePage() {
             <p className="mx-auto mt-6 max-w-2xl text-lg text-primary-foreground/90">
               {home.hero.description}
             </p>
-            <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-              <Button
-                size="lg"
-                className="min-h-12 rounded-full px-6 text-base"
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/calculators/bike-fit", locale)}
-                    locale={locale}
-                    pagePath={homePath}
-                    section="hero_primary"
-                    ctaLabel={home.hero.primaryCta}
-                  />
-                }
-              >
-                {home.hero.primaryCta}
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="min-h-12 rounded-full border-primary-foreground/25 bg-[color:color-mix(in_oklch,var(--background)_88%,white_12%)] px-6 text-base text-[color:var(--foreground)] shadow-[0_12px_32px_-18px_color-mix(in_oklch,var(--foreground)_28%,transparent)] after:bg-[color:color-mix(in_oklch,var(--background)_92%,white_8%)] hover-only:after:bg-[color:color-mix(in_oklch,var(--muted)_70%,var(--background)_30%)]"
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/pricing", locale)}
-                    locale={locale}
-                    pagePath={homePath}
-                    section="hero_secondary"
-                    ctaLabel={home.hero.secondaryCta}
-                  />
-                }
-              >
-                {home.hero.secondaryCta}
-              </Button>
-            </div>
+            {campaignActive ? (
+              <div className="mt-8 rounded-[1.5rem] border border-primary-foreground/15 bg-black/25 px-5 py-5 text-left shadow-xl backdrop-blur-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-foreground/70">
+                  {campaign.homepageEyebrow}
+                </p>
+                <p className="mt-3 text-base leading-7 text-primary-foreground/90">
+                  {campaign.homepageDescription}
+                </p>
+                <CampaignCtaGroup
+                  locale={locale}
+                  pagePath={homePath}
+                  startHref={withLocalePrefix("/calculators/bike-fit", locale)}
+                  startSection="hero_primary"
+                  donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+                  donateSection="hero_donate"
+                  startLabel={campaign.startFreeCta}
+                  donateLabel={campaign.donateCta}
+                  buttonSize="lg"
+                  className="mt-5"
+                />
+              </div>
+            ) : (
+              <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+                <Button
+                  size="lg"
+                  className="min-h-12 rounded-full px-6 text-base"
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/calculators/bike-fit", locale)}
+                      locale={locale}
+                      pagePath={homePath}
+                      section="hero_primary"
+                      ctaLabel={home.hero.primaryCta}
+                    />
+                  }
+                >
+                  {home.hero.primaryCta}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="min-h-12 rounded-full border-primary-foreground/25 bg-[color:color-mix(in_oklch,var(--background)_88%,white_12%)] px-6 text-base text-[color:var(--foreground)] shadow-[0_12px_32px_-18px_color-mix(in_oklch,var(--foreground)_28%,transparent)] after:bg-[color:color-mix(in_oklch,var(--background)_92%,white_8%)] hover-only:after:bg-[color:color-mix(in_oklch,var(--muted)_70%,var(--background)_30%)]"
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/pricing", locale)}
+                      locale={locale}
+                      pagePath={homePath}
+                      section="hero_secondary"
+                      ctaLabel={home.hero.secondaryCta}
+                    />
+                  }
+                >
+                  {home.hero.secondaryCta}
+                </Button>
+              </div>
+            )}
             <p className="mt-4 text-sm text-primary-foreground/60">
               <TrackedCtaLink
                 href={withLocalePrefix("/login", locale)}
@@ -277,6 +309,25 @@ export default async function HomePage() {
               copy={home.bikeQuickCheck}
             />
           </div>
+          {campaignActive ? (
+            <PublicCtaBand
+              className="mx-auto mt-8 max-w-4xl"
+              eyebrow={campaign.homepageEyebrow}
+              title={campaign.homepageTitle}
+              description={campaign.homepageDescription}
+              actions={
+                <CampaignCtaGroup
+                  locale={locale}
+                  pagePath={homePath}
+                  startHref={withLocalePrefix("/calculators/bike-fit", locale)}
+                  startSection="homepage_campaign_start"
+                  donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+                  donateSection="homepage_campaign_donate"
+                />
+              }
+              aside={campaign.optionalNote}
+            />
+          ) : null}
         </div>
       </section>
       <section className="py-12 sm:py-16">
@@ -570,38 +621,55 @@ export default async function HomePage() {
           <h2 className="mt-3 text-3xl font-bold text-primary-foreground">{home.cta.title}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-primary-foreground/80">{home.cta.description}</p>
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <Button
-              variant="outline"
-              size="lg"
-              className="min-h-12 rounded-full border-background/50 bg-background px-6 text-base text-primary after:bg-background hover-only:after:bg-muted"
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/calculators/bike-fit", locale)}
-                  locale={locale}
-                  pagePath={homePath}
-                  section="final_cta_primary"
-                  ctaLabel={home.cta.button}
-                />
-              }
-            >
-              {home.cta.button}
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="min-h-12 rounded-full border-primary-foreground/45 bg-transparent px-6 text-base text-primary-foreground after:bg-transparent hover-only:after:bg-primary-foreground/8"
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/pricing", locale)}
-                  locale={locale}
-                  pagePath={homePath}
-                  section="final_cta_secondary"
-                  ctaLabel={locale === "nl" ? "Bekijk prijzen" : "View pricing"}
-                />
-              }
-            >
-              {locale === "nl" ? "Bekijk prijzen" : "View pricing"}
-            </Button>
+            {campaignActive ? (
+              <CampaignCtaGroup
+                locale={locale}
+                pagePath={homePath}
+                startHref={withLocalePrefix("/calculators/bike-fit", locale)}
+                startSection="final_cta_primary"
+                donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+                donateSection="final_cta_secondary"
+                startLabel={campaign.startFreeCta}
+                donateLabel={campaign.donateCta}
+                buttonSize="lg"
+                className="items-center justify-center"
+              />
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="min-h-12 rounded-full border-background/50 bg-background px-6 text-base text-primary after:bg-background hover-only:after:bg-muted"
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/calculators/bike-fit", locale)}
+                      locale={locale}
+                      pagePath={homePath}
+                      section="final_cta_primary"
+                      ctaLabel={home.cta.button}
+                    />
+                  }
+                >
+                  {home.cta.button}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="min-h-12 rounded-full border-primary-foreground/45 bg-transparent px-6 text-base text-primary-foreground after:bg-transparent hover-only:after:bg-primary-foreground/8"
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/pricing", locale)}
+                      locale={locale}
+                      pagePath={homePath}
+                      section="final_cta_secondary"
+                      ctaLabel={locale === "nl" ? "Bekijk prijzen" : "View pricing"}
+                    />
+                  }
+                >
+                  {locale === "nl" ? "Bekijk prijzen" : "View pricing"}
+                </Button>
+              </>
+            )}
           </div>
           </Card>
         </div>

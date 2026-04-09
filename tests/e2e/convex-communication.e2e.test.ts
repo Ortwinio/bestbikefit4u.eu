@@ -165,33 +165,33 @@ async function runRecommendationFlow(db: InMemoryDb, sessionId: string) {
   const storeResultHandler = handlerOf<Record<string, unknown>, string>(storeResult);
 
   const scheduler = {
-    runAfter: vi.fn(async (_delay: number, ref: unknown, args: Record<string, unknown>) => {
-      if (ref === api.recommendations.actions.generateFromData) {
-        await generateFromDataHandler(
-          {
-            scheduler: { runAfter: vi.fn(async () => undefined) },
-            runMutation: async (mutationRef: unknown, mutationArgs: Record<string, unknown>) => {
-              if (mutationRef === api.recommendations.internalMutations.storeResult) {
-                return await storeResultHandler(
-                  { db, scheduler: { runAfter: vi.fn(async () => undefined) } },
-                  mutationArgs
-                );
-              }
-
-              return null;
-            },
-          },
-          args
-        );
-      }
-
-      return undefined;
-    }),
+    runAfter: vi.fn(async () => undefined),
   };
 
   await handlerOf<{ sessionId: string }, void>(generateRecommendation)(
     { db, scheduler },
     { sessionId }
+  );
+
+  const scheduledArgs = (scheduler.runAfter.mock.calls as unknown[][])[0]?.[2] as
+    | Record<string, unknown>
+    | undefined;
+
+  if (!scheduledArgs) {
+    throw new Error("Recommendation generation was not scheduled");
+  }
+
+  await generateFromDataHandler(
+    {
+      scheduler: { runAfter: vi.fn(async () => undefined) },
+      runMutation: async (_mutationRef: unknown, mutationArgs: Record<string, unknown>) => {
+        return await storeResultHandler(
+          { db, scheduler: { runAfter: vi.fn(async () => undefined) } },
+          mutationArgs
+        );
+      },
+    },
+    scheduledArgs
   );
 }
 
@@ -417,6 +417,7 @@ describe("convex communication e2e", () => {
     >(getRecommendationBySession)({ db }, { sessionId });
     expect(before).toBeNull();
 
+    await db.patch(sessionId, { status: "questionnaire_complete" });
     await runRecommendationFlow(db, sessionId);
 
     const after = await handlerOf<
@@ -465,6 +466,7 @@ describe("convex communication e2e", () => {
       primaryGoal: "balanced",
     });
 
+    await db.patch(sessionId, { status: "questionnaire_complete" });
     await runRecommendationFlow(db, sessionId);
 
     const usersGetCurrentUserHandler = handlerOf<
@@ -546,6 +548,7 @@ describe("convex communication e2e", () => {
       ridingStyle: "racing",
       primaryGoal: "performance",
     });
+    await db.patch(sessionId, { status: "questionnaire_complete" });
     await runRecommendationFlow(db, sessionId);
 
     currentUserId = otherId;
@@ -595,11 +598,8 @@ describe("convex communication e2e", () => {
       primaryGoal: "comfort",
     });
 
+    await db.patch(sessionId, { status: "questionnaire_complete" });
     await runRecommendationFlow(db, sessionId);
-    await handlerOf<{ sessionId: string }, string>(generateRecommendation)(
-      { db },
-      { sessionId }
-    );
 
     const usersGetCurrentUserHandler = handlerOf<
       Record<string, never>,

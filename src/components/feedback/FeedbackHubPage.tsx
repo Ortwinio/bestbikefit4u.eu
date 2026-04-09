@@ -95,7 +95,7 @@ function Pill({
   );
 }
 
-function formatReleaseName(release: PublicReleaseRow, copy = getFeedbackCopy("en")) {
+function formatReleaseName(release: PublicReleaseRow) {
   return release.versionLabel ? `${release.name} · ${release.versionLabel}` : release.name;
 }
 

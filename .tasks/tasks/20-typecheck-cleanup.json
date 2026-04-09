@@ -2,7 +2,7 @@
   "_version": 1,
   "id": 20,
   "title": "Typecheck cleanup: clear remaining repo-wide TypeScript blockers after functional regressions are resolved",
-  "status": "todo",
+  "status": "done",
   "priority": 4,
   "assigned": "repo-health-owner",
   "depends_on": ["PDF route regression", "Session/profile completeness regression", "Recommendation contract recovery", "Questionnaire contract refresh", "Dashboard/provider harness fixes", "Isolated contract cleanup"],
@@ -17,5 +17,8 @@
     "Tests stop mutating read-only process.env.NODE_ENV",
     "npm run typecheck passes"
   ],
-  "notes": "Do this after the functional clusters so the remaining TypeScript issues are easier to isolate and verify."
+  "notes": [
+    "Repo-wide TypeScript blockers have been cleared from the current baseline.",
+    "Confirmed on 2026-04-09: npm run typecheck exits successfully."
+  ]
 }

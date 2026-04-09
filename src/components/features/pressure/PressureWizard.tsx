@@ -5,7 +5,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { Button, Card } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { QuestionnaireProgressBar } from "@/components/questionnaire/QuestionnaireProgressBar";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { StepBikeSelect } from "./wizard/StepBikeSelect";

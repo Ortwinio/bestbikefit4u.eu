@@ -1,0 +1,23 @@
+{
+  "_version": 1,
+  "id": 25,
+  "title": "Dashboard high-traffic page harmony: apply the shell and primitive contract to dashboard home, fit start, settings, bikes, and fit results",
+  "status": "done",
+  "priority": 2,
+  "assigned": "dashboard-owner",
+  "depends_on": ["Dashboard token and shell contract", "Dashboard shared primitives and library alignment"],
+  "files": [
+    "src/app/(dashboard)/dashboard/page.tsx",
+    "src/app/(dashboard)/fit/page.tsx",
+    "src/app/(dashboard)/settings/page.tsx",
+    "src/app/(dashboard)/bikes/page.tsx",
+    "src/app/(dashboard)/fit/[sessionId]/results/page.tsx"
+  ],
+  "acceptance": [
+    "Dashboard home uses the new page-header and surface contract",
+    "Fit start, settings, bikes, and fit results use a coherent card and CTA language",
+    "Support, warning, and empty states feel aligned with the product family",
+    "Desktop and mobile remain clear and usable"
+  ],
+  "notes": "Completed. Applied the new dashboard shell/card/CTA contract to dashboard home, fit start, settings, bikes, and fit results. Output: plans/feature-dashboard-look-and-feel-harmony/output-04-dashboard-high-traffic-page-harmony.md. Validation: targeted ESLint and dashboard layout test passed."
+}

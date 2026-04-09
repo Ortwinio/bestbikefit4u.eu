@@ -82,7 +82,7 @@ export default function GeometryRecordPage({ params }: PageProps) {
 
     setDraft(createGeometryRecordDraft(record));
     setRejectReason("");
-  }, [record?._id]);
+  }, [record]);
 
   if (recordDetail === undefined || brands === undefined) {
     return <LoadingState label="Loading geometry record..." />;

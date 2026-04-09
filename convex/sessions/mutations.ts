@@ -27,7 +27,7 @@ async function deleteBySessionIndex(
 ) {
   const docs = await ctx.db
     .query(table)
-    .withIndex("by_session", (q: any) => q.eq("sessionId", sessionId))
+    .withIndex("by_session", (q) => q.eq("sessionId", sessionId))
     .collect();
 
   for (const doc of docs) {

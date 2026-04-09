@@ -35,6 +35,25 @@ vi.mock("@/components/analytics/MarketingEventTracker", () => ({
   TrackMarketingEventOnView: () => null,
 }));
 
+vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
+  CampaignCtaGroup: ({
+    startHref,
+    donateHref,
+    startLabel,
+    donateLabel,
+  }: {
+    startHref: string;
+    donateHref: string;
+    startLabel?: string;
+    donateLabel?: string;
+  }) => (
+    <div>
+      <a href={startHref}>{startLabel ?? "Start free bike fit"}</a>
+      <a href={donateHref}>{donateLabel ?? "Make a donation"}</a>
+    </div>
+  ),
+}));
+
 vi.mock("@/components/seo/JsonLd", () => ({
   JsonLd: () => null,
 }));
@@ -54,51 +73,44 @@ afterEach(() => {
 });
 
 describe("pricing page", () => {
-  it("shows the new Free vs Pro framing and proof modules in English", async () => {
+  it("shows the campaign replacement card in English", async () => {
     const ui = await PricingPage();
     render(ui);
 
     expect(screen.getByText("Clear pricing for real riders")).toBeTruthy();
-    expect(screen.getByText("Start free")).toBeTruthy();
-    expect(screen.getByText("Start Pro - EUR 9/month")).toBeTruthy();
-    expect(screen.getByText("Why riders trust this as a first step")).toBeTruthy();
-    expect(screen.getByText("Method-backed calculations")).toBeTruthy();
-    expect(screen.getByText("Concrete fit outputs")).toBeTruthy();
-    expect(screen.getByText("Honest about limits")).toBeTruthy();
-    expect(
-      screen.getByText("No contract. Start free and upgrade or cancel at any time.")
-    ).toBeTruthy();
+    expect(screen.getByText("Temporary free campaign")).toBeTruthy();
+    expect(screen.getByText("Use BestBikeFit4U for free until June 4, 2026")).toBeTruthy();
+    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
+      "/en/calculators/bike-fit"
+    );
+    expect(screen.getByText("Make a donation").closest("a")?.getAttribute("href")).toBe(
+      "https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756"
+    );
+    expect(screen.getByText("Donating is entirely optional.")).toBeTruthy();
+    expect(screen.queryByText("Start Pro - EUR 9/month")).toBeNull();
   });
 
-  it("preserves login source tags on plan CTAs and moves the footer CTA to the calculator", async () => {
+  it("keeps the campaign start CTA pointed at the calculator", async () => {
     const ui = await PricingPage();
     render(ui);
 
-    expect(
-      screen.getAllByRole("button", { name: "Start free" })[0].getAttribute("href")
-    ).toBe("/en/login?src=%2Fen%2Fpricing%3Apricing_free_cta");
-    expect(
-      screen
-        .getAllByRole("button", { name: "Start Pro - EUR 9/month" })[0]
-        .getAttribute("href")
-    ).toBe("/en/login?src=%2Fen%2Fpricing%3Apricing_pro_cta");
-    expect(
-      screen.getByRole("button", { name: "Start free fit" }).getAttribute("href")
-    ).toBe("/en/calculators/bike-fit");
+    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
+      "/en/calculators/bike-fit"
+    );
+    expect(screen.queryByText("Start free")).toBeNull();
   });
 
-  it("keeps the Dutch commercial copy aligned", async () => {
+  it("keeps the Dutch campaign copy aligned", async () => {
     locale = "nl";
 
     const ui = await PricingPage();
     render(ui);
 
     expect(screen.getByText("Heldere prijzen voor echte rijders")).toBeTruthy();
-    expect(screen.getByText("Start gratis")).toBeTruthy();
-    expect(screen.getByText("Start Pro - EUR 9/maand")).toBeTruthy();
-    expect(screen.getByText("Waarom rijders dit vertrouwen als eerste stap")).toBeTruthy();
-    expect(
-      screen.getByText("Geen contract. Start gratis en upgrade of annuleer op elk moment.")
-    ).toBeTruthy();
+    expect(screen.getByText("Tijdelijke gratis campagne")).toBeTruthy();
+    expect(screen.getByText("Gebruik BestBikeFit4U gratis tot 4 juni 2026")).toBeTruthy();
+    expect(screen.getByText("Start gratis bike fit")).toBeTruthy();
+    expect(screen.getByText("Doneer voor Alpe d'HuZes")).toBeTruthy();
+    expect(screen.getByText("Doneren is volledig optioneel.")).toBeTruthy();
   });
 });

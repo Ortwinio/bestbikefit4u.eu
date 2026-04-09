@@ -18,8 +18,6 @@ import {
   EmptyState,
   Input,
   Select,
-  SegmentedControl,
-  SegmentedControlItem,
   Textarea,
   useToast,
 } from "@/components/ui";
@@ -198,14 +196,12 @@ function MessageSnapshotCard({
 function AudienceRuleEditor({
   rule,
   users,
-  releases,
   onChange,
   onRemove,
   canRemove,
 }: {
   rule: AudienceRuleDraft;
   users: MessageComposeData["users"];
-  releases: MessageComposeData["releases"];
   onChange: (next: AudienceRuleDraft) => void;
   onRemove: () => void;
   canRemove: boolean;
@@ -430,30 +426,6 @@ export function MessageListView({
       </AdminSectionCard>
     </div>
   );
-}
-
-function getUserOptions(users: MessageComposeData["users"]) {
-  return [
-    { value: "", label: "Select a user" },
-    ...users.map((user) => ({ value: String(user._id), label: getAdminDisplayName(user) })),
-  ];
-}
-
-function getReleaseOptions(releases: MessageComposeData["releases"]) {
-  return [
-    { value: "", label: "No release link" },
-    ...releases.map((release) => ({
-      value: String(release._id),
-      label: release.versionLabel ? `${release.name} · ${release.versionLabel}` : release.name,
-    })),
-  ];
-}
-
-function getFeedbackOptions(feedbackItems: MessageComposeData["feedbackItems"]) {
-  return [
-    { value: "", label: "No feedback link" },
-    ...feedbackItems.map((item) => ({ value: String(item._id), label: item.title })),
-  ];
 }
 
 function getAudienceInitialTargets(detail: MessageDetailRecord | null) {

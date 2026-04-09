@@ -90,24 +90,35 @@ function makeCtx({
           }
         }),
         query: vi.fn((table: string) => {
-          if (table !== "bikePhotos") {
-            throw new Error(`Unexpected table query ${table}`);
+          if (table === "bikePhotos") {
+            return {
+              withIndex: vi.fn((indexName: string, builder: (query: { eq: (field: string, value: string) => unknown }) => unknown) => {
+                if (indexName !== "by_bike" && indexName !== "by_storage") {
+                  throw new Error(`Unexpected index ${indexName}`);
+                }
+                builder({
+                  eq: () => undefined,
+                });
+                return {
+                  collect: vi.fn(async () => {
+                    if (indexName === "by_storage") {
+                      return photoState;
+                    }
+
+                    return photoState.filter((photo) => photo.bikeId === bikeState._id);
+                  }),
+                };
+              }),
+            };
           }
-          return {
-            withIndex: vi.fn((indexName: string, builder: (query: { eq: (field: string, value: string) => unknown }) => unknown) => {
-              if (indexName !== "by_bike") {
-                throw new Error(`Unexpected index ${indexName}`);
-              }
-              builder({
-                eq: () => undefined,
-              });
-              return {
-                collect: vi.fn(async () =>
-                  photoState.filter((photo) => photo.bikeId === bikeState._id)
-                ),
-              };
-            }),
-          };
+
+          if (table === "bikes") {
+            return {
+              collect: vi.fn(async () => [bikeState]),
+            };
+          }
+
+          throw new Error(`Unexpected table query ${table}`);
         }),
       },
       storage: {

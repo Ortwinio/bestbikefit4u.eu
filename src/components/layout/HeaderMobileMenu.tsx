@@ -38,6 +38,7 @@ type HeaderMobileMenuProps = {
 
 export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMounted] = useState(() => typeof window !== "undefined");
   const { isAuthenticated } = useConvexAuth();
   const { signOut } = useAuthActions();
   const router = useRouter();
@@ -67,6 +68,22 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
       icon: <Sparkles className="h-4 w-4 text-[color:var(--primary)]" />,
     },
   ];
+
+  if (!isMounted) {
+    return (
+      <div className="md:hidden">
+        <Button
+          type="button"
+          variant="outline"
+          aria-label="Open navigation menu"
+          aria-expanded={false}
+          className="inline-flex h-9 w-9 items-center justify-center px-0 text-muted-foreground"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="md:hidden">

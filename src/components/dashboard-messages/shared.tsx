@@ -17,31 +17,31 @@ const toneStyles: Record<
 > = {
   info: {
     border: "border-[color:color-mix(in_oklch,var(--primary)_28%,var(--border))]",
-    surface: "bg-[color:color-mix(in_oklch,var(--card)_92%,var(--primary)_8%)]",
+    surface: "bg-[color:color-mix(in_oklch,var(--dashboard-surface-muted)_90%,var(--primary)_10%)]",
     icon: "text-[color:var(--primary)]",
     pill: "bg-[color:color-mix(in_oklch,var(--primary)_15%,var(--secondary))] text-[color:var(--primary)]",
   },
   success: {
     border: "border-[color:color-mix(in_oklch,var(--success)_28%,var(--border))]",
-    surface: "bg-[color:color-mix(in_oklch,var(--card)_92%,var(--success)_8%)]",
+    surface: "bg-[color:color-mix(in_oklch,var(--dashboard-surface-muted)_90%,var(--success)_10%)]",
     icon: "text-[color:var(--success)]",
     pill: "bg-[color:color-mix(in_oklch,var(--success)_15%,var(--secondary))] text-[color:var(--success)]",
   },
   warning: {
     border: "border-[color:color-mix(in_oklch,var(--warning)_28%,var(--border))]",
-    surface: "bg-[color:color-mix(in_oklch,var(--card)_92%,var(--warning)_8%)]",
+    surface: "bg-[color:color-mix(in_oklch,var(--dashboard-surface-muted)_90%,var(--warning)_10%)]",
     icon: "text-[color:var(--warning)]",
     pill: "bg-[color:color-mix(in_oklch,var(--warning)_15%,var(--secondary))] text-[color:var(--warning)]",
   },
   danger: {
     border: "border-[color:color-mix(in_oklch,var(--danger)_30%,var(--border))]",
-    surface: "bg-[color:color-mix(in_oklch,var(--card)_92%,var(--danger)_8%)]",
+    surface: "bg-[color:color-mix(in_oklch,var(--dashboard-surface-muted)_90%,var(--danger)_10%)]",
     icon: "text-[color:var(--danger)]",
     pill: "bg-[color:color-mix(in_oklch,var(--danger)_15%,var(--secondary))] text-[color:var(--danger)]",
   },
   neutral: {
-    border: "border-[color:var(--border)]",
-    surface: "bg-[color:var(--card)]",
+    border: "border-[color:oklch(var(--dashboard-border-soft))]",
+    surface: "dashboard-card-surface-muted",
     icon: "text-[color:var(--muted-foreground)]",
     pill: "bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]",
   },
@@ -187,7 +187,7 @@ export function MessageSurfaceChrome({
   return (
     <div
       className={cn(
-        "rounded-[var(--radius-xl)] border p-4 shadow-sm",
+        "dashboard-card-surface-muted rounded-[var(--radius-xl)] border p-4 shadow-sm",
         styles.border,
         styles.surface,
         className

@@ -4,6 +4,7 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
 import { BRAND } from "@/config/brand";
+import { isConsumerCampaignActive } from "@/config/commercial";
 import { createSimplePdfFromLines } from "@/lib/pdf/simplePdf";
 import { renderPdfFromHtml } from "@/lib/pdf/htmlPdf";
 import {
@@ -132,7 +133,11 @@ export async function GET(
     convex.setAuth(token);
 
     const currentUser = await convex.query(api.users.queries.getCurrentUser);
-    if (!currentUser || currentUser.tier !== "pro") {
+    const hasCampaignAccess = isConsumerCampaignActive();
+    const hasPaidAccess =
+      currentUser?.tier === "pro" || currentUser?.tier === "premium";
+
+    if (!currentUser || (!hasCampaignAccess && !hasPaidAccess)) {
       return NextResponse.json({ error: "pro_required" }, { status: 403 });
     }
 

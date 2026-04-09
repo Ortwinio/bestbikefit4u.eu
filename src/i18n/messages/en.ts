@@ -653,7 +653,11 @@ const en = {
       sections: {
         bikeType: "What type of bike?",
         ridingStyle: "How do you typically ride?",
+        ridingStyleTooltip:
+          "Choose the riding style that best matches how this bike is usually used so fit recommendations can balance comfort, handling, and position correctly.",
         primaryGoal: "What's your primary goal?",
+        primaryGoalTooltip:
+          "Pick the main outcome you want from this bike setup so saved bike profiles and fit sessions can bias toward that priority.",
       },
       continueCta: "Continue to Questions",
       profileRequirementHint: "Complete your profile to continue",

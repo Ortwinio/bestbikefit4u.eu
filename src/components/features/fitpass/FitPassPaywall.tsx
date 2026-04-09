@@ -3,12 +3,16 @@
 import { useEffect, useState } from "react";
 import { CheckCircle } from "lucide-react";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
+import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { Card, CardContent } from "@/components/prototyper-ui/ui/card";
 import {
   COMMERCIAL_CURRENCY,
+  CONSUMER_CAMPAIGN_CONFIG,
   FIT_PASS_PRODUCT,
   formatEuroPriceFromCents,
+  getConsumerCampaignCopy,
+  isConsumerCampaignActive,
 } from "@/config/commercial";
 
 interface FitPassPaywallProps {
@@ -28,6 +32,8 @@ export function FitPassPaywall({
   const [error, setError] = useState<string | null>(null);
 
   const isNl = locale === "nl";
+  const campaignActive = isConsumerCampaignActive();
+  const campaign = getConsumerCampaignCopy(isNl ? "nl" : "en");
   const pagePath = `${isNl ? "/nl" : ""}/fit/${sessionId}/results`;
   const priceLabel = formatEuroPriceFromCents(
     FIT_PASS_PRODUCT.priceCents,
@@ -45,8 +51,41 @@ export function FitPassPaywall({
     });
   }, [isNl, logMarketingEvent, pagePath]);
 
-  if (userTier === "pro" || userTier === "premium") {
+  if ((userTier === "pro" || userTier === "premium") && !campaignActive) {
     return null;
+  }
+
+  if (campaignActive) {
+    return (
+      <Card
+        variant="secondary"
+        className="mt-6 overflow-hidden border border-[color:color-mix(in_oklch,var(--primary)_22%,var(--border))]"
+      >
+        <CardContent className="px-6 py-6">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--primary)]">
+            {campaign.paywallTitle}
+          </p>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
+            {campaign.paywallDescription}
+          </p>
+          <div className="mt-5">
+            <CampaignCtaGroup
+              locale={isNl ? "nl" : "en"}
+              pagePath={pagePath}
+              startHref={pagePath}
+              startSection="fit_pass_campaign_continue"
+              donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+              donateSection="fit_pass_campaign_donate"
+              startLabel={campaign.continueFreeCta}
+              donateLabel={campaign.donateFirstCta}
+            />
+          </div>
+          <p className="mt-4 text-xs text-[color:var(--muted-foreground)]">
+            {campaign.optionalNote}
+          </p>
+        </CardContent>
+      </Card>
+    );
   }
 
   const features = isNl

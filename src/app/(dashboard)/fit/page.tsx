@@ -16,7 +16,13 @@ import {
   InfoBox,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
+import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
+import {
+  CONSUMER_CAMPAIGN_CONFIG,
+  getConsumerCampaignCopy,
+  isConsumerCampaignActive,
+} from "@/config/commercial";
 import {
   getBikeTypeLabel,
   isAeroCompatibleBikeType,
@@ -39,6 +45,7 @@ function SavedBikeImage({ source, selected }: { source?: string; selected?: bool
       "flex aspect-video w-full items-center justify-center overflow-hidden rounded-[var(--radius-md)]",
       selected ? "bg-primary-foreground/10" : "bg-muted"
     )}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={imageUrl ?? "/default-bike.svg"}
         alt=""
@@ -55,6 +62,8 @@ export default function NewFitSessionPage() {
   const toast = useToast();
   const pagePath = withLocalePrefix("/fit", locale);
   const logMarketingEvent = useMarketingEventLogger();
+  const campaignActive = isConsumerCampaignActive();
+  const campaign = getConsumerCampaignCopy(locale);
   const hasTrackedFitViewRef = useRef(false);
   const [selectedBikeId, setSelectedBikeId] = useState<Id<"bikes"> | null>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -130,6 +139,15 @@ export default function NewFitSessionPage() {
         primaryGoal: effectiveRidingGoal as PrimaryGoal,
         bikeId: selectedBike?._id,
       });
+      if (campaignActive) {
+        logMarketingEvent({
+          eventType: "free_fit_started_during_campaign",
+          locale,
+          pagePath,
+          section: "fit_start_page",
+          ctaLabel: campaign.startFreeCta,
+        });
+      }
       toast.success({ description: messages.common.toasts.fitSessionStarted });
       router.push(withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale));
     } catch (error) {
@@ -156,31 +174,68 @@ export default function NewFitSessionPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[color:var(--foreground)]">{messages.fit.title}</h1>
-        <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">{messages.fit.subtitle}</p>
-      </div>
+    <div className="mx-auto max-w-3xl space-y-6">
+      <Card variant="bordered" className="dashboard-hero-surface overflow-hidden">
+        <CardContent className="space-y-5 px-6 py-6 sm:px-7 sm:py-7">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="space-y-3">
+              {campaignActive ? (
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted-foreground)]">
+                  {campaign.fitStartTitle}
+                </p>
+              ) : null}
+              <h1 className="text-2xl font-semibold text-[color:var(--foreground)] sm:text-3xl">
+                {messages.fit.title}
+              </h1>
+              <p className="max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
+                {messages.fit.subtitle}
+              </p>
+              {campaignActive ? (
+                <p className="max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
+                  {campaign.fitStartDescription}
+                </p>
+              ) : null}
+            </div>
+            {campaignActive ? (
+              <div className="shrink-0">
+                <CampaignCtaGroup
+                  locale={locale}
+                  pagePath={pagePath}
+                  startHref={withLocalePrefix("/fit", locale)}
+                  startSection="dashboard_fit_campaign_start"
+                  donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+                  donateSection="dashboard_fit_campaign_donate"
+                  startLabel={campaign.continueFreeCta}
+                  buttonSize="sm"
+                  className="w-full sm:w-auto"
+                />
+              </div>
+            ) : null}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Profile warning */}
       {!isLoadingProfile && !hasProfile && (
         <InfoBox
           variant="warning"
           icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
-          className="mb-6"
+          className="mb-0"
         >
           <p className="font-medium">{messages.fit.profileWarning.title}</p>
           <p className="mt-1 text-[color:var(--muted-foreground)]">
             {messages.fit.profileWarning.description}
           </p>
-          <Link
-            href={withLocalePrefix("/profile", locale)}
-            className="mt-2 inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
-          >
-            {messages.fit.profileWarning.cta}
-            <ArrowRight className="h-3.5 w-3.5 shrink-0" />
-          </Link>
+          <div className="mt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              render={<Link href={withLocalePrefix("/profile", locale)} />}
+            >
+              {messages.fit.profileWarning.cta}
+              <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+            </Button>
+          </div>
         </InfoBox>
       )}
 
@@ -189,29 +244,32 @@ export default function NewFitSessionPage() {
         <InfoBox
           variant="warning"
           icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
-          className="mb-6"
+          className="mb-0"
         >
           <p className="font-medium">{messages.fit.riderProfileWarning.title}</p>
           <p className="mt-1 text-[color:var(--muted-foreground)]">
             {messages.fit.riderProfileWarning.description}
           </p>
-          <Link
-            href={withLocalePrefix("/profile", locale)}
-            className="mt-2 inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
-          >
-            {messages.fit.riderProfileWarning.cta}
-            <ArrowRight className="h-3.5 w-3.5 shrink-0" />
-          </Link>
+          <div className="mt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              render={<Link href={withLocalePrefix("/profile", locale)} />}
+            >
+              {messages.fit.riderProfileWarning.cta}
+              <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+            </Button>
+          </div>
         </InfoBox>
       )}
 
       {/* Bike selection */}
-      <Card variant="bordered" className="dashboard-card-surface mb-6">
+      <Card variant="bordered" className="dashboard-card-surface">
         <SectionHeader
           icon={<Bike className="h-5 w-5 text-[color:var(--primary)]" />}
           title={messages.fit.savedBikes.title}
         />
-        <CardContent>
+        <CardContent className="pt-5">
           {isLoadingBikes ? (
             <p className="text-sm text-muted-foreground">{messages.fit.savedBikes.loading}</p>
           ) : bikes && bikes.length > 0 ? (
@@ -226,17 +284,17 @@ export default function NewFitSessionPage() {
                       setSelectedBikeId(bike._id);
                     }}
                     className={cn(
-                      "relative w-full rounded-[var(--radius-lg)] border-2 p-4 text-left transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+                      "relative w-full rounded-[var(--radius-xl)] border p-4 text-left transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
                       isSelected
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "border-border bg-card text-foreground hover:bg-accent"
+                        ? "border-[color:var(--primary)] bg-[color:color-mix(in_oklch,var(--primary)_10%,var(--card)_90%)] text-[color:var(--foreground)] shadow-sm"
+                        : "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] hover:bg-[color:var(--surface-secondary)]"
                     )}
                   >
                     {/* Selection indicator */}
                     <CheckCircle2
                       className={cn(
                         "absolute top-3 right-3 h-5 w-5 transition-opacity duration-150",
-                        isSelected ? "opacity-100" : "opacity-0"
+                        isSelected ? "opacity-100 text-[color:var(--primary)]" : "opacity-0"
                       )}
                     />
 
@@ -244,7 +302,12 @@ export default function NewFitSessionPage() {
 
                     <div className="mt-3">
                       <div className="pr-6 font-medium">{bike.name}</div>
-                      <div className={cn("mt-1 text-sm", isSelected ? "text-primary-foreground/80" : "text-muted-foreground")}>
+                      <div
+                        className={cn(
+                          "mt-1 text-sm",
+                          isSelected ? "text-[color:var(--muted-foreground)]" : "text-muted-foreground"
+                        )}
+                      >
                         {getBikeTypeLabel(bike.bikeType, messages)}
                       </div>
                     </div>
@@ -255,7 +318,7 @@ export default function NewFitSessionPage() {
               {/* Add new bike card */}
               <Link
                 href={withLocalePrefix("/bikes/new", locale)}
-                className="flex min-h-[140px] flex-col items-center justify-center gap-2 rounded-[var(--radius-lg)] border-2 border-dashed border-border bg-card p-4 text-center transition-colors hover:bg-accent"
+                className="flex min-h-[140px] flex-col items-center justify-center gap-2 rounded-[var(--radius-xl)] border border-dashed border-[color:var(--border)] bg-[color:var(--card)] p-4 text-center transition-colors hover:bg-[color:var(--surface-secondary)]"
               >
                 <PlusCircle className="h-6 w-6 text-muted-foreground" />
                 <span className="text-sm font-medium text-muted-foreground">
@@ -265,21 +328,24 @@ export default function NewFitSessionPage() {
             </div>
           ) : (
             /* No bikes yet */
-            <div className="flex flex-col items-center gap-4 py-8 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted">
-                <Bike className="h-7 w-7 text-muted-foreground" />
+            <div className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface-secondary)] px-6 py-8 text-center">
+              <div className="flex flex-col items-center gap-4">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted">
+                  <Bike className="h-7 w-7 text-muted-foreground" />
+                </div>
+                <div>
+                  <p className="font-medium text-foreground">{messages.fit.savedBikes.noBikes}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{messages.fit.savedBikes.noBikesHint}</p>
+                </div>
+                <Button
+                  render={<Link href={withLocalePrefix("/bikes/new", locale)} />}
+                  variant="outline"
+                  size="sm"
+                >
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  {messages.fit.savedBikes.addFirstBike}
+                </Button>
               </div>
-              <div>
-                <p className="font-medium text-foreground">{messages.fit.savedBikes.noBikes}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{messages.fit.savedBikes.noBikesHint}</p>
-              </div>
-              <Button
-                render={<Link href={withLocalePrefix("/bikes/new", locale)} />}
-                variant="outline"
-              >
-                <PlusCircle className="mr-2 h-4 w-4" />
-                {messages.fit.savedBikes.addFirstBike}
-              </Button>
             </div>
           )}
         </CardContent>
@@ -290,23 +356,26 @@ export default function NewFitSessionPage() {
         <InfoBox
           variant="warning"
           icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
-          className="mb-6"
+          className="mb-0"
         >
           <p className="font-medium">{messages.fit.savedBikes.missingBikeAttribute}</p>
-          <Link
-            href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)}
-            className="mt-2 inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
-          >
-            {messages.fit.savedBikes.completeBikeSetup}
-            <ArrowRight className="h-3.5 w-3.5 shrink-0" />
-          </Link>
+          <div className="mt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              render={<Link href={withLocalePrefix(`/bikes/${selectedBike._id}/edit`, locale)} />}
+            >
+              {messages.fit.savedBikes.completeBikeSetup}
+              <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+            </Button>
+          </div>
         </InfoBox>
       )}
 
       {/* CTA */}
       <Button
         size="lg"
-        className="w-full"
+        className="w-full shadow-sm"
         disabled={!canStart}
         isLoading={isCreating}
         onClick={handleStartSession}

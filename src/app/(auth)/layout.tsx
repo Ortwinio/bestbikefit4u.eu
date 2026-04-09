@@ -12,11 +12,11 @@ export default async function AuthLayout({
   return (
     <div className="flex min-h-screen flex-col bg-[color:var(--surface-secondary)] px-4 text-[color:var(--foreground)]">
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center">
-        <div className="mb-8">
+        <div className="mb-8 w-full">
           <BrandLogo
             href={withLocalePrefix("/", locale)}
             asset="primary"
-            className="block w-[468px]"
+            className="block w-full max-w-[468px]"
             imageClassName="block"
           />
         </div>

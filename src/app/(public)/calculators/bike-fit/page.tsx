@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { Compass, Gauge, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
+import {
+  CONSUMER_CAMPAIGN_CONFIG,
+  getConsumerCampaignCopy,
+  isConsumerCampaignActive,
+} from "@/config/commercial";
 import {
   PublicCtaBand,
   PublicFeatureCard,
@@ -74,6 +80,8 @@ export default async function BikeFitCalculatorPage() {
   const locale = await getRequestLocale();
   const isNl = locale === "nl";
   const pagePath = withLocalePrefix("/calculators/bike-fit", locale);
+  const campaignActive = isConsumerCampaignActive();
+  const campaign = getConsumerCampaignCopy(locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
   const faqs = buildFaqs(isNl);
   const trustPoints = isNl
@@ -202,51 +210,82 @@ export default async function BikeFitCalculatorPage() {
             : "Create a free account to save these results, refine your setup with more detail, and track changes over time."
         }
         actions={
-          <>
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="bike_fit_result"
-                  ctaLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
-                />
-              }
-            >
-              {isNl ? "Maak account aan of log in" : "Create account or sign in"}
-            </Button>
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/pricing", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="bike_fit_pricing_cta"
-                  ctaLabel={isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
-                />
-              }
-              variant="outline"
-            >
-              {isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
-            </Button>
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/bandenspanning-calculator", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="bike_fit_tire_pressure_cta"
-                  ctaLabel={
-                    isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"
-                  }
-                />
-              }
-              variant="outline"
-            >
-              {isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"}
-            </Button>
-          </>
+          campaignActive ? (
+            <>
+              <CampaignCtaGroup
+                locale={locale}
+                pagePath={pagePath}
+                startHref={withLocalePrefix("/login", locale)}
+                startSection="bike_fit_result"
+                donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+                donateSection="bike_fit_campaign_donate"
+                startLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
+                donateLabel={campaign.donateCta}
+              />
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/bandenspanning-calculator", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="bike_fit_tire_pressure_cta"
+                    ctaLabel={
+                      isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"
+                    }
+                  />
+                }
+                variant="outline"
+              >
+                {isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/login", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="bike_fit_result"
+                    ctaLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
+                  />
+                }
+              >
+                {isNl ? "Maak account aan of log in" : "Create account or sign in"}
+              </Button>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/pricing", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="bike_fit_pricing_cta"
+                    ctaLabel={isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
+                  />
+                }
+                variant="outline"
+              >
+                {isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
+              </Button>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/bandenspanning-calculator", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="bike_fit_tire_pressure_cta"
+                    ctaLabel={
+                      isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"
+                    }
+                  />
+                }
+                variant="outline"
+              >
+                {isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"}
+              </Button>
+            </>
+          )
         }
         aside={
           isNl

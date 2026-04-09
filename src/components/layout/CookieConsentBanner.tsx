@@ -63,10 +63,10 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
   }
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[95] p-4">
-      <div className="panel-surface-base panel-theme-context pointer-events-auto mx-auto max-w-5xl rounded-[1.75rem] border p-4 shadow-[0_22px_60px_-36px_color-mix(in_oklch,var(--foreground)_45%,transparent)] sm:p-5">
+    <div className="pointer-events-none fixed inset-x-0 top-0 z-[95] p-3 sm:top-auto sm:bottom-0 sm:p-4">
+      <div className="panel-surface-base panel-theme-context pointer-events-auto mx-auto max-w-5xl rounded-[1.5rem] border p-4 shadow-[0_22px_60px_-36px_color-mix(in_oklch,var(--foreground)_45%,transparent)] sm:rounded-[1.75rem] sm:p-5">
         <h2 className="text-sm font-semibold text-[color:var(--foreground)]">{copy.title}</h2>
-        <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
+        <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
           {copy.body}{" "}
           <Link
             href={withLocalePrefix("/privacy", locale)}
@@ -76,12 +76,12 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
           </Link>
           .
         </p>
-        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:items-center">
           <Button
             type="button"
             size="sm"
             variant="outline"
-            className="w-full sm:w-auto"
+            className="min-w-0"
             onClick={() => handleConsent("essential")}
           >
             {copy.essentialLabel}
@@ -89,7 +89,7 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
           <Button
             type="button"
             size="sm"
-            className="w-full sm:w-auto"
+            className="min-w-0"
             onClick={() => handleConsent("accepted")}
           >
             {copy.acceptLabel}

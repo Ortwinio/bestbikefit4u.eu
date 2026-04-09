@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
+import {
+  CONSUMER_CAMPAIGN_CONFIG,
+  getConsumerCampaignCopy,
+  isConsumerCampaignActive,
+} from "@/config/commercial";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import {
   PublicCtaBand,
@@ -62,6 +68,8 @@ export default async function CrankLengthCalculatorPage({
   const inseamCm = parsePositiveNumberParam(params, "inseamCm") ?? undefined;
   const category = parseBikeCategory(getFirstSearchParam(params, "category"));
   const pagePath = withLocalePrefix("/calculators/crank-length", locale);
+  const campaignActive = isConsumerCampaignActive();
+  const campaign = getConsumerCampaignCopy(locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
   const faqs = isNl
     ? [
@@ -132,49 +140,78 @@ export default async function CrankLengthCalculatorPage({
               : "Create a free account to save these results, refine your setup with more detail, and track changes over time."
           }
           actions={
-            <>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/login", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="crank_length_result"
-                    ctaLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
-                  />
-                }
-              >
-                {isNl ? "Maak account aan of log in" : "Create account or sign in"}
-              </Button>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/pricing", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="crank_length_pricing_cta"
-                    ctaLabel={isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
-                  />
-                }
-                variant="outline"
-              >
-                {isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
-              </Button>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/calculators/bike-fit", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="crank_length_bike_fit_cta"
-                    ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-                  />
-                }
-                variant="outline"
-              >
-                {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-              </Button>
-            </>
+            campaignActive ? (
+              <>
+                <CampaignCtaGroup
+                  locale={locale}
+                  pagePath={pagePath}
+                  startHref={withLocalePrefix("/login", locale)}
+                  startSection="crank_length_result"
+                  donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+                  donateSection="crank_length_campaign_donate"
+                  startLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
+                  donateLabel={campaign.donateCta}
+                />
+                <Button
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/calculators/bike-fit", locale)}
+                      locale={locale}
+                      pagePath={pagePath}
+                      section="crank_length_bike_fit_cta"
+                      ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
+                    />
+                  }
+                  variant="outline"
+                >
+                  {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/login", locale)}
+                      locale={locale}
+                      pagePath={pagePath}
+                      section="crank_length_result"
+                      ctaLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
+                    />
+                  }
+                >
+                  {isNl ? "Maak account aan of log in" : "Create account or sign in"}
+                </Button>
+                <Button
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/pricing", locale)}
+                      locale={locale}
+                      pagePath={pagePath}
+                      section="crank_length_pricing_cta"
+                      ctaLabel={isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
+                    />
+                  }
+                  variant="outline"
+                >
+                  {isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
+                </Button>
+                <Button
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/calculators/bike-fit", locale)}
+                      locale={locale}
+                      pagePath={pagePath}
+                      section="crank_length_bike_fit_cta"
+                      ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
+                    />
+                  }
+                  variant="outline"
+                >
+                  {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
+                </Button>
+              </>
+            )
           }
           aside={
             isNl

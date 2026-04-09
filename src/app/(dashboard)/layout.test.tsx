@@ -118,7 +118,7 @@ describe("DashboardLayout feedback context integration", () => {
     expect(DASHBOARD_MOBILE_HEADER_CLASSNAME).not.toContain("bg-card/90");
     expect(DASHBOARD_MOBILE_HEADER_CLASSNAME).not.toContain("backdrop-blur");
     expect(DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME).toContain("panel-backdrop");
-    expect(DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME).toContain("panel-surface-base");
-    expect(DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME).toContain("panel-theme-context");
+    expect(DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME).toContain("dashboard-sidebar-surface");
+    expect(DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME).toContain("dashboard-theme-context");
   });
 });

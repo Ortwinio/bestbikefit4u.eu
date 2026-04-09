@@ -352,7 +352,7 @@ export function StravaBikeImportSection({
 
   useEffect(() => {
     setSelectedIds(new Set(importableCandidates.map((candidate) => candidate.gearId)));
-  }, [selectionSignature]);
+  }, [importableCandidates, selectionSignature]);
 
   const closeCorrectionDialog = () => {
     setPendingCorrections([]);

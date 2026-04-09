@@ -11,7 +11,6 @@ import {
   WEIGHT_STEPS,
   buildPressureAlternates,
   buildDutchPressureSlug,
-  buildEnglishPressureSlug,
   buildPressureInput,
   parseDutchPressureSlug,
 } from "@/lib/seo/programmatic/tirePressure";

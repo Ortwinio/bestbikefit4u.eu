@@ -10,7 +10,6 @@ import {
   EN_BIKE_TYPES,
   WEIGHT_STEPS,
   buildPressureAlternates,
-  buildDutchPressureSlug,
   buildEnglishPressureSlug,
   buildPressureInput,
   parseEnglishPressureSlug,

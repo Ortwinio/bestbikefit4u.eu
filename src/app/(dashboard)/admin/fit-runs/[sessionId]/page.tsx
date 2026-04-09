@@ -5,7 +5,6 @@ import { api } from "../../../../../../convex/_generated/api";
 import {
   Button,
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,

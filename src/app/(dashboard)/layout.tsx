@@ -18,13 +18,13 @@ import { Menu, X } from "lucide-react";
 import { adminNavigationGroups } from "@/components/admin/layout/admin-navigation";
 
 export const DASHBOARD_MOBILE_HEADER_CLASSNAME =
-  "panel-surface-base panel-theme-context sticky top-0 z-30 flex items-center justify-between border-b px-4 py-3 md:hidden";
+  "dashboard-sidebar-surface dashboard-theme-context sticky top-0 z-30 flex items-center justify-between border-b px-4 py-3 md:hidden";
 
 export const DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME =
   "panel-backdrop fixed inset-0 z-30 md:hidden";
 
 export const DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME =
-  "panel-surface-base panel-theme-context fixed inset-y-0 left-0 z-40 w-72 overflow-y-auto border-r p-4 md:hidden";
+  "dashboard-sidebar-surface dashboard-theme-context fixed inset-y-0 left-0 z-40 w-72 overflow-y-auto border-r p-4 md:hidden";
 
 export default function DashboardLayout({
   children,
@@ -41,6 +41,10 @@ export default function DashboardLayout({
   const internalPathname = stripLocalePrefix(pathname ?? "/");
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
   const loginPath = toLocalizedPath("/login");
+  const mobileSectionLabelClassName =
+    "px-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:oklch(var(--dashboard-nav-foreground))]";
+  const mobileNavItemClassName =
+    "block rounded-lg px-3 py-2.5 text-[0.95rem] font-medium tracking-[-0.01em] transition-colors";
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -50,7 +54,7 @@ export default function DashboardLayout({
 
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="dashboard-shell-surface min-h-screen bg-background">
         <LoadingState
           label={messages.layout.loading}
           className="min-h-screen"
@@ -60,7 +64,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="dashboard-shell-surface min-h-screen bg-background">
       <div className="hidden md:block">
         <DashboardSidebar />
       </div>
@@ -85,7 +89,7 @@ export default function DashboardLayout({
                 : messages.layout.mobileMenu.openAria
             }
             onClick={() => setIsMobileMenuOpen((current) => !current)}
-            className="inline-flex h-9 w-9 items-center justify-center border-[color:var(--panel-border)] bg-[color:var(--panel-surface-subtle)] px-0 text-[color:var(--panel-foreground)] hover:bg-[color:var(--panel-surface-subtle)]/90"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border-[color:oklch(var(--dashboard-border-soft))] bg-[color:color-mix(in_oklch,var(--dashboard-surface-muted)_92%,var(--background)_8%)] px-0 text-[color:oklch(var(--dashboard-nav-foreground-strong))] hover:bg-[color:color-mix(in_oklch,var(--dashboard-surface-strong)_84%,var(--background)_16%)]"
           >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
@@ -108,99 +112,111 @@ export default function DashboardLayout({
               imageClassName="block"
               ariaLabel={messages.layout.website.home}
             />
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--panel-foreground)]/75">
-              {messages.layout.sections.dashboard}
-            </p>
-            <div className="space-y-1">
-              {[
-                { href: "/dashboard", label: messages.nav.dashboard },
-                { href: "/feedback", label: messages.nav.feedback },
-                { href: "/profile", label: messages.nav.profile },
-                { href: "/bikes", label: messages.nav.myBikes },
-                { href: "/bikes/new", label: messages.nav.newBike },
-                { href: "/fit-history", label: messages.nav.bikeFitting },
-                { href: "/fit", label: messages.nav.newFitSession },
-                { href: "/pressure-calculator", label: messages.nav.tirePressure },
-                { href: "/settings", label: messages.nav.settings },
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  href={toLocalizedPath(item.href)}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={cn(
-                    "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                    internalPathname === item.href || internalPathname.startsWith(`${item.href}/`)
-                      ? "dashboard-nav-item-active"
-                      : "dashboard-nav-item hover:dashboard-nav-item-hover"
-                  )}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-            <p className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wide text-[color:var(--panel-foreground)]/75">
-              {messages.layout.sections.website}
-            </p>
-            <div className="space-y-1">
-              {[
-                { href: "/", label: messages.layout.website.home },
-                { href: "/about", label: messages.layout.website.howItWorks },
-                { href: "/pricing", label: messages.layout.website.pricing },
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  href={toLocalizedPath(item.href)}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={cn(
-                    "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                    internalPathname === item.href || internalPathname.startsWith(`${item.href}/`)
-                      ? "dashboard-nav-item-active"
-                      : "dashboard-nav-item hover:dashboard-nav-item-hover"
-                  )}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-            {isSuperAdmin && (
-              <>
-                <p className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wide text-[color:var(--panel-foreground)]/75">
-                  {messages.layout.sections.admin}
+            <div className="space-y-5">
+              <section className="space-y-2">
+                <p className={mobileSectionLabelClassName}>
+                  {messages.layout.sections.dashboard}
                 </p>
-                <div className="space-y-4">
-                  {adminNavigationGroups.map((group) => (
-                    <div key={group.label}>
-                      <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--panel-foreground)]/70">
-                        {group.label}
-                      </p>
-                      <div className="space-y-0.5">
-                        {group.items.map((item) => (
-                          <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className={cn(
-                              "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                              internalPathname === item.href || internalPathname.startsWith(`${item.href}/`)
-                                ? "dashboard-nav-item-active"
-                                : "dashboard-nav-item hover:dashboard-nav-item-hover"
-                            )}
-                          >
-                            {item.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
+                <div className="dashboard-card-surface-muted space-y-1 rounded-[calc(var(--radius-xl)+0.125rem)] border p-2">
+                  {[
+                    { href: "/dashboard", label: messages.nav.dashboard },
+                    { href: "/feedback", label: messages.nav.feedback },
+                    { href: "/profile", label: messages.nav.profile },
+                    { href: "/bikes", label: messages.nav.myBikes },
+                    { href: "/bikes/new", label: messages.nav.newBike },
+                    { href: "/fit-history", label: messages.nav.bikeFitting },
+                    { href: "/fit", label: messages.nav.newFitSession },
+                    { href: "/pressure-calculator", label: messages.nav.tirePressure },
+                    { href: "/settings", label: messages.nav.settings },
+                  ].map((item) => (
+                    <Link
+                      key={item.href}
+                      href={toLocalizedPath(item.href)}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        mobileNavItemClassName,
+                        internalPathname === item.href || internalPathname.startsWith(`${item.href}/`)
+                          ? "dashboard-nav-item-active"
+                          : "dashboard-nav-item hover:dashboard-nav-item-hover"
+                      )}
+                    >
+                      {item.label}
+                    </Link>
                   ))}
                 </div>
-              </>
-            )}
+              </section>
+
+              <section className="space-y-2">
+                <p className={mobileSectionLabelClassName}>
+                  {messages.layout.sections.website}
+                </p>
+                <div className="dashboard-card-surface-muted space-y-1 rounded-[calc(var(--radius-xl)+0.125rem)] border p-2">
+                  {[
+                    { href: "/", label: messages.layout.website.home },
+                    { href: "/about", label: messages.layout.website.howItWorks },
+                    { href: "/pricing", label: messages.layout.website.pricing },
+                  ].map((item) => (
+                    <Link
+                      key={item.href}
+                      href={toLocalizedPath(item.href)}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        mobileNavItemClassName,
+                        internalPathname === item.href || internalPathname.startsWith(`${item.href}/`)
+                          ? "dashboard-nav-item-active"
+                          : "dashboard-nav-item hover:dashboard-nav-item-hover"
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </section>
+
+              {isSuperAdmin && (
+                <section className="space-y-2">
+                  <p className={mobileSectionLabelClassName}>
+                    {messages.layout.sections.admin}
+                  </p>
+                  <div className="dashboard-card-surface-muted space-y-4 rounded-[calc(var(--radius-xl)+0.125rem)] border p-2">
+                    {adminNavigationGroups.map((group) => (
+                      <div key={group.label}>
+                        <p className={cn(mobileSectionLabelClassName, "pb-1")}>
+                          {group.label}
+                        </p>
+                        <div className="space-y-0.5">
+                          {group.items.map((item) => (
+                            <Link
+                              key={item.href}
+                              href={item.href}
+                              onClick={() => setIsMobileMenuOpen(false)}
+                              className={cn(
+                                "block rounded-lg px-3 py-2 text-[0.88rem] font-medium tracking-[-0.01em] transition-colors",
+                                internalPathname === item.href || internalPathname.startsWith(`${item.href}/`)
+                                  ? "dashboard-nav-item-active"
+                                  : "dashboard-nav-item hover:dashboard-nav-item-hover"
+                              )}
+                            >
+                              {item.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </div>
           </nav>
         </>
       )}
 
       <div className="md:pl-80">
-        <main id="main-content" tabIndex={-1} className="p-4 sm:p-6 md:p-8">
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="mx-auto w-full max-w-7xl p-4 sm:p-6 md:p-8"
+        >
           <StravaAutoImportTrigger
             userId={user?._id ?? null}
             lastLoginAt={user?.lastLoginAt ?? null}

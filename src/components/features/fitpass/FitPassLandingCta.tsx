@@ -5,6 +5,12 @@ import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Button } from "@/components/prototyper-ui/ui/button";
+import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
+import {
+  CONSUMER_CAMPAIGN_CONFIG,
+  getConsumerCampaignCopy,
+  isConsumerCampaignActive,
+} from "@/config/commercial";
 
 interface FitPassLandingCtaProps {
   locale: string;
@@ -25,6 +31,8 @@ export function FitPassLandingCta({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const isNl = locale === "nl";
+  const campaignActive = isConsumerCampaignActive();
+  const campaign = getConsumerCampaignCopy(isNl ? "nl" : "en");
 
   // Still loading auth state
   if (user === undefined) {
@@ -51,10 +59,37 @@ export function FitPassLandingCta({
 
   // Not authenticated
   if (!user) {
+    if (campaignActive) {
+      return (
+        <CampaignCtaGroup
+          locale={isNl ? "nl" : "en"}
+          pagePath={loginHref}
+          startHref={loginHref}
+          startSection="fit_pass_landing_campaign_start"
+          donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+          donateSection="fit_pass_landing_campaign_donate"
+          startLabel={campaign.startFreeCta}
+        />
+      );
+    }
     return (
       <Button render={<Link href={loginHref} />}>
         {label}
       </Button>
+    );
+  }
+
+  if (campaignActive) {
+    return (
+      <CampaignCtaGroup
+        locale={isNl ? "nl" : "en"}
+        pagePath={dashboardHref}
+        startHref={dashboardHref}
+        startSection="fit_pass_landing_campaign_dashboard"
+        donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+        donateSection="fit_pass_landing_campaign_donate"
+        startLabel={campaign.continueFreeCta}
+      />
     );
   }
 

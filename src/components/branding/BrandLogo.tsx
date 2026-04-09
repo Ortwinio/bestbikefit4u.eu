@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { BRAND } from "@/config/brand";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { cn } from "@/utils/cn";
@@ -50,17 +49,12 @@ export function BrandLogo({
   ariaLabel,
 }: BrandLogoProps) {
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const selectedAsset =
     asset === "primary"
       ? priority === "dark"
         ? LOGO_ASSETS.dark
-        : mounted && resolvedTheme === "dark"
+        : resolvedTheme === "dark"
           ? LOGO_ASSETS.dark
           : LOGO_ASSETS.primary
       : LOGO_ASSETS[asset];

@@ -2,7 +2,7 @@
   "_version": 1,
   "id": 21,
   "title": "Lint error cleanup: clear blocking ESLint errors by rule family across the remaining repo-health files",
-  "status": "todo",
+  "status": "done",
   "priority": 5,
   "assigned": "repo-health-owner",
   "depends_on": ["Typecheck cleanup"],
@@ -28,5 +28,8 @@
     "@typescript-eslint/no-explicit-any errors are resolved",
     "npm run lint passes"
   ],
-  "notes": "Group fixes by rule family, not by file, to reduce rework and get to green faster."
+  "notes": [
+    "Blocking ESLint errors have been cleared from the current baseline.",
+    "Confirmed on 2026-04-09: npm run lint exits successfully. Remaining output is warning-only and does not block lint."
+  ]
 }

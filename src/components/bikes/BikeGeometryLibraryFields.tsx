@@ -93,14 +93,6 @@ export function BikeGeometryLibraryFields({
   );
 
   useEffect(() => {
-    setBrandQuery(state.standardBrand ?? "");
-  }, [state.standardBrand]);
-
-  useEffect(() => {
-    setModelQuery(state.standardModel ?? "");
-  }, [state.standardModel]);
-
-  useEffect(() => {
     if (!brands || state.customBrandEnabled || state.standardBrandId || !state.standardBrand) {
       return;
     }
@@ -332,7 +324,7 @@ export function BikeGeometryLibraryFields({
         <div className="space-y-2">
           <Input
           label={messages.bikeForm.fields.geometryLink.standardBrand.label}
-          value={brandQuery}
+          value={state.standardBrandId ? (state.standardBrand ?? brandQuery) : brandQuery}
           helperText={brandHelperText}
           placeholder={messages.bikeForm.fields.geometryLink.standardBrand.placeholder}
           onChange={(event) => {
@@ -387,7 +379,7 @@ export function BikeGeometryLibraryFields({
         <div className="space-y-2">
           <Input
           label={messages.bikeForm.fields.geometryLink.standardModel.label}
-          value={modelQuery}
+          value={state.standardModelFamilyKey ? (state.standardModel ?? modelQuery) : modelQuery}
           helperText={modelHelperText}
           placeholder={messages.bikeForm.fields.geometryLink.standardModel.placeholder}
           onChange={(event) => {

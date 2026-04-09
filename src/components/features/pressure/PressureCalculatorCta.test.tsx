@@ -22,7 +22,7 @@ vi.mock("@/components/analytics/TrackedCtaLink", () => ({
   ),
 }));
 
-vi.mock("@/components/ui", () => ({
+vi.mock("@/components/prototyper-ui/ui/button", () => ({
   Button: ({
     children,
     render,
@@ -45,11 +45,24 @@ vi.mock("@/components/ui", () => ({
     ) : (
       <button className={className}>{children}</button>
     ),
-  Card: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
-    <section {...props}>{children}</section>
-  ),
-  CardContent: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
-    <div {...props}>{children}</div>
+}));
+
+vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
+  CampaignCtaGroup: ({
+    startHref,
+    donateHref,
+    startLabel,
+    donateLabel,
+  }: {
+    startHref: string;
+    donateHref: string;
+    startLabel?: string;
+    donateLabel?: string;
+  }) => (
+    <div>
+      <a href={startHref}>{startLabel ?? "Create account or sign in"}</a>
+      <a href={donateHref}>{donateLabel ?? "Donate via our Alpe d'HuZes page"}</a>
+    </div>
   ),
 }));
 
@@ -79,9 +92,16 @@ describe("PressureCalculatorCta", () => {
     expect(screen.getByText("Create account or sign in").closest("a")?.getAttribute("href")).toBe(
       "/en/login"
     );
-    expect(screen.getByText("Compare Free vs Pro").closest("a")?.getAttribute("href")).toBe(
-      "/en/pricing"
-    );
+    expect(
+      screen
+        .getByText("Donate via our Alpe d'HuZes page")
+        .closest("a")
+        ?.getAttribute("href")
+    ).toBe("https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756");
+    expect(
+      screen.getByText("Open bike-fit calculator").closest("a")?.getAttribute("href")
+    ).toBe("/en/calculators/bike-fit");
     expect(screen.getByText("Log in").closest("a")?.getAttribute("href")).toBe("/en/login");
+    expect(screen.queryByText("Compare Free vs Pro")).toBeNull();
   });
 });

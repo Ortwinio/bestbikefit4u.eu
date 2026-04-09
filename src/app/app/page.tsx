@@ -43,12 +43,8 @@ export default function AppInstallPage() {
   const router = useRouter();
   const { locale, messages } = useDashboardMessages();
   const { isLoading, isAuthenticated } = useConvexAuth();
-  const [standalone, setStandalone] = useState(false);
-  const { isAppleMobile, isSafari } = useMemo(detectAppleInstallContext, []);
-
-  useEffect(() => {
-    setStandalone(isStandaloneMode());
-  }, []);
+  const [standalone] = useState(() => isStandaloneMode());
+  const { isAppleMobile, isSafari } = useMemo(() => detectAppleInstallContext(), []);
 
   useEffect(() => {
     if (isLoading || !standalone) {

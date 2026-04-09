@@ -2,7 +2,7 @@
   "_version": 1,
   "id": 15,
   "title": "Session/profile completeness regression: reconcile rider-profile gating with expected session creation and communication flows",
-  "status": "todo",
+  "status": "done",
   "priority": 1,
   "assigned": "session-owner",
   "depends_on": ["Validation scope cleanup"],
@@ -16,5 +16,8 @@
     "Convex communication e2e passes",
     "The gating rule is explicit in code and tests"
   ],
-  "notes": "Validation failures indicate a behavior mismatch between new completeness checks and the session flow contract expected by tests."
+  "notes": [
+    "Session/profile completeness behavior is aligned again in the current codebase.",
+    "Confirmed on 2026-04-09: convex/sessions/__tests__/create.contract.test.ts and tests/e2e/convex-communication.e2e.test.ts both pass."
+  ]
 }

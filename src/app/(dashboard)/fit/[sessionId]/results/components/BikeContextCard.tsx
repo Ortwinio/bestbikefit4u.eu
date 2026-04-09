@@ -222,6 +222,7 @@ export function BikeContextCard({ bike, copy }: BikeContextCardProps) {
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
           <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--primary)_8%,white_92%)_0%,white_100%)]">
             {bike.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={bike.imageUrl}
                 alt={bike.name}

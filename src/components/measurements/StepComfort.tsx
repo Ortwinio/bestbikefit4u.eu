@@ -31,7 +31,7 @@ export function StepComfort() {
         <p className="mt-1 text-[color:var(--muted-foreground)]">
           Pain and discomfort while riding is one of the most common reasons riders
           need a bike fit. Knowing where you currently sit on the comfort scale helps
-          us prioritise what to fix — whether that's saddle height, reach, or handlebar
+          us prioritise what to fix — whether that&apos;s saddle height, reach, or handlebar
           height — and avoid making an already painful position worse.
         </p>
       </InfoBox>

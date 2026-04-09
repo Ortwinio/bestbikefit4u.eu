@@ -27,7 +27,11 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
 import { trackAdConversion } from "@/lib/analytics/conversions";
-import { COMMERCIAL_CURRENCY, FIT_PASS_PRODUCT } from "@/config/commercial";
+import {
+  COMMERCIAL_CURRENCY,
+  FIT_PASS_PRODUCT,
+  isConsumerCampaignActive,
+} from "@/config/commercial";
 import { trackFeedbackSignal } from "@/components/feedback/feedback-activity";
 import { RiderProfileCard } from "./components/RiderProfileCard";
 import { PriorityTable } from "./components/PriorityTable";
@@ -86,7 +90,12 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   const session = reportSource?.session ?? null;
   const recommendation = reportSource?.recommendation ?? null;
   const hasClimbingProfile = Boolean(recommendation?.climbingCalculatedFit);
-  const hasPaidReportAccess = sessionAccess?.hasAccess ?? user?.tier === "pro";
+  const hasPaidReportAccess = Boolean(
+    isConsumerCampaignActive() ||
+      sessionAccess?.hasAccess ||
+      user?.tier === "pro" ||
+      user?.tier === "premium"
+  );
 
   // Build the active report source — swap calculatedFit for climbingCalculatedFit when climbing tab is active
   const activeReportSource =
@@ -448,24 +457,20 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         )}
       </AccessibleDialog>
 
-      <div className="mb-4">
+      <div className="mb-5">
         <Link
           href={withLocalePrefix("/dashboard", locale)}
-          className="mb-4 inline-flex items-center text-sm text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)]"
+          className="inline-flex items-center gap-1 rounded-full border border-[color:oklch(var(--dashboard-border-soft))] bg-[color:color-mix(in_oklch,var(--dashboard-surface-muted)_88%,var(--background)_12%)] px-3 py-1.5 text-sm font-medium text-[color:oklch(var(--dashboard-nav-foreground-strong))] transition-colors hover:bg-[color:color-mix(in_oklch,var(--dashboard-surface-strong)_84%,var(--background)_16%)]"
         >
-          <ArrowLeft className="h-4 w-4 mr-1" />
+          <ArrowLeft className="h-4 w-4" />
           {messages.results.backToDashboard}
         </Link>
       </div>
 
-      <Card
-        variant="bordered"
-        className="mb-6 overflow-hidden border-[color:color-mix(in_oklch,var(--primary)_22%,var(--border))]"
-      >
-        <div className="bg-[linear-gradient(135deg,color-mix(in_oklch,var(--primary)_16%,white_84%)_0%,color-mix(in_oklch,var(--secondary)_28%,white_72%)_100%)]">
-          <CardContent className="grid gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.72fr)] lg:items-start">
+      <Card variant="bordered" className="dashboard-hero-surface mb-6 overflow-hidden">
+        <CardContent className="grid gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.72fr)] lg:items-start">
             <div>
-              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/70 bg-white/85 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--primary)] shadow-sm">
+              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[color:color-mix(in_oklch,var(--dashboard-border-strong)_76%,var(--background)_24%)] bg-[color:color-mix(in_oklch,var(--dashboard-surface)_82%,var(--background)_18%)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--primary)] shadow-sm">
                 <CheckCircle className="h-3.5 w-3.5" />
                 {reportCopy.sections.about}
               </div>
@@ -478,11 +483,75 @@ export default function ResultsPage({ params }: ResultsPageProps) {
               <p className="mt-4 text-sm font-medium text-[color:var(--foreground)]/85">
                 {reportCopy.shell.coverSupport}
               </p>
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Button render={<Link href={withLocalePrefix("/fit", locale)} />}>
+                  {messages.results.actions.startNewFit}
+                </Button>
+                <div className="dashboard-card-surface-muted rounded-[var(--radius-xl)] border px-3 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:oklch(var(--dashboard-nav-foreground))]">
+                    {isNl ? "Rapport acties" : "Report actions"}
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        if (!hasPaidReportAccess) {
+                          toast.info({
+                            description: isNl
+                              ? "Fit Pass of Pro is nodig om het volledige rapport te e-mailen."
+                              : "Fit Pass or Pro is required to email the full report.",
+                          });
+                          return;
+                        }
+                        trackFeedbackSignal(
+                          pagePath,
+                          "open_email_report",
+                          "Opened the fit report email dialog"
+                        );
+                        setShowEmailModal(true);
+                      }}
+                    >
+                      <Mail className="mr-2 h-4 w-4" />
+                      {hasPaidReportAccess
+                        ? messages.results.actions.emailReport
+                        : isNl
+                          ? "E-mail rapport — Fit Pass"
+                          : "Email report — Fit Pass"}
+                    </Button>
+                    {hasPaidReportAccess ? (
+                      <Button
+                        variant="outline"
+                        onClick={handleDownloadPdf}
+                        isLoading={isDownloading}
+                      >
+                        <Download className="mr-2 h-4 w-4" />
+                        {messages.results.actions.downloadPdf}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        disabled
+                        onClick={() => {
+                          toast.info({
+                            description: isNl
+                              ? "Fit Pass of Pro is nodig om je PDF te downloaden."
+                              : "Fit Pass or Pro is required to download your PDF.",
+                          });
+                        }}
+                      >
+                        <Download className="mr-2 h-4 w-4" />
+                        {isNl ? "PDF — Fit Pass of Pro" : "PDF — Fit Pass or Pro"}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="rounded-[var(--radius-xl)] border border-white/70 bg-white/88 p-5 shadow-sm backdrop-blur">
+            <div className="dashboard-card-surface rounded-[var(--radius-2xl)] border p-5">
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 px-4 py-3">
+                <div className="dashboard-card-surface-muted rounded-[var(--radius-lg)] border px-4 py-3">
                   <p className="text-xs uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
                     {reportCopy.shell.dateLabel}
                   </p>
@@ -490,7 +559,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                     {reportDateLabel}
                   </p>
                 </div>
-                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 px-4 py-3">
+                <div className="dashboard-card-surface-muted rounded-[var(--radius-lg)] border px-4 py-3">
                   <p className="text-xs uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
                     {messages.results.algorithmVersionLabel}
                   </p>
@@ -500,65 +569,22 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                 </div>
               </div>
 
-              <div className="mt-5 flex flex-wrap gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    if (!hasPaidReportAccess) {
-                      toast.info({
-                        description: isNl
-                          ? "Fit Pass of Pro is nodig om het volledige rapport te e-mailen."
-                          : "Fit Pass or Pro is required to email the full report.",
-                      });
-                      return;
-                    }
-                    trackFeedbackSignal(
-                      pagePath,
-                      "open_email_report",
-                      "Opened the fit report email dialog"
-                    );
-                    setShowEmailModal(true);
-                  }}
-                >
-                  <Mail className="mr-2 h-4 w-4" />
+              <div className="dashboard-card-surface-muted mt-5 rounded-[var(--radius-xl)] border px-4 py-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:oklch(var(--dashboard-nav-foreground))]">
+                  {isNl ? "Samenvatting" : "Summary"}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
                   {hasPaidReportAccess
-                    ? messages.results.actions.emailReport
+                    ? isNl
+                      ? "Je volledige rapport staat klaar, inclusief de gedetailleerde aanpasvolgorde en validatiestappen."
+                      : "Your full report is ready, including the detailed adjustment sequence and validation steps."
                     : isNl
-                      ? "E-mail rapport — Fit Pass"
-                      : "Email report — Fit Pass"}
-                </Button>
-                {hasPaidReportAccess ? (
-                  <Button
-                    variant="outline"
-                    onClick={handleDownloadPdf}
-                    isLoading={isDownloading}
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    {messages.results.actions.downloadPdf}
-                  </Button>
-                ) : (
-                  <Button
-                    variant="outline"
-                    disabled
-                    onClick={() => {
-                      toast.info({
-                        description: isNl
-                          ? "Fit Pass of Pro is nodig om je PDF te downloaden."
-                          : "Fit Pass or Pro is required to download your PDF.",
-                      });
-                    }}
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    {isNl ? "PDF — Fit Pass of Pro" : "PDF — Fit Pass or Pro"}
-                  </Button>
-                )}
-                <Button render={<Link href={withLocalePrefix("/fit", locale)} />}>
-                  {messages.results.actions.startNewFit}
-                </Button>
+                      ? "Je ziet nu de belangrijkste fitgetallen. Extra rapportacties blijven beschikbaar via Fit Pass of Pro."
+                      : "You are seeing the core fit numbers now. Additional report actions remain available through Fit Pass or Pro."}
+                </p>
               </div>
             </div>
           </CardContent>
-        </div>
       </Card>
 
       {/* Profile tab switcher */}
@@ -589,7 +615,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
 
       {/* Climbing profile info banner */}
       {activeTab === "climbing" && (
-        <div className="mb-4 rounded-lg border border-[color:var(--primary)]/20 bg-[color:var(--primary)]/5 px-4 py-3 text-sm text-[color:var(--muted-foreground)]">
+        <div className="dashboard-card-surface-muted mb-4 rounded-[var(--radius-xl)] border px-4 py-3 text-sm text-[color:var(--muted-foreground)]">
           {messages.results.climbingProfileNote}
         </div>
       )}
@@ -624,7 +650,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
             {primaryStats.map((stat) => (
               <div
                 key={stat.key}
-                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-center"
+                className="dashboard-card-surface rounded-2xl border p-4 text-center"
               >
                 <p className="text-xs font-medium uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
                   {stat.label}
@@ -648,7 +674,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                 <CardDescription>{reportCopy.shell.aboutBody}</CardDescription>
               </CardHeader>
               <CardContent className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(260px,0.8fr)]">
-                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--primary)_6%,white_94%)_0%,white_100%)] px-5 py-5">
+                <div className="dashboard-card-surface rounded-[var(--radius-lg)] border px-5 py-5">
                   <p className="text-base font-semibold text-[color:var(--foreground)]">
                     {reportCopy.shell.aboutTitle}
                   </p>
@@ -656,7 +682,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                     {reportCopy.introBody}
                   </p>
                 </div>
-                <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_8%,var(--card)_92%)] px-5 py-5">
+                <div className="dashboard-card-surface-muted rounded-[var(--radius-lg)] border px-5 py-5">
                   <p className="text-sm font-semibold text-[color:var(--foreground)]">
                     {reportCopy.shell.aboutTitle}
                   </p>
@@ -728,7 +754,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                   ].map((item) => (
                     <div
                       key={item}
-                      className="rounded-[var(--radius-lg)] border border-dashed border-[color:var(--border)] bg-[color:var(--muted)]/40 px-4 py-4 text-sm text-[color:var(--muted-foreground)]"
+                      className="dashboard-card-surface-muted rounded-[var(--radius-lg)] border border-dashed px-4 py-4 text-sm text-[color:var(--muted-foreground)]"
                     >
                       {item}
                     </div>
@@ -745,7 +771,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
             userEmail={user.email ?? ""}
           />
         )}
-        {user && !hasPaidReportAccess && (
+        {user && (!hasPaidReportAccess || isConsumerCampaignActive()) && (
           <FitPassPaywall locale={locale} sessionId={sessionId} userTier={user.tier} />
         )}
       </div>

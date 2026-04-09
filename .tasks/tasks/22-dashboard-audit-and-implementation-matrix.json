@@ -1,0 +1,25 @@
+{
+  "_version": 1,
+  "id": 22,
+  "title": "Dashboard audit and implementation matrix: audit shell, representative pages, Prototyper UI usage, slider exception surfaces, and produce the dashboard harmony source-of-truth matrix",
+  "status": "done",
+  "priority": 1,
+  "assigned": "orchestrator",
+  "depends_on": [],
+  "files": [
+    "plans/feature-dashboard-look-and-feel-harmony/README.md",
+    "plans/feature-dashboard-look-and-feel-harmony/01-dashboard-audit-and-implementation-matrix.md",
+    "src/app/(dashboard)/layout.tsx",
+    "src/components/layout/DashboardSidebar.tsx",
+    "src/app/globals.css",
+    "src/components/ui/*",
+    "src/components/prototyper-ui/ui/*"
+  ],
+  "acceptance": [
+    "Representative dashboard shell and page surfaces are audited",
+    "Prototyper UI versus approved wrapper usage is inventoried",
+    "Slider exception surfaces are explicitly listed",
+    "A file-level implementation matrix exists for the dashboard harmony pass"
+  ],
+  "notes": "Completed. Output: plans/feature-dashboard-look-and-feel-harmony/output-01-dashboard-audit-and-implementation-matrix.md. Captures shell/theme divergence, approved wrapper versus direct Prototyper usage, slider exception surfaces, and the file-level implementation matrix for the next slices."
+}
