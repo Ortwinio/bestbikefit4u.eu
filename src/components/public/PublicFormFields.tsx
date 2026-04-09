@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, type ChangeEvent, type ReactNode } from "react";
-import { Field as BaseField } from "@base-ui/react/field";
+import { useId, type ChangeEvent, type ReactNode } from "react";
 import {
   Select,
   SelectContent,
@@ -11,6 +10,9 @@ import {
 } from "@/components/prototyper-ui/ui/select";
 import { Input } from "@/components/prototyper-ui/ui/input";
 import { Label } from "@/components/prototyper-ui/ui/label";
+import {
+  ScaleSliderQuestion,
+} from "@/components/shared/ScaleSlider";
 import { cn } from "@/utils/cn";
 
 type PublicFieldOption = {
@@ -19,11 +21,12 @@ type PublicFieldOption = {
 };
 
 type PublicFieldShellProps = {
+  fieldId?: string;
+  descriptionId?: string;
   label: string;
   description?: string;
   className?: string;
   children: ReactNode;
-  mounted: boolean;
 };
 
 type PublicNumberFieldProps = {
@@ -49,25 +52,43 @@ type PublicSelectFieldProps = {
   className?: string;
 };
 
+type PublicScaleFieldProps = {
+  label: string;
+  value: string | null;
+  onChange: (value: string) => void;
+  options: PublicFieldOption[];
+  description?: string;
+  className?: string;
+};
+
 function PublicFieldShell({
+  fieldId,
+  descriptionId,
   label,
   description,
   className,
   children,
-  mounted,
 }: PublicFieldShellProps) {
-  const Shell = mounted ? BaseField.Root : "div";
-
   return (
-    <Shell className={cn("space-y-3", className)}>
+    <div className={cn("space-y-3", className)}>
       <div className="space-y-1">
-        <Label className="text-sm font-semibold text-[color:var(--foreground)]">{label}</Label>
+        <Label
+          htmlFor={fieldId}
+          className="text-sm font-semibold text-[color:var(--foreground)]"
+        >
+          {label}
+        </Label>
         {description ? (
-          <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">{description}</p>
+          <p
+            id={descriptionId}
+            className="text-sm leading-6 text-[color:var(--muted-foreground)]"
+          >
+            {description}
+          </p>
         ) : null}
       </div>
       {children}
-    </Shell>
+    </div>
   );
 }
 
@@ -83,7 +104,8 @@ export function PublicNumberField({
   placeholder,
   className,
 }: PublicNumberFieldProps) {
-  const [isMounted] = useState(() => typeof window !== "undefined");
+  const fieldId = useId();
+  const descriptionId = description ? `${fieldId}-description` : undefined;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const nextValue = event.target.value;
@@ -99,40 +121,26 @@ export function PublicNumberField({
 
   return (
     <PublicFieldShell
+      fieldId={fieldId}
+      descriptionId={descriptionId}
       label={label}
       description={description}
       className={className}
-      mounted={isMounted}
     >
       <div className="relative">
-        {isMounted ? (
-          <Input
-            type="number"
-            inputMode="decimal"
-            min={min}
-            max={max}
-            step={step}
-            value={value ?? ""}
-            placeholder={placeholder}
-            onChange={handleChange}
-            className={cn("h-11 rounded-xl border-[color:var(--border)] pr-16 text-base", unit ? "pr-20" : null)}
-          />
-        ) : (
-          <input
-            type="number"
-            inputMode="decimal"
-            min={min}
-            max={max}
-            step={step}
-            value={value ?? ""}
-            placeholder={placeholder}
-            onChange={handleChange}
-            className={cn(
-              "h-11 w-full min-w-0 rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-1 text-base text-[color:var(--foreground)] shadow-field outline-none transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth placeholder:text-[color:var(--muted-foreground)] hover-only:hover:border-field-border-hover focus-visible:border-field-border-focus focus-visible:focus-field-ring motion-reduce:transition-none",
-              unit ? "pr-20" : "pr-16"
-            )}
-          />
-        )}
+        <Input
+          id={fieldId}
+          type="number"
+          inputMode="decimal"
+          min={min}
+          max={max}
+          step={step}
+          value={value ?? ""}
+          placeholder={placeholder}
+          onChange={handleChange}
+          aria-describedby={descriptionId}
+          className={cn("h-11 rounded-xl border-[color:var(--border)] pr-16 text-base", unit ? "pr-20" : null)}
+        />
         {unit ? (
           <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-medium text-[color:var(--muted-foreground)]">
             {unit}
@@ -152,46 +160,53 @@ export function PublicSelectField({
   placeholder,
   className,
 }: PublicSelectFieldProps) {
-  const [isMounted] = useState(() => typeof window !== "undefined");
+  const fieldId = useId();
+  const descriptionId = description ? `${fieldId}-description` : undefined;
 
   return (
     <PublicFieldShell
+      fieldId={fieldId}
+      descriptionId={descriptionId}
       label={label}
       description={description}
       className={className}
-      mounted={isMounted}
     >
-      {isMounted ? (
-        <Select value={value} onValueChange={onChange}>
-          <SelectTrigger className="h-11 rounded-xl border-[color:var(--border)] bg-[color:var(--card)] text-sm">
-            <SelectValue placeholder={placeholder ?? label} />
-          </SelectTrigger>
-          <SelectContent>
-            {options.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      ) : (
-        <select
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          className="h-11 w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-1 text-sm text-[color:var(--foreground)] shadow-field outline-none transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth focus-visible:border-field-border-focus focus-visible:focus-field-ring motion-reduce:transition-none"
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger
+          id={fieldId}
+          aria-describedby={descriptionId}
+          className="h-11 rounded-xl border-[color:var(--border)] bg-[color:var(--card)] text-sm"
         >
-          {placeholder && !value ? (
-            <option value="" disabled>
-              {placeholder}
-            </option>
-          ) : null}
+          <SelectValue placeholder={placeholder ?? label} />
+        </SelectTrigger>
+        <SelectContent>
           {options.map((option) => (
-            <option key={option.value} value={option.value}>
+            <SelectItem key={option.value} value={option.value}>
               {option.label}
-            </option>
+            </SelectItem>
           ))}
-        </select>
-      )}
+        </SelectContent>
+      </Select>
     </PublicFieldShell>
+  );
+}
+
+export function PublicScaleField({
+  label,
+  value,
+  onChange,
+  options,
+  description,
+  className,
+}: PublicScaleFieldProps) {
+  return (
+    <ScaleSliderQuestion
+      label={label}
+      description={description}
+      options={options.map((option) => ({ key: option.value, label: option.label }))}
+      value={value}
+      onChange={onChange}
+      className={className}
+    />
   );
 }

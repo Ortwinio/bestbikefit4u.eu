@@ -5,6 +5,7 @@ import { ShieldCheck } from "lucide-react";
 import {
   PublicInfoPanel,
   PublicNumberField,
+  PublicScaleField,
   PublicSelectField,
   PublicSurfaceCard,
 } from "@/components/public";
@@ -136,7 +137,7 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
               ? "Binnenbeenlengte zet de basis. Categorie, rijdoel, flexibiliteit en core helpen om dat startpunt verder te verfijnen."
               : "Inseam sets the baseline. Category, ambition, flexibility, and core help refine how progressive the starting point can be."
           }
-          className="rounded-[1.75rem]"
+          className="public-calculator-card rounded-[1.75rem]"
         >
           <div className="space-y-6">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
@@ -169,7 +170,7 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
                 value={category}
                 onChange={(value) => setCategory(value as BikeCategory)}
               />
-              <PublicSelectField
+              <PublicScaleField
                 label={isNl ? "Rijdoel" : "Riding goal"}
                 description={
                   isNl
@@ -180,14 +181,24 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
                 value={ambition}
                 onChange={(value) => setAmbition(value as Ambition)}
               />
-              <PublicSelectField
+              <PublicScaleField
                 label={isNl ? "Flexibiliteit" : "Flexibility"}
+                description={
+                  isNl
+                    ? "Schuif alleen omhoog als je die houding ook echt kunt vasthouden."
+                    : "Only move higher if you can actually sustain the posture."
+                }
                 options={flexibilityOptions}
                 value={flexibility}
                 onChange={setFlexibility}
               />
-              <PublicSelectField
+              <PublicScaleField
                 label={isNl ? "Core-stabiliteit" : "Core stability"}
+                description={
+                  isNl
+                    ? "Meer stabiliteit maakt een progressiever startpunt haalbaarder."
+                    : "More stability makes a more progressive starting point more realistic."
+                }
                 options={coreOptions}
                 value={core}
                 onChange={setCore}
@@ -210,7 +221,7 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
             <PublicSurfaceCard
               title={isNl ? "Richtlijnen" : "Guidance"}
               compact
-              className="rounded-[1.5rem]"
+              className="public-calculator-card-subtle rounded-[1.5rem]"
             >
               <ul className="space-y-3 text-sm text-muted-foreground">
                 {guidancePoints.map((point) => (
@@ -234,7 +245,7 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
             ? "Gebruik dit als veilig startpunt, niet als definitief eindwoord."
             : "Use this as a safe starting point, not as the final word."
         }
-        className="mt-6 rounded-[1.75rem]"
+        className="public-calculator-card mt-6 rounded-[1.75rem]"
       >
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
           {isNl ? "Uitkomst" : "Output"}
@@ -242,7 +253,7 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
 
         {recommendation ? (
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-primary/20 bg-primary-soft p-5">
+            <div className="public-calculator-result rounded-2xl border p-5">
               <p className="text-sm text-muted-foreground">
                 {isNl ? "Aanbevolen zadelhoogte" : "Recommended saddle height"}
               </p>
@@ -250,7 +261,7 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
                 {recommendation.saddleHeightMm} mm
               </p>
             </div>
-            <div className="rounded-2xl border border-border bg-[color:var(--secondary)] p-5">
+            <div className="public-calculator-card-subtle rounded-2xl border p-5">
               <p className="text-sm text-muted-foreground">
                 {isNl ? "Veilige startzone" : "Safe starting band"}
               </p>
@@ -260,7 +271,7 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
             </div>
           </div>
         ) : (
-          <div className="mt-6 rounded-2xl border border-dashed border-border bg-[color:var(--secondary)] px-4 py-5 text-sm text-muted-foreground">
+          <div className="public-calculator-card-subtle mt-6 rounded-2xl border border-dashed px-4 py-5 text-sm text-muted-foreground">
             {isNl
               ? "Vul je binnenbeenlengte in om een eerste zadelhoogte-startpunt te berekenen."
               : "Enter your inseam to generate a first-pass saddle-height starting point."}

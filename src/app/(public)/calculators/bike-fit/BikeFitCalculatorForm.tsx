@@ -5,6 +5,7 @@ import { ShieldCheck } from "lucide-react";
 import {
   PublicInfoPanel,
   PublicNumberField,
+  PublicScaleField,
   PublicSelectField,
   PublicSurfaceCard,
 } from "@/components/public";
@@ -143,7 +144,7 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
               ? "Vul je maten en rijcontext in. De uitkomst is bedoeld als sterk startpunt, niet als eindafstelling."
               : "Enter your measurements and riding context. The result is designed as a strong starting point, not the final setup."
           }
-          className="rounded-[1.75rem]"
+          className="public-calculator-card rounded-[1.75rem]"
         >
           <div className="space-y-6">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
@@ -194,7 +195,7 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
                 value={category}
                 onChange={(value) => setCategory(value as BikeCategory)}
               />
-              <PublicSelectField
+              <PublicScaleField
                 label={isNl ? "Rijdoel" : "Riding goal"}
                 description={
                   isNl
@@ -205,7 +206,7 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
                 value={ambition}
                 onChange={(value) => setAmbition(value as Ambition)}
               />
-              <PublicSelectField
+              <PublicScaleField
                 label={isNl ? "Flexibiliteit" : "Flexibility"}
                 description={
                   isNl
@@ -216,7 +217,7 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
                 value={flexibility}
                 onChange={setFlexibility}
               />
-              <PublicSelectField
+              <PublicScaleField
                 label={isNl ? "Core-stabiliteit" : "Core stability"}
                 description={
                   isNl
@@ -245,7 +246,7 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
             <PublicSurfaceCard
               title={isNl ? "Uitleg" : "Guidance"}
               compact
-              className="rounded-[1.5rem]"
+              className="public-calculator-card-subtle rounded-[1.5rem]"
             >
               <ul className="space-y-3 text-sm text-muted-foreground">
                 {guidancePoints.map((point) => (
@@ -269,7 +270,7 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
             ? "Controleer de uitkomst daarna altijd op je huidige fiets en bouw veranderingen stap voor stap op."
             : "Always validate the result on your current bike afterwards and build changes step by step."
         }
-        className="mt-6 rounded-[1.75rem]"
+        className="public-calculator-card mt-6 rounded-[1.75rem]"
       >
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
           {isNl ? "Output" : "Output"}
@@ -278,7 +279,7 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
         {result ? (
           <>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border border-primary/20 bg-primary-soft p-5">
+              <div className="public-calculator-result rounded-2xl border p-5">
                 <p className="text-sm text-muted-foreground">
                   {isNl ? "Zadelhoogte" : "Saddle Height"}
                 </p>
@@ -286,7 +287,7 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
                   {result.saddleHeightMm} mm
                 </p>
               </div>
-              <div className="rounded-2xl border border-border bg-[color:var(--secondary)] p-5">
+              <div className="public-calculator-card-subtle rounded-2xl border p-5">
                 <p className="text-sm text-muted-foreground">
                   {isNl ? "Reach-doel" : "Reach Target"}
                 </p>
@@ -295,13 +296,13 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
                   {isNl ? "Range" : "Range"}: {result.reachRange.min}–{result.reachRange.max} mm
                 </p>
               </div>
-              <div className="rounded-2xl border border-border bg-[color:var(--secondary)] p-5">
+              <div className="public-calculator-card-subtle rounded-2xl border p-5">
                 <p className="text-sm text-muted-foreground">
                   {isNl ? "Stuurdrop" : "Bar Drop"}
                 </p>
                 <p className="mt-2 text-2xl font-semibold text-foreground">{result.barDropMm} mm</p>
               </div>
-              <div className="rounded-2xl border border-border bg-[color:var(--secondary)] p-5">
+              <div className="public-calculator-card-subtle rounded-2xl border p-5">
                 <p className="text-sm text-muted-foreground">
                   {isNl ? "Framedoelen" : "Frame Targets"}
                 </p>
@@ -314,7 +315,7 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
                 </p>
               </div>
             </div>
-            <div className="mt-6 rounded-2xl border border-border bg-[color:var(--secondary)] p-5">
+            <div className="public-calculator-card-subtle mt-6 rounded-2xl border p-5">
               <h3 className="text-lg font-semibold text-foreground">
                 {isNl ? "Interpretatie" : "How to interpret this"}
               </h3>
@@ -326,7 +327,7 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
             </div>
           </>
         ) : (
-          <div className="mt-6 rounded-2xl border border-dashed border-border bg-[color:var(--secondary)] px-4 py-5 text-sm text-muted-foreground">
+          <div className="public-calculator-card-subtle mt-6 rounded-2xl border border-dashed px-4 py-5 text-sm text-muted-foreground">
             {isNl
               ? "Vul lengte en binnenbeenlengte in om een eerste fit-startpunt te berekenen."
               : "Enter height and inseam to calculate a first-pass fit starting point."}

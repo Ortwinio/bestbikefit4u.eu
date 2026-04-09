@@ -10,8 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui";
+import {
+  ReadOnlyScaleSlider,
+  ScaleSliderQuestion,
+} from "@/components/shared/ScaleSlider";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { cn } from "@/utils/cn";
+
+export { ReadOnlyScaleSlider as ReadOnlySlider, ScaleSliderQuestion as SliderQuestion };
 
 type ExperienceLevel = "beginner" | "intermediate" | "advanced";
 type WeeklyHours = "0-3" | "3-6" | "6-10" | "10-15" | "15+";
@@ -55,161 +60,6 @@ function initDraft(profile: Doc<"profiles"> | null): DraftState {
     positionPriority: profile?.positionPriority ?? null,
   };
 }
-
-// Read-only slider for view state
-export function ReadOnlySlider({
-  label,
-  options,
-  value,
-}: {
-  label: string;
-  options: { key: string; label: string }[];
-  value: string | null;
-}) {
-  const selectedIndex = value ? options.findIndex((o) => o.key === value) : -1;
-  const fillPercent =
-    selectedIndex >= 0 ? (selectedIndex / (options.length - 1)) * 100 : 0;
-
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-xs font-medium text-[color:var(--muted-foreground)]">{label}</p>
-        {value ? (
-          <span className="text-xs font-semibold text-primary">
-            {options.find((o) => o.key === value)?.label}
-          </span>
-        ) : null}
-      </div>
-      <div className="relative flex h-6 items-center justify-between px-1">
-        {/* Track */}
-        <div className="pointer-events-none absolute inset-x-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary/15" />
-        {/* Fill */}
-        {selectedIndex >= 0 && (
-          <div
-            className="pointer-events-none absolute left-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary/60"
-            style={{ width: `calc(${fillPercent}% * (100% - 8px) / 100 + ${fillPercent > 0 ? "4px" : "0px"})` }}
-          />
-        )}
-        {/* Dots */}
-        {options.map((opt, i) => {
-          const isActive = i === selectedIndex;
-          return (
-            <div
-              key={opt.key}
-              className={cn(
-                "relative z-10 rounded-full bg-primary transition-all duration-200",
-                isActive ? "size-4 border-2 border-background shadow-sm ring-2 ring-primary" : "size-2 opacity-30"
-              )}
-            />
-          );
-        })}
-      </div>
-      {/* Labels */}
-      <div
-        className="grid text-xs"
-        style={{ gridTemplateColumns: `repeat(${options.length}, 1fr)` }}
-      >
-        {options.map((opt, i) => (
-          <span
-            key={opt.key}
-            className={cn(
-              "leading-tight",
-              i === 0 ? "text-left" : i === options.length - 1 ? "text-right" : "text-center",
-              opt.key === value ? "font-semibold text-primary" : "text-muted-foreground"
-            )}
-          >
-            {opt.label}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Compact horizontal snap-point slider
-export function SliderQuestion({
-  label,
-  options,
-  value,
-  onChange,
-}: {
-  label: string;
-  options: { key: string; label: string }[];
-  value: string | null;
-  onChange: (key: string) => void;
-}) {
-  const selectedIndex = value ? options.findIndex((o) => o.key === value) : -1;
-  const fillPercent =
-    selectedIndex >= 0 ? (selectedIndex / (options.length - 1)) * 100 : 0;
-
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-medium text-[color:var(--foreground)]">{label}</p>
-        {value ? (
-          <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
-            {options.find((o) => o.key === value)?.label}
-          </span>
-        ) : null}
-      </div>
-      <div
-        role="radiogroup"
-        aria-label={label}
-        className="relative flex h-10 items-center justify-between px-1"
-      >
-        {/* Track background */}
-        <div className="pointer-events-none absolute inset-x-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary/15" />
-        {/* Filled portion */}
-        {selectedIndex >= 0 && (
-          <div
-            className="pointer-events-none absolute left-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary transition-[width] duration-300 ease-out"
-            style={{ width: `calc(${fillPercent}% * (100% - 8px) / 100 + ${fillPercent > 0 ? "4px" : "0px"})` }}
-          />
-        )}
-        {/* Snap-point buttons */}
-        {options.map((opt, i) => {
-          const isActive = i === selectedIndex;
-          return (
-            <button
-              key={opt.key}
-              type="button"
-              role="radio"
-              aria-checked={isActive}
-              onClick={() => onChange(opt.key)}
-              className={cn(
-                "relative z-10 rounded-full bg-primary transition-all duration-200",
-                "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
-                isActive
-                  ? "size-6 border-4 border-background shadow-md"
-                  : "size-3 opacity-50 hover:opacity-100"
-              )}
-            />
-          );
-        })}
-      </div>
-      {/* Labels row */}
-      <div
-        className="grid text-xs font-medium"
-        style={{ gridTemplateColumns: `repeat(${options.length}, 1fr)` }}
-      >
-        {options.map((opt, i) => (
-          <span
-            key={opt.key}
-            className={cn(
-              "cursor-pointer transition-colors duration-150 leading-tight",
-              i === 0 ? "text-left" : i === options.length - 1 ? "text-right" : "text-center",
-              opt.key === value ? "font-semibold text-primary" : "text-muted-foreground"
-            )}
-            onClick={() => onChange(opt.key)}
-          >
-            {opt.label}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 
 interface RidingStyleCardProps {
   profile: Doc<"profiles"> | null;
@@ -289,22 +139,22 @@ export function RidingStyleCard({
         <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
           {t.description}
         </p>
-        <ReadOnlySlider
+        <ReadOnlyScaleSlider
           label={t.experienceLevel}
           options={experienceOptions}
           value={profile.experienceLevel ?? null}
         />
-        <ReadOnlySlider
+        <ReadOnlyScaleSlider
           label={t.weeklyHours}
           options={weeklyHoursOptions}
           value={profile.weeklyHours ?? null}
         />
-        <ReadOnlySlider
+        <ReadOnlyScaleSlider
           label={t.typicalRide}
           options={rideDistanceOptions}
           value={profile.typicalRideLength ?? null}
         />
-        <ReadOnlySlider
+        <ReadOnlyScaleSlider
           label={t.positionPriority}
           options={positionOptions}
           value={profile.positionPriority ?? null}
@@ -336,28 +186,28 @@ export function RidingStyleCard({
 
     return (
       <div className="space-y-6">
-        <SliderQuestion
+        <ScaleSliderQuestion
           label={tQ.experienceLevel.questionText}
           options={experienceOptions}
           value={draft.experienceLevel}
           onChange={(v) => setDraft((d) => ({ ...d, experienceLevel: v as ExperienceLevel }))}
         />
 
-        <SliderQuestion
+        <ScaleSliderQuestion
           label={tQ.weeklyHours.questionText}
           options={weeklyHoursOptions}
           value={draft.weeklyHours}
           onChange={(v) => setDraft((d) => ({ ...d, weeklyHours: v }))}
         />
 
-        <SliderQuestion
+        <ScaleSliderQuestion
           label={tQ.rideDistance.questionText}
           options={rideDistanceOptions}
           value={draft.typicalRideLength}
           onChange={(v) => setDraft((d) => ({ ...d, typicalRideLength: v }))}
         />
 
-        <SliderQuestion
+        <ScaleSliderQuestion
           label={t.positionPriorityQuestion}
           options={positionOptions}
           value={draft.positionPriority}

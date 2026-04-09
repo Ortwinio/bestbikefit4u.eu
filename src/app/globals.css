@@ -408,6 +408,29 @@
   box-shadow: var(--public-shadow-strong);
 }
 
+@utility public-calculator-card {
+  background: oklch(var(--dashboard-surface));
+  border-color: oklch(var(--dashboard-border-soft));
+  box-shadow: var(--dashboard-shadow);
+}
+
+@utility public-calculator-card-subtle {
+  background: color-mix(in oklch, oklch(var(--dashboard-surface-muted)) 90%, oklch(var(--background)) 10%);
+  border-color: oklch(var(--dashboard-border-soft));
+  box-shadow: var(--dashboard-shadow);
+}
+
+@utility public-calculator-result {
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in oklch, oklch(var(--dashboard-hero)) 84%, oklch(var(--primary)) 16%),
+      color-mix(in oklch, oklch(var(--dashboard-surface)) 80%, oklch(var(--primary)) 20%)
+    );
+  border-color: color-mix(in oklch, oklch(var(--dashboard-border-strong)) 70%, oklch(var(--primary)) 30%);
+  box-shadow: var(--dashboard-shadow-strong);
+}
+
 @utility panel-surface-base {
   background: oklch(var(--panel-surface));
   color: oklch(var(--panel-foreground));

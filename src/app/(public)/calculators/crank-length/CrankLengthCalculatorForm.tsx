@@ -79,7 +79,7 @@ export function CrankLengthCalculatorForm({
               ? "Binnenbeenlengte en discipline zijn genoeg voor een bruikbaar eerste cranklengte-advies."
               : "Inseam and bike category are enough for a practical first-pass crank-length recommendation."
           }
-          className="rounded-[1.75rem]"
+          className="public-calculator-card rounded-[1.75rem]"
         >
           <div className="space-y-6">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
@@ -137,7 +137,7 @@ export function CrankLengthCalculatorForm({
             <PublicSurfaceCard
               title={isNl ? "Richtlijnen" : "Guidance"}
               compact
-              className="rounded-[1.5rem]"
+              className="public-calculator-card-subtle rounded-[1.5rem]"
             >
               <ul className="space-y-3 text-sm text-muted-foreground">
                 {guidancePoints.map((point) => (
@@ -161,21 +161,21 @@ export function CrankLengthCalculatorForm({
             ? "Gebruik dit als praktisch startpunt voordat je onderdelen wisselt."
             : "Use this as a practical starting point before you change components."
         }
-        className="mt-6 rounded-[1.75rem]"
+        className="public-calculator-card mt-6 rounded-[1.75rem]"
       >
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
           {isNl ? "Uitkomst" : "Output"}
         </p>
 
         {result !== null ? (
-          <div className="mt-6 rounded-2xl border border-primary/20 bg-primary-soft p-5">
+          <div className="public-calculator-result mt-6 rounded-2xl border p-5">
             <p className="text-sm text-muted-foreground">
               {isNl ? "Aanbevolen cranklengte" : "Recommended crank length"}
             </p>
             <p className="mt-2 text-3xl font-semibold text-foreground">{result} mm</p>
           </div>
         ) : (
-          <div className="mt-6 rounded-2xl border border-dashed border-border bg-[color:var(--secondary)] px-4 py-5 text-sm text-muted-foreground">
+          <div className="public-calculator-card-subtle mt-6 rounded-2xl border border-dashed px-4 py-5 text-sm text-muted-foreground">
             {isNl
               ? "Vul je gegevens in om een eerste cranklengte-aanbeveling te genereren."
               : "Enter your details to generate a first-pass crank-length recommendation."}

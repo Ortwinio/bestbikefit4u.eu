@@ -6,6 +6,7 @@ import { Button } from "@/components/prototyper-ui/ui/button";
 import {
   PublicInfoPanel,
   PublicNumberField,
+  PublicScaleField,
   PublicSelectField,
   PublicSurfaceCard,
 } from "@/components/public";
@@ -191,7 +192,7 @@ export function PressureCalculatorForm({
             ? "Begin met de grootste invloeden eerst. Geavanceerde opties zijn er wanneer je verder wilt verfijnen."
             : "Start with the essentials first. Advanced options are there when you want to refine the recommendation further."
         }
-        className="rounded-[1.75rem]"
+        className="public-calculator-card rounded-[1.75rem]"
       >
         <div className="space-y-6">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
@@ -251,8 +252,13 @@ export function PressureCalculatorForm({
               value={tubeType}
               onChange={(value) => setTubeType(value as "inner_tube" | "latex_tube" | "tubeless")}
             />
-            <PublicSelectField
+            <PublicScaleField
               label={labels.surfaceLabel}
+              description={
+                isNl
+                  ? "Schuif van glad naar losser naarmate je ondergrond meer grip en demping vraagt."
+                  : "Move from smoother to looser surfaces as the terrain asks for more grip and compliance."
+              }
               options={surfaceOptions}
               value={surface}
               onChange={(value) => setSurface(value as Surface)}
@@ -269,7 +275,7 @@ export function PressureCalculatorForm({
             </div>
           )}
 
-          <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+          <div className="public-calculator-card-subtle rounded-2xl border p-4">
             <Button
               type="button"
               variant="ghost"
@@ -282,8 +288,13 @@ export function PressureCalculatorForm({
 
             {showAdvanced ? (
               <div className="mt-4 grid gap-5 md:grid-cols-2">
-                <PublicSelectField
+                <PublicScaleField
                   label={labels.ridingGoalLabel}
+                  description={
+                    isNl
+                      ? "Meer comfort vraagt meestal om wat extra marge."
+                      : "More comfort usually asks for a bit more margin."
+                  }
                   options={goalOptions}
                   value={ridingGoal ?? "balance"}
                   onChange={(value) => setRidingGoal(value as RidingGoal)}
@@ -307,7 +318,7 @@ export function PressureCalculatorForm({
         {result ? (
           <PressureResultCard result={result} labels={resultLabels} />
         ) : (
-          <div className="rounded-[1.75rem] border border-dashed border-[color:var(--border)] bg-[color:var(--card)] p-6 text-sm text-[color:var(--muted-foreground)]">
+          <div className="public-calculator-card-subtle rounded-[1.75rem] border border-dashed p-6 text-sm text-[color:var(--muted-foreground)]">
             {labels.resultPlaceholder}
           </div>
         )}
