@@ -930,7 +930,6 @@ export function MessageComposeView({
                         key={`${rule.targetType}-${index}`}
                         rule={rule}
                         users={data.users}
-                        releases={data.releases}
                         onChange={(next) => updateTarget(index, next)}
                         onRemove={() => removeTarget(index)}
                         canRemove={form.targets.length > 1}

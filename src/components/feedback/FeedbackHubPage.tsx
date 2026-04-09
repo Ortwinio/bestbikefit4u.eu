@@ -462,7 +462,7 @@ export function FeedbackHubPage() {
                             ) : null}
                           </div>
                           <p className="text-base font-semibold text-[color:var(--foreground)]">
-                            {formatReleaseName(release, copy)}
+                            {formatReleaseName(release)}
                           </p>
                         </div>
                         <div className="text-xs text-[color:var(--muted-foreground)]">

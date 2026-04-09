@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Doc } from "../../../convex/_generated/dataModel";
 import { Button, Card, CardContent, EmptyState, SectionHeader, MeasurementTile, InfoBox, StatRow } from "@/components/ui";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
+import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getBikeTypeLabel } from "@/lib/bikes";

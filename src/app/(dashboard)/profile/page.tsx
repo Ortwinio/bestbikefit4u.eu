@@ -1003,7 +1003,6 @@ function ProfileSummary({
               messages={messages}
               locale={locale}
               isEditing={editingMeasurements}
-              onEdit={onStartMeasurementsEdit}
               onCancel={onCancelMeasurementsEdit}
               onSave={onSaveMeasurements}
             />
