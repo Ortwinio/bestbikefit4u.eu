@@ -1,128 +1,138 @@
 # Validation And Confidence
 
-## Decision
+## Mission
 
-The public calculators should run a shared validation stage before calculation and then express output confidence explicitly.
+BestBikeFit4U should validate before it calculates, then explain how trustworthy the output is.
 
-## Validation Model
+## Validation Layers
 
-### Severity levels
+### Layer A: Impossible inputs
 
-- `blocking`
-  - calculation should not run
-- `warning`
-  - calculation can run, but with visible caution
-- `confidence-impacting`
-  - calculation can run, but confidence drops
+Block calculation.
 
-### Validation categories
-
-- impossible raw values
-- implausible anthropometric combinations
-- category/setup contradictions
-- output contradictions
-- missing refinement quality
-
-## Shared Validation Rules
-
-### Anthropometric checks
+Examples:
 
 - height outside supported human range
 - inseam outside supported human range
-- inseam greater than or equal to height
+- tyre width outside tool range
+- negative or zero weights
+
+### Layer B: Implausible body combinations
+
+Warn, then calculate if still reasonable.
+
+Examples:
+
 - unusually low inseam relative to height
 - unusually high inseam relative to height
+- inseam nearly equal to height
+- extreme fit scores paired with small/large body values
 
-### Fit-logic checks
+### Layer C: Category/setup contradictions
 
-- aggressive drop target combined with very low flexibility and very low core stability
-- extremely short or long crank recommendation inconsistent with selected bike category
-- frame-size outcome that implies shortlist contradiction with baseline dimensions
-- saddle-height shift triggered by category/goal/refinement that exceeds the public-safe adjustment window
+Warn, then calculate if recoverable.
 
-### Pressure checks
+Examples:
 
-- impossible tire width for selected discipline
-- impossible setup combination for width/discipline
-- impossible rider/system weight and tire width combination without warning
+- road bike with obviously MTB tyre width
+- MTB with implausibly narrow tyres for the selected setup
+- crank-length output outside typical range for the chosen category
+
+### Layer D: Output contradictions
+
+Warn and downgrade confidence.
+
+Examples:
+
+- very aggressive bar drop with very low flexibility and very low core stability
+- strongly performance-biased frame or fit output while rider inputs suggest a safer center
+- crank-length recommendation implying a saddle-height recheck
+
+## Proposed Validation Severity
+
+- `error`: block calculation and explain why
+- `warning`: calculate, but show reduced confidence
+- `notice`: calculate, but add explanation or follow-up guidance
 
 ## Confidence Model
 
-### Labels
+### High confidence
 
-- `High confidence`
-  - measured baseline inputs present
-  - no validation warnings
-  - refinement inputs present where relevant
-- `Medium confidence`
-  - core baseline present
-  - one or more refinements missing or estimated
-  - no severe contradiction
-- `Lower confidence`
-  - estimated inseam
-  - validation warnings present
-  - critical refinements omitted for a more posture-sensitive output
+Conditions:
 
-### Confidence drivers
+- measured inseam entered
+- core baseline inputs present
+- no blocking errors
+- no major warnings
+
+### Medium confidence
+
+Conditions:
+
+- core baseline present
+- one or more refinement fields missing
+- minor plausibility warnings
+
+### Lower confidence
+
+Conditions:
+
+- inseam estimated instead of measured
+- key refinements missing
+- contradiction or plausibility warnings present
+
+## Confidence Drivers
+
+Confidence should be derived from:
 
 - measured vs estimated inseam
-- presence of category
-- presence of riding goal for posture-sensitive calculators
-- presence of flexibility/core stability for posture-sensitive calculators
-- validation warnings
+- presence of required baseline fields
+- presence of optional refinement fields
+- number and severity of validation warnings
+- whether the tool is outputting a simplified model rather than a full-fit result
 
 ## UI Contract
 
-### Blocking state
+Each calculator should display:
 
-- show inline message near the offending field
-- do not produce result cards
-- explain what to fix
+- validation state near the affected input
+- confidence label near the result
+- short explanation for confidence level
 
-### Warning state
+Example:
 
-- show result
-- show warning explanation
-- lower confidence label if needed
+- `High confidence: measured inseam entered and no major contradictions found`
+- `Medium confidence: result is sound, but riding-goal and stability refinements are missing`
+- `Lower confidence: inseam was estimated and some inputs reduce certainty`
 
-### Confidence presentation
+## Engineering Contract
 
-- show a visible confidence badge near the result header
-- add one sentence explaining why confidence is high, medium, or lower
-
-## Engineering Implications
-
-- Add a shared validation module for the public baseline.
-- Return structured validation issues:
+Create a shared validation result shape, for example:
 
 ```ts
-type ValidationIssue = {
+type ValidationSeverity = "error" | "warning" | "notice";
+
+type PublicCalculatorValidation = {
   field?: string;
-  severity: "blocking" | "warning" | "confidence-impacting";
+  severity: ValidationSeverity;
   code: string;
   message: string;
+  explanation?: string;
 };
-```
 
-- Confidence should be computed from structured inputs and validation issues, not page-local copy conditions.
-- Calculator components should render validation states from a common result envelope rather than inventing their own warning model.
+type ConfidenceLevel = "high" | "medium" | "lower";
+```
 
 ## Success Criteria
 
-- Every public calculator validates before producing its result.
-- Validation differentiates between blocking and warning states.
-- Confidence labels use one shared model across calculators.
-- Estimated or partial inputs lower confidence without breaking usability.
+- Every calculator validates before calculation.
+- Validation logic improves trust rather than simply rejecting inputs.
+- Confidence is derived from shared rules, not page-specific copy.
+- Contradictions reduce certainty visibly instead of being silently ignored.
 
 ## User Acceptance Tests
 
-1. A rider enters an inseam that is greater than height.
-   Expected: calculation is blocked, the rider sees a clear explanation, and no result is shown.
-2. A rider enters a plausible but unusual inseam-to-height ratio.
-   Expected: the result can still be shown, but a warning explains why the output should be treated cautiously.
-3. A rider uses estimated inseam instead of measured inseam.
-   Expected: the result appears with a lower confidence label and a clear reason.
-4. A rider chooses a comfort goal with very low flexibility/core while the tool trends toward an aggressive posture.
-   Expected: the result stays conservative and the explanation calls out the contradiction.
-5. A rider uses a tire width that is unrealistic for the chosen discipline.
-   Expected: the pressure calculator blocks or warns appropriately instead of silently returning a misleading value.
+1. If a rider enters an impossible height/inseam combination, the calculator blocks calculation and explains the problem clearly.
+2. If a rider enters a plausible but unusual body combination, the calculator still works but lowers confidence and explains why.
+3. If a rider estimates inseam instead of measuring it, the result visibly shifts to a lower confidence state.
+4. If a rider chooses low flexibility and low core stability, the calculator avoids presenting a highly aggressive fit output as fully trustworthy.

@@ -103,7 +103,7 @@ describe("bike fit calculator page", () => {
     ).toBe("https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756");
     expect(
       screen.getByText("Open Tire Pressure Calculator").closest("a")?.getAttribute("href")
-    ).toBe("/en/bandenspanning-calculator");
+    ).toBe("/en/tire-pressure-calculator");
     expect(screen.queryByText("Compare Free vs Pro")).toBeNull();
   });
 });

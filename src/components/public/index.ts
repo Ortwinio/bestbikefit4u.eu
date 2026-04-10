@@ -11,3 +11,4 @@ export { PublicCtaBand } from "./PublicCtaBand";
 export { PublicInfoPanel } from "./PublicInfoPanel";
 export { PublicNumberField, PublicScaleField, PublicSelectField } from "./PublicFormFields";
 export { PublicIconBadge } from "./PublicIconBadge";
+export { PublicCalculatorResultSummary } from "./PublicCalculatorResultSummary";

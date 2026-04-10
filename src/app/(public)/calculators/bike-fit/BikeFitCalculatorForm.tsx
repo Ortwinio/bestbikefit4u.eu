@@ -3,19 +3,24 @@
 import { useMemo, useState } from "react";
 import { ShieldCheck } from "lucide-react";
 import {
+  PublicCalculatorResultSummary,
   PublicInfoPanel,
   PublicNumberField,
   PublicScaleField,
   PublicSelectField,
   PublicSurfaceCard,
 } from "@/components/public";
-import {
-  calculateBikeFit,
-  calculateQuickEstimate,
-  mapCoreScore,
-  mapFlexibilityScore,
-} from "../../../../../convex/lib/fitAlgorithm";
 import type { Ambition, BikeCategory } from "../../../../../convex/lib/fitAlgorithm/types";
+import {
+  createPublicCalculatorResultEnvelope,
+  createPublicCalculatorRange,
+  createPublicFitBaseline,
+  derivePublicCalculatorConfidence,
+  getConfidenceLabel,
+  PUBLIC_FIT_REQUIREMENTS,
+  validatePublicFitBaseline,
+} from "@/lib/publicCalculatorLogic";
+import { runBikeFitCalculation } from "@/lib/public-calculators/fitAdapters";
 
 const CATEGORY_OPTIONS = [
   { value: "road", label: "Road" },
@@ -59,27 +64,48 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
   const [flexibility, setFlexibility] = useState("3");
   const [core, setCore] = useState("3");
 
+  const baseline = useMemo(
+    () =>
+      createPublicFitBaseline({
+        heightCm,
+        inseamCm,
+        bikeCategory: category,
+        ridingGoal: ambition,
+        flexibilityScore: Number(flexibility) as 1 | 2 | 3 | 4 | 5,
+        coreStabilityScore: Number(core),
+      }),
+    [heightCm, inseamCm, category, ambition, flexibility, core]
+  );
+
+  const baselineIssues = useMemo(
+    () => validatePublicFitBaseline(baseline, PUBLIC_FIT_REQUIREMENTS.bikeFit),
+    [baseline]
+  );
+  const baselineConfidence = useMemo(
+    () =>
+      derivePublicCalculatorConfidence({
+        baseline,
+        issues: baselineIssues,
+        requirements: PUBLIC_FIT_REQUIREMENTS.bikeFit,
+      }),
+    [baseline, baselineIssues]
+  );
+
   const result = useMemo(() => {
     if (!heightCm || !inseamCm) return null;
-    if (heightCm < 140 || heightCm > 220) return null;
-    if (inseamCm < 55 || inseamCm > 105) return null;
-    if (inseamCm >= heightCm) return null;
+    if (baselineIssues.some((issue) => issue.severity === "error")) return null;
 
     const flexScore = Number(flexibility) as 1 | 2 | 3 | 4 | 5;
     const coreScore = Number(core) as 1 | 2 | 3 | 4 | 5;
 
-    const fitResult = calculateBikeFit({
+    const { fitResult, quickEstimate } = runBikeFitCalculation({
+      heightCm,
+      inseamCm,
       category,
-      ambition,
-      heightMm: Math.round(heightCm * 10),
-      inseamMm: Math.round(inseamCm * 10),
-      flexibilityScore: mapFlexibilityScore(flexScore),
-      coreScore: mapCoreScore(coreScore),
-    });
-    const quickEstimate = calculateQuickEstimate({
-      category,
-      heightMm: Math.round(heightCm * 10),
-      inseamMm: Math.round(inseamCm * 10),
+      ridingGoal: ambition,
+      flexibility: flexScore,
+      coreStability: coreScore,
+      inseamSource: baseline.inseamSource,
     });
 
     const notes: string[] = [];
@@ -110,6 +136,34 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
         : "Use this as a starting point, then compare it with your current setup inside the dashboard."
     );
 
+    const resultModel = createPublicCalculatorResultEnvelope({
+      calculatorKey: "bike-fit",
+      recommended: {
+        saddleHeightMm: fitResult.saddleHeightMm,
+        reachMm: fitResult.saddleToBarReachMm,
+      },
+      range: createPublicCalculatorRange(
+        fitResult.reachRange.min,
+        fitResult.reachRange.max,
+        fitResult.saddleToBarReachMm
+      ),
+      confidence: baselineConfidence,
+      issues: baselineIssues,
+      primaryDrivers: [
+        isNl ? "Lengte en binnenbeenlengte" : "Height and inseam",
+      ],
+      secondaryModifiers: [
+        isNl ? "Rijdoel, flexibiliteit en core-stabiliteit" : "Riding goal, flexibility, and core stability",
+      ],
+      notCovered: [
+        isNl ? "Cleat stack, zadelvorm en asymmetrie" : "Cleat stack, saddle shape, and asymmetry",
+      ],
+      nextAction:
+        isNl
+          ? "Begin met zadelhoogte en controleer daarna reach en drop."
+          : "Start with saddle height, then validate reach and drop.",
+    });
+
     return {
       saddleHeightMm: fitResult.saddleHeightMm,
       reachMm: fitResult.saddleToBarReachMm,
@@ -119,8 +173,14 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
       frameReachTargetMm: fitResult.frameReachTargetMm,
       frameSize: quickEstimate.estimatedFrameSize,
       notes,
+      resultModel,
     };
-  }, [heightCm, inseamCm, category, ambition, flexibility, core, isNl]);
+  }, [heightCm, inseamCm, baselineIssues, category, ambition, flexibility, core, isNl, baselineConfidence]);
+
+  const confidenceLabel = useMemo(
+    () => getConfidenceLabel(baselineConfidence.level, isNl),
+    [baselineConfidence.level, isNl]
+  );
 
   const guidancePoints = isNl
     ? [
@@ -150,6 +210,20 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
               {isNl ? "Input" : "Inputs"}
             </p>
+            <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3">
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                {confidenceLabel}
+              </span>
+              <p className="text-sm text-muted-foreground">
+                {baselineConfidence.level === "high"
+                  ? isNl
+                    ? "Je hebt de belangrijkste basismeting ingevuld en de verfijners actief."
+                    : "You have the key baseline measurement plus refinement inputs in place."
+                  : isNl
+                    ? "De betrouwbaarheid stijgt wanneer je nauwkeurig meet en extra verfijners invult."
+                    : "Confidence increases when your measurements are precise and refinements are filled in."}
+              </p>
+            </div>
             <div className="grid gap-5 md:grid-cols-2">
               <PublicNumberField
                 label={isNl ? "Lengte" : "Height"}
@@ -229,6 +303,17 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
                 onChange={setCore}
               />
             </div>
+            {baselineIssues.length > 0 ? (
+              <div className="rounded-2xl border border-amber-500/25 bg-amber-500/10 px-4 py-3 text-sm text-amber-700 dark:text-amber-300">
+                <ul className="space-y-1">
+                  {baselineIssues.map((issue) => (
+                    <li key={`${issue.code}-${issue.field ?? "baseline"}-${issue.message}`}>
+                      {issue.message}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </div>
         </PublicSurfaceCard>
 
@@ -315,16 +400,11 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
                 </p>
               </div>
             </div>
-            <div className="public-calculator-card-subtle mt-6 rounded-2xl border p-5">
-              <h3 className="text-lg font-semibold text-foreground">
-                {isNl ? "Interpretatie" : "How to interpret this"}
-              </h3>
-              <ul className="mt-3 list-inside list-disc space-y-2 text-muted-foreground">
-                {result.notes.map((note) => (
-                  <li key={note}>{note}</li>
-                ))}
-              </ul>
-            </div>
+            <PublicCalculatorResultSummary
+              result={result.resultModel}
+              isNl={isNl}
+              extraNotes={result.notes}
+            />
           </>
         ) : (
           <div className="public-calculator-card-subtle mt-6 rounded-2xl border border-dashed px-4 py-5 text-sm text-muted-foreground">

@@ -8,6 +8,7 @@ import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getBikeTypeLabel } from "@/lib/bikes";
+import { getDashboardPressureCalculatorPath } from "@/lib/pressureRoutes";
 import { Mountain, Gauge, Bike, Activity, Ruler, AlertCircle, ArrowRight } from "lucide-react";
 import { FitReportActionGroup } from "@/components/reports";
 
@@ -441,7 +442,10 @@ export function BikeGarageRow({
                       </InfoBox>
                     ) : null}
                     <Link
-                      href={withLocalePrefix(`/pressure-calculator?bikeId=${bike._id}`, locale)}
+                      href={withLocalePrefix(
+                        getDashboardPressureCalculatorPath(bike._id),
+                        locale
+                      )}
                       className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
                     >
                       {messages.bikeGarage.recalculatePressure}
@@ -454,7 +458,10 @@ export function BikeGarageRow({
                       {messages.pressure.overview.noCalculation}
                     </p>
                     <Link
-                      href={withLocalePrefix(`/pressure-calculator?bikeId=${bike._id}`, locale)}
+                      href={withLocalePrefix(
+                        getDashboardPressureCalculatorPath(bike._id),
+                        locale
+                      )}
                       className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
                     >
                       {messages.pressure.overview.noCalculationCta}

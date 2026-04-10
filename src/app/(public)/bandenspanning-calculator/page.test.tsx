@@ -46,7 +46,10 @@ vi.mock("@/i18n/request", () => ({
 
 vi.mock("@/i18n/metadata", () => ({
   buildLocaleAlternates: () => ({
-    canonical: `https://bestbikefit4u.eu/${locale}/bandenspanning-calculator`,
+    canonical:
+      locale === "nl"
+        ? "https://bestbikefit4u.eu/nl/bandenspanning-calculator"
+        : "https://bestbikefit4u.eu/en/tire-pressure-calculator",
   }),
 }));
 

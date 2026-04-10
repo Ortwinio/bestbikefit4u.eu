@@ -17,6 +17,7 @@ import {
 import { BrandLogo } from "@/components/branding";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import { Compass, Gauge, Menu, Sparkles, X } from "lucide-react";
 
 type HeaderMobileMenuProps = {
@@ -58,7 +59,7 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
       icon: <Compass className="h-4 w-4 text-[color:var(--primary)]" />,
     },
     {
-      href: withLocalePrefix("/bandenspanning-calculator", locale),
+      href: withLocalePrefix(getLocalizedPublicCalculatorPath("tire-pressure", locale), locale),
       label: labels.tools,
       icon: <Gauge className="h-4 w-4 text-[color:var(--primary)]" />,
     },

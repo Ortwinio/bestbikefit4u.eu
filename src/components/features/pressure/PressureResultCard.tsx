@@ -1,14 +1,24 @@
-import { AlertTriangle, Gauge } from "lucide-react";
-import { PublicInfoPanel, PublicSurfaceCard } from "@/components/public";
+import { Gauge } from "lucide-react";
+import { PublicCalculatorResultSummary, PublicSurfaceCard } from "@/components/public";
+import type { PublicResultEnvelope } from "@/lib/publicCalculatorLogic";
 import type { PressureOutput } from "@/lib/pressure-engine";
 import type { PressureResultLabels } from "./shared";
 
 interface PressureResultCardProps {
   result: PressureOutput;
   labels: PressureResultLabels;
+  isNl: boolean;
+  summary: PublicResultEnvelope<unknown>;
+  extraNotes: string[];
 }
 
-export function PressureResultCard({ result, labels }: PressureResultCardProps) {
+export function PressureResultCard({
+  result,
+  labels,
+  isNl,
+  summary,
+  extraNotes,
+}: PressureResultCardProps) {
   const allWarnings =
     result.warnings.length > 0
       ? [labels.disclaimer, ...result.warnings.map((warning) => labels.warningMessages[warning])]
@@ -39,19 +49,12 @@ export function PressureResultCard({ result, labels }: PressureResultCardProps) 
         <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
           {result.explanation}
         </p>
-
-        <PublicInfoPanel
-          tone="warning"
-          title={labels.warningsTitle}
-          icon={<AlertTriangle />}
-          role="note"
-        >
-          <ul className="space-y-2">
-            {allWarnings.map((warning, index) => (
-              <li key={`${warning}-${index}`}>{warning}</li>
-            ))}
-          </ul>
-        </PublicInfoPanel>
+        <PublicCalculatorResultSummary
+          result={summary}
+          isNl={isNl}
+          extraNotes={extraNotes}
+          validationMessages={allWarnings}
+        />
 
         {(result.comfortScore !== undefined ||
           result.gripScore !== undefined ||

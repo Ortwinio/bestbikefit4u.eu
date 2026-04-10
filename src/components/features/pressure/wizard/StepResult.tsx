@@ -6,6 +6,7 @@ import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
 import { Button, Card, CardContent, InfoBox, Input, Select, StatRow } from "@/components/ui";
 import { calculateAdvancedPressure } from "@/lib/pressure-engine";
+import { createPublicCalculatorResultEnvelope } from "@/lib/publicCalculatorLogic";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { PressureResultCard } from "../PressureResultCard";
 import type { InlineTireInput, PressureResultLabels } from "../shared";
@@ -128,6 +129,50 @@ export function StepResult({
   }, [bikeWeightKg, bodyWeightKg, currentFrontBar, currentRearBar, discipline, extraLuggageKg, inlineTireInput, isWet, offRoadPercent, ridingGoal, routeDistanceKm, routeElevationM, surface, tireSetup]);
 
   const result = calculationInput ? calculateAdvancedPressure(calculationInput) : null;
+  const pressureSummary = useMemo(() => {
+    if (!result) {
+      return null;
+    }
+
+    return createPublicCalculatorResultEnvelope({
+      calculatorKey: "tire-pressure",
+      recommended: {
+        frontBar: result.frontBar,
+        rearBar: result.rearBar,
+      },
+      confidence: {
+        level: result.warnings.length > 1 ? "medium" : "high",
+        score: result.warnings.length > 1 ? 68 : 84,
+        reasons: [],
+      },
+      primaryDrivers:
+        locale === "nl"
+          ? ["Rijdersgewicht", "Bandbreedte", "Ondergrond", "Bandtype"]
+          : ["Rider weight", "Tyre width", "Surface", "Tyre type"],
+      secondaryModifiers:
+        locale === "nl"
+          ? ["Rijdoel", "Fietsgewicht", "Weers- en routecontext"]
+          : ["Riding goal", "Bike weight", "Weather and route context"],
+      notCovered:
+        locale === "nl"
+          ? ["Persoonlijke voorkeur en verfijning na meerdere ritten"]
+          : ["Personal preference and refinement after multiple rides"],
+      nextAction:
+        locale === "nl"
+          ? "Valideer dit met kleine stappen van 0,1 bar op je volgende rit."
+          : "Validate this in 0.1 bar steps on your next ride.",
+    });
+  }, [locale, result]);
+  const extraNotes =
+    locale === "nl"
+      ? [
+          "Controleer eerst grip vooraan en stabiliteit achteraan.",
+          "Gebruik nat weer en bagage alleen als verfijners, niet als basis.",
+        ]
+      : [
+          "Check front grip first and rear stability second.",
+          "Treat wet weather and luggage as refinements, not the baseline.",
+        ];
 
   const handleSaveCalculation = async () => {
     if (!result || !calculationInput) {
@@ -210,7 +255,13 @@ export function StepResult({
 
   return (
     <div className="space-y-5">
-      <PressureResultCard result={result} labels={resultLabels} />
+      <PressureResultCard
+        result={result}
+        labels={resultLabels}
+        isNl={locale === "nl"}
+        summary={pressureSummary!}
+        extraNotes={extraNotes}
+      />
 
       {(currentFrontBar !== undefined || currentRearBar !== undefined) && (
         <Card variant="bordered">

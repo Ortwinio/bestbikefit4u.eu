@@ -3,6 +3,7 @@ import { Compass, Gauge, Sparkles } from "lucide-react";
 import { BRAND } from "@/config/brand";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import type { Messages } from "@/i18n/getDictionary";
 
 type FooterProps = {
@@ -160,7 +161,10 @@ export function Footer({ locale, labels }: FooterProps) {
               </li>
               <li>
                 <Link
-                  href={withLocalePrefix("/bandenspanning-calculator", locale)}
+                  href={withLocalePrefix(
+                    getLocalizedPublicCalculatorPath("tire-pressure", locale),
+                    locale
+                  )}
                   className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
                   {f.tirePressure}

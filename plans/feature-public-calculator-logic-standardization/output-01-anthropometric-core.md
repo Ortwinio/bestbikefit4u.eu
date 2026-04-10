@@ -1,138 +1,161 @@
 # Shared Anthropometric Core
 
-## Decision
+## Mission
 
-All public fit-related calculators should consume one shared rider-baseline contract before calculator-specific refinements are applied.
+Make every public fit-related calculator feel like one logic engine by standardizing a shared baseline rider model.
 
-## Baseline Schema
+## Shared Public Baseline
 
-### Required schema object
+### Canonical fields
+
+- `heightCm`
+- `inseamCm`
+- `bikeCategory`
+- `ridingGoal`
+- `flexibility`
+- `coreStability`
+
+### Field intent
+
+- `heightCm`: body-size anchor for fit and size estimation
+- `inseamCm`: primary lower-body fit anchor and default confidence driver
+- `bikeCategory`: discipline context that shifts safer vs more aggressive assumptions
+- `ridingGoal`: performance-vs-comfort bias
+- `flexibility`: posture sustainability modifier
+- `coreStability`: posture sustainability and control modifier
+
+## Calculator Mapping
+
+### Bike fit
+
+Visible by default:
+
+- height
+- inseam
+- bike category
+- riding goal
+- flexibility
+- core stability
+
+Notes:
+
+- This is the reference implementation for the shared baseline.
+
+### Saddle height
+
+Visible by default:
+
+- inseam
+- bike category
+- riding goal
+- flexibility
+- core stability
+
+Hidden but available:
+
+- height
+
+Notes:
+
+- Height should be retained in the shared model even if the UI keeps it hidden by default.
+- This supports future validation and confidence checks without making the tool heavier.
+
+### Frame size
+
+Visible by default:
+
+- height
+- inseam
+- bike category
+
+Optional refinement:
+
+- riding goal
+
+Hidden but available:
+
+- flexibility
+- core stability
+
+Notes:
+
+- Initial frame-size output can stay simpler than bike-fit output.
+- Riding goal should bias “stable vs agile” sizing once implemented.
+
+### Crank length
+
+Visible by default:
+
+- inseam
+- bike category
+
+Hidden but available:
+
+- riding goal
+- flexibility
+- core stability
+- height
+
+Notes:
+
+- The core model should still travel with the calculator even if only two inputs are shown.
+- This enables warnings such as “recheck saddle height after changing crank length.”
+
+### Tire pressure
+
+The tire-pressure tool does not inherit the anthropometric baseline as its primary contract.
+
+It should remain in the same product family, but use a parallel baseline:
+
+- rider/system weight
+- bike discipline
+- tyre width
+- surface
+- tube/rim setup
+
+Shared product-language overlap:
+
+- confidence
+- validation
+- result structure
+- driver explanation
+- next best action
+
+## Engineering Contract
+
+Introduce a shared public baseline type, for example:
 
 ```ts
-type PublicRiderBaseline = {
+type PublicFitBaseline = {
   heightCm?: number;
   inseamCm?: number;
   bikeCategory?: "road" | "gravel" | "mtb" | "city";
   ridingGoal?: "comfort" | "balanced" | "performance" | "aero";
   flexibility?: 1 | 2 | 3 | 4 | 5;
   coreStability?: 1 | 2 | 3 | 4 | 5;
-  inseamSource?: "measured" | "estimated";
 };
 ```
 
-### Input semantics
+## Implementation Rules
 
-- `heightCm`: full-body sizing driver and validation anchor
-- `inseamCm`: primary lower-body fit driver
-- `bikeCategory`: discipline context for geometry, saddle height bias, crank guidance, and pressure family logic
-- `ridingGoal`: posture bias and aggressiveness modifier
-- `flexibility`: fit sustainability modifier
-- `coreStability`: fit sustainability modifier
-- `inseamSource`: required for confidence logic
-
-## Calculator Mapping
-
-### Bike fit
-
-Uses the full baseline.
-
-- Primary drivers:
-  - height
-  - inseam
-  - bike category
-- Secondary modifiers:
-  - riding goal
-  - flexibility
-  - core stability
-
-### Saddle height
-
-Inherits the baseline, but the default visible model stays simpler.
-
-- Default required:
-  - inseam
-  - bike category
-- Default optional refinements:
-  - riding goal
-  - flexibility
-  - core stability
-- Future optional:
-  - crank length
-
-### Frame size
-
-Inherits the baseline even if only part of it is shown by default.
-
-- Default required:
-  - height
-  - inseam
-  - bike category
-- Optional refinement:
-  - riding goal for stability vs agility bias
-
-### Crank length
-
-Inherits the baseline but defaults to a narrower input view.
-
-- Default required:
-  - inseam
-  - bike category
-- Optional refinement:
-  - riding goal
-- Future optional:
-  - hip-compression sensitivity or pedaling-style refinement
-
-### Tire pressure
-
-Does not use the anthropometric baseline as its main logic contract, but it should still align with the shared product language.
-
-- Shared family concepts:
-  - bike category discipline semantics
-  - result confidence
-  - primary vs secondary driver explanations
-  - next-ride validation guidance
-- Separate calculator-specific base:
-  - rider/system weight
-  - front/rear tire width
-  - setup
-  - surface
-  - riding goal
-
-## Visibility Rules
-
-### Baseline visibility policy
-
-- `bike-fit`: show the full baseline
-- `saddle-height`: show only the minimal baseline first, then optional refinements
-- `frame-size`: show height + inseam + category first, with riding-goal refinement optional
-- `crank-length`: show inseam + category first, with deeper modifiers hidden initially
-
-### Hidden but shared rule
-
-Even when a field is hidden in the UI, the calculator should still consume the same shared baseline contract shape internally. Hidden fields remain `undefined`, not remapped into calculator-specific local models.
-
-## Engineering Implications
-
-- Create a shared public calculator baseline type in a neutral module, not in a page-local file.
-- Create one normalization function to coerce string form values into the baseline contract.
-- Create one baseline-preservation strategy so calculators can pass data between tools or prefill from query params/account context later.
-- Avoid calculator-specific copies of `bikeCategory`, `ridingGoal`, `flexibility`, and `coreStability` enums.
-- Do not allow each calculator to invent its own “goal” or “category” meanings.
+1. All fit-related calculators must accept the shared baseline, even if some fields are hidden in the UI.
+2. Calculator-specific logic may ignore unused baseline fields, but must not redefine them locally with new semantics.
+3. Hidden fields may still influence:
+   - validation
+   - confidence
+   - future progressive disclosure
+4. Inseam fallback estimation may exist later, but never as the default logic path.
 
 ## Success Criteria
 
-- One baseline type is used across all fit-related public calculators.
-- No fit-related calculator uses its own incompatible enum set for shared rider inputs.
-- Hidden optional refinements do not break the shared logic model.
-- The tire-pressure calculator stays separate in its core inputs, but aligns with the same product-language contract.
+- There is one documented baseline model for all public fit-related calculators.
+- Fit-related calculators no longer define incompatible local rider models.
+- The baseline is rich enough for future explainability and validation work.
+- Tire pressure remains part of the same product language without being forced into the wrong body-fit contract.
 
 ## User Acceptance Tests
 
-1. A rider opens `bike-fit`, enters height, inseam, category, goal, flexibility, and core stability, and then opens `saddle-height`.
-   Expected: overlapping fields can be prefilled or understood as the same product inputs rather than reinterpreted differently.
-2. A rider opens `frame-size` and sees a lightweight input set first.
-   Expected: the tool still clearly belongs to the same fit system and can optionally accept riding-goal refinement later.
-3. A rider opens `crank-length`.
-   Expected: inseam and category are treated as part of the same rider baseline used elsewhere, not as isolated tool-only inputs.
-4. A rider moves between `bike-fit`, `saddle-height`, and `frame-size`.
-   Expected: category names, goal names, and scale meanings stay consistent.
+1. A rider opening bike-fit, saddle-height, frame-size, and crank-length sees consistent rider concepts across all tools.
+2. If a rider enters inseam on one fit tool, the same concept and unit are used everywhere else.
+3. A product manager can point to one baseline schema and explain how every fit-related public calculator uses it.
+4. Engineering can add a new fit calculator without inventing a new rider-input model.

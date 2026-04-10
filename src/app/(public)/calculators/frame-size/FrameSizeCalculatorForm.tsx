@@ -3,12 +3,21 @@
 import { useMemo, useState } from "react";
 import { ShieldCheck } from "lucide-react";
 import {
+  PublicCalculatorResultSummary,
   PublicInfoPanel,
   PublicNumberField,
   PublicSelectField,
   PublicSurfaceCard,
 } from "@/components/public";
-import { calculateQuickEstimate } from "../../../../../convex/lib/fitAlgorithm";
+import {
+  createPublicCalculatorResultEnvelope,
+  createPublicFitBaseline,
+  derivePublicCalculatorConfidence,
+  getConfidenceLabel,
+  PUBLIC_FIT_REQUIREMENTS,
+  validatePublicFitBaseline,
+} from "@/lib/publicCalculatorLogic";
+import { runFrameSizeCalculation } from "@/lib/public-calculators/fitAdapters";
 import type { BikeCategory } from "../../../../../convex/lib/fitAlgorithm/types";
 
 const CATEGORY_OPTIONS = [
@@ -44,22 +53,77 @@ export function FrameSizeCalculatorForm({ isNl = false }: { isNl?: boolean }) {
       ]
     : GUIDANCE_POINTS;
 
+  const baseline = useMemo(
+    () =>
+      createPublicFitBaseline({
+        heightCm,
+        inseamCm,
+        bikeCategory: category,
+      }),
+    [heightCm, inseamCm, category]
+  );
+
+  const baselineIssues = useMemo(
+    () => validatePublicFitBaseline(baseline, PUBLIC_FIT_REQUIREMENTS.frameSize),
+    [baseline]
+  );
+  const baselineConfidence = useMemo(
+    () =>
+      derivePublicCalculatorConfidence({
+        baseline,
+        issues: baselineIssues,
+        requirements: PUBLIC_FIT_REQUIREMENTS.frameSize,
+      }),
+    [baseline, baselineIssues]
+  );
+
   const result = useMemo(() => {
     if (!heightCm || !inseamCm) return null;
-    if (heightCm < 130 || heightCm > 210) return null;
-    if (inseamCm < 55 || inseamCm > 105) return null;
-    if (inseamCm >= heightCm) return null;
+    if (baselineIssues.some((issue) => issue.severity === "error")) return null;
 
-    const estimate = calculateQuickEstimate({
-      heightMm: Math.round(heightCm * 10),
-      inseamMm: Math.round(inseamCm * 10),
+    const estimate = runFrameSizeCalculation({
+      heightCm,
+      inseamCm,
       category,
+      inseamSource: baseline.inseamSource,
     });
+
+    const resultModel = createPublicCalculatorResultEnvelope({
+      calculatorKey: "frame-size",
+      recommended: {
+        label: isNl ? "Aanbevolen shortlist" : "Recommended shortlist",
+        value: estimate.estimatedFrameSize,
+      },
+      confidence: baselineConfidence,
+      primaryDrivers: [isNl ? "Lengte en binnenbeenlengte" : "Height and inseam"],
+      secondaryModifiers: [
+        isNl
+          ? "De categorie beïnvloedt hoe conservatief of progressief de shortlist uitvalt."
+          : "Bike category changes how conservative or progressive the shortlist becomes.",
+      ],
+      notCovered: [
+        isNl
+          ? "Stack, reach en cockpitlengte."
+          : "Stack, reach, and cockpit length.",
+      ],
+      nextAction:
+        isNl
+          ? "Gebruik dit eerst om maten te schrappen en vergelijk daarna stack, reach en cockpitlengte."
+          : "Use this to remove implausible sizes, then compare stack, reach, and cockpit length.",
+      issues: baselineIssues,
+    });
+
     return {
       frameSize: estimate.estimatedFrameSize,
       saddleHeightMm: estimate.estimatedSaddleHeight,
+      resultModel,
     };
-  }, [heightCm, inseamCm, category]);
+  }, [heightCm, inseamCm, baselineIssues, category, isNl, baselineConfidence, baseline.inseamSource]);
+
+  const confidenceLabel = useMemo(
+    () => getConfidenceLabel(baselineConfidence.level, isNl),
+    [baselineConfidence.level, isNl]
+  );
 
   return (
     <>
@@ -77,6 +141,20 @@ export function FrameSizeCalculatorForm({ isNl = false }: { isNl?: boolean }) {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
               {isNl ? "Invoer" : "Inputs"}
             </p>
+            <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3">
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                {confidenceLabel}
+              </span>
+              <p className="text-sm text-muted-foreground">
+                {baselineConfidence.level === "high"
+                  ? isNl
+                    ? "Je hebt de belangrijkste basismeting voor framemaat ingevuld."
+                    : "You have the key baseline measurements for frame-size filtering."
+                  : isNl
+                    ? "De betrouwbaarheid stijgt wanneer je lengte en binnenbeenlengte nauwkeurig meet."
+                    : "Confidence increases when height and inseam are measured carefully."}
+              </p>
+            </div>
             <div className="grid gap-5 md:grid-cols-2">
               <PublicNumberField
                 label={isNl ? "Lengte" : "Height"}
@@ -120,6 +198,15 @@ export function FrameSizeCalculatorForm({ isNl = false }: { isNl?: boolean }) {
               value={category}
               onChange={(value) => setCategory(value as BikeCategory)}
             />
+            {baselineIssues.length > 0 ? (
+              <div className="rounded-2xl border border-amber-500/25 bg-amber-500/10 px-4 py-3 text-sm text-amber-700 dark:text-amber-300">
+                <ul className="space-y-1">
+                  {baselineIssues.map((issue) => (
+                    <li key={`${issue.code}-${issue.field}-${issue.message}`}>{issue.message}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </div>
         </PublicSurfaceCard>
 
@@ -168,22 +255,28 @@ export function FrameSizeCalculatorForm({ isNl = false }: { isNl?: boolean }) {
         </p>
 
         {result ? (
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="public-calculator-result rounded-2xl border p-5">
-              <p className="text-sm text-muted-foreground">
-                {isNl ? "Geschatte framemaat" : "Estimated frame size"}
-              </p>
-              <p className="mt-2 text-3xl font-semibold text-foreground">{result.frameSize}</p>
+          <>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="public-calculator-result rounded-2xl border p-5">
+                <p className="text-sm text-muted-foreground">
+                  {isNl ? "Geschatte framemaat" : "Estimated frame size"}
+                </p>
+                <p className="mt-2 text-3xl font-semibold text-foreground">{result.frameSize}</p>
+              </div>
+              <div className="public-calculator-card-subtle rounded-2xl border p-5">
+                <p className="text-sm text-muted-foreground">
+                  {isNl ? "Basis voor zadelhoogte" : "Saddle-height baseline"}
+                </p>
+                <p className="mt-2 text-2xl font-semibold text-foreground">
+                  {result.saddleHeightMm} mm
+                </p>
+              </div>
             </div>
-            <div className="public-calculator-card-subtle rounded-2xl border p-5">
-              <p className="text-sm text-muted-foreground">
-                {isNl ? "Basis voor zadelhoogte" : "Saddle-height baseline"}
-              </p>
-              <p className="mt-2 text-2xl font-semibold text-foreground">
-                {result.saddleHeightMm} mm
-              </p>
-            </div>
-          </div>
+            <PublicCalculatorResultSummary
+              result={result.resultModel}
+              isNl={isNl}
+            />
+          </>
         ) : (
           <div className="public-calculator-card-subtle mt-6 rounded-2xl border border-dashed px-4 py-5 text-sm text-muted-foreground">
             {isNl

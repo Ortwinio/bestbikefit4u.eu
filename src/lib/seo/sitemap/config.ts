@@ -1,5 +1,6 @@
 import { BRAND } from "@/config/brand";
 import type { Locale } from "@/i18n/config";
+import { DASHBOARD_PRESSURE_CALCULATOR_PATH } from "@/lib/pressureRoutes";
 import type { SitemapSection } from "./types";
 
 export const SITEMAP_BASE_URL = BRAND.siteUrl;
@@ -42,9 +43,9 @@ export const ROBOTS_DISALLOW_PATHS = [
   "/fit-history",
   "/en/fit-history",
   "/nl/fit-history",
-  "/pressure-calculator",
-  "/en/pressure-calculator",
-  "/nl/pressure-calculator",
+  DASHBOARD_PRESSURE_CALCULATOR_PATH,
+  `/en${DASHBOARD_PRESSURE_CALCULATOR_PATH}`,
+  `/nl${DASHBOARD_PRESSURE_CALCULATOR_PATH}`,
   "/feedback",
   "/en/feedback",
   "/nl/feedback",

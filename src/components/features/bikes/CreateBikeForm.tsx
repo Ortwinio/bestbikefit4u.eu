@@ -17,6 +17,7 @@ import {
 } from "@/components/bikes/bikeFormGeometry";
 import { getBikeTypeOptions, type BikeType } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { getDashboardPressureCalculatorPath } from "@/lib/pressureRoutes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 type Step = "bike" | "saved" | "wheelset" | "done";
@@ -526,7 +527,12 @@ export function CreateBikeForm() {
             <div className="flex flex-wrap gap-3">
               <Button
                 render={
-                  <Link href={withLocalePrefix(`/pressure-calculator?bikeId=${newBikeId}`, locale)} />
+                  <Link
+                    href={withLocalePrefix(
+                      getDashboardPressureCalculatorPath(newBikeId),
+                      locale
+                    )}
+                  />
                 }
               >
                 {messages.pressure.wizard.calculatePressure}

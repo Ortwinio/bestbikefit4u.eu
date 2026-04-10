@@ -5,6 +5,7 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import type { Messages } from "@/i18n/getDictionary";
 import { BrandLogo } from "@/components/branding";
 import { CampaignAnnouncementBar } from "@/components/campaign/CampaignAnnouncementBar";
+import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { HeaderAuthActions } from "./HeaderAuthActions";
 import { HeaderMobileMenu } from "./HeaderMobileMenu";
@@ -28,7 +29,7 @@ export function Header({ locale, labels }: HeaderProps) {
       icon: <Compass className="h-4 w-4" />,
     },
     {
-      href: withLocalePrefix("/bandenspanning-calculator", locale),
+      href: withLocalePrefix(getLocalizedPublicCalculatorPath("tire-pressure", locale), locale),
       label: labels.nav.tools,
       icon: <Gauge className="h-4 w-4" />,
     },

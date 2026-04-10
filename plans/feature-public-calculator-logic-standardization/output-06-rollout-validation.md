@@ -1,121 +1,149 @@
 # Rollout And Validation
 
-## Rollout Sequence
+## Recommended Rollout Sequence
 
-### Phase 0: Shared contracts
+### Phase 1: Shared logic contract
+
+Implement:
 
 - shared anthropometric baseline type
-- shared validation issue model
-- shared confidence model
-- shared result envelope
-- shared calculator route registry
+- shared fit-calculator input mapping
+- validation result type
+- confidence result type
 
-### Phase 1: Fit calculator logic core
+### Phase 2: Shared result contract
 
-- migrate `bike-fit`
-- migrate `saddle-height`
-- shared measurement help patterns
-- shared “why this changed” block
+Implement:
 
-### Phase 2: Fit calculator family completion
+- standardized result shape
+- “range + likely center” output model
+- explanation model
+- primary driver / secondary modifier / not-covered blocks
 
-- migrate `frame-size`
-- migrate `crank-length`
-- add shortlist/range model where needed
-- add not-covered-here blocks
+### Phase 3: Shared calculator-family UI
 
-### Phase 3: Tire-pressure family alignment
+Implement:
 
-- align result envelope
-- align confidence language
-- align naming/routing
-- preserve pressure-specific logic model
+- page skeleton
+- required-input and optional-refinement sections
+- confidence presentation
+- “why this changed” block
+- measurement help patterns
 
-### Phase 4: Route canonicalization
+### Phase 4: Calculator rollout
 
-- canonical route rollout
+Order:
+
+1. bike fit
+2. saddle height
+3. frame size
+4. crank length
+5. tire pressure
+
+### Phase 5: Naming and route cleanup
+
+Implement:
+
+- canonical route standard
+- internal link migration
 - redirects
 - metadata updates
-- sitemap updates
-- analytics normalization
 
 ## Engineering Success Criteria
 
-- Shared calculator logic exists in reusable modules, not route-local code.
-- Validation and confidence logic are shared across fit-related calculators.
-- Result and explanation rendering follow one common model.
-- Route naming uses one registry and one redirect strategy.
+- Shared logic lives in reusable modules rather than page-local helpers.
+- Shared result and confidence shapes are reused across calculators.
+- Touched calculators render the same result structure and explanation pattern.
+- Route changes preserve analytics and SEO behavior.
 
 ## Product Success Criteria
 
 - Public calculators feel like one product family.
-- Riders understand what affects the result.
-- Riders understand what the tool does not cover.
-- Confidence and measurement quality are visible.
-- The next action after each result is clear.
+- Results are more honest and more useful.
+- Riders understand why the recommendation moved.
+- Confidence is visible without being alarmist.
 
-## Test Plan
+## Required Test Coverage
 
 ### Unit tests
 
 - shared baseline normalization
 - validation rules
 - confidence scoring
-- result-envelope formatting
-- explanation-driver selection
+- result formatting
+- explanation-generation rules
 
-### Component/page tests
+### Page/component tests
 
-- required inputs render correctly
-- optional refinements stay secondary
-- confidence block appears when expected
-- “why this changed” block appears with standardized content
-- next-step CTA remains visible
+- each calculator shows required vs optional sections correctly
+- each calculator shows confidence and “why this changed” areas
+- legacy route redirects work
 
 ### Browser acceptance
 
 - mobile and desktop
 - EN and NL
 - light, dark, system
-- route consistency
-- measurement help visibility
-- confidence label visibility
-- explanation visibility
+- inline measurement help visibility
+- result readability
 - CTA continuity
 
 ## User Acceptance Tests
 
-### Baseline and flow
+### UAT 1: Shared logic clarity
 
-1. A rider uses `bike-fit`, then opens `saddle-height`.
-   Expected: the shared rider logic feels continuous and the overlapping inputs mean the same thing.
+Given a rider uses bike fit and then saddle height,
+when they compare the forms,
+then the rider recognizes the same baseline concepts and terminology.
 
-### Validation and confidence
+### UAT 2: Validation trust
 
-2. A rider enters implausible measurements.
-   Expected: the tool blocks or warns clearly before calculation.
-3. A rider uses an estimated inseam.
-   Expected: the result is still available, but confidence drops and the UI explains why.
+Given a rider enters an implausible height/inseam combination,
+when they try to calculate,
+then the tool clearly explains the problem before calculation proceeds.
 
-### Result explainability
+### UAT 3: Range-based result honesty
 
-4. A rider changes a major modifier such as goal or flexibility.
-   Expected: the result changes and the explanation tells them why.
+Given a rider completes saddle height or frame size,
+when the result appears,
+then they see a usable range and a practical recommended start, not only a single-point answer.
 
-### UX consistency
+### UAT 4: Explainability
 
-5. A rider uses `frame-size` and `crank-length`.
-   Expected: both tools use the same structure for required inputs, optional refinements, result, explanation, and next action.
+Given a rider selects comfort goal with limited flexibility,
+when the result appears,
+then the tool explains that those choices made the recommendation more conservative.
 
-### Naming and route consistency
+### UAT 5: Confidence visibility
 
-6. A rider enters through a homepage link, a guide link, or an old route.
-   Expected: they land on a consistent canonical calculator route.
+Given a rider enters measured inseam,
+when the result appears,
+then confidence is visibly higher than when inseam is estimated or key refinements are missing.
 
-## Final Signoff Artifacts
+### UAT 6: Family consistency
 
-- implementation contract summary
-- route migration summary
-- test report
-- browser QA report
-- residual follow-ups list
+Given a rider uses frame size, crank length, and tire pressure,
+when they compare the flows,
+then each calculator follows the same structural rhythm:
+
+- what this tool is for
+- required inputs
+- optional refinements
+- result
+- why this changed
+- next best action
+
+### UAT 7: Route polish
+
+Given a rider visits calculator links from homepage or guides,
+when they navigate across English and Dutch pages,
+then route naming and calculator titles feel consistent and intentional.
+
+## Final Signoff
+
+The work is ready for implementation signoff when:
+
+- all six outputs in this plan are approved
+- the rollout order is accepted
+- success criteria are agreed by product and engineering
+- the UAT set is accepted as the launch gate

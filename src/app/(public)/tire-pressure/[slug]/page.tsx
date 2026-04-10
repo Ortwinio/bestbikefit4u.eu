@@ -15,6 +15,7 @@ import {
   parseEnglishPressureSlug,
 } from "@/lib/seo/programmatic/tirePressure";
 import { buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { BRAND } from "@/config/brand";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -172,7 +173,10 @@ export default async function ProgrammaticTirePressurePage({
             <Button
               render={
                 <TrackedCtaLink
-                  href={withLocalePrefix("/bandenspanning-calculator", "en")}
+                  href={withLocalePrefix(
+                    getLocalizedPublicCalculatorPath("tire-pressure", "en"),
+                    "en"
+                  )}
                   locale="en"
                   pagePath={pagePath}
                   section="programmatic_pressure_primary_cta"

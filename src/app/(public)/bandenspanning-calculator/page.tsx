@@ -12,12 +12,15 @@ import { buildLocaleAlternates } from "@/i18n/metadata";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { getPublicCalculatorRouteEntry } from "@/lib/public-calculators";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const dictionary = await getDictionary(locale);
-  const alternates = buildLocaleAlternates("/bandenspanning-calculator", locale);
+  const routeEntry = getPublicCalculatorRouteEntry("tire-pressure");
+  const localizedPath = routeEntry.localizedPaths[locale];
+  const alternates = buildLocaleAlternates(localizedPath, locale);
 
   return {
     title: dictionary.pressure.publicPage.title,
@@ -35,7 +38,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function BandenspanningCalculatorPage() {
   const locale = await getRequestLocale();
   const dictionary = await getDictionary(locale);
-  const pagePath = withLocalePrefix("/bandenspanning-calculator", locale);
+  const routeEntry = getPublicCalculatorRouteEntry("tire-pressure");
+  const pagePath = withLocalePrefix(routeEntry.localizedPaths[locale], locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
 
   return (

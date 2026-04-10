@@ -1,4 +1,5 @@
 import { type Locale, SUPPORTED_LOCALES, isLocale } from "./config";
+import { DASHBOARD_PRESSURE_CALCULATOR_PATH } from "@/lib/pressureRoutes";
 
 const localePrefixRegex = new RegExp(
   `^/(${SUPPORTED_LOCALES.join("|")})(?=/|$)`,
@@ -78,7 +79,7 @@ export function isProtectedAppPath(pathname: string): boolean {
     "/profile",
     "/settings",
     "/fit-history",
-    "/pressure-calculator",
+    DASHBOARD_PRESSURE_CALCULATOR_PATH,
     "/feedback",
   ] as const;
 

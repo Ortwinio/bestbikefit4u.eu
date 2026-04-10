@@ -29,6 +29,9 @@ describe("BikeFitCalculatorForm", () => {
 
     expect(screen.getAllByText("Your first-pass fit recommendation").length).toBeGreaterThan(0);
     expect(screen.getByText("Saddle Height")).toBeTruthy();
+    expect(screen.getAllByText("High confidence").length).toBeGreaterThan(0);
+    expect(screen.getByText("Why this result changed")).toBeTruthy();
+    expect(screen.getByText("Primary drivers")).toBeTruthy();
     expect(screen.queryByText("Enter your height and inseam to unlock a first-pass fit estimate.")).toBeNull();
   });
 });

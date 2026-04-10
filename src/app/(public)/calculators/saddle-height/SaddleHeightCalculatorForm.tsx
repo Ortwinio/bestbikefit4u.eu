@@ -3,15 +3,24 @@
 import { useMemo, useState } from "react";
 import { ShieldCheck } from "lucide-react";
 import {
+  PublicCalculatorResultSummary,
   PublicInfoPanel,
   PublicNumberField,
   PublicScaleField,
   PublicSelectField,
   PublicSurfaceCard,
 } from "@/components/public";
-import { mapCoreScore, mapFlexibilityScore } from "../../../../../convex/lib/fitAlgorithm";
-import { calculateSaddleHeight } from "../../../../../convex/lib/fitAlgorithm/calculations";
-import type { Ambition, BikeCategory, CalculationContext } from "../../../../../convex/lib/fitAlgorithm/types";
+import type { Ambition, BikeCategory } from "../../../../../convex/lib/fitAlgorithm/types";
+import {
+  createPublicCalculatorResultEnvelope,
+  createPublicCalculatorRange,
+  createPublicFitBaseline,
+  derivePublicCalculatorConfidence,
+  getConfidenceLabel,
+  PUBLIC_FIT_REQUIREMENTS,
+  validatePublicFitBaseline,
+} from "@/lib/publicCalculatorLogic";
+import { runSaddleHeightCalculation } from "@/lib/public-calculators/fitAdapters";
 
 const CATEGORY_OPTIONS = [
   { value: "road", label: "Road" },
@@ -55,6 +64,30 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
   const [ambition, setAmbition] = useState<Ambition>("balanced");
   const [flexibility, setFlexibility] = useState("3");
   const [core, setCore] = useState("3");
+  const baseline = useMemo(
+    () =>
+      createPublicFitBaseline({
+        inseamCm,
+        bikeCategory: category,
+        ridingGoal: ambition,
+        flexibilityScore: Number(flexibility) as 1 | 2 | 3 | 4 | 5,
+        coreStabilityScore: Number(core),
+      }),
+    [inseamCm, category, ambition, flexibility, core]
+  );
+  const baselineIssues = useMemo(
+    () => validatePublicFitBaseline(baseline, PUBLIC_FIT_REQUIREMENTS.saddleHeight),
+    [baseline]
+  );
+  const baselineConfidence = useMemo(
+    () =>
+      derivePublicCalculatorConfidence({
+        baseline,
+        issues: baselineIssues,
+        requirements: PUBLIC_FIT_REQUIREMENTS.saddleHeight,
+      }),
+    [baseline, baselineIssues]
+  );
   const categoryOptions = isNl
     ? [
         { value: "road", label: "Race" },
@@ -99,33 +132,51 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
 
   const recommendation = useMemo(() => {
     if (!inseamCm || inseamCm < 55 || inseamCm > 105) return null;
+    if (baselineIssues.some((issue) => issue.severity === "error")) return null;
 
     const flexScore = Number(flexibility) as 1 | 2 | 3 | 4 | 5;
     const coreScore = Number(core) as 1 | 2 | 3 | 4 | 5;
-    const inseamMm = Math.round(inseamCm * 10);
-    const mappedFlex = mapFlexibilityScore(flexScore);
-    const mappedCore = mapCoreScore(coreScore);
-
-    const ctx: CalculationContext = {
-      inputs: {
-        category,
-        ambition,
-        heightMm: 1750,
-        inseamMm,
-        flexibilityScore: mappedFlex,
-        coreScore: mappedCore,
+    const result = runSaddleHeightCalculation({
+      inseamCm,
+      category,
+      ridingGoal: ambition,
+      flexibility: flexScore,
+      coreStability: coreScore,
+      inseamSource: baseline.inseamSource,
+    });
+    const resultModel = createPublicCalculatorResultEnvelope({
+      calculatorKey: "saddle-height",
+      recommended: {
+        saddleHeightMm: result.height,
       },
-      flexIndex: mappedFlex - 5,
-      coreIndex: mappedCore - 5,
-    };
+      range: createPublicCalculatorRange(result.range.min, result.range.max, result.height),
+      confidence: baselineConfidence,
+      issues: baselineIssues,
+      primaryDrivers: [isNl ? "Binnenbeenlengte en categorie" : "Inseam and category"],
+      secondaryModifiers: [
+        isNl ? "Rijdoel, flexibiliteit en core-stabiliteit" : "Riding goal, flexibility, and core stability",
+      ],
+      notCovered: [
+        isNl ? "Cranklengte, schoenplaatstack en asymmetrie" : "Crank length, cleat stack, and asymmetry",
+      ],
+      nextAction:
+        isNl
+          ? "Pas eerst zadelhoogte aan voordat je andere contactpunten verandert."
+          : "Adjust saddle height before changing other contact points.",
+    });
 
-    const result = calculateSaddleHeight(ctx);
     return {
       saddleHeightMm: result.height,
       minMm: result.range.min,
       maxMm: result.range.max,
+      resultModel,
     };
-  }, [inseamCm, category, ambition, flexibility, core]);
+  }, [inseamCm, category, ambition, flexibility, core, baselineIssues, baselineConfidence, isNl, baseline.inseamSource]);
+
+  const confidenceLabel = useMemo(
+    () => getConfidenceLabel(baselineConfidence.level, isNl),
+    [baselineConfidence.level, isNl]
+  );
 
   return (
     <>
@@ -143,6 +194,20 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
               {isNl ? "Invoer" : "Inputs"}
             </p>
+            <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3">
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                {confidenceLabel}
+              </span>
+              <p className="text-sm text-muted-foreground">
+                {baselineConfidence.level === "high"
+                  ? isNl
+                    ? "De gemeten binnenbeenlengte geeft een sterk startpunt."
+                    : "A measured inseam gives this calculator a strong starting point."
+                  : isNl
+                    ? "De betrouwbaarheid stijgt wanneer je nauwkeurig meet en de verfijners invult."
+                    : "Confidence increases when your measurement is precise and the refinements are set."}
+              </p>
+            </div>
             <PublicNumberField
               label={isNl ? "Binnenbeenlengte" : "Inseam"}
               description={
@@ -204,6 +269,17 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
                 onChange={setCore}
               />
             </div>
+            {baselineIssues.length > 0 ? (
+              <div className="rounded-2xl border border-amber-500/25 bg-amber-500/10 px-4 py-3 text-sm text-amber-700 dark:text-amber-300">
+                <ul className="space-y-1">
+                  {baselineIssues.map((issue) => (
+                    <li key={`${issue.code}-${issue.field ?? "baseline"}-${issue.message}`}>
+                      {issue.message}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </div>
         </PublicSurfaceCard>
 
@@ -252,24 +328,30 @@ export function SaddleHeightCalculatorForm({ isNl = false }: { isNl?: boolean })
         </p>
 
         {recommendation ? (
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="public-calculator-result rounded-2xl border p-5">
-              <p className="text-sm text-muted-foreground">
-                {isNl ? "Aanbevolen zadelhoogte" : "Recommended saddle height"}
-              </p>
-              <p className="mt-2 text-3xl font-semibold text-foreground">
-                {recommendation.saddleHeightMm} mm
-              </p>
+          <>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="public-calculator-result rounded-2xl border p-5">
+                <p className="text-sm text-muted-foreground">
+                  {isNl ? "Aanbevolen zadelhoogte" : "Recommended saddle height"}
+                </p>
+                <p className="mt-2 text-3xl font-semibold text-foreground">
+                  {recommendation.saddleHeightMm} mm
+                </p>
+              </div>
+              <div className="public-calculator-card-subtle rounded-2xl border p-5">
+                <p className="text-sm text-muted-foreground">
+                  {isNl ? "Veilige startzone" : "Safe starting band"}
+                </p>
+                <p className="mt-2 text-2xl font-semibold text-foreground">
+                  {recommendation.minMm}–{recommendation.maxMm} mm
+                </p>
+              </div>
             </div>
-            <div className="public-calculator-card-subtle rounded-2xl border p-5">
-              <p className="text-sm text-muted-foreground">
-                {isNl ? "Veilige startzone" : "Safe starting band"}
-              </p>
-              <p className="mt-2 text-2xl font-semibold text-foreground">
-                {recommendation.minMm}–{recommendation.maxMm} mm
-              </p>
-            </div>
-          </div>
+            <PublicCalculatorResultSummary
+              result={recommendation.resultModel}
+              isNl={isNl}
+            />
+          </>
         ) : (
           <div className="public-calculator-card-subtle mt-6 rounded-2xl border border-dashed px-4 py-5 text-sm text-muted-foreground">
             {isNl

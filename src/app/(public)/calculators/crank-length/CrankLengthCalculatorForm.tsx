@@ -3,12 +3,22 @@
 import { useMemo, useState } from "react";
 import { ShieldCheck } from "lucide-react";
 import {
+  PublicCalculatorResultSummary,
   PublicInfoPanel,
   PublicNumberField,
   PublicSelectField,
   PublicSurfaceCard,
 } from "@/components/public";
-import { calculateCrankLength } from "../../../../../convex/lib/fitAlgorithm/calculations";
+import {
+  createPublicCalculatorResultEnvelope,
+  createPublicFitBaseline,
+  derivePublicCalculatorConfidence,
+  getConfidenceLabel,
+  PUBLIC_FIT_REQUIREMENTS,
+  validateCrankLengthRecommendation,
+  validatePublicFitBaseline,
+} from "@/lib/publicCalculatorLogic";
+import { runCrankLengthCalculation } from "@/lib/public-calculators/fitAdapters";
 import type { BikeCategory } from "../../../../../convex/lib/fitAlgorithm/types";
 
 type CrankLengthCalculatorFormProps = {
@@ -55,19 +65,85 @@ export function CrankLengthCalculatorForm({
       ]
     : GUIDANCE_POINTS;
 
+  const baseline = useMemo(
+    () =>
+      createPublicFitBaseline({
+        inseamCm,
+        bikeCategory: category,
+      }),
+    [inseamCm, category]
+  );
+
+  const baselineIssues = useMemo(
+    () => validatePublicFitBaseline(baseline, PUBLIC_FIT_REQUIREMENTS.crankLength),
+    [baseline]
+  );
+  const baselineConfidence = useMemo(
+    () =>
+      derivePublicCalculatorConfidence({
+        baseline,
+        issues: baselineIssues,
+        requirements: PUBLIC_FIT_REQUIREMENTS.crankLength,
+      }),
+    [baseline, baselineIssues]
+  );
+
   const result = useMemo(() => {
     if (!inseamCm) return null;
-    if (inseamCm < 55 || inseamCm > 105) return null;
+    if (baselineIssues.some((issue) => issue.severity === "error")) return null;
 
-    return calculateCrankLength(Math.round(inseamCm * 10), category);
-  }, [category, inseamCm]);
+    const crankLengthMm = runCrankLengthCalculation({
+      inseamCm,
+      category,
+      inseamSource: baseline.inseamSource,
+    });
+    const outputIssues = [
+      ...baselineIssues,
+      ...validateCrankLengthRecommendation(category, crankLengthMm, isNl),
+    ];
+    const resultModel = createPublicCalculatorResultEnvelope({
+      calculatorKey: "crank-length",
+      recommended: {
+        label: isNl ? "Aanbevolen cranklengte" : "Recommended crank length",
+        value: crankLengthMm,
+        unit: "mm",
+      },
+      confidence: baselineConfidence,
+      primaryDrivers: [isNl ? "Binnenbeenlengte" : "Inseam"],
+      secondaryModifiers: [
+        isNl
+          ? "De categorie beïnvloedt hoe conservatief de componentkeuze moet blijven."
+          : "Bike category changes how conservative the component choice should stay.",
+      ],
+      notCovered: [
+        isNl
+          ? "Heupcompressie, pedaalgevoel en zadelhoogte."
+          : "Hip compression, pedaling feel, and saddle height.",
+      ],
+      nextAction: isNl
+        ? "Controleer daarna of zadelhoogte en kniehoek nog logisch blijven."
+        : "Then recheck whether saddle height and knee angle still make sense.",
+      issues: outputIssues,
+    });
+
+    return {
+      crankLengthMm,
+      resultModel,
+    };
+  }, [category, inseamCm, baselineIssues, baselineConfidence, isNl, baseline.inseamSource]);
 
   const error =
-    inseamCm !== undefined && (inseamCm < 55 || inseamCm > 105)
+    baselineIssues.find((issue) => issue.severity === "error")?.message ??
+    (inseamCm !== undefined && (inseamCm < 55 || inseamCm > 105)
       ? isNl
         ? "Voer een binnenbeenlengte tussen 55 en 105 cm in."
         : "Please enter inseam between 55 and 105 cm."
-      : null;
+      : null);
+
+  const confidenceLabel = useMemo(
+    () => getConfidenceLabel(baselineConfidence.level, isNl),
+    [baselineConfidence.level, isNl]
+  );
 
   return (
     <>
@@ -85,6 +161,20 @@ export function CrankLengthCalculatorForm({
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
               {isNl ? "Invoer" : "Inputs"}
             </p>
+            <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3">
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                {confidenceLabel}
+              </span>
+              <p className="text-sm text-muted-foreground">
+                {baselineConfidence.level === "high"
+                  ? isNl
+                    ? "Een gemeten binnenbeenlengte maakt deze componentkeuze betrouwbaarder."
+                    : "A measured inseam makes this component recommendation more reliable."
+                  : isNl
+                    ? "De betrouwbaarheid stijgt wanneer je nauwkeurig meet."
+                    : "Confidence increases when your inseam is measured precisely."}
+              </p>
+            </div>
 
             <div className="grid gap-5 md:grid-cols-2">
               <PublicNumberField
@@ -118,6 +208,15 @@ export function CrankLengthCalculatorForm({
             {error ? (
               <div className="rounded-2xl border border-destructive/20 bg-destructive-soft px-4 py-3 text-sm text-destructive">
                 {error}
+              </div>
+            ) : null}
+            {!error && baselineIssues.length > 0 ? (
+              <div className="rounded-2xl border border-amber-500/25 bg-amber-500/10 px-4 py-3 text-sm text-amber-700 dark:text-amber-300">
+                <ul className="space-y-1">
+                  {baselineIssues.map((issue) => (
+                    <li key={`${issue.code}-${issue.field}-${issue.message}`}>{issue.message}</li>
+                  ))}
+                </ul>
               </div>
             ) : null}
           </div>
@@ -168,12 +267,20 @@ export function CrankLengthCalculatorForm({
         </p>
 
         {result !== null ? (
-          <div className="public-calculator-result mt-6 rounded-2xl border p-5">
-            <p className="text-sm text-muted-foreground">
-              {isNl ? "Aanbevolen cranklengte" : "Recommended crank length"}
-            </p>
-            <p className="mt-2 text-3xl font-semibold text-foreground">{result} mm</p>
-          </div>
+          <>
+            <div className="public-calculator-result mt-6 rounded-2xl border p-5">
+              <p className="text-sm text-muted-foreground">
+                {isNl ? "Aanbevolen cranklengte" : "Recommended crank length"}
+              </p>
+              <p className="mt-2 text-3xl font-semibold text-foreground">
+                {result.crankLengthMm} mm
+              </p>
+            </div>
+            <PublicCalculatorResultSummary
+              result={result.resultModel}
+              isNl={isNl}
+            />
+          </>
         ) : (
           <div className="public-calculator-card-subtle mt-6 rounded-2xl border border-dashed px-4 py-5 text-sm text-muted-foreground">
             {isNl

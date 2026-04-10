@@ -1,21 +1,19 @@
 # Naming And Routing
 
-## Current Problem
+## Mission
 
-The public calculator routes are not fully polished as one family. The clearest inconsistency is the English tire-pressure route living on Dutch naming:
+Make calculator naming and routing feel deliberate, bilingual, and product-grade.
 
-- `/bandenspanning-calculator`
+## Current Routing Reality
 
-There are also parallel content routes in both languages:
+Current mixed pattern:
 
-- `/bandenspanning/[slug]`
-- `/tire-pressure/[slug]`
+- fit calculators use `/calculators/...`
+- English tire pressure still uses `/bandenspanning-calculator`
 
-And internal references still exist to:
+This weakens polish and makes the English product surface feel partially untranslated.
 
-- `/pressure-calculator`
-
-## Canonical Route Contract
+## Recommended Route Model
 
 ### English
 
@@ -27,75 +25,68 @@ And internal references still exist to:
 
 ### Dutch
 
+Recommended preferred pattern:
+
 - `/calculators/bike-fit`
 - `/calculators/zadelhoogte`
 - `/calculators/framemaat`
 - `/calculators/cranklengte`
 - `/calculators/bandenspanning`
 
-## Migration Strategy
+Alternative if the product chooses one neutral route family:
 
-### Phase 1: Canonical declaration
-
-- define the canonical route set in one shared routing config
-- update metadata helpers to use canonical localized paths
-
-### Phase 2: Internal-link update
-
-- update CTAs
-- update related links
-- update homepage calculator references
-- update sitemap sources
-
-### Phase 3: Redirects
-
-- redirect `/bandenspanning-calculator` to English or Dutch canonical route as appropriate
-- redirect `/pressure-calculator` to the canonical localized route
-- preserve campaign and analytics attribution parameters
-
-### Phase 4: SEO cleanup
-
-- canonical tags
-- alternate locale links
-- sitemap entries
-- analytics page-path normalization
+- keep `/calculators/...` as the family path in both locales
+- localize the slug per locale
 
 ## Naming Contract
 
-### UI naming
+### Product-facing names
 
-- always use one calculator title per locale
-- use the same name in hero, metadata, CTA text, and related links
+- English: Bike Fit Calculator, Saddle Height Calculator, Frame Size Calculator, Crank Length Calculator, Tire Pressure Calculator
+- Dutch: Bike fit calculator, Zadelhoogte calculator, Framemaat calculator, Cranklengte calculator, Bandenspanning calculator
 
-### CTA naming
+### CTA references
 
-- “Open bike-fit calculator”
-- “Open saddle-height calculator”
-- “Open frame-size calculator”
-- “Open crank-length calculator”
-- “Open tire-pressure calculator”
+CTAs should use the same names everywhere:
 
-## Engineering Implications
+- no mixed references like “bandenspanning calculator” on English surfaces unless intentional for SEO legacy only
+- no inconsistent capitalization across the same locale
 
-- Introduce a shared calculator route registry.
-- Stop hard-coding calculator hrefs across multiple pages.
-- Update sitemap and metadata generation to pull from the same route registry.
-- Normalize analytics page names so legacy paths and canonical paths roll up together during migration.
+## Migration Strategy
+
+### Phase 1
+
+- define new canonical route targets
+- keep current routes working
+- add redirect plan
+
+### Phase 2
+
+- update internal links, CTAs, related-links modules, and calculators index
+- update metadata and alternates
+
+### Phase 3
+
+- add permanent redirects from legacy routes
+- monitor analytics continuity
+
+## SEO And Analytics Constraints
+
+- preserve canonical and alternate links during migration
+- preserve campaign and CTA source tracking
+- preserve route-level analytics history through redirect mapping
+- update sitemap calculator entries
 
 ## Success Criteria
 
-- No mixed-language calculator route remains as the visible canonical route.
-- Internal links use one shared route source of truth.
-- Redirects preserve SEO equity and analytics continuity.
-- Users see the same calculator naming everywhere.
+- Route conventions are consistent and bilingual.
+- English routes are no longer partially Dutch for the tire-pressure calculator.
+- Internal links and metadata follow the same naming contract.
+- Redirects protect SEO and campaign attribution.
 
 ## User Acceptance Tests
 
-1. An English user opens the tire-pressure calculator.
-   Expected: the visible canonical route is English and matches the page title.
-2. A Dutch user opens the Dutch tire-pressure calculator.
-   Expected: the visible route and the page title are both Dutch and consistent.
-3. A legacy link to `/bandenspanning-calculator` still works.
-   Expected: it redirects cleanly to the correct canonical route without losing UTM parameters.
-4. A user navigates from homepage, related links, and calculator CTAs.
-   Expected: every path uses the same naming convention.
+1. An English-speaking rider sees English calculator route names and English calculator titles.
+2. A Dutch-speaking rider sees Dutch calculator titles and route slugs where localization is intended.
+3. Legacy calculator URLs still reach the right destination through redirects.
+4. Internal links from homepage, guides, FAQ, and related-links modules all point to the canonical route version.

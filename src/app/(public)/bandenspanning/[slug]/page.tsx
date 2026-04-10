@@ -15,6 +15,7 @@ import {
   parseDutchPressureSlug,
 } from "@/lib/seo/programmatic/tirePressure";
 import { buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { BRAND } from "@/config/brand";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -172,7 +173,10 @@ export default async function ProgrammaticBandenspanningPage({
             <Button
               render={
                 <TrackedCtaLink
-                  href={withLocalePrefix("/bandenspanning-calculator", "nl")}
+                  href={withLocalePrefix(
+                    getLocalizedPublicCalculatorPath("tire-pressure", "nl"),
+                    "nl"
+                  )}
                   locale="nl"
                   pagePath={pagePath}
                   section="programmatic_pressure_primary_cta"

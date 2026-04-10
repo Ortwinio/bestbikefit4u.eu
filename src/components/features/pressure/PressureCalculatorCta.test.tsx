@@ -76,7 +76,7 @@ describe("PressureCalculatorCta", () => {
     render(
       <PressureCalculatorCta
         locale="en"
-        pagePath="/en/bandenspanning-calculator"
+        pagePath="/en/tire-pressure-calculator"
         labels={{
           heading: "What is next?",
           body: "Create a free account to save these results, refine your setup with more detail, and track changes over time.",

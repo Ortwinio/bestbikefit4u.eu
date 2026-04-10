@@ -10,6 +10,7 @@ import { BrandLogo } from "@/components/branding";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
+import { DASHBOARD_PRESSURE_CALCULATOR_PATH } from "@/lib/pressureRoutes";
 import { cn } from "@/utils/cn";
 import {
   LayoutDashboard,
@@ -50,7 +51,7 @@ export function DashboardSidebar() {
     { name: messages.nav.newBike, href: "/bikes/new", icon: PlusCircle },
     { name: messages.nav.bikeFitting, href: "/fit-history", icon: ClipboardList },
     { name: messages.nav.newFitSession, href: "/fit", icon: PlusCircle },
-    { name: messages.nav.tirePressure, href: "/pressure-calculator", icon: Gauge },
+    { name: messages.nav.tirePressure, href: DASHBOARD_PRESSURE_CALCULATOR_PATH, icon: Gauge },
     { name: messages.nav.settings, href: "/settings", icon: Settings },
     { name: messages.nav.feedback, href: "/feedback", icon: MessageSquareMore },
   ];

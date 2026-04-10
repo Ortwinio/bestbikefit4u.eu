@@ -12,6 +12,7 @@ import { DashboardMessageSurface } from "@/components/dashboard-messages";
 import { StravaAutoImportTrigger } from "@/components/integrations/StravaAutoImportTrigger";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
+import { DASHBOARD_PRESSURE_CALCULATOR_PATH } from "@/lib/pressureRoutes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { cn } from "@/utils/cn";
 import { Menu, X } from "lucide-react";
@@ -126,7 +127,7 @@ export default function DashboardLayout({
                     { href: "/bikes/new", label: messages.nav.newBike },
                     { href: "/fit-history", label: messages.nav.bikeFitting },
                     { href: "/fit", label: messages.nav.newFitSession },
-                    { href: "/pressure-calculator", label: messages.nav.tirePressure },
+                    { href: DASHBOARD_PRESSURE_CALCULATOR_PATH, label: messages.nav.tirePressure },
                     { href: "/settings", label: messages.nav.settings },
                   ].map((item) => (
                     <Link

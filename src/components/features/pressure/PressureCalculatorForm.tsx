@@ -18,6 +18,11 @@ import {
   type ValidationError,
   validatePressureInput,
 } from "@/lib/pressure-engine";
+import {
+  createPublicCalculatorResultEnvelope,
+  getConfidenceLabel,
+  type PublicResultEnvelope,
+} from "@/lib/publicCalculatorLogic";
 import { PressureResultCard } from "./PressureResultCard";
 import type { PressureResultLabels } from "./shared";
 
@@ -68,6 +73,20 @@ const TUBE_OPTIONS = ["inner_tube", "latex_tube", "tubeless"] as const;
 
 function findError(errors: ValidationError[], field: string): string | undefined {
   return errors.find((error) => error.field === field)?.message;
+}
+
+function getPressureConfidenceLevel(params: {
+  hasGoal: boolean;
+  hasAdvancedBikeWeight: boolean;
+  warningCount: number;
+}): "high" | "medium" | "lower" {
+  if (params.warningCount >= 2) {
+    return "medium";
+  }
+  if (params.hasGoal && params.hasAdvancedBikeWeight) {
+    return "high";
+  }
+  return "medium";
 }
 
 export function PressureCalculatorForm({
@@ -143,6 +162,70 @@ export function PressureCalculatorForm({
     widthFrontMm,
     widthRearMm,
   ]);
+
+  const resultSummary: PublicResultEnvelope<unknown> | null = useMemo(() => {
+    if (!result) {
+      return null;
+    }
+
+    const confidenceLevel = getPressureConfidenceLevel({
+      hasGoal: Boolean(ridingGoal),
+      hasAdvancedBikeWeight: showAdvanced,
+      warningCount: result.warnings.length,
+    });
+
+    return createPublicCalculatorResultEnvelope({
+      calculatorKey: "tire-pressure",
+      recommended: {
+        frontBar: result.frontBar,
+        rearBar: result.rearBar,
+      },
+      confidence: {
+        level: confidenceLevel,
+        score: confidenceLevel === "high" ? 82 : 64,
+        reasons: [getConfidenceLabel(confidenceLevel, isNl)],
+      },
+      primaryDrivers: isNl
+        ? ["Rijdersgewicht", "Bandbreedte", "Ondergrond", "Bandtype"]
+        : ["Rider weight", "Tyre width", "Surface", "Tyre type"],
+      secondaryModifiers:
+        showAdvanced || ridingGoal
+          ? isNl
+            ? [
+                "Rijdoel verschuift het advies richting snelheid of comfort.",
+                "Fietsgewicht verfijnt de totale systeemlast.",
+              ]
+            : [
+                "Riding goal shifts the recommendation toward speed or comfort.",
+                "Bike weight refines the total system load.",
+              ]
+          : isNl
+            ? ["Open geavanceerde opties om rijdoel en fietsgewicht mee te nemen."]
+            : ["Open advanced options to include riding goal and bike weight."],
+      notCovered: isNl
+        ? [
+            "Interne velgbreedte, karkasconstructie en natte omstandigheden.",
+            "Persoonlijke voorkeur na enkele testritten.",
+          ]
+        : [
+            "Internal rim width, casing construction, and wet conditions.",
+            "Personal preference after a few validation rides.",
+          ],
+      nextAction: isNl
+        ? "Begin hier en test daarna kleine stappen van 0,1 bar per keer."
+        : "Start here, then test small 0.1 bar steps one change at a time.",
+    });
+  }, [result, ridingGoal, showAdvanced, isNl]);
+
+  const extraNotes = isNl
+    ? [
+        "Controleer grip en comfort eerst op de voorband.",
+        "Houd achterbanddruk iets hoger als je extra belasting of ruwer terrein voelt.",
+      ]
+    : [
+        "Check front-tyre grip and comfort first on the next ride.",
+        "Keep rear pressure slightly higher when the load or terrain feels harsher.",
+      ];
 
   const disciplineOptions = [
     { value: "road", label: labels.disciplineRoad },
@@ -316,7 +399,13 @@ export function PressureCalculatorForm({
 
       <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
         {result ? (
-          <PressureResultCard result={result} labels={resultLabels} />
+          <PressureResultCard
+            result={result}
+            labels={resultLabels}
+            isNl={isNl}
+            summary={resultSummary!}
+            extraNotes={extraNotes}
+          />
         ) : (
           <div className="public-calculator-card-subtle rounded-[1.75rem] border border-dashed p-6 text-sm text-[color:var(--muted-foreground)]">
             {labels.resultPlaceholder}

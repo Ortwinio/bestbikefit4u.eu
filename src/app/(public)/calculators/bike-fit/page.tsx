@@ -21,6 +21,7 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
+import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import { buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { BikeFitCalculatorForm } from "./BikeFitCalculatorForm";
@@ -225,7 +226,10 @@ export default async function BikeFitCalculatorPage() {
               <Button
                 render={
                   <TrackedCtaLink
-                    href={withLocalePrefix("/bandenspanning-calculator", locale)}
+                    href={withLocalePrefix(
+                      getLocalizedPublicCalculatorPath("tire-pressure", locale),
+                      locale
+                    )}
                     locale={locale}
                     pagePath={pagePath}
                     section="bike_fit_tire_pressure_cta"
@@ -271,7 +275,10 @@ export default async function BikeFitCalculatorPage() {
               <Button
                 render={
                   <TrackedCtaLink
-                    href={withLocalePrefix("/bandenspanning-calculator", locale)}
+                    href={withLocalePrefix(
+                      getLocalizedPublicCalculatorPath("tire-pressure", locale),
+                      locale
+                    )}
                     locale={locale}
                     pagePath={pagePath}
                     section="bike_fit_tire_pressure_cta"

@@ -23,6 +23,7 @@ import { PublicCtaBand } from "@/components/public/PublicCtaBand";
 import { PublicSection } from "@/components/public/PublicSection";
 import { PublicSurfaceCard } from "@/components/public/PublicSurfaceCard";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import { getDictionary } from "@/i18n/getDictionary";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
@@ -135,7 +136,7 @@ export default async function HomePage() {
               "bg-[color:color-mix(in_oklch,var(--warning)_18%,var(--background)_82%)] text-[color:color-mix(in_oklch,var(--warning)_78%,var(--foreground)_22%)]",
           },
           {
-            href: "/bandenspanning-calculator",
+            href: getLocalizedPublicCalculatorPath("tire-pressure", "nl"),
             label: "Bandenspanning calculator",
             icon: Gauge,
             iconClassName:
@@ -165,7 +166,7 @@ export default async function HomePage() {
               "bg-[color:color-mix(in_oklch,var(--warning)_18%,var(--background)_82%)] text-[color:color-mix(in_oklch,var(--warning)_78%,var(--foreground)_22%)]",
           },
           {
-            href: "/bandenspanning-calculator",
+            href: getLocalizedPublicCalculatorPath("tire-pressure", "en"),
             label: "Tire Pressure Calculator",
             icon: Gauge,
             iconClassName:

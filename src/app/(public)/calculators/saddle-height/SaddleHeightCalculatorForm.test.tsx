@@ -26,5 +26,8 @@ describe("SaddleHeightCalculatorForm", () => {
 
     expect(screen.getAllByText("Your baseline").length).toBeGreaterThan(0);
     expect(screen.getByText("Recommended saddle height")).toBeTruthy();
+    expect(screen.getAllByText("High confidence").length).toBeGreaterThan(0);
+    expect(screen.getByText("Why this result changed")).toBeTruthy();
+    expect(screen.getByText("Secondary modifiers")).toBeTruthy();
   });
 });

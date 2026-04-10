@@ -163,7 +163,10 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
   },
   {
     id: "calculator-tire-pressure",
-    path: "/bandenspanning-calculator",
+    localizedPaths: {
+      en: "/en/tire-pressure-calculator",
+      nl: "/nl/bandenspanning-calculator",
+    },
     lastmod: "2026-03-17",
     changefreq: "weekly",
     priority: 0.9,

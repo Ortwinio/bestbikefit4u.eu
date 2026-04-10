@@ -7,6 +7,7 @@ import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { getDashboardPressureCalculatorPath } from "@/lib/pressureRoutes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { pressureUseCaseLabel, tubeTypeLabel } from "./shared";
 import { PressureStatusBadge } from "./PressureStatusBadge";
@@ -52,7 +53,12 @@ export function BikePressureSection({ bikeId }: BikePressureSectionProps) {
           <div className="flex flex-wrap gap-2">
             <Button
               render={
-                <Link href={withLocalePrefix(`/pressure-calculator?bikeId=${bikeId}`, locale)} />
+                <Link
+                  href={withLocalePrefix(
+                    getDashboardPressureCalculatorPath(bikeId),
+                    locale
+                  )}
+                />
               }
             >
               {messages.pressure.bikeDetail.calculatePressure}
