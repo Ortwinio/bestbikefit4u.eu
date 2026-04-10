@@ -65,9 +65,12 @@ function resolveCompleteness(input: {
     return "partial" as const;
   }
 
+  const drivetrainType = input.drivetrainType!;
+  const chainrings = input.chainrings!;
+
   const drivetrainMatchesChainrings =
-    (input.drivetrainType === "1x" && input.chainrings.length === 1) ||
-    (input.drivetrainType === "2x" && input.chainrings.length === 2);
+    (drivetrainType === "1x" && chainrings.length === 1) ||
+    (drivetrainType === "2x" && chainrings.length === 2);
 
   if (!drivetrainMatchesChainrings) {
     return "partial" as const;
