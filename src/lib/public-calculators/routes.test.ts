@@ -10,8 +10,17 @@ describe("PUBLIC_CALCULATOR_ROUTE_REGISTRY", () => {
     expect(PUBLIC_CALCULATOR_ROUTE_REGISTRY["bike-fit"].canonicalPath).toBe(
       "/calculators/bike-fit"
     );
+    expect(PUBLIC_CALCULATOR_ROUTE_REGISTRY.gearing.canonicalPath).toBe(
+      "/calculators/gearing"
+    );
     expect(PUBLIC_CALCULATOR_ROUTE_REGISTRY["saddle-height"].canonicalPath).toBe(
       "/calculators/saddle-height"
+    );
+    expect(PUBLIC_CALCULATOR_ROUTE_REGISTRY["saddle-width"].canonicalPath).toBe(
+      "/calculators/saddle-width"
+    );
+    expect(PUBLIC_CALCULATOR_ROUTE_REGISTRY["gearing"].canonicalPath).toBe(
+      "/calculators/gearing"
     );
   });
 
@@ -26,6 +35,8 @@ describe("PUBLIC_CALCULATOR_ROUTE_REGISTRY", () => {
   });
 
   it("returns locale-specific public paths via the helper", () => {
+    expect(getLocalizedPublicCalculatorPath("gearing", "en")).toBe("/calculators/gearing");
+    expect(getLocalizedPublicCalculatorPath("gearing", "nl")).toBe("/calculators/gearing");
     expect(getLocalizedPublicCalculatorPath("tire-pressure", "en")).toBe(
       "/tire-pressure-calculator"
     );

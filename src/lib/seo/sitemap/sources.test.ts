@@ -34,6 +34,8 @@ describe("sitemap sources", () => {
       ...getSitemapNodes("guides").map((node) => node.loc),
     ];
 
+    expect(locs.some((loc) => loc.endsWith("/en/calculators/gearing"))).toBe(true);
+    expect(locs.some((loc) => loc.endsWith("/nl/calculators/gearing"))).toBe(true);
     expect(locs.some((loc) => loc.includes("/dashboard"))).toBe(false);
     expect(locs.some((loc) => loc.includes("/admin"))).toBe(false);
     expect(locs.some((loc) => loc.includes("/settings"))).toBe(false);

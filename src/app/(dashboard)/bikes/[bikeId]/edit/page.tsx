@@ -27,7 +27,7 @@ export default function EditBikePage({ params }: EditBikePageProps) {
   const bike = useQuery(api.bikes.queries.getById, {
     bikeId: bikeId as Id<"bikes">,
   });
-  const updateBike = useMutation(api.bikes.mutations.update);
+  const updateBike = useMutation(api.bikes.mutations.update as any);
   const assignPublicFitCode = useMutation(api.bikes.mutations.assignPublicFitCode);
   const revokePublicFitCode = useMutation(api.bikes.mutations.revokePublicFitCode);
   const removeBike = useMutation(api.bikes.mutations.remove);
@@ -47,6 +47,7 @@ export default function EditBikePage({ params }: EditBikePageProps) {
       notes: payload.notes,
       currentGeometry: payload.currentGeometry,
       currentSetup: payload.currentSetup,
+      gearing: payload.gearing,
     });
     router.replace(withLocalePrefix("/bikes", locale));
   };
@@ -80,6 +81,7 @@ export default function EditBikePage({ params }: EditBikePageProps) {
     notes: bike.notes,
     currentGeometry: bike.currentGeometry,
     currentSetup: bike.currentSetup,
+    gearing: (bike as { gearing?: BikeFormInitialData["gearing"] }).gearing,
   };
 
   const bikePassportId =

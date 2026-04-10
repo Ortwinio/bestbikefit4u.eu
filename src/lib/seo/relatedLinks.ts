@@ -2,25 +2,61 @@ import type { Locale } from "@/i18n/config";
 import type { RelatedLink } from "@/components/seo/RelatedLinksSection";
 
 type RelatedKey =
+  | "gearing"
   | "saddle-height"
+  | "saddle-width"
   | "frame-size"
   | "crank-length"
   | "bike-fit"
   | "tire-pressure";
 
 const RELATED_LINKS: Record<RelatedKey, Record<Locale, RelatedLink[]>> = {
+  gearing: {
+    en: [
+      { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
+      { href: "/calculators/saddle-height", label: "Saddle Height Calculator" },
+      { href: "/calculators/saddle-width", label: "Saddle Width Calculator" },
+      { href: "/calculators/frame-size", label: "Frame Size Calculator" },
+      { href: "/tire-pressure-calculator", label: "Tire Pressure Calculator" },
+    ],
+    nl: [
+      { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+      { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
+      { href: "/calculators/saddle-width", label: "Zadelbreedtecalculator" },
+      { href: "/calculators/frame-size", label: "Framemaat calculator" },
+      { href: "/bandenspanning-calculator", label: "Bandenspanning calculator" },
+    ],
+  },
   "saddle-height": {
     en: [
       { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
+      { href: "/calculators/saddle-width", label: "Saddle Width Calculator" },
       { href: "/calculators/frame-size", label: "Frame Size Calculator" },
       { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
       { href: "/use-cases/back-pain-cycling", label: "Bike Fit for Lower Back Pain" },
     ],
     nl: [
       { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+      { href: "/calculators/saddle-width", label: "Zadelbreedtecalculator" },
       { href: "/calculators/frame-size", label: "Framemaat calculator" },
       { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
       { href: "/use-cases/back-pain-cycling", label: "Bikefit bij lage rugklachten" },
+    ],
+  },
+  "saddle-width": {
+    en: [
+      { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
+      { href: "/calculators/saddle-height", label: "Saddle Height Calculator" },
+      { href: "/calculators/frame-size", label: "Frame Size Calculator" },
+      { href: "/faq", label: "FAQ" },
+      { href: "/measurement-guide", label: "Measurement Guide" },
+    ],
+    nl: [
+      { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+      { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
+      { href: "/calculators/frame-size", label: "Framemaat calculator" },
+      { href: "/faq", label: "FAQ" },
+      { href: "/measurement-guide", label: "Meetgids" },
     ],
   },
   "frame-size": {
@@ -54,12 +90,14 @@ const RELATED_LINKS: Record<RelatedKey, Record<Locale, RelatedLink[]>> = {
   "bike-fit": {
     en: [
       { href: "/calculators/saddle-height", label: "Saddle Height Calculator" },
+      { href: "/calculators/saddle-width", label: "Saddle Width Calculator" },
       { href: "/calculators/frame-size", label: "Frame Size Calculator" },
       { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
       { href: "/use-cases/endurance-cycling-fit", label: "Bike Fit for Endurance Cyclists" },
     ],
     nl: [
       { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
+      { href: "/calculators/saddle-width", label: "Zadelbreedtecalculator" },
       { href: "/calculators/frame-size", label: "Framemaat calculator" },
       { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
       { href: "/use-cases/endurance-cycling-fit", label: "Bikefit voor duurrijders" },

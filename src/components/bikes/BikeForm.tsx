@@ -39,6 +39,16 @@ type RidingStyle =
 
 type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
 
+export type BikeGearingPayload = {
+  drivetrainType?: "1x" | "2x";
+  chainrings?: number[];
+  cassetteTeeth?: number[];
+  wheelCircumferenceMm?: number;
+  crankLengthMm?: number;
+  groupsetName?: string;
+  derailleurMaxCog?: number;
+};
+
 export type BikeFormPayload = {
   name: string;
   bikeType: BikeType;
@@ -63,6 +73,7 @@ export type BikeFormPayload = {
     handlebarWidthMm?: number;
     crankLengthMm?: number;
   };
+  gearing?: BikeGearingPayload;
 };
 
 export interface BikeFormInitialData {
@@ -76,6 +87,7 @@ export interface BikeFormInitialData {
   notes?: string;
   currentGeometry?: BikeFormPayload["currentGeometry"];
   currentSetup?: BikeFormPayload["currentSetup"];
+  gearing?: BikeGearingPayload;
 }
 
 interface BikeFormProps {
@@ -115,6 +127,13 @@ function numberToInputValue(value: string) {
   return numberFromInput(value) ?? null;
 }
 
+function parseCommaSeparatedNumbers(value: string) {
+  return value
+    .split(/[,\s]+/g)
+    .map((part) => Number(part.trim()))
+    .filter((part) => Number.isFinite(part) && part > 0);
+}
+
 export function BikeForm({
   bikeId,
   title,
@@ -130,7 +149,7 @@ export function BikeForm({
   onSubmit,
   onDelete,
 }: BikeFormProps) {
-  const { messages } = useDashboardMessages();
+  const { locale, messages } = useDashboardMessages();
   const [name, setName] = useState(initialData?.name ?? "");
   const [notes, setNotes] = useState(initialData?.notes ?? "");
   const [bikeType, setBikeType] = useState<BikeType | "">(initialData?.bikeType ?? "");
@@ -156,6 +175,19 @@ export function BikeForm({
   const [stemAngle, setStemAngle] = useState(initialData?.currentSetup?.stemAngle?.toString() ?? "");
   const [handlebarWidthMm, setHandlebarWidthMm] = useState(initialData?.currentSetup?.handlebarWidthMm?.toString() ?? "");
   const [crankLengthMm, setCrankLengthMm] = useState(initialData?.currentSetup?.crankLengthMm?.toString() ?? "");
+  const [drivetrainType, setDrivetrainType] = useState<"1x" | "2x">(
+    initialData?.gearing?.drivetrainType ?? (initialData?.bikeType === "gravel" || initialData?.bikeType === "mountain" ? "1x" : "2x")
+  );
+  const [frontChainring, setFrontChainring] = useState(initialData?.gearing?.chainrings?.[0]?.toString() ?? "");
+  const [innerChainring, setInnerChainring] = useState(initialData?.gearing?.chainrings?.[1]?.toString() ?? "");
+  const [cassetteTeethCsv, setCassetteTeethCsv] = useState(
+    initialData?.gearing?.cassetteTeeth?.length ? initialData.gearing.cassetteTeeth.join(", ") : ""
+  );
+  const [wheelCircumferenceMm, setWheelCircumferenceMm] = useState(
+    initialData?.gearing?.wheelCircumferenceMm?.toString() ?? "2105"
+  );
+  const [groupsetName, setGroupsetName] = useState(initialData?.gearing?.groupsetName ?? "");
+  const [derailleurMaxCog, setDerailleurMaxCog] = useState(initialData?.gearing?.derailleurMaxCog?.toString() ?? "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -203,6 +235,30 @@ export function BikeForm({
       handlebarWidthMm: numberFromInput(handlebarWidthMm),
       crankLengthMm: numberFromInput(crankLengthMm),
     };
+    const chainrings = [numberFromInput(frontChainring), numberFromInput(innerChainring)].filter(
+      (value): value is number => typeof value === "number"
+    );
+    const cassetteTeeth = parseCommaSeparatedNumbers(cassetteTeethCsv);
+    const wheelCircumference = numberFromInput(wheelCircumferenceMm);
+    const hasGearingInput =
+      Boolean(initialData?.gearing) ||
+      chainrings.length > 0 ||
+      cassetteTeeth.length > 0 ||
+      typeof wheelCircumference === "number" ||
+      Boolean(groupsetName.trim()) ||
+      typeof numberFromInput(derailleurMaxCog) === "number";
+    const gearing =
+      hasGearingInput
+        ? {
+            drivetrainType: drivetrainType || undefined,
+            chainrings: chainrings.length ? chainrings : undefined,
+            cassetteTeeth: cassetteTeeth.length ? cassetteTeeth : undefined,
+            wheelCircumferenceMm: wheelCircumference,
+            crankLengthMm: numberFromInput(crankLengthMm),
+            groupsetName: groupsetName.trim() || undefined,
+            derailleurMaxCog: numberFromInput(derailleurMaxCog),
+          }
+        : undefined;
     const normalizedIdentity = normalizeBikeGeometryIdentityPayload(
       geometryFallbackState
     );
@@ -220,6 +276,7 @@ export function BikeForm({
         notes: notes.trim() || undefined,
         currentGeometry: Object.values(geometry).some((value) => value !== undefined) ? geometry : undefined,
         currentSetup: Object.values(setup).some((value) => value !== undefined) ? setup : undefined,
+        gearing,
       });
     } catch (submitError) {
       console.error("Failed to save bike:", submitError);
@@ -378,6 +435,68 @@ export function BikeForm({
             <NumberInput label={messages.bikeForm.fields.setup.stemAngle.label} tooltip={messages.bikeForm.fields.setup.stemAngle.tooltip} step={0.1} value={numberToInputValue(stemAngle)} onChange={(value) => setStemAngle(value === null ? "" : String(value))} />
             <NumberInput label={messages.bikeForm.fields.setup.handlebarWidth.label} tooltip={messages.bikeForm.fields.setup.handlebarWidth.tooltip} value={numberToInputValue(handlebarWidthMm)} onChange={(value) => setHandlebarWidthMm(value === null ? "" : String(value))} />
             <NumberInput label={messages.bikeForm.fields.setup.crankLength.label} tooltip={messages.bikeForm.fields.setup.crankLength.tooltip} step={0.1} value={numberToInputValue(crankLengthMm)} onChange={(value) => setCrankLengthMm(value === null ? "" : String(value))} />
+          </CardContent>
+        </Card>
+
+        <Card variant="bordered" className="dashboard-card-surface">
+          <CardHeader>
+            <CardTitle>{locale === "nl" ? "Versnelling" : "Gearing"}</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-4 sm:grid-cols-2">
+            <Select
+              label={locale === "nl" ? "Aandrijving" : "Drivetrain"}
+              value={drivetrainType}
+              onChange={(event) => setDrivetrainType(event.target.value as "1x" | "2x")}
+              options={[
+                { value: "1x", label: "1x" },
+                { value: "2x", label: "2x" },
+              ]}
+            />
+            <NumberInput
+              label={locale === "nl" ? "Buitenste kettingblad" : "Outer chainring"}
+              value={numberToInputValue(frontChainring)}
+              onChange={(value) => setFrontChainring(value === null ? "" : String(value))}
+              unit="t"
+            />
+            <NumberInput
+              label={locale === "nl" ? "Binnenste kettingblad" : "Inner chainring"}
+              value={numberToInputValue(innerChainring)}
+              onChange={(value) => setInnerChainring(value === null ? "" : String(value))}
+              disabled={drivetrainType !== "2x"}
+              unit="t"
+            />
+            <NumberInput
+              label={locale === "nl" ? "Wielomtrek" : "Wheel circumference"}
+              value={numberToInputValue(wheelCircumferenceMm)}
+              onChange={(value) => setWheelCircumferenceMm(value === null ? "" : String(value))}
+              unit="mm"
+            />
+            <Textarea
+              label={locale === "nl" ? "Cassette-tanden" : "Cassette teeth"}
+              value={cassetteTeethCsv}
+              onChange={(event) => setCassetteTeethCsv(event.target.value)}
+              placeholder="11, 12, 13, 15, 17, 19, 21, 24, 28, 32"
+              helperText={
+                locale === "nl" ? "Gebruik komma's of spaties." : "Use commas or spaces."
+              }
+            />
+            <Input
+              label={locale === "nl" ? "Groepset" : "Groupset"}
+              value={groupsetName}
+              onChange={(event) => setGroupsetName(event.target.value)}
+              placeholder="Ultegra / GRX / GX"
+            />
+            <NumberInput
+              label={locale === "nl" ? "Max. achtertand derailleur" : "Rear derailleur max cog"}
+              value={numberToInputValue(derailleurMaxCog)}
+              onChange={(value) => setDerailleurMaxCog(value === null ? "" : String(value))}
+              unit="t"
+            />
+            <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/30 p-4 text-sm text-muted-foreground">
+              {locale === "nl"
+                ? "Bestaande fietsen mogen gedeeltelijk ingevuld blijven, maar nieuwe fietsen moeten genoeg gearing-data hebben voor bruikbare resultaten."
+                : "Existing bikes may remain partially filled, but new bikes should have enough gearing data for usable calculator results."}
+            </div>
           </CardContent>
         </Card>
 

@@ -30,6 +30,13 @@ type RidingStyle =
   | "touring";
 type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
 
+function parseCommaSeparatedNumbers(value: string) {
+  return value
+    .split(/[,\s]+/g)
+    .map((part) => Number(part.trim()))
+    .filter((part) => Number.isFinite(part) && part > 0);
+}
+
 function deriveDiscipline(bikeType: BikeType) {
   switch (bikeType) {
     case "road":
@@ -47,7 +54,7 @@ function deriveDiscipline(bikeType: BikeType) {
 
 export function CreateBikeForm() {
   const { locale, messages } = useDashboardMessages();
-  const createBike = useMutation(api.bikes.mutations.create);
+  const createBike = useMutation(api.bikes.mutations.create as any);
   const createWheelset = useMutation(api.wheelsets.mutations.create);
   const createTireSetup = useMutation(api.tireSetups.mutations.create);
 
@@ -64,6 +71,13 @@ export function CreateBikeForm() {
   const [primaryGoal, setPrimaryGoal] = useState<PrimaryGoal>("balanced");
   const [notes, setNotes] = useState("");
   const [bikeWeightKg, setBikeWeightKg] = useState("");
+  const [drivetrainType, setDrivetrainType] = useState<"1x" | "2x">("2x");
+  const [frontChainring, setFrontChainring] = useState("");
+  const [innerChainring, setInnerChainring] = useState("");
+  const [cassetteTeethCsv, setCassetteTeethCsv] = useState("");
+  const [wheelCircumferenceMm, setWheelCircumferenceMm] = useState("2105");
+  const [groupsetName, setGroupsetName] = useState("");
+  const [derailleurMaxCog, setDerailleurMaxCog] = useState("");
 
   const [wheelsetName, setWheelsetName] = useState("");
   const [rimType, setRimType] = useState<"hooked" | "hookless">("hooked");
@@ -117,6 +131,23 @@ export function CreateBikeForm() {
       if (bikeWeightError) {
         return messages.pressure.wizard.bikeWeightRange;
       }
+      if (!drivetrainType) {
+        return locale === "nl" ? "Kies een type aandrijving." : "Choose a drivetrain type.";
+      }
+      if (!frontChainring.trim()) {
+        return locale === "nl" ? "Vul het voorblad in." : "Enter the front chainring.";
+      }
+      if (drivetrainType === "2x" && !innerChainring.trim()) {
+        return locale === "nl" ? "Vul ook het binnenblad in." : "Enter the inner chainring as well.";
+      }
+      if (!parseCommaSeparatedNumbers(cassetteTeethCsv).length) {
+        return locale === "nl"
+          ? "Vul de cassette-tanden in, bijvoorbeeld 11, 12, 13, 15, 17, 19, 21, 24, 28, 32."
+          : "Enter cassette teeth, for example 11, 12, 13, 15, 17, 19, 21, 24, 28, 32.";
+      }
+      if (!wheelCircumferenceMm.trim()) {
+        return locale === "nl" ? "Vul de wielomtrek in." : "Enter the wheel circumference.";
+      }
     }
 
     if (step === "wheelset") {
@@ -140,6 +171,11 @@ export function CreateBikeForm() {
     return null;
   }, [
     bikeWeightError,
+    cassetteTeethCsv,
+    drivetrainType,
+    frontChainring,
+    innerChainring,
+    locale,
     messages.bikeForm.errors.nameRequired,
     messages.pressure.wizard.bikeWeightRange,
     messages.pressure.wizard.maxPressureRange,
@@ -153,6 +189,7 @@ export function CreateBikeForm() {
     widthFrontError,
     widthRearError,
     maxPressureError,
+    wheelCircumferenceMm,
   ]);
 
   const handleCreateBike = async () => {
@@ -183,6 +220,21 @@ export function CreateBikeForm() {
           : undefined,
         notes: notes.trim() || undefined,
         bikeWeightKg: bikeWeightKg ? Number(bikeWeightKg) : undefined,
+        // New bikes should carry enough gear data to make the calculator useful immediately.
+        gearing: (() => {
+          const chainrings = [Number(frontChainring)];
+          if (drivetrainType === "2x") {
+            chainrings.push(Number(innerChainring));
+          }
+          return {
+            drivetrainType,
+            chainrings,
+            cassetteTeeth: parseCommaSeparatedNumbers(cassetteTeethCsv),
+            wheelCircumferenceMm: wheelCircumferenceMm ? Number(wheelCircumferenceMm) : undefined,
+            groupsetName: groupsetName.trim() || undefined,
+            derailleurMaxCog: derailleurMaxCog ? Number(derailleurMaxCog) : undefined,
+          };
+        })(),
       });
       setNewBikeId(bikeId);
       setStep("saved");
@@ -353,6 +405,64 @@ export function CreateBikeForm() {
                   },
                 ]}
               />
+            </div>
+
+            <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)] p-4">
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-[color:var(--foreground)]">Gearing</h2>
+                <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                  {locale === "nl"
+                    ? "Vul deze gegevens in zodat de calculator direct bruikbaar is voor deze fiets."
+                    : "Fill these in so the calculator is immediately useful for this bike."}
+                </p>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Select
+                  label="Drivetrain"
+                  value={drivetrainType}
+                  onChange={(event) => setDrivetrainType(event.target.value as "1x" | "2x")}
+                  options={[
+                    { value: "1x", label: "1x" },
+                    { value: "2x", label: "2x" },
+                  ]}
+                />
+                <NumberInput
+                  label="Front chainring"
+                  value={frontChainring ? Number(frontChainring) : null}
+                  onChange={(value) => setFrontChainring(value === null ? "" : String(value))}
+                  unit="t"
+                />
+                <NumberInput
+                  label="Inner chainring"
+                  value={innerChainring ? Number(innerChainring) : null}
+                  onChange={(value) => setInnerChainring(value === null ? "" : String(value))}
+                  unit="t"
+                />
+                <NumberInput
+                  label="Wheel circumference"
+                  value={wheelCircumferenceMm ? Number(wheelCircumferenceMm) : null}
+                  onChange={(value) => setWheelCircumferenceMm(value === null ? "" : String(value))}
+                  unit="mm"
+                />
+                <Textarea
+                  label="Cassette teeth"
+                  value={cassetteTeethCsv}
+                  onChange={(event) => setCassetteTeethCsv(event.target.value)}
+                  placeholder="11, 12, 13, 15, 17, 19, 21, 24, 28, 32"
+                />
+                <Input
+                  label="Groupset"
+                  value={groupsetName}
+                  onChange={(event) => setGroupsetName(event.target.value)}
+                  placeholder="Ultegra / GRX / GX"
+                />
+                <NumberInput
+                  label="Rear derailleur max cog"
+                  value={derailleurMaxCog ? Number(derailleurMaxCog) : null}
+                  onChange={(value) => setDerailleurMaxCog(value === null ? "" : String(value))}
+                  unit="t"
+                />
+              </div>
             </div>
 
             <Textarea

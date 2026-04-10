@@ -1,6 +1,8 @@
 export type PublicCalculatorId =
   | "bike-fit"
+  | "gearing"
   | "saddle-height"
+  | "saddle-width"
   | "frame-size"
   | "crank-length"
   | "tire-pressure";
@@ -28,12 +30,30 @@ export const PUBLIC_CALCULATOR_ROUTE_REGISTRY: Record<
     },
     legacyAliases: [],
   },
+  gearing: {
+    id: "gearing",
+    canonicalPath: "/calculators/gearing",
+    localizedPaths: {
+      en: "/calculators/gearing",
+      nl: "/calculators/gearing",
+    },
+    legacyAliases: [],
+  },
   "saddle-height": {
     id: "saddle-height",
     canonicalPath: "/calculators/saddle-height",
     localizedPaths: {
       en: "/calculators/saddle-height",
       nl: "/calculators/saddle-height",
+    },
+    legacyAliases: [],
+  },
+  "saddle-width": {
+    id: "saddle-width",
+    canonicalPath: "/calculators/saddle-width",
+    localizedPaths: {
+      en: "/calculators/saddle-width",
+      nl: "/calculators/saddle-width",
     },
     legacyAliases: [],
   },

@@ -1,13 +1,15 @@
 export type PublicCalculatorKey =
   | "bike-fit"
+  | "gearing"
   | "saddle-height"
+  | "saddle-width"
   | "frame-size"
   | "crank-length"
   | "tire-pressure";
 
 export interface PublicCalculatorCatalogEntry {
   key: PublicCalculatorKey;
-  family: "fit" | "pressure";
+  family: "fit" | "pressure" | "drivetrain";
   currentPath: string;
   plannedCanonicalPath?: string;
   title: {
@@ -38,6 +40,15 @@ export const PUBLIC_CALCULATOR_CATALOG: Record<
       nl: "Zadelhoogte calculator",
     },
   },
+  "saddle-width": {
+    key: "saddle-width",
+    family: "fit",
+    currentPath: "/calculators/saddle-width",
+    title: {
+      en: "Saddle Width Calculator",
+      nl: "Zadelbreedtecalculator",
+    },
+  },
   "frame-size": {
     key: "frame-size",
     family: "fit",
@@ -54,6 +65,15 @@ export const PUBLIC_CALCULATOR_CATALOG: Record<
     title: {
       en: "Crank Length Calculator",
       nl: "Cranklengte calculator",
+    },
+  },
+  gearing: {
+    key: "gearing",
+    family: "drivetrain",
+    currentPath: "/calculators/gearing",
+    title: {
+      en: "Gearing Calculator",
+      nl: "Verzet calculator",
     },
   },
   "tire-pressure": {

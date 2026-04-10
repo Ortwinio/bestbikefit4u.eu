@@ -22,6 +22,10 @@ import {
   resolvePublicFitSnapshot,
 } from "./publicFit";
 import { findUnreferencedStorageIdsForBikes } from "../lib/storageReferences";
+import {
+  buildBikeGearingRecord,
+  type BikeGearingRecord,
+} from "../../src/lib/gearing-engine";
 
 export const bikeTypeValidator = v.union(
   v.literal("road"),
@@ -103,6 +107,7 @@ type CreateBikeInput = {
     handlebarWidthMm?: number;
     crankLengthMm?: number;
   };
+  gearing?: BikeGearingRecord;
   discipline?: "road" | "gravel" | "mtb" | "tt";
   ridingStyle?: "recreational" | "fitness" | "sportive" | "racing" | "commuting" | "touring";
   primaryGoal?: "comfort" | "balanced" | "performance" | "aerodynamics";
@@ -169,6 +174,7 @@ export async function createBikeWithProfiles(
     source: args.source,
     currentGeometry: args.currentGeometry,
     currentSetup: args.currentSetup,
+    gearing: buildBikeGearingRecord(args.gearing),
     discipline: args.discipline,
     ridingStyle: args.ridingStyle,
     primaryGoal: args.primaryGoal,
@@ -285,6 +291,34 @@ export const create = mutation({
         crankLengthMm: v.optional(v.number()),
       })
     ),
+    gearing: v.optional(
+      v.object({
+        drivetrainType: v.optional(v.union(v.literal("1x"), v.literal("2x"))),
+        chainrings: v.optional(v.array(v.number())),
+        cassetteTeeth: v.optional(v.array(v.number())),
+        wheelCircumferenceMm: v.optional(v.number()),
+        crankLengthMm: v.optional(v.number()),
+        groupsetName: v.optional(v.string()),
+        derailleurMaxCog: v.optional(v.number()),
+        completeness: v.optional(
+          v.union(
+            v.literal("missing"),
+            v.literal("partial"),
+            v.literal("complete"),
+            v.literal("validated")
+          )
+        ),
+        source: v.optional(
+          v.union(
+            v.literal("user_entered"),
+            v.literal("preset"),
+            v.literal("derived"),
+            v.literal("imported")
+          )
+        ),
+        updatedAt: v.optional(v.number()),
+      })
+    ),
     discipline: v.optional(disciplineValidator),
     ridingStyle: v.optional(ridingStyleValidator),
     primaryGoal: v.optional(primaryGoalValidator),
@@ -343,6 +377,34 @@ export const update = mutation({
         crankLengthMm: v.optional(v.number()),
       })
     ),
+    gearing: v.optional(
+      v.object({
+        drivetrainType: v.optional(v.union(v.literal("1x"), v.literal("2x"))),
+        chainrings: v.optional(v.array(v.number())),
+        cassetteTeeth: v.optional(v.array(v.number())),
+        wheelCircumferenceMm: v.optional(v.number()),
+        crankLengthMm: v.optional(v.number()),
+        groupsetName: v.optional(v.string()),
+        derailleurMaxCog: v.optional(v.number()),
+        completeness: v.optional(
+          v.union(
+            v.literal("missing"),
+            v.literal("partial"),
+            v.literal("complete"),
+            v.literal("validated")
+          )
+        ),
+        source: v.optional(
+          v.union(
+            v.literal("user_entered"),
+            v.literal("preset"),
+            v.literal("derived"),
+            v.literal("imported")
+          )
+        ),
+        updatedAt: v.optional(v.number()),
+      })
+    ),
     discipline: v.optional(disciplineValidator),
     ridingStyle: v.optional(ridingStyleValidator),
     primaryGoal: v.optional(primaryGoalValidator),
@@ -380,6 +442,12 @@ export const update = mutation({
       updates.currentGeometry = args.currentGeometry;
     if (args.currentSetup !== undefined)
       updates.currentSetup = args.currentSetup;
+    if (args.gearing !== undefined) {
+      updates.gearing = buildBikeGearingRecord({
+        ...args.gearing,
+        updatedAt: Date.now(),
+      });
+    }
     if (args.discipline !== undefined) updates.discipline = args.discipline;
     if (args.ridingStyle !== undefined) updates.ridingStyle = args.ridingStyle;
     if (args.primaryGoal !== undefined) updates.primaryGoal = args.primaryGoal;

@@ -24,6 +24,7 @@ import {
   MessageSquareMore,
   ChevronDown,
   CircuitBoard,
+  ArrowUpDown,
 } from "lucide-react";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { Button } from "@/components/ui";
@@ -52,6 +53,8 @@ export function DashboardSidebar() {
     { name: messages.nav.bikeFitting, href: "/fit-history", icon: ClipboardList },
     { name: messages.nav.newFitSession, href: "/fit", icon: PlusCircle },
     { name: messages.nav.tirePressure, href: DASHBOARD_PRESSURE_CALCULATOR_PATH, icon: Gauge },
+    { name: messages.nav.gearing, href: "/gearing", icon: ArrowUpDown },
+    { name: messages.nav.saddleSelector, href: "/dashboard/saddle-selector", icon: ArrowUpDown },
     { name: messages.nav.settings, href: "/settings", icon: Settings },
     { name: messages.nav.feedback, href: "/feedback", icon: MessageSquareMore },
   ];

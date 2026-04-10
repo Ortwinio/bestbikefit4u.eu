@@ -12,6 +12,160 @@ const questionnaireResponseValue = v.union(
   v.array(v.string())
 );
 
+const gearingBikeTypeValidator = v.union(
+  v.literal("road"),
+  v.literal("gravel"),
+  v.literal("mountain"),
+  v.literal("hybrid"),
+  v.literal("tt_triathlon"),
+  v.literal("cyclocross"),
+  v.literal("touring"),
+  v.literal("city")
+);
+
+const gearingLengthBandValidator = v.union(
+  v.literal("short"),
+  v.literal("medium"),
+  v.literal("long"),
+  v.literal("alpine")
+);
+
+const gearingSurfaceValidator = v.union(
+  v.literal("road"),
+  v.literal("gravel"),
+  v.literal("mtb"),
+  v.literal("commuter"),
+  v.literal("indoor"),
+  v.literal("mixed")
+);
+
+const gearingReadinessLabelValidator = v.union(
+  v.literal("suitable"),
+  v.literal("challenging"),
+  v.literal("likely_overgeared")
+);
+
+const gearingSetupLabelValidator = v.union(
+  v.literal("comfort-oriented climbing setup"),
+  v.literal("balanced sportive setup"),
+  v.literal("performance climbing setup"),
+  v.literal("race gearing"),
+  v.literal("undergeared on the flat but mountain-ready"),
+  v.literal("overgeared for Alpine use"),
+  v.literal("needs bailout gear")
+);
+
+const gearingConfidenceLevelValidator = v.union(
+  v.literal("high"),
+  v.literal("medium"),
+  v.literal("low")
+);
+
+const gearingGearPairValidator = v.object({
+  frontChainringTeeth: v.number(),
+  rearCogTeeth: v.number(),
+  ratio: v.number(),
+  developmentM: v.number(),
+  gearInches: v.number(),
+  gainRatio: v.optional(v.number()),
+  speedKmhAtCadence: v.optional(v.number()),
+  cadenceRpmAtSpeed: v.optional(v.number()),
+});
+
+const gearingConfidenceValidator = v.object({
+  score: v.number(),
+  level: gearingConfidenceLevelValidator,
+  mathScore: v.number(),
+  suitabilityScore: v.number(),
+  reasons: v.array(v.string()),
+});
+
+const gearingMathValidator = v.object({
+  drivetrainType: v.union(v.literal("1x"), v.literal("2x")),
+  normalizedChainrings: v.array(v.number()),
+  normalizedCassetteTeeth: v.array(v.number()),
+  wheelCircumferenceMm: v.number(),
+  wheelDiameterInches: v.number(),
+  wheelRadiusMm: v.number(),
+  gearPairs: v.array(gearingGearPairValidator),
+  easiestGear: gearingGearPairValidator,
+  hardestGear: gearingGearPairValidator,
+  rangeRatio: v.number(),
+  rangePercent: v.number(),
+});
+
+const gearingInputValidator = v.object({
+  drivetrainType: v.union(v.literal("1x"), v.literal("2x")),
+  chainrings: v.array(v.number()),
+  cassetteTeeth: v.array(v.number()),
+  wheelCircumferenceMm: v.number(),
+  crankLengthMm: v.optional(v.number()),
+  cadenceRpm: v.optional(v.number()),
+  targetSpeedKmh: v.optional(v.number()),
+  bikeType: v.optional(gearingBikeTypeValidator),
+  surfaceType: v.optional(gearingSurfaceValidator),
+  riderWeightKg: v.optional(v.number()),
+  bikeWeightKg: v.optional(v.number()),
+  ftpWatts: v.optional(v.number()),
+  preferredCadenceRpm: v.optional(v.number()),
+  comfortableCadenceMinRpm: v.optional(v.number()),
+  comfortableCadenceMaxRpm: v.optional(v.number()),
+  climbGradientPct: v.optional(v.number()),
+  climbMaxGradientPct: v.optional(v.number()),
+  climbLengthKm: v.optional(v.number()),
+  climbLengthBand: v.optional(gearingLengthBandValidator),
+  elevationGainM: v.optional(v.number()),
+  eventType: v.optional(v.string()),
+  rideIntent: v.optional(v.string()),
+  preference: v.optional(v.string()),
+  alpineFlag: v.optional(v.boolean()),
+  rearDerailleurMaxCog: v.optional(v.number()),
+});
+
+const gearingSuitabilityValidator = v.object({
+  publicVerdict: gearingReadinessLabelValidator,
+  setupLabel: gearingSetupLabelValidator,
+  gearRangeScore: v.number(),
+  climbSuitabilityScore: v.number(),
+  eventReadinessScore: v.number(),
+  requiredPowerWatts: v.optional(v.number()),
+  sustainablePowerWatts: v.optional(v.number()),
+  powerGapWatts: v.optional(v.number()),
+  estimatedClimbDurationMinutes: v.optional(v.number()),
+  preferredCadenceFeasible: v.optional(v.boolean()),
+  cadenceNeededAtSustainablePowerRpm: v.optional(v.number()),
+  assumptions: v.array(v.string()),
+  warnings: v.array(v.string()),
+  recommendationText: v.string(),
+  confidence: gearingConfidenceValidator,
+});
+
+const gearingDrivetrainType = v.union(v.literal("1x"), v.literal("2x"));
+const gearingCompleteness = v.union(
+  v.literal("missing"),
+  v.literal("partial"),
+  v.literal("complete"),
+  v.literal("validated")
+);
+const gearingSource = v.union(
+  v.literal("user_entered"),
+  v.literal("preset"),
+  v.literal("derived"),
+  v.literal("imported")
+);
+const bikeGearingValidator = v.object({
+  drivetrainType: v.optional(gearingDrivetrainType),
+  chainrings: v.optional(v.array(v.number())),
+  cassetteTeeth: v.optional(v.array(v.number())),
+  wheelCircumferenceMm: v.optional(v.number()),
+  crankLengthMm: v.optional(v.number()),
+  groupsetName: v.optional(v.string()),
+  derailleurMaxCog: v.optional(v.number()),
+  completeness: v.optional(gearingCompleteness),
+  source: v.optional(gearingSource),
+  updatedAt: v.optional(v.number()),
+});
+
 export default defineSchema({
   // Auth tables from @convex-dev/auth
   ...authTables,
@@ -92,6 +246,7 @@ export default defineSchema({
     footLengthCm: v.optional(v.number()),
     handSpanCm: v.optional(v.number()),
     sitBoneWidthMm: v.optional(v.number()),
+    hipCircumferenceCm: v.optional(v.number()),
 
     // Flexibility assessment
     flexibilityScore: v.union(
@@ -245,6 +400,7 @@ export default defineSchema({
         crankLengthMm: v.optional(v.number()),
       })
     ),
+    gearing: v.optional(bikeGearingValidator),
     discipline: v.optional(
       v.union(
         v.literal("road"),
@@ -656,6 +812,64 @@ export default defineSchema({
   })
     .index("by_bike", ["bikeId"])
     .index("by_user", ["userId"]),
+
+  saddleWidthSessions: defineTable({
+    userId: v.optional(v.id("users")),
+    bikeId: v.optional(v.id("bikes")),
+    sessionType: v.union(v.literal("public"), v.literal("dashboard")),
+    measurementMethod: v.union(v.literal("measured"), v.literal("estimated")),
+    sitBoneWidthMm: v.optional(v.number()),
+    heightCm: v.optional(v.number()),
+    weightKg: v.optional(v.number()),
+    hipCircumferenceCm: v.optional(v.number()),
+    flexibilityScore: v.optional(v.number()),
+    coreStabilityScore: v.optional(v.number()),
+    ridingType: v.string(),
+    postureCategory: v.string(),
+    indoorOutdoor: v.optional(v.string()),
+    typicalRideLength: v.optional(v.string()),
+    currentSaddleWidthMm: v.optional(v.number()),
+    currentSaddleShape: v.optional(v.string()),
+    currentSaddleTilt: v.optional(v.string()),
+    currentSaddleSatisfaction: v.optional(v.string()),
+    symptoms: v.optional(v.array(v.string())),
+    recommendedWidthMm: v.number(),
+    widthRangeMinMm: v.number(),
+    widthRangeMaxMm: v.number(),
+    primaryWidthClass: v.string(),
+    saddleFamily: v.string(),
+    noseType: v.string(),
+    profileShape: v.string(),
+    cutoutRecommended: v.boolean(),
+    paddingPreference: v.string(),
+    confidenceScore: v.number(),
+    confidenceLevel: v.string(),
+    widthMatchScore: v.optional(v.number()),
+    fitInteractionWarnings: v.optional(v.array(v.string())),
+    explanationKey: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_session_type", ["userId", "sessionType"])
+    .index("by_bike", ["bikeId"])
+    .index("by_created_at", ["createdAt"]),
+
+  gearingSessions: defineTable({
+    userId: v.optional(v.id("users")),
+    bikeId: v.optional(v.id("bikes")),
+    sessionType: v.union(v.literal("public"), v.literal("dashboard")),
+    algorithmVersion: v.string(),
+    scenarioName: v.optional(v.string()),
+    input: gearingInputValidator,
+    math: gearingMathValidator,
+    suitability: gearingSuitabilityValidator,
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_session_type", ["userId", "sessionType"])
+    .index("by_user_bike_session_type", ["userId", "bikeId", "sessionType"])
+    .index("by_bike", ["bikeId"])
+    .index("by_created_at", ["createdAt"]),
 
   tireSetups: defineTable({
     wheelsetId: v.id("wheelsets"),

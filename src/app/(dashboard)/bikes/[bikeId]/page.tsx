@@ -13,6 +13,7 @@ import { BikeNotesEditor } from "@/components/bikes/BikeNotesEditor";
 import { BikePhotoGallery } from "@/components/bikes/BikePhotoGallery";
 import { BikeWheelsetManager } from "@/components/bikes/BikeWheelsetManager";
 import { BikePressureSection } from "@/components/features/pressure/BikePressureSection";
+import { BikeGearingCard } from "./BikeGearingCard";
 import { GeometryLinkCard, type GeometryLinkState } from "./GeometryLinkCard";
 import { SignedInFitFollowUpCard } from "./SignedInFitFollowUpCard";
 import {
@@ -178,49 +179,6 @@ export default function BikeDetailPage({
     typeof (bike as { publicFitEnabled?: unknown }).publicFitEnabled === "boolean"
       ? ((bike as { publicFitEnabled?: boolean }).publicFitEnabled ?? false)
       : false;
-  const geometryItems = [
-    {
-      label: messages.bikeForm.fields.type.staticLabel,
-      value: getBikeTypeLabel(bike.bikeType, messages),
-    },
-    {
-      label: messages.fit.sections.ridingStyle,
-      value: ridingStyleLabel,
-    },
-    {
-      label: messages.fit.sections.primaryGoal,
-      value: primaryGoalLabel,
-    },
-    {
-      label: messages.bikeForm.fields.brand.label,
-      value: bike.brand ?? "-",
-    },
-    {
-      label: messages.bikeForm.fields.model.label,
-      value: bike.model ?? "-",
-    },
-    {
-      label: messages.bikeForm.fields.bikeWeightKg.label,
-      value: bike.bikeWeightKg ?? "-",
-    },
-    {
-      label: messages.bikes.fields.stack,
-      value: bike.currentGeometry?.stackMm ?? "-",
-    },
-    {
-      label: messages.bikes.fields.reach,
-      value: bike.currentGeometry?.reachMm ?? "-",
-    },
-    {
-      label: messages.bikes.fields.frameSize,
-      value: bike.currentGeometry?.frameSize ?? "-",
-    },
-  ];
-  const savedGeometryDescription =
-    locale === "nl"
-      ? "Dit zijn de opgeslagen fietsvelden en eventuele handmatig ingevoerde geometriewaarden op deze fiets."
-      : "These are the saved bike fields and any manually entered geometry values on this bike.";
-
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -464,6 +422,35 @@ export default function BikeDetailPage({
             locale={locale}
             state={geometryLinkState}
             linkedGeometry={linkedGeometry}
+            bike={{
+              bikeType: bike.bikeType,
+              ridingStyle: bike.ridingStyle,
+              primaryGoal: bike.primaryGoal,
+              brand: bike.brand,
+              model: bike.model,
+              bikeWeightKg: bike.bikeWeightKg,
+              currentGeometry: bike.currentGeometry,
+            }}
+            editHref={withLocalePrefix(`/bikes/${bike._id}/edit`, locale)}
+            messages={messages}
+          />
+
+          <BikeGearingCard
+            bikeId={String(bike._id)}
+            gearing={(bike as { gearing?: unknown }).gearing as
+              | {
+                  drivetrainType?: "1x" | "2x";
+                  chainrings?: number[];
+                  cassetteTeeth?: number[];
+                  wheelCircumferenceMm?: number;
+                  crankLengthMm?: number;
+                  groupsetName?: string;
+                  derailleurMaxCog?: number;
+                  completeness?: "missing" | "partial" | "complete" | "validated";
+                }
+              | null
+              | undefined}
+            locale={locale}
           />
 
           <Card variant="bordered" className="dashboard-card-surface">
@@ -477,28 +464,6 @@ export default function BikeDetailPage({
                 initialDescription={bike.description}
                 initialSource={bike.descriptionSource}
               />
-            </CardContent>
-          </Card>
-
-          <Card variant="bordered" className="dashboard-card-surface">
-            <CardHeader>
-              <CardTitle>{messages.bikes.sections.geometry}</CardTitle>
-              <CardDescription>{savedGeometryDescription}</CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-3 sm:grid-cols-2">
-              {geometryItems.map((item) => (
-                <div
-                  key={item.label}
-                  className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/25 px-4 py-3"
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
-                    {item.label}
-                  </p>
-                  <p className="mt-2 text-sm font-medium text-[color:var(--foreground)]">
-                    {item.value}
-                  </p>
-                </div>
-              ))}
             </CardContent>
           </Card>
 

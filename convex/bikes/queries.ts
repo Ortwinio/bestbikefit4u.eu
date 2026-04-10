@@ -185,6 +185,59 @@ function buildGarageLinkedGeometrySummary({
 
 export { buildGarageLinkedGeometrySummary };
 
+function buildBikeGearingSummary(bike: {
+  bikeType: string;
+  currentSetup?: { crankLengthMm?: number | null } | null;
+  gearing?: {
+    drivetrainType?: "1x" | "2x";
+    chainrings?: number[];
+    cassetteTeeth?: number[];
+    wheelCircumferenceMm?: number;
+    crankLengthMm?: number;
+    groupsetName?: string;
+    derailleurMaxCog?: number;
+    completeness?: "missing" | "partial" | "complete" | "validated";
+  } | null;
+}) {
+  const gearing = bike.gearing ?? null;
+  const chainrings = (gearing?.chainrings ?? []).filter(
+    (value): value is number => Number.isFinite(value) && value > 0
+  );
+  const cassetteTeeth = (gearing?.cassetteTeeth ?? []).filter(
+    (value): value is number => Number.isFinite(value) && value > 0
+  );
+  const wheelCircumferenceMm = gearing?.wheelCircumferenceMm ?? null;
+  const lowestGearRatio =
+    chainrings.length && cassetteTeeth.length
+      ? Math.min(...chainrings) / Math.max(...cassetteTeeth)
+      : null;
+  const highestGearRatio =
+    chainrings.length && cassetteTeeth.length
+      ? Math.max(...chainrings) / Math.min(...cassetteTeeth)
+      : null;
+
+  const completeness =
+    gearing?.completeness ??
+    (!chainrings.length && !cassetteTeeth.length && !wheelCircumferenceMm
+      ? "missing"
+      : chainrings.length && cassetteTeeth.length && wheelCircumferenceMm
+        ? "complete"
+        : "partial");
+
+  return {
+    completeness,
+    drivetrainType: gearing?.drivetrainType ?? null,
+    chainrings,
+    cassetteTeeth,
+    wheelCircumferenceMm,
+    crankLengthMm: gearing?.crankLengthMm ?? bike.currentSetup?.crankLengthMm ?? null,
+    groupsetName: gearing?.groupsetName ?? null,
+    derailleurMaxCog: gearing?.derailleurMaxCog ?? null,
+    lowestGearRatio,
+    highestGearRatio,
+  };
+}
+
 export const getById = query({
   args: { bikeId: v.id("bikes") },
   handler: async (ctx, args) => {
@@ -306,6 +359,7 @@ export const getDetail = query({
       bikeProfiles: sortNewestFirst(bikeProfiles),
       photos: photoState.detailPhotos,
       activePhotoStorageId: photoState.activePhotoStorageId,
+      gearingSummary: buildBikeGearingSummary(bike),
       wheelsets: wheelsetsWithTireSetups,
       activeWheelset,
       activeTireSetup: activeWheelset?.activeTireSetup ?? null,
@@ -506,6 +560,7 @@ export const listSummariesByUser = query({
               latestCalculation?.currentFrontBar !== undefined ||
               latestCalculation?.currentRearBar !== undefined,
           },
+          gearingSummary: buildBikeGearingSummary(bike),
         };
       })
     );

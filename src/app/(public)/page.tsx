@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  ArrowUpDown,
   Ruler,
   Target,
   FileText,
@@ -129,11 +130,25 @@ export default async function HomePage() {
               "bg-[color:color-mix(in_oklch,var(--success)_16%,var(--background)_84%)] text-[color:color-mix(in_oklch,var(--success)_82%,var(--foreground)_18%)]",
           },
           {
+            href: "/calculators/saddle-width",
+            label: "Zadelbreedtecalculator",
+            icon: ArrowUpDown,
+            iconClassName:
+              "bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--secondary)_88%)] text-[color:color-mix(in_oklch,var(--primary-dark)_82%,var(--foreground)_18%)]",
+          },
+          {
             href: "/calculators/frame-size",
             label: "Framemaat calculator",
             icon: Target,
             iconClassName:
               "bg-[color:color-mix(in_oklch,var(--warning)_18%,var(--background)_82%)] text-[color:color-mix(in_oklch,var(--warning)_78%,var(--foreground)_22%)]",
+          },
+          {
+            href: "/calculators/gearing",
+            label: "Verzet calculator",
+            icon: ArrowUpDown,
+            iconClassName:
+              "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--secondary)_86%)] text-[color:color-mix(in_oklch,var(--primary-dark)_82%,var(--foreground)_18%)]",
           },
           {
             href: getLocalizedPublicCalculatorPath("tire-pressure", "nl"),
@@ -159,11 +174,25 @@ export default async function HomePage() {
               "bg-[color:color-mix(in_oklch,var(--success)_16%,var(--background)_84%)] text-[color:color-mix(in_oklch,var(--success)_82%,var(--foreground)_18%)]",
           },
           {
+            href: "/calculators/saddle-width",
+            label: "Saddle Width Calculator",
+            icon: ArrowUpDown,
+            iconClassName:
+              "bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--secondary)_88%)] text-[color:color-mix(in_oklch,var(--primary-dark)_82%,var(--foreground)_18%)]",
+          },
+          {
             href: "/calculators/frame-size",
             label: "Frame Size Calculator",
             icon: Target,
             iconClassName:
               "bg-[color:color-mix(in_oklch,var(--warning)_18%,var(--background)_82%)] text-[color:color-mix(in_oklch,var(--warning)_78%,var(--foreground)_22%)]",
+          },
+          {
+            href: "/calculators/gearing",
+            label: "Gearing Calculator",
+            icon: ArrowUpDown,
+            iconClassName:
+              "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--secondary)_86%)] text-[color:color-mix(in_oklch,var(--primary-dark)_82%,var(--foreground)_18%)]",
           },
           {
             href: getLocalizedPublicCalculatorPath("tire-pressure", "en"),

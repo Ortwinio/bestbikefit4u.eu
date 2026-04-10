@@ -134,10 +134,24 @@ const PAGE_ROUTE_SEEDS: readonly RouteSeed[] = [
 
 const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
   {
+    id: "calculator-gearing",
+    path: "/calculators/gearing",
+    lastmod: "2026-04-10",
+    changefreq: "monthly",
+    priority: 0.8,
+  },
+  {
     id: "calculator-saddle-height",
     path: "/calculators/saddle-height",
     lastmod: "2026-02-19",
     changefreq: "weekly",
+    priority: 0.8,
+  },
+  {
+    id: "calculator-saddle-width",
+    path: "/calculators/saddle-width",
+    lastmod: "2026-04-10",
+    changefreq: "monthly",
     priority: 0.8,
   },
   {
@@ -153,6 +167,13 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
     lastmod: "2026-02-19",
     changefreq: "weekly",
     priority: 0.8,
+  },
+  {
+    id: "calculator-gearing",
+    path: "/calculators/gearing",
+    lastmod: "2026-04-10",
+    changefreq: "weekly",
+    priority: 0.85,
   },
   {
     id: "calculator-bike-fit",
