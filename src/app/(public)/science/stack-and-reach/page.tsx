@@ -36,7 +36,7 @@ const copy: Record<
     metadata: {
       title: "Stack and Reach Explained | BestBikeFit4U Science",
       description:
-        "Learn how stack and reach work, why they are better than seat-tube sizing, and how to use them for frame comparison.",
+        "Learn how stack and reach work, why they are better than seat-tube sizing, and how to use them for frame comparison alongside the guide library.",
       keywords: [
         "stack and reach explained",
         "bike frame sizing",
@@ -46,9 +46,9 @@ const copy: Record<
     },
     hero: {
       eyebrow: "Science",
-      title: "Stack and Reach",
+      title: "Stack and Reach Explained",
       description:
-        "Stack and reach provide a consistent way to compare bike frames across brands without relying on inconsistent size labels.",
+        "Stack and reach provide a consistent way to compare bike frames across brands without relying on inconsistent size labels or legacy fit shorthand.",
       chips: ["Vertical fit", "Horizontal fit", "Frame comparison"],
       caption:
         "These two coordinates say more about rider position than a nominal frame size alone.",
@@ -83,11 +83,11 @@ const copy: Record<
     ],
     linksTitle: "Continue reading",
     links: [
-      { href: "/science/calculation-engine", label: "Calculation Engine" },
+      { href: "/guides/fit-science", label: "Fit Science" },
+      { href: "/guides/frame-size-guide", label: "Frame Size Guide" },
       { href: "/science/bike-fit-methods", label: "Fit Methods Comparison" },
       { href: "/calculators/frame-size", label: "Frame Size Calculator" },
-      { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
-      { href: "/guides/gravel-bike-fit-guide", label: "Gravel Bike Fit Guide" },
+      { href: "/guides/how-to-compare-two-bikes-for-fit", label: "How to Compare Two Bikes for Fit" },
     ],
   },
   nl: {
@@ -104,9 +104,9 @@ const copy: Record<
     },
     hero: {
       eyebrow: "Wetenschap",
-      title: "Stack en reach",
+      title: "Stack en reach uitgelegd",
       description:
-        "Stack en reach geven een consistente manier om fietsframes tussen merken te vergelijken zonder te vertrouwen op inconsistente framelabels.",
+        "Stack en reach geven een consistente manier om fietsframes tussen merken te vergelijken zonder te vertrouwen op inconsistente framelabels of oude fit-afkortingen.",
       chips: ["Verticale fit", "Horizontale fit", "Framevergelijking"],
       caption:
         "Deze twee coordinaten zeggen meer over rijpositie dan alleen een nominale framemaat.",
@@ -141,11 +141,11 @@ const copy: Record<
     ],
     linksTitle: "Verder lezen",
     links: [
-      { href: "/science/calculation-engine", label: "Calculatiemotor" },
+      { href: "/guides/fit-science", label: "Fit science" },
+      { href: "/guides/frame-size-guide", label: "Framemaatgids" },
       { href: "/science/bike-fit-methods", label: "Vergelijking van bikefit-methodes" },
       { href: "/calculators/frame-size", label: "Framemaat calculator" },
-      { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
-      { href: "/guides/gravel-bike-fit-guide", label: "Gravel fit gids" },
+      { href: "/guides/how-to-compare-two-bikes-for-fit", label: "Twee fietsen vergelijken voor fit" },
     ],
   },
 };

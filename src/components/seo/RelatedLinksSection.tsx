@@ -29,10 +29,12 @@ export function RelatedLinksSection({
     <PublicSection
       className="mt-10"
       header={{
-        eyebrow: "Explore more",
+        eyebrow: locale === "nl" ? "Verder lezen" : "Explore more",
         title,
         description:
-          "Keep going with related guides and calculators that build on what you just learned.",
+          locale === "nl"
+            ? "Ga verder met gerelateerde gidsen en calculators die logisch aansluiten op wat je net hebt gelezen."
+            : "Keep going with related guides and calculators that build on what you just learned.",
       }}
       contentClassName="pt-5"
     >
@@ -57,7 +59,7 @@ export function RelatedLinksSection({
               href={withLocalePrefix(link.href, locale)}
               className="inline-flex items-center text-sm font-medium text-[color:var(--primary)] underline-offset-4 outline-none transition-colors hover:text-[color:color-mix(in_oklch,var(--primary)_82%,var(--foreground)_18%)] hover:underline focus-visible:underline"
             >
-              Read more
+              {locale === "nl" ? "Lees verder" : "Read more"}
             </Link>
           </PublicSurfaceCard>
         ))}

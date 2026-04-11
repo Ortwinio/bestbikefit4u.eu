@@ -42,6 +42,21 @@ describe("sitemap sources", () => {
     expect(locs.some((loc) => loc.includes("/fit-history"))).toBe(false);
     expect(locs.some((loc) => loc.includes("/pressure-calculator"))).toBe(false);
     expect(locs.some((loc) => loc.includes("/feedback"))).toBe(false);
+    expect(locs.some((loc) => loc.includes("/use-cases"))).toBe(false);
+    expect(locs.some((loc) => loc.includes("/science/calculation-engine"))).toBe(false);
+  });
+
+  it("includes the new public calculator destinations that guides link to", () => {
+    const locs = getSitemapNodes("calculators").map((node) => node.loc);
+
+    expect(locs.some((loc) => loc.endsWith("/en/calculators/fuel-hydration"))).toBe(true);
+    expect(locs.some((loc) => loc.endsWith("/nl/calculators/fuel-hydration"))).toBe(true);
+    expect(locs.some((loc) => loc.endsWith("/en/calculators/ftp-wkg"))).toBe(true);
+    expect(locs.some((loc) => loc.endsWith("/nl/calculators/ftp-wkg"))).toBe(true);
+    expect(locs.some((loc) => loc.endsWith("/en/calculators/power-speed"))).toBe(true);
+    expect(locs.some((loc) => loc.endsWith("/nl/calculators/power-speed"))).toBe(true);
+    expect(locs.some((loc) => loc.endsWith("/en/calculators/climb-planner"))).toBe(true);
+    expect(locs.some((loc) => loc.endsWith("/nl/calculators/climb-planner"))).toBe(true);
   });
 
   it("keeps english x-default alternates for programmatic pressure pages", () => {

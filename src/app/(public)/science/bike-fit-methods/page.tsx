@@ -47,9 +47,9 @@ const copy: Record<
 > = {
   en: {
     metadata: {
-      title: "Bike Fit Methods Comparison | BestBikeFit4U Science",
+      title: "Bike Fitting Methods Explained | BestBikeFit4U Science",
       description:
-        "Compare common bike fitting methods including LeMond, KOPS, and dynamic fit systems, and see where each method is useful.",
+        "Learn how common bike fitting methods such as LeMond, KOPS, and dynamic fit systems work, where each method helps, and when to use a guide instead.",
       keywords: [
         "bike fit methods",
         "LeMond method",
@@ -59,9 +59,9 @@ const copy: Record<
     },
     hero: {
       eyebrow: "Science",
-      title: "Bike Fit Methods",
+      title: "Bike Fitting Methods Explained",
       description:
-        "Modern fitting combines foundational formulas with rider-specific context. No single method solves everything in isolation.",
+        "Modern fitting combines foundational formulas with rider-specific context. No single method solves everything in isolation, which is why the guide library matters.",
       chips: ["LeMond / Hamley", "KOPS", "Dynamic fit"],
       caption:
         "Different methods answer different questions inside the full fit workflow.",
@@ -99,20 +99,21 @@ const copy: Record<
         limit: "Requires equipment and specialist time",
       },
     ],
-    linksTitle: "Related resources",
+    linksTitle: "Related guides and tools",
     links: [
-      { href: "/science/calculation-engine", label: "Calculation Engine" },
+      { href: "/guides/fit-science", label: "Fit Science" },
+      { href: "/guides/setup-parameters", label: "Setup Parameter Guides" },
       { href: "/science/stack-and-reach", label: "Stack and Reach Guide" },
       { href: "/calculators/crank-length", label: "Crank Length Calculator" },
       { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
-      { href: "/guides/mountain-bike-fit-guide", label: "Mountain Bike Fit Guide" },
+      { href: "/guides/when-online-bike-fit-has-limits", label: "When Online Bike Fit Has Limits" },
     ],
   },
   nl: {
     metadata: {
-      title: "Vergelijking van bikefit-methodes | BestBikeFit4U Science",
+      title: "Bikefit-methodes uitgelegd | BestBikeFit4U Science",
       description:
-        "Vergelijk veelgebruikte bikefitting-methodes zoals LeMond, KOPS en dynamische fitsystemen en bekijk waar elke methode bruikbaar is.",
+        "Leer hoe veelgebruikte bikefit-methodes zoals LeMond, KOPS en dynamische fitsystemen werken, waar elke methode helpt en wanneer je beter een gids volgt.",
       keywords: [
         "bikefit methodes",
         "LeMond methode",
@@ -122,9 +123,9 @@ const copy: Record<
     },
     hero: {
       eyebrow: "Wetenschap",
-      title: "Bikefit-methodes",
+      title: "Bikefit-methodes uitgelegd",
       description:
-        "Moderne bikefitting combineert basale formules met rijderspecifieke context. Geen enkele methode lost alles op zichzelf op.",
+        "Moderne bikefitting combineert basale formules met rijderspecifieke context. Geen enkele methode lost alles op zichzelf op, en daarom is de gidsenbibliotheek belangrijk.",
       chips: ["LeMond / Hamley", "KOPS", "Dynamische fit"],
       caption:
         "Verschillende methodes beantwoorden verschillende vragen binnen dezelfde fitflow.",
@@ -162,13 +163,14 @@ const copy: Record<
         limit: "Vraagt apparatuur en specialistische tijd",
       },
     ],
-    linksTitle: "Gerelateerde bronnen",
+    linksTitle: "Gerelateerde gidsen en tools",
     links: [
-      { href: "/science/calculation-engine", label: "Calculatiemotor" },
+      { href: "/guides/fit-science", label: "Fit science" },
+      { href: "/guides/setup-parameters", label: "Setupparametergidsen" },
       { href: "/science/stack-and-reach", label: "Stack en reach gids" },
       { href: "/calculators/crank-length", label: "Cranklengte calculator" },
       { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
-      { href: "/guides/mountain-bike-fit-guide", label: "MTB fit gids" },
+      { href: "/guides/when-online-bike-fit-has-limits", label: "Wanneer online bikefit grenzen heeft" },
     ],
   },
 };

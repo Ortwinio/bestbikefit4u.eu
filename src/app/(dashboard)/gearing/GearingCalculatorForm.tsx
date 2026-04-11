@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { startTransition, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
 import { useSearchParams } from "next/navigation";
@@ -112,7 +112,8 @@ export function GearingCalculatorForm() {
   const isNl = locale === "nl";
   const searchParams = useSearchParams();
   const bikeIdParam = searchParams.get("bikeId") as Id<"bikes"> | null;
-  const [selectedBikeId, setSelectedBikeId] = useState<string>(bikeIdParam ?? "");
+  const [selectedBikeIdOverride, setSelectedBikeIdOverride] = useState<string | null>(null);
+  const selectedBikeId = selectedBikeIdOverride ?? bikeIdParam ?? "";
   const bikes = useQuery(api.bikes.queries.list, {});
   const profile = useQuery(api.profiles.queries.getMyProfile);
   const bike = useQuery(
@@ -136,30 +137,29 @@ export function GearingCalculatorForm() {
   const [climbMinutes, setClimbMinutes] = useState("30");
   const [eventType, setEventType] = useState("sportive");
   const [comparisonCassetteCsv, setComparisonCassetteCsv] = useState("");
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
   const savedSignatureRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (!bikeIdParam) return;
-    setSelectedBikeId(bikeIdParam);
-  }, [bikeIdParam]);
 
   useEffect(() => {
     if (!bike) return;
     const gearing = (bike as { gearing?: GearingData | null }).gearing ?? null;
     const currentSetup = bike.currentSetup ?? null;
 
-    setDrivetrainType(gearing?.drivetrainType ?? (bike.bikeType === "gravel" || bike.bikeType === "mountain" ? "1x" : "2x"));
-    setFrontChainring(gearing?.chainrings?.[0]?.toString() ?? "");
-    setInnerChainring(gearing?.chainrings?.[1]?.toString() ?? "");
-    setCassetteCsv(gearing?.cassetteTeeth?.join(", ") ?? "");
-    setWheelCircumferenceMm(gearing?.wheelCircumferenceMm?.toString() ?? "2105");
-    setGroupsetName(gearing?.groupsetName ?? "");
-    setDerailleurMaxCog(gearing?.derailleurMaxCog?.toString() ?? "");
-    setBikeWeightKg(bike.bikeWeightKg?.toString() ?? "");
-    setPreferredCadenceRpm("85");
-    setFtpW("");
-    setComparisonCassetteCsv("");
+    startTransition(() => {
+      setDrivetrainType(
+        gearing?.drivetrainType ??
+          (bike.bikeType === "gravel" || bike.bikeType === "mountain" ? "1x" : "2x")
+      );
+      setFrontChainring(gearing?.chainrings?.[0]?.toString() ?? "");
+      setInnerChainring(gearing?.chainrings?.[1]?.toString() ?? "");
+      setCassetteCsv(gearing?.cassetteTeeth?.join(", ") ?? "");
+      setWheelCircumferenceMm(gearing?.wheelCircumferenceMm?.toString() ?? "2105");
+      setGroupsetName(gearing?.groupsetName ?? "");
+      setDerailleurMaxCog(gearing?.derailleurMaxCog?.toString() ?? "");
+      setBikeWeightKg(bike.bikeWeightKg?.toString() ?? "");
+      setPreferredCadenceRpm("85");
+      setFtpW("");
+      setComparisonCassetteCsv("");
+    });
     if (currentSetup?.crankLengthMm) {
       // Use the bike's crank length only as an assumption for gain-ratio-adjacent explanations.
       void currentSetup.crankLengthMm;
@@ -167,8 +167,11 @@ export function GearingCalculatorForm() {
   }, [bike]);
 
   useEffect(() => {
-    if (profile?.weightKg) {
-      setRiderWeightKg(profile.weightKg.toString());
+    const weightKg = profile?.weightKg;
+    if (typeof weightKg === "number") {
+      startTransition(() => {
+        setRiderWeightKg(weightKg.toString());
+      });
     }
   }, [profile]);
 
@@ -314,12 +317,9 @@ export function GearingCalculatorForm() {
     [persistenceInput]
   );
 
-  useEffect(() => {
-    if (!recentSessions) {
-      return;
-    }
-    setHistory(
-      recentSessions.map((session) => ({
+  const history = useMemo<HistoryEntry[]>(
+    () =>
+      (recentSessions ?? []).map((session) => ({
         createdAt: session.createdAt,
         bikeId: session.bikeId ? String(session.bikeId) : null,
         label:
@@ -330,9 +330,9 @@ export function GearingCalculatorForm() {
             : "Manual setup",
         recommendation: session.suitability.recommendationText,
         confidence: session.suitability.confidence.level,
-      }))
-    );
-  }, [recentSessions, bikes]);
+      })),
+    [recentSessions, bikes]
+  );
 
   useEffect(() => {
     if (!persistenceInput || !persistenceAnalysis) {
@@ -391,7 +391,7 @@ export function GearingCalculatorForm() {
             <Select
               label={isNl ? "Kies een fiets" : "Choose a bike"}
               value={selectedBikeId}
-              onChange={(event) => setSelectedBikeId(event.target.value)}
+              onChange={(event) => setSelectedBikeIdOverride(event.target.value || null)}
               options={[
                 { value: "", label: isNl ? "Handmatige invoer" : "Manual input" },
                 ...bikeOptions,

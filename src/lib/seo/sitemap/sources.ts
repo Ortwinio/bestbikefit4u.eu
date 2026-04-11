@@ -1,7 +1,6 @@
-import { GUIDE_SLUGS } from "@/app/(public)/guides/data";
-import { USE_CASE_SLUGS } from "@/app/(public)/use-cases/data";
 import { PAIN_PAGE_SLUGS } from "@/content/painPages";
 import { SUPPORTED_LOCALES, type Locale } from "@/i18n/config";
+import { getGuideBacklog } from "@/lib/guides/backlog";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getProgrammaticCalculatorEntries } from "@/lib/seo/programmatic/tirePressure";
 import {
@@ -93,29 +92,8 @@ const PAGE_ROUTE_SEEDS: readonly RouteSeed[] = [
     changefreq: "monthly",
     priority: 0.7,
   },
-  {
-    id: "use-cases-index",
-    path: "/use-cases",
-    lastmod: "2026-03-18",
-    changefreq: "weekly",
-    priority: 0.75,
-  },
-  ...USE_CASE_SLUGS.map<RouteSeed>((slug) => ({
-    id: `use-case-${slug}`,
-    path: `/use-cases/${slug}`,
-    lastmod: "2026-03-18",
-    changefreq: "weekly",
-    priority: 0.75,
-  })),
   { id: "privacy", path: "/privacy", lastmod: "2026-02-22", changefreq: "yearly", priority: 0.3 },
   { id: "terms", path: "/terms", lastmod: "2026-02-19", changefreq: "yearly", priority: 0.3 },
-  {
-    id: "science-calculation-engine",
-    path: "/science/calculation-engine",
-    lastmod: "2026-02-19",
-    changefreq: "monthly",
-    priority: 0.7,
-  },
   {
     id: "science-bike-fit-methods",
     path: "/science/bike-fit-methods",
@@ -167,6 +145,34 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
     lastmod: "2026-02-19",
     changefreq: "weekly",
     priority: 0.8,
+  },
+  {
+    id: "calculator-fuel-hydration",
+    path: "/calculators/fuel-hydration",
+    lastmod: "2026-04-11",
+    changefreq: "monthly",
+    priority: 0.75,
+  },
+  {
+    id: "calculator-ftp-wkg",
+    path: "/calculators/ftp-wkg",
+    lastmod: "2026-04-11",
+    changefreq: "monthly",
+    priority: 0.75,
+  },
+  {
+    id: "calculator-power-speed",
+    path: "/calculators/power-speed",
+    lastmod: "2026-04-11",
+    changefreq: "monthly",
+    priority: 0.75,
+  },
+  {
+    id: "calculator-climb-planner",
+    path: "/calculators/climb-planner",
+    lastmod: "2026-04-11",
+    changefreq: "monthly",
+    priority: 0.75,
   },
   {
     id: "calculator-gearing",
@@ -224,26 +230,21 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
 
 const GUIDE_ROUTE_SEEDS: readonly RouteSeed[] = [
   {
-    id: "guides-index",
-    path: "/guides",
-    lastmod: "2026-02-19",
-    changefreq: "monthly",
-    priority: 0.7,
-  },
-  {
     id: "guide-why-bikefit-matters",
     path: "/why-bikefit-matters",
     lastmod: "2026-02-23",
     changefreq: "monthly",
     priority: 0.7,
   },
-  ...GUIDE_SLUGS.map<RouteSeed>((slug) => ({
-    id: `guide-${slug}`,
-    path: `/guides/${slug}`,
-    lastmod: "2026-02-19",
-    changefreq: "monthly",
-    priority: 0.7,
-  })),
+  ...getGuideBacklog("en")
+    .filter((entry) => entry.path === "/guides" || entry.path.startsWith("/guides/"))
+    .map<RouteSeed>((entry) => ({
+      id: `guide-${entry.slug.replace(/\//g, "-")}`,
+      path: entry.path,
+      lastmod: "2026-04-11",
+      changefreq: "monthly",
+      priority: entry.path === "/guides" ? 0.8 : 0.7,
+    })),
 ] as const;
 
 const BLOG_ROUTE_SEEDS: readonly RouteSeed[] = [];
