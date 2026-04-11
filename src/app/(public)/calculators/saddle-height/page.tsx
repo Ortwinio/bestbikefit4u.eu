@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { Gauge, Ruler, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
+import {
+  CONSUMER_CAMPAIGN_CONFIG,
+  getConsumerCampaignCopy,
+  isConsumerCampaignActive,
+} from "@/config/commercial";
 import {
   PublicCtaBand,
   PublicFeatureCard,
@@ -50,6 +56,8 @@ export default async function SaddleHeightCalculatorPage() {
   const locale = await getRequestLocale();
   const isNl = locale === "nl";
   const pagePath = withLocalePrefix("/calculators/saddle-height", locale);
+  const campaignActive = isConsumerCampaignActive();
+  const campaign = getConsumerCampaignCopy(locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
   const faqs = isNl
     ? [
@@ -186,48 +194,91 @@ export default async function SaddleHeightCalculatorPage() {
 
       <PublicCtaBand
         className="mt-10"
-        eyebrow={isNl ? "Volgende stap" : "Next step"}
-        title={isNl ? "Plaats zadelhoogte in het totale fitbeeld" : "Put saddle height into the full fit picture"}
+        eyebrow={isNl ? "Hoe verder?" : "What's next?"}
+        title={isNl ? "Verfijn de uitkomst in je account" : "Refine the result in your account"}
         description={
           isNl
-            ? "Als je de zadelbasis kent, vergelijk je die met reach, drop en framedoelen zodat de totale positie logisch blijft."
-            : "Once you know the saddle baseline, compare it with reach, drop, and frame targets so the full position stays coherent."
+            ? "Maak een gratis account aan om deze resultaten op te slaan, zadelhoogte te koppelen aan reach en drop, en veranderingen bij te houden."
+            : "Create a free account to save these results, connect saddle height to reach and drop, and track changes over time."
         }
         actions={
-          <>
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/calculators/bike-fit", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="saddle_height_bike_fit_cta"
-                  ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-                />
-              }
-            >
-              {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-            </Button>
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="saddle_height_dashboard_cta"
-                  ctaLabel={isNl ? "Ga verder in dashboard" : "Continue in dashboard"}
-                />
-              }
-              variant="outline"
-            >
-              {isNl ? "Ga verder in dashboard" : "Continue in dashboard"}
-            </Button>
-          </>
+          campaignActive ? (
+            <>
+              <CampaignCtaGroup
+                locale={locale}
+                pagePath={pagePath}
+                startHref={withLocalePrefix("/login", locale)}
+                startSection="saddle_height_result"
+                donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+                donateSection="saddle_height_campaign_donate"
+                startLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
+                donateLabel={campaign.donateCta}
+              />
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/calculators/bike-fit", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="saddle_height_bike_fit_cta"
+                    ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
+                  />
+                }
+                variant="outline"
+              >
+                {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/login", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="saddle_height_result"
+                    ctaLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
+                  />
+                }
+              >
+                {isNl ? "Maak account aan of log in" : "Create account or sign in"}
+              </Button>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/pricing", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="saddle_height_pricing_cta"
+                    ctaLabel={isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
+                  />
+                }
+                variant="outline"
+              >
+                {isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
+              </Button>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/calculators/bike-fit", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="saddle_height_bike_fit_cta"
+                    ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
+                  />
+                }
+                variant="outline"
+              >
+                {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
+              </Button>
+            </>
+          )
         }
         aside={
           isNl
-            ? "Gebruik een fysieke fitter of arts bij aanhoudende pijn, blessures of complexe asymmetrie."
-            : "Use an in-person fitter or clinician for persistent pain, injury, or complex asymmetry."
+            ? "De calculator geeft een praktisch startpunt. Een persoonlijke fitter kan toegevoegde waarde bieden bij complexe biomechanische kwesties."
+            : "The calculator gives a practical starting point. An in-person fitter can add value for complex biomechanical issues."
         }
       />
 

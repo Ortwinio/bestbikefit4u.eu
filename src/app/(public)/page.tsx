@@ -205,16 +205,22 @@ export default async function HomePage() {
   const riderScenarios =
     locale === "nl"
       ? [
-          { href: "/use-cases/back-pain-cycling", label: "Bikefit bij lage rugklachten" },
-          { href: "/use-cases/gravel-cycling-fit", label: "Bikefit voor gravelrijden" },
-          { href: "/use-cases/triathlon-bike-fit", label: "Bikefit voor triathlon" },
-          { href: "/use-cases/tall-rider-bike-fit", label: "Bikefit voor lange rijders" },
+          {
+            href: "/guides/bike-fitting-for-lower-back-pain",
+            label: "Bikefit bij lage rugklachten",
+          },
+          { href: "/guides/gravel-bike-fit-guide", label: "Bikefit voor gravelrijden" },
+          { href: "/guides/triathlon-bike-fit-guide", label: "Bikefit voor triathlon" },
+          { href: "/guides/bike-fit-for-tall-riders", label: "Bikefit voor lange rijders" },
         ]
       : [
-          { href: "/use-cases/back-pain-cycling", label: "Bike Fit for Lower Back Pain" },
-          { href: "/use-cases/gravel-cycling-fit", label: "Bike Fit for Gravel Riding" },
-          { href: "/use-cases/triathlon-bike-fit", label: "Bike Fit for Triathlon" },
-          { href: "/use-cases/tall-rider-bike-fit", label: "Bike Fit for Tall Riders" },
+          {
+            href: "/guides/bike-fitting-for-lower-back-pain",
+            label: "Bike Fit for Lower Back Pain",
+          },
+          { href: "/guides/gravel-bike-fit-guide", label: "Bike Fit for Gravel Riding" },
+          { href: "/guides/triathlon-bike-fit-guide", label: "Bike Fit for Triathlon" },
+          { href: "/guides/bike-fit-for-tall-riders", label: "Bike Fit for Tall Riders" },
         ];
 
   return (
@@ -579,9 +585,9 @@ export default async function HomePage() {
               <Button
                 variant="link"
                 className="text-sm font-semibold"
-                render={<Link href={withLocalePrefix("/use-cases", locale)} />}
+                render={<Link href={withLocalePrefix("/guides", locale)} />}
               >
-              {locale === "nl" ? "Bekijk alle use cases" : "View all use cases"}
+              {locale === "nl" ? "Bekijk alle gidsen" : "View all guides"}
               </Button>
             </div>
           </PublicSection>

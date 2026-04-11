@@ -53,6 +53,8 @@ const EXEMPT_FILES = new Set([
   "src/components/features/pressure/wizard/StepRoute.tsx",
   "src/components/features/pressure/wizard/StepWeightGoal.tsx",
   "src/components/features/pressure/wizard/StepWheelsetTires.tsx",
+  "src/app/(dashboard)/gearing/GearingCalculatorForm.tsx",
+  "src/app/(dashboard)/saddle-selector/SaddleSelectorForm.tsx",
   "src/components/feedback/FeedbackDialog.tsx",
   "src/components/measurements/NumberSlider.tsx",
   "src/components/profile/ProfilePhotoUpload.tsx",

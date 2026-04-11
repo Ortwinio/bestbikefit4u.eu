@@ -250,3 +250,24 @@ export const listSizeRecordsForRiderModel = query({
     };
   },
 });
+
+export const getGeometryRecordPreview = query({
+  args: { recordId: v.id("geometry_records") },
+  handler: async (ctx, args) => {
+    await requireUserId(ctx);
+
+    const record = await ctx.db.get(args.recordId);
+    if (!record || record.status !== "active") {
+      return null;
+    }
+
+    return {
+      recordId: record._id,
+      sizeLabel: record.sizeLabel,
+      stackMm: record.stack ?? null,
+      reachMm: record.reach ?? null,
+      seatTubeAngle: record.seatTubeAngle ?? null,
+      headTubeAngle: record.headTubeAngle ?? null,
+    };
+  },
+});

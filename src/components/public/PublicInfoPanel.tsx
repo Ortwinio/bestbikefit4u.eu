@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@/components/prototyper-ui/ui/card";
 import { cn } from "@/utils/cn";
 
@@ -13,6 +12,7 @@ type PublicInfoPanelProps = ComponentPropsWithoutRef<"div"> & {
   tone?: "primary" | "secondary" | "success" | "warning" | "danger";
   icon?: ReactNode;
   role?: "status" | "alert" | "note";
+  titleAs?: "h2" | "h3" | "h4" | "p";
 };
 
 const toneStyles: Record<NonNullable<PublicInfoPanelProps["tone"]>, string> = {
@@ -35,8 +35,11 @@ export function PublicInfoPanel({
   tone = "secondary",
   className,
   role = "note",
+  titleAs = "h3",
   ...props
 }: PublicInfoPanelProps) {
+  const TitleTag = titleAs;
+
   return (
     <Card
       variant="secondary"
@@ -58,9 +61,9 @@ export function PublicInfoPanel({
           <div className="min-w-0 space-y-2">
             {title ? (
               <CardHeader className="p-0">
-                <CardTitle className="text-sm font-semibold tracking-tight text-[color:var(--foreground)]">
+                <TitleTag className="text-sm font-semibold tracking-tight text-[color:var(--foreground)]">
                   {title}
-                </CardTitle>
+                </TitleTag>
               </CardHeader>
             ) : null}
             <div className="text-sm leading-6 text-[color:var(--muted-foreground)]">{children}</div>

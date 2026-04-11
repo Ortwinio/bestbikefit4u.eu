@@ -204,7 +204,7 @@ export function solveSpeedForPowerWatts(input: {
   drivetrainEfficiency?: number;
 }) {
   const lowerBound = 0.1;
-  let upperBound = 15;
+  const upperBound = 15;
   const maxIterations = 50;
 
   const powerForSpeed = (velocityMps: number) =>

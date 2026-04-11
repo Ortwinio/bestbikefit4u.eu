@@ -2,7 +2,7 @@
 
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import BandenspanningCalculatorPage from "./page";
+import BandenspanningCalculatorPage, { PressureCalculatorPageContent } from "./page";
 
 let locale: "en" | "nl" = "en";
 
@@ -42,6 +42,16 @@ vi.mock("@/components/features/pressure/PressureCalculatorCta", () => ({
 
 vi.mock("@/i18n/request", () => ({
   getRequestLocale: () => Promise.resolve(locale),
+}));
+
+const { permanentRedirect } = vi.hoisted(() => ({
+  permanentRedirect: vi.fn((href: string) => {
+    throw new Error(`REDIRECT:${href}`);
+  }),
+}));
+
+vi.mock("next/navigation", () => ({
+  permanentRedirect,
 }));
 
 vi.mock("@/i18n/metadata", () => ({
@@ -95,8 +105,8 @@ afterEach(() => {
 });
 
 describe("bandenspanning calculator page", () => {
-  it("keeps the calculator form and next-step CTAs visible in English", async () => {
-    const ui = await BandenspanningCalculatorPage();
+  it("keeps the calculator form and next-step CTAs visible in English content", async () => {
+    const ui = await PressureCalculatorPageContent();
     render(ui);
 
     expect(screen.getByText("Tire Pressure Calculator")).toBeTruthy();
@@ -111,5 +121,14 @@ describe("bandenspanning calculator page", () => {
     expect(screen.getByText("Open bike-fit calculator").closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"
     );
+  });
+
+  it("redirects the English alias route to the canonical tire-pressure path", async () => {
+    locale = "en";
+
+    await expect(BandenspanningCalculatorPage()).rejects.toThrow(
+      "REDIRECT:/en/tire-pressure-calculator"
+    );
+    expect(permanentRedirect).toHaveBeenCalledWith("/en/tire-pressure-calculator");
   });
 });

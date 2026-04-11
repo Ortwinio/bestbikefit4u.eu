@@ -5,7 +5,6 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/prototyper-ui/ui/card";
 import { cn } from "@/utils/cn";
 import { PublicIconBadge } from "./PublicIconBadge";
@@ -16,6 +15,7 @@ type PublicSurfaceCardProps = Omit<ComponentPropsWithoutRef<typeof Card>, "title
   leading?: ReactNode;
   footer?: ReactNode;
   compact?: boolean;
+  titleAs?: "h2" | "h3" | "h4" | "p";
 };
 
 export function PublicSurfaceCard({
@@ -26,8 +26,11 @@ export function PublicSurfaceCard({
   children,
   className,
   compact = false,
+  titleAs = "h3",
   ...props
 }: PublicSurfaceCardProps) {
+  const TitleTag = titleAs;
+
   return (
     <Card
       variant="secondary"
@@ -47,9 +50,9 @@ export function PublicSurfaceCard({
             ) : null}
             <div className="space-y-1">
               {title ? (
-                <CardTitle className="text-lg font-semibold tracking-tight text-[color:var(--foreground)]">
+                <TitleTag className="text-lg font-semibold tracking-tight text-[color:var(--foreground)]">
                   {title}
-                </CardTitle>
+                </TitleTag>
               ) : null}
               {description ? (
                 <CardDescription className="text-sm leading-6 text-[color:var(--muted-foreground)]">

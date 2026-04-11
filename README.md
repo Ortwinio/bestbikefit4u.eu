@@ -29,6 +29,17 @@ npm run test:contracts
 npm run build -- --webpack
 ```
 
+## Multi-Agent Workflow
+
+When coordinating with `tmux-ide`, use the minimal repo convention in [plans/tmux-ide-minimal-operating-convention.md](/Users/ortwinverreck/Developer/bestbikefit4u/plans/tmux-ide-minimal-operating-convention.md).
+
+In practice:
+
+- `plans/` is the durable source of workflow truth.
+- `.tasks/` is lightweight execution state.
+- Task proof must reference real repo artifacts, changed files, or test runs.
+- Do not use `tmux-ide validate add ...` in this repo.
+
 ## Deployment
 
 - Deployment target: Vercel

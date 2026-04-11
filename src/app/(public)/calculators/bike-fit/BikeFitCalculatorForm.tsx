@@ -175,7 +175,7 @@ export function BikeFitCalculatorForm({ isNl }: Props) {
       notes,
       resultModel,
     };
-  }, [heightCm, inseamCm, baselineIssues, category, ambition, flexibility, core, isNl, baselineConfidence]);
+  }, [heightCm, inseamCm, baselineIssues, category, ambition, flexibility, core, isNl, baselineConfidence, baseline.inseamSource]);
 
   const confidenceLabel = useMemo(
     () => getConfidenceLabel(baselineConfidence.level, isNl),

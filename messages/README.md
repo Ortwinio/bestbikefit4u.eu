@@ -79,9 +79,12 @@ Your question or information here.
 When a message is resolved:
 1. The original poster deletes the file
 2. If you resolved someone else's question, add your response and let them delete it
+3. If repo state has moved past a blocker, do not leave the blocker file in place as stale truth
 
 ## Cleanup
 
 This directory should stay clean. Messages are temporary coordination tools, not permanent records. Delete resolved messages promptly.
+
+If `tmux-ide` task state, dispatch notes, and repo artifacts disagree, clean up or supersede stale blocker messages after verifying the repo state.
 
 Files here (except README and TEMPLATE) are excluded from version control.

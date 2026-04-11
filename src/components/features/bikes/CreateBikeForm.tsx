@@ -54,7 +54,7 @@ function deriveDiscipline(bikeType: BikeType) {
 
 export function CreateBikeForm() {
   const { locale, messages } = useDashboardMessages();
-  const createBike = useMutation(api.bikes.mutations.create as any);
+  const createBike = useMutation(api.bikes.mutations.create);
   const createWheelset = useMutation(api.wheelsets.mutations.create);
   const createTireSetup = useMutation(api.tireSetups.mutations.create);
 

@@ -20,7 +20,6 @@ import type {
   GearingAnalysisInput,
   GearingAnalysisResult,
   GearingConfidence,
-  GearingContextInput,
   GearingLengthBand,
   GearingMathResult,
   GearingReadinessLabel,

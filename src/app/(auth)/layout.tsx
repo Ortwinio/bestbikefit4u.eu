@@ -1,6 +1,25 @@
+import type { Metadata } from "next";
 import { BrandLogo } from "@/components/branding";
+import { buildLocaleAlternates } from "@/i18n/metadata";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+
+  return {
+    title: locale === "nl" ? "Inloggen | BestBikeFit4U" : "Sign In | BestBikeFit4U",
+    description:
+      locale === "nl"
+        ? "Log in of maak je account aan om je persoonlijke BestBikeFit4U-dashboard te openen."
+        : "Sign in or create your account to open your personal BestBikeFit4U dashboard.",
+    alternates: buildLocaleAlternates("/login", locale),
+    robots: {
+      index: false,
+      follow: true,
+    },
+  };
+}
 
 export default async function AuthLayout({
   children,

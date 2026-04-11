@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { permanentRedirect } from "next/navigation";
 import { PublicPageShell } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -14,6 +15,11 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getPublicCalculatorRouteEntry } from "@/lib/public-calculators";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
+
+function getLocalizedPressureCalculatorPath(locale: "en" | "nl") {
+  const routeEntry = getPublicCalculatorRouteEntry("tire-pressure");
+  return withLocalePrefix(routeEntry.localizedPaths[locale], locale);
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -35,11 +41,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function BandenspanningCalculatorPage() {
+export async function PressureCalculatorPageContent() {
   const locale = await getRequestLocale();
   const dictionary = await getDictionary(locale);
-  const routeEntry = getPublicCalculatorRouteEntry("tire-pressure");
-  const pagePath = withLocalePrefix(routeEntry.localizedPaths[locale], locale);
+  const pagePath = getLocalizedPressureCalculatorPath(locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
 
   return (
@@ -80,4 +85,14 @@ export default async function BandenspanningCalculatorPage() {
       />
     </PublicPageShell>
   );
+}
+
+export default async function BandenspanningCalculatorPage() {
+  const locale = await getRequestLocale();
+
+  if (locale !== "nl") {
+    permanentRedirect(getLocalizedPressureCalculatorPath("en"));
+  }
+
+  return <PressureCalculatorPageContent />;
 }

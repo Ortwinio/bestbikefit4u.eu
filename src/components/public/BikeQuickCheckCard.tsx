@@ -13,7 +13,6 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/prototyper-ui/ui/card";
 import { Input as PrototyperInput } from "@/components/prototyper-ui/ui/input";
 import { Label } from "@/components/prototyper-ui/ui/label";
@@ -321,9 +320,9 @@ export function BikeQuickCheckCard({
             <Search className="h-5 w-5" />
           </div>
           <div className="space-y-1">
-            <CardTitle className="text-lg font-semibold tracking-tight text-[color:var(--foreground)]">
+            <p className="text-lg font-semibold tracking-tight text-[color:var(--foreground)]">
               {copy.collapsedTitle}
-            </CardTitle>
+            </p>
             <CardDescription className="text-sm leading-6 text-[color:var(--muted-foreground)]">
               {copy.collapsedDescription}
             </CardDescription>

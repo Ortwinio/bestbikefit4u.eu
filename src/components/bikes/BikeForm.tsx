@@ -445,6 +445,11 @@ export function BikeForm({
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <Select
               label={locale === "nl" ? "Aandrijving" : "Drivetrain"}
+              tooltip={
+                locale === "nl"
+                  ? "Kies 1x of 2x zodat kettingbladen en cassette logisch worden geïnterpreteerd."
+                  : "Choose 1x or 2x so chainring and cassette inputs are interpreted correctly."
+              }
               value={drivetrainType}
               onChange={(event) => setDrivetrainType(event.target.value as "1x" | "2x")}
               options={[
@@ -482,6 +487,11 @@ export function BikeForm({
             />
             <Input
               label={locale === "nl" ? "Groepset" : "Groupset"}
+              tooltip={
+                locale === "nl"
+                  ? "Optioneel. Handig om later te herkennen welke drivetrain op deze fiets zit."
+                  : "Optional. Useful when you want to remember which drivetrain this bike is using."
+              }
               value={groupsetName}
               onChange={(event) => setGroupsetName(event.target.value)}
               placeholder="Ultegra / GRX / GX"

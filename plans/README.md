@@ -17,6 +17,8 @@ plans/
     └── 01-fix-validation.md
 ```
 
+Some files in `plans/` are repo-wide operating conventions rather than project folders. Keep those as standalone markdown files when the content is policy or workflow guidance instead of a build sequence.
+
 ## Creating a New Plan
 
 ### 1. Create a project folder
@@ -67,6 +69,20 @@ What the agent should produce.
 - Run prompts in order.
 - Update status at the end of each prompt.
 - Do not skip steps without writing why in the README.
+- If a task defines acceptance or QA requirements, store them in repo artifacts under `plans/` rather than external task metadata only.
+- Good durable artifacts include `README.md`, `testplan.md`, and `output-*.md`.
+
+## tmux-ide Usage in This Repo
+
+If you are coordinating work with `tmux-ide`, use the minimal operating convention in [tmux-ide-minimal-operating-convention.md](/Users/ortwinverreck/Developer/bestbikefit4u/plans/tmux-ide-minimal-operating-convention.md).
+
+Practical rules:
+
+- Treat `plans/` as the durable workflow layer.
+- Treat `.tasks/` as lightweight execution state.
+- Use task proof strings that point to real files, tests, or changed code.
+- Do not use `tmux-ide validate add ...` in this repo.
+- If dispatch files and repo state conflict, prefer repo state and note the mismatch.
 
 ## Archiving Completed Plans
 

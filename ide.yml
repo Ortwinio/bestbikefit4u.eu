@@ -4,22 +4,30 @@ team:
 rows:
   - size: 70%
     panes:
-      - title: Planner
+      - title: Lead
         command: claude
         role: lead
         focus: true
-      - title: Executor 1
+      - title: Codex A
         command: codex
         role: teammate
-        task: Work on Next.js UI components, pages, and layouts in src/app and src/components
-      - title: Executor 2
+        task: Coordinate plan artifacts, navigation/SEO wiring, and final QA closeout tasks from the active mission.
+      - title: Codex B
         command: codex
         role: teammate
-        task: Work on Convex schema, mutations, queries, and actions in the convex/ directory
+        task: Own engine and public/frontend implementation slices assigned by the active mission.
+      - title: Codex C
+        command: codex
+        role: teammate
+        task: Own Convex/backend and dashboard implementation slices assigned by the active mission.
+      - title: Codex D
+        command: codex
+        role: teammate
+        task: Take overflow implementation or QA/browser validation work when the active mission assigns it.
   - panes:
       - title: Next.js
         command: npm run dev
       - title: Convex
         command: npx convex dev
-      - title: macmon
-        command: macmon
+      - title: Shell
+        command: zsh

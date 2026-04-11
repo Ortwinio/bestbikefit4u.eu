@@ -27,7 +27,7 @@ export default function EditBikePage({ params }: EditBikePageProps) {
   const bike = useQuery(api.bikes.queries.getById, {
     bikeId: bikeId as Id<"bikes">,
   });
-  const updateBike = useMutation(api.bikes.mutations.update as any);
+  const updateBike = useMutation(api.bikes.mutations.update);
   const assignPublicFitCode = useMutation(api.bikes.mutations.assignPublicFitCode);
   const revokePublicFitCode = useMutation(api.bikes.mutations.revokePublicFitCode);
   const removeBike = useMutation(api.bikes.mutations.remove);

@@ -90,7 +90,7 @@ export function PainPointPageTemplate({
                 variant="outline"
                 render={
                   <TrackedCtaLink
-                    href={withLocalePrefix(`/case-study?pain=${slug}`, locale)}
+                    href={withLocalePrefix("/case-study", locale)}
                     locale={locale}
                     pagePath={pagePath}
                     section="pain_secondary_cta"
@@ -212,7 +212,7 @@ export function PainPointPageTemplate({
               className="border-primary-foreground/50 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
               render={
                 <TrackedCtaLink
-                  href={withLocalePrefix(`/case-study?pain=${slug}`, locale)}
+                  href={withLocalePrefix("/case-study", locale)}
                   locale={locale}
                   pagePath={pagePath}
                   section="pain_footer_secondary_cta"

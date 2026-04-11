@@ -49,7 +49,4 @@ export const ROBOTS_DISALLOW_PATHS = [
   "/feedback",
   "/en/feedback",
   "/nl/feedback",
-  "/login",
-  "/en/login",
-  "/nl/login",
 ] as const;
