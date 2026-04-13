@@ -271,3 +271,35 @@ export const getGeometryRecordPreview = query({
     };
   },
 });
+
+export const getGeometryRecordSelectionForRider = query({
+  args: { recordId: v.id("geometry_records") },
+  handler: async (ctx, args) => {
+    await requireUserId(ctx);
+
+    const record = await ctx.db.get(args.recordId);
+    if (!record || record.status !== "active") {
+      return null;
+    }
+
+    const [brand, model] = await Promise.all([
+      ctx.db.get(record.brandId),
+      ctx.db.get(record.modelId),
+    ]);
+
+    if (!brand || !model) {
+      return null;
+    }
+
+    return {
+      recordId: record._id,
+      brandId: brand._id,
+      brandName: brand.name,
+      modelFamilyKey: buildModelFamilyKey(model),
+      modelId: model._id,
+      modelName: model.name,
+      yearLabel: formatGeometryYearLabel(model.yearStart, model.yearEnd),
+      sizeLabel: record.sizeLabel,
+    };
+  },
+});

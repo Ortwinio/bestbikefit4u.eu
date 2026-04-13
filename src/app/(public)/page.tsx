@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  ArrowUpDown,
   Ruler,
   Target,
   FileText,
@@ -11,20 +10,23 @@ import {
   CheckCircle2,
   Gauge,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { QuotesCarousel } from "@/components/home/QuotesCarousel";
 import { BikeQuickCheckCard } from "@/components/public/BikeQuickCheckCard";
+import { CalculatorLogo } from "@/components/public/CalculatorLogo";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { Card, CardContent } from "@/components/prototyper-ui/ui/card";
 import { PublicCtaBand } from "@/components/public/PublicCtaBand";
 import { PublicSection } from "@/components/public/PublicSection";
 import { PublicSurfaceCard } from "@/components/public/PublicSurfaceCard";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
+import {
+  getLocalizedPublicCalculatorPath,
+  type PublicCalculatorId,
+} from "@/lib/public-calculators";
 import { getDictionary } from "@/i18n/getDictionary";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
@@ -67,10 +69,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HomePage() {
   type PopularTool = {
+    calculatorId: PublicCalculatorId;
     href: string;
     label: string;
-    icon: LucideIcon;
-    iconClassName: string;
   };
 
   const locale = await getRequestLocale();
@@ -116,90 +117,66 @@ export default async function HomePage() {
     locale === "nl"
       ? [
           {
+            calculatorId: "bike-fit",
             href: "/calculators/bike-fit",
             label: "Bike fit calculator",
-            icon: Bike,
-            iconClassName:
-              "bg-[color:color-mix(in_oklch,var(--primary)_16%,var(--background)_84%)] text-[color:color-mix(in_oklch,var(--primary-dark)_78%,var(--foreground)_22%)]",
           },
           {
+            calculatorId: "saddle-height",
             href: "/calculators/saddle-height",
             label: "Zadelhoogte calculator",
-            icon: Ruler,
-            iconClassName:
-              "bg-[color:color-mix(in_oklch,var(--success)_16%,var(--background)_84%)] text-[color:color-mix(in_oklch,var(--success)_82%,var(--foreground)_18%)]",
           },
           {
+            calculatorId: "saddle-width",
             href: "/calculators/saddle-width",
             label: "Zadelbreedtecalculator",
-            icon: ArrowUpDown,
-            iconClassName:
-              "bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--secondary)_88%)] text-[color:color-mix(in_oklch,var(--primary-dark)_82%,var(--foreground)_18%)]",
           },
           {
+            calculatorId: "frame-size",
             href: "/calculators/frame-size",
             label: "Framemaat calculator",
-            icon: Target,
-            iconClassName:
-              "bg-[color:color-mix(in_oklch,var(--warning)_18%,var(--background)_82%)] text-[color:color-mix(in_oklch,var(--warning)_78%,var(--foreground)_22%)]",
           },
           {
+            calculatorId: "gearing",
             href: "/calculators/gearing",
             label: "Verzet calculator",
-            icon: ArrowUpDown,
-            iconClassName:
-              "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--secondary)_86%)] text-[color:color-mix(in_oklch,var(--primary-dark)_82%,var(--foreground)_18%)]",
           },
           {
+            calculatorId: "tire-pressure",
             href: getLocalizedPublicCalculatorPath("tire-pressure", "nl"),
             label: "Bandenspanning calculator",
-            icon: Gauge,
-            iconClassName:
-              "bg-[color:color-mix(in_oklch,var(--secondary)_70%,var(--background)_30%)] text-[color:color-mix(in_oklch,var(--primary)_80%,var(--foreground)_20%)]",
           },
         ]
       : [
           {
+            calculatorId: "bike-fit",
             href: "/calculators/bike-fit",
             label: "Bike Fit Calculator",
-            icon: Bike,
-            iconClassName:
-              "bg-[color:color-mix(in_oklch,var(--primary)_16%,var(--background)_84%)] text-[color:color-mix(in_oklch,var(--primary-dark)_78%,var(--foreground)_22%)]",
           },
           {
+            calculatorId: "saddle-height",
             href: "/calculators/saddle-height",
             label: "Saddle Height Calculator",
-            icon: Ruler,
-            iconClassName:
-              "bg-[color:color-mix(in_oklch,var(--success)_16%,var(--background)_84%)] text-[color:color-mix(in_oklch,var(--success)_82%,var(--foreground)_18%)]",
           },
           {
+            calculatorId: "saddle-width",
             href: "/calculators/saddle-width",
             label: "Saddle Width Calculator",
-            icon: ArrowUpDown,
-            iconClassName:
-              "bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--secondary)_88%)] text-[color:color-mix(in_oklch,var(--primary-dark)_82%,var(--foreground)_18%)]",
           },
           {
+            calculatorId: "frame-size",
             href: "/calculators/frame-size",
             label: "Frame Size Calculator",
-            icon: Target,
-            iconClassName:
-              "bg-[color:color-mix(in_oklch,var(--warning)_18%,var(--background)_82%)] text-[color:color-mix(in_oklch,var(--warning)_78%,var(--foreground)_22%)]",
           },
           {
+            calculatorId: "gearing",
             href: "/calculators/gearing",
             label: "Gearing Calculator",
-            icon: ArrowUpDown,
-            iconClassName:
-              "bg-[color:color-mix(in_oklch,var(--primary)_14%,var(--secondary)_86%)] text-[color:color-mix(in_oklch,var(--primary-dark)_82%,var(--foreground)_18%)]",
           },
           {
+            calculatorId: "tire-pressure",
             href: getLocalizedPublicCalculatorPath("tire-pressure", "en"),
             label: "Tire Pressure Calculator",
-            icon: Gauge,
-            iconClassName:
-              "bg-[color:color-mix(in_oklch,var(--secondary)_70%,var(--background)_30%)] text-[color:color-mix(in_oklch,var(--primary)_80%,var(--foreground)_20%)]",
           },
         ];
   const riderScenarios =
@@ -389,11 +366,10 @@ export default async function HomePage() {
                   render={<Link href={withLocalePrefix(tool.href, locale)} />}
                 >
                   <span className="flex items-center gap-3">
-                    <span
-                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-black/5 ${tool.iconClassName}`}
-                    >
-                      <tool.icon className="h-5 w-5" />
-                    </span>
+                    <CalculatorLogo
+                      calculatorId={tool.calculatorId}
+                      className="h-11 w-11 shrink-0 rounded-2xl [&_svg]:h-10 [&_svg]:w-10"
+                    />
                     <span className="leading-6">{tool.label}</span>
                   </span>
                 </Button>

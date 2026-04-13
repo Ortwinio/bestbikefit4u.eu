@@ -2358,7 +2358,7 @@ const en = {
         geometryLink: {
           title: "Link bike geometry",
           description:
-            "Choose your bike from the geometry library when it is available. If it is not listed, you can still save your bike with your own brand and model.",
+            "Select your bike from the geometry library step by step: brand, model, year, and size. If your bike is not listed, you can still save your own brand and model.",
           loadingBrands: "Loading standard brands...",
           loadingModels: "Loading models for the selected brand...",
           noBrands:
@@ -2377,15 +2377,15 @@ const en = {
             "This bike is currently linked to a reference geometry record. Starting a custom fallback clears that linked record for this save.",
           standardBrand: {
             label: "Standard brand",
-            placeholder: "Start typing a brand",
+            placeholder: "Choose a brand",
             helper:
-              "Start typing and choose the brand that matches your bike. Press Enter to use the best match.",
+              "Start with the bike brand from the geometry library. This unlocks the matching model list.",
           },
           standardModel: {
             label: "Standard model",
-            placeholder: "Start typing a model",
+            placeholder: "Choose a model",
             helper:
-              "Start typing and choose the model that matches your bike. Press Enter to use the best match.",
+              "Choose the model that matches your bike for the selected brand.",
           },
           year: {
             label: "Model year",
@@ -2396,9 +2396,9 @@ const en = {
           },
           size: {
             label: "Frame size",
-            placeholder: "e.g. 54, 56, M, L",
+            placeholder: "Choose a size",
             helper:
-              "Choose the size label that matches your bike. This is saved on your bike even when a geometry-library record is not available yet.",
+              "Choose the frame size that matches your bike. As soon as you select it, the exact geometry preview appears below.",
           },
           preview: {
             title: "Linked geometry preview",
@@ -2412,7 +2412,7 @@ const en = {
             headTubeAngle: "Head tube angle",
             unavailable: "Unavailable",
           },
-          customBrandAction: "My brand is not listed",
+          customBrandAction: "My bike is not in the list",
           customModelAction: "My model is not listed",
           customExplanation:
             "Custom brand and model values are saved only on your bike. They do not change the shared geometry library.",

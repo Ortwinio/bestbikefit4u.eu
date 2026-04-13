@@ -2368,7 +2368,7 @@ const nl = {
         geometryLink: {
           title: "Fietsgeometrie koppelen",
           description:
-            "Kies je fiets uit de geometriebibliotheek wanneer die beschikbaar is. Staat hij er niet in, dan kun je je fiets alsnog opslaan met je eigen merk en model.",
+            "Selecteer je fiets stap voor stap uit de geometriebibliotheek: merk, model, jaar en maat. Staat je fiets er niet in, dan kun je alsnog je eigen merk en model opslaan.",
           loadingBrands: "Standaard merken laden...",
           loadingModels: "Modellen voor het gekozen merk laden...",
           noBrands:
@@ -2387,15 +2387,15 @@ const nl = {
             "Deze fiets is nu gekoppeld aan een referentie-record uit de bibliotheek. Zodra je de custom fallback start, wordt die koppeling voor deze opslag verwijderd.",
           standardBrand: {
             label: "Standaard merk",
-            placeholder: "Begin met typen voor een merk",
+            placeholder: "Kies een merk",
             helper:
-              "Begin met typen en kies het merk dat bij je fiets past. Druk op Enter om de beste match te gebruiken.",
+              "Begin met het fietsmerk uit de geometriebibliotheek. Daarna wordt de juiste modellijst beschikbaar.",
           },
           standardModel: {
             label: "Standaard model",
-            placeholder: "Begin met typen voor een model",
+            placeholder: "Kies een model",
             helper:
-              "Begin met typen en kies het model dat bij je fiets past. Druk op Enter om de beste match te gebruiken.",
+              "Kies het model dat hoort bij je fiets voor het geselecteerde merk.",
           },
           year: {
             label: "Modeljaar",
@@ -2406,9 +2406,9 @@ const nl = {
           },
           size: {
             label: "Framemaat",
-            placeholder: "bijv. 54, 56, M, L",
+            placeholder: "Kies een maat",
             helper:
-              "Kies de maatvermelding die bij je fiets past. Die wordt op je fiets opgeslagen, ook wanneer er nog geen record uit de geometriebibliotheek beschikbaar is.",
+              "Kies de framemaat die bij je fiets past. Zodra je die kiest, verschijnt hieronder het exacte geometrievoorbeeld.",
           },
           preview: {
             title: "Voorbeeld gekoppelde geometrie",
@@ -2422,7 +2422,7 @@ const nl = {
             headTubeAngle: "Balhoofdhoek",
             unavailable: "Niet beschikbaar",
           },
-          customBrandAction: "Mijn merk staat er niet tussen",
+          customBrandAction: "Mijn fiets staat niet in de lijst",
           customModelAction: "Mijn model staat er niet tussen",
           customExplanation:
             "Custom merk- en modelwaarden worden alleen op jouw fiets opgeslagen. Ze veranderen de gedeelde geometriebibliotheek niet.",

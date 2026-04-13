@@ -1,0 +1,331 @@
+/* @vitest-environment jsdom */
+
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { useState } from "react";
+import { useQuery } from "convex/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { BikeGeometryLibraryFields } from "./BikeGeometryLibraryFields";
+import {
+  createBikeGeometryFallbackState,
+  type BikeGeometryFallbackState,
+} from "./bikeFormGeometry";
+
+const useQueryMock = vi.mocked(useQuery);
+
+vi.mock("convex/react", () => ({
+  useQuery: vi.fn(),
+}));
+
+vi.mock("../../../convex/_generated/api", () => ({
+  api: {
+    geometry: {
+      queries: {
+        listBrandsForRider: "listBrandsForRider",
+        listModelsForRiderBrand: "listModelsForRiderBrand",
+        listSizeRecordsForRiderModel: "listSizeRecordsForRiderModel",
+        getGeometryRecordPreview: "getGeometryRecordPreview",
+        getGeometryRecordSelectionForRider: "getGeometryRecordSelectionForRider",
+      },
+    },
+  },
+}));
+
+vi.mock("@/lib/analytics/marketing", () => ({
+  pushDataLayerEvent: vi.fn(),
+}));
+
+vi.mock("@/components/ui", () => ({
+  Button: ({
+    children,
+    ...props
+  }: {
+    children?: React.ReactNode;
+    [key: string]: unknown;
+  }) => <button {...props}>{children}</button>,
+  Input: ({
+    label,
+    value,
+    onChange,
+    placeholder,
+  }: {
+    label: string;
+    value: string;
+    onChange: (event: { target: { value: string } }) => void;
+    placeholder?: string;
+  }) => (
+    <label>
+      <span>{label}</span>
+      <input
+        aria-label={label}
+        value={value}
+        placeholder={placeholder}
+        onChange={onChange as never}
+      />
+    </label>
+  ),
+  Select: ({
+    label,
+    value,
+    onChange,
+    options,
+    placeholder,
+    disabled,
+  }: {
+    label: string;
+    value: string;
+    onChange: (event: { target: { value: string } }) => void;
+    options: Array<{ value: string; label: string }>;
+    placeholder?: string;
+    disabled?: boolean;
+  }) => (
+    <label>
+      <span>{label}</span>
+      <select
+        aria-label={label}
+        value={value}
+        disabled={disabled}
+        onChange={onChange as never}
+      >
+        <option value="">{placeholder ?? "Select"}</option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  ),
+}));
+
+const messages = {
+  common: { back: "Back" },
+  bikeForm: {
+    fields: {
+      brand: { label: "Brand", placeholder: "Brand" },
+      model: { label: "Model", placeholder: "Model" },
+      geometryLink: {
+        title: "Link bike geometry",
+        description: "Pick brand, model, year, and size.",
+        loadingBrands: "Loading brands",
+        loadingModels: "Loading models",
+        noBrands: "No brands",
+        selectModelFirst: "Choose the right model",
+        noModels: "No models",
+        selectionSummary: "Selected standard bike identity",
+        selectionSummaryEmpty: "No standard geometry-library path selected yet.",
+        standardBrand: {
+          label: "Standard brand",
+          placeholder: "Choose a brand",
+          helper: "Pick the bike brand.",
+        },
+        standardModel: {
+          label: "Standard model",
+          placeholder: "Choose a model",
+          helper: "Pick the bike model.",
+        },
+        year: {
+          label: "Model year",
+          placeholder: "Choose a year",
+          helper: "Choose the matching model year.",
+          unknownOptionLabel: "Year not specified ({count})",
+        },
+        size: {
+          label: "Frame size",
+          placeholder: "Choose a size",
+          helper: "Choose the matching size.",
+        },
+        preview: {
+          title: "Linked geometry preview",
+          description: "",
+          year: "Year",
+          size: "Frame size",
+          stack: "Stack",
+          reach: "Reach",
+          seatTubeAngle: "Seat tube angle",
+          headTubeAngle: "Head tube angle",
+          unavailable: "Unavailable",
+        },
+        customBrandAction: "My bike is not in the list",
+        customModelAction: "My model is not listed",
+        customExplanation: "Fallback saves only on your bike.",
+        linkedTitle: "Linked geometry record kept",
+        linkedDescription: "Linked geometry will be cleared when fallback starts.",
+      },
+    },
+  },
+} as const;
+
+function TestHarness({
+  initialState,
+}: {
+  initialState: BikeGeometryFallbackState;
+}) {
+  const [state, setState] = useState(initialState);
+  return (
+    <BikeGeometryLibraryFields
+      state={state}
+      onChange={setState}
+      messages={messages as never}
+    />
+  );
+}
+
+afterEach(() => {
+  cleanup();
+  vi.clearAllMocks();
+});
+
+describe("BikeGeometryLibraryFields", () => {
+  it("guides the user through brand, model, year, and size selection", async () => {
+    useQueryMock.mockImplementation(((query: unknown, args?: unknown) => {
+      switch (query) {
+        case "listBrandsForRider":
+          return [
+            { brandId: "brand_trek", name: "Trek", hasUsableModels: true },
+            { brandId: "brand_canyon", name: "Canyon", hasUsableModels: true },
+          ];
+        case "listModelsForRiderBrand":
+          return args && (args as { brandId: string }).brandId === "brand_trek"
+            ? [
+                {
+                  modelKey: "emonda::road",
+                  name: "Emonda SL",
+                  yearSelectionRequired: true,
+                  hasUsableSizes: true,
+                  yearOptions: [
+                    { modelId: "model_2023", yearLabel: "2023", sizeRecordCount: 3 },
+                    { modelId: "model_2022", yearLabel: "2022", sizeRecordCount: 2 },
+                  ],
+                },
+              ]
+            : [];
+        case "listSizeRecordsForRiderModel":
+          return args && (args as { modelId: string }).modelId === "model_2023"
+            ? {
+                sizeOptions: [
+                  { recordId: "record_54", sizeLabel: "54" },
+                  { recordId: "record_56", sizeLabel: "56" },
+                ],
+              }
+            : { sizeOptions: [] };
+        case "getGeometryRecordPreview":
+          return args && (args as { recordId: string }).recordId === "record_56"
+            ? {
+                recordId: "record_56",
+                sizeLabel: "56",
+                stackMm: 563,
+                reachMm: 387,
+                seatTubeAngle: 73.5,
+                headTubeAngle: 72.8,
+              }
+            : null;
+        case "getGeometryRecordSelectionForRider":
+          return null;
+        default:
+          return undefined;
+      }
+    }) as never);
+
+    render(<TestHarness initialState={createBikeGeometryFallbackState({})} />);
+
+    fireEvent.change(screen.getByLabelText("Standard brand"), {
+      target: { value: "brand_trek" },
+    });
+    fireEvent.change(screen.getByLabelText("Standard model"), {
+      target: { value: "emonda::road" },
+    });
+    fireEvent.change(screen.getByLabelText("Model year"), {
+      target: { value: "model_2023" },
+    });
+    fireEvent.change(screen.getByLabelText("Frame size"), {
+      target: { value: "record_56" },
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Trek · Emonda SL · 2023 · 56")).toBeTruthy();
+      expect(screen.getByText("563 mm")).toBeTruthy();
+      expect(screen.getByText("387 mm")).toBeTruthy();
+    });
+  });
+
+  it("hydrates edit state from an existing geometry record into the guided picks", async () => {
+    useQueryMock.mockImplementation(((query: unknown, args?: unknown) => {
+      switch (query) {
+        case "listBrandsForRider":
+          return [{ brandId: "brand_trek", name: "Trek", hasUsableModels: true }];
+        case "listModelsForRiderBrand":
+          return args && (args as { brandId: string }).brandId === "brand_trek"
+            ? [
+                {
+                  modelKey: "emonda::road",
+                  name: "Emonda SL",
+                  yearSelectionRequired: true,
+                  hasUsableSizes: true,
+                  yearOptions: [
+                    { modelId: "model_2023", yearLabel: "2023", sizeRecordCount: 3 },
+                  ],
+                },
+              ]
+            : [];
+        case "listSizeRecordsForRiderModel":
+          return args && (args as { modelId: string }).modelId === "model_2023"
+            ? {
+                sizeOptions: [{ recordId: "record_56", sizeLabel: "56" }],
+              }
+            : { sizeOptions: [] };
+        case "getGeometryRecordPreview":
+          return args && (args as { recordId: string }).recordId === "record_56"
+            ? {
+                recordId: "record_56",
+                sizeLabel: "56",
+                stackMm: 563,
+                reachMm: 387,
+                seatTubeAngle: 73.5,
+                headTubeAngle: 72.8,
+              }
+            : null;
+        case "getGeometryRecordSelectionForRider":
+          return args && (args as { recordId: string }).recordId === "record_56"
+            ? {
+                recordId: "record_56",
+                brandId: "brand_trek",
+                brandName: "Trek",
+                modelFamilyKey: "emonda::road",
+                modelId: "model_2023",
+                modelName: "Emonda SL",
+                yearLabel: "2023",
+                sizeLabel: "56",
+              }
+            : null;
+        default:
+          return undefined;
+      }
+    }) as never);
+
+    render(
+      <TestHarness
+        initialState={createBikeGeometryFallbackState({
+          brand: "Trek",
+          model: "Emonda SL",
+          geometryRecordId: "record_56",
+          geometrySizeLabel: "56",
+        })}
+      />
+    );
+
+    await waitFor(() => {
+      expect(
+        (screen.getByLabelText("Standard brand") as HTMLSelectElement).value
+      ).toBe("brand_trek");
+      expect(
+        (screen.getByLabelText("Standard model") as HTMLSelectElement).value
+      ).toBe("emonda::road");
+      expect(
+        (screen.getByLabelText("Model year") as HTMLSelectElement).value
+      ).toBe("model_2023");
+      expect((screen.getByLabelText("Frame size") as HTMLSelectElement).value).toBe(
+        "record_56"
+      );
+    });
+  });
+});

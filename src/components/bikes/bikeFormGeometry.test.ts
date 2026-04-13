@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   applyGeometryRecordSelection,
+  applyStandardGeometrySelection,
   applyStandardBrandSelection,
   applyStandardModelFamilySelection,
   applyStandardModelVariantSelection,
@@ -172,6 +173,30 @@ describe("bikeFormGeometry", () => {
       standardModel: "Endurace",
       geometryRecordId: "record_56",
       geometrySizeLabel: "56",
+    });
+  });
+
+  it("hydrates a full standard selection from an exact geometry record", () => {
+    const state = applyStandardGeometrySelection(createBikeGeometryFallbackState({}), {
+      brandId: "brand_1",
+      brandName: "Trek",
+      modelFamilyKey: "emonda::road",
+      modelId: "model_2023",
+      modelName: "Emonda SL",
+      geometryRecordId: "record_56",
+      sizeLabel: "56",
+    });
+
+    expect(state).toMatchObject({
+      standardBrandId: "brand_1",
+      standardBrand: "Trek",
+      standardModelFamilyKey: "emonda::road",
+      standardModelId: "model_2023",
+      standardModel: "Emonda SL",
+      geometryRecordId: "record_56",
+      geometrySizeLabel: "56",
+      customBrandEnabled: false,
+      customModelEnabled: false,
     });
   });
 });

@@ -28,6 +28,16 @@ type BikeGeometryIdentityPayload = {
   geometryRecordId?: string;
 };
 
+type StandardGeometrySelectionPayload = {
+  brandId?: string | null;
+  brandName?: string | null;
+  modelFamilyKey?: string | null;
+  modelId?: string | null;
+  modelName?: string | null;
+  geometryRecordId?: string | null;
+  sizeLabel?: string | null;
+};
+
 function normalizeOptionalText(value: string | null | undefined) {
   const normalized = value?.trim();
   return normalized ? normalized : undefined;
@@ -217,6 +227,26 @@ export function applyGeometryRecordSelection(
     ...state,
     geometryRecordId: normalizeOptionalText(input.geometryRecordId),
     geometrySizeLabel: normalizeOptionalText(input.sizeLabel),
+    customModelEnabled: false,
+    customModel: "",
+  };
+}
+
+export function applyStandardGeometrySelection(
+  state: BikeGeometryFallbackState,
+  input: StandardGeometrySelectionPayload
+): BikeGeometryFallbackState {
+  return {
+    ...state,
+    standardBrandId: normalizeOptionalText(input.brandId),
+    standardBrand: normalizeOptionalText(input.brandName),
+    standardModelFamilyKey: normalizeOptionalText(input.modelFamilyKey),
+    standardModelId: normalizeOptionalText(input.modelId),
+    standardModel: normalizeOptionalText(input.modelName),
+    geometrySizeLabel: normalizeOptionalText(input.sizeLabel),
+    geometryRecordId: normalizeOptionalText(input.geometryRecordId),
+    customBrandEnabled: false,
+    customBrand: "",
     customModelEnabled: false,
     customModel: "",
   };

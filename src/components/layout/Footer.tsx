@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Compass, Gauge, Sparkles } from "lucide-react";
+import { CalculatorLogo } from "@/components/public/CalculatorLogo";
 import { BRAND } from "@/config/brand";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -92,48 +93,54 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/bike-fit", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
+                  <CalculatorLogo calculatorId="bike-fit" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.bikeFit}
                 </Link>
               </li>
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/saddle-height", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
+                  <CalculatorLogo calculatorId="saddle-height" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.saddleHeight}
                 </Link>
               </li>
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/saddle-width", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
+                  <CalculatorLogo calculatorId="saddle-width" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.saddleWidth}
                 </Link>
               </li>
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/frame-size", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
+                  <CalculatorLogo calculatorId="frame-size" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.frameSize}
                 </Link>
               </li>
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/crank-length", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
+                  <CalculatorLogo calculatorId="crank-length" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.crankLength}
                 </Link>
               </li>
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/gearing", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
+                  <CalculatorLogo calculatorId="gearing" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.gearing}
                 </Link>
               </li>
@@ -143,8 +150,9 @@ export function Footer({ locale, labels }: FooterProps) {
                     getLocalizedPublicCalculatorPath("tire-pressure", locale),
                     locale
                   )}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
+                  <CalculatorLogo calculatorId="tire-pressure" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.tirePressure}
                 </Link>
               </li>
