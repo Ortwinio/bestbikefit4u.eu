@@ -35,8 +35,16 @@ type LocaleKey = "en" | "nl";
 type FormTab = "content" | "seo" | "settings" | "activity";
 type SectionType = "prose" | "steps" | "cards" | "table";
 type AuditEntry = Doc<"guideAuditLog">;
+type GuideRevisionEntry = Doc<"guideRevisions"> & {
+  savedByDetail?: { _id: string; displayName: string; email: string };
+};
 
 type BilingualText = { en: string; nl: string };
+type GuideQuickAnswerForm = {
+  keyTakeaway: BilingualText;
+  commonMistake: BilingualText;
+  payAttention: BilingualText;
+};
 type GuideSectionForm = {
   title: BilingualText;
   type: SectionType;
@@ -69,6 +77,14 @@ function emptySection(): GuideSectionForm {
 
 function emptyFaq(): GuideFaqForm {
   return { q: emptyText(), a: emptyText() };
+}
+
+function emptyQuickAnswer(): GuideQuickAnswerForm {
+  return {
+    keyTakeaway: emptyText(),
+    commonMistake: emptyText(),
+    payAttention: emptyText(),
+  };
 }
 
 function updateLocalizedValue(
@@ -205,6 +221,7 @@ function buildInitialState(guide: Doc<"guidePages">) {
     slug: guide.slug ?? "",
     cluster: guide.cluster ?? "pain-discomfort",
     primaryCtaTarget: guide.primaryCtaTarget ?? "/login?from=guide",
+    authorId: guide.author ? String(guide.author) : "",
     featuredImageUrl: guide.featuredImageUrl ?? "",
     ogImageUrl: guide.ogImageUrl ?? "",
     canonicalUrl: guide.canonicalUrl ?? "",
@@ -238,6 +255,20 @@ function buildInitialState(guide: Doc<"guidePages">) {
     featuredImageAlt: mergeText(guide.featuredImageAlt?.en, guide.featuredImageAlt?.nl),
     ogImageAlt: mergeText(guide.ogImageAlt?.en, guide.ogImageAlt?.nl),
     libraryBody: mergeText(guide.libraryBody?.en, guide.libraryBody?.nl),
+    quickAnswer: {
+      keyTakeaway: mergeText(
+        guide.quickAnswer?.keyTakeaway?.en,
+        guide.quickAnswer?.keyTakeaway?.nl
+      ),
+      commonMistake: mergeText(
+        guide.quickAnswer?.commonMistake?.en,
+        guide.quickAnswer?.commonMistake?.nl
+      ),
+      payAttention: mergeText(
+        guide.quickAnswer?.payAttention?.en,
+        guide.quickAnswer?.payAttention?.nl
+      ),
+    },
   };
 }
 
@@ -247,6 +278,8 @@ type ConfirmAction =
   | { kind: "save-slug-change"; oldSlug: string; newSlug: string }
   | { kind: "publish" }
   | { kind: "unpublish" }
+  | { kind: "delete" }
+  | { kind: "restore"; revisionId: string; version: number }
   | null;
 
 export function GuideEditView({
@@ -262,8 +295,11 @@ export function GuideEditView({
   const changeSlug = useMutation(api.guides.mutations.changeSlug);
   const publishGuide = useMutation(api.guides.mutations.publishGuide);
   const unpublishGuide = useMutation(api.guides.mutations.unpublishGuide);
+  const deleteGuide = useMutation(api.guides.mutations.deleteGuide);
+  const restoreGuideRevision = useMutation(api.guides.mutations.restoreGuideRevision);
   const submitGuideForReview = useMutation(api.guides.mutations.submitGuideForReview);
   const requestGuideChanges = useMutation(api.guides.mutations.requestGuideChanges);
+  const formOptions = useQuery(api.guides.queries.getGuideAdminFormOptions, {});
   const [formTab, setFormTab] = useState<FormTab>("content");
   const [localeTab, setLocaleTab] = useState<LocaleKey>("en");
   const [state, setState] = useState<EditState>(() => buildInitialState(guide));
@@ -277,6 +313,10 @@ export function GuideEditView({
     api.guides.queries.getGuideAuditLog,
     isPublishAdmin ? { guideId: guide._id } : "skip"
   );
+  const revisions = useQuery(
+    api.guides.queries.getGuideRevisions,
+    { guideId: guide._id }
+  ) as GuideRevisionEntry[] | undefined;
   const normalizedSlug = useMemo(() => slugifyGuideTitle(state.slug), [state.slug]);
   const slugLookup = useQuery(
     api.guides.queries.getGuideBySlug,
@@ -284,6 +324,21 @@ export function GuideEditView({
   );
 
   const previewPath = buildGuidePreviewPath(normalizedSlug);
+  const relatedGuideOptions = useMemo(
+    () =>
+      (formOptions?.relatedGuideOptions ?? []).filter(
+        (option) => String(option._id) !== String(guide._id) && option.slug !== normalizedSlug
+      ),
+    [formOptions?.relatedGuideOptions, guide._id, normalizedSlug]
+  );
+  const selectedRelatedGuides = useMemo(
+    () =>
+      state.relatedGuides
+        .split(",")
+        .map((value) => value.trim())
+        .filter(Boolean),
+    [state.relatedGuides]
+  );
   const lastSavedAt = guide.lastUpdatedAt ?? guide.updatedAt;
   const slugReadOnly = guide.status === "published" && !isPublishAdmin;
   const previewDisabled = dirty;
@@ -393,11 +448,24 @@ export function GuideEditView({
     if (!state.pageTitle.en.trim() || !state.pageTitle.nl.trim()) {
       return "Page title is required in English and Dutch.";
     }
+    if (!state.h1.en.trim() || !state.h1.nl.trim()) {
+      return "H1 is required in English and Dutch.";
+    }
+    if (!state.pageBrief.en.trim() || !state.pageBrief.nl.trim()) {
+      return "Page brief is required in English and Dutch.";
+    }
     if (!state.metaTitle.en.trim() || !state.metaTitle.nl.trim()) {
       return "Meta title is required in English and Dutch.";
     }
     if (!state.metaDescription.en.trim() || !state.metaDescription.nl.trim()) {
       return "Meta description is required in English and Dutch.";
+    }
+    if (
+      state.body.en.every((section) =>
+        section.items.every((item) => !item.en.trim() && !item.nl.trim())
+      )
+    ) {
+      return "Add at least one body item before saving.";
     }
 
     return null;
@@ -451,6 +519,15 @@ export function GuideEditView({
         .filter((faq) => faq.q.nl.trim() || faq.a.nl.trim())
         .map((faq) => ({ q: faq.q.nl, a: faq.a.nl })),
     },
+    quickAnswer:
+      state.quickAnswer.keyTakeaway.en.trim() ||
+      state.quickAnswer.keyTakeaway.nl.trim() ||
+      state.quickAnswer.commonMistake.en.trim() ||
+      state.quickAnswer.commonMistake.nl.trim() ||
+      state.quickAnswer.payAttention.en.trim() ||
+      state.quickAnswer.payAttention.nl.trim()
+        ? state.quickAnswer
+        : undefined,
     libraryBody:
       state.libraryBody.en.trim() || state.libraryBody.nl.trim()
         ? state.libraryBody
@@ -485,6 +562,7 @@ export function GuideEditView({
         ? state.ogImageAlt
         : undefined,
     robotsIndex: state.robotsIndex,
+    author: state.authorId ? (state.authorId as Doc<"users">["_id"]) : undefined,
     tags: state.tags
       .split(",")
       .map((value) => value.trim())
@@ -535,6 +613,7 @@ export function GuideEditView({
               pageBrief: payload.pageBrief,
               body: payload.body,
               faqs: payload.faqs,
+              quickAnswer: payload.quickAnswer,
               libraryBody: payload.libraryBody,
               heroImageFileName: payload.heroImageFileName,
               heroImagePublicPath: payload.heroImagePublicPath,
@@ -548,6 +627,7 @@ export function GuideEditView({
               ogImageUrl: payload.ogImageUrl,
               ogImageAlt: payload.ogImageAlt,
               robotsIndex: payload.robotsIndex,
+              author: payload.author,
               tags: payload.tags,
               relatedGuides: payload.relatedGuides,
               primaryCtaTarget: payload.primaryCtaTarget,
@@ -590,6 +670,14 @@ export function GuideEditView({
 
   const handleUnpublish = async () => {
     setConfirmAction({ kind: "unpublish" });
+  };
+
+  const handleDelete = async () => {
+    setConfirmAction({ kind: "delete" });
+  };
+
+  const handleRestoreRevision = (revisionId: string, version: number) => {
+    setConfirmAction({ kind: "restore", revisionId, version });
   };
 
   const handleSubmitForReview = async () => {
@@ -713,6 +801,48 @@ export function GuideEditView({
       } finally {
         setIsSaving(false);
       }
+      return;
+    }
+
+    if (nextAction.kind === "delete") {
+      setIsSaving(true);
+      try {
+        await deleteGuide({ id: guide._id });
+        toast.success({ description: "Guide deleted." });
+        router.push("/admin/guides");
+        router.refresh();
+      } catch (mutationError) {
+        console.error("Failed to delete guide:", mutationError);
+        setError(
+          mutationError instanceof Error
+            ? mutationError.message
+            : "Could not delete the guide."
+        );
+      } finally {
+        setIsSaving(false);
+      }
+      return;
+    }
+
+    if (nextAction.kind === "restore") {
+      setIsSaving(true);
+      try {
+        await restoreGuideRevision({
+          guideId: guide._id,
+          revisionId: nextAction.revisionId as Doc<"guideRevisions">["_id"],
+        });
+        toast.success({ description: `Restored revision v${nextAction.version}.` });
+        router.refresh();
+      } catch (mutationError) {
+        console.error("Failed to restore revision:", mutationError);
+        setError(
+          mutationError instanceof Error
+            ? mutationError.message
+            : "Could not restore the revision."
+        );
+      } finally {
+        setIsSaving(false);
+      }
     }
   };
 
@@ -725,6 +855,7 @@ export function GuideEditView({
   const unpublishButtonVisible = isPublishAdmin && guide.status === "published";
   const requestChangesVisible = isPublishAdmin && guide.status === "in_review";
   const submitForReviewVisible = guide.status === "draft";
+  const deleteButtonVisible = isPublishAdmin;
 
   return (
     <div className="space-y-8">
@@ -735,6 +866,10 @@ export function GuideEditView({
             ? "Publish guide"
             : confirmAction?.kind === "unpublish"
               ? "Unpublish guide"
+              : confirmAction?.kind === "delete"
+                ? "Delete guide"
+                : confirmAction?.kind === "restore"
+                  ? "Restore revision"
               : "Confirm slug change"
         }
         description={
@@ -742,6 +877,10 @@ export function GuideEditView({
             ? "Publish this guide? It will be visible on the public site immediately."
             : confirmAction?.kind === "unpublish"
               ? "Unpublish this guide? It will be removed from the public site."
+              : confirmAction?.kind === "delete"
+                ? "Delete this guide? The record stays in Convex but disappears from the active CMS list."
+                : confirmAction?.kind === "restore"
+                  ? `Restore revision v${confirmAction.version}? Current unsaved changes will be lost.`
               : confirmAction?.kind === "save-slug-change"
                 ? `This guide is published. Changing the slug will create a 301 redirect from ${confirmAction.oldSlug} to ${confirmAction.newSlug}. Confirm?`
                 : undefined
@@ -829,9 +968,10 @@ export function GuideEditView({
                   <Select
                     label="Cluster"
                     value={state.cluster}
-                    onChange={(event) =>
-                      updateState((current) => ({ ...current, cluster: event.currentTarget.value }))
-                    }
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
+                      updateState((current) => ({ ...current, cluster: nextValue }));
+                    }}
                     options={GUIDE_CLUSTER_OPTIONS.map((option) => ({
                       value: option.value,
                       label: option.label,
@@ -840,57 +980,61 @@ export function GuideEditView({
                   <Input
                     label="Internal title"
                     value={state.pageTitle[localeTab]}
-                    onChange={(event) =>
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
                       updateState((current) => ({
                         ...current,
                         pageTitle: updateLocalizedValue(
                           current.pageTitle,
                           localeTab,
-                          event.currentTarget.value
+                          nextValue
                         ),
-                      }))
-                    }
+                      }));
+                    }}
                   />
                   <Input
                     label="H1"
                     value={state.h1[localeTab]}
-                    onChange={(event) =>
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
                       updateState((current) => ({
                         ...current,
-                        h1: updateLocalizedValue(current.h1, localeTab, event.currentTarget.value),
-                      }))
-                    }
+                        h1: updateLocalizedValue(current.h1, localeTab, nextValue),
+                      }));
+                    }}
                     placeholder="Public page heading"
                   />
                   <Textarea
                     label="Page brief"
                     value={state.pageBrief[localeTab]}
-                    onChange={(event) =>
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
                       updateState((current) => ({
                         ...current,
                         pageBrief: updateLocalizedValue(
                           current.pageBrief,
                           localeTab,
-                          event.currentTarget.value
+                          nextValue
                         ),
-                      }))
-                    }
+                      }));
+                    }}
                     rows={3}
                     helperText="Used in cards, listings, and hub summaries."
                   />
                   <Textarea
                     label="Primary CTA label"
                     value={state.primaryCtaLabel[localeTab]}
-                    onChange={(event) =>
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
                       updateState((current) => ({
                         ...current,
                         primaryCtaLabel: updateLocalizedValue(
                           current.primaryCtaLabel,
                           localeTab,
-                          event.currentTarget.value
+                          nextValue
                         ),
-                      }))
-                    }
+                      }));
+                    }}
                     rows={2}
                   />
                 </div>
@@ -907,7 +1051,8 @@ export function GuideEditView({
                         <Input
                           label={`Section title (${localeTab === "en" ? "English" : "Dutch"})`}
                           value={section.title[localeTab]}
-                          onChange={(event) =>
+                          onChange={(event) => {
+                            const nextValue = event.currentTarget.value;
                             updateState((current) => {
                               const nextBody = [...current.body[localeTab]];
                               nextBody[sectionIndex] = {
@@ -915,7 +1060,7 @@ export function GuideEditView({
                                 title: updateLocalizedValue(
                                   section.title,
                                   localeTab,
-                                  event.currentTarget.value
+                                  nextValue
                                 ),
                               };
                               return {
@@ -925,18 +1070,19 @@ export function GuideEditView({
                                   [localeTab]: nextBody,
                                 },
                               };
-                            })
-                          }
+                            });
+                          }}
                         />
                         <Select
                           label="Section type"
                           value={section.type}
-                          onChange={(event) =>
+                          onChange={(event) => {
+                            const nextValue = event.currentTarget.value as SectionType;
                             updateState((current) => {
                               const nextBody = [...current.body[localeTab]];
                               nextBody[sectionIndex] = {
                                 ...section,
-                                type: event.currentTarget.value as SectionType,
+                                type: nextValue,
                               };
                               return {
                                 ...current,
@@ -945,8 +1091,8 @@ export function GuideEditView({
                                   [localeTab]: nextBody,
                                 },
                               };
-                            })
-                          }
+                            });
+                          }}
                           options={[
                             { value: "prose", label: "Prose" },
                             { value: "steps", label: "Steps" },
@@ -982,14 +1128,15 @@ export function GuideEditView({
                             key={`section-${sectionIndex}-item-${itemIndex}`}
                             label={`Item ${itemIndex + 1} (${localeTab === "en" ? "English" : "Dutch"})`}
                             value={item[localeTab]}
-                            onChange={(event) =>
+                            onChange={(event) => {
+                              const nextValue = event.currentTarget.value;
                               updateState((current) => {
                                 const nextBody = [...current.body[localeTab]];
                                 const nextItems = [...section.items];
                                 nextItems[itemIndex] = updateLocalizedValue(
                                   item,
                                   localeTab,
-                                  event.currentTarget.value
+                                  nextValue
                                 );
                                 nextBody[sectionIndex] = { ...section, items: nextItems };
                                 return {
@@ -999,15 +1146,15 @@ export function GuideEditView({
                                     [localeTab]: nextBody,
                                   },
                                 };
-                              })
-                            }
+                              });
+                            }}
                             rows={3}
                           />
                         ))}
                         <Button
                           type="button"
                           variant="outline"
-                          onClick={() =>
+                          onClick={() => {
                             updateState((current) => {
                               const nextBody = [...current.body[localeTab]];
                               nextBody[sectionIndex] = {
@@ -1021,8 +1168,8 @@ export function GuideEditView({
                                   [localeTab]: nextBody,
                                 },
                               };
-                            })
-                          }
+                            });
+                          }}
                         >
                           Add body item
                         </Button>
@@ -1106,15 +1253,15 @@ export function GuideEditView({
                   <Button
                     type="button"
                     variant="secondary"
-                    onClick={() =>
+                    onClick={() => {
                       updateState((current) => ({
                         ...current,
                         body: {
                           ...current.body,
                           [localeTab]: [...current.body[localeTab], emptySection()],
                         },
-                      }))
-                    }
+                      }));
+                    }}
                   >
                     Add section
                   </Button>
@@ -1132,7 +1279,8 @@ export function GuideEditView({
                         <Input
                           label={`Question ${faqIndex + 1} (${localeTab === "en" ? "English" : "Dutch"})`}
                           value={faq.q[localeTab]}
-                          onChange={(event) =>
+                          onChange={(event) => {
+                            const nextValue = event.currentTarget.value;
                             updateState((current) => {
                               const nextFaqs = [...current.faqs[localeTab]];
                               nextFaqs[faqIndex] = {
@@ -1140,7 +1288,7 @@ export function GuideEditView({
                                 q: updateLocalizedValue(
                                   faq.q,
                                   localeTab,
-                                  event.currentTarget.value
+                                  nextValue
                                 ),
                               };
                               return {
@@ -1150,13 +1298,14 @@ export function GuideEditView({
                                   [localeTab]: nextFaqs,
                                 },
                               };
-                            })
-                          }
+                            });
+                          }}
                         />
                         <Textarea
                           label={`Answer ${faqIndex + 1} (${localeTab === "en" ? "English" : "Dutch"})`}
                           value={faq.a[localeTab]}
-                          onChange={(event) =>
+                          onChange={(event) => {
+                            const nextValue = event.currentTarget.value;
                             updateState((current) => {
                               const nextFaqs = [...current.faqs[localeTab]];
                               nextFaqs[faqIndex] = {
@@ -1164,7 +1313,7 @@ export function GuideEditView({
                                 a: updateLocalizedValue(
                                   faq.a,
                                   localeTab,
-                                  event.currentTarget.value
+                                  nextValue
                                 ),
                               };
                               return {
@@ -1174,8 +1323,8 @@ export function GuideEditView({
                                   [localeTab]: nextFaqs,
                                 },
                               };
-                            })
-                          }
+                            });
+                          }}
                           rows={4}
                         />
                         <div>
@@ -1218,6 +1367,71 @@ export function GuideEditView({
                   </Button>
                 </div>
               </AdminSectionCard>
+
+              <AdminSectionCard
+                title="Quick answer"
+                description="Optional answer box for key takeaway, common mistake, and who should pay extra attention."
+              >
+                <div className="grid gap-4">
+                  <Textarea
+                    label={`Key takeaway (${localeTab === "en" ? "English" : "Dutch"})`}
+                    value={state.quickAnswer.keyTakeaway[localeTab]}
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
+                      updateState((current) => ({
+                        ...current,
+                        quickAnswer: {
+                          ...current.quickAnswer,
+                          keyTakeaway: updateLocalizedValue(
+                            current.quickAnswer.keyTakeaway,
+                            localeTab,
+                            nextValue
+                          ),
+                        },
+                      }));
+                    }}
+                    rows={3}
+                  />
+                  <Textarea
+                    label={`Common mistake (${localeTab === "en" ? "English" : "Dutch"})`}
+                    value={state.quickAnswer.commonMistake[localeTab]}
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
+                      updateState((current) => ({
+                        ...current,
+                        quickAnswer: {
+                          ...current.quickAnswer,
+                          commonMistake: updateLocalizedValue(
+                            current.quickAnswer.commonMistake,
+                            localeTab,
+                            nextValue
+                          ),
+                        },
+                      }));
+                    }}
+                    rows={3}
+                  />
+                  <Textarea
+                    label={`Pay attention (${localeTab === "en" ? "English" : "Dutch"})`}
+                    value={state.quickAnswer.payAttention[localeTab]}
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
+                      updateState((current) => ({
+                        ...current,
+                        quickAnswer: {
+                          ...current.quickAnswer,
+                          payAttention: updateLocalizedValue(
+                            current.quickAnswer.payAttention,
+                            localeTab,
+                            nextValue
+                          ),
+                        },
+                      }));
+                    }}
+                    rows={3}
+                  />
+                </div>
+              </AdminSectionCard>
             </>
           ) : null}
 
@@ -1236,104 +1450,112 @@ export function GuideEditView({
                 <Input
                   label="Meta title"
                   value={state.metaTitle[localeTab]}
-                  onChange={(event) =>
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
                     updateState((current) => ({
                       ...current,
                       metaTitle: updateLocalizedValue(
                         current.metaTitle,
                         localeTab,
-                        event.currentTarget.value
+                        nextValue
                       ),
-                    }))
-                  }
+                    }));
+                  }}
                 />
                 <Textarea
                   label="Meta description"
                   value={state.metaDescription[localeTab]}
-                  onChange={(event) =>
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
                     updateState((current) => ({
                       ...current,
                       metaDescription: updateLocalizedValue(
                         current.metaDescription,
                         localeTab,
-                        event.currentTarget.value
+                        nextValue
                       ),
-                    }))
-                  }
+                    }));
+                  }}
                   rows={3}
                   helperText="Target 50–160 characters."
                 />
                 <Input
                   label="Open Graph title"
                   value={state.ogTitle[localeTab]}
-                  onChange={(event) =>
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
                     updateState((current) => ({
                       ...current,
                       ogTitle: updateLocalizedValue(
                         current.ogTitle,
                         localeTab,
-                        event.currentTarget.value
+                        nextValue
                       ),
-                    }))
-                  }
+                    }));
+                  }}
                   helperText="Leave empty to fall back to the meta title."
                 />
                 <Textarea
                   label="Open Graph description"
                   value={state.ogDescription[localeTab]}
-                  onChange={(event) =>
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
                     updateState((current) => ({
                       ...current,
                       ogDescription: updateLocalizedValue(
                         current.ogDescription,
                         localeTab,
-                        event.currentTarget.value
+                        nextValue
                       ),
-                    }))
-                  }
+                    }));
+                  }}
                   rows={3}
                 />
                 <Input
                   label="Featured image URL"
                   value={state.featuredImageUrl}
-                  onChange={(event) =>
-                    updateState((current) => ({ ...current, featuredImageUrl: event.currentTarget.value }))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    updateState((current) => ({ ...current, featuredImageUrl: nextValue }));
+                  }}
                 />
                 <Input
                   label={`Featured image alt (${localeTab === "en" ? "English" : "Dutch"})`}
                   value={state.featuredImageAlt[localeTab]}
-                  onChange={(event) =>
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
                     updateState((current) => ({
                       ...current,
                       featuredImageAlt: updateLocalizedValue(
                         current.featuredImageAlt,
                         localeTab,
-                        event.currentTarget.value
+                        nextValue
                       ),
-                    }))
-                  }
+                    }));
+                  }}
                 />
                 <Input
                   label="Open Graph image URL"
                   value={state.ogImageUrl}
-                  onChange={(event) =>
-                    updateState((current) => ({ ...current, ogImageUrl: event.currentTarget.value }))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    updateState((current) => ({ ...current, ogImageUrl: nextValue }));
+                  }}
                 />
                 <Input
                   label={`Open Graph image alt (${localeTab === "en" ? "English" : "Dutch"})`}
                   value={state.ogImageAlt[localeTab]}
-                  onChange={(event) =>
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
                     updateState((current) => ({
                       ...current,
                       ogImageAlt: updateLocalizedValue(
                         current.ogImageAlt,
                         localeTab,
-                        event.currentTarget.value
+                        nextValue
                       ),
-                    }))
-                  }
+                    }));
+                  }}
                 />
               </div>
             </AdminSectionCard>
@@ -1345,9 +1567,10 @@ export function GuideEditView({
                 <Input
                   label="Slug"
                   value={state.slug}
-                  onChange={(event) =>
-                    updateState((current) => ({ ...current, slug: event.currentTarget.value }))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    updateState((current) => ({ ...current, slug: nextValue }));
+                  }}
                   readOnly={slugReadOnly}
                   error={slugError}
                   helperText={`URL preview: ${previewPath}`}
@@ -1355,93 +1578,152 @@ export function GuideEditView({
                 <Input
                   label="Canonical URL"
                   value={state.canonicalUrl}
-                  onChange={(event) =>
-                    updateState((current) => ({ ...current, canonicalUrl: event.currentTarget.value }))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    updateState((current) => ({ ...current, canonicalUrl: nextValue }));
+                  }}
+                />
+                <Select
+                  label="Author"
+                  value={state.authorId}
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    updateState((current) => ({ ...current, authorId: nextValue }));
+                  }}
+                  placeholder="Unassigned"
+                  options={[
+                    { value: "", label: "Unassigned" },
+                    ...(formOptions?.authorOptions ?? []).map((option) => ({
+                      value: String(option._id),
+                      label: `${option.label}${option.adminRole ? ` (${option.adminRole})` : ""}`,
+                    })),
+                  ]}
                 />
                 <Input
                   label="Primary CTA target"
                   value={state.primaryCtaTarget}
-                  onChange={(event) =>
-                    updateState((current) => ({ ...current, primaryCtaTarget: event.currentTarget.value }))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    updateState((current) => ({ ...current, primaryCtaTarget: nextValue }));
+                  }}
                 />
                 <Textarea
                   label="Tags"
                   value={state.tags}
-                  onChange={(event) => updateState((current) => ({ ...current, tags: event.currentTarget.value }))}
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    updateState((current) => ({ ...current, tags: nextValue }));
+                  }}
                   rows={2}
                   helperText="Comma-separated tags."
                 />
                 <Textarea
                   label="Related guides"
                   value={state.relatedGuides}
-                  onChange={(event) =>
-                    updateState((current) => ({ ...current, relatedGuides: event.currentTarget.value }))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    updateState((current) => ({ ...current, relatedGuides: nextValue }));
+                  }}
                   rows={2}
                   helperText="Comma-separated guide slugs."
                 />
+                {relatedGuideOptions.length > 0 ? (
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-[color:var(--foreground)]">
+                      Suggested related guides
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {relatedGuideOptions.slice(0, 12).map((option) => {
+                        const selected = selectedRelatedGuides.includes(option.slug);
+                        return (
+                          <Button
+                            key={option.slug}
+                            type="button"
+                            size="sm"
+                            variant={selected ? "secondary" : "outline"}
+                            onClick={() =>
+                              updateState((current) => {
+                                const nextValues = selected
+                                  ? selectedRelatedGuides.filter((value) => value !== option.slug)
+                                  : [...selectedRelatedGuides, option.slug];
+                                return { ...current, relatedGuides: nextValues.join(", ") };
+                              })
+                            }
+                          >
+                            {option.pageTitle.en || option.slug}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : null}
                 <Textarea
                   label="Related guide paths"
                   value={state.relatedGuidePaths}
-                  onChange={(event) =>
-                    updateState((current) => ({ ...current, relatedGuidePaths: event.currentTarget.value }))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    updateState((current) => ({ ...current, relatedGuidePaths: nextValue }));
+                  }}
                   rows={2}
                   helperText="Comma-separated public paths."
                 />
                 <Textarea
                   label="Related keywords"
                   value={state.relatedKeywords}
-                  onChange={(event) =>
-                    updateState((current) => ({ ...current, relatedKeywords: event.currentTarget.value }))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    updateState((current) => ({ ...current, relatedKeywords: nextValue }));
+                  }}
                   rows={2}
                 />
                 <Input
                   label="Hero image filename"
                   value={state.heroImageFileName}
-                  onChange={(event) =>
-                    updateState((current) => ({ ...current, heroImageFileName: event.currentTarget.value }))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    updateState((current) => ({ ...current, heroImageFileName: nextValue }));
+                  }}
                 />
                 <Input
                   label="Hero image public path"
                   value={state.heroImagePublicPath}
-                  onChange={(event) =>
-                    updateState((current) => ({ ...current, heroImagePublicPath: event.currentTarget.value }))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    updateState((current) => ({ ...current, heroImagePublicPath: nextValue }));
+                  }}
                 />
                 <Textarea
                   label="Library body (EN)"
                   value={state.libraryBody.en}
-                  onChange={(event) =>
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
                     updateState((current) => ({
                       ...current,
-                      libraryBody: { ...current.libraryBody, en: event.currentTarget.value },
-                    }))
-                  }
+                      libraryBody: { ...current.libraryBody, en: nextValue },
+                    }));
+                  }}
                   rows={4}
                 />
                 <Textarea
                   label="Library body (NL)"
                   value={state.libraryBody.nl}
-                  onChange={(event) =>
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
                     updateState((current) => ({
                       ...current,
-                      libraryBody: { ...current.libraryBody, nl: event.currentTarget.value },
-                    }))
-                  }
+                      libraryBody: { ...current.libraryBody, nl: nextValue },
+                    }));
+                  }}
                   rows={4}
                 />
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Select
                     label="Table of contents"
                     value={state.tableOfContents ? "on" : "off"}
-                    onChange={(event) =>
-                      updateState((current) => ({ ...current, tableOfContents: event.currentTarget.value === "on" }))
-                    }
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
+                      updateState((current) => ({ ...current, tableOfContents: nextValue === "on" }));
+                    }}
                     options={[
                       { value: "on", label: "Enabled" },
                       { value: "off", label: "Disabled" },
@@ -1450,9 +1732,10 @@ export function GuideEditView({
                   <Select
                     label="Robots index"
                     value={state.robotsIndex ? "index" : "noindex"}
-                    onChange={(event) =>
-                      updateState((current) => ({ ...current, robotsIndex: event.currentTarget.value === "index" }))
-                    }
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
+                      updateState((current) => ({ ...current, robotsIndex: nextValue === "index" }));
+                    }}
                     options={[
                       { value: "index", label: "Index" },
                       { value: "noindex", label: "Noindex" },
@@ -1464,63 +1747,103 @@ export function GuideEditView({
           ) : null}
 
           {formTab === "activity" && isPublishAdmin ? (
-            <AdminSectionCard
-              title="Activity"
-              description="Latest audit entries for this guide, including field changes and publishing events."
-            >
-              {activityLog === undefined ? (
-                <p className="text-sm text-[color:var(--muted-foreground)]">Loading activity…</p>
-              ) : activityLog.length === 0 ? (
-                <p className="text-sm text-[color:var(--muted-foreground)]">No activity recorded yet.</p>
-              ) : (
-                <div className="space-y-4">
-                  {activityLog.map((entry) => {
-                    const summary = summarizeAuditEntry(entry);
-                    return (
-                      <div
-                        key={String(entry._id)}
-                        className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4"
-                      >
-                        <div className="flex flex-wrap items-center justify-between gap-3">
-                          <div className="space-y-1">
-                            <p className="font-medium">
-                              {entry.userEmail} {formatAuditAction(entry.action)}
-                            </p>
-                            <p className="text-sm text-[color:var(--muted-foreground)]">
-                              {formatAdminDateTime(entry.timestamp)}
-                            </p>
-                          </div>
-                          <AdminStatusPill tone="neutral">
-                            {entry.action.replaceAll("_", " ")}
-                          </AdminStatusPill>
-                        </div>
-                        {summary.length > 0 ? (
-                          <div className="mt-4 space-y-2">
-                            {summary.map((change) => (
-                              <div
-                                key={`${String(entry._id)}-${change.field}`}
-                                className="rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm"
-                              >
-                                <span className="font-medium">{change.field}</span>
-                                <span className="text-[color:var(--muted-foreground)]">
-                                  {" "}
-                                  {change.oldValue} {"->"} {change.newValue}
-                                </span>
-                              </div>
-                            ))}
-                            {entry.fieldChanges.length > 3 ? (
-                              <p className="text-xs text-[color:var(--muted-foreground)]">
-                                +{entry.fieldChanges.length - 3} more field changes
+            <div className="space-y-6">
+              <AdminSectionCard
+                title="Activity"
+                description="Latest audit entries for this guide, including field changes and publishing events."
+              >
+                {activityLog === undefined ? (
+                  <p className="text-sm text-[color:var(--muted-foreground)]">Loading activity…</p>
+                ) : activityLog.length === 0 ? (
+                  <p className="text-sm text-[color:var(--muted-foreground)]">No activity recorded yet.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {activityLog.map((entry) => {
+                      const summary = summarizeAuditEntry(entry);
+                      return (
+                        <div
+                          key={String(entry._id)}
+                          className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4"
+                        >
+                          <div className="flex flex-wrap items-center justify-between gap-3">
+                            <div className="space-y-1">
+                              <p className="font-medium">
+                                {entry.userEmail} {formatAuditAction(entry.action)}
                               </p>
-                            ) : null}
+                              <p className="text-sm text-[color:var(--muted-foreground)]">
+                                {formatAdminDateTime(entry.timestamp)}
+                              </p>
+                            </div>
+                            <AdminStatusPill tone="neutral">
+                              {entry.action.replaceAll("_", " ")}
+                            </AdminStatusPill>
                           </div>
-                        ) : null}
+                          {summary.length > 0 ? (
+                            <div className="mt-4 space-y-2">
+                              {summary.map((change) => (
+                                <div
+                                  key={`${String(entry._id)}-${change.field}`}
+                                  className="rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm"
+                                >
+                                  <span className="font-medium">{change.field}</span>
+                                  <span className="text-[color:var(--muted-foreground)]">
+                                    {" "}
+                                    {change.oldValue} {"->"} {change.newValue}
+                                  </span>
+                                </div>
+                              ))}
+                              {entry.fieldChanges.length > 3 ? (
+                                <p className="text-xs text-[color:var(--muted-foreground)]">
+                                  +{entry.fieldChanges.length - 3} more field changes
+                                </p>
+                              ) : null}
+                            </div>
+                          ) : null}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </AdminSectionCard>
+
+              <AdminSectionCard
+                title="Revisions"
+                description="Recent saved snapshots. Admins can restore any revision."
+              >
+                {revisions === undefined ? (
+                  <p className="text-sm text-[color:var(--muted-foreground)]">Loading revisions…</p>
+                ) : revisions.length === 0 ? (
+                  <p className="text-sm text-[color:var(--muted-foreground)]">No revisions available yet.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {revisions.map((revision) => (
+                      <div
+                        key={String(revision._id)}
+                        className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4"
+                      >
+                        <div className="space-y-1">
+                          <p className="font-medium">Version {revision.version}</p>
+                          <p className="text-sm text-[color:var(--muted-foreground)]">
+                            {revision.savedByDetail?.displayName ?? revision.savedByDetail?.email ?? "Unknown"} on{" "}
+                            {formatAdminDateTime(revision.savedAt)}
+                          </p>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            handleRestoreRevision(String(revision._id), revision.version)
+                          }
+                        >
+                          Restore
+                        </Button>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-            </AdminSectionCard>
+                    ))}
+                  </div>
+                )}
+              </AdminSectionCard>
+            </div>
           ) : null}
         </div>
 
@@ -1603,6 +1926,18 @@ export function GuideEditView({
                     isLoading={isSaving}
                   >
                     Unpublish
+                  </Button>
+                ) : null}
+                {deleteButtonVisible ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => {
+                      void handleDelete();
+                    }}
+                    isLoading={isSaving}
+                  >
+                    Delete
                   </Button>
                 ) : null}
               </div>

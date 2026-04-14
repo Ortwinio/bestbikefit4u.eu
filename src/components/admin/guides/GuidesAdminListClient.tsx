@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useDeferredValue, useMemo, useState } from "react";
-import { usePaginatedQuery } from "convex/react";
+import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { PaginatedQueryItem } from "convex/react";
-import { Button, EmptyState, Input, LoadingState, Select } from "@/components/ui";
+import { AccessibleDialog, Button, EmptyState, Input, LoadingState, Select, useToast } from "@/components/ui";
 import {
   AdminMetricCard,
   AdminPageHeader,
@@ -36,56 +36,83 @@ function getGuideH1(guide: GuideRow) {
 
 export function GuidesAdminListClient({
   canManageRedirects,
+  canManageGuides,
 }: {
   canManageRedirects: boolean;
+  canManageGuides: boolean;
 }) {
+  const toast = useToast();
+  const deleteGuide = useMutation(api.guides.mutations.deleteGuide);
+  const formOptions = useQuery(api.guides.queries.getGuideAdminFormOptions, {});
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<(typeof GUIDE_STATUS_OPTIONS)[number]["value"]>("all");
   const [clusterFilter, setClusterFilter] = useState("all");
+  const [authorFilter, setAuthorFilter] = useState("all");
+  const [localeFilter, setLocaleFilter] = useState<"en" | "nl">("en");
+  const [deleteCandidate, setDeleteCandidate] = useState<GuideRow | null>(null);
   const deferredSearch = useDeferredValue(search);
 
   const { results, status, loadMore } = usePaginatedQuery(
     api.guides.queries.listGuides,
     {
+      search: deferredSearch || undefined,
       status: statusFilter === "all" ? undefined : statusFilter,
       cluster: clusterFilter === "all" ? undefined : clusterFilter,
-      locale: "en",
+      locale: localeFilter,
+      authorId: authorFilter === "all" ? undefined : (authorFilter as never),
     },
-    { initialNumItems: 20 }
+    { initialNumItems: 10 }
   );
-
-  const filteredResults = useMemo(() => {
-    const normalized = deferredSearch.trim().toLowerCase();
-    if (!normalized) {
-      return results;
-    }
-
-    return results.filter((guide) => {
-      const localizedTitle = getGuideTitle(guide);
-      return (
-        guide.slug.toLowerCase().includes(normalized) ||
-        localizedTitle.toLowerCase().includes(normalized) ||
-        (guide.cluster ?? "").toLowerCase().includes(normalized)
-      );
-    });
-  }, [deferredSearch, results]);
 
   if (status === "LoadingFirstPage" && results.length === 0) {
     return <LoadingState label="Loading guides..." />;
   }
 
-  const guideRows = filteredResults as GuideRow[];
+  const guideRows = results as GuideRow[];
   const publishedCount = results.filter((guide) => guide.status === "published").length;
   const reviewCount = results.filter((guide) => guide.status === "in_review").length;
 
+  const handleDelete = async () => {
+    if (!deleteCandidate) {
+      return;
+    }
+
+    await deleteGuide({ id: deleteCandidate._id });
+    toast.success({ description: "Guide deleted." });
+    setDeleteCandidate(null);
+  };
+
   return (
     <div className="space-y-8">
+      <AccessibleDialog
+        open={deleteCandidate !== null}
+        title="Delete guide"
+        description={
+          deleteCandidate
+            ? `Delete ${getGuideTitle(deleteCandidate)}? The record stays in Convex but leaves the active list.`
+            : undefined
+        }
+        onClose={() => setDeleteCandidate(null)}
+      >
+        <div className="flex flex-wrap justify-end gap-3">
+          <Button variant="ghost" type="button" onClick={() => setDeleteCandidate(null)}>
+            Cancel
+          </Button>
+          <Button type="button" onClick={() => void handleDelete()}>
+            Delete
+          </Button>
+        </div>
+      </AccessibleDialog>
+
       <AdminPageHeader
         eyebrow="Product"
         title="Guides"
         description="Manage draft, review, and published guide pages from the Convex-backed library."
         actions={
           <>
+            <Button variant="outline" render={<Link href="/admin/guides/import" />}>
+              Import JSON
+            </Button>
             {canManageRedirects ? (
               <Button variant="outline" render={<Link href="/admin/guides/redirects" />}>
                 Redirects
@@ -114,8 +141,8 @@ export function GuidesAdminListClient({
         />
       </section>
 
-      <AdminSectionCard title="Filters" description="Filter the guide library by status, cluster, or title.">
-        <div className="grid gap-3 xl:grid-cols-[minmax(0,1.5fr)_repeat(2,minmax(0,1fr))]">
+      <AdminSectionCard title="Filters" description="Filter the guide library by status, cluster, locale, author, or title.">
+        <div className="grid gap-3 xl:grid-cols-[minmax(0,1.5fr)_repeat(4,minmax(0,1fr))]">
           <Input
             value={search}
             onChange={(event) => setSearch(event.currentTarget.value)}
@@ -143,6 +170,27 @@ export function GuidesAdminListClient({
               })),
             ]}
           />
+          <Select
+            aria-label="Guide locale filter"
+            value={localeFilter}
+            onChange={(event) => setLocaleFilter(event.currentTarget.value as "en" | "nl")}
+            options={[
+              { value: "en", label: "English" },
+              { value: "nl", label: "Dutch" },
+            ]}
+          />
+          <Select
+            aria-label="Guide author filter"
+            value={authorFilter}
+            onChange={(event) => setAuthorFilter(event.currentTarget.value)}
+            options={[
+              { value: "all", label: "All authors" },
+              ...(formOptions?.authorOptions ?? []).map((option) => ({
+                value: String(option._id),
+                label: option.label,
+              })),
+            ]}
+          />
         </div>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-[color:var(--muted-foreground)]">
           <span>
@@ -156,6 +204,8 @@ export function GuidesAdminListClient({
               setSearch("");
               setStatusFilter("all");
               setClusterFilter("all");
+              setLocaleFilter("en");
+              setAuthorFilter("all");
             }}
           >
             Clear filters
@@ -175,7 +225,7 @@ export function GuidesAdminListClient({
         ) : (
           <AdminTable>
             <AdminTableHead
-              columns={["Internal title", "Slug", "Cluster", "Status", "Updated", "Action"]}
+              columns={["Internal title", "Slug", "Cluster", "Author", "Status", "Updated", "Actions"]}
             />
             <tbody>
               {guideRows.map((guide) => (
@@ -193,19 +243,43 @@ export function GuidesAdminListClient({
                   </AdminTableCell>
                   <AdminTableCell>{guide.cluster ?? "Unassigned"}</AdminTableCell>
                   <AdminTableCell>
+                    {guide.authorDetail?.displayName || "Unassigned"}
+                  </AdminTableCell>
+                  <AdminTableCell>
                     <AdminStatusPill tone={guideStatusTone(guide.status)}>
                       {formatGuideStatusLabel(guide.status)}
                     </AdminStatusPill>
                   </AdminTableCell>
                   <AdminTableCell>{formatGuideDate(guide.updatedAt)}</AdminTableCell>
                   <AdminTableCell>
-                    <Button
-                      render={<Link href={`/admin/guides/${String(guide._id)}/edit`} />}
-                      variant="outline"
-                      size="sm"
-                    >
-                      Edit
-                    </Button>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        render={<Link href={`/admin/guides/${String(guide._id)}/edit`} />}
+                        variant="outline"
+                        size="sm"
+                      >
+                        Edit
+                      </Button>
+                      {guide.status === "published" ? (
+                        <Button
+                          render={<Link href={`/guides/${guide.slug}`} />}
+                          variant="outline"
+                          size="sm"
+                        >
+                          Preview
+                        </Button>
+                      ) : null}
+                      {canManageGuides ? (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setDeleteCandidate(guide)}
+                        >
+                          Delete
+                        </Button>
+                      ) : null}
+                    </div>
                   </AdminTableCell>
                 </AdminTableRow>
               ))}
@@ -219,9 +293,9 @@ export function GuidesAdminListClient({
               type="button"
               variant="secondary"
               isLoading={status === "LoadingMore"}
-              onClick={() => loadMore(20)}
+              onClick={() => loadMore(10)}
             >
-              Load more
+              Next 10
             </Button>
           </div>
         ) : null}

@@ -25,6 +25,11 @@ type FormTab = "content" | "seo" | "settings";
 type SectionType = "prose" | "steps" | "cards" | "table";
 
 type BilingualText = { en: string; nl: string };
+type GuideQuickAnswerForm = {
+  keyTakeaway: BilingualText;
+  commonMistake: BilingualText;
+  payAttention: BilingualText;
+};
 type GuideSectionForm = {
   title: BilingualText;
   type: SectionType;
@@ -58,6 +63,14 @@ function emptyFaq(): GuideFaqForm {
   return { q: emptyText(), a: emptyText() };
 }
 
+function emptyQuickAnswer(): GuideQuickAnswerForm {
+  return {
+    keyTakeaway: emptyText(),
+    commonMistake: emptyText(),
+    payAttention: emptyText(),
+  };
+}
+
 function updateLocalizedValue(
   value: BilingualText,
   locale: LocaleKey,
@@ -79,6 +92,7 @@ export function GuideCreateView({
   const toast = useToast();
   const createGuide = useMutation(api.guides.mutations.createGuide);
   const submitGuideForReview = useMutation(api.guides.mutations.submitGuideForReview);
+  const formOptions = useQuery(api.guides.queries.getGuideAdminFormOptions, {});
   const [formTab, setFormTab] = useState<FormTab>("content");
   const [localeTab, setLocaleTab] = useState<LocaleKey>("en");
   const [cluster, setCluster] = useState<(typeof GUIDE_CLUSTER_OPTIONS)[number]["value"]>("pain-discomfort");
@@ -87,6 +101,7 @@ export function GuideCreateView({
   const [pageBrief, setPageBrief] = useState<BilingualText>(emptyText());
   const [body, setBody] = useState<GuideSectionForm[]>([emptySection()]);
   const [faqs, setFaqs] = useState<GuideFaqForm[]>([emptyFaq()]);
+  const [quickAnswer, setQuickAnswer] = useState<GuideQuickAnswerForm>(emptyQuickAnswer());
   const [metaTitle, setMetaTitle] = useState<BilingualText>(emptyText());
   const [metaDescription, setMetaDescription] = useState<BilingualText>(emptyText());
   const [ogTitle, setOgTitle] = useState<BilingualText>(emptyText());
@@ -103,6 +118,7 @@ export function GuideCreateView({
   const [canonicalUrl, setCanonicalUrl] = useState("");
   const [featuredImageUrl, setFeaturedImageUrl] = useState("");
   const [featuredImageAlt, setFeaturedImageAlt] = useState<BilingualText>(emptyText());
+  const [authorId, setAuthorId] = useState("");
   const [ogImageUrl, setOgImageUrl] = useState("");
   const [ogImageAlt, setOgImageAlt] = useState<BilingualText>(emptyText());
   const [tags, setTags] = useState("");
@@ -119,6 +135,21 @@ export function GuideCreateView({
   const slugLookup = useQuery(
     api.guides.queries.getGuideBySlug,
     normalizedSlug ? { slug: normalizedSlug } : "skip"
+  );
+  const relatedGuideOptions = useMemo(
+    () =>
+      (formOptions?.relatedGuideOptions ?? []).filter(
+        (guide) => guide.slug !== normalizedSlug
+      ),
+    [formOptions?.relatedGuideOptions, normalizedSlug]
+  );
+  const selectedRelatedGuides = useMemo(
+    () =>
+      relatedGuides
+        .split(",")
+        .map((value) => value.trim())
+        .filter(Boolean),
+    [relatedGuides]
   );
 
   const metaDescriptionLength = metaDescription[localeTab].trim().length;
@@ -219,6 +250,15 @@ export function GuideCreateView({
         .filter((faq) => faq.q.nl.trim() || faq.a.nl.trim())
         .map((faq) => ({ q: faq.q.nl, a: faq.a.nl })),
     },
+    quickAnswer:
+      quickAnswer.keyTakeaway.en.trim() ||
+      quickAnswer.keyTakeaway.nl.trim() ||
+      quickAnswer.commonMistake.en.trim() ||
+      quickAnswer.commonMistake.nl.trim() ||
+      quickAnswer.payAttention.en.trim() ||
+      quickAnswer.payAttention.nl.trim()
+        ? quickAnswer
+        : undefined,
     libraryBody:
       libraryBody.en.trim() || libraryBody.nl.trim()
         ? libraryBody
@@ -253,6 +293,7 @@ export function GuideCreateView({
         ? ogImageAlt
         : undefined,
     robotsIndex,
+    author: authorId ? (authorId as Id<"users">) : undefined,
     tags: tags
       .split(",")
       .map((value) => value.trim())
@@ -279,11 +320,26 @@ export function GuideCreateView({
     if (!pageTitle.en.trim() || !pageTitle.nl.trim()) {
       return "Page title is required in English and Dutch.";
     }
+    if (!h1.en.trim() || !h1.nl.trim()) {
+      return "H1 is required in English and Dutch.";
+    }
+    if (!pageBrief.en.trim() || !pageBrief.nl.trim()) {
+      return "Page brief is required in English and Dutch.";
+    }
     if (!metaTitle.en.trim() || !metaTitle.nl.trim()) {
       return "Meta title is required in English and Dutch.";
     }
     if (!metaDescription.en.trim() || !metaDescription.nl.trim()) {
       return "Meta description is required in English and Dutch.";
+    }
+    if (
+      body.every((section) =>
+        section.items.every(
+          (item) => !item.en.trim() && !item.nl.trim()
+        )
+      )
+    ) {
+      return "Add at least one body item before saving.";
     }
 
     return null;
@@ -335,6 +391,9 @@ export function GuideCreateView({
             <AdminStatusPill tone={guideStatusTone("draft")}>
               {formatGuideStatusLabel("draft")}
             </AdminStatusPill>
+            <Button variant="outline" render={<Link href="/admin/guides/import" />}>
+              Import JSON
+            </Button>
             <Button variant="outline" render={<Link href="/admin/guides" />}>
               Back to guides
             </Button>
@@ -409,26 +468,31 @@ export function GuideCreateView({
                   <Input
                     label="H1"
                     value={h1[localeTab]}
-                    onChange={(event) =>
-                      setH1((current) => updateLocalizedValue(current, localeTab, event.currentTarget.value))
-                    }
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
+                      setH1((current) => updateLocalizedValue(current, localeTab, nextValue));
+                    }}
                     placeholder="Public page heading"
                   />
                   <Textarea
                     label="Page brief"
                     value={pageBrief[localeTab]}
-                    onChange={(event) =>
-                      setPageBrief((current) => updateLocalizedValue(current, localeTab, event.currentTarget.value))
-                    }
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
+                      setPageBrief((current) => updateLocalizedValue(current, localeTab, nextValue));
+                    }}
                     rows={3}
                     helperText="Used in cards, listings, and hub summaries."
                   />
                   <Textarea
                     label="Primary CTA label"
                     value={primaryCtaLabel[localeTab]}
-                    onChange={(event) =>
-                      setPrimaryCtaLabel((current) => updateLocalizedValue(current, localeTab, event.currentTarget.value))
-                    }
+                    onChange={(event) => {
+                      const nextValue = event.currentTarget.value;
+                      setPrimaryCtaLabel((current) =>
+                        updateLocalizedValue(current, localeTab, nextValue)
+                      );
+                    }}
                     rows={2}
                   />
                 </div>
@@ -446,10 +510,11 @@ export function GuideCreateView({
                           label={`Section title (${contentLocaleLabel})`}
                           value={section.title[localeTab]}
                           onChange={(event) => {
+                            const nextValue = event.currentTarget.value;
                             const nextSections = [...body];
                             nextSections[sectionIndex] = {
                               ...section,
-                              title: updateLocalizedValue(section.title, localeTab, event.currentTarget.value),
+                              title: updateLocalizedValue(section.title, localeTab, nextValue),
                             };
                             setBody(nextSections);
                           }}
@@ -489,14 +554,15 @@ export function GuideCreateView({
                           <Textarea
                             key={`section-${sectionIndex}-item-${itemIndex}`}
                             label={`Item ${itemIndex + 1} (${contentLocaleLabel})`}
-                            value={item[localeTab]}
-                            onChange={(event) => {
-                              const nextSections = [...body];
-                              const nextItems = [...section.items];
-                              nextItems[itemIndex] = updateLocalizedValue(item, localeTab, event.currentTarget.value);
-                              nextSections[sectionIndex] = { ...section, items: nextItems };
-                              setBody(nextSections);
-                            }}
+                          value={item[localeTab]}
+                          onChange={(event) => {
+                            const nextValue = event.currentTarget.value;
+                            const nextSections = [...body];
+                            const nextItems = [...section.items];
+                            nextItems[itemIndex] = updateLocalizedValue(item, localeTab, nextValue);
+                            nextSections[sectionIndex] = { ...section, items: nextItems };
+                            setBody(nextSections);
+                          }}
                             rows={3}
                           />
                         ))}
@@ -593,10 +659,11 @@ export function GuideCreateView({
                           label={`Question ${faqIndex + 1} (${contentLocaleLabel})`}
                           value={faq.q[localeTab]}
                           onChange={(event) => {
+                            const nextValue = event.currentTarget.value;
                             const nextFaqs = [...faqs];
                             nextFaqs[faqIndex] = {
                               ...faq,
-                              q: updateLocalizedValue(faq.q, localeTab, event.currentTarget.value),
+                              q: updateLocalizedValue(faq.q, localeTab, nextValue),
                             };
                             setFaqs(nextFaqs);
                           }}
@@ -605,10 +672,11 @@ export function GuideCreateView({
                           label={`Answer ${faqIndex + 1} (${contentLocaleLabel})`}
                           value={faq.a[localeTab]}
                           onChange={(event) => {
+                            const nextValue = event.currentTarget.value;
                             const nextFaqs = [...faqs];
                             nextFaqs[faqIndex] = {
                               ...faq,
-                              a: updateLocalizedValue(faq.a, localeTab, event.currentTarget.value),
+                              a: updateLocalizedValue(faq.a, localeTab, nextValue),
                             };
                             setFaqs(nextFaqs);
                           }}
@@ -632,6 +700,68 @@ export function GuideCreateView({
                   </Button>
                 </div>
               </AdminSectionCard>
+
+              <AdminSectionCard
+                title="Quick answer"
+                description="Optional answer box for key takeaway, common mistake, and who should pay extra attention."
+              >
+                <div className="grid gap-4">
+                  <Textarea
+                    label={`Key takeaway (${contentLocaleLabel})`}
+                    value={quickAnswer.keyTakeaway[localeTab]}
+                    onChange={(event) =>
+                      {
+                        const nextValue = event.currentTarget.value;
+                        setQuickAnswer((current) => ({
+                          ...current,
+                          keyTakeaway: updateLocalizedValue(
+                            current.keyTakeaway,
+                            localeTab,
+                            nextValue
+                          ),
+                        }));
+                      }
+                    }
+                    rows={3}
+                  />
+                  <Textarea
+                    label={`Common mistake (${contentLocaleLabel})`}
+                    value={quickAnswer.commonMistake[localeTab]}
+                    onChange={(event) =>
+                      {
+                        const nextValue = event.currentTarget.value;
+                        setQuickAnswer((current) => ({
+                          ...current,
+                          commonMistake: updateLocalizedValue(
+                            current.commonMistake,
+                            localeTab,
+                            nextValue
+                          ),
+                        }));
+                      }
+                    }
+                    rows={3}
+                  />
+                  <Textarea
+                    label={`Pay attention (${contentLocaleLabel})`}
+                    value={quickAnswer.payAttention[localeTab]}
+                    onChange={(event) =>
+                      {
+                        const nextValue = event.currentTarget.value;
+                        setQuickAnswer((current) => ({
+                          ...current,
+                          payAttention: updateLocalizedValue(
+                            current.payAttention,
+                            localeTab,
+                            nextValue
+                          ),
+                        }));
+                      }
+                    }
+                    rows={3}
+                  />
+                </div>
+              </AdminSectionCard>
             </>
           ) : null}
 
@@ -650,33 +780,41 @@ export function GuideCreateView({
                 <Input
                   label="Meta title"
                   value={metaTitle[localeTab]}
-                  onChange={(event) =>
-                    setMetaTitle((current) => updateLocalizedValue(current, localeTab, event.currentTarget.value))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    setMetaTitle((current) => updateLocalizedValue(current, localeTab, nextValue));
+                  }}
                 />
                 <Textarea
                   label="Meta description"
                   value={metaDescription[localeTab]}
-                  onChange={(event) =>
-                    setMetaDescription((current) => updateLocalizedValue(current, localeTab, event.currentTarget.value))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    setMetaDescription((current) =>
+                      updateLocalizedValue(current, localeTab, nextValue)
+                    );
+                  }}
                   rows={3}
                   helperText="Target 50–160 characters."
                 />
                 <Input
                   label="Open Graph title"
                   value={ogTitle[localeTab]}
-                  onChange={(event) =>
-                    setOgTitle((current) => updateLocalizedValue(current, localeTab, event.currentTarget.value))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    setOgTitle((current) => updateLocalizedValue(current, localeTab, nextValue));
+                  }}
                   helperText="Leave empty to fall back to the meta title."
                 />
                 <Textarea
                   label="Open Graph description"
                   value={ogDescription[localeTab]}
-                  onChange={(event) =>
-                    setOgDescription((current) => updateLocalizedValue(current, localeTab, event.currentTarget.value))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    setOgDescription((current) =>
+                      updateLocalizedValue(current, localeTab, nextValue)
+                    );
+                  }}
                   rows={3}
                 />
                 <Input
@@ -687,9 +825,12 @@ export function GuideCreateView({
                 <Input
                   label={`Featured image alt (${contentLocaleLabel})`}
                   value={featuredImageAlt[localeTab]}
-                  onChange={(event) =>
-                    setFeaturedImageAlt((current) => updateLocalizedValue(current, localeTab, event.currentTarget.value))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    setFeaturedImageAlt((current) =>
+                      updateLocalizedValue(current, localeTab, nextValue)
+                    );
+                  }}
                 />
                 <Input
                   label="Open Graph image URL"
@@ -699,9 +840,12 @@ export function GuideCreateView({
                 <Input
                   label={`Open Graph image alt (${contentLocaleLabel})`}
                   value={ogImageAlt[localeTab]}
-                  onChange={(event) =>
-                    setOgImageAlt((current) => updateLocalizedValue(current, localeTab, event.currentTarget.value))
-                  }
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    setOgImageAlt((current) =>
+                      updateLocalizedValue(current, localeTab, nextValue)
+                    );
+                  }}
                 />
               </div>
             </AdminSectionCard>
@@ -725,6 +869,19 @@ export function GuideCreateView({
                   value={canonicalUrl}
                   onChange={(event) => setCanonicalUrl(event.currentTarget.value)}
                 />
+                <Select
+                  label="Author"
+                  value={authorId}
+                  onChange={(event) => setAuthorId(event.currentTarget.value)}
+                  placeholder="Unassigned"
+                  options={[
+                    { value: "", label: "Unassigned" },
+                    ...(formOptions?.authorOptions ?? []).map((option) => ({
+                      value: String(option._id),
+                      label: `${option.label}${option.adminRole ? ` (${option.adminRole})` : ""}`,
+                    })),
+                  ]}
+                />
                 <Input
                   label="Primary CTA target"
                   value={primaryCtaTarget}
@@ -744,6 +901,34 @@ export function GuideCreateView({
                   rows={2}
                   helperText="Comma-separated guide slugs."
                 />
+                {relatedGuideOptions.length > 0 ? (
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-[color:var(--foreground)]">
+                      Suggested related guides
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {relatedGuideOptions.slice(0, 12).map((option) => {
+                        const selected = selectedRelatedGuides.includes(option.slug);
+                        return (
+                          <Button
+                            key={option.slug}
+                            type="button"
+                            size="sm"
+                            variant={selected ? "secondary" : "outline"}
+                            onClick={() => {
+                              const nextValues = selected
+                                ? selectedRelatedGuides.filter((value) => value !== option.slug)
+                                : [...selectedRelatedGuides, option.slug];
+                              setRelatedGuides(nextValues.join(", "));
+                            }}
+                          >
+                            {option.pageTitle.en || option.slug}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : null}
                 <Textarea
                   label="Related guide paths"
                   value={relatedGuidePaths}
@@ -770,13 +955,19 @@ export function GuideCreateView({
                 <Textarea
                   label="Library body (EN)"
                   value={libraryBody.en}
-                  onChange={(event) => setLibraryBody((current) => ({ ...current, en: event.currentTarget.value }))}
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    setLibraryBody((current) => ({ ...current, en: nextValue }));
+                  }}
                   rows={4}
                 />
                 <Textarea
                   label="Library body (NL)"
                   value={libraryBody.nl}
-                  onChange={(event) => setLibraryBody((current) => ({ ...current, nl: event.currentTarget.value }))}
+                  onChange={(event) => {
+                    const nextValue = event.currentTarget.value;
+                    setLibraryBody((current) => ({ ...current, nl: nextValue }));
+                  }}
                   rows={4}
                 />
                 <div className="grid gap-3 sm:grid-cols-2">

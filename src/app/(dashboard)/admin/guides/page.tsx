@@ -4,6 +4,12 @@ import { isGuideAdminRole } from "@/components/admin/guides/guide-admin-shared";
 
 export default async function AdminGuidesPage() {
   const session = await requireAdminSession();
+  const isGuideAdmin = isGuideAdminRole(session.adminRole);
 
-  return <GuidesAdminListClient canManageRedirects={isGuideAdminRole(session.adminRole)} />;
+  return (
+    <GuidesAdminListClient
+      canManageRedirects={isGuideAdmin}
+      canManageGuides={isGuideAdmin}
+    />
+  );
 }

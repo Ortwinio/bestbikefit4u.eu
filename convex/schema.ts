@@ -1762,6 +1762,8 @@ export default defineSchema({
     tableOfContents: v.boolean(),
     publishedAt: v.optional(v.number()),
     lastUpdatedAt: v.optional(v.number()),
+    deletedAt: v.optional(v.number()),
+    deletedBy: v.optional(v.id("users")),
     createdAt: v.number(),
     updatedAt: v.number(),
     createdBy: v.union(v.id("users"), v.literal("import-json")),

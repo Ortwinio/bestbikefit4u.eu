@@ -14,7 +14,9 @@ vi.mock("@convex-dev/auth/server", () => ({
 import {
   changeSlug,
   createGuide,
+  deleteGuide,
   publishGuide,
+  restoreGuideRevision,
   updateGuide,
 } from "../mutations";
 import { getGuideAuditLog, getPublishedGuide } from "../queries";
@@ -297,5 +299,39 @@ describe("guide mutations and queries", () => {
     ).rejects.toThrow(
       "Not authorized: requires one of [super_admin, ops_admin, fit_specialist, qa_manager]"
     );
+  });
+
+  it("soft deletes guides and can restore a previous revision", async () => {
+    const ctx = makeCtx();
+    const createHandler = (createGuide as unknown as { _handler: TestHandler })._handler;
+    const updateHandler = (updateGuide as unknown as { _handler: TestHandler })._handler;
+    const deleteHandler = (deleteGuide as unknown as { _handler: TestHandler })._handler;
+    const restoreHandler = (restoreGuideRevision as unknown as { _handler: TestHandler })._handler;
+
+    const guideId = (await createHandler(ctx, createGuideArgs())) as string;
+    await updateHandler(ctx, {
+      id: guideId,
+      pageTitle: { en: "Updated title", nl: "Bijgewerkte titel" },
+    });
+
+    const firstRevision = [...ctx.tables.revisions.values()].find(
+      (revision) => revision.version === 1
+    );
+    expect(firstRevision).toBeDefined();
+
+    await deleteHandler(ctx, { id: guideId });
+    expect(ctx.tables.guidePages.get(guideId)?.deletedAt).toBeTypeOf("number");
+    expect(ctx.tables.guidePages.get(guideId)?.status).toBe("unpublished");
+
+    await restoreHandler(ctx, {
+      guideId,
+      revisionId: firstRevision?._id,
+    });
+
+    const restoredGuide = ctx.tables.guidePages.get(guideId);
+    expect(restoredGuide).toMatchObject({
+      pageTitle: { en: "Test guide", nl: "Testgids" },
+      deletedAt: undefined,
+    });
   });
 });

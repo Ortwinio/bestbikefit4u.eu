@@ -19,6 +19,29 @@ The CMS is not a separate product. It is an extension of the existing admin pane
 2. **Standard guide page template** — a redesigned, opinionated page template using existing component primitives with structured conversion zones: hero, quick answer cards, Markdown body, mid-page tool CTA, FAQ, related guides, and a closing CTA band.
 3. **Visitor-to-account conversion strategy** — a funnel-aware CTA and content strategy that uses guide pages as acquisition assets, guiding readers from problem-awareness toward account creation through contextual, non-intrusive conversion touchpoints.
 
+## Implementation Gap Checklist
+
+Status checked against the live repo on 2026-04-14.
+
+| Capability | Plan status | Repo status |
+|---|---|---|
+| Guide create/edit/publish workflow | Must have | Implemented |
+| Redirect manager and slug redirects | Must have | Implemented |
+| Audit log | Must have | Implemented |
+| Admin JSON import inside CMS | Must have in practice | Implemented on `2026-04-14` via `/admin/guides/import` |
+| Author assignment in create/edit UI | Must have | Implemented on `2026-04-14` |
+| Quick-answer editing in create/edit UI | Planned content model | Implemented on `2026-04-14` |
+| Revision restore | Must have | Implemented on `2026-04-14` |
+| Soft delete | Must have | Implemented on `2026-04-14` |
+| Guide list author/locale/search filters | Should have | Implemented on `2026-04-14` |
+| Guide list preview/delete/import actions | Planned | Implemented on `2026-04-14` |
+| `/admin/guides/new` create-flow validation hardening | Required by QA | Implemented on `2026-04-14` |
+
+Validation notes:
+- Focused TypeScript checks for the guides CMS files pass after the 2026-04-14 implementation sweep.
+- Focused tests now cover guide delete/restore mutations and guide-create form submission.
+- Full repo `tsc --noEmit` still has unrelated non-guides issues outside this plan area.
+
 ---
 
 ## Product Goal and Scope

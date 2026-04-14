@@ -29,6 +29,53 @@ function normalizeRedirectPath(value: string) {
     : withLeadingSlash;
 }
 
+function buildGuideRecordFromArgs(
+  args: any
+) {
+  const slug = normalizeGuideSlug(args.slug);
+  return {
+    slug,
+    path: args.path ?? buildGuidePath(slug),
+    cluster: args.cluster,
+    backlogOrder: args.backlogOrder,
+    importStatus: args.importStatus,
+    importNotes: args.importNotes,
+    status: args.status ?? "draft",
+    pageTitle: args.pageTitle,
+    h1: args.h1,
+    metaTitle: args.metaTitle,
+    metaDescription: args.metaDescription,
+    pageBrief: args.pageBrief,
+    body: args.body,
+    faqs: args.faqs,
+    quickAnswer: args.quickAnswer,
+    libraryBody: args.libraryBody,
+    heroImageFileName: args.heroImageFileName,
+    heroImagePublicPath: args.heroImagePublicPath,
+    relatedGuidePaths: cleanStringArray(args.relatedGuidePaths),
+    relatedKeywords: cleanStringArray(args.relatedKeywords),
+    seoHints: args.seoHints,
+    featuredImageUrl: args.featuredImageUrl,
+    featuredImageAlt: args.featuredImageAlt,
+    canonicalUrl: args.canonicalUrl,
+    ogTitle: args.ogTitle,
+    ogDescription: args.ogDescription,
+    ogImageUrl: args.ogImageUrl,
+    ogImageAlt: args.ogImageAlt,
+    robotsIndex: args.robotsIndex,
+    author: args.author,
+    tags: cleanStringArray(args.tags),
+    relatedGuides: cleanStringArray(args.relatedGuides),
+    primaryCtaTarget: args.primaryCtaTarget,
+    primaryCtaLabel: args.primaryCtaLabel,
+    tableOfContents: args.tableOfContents,
+    publishedAt: args.publishedAt,
+    lastUpdatedAt: args.lastUpdatedAt,
+    deletedAt: undefined,
+    deletedBy: undefined,
+  };
+}
+
 export const createGuide = mutation({
   args: {
     slug: v.string(),
@@ -41,41 +88,11 @@ export const createGuide = mutation({
 
     const now = Date.now();
     const guideId = await ctx.db.insert("guidePages", {
-      slug,
-      path: buildGuidePath(slug),
-      cluster: args.cluster,
-      backlogOrder: args.backlogOrder,
-      importStatus: args.importStatus,
-      importNotes: args.importNotes,
-      status: "draft",
-      pageTitle: args.pageTitle,
-      h1: args.h1,
-      metaTitle: args.metaTitle,
-      metaDescription: args.metaDescription,
-      pageBrief: args.pageBrief,
-      body: args.body,
-      faqs: args.faqs,
-      quickAnswer: args.quickAnswer,
-      libraryBody: args.libraryBody,
-      heroImageFileName: args.heroImageFileName,
-      heroImagePublicPath: args.heroImagePublicPath,
-      relatedGuidePaths: cleanStringArray(args.relatedGuidePaths),
-      relatedKeywords: cleanStringArray(args.relatedKeywords),
-      seoHints: args.seoHints,
-      featuredImageUrl: args.featuredImageUrl,
-      featuredImageAlt: args.featuredImageAlt,
-      canonicalUrl: args.canonicalUrl,
-      ogTitle: args.ogTitle,
-      ogDescription: args.ogDescription,
-      ogImageUrl: args.ogImageUrl,
-      ogImageAlt: args.ogImageAlt,
-      robotsIndex: args.robotsIndex,
-      author: args.author,
-      tags: cleanStringArray(args.tags),
-      relatedGuides: cleanStringArray(args.relatedGuides),
-      primaryCtaTarget: args.primaryCtaTarget,
-      primaryCtaLabel: args.primaryCtaLabel,
-      tableOfContents: args.tableOfContents,
+      ...buildGuideRecordFromArgs({
+        ...args,
+        slug,
+        status: "draft",
+      }),
       createdAt: now,
       updatedAt: now,
       createdBy: userId,
@@ -180,7 +197,7 @@ export const updateGuide = mutation({
       };
     }
 
-    const patch = {
+    const patch: any = {
       ...slugPatch,
       ...(args.cluster !== undefined ? { cluster: args.cluster } : {}),
       ...(args.backlogOrder !== undefined ? { backlogOrder: args.backlogOrder } : {}),
@@ -443,6 +460,191 @@ export const requestGuideChanges = mutation({
   },
 });
 
+export const deleteGuide = mutation({
+  args: {
+    id: v.id("guidePages"),
+    reason: v.optional(v.string()),
+  },
+  handler: async (ctx, { id, reason }) => {
+    const userId = await requireGuideAdmin(ctx);
+    const guide = await ctx.db.get(id);
+    if (!guide) {
+      throw new Error("Guide not found");
+    }
+
+    const now = Date.now();
+    await ctx.db.patch(id, {
+      status: "unpublished",
+      deletedAt: now,
+      deletedBy: userId,
+      updatedAt: now,
+      updatedBy: userId,
+      version: guide.version + 1,
+    });
+
+    const deletedGuide = await ctx.db.get(id);
+    if (!deletedGuide) {
+      throw new Error("Guide delete failed");
+    }
+
+    await saveGuideRevision(ctx, deletedGuide, userId);
+    await writeAuditLog(ctx, {
+      adminUserId: userId,
+      action: "guide.delete",
+      targetType: "guidePage",
+      targetId: String(id),
+      payload: { slug: guide.slug, status: "unpublished" },
+      reason,
+    });
+    await writeGuideAuditLog(ctx, {
+      guideId: id,
+      action: "delete",
+      resourceType: "guide",
+      resourceId: String(id),
+      userId,
+      metadata: { slug: guide.slug, reason },
+    });
+
+    return id;
+  },
+});
+
+export const restoreGuideRevision = mutation({
+  args: {
+    guideId: v.id("guidePages"),
+    revisionId: v.id("guideRevisions"),
+  },
+  handler: async (ctx, { guideId, revisionId }) => {
+    const userId = await requireGuideAdmin(ctx);
+    const [guide, revision] = await Promise.all([
+      ctx.db.get(guideId),
+      ctx.db.get(revisionId),
+    ]);
+
+    if (!guide) {
+      throw new Error("Guide not found");
+    }
+    if (!revision || revision.guideId !== guideId) {
+      throw new Error("Revision not found");
+    }
+
+    const snapshot = revision.snapshot as Record<string, unknown>;
+    const nextSlug = normalizeGuideSlug(String(snapshot.slug ?? guide.slug));
+    await assertGuideSlugAvailable(ctx, nextSlug, guideId);
+
+    const now = Date.now();
+    const patch = {
+      slug: nextSlug,
+      path: buildGuidePath(nextSlug),
+      cluster: String(snapshot.cluster ?? guide.cluster),
+      backlogOrder:
+        typeof snapshot.backlogOrder === "number" ? snapshot.backlogOrder : undefined,
+      importStatus:
+        typeof snapshot.importStatus === "string" ? snapshot.importStatus : undefined,
+      importNotes:
+        typeof snapshot.importNotes === "string" ? snapshot.importNotes : undefined,
+      status:
+        (snapshot.status as "draft" | "in_review" | "published" | "unpublished") ??
+        guide.status,
+      pageTitle: snapshot.pageTitle ?? guide.pageTitle,
+      h1: snapshot.h1 ?? guide.h1,
+      metaTitle: snapshot.metaTitle ?? guide.metaTitle,
+      metaDescription: snapshot.metaDescription ?? guide.metaDescription,
+      pageBrief: snapshot.pageBrief ?? guide.pageBrief,
+      body: snapshot.body ?? guide.body,
+      faqs: snapshot.faqs ?? undefined,
+      quickAnswer: snapshot.quickAnswer ?? undefined,
+      libraryBody: snapshot.libraryBody ?? undefined,
+      heroImageFileName:
+        typeof snapshot.heroImageFileName === "string"
+          ? snapshot.heroImageFileName
+          : undefined,
+      heroImagePublicPath:
+        typeof snapshot.heroImagePublicPath === "string"
+          ? snapshot.heroImagePublicPath
+          : undefined,
+      relatedGuidePaths: cleanStringArray(
+        Array.isArray(snapshot.relatedGuidePaths)
+          ? (snapshot.relatedGuidePaths as string[])
+          : undefined
+      ),
+      relatedKeywords: cleanStringArray(
+        Array.isArray(snapshot.relatedKeywords)
+          ? (snapshot.relatedKeywords as string[])
+          : undefined
+      ),
+      seoHints: snapshot.seoHints,
+      featuredImageUrl:
+        typeof snapshot.featuredImageUrl === "string"
+          ? snapshot.featuredImageUrl
+          : undefined,
+      featuredImageAlt: snapshot.featuredImageAlt ?? undefined,
+      canonicalUrl:
+        typeof snapshot.canonicalUrl === "string" ? snapshot.canonicalUrl : undefined,
+      ogTitle: snapshot.ogTitle ?? undefined,
+      ogDescription: snapshot.ogDescription ?? undefined,
+      ogImageUrl:
+        typeof snapshot.ogImageUrl === "string" ? snapshot.ogImageUrl : undefined,
+      ogImageAlt: snapshot.ogImageAlt ?? undefined,
+      robotsIndex:
+        typeof snapshot.robotsIndex === "boolean" ? snapshot.robotsIndex : guide.robotsIndex,
+      author: snapshot.author ?? undefined,
+      tags: cleanStringArray(
+        Array.isArray(snapshot.tags) ? (snapshot.tags as string[]) : undefined
+      ),
+      relatedGuides: cleanStringArray(
+        Array.isArray(snapshot.relatedGuides)
+          ? (snapshot.relatedGuides as string[])
+          : undefined
+      ),
+      primaryCtaTarget:
+        typeof snapshot.primaryCtaTarget === "string"
+          ? snapshot.primaryCtaTarget
+          : undefined,
+      primaryCtaLabel: snapshot.primaryCtaLabel ?? undefined,
+      tableOfContents:
+        typeof snapshot.tableOfContents === "boolean"
+          ? snapshot.tableOfContents
+          : guide.tableOfContents,
+      publishedAt:
+        typeof snapshot.publishedAt === "number" ? snapshot.publishedAt : undefined,
+      lastUpdatedAt:
+        typeof snapshot.lastUpdatedAt === "number" ? snapshot.lastUpdatedAt : undefined,
+      deletedAt: undefined,
+      deletedBy: undefined,
+      updatedAt: now,
+      updatedBy: userId,
+      version: guide.version + 1,
+    };
+
+    await ctx.db.patch(guideId, patch as any);
+
+    const restoredGuide = await ctx.db.get(guideId);
+    if (!restoredGuide) {
+      throw new Error("Guide restore failed");
+    }
+
+    await saveGuideRevision(ctx, restoredGuide, userId);
+    await writeAuditLog(ctx, {
+      adminUserId: userId,
+      action: "guide.restore_revision",
+      targetType: "guidePage",
+      targetId: String(guideId),
+      payload: { revisionId: String(revisionId), restoredVersion: revision.version },
+    });
+    await writeGuideAuditLog(ctx, {
+      guideId,
+      action: "restore_revision",
+      resourceType: "guide",
+      resourceId: String(guideId),
+      userId,
+      metadata: { revisionId: String(revisionId), restoredVersion: revision.version },
+    });
+
+    return guideId;
+  },
+});
+
 export const addRedirect = mutation({
   args: {
     from: v.string(),
@@ -652,20 +854,66 @@ export const importGuide = internalMutation({
     overwrite: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("guidePages")
-      .withIndex("by_slug", (q) => q.eq("slug", normalizeGuideSlug(args.slug)))
-      .unique();
+    return importGuideRecord(ctx, args);
+  },
+});
 
-    const now = Date.now();
-    const baseRecord = {
+export const importGuideFromAdmin = mutation({
+  args: {
+    slug: v.string(),
+    path: v.string(),
+    cluster: v.string(),
+    backlogOrder: v.optional(v.number()),
+    importStatus: v.optional(v.string()),
+    importNotes: v.optional(v.string()),
+    pageTitle: guideEditableFields.pageTitle,
+    h1: guideEditableFields.h1,
+    metaTitle: guideEditableFields.metaTitle,
+    metaDescription: guideEditableFields.metaDescription,
+    pageBrief: guideEditableFields.pageBrief,
+    body: v.optional(guideEditableFields.body),
+    faqs: v.optional(guideEditableFields.faqs),
+    quickAnswer: v.optional(guideEditableFields.quickAnswer),
+    libraryBody: v.optional(guideEditableFields.libraryBody),
+    heroImageFileName: v.optional(v.string()),
+    heroImagePublicPath: v.optional(v.string()),
+    relatedGuidePaths: v.optional(v.array(v.string())),
+    relatedKeywords: v.optional(v.array(v.string())),
+    seoHints: v.optional(guideSeoHintsValidator),
+    primaryCtaTarget: v.optional(v.string()),
+    primaryCtaLabel: v.optional(guideEditableFields.primaryCtaLabel),
+    relatedGuides: v.optional(v.array(v.string())),
+    robotsIndex: v.boolean(),
+    tableOfContents: v.boolean(),
+    publishedAt: v.number(),
+    lastUpdatedAt: v.number(),
+    overwrite: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    await requireGuideAdmin(ctx);
+    return importGuideRecord(ctx, args);
+  },
+});
+
+async function importGuideRecord(
+  ctx: any,
+  args: any
+) {
+  const existing = await ctx.db
+    .query("guidePages")
+    .withIndex("by_slug", (q: any) => q.eq("slug", normalizeGuideSlug(args.slug)))
+    .unique();
+
+  const now = Date.now();
+  const baseRecord = {
+    ...buildGuideRecordFromArgs({
       slug: normalizeGuideSlug(args.slug),
       path: args.path,
       cluster: args.cluster,
       backlogOrder: args.backlogOrder,
       importStatus: args.importStatus,
       importNotes: args.importNotes,
-      status: "published" as const,
+      status: "published",
       pageTitle: args.pageTitle,
       h1: args.h1,
       metaTitle: args.metaTitle,
@@ -682,61 +930,52 @@ export const importGuide = internalMutation({
       libraryBody: args.libraryBody,
       heroImageFileName: args.heroImageFileName,
       heroImagePublicPath: args.heroImagePublicPath,
-      relatedGuidePaths: cleanStringArray(args.relatedGuidePaths),
-      relatedKeywords: cleanStringArray(args.relatedKeywords),
+      relatedGuidePaths: args.relatedGuidePaths,
+      relatedKeywords: args.relatedKeywords,
       seoHints: args.seoHints,
-      featuredImageUrl: undefined,
-      featuredImageAlt: undefined,
-      canonicalUrl: undefined,
-      ogTitle: undefined,
-      ogDescription: undefined,
-      ogImageUrl: undefined,
-      ogImageAlt: undefined,
       robotsIndex: args.robotsIndex,
-      author: undefined,
-      tags: undefined,
-      relatedGuides: cleanStringArray(args.relatedGuides),
+      relatedGuides: args.relatedGuides,
       primaryCtaTarget: args.primaryCtaTarget,
       primaryCtaLabel: args.primaryCtaLabel,
       tableOfContents: args.tableOfContents,
       publishedAt: args.publishedAt,
       lastUpdatedAt: args.lastUpdatedAt,
-      updatedAt: now,
-      updatedBy: "import-json" as const,
-    };
+    }),
+    updatedAt: now,
+    updatedBy: "import-json" as const,
+  };
 
-    if (existing) {
-      if (!args.overwrite) {
-        return {
-          outcome: "skipped" as const,
-          id: existing._id,
-          slug: existing.slug,
-        };
-      }
-
-      await ctx.db.patch(existing._id, {
-        ...baseRecord,
-        version: existing.version + 1,
-      });
-
+  if (existing) {
+    if (!args.overwrite) {
       return {
-        outcome: "updated" as const,
+        outcome: "skipped" as const,
         id: existing._id,
-        slug: normalizeGuideSlug(args.slug),
+        slug: existing.slug,
       };
     }
 
-    const guideId = await ctx.db.insert("guidePages", {
+    await ctx.db.patch(existing._id, {
       ...baseRecord,
-      createdAt: now,
-      createdBy: "import-json",
-      version: 1,
+      version: existing.version + 1,
     });
 
     return {
-      outcome: "created" as const,
-      id: guideId,
+      outcome: "updated" as const,
+      id: existing._id,
       slug: normalizeGuideSlug(args.slug),
     };
-  },
-});
+  }
+
+  const guideId = await ctx.db.insert("guidePages", {
+    ...baseRecord,
+    createdAt: now,
+    createdBy: "import-json",
+    version: 1,
+  });
+
+  return {
+    outcome: "created" as const,
+    id: guideId,
+    slug: normalizeGuideSlug(args.slug),
+  };
+}
