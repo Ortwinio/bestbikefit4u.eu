@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
@@ -160,6 +160,8 @@ export function GuideImportView() {
   const [rowFilter, setRowFilter] = useState<"all" | "ready" | "missing_locale" | "new" | "existing">("all");
   const [slugFilter, setSlugFilter] = useState("");
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>([]);
+  const [previewSlug, setPreviewSlug] = useState<string | null>(null);
+  const [previewLocale, setPreviewLocale] = useState<Locale>("en");
   const [isImporting, setIsImporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [rowResults, setRowResults] = useState<Record<string, RowImportResult>>({});
@@ -210,10 +212,26 @@ export function GuideImportView() {
     () => allReadyRows.filter((row) => selectedSlugs.includes(row.slug)),
     [allReadyRows, selectedSlugs]
   );
+  const previewRow = useMemo(
+    () => allRows.find((row) => row.slug === previewSlug) ?? allRows[0] ?? null,
+    [allRows, previewSlug]
+  );
+  const previewRecord = previewRow?.[previewLocale]?.record ?? null;
   const missingLocaleCount = allRows.filter((row) => !row.ready).length;
   const existingCount = allRows.filter((row) => existingGuideMap.has(row.slug)).length;
   const publishedCount = allRows.filter((row) => existingGuideMap.get(row.slug)?.status === "published").length;
   const draftCount = allRows.filter((row) => existingGuideMap.get(row.slug)?.status === "draft").length;
+
+  useEffect(() => {
+    if (!allRows.length) {
+      setPreviewSlug(null);
+      return;
+    }
+
+    if (!previewSlug || !allRows.some((row) => row.slug === previewSlug)) {
+      setPreviewSlug(allRows[0]?.slug ?? null);
+    }
+  }, [allRows, previewSlug]);
 
   const handleFileSelection = async (nextFiles: FileList | null) => {
     if (!nextFiles?.length) {
@@ -455,7 +473,7 @@ export function GuideImportView() {
         ) : (
           <AdminTable>
             <AdminTableHead
-              columns={["Select", "Slug", "Cluster", "Uploaded EN", "Uploaded NL", "File pair", "Current guide", "Batch result"]}
+              columns={["Select", "Slug", "Cluster", "Uploaded EN", "Uploaded NL", "File pair", "Current guide", "Preview", "Batch result"]}
             />
             <tbody>
               {importRows.map((row) => {
@@ -524,6 +542,16 @@ export function GuideImportView() {
                       )}
                     </AdminTableCell>
                     <AdminTableCell>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant={previewRow?.slug === row.slug ? "secondary" : "outline"}
+                        onClick={() => setPreviewSlug(row.slug)}
+                      >
+                        Preview JSON
+                      </Button>
+                    </AdminTableCell>
+                    <AdminTableCell>
                       {rowResult ? (
                         <div className="space-y-1">
                           <AdminStatusPill tone={rowResult.state === "success" ? "success" : "danger"}>
@@ -544,6 +572,145 @@ export function GuideImportView() {
               })}
             </tbody>
           </AdminTable>
+        )}
+      </AdminSectionCard>
+
+      <AdminSectionCard
+        title="JSON preview"
+        description="Inspect the uploaded guide JSON before import and switch between EN and NL inside the admin panel."
+      >
+        {previewRow ? (
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="space-y-1">
+                <p className="font-medium">{previewRow.slug}</p>
+                <div className="flex flex-wrap gap-2">
+                  <AdminStatusPill tone={previewRow.en ? "success" : "warning"}>
+                    {previewRow.en ? "EN uploaded" : "EN missing"}
+                  </AdminStatusPill>
+                  <AdminStatusPill tone={previewRow.nl ? "success" : "warning"}>
+                    {previewRow.nl ? "NL uploaded" : "NL missing"}
+                  </AdminStatusPill>
+                  {existingGuideMap.get(previewRow.slug) ? (
+                    <AdminStatusPill tone={guideStatusTone(existingGuideMap.get(previewRow.slug)!.status)}>
+                      {formatGuideStatusLabel(existingGuideMap.get(previewRow.slug)!.status)}
+                    </AdminStatusPill>
+                  ) : (
+                    <AdminStatusPill tone="neutral">Not imported</AdminStatusPill>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={previewLocale === "en" ? "secondary" : "outline"}
+                  disabled={!previewRow.en}
+                  onClick={() => setPreviewLocale("en")}
+                >
+                  EN
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={previewLocale === "nl" ? "secondary" : "outline"}
+                  disabled={!previewRow.nl}
+                  onClick={() => setPreviewLocale("nl")}
+                >
+                  NL
+                </Button>
+              </div>
+            </div>
+
+            {previewRecord ? (
+              <>
+                <div className="grid gap-4 lg:grid-cols-2">
+                  <div className="space-y-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        File
+                      </p>
+                      <p className="text-sm">{previewRow[previewLocale]?.fileName}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        Path
+                      </p>
+                      <p className="text-sm">{previewRecord.path}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        Title
+                      </p>
+                      <p className="text-sm">{previewRecord.pageTitle}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        H1
+                      </p>
+                      <p className="text-sm">{previewRecord.h1}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        CTA
+                      </p>
+                      <p className="text-sm">
+                        {previewRecord.primaryCtaLabel} {"->"} {previewRecord.primaryCtaTarget}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        Meta title
+                      </p>
+                      <p className="text-sm">{previewRecord.metaTitle}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        Meta description
+                      </p>
+                      <p className="text-sm">{previewRecord.metaDescription}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        Brief
+                      </p>
+                      <p className="text-sm">{previewRecord.pageBrief}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        Internal links
+                      </p>
+                      <p className="text-sm">{previewRecord.internalLinkTargets.length}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                        Related keywords
+                      </p>
+                      <p className="text-sm">{previewRecord.relatedKeywords?.join(", ") || "None"}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                    Uploaded JSON
+                  </p>
+                  <pre className="max-h-[36rem] overflow-auto rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-4 text-xs leading-6 text-[color:var(--foreground)]">
+                    {JSON.stringify(previewRecord, null, 2)}
+                  </pre>
+                </div>
+              </>
+            ) : (
+              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4 text-sm text-[color:var(--muted-foreground)]">
+                No uploaded JSON exists for the selected locale.
+              </div>
+            )}
+          </div>
+        ) : (
+          <p className="text-sm text-[color:var(--muted-foreground)]">Load files to preview uploaded JSON.</p>
         )}
       </AdminSectionCard>
     </div>
