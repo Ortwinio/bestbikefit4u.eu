@@ -6,6 +6,7 @@ const nl = {
     language: "Taal",
     english: "Engels",
     dutch: "Nederlands",
+    skipToContent: "Ga naar hoofdinhoud",
   },
   nav: {
     brand: BRAND.name,
@@ -990,6 +991,190 @@ const nl = {
           },
         },
       },
+      currentPositionFeeling: {
+        questionText: "Hoe voelt je huidige fietspositie aan?",
+        helpText:
+          "Kleine ongemakken wijzen vaak op een verkeerde afstelling. Door die vroeg te herkennen kunnen we reach, stuurhoogte en zadelpositie gerichter verbeteren. Selecteer alles wat van toepassing is — heb je nu geen fiets, kies dan 'Sla deze stap over'.",
+        imageAlt: "Illustratie van comfortabele versus oncomfortabele fietsposities",
+        orDivider: "of beschrijf wat niet goed voelt",
+        options: {
+          good: {
+            label: "Over het algemeen goed, kleine aanpassingen nodig",
+            subtitle: "Kleine aanpassingen nodig",
+            tooltip:
+              "Je positie voelt grotendeels comfortabel aan, met ruimte voor kleine verbeteringen.",
+          },
+          no_bike: {
+            label: "Sla deze stap over",
+            subtitle:
+              "We baseren je fit volledig op je lichaamsmetingen en rijprofiel.",
+            tooltip:
+              "We baseren je fit volledig op je lichaamsmetingen en rijprofiel.",
+          },
+          too_stretched: {
+            label: "Te uitgestrekt - ik moet te ver reiken",
+            subtitle: "Te lange reach",
+            tooltip:
+              "Je armen, nek of onderrug kunnen op langere ritten overstrekt aanvoelen.",
+          },
+          too_compact: {
+            label: "Te compact - ik voel me opgepropt",
+            subtitle: "Te compact of te rechtop",
+            tooltip:
+              "Je positie kan ademhaling, comfort of krachtoverdracht beperken.",
+          },
+          too_low: {
+            label: "Het stuur voelt te laag",
+            subtitle: "Te veel druk op handen of rug",
+            tooltip:
+              "Je kunt spanning voelen in je nek, schouders of onderrug.",
+          },
+          too_high: {
+            label: "Het stuur voelt te hoog",
+            subtitle: "Te weinig voorwaartse positie",
+            tooltip:
+              "Je kunt je minder efficiënt voelen of controle aan de voorkant missen.",
+          },
+          saddle_too_high: {
+            label: "Het zadel voelt te hoog",
+            subtitle: "Mogelijk heupwiebelen",
+            tooltip:
+              "Een te hoog zadel laat de heupen wiebelen, belast de knieën en vermindert de krachtoverdracht.",
+          },
+          saddle_too_low: {
+            label: "Het zadel voelt te laag",
+            subtitle: "Meer kniedruk",
+            tooltip:
+              "Een te laag zadel comprimeert het kniegewricht en beperkt volledige beenstrekking.",
+          },
+        },
+      },
+      climbingProfile: {
+        questionText: "Wil je een klimgericht fit-profiel?",
+        helpText:
+          "Een klimprofiel geeft je een tweede set aanbevelingen, geoptimaliseerd voor zittend klimmen — met aangepaste zadelhoogte, setback en stuurpositie.",
+        imageAlt: "Illustratie van een klimmende fietser",
+        options: {
+          yes: {
+            label: "Ja, voeg een klimprofiel toe",
+            tooltip:
+              "We berekenen een tweede set metingen, geoptimaliseerd voor zittend klimmen — met aangepaste zadelhoogte, setback en stuurpositie voor meer efficiëntie op beklimmingen.",
+          },
+          no: {
+            label: "Nee, alleen standaard fit",
+            tooltip:
+              "We geven je één allround fit-profiel op basis van je metingen en rijvoorkeuren.",
+          },
+        },
+      },
+      climbingImportance: {
+        questionText: "Hoe belangrijk is klimmen in jouw ritten?",
+        helpText:
+          "Klimmen verandert hoe je lichaam met de fiets samenwerkt. We passen je positie aan om efficiëntie, comfort en controle te verbeteren op lange of steile beklimmingen.",
+        options: {
+          rarely: {
+            label: "Ik klim zelden",
+            tooltip:
+              "Op vlak terrein kunnen we je positie optimaliseren voor aerodynamica en snelheid met een lagere en meer gestrekte setup.",
+          },
+          occasional: {
+            label: "Af en toe klimmen",
+            tooltip:
+              "Een gebalanceerde positie helpt je efficiënt te blijven op vlakke stukken en toch comfortabel te klimmen op korte hellingen.",
+          },
+          regular: {
+            label: "Regelmatig klimmen",
+            tooltip:
+              "Klimmen vraagt om efficiënte krachtoverdracht en comfort in een meer rechtopstaande positie. We passen je setup aan om belasting tijdens langere inspanningen te beperken.",
+          },
+          climbing_focused: {
+            label: "Klimmen staat centraal",
+            tooltip:
+              "Lange beklimmingen vragen om een open heuphoek en stabiele houding. We optimaliseren je positie voor zittende klimefficiëntie en minder vermoeidheid.",
+          },
+        },
+      },
+      roadRidingType: {
+        questionText: "Welk type weggebruik doe je vooral?",
+        helpText:
+          "Je rijtype bepaalt hoe agressief en aerodynamisch je positie moet zijn. Daarmee stemmen we je setup af op comfort, efficiëntie of maximale prestaties.",
+        imageAlt: "Illustratie van verschillende rijtypes",
+        options: {
+          casual: {
+            label: "Ontspannen ritten en fitness",
+            description:
+              "Gericht op comfort en plezier. We geven prioriteit aan een meer ontspannen positie met minder belasting op rug, nek en handen.",
+            tooltip:
+              "Gericht op comfort en plezier. We geven prioriteit aan een meer ontspannen positie met minder belasting op rug, nek en handen.",
+          },
+          group: {
+            label: "Groepsritten en toertochten",
+            description:
+              "Een mix van duurvermogen en tempo. We balanceren comfort en efficiëntie voor langere ritten met gematigde intensiteit.",
+            tooltip:
+              "Een mix van duurvermogen en tempo. We balanceren comfort en efficiëntie voor langere ritten met gematigde intensiteit.",
+          },
+          training: {
+            label: "Gestructureerde training",
+            description:
+              "Regelmatige training met specifieke doelen. We optimaliseren je positie voor efficiëntie en krachtoverdracht, zonder duurzaamheid te verliezen.",
+            tooltip:
+              "Regelmatige training met specifieke doelen. We optimaliseren je positie voor efficiëntie en krachtoverdracht, zonder duurzaamheid te verliezen.",
+          },
+          racing: {
+            label: "Wedstrijden (criteriums, wegwedstrijden)",
+            description:
+              "Hoge intensiteit en prestatiegericht. We maken je positie agressiever voor meer snelheid, aerodynamica en directheid.",
+            tooltip:
+              "Hoge intensiteit en prestatiegericht. We maken je positie agressiever voor meer snelheid, aerodynamica en directheid.",
+          },
+          tt: {
+            label: "Tijdritten / triatlon",
+            description:
+              "Maximale aerodynamische efficiëntie. We plaatsen je lager en meer naar voren om luchtweerstand te minimaliseren en constante snelheid te maximaliseren.",
+            tooltip:
+              "Maximale aerodynamische efficiëntie. We plaatsen je lager en meer naar voren om luchtweerstand te minimaliseren en constante snelheid te maximaliseren.",
+          },
+        },
+      },
+      mtbTerrain: {
+        questionText: "Op welk terrein rijd je vooral?",
+        helpText:
+          "Het terrein waarop je rijdt heeft grote invloed op je ideale fietssetup. Gladde wegen laten een meer aerodynamische positie toe, terwijl ruw en technisch terrein meer controle en stabiliteit vraagt. Zo vinden we de juiste balans tussen comfort, controle, efficiëntie en prestaties.",
+        imageAlt: "Illustratie van fietsterrein",
+        options: {
+          asphalt: {
+            label: "Alleen asfalt",
+            tooltip:
+              "Gladde wegen maken een efficiënte en aerodynamische rijpositie mogelijk. We optimaliseren je setup voor snelheid, krachtoverdracht en minder luchtweerstand.",
+          },
+          paved: {
+            label: "Verharde wegen en lichte gravel",
+            tooltip:
+              "Gemengde ondergrond vraagt om een balans tussen comfort en efficiëntie. We vergroten de stabiliteit licht zonder snelheid te verliezen.",
+          },
+          xc: {
+            label: "Cross-country (vloeiende trails, klimmen)",
+            tooltip:
+              "Klimmen en lichte trails vragen om efficiënte krachtoverdracht en controle. We combineren stabiliteit met een positie voor langdurige inspanning.",
+          },
+          trail: {
+            label: "Trail (wisselend terrein, licht technisch)",
+            tooltip:
+              "Oneffen en technisch terrein vraagt om meer controle en flexibiliteit. We passen je positie aan voor betere handling en stabiliteit in afdalingen.",
+          },
+          enduro: {
+            label: "Enduro (technische afdalingen, flinke beklimmingen)",
+            tooltip:
+              "Steile afdalingen en ruw terrein vragen om een stabiele en zelfverzekerde positie. We geven prioriteit aan controle en schokabsorptie boven aerodynamica.",
+          },
+          dh: {
+            label: "Downhill / bikepark",
+            tooltip:
+              "Afdalingen op hoge snelheid en sprongen vragen om maximale controle en veiligheid. We optimaliseren je setup voor stabiliteit, impactabsorptie en handling.",
+          },
+        },
+      },
       multiChoice: {
         legend: "Selecteer alles wat van toepassing is",
       },
@@ -1089,6 +1274,7 @@ const nl = {
           aboutTitle: "Over dit rapport",
           aboutBody:
             "Dit rapport vertaalt je fitsessie naar een helder aanpasplan dat je op de fiets kunt gebruiken of kunt bespreken met een fitter of fietsenwinkel.",
+          actionsTitle: "Rapportacties",
           aboutBullets: [
             "Volg de volgorde stap voor stap.",
             "Valideer elke wijziging tijdens een echte rit.",
@@ -1097,6 +1283,22 @@ const nl = {
           ] as string[],
           coverSupport:
             "Ontwikkeld om je huidige setup met duidelijkere vervolgstappen te beoordelen.",
+          fitPassActivated:
+            "Fit Pass geactiveerd. Je volledige rapport is nu beschikbaar.",
+          summaryTitle: "Samenvatting",
+          summaryFullAccess:
+            "Je volledige rapport staat klaar, inclusief de gedetailleerde aanpasvolgorde en validatiestappen.",
+          summaryLimited:
+            "Je ziet nu de belangrijkste fitgetallen. Extra rapportacties blijven beschikbaar via Fit Pass of Pro.",
+          unlockTitle: "Volledig rapport ontgrendelen",
+          unlockDescription:
+            "De gratis weergave laat je belangrijkste getallen en prioriteiten zien. Fit Pass voegt de complete aanpasvolgorde, PDF-download, e-mailrapport en validatieplan toe.",
+          unlockItems: [
+            "Gedetailleerde fittabel",
+            "Volledige aanpasvolgorde",
+            "Bandenspanning en waarschuwingen",
+            "14-daags validatieplan",
+          ] as string[],
         },
         sections: {
           about: "Over je rapport",
@@ -1135,6 +1337,9 @@ const nl = {
           torsoLength: "Torso",
           shoulderWidth: "Schouderbreedte",
           bmi: "BMI",
+          frameStack: "Stack",
+          frameReach: "Reach",
+          frameEffectiveTopTube: "ETT",
           bmiCategories: {
             underweight: "Ondergewicht",
             normal: "Gezond gewicht",
@@ -1255,6 +1460,11 @@ const nl = {
           quickStartTitle: "Snelle startschatting",
           quickStartNote:
             "Niet gepersonaliseerd. Respecteer altijd de maximale druk van band en velg.",
+          quickStartColumns: {
+            weight: "Gewicht",
+            tireSize: "Bandmaat",
+            psi: "PSI",
+          },
           confidence: "Zekerheid bandenspanning",
           front: "Voor",
           rear: "Achter",
@@ -1282,6 +1492,14 @@ const nl = {
             looseGravel: "Los gravel",
             trail: "Trail",
           },
+        },
+        paywall: {
+          emailUpgradeToast:
+            "Fit Pass of Pro is nodig om het volledige rapport te e-mailen.",
+          emailUpgradeButton: "E-mail rapport - Fit Pass",
+          pdfUpgradeToast:
+            "Fit Pass of Pro is nodig om je PDF te downloaden.",
+          pdfUpgradeButton: "PDF - Fit Pass of Pro",
         },
         validationPlan: {
           dayBlock: "Dagblok",

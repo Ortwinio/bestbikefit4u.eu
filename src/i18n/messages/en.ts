@@ -5,6 +5,7 @@ const en = {
     language: "Language",
     english: "English",
     dutch: "Dutch",
+    skipToContent: "Skip to main content",
   },
   nav: {
     brand: BRAND.name,
@@ -984,6 +985,190 @@ const en = {
           },
         },
       },
+      currentPositionFeeling: {
+        questionText: "How does your current bike position feel?",
+        helpText:
+          "Small discomforts often indicate misalignment in your setup. By identifying these early, we can adjust key parameters like reach, handlebar height, and saddle position to improve comfort and performance. Select all that apply — if you don't have a current bike, choose 'Skip this step'.",
+        imageAlt: "Illustration of comfortable versus uncomfortable cycling positions",
+        orDivider: "or describe what feels off",
+        options: {
+          good: {
+            label: "Generally good, minor tweaks needed",
+            subtitle: "Minor adjustments needed",
+            tooltip:
+              "Your position feels mostly comfortable with small improvements possible.",
+          },
+          no_bike: {
+            label: "Skip this step",
+            subtitle:
+              "We'll base your fit entirely on your body measurements and riding profile.",
+            tooltip:
+              "We'll base your fit entirely on your body measurements and riding profile.",
+          },
+          too_stretched: {
+            label: "Too stretched out - reaching too far",
+            subtitle: "Too long a reach",
+            tooltip:
+              "Your arms, neck, or lower back may feel overstretched on longer rides.",
+          },
+          too_compact: {
+            label: "Too compact - feel cramped",
+            subtitle: "Feeling cramped or too upright",
+            tooltip:
+              "Your position may limit breathing, comfort, or power output.",
+          },
+          too_low: {
+            label: "Handlebars feel too low",
+            subtitle: "Too much pressure on hands or back",
+            tooltip:
+              "You may feel strain in your neck, shoulders, or lower back.",
+          },
+          too_high: {
+            label: "Handlebars feel too high",
+            subtitle: "Not enough forward position",
+            tooltip:
+              "You may feel less efficient or lack front-end control.",
+          },
+          saddle_too_high: {
+            label: "Saddle feels too high",
+            subtitle: "Possible hip rocking",
+            tooltip:
+              "A saddle that's too high causes the hips to rock, stresses the knees, and reduces power transfer.",
+          },
+          saddle_too_low: {
+            label: "Saddle feels too low",
+            subtitle: "Increased knee strain",
+            tooltip:
+              "A saddle that's too low compresses the knee joint and limits full leg extension.",
+          },
+        },
+      },
+      climbingProfile: {
+        questionText: "Would you like a climbing-specific fit profile?",
+        helpText:
+          "A climbing profile gives you a second set of recommendations optimised for seated climbing efficiency — adjusted saddle height, setback, and handlebar position.",
+        imageAlt: "Climbing cyclist illustration",
+        options: {
+          yes: {
+            label: "Yes, add a climbing profile",
+            tooltip:
+              "We'll calculate a second set of measurements optimised for seated climbing — adjusted saddle height, setback, and handlebar position to improve efficiency on climbs.",
+          },
+          no: {
+            label: "No, standard fit only",
+            tooltip:
+              "We'll provide a single all-round fit profile based on your measurements and riding preferences.",
+          },
+        },
+      },
+      climbingImportance: {
+        questionText: "How important is climbing in your riding?",
+        helpText:
+          "Climbing changes how your body interacts with the bike. We adjust your position to improve efficiency, comfort, and control on long or steep climbs.",
+        options: {
+          rarely: {
+            label: "Rarely climb",
+            tooltip:
+              "On flat terrain, we can optimize your position for aerodynamics and speed with a lower and more stretched setup.",
+          },
+          occasional: {
+            label: "Occasional climbs",
+            tooltip:
+              "A balanced position helps you stay efficient on flats while remaining comfortable on short climbs.",
+          },
+          regular: {
+            label: "Regular climbing",
+            tooltip:
+              "Climbing requires efficient power transfer and comfort in a more upright position. We adjust your setup to reduce strain during sustained efforts.",
+          },
+          climbing_focused: {
+            label: "Climbing-focused",
+            tooltip:
+              "Long climbs demand an open hip angle and stable posture. We optimize your position for seated climbing efficiency and reduced fatigue.",
+          },
+        },
+      },
+      roadRidingType: {
+        questionText: "What type of road riding do you primarily do?",
+        helpText:
+          "Your riding type influences how aggressive and aerodynamic your position should be. We use this to tailor your setup for comfort, efficiency, or maximum performance.",
+        imageAlt: "Type of riding illustration",
+        options: {
+          casual: {
+            label: "Casual rides and fitness",
+            description:
+              "Focused on comfort and enjoyment. We prioritize a more relaxed position with reduced strain on your back, neck, and hands.",
+            tooltip:
+              "Focused on comfort and enjoyment. We prioritize a more relaxed position with reduced strain on your back, neck, and hands.",
+          },
+          group: {
+            label: "Group rides and sportives",
+            description:
+              "A mix of endurance and pace. We balance comfort and efficiency to support longer rides with moderate intensity.",
+            tooltip:
+              "A mix of endurance and pace. We balance comfort and efficiency to support longer rides with moderate intensity.",
+          },
+          training: {
+            label: "Structured training",
+            description:
+              "Regular training with specific goals. We optimize your position for efficiency and power transfer while maintaining sustainability.",
+            tooltip:
+              "Regular training with specific goals. We optimize your position for efficiency and power transfer while maintaining sustainability.",
+          },
+          racing: {
+            label: "Racing (crits, road races)",
+            description:
+              "High intensity and performance-focused. We create a more aggressive position to improve speed, aerodynamics, and responsiveness.",
+            tooltip:
+              "High intensity and performance-focused. We create a more aggressive position to improve speed, aerodynamics, and responsiveness.",
+          },
+          tt: {
+            label: "Time trials / triathlon",
+            description:
+              "Maximum aerodynamic efficiency. We position you lower and more forward to minimize air resistance and maximize sustained speed.",
+            tooltip:
+              "Maximum aerodynamic efficiency. We position you lower and more forward to minimize air resistance and maximize sustained speed.",
+          },
+        },
+      },
+      mtbTerrain: {
+        questionText: "What terrain do you primarily ride?",
+        helpText:
+          "The terrain you ride has a major impact on your ideal bike setup. Smooth roads allow for a more aerodynamic position, while rough and technical terrain requires more control and stability. We use this to find the right balance between comfort, control, efficiency, and performance.",
+        imageAlt: "Bike terrain illustration",
+        options: {
+          asphalt: {
+            label: "Only asphalt",
+            tooltip:
+              "Smooth roads allow for an efficient and aerodynamic riding position. We optimize your setup for speed, power transfer, and reduced air resistance.",
+          },
+          paved: {
+            label: "Paved roads and light gravel",
+            tooltip:
+              "Mixed surfaces require a balance between comfort and efficiency. We slightly increase stability while maintaining a fast, efficient position.",
+          },
+          xc: {
+            label: "Cross-country (smooth trails, climbing)",
+            tooltip:
+              "Climbing and light trails require efficient power transfer and control. We balance stability with a position suited for sustained effort.",
+          },
+          trail: {
+            label: "Trail (varied terrain, some technical)",
+            tooltip:
+              "Uneven and technical terrain demands more control and flexibility. We adjust your position to improve handling and stability on descents.",
+          },
+          enduro: {
+            label: "Enduro (technical descents, big climbs)",
+            tooltip:
+              "Steep descents and rough terrain require a stable and confident position. We prioritize control and shock absorption over aerodynamics.",
+          },
+          dh: {
+            label: "Downhill / bike park",
+            tooltip:
+              "High-speed descents and jumps require maximum control and safety. We optimize your setup for stability, impact absorption, and handling.",
+          },
+        },
+      },
       multiChoice: {
         legend: "Select all that apply",
       },
@@ -1082,6 +1267,7 @@ const en = {
           aboutTitle: "About this report",
           aboutBody:
             "This report translates your fit session into a clear adjustment plan you can use on the bike or review with a fitter or bike shop.",
+          actionsTitle: "Report actions",
           aboutBullets: [
             "Follow the sequence one step at a time.",
             "Validate each change during a real ride.",
@@ -1090,6 +1276,22 @@ const en = {
           ] as string[],
           coverSupport:
             "Built to help you review your current setup with clearer next steps.",
+          fitPassActivated:
+            "Fit Pass activated. Your full report is now available.",
+          summaryTitle: "Summary",
+          summaryFullAccess:
+            "Your full report is ready, including the detailed adjustment sequence and validation steps.",
+          summaryLimited:
+            "You are seeing the core fit numbers now. Additional report actions remain available through Fit Pass or Pro.",
+          unlockTitle: "Unlock the full report",
+          unlockDescription:
+            "The free view shows your core numbers and priorities. Fit Pass adds the full adjustment sequence, PDF download, email report, and validation plan.",
+          unlockItems: [
+            "Detailed fit table",
+            "Full adjustment sequence",
+            "Tire pressure and warnings",
+            "14-day validation plan",
+          ] as string[],
         },
         sections: {
           about: "About your report",
@@ -1128,6 +1330,9 @@ const en = {
           torsoLength: "Torso length",
           shoulderWidth: "Shoulder width",
           bmi: "BMI",
+          frameStack: "Stack",
+          frameReach: "Reach",
+          frameEffectiveTopTube: "ETT",
           bmiCategories: {
             underweight: "Underweight",
             normal: "Healthy weight",
@@ -1247,6 +1452,11 @@ const en = {
             "Personalized tyre pressure needs rider weight, tyre setup, and surface context. Use the quick-start table only as a temporary starting point.",
           quickStartTitle: "Quick-start estimate",
           quickStartNote: "Not personalized. Always respect tyre and rim maximum limits.",
+          quickStartColumns: {
+            weight: "Weight",
+            tireSize: "Tyre size",
+            psi: "PSI",
+          },
           confidence: "Pressure confidence",
           front: "Front",
           rear: "Rear",
@@ -1274,6 +1484,14 @@ const en = {
             looseGravel: "Loose gravel",
             trail: "Trail",
           },
+        },
+        paywall: {
+          emailUpgradeToast:
+            "Fit Pass or Pro is required to email the full report.",
+          emailUpgradeButton: "Email report - Fit Pass",
+          pdfUpgradeToast:
+            "Fit Pass or Pro is required to download your PDF.",
+          pdfUpgradeButton: "PDF - Fit Pass or Pro",
         },
         validationPlan: {
           dayBlock: "Day block",
