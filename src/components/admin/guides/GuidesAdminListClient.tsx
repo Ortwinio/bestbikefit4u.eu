@@ -26,6 +26,14 @@ import {
 
 type GuideRow = PaginatedQueryItem<typeof api.guides.queries.listGuides>;
 
+function getGuideTitle(guide: GuideRow) {
+  return guide.localized?.pageTitle || guide.pageTitle?.en || guide.slug;
+}
+
+function getGuideH1(guide: GuideRow) {
+  return guide.localized?.h1 || guide.h1?.en || "";
+}
+
 export function GuidesAdminListClient({
   canManageRedirects,
 }: {
@@ -53,11 +61,11 @@ export function GuidesAdminListClient({
     }
 
     return results.filter((guide) => {
-      const localizedTitle = guide.localized?.pageTitle ?? guide.pageTitle.en;
+      const localizedTitle = getGuideTitle(guide);
       return (
         guide.slug.toLowerCase().includes(normalized) ||
         localizedTitle.toLowerCase().includes(normalized) ||
-        guide.cluster.toLowerCase().includes(normalized)
+        (guide.cluster ?? "").toLowerCase().includes(normalized)
       );
     });
   }, [deferredSearch, results]);
@@ -174,16 +182,16 @@ export function GuidesAdminListClient({
                 <AdminTableRow key={String(guide._id)}>
                   <AdminTableCell className="font-medium">
                     <div className="space-y-1">
-                      <div>{guide.localized?.pageTitle ?? guide.pageTitle.en}</div>
+                      <div>{getGuideTitle(guide)}</div>
                       <div className="text-xs text-[color:var(--muted-foreground)]">
-                        {guide.h1.en || "No H1 yet"}
+                        {getGuideH1(guide) || "No H1 yet"}
                       </div>
                     </div>
                   </AdminTableCell>
                   <AdminTableCell>
                     <code className="text-xs">{guide.slug}</code>
                   </AdminTableCell>
-                  <AdminTableCell>{guide.cluster}</AdminTableCell>
+                  <AdminTableCell>{guide.cluster ?? "Unassigned"}</AdminTableCell>
                   <AdminTableCell>
                     <AdminStatusPill tone={guideStatusTone(guide.status)}>
                       {formatGuideStatusLabel(guide.status)}

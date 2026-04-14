@@ -8,6 +8,13 @@ import {
   sortGuidesByUpdatedAtDesc,
 } from "./shared";
 
+function readLocalizedField(
+  value: { en?: string | null; nl?: string | null } | undefined,
+  locale: "en" | "nl"
+) {
+  return value?.[locale] ?? "";
+}
+
 export const getPublishedGuide = query({
   args: {
     slug: v.string(),
@@ -85,11 +92,11 @@ export const listGuides = query({
       ...guide,
       localized: args.locale
         ? {
-            pageTitle: guide.pageTitle[args.locale],
-            h1: guide.h1[args.locale],
-            metaTitle: guide.metaTitle[args.locale],
-            metaDescription: guide.metaDescription[args.locale],
-            pageBrief: guide.pageBrief[args.locale],
+            pageTitle: readLocalizedField(guide.pageTitle, args.locale),
+            h1: readLocalizedField(guide.h1, args.locale),
+            metaTitle: readLocalizedField(guide.metaTitle, args.locale),
+            metaDescription: readLocalizedField(guide.metaDescription, args.locale),
+            pageBrief: readLocalizedField(guide.pageBrief, args.locale),
           }
         : undefined,
     }));
