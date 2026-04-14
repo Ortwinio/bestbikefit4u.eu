@@ -1327,7 +1327,7 @@ export const listAdminFeatureFlags = getFeatureFlags;
 export const listAdminMarketingShowcaseBikes = query({
   args: {},
   handler: async (ctx) => {
-    await requireBikeRead(ctx);
+    await requireAnyRole(ctx, ["super_admin", "ops_admin", "fit_specialist", "geometry_manager", "analyst"]);
 
     const bikes = await ctx.db.query("bikes").collect();
 
