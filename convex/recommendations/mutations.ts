@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import type { Id } from "../_generated/dataModel";
 import { internal } from "../_generated/api";
 import { requireSessionOwner, requireUserId } from "../lib/authz";
+import { getDefaultEngineVersion } from "../lib/engineVersion";
 import { mapBikeCategory, mapAmbition } from "./inputMapping";
 import type { ClimbingLevel } from "../lib/fitAlgorithm";
 import { buildBikeRoleBias } from "./bikeRoleBias";
@@ -20,6 +21,7 @@ export const generate = mutation({
   },
   handler: async (ctx, args) => {
     const { userId, session } = await requireSessionOwner(ctx, args.sessionId);
+    const baselineEngineVersion = session.engineVersion ?? getDefaultEngineVersion();
 
     // Return early if recommendation already exists
     const existingRecommendationId = await getExistingRecommendationId(
@@ -172,6 +174,7 @@ export const generate = mutation({
         ambition,
         advisoryNotes,
         painPoints: session.painPoints,
+        baselineEngineVersion,
         frameStackMm,
         frameReachMm,
         experienceLevel,

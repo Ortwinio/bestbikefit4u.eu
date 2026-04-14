@@ -75,6 +75,11 @@ export const generateFromData = internalAction({
       )
     ),
     advisoryNotes: v.optional(v.array(v.string())),
+    baselineEngineVersion: v.union(
+      v.literal("v1"),
+      v.literal("v2_shadow"),
+      v.literal("v2")
+    ),
 
     // Optional bike geometry
     frameStackMm: v.optional(v.number()),
@@ -173,6 +178,7 @@ export const generateFromData = internalAction({
           frameStackMm: args.frameStackMm,
           frameReachMm: args.frameReachMm,
           experienceLevel: args.experienceLevel,
+          baselineEngineVersion: args.baselineEngineVersion,
           baselineSnapshot: seed.comparisonSnapshot,
         }
       );
@@ -209,6 +215,11 @@ export const runShadowComparison = internalAction({
       v.literal("balanced"),
       v.literal("performance"),
       v.literal("aero")
+    ),
+    baselineEngineVersion: v.union(
+      v.literal("v1"),
+      v.literal("v2_shadow"),
+      v.literal("v2")
     ),
     frameStackMm: v.optional(v.number()),
     frameReachMm: v.optional(v.number()),
@@ -253,7 +264,7 @@ export const runShadowComparison = internalAction({
         {
           sessionId: args.sessionId,
           userId: args.userId,
-          baselineEngineVersion: "v2",
+          baselineEngineVersion: args.baselineEngineVersion,
           shadowEngineVersion: "v2_shadow",
           status: "completed",
           baselineSnapshot: args.baselineSnapshot,
@@ -270,7 +281,7 @@ export const runShadowComparison = internalAction({
         {
           sessionId: args.sessionId,
           userId: args.userId,
-          baselineEngineVersion: "v2",
+          baselineEngineVersion: args.baselineEngineVersion,
           shadowEngineVersion: "v2_shadow",
           status: "failed",
           baselineSnapshot: args.baselineSnapshot,

@@ -106,6 +106,7 @@ describe("recommendations actions advisory notes", () => {
         coreStabilityScore: 4,
         bikeCategory: "road",
         ambition: "balanced",
+        baselineEngineVersion: "v2",
         advisoryNotes: ["Imported bike suggests a performance bias."],
       }
     );
@@ -121,5 +122,38 @@ describe("recommendations actions advisory notes", () => {
     expect(storedArgs.fitNotes.some((note) => note.includes("Saddle height of"))).toBe(
       true
     );
+  });
+
+  it("passes the active baseline engine version into shadow comparisons", async () => {
+    isEngineV2ShadowEnabledMock.mockReturnValue(true);
+    const runMutation = vi.fn(async () => undefined);
+    const schedulerRunAfter = vi.fn(async () => undefined);
+    const handler = (generateFromData as unknown as { _handler: TestHandler })._handler;
+
+    await handler(
+      {
+        runMutation,
+        scheduler: { runAfter: schedulerRunAfter },
+      },
+      {
+        sessionId: "session_1",
+        userId: "user_1",
+        heightCm: 180,
+        inseamCm: 83,
+        flexibilityScore: "good",
+        coreStabilityScore: 4,
+        bikeCategory: "road",
+        ambition: "balanced",
+        baselineEngineVersion: "v1",
+      }
+    );
+
+    expect(schedulerRunAfter).toHaveBeenCalledTimes(1);
+    const scheduledArgs = (schedulerRunAfter.mock.calls[0] as unknown as [
+      number,
+      unknown,
+      { baselineEngineVersion: string }
+    ])[2];
+    expect(scheduledArgs.baselineEngineVersion).toBe("v1");
   });
 });

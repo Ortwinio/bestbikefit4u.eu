@@ -2,6 +2,7 @@ import { internalMutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import type { Id } from "../_generated/dataModel";
 import { internal } from "../_generated/api";
+import { getDefaultEngineVersion } from "../lib/engineVersion";
 import { computePressureInsights } from "../lib/pressureFitInteraction";
 
 async function getExistingRecommendationId(
@@ -133,14 +134,21 @@ export const storeResult = internalMutation({
       bike,
       profile?.weightKg
     );
+    const engineVersion = session?.engineVersion ?? getDefaultEngineVersion();
+    const sourceType =
+      engineVersion === "v2"
+        ? "engine_v2"
+        : engineVersion === "v2_shadow"
+          ? "engine_v2_shadow"
+          : "engine_v1";
 
     const recId = await ctx.db.insert("recommendations", {
       sessionId: args.sessionId,
       userId: args.userId,
       bikeId: session?.bikeId,
       bikeProfileId: session?.bikeProfileId,
-      engineVersion: session?.engineVersion ?? "v2",
-      sourceType: session?.engineVersion === "v2" ? "engine_v2" : "engine_v1",
+      engineVersion,
+      sourceType,
       comparisonSnapshot: args.comparisonSnapshot,
       recommendationItems: args.recommendationItems,
       calculatedFit: args.calculatedFit,

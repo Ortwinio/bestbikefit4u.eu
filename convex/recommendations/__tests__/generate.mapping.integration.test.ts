@@ -80,6 +80,7 @@ describe("recommendations.generate mapping integration", () => {
     expect(delay).toBe(0);
     expect(scheduledArgs.sessionId).toBe("session_1");
     expect(scheduledArgs.userId).toBe("user_1");
+    expect(scheduledArgs.baselineEngineVersion).toBe("v2");
     expect(scheduledArgs.heightCm).toBe(profile.heightCm);
     expect(scheduledArgs.inseamCm).toBe(profile.inseamCm);
     expect(scheduledArgs.flexibilityScore).toBe(profile.flexibilityScore);

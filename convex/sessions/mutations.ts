@@ -7,6 +7,7 @@ import {
   requireBikeProfileOwner,
   requireSessionOwner,
 } from "../lib/authz";
+import { getDefaultEngineVersion } from "../lib/engineVersion";
 import { validateNumberRange, validateShortString } from "../lib/validation";
 import { buildBikeRoleBias } from "../recommendations/bikeRoleBias";
 import { isRiderProfileComplete } from "../profiles/queries";
@@ -73,6 +74,7 @@ export const create = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
+    const defaultEngineVersion = getDefaultEngineVersion();
 
     let resolvedBikeId = args.bikeId;
     let snapshotBikeType = args.bikeType;
@@ -153,7 +155,7 @@ export const create = mutation({
       bikeId: resolvedBikeId,
       bikeProfileId: args.bikeProfileId,
       bikeType: snapshotBikeType,
-      engineVersion: "v2",
+      engineVersion: defaultEngineVersion,
       sourceType: args.bikeProfileId ? "bike_profile_flow" : "legacy_flow",
       status: "in_progress",
       ridingStyle: snapshotRidingStyle,

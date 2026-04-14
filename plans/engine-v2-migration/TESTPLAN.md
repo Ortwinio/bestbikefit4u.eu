@@ -165,9 +165,9 @@ Verify:
 
 ## Rollout Sign-Off Checklist
 
-- [ ] Static checks pass
-- [ ] Contract and parity tests pass
+- [x] Static checks pass
+- [x] Contract and parity tests pass
 - [ ] Schema compatibility verified on legacy-shaped data
 - [ ] Shadow mode records and reports deltas correctly
 - [ ] Manual dashboard fit flow verified
-- [ ] Rollback path documented before default cutover
+- [x] Rollback path documented before default cutover

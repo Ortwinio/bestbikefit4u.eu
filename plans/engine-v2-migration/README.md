@@ -144,13 +144,13 @@ Make v2 the default recommendation path after shadow metrics, QA, and rollback c
 
 ## Acceptance Criteria
 
-- [ ] A new `plans/engine-v2-migration/` folder contains an executable repo-aligned plan
-- [ ] Every phase has a discrete prompt file with scope and exit criteria
-- [ ] The migration plan maps to the current Convex and Next.js modules in this repo
-- [ ] Legacy recommendations and sessions are explicitly preserved in the migration strategy
-- [ ] Shadow-mode comparison and rollout gates are defined concretely
-- [ ] Feature-flag boundaries are defined for dynamic validation and learning
-- [ ] `plans/engine-v2-migration/TESTPLAN.md` exists and covers static, migration, shadow, and manual validation
+- [x] A new `plans/engine-v2-migration/` folder contains an executable repo-aligned plan
+- [x] Every phase has a discrete prompt file with scope and exit criteria
+- [x] The migration plan maps to the current Convex and Next.js modules in this repo
+- [x] Legacy recommendations and sessions are explicitly preserved in the migration strategy
+- [x] Shadow-mode comparison and rollout gates are defined concretely
+- [x] Feature-flag boundaries are defined for dynamic validation and learning
+- [x] `plans/engine-v2-migration/TESTPLAN.md` exists and covers static, migration, shadow, and manual validation
 
 ## Prompt Index
 
@@ -177,4 +177,4 @@ Make v2 the default recommendation path after shadow metrics, QA, and rollback c
 - [x] 07 — UX rollout
 - [x] 08 — Dynamic validation beta
 - [x] 09 — Feedback loop beta
-- [ ] 10 — Default v2 cutover
+- [x] 10 — Default v2 cutover

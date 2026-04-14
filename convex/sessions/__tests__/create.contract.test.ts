@@ -81,6 +81,7 @@ describe("sessions.create contract", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    delete process.env.ENGINE_VERSION_DEFAULT;
   });
 
   it("persists explicit bikeType in fit session", async () => {
@@ -160,6 +161,29 @@ describe("sessions.create contract", () => {
         ridingStyle: "fitness",
         primaryGoal: "balanced",
         sourceType: "bike_profile_flow",
+      })
+    );
+  });
+
+  it("supports rollback by creating new sessions as v1 when the env switch is set", async () => {
+    process.env.ENGINE_VERSION_DEFAULT = "v1";
+    getAuthUserIdMock.mockResolvedValue("user_1");
+    const ctx = makeCtx({
+      profile: completeProfile,
+      bike: null,
+    });
+
+    const handler = (create as unknown as { _handler: TestHandler })._handler;
+    await handler(ctx, {
+      bikeType: "gravel",
+      ridingStyle: "touring",
+      primaryGoal: "balanced",
+    });
+
+    expect(ctx.db.insert).toHaveBeenCalledWith(
+      "fitSessions",
+      expect.objectContaining({
+        engineVersion: "v1",
       })
     );
   });

@@ -39,20 +39,12 @@ Per `output-06-shadow-mode-and-calibration.md`: the shadow runner currently uses
 
 ## Rollback Procedure
 
-**To revert without a code deploy** — this is not possible with the current implementation; the version is hardcoded. If an emergency rollback is needed before the next deploy:
+Rollback can now be done without a code change:
 
-1. Revert the single line in `convex/sessions/mutations.ts`:
-   ```ts
-   engineVersion: "v1",
-   ```
-2. Revert `internalMutations.ts` to:
-   ```ts
-   engineVersion: session?.engineVersion ?? "v1",
-   sourceType: "engine_v1",
-   ```
-3. Deploy to Convex (`npx convex deploy`). Sessions created between the cutover and rollback will have `engineVersion: "v2"` in the DB; they remain readable — the recommendation query does not filter by engine version.
-
-**Future improvement**: add a Convex environment variable (`ENGINE_VERSION_DEFAULT`) so rollback can be done without a code change, following the same pattern as `ENGINE_V2_SHADOW_ENABLED`.
+1. Set `ENGINE_VERSION_DEFAULT=v1` in the active environment.
+2. Deploy the updated environment to Convex.
+3. Verify a newly created `fitSessions` record stores `engineVersion: "v1"`.
+4. Leave existing `v2` sessions and recommendations in place; they remain readable because recommendation reads are not filtered by engine version.
 
 ## Validation Summary
 
