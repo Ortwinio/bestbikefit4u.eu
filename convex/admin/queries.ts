@@ -1323,3 +1323,51 @@ export const listAdminGdprRequests = listGdprRequests;
 export const getAdminGdprRequestDetail = getGdprRequestDetail;
 export const listAdminAuditLogs = listAuditLogs;
 export const listAdminFeatureFlags = getFeatureFlags;
+
+export const listAdminMarketingShowcaseBikes = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireBikeRead(ctx);
+
+    const bikes = await ctx.db.query("bikes").order("desc").take(200);
+
+    const showcaseCandidates = bikes.filter(
+      (b) =>
+        b.brand &&
+        b.model &&
+        (b.geometryRecordId || (b.currentGeometry?.stackMm && b.currentGeometry?.reachMm))
+    );
+
+    return Promise.all(
+      showcaseCandidates.map(async (bike) => {
+        const primaryPhoto = await ctx.db
+          .query("bikePhotos")
+          .withIndex("by_bike_primary", (q) =>
+            q.eq("bikeId", bike._id).eq("isPrimary", true)
+          )
+          .first();
+
+        const photoStorageId = primaryPhoto?.storageId ?? bike.photoUrl ?? null;
+
+        const geometryRecord = bike.geometryRecordId
+          ? await ctx.db.get(bike.geometryRecordId)
+          : null;
+
+        return {
+          _id: bike._id,
+          name: bike.name,
+          brand: bike.brand ?? null,
+          model: bike.model ?? null,
+          bikeType: bike.bikeType,
+          photoStorageId,
+          marketingEligible: bike.marketingEligible ?? false,
+          marketingEligibleAt: bike.marketingEligibleAt ?? null,
+          imageModerated: bike.imageModerated ?? false,
+          hasGeometry: Boolean(bike.geometryRecordId),
+          geometryStatus: geometryRecord?.status ?? null,
+          updatedAt: bike.updatedAt,
+        };
+      })
+    );
+  },
+});

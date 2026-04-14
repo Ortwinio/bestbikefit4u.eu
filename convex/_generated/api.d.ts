@@ -11,6 +11,7 @@
 import type * as admin_actions from "../admin/actions.js";
 import type * as admin_audit from "../admin/audit.js";
 import type * as admin_authz from "../admin/authz.js";
+import type * as admin_bikeMarketing from "../admin/bikeMarketing.js";
 import type * as admin_bootstrap from "../admin/bootstrap.js";
 import type * as admin_mutations from "../admin/mutations.js";
 import type * as admin_overviewSeries from "../admin/overviewSeries.js";
@@ -35,6 +36,7 @@ import type * as bikes_description from "../bikes/description.js";
 import type * as bikes_mutations from "../bikes/mutations.js";
 import type * as bikes_passport from "../bikes/passport.js";
 import type * as bikes_publicFit from "../bikes/publicFit.js";
+import type * as bikes_publicQueries from "../bikes/publicQueries.js";
 import type * as bikes_queries from "../bikes/queries.js";
 import type * as caseStudyLeads_emails from "../caseStudyLeads/emails.js";
 import type * as caseStudyLeads_mutations from "../caseStudyLeads/mutations.js";
@@ -134,6 +136,7 @@ declare const fullApi: ApiFromModules<{
   "admin/actions": typeof admin_actions;
   "admin/audit": typeof admin_audit;
   "admin/authz": typeof admin_authz;
+  "admin/bikeMarketing": typeof admin_bikeMarketing;
   "admin/bootstrap": typeof admin_bootstrap;
   "admin/mutations": typeof admin_mutations;
   "admin/overviewSeries": typeof admin_overviewSeries;
@@ -158,6 +161,7 @@ declare const fullApi: ApiFromModules<{
   "bikes/mutations": typeof bikes_mutations;
   "bikes/passport": typeof bikes_passport;
   "bikes/publicFit": typeof bikes_publicFit;
+  "bikes/publicQueries": typeof bikes_publicQueries;
   "bikes/queries": typeof bikes_queries;
   "caseStudyLeads/emails": typeof caseStudyLeads_emails;
   "caseStudyLeads/mutations": typeof caseStudyLeads_mutations;

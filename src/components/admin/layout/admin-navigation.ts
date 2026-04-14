@@ -73,6 +73,12 @@ export const adminNavigationGroups: AdminNavigationGroup[] = [
         description: "Owned bikes and geometry links",
         icon: Bike,
       },
+      {
+        label: "Marketing Showcase",
+        href: "/admin/bikes/marketing-showcase",
+        description: "Homepage bike carousel management",
+        icon: Bike,
+      },
     ],
   },
   {

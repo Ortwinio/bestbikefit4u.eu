@@ -631,6 +631,12 @@ export default defineSchema({
     notes: v.optional(v.string()),
     geometryRecordId: v.optional(v.id("geometry_records")),
 
+    marketingEligible: v.optional(v.boolean()),
+    marketingEligibleAt: v.optional(v.number()),
+    marketingEligibleBy: v.optional(v.id("users")),
+    imageModerated: v.optional(v.boolean()),
+    imageModerationAt: v.optional(v.number()),
+
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -640,7 +646,8 @@ export default defineSchema({
     .index("by_user_imported_from_passport", ["userId", "importedFromBikePassportId"])
     .index("by_geometry_record", ["geometryRecordId"])
     .index("by_bike_import", ["bikeImportId"])
-    .index("by_strava_gear", ["stravaGearId"]),
+    .index("by_strava_gear", ["stravaGearId"])
+    .index("by_marketing_eligible", ["marketingEligible"]),
 
   bikeActivities: defineTable({
     userId: v.id("users"),

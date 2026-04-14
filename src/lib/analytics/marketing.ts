@@ -56,6 +56,11 @@ export const MARKETING_EVENT_TYPES = [
   "bike_public_fit_rate_limited",
   "bike_public_fit_quick_match_completed",
   "bike_public_fit_signup_cta_clicked",
+  "bike_showcase_section_view",
+  "bike_showcase_card_click",
+  "bike_showcase_modal_open",
+  "bike_showcase_cta_click",
+  "bike_showcase_nav_click",
 ] as const;
 
 export type MarketingEventType = (typeof MARKETING_EVENT_TYPES)[number];

@@ -15,6 +15,7 @@ import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { QuotesCarousel } from "@/components/home/QuotesCarousel";
+import { BikeShowcaseSection } from "@/components/home/BikeShowcaseSection";
 import { BikeQuickCheckCard } from "@/components/public/BikeQuickCheckCard";
 import { CalculatorLogo } from "@/components/public/CalculatorLogo";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -42,6 +43,8 @@ import {
   HOME_QUOTES_DISPLAY_COUNT,
   selectRandomHomeQuotesForLocale,
 } from "@/content/homeQuotes";
+
+export const revalidate = 3600;
 
 const featureIcons = [Ruler, Target, FileText, Bike, Activity, Shield];
 const reasonsIcons = [Activity, Target, Bike, Shield, FileText];
@@ -378,6 +381,7 @@ export default async function HomePage() {
         </div>
       </section>
       <QuotesCarousel locale={locale} quotes={randomHomeQuotes} />
+      <BikeShowcaseSection locale={locale} copy={home.bikeShowcase} />
 
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
