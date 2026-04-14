@@ -1329,7 +1329,7 @@ export const listAdminMarketingShowcaseBikes = query({
   handler: async (ctx) => {
     await requireBikeRead(ctx);
 
-    const bikes = await ctx.db.query("bikes").order("desc").take(200);
+    const bikes = await ctx.db.query("bikes").collect();
 
     const showcaseCandidates = bikes.filter(
       (b) =>
