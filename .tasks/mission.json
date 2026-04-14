@@ -1,10 +1,46 @@
 {
   "_version": 1,
-  "title": "Make BestBikeFit4U a clear, conversion-focused cycling SaaS built only from approved Prototyper UI patterns on public website pages: lead visitors to first value before signup, strengthen trust and proof on high-intent pages, unify icons and light/dark/system theme behavior, eliminate non-Prototyper UI usage on website pages, remove dead code, keep the codebase clean, and meet modern web security standards with validated mobile/desktop UX and intact analytics.",
-  "description": "",
+  "title": "CMS Guide Pages \u2014 database-backed content management, batch JSON import, and conversion-optimised page template",
+  "description": "Move guide page content from hardcoded TypeScript to a Convex-backed CMS. Batch import 62 JSON files from docs/cms-import. Standard Markdown-rendered page template with hero image and four conversion zones. Visitor-to-account conversion strategy with funnel-aware CTAs. Goal 10. Tasks 048\u2013054. Validation: plans/feature-cms-guide-pages/testplan.md.",
   "status": "active",
   "branch": null,
-  "milestones": [],
-  "created": "2026-04-07T20:43:08.775Z",
-  "updated": "2026-04-07T20:43:08.775Z"
+  "milestones": [
+    {
+      "id": "M1",
+      "title": "Schema and backend",
+      "tasks": [
+        "048"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "M2",
+      "title": "Public routes, import, admin list",
+      "tasks": [
+        "049",
+        "050",
+        "052"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "M3",
+      "title": "Template redesign and admin edit",
+      "tasks": [
+        "051",
+        "053"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "M4",
+      "title": "Audit log, roles, QA closeout",
+      "tasks": [
+        "054"
+      ],
+      "status": "in_progress"
+    }
+  ],
+  "created": "2026-04-11T12:00:00.000Z",
+  "updated": "2026-04-13T21:00:00Z"
 }

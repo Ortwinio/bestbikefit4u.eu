@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "027",
+  "title": "Write testplan.md: acceptance tests and UX/UI validation rules",
+  "description": "",
+  "goal": null,
+  "status": "done",
+  "assignee": "Codex A",
+  "priority": 1,
+  "created": "2026-04-10T19:52:50.428Z",
+  "updated": "2026-04-10T20:01:31.594Z",
+  "tags": [],
+  "proof": {
+    "notes": "testplan.md written at plans/feature-saddle-width-calculator/testplan.md; validation contracts recorded in the artifact because this repo's tmux-ide CLI does not support validate-add subcommands"
+  },
+  "milestone": "M1",
+  "specialty": "backend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": "Acceptance and release-gate requirements now live in plans/feature-saddle-width-calculator/testplan.md and should be treated as the validation source of truth for downstream tasks."
+}

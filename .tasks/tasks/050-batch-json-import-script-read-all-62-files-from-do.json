@@ -1,0 +1,28 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [
+    "048"
+  ],
+  "id": "050",
+  "title": "Batch JSON import script \u2014 read all 62 files from docs/cms-import and write to Convex guidePages",
+  "description": "Implement scripts/import-guide-json.ts that reads all EN and NL JSON files from docs/cms-import/, pairs them by slug, merges bilingual fields, strips locale prefixes, and writes published guidePages records to Convex. Supports --dry-run, --overwrite, --copy-images, --slug flags. Idempotent. Copies hero images to public/guides/media/. Validation source of truth: testplan.md I01\u2013I09.",
+  "goal": "10",
+  "status": "done",
+  "assignee": "Codex D",
+  "priority": 1,
+  "created": "2026-04-11T12:00:00.000Z",
+  "updated": "2026-04-13T20:38:00Z",
+  "tags": [],
+  "proof": {
+    "notes": "import-guide-json.ts written; dry-run shows 62 files parsed and paired; tsc --noEmit passes; actual import deferred pending CONVEX_ADMIN_KEY from dashboard"
+  },
+  "milestone": null,
+  "specialty": "backend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

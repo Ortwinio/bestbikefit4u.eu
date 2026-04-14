@@ -1,0 +1,30 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [
+    "044",
+    "045",
+    "046"
+  ],
+  "id": "047",
+  "title": "Guide guideline alignment QA and closeout",
+  "description": "Run tsc --noEmit, verify all five structural sections present across guides, check FAQ count, verify hero intro and CTA descriptions are guide-specific, spot-check richer rendering (steps/prose/table) on at least 3 guides per cluster, run the full §16 minimum quality checklist. See plans/guide-guideline-alignment/04-qa-closeout.md.",
+  "goal": "09",
+  "status": "done",
+  "assignee": null,
+  "priority": 1,
+  "created": "2026-04-11T00:00:00.000Z",
+  "updated": "2026-04-13T20:54:38.227Z",
+  "tags": [],
+  "proof": {
+    "notes": "qa-report at plans/guide-guideline-alignment/qa-report.md; tsc passes; all sections verified"
+  },
+  "milestone": null,
+  "specialty": "qa",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": "Gate task. Do not mark done until all three content/template tasks are complete and the §16 checklist passes for a representative sample."
+}

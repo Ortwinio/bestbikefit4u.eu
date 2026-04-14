@@ -1,0 +1,29 @@
+{
+  "_version": 1,
+  "id": "032",
+  "title": "Wire footer, homepage grid, sidebar nav, sitemap, related links, and i18n",
+  "description": "Wire public navigation, homepage discoverability, dashboard sidebar, sitemap, related links, and i18n for the saddle-width feature after both public and dashboard surfaces exist.",
+  "goal": null,
+  "status": "done",
+  "assignee": "Codex A",
+  "priority": 4,
+  "created": "2026-04-10T19:52:50.788Z",
+  "updated": "2026-04-11T09:50:00Z",
+  "tags": [],
+  "proof": "Navigation/discoverability proof recorded in plans/feature-saddle-width-calculator/output-03-closeout-and-review.md; validated with `npx vitest run 'src/components/layout/DashboardSidebar.test.tsx' 'src/i18n/navigation.test.ts' 'src/app/(dashboard)/layout.test.tsx'`.",
+  "depends_on": [
+    "030",
+    "031"
+  ],
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "milestone": "M5",
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [
+    "Review found the desktop sidebar used `/dashboard/saddle-selector` instead of `/saddle-selector`, and mobile/protected-route wiring were incomplete; fixed and covered with tests."
+  ],
+  "salientSummary": "Closed with homepage/footer/sidebar/sitemap discoverability in place and route wiring corrected for desktop sidebar, mobile menu, and auth gating."
+}

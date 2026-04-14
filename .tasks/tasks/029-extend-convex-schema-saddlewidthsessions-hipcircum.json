@@ -1,0 +1,28 @@
+{
+  "_version": 1,
+  "id": "029",
+  "title": "Extend Convex schema (saddleWidthSessions, hipCircumferenceCm) and implement mutations/queries",
+  "description": "Extend the Convex schema with saddleWidthSessions and hipCircumferenceCm, then implement the public and dashboard saddle-width mutations and queries required by the plan and testplan.",
+  "goal": null,
+  "status": "done",
+  "assignee": "Codex C",
+  "priority": 2,
+  "created": "2026-04-10T19:52:50.586Z",
+  "updated": "2026-04-11T09:50:00Z",
+  "tags": [],
+  "proof": "Backend/schema proof recorded in plans/feature-saddle-width-calculator/output-03-closeout-and-review.md; payload validation hardened in convex/saddleWidth/mutations.ts and checked with `npx tsc --noEmit`.",
+  "depends_on": [
+    "027"
+  ],
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "milestone": "M2",
+  "specialty": "backend",
+  "fulfills": [],
+  "discoveredIssues": [
+    "Review found persisted saddle-width sessions trusted client payloads too loosely; fixed with mode, enum, and range validation in convex/saddleWidth/mutations.ts."
+  ],
+  "salientSummary": "Closed with schema/backend wiring in place plus backend-side validation for measurement mode, confidence/range bounds, and dashboard bike ownership enforcement."
+}

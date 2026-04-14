@@ -1,0 +1,29 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [
+    "049",
+    "050"
+  ],
+  "id": "051",
+  "title": "Guide page template redesign: Markdown renderer, hero image, quick-answer extraction, FAQ accordion, and three conversion zones",
+  "description": "Rewrite the guide page template (src/app/(public)/guides/[slug]/page.tsx) to: render libraryBody as styled Markdown via react-markdown + remark-gfm, show hero image, extract Quick Answer 3-card block and FAQ accordion from Markdown at render time, implement GuideSoftToolCta (Zone A), GuideMidPageCta (Zone B), and the closing CTA band (Zone C) with funnel-aware copy and TrackedCtaLink events. Install react-markdown and remark-gfm. Implement markdown-utils.ts with extractQuickAnswer and extractFaqs + unit tests. Validation source of truth: testplan.md T01\u2013T16, B01\u2013B05.",
+  "goal": "10",
+  "status": "done",
+  "assignee": "Codex D",
+  "priority": 1,
+  "created": "2026-04-11T12:00:00.000Z",
+  "updated": "2026-04-13T21:00:00Z",
+  "tags": [],
+  "proof": {
+    "notes": "files: src/components/content/GuideBodyMarkdown.tsx, src/components/content/GuideSoftToolCta.tsx, src/components/content/GuideMidPageCta.tsx, src/components/content/GuideFaqAccordion.tsx, src/lib/guides/markdown-utils.ts, src/lib/guides/cta-resolver.ts, src/lib/guides/markdown-utils.test.ts, src/app/(public)/guides/[slug]/page.tsx, src/app/(public)/guides/[slug]/page.test.tsx, src/app/api/preview/route.ts, src/app/api/preview-exit/route.ts; validation: npx tsc --noEmit passes; npm test passes (168 files, 585 tests); targeted vitest passes for src/lib/guides/markdown-utils.test.ts and src/app/(public)/guides/[slug]/page.test.tsx; supporting regressions fixed in src/lib/guides/content.test.ts and src/app/(public)/calculators/saddle-height/page.test.tsx"
+  },
+  "milestone": null,
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

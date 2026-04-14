@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "044",
+  "title": "Add missing structural sections to all guides (measure, adjust, warning signs, variations, recommendation)",
+  "description": "Add five missing sections to every guide in all content modules: 'How to measure', 'How to adjust', 'Warning signs', 'Variations by rider type', and 'Practical recommendation'. Each section should be specific, include concrete numbers/steps, and have both EN and NL versions. See plans/guide-guideline-alignment/01-missing-structural-sections.md.",
+  "goal": "09",
+  "status": "done",
+  "assignee": "Codex A",
+  "priority": 1,
+  "created": "2026-04-11T00:00:00.000Z",
+  "updated": "2026-04-13T20:17:29.992Z",
+  "tags": [],
+  "proof": {
+    "notes": "sections added to all content modules; tsc --noEmit passes"
+  },
+  "milestone": null,
+  "specialty": "content",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": "Largest content task. All five new sections must be specific and actionable — not generic filler. Reference the example in the prompt for the expected depth."
+}

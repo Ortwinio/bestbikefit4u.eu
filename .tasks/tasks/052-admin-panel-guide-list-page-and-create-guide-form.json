@@ -1,0 +1,28 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [
+    "048"
+  ],
+  "id": "052",
+  "title": "Admin panel: guide list page and create guide form",
+  "description": "Build the admin guide list view (/admin/guides) and the create guide form (/admin/guides/new). Three-tab layout: Content (with EN/NL subtabs, body sections editor, FAQ editor), SEO (meta fields, OG fields, live SEO checklist panel), Settings (slug with URL preview, live uniqueness check). Save as draft, submit for review. Follows existing admin panel auth and layout conventions. Validation source of truth: testplan.md A01\u2013A06.",
+  "goal": "10",
+  "status": "done",
+  "assignee": "Codex C",
+  "priority": 2,
+  "created": "2026-04-11T12:00:00.000Z",
+  "updated": "2026-04-13T20:38:00Z",
+  "tags": [],
+  "proof": {
+    "notes": "A01-A06: added /admin/guides list and /admin/guides/new create form via src/app/(dashboard)/admin/guides/page.tsx, src/app/(dashboard)/admin/guides/new/page.tsx, src/components/admin/guides/GuidesAdminListClient.tsx, src/components/admin/guides/GuideCreateView.tsx, and src/components/admin/guides/guide-admin-shared.ts; wired sidebar discovery in src/components/admin/layout/admin-navigation.ts; added route-access coverage in src/components/admin/auth/admin-route-access.ts with updated tests in src/components/admin/auth/admin-route-access.test.ts and src/components/admin/auth/admin-session.test.ts; enabled review-state transition in convex/guides/mutations.ts. Validation passed: npx vitest run src/components/admin/auth/admin-route-access.test.ts src/components/admin/auth/admin-session.test.ts; npx eslint src/components/admin/guides/GuideCreateView.tsx src/components/admin/guides/GuidesAdminListClient.tsx src/components/admin/guides/guide-admin-shared.ts src/components/admin/layout/admin-navigation.ts src/components/admin/auth/admin-route-access.ts src/components/admin/auth/admin-route-access.test.ts src/components/admin/auth/admin-session.test.ts 'src/app/(dashboard)/admin/guides/page.tsx' 'src/app/(dashboard)/admin/guides/new/page.tsx'; npx tsc --noEmit."
+  },
+  "milestone": null,
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

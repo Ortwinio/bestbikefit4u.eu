@@ -1,0 +1,28 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [
+    "048"
+  ],
+  "id": "049",
+  "title": "Public route integration: DB-first rendering, SEO metadata, JSON-LD schemas, sitemap, and redirect middleware",
+  "description": "Update guide page server components to read from Convex first and fall back to TypeScript content. generateMetadata uses CMS SEO fields. Article, FAQPage, BreadcrumbList JSON-LD generated from DB fields. XML sitemap includes all published DB guides. Redirect middleware reads the redirects table and serves 301/302s.",
+  "goal": "10",
+  "status": "done",
+  "assignee": "Codex B",
+  "priority": 1,
+  "created": "2026-04-11T12:00:00.000Z",
+  "updated": "2026-04-13T20:38:00Z",
+  "tags": [],
+  "proof": {
+    "notes": "Implemented DB-first public guide integration: added public Convex queries for published guides and redirects, added server-side guide resolution in src/lib/guides/content.ts with transparent TS fallback, updated src/app/(public)/guides/[slug]/page.tsx to read DB SEO fields and emit conditional Article/FAQ/Breadcrumb JSON-LD, updated src/app/sitemap-guides.xml/route.ts to merge published DB guides with fallback sitemap nodes, and added cached redirect lookup via src/app/api/guide-redirects/route.ts plus src/proxy.ts 60s in-memory cache. Verification completed: npx convex codegen passed and npx tsc --noEmit passed. Runtime curl proof for R01/R03-R09 is blocked from this sandbox because the configured Convex host is not reachable here (ENOTFOUND keen-ladybug-936.eu-west-1.convex.cloud) and the host-side localhost server is not reachable from the sandbox."
+  },
+  "milestone": null,
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

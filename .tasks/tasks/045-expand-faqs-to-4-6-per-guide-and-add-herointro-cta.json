@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "045",
+  "title": "Expand FAQs to 4\u20136 per guide and add heroIntro + ctaDescription fields",
+  "description": "Add 2\u20133 more FAQs per guide (reaching 4\u20136 total). Extend GuideContentLocale type with optional heroIntro and ctaDescription fields. Write heroIntro (2\u20133 sentences) and ctaDescription for every guide. Update [slug]/page.tsx to consume these fields. See plans/guide-guideline-alignment/02-faqs-hero-intro-cta.md.",
+  "goal": "09",
+  "status": "done",
+  "assignee": "Codex A",
+  "priority": 1,
+  "created": "2026-04-11T00:00:00.000Z",
+  "updated": "2026-04-13T20:38:00Z",
+  "tags": [],
+  "proof": {
+    "notes": "FAQs expanded to 4-6 per guide; heroIntro + ctaDescription added; tsc passes"
+  },
+  "milestone": null,
+  "specialty": "content",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": "Both a type change and a content task. The type change is small; the content work (heroIntro + ctaDescription for all guides, plus extra FAQs) is the bulk of the work."
+}

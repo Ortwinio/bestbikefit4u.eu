@@ -210,6 +210,22 @@ export const getGuideAdminFormOptions = query({
   },
 });
 
+export const getGuideImportStatusOverview = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireGuideEditor(ctx);
+
+    const guides = await ctx.db.query("guidePages").collect();
+    return sortGuidesByUpdatedAtDesc(guides).map((guide) => ({
+      _id: guide._id,
+      slug: guide.slug,
+      status: guide.status,
+      updatedAt: guide.updatedAt,
+      deletedAt: guide.deletedAt ?? null,
+    }));
+  },
+});
+
 export const listRedirects = query({
   args: {},
   handler: async (ctx) => {

@@ -1,0 +1,29 @@
+{
+  "_version": 1,
+  "id": "031",
+  "title": "Implement dashboard saddle selector page and SaddleSelectorForm",
+  "description": "Implement the authenticated dashboard saddle selector page and form, including profile/bike prefill, optional sections, result cards, save flow, and history behavior defined in the plan and testplan.",
+  "goal": null,
+  "status": "done",
+  "assignee": "Codex C",
+  "priority": 3,
+  "created": "2026-04-10T19:52:50.721Z",
+  "updated": "2026-04-11T09:50:00Z",
+  "tags": [],
+  "proof": "Dashboard form proof recorded in plans/feature-saddle-width-calculator/output-03-closeout-and-review.md; validated with `npx vitest run 'src/app/(dashboard)/saddle-selector/SaddleSelectorForm.test.ts' 'src/app/(dashboard)/saddle-selector/SaddleSelectorForm.test.tsx'`.",
+  "depends_on": [
+    "028",
+    "029"
+  ],
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "milestone": "M4",
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [
+    "Review found a bike-selection mismatch between derived defaults and saved bikeId; fixed so the selected bike now drives both the defaults and the save payload."
+  ],
+  "salientSummary": "Closed with dashboard prefill/save/history behavior verified and focused regression tests added for bike selection, bikeId hydration, and safe unbound saves."
+}

@@ -1,0 +1,28 @@
+{
+  "_version": 1,
+  "id": "028",
+  "title": "Implement saddle-width-engine (config, types, width-engine, suitability-engine, unit tests)",
+  "description": "Implement the pure saddle-width calculation engine described in plans/feature-saddle-width-calculator/02-saddle-width-engine.md and prove it against the canonical engine cases in testplan.md.",
+  "goal": null,
+  "status": "done",
+  "assignee": "Codex B",
+  "priority": 2,
+  "created": "2026-04-10T19:52:50.503Z",
+  "updated": "2026-04-11T09:50:00Z",
+  "tags": [],
+  "proof": "Engine implementation and review closeout recorded in plans/feature-saddle-width-calculator/output-03-closeout-and-review.md; validated with `npx vitest run 'src/lib/saddle-width-engine/width-engine.test.ts'` and `npx tsc --noEmit`.",
+  "depends_on": [
+    "027"
+  ],
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "milestone": "M2",
+  "specialty": "backend",
+  "fulfills": [],
+  "discoveredIssues": [
+    "Review found an accidental clamp to the highest marketed saddle bin; fixed to match the testplan's high-end recommendation behavior."
+  ],
+  "salientSummary": "Closed with engine range alignment, high-end recommendation behavior restored to the documented contract, and strengthened boundary coverage in src/lib/saddle-width-engine/width-engine.test.ts."
+}

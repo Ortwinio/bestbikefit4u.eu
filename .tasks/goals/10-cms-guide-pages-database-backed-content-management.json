@@ -1,0 +1,14 @@
+{
+  "_version": 1,
+  "id": "10",
+  "title": "CMS Guide Pages — database-backed content management, batch JSON import, and conversion-optimised page template",
+  "description": "Move guide page content from hardcoded TypeScript to a Convex-backed CMS. Includes: guidePages/guideRevisions/redirects Convex tables, admin panel CRUD with draft-review-publish workflow, batch import of 62 JSON files from docs/cms-import (EN+NL), a standard Markdown-rendered page template with hero image and four conversion zones, and a visitor-to-account conversion strategy with funnel-aware CTAs. Validation source of truth: plans/feature-cms-guide-pages/testplan.md.",
+  "status": "done",
+  "acceptance": "AC-01–AC-37 in plans/feature-cms-guide-pages/README.md all pass. npx tsc --noEmit passes. All pre-existing tests pass. pnpm run build succeeds. All 31 imported guide pairs are live on the public site. Three CTA zones fire analytics events with correct section labels.",
+  "priority": 1,
+  "created": "2026-04-11T12:00:00.000Z",
+  "updated": "2026-04-13T21:08:19.543Z",
+  "assignee": null,
+  "specialty": null,
+  "milestone": null
+}

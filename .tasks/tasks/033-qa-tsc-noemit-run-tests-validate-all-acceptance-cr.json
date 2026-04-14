@@ -1,0 +1,32 @@
+{
+  "_version": 1,
+  "id": "033",
+  "title": "QA: tsc --noEmit, run tests, validate all acceptance criteria, record proof in repo artifact",
+  "description": "Run the final feature QA pass against plans/feature-saddle-width-calculator/testplan.md, capture browser/schema/test evidence, and record the closeout in a repo artifact instead of a tmux-ide validation registry.",
+  "goal": null,
+  "status": "done",
+  "assignee": "Codex A",
+  "priority": 5,
+  "created": "2026-04-10T19:52:50.855Z",
+  "updated": "2026-04-11T09:50:00Z",
+  "tags": [],
+  "proof": "Final QA evidence recorded in plans/feature-saddle-width-calculator/output-03-closeout-and-review.md; verified with `npx tsc --noEmit` and the focused Vitest suite listed in that artifact.",
+  "depends_on": [
+    "028",
+    "029",
+    "030",
+    "031",
+    "032"
+  ],
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "milestone": "M6",
+  "specialty": "backend",
+  "fulfills": [],
+  "discoveredIssues": [
+    "Parallel review surfaced engine, dashboard selection, and routing gaps; all were either fixed or explicitly resolved against the written testplan in the closeout artifact."
+  ],
+  "salientSummary": "Closed with a durable QA artifact under plans/feature-saddle-width-calculator/, green typecheck, and focused regression coverage across engine, public, dashboard, and navigation slices."
+}

@@ -1,0 +1,29 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [
+    "051",
+    "053"
+  ],
+  "id": "054",
+  "title": "Audit log, Convex-level role enforcement, SEO checklist wiring, and full QA closeout",
+  "description": "Implement guideAuditLog Convex table and write audit records for all state-changing mutations. Add mutation-level role enforcement (not just UI) for publish, unpublish, changeSlug, and createRedirect. Wire SEO checklist panel in admin to reflect live form state. Run full acceptance criteria checklist (AC-01–AC-37) and record all results in plans/feature-cms-guide-pages/qa-report.md. Fix any failures before closing. Validation source of truth: testplan.md G01–G05, B01–B03.",
+  "goal": "10",
+  "status": "done",
+  "assignee": null,
+  "priority": 2,
+  "created": "2026-04-11T12:00:00.000Z",
+  "updated": "2026-04-13T21:08:14.773Z",
+  "tags": [],
+  "proof": {
+    "notes": "plans/feature-cms-guide-pages/qa-report.md; convex/schema.ts guideAuditLog table; convex/guides/audit.ts; convex/guides/mutations.ts; convex/guides/queries.ts getGuideAuditLog; convex/admin/authz.ts requireAdminRole supports allowed role sets; src/components/admin/guides/GuideEditView.tsx activity tab + live SEO checklist; convex/guides/__tests__/mutations.contract.test.ts covers G01 G02 G03 G04; all AC-01-AC-37 marked pass in plans/feature-cms-guide-pages/qa-report.md; npx tsc --noEmit; npx vitest run; npm run build"
+  },
+  "milestone": null,
+  "specialty": "backend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

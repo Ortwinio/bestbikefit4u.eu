@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "048",
+  "title": "Convex schema (guidePages, guideRevisions, redirects), mutations, queries, and seed migration",
+  "description": "Define all Convex tables and indexes for the CMS feature, implement createGuide/updateGuide/publishGuide/unpublishGuide/changeSlug mutations, all admin and public queries, and a seed migration script that imports existing TypeScript guide content into the DB. Role enforcement at mutation level using requireUserId pattern.",
+  "goal": "10",
+  "status": "done",
+  "assignee": "Codex D",
+  "priority": 1,
+  "created": "2026-04-11T12:00:00.000Z",
+  "updated": "2026-04-13T19:59:12Z",
+  "tags": [],
+  "proof": {
+    "notes": "S01: npx tsc --noEmit passed. S02: convex/schema.ts adds guidePages + indexes by_slug/by_status/by_cluster/by_status_and_cluster at lines 1710-1762, guideRevisions by_guideId at 1764-1770, redirects by_from at 1772-1779. S03-S08: npx vitest run convex/guides/__tests__/mutations.contract.test.ts --bail=1 passed (4 tests) covering auth rejection on createGuide, publishGuide non-admin rejection, version increment to 3 after two updates, getPublishedGuide null for draft then published record after publish, and changeSlug creating 301 redirect from /guides/test-slug-a to /guides/test-slug-b. S09: npx tsx scripts/seed-guides.ts --dry-run passed and emitted 52 guide payload summaries with final summary {total:52,created:0,skipped:0,errors:0,dryRun:true}. Note: tsx dry-run needed an unsandboxed rerun because sandbox IPC blocked tsx pipe creation (EPERM)."
+  },
+  "milestone": null,
+  "specialty": "backend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

@@ -1,0 +1,14 @@
+{
+  "_version": 1,
+  "id": "08",
+  "title": "Guide Content Enrichment — real bike-fit content for every guide page",
+  "description": "Replace template-generated guide content with real, specific, actionable bike-fit content for all 52 guides across 9 clusters. Each guide gets topic-appropriate EN + NL sections and FAQs via a new content module that the template engine falls back from.",
+  "status": "done",
+  "acceptance": "Every guide with Existing status has real content. No nutrition/power guide has bike-fit pain FAQs. npx tsc --noEmit passes. Fallback template still works for unwritten slugs.",
+  "priority": 2,
+  "created": "2026-04-11T00:00:00.000Z",
+  "updated": "2026-04-11T10:03:18.000Z",
+  "assignee": null,
+  "specialty": "content",
+  "milestone": null
+}

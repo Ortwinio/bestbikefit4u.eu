@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "046",
+  "title": "Enable richer section rendering in the guide page template (steps, prose, tables)",
+  "description": "Extend GuideContentSection type with optional 'type' field (cards|steps|prose|table) and optional tableHeaders/tableRows. Update [slug]/page.tsx to render each type correctly. Update How-to-measure and How-to-adjust sections to use type 'steps', Practical recommendation to use 'prose', and Variations by rider type to use 'table' where appropriate. See plans/guide-guideline-alignment/03-richer-section-rendering.md.",
+  "goal": "09",
+  "status": "done",
+  "assignee": null,
+  "priority": 2,
+  "created": "2026-04-11T00:00:00.000Z",
+  "updated": "2026-04-13T20:50:00Z",
+  "tags": [],
+  "proof": {
+    "notes": "Updated /Users/ortwinverreck/Developer/bestbikefit4u/src/app/(public)/guides/[slug]/page.tsx to render guide sections by type: default cards, numbered steps, prose blocks, and tables. Rich section types are defined in /Users/ortwinverreck/Developer/bestbikefit4u/src/lib/guides/guide-content.ts and exercised in /Users/ortwinverreck/Developer/bestbikefit4u/src/lib/guides/content/setup-parameters.ts, /Users/ortwinverreck/Developer/bestbikefit4u/src/lib/guides/content/pain-discomfort.ts, /Users/ortwinverreck/Developer/bestbikefit4u/src/lib/guides/content/ride-types.ts, /Users/ortwinverreck/Developer/bestbikefit4u/src/lib/guides/content/shoe-foot-geometry.ts, and /Users/ortwinverreck/Developer/bestbikefit4u/src/lib/guides/content/remaining-clusters.ts where How to measure / adjust now use steps, Practical recommendation uses prose, and Variations by rider type uses tables. Verification: npx tsc --noEmit passed."
+  },
+  "milestone": null,
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": "Template change first, then update the content modules. Default 'cards' behavior must be preserved unchanged for all existing sections that don't specify a type."
+}

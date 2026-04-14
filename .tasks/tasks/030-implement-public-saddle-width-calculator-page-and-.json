@@ -1,0 +1,29 @@
+{
+  "_version": 1,
+  "id": "030",
+  "title": "Implement public saddle-width calculator page and SaddleWidthCalculatorForm",
+  "description": "Implement the public saddle-width calculator page and form at /calculators/saddle-width using the engine and backend contracts, then validate the UX/UI and analytics behavior from testplan.md.",
+  "goal": null,
+  "status": "done",
+  "assignee": "Codex B",
+  "priority": 3,
+  "created": "2026-04-10T19:52:50.653Z",
+  "updated": "2026-04-11T09:50:00Z",
+  "tags": [],
+  "proof": "Public UI proof recorded in plans/feature-saddle-width-calculator/output-03-closeout-and-review.md; validated with `npx vitest run 'src/app/(public)/calculators/saddle-width/SaddleWidthCalculatorForm.test.tsx' 'src/app/(public)/calculators/saddle-width/page.test.tsx'`.",
+  "depends_on": [
+    "028",
+    "029"
+  ],
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "milestone": "M3",
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [
+    "Review found the public save effect keyed too much to transient input state; fixed by deduping on result payload and adding a short debounce."
+  ],
+  "salientSummary": "Closed with the public route, metadata, CTAs, locale coverage, and quieter public session persistence behavior."
+}

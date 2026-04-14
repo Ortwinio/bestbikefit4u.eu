@@ -1,0 +1,28 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [
+    "052"
+  ],
+  "id": "053",
+  "title": "Admin panel: edit form, publish/unpublish controls, Next.js draft mode preview, and redirect manager",
+  "description": "Build the edit guide form (/admin/guides/[id]/edit) with pre-filled fields and status workflow buttons. Admin-only publish/unpublish with confirmation dialogs. Preview via Next.js draft mode API route (/api/preview and /api/preview-exit). Slug change on published guide triggers confirmation and auto-creates redirect. Redirect manager UI (/admin/guides/redirects). Validation source of truth: testplan.md A07–A10.",
+  "goal": "10",
+  "status": "done",
+  "assignee": "Codex C",
+  "priority": 2,
+  "created": "2026-04-11T12:00:00.000Z",
+  "updated": "2026-04-13T20:48:57.912Z",
+  "tags": [],
+  "proof": {
+    "notes": "A07-A10 implemented with repo-backed proof: publish is blocked without bilingual H1 in convex/guides/mutations.ts and the edit UI in src/components/admin/guides/GuideEditView.tsx; draft preview now flows through src/app/api/preview/route.ts plus draft-aware rendering in src/app/(public)/guides/[slug]/page.tsx and src/lib/guides/content.ts, with exit via src/app/api/preview-exit/route.ts; published slug changes are gated by a confirmation dialog in src/components/admin/guides/GuideEditView.tsx and create 301 redirects with auto-created reason in convex/guides/mutations.ts; redirect manager is live at src/app/(dashboard)/admin/guides/redirects/page.tsx using src/components/admin/guides/GuideRedirectsView.tsx plus add/delete redirect mutations in convex/guides/mutations.ts. Supporting admin route/edit wiring updated in src/app/(dashboard)/admin/guides/[id]/edit/page.tsx, src/components/admin/guides/GuidesAdminListClient.tsx, src/components/admin/guides/GuideCreateView.tsx, src/components/admin/guides/guide-admin-shared.ts, src/components/admin/layout/admin-navigation.ts, src/components/admin/auth/admin-route-access.ts, src/components/admin/auth/admin-route-access.test.ts, src/components/admin/auth/admin-session.test.ts, and convex/_generated/api.d.ts. Validation passed: npx convex codegen; ./node_modules/.bin/tsc --noEmit --pretty false; npx eslint src/components/admin/guides/GuideCreateView.tsx src/components/admin/guides/GuideEditView.tsx src/components/admin/guides/GuideRedirectsView.tsx src/components/admin/guides/GuidesAdminListClient.tsx src/components/admin/guides/guide-admin-shared.ts src/components/admin/layout/admin-navigation.ts src/components/admin/auth/admin-route-access.ts src/components/admin/auth/admin-route-access.test.ts src/components/admin/auth/admin-session.test.ts 'src/app/(dashboard)/admin/guides/page.tsx' 'src/app/(dashboard)/admin/guides/new/page.tsx' 'src/app/(dashboard)/admin/guides/[id]/edit/page.tsx' 'src/app/(dashboard)/admin/guides/redirects/page.tsx' 'src/app/api/preview/route.ts' 'src/app/api/preview-exit/route.ts' 'src/app/(public)/guides/[slug]/page.tsx' src/lib/guides/content.ts convex/guides/mutations.ts; npx vitest run src/components/admin/auth/admin-route-access.test.ts src/components/admin/auth/admin-session.test.ts."
+  },
+  "milestone": null,
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}
