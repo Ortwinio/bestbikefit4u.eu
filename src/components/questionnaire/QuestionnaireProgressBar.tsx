@@ -3,6 +3,7 @@
 import { Clock } from "lucide-react";
 import { formatMessage } from "@/i18n/dashboardMessages";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { toPercentBucket } from "@/lib/uiPercent";
 
 interface QuestionnaireProgressBarProps {
   estimatedMinutes: number;
@@ -15,6 +16,7 @@ export function QuestionnaireProgressBar({
 }: QuestionnaireProgressBarProps) {
   const { messages } = useDashboardMessages();
   const t = messages.questionnaire.progress;
+  const percentBucket = toPercentBucket(percentComplete);
 
   return (
     <div className="flex items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-muted/50 px-4 py-3">
@@ -26,8 +28,8 @@ export function QuestionnaireProgressBar({
       <div className="flex flex-1 items-center gap-2">
         <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-border">
           <div
-            className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
-            style={{ width: `${percentComplete}%` }}
+            className="csp-fill-width h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
+            data-fill-pct={percentBucket}
           />
         </div>
         <span className="shrink-0 text-sm text-muted-foreground">

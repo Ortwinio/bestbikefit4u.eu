@@ -1,5 +1,6 @@
 "use client";
 
+import { toPercentBucket } from "@/lib/uiPercent";
 import { cn } from "@/utils/cn";
 
 /**
@@ -21,6 +22,7 @@ export function ReadOnlyNumberSlider({
 }) {
   const hasValue = typeof value === "number" && !Number.isNaN(value);
   const pct = hasValue ? (value - min) / (max - min) : 0;
+  const rangeBucket = toPercentBucket(pct * 100);
 
   return (
     <div className="space-y-1.5">
@@ -40,19 +42,19 @@ export function ReadOnlyNumberSlider({
         {/* Fill */}
         {hasValue && (
           <div
-            className="pointer-events-none absolute left-3 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-primary/60"
-            style={{ width: `calc(${pct} * (100% - 24px))` }}
+            className="csp-range-fill pointer-events-none absolute left-3 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-primary/60"
+            data-range-pct={rangeBucket}
           />
         )}
         {/* Thumb */}
         {hasValue && (
           <div
             className={cn(
-              "pointer-events-none absolute top-1/2 size-4",
+              "csp-range-left pointer-events-none absolute top-1/2 size-4",
               "-translate-x-1/2 -translate-y-1/2",
               "rounded-full border-2 border-background bg-primary shadow-sm ring-2 ring-primary/30"
             )}
-            style={{ left: `calc(12px + ${pct} * (100% - 24px))` }}
+            data-range-pct={rangeBucket}
           />
         )}
       </div>
@@ -93,6 +95,7 @@ export function NumberSlider({
   const hasValue = typeof value === "number" && !Number.isNaN(value);
   // Unitless 0–1 fraction — valid multiplier in CSS calc(fraction * length)
   const pct = hasValue ? (value - min) / (max - min) : 0;
+  const rangeBucket = toPercentBucket(pct * 100);
 
   return (
     <div className="space-y-2">
@@ -114,8 +117,8 @@ export function NumberSlider({
         {/* Fill — calc(pct * (100% - 24px)) is valid: unitless × length */}
         {hasValue && (
           <div
-            className="pointer-events-none absolute left-3 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary"
-            style={{ width: `calc(${pct} * (100% - 24px))` }}
+            className="csp-range-fill pointer-events-none absolute left-3 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary"
+            data-range-pct={rangeBucket}
           />
         )}
 
@@ -123,11 +126,11 @@ export function NumberSlider({
         {hasValue && (
           <div
             className={cn(
-              "pointer-events-none absolute top-1/2 size-6",
+              "csp-range-left pointer-events-none absolute top-1/2 size-6",
               "-translate-x-1/2 -translate-y-1/2",
               "rounded-full border-4 border-background bg-primary shadow-md"
             )}
-            style={{ left: `calc(12px + ${pct} * (100% - 24px))` }}
+            data-range-pct={rangeBucket}
           />
         )}
 

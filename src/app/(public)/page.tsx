@@ -210,8 +210,7 @@ export default async function HomePage() {
       />
       <JsonLd schema={structuredData} />
       <section
-        className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-24 sm:py-28"
-        style={{ backgroundImage: "url('/bestbikefit4u-home.gif')" }}
+        className="relative overflow-hidden bg-[url('/bestbikefit4u-home.gif')] bg-cover bg-center bg-no-repeat py-24 sm:py-28"
       >
         <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

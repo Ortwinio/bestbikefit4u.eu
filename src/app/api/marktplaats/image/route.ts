@@ -1,4 +1,10 @@
+import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { NextRequest } from "next/server";
+import { consumeRateLimit } from "@/lib/rateLimiter";
+import { getClientIp, hashIp } from "@/lib/ipHash";
+
+const IMAGE_PROXY_LIMIT = 20;
+const IMAGE_PROXY_WINDOW_MS = 60 * 1000;
 
 function isAllowedHost(hostname: string): boolean {
   const normalized = hostname.trim().toLowerCase();
@@ -11,6 +17,28 @@ function isAllowedHost(hostname: string): boolean {
 }
 
 export async function GET(request: NextRequest) {
+  const token = await convexAuthNextjsToken();
+  if (!token) {
+    return new Response("Authentication required", { status: 401 });
+  }
+
+  const ipHash = hashIp(getClientIp(request));
+  const rateLimit = await consumeRateLimit({
+    scope: "marktplaats-image",
+    key: ipHash,
+    limit: IMAGE_PROXY_LIMIT,
+    windowMs: IMAGE_PROXY_WINDOW_MS,
+  });
+
+  if (!rateLimit.allowed) {
+    return new Response("Too many requests", {
+      status: 429,
+      headers: {
+        "Retry-After": String(rateLimit.retryAfterSeconds ?? 60),
+      },
+    });
+  }
+
   const rawUrl = request.nextUrl.searchParams.get("url");
   if (!rawUrl) {
     return new Response("Missing url", { status: 400 });

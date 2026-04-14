@@ -7,6 +7,7 @@ import {
   PublicSection,
   PublicSurfaceCard,
 } from "@/components/public";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import type { Locale } from "@/i18n/config";
 import { buildLocaleAlternates } from "@/i18n/metadata";
@@ -212,10 +213,7 @@ export default async function BikeFitMethodsPage() {
 
   return (
     <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_22%,var(--background)_78%)_100%)] text-foreground">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
-      />
+      <JsonLd schema={articleJsonLd} />
 
       <PublicHero
         eyebrow={page.hero.eyebrow}

@@ -16,9 +16,10 @@ declare global {
 
 type GTMConsentLoaderProps = {
   gtmId: string;
+  nonce?: string;
 };
 
-export function GTMConsentLoader({ gtmId }: GTMConsentLoaderProps) {
+export function GTMConsentLoader({ gtmId, nonce }: GTMConsentLoaderProps) {
   const consent = useSyncExternalStore(
     subscribeToCookieConsent,
     readCookieConsent,
@@ -48,8 +49,11 @@ export function GTMConsentLoader({ gtmId }: GTMConsentLoaderProps) {
     const script = document.createElement("script");
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtm.js?id=${gtmId}`;
+    if (nonce) {
+      script.nonce = nonce;
+    }
     document.head.appendChild(script);
-  }, [consent, gtmId]);
+  }, [consent, gtmId, nonce]);
 
   return null;
 }

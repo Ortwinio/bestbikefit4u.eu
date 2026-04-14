@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { toPercentBucket } from "@/lib/uiPercent";
 import { cn } from "@/utils/cn";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
@@ -22,6 +23,7 @@ export function WeeklyHoursSelector({
 
   const selectedIndex = value ? HOUR_KEYS.indexOf(value as WeeklyHoursValue) : -1;
   const fillPercent = selectedIndex >= 0 ? (selectedIndex / (HOUR_KEYS.length - 1)) * 100 : 0;
+  const fillBucket = toPercentBucket(fillPercent);
 
   return (
     <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border">
@@ -52,8 +54,8 @@ export function WeeklyHoursSelector({
 
           {/* Filled portion */}
           <div
-            className="pointer-events-none absolute left-0 top-1/2 h-3 -translate-y-1/2 rounded-full bg-primary transition-[width] duration-300 ease-out"
-            style={{ width: `${fillPercent}%` }}
+            className="csp-fill-width pointer-events-none absolute left-0 top-1/2 h-3 -translate-y-1/2 rounded-full bg-primary transition-[width] duration-300 ease-out"
+            data-fill-pct={fillBucket}
           />
 
           {/* Snap-point buttons */}

@@ -1,5 +1,6 @@
 "use client";
 
+import { toPercentBucket } from "@/lib/uiPercent";
 import { cn } from "@/utils/cn";
 
 export type ScaleSliderOption = {
@@ -28,6 +29,23 @@ function getFillPercent(selectedIndex: number, optionCount: number) {
   return (selectedIndex / (optionCount - 1)) * 100;
 }
 
+function getGridColumnClassName(optionCount: number) {
+  switch (optionCount) {
+    case 2:
+      return "grid-cols-2";
+    case 3:
+      return "grid-cols-3";
+    case 4:
+      return "grid-cols-4";
+    case 5:
+      return "grid-cols-5";
+    case 6:
+      return "grid-cols-6";
+    default:
+      return "grid-cols-5";
+  }
+}
+
 export function ReadOnlyScaleSlider({
   label,
   options,
@@ -36,6 +54,8 @@ export function ReadOnlyScaleSlider({
 }: ReadOnlyScaleSliderProps) {
   const selectedIndex = value ? options.findIndex((option) => option.key === value) : -1;
   const fillPercent = getFillPercent(selectedIndex, options.length);
+  const fillBucket = toPercentBucket(fillPercent);
+  const gridColumnClassName = getGridColumnClassName(options.length);
 
   return (
     <div className={cn("space-y-1.5", className)}>
@@ -51,10 +71,8 @@ export function ReadOnlyScaleSlider({
         <div className="pointer-events-none absolute inset-x-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary/15" />
         {selectedIndex >= 0 ? (
           <div
-            className="pointer-events-none absolute left-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary/60"
-            style={{
-              width: `calc(${fillPercent}% * (100% - 8px) / 100 + ${fillPercent > 0 ? "4px" : "0px"})`,
-            }}
+            className="csp-scale-fill pointer-events-none absolute left-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary/60"
+            data-scale-pct={fillBucket}
           />
         ) : null}
         {options.map((option, index) => {
@@ -73,7 +91,7 @@ export function ReadOnlyScaleSlider({
           );
         })}
       </div>
-      <div className="grid text-xs" style={{ gridTemplateColumns: `repeat(${options.length}, 1fr)` }}>
+      <div className={cn("grid text-xs", gridColumnClassName)}>
         {options.map((option, index) => (
           <span
             key={option.key}
@@ -101,6 +119,8 @@ export function ScaleSliderQuestion({
 }: ScaleSliderQuestionProps) {
   const selectedIndex = value ? options.findIndex((option) => option.key === value) : -1;
   const fillPercent = getFillPercent(selectedIndex, options.length);
+  const fillBucket = toPercentBucket(fillPercent);
+  const gridColumnClassName = getGridColumnClassName(options.length);
 
   return (
     <div className={cn("space-y-2", className)}>
@@ -125,10 +145,8 @@ export function ScaleSliderQuestion({
         <div className="pointer-events-none absolute inset-x-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary/15" />
         {selectedIndex >= 0 ? (
           <div
-            className="pointer-events-none absolute left-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary transition-[width] duration-300 ease-out"
-            style={{
-              width: `calc(${fillPercent}% * (100% - 8px) / 100 + ${fillPercent > 0 ? "4px" : "0px"})`,
-            }}
+            className="csp-scale-fill pointer-events-none absolute left-1 top-1/2 h-2 -translate-y-1/2 rounded-full bg-primary transition-[width] duration-300 ease-out"
+            data-scale-pct={fillBucket}
           />
         ) : null}
         {options.map((option, index) => {
@@ -152,10 +170,7 @@ export function ScaleSliderQuestion({
           );
         })}
       </div>
-      <div
-        className="grid text-xs font-medium"
-        style={{ gridTemplateColumns: `repeat(${options.length}, 1fr)` }}
-      >
+      <div className={cn("grid text-xs font-medium", gridColumnClassName)}>
         {options.map((option, index) => (
           <span
             key={option.key}

@@ -13,12 +13,26 @@ function getIpHashSalt() {
 }
 
 export function getClientIp(request: Request) {
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    return forwarded.split(",")[0]?.trim() ?? null;
+  const vercelForwarded = request.headers.get("x-vercel-forwarded-for");
+  if (vercelForwarded) {
+    return vercelForwarded.trim();
   }
 
-  return request.headers.get("x-real-ip")?.trim() ?? null;
+  const realIp = request.headers.get("x-real-ip");
+  if (realIp) {
+    return realIp.trim();
+  }
+
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    const parts = forwarded
+      .split(",")
+      .map((part) => part.trim())
+      .filter(Boolean);
+    return parts.at(-1) ?? null;
+  }
+
+  return null;
 }
 
 export function hashIp(ip: string | null) {
@@ -29,4 +43,3 @@ export function hashIp(ip: string | null) {
 
   return createHash("sha256").update(`${salt}:${ip}`).digest("hex");
 }
-

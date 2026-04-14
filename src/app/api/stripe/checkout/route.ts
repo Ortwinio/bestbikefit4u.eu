@@ -20,7 +20,14 @@ export async function POST(request: Request): Promise<Response> {
 
     const stripeKey = process.env.STRIPE_SECRET_KEY;
     const stripePriceId = process.env.STRIPE_PRO_PRICE_ID;
-    const siteUrl = process.env.SITE_URL ?? "https://bestbikefit4u.eu";
+    const requestOrigin = new URL(request.url).origin;
+    const siteUrl = process.env.SITE_URL ?? (
+      process.env.NODE_ENV === "production" ? undefined : requestOrigin
+    );
+
+    if (!siteUrl) {
+      return NextResponse.json({ error: "SITE_URL is required in production." }, { status: 500 });
+    }
 
     if (!stripeKey || !stripePriceId) {
       // Dev fallback

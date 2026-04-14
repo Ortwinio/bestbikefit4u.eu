@@ -26,6 +26,7 @@ import {
   fetchAdminUsers,
   getAdminQueryToken,
 } from "@/components/admin/shared/admin-live-data";
+import { toPercentBucket } from "@/lib/uiPercent";
 import { cn } from "@/utils/cn";
 
 function getSearchParam(value: string | string[] | undefined) {
@@ -196,62 +197,64 @@ export default async function FitRunsPage({
               columns={["User", "Bike", "Engine", "Completed", "Confidence", "Review", "Action"]}
             />
             <tbody>
-              {filteredRuns.map((view) => (
-                <AdminTableRow key={view.run._id}>
-                  <AdminTableCell className="font-medium">{view.userName}</AdminTableCell>
-                  <AdminTableCell>{view.bikeName}</AdminTableCell>
-                  <AdminTableCell>{view.engineVersionLabel}</AdminTableCell>
-                  <AdminTableCell>
-                    {formatAdminDateTime(view.run.completedAt ?? view.run.createdAt)}
-                  </AdminTableCell>
-                  <AdminTableCell>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between gap-3">
-                        <span>{formatAdminPercent(view.run.confidenceScore)}</span>
-                        <span className="text-xs text-[color:var(--muted-foreground)]">
-                          {view.run.reviewNotes ? "review notes saved" : "no review note"}
-                        </span>
+              {filteredRuns.map((view) => {
+                const confidencePercent =
+                  typeof view.run.confidenceScore === "number"
+                    ? Math.round(view.run.confidenceScore * 100)
+                    : 0;
+
+                return (
+                  <AdminTableRow key={view.run._id}>
+                    <AdminTableCell className="font-medium">{view.userName}</AdminTableCell>
+                    <AdminTableCell>{view.bikeName}</AdminTableCell>
+                    <AdminTableCell>{view.engineVersionLabel}</AdminTableCell>
+                    <AdminTableCell>
+                      {formatAdminDateTime(view.run.completedAt ?? view.run.createdAt)}
+                    </AdminTableCell>
+                    <AdminTableCell>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between gap-3">
+                          <span>{formatAdminPercent(view.run.confidenceScore)}</span>
+                          <span className="text-xs text-[color:var(--muted-foreground)]">
+                            {view.run.reviewNotes ? "review notes saved" : "no review note"}
+                          </span>
+                        </div>
+                        <div className="h-2 rounded-full bg-[color:var(--muted)]">
+                          <div
+                            className={cn(
+                              "csp-fill-width h-2 rounded-full",
+                              typeof view.run.confidenceScore === "number" &&
+                                view.run.confidenceScore >= 0.85
+                                ? "bg-[color:var(--success)]"
+                                : typeof view.run.confidenceScore === "number" &&
+                                    view.run.confidenceScore >= 0.65
+                                  ? "bg-[color:var(--warning)]"
+                                  : "bg-[color:var(--danger)]"
+                            )}
+                            data-fill-pct={toPercentBucket(confidencePercent)}
+                          />
+                        </div>
                       </div>
-                      <div className="h-2 rounded-full bg-[color:var(--muted)]">
-                        <div
-                          className={cn(
-                            "h-2 rounded-full",
-                            typeof view.run.confidenceScore === "number" &&
-                              view.run.confidenceScore >= 0.85
-                              ? "bg-[color:var(--success)]"
-                              : typeof view.run.confidenceScore === "number" &&
-                                  view.run.confidenceScore >= 0.65
-                                ? "bg-[color:var(--warning)]"
-                                : "bg-[color:var(--danger)]"
-                          )}
-                          style={{
-                            width:
-                              typeof view.run.confidenceScore === "number"
-                                ? `${Math.round(view.run.confidenceScore * 100)}%`
-                                : "0%",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </AdminTableCell>
-                  <AdminTableCell>
-                    <AdminStatusPill
-                      tone={reviewStatusTone(view.run.reviewStatus ?? "not_required")}
-                    >
-                      {view.run.reviewStatus ?? "not_required"}
-                    </AdminStatusPill>
-                  </AdminTableCell>
-                  <AdminTableCell>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      render={<Link href={`/admin/fit-runs/${view.run._id}`} />}
-                    >
-                      Trace
-                    </Button>
-                  </AdminTableCell>
-                </AdminTableRow>
-              ))}
+                    </AdminTableCell>
+                    <AdminTableCell>
+                      <AdminStatusPill
+                        tone={reviewStatusTone(view.run.reviewStatus ?? "not_required")}
+                      >
+                        {view.run.reviewStatus ?? "not_required"}
+                      </AdminStatusPill>
+                    </AdminTableCell>
+                    <AdminTableCell>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        render={<Link href={`/admin/fit-runs/${view.run._id}`} />}
+                      >
+                        Trace
+                      </Button>
+                    </AdminTableCell>
+                  </AdminTableRow>
+                );
+              })}
             </tbody>
           </AdminTable>
         </AdminSectionCard>

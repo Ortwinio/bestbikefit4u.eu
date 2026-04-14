@@ -25,8 +25,6 @@ export async function GET(): Promise<Response> {
   return NextResponse.json(
     {
       ok,
-      deploymentEnv:
-        process.env.VERCEL_ENV ?? process.env.NODE_ENV ?? "unknown",
       required,
       optional,
       checkedAt: new Date().toISOString(),

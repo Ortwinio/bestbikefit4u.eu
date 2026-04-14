@@ -1,6 +1,4 @@
 "use client";
-
-import { type CSSProperties } from "react";
 import { Progress } from "@/components/ui";
 import { cn } from "@/utils/cn";
 import { flexibilityTests } from "@/lib/validations/profile";
@@ -8,11 +6,11 @@ import { flexibilityTests } from "@/lib/validations/profile";
 type FlexibilityScore = (typeof flexibilityTests)[number]["score"];
 
 const scoreColorMap: Record<FlexibilityScore, string> = {
-  very_limited: "var(--color-danger)",
-  limited: "var(--color-warning)",
-  average: "var(--color-warning)",
-  good: "var(--color-success)",
-  excellent: "var(--color-success)",
+  very_limited: "bg-[color:var(--color-danger)]",
+  limited: "bg-[color:var(--color-warning)]",
+  average: "bg-[color:var(--color-warning)]",
+  good: "bg-[color:var(--color-success)]",
+  excellent: "bg-[color:var(--color-success)]",
 };
 
 export function getFlexibilityMeta(score: FlexibilityScore) {
@@ -22,7 +20,7 @@ export function getFlexibilityMeta(score: FlexibilityScore) {
   return {
     ...test,
     index: index + 1,
-    color: scoreColorMap[score],
+    indicatorClassName: scoreColorMap[score],
   };
 }
 
@@ -47,12 +45,7 @@ export function FlexibilityScale({
       </div>
       <Progress
         value={meta.index * 20}
-        indicatorClassName="bg-[var(--progress-indicator-color)]"
-        style={
-          {
-            "--progress-indicator-color": meta.color,
-          } as CSSProperties
-        }
+        indicatorClassName={meta.indicatorClassName}
       />
       <p className="text-sm text-[color:var(--muted-foreground)]">
         {meta.description}

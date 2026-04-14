@@ -7,7 +7,6 @@ import { BRAND } from "./lib/brand";
 import type { Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 import {
-  isAllowedLocalhostHost,
   normalizeLocalDevEmail,
   normalizeLocalDevName,
   normalizeLocalDevRole,
@@ -188,12 +187,6 @@ const localhostDevProvider = localhostDevLoginEnabled
           typeof credentials.secret === "string" ? credentials.secret : "";
         if (submittedSecret !== configuredSecret) {
           throw new Error("Localhost dev login is not configured for this environment.");
-        }
-
-        const hostname =
-          typeof credentials.hostname === "string" ? credentials.hostname : "";
-        if (!isAllowedLocalhostHost(hostname)) {
-          throw new Error("Localhost dev login only works on localhost.");
         }
 
         const email = normalizeLocalDevEmail(

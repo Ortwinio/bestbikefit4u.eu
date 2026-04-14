@@ -19,6 +19,7 @@ import { StepRidingStyle } from "./StepRidingStyle";
 import { ListChecks, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { toPercentBucket } from "@/lib/uiPercent";
 
 const wizardSchema = z.object({
   // Step 1: Required body measurements
@@ -133,6 +134,7 @@ export function MeasurementWizard({
   const { handleSubmit, trigger, formState } = methods;
   const activeStep = steps[currentStep - 1];
   const percentComplete = Math.round((currentStep / steps.length) * 100);
+  const percentBucket = toPercentBucket(percentComplete);
 
   const validateCurrentStep = async () => {
     switch (currentStep) {
@@ -201,8 +203,8 @@ export function MeasurementWizard({
           <div className="flex flex-1 items-center gap-2">
             <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-border">
               <div
-                className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
-                style={{ width: `${percentComplete}%` }}
+                className="csp-fill-width h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
+                data-fill-pct={percentBucket}
               />
             </div>
             <span className="shrink-0 text-sm text-muted-foreground">

@@ -281,8 +281,6 @@ export default function LoginPage() {
   const googleAuthEnabled = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === "true";
   const localhostDevLoginEnabled =
     process.env.NEXT_PUBLIC_ENABLE_LOCALHOST_DEV_LOGIN === "true";
-  const localhostDevLoginSecret =
-    process.env.NEXT_PUBLIC_LOCALHOST_DEV_LOGIN_SECRET ?? "";
   const localhostDevLoginEmail =
     process.env.NEXT_PUBLIC_LOCALHOST_DEV_LOGIN_EMAIL ?? "";
   const localhostDevLoginName =
@@ -512,19 +510,22 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const credentials: Record<string, string> = {
-        secret: localhostDevLoginSecret,
-        hostname: window.location.hostname,
-        adminRole: localhostDevLoginRole,
-      };
-      if (localhostDevLoginEmail) {
-        credentials.email = localhostDevLoginEmail;
-      }
-      if (localhostDevLoginName) {
-        credentials.name = localhostDevLoginName;
+      const response = await fetch("/api/auth/localhost-dev", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: localhostDevLoginEmail || undefined,
+          name: localhostDevLoginName || undefined,
+          adminRole: localhostDevLoginRole,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("localhost_dev_login_failed");
       }
 
-      await signIn("localhost-dev", credentials);
       window.location.href = withLocalePrefix("/dashboard", locale);
     } catch (err) {
       console.error("Failed to start localhost dev login:", err);

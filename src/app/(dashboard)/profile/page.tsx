@@ -30,6 +30,7 @@ import { FlexibilityScale, getFlexibilityMeta } from "@/components/profile/Flexi
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { RidingStyleCard, SliderQuestion, ReadOnlySlider, type RiderProfileData } from "@/components/profile/RidingStyleCard";
 import { reportClientError } from "@/lib/telemetry";
+import { toPercentBucket } from "@/lib/uiPercent";
 import {
   coreStabilityTests,
   deriveComfortScore,
@@ -134,6 +135,7 @@ function BMISlider({
   const MIN_BMI = 15;
   const MAX_BMI = 40;
   const percent = Math.max(0, Math.min(100, ((bmi - MIN_BMI) / (MAX_BMI - MIN_BMI)) * 100));
+  const percentBucket = toPercentBucket(percent);
 
   let category: string;
   let categoryColor: string;
@@ -171,8 +173,8 @@ function BMISlider({
       <div className="relative h-3 overflow-visible rounded-full bg-gradient-to-r from-[color:var(--color-warning)] via-[color:var(--color-success)] via-60% to-[color:var(--color-danger)]">
         {/* Marker */}
         <div
-          className="absolute top-1/2 h-5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[color:var(--foreground)] ring-2 ring-[color:var(--background)] shadow-md"
-          style={{ left: `${percent}%` }}
+          className="csp-fill-left absolute top-1/2 h-5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[color:var(--foreground)] ring-2 ring-[color:var(--background)] shadow-md"
+          data-left-pct={percentBucket}
         />
       </div>
       {/* Scale labels */}

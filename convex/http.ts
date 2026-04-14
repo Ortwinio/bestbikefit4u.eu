@@ -192,7 +192,7 @@ http.route({
       .map((b) => b.toString(16).padStart(2, "0"))
       .join("");
 
-    const isValid = signatures.some((s) => s === hmacHex);
+    const isValid = signatures.some((s) => timingSafeEqual(s, hmacHex));
     if (!isValid) {
       return new Response("Invalid webhook signature", { status: 400 });
     }
@@ -245,5 +245,21 @@ http.route({
     return new Response("ok", { status: 200 });
   }),
 });
+
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  const aBytes = new TextEncoder().encode(a);
+  const bBytes = new TextEncoder().encode(b);
+  let result = 0;
+
+  for (let i = 0; i < aBytes.length; i += 1) {
+    result |= aBytes[i] ^ bBytes[i];
+  }
+
+  return result === 0;
+}
 
 export default http;

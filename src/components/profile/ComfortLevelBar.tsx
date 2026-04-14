@@ -4,11 +4,11 @@ import { cn } from "@/utils/cn";
 import { comfortLevels } from "@/lib/validations/profile";
 
 const scoreColorMap: Record<number, string> = {
-  1: "var(--color-danger)",
-  2: "var(--color-warning)",
-  3: "var(--color-warning)",
-  4: "var(--color-success)",
-  5: "var(--color-success)",
+  1: "bg-[color:var(--color-danger)]",
+  2: "bg-[color:var(--color-warning)]",
+  3: "bg-[color:var(--color-warning)]",
+  4: "bg-[color:var(--color-success)]",
+  5: "bg-[color:var(--color-success)]",
 };
 
 export function getComfortMeta(score: number) {
@@ -17,7 +17,7 @@ export function getComfortMeta(score: number) {
 
   return {
     ...meta,
-    color: scoreColorMap[normalized],
+    colorClass: scoreColorMap[normalized],
   };
 }
 
@@ -44,11 +44,10 @@ export function ComfortLevelBar({
         {[1, 2, 3, 4, 5].map((segment) => (
           <div
             key={segment}
-            className="h-3 flex-1 rounded-full"
-            style={{
-              backgroundColor:
-                segment <= meta.score ? meta.color : "var(--color-muted)",
-            }}
+            className={cn(
+              "h-3 flex-1 rounded-full",
+              segment <= meta.score ? meta.colorClass : "bg-[color:var(--muted)]"
+            )}
           />
         ))}
       </div>

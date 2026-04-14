@@ -6,6 +6,7 @@ import {
   ProgressIndicator,
   ProgressTrack,
 } from "@/components/prototyper-ui/ui/progress";
+import { toPercentBucket } from "@/lib/uiPercent";
 import { cn } from "@/utils/cn";
 
 export interface ProgressProps extends HTMLAttributes<HTMLDivElement> {
@@ -31,6 +32,7 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(
   ) => {
     const percentage =
       value === null ? 100 : Math.max(0, Math.min(100, (value / max) * 100));
+    const fillBucket = value === null ? "42" : toPercentBucket(percentage);
 
     return (
       <BaseProgress.Root
@@ -53,13 +55,11 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(
           <ProgressIndicator
             color="default"
             className={cn(
-              "h-full rounded-full bg-[color:var(--primary)] transition-transform duration-300 ease-out motion-reduce:transition-none",
+              "csp-fill-width h-full rounded-full bg-[color:var(--primary)] transition-transform duration-300 ease-out motion-reduce:transition-none",
               value === null && "animate-pulse",
               indicatorClassName
             )}
-            style={{
-              width: value === null ? "42%" : `${percentage}%`,
-            }}
+            data-fill-pct={fillBucket}
           />
         </ProgressTrack>
       </BaseProgress.Root>

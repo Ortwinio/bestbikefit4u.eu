@@ -10,6 +10,7 @@ import {
   PublicPageShell,
   PublicSection,
 } from "@/components/public";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getCommercialFaqCopy, PRODUCT_LIVE_FLAGS } from "@/config/commercial";
 import type { Locale } from "@/i18n/config";
 import { buildLocaleAlternates } from "@/i18n/metadata";
@@ -399,10 +400,7 @@ export default async function FAQPage() {
 
   return (
     <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_40%,var(--background)_60%)_100%)]">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+      <JsonLd schema={faqJsonLd} />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <PublicHero
           eyebrow={locale === "nl" ? "Snel antwoord" : "Quick answers"}
