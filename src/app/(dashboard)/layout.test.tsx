@@ -1,6 +1,14 @@
-import { renderToStaticMarkup } from "react-dom/server";
+/* @vitest-environment jsdom */
+
 import type { ReactNode } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
+import DashboardLayout, {
+  DASHBOARD_MOBILE_HEADER_CLASSNAME,
+  DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME,
+  DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME,
+} from "./layout";
 
 const { usePathnameMock, useRouterMock, useConvexAuthMock, useQueryMock } = vi.hoisted(() => ({
   usePathnameMock: vi.fn(),
@@ -15,6 +23,22 @@ const { usePathnameMock, useRouterMock, useConvexAuthMock, useQueryMock } = vi.h
 vi.mock("next/navigation", () => ({
   usePathname: usePathnameMock,
   useRouter: useRouterMock,
+}));
+
+vi.mock("next/link", () => ({
+  default: ({
+    href,
+    children,
+    ...props
+  }: {
+    href: string;
+    children?: ReactNode;
+    [key: string]: unknown;
+  }) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  ),
 }));
 
 vi.mock("convex/react", () => ({
@@ -61,6 +85,7 @@ vi.mock("@/i18n/useDashboardMessages", () => ({
         newBike: "New bike",
         bikeFitting: "Bike fitting",
         newFitSession: "New fit",
+        saddleSelector: "Saddle Selector",
         tirePressure: "Pressure",
         settings: "Settings",
       },
@@ -90,11 +115,9 @@ vi.mock("@/i18n/useDashboardMessages", () => ({
   }),
 }));
 
-import DashboardLayout, {
-  DASHBOARD_MOBILE_HEADER_CLASSNAME,
-  DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME,
-  DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME,
-} from "./layout";
+afterEach(() => {
+  cleanup();
+});
 
 function renderLayout(pathname: string) {
   usePathnameMock.mockReturnValue(pathname);
@@ -120,5 +143,21 @@ describe("DashboardLayout feedback context integration", () => {
     expect(DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME).toContain("panel-backdrop");
     expect(DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME).toContain("dashboard-sidebar-surface");
     expect(DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME).toContain("dashboard-theme-context");
+  });
+
+  it("exposes the saddle selector in the mobile dashboard menu", () => {
+    usePathnameMock.mockReturnValue("/nl/dashboard");
+
+    render(
+      <DashboardLayout>
+        <div>Dashboard content</div>
+      </DashboardLayout>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open dashboard menu" }));
+
+    expect(screen.getByRole("link", { name: "Saddle Selector" }).getAttribute("href")).toBe(
+      "/nl/saddle-selector"
+    );
   });
 });

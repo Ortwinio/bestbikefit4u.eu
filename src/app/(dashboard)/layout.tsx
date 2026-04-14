@@ -127,6 +127,7 @@ export default function DashboardLayout({
                     { href: "/bikes/new", label: messages.nav.newBike },
                     { href: "/fit-history", label: messages.nav.bikeFitting },
                     { href: "/fit", label: messages.nav.newFitSession },
+                    { href: "/saddle-selector", label: messages.nav.saddleSelector },
                     { href: DASHBOARD_PRESSURE_CALCULATOR_PATH, label: messages.nav.tirePressure },
                     { href: "/settings", label: messages.nav.settings },
                   ].map((item) => (

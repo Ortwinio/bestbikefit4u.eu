@@ -54,6 +54,56 @@ describe("saddle-width engine", () => {
     expect(result.primaryWidthClass).toBe("L");
   });
 
+  it("keeps high measured recommendations while clamping the width class gracefully", () => {
+    const result = calculateSaddleWidth({
+      inputMethod: "measured",
+      sitBoneWidthMm: 200,
+      postureCategory: "upright",
+      ridingType: "commuter_leisure",
+    });
+
+    expect(result.resolvedSitBoneWidthMm).toBe(200);
+    expect(result.finalRecommendedWidthMm).toBe(236);
+    expect(result.widthRangeMinMm).toBe(231);
+    expect(result.widthRangeMaxMm).toBe(241);
+    expect(result.primaryWidthClass).toBe("XXL");
+  });
+
+  it("uses the shared measured sit-bone range", () => {
+    expect(() =>
+      calculateSaddleWidth({
+        inputMethod: "measured",
+        sitBoneWidthMm: 59,
+        postureCategory: "balanced",
+        ridingType: "endurance_road",
+      })
+    ).toThrow("Sit-bone width is out of range.");
+    expect(() =>
+      calculateSaddleWidth({
+        inputMethod: "measured",
+        sitBoneWidthMm: 201,
+        postureCategory: "balanced",
+        ridingType: "endurance_road",
+      })
+    ).toThrow("Sit-bone width is out of range.");
+
+    const lowerBound = calculateSaddleWidth({
+      inputMethod: "measured",
+      sitBoneWidthMm: 60,
+      postureCategory: "balanced",
+      ridingType: "endurance_road",
+    });
+    const upperBound = calculateSaddleWidth({
+      inputMethod: "measured",
+      sitBoneWidthMm: 200,
+      postureCategory: "balanced",
+      ridingType: "endurance_road",
+    });
+
+    expect(lowerBound.resolvedSitBoneWidthMm).toBe(60);
+    expect(upperBound.resolvedSitBoneWidthMm).toBe(200);
+  });
+
   it("widens for numbness", () => {
     const result = calculateSaddleWidth({
       inputMethod: "measured",

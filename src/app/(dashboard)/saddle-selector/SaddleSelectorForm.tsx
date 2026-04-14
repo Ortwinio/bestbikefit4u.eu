@@ -114,7 +114,26 @@ function mapBikeToRidingType(bikeType?: string): SaddleRidingType {
   }
 }
 
-function mapGoalToPosture(goal?: string): SaddlePostureCategory {
+export function mapBikeToRidingTypeFromBike(bike?: {
+  bikeType?: string;
+  ridingStyle?: string | null;
+}) {
+  switch (bike?.ridingStyle) {
+    case "racing":
+      return "road_race";
+    case "sportive":
+    case "fitness":
+      return "endurance_road";
+    case "recreational":
+    case "commuting":
+    case "touring":
+      return "commuter_leisure";
+    default:
+      return mapBikeToRidingType(bike?.bikeType);
+  }
+}
+
+export function mapGoalToPosture(goal?: string): SaddlePostureCategory {
   switch (goal) {
     case "aerodynamics":
     case "performance":
@@ -195,6 +214,18 @@ function formatFamily(family: string, isNl: boolean) {
   }
 }
 
+export function normalizeProfileSitBoneWidth(value?: number | null) {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  if (value < 60 || value > 200) {
+    return null;
+  }
+
+  return value;
+}
+
 export function SaddleSelectorForm() {
   const { locale, messages } = useDashboardMessages();
   const isNl = locale === "nl";
@@ -203,9 +234,9 @@ export function SaddleSelectorForm() {
   const sessions = useQuery(api.saddleWidth.queries.listSaddleWidthSessions, { limit: 5 });
   const searchParams = useSearchParams();
   const bikeIdParam = searchParams.get("bikeId") as Id<"bikes"> | null;
-  const bike = useQuery(api.bikes.queries.get, bikeIdParam ? { bikeId: bikeIdParam } : "skip");
   const saveSession = useMutation(api.saddleWidth.mutations.createDashboardSaddleWidthSession);
   const resultRef = useRef<HTMLDivElement | null>(null);
+  const appliedBikeDefaultsRef = useRef<string | null>(null);
 
   const [inputMode, setInputMode] = useState<"measured" | "estimated">("estimated");
   const [sitBoneWidthMm, setSitBoneWidthMm] = useState<number | null>(null);
@@ -215,6 +246,10 @@ export function SaddleSelectorForm() {
   const [flexibilityScore, setFlexibilityScore] = useState<number | null>(null);
   const [coreStabilityScore, setCoreStabilityScore] = useState<number | null>(null);
   const [selectedBikeId, setSelectedBikeId] = useState<string>("");
+  const selectedBike = useQuery(
+    api.bikes.queries.get,
+    selectedBikeId ? { bikeId: selectedBikeId as Id<"bikes"> } : "skip"
+  );
   const [ridingType, setRidingType] = useState<SaddleRidingType>("endurance_road");
   const [postureCategory, setPostureCategory] = useState<SaddlePostureCategory>("balanced");
   const [indoorOutdoor, setIndoorOutdoor] = useState<"indoor" | "outdoor" | "mixed">("outdoor");
@@ -242,8 +277,9 @@ export function SaddleSelectorForm() {
 
   useEffect(() => {
     if (!profile) return;
-    setInputMode(profile.sitBoneWidthMm ? "measured" : "estimated");
-    setSitBoneWidthMm(profile.sitBoneWidthMm ?? null);
+    const normalizedSitBoneWidth = normalizeProfileSitBoneWidth(profile.sitBoneWidthMm);
+    setInputMode(normalizedSitBoneWidth ? "measured" : "estimated");
+    setSitBoneWidthMm(normalizedSitBoneWidth);
     setHeightCm(profile.heightCm ?? null);
     setWeightKg(profile.weightKg ?? null);
     setHipCircumferenceCm(profile.hipCircumferenceCm ?? null);
@@ -252,22 +288,32 @@ export function SaddleSelectorForm() {
   }, [profile]);
 
   useEffect(() => {
-    if (bikeIdParam) {
+    if (bikeIdParam && !selectedBikeId) {
       setSelectedBikeId(bikeIdParam);
     }
-  }, [bikeIdParam]);
+  }, [bikeIdParam, selectedBikeId]);
 
   useEffect(() => {
-    if (!selectedBikeId && bikes && bikes.length > 0) {
-      setSelectedBikeId(String(bikes[0]._id));
+    if (selectedBike === undefined) {
+      return;
     }
-  }, [bikes, selectedBikeId]);
 
-  useEffect(() => {
-    if (!bike) return;
-    setRidingType(mapBikeToRidingType(bike.bikeType));
-    setPostureCategory(mapGoalToPosture(bike.primaryGoal));
-  }, [bike]);
+    if (!selectedBike) {
+      appliedBikeDefaultsRef.current = null;
+      setRidingType("endurance_road");
+      setPostureCategory("balanced");
+      return;
+    }
+
+    const bikeKey = String(selectedBike._id);
+    if (appliedBikeDefaultsRef.current === bikeKey) {
+      return;
+    }
+
+    appliedBikeDefaultsRef.current = bikeKey;
+    setRidingType(mapBikeToRidingTypeFromBike(selectedBike));
+    setPostureCategory(mapGoalToPosture(selectedBike.primaryGoal));
+  }, [selectedBike]);
 
   const bikeOptions = useMemo(
     () =>
@@ -313,7 +359,7 @@ export function SaddleSelectorForm() {
     setIsSaving(true);
     try {
       await saveSession({
-        bikeId: selectedBikeId ? (selectedBikeId as Id<"bikes">) : undefined,
+        bikeId: selectedBike ? (selectedBike._id as Id<"bikes">) : undefined,
         measurementMethod: inputMode,
         sitBoneWidthMm: sitBoneWidthMm ?? undefined,
         heightCm: heightCm ?? undefined,

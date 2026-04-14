@@ -196,9 +196,13 @@ This is commercially correct: it positions measured > estimated, sets honest exp
 
 ## Progress
 
-- [ ] 01 Product definition finalized
-- [ ] 02 Calculation engine implemented and unit tested
-- [ ] 03 Convex schema and backend implemented
-- [ ] 04 Public calculator page implemented
-- [ ] 05 Dashboard saddle selector implemented
-- [ ] 06 Navigation, SEO, and i18n completed
+- [x] 01 Product definition finalized
+- [x] 02 Calculation engine implemented and unit tested
+- [x] 03 Convex schema and backend implemented
+- [x] 04 Public calculator page implemented
+- [x] 05 Dashboard saddle selector implemented
+- [x] 06 Navigation, SEO, and i18n completed
+
+## Closeout
+
+- Implementation and review evidence recorded in [output-03-closeout-and-review.md](output-03-closeout-and-review.md)

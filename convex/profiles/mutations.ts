@@ -17,7 +17,7 @@ const PROFILE_RANGES = {
   shoulderWidthCm: [25, 70],
   footLengthCm: [15, 40],
   handSpanCm: [10, 35],
-  sitBoneWidthMm: [70, 220],
+  sitBoneWidthMm: [60, 200],
   coreStabilityScore: [1, 5],
   age: [10, 100],
   weightKg: [30, 250],

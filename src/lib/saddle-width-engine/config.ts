@@ -33,6 +33,11 @@ export const WIDTH_BINS: Array<{ label: string; min: number; max: number }> = [
   { label: "XXL", min: 176, max: 190 },
 ];
 
+export const SUPPORTED_WIDTH_RANGE = {
+  min: WIDTH_BINS[0].min,
+  max: WIDTH_BINS[WIDTH_BINS.length - 1].max,
+} as const;
+
 export const CONFIDENCE_WEIGHTS = {
   measuredBase: 95,
   estimatedBase: 55,

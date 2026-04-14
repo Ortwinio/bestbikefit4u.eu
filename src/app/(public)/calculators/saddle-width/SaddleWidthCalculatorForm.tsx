@@ -183,30 +183,7 @@ export function SaddleWidthCalculatorForm({ isNl = false }: { isNl?: boolean }) 
     if (!result) return;
 
     const signature = JSON.stringify({
-      inputMode,
-      sitBoneWidthMm,
-      heightCm,
-      weightKg,
-      hipCircumferenceCm,
-      ridingType,
-      postureCategory,
-      finalWidth: result.width.finalRecommendedWidthMm,
-    });
-
-    if (savedSignatureRef.current === signature) {
-      return;
-    }
-
-    savedSignatureRef.current = signature;
-
-    void saveSession({
       measurementMethod: inputMode,
-      sitBoneWidthMm,
-      heightCm,
-      weightKg,
-      hipCircumferenceCm,
-      ridingType,
-      postureCategory,
       recommendedWidthMm: result.width.finalRecommendedWidthMm,
       widthRangeMinMm: result.width.widthRangeMinMm,
       widthRangeMaxMm: result.width.widthRangeMaxMm,
@@ -220,6 +197,40 @@ export function SaddleWidthCalculatorForm({ isNl = false }: { isNl?: boolean }) 
       confidenceLevel: result.width.confidenceLevel,
       explanationKey: result.width.explanationKey,
     });
+
+    if (savedSignatureRef.current === signature) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      savedSignatureRef.current = signature;
+
+      void saveSession({
+        measurementMethod: inputMode,
+        sitBoneWidthMm,
+        heightCm,
+        weightKg,
+        hipCircumferenceCm,
+        ridingType,
+        postureCategory,
+        recommendedWidthMm: result.width.finalRecommendedWidthMm,
+        widthRangeMinMm: result.width.widthRangeMinMm,
+        widthRangeMaxMm: result.width.widthRangeMaxMm,
+        primaryWidthClass: result.width.primaryWidthClass,
+        saddleFamily: result.suitability.saddleFamily,
+        noseType: result.suitability.noseType,
+        profileShape: result.suitability.profileShape,
+        cutoutRecommended: result.suitability.cutoutRecommended,
+        paddingPreference: result.suitability.paddingPreference,
+        confidenceScore: result.width.confidenceScore,
+        confidenceLevel: result.width.confidenceLevel,
+        explanationKey: result.width.explanationKey,
+      });
+    }, 400);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
   }, [
     result,
     saveSession,
