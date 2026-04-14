@@ -83,9 +83,12 @@ function buildGearingData({
   derailleurMaxCog: string;
 }): GearingData {
   const cassetteTeeth = parseCommaSeparatedNumbers(cassetteCsv);
-  const chainrings = [parsePositiveNumber(frontChainring), parsePositiveNumber(innerChainring)].filter(
-    (value): value is number => typeof value === "number"
-  );
+  const outerRing = parsePositiveNumber(frontChainring);
+  const innerRing = parsePositiveNumber(innerChainring);
+  const chainrings =
+    drivetrainType === "1x"
+      ? [outerRing].filter((value): value is number => typeof value === "number")
+      : [outerRing, innerRing].filter((value): value is number => typeof value === "number");
 
   return {
     drivetrainType: drivetrainType || undefined,
@@ -199,6 +202,14 @@ export function GearingCalculatorForm() {
     [drivetrainType, frontChainring, innerChainring, cassetteCsv, wheelCircumferenceMm, bike, groupsetName, derailleurMaxCog]
   );
 
+  useEffect(() => {
+    if (drivetrainType === "1x" && innerChainring) {
+      startTransition(() => {
+        setInnerChainring("");
+      });
+    }
+  }, [drivetrainType, innerChainring]);
+
   const currentMetrics = useMemo(
     () => computeGearingMetrics(currentData, Number(preferredCadenceRpm) || 90),
     [currentData, preferredCadenceRpm]
@@ -259,20 +270,24 @@ export function GearingCalculatorForm() {
   ]);
 
   const persistenceInput = useMemo(() => {
-    if (
-      !currentData.drivetrainType ||
-      !currentData.chainrings?.length ||
-      !currentData.cassetteTeeth?.length ||
-      !currentData.wheelCircumferenceMm
-    ) {
+    if (summarizeCompleteness(currentData) !== "validated") {
+      return null;
+    }
+
+    const drivetrainType = currentData.drivetrainType;
+    const chainrings = currentData.chainrings;
+    const cassetteTeeth = currentData.cassetteTeeth;
+    const wheelCircumferenceMm = currentData.wheelCircumferenceMm;
+
+    if (!drivetrainType || !chainrings || !cassetteTeeth || !wheelCircumferenceMm) {
       return null;
     }
 
     return {
-      drivetrainType: currentData.drivetrainType,
-      chainrings: currentData.chainrings,
-      cassetteTeeth: currentData.cassetteTeeth,
-      wheelCircumferenceMm: currentData.wheelCircumferenceMm,
+      drivetrainType,
+      chainrings,
+      cassetteTeeth,
+      wheelCircumferenceMm,
       crankLengthMm: currentData.crankLengthMm,
       cadenceRpm: parsePositiveNumber(preferredCadenceRpm) ?? 85,
       bikeType: bike?.bikeType,
@@ -312,10 +327,17 @@ export function GearingCalculatorForm() {
     riderWeightKg,
   ]);
 
-  const persistenceAnalysis = useMemo(
-    () => (persistenceInput ? calculateGearingAnalysis(persistenceInput) : null),
-    [persistenceInput]
-  );
+  const persistenceAnalysis = useMemo(() => {
+    if (!persistenceInput) {
+      return null;
+    }
+
+    try {
+      return calculateGearingAnalysis(persistenceInput);
+    } catch {
+      return null;
+    }
+  }, [persistenceInput]);
 
   const history = useMemo<HistoryEntry[]>(
     () =>
