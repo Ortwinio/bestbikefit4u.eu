@@ -706,6 +706,51 @@ export const rejectGeometryRecord = mutation({
   },
 });
 
+export const bulkUpdateGeometryRecordStatus = mutation({
+  args: {
+    recordIds: v.array(v.id("geometry_records")),
+    status: v.union(v.literal("draft"), v.literal("active"), v.literal("rejected")),
+    reason: v.optional(v.string()),
+  },
+  handler: async (ctx, { recordIds, status, reason }) => {
+    const adminId = await requireAnyRole(ctx, ["super_admin", "geometry_manager"]);
+    const uniqueRecordIds = [...new Set(recordIds.map((recordId) => String(recordId)))];
+    const now = Date.now();
+    let updatedCount = 0;
+
+    for (const recordIdString of uniqueRecordIds) {
+      const recordId = recordIdString as Id<"geometry_records">;
+      const record = await ctx.db.get(recordId);
+      if (!record) {
+        continue;
+      }
+
+      await ctx.db.patch(recordId, {
+        status,
+        reviewedBy: adminId,
+        reviewedAt: now,
+      });
+      updatedCount += 1;
+
+      await writeAuditLog(ctx, {
+        adminUserId: adminId,
+        action: "geometry.bulk_status_update",
+        targetType: "geometry_record",
+        targetId: recordId,
+        payload: {
+          previousStatus: record.status,
+          nextStatus: status,
+          bulk: true,
+          selectedCount: uniqueRecordIds.length,
+        },
+        reason,
+      });
+    }
+
+    return { updatedCount };
+  },
+});
+
 export const createGeometryRecordVersion = mutation({
   args: { recordId: v.id("geometry_records"), changeReason: v.optional(v.string()) },
   handler: async (ctx, { recordId, changeReason }) => {

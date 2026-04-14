@@ -601,6 +601,120 @@ export const listGeometryRecords = query({
   },
 });
 
+function formatGeometryAdminYearLabel(yearStart?: number, yearEnd?: number) {
+  if (yearStart && yearEnd && yearStart !== yearEnd) {
+    return `${yearStart}-${yearEnd}`;
+  }
+  if (yearStart) {
+    return String(yearStart);
+  }
+  if (yearEnd) {
+    return String(yearEnd);
+  }
+  return "Unknown";
+}
+
+export const listGeometryRecordsForAdminReview = query({
+  args: {
+    brandId: v.optional(v.id("geometry_brands")),
+    modelId: v.optional(v.id("geometry_models")),
+    year: v.optional(v.number()),
+    status: v.optional(
+      v.union(
+        v.literal("draft"),
+        v.literal("active"),
+        v.literal("superseded"),
+        v.literal("rejected")
+      )
+    ),
+  },
+  handler: async (ctx, args) => {
+    await requireGovernanceRead(ctx);
+
+    const [brands, models, records] = await Promise.all([
+      ctx.db.query("geometry_brands").collect(),
+      ctx.db.query("geometry_models").collect(),
+      ctx.db.query("geometry_records").collect(),
+    ]);
+
+    const brandsById = new Map(brands.map((brand) => [String(brand._id), brand]));
+    const modelsById = new Map(models.map((model) => [String(model._id), model]));
+
+    const filteredRecords = records
+      .filter((record) => {
+        if (args.brandId && String(record.brandId) !== String(args.brandId)) {
+          return false;
+        }
+        if (args.modelId && String(record.modelId) !== String(args.modelId)) {
+          return false;
+        }
+        if (args.status && record.status !== args.status) {
+          return false;
+        }
+
+        const model = modelsById.get(String(record.modelId));
+        if (!model) {
+          return false;
+        }
+
+        if (args.year !== undefined) {
+          const yearStart = model.yearStart ?? model.yearEnd;
+          const yearEnd = model.yearEnd ?? model.yearStart;
+          if (yearStart !== undefined && yearEnd !== undefined) {
+            if (args.year < yearStart || args.year > yearEnd) {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        }
+
+        return true;
+      })
+      .map((record) => {
+        const brand = brandsById.get(String(record.brandId)) ?? null;
+        const model = modelsById.get(String(record.modelId)) ?? null;
+        return {
+          _id: record._id,
+          brandId: record.brandId,
+          modelId: record.modelId,
+          brandName: brand?.name ?? "Unknown brand",
+          modelName: model?.name ?? "Unknown model",
+          modelYearStart: model?.yearStart ?? null,
+          modelYearEnd: model?.yearEnd ?? null,
+          modelYearLabel: formatGeometryAdminYearLabel(model?.yearStart, model?.yearEnd),
+          sizeLabel: record.sizeLabel,
+          stack: record.stack ?? null,
+          reach: record.reach ?? null,
+          status: record.status,
+          source: record.source,
+          version: record.version,
+          createdAt: record.createdAt,
+        };
+      })
+      .sort((left, right) => {
+        if (left.brandName !== right.brandName) {
+          return left.brandName.localeCompare(right.brandName);
+        }
+        if (left.modelName !== right.modelName) {
+          return left.modelName.localeCompare(right.modelName);
+        }
+        if (left.modelYearLabel !== right.modelYearLabel) {
+          return left.modelYearLabel.localeCompare(right.modelYearLabel);
+        }
+        if (left.sizeLabel !== right.sizeLabel) {
+          return left.sizeLabel.localeCompare(right.sizeLabel, undefined, {
+            numeric: true,
+            sensitivity: "base",
+          });
+        }
+        return right.version - left.version;
+      });
+
+    return filteredRecords;
+  },
+});
+
 export const getGeometryRecordDetail = query({
   args: { recordId: v.id("geometry_records") },
   handler: async (ctx, { recordId }) => {
