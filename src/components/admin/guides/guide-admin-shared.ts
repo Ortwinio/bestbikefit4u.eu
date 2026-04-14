@@ -1,5 +1,3 @@
-"use client";
-
 import type { Doc } from "../../../../convex/_generated/dataModel";
 
 export const GUIDE_CLUSTER_OPTIONS = [
