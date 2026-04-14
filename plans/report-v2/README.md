@@ -28,7 +28,7 @@ The original report-v2 plan had the right product direction, but it still needed
 ## Background
 
 ### What exists today
-- **Engine v2** is 9/10 phases complete (`plans/engine-v2-migration/`). Steps 1–9 are done. Phase 10 (default cutover) is pending.
+- **Engine v2** is complete (`plans/engine-v2-migration/`). Phase 10 default cutover is documented in `output-10-default-cutover.md`.
 - **PDF layout** was upgraded (`plans/feature-pdf-layout-upgrade/` — COMPLETE). Structured layout with value mapping exists.
 - **Tire pressure module** is built (`plans/feature-tire-pressure/`).
 - **i18n infrastructure** is in place (EN/NL, dashboard + public routes).
@@ -122,8 +122,15 @@ With engine v2 nearly complete and i18n in place, all building blocks exist. Thi
 |------|------|----------|--------|
 | 01 | `01-engine-v2-cutover.md` | P0 | Complete |
 | 02 | `02-report-data-model.md` | P0 | Complete |
-| 03 | `03-in-app-results-page-v2.md` | P1 | Todo |
-| 04 | `04-education-content.md` | P1 | Todo |
-| 05 | `05-pdf-report-v2.md` | P1 | Todo |
-| 06 | `06-tire-pressure-and-deltas.md` | P1 | Todo |
-| 07 | `07-qa-and-release.md` | P0 | Todo |
+| 03 | `03-in-app-results-page-v2.md` | P1 | Complete |
+| 04 | `04-education-content.md` | P1 | Complete |
+| 05 | `05-pdf-report-v2.md` | P1 | Complete |
+| 06 | `06-tire-pressure-and-deltas.md` | P1 | Complete |
+| 07 | `07-qa-and-release.md` | P0 | Complete with documented repo-wide blockers |
+
+## Final Closeout
+
+- Outputs added for Steps `03` through `07`
+- Shared report-v2 payload, dashboard surface, PDF route, tire-pressure integration, and EN/NL copy were verified in code
+- A small cleanup pass moved remaining report-v2 route strings into the shared `dashboard.results.reportV2` copy layer
+- Repo-wide release gates are not fully clean because of unrelated existing failures in guide import, geometry-link test, and questionnaire localization typing; see `output-07-qa-and-release.md`

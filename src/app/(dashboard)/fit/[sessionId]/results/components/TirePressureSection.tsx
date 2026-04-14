@@ -115,9 +115,15 @@ export function TirePressureSection({
                 <table className="w-full min-w-[420px] text-left text-sm">
                   <thead>
                     <tr className="border-b border-[color:var(--border)]">
-                      <th className="pb-2 pr-4 font-medium">Weight</th>
-                      <th className="pb-2 pr-4 font-medium">Tyre size</th>
-                      <th className="pb-2 font-medium">PSI</th>
+                      <th className="pb-2 pr-4 font-medium">
+                        {copy.tirePressure.quickStartColumns.weight}
+                      </th>
+                      <th className="pb-2 pr-4 font-medium">
+                        {copy.tirePressure.quickStartColumns.tireSize}
+                      </th>
+                      <th className="pb-2 font-medium">
+                        {copy.tirePressure.quickStartColumns.psi}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>

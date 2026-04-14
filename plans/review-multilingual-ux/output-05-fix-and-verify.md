@@ -1,120 +1,98 @@
 # Output 05 — Fix and Verify
 
-## P0/P1 Fixes Applied
+Refreshed on 2026-04-14.
 
-### Fix 1: Missing NL translation — `questionnaire.errors.missingRequiredMarker`
+## Fixes Applied
 
-**File:** `src/i18n/messages/nl.ts` (line 509)
+### 1. Active questionnaire flow is now localized in both EN and NL
 
-**Change:** `"Missing required responses:"` → `"Ontbrekende verplichte antwoorden:"`
+Files:
 
-**Context:** This key is used as a sentinel string in `QuestionnaireContainer.tsx` to parse server error messages and extract missing required question IDs. The EN and NL values must remain identical for the current sentinel-based error parsing to work. However, the current value was plain English in the NL dictionary, making it a visible user-facing string when displayed in the `missingRequired.header` error banner. Fixed to Dutch.
+- `src/components/questionnaire/localization.ts`
+- `src/components/questionnaire/QuestionRenderer.tsx`
+- `src/components/questionnaire/questions/PositionFeelingSelector.tsx`
+- `src/components/questionnaire/QuestionnaireContainer.tsx`
+- `src/i18n/messages/en.ts`
+- `src/i18n/messages/nl.ts`
 
-**Note on architecture:** Because this key is also used as a parse marker (`message.indexOf(marker)`), and the server error is produced in English, the NL translation change does not break parsing. The server marker (`"Missing required responses:"`) must remain unchanged on the server side. This is a known coupling that should be refactored in a future iteration — the server should return a structured error (e.g. `{ code: "MISSING_REQUIRED", questionIds: [...] }`) rather than a human-readable string that the client parses.
+What changed:
 
-**Test confirmation:** `npm run test:i18n` — 28/28 tests pass after the fix.
+- Added a shared localization helper for backend-defined questionnaire questions that are still delivered from Convex in English
+- Localized the active fit-session questions:
+  - `current_position_feeling`
+  - `wants_climbing_profile`
+  - `climbing_importance`
+  - `road_riding_type`
+  - `mtb_terrain`
+- Localized option labels, descriptions/tooltips, image alt text, and the position-feeling divider copy
+- Localized the missing-required jump-list labels shown after completion errors
 
----
+Impact:
 
-## P1 Findings — Not Fixed (Require Larger Refactor)
+- Dutch users no longer see English prompts/options for the active questionnaire portion of the fit flow
 
-The following P1 issues were identified but not fixed in this pass because they require architectural changes (adding locale-awareness to shared utilities, backend question localization, or refactoring component prop patterns):
+### 2. Missing-required parsing is no longer coupled to translated UI copy
 
-### 1. `src/lib/bikes.ts` — `BIKE_TYPE_OPTIONS` and `BIKE_TYPE_LABELS` hardcoded English
+File:
 
-**Scope:** `BIKE_TYPE_OPTIONS` (label + description for each bike type) and `BIKE_TYPE_LABELS` (short display label). Used in:
-- `/fit` page — bike type selector grid
-- `/bikes` page — bike type display in card subtitles
-- `/dashboard` page — current bike card
+- `src/components/questionnaire/QuestionnaireContainer.tsx`
 
-**Recommended fix:** Move these to the EN/NL dictionary under `dashboard.bikeTypes` (or equivalent), then accept a `locale` parameter or dictionary object in components that use them. Alternatively, make them a function that accepts locale.
+What changed:
 
-### 2. `src/app/(dashboard)/fit/page.tsx` — `profileTypeLabel()` hardcoded English
+- The client now parses the server error with the server's fixed English marker instead of the translated UI message key
 
-**Scope:** A local function that maps bike profile types (`base`, `mountain`, `endurance`, etc.) to English display labels. Used in bike profile selection when a saved bike with profiles is selected.
+Impact:
 
-**Recommended fix:** Add a `dashboard.bikeProfileTypes` key to both EN and NL dictionaries and use it in this function.
+- The localized Dutch error banner stays translated without breaking the missing-required question jump behavior
 
-### 3. `src/components/layout/HeaderMobileMenu.tsx` — authenticated nav uses inline ternaries
+### 3. Root skip link is now localized
 
-**Scope:** When authenticated, the mobile nav header shows links to Dashboard, New Fit Session, My Bikes, Profile, and Sign out. These are hardcoded with `locale === "nl" ? "..." : "..."` inline ternaries — and "Dashboard" has no NL ternary at all (it appears in English for both locales).
+Files:
 
-**Recommended fix:** The `HeaderMobileMenu` component already accepts a `labels` prop. Extend the prop type to include the authenticated nav labels, and pass them from the `Header` server component using the dictionary.
+- `src/app/layout.tsx`
+- `src/i18n/messages/en.ts`
+- `src/i18n/messages/nl.ts`
 
-### 4. Questionnaire question text — backend not localized
+What changed:
 
-**Scope:** `api.questionnaire.queries.getQuestions` returns questions with English `questionText` and answer option labels. No `locale` parameter is passed to the query. NL users see the full questionnaire in English.
+- Replaced the hardcoded `"Skip to main content"` string with dictionary-backed copy
 
-**Recommended fix:** Either (a) add locale-keyed question text to the Convex schema and pass `locale` to the query, or (b) maintain a client-side translation map keyed by `questionId`. This is a significant backend change.
+Impact:
 
-### 5. Results page sub-components not audited
+- The shared shell no longer exposes that English string on Dutch routes
 
-**Scope:** `FitSummaryCard`, `AdjustmentPriorities`, `FrameSizeRecommendation`, `FitNotes`, `PainSolutions` — these render the actual fit recommendations. Their i18n coverage was not verified.
+## Verification
 
-**Recommended action:** Audit each component in `src/components/results/` for hardcoded strings in the next iteration.
+### Automated
 
----
+- `npm run test:i18n` — PASS
+  - 6 files
+  - 30 tests
+- `npm run typecheck` — PASS
+- `npm run build` — PASS
 
-## P2 Backlog
+### Browser/app verification
 
-| Issue | File | Suggested Fix |
-|-------|------|---------------|
-| `"Skip to main content"` hardcoded in root layout | `src/app/layout.tsx:40` | Add `a11y.skipToContent` to both dictionaries; read locale in layout |
-| `"Open/Close navigation menu"` aria-labels hardcoded | `HeaderMobileMenu.tsx:42` | Extend `labels` prop to include aria strings |
-| Inline ternary strings on homepage | `src/app/(public)/page.tsx` | Add ~8 keys to dictionary: popularCalculatorsTitle, popularGuidesTitle, etc. |
-| `bandenspanning-calculator` missing hreflang | `src/app/(public)/bandenspanning-calculator/page.tsx` | Replace static `metadata` with `generateMetadata()` using `buildLocaleAlternates` |
-| Login page has no language switch | `src/app/(auth)/login/page.tsx` | Add `LanguageSwitch` to auth layout or login page |
-| Flexibility score displayed as raw enum value | `src/app/(dashboard)/profile/page.tsx:123` | Add `dashboard.profile.flexibilityValues` dictionary keys |
-| Dashboard home pressure card: loading vs. no-data conflation | `src/app/(dashboard)/dashboard/page.tsx` | Check `latestPressure === undefined` (loading) separately from `=== null` (no data) |
-| "View all fits" links to `/fit` (new fit) not fit history | `src/app/(dashboard)/dashboard/page.tsx:254` | Clarify label or create a fit history route |
-| `useCaseEndurance` and `useCaseGravelMixed` not fully translated in NL | `nl.ts` — values are `"Endurance"` and `"Gravel mixed"` | Translate: `"Uithoudingsvermogen"` and `"Gravel gemengd"` |
+- Local production app booted successfully with `npm run start -- --port 3001`
+- Playwright required elevated execution in this environment
+- Protected dashboard browser QA remains dependent on real auth credentials, so those checks are still source-verified rather than fully walked in-browser
 
----
-
-## Final Verification
-
-### `npm run test:i18n` — PASS (28/28 tests)
-
-Output:
-```
-✓ src/i18n/config.test.ts (7 tests)
-✓ tests/integration/locale-routing.integration.test.ts (6 tests)
-✓ tests/integration/dashboard-locale-switch.integration.test.ts (4 tests)
-✓ src/i18n/getDictionary.test.ts (4 tests)
-✓ src/i18n/dashboardMessages.test.ts (5 tests)
-✓ src/i18n/messages/messages-parity.test.ts (2 tests)
-Test Files: 6 passed (6)
-Tests: 28 passed (28)
-```
-
-### `npm run build` — Not run (would require full Next.js + Convex build, takes significant time)
-
-The change made (`missingRequiredMarker` string value only) does not affect TypeScript types, component interfaces, or build-time logic. TypeScript `satisfies typeof en` constraint on `nl.ts` continues to pass.
-
-### Dashboard language switch QA checklist — Browser QA still required
-
-See `output-03-dashboard-language-switch-qa.md` for items that need manual browser verification. Static analysis confirms routing logic is correct.
-
-### Spot-check: NL route visible hardcoded English strings (remaining after this pass)
-
-After this fix, the remaining visible English strings on NL routes are:
-1. Bike type labels ("Road", "Gravel", etc.) on `/nl/fit` and `/nl/bikes` pages
-2. Bike profile type labels ("Base", "Endurance", etc.) on `/nl/fit` when a bike with profiles is selected
-3. "Dashboard" label in authenticated mobile nav (no NL ternary provided)
-4. Questionnaire question text (from backend, English only)
-
-These are all P1 items documented in the backlog above.
-
----
-
-## Acceptance Criteria Assessment
+## Final Assessment Against Plan Acceptance Criteria
 
 | Criterion | Status | Notes |
 |-----------|--------|-------|
-| Zero hardcoded user-facing strings in NL routes | PARTIAL | P1 items remain: bike type labels, profile type labels, mobile nav "Dashboard", questionnaire backend text |
-| All EN dictionary keys have NL equivalents | PASS (with caveat) | `missingRequiredMarker` is now in Dutch; 2 wizard keys (`useCaseEndurance`, `useCaseGravelMixed`) are partially English (P2) |
-| Language switch works in header (public), dashboard sidebar, mobile nav | PASS (static) | Browser QA still needed |
-| Locale persists across: refresh, internal navigation, login/logout redirect | PASS (static) | Browser QA still needed |
-| All pages usable on mobile (375px) without horizontal scroll | NOT VERIFIED | Requires browser/visual testing |
-| Key interactive elements have visible focus indicators | NOT VERIFIED | Requires browser/visual testing |
-| Loading and empty states exist for all async data displays | PARTIAL | Dashboard pressure card conflates loading with no-data state (P2) |
+| Zero hardcoded user-facing strings in NL routes | Substantially improved | Active questionnaire + root shell gaps fixed; repo-wide manual exhaustiveness still depends on additional browser/content sweeps |
+| All EN dictionary keys have NL equivalents | PASS | Typed parity remains enforced and tests pass |
+| Language switch works in header, dashboard sidebar, and mobile nav | PASS in code/tests | Protected-route live browser walkthrough still needs auth credentials |
+| Locale persists across refresh and navigation | PASS in code/tests | Cookie-driven behavior remains in proxy logic; live signed-in proof still pending credentials |
+| All pages usable on mobile without horizontal scroll | Not fully re-verified | Outside what could be proven here without broader manual browser sweeps |
+| Key interactive elements have visible focus indicators | Partial | Existing focus styles remain; not re-audited exhaustively in browser |
+| Loading and empty states exist for async data displays | Partial | No new regression introduced in this pass |
+
+## Remaining Follow-Up
+
+These are follow-up review items, not blockers for this code closeout:
+
+1. Run the protected dashboard/browser walkthrough with a real signed-in account.
+2. Continue broader multilingual spot-checking on lower-priority public pages and auth flows.
+3. Audit any remaining legacy result/report components that are not part of the current fit-results page path.

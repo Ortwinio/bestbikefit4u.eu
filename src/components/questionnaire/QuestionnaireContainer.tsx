@@ -17,6 +17,9 @@ import { ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { formatMessage } from "@/i18n/dashboardMessages";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import type { QuestionDefinition, QuestionnaireResponseValue } from "./types";
+import { getLocalizedQuestion } from "./localization";
+
+const SERVER_MISSING_REQUIRED_MARKER = "Missing required responses:";
 
 interface QuestionnaireContainerProps {
   questions: QuestionDefinition[];
@@ -197,7 +200,7 @@ export function QuestionnaireContainer({
         const message = getErrorMessage(error);
         const missingIds = extractMissingRequiredQuestionIds(
           message,
-          messages.questionnaire.errors.missingRequiredMarker
+          SERVER_MISSING_REQUIRED_MARKER
         );
         if (missingIds.length > 0) {
           setMissingRequiredQuestionIds(missingIds);
@@ -275,7 +278,7 @@ export function QuestionnaireContainer({
                   variant="outline"
                   onClick={() => jumpToQuestion(questionId)}
                 >
-                  {question?.questionText ?? questionId}
+                  {question ? getLocalizedQuestion(question, messages).questionText : questionId}
                 </Button>
               );
             })}

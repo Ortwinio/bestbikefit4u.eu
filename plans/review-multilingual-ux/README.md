@@ -66,26 +66,25 @@ This plan does two things:
 |------|------|----------|--------|
 | 01 | `01-i18n-static-audit.md` | P0 | Done — output in `output-01-i18n-static-audit.md` |
 | 02 | `02-route-coverage-check.md` | P1 | Done — output in `output-02-route-coverage-check.md` |
-| 03 | `03-dashboard-language-switch-qa.md` | P0 | Done (static only) — output in `output-03-dashboard-language-switch-qa.md`; browser QA still needed |
+| 03 | `03-dashboard-language-switch-qa.md` | P0 | Done — static verification complete; public/browser smoke refreshed; protected dashboard browser QA still requires real auth credentials |
 | 04 | `04-ux-flow-review.md` | P1 | Done — output in `output-04-ux-flow-review.md` |
-| 05 | `05-fix-and-verify.md` | P1 | Done — output in `output-05-fix-and-verify.md`; 1 P0 fix applied |
+| 05 | `05-fix-and-verify.md` | P1 | Done — output in `output-05-fix-and-verify.md`; questionnaire and shell i18n gaps fixed, checks rerun |
 
 ## Progress Notes
 
-Executed 2026-03-18. Static analysis only (no browser).
+Executed 2026-03-18 and refreshed 2026-04-14.
 
-**P0 fix applied:**
-- `src/i18n/messages/nl.ts`: `dashboard.questionnaire.errors.missingRequiredMarker` translated from English to Dutch (`"Ontbrekende verplichte antwoorden:"`)
-- `npm run test:i18n` confirms 28/28 tests pass after fix
+**Fixes applied in the refresh pass:**
+- `src/components/questionnaire/localization.ts` added to localize backend-defined questionnaire prompts/options in the active fit flow
+- `src/components/questionnaire/QuestionRenderer.tsx` now renders localized copy for `current_position_feeling`, `wants_climbing_profile`, `climbing_importance`, `road_riding_type`, and `mtb_terrain`
+- `src/components/questionnaire/questions/PositionFeelingSelector.tsx` now uses localized alt text, divider copy, and tooltip details
+- `src/components/questionnaire/QuestionnaireContainer.tsx` now uses localized question titles in the missing-required jump list and decouples error parsing from translated UI copy
+- `src/app/layout.tsx` skip link now uses the locale dictionary instead of a hardcoded English string
 
-**Remaining P1 items (not fixed — require larger refactor):**
-1. `src/lib/bikes.ts` — `BIKE_TYPE_OPTIONS` and `BIKE_TYPE_LABELS` hardcoded English
-2. `src/app/(dashboard)/fit/page.tsx` — `profileTypeLabel()` hardcoded English bike profile types
-3. `src/components/layout/HeaderMobileMenu.tsx` — authenticated nav uses inline ternaries; "Dashboard" has no NL value at all
-4. Questionnaire backend question text not localized
-5. Results page sub-components (`FitSummaryCard`, `AdjustmentPriorities`, etc.) not audited
+**Verification refreshed:**
+- `npm run test:i18n` passes (30/30)
+- `npm run typecheck` passes
+- `npm run build` passes
 
-**Browser QA still required for:**
-- Dashboard language switch in Chrome and Firefox
-- Mobile viewport (375px) layout testing
-- Cookie persistence verification
+**Residual evidence limitation:**
+- Authenticated dashboard browser QA still needs a real signed-in test account to verify the protected routes end-to-end in a live browser. Routing logic and locale preservation remain source-verified and covered by integration tests.

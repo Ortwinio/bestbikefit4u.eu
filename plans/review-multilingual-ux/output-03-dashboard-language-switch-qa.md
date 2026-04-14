@@ -1,111 +1,76 @@
 # Output 03 — Dashboard Language Switch QA
 
-## Static Analysis Summary
+Refreshed on 2026-04-14 after the multilingual closeout pass.
 
-Browser testing was not performed (no browser available in this execution context). This document covers what can be verified statically from source code, plus identifies what still requires manual browser QA.
+## Result Summary
 
----
+- Static route-switch verification: PASS
+- Integration coverage (`tests/integration/dashboard-locale-switch.integration.test.ts`): PASS
+- Public locale persistence and shell smoke: PASS via local built app
+- Protected dashboard browser walkthrough: BLOCKED by missing signed-in test credentials in this workspace
 
-## Static Verification Results
+## What Was Verified
 
-### Routing logic — PASS
+### Route + query preservation
 
-The `LanguageSwitch` component (`src/components/layout/LanguageSwitch.tsx`) uses `buildLocaleSwitchHref()` which calls `switchLocalePathname()` → `withLocalePrefix()`. The logic:
+Verified statically from the routing utilities and integration tests:
 
-1. Reads `usePathname()` to get the current path (includes `[sessionId]` values)
-2. Strips the current locale prefix via `stripLocalePrefix()`
-3. Replaces with the target locale prefix
-4. Appends the query string from `useSearchParams()`
+- Locale switching preserves the pathname shape for dashboard routes
+- Dynamic segments such as `sessionId` remain intact
+- Query strings are preserved
+- Locale preference continues to rely on `bf_locale` cookie plus request header resolution
 
-This correctly handles all dashboard route shapes:
-- `/en/dashboard` → `/nl/dashboard`
-- `/en/fit/[sessionId]/questionnaire` → `/nl/fit/[sessionId]/questionnaire` (sessionId preserved)
-- `/en/fit/[sessionId]/results` → `/nl/fit/[sessionId]/results`
-- `/en/profile` → `/nl/profile`
-- `/en/bikes` → `/nl/bikes`
-- `/en/bikes/new` → `/nl/bikes/new`
-- `/en/bikes/[bikeId]/edit` → `/nl/bikes/[bikeId]/edit`
-- `/en/pressure-calculator?bikeId=xxx` → `/nl/pressure-calculator?bikeId=xxx` (query preserved)
+### Dashboard shell coverage
 
-### Switch component placement — PASS
+Verified from current source:
 
-The `LanguageSwitch` is rendered in:
-- `DashboardSidebar.tsx` (desktop, top of sidebar below brand link)
-- `DashboardLayout` mobile topbar (the sticky `div` shown on `md:hidden`)
+- Desktop dashboard sidebar renders `LanguageSwitch`
+- Mobile dashboard topbar renders `LanguageSwitch`
+- Dashboard navigation labels are dictionary-backed
+- Authenticated public mobile nav labels are dictionary-backed
 
-Both pass `locale` and `languageSwitchLabels` props from `useDashboardMessages()`, which is correctly locale-aware.
+### Local browser/app smoke
 
-### Copy coverage — static PASS
+Verified against a fresh local production build:
 
-All dashboard navigation items, action buttons, and state labels are sourced from the `useDashboardMessages()` hook backed by `nl.ts` dictionary entries. One exception found:
+- `npm run build` completed successfully
+- `npm run start -- --port 3001` served the built app successfully
+- Playwright could be launched only with elevated execution in this environment
+- Direct protected-route browser QA could not be completed without a real authenticated session
 
-- `HeaderMobileMenu.tsx` (public header mobile nav, not dashboard) uses inline ternaries for authenticated user links — these strings appear correct but are not sourced from the dictionary. See output-01 for details.
+## Checklist
 
-### Locale persistence — logic PASS
+### Desktop (>=1024px)
 
-- `LanguageSwitch` uses `<a href>` (not `<Link>`) for navigation, which triggers a full page load
-- On full page load, the proxy middleware reads `bf_locale` cookie and sets `x-bf-locale` header
-- `getRequestLocale()` reads `x-bf-locale` first, providing stable locale on reload
-- On logout: the cookie is not cleared by `signOut()` (Convex auth action), so locale should persist across login/logout cycles
+- [x] Language switch code path exists in dashboard sidebar
+- [x] `/en/dashboard` -> `/nl/dashboard` is covered by switch-path logic
+- [x] `/en/fit/[sessionId]/questionnaire` -> `/nl/fit/[sessionId]/questionnaire` is covered by switch-path logic
+- [x] `/en/fit/[sessionId]/results` -> `/nl/fit/[sessionId]/results` is covered by switch-path logic
+- [x] `/en/profile` -> `/nl/profile` is covered by switch-path logic
+- [x] `/en/bikes` -> `/nl/bikes` is covered by switch-path logic
+- [x] `/en/bikes/new` -> `/nl/bikes/new` is covered by switch-path logic
+- [x] `/en/bikes/[bikeId]/edit` -> `/nl/bikes/[bikeId]/edit` is covered by switch-path logic
+- [x] Query parameters are preserved by the switch helper
+- [ ] Real signed-in browser navigation through those routes
 
----
+### Mobile (<=767px)
 
-## QA Checklist — Static Assessment
+- [x] Language switch code path exists in the mobile dashboard header
+- [ ] Real signed-in mobile browser walkthrough
 
-### Desktop (≥1024px)
+### Copy verification
 
-| Item | Static Result | Browser QA needed? |
-|------|--------------|-------------------|
-| Language switch visible in dashboard sidebar | PASS (code confirmed) | Yes — verify render position |
-| Switching on `/en/dashboard` → `/nl/dashboard` | PASS (logic correct) | Yes — verify navigation |
-| Switching on `/en/fit/[sessionId]/questionnaire` → `/nl/fit/[sessionId]/questionnaire` | PASS (sessionId preserved in logic) | Yes — verify in session context |
-| Switching on `/en/fit/[sessionId]/results` | PASS | Yes |
-| Switching on `/en/profile` | PASS | Yes |
-| Switching on `/en/bikes` | PASS | Yes |
-| Switching on `/en/bikes/new` | PASS | Yes |
-| Switching on `/en/bikes/[bikeId]/edit` | PASS | Yes |
-| Query parameters preserved | PASS (searchParams passed to `buildLocaleSwitchHref`) | Yes |
-
-### Mobile (≤767px)
-
-| Item | Static Result | Browser QA needed? |
-|------|--------------|-------------------|
-| Language switch visible in mobile header | PASS (rendered in `md:hidden` topbar) | Yes — verify on real viewport |
-| All route switches work on mobile | PASS (same component) | Yes |
-
-### Copy verification (spot check)
-
-| Item | Static Result | Notes |
-|------|--------------|-------|
-| Dashboard home: navigation items translated in NL | PASS — all from `messages.nav.*` | Verified in `DashboardSidebar.tsx` and `DashboardLayout` |
-| Questionnaire: action buttons (Next, Back) translated in NL | PASS — `messages.questionnaire.actions.*` | Verified in `QuestionnaireContainer.tsx` |
-| Results page: back-navigation link translated in NL | PASS — `messages.results.backToDashboard` | Verified in `results/page.tsx` |
-| Bikes empty state: translated in NL | PASS — `messages.bikes.empty.*` | Verified in `bikes/page.tsx` |
-| No mixed-language chrome | PARTIAL — `BIKE_TYPE_LABELS` in sidebar and bike cards are hardcoded English | P1 gap noted in output-01/02 |
+- [x] Dashboard shell/navigation labels are localized
+- [x] Questionnaire action buttons are localized
+- [x] Results back-navigation label is localized
+- [x] Bikes empty state is localized
+- [x] Previously stale authenticated mobile-nav label issue is fixed in current code
 
 ### Locale persistence
 
-| Item | Static Result | Browser QA needed? |
-|------|--------------|-------------------|
-| Reload on NL dashboard route stays on NL | PASS (cookie + header mechanism) | Yes — verify cookie is set on switch |
-| Log out and log back in: locale cookie persists | PASS (cookie not cleared on signOut) | Yes — verify empirically |
+- [x] Cookie-driven persistence remains implemented in proxy + locale resolution
+- [ ] Signed-in logout/login persistence walkthrough in a browser
 
----
+## Residual Risk
 
-## Items Requiring Manual Browser QA
-
-The following cannot be verified statically:
-
-1. Confirm `LanguageSwitch` visually renders at the correct position in the sidebar (below brand, above nav items) — code says yes, render may differ
-2. Confirm switching locale triggers a full page reload and the locale is correctly applied on the new page
-3. Confirm the cookie `bf_locale` is set in browser DevTools after switching
-4. Confirm no flash of English content on NL dashboard pages
-5. Confirm that on mobile (375px viewport) the language switch in the sticky topbar is usable without overflow
-6. Test in Firefox (any layout difference from Chrome)
-7. Confirm that `BIKE_TYPE_LABELS` hardcoded English values appear on NL fit and bikes pages (to prioritize the fix)
-
----
-
-## Known Issue: Hardcoded English Bike Type Labels
-
-When a user is on `/nl/bikes` or `/nl/fit`, bike type labels (`"Road"`, `"Gravel"`, `"Mountain"`, etc.) from `BIKE_TYPE_LABELS` and `BIKE_TYPE_OPTIONS` in `src/lib/bikes.ts` will appear in English regardless of locale. This is a P1 i18n gap documented in output-01.
+The remaining gap is not a known routing bug; it is missing manual evidence for the authenticated browser walkthrough. Completing that last check requires valid login credentials or a seeded local auth session.

@@ -199,9 +199,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
 
     sessionStorage.setItem(storageKey, "1");
     toast.success({
-      description: isNl
-        ? "Fit Pass geactiveerd. Je volledige rapport is nu beschikbaar."
-        : "Fit Pass activated. Your full report is now available.",
+      description: reportCopy.shell.fitPassActivated,
     });
     logMarketingEvent({
       eventType: "fit_pass_checkout_completed",
@@ -225,7 +223,16 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       ? `${window.location.pathname}?${cleanParams.toString()}`
       : window.location.pathname;
     router.replace(cleanPath);
-  }, [searchParams, sessionId, toast, isNl, logMarketingEvent, locale, pagePath, router]);
+  }, [
+    searchParams,
+    sessionId,
+    toast,
+    logMarketingEvent,
+    locale,
+    pagePath,
+    reportCopy.shell.fitPassActivated,
+    router,
+  ]);
 
   const handleSendEmail = async () => {
     if (!email || !recommendation) return;
@@ -490,7 +497,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                 </Button>
                 <div className="dashboard-card-surface-muted rounded-[var(--radius-xl)] border px-3 py-3">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:oklch(var(--dashboard-nav-foreground))]">
-                    {isNl ? "Rapport acties" : "Report actions"}
+                    {reportCopy.shell.actionsTitle}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-3">
                     <Button
@@ -498,9 +505,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                       onClick={() => {
                         if (!hasPaidReportAccess) {
                           toast.info({
-                            description: isNl
-                              ? "Fit Pass of Pro is nodig om het volledige rapport te e-mailen."
-                              : "Fit Pass or Pro is required to email the full report.",
+                            description: reportCopy.paywall.emailUpgradeToast,
                           });
                           return;
                         }
@@ -515,9 +520,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                       <Mail className="mr-2 h-4 w-4" />
                       {hasPaidReportAccess
                         ? messages.results.actions.emailReport
-                        : isNl
-                          ? "E-mail rapport — Fit Pass"
-                          : "Email report — Fit Pass"}
+                        : reportCopy.paywall.emailUpgradeButton}
                     </Button>
                     {hasPaidReportAccess ? (
                       <Button
@@ -534,14 +537,12 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                         disabled
                         onClick={() => {
                           toast.info({
-                            description: isNl
-                              ? "Fit Pass of Pro is nodig om je PDF te downloaden."
-                              : "Fit Pass or Pro is required to download your PDF.",
+                            description: reportCopy.paywall.pdfUpgradeToast,
                           });
                         }}
                       >
                         <Download className="mr-2 h-4 w-4" />
-                        {isNl ? "PDF — Fit Pass of Pro" : "PDF — Fit Pass or Pro"}
+                        {reportCopy.paywall.pdfUpgradeButton}
                       </Button>
                     )}
                   </div>
@@ -571,16 +572,12 @@ export default function ResultsPage({ params }: ResultsPageProps) {
 
               <div className="dashboard-card-surface-muted mt-5 rounded-[var(--radius-xl)] border px-4 py-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:oklch(var(--dashboard-nav-foreground))]">
-                  {isNl ? "Samenvatting" : "Summary"}
+                  {reportCopy.shell.summaryTitle}
                 </p>
                 <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
                   {hasPaidReportAccess
-                    ? isNl
-                      ? "Je volledige rapport staat klaar, inclusief de gedetailleerde aanpasvolgorde en validatiestappen."
-                      : "Your full report is ready, including the detailed adjustment sequence and validation steps."
-                    : isNl
-                      ? "Je ziet nu de belangrijkste fitgetallen. Extra rapportacties blijven beschikbaar via Fit Pass of Pro."
-                      : "You are seeing the core fit numbers now. Additional report actions remain available through Fit Pass or Pro."}
+                    ? reportCopy.shell.summaryFullAccess
+                    : reportCopy.shell.summaryLimited}
                 </p>
               </div>
             </div>
@@ -626,22 +623,22 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         const primaryStats = [
           {
             key: "saddleHeight",
-            label: isNl ? "Zadelhoogte" : "Saddle height",
+            label: reportCopy.parameters.saddleHeight.label,
             value: fit.saddleHeightMm,
           },
           {
             key: "saddleSetback",
-            label: isNl ? "Zadelteruggang" : "Saddle setback",
+            label: reportCopy.parameters.saddleSetback.label,
             value: fit.saddleSetbackMm,
           },
           {
             key: "handlebarDrop",
-            label: isNl ? "Stuurhoogteverschil" : "Handlebar drop",
+            label: reportCopy.parameters.handlebarDrop.label,
             value: fit.handlebarDropMm,
           },
           {
             key: "stemLength",
-            label: isNl ? "Stuurpenlengte" : "Stem length",
+            label: reportCopy.parameters.stem.label,
             value: fit.stemLengthMm,
           },
         ];
@@ -737,21 +734,14 @@ export default function ResultsPage({ params }: ResultsPageProps) {
               <Card variant="bordered">
                 <CardHeader>
                   <CardTitle>
-                    {isNl ? "Volledig rapport ontgrendelen" : "Unlock the full report"}
+                    {reportCopy.shell.unlockTitle}
                   </CardTitle>
                   <CardDescription>
-                    {isNl
-                      ? "De gratis weergave laat je belangrijkste getallen en prioriteiten zien. Fit Pass voegt de complete aanpasvolgorde, PDF-download, e-mailrapport en validatieplan toe."
-                      : "The free view shows your core numbers and priorities. Fit Pass adds the full adjustment sequence, PDF download, email report, and validation plan."}
+                    {reportCopy.shell.unlockDescription}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-3 sm:grid-cols-2">
-                  {[
-                    isNl ? "Gedetailleerde fittabel" : "Detailed fit table",
-                    isNl ? "Volledige aanpasvolgorde" : "Full adjustment sequence",
-                    isNl ? "Bandenspanning en waarschuwingen" : "Tire pressure and warnings",
-                    isNl ? "14-daags validatieplan" : "14-day validation plan",
-                  ].map((item) => (
+                  {reportCopy.shell.unlockItems.map((item) => (
                     <div
                       key={item}
                       className="dashboard-card-surface-muted rounded-[var(--radius-lg)] border border-dashed px-4 py-4 text-sm text-[color:var(--muted-foreground)]"

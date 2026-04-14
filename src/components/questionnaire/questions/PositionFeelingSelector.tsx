@@ -48,14 +48,22 @@ interface Option {
   label: string;
 }
 
+interface PositionFeelingCopy {
+  imageAlt: string;
+  orDivider: string;
+  options: Record<string, { subtitle: string; tooltip: string }>;
+}
+
 interface PositionFeelingSelectorProps {
   options: Option[];
+  copy: PositionFeelingCopy;
   value: string[];
   onChange: (value: string[]) => void;
 }
 
 export function PositionFeelingSelector({
   options,
+  copy,
   value,
   onChange,
 }: PositionFeelingSelectorProps) {
@@ -85,7 +93,7 @@ export function PositionFeelingSelector({
       <div className="relative w-full">
         <Image
           src="/comfort-discomfort.png"
-          alt="Illustration of comfortable versus uncomfortable cycling positions"
+          alt={copy.imageAlt}
           width={900}
           height={400}
           className="h-auto max-h-[214px] w-full object-cover"
@@ -128,7 +136,7 @@ export function PositionFeelingSelector({
       <div className="flex items-center gap-3 border-t border-border px-4 py-3">
         <div className="h-px flex-1 bg-border" />
         <span className="text-xs font-medium text-muted-foreground">
-          or describe what feels off
+          {copy.orDivider}
         </span>
         <div className="h-px flex-1 bg-border" />
       </div>
@@ -172,7 +180,7 @@ export function PositionFeelingSelector({
         <div className="border-t border-border px-6 py-4">
           <div className="space-y-3">
             {selectedValues.map((v) => {
-              const details = OPTION_DETAILS[v];
+              const details = copy.options[v] ?? OPTION_DETAILS[v];
               if (!details) return null;
               const label = options.find((o) => o.value === v)?.label ?? v;
               return (

@@ -16,6 +16,7 @@ import { TextQuestion } from "./questions/TextQuestion";
 import Image from "next/image";
 import { HelpCircle } from "lucide-react";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { getLocalizedQuestion } from "./localization";
 
 interface QuestionRendererProps {
   question: QuestionDefinition;
@@ -31,6 +32,7 @@ export function QuestionRenderer({
   headingId,
 }: QuestionRendererProps) {
   const { messages } = useDashboardMessages();
+  const localizedQuestion = getLocalizedQuestion(question, messages);
   const isExperienceLevel = question.questionId === "experience_level";
   const isWeeklyHours = question.questionId === "weekly_hours";
   const isRideDistance = question.questionId === "typical_ride_length";
@@ -46,7 +48,7 @@ export function QuestionRenderer({
           ? messages.questionnaire.painDiscomfort.questionText
           : isPainAreas
             ? messages.questionnaire.painAreas.questionText
-            : question.questionText;
+            : localizedQuestion.questionText;
   const helpText = isExperienceLevel
     ? messages.questionnaire.experienceLevel.helpText
     : isWeeklyHours
@@ -57,7 +59,7 @@ export function QuestionRenderer({
           ? messages.questionnaire.painDiscomfort.helpText
           : isPainAreas
             ? messages.questionnaire.painAreas.helpText
-            : question.helpText;
+            : localizedQuestion.helpText;
 
   return (
     <div className="space-y-4">
@@ -131,7 +133,7 @@ export function QuestionRenderer({
           <div className="mb-4 overflow-hidden rounded-[var(--radius-lg)] border border-border">
             <Image
               src="/type-of-riding.png"
-              alt="Type of riding illustration"
+              alt={messages.questionnaire.roadRidingType.imageAlt}
               width={1024}
               height={1024}
               className="h-auto max-h-56 w-full object-cover"
@@ -144,7 +146,7 @@ export function QuestionRenderer({
           <div className="mb-4 overflow-hidden rounded-[var(--radius-lg)] border border-border">
             <Image
               src="/climbing-cyclist.png"
-              alt="Climbing cyclist illustration"
+              alt={messages.questionnaire.climbingProfile.imageAlt}
               width={1024}
               height={1024}
               className="h-auto max-h-56 w-full object-cover"
@@ -157,7 +159,7 @@ export function QuestionRenderer({
           <div className="mb-4 overflow-hidden rounded-[var(--radius-lg)] border border-border">
             <Image
               src="/bike-terrain.png"
-              alt="Bike terrain illustration"
+              alt={messages.questionnaire.mtbTerrain.imageAlt}
               width={1024}
               height={1024}
               className="h-auto max-h-56 w-full object-cover"
@@ -166,73 +168,71 @@ export function QuestionRenderer({
           </div>
         )}
 
-        {question.questionId === "mtb_terrain" && question.options && (
+        {question.questionId === "mtb_terrain" && localizedQuestion.options && (
           <SingleChoiceTooltipQuestion
             name={question.questionId}
-            options={question.options}
+            options={localizedQuestion.options}
             tooltips={{
-              asphalt:
-                "Smooth roads allow for an efficient and aerodynamic riding position. We optimize your setup for speed, power transfer, and reduced air resistance.",
-              paved:
-                "Mixed surfaces require a balance between comfort and efficiency. We slightly increase stability while maintaining a fast, efficient position.",
-              xc: "Climbing and light trails require efficient power transfer and control. We balance stability with a position suited for sustained effort.",
-              trail:
-                "Uneven and technical terrain demands more control and flexibility. We adjust your position to improve handling and stability on descents.",
-              enduro:
-                "Steep descents and rough terrain require a stable and confident position. We prioritize control and shock absorption over aerodynamics.",
-              dh: "High-speed descents and jumps require maximum control and safety. We optimize your setup for stability, impact absorption, and handling.",
+              asphalt: messages.questionnaire.mtbTerrain.options.asphalt.tooltip,
+              paved: messages.questionnaire.mtbTerrain.options.paved.tooltip,
+              xc: messages.questionnaire.mtbTerrain.options.xc.tooltip,
+              trail: messages.questionnaire.mtbTerrain.options.trail.tooltip,
+              enduro: messages.questionnaire.mtbTerrain.options.enduro.tooltip,
+              dh: messages.questionnaire.mtbTerrain.options.dh.tooltip,
             }}
             value={value as string | null}
             onChange={onChange}
           />
         )}
 
-        {question.questionId === "road_riding_type" && question.options && (
+        {question.questionId === "road_riding_type" && localizedQuestion.options && (
           <SingleChoiceTooltipQuestion
             name={question.questionId}
-            options={question.options}
+            options={localizedQuestion.options}
             tooltips={{
-              casual:
-                "Focused on comfort and enjoyment. We prioritize a more relaxed position with reduced strain on your back, neck, and hands.",
-              group:
-                "A mix of endurance and pace. We balance comfort and efficiency to support longer rides with moderate intensity.",
+              casual: messages.questionnaire.roadRidingType.options.casual.tooltip,
+              group: messages.questionnaire.roadRidingType.options.group.tooltip,
               training:
-                "Regular training with specific goals. We optimize your position for efficiency and power transfer while maintaining sustainability.",
+                messages.questionnaire.roadRidingType.options.training.tooltip,
               racing:
-                "High intensity and performance-focused. We create a more aggressive position to improve speed, aerodynamics, and responsiveness.",
-              tt: "Maximum aerodynamic efficiency. We position you lower and more forward to minimize air resistance and maximize sustained speed.",
+                messages.questionnaire.roadRidingType.options.racing.tooltip,
+              tt: messages.questionnaire.roadRidingType.options.tt.tooltip,
             }}
             value={value as string | null}
             onChange={onChange}
           />
         )}
 
-        {question.questionId === "wants_climbing_profile" && question.options && (
+        {question.questionId === "wants_climbing_profile" &&
+          localizedQuestion.options && (
           <SingleChoiceTooltipQuestion
             name={question.questionId}
-            options={question.options}
+            options={localizedQuestion.options}
             tooltips={{
-              yes: "We'll calculate a second set of measurements optimised for seated climbing — adjusted saddle height, setback, and handlebar position to improve efficiency on climbs.",
-              no: "We'll provide a single all-round fit profile based on your measurements and riding preferences.",
+              yes: messages.questionnaire.climbingProfile.options.yes.tooltip,
+              no: messages.questionnaire.climbingProfile.options.no.tooltip,
             }}
             value={value as string | null}
             onChange={onChange}
           />
         )}
 
-        {question.questionId === "climbing_importance" && question.options && (
+        {question.questionId === "climbing_importance" &&
+          localizedQuestion.options && (
           <SingleChoiceTooltipQuestion
             name={question.questionId}
-            options={question.options}
+            options={localizedQuestion.options}
             tooltips={{
               rarely:
-                "On flat terrain, we can optimize your position for aerodynamics and speed with a lower and more stretched setup.",
+                messages.questionnaire.climbingImportance.options.rarely.tooltip,
               occasional:
-                "A balanced position helps you stay efficient on flats while remaining comfortable on short climbs.",
+                messages.questionnaire.climbingImportance.options.occasional
+                  .tooltip,
               regular:
-                "Climbing requires efficient power transfer and comfort in a more upright position. We adjust your setup to reduce strain during sustained efforts.",
+                messages.questionnaire.climbingImportance.options.regular.tooltip,
               climbing_focused:
-                "Long climbs demand an open hip angle and stable posture. We optimize your position for seated climbing efficiency and reduced fatigue.",
+                messages.questionnaire.climbingImportance.options
+                  .climbing_focused.tooltip,
             }}
             value={value as string | null}
             onChange={onChange}
@@ -240,7 +240,7 @@ export function QuestionRenderer({
         )}
 
         {question.responseType === "single_choice" &&
-          question.options &&
+          localizedQuestion.options &&
           question.questionId !== "experience_level" &&
           question.questionId !== "weekly_hours" &&
           question.questionId !== "typical_ride_length" &&
@@ -251,28 +251,29 @@ export function QuestionRenderer({
           question.questionId !== "wants_climbing_profile" && (
           <SingleChoiceQuestion
             name={question.questionId}
-            options={question.options}
+            options={localizedQuestion.options}
             value={value as string | null}
             onChange={onChange}
           />
         )}
 
         {question.questionId === "current_position_feeling" &&
-          question.options && (
+          localizedQuestion.options && (
           <PositionFeelingSelector
-            options={question.options}
+            options={localizedQuestion.options}
+            copy={messages.questionnaire.currentPositionFeeling}
             value={(value as string[]) || []}
             onChange={onChange}
           />
         )}
 
         {question.responseType === "multiple_choice" &&
-          question.options &&
+          localizedQuestion.options &&
           question.questionId !== "pain_areas" &&
           question.questionId !== "current_position_feeling" && (
           <MultipleChoiceQuestion
             name={question.questionId}
-            options={question.options}
+            options={localizedQuestion.options}
             value={(value as string[]) || []}
             onChange={onChange}
           />

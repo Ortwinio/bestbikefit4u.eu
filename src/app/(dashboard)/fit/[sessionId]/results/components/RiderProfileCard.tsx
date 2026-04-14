@@ -27,12 +27,12 @@ export function RiderProfileCard({
   ] as const;
 
   const measurements = [
-    ["Height", rider.heightCm ? `${rider.heightCm} cm` : null],
-    ["Inseam", rider.inseamCm ? `${rider.inseamCm} cm` : null],
-    ["Torso", rider.torsoLengthCm ? `${rider.torsoLengthCm} cm` : null],
-    ["Arm", rider.armLengthCm ? `${rider.armLengthCm} cm` : null],
-    ["Shoulder", rider.shoulderWidthCm ? `${rider.shoulderWidthCm} cm` : null],
-    ["Weight", rider.weightKg ? `${rider.weightKg} kg` : null],
+    [copy.rider.height, rider.heightCm ? `${rider.heightCm} cm` : null],
+    [copy.rider.inseam, rider.inseamCm ? `${rider.inseamCm} cm` : null],
+    [copy.rider.torsoLength, rider.torsoLengthCm ? `${rider.torsoLengthCm} cm` : null],
+    [copy.rider.armLength, rider.armLengthCm ? `${rider.armLengthCm} cm` : null],
+    [copy.rider.shoulderWidth, rider.shoulderWidthCm ? `${rider.shoulderWidthCm} cm` : null],
+    [copy.rider.weight, rider.weightKg ? `${rider.weightKg} kg` : null],
   ].filter((entry): entry is [string, string] => Boolean(entry[1]));
 
   return (
@@ -75,7 +75,11 @@ export function RiderProfileCard({
               <MetricTile
                 label="BMI"
                 value={rider.bmi.toFixed(1)}
-                detail={rider.bmiCategory ?? undefined}
+                detail={
+                  rider.bmiCategory
+                    ? copy.rider.bmiCategories[rider.bmiCategory]
+                    : undefined
+                }
                 emphasis="success"
               />
             ) : null}
@@ -106,10 +110,18 @@ export function RiderProfileCard({
             {copy.sections.frameTargets}
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <MetricTile label="Stack" value={`${frameTargets.stackMm} mm`} emphasis="primary" />
-            <MetricTile label="Reach" value={`${frameTargets.reachMm} mm`} emphasis="primary" />
             <MetricTile
-              label="ETT"
+              label={copy.rider.frameStack}
+              value={`${frameTargets.stackMm} mm`}
+              emphasis="primary"
+            />
+            <MetricTile
+              label={copy.rider.frameReach}
+              value={`${frameTargets.reachMm} mm`}
+              emphasis="primary"
+            />
+            <MetricTile
+              label={copy.rider.frameEffectiveTopTube}
               value={`${frameTargets.effectiveTopTubeMm} mm`}
               emphasis="primary"
             />

@@ -54,14 +54,7 @@ export function RelatedLinksSection({
               </Link>
             }
             description={link.description ?? "Open the next page in this topic cluster."}
-          >
-            <Link
-              href={withLocalePrefix(link.href, locale)}
-              className="inline-flex items-center text-sm font-medium text-[color:var(--primary)] underline-offset-4 outline-none transition-colors hover:text-[color:color-mix(in_oklch,var(--primary)_82%,var(--foreground)_18%)] hover:underline focus-visible:underline"
-            >
-              {locale === "nl" ? "Lees verder" : "Read more"}
-            </Link>
-          </PublicSurfaceCard>
+          />
         ))}
       </div>
     </PublicSection>

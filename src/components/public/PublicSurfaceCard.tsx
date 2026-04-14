@@ -63,9 +63,11 @@ export function PublicSurfaceCard({
           </div>
         </CardHeader>
       ) : null}
-      <CardContent className={cn(compact ? "px-4 pb-4" : "px-5 pb-5 sm:px-6 sm:pb-6")}>
-        {children}
-      </CardContent>
+      {children ? (
+        <CardContent className={cn(compact ? "px-4 pb-4" : "px-5 pb-5 sm:px-6 sm:pb-6")}>
+          {children}
+        </CardContent>
+      ) : null}
       {footer ? (
         <CardFooter
           className={cn(
