@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useConvexAuth, useQuery } from "convex/react";
@@ -17,6 +17,8 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { cn } from "@/utils/cn";
 import { Menu, X } from "lucide-react";
 import { adminNavigationGroups } from "@/components/admin/layout/admin-navigation";
+import { canAccessAdminRoute } from "@/components/admin/auth/admin-route-access";
+import { isAdminRole } from "@/components/admin/auth/admin-auth-shared";
 
 export const DASHBOARD_MOBILE_HEADER_CLASSNAME =
   "dashboard-sidebar-surface dashboard-theme-context sticky top-0 z-30 flex items-center justify-between border-b px-4 py-3 md:hidden";
@@ -37,7 +39,19 @@ export default function DashboardLayout({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isLoading, isAuthenticated } = useConvexAuth();
   const user = useQuery(api.users.queries.getCurrentUser);
-  const isSuperAdmin = user?.adminRole === "super_admin";
+  const adminRole = isAdminRole(user?.adminRole) ? user.adminRole : null;
+  const visibleAdminNavigationGroups = useMemo(
+    () =>
+      adminRole
+        ? adminNavigationGroups
+            .map((group) => ({
+              ...group,
+              items: group.items.filter((item) => canAccessAdminRoute(item.href, adminRole)),
+            }))
+            .filter((group) => group.items.length > 0)
+        : [],
+    [adminRole]
+  );
   const { locale, messages, languageSwitchLabels } = useDashboardMessages();
   const internalPathname = stripLocalePrefix(pathname ?? "/");
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
@@ -175,13 +189,13 @@ export default function DashboardLayout({
                 </div>
               </section>
 
-              {isSuperAdmin && (
+              {visibleAdminNavigationGroups.length > 0 && (
                 <section className="space-y-2">
                   <p className={mobileSectionLabelClassName}>
                     {messages.layout.sections.admin}
                   </p>
                   <div className="dashboard-card-surface-muted space-y-4 rounded-[calc(var(--radius-xl)+0.125rem)] border p-2">
-                    {adminNavigationGroups.map((group) => (
+                    {visibleAdminNavigationGroups.map((group) => (
                       <div key={group.label}>
                         <p className={cn(mobileSectionLabelClassName, "pb-1")}>
                           {group.label}

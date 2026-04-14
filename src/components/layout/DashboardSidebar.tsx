@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
@@ -36,6 +36,8 @@ import {
   adminNavigationGroups,
   isAdminNavigationActive,
 } from "@/components/admin/layout/admin-navigation";
+import { canAccessAdminRoute } from "@/components/admin/auth/admin-route-access";
+import { isAdminRole } from "@/components/admin/auth/admin-auth-shared";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
@@ -60,7 +62,19 @@ export function DashboardSidebar() {
   ];
 
   const user = useQuery(api.users.queries.getCurrentUser);
-  const isSuperAdmin = user?.adminRole === "super_admin";
+  const adminRole = isAdminRole(user?.adminRole) ? user.adminRole : null;
+  const visibleAdminNavigationGroups = useMemo(
+    () =>
+      adminRole
+        ? adminNavigationGroups
+            .map((group) => ({
+              ...group,
+              items: group.items.filter((item) => canAccessAdminRoute(item.href, adminRole)),
+            }))
+            .filter((group) => group.items.length > 0)
+        : [],
+    [adminRole]
+  );
 
   const [isAdminOpen, setIsAdminOpen] = useState(
     () => internalPathname.startsWith("/admin")
@@ -130,7 +144,7 @@ export function DashboardSidebar() {
               </nav>
             </section>
 
-            {isSuperAdmin && (
+            {visibleAdminNavigationGroups.length > 0 && (
               <section className="dashboard-card-surface-muted rounded-[calc(var(--radius-xl)+0.125rem)] border px-2 py-3">
                 <p className={cn(sectionLabelClassName, "pb-2")}>
                   {messages.layout.sections.admin}
@@ -159,7 +173,7 @@ export function DashboardSidebar() {
 
                 {isAdminOpen && (
                   <div className="mt-3 space-y-4 border-t border-[color:oklch(var(--dashboard-border-soft))] pt-3">
-                    {adminNavigationGroups.map((group) => {
+                    {visibleAdminNavigationGroups.map((group) => {
                       const hideLabel = ["Command center", "People", "Rider data", "Technical"].includes(group.label);
                       return (
                         <div key={group.label}>
