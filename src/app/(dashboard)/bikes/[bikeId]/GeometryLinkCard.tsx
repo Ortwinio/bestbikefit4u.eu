@@ -124,23 +124,6 @@ function joinParts(parts: Array<string | number | null | undefined>) {
   return parts.filter((part) => part !== null && part !== undefined && part !== "").join(" · ");
 }
 
-export function buildGeometryCardItems(
-  locale: Locale,
-  linkedGeometry: LinkedGeometryDetail
-) {
-  const copy = getGeometryCardCopy(locale);
-
-  return [
-    { label: "Brand", value: formatValue(linkedGeometry.brandName, copy.unavailable) },
-    { label: "Model", value: formatValue(linkedGeometry.modelName, copy.unavailable) },
-    { label: copy.fields.year, value: formatValue(linkedGeometry.modelYearLabel, copy.unavailable) },
-    { label: copy.fields.frameSize, value: linkedGeometry.sizeLabel },
-    { label: "Source", value: linkedGeometry.source === "manufacturer" ? "Manufacturer" : linkedGeometry.source },
-    { label: copy.fields.stack, value: formatValue(linkedGeometry.stack, copy.unavailable) },
-    { label: copy.fields.reach, value: formatValue(linkedGeometry.reach, copy.unavailable) },
-  ];
-}
-
 function getRidingStyleLabel(bike: GeometryCardBike, messages: DashboardMessages) {
   if (!bike.ridingStyle) {
     return "-";

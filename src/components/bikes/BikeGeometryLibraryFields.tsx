@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Check, ChevronDown, ListChecks, X } from "lucide-react";
 import { useQuery } from "convex/react";
 import type { Id } from "../../../convex/_generated/dataModel";
-import { Button, Input, Select } from "@/components/ui";
+import { Button, Input } from "@/components/ui";
 import { api } from "../../../convex/_generated/api";
 import { pushDataLayerEvent } from "@/lib/analytics/marketing";
 import type { DashboardMessages } from "@/i18n/dashboardMessages";
@@ -96,6 +96,36 @@ function formatMetric(value: number | null, unit: string, unavailable: string) {
   return value === null ? unavailable : `${value}${unit}`;
 }
 
+function normalizeFilter(value: string) {
+  return value.trim().toLocaleLowerCase();
+}
+
+function matchesAutocompleteQuery(value: string, query: string) {
+  const normalizedQuery = normalizeFilter(query);
+  if (!normalizedQuery) {
+    return true;
+  }
+
+  return value.toLocaleLowerCase().includes(normalizedQuery);
+}
+
+function compareAutocompleteMatches(left: string, right: string, query: string) {
+  const normalizedQuery = normalizeFilter(query);
+  const leftLower = left.toLocaleLowerCase();
+  const rightLower = right.toLocaleLowerCase();
+
+  if (normalizedQuery) {
+    const leftStartsWith = leftLower.startsWith(normalizedQuery);
+    const rightStartsWith = rightLower.startsWith(normalizedQuery);
+
+    if (leftStartsWith !== rightStartsWith) {
+      return leftStartsWith ? -1 : 1;
+    }
+  }
+
+  return left.localeCompare(right, undefined, { sensitivity: "base" });
+}
+
 function SelectedBadge({
   label,
   onClear,
@@ -116,6 +146,32 @@ function SelectedBadge({
         <X className="h-4 w-4" />
       </button>
     </div>
+  );
+}
+
+function ChipButton({
+  label,
+  selected,
+  onClick,
+}: {
+  label: string;
+  selected?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cx(
+        "inline-flex min-h-10 items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition",
+        selected
+          ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
+          : "border-[color:var(--border)] bg-[color:var(--background)] text-[color:var(--foreground)] hover:border-[color:var(--primary)]/50 hover:bg-[color:var(--secondary)]/40"
+      )}
+    >
+      {selected ? <Check className="h-4 w-4" /> : null}
+      <span>{label}</span>
+    </button>
   );
 }
 
@@ -258,21 +314,20 @@ function GeometryPreviewCard({
 
 function Phase1BrandSelector({
   brands,
+  filter,
+  onFilterChange,
   selectedBrandId,
   onBrandSelect,
   messages,
 }: {
   brands: BrandOption[] | undefined;
+  filter: string;
+  onFilterChange: (value: string) => void;
   selectedBrandId?: string;
   onBrandSelect: (brand: BrandOption) => void;
   messages: DashboardMessages;
 }) {
   const copy = messages.bikeForm.fields.geometryLink;
-  const options =
-    brands?.map((brand) => ({
-      value: String(brand.brandId),
-      label: brand.name,
-    })) ?? [];
 
   return (
     <SectionShell
@@ -287,20 +342,24 @@ function Phase1BrandSelector({
             : copy.standardBrand.helper
       }
     >
-      <Select
+      <Input
         label={copy.standardBrand.label}
-        value={selectedBrandId ?? ""}
-        onChange={(event) => {
-          const nextBrand = brands?.find(
-            (brand) => String(brand.brandId) === event.target.value
-          );
-          if (nextBrand) {
-            onBrandSelect(nextBrand);
-          }
-        }}
-        options={options}
+        value={filter}
+        onChange={(event) => onFilterChange(event.target.value)}
         placeholder={copy.standardBrand.placeholder}
       />
+      {brands !== undefined && brands.length > 0 ? (
+        <div className="flex flex-wrap gap-2">
+          {brands.map((brand) => (
+            <ChipButton
+              key={String(brand.brandId)}
+              label={brand.name}
+              selected={String(brand.brandId) === selectedBrandId}
+              onClick={() => onBrandSelect(brand)}
+            />
+          ))}
+        </div>
+      ) : null}
       {brands !== undefined && brands.length === 0 ? (
         <EmptyChipState message={copy.noBrands} />
       ) : null}
@@ -310,9 +369,11 @@ function Phase1BrandSelector({
 
 function Phase2ModelSelector({
   models,
+  filter,
+  onFilterChange,
   selectedBrandName,
   selectedModelFamilyKey,
-  selectedModelFamilyLabel,
+  selectedModelLabel,
   selectedModelId,
   onClearBrand,
   onModelSelect,
@@ -320,9 +381,11 @@ function Phase2ModelSelector({
   messages,
 }: {
   models: ModelFamilyOption[] | undefined;
+  filter: string;
+  onFilterChange: (value: string) => void;
   selectedBrandName: string;
   selectedModelFamilyKey?: string;
-  selectedModelFamilyLabel?: string;
+  selectedModelLabel?: string;
   selectedModelId?: string;
   onClearBrand: () => void;
   onModelSelect: (family: ModelFamilyOption) => void;
@@ -332,118 +395,78 @@ function Phase2ModelSelector({
   const copy = messages.bikeForm.fields.geometryLink;
   const selectedFamily =
     models?.find((family) => family.modelKey === selectedModelFamilyKey) ?? null;
-  const modelOptions =
-    models?.map((family) => ({
-      value: family.modelKey,
-      label: family.yearSelectionRequired
-        ? `${family.name} (${family.yearOptions.length})`
-        : family.name,
-    })) ?? [];
-  const yearOptions =
-    selectedFamily?.yearOptions.map((option) => ({
-      value: String(option.modelId),
-      label:
-        option.yearLabel ??
-        copy.year.unknownOptionLabel.replace(
-          "{count}",
-          String(option.sizeRecordCount)
-        ),
-    })) ?? [];
 
   return (
     <SectionShell
       step={2}
-      complete={Boolean(selectedModelFamilyKey)}
+      complete={Boolean(selectedModelFamilyKey) && Boolean(selectedModelId || !selectedFamily?.yearSelectionRequired)}
       disabled={!selectedBrandName}
       title={copy.standardModel.label}
       description={
-        models === undefined
-          ? copy.loadingModels
-          : models.length === 0
-            ? copy.noModels
-            : copy.selectModelFirst
+        !selectedBrandName
+          ? copy.selectBrandFirst
+          : models === undefined
+            ? copy.loadingModels
+            : models.length === 0
+              ? copy.noModels
+              : copy.selectModelFirst
       }
     >
       <SelectedBadge label={selectedBrandName} onClear={onClearBrand} />
-      <Select
+      <Input
         label={copy.standardModel.label}
-        value={selectedModelFamilyKey ?? ""}
-        onChange={(event) => {
-          const family = models?.find(
-            (candidate) => candidate.modelKey === event.target.value
-          );
-          if (family) {
-            onModelSelect(family);
-          }
-        }}
-        options={modelOptions}
+        value={filter}
+        onChange={(event) => onFilterChange(event.target.value)}
         placeholder={copy.standardModel.placeholder}
-        disabled={!selectedBrandName || models === undefined || models.length === 0}
       />
+      {models !== undefined && models.length > 0 ? (
+        <div className="flex flex-wrap gap-2">
+          {models.map((family) => (
+            <ChipButton
+              key={family.modelKey}
+              label={family.name}
+              selected={family.modelKey === selectedModelFamilyKey}
+              onClick={() => onModelSelect(family)}
+            />
+          ))}
+        </div>
+      ) : null}
       {models !== undefined && models.length === 0 ? (
         <EmptyChipState message={copy.noModels} />
       ) : null}
-      {selectedFamily && !selectedFamily.yearSelectionRequired && selectedModelFamilyLabel ? (
-        <div className="rounded-[var(--radius-md)] bg-[color:var(--secondary)]/35 px-3 py-3 text-sm text-[color:var(--muted-foreground)]">
-          {selectedModelFamilyLabel}
+      {selectedFamily?.yearSelectionRequired ? (
+        <div className="space-y-3 rounded-[var(--radius-md)] bg-[color:var(--secondary)]/30 p-3">
+          <p className="text-sm font-semibold text-[color:var(--foreground)]">
+            {selectedModelLabel ?? selectedFamily.name}
+          </p>
+          <div className="space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--muted-foreground)]">
+              {copy.year.label}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {selectedFamily.yearOptions.map((option) => (
+                <ChipButton
+                  key={String(option.modelId)}
+                  label={
+                    option.yearLabel ??
+                    copy.year.unknownOptionLabel.replace(
+                      "{count}",
+                      String(option.sizeRecordCount)
+                    )
+                  }
+                  selected={String(option.modelId) === selectedModelId}
+                  onClick={() => onYearSelect(selectedFamily, option)}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       ) : null}
-      {selectedFamily?.yearSelectionRequired ? (
-        <Select
-          label={copy.year.label}
-          value={selectedModelId ?? ""}
-          onChange={(event) => {
-            const option = selectedFamily.yearOptions.find(
-              (candidate) => String(candidate.modelId) === event.target.value
-            );
-            if (option) {
-              onYearSelect(selectedFamily, option);
-            }
-          }}
-          options={yearOptions}
-          placeholder={copy.year.placeholder}
-          helperText={copy.year.helper}
-        />
-      ) : null}
     </SectionShell>
   );
 }
 
-function Phase3YearSelector({
-  selectedLabel,
-  yearSelectionRequired,
-  selectedYearLabel,
-  selectedModelId,
-  onClearModel,
-  messages,
-}: {
-  selectedLabel: string;
-  yearSelectionRequired: boolean;
-  selectedYearLabel: string | null;
-  selectedModelId?: string;
-  onClearModel: () => void;
-  messages: DashboardMessages;
-}) {
-  const copy = messages.bikeForm.fields.geometryLink;
-
-  return (
-    <SectionShell
-      step={3}
-      complete={yearSelectionRequired ? Boolean(selectedModelId) : Boolean(selectedLabel)}
-      disabled={!selectedLabel}
-      title={copy.year.label}
-      description={copy.year.helper}
-    >
-      <SelectedBadge label={selectedLabel} onClear={onClearModel} />
-      <div className="rounded-[var(--radius-md)] bg-[color:var(--secondary)]/35 px-3 py-3 text-sm text-[color:var(--muted-foreground)]">
-        {selectedYearLabel ??
-          (yearSelectionRequired ? copy.year.placeholder : copy.year.unknownOptionLabel.replace("{count}", "1"))}
-      </div>
-    </SectionShell>
-  );
-}
-
-function Phase4SizeSelector({
+function Phase3SizeSelector({
   selectedLabel,
   onClearModel,
   sizeOptions,
@@ -461,15 +484,10 @@ function Phase4SizeSelector({
   messages: DashboardMessages;
 }) {
   const copy = messages.bikeForm.fields.geometryLink;
-  const options =
-    sizeOptions?.map((size) => ({
-      value: String(size.recordId),
-      label: size.sizeLabel,
-    })) ?? [];
 
   return (
     <SectionShell
-      step={4}
+      step={3}
       complete={Boolean(selectedRecordId)}
       disabled={!selectedLabel}
       title={copy.size.label}
@@ -481,20 +499,16 @@ function Phase4SizeSelector({
       ) : sizeOptions.length === 0 ? (
         <EmptyChipState message={copy.noModels} />
       ) : (
-        <Select
-          label={copy.size.label}
-          value={selectedRecordId ?? ""}
-          onChange={(event) => {
-            const nextSize = sizeOptions.find(
-              (size) => String(size.recordId) === event.target.value
-            );
-            if (nextSize) {
-              onSizeSelect(nextSize);
-            }
-          }}
-          options={options}
-          placeholder={copy.size.placeholder}
-        />
+        <div className="flex flex-wrap gap-2">
+          {sizeOptions.map((size) => (
+            <ChipButton
+              key={String(size.recordId)}
+              label={size.sizeLabel}
+              selected={String(size.recordId) === selectedRecordId}
+              onClick={() => onSizeSelect(size)}
+            />
+          ))}
+        </div>
       )}
       <GeometryPreviewCard preview={geometryPreview} messages={messages} />
     </SectionShell>
@@ -611,6 +625,8 @@ export function BikeGeometryLibraryFields({
   messages,
 }: BikeGeometryLibraryFieldsProps) {
   const setState = asStateSetter(onChange);
+  const [brandFilter, setBrandFilter] = useState("");
+  const [modelFilter, setModelFilter] = useState("");
   const [customOpen, setCustomOpen] = useState(
     state.customBrandEnabled || state.customModelEnabled
   );
@@ -698,10 +714,9 @@ export function BikeGeometryLibraryFields({
 
     return [...brands]
       .filter((brand) => brand.hasUsableModels)
-      .sort((left, right) =>
-        left.name.localeCompare(right.name, undefined, { sensitivity: "base" })
-      );
-  }, [brands]);
+      .filter((brand) => matchesAutocompleteQuery(brand.name, brandFilter))
+      .sort((left, right) => compareAutocompleteMatches(left.name, right.name, brandFilter));
+  }, [brandFilter, brands]);
 
   const availableModels = useMemo(() => {
     if (!models) {
@@ -710,33 +725,25 @@ export function BikeGeometryLibraryFields({
 
     return [...models]
       .filter((family) => family.hasUsableSizes)
-      .sort((left, right) =>
-        left.name.localeCompare(right.name, undefined, { sensitivity: "base" })
-      );
-  }, [models]);
+      .filter((family) => matchesAutocompleteQuery(family.name, modelFilter))
+      .sort((left, right) => compareAutocompleteMatches(left.name, right.name, modelFilter));
+  }, [modelFilter, models]);
 
   const selectedModelFamily =
-    availableModels?.find((family) => family.modelKey === state.standardModelFamilyKey) ?? null;
+    models?.find((family) => family.modelKey === state.standardModelFamilyKey) ?? null;
   const selectedYearOption =
     selectedModelFamily?.yearOptions.find(
       (option) => String(option.modelId) === state.standardModelId
     ) ?? null;
   const resolvedYearLabel =
     selectedYearOption?.yearLabel ?? geometrySelection?.yearLabel ?? null;
-  const selectedModelLabel = [
-    state.standardBrand,
-    selectedModelFamily?.name ?? state.standardModel,
-    resolvedYearLabel,
-  ]
+  const selectedModelLabel = [state.standardBrand, state.standardModel, resolvedYearLabel]
     .filter(Boolean)
     .join(" · ");
-  const selectedYearLabel = resolvedYearLabel ?? messages.bikeForm.fields.geometryLink.year.placeholder;
-  const selectedModelFamilyLabel =
-    selectedModelFamily && !selectedModelFamily.yearSelectionRequired
-      ? resolvedYearLabel
-        ? `${selectedModelFamily.name} · ${resolvedYearLabel}`
-        : selectedModelFamily.name
-      : undefined;
+  const isModelSelectionComplete = Boolean(
+    selectedModelFamily &&
+      (selectedModelFamily.yearSelectionRequired ? state.standardModelId : true)
+  );
 
   return (
     <div className="space-y-5 rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
@@ -755,6 +762,8 @@ export function BikeGeometryLibraryFields({
         <>
           <Phase1BrandSelector
             brands={availableBrands}
+            filter={brandFilter}
+            onFilterChange={setBrandFilter}
             selectedBrandId={state.standardBrandId}
             onBrandSelect={(brand) => {
               setState((current) =>
@@ -763,6 +772,8 @@ export function BikeGeometryLibraryFields({
                   brandName: brand.name,
                 })
               );
+              setBrandFilter("");
+              setModelFilter("");
               trackGeometrySelection("bike_geometry_brand_selected", {
                 brandName: brand.name,
               });
@@ -770,75 +781,66 @@ export function BikeGeometryLibraryFields({
             messages={messages}
           />
 
-          <Phase2ModelSelector
-            models={availableModels}
-            selectedBrandName={state.standardBrand ?? ""}
-            selectedModelFamilyLabel={selectedModelFamilyLabel}
-            selectedModelFamilyKey={state.standardModelFamilyKey}
-            selectedModelId={state.standardModelId}
-            onClearBrand={() => {
-              setState((current) =>
-                applyStandardBrandSelection(current, {
-                  brandId: undefined,
-                  brandName: undefined,
-                })
-              );
-            }}
-            onModelSelect={(family) => {
-              setState((current) => {
-                const nextState = applyStandardModelFamilySelection(current, {
-                  modelFamilyKey: family.modelKey,
-                  modelName: family.name,
-                });
-
-                if (!family.yearSelectionRequired && family.yearOptions[0]) {
-                  return applyStandardModelVariantSelection(nextState, {
-                    modelId: String(family.yearOptions[0].modelId),
+          {state.standardBrandId ? (
+            <Phase2ModelSelector
+              models={availableModels}
+              filter={modelFilter}
+              onFilterChange={setModelFilter}
+              selectedBrandName={state.standardBrand ?? ""}
+              selectedModelFamilyKey={state.standardModelFamilyKey}
+              selectedModelLabel={selectedModelLabel}
+              selectedModelId={state.standardModelId}
+              onClearBrand={() => {
+                setState((current) =>
+                  applyStandardBrandSelection(current, {
+                    brandId: undefined,
+                    brandName: undefined,
+                  })
+                );
+                setBrandFilter("");
+                setModelFilter("");
+              }}
+              onModelSelect={(family) => {
+                setState((current) => {
+                  const nextState = applyStandardModelFamilySelection(current, {
+                    modelFamilyKey: family.modelKey,
                     modelName: family.name,
                   });
-                }
 
-                return nextState;
-              });
-              trackGeometrySelection("bike_geometry_model_selected", {
-                brandName: state.standardBrand,
-                modelName: family.name,
-              });
-            }}
-            onYearSelect={(family, option) => {
-              setState((current) =>
-                applyStandardModelVariantSelection(current, {
-                  modelId: String(option.modelId),
+                  if (!family.yearSelectionRequired && family.yearOptions[0]) {
+                    return applyStandardModelVariantSelection(nextState, {
+                      modelId: String(family.yearOptions[0].modelId),
+                      modelName: family.name,
+                    });
+                  }
+
+                  return nextState;
+                });
+                setModelFilter("");
+                trackGeometrySelection("bike_geometry_model_selected", {
+                  brandName: state.standardBrand,
                   modelName: family.name,
-                })
-              );
-              trackGeometrySelection("bike_geometry_year_selected", {
-                brandName: state.standardBrand,
-                modelName: family.name,
-                yearLabel: option.yearLabel,
-              });
-            }}
-            messages={messages}
-          />
+                });
+              }}
+              onYearSelect={(family, option) => {
+                setState((current) =>
+                  applyStandardModelVariantSelection(current, {
+                    modelId: String(option.modelId),
+                    modelName: family.name,
+                  })
+                );
+                trackGeometrySelection("bike_geometry_year_selected", {
+                  brandName: state.standardBrand,
+                  modelName: family.name,
+                  yearLabel: option.yearLabel,
+                });
+              }}
+              messages={messages}
+            />
+          ) : null}
 
-          <Phase3YearSelector
-            selectedLabel={selectedModelLabel}
-            yearSelectionRequired={Boolean(selectedModelFamily?.yearSelectionRequired)}
-            selectedYearLabel={selectedYearLabel}
-            selectedModelId={state.standardModelId}
-            onClearModel={() => {
-              setState((current) =>
-                applyStandardModelFamilySelection(current, {
-                  modelFamilyKey: undefined,
-                  modelName: undefined,
-                })
-              );
-            }}
-            messages={messages}
-          />
-
-          {state.standardModelId ? (
-            <Phase4SizeSelector
+          {isModelSelectionComplete ? (
+            <Phase3SizeSelector
               selectedLabel={selectedModelLabel}
               onClearModel={() => {
                 setState((current) =>
@@ -847,6 +849,7 @@ export function BikeGeometryLibraryFields({
                     modelName: undefined,
                   })
                 );
+                setModelFilter("");
               }}
               sizeOptions={sizes?.sizeOptions}
               selectedRecordId={state.geometryRecordId}
@@ -857,7 +860,7 @@ export function BikeGeometryLibraryFields({
                     sizeLabel: size.sizeLabel,
                   })
                 );
-                trackGeometrySelection("bike_geometry_record_linked", {
+                trackGeometrySelection("bike_geometry_size_selected", {
                   brandName: state.standardBrand,
                   modelName: state.standardModel,
                   sizeLabel: size.sizeLabel,
