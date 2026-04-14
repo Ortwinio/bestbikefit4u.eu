@@ -11,7 +11,7 @@ The profile already stores pain/discomfort data via the Riding Style section (`h
 The card will:
 - Derive a **1–5 comfort score** from the existing `hasPain` + `painSeverity` fields
 - Show a visual bar (similar to `CoreStabilityBar`) coloured from danger → success
-- List active pain areas as colour-coded chips
+- Show active discomfort areas clearly in view state, including per-area severity
 - Include an impact description and an "How to improve" link
 - Allow inline editing (update `hasPain`, `painAreas`, `painSeverity`)
 
@@ -32,7 +32,7 @@ The score is **derived** — no new database field is required.
 ### In scope
 - `ComfortLevelBar` visual component (mirrors `CoreStabilityBar`)
 - `ComfortCard` inline in `profile/page.tsx` (mirrors `FlexibilityCard` / `CoreStabilityCard`)
-- Edit mode: `hasPain` toggle + `painAreas` multi-select chips + `painSeverity` slider (1–5), only when `hasPain === "yes"`
+- Edit mode: dedicated comfort editing controls that write `hasPain`, `painAreas`, and `painSeverity`
 - Remove pain-related fields from `RidingStyleCard` (they move here)
 - `updateComfort` mutation (or reuse `updateRiderProfile`)
 - `/profile/improve/comfort` page with targeted advice per pain area
@@ -56,22 +56,22 @@ Follow the same implementation pattern used for Flexibility and Core Stability:
 
 ## Acceptance Criteria
 
-- [ ] Comfort score (1–5) derived correctly from `hasPain` + `painSeverity`
-- [ ] `ComfortLevelBar` shows correct colour (danger/warning/success) per score
-- [ ] Active pain areas shown as coloured chips in view state
-- [ ] Impact description text explains relevance to bike fit
-- [ ] Edit mode updates `hasPain`, `painAreas`, `painSeverity` via `updateRiderProfile`
-- [ ] Pain fields removed from `RidingStyleCard` edit form (no duplication)
-- [ ] "How to improve" link navigates to `/profile/improve/comfort`
-- [ ] Improve page has targeted advice for at least 5 pain areas
-- [ ] EN + NL translations complete
-- [ ] No TypeScript errors introduced
+- [x] Comfort score (1–5) derived correctly from `hasPain` + `painSeverity`
+- [x] `ComfortLevelBar` shows correct colour (danger/warning/success) per score
+- [x] Active pain areas are shown clearly in view state
+- [x] Impact description text explains relevance to bike fit
+- [x] Edit mode updates `hasPain`, `painAreas`, `painSeverity` via dedicated comfort saving
+- [x] Pain fields removed from `RidingStyleCard` edit form (no duplication)
+- [x] "How to improve" link navigates to `/profile/improve/comfort`
+- [x] Improve page has targeted advice for at least 5 pain areas
+- [x] EN + NL translations complete
+- [x] No TypeScript errors introduced
 
 ---
 
 ## Progress
 
-- [ ] Prompt 01 — Visual component + i18n
-- [ ] Prompt 02 — ComfortCard + profile page integration
-- [ ] Prompt 03 — Remove pain from RidingStyleCard
-- [ ] Prompt 04 — Improve page
+- [x] Prompt 01 — Visual component + i18n
+- [x] Prompt 02 — ComfortCard + profile page integration
+- [x] Prompt 03 — Remove pain from RidingStyleCard
+- [x] Prompt 04 — Improve page

@@ -32,6 +32,25 @@ vi.mock("@/components/analytics/TrackedCtaLink", () => ({
   }) => <a href={href}>{children}</a>,
 }));
 
+vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
+  CampaignCtaGroup: ({
+    startHref,
+    donateHref,
+    startLabel,
+    donateLabel,
+  }: {
+    startHref: string;
+    donateHref: string;
+    startLabel?: string;
+    donateLabel?: string;
+  }) => (
+    <div>
+      <a href={startHref}>{startLabel ?? "Open bike-fit calculator"}</a>
+      <a href={donateHref}>{donateLabel ?? "Continue in dashboard"}</a>
+    </div>
+  ),
+}));
+
 vi.mock("@/components/seo/JsonLd", () => ({
   JsonLd: () => null,
 }));
@@ -76,7 +95,7 @@ describe("saddle height calculator page", () => {
     expect(screen.getByText("Open bike-fit calculator").closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"
     );
-    expect(screen.getByText("Continue in dashboard").closest("a")?.getAttribute("href")).toBe(
+    expect(screen.getByText("Create account or sign in").closest("a")?.getAttribute("href")).toBe(
       "/en/login"
     );
   });
