@@ -136,7 +136,7 @@ export default async function GuidesHubPage() {
                   key={hub.slug}
                   title={hub.pageTitle}
                   description={hub.pageBrief}
-                  leading={<Icon className="h-5 w-5" />}
+                  leading={<Icon aria-hidden="true" className="h-5 w-5" />}
                   footer={
                     <Link
                       href={withLocalePrefix(hub.path, locale)}
@@ -149,7 +149,13 @@ export default async function GuidesHubPage() {
                 >
                   <div className="space-y-2 text-sm text-muted-foreground">
                     {children.slice(0, 3).map((child) => (
-                      <p key={child.slug}>{child.pageTitle}</p>
+                      <Link
+                        key={child.slug}
+                        href={withLocalePrefix(child.path, locale)}
+                        className="block outline-none hover:text-foreground focus-visible:text-foreground"
+                      >
+                        {child.pageTitle}
+                      </Link>
                     ))}
                   </div>
                 </PublicSurfaceCard>

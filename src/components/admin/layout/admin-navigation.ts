@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   Activity,
   Bike,
+  BookOpenText,
   Building2,
   CalendarDays,
   FlaskConical,
@@ -105,6 +106,12 @@ export const adminNavigationGroups: AdminNavigationGroup[] = [
         href: "/admin/feedback",
         description: "Support requests and feature ideas",
         icon: MessageSquare,
+      },
+      {
+        label: "Guides",
+        href: "/admin/guides",
+        description: "Guide drafts, SEO fields, and publishing queue",
+        icon: BookOpenText,
       },
       {
         label: "Feature Requests",

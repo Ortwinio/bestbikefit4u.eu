@@ -72,6 +72,10 @@ const gearingGearPairValidator = v.object({
   cadenceRpmAtSpeed: v.optional(v.number()),
 });
 
+const guideSeoHintsValidator = v.object({
+  funnel: v.optional(v.string()),
+});
+
 const gearingConfidenceValidator = v.object({
   score: v.number(),
   level: gearingConfidenceLevelValidator,
@@ -164,6 +168,44 @@ const bikeGearingValidator = v.object({
   completeness: v.optional(gearingCompleteness),
   source: v.optional(gearingSource),
   updatedAt: v.optional(v.number()),
+});
+
+const bilingualStringValidator = v.object({
+  en: v.string(),
+  nl: v.string(),
+});
+
+const guideStatusValidator = v.union(
+  v.literal("draft"),
+  v.literal("in_review"),
+  v.literal("published"),
+  v.literal("unpublished")
+);
+
+const guideSectionTypeValidator = v.union(
+  v.literal("prose"),
+  v.literal("steps"),
+  v.literal("cards"),
+  v.literal("table")
+);
+
+const guideSectionValidator = v.object({
+  title: v.string(),
+  type: guideSectionTypeValidator,
+  items: v.array(v.string()),
+  tableHeaders: v.optional(v.array(v.string())),
+  tableRows: v.optional(v.array(v.array(v.string()))),
+});
+
+const guideFaqValidator = v.object({
+  q: v.string(),
+  a: v.string(),
+});
+
+const guideQuickAnswerValidator = v.object({
+  keyTakeaway: bilingualStringValidator,
+  commonMistake: bilingualStringValidator,
+  payAttention: bilingualStringValidator,
 });
 
 export default defineSchema({
@@ -1668,6 +1710,106 @@ export default defineSchema({
     .index("by_admin", ["adminUserId"])
     .index("by_target", ["targetType", "targetId"])
     .index("by_occurred_at", ["occurredAt"]),
+
+  guidePages: defineTable({
+    slug: v.string(),
+    path: v.string(),
+    cluster: v.string(),
+    backlogOrder: v.optional(v.number()),
+    importStatus: v.optional(v.string()),
+    importNotes: v.optional(v.string()),
+    status: guideStatusValidator,
+    pageTitle: bilingualStringValidator,
+    h1: bilingualStringValidator,
+    metaTitle: bilingualStringValidator,
+    metaDescription: bilingualStringValidator,
+    pageBrief: bilingualStringValidator,
+    body: v.object({
+      en: v.array(guideSectionValidator),
+      nl: v.array(guideSectionValidator),
+    }),
+    faqs: v.optional(
+      v.object({
+        en: v.array(guideFaqValidator),
+        nl: v.array(guideFaqValidator),
+      })
+    ),
+    quickAnswer: v.optional(guideQuickAnswerValidator),
+    libraryBody: v.optional(
+      v.object({
+        en: v.string(),
+        nl: v.string(),
+      })
+    ),
+    heroImageFileName: v.optional(v.string()),
+    heroImagePublicPath: v.optional(v.string()),
+    relatedGuidePaths: v.optional(v.array(v.string())),
+    relatedKeywords: v.optional(v.array(v.string())),
+    seoHints: v.optional(guideSeoHintsValidator),
+    featuredImageUrl: v.optional(v.string()),
+    featuredImageAlt: v.optional(bilingualStringValidator),
+    canonicalUrl: v.optional(v.string()),
+    ogTitle: v.optional(bilingualStringValidator),
+    ogDescription: v.optional(bilingualStringValidator),
+    ogImageUrl: v.optional(v.string()),
+    ogImageAlt: v.optional(bilingualStringValidator),
+    robotsIndex: v.boolean(),
+    author: v.optional(v.id("users")),
+    tags: v.optional(v.array(v.string())),
+    relatedGuides: v.optional(v.array(v.string())),
+    primaryCtaTarget: v.optional(v.string()),
+    primaryCtaLabel: v.optional(bilingualStringValidator),
+    tableOfContents: v.boolean(),
+    publishedAt: v.optional(v.number()),
+    lastUpdatedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    createdBy: v.union(v.id("users"), v.literal("import-json")),
+    updatedBy: v.union(v.id("users"), v.literal("import-json")),
+    version: v.number(),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_status", ["status"])
+    .index("by_cluster", ["cluster"])
+    .index("by_status_and_cluster", ["status", "cluster"]),
+
+  guideRevisions: defineTable({
+    guideId: v.id("guidePages"),
+    version: v.number(),
+    snapshot: v.any(),
+    savedBy: v.id("users"),
+    savedAt: v.number(),
+  }).index("by_guideId", ["guideId"]),
+
+  guideAuditLog: defineTable({
+    guideId: v.optional(v.id("guidePages")),
+    action: v.string(),
+    resourceType: v.string(),
+    resourceId: v.string(),
+    fieldChanges: v.array(
+      v.object({
+        field: v.string(),
+        oldValue: v.optional(v.any()),
+        newValue: v.optional(v.any()),
+      })
+    ),
+    userId: v.id("users"),
+    userEmail: v.string(),
+    timestamp: v.number(),
+    metadata: v.optional(v.any()),
+  })
+    .index("by_guideId", ["guideId"])
+    .index("by_resource", ["resourceType", "resourceId"])
+    .index("by_timestamp", ["timestamp"]),
+
+  redirects: defineTable({
+    from: v.string(),
+    to: v.string(),
+    statusCode: v.union(v.literal(301), v.literal(302)),
+    reason: v.optional(v.string()),
+    createdBy: v.id("users"),
+    createdAt: v.number(),
+  }).index("by_from", ["from"]),
 
   geometry_brands: defineTable({
     name: v.string(),

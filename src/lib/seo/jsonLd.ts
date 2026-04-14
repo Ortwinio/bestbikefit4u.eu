@@ -100,11 +100,13 @@ export function buildArticleSchema({
   description,
   url,
   inLanguage,
+  image,
 }: {
   headline: string;
   description: string;
   url: string;
   inLanguage?: string;
+  image?: string;
 }) {
   return {
     "@context": "https://schema.org",
@@ -113,6 +115,7 @@ export function buildArticleSchema({
     description,
     inLanguage,
     mainEntityOfPage: url,
+    image,
     author: {
       "@id": `${BRAND.siteUrl}/#organization`,
     },

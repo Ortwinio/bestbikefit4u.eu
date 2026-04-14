@@ -1,16 +1,232 @@
+import "server-only";
+
+import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../convex/_generated/api";
+import type { Doc, Id } from "../../../convex/_generated/dataModel";
 import type { Locale } from "@/i18n/config";
 import { isProtectedAppPath } from "@/i18n/navigation";
-import type { GuideBacklogEntry } from "./backlog";
+import {
+  getGuideChildren,
+  getGuideEntryBySlug,
+  type GuideBacklogEntry,
+} from "./backlog";
+import { getGuideContent } from "./guide-content";
+import { getGuideQuickAnswer } from "./quick-answers";
+
+export { getGuideContent } from "./guide-content";
 
 export type GuideSection = {
   title: string;
+  type?: "cards" | "steps" | "prose" | "table";
   items: string[];
+  tableHeaders?: string[];
+  tableRows?: string[][];
 };
 
 export type GuideFaq = {
   q: string;
   a: string;
 };
+
+export type GuideQuickAnswer = {
+  keyTakeaway: string;
+  commonMistake: string;
+  payAttention: string;
+};
+
+type GuideRecord = Doc<"guidePages">;
+type RedirectRecord = Doc<"redirects">;
+
+export type GuidePageData = {
+  source: "db" | "fallback";
+  dbGuide: GuideRecord | null;
+  entry: GuideBacklogEntry;
+  childPages: GuideBacklogEntry[];
+  isHub: boolean;
+  faqs: GuideFaq[];
+  leafSections: GuideSection[];
+  quickAnswer: GuideQuickAnswer;
+  hubQuickAnswer: GuideQuickAnswer;
+};
+
+function stripLocalePrefix(path: string): string {
+  return path.replace(/^\/(en|nl)(?=\/|$)/, "") || "/";
+}
+
+function normalizeGuidePath(path: string): string {
+  const normalized = stripLocalePrefix(path).trim();
+  if (!normalized) {
+    return "/";
+  }
+
+  return normalized.startsWith("/") ? normalized : `/${normalized}`;
+}
+
+function localizeBilingualValue(
+  value: { en: string; nl: string } | undefined,
+  locale: Locale
+): string | undefined {
+  return value?.[locale];
+}
+
+function buildGuideEntryFromDb(
+  slug: string,
+  locale: Locale,
+  dbGuide: GuideRecord,
+  fallbackEntry?: GuideBacklogEntry
+): GuideBacklogEntry {
+  return {
+    order: fallbackEntry?.order ?? 0,
+    cluster: dbGuide.cluster || fallbackEntry?.cluster || "Guides",
+    status: dbGuide.status,
+    path: normalizeGuidePath(dbGuide.path || fallbackEntry?.path || `/guides/${slug}`),
+    slug: dbGuide.slug || fallbackEntry?.slug || slug,
+    pageTitle:
+      localizeBilingualValue(dbGuide.pageTitle, locale) ??
+      fallbackEntry?.pageTitle ??
+      slug,
+    metaTitle:
+      localizeBilingualValue(dbGuide.metaTitle, locale) ??
+      fallbackEntry?.metaTitle ??
+      slug,
+    h1:
+      localizeBilingualValue(dbGuide.h1, locale) ??
+      fallbackEntry?.h1 ??
+      slug,
+    pageBrief:
+      localizeBilingualValue(dbGuide.pageBrief, locale) ??
+      fallbackEntry?.pageBrief ??
+      "",
+    primaryCtaLabel:
+      localizeBilingualValue(dbGuide.primaryCtaLabel, locale) ??
+      fallbackEntry?.primaryCtaLabel ??
+      (locale === "nl" ? "Open volgende stap" : "Open next step"),
+    primaryCtaTarget:
+      normalizeGuidePath(
+        dbGuide.primaryCtaTarget || fallbackEntry?.primaryCtaTarget || "/guides"
+      ),
+    internalLinkTargets:
+      dbGuide.relatedGuidePaths?.map(normalizeGuidePath) ??
+      fallbackEntry?.internalLinkTargets ??
+      [],
+    notes: fallbackEntry?.notes ?? "",
+  };
+}
+
+function buildDbQuickAnswer(
+  dbGuide: GuideRecord,
+  locale: Locale
+): GuideQuickAnswer | null {
+  if (!dbGuide.quickAnswer) {
+    return null;
+  }
+
+  return {
+    keyTakeaway: dbGuide.quickAnswer.keyTakeaway[locale],
+    commonMistake: dbGuide.quickAnswer.commonMistake[locale],
+    payAttention: dbGuide.quickAnswer.payAttention[locale],
+  };
+}
+
+export async function getPublishedGuideRecord(
+  slug: string
+): Promise<GuideRecord | null> {
+  try {
+    return (await fetchQuery(api.guides.queries.getPublishedGuide, {
+      slug,
+    })) as GuideRecord | null;
+  } catch {
+    return null;
+  }
+}
+
+export async function listPublishedGuideRecords(): Promise<GuideRecord[]> {
+  try {
+    return (await fetchQuery(
+      api.guides.queries.listPublishedGuides,
+      {}
+    )) as GuideRecord[];
+  } catch {
+    return [];
+  }
+}
+
+export async function listPublicGuideRedirectRecords(): Promise<RedirectRecord[]> {
+  try {
+    return (await fetchQuery(
+      api.guides.queries.listPublicRedirects,
+      {}
+    )) as RedirectRecord[];
+  } catch {
+    return [];
+  }
+}
+
+export async function getDraftGuideRecord(
+  id: string
+): Promise<GuideRecord | null> {
+  try {
+    const token = await convexAuthNextjsToken();
+    if (!token) {
+      return null;
+    }
+
+    return (await fetchQuery(
+      api.guides.queries.getDraftGuide,
+      { id: id as Id<"guidePages"> },
+      { token }
+    )) as GuideRecord | null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getGuidePageData(
+  slug: string,
+  locale: Locale,
+  draftGuideId?: string
+): Promise<GuidePageData | null> {
+  const fallbackEntry = getGuideEntryBySlug(slug, locale);
+  const draftGuide = draftGuideId ? await getDraftGuideRecord(draftGuideId) : null;
+  const dbGuide =
+    draftGuide && draftGuide.slug === slug
+      ? draftGuide
+      : await getPublishedGuideRecord(slug);
+
+  if (!dbGuide && !fallbackEntry) {
+    return null;
+  }
+
+  const entry = dbGuide
+    ? buildGuideEntryFromDb(slug, locale, dbGuide, fallbackEntry)
+    : fallbackEntry;
+
+  if (!entry) {
+    return null;
+  }
+
+  const childPages = getGuideChildren(entry.slug, locale);
+  const isHub = childPages.length > 0;
+  const dbQuickAnswer = dbGuide ? buildDbQuickAnswer(dbGuide, locale) : null;
+  const faqs = dbGuide?.faqs?.[locale] ?? buildFaqs(entry, locale);
+  const leafSections = dbGuide?.body?.[locale] ?? buildLeafSections(entry, locale);
+  const quickAnswer = dbQuickAnswer ?? buildQuickAnswer(entry, locale);
+  const hubQuickAnswer =
+    dbQuickAnswer ?? buildHubQuickAnswer(entry, locale, childPages.length);
+
+  return {
+    source: dbGuide ? "db" : "fallback",
+    dbGuide,
+    entry,
+    childPages,
+    isHub,
+    faqs,
+    leafSections,
+    quickAnswer,
+    hubQuickAnswer,
+  };
+}
 
 export function getGuideLinkLabel(path: string, locale: Locale): string {
   const normalized = path.replace(/^\/(en|nl)/, "");
@@ -154,10 +370,108 @@ export function buildHubIntro(entry: GuideBacklogEntry, locale: Locale): string[
   ];
 }
 
+export function buildHubQuickAnswer(
+  entry: GuideBacklogEntry,
+  locale: Locale,
+  childCount: number
+): GuideQuickAnswer {
+  const authoredQuickAnswer = getGuideQuickAnswer(entry.slug, locale);
+
+  if (authoredQuickAnswer) {
+    return authoredQuickAnswer;
+  }
+
+  const primaryTool = getGuideLinkLabel(entry.primaryCtaTarget, locale).toLowerCase();
+
+  if (locale === "nl") {
+    return {
+      keyTakeaway: `${entry.pageBrief} Gebruik deze hub om sneller van onderwerpselectie naar een bruikbare volgende stap te gaan.`,
+      commonMistake:
+        "Meteen de eerste child-pagina openen zonder eerst te bepalen of je vraag vooral over klachten, discipline, setup of aankoopkeuze gaat.",
+      payAttention: `Rijders die tussen meerdere subonderwerpen twijfelen of ${childCount} gerelateerde pagina's willen terugbrengen tot de best passende startpagina en tool, zoals ${primaryTool}.`,
+    };
+  }
+
+  return {
+    keyTakeaway: `${entry.pageBrief} Use this hub to move faster from topic selection to a useful next step.`,
+    commonMistake:
+      "Opening the first child page immediately instead of deciding whether your question is mainly about symptoms, discipline, setup, or a buying decision.",
+    payAttention: `Riders choosing between multiple subtopics or narrowing ${childCount} related pages down to the right starting page and tool, such as ${primaryTool}.`,
+  };
+}
+
 export function buildLeafSections(entry: GuideBacklogEntry, locale: Locale): GuideSection[] {
+  const guideContent = getGuideContent(entry.slug);
+  if (guideContent) {
+    const localized = guideContent[locale];
+    return [
+      {
+        title: labels(locale).intro,
+        items: localized.intro,
+      },
+      ...localized.sections,
+    ];
+  }
+
   const t = labels(locale);
   const primaryTool = getGuideLinkLabel(entry.primaryCtaTarget, locale);
   const related = entry.internalLinkTargets.map((href) => getGuideLinkLabel(href, locale));
+
+  if (isNutritionCluster(entry.cluster) || isPowerCluster(entry.cluster)) {
+    if (locale === "nl") {
+      return [
+        {
+          title: t.intro,
+          items: [
+            `${entry.pageBrief} Deze pagina geeft je praktische richtlijnen die je direct kunt toepassen.`,
+            `Gebruik deze gids als context en ga daarna verder met ${primaryTool.toLowerCase()} voor specifieke getallen.`,
+          ],
+        },
+        {
+          title: "Kernconcepten",
+          items: [
+            "Focus op consistente gewoonten boven perfecte precisie — fietsers verbeteren het meest wanneer ze handelen op goede-genoeg richtlijnen.",
+            `De belangrijkste variabelen hangen samen met ${related.slice(0, 2).join(" en ")} — begin daar voor je naar randgevallen kijkt.`,
+            "Kleine verbeteringen consequent toegepast werken beter dan eenmalige optimalisaties.",
+          ],
+        },
+        {
+          title: "Hoe je deze gids gebruikt",
+          items: [
+            "Lees de gids om de redenering achter de getallen te begrijpen.",
+            "Test je aanpak op een normale trainingsrit voordat je hem in belangrijke sessies toepast.",
+            `Gebruik ${primaryTool.toLowerCase()} voor gepersonaliseerde startwaarden.`,
+          ],
+        },
+      ];
+    }
+
+    return [
+      {
+        title: t.intro,
+        items: [
+          `${entry.pageBrief} This page gives you practical guidance to apply immediately, without unnecessary complexity.`,
+          `Use this guide as context, then continue into ${primaryTool.toLowerCase()} to get specific numbers.`,
+        ],
+      },
+      {
+        title: "Key concepts",
+        items: [
+          "Focus on consistent habits over perfect precision — riders improve most when they act on good-enough guidance rather than waiting for perfect data.",
+          `The main variables here are linked to ${related.slice(0, 2).join(" and ")} — start there before exploring edge cases.`,
+          "Small improvements applied consistently outperform one-time optimizations.",
+        ],
+      },
+      {
+        title: "How to use this guide",
+        items: [
+          "Read the guide to understand the reasoning behind the numbers.",
+          "Test your approach on a regular training ride before applying it in important sessions.",
+          `Use ${primaryTool.toLowerCase()} to get personalised starting values.`,
+        ],
+      },
+    ];
+  }
 
   if (locale === "nl") {
     return [
@@ -276,8 +590,197 @@ export function buildLeafSections(entry: GuideBacklogEntry, locale: Locale): Gui
   ];
 }
 
+function isNutritionCluster(cluster: string): boolean {
+  return cluster.toLowerCase().includes("nutrition");
+}
+
+function isPowerCluster(cluster: string): boolean {
+  const lower = cluster.toLowerCase();
+  return lower.includes("power") || lower.includes("ftp") || lower.includes("pacing");
+}
+
+export function buildQuickAnswer(
+  entry: GuideBacklogEntry,
+  locale: Locale
+): GuideQuickAnswer {
+  const authoredQuickAnswer = getGuideQuickAnswer(entry.slug, locale);
+
+  if (authoredQuickAnswer) {
+    return authoredQuickAnswer;
+  }
+
+  const guideContent = getGuideContent(entry.slug);
+  const keyTakeaway =
+    guideContent?.[locale].intro[0] ??
+    (locale === "nl"
+      ? `${entry.pageBrief} Begin met de grootste, best meetbare variabele.`
+      : `${entry.pageBrief} Start with the biggest, most measurable variable first.`);
+
+  if (isNutritionCluster(entry.cluster)) {
+    return locale === "nl"
+      ? {
+          keyTakeaway,
+          commonMistake: "Geavanceerde voedingsschema's najagen voordat basisgewoonten en innamemomenten consistent zijn.",
+          payAttention:
+            "Rijders die langer dan 90 minuten trainen, warm weer verwachten of snel energiedips krijgen.",
+        }
+      : {
+          keyTakeaway,
+          commonMistake:
+            "Chasing advanced fueling numbers before basic habits and intake timing are consistent.",
+          payAttention:
+            "Riders doing sessions over 90 minutes, training in heat, or regularly hitting energy dips.",
+        };
+  }
+
+  if (isPowerCluster(entry.cluster)) {
+    return locale === "nl"
+      ? {
+          keyTakeaway,
+          commonMistake: "Eén FTP- of W/kg-getal behandelen alsof het pacing, training en race-uitvoering volledig verklaart.",
+          payAttention:
+            "Rijders die pacing plannen, trainingen structureren of klimdoelen realistisch willen inschatten.",
+        }
+      : {
+          keyTakeaway,
+          commonMistake:
+            "Treating one FTP or W/kg number as if it fully explains pacing, training, and race execution.",
+          payAttention:
+            "Riders planning pacing, structuring training, or estimating climb goals realistically.",
+        };
+  }
+
+  if (entry.cluster.toLowerCase().includes("ride")) {
+    return locale === "nl"
+      ? {
+          keyTakeaway,
+          commonMistake:
+            "Een houding van een andere discipline kopiëren zonder rekening te houden met terrein, duur en controle.",
+          payAttention:
+            "Rijders die van discipline wisselen of comfort, controle en snelheid anders moeten balanceren.",
+        }
+      : {
+          keyTakeaway,
+          commonMistake:
+            "Copying a position from another discipline without adjusting for terrain, duration, and control demands.",
+          payAttention:
+            "Riders switching disciplines or balancing comfort, control, and speed in a different context.",
+        };
+  }
+
+  if (
+    entry.cluster.toLowerCase().includes("shoe") ||
+    entry.cluster.toLowerCase().includes("geometry")
+  ) {
+    return locale === "nl"
+      ? {
+          keyTakeaway,
+          commonMistake:
+            "Schoenen, cleats of framematen beoordelen op gevoel alleen, zonder eerst de basismaat of referentiecijfers te controleren.",
+          payAttention:
+            "Rijders met hotspots, numbness, aankoopkeuzes of vergelijkingen tussen twee fietsen.",
+        }
+      : {
+          keyTakeaway,
+          commonMistake:
+            "Judging shoes, cleats, or frame size by feel alone before checking the underlying measurements and reference numbers.",
+          payAttention:
+            "Riders dealing with hotspots, numbness, purchase decisions, or comparisons between two bikes.",
+        };
+  }
+
+  if (entry.cluster.toLowerCase().includes("setup")) {
+    return locale === "nl"
+      ? {
+          keyTakeaway,
+          commonMistake:
+            "Eén setupwaarde groot veranderen zonder te controleren hoe zadel, reach en houding elkaar beïnvloeden.",
+          payAttention:
+            "Rijders die zelf aanpassingen doen en willen weten welke volgorde en stapgrootte logisch is.",
+        }
+      : {
+          keyTakeaway,
+          commonMistake:
+            "Making a large change to one setup number without checking how saddle position, reach, and posture interact.",
+          payAttention:
+            "Riders adjusting their own bike and needing a clear order of operations plus sensible step size.",
+        };
+  }
+
+  return locale === "nl"
+    ? {
+        keyTakeaway,
+        commonMistake:
+          "Te veel tegelijk aanpassen in plaats van eerst de grootste, meest herhaalbare factor te testen.",
+        payAttention:
+          "Rijders met terugkerend discomfort, prestatieverlies of een nieuwe setup die onder vermoeidheid uit elkaar valt.",
+      }
+    : {
+        keyTakeaway,
+        commonMistake:
+          "Changing too many variables at once instead of testing the biggest, most repeatable factor first.",
+        payAttention:
+          "Riders with recurring discomfort, performance loss, or a new setup that falls apart under fatigue.",
+      };
+}
+
 export function buildFaqs(entry: GuideBacklogEntry, locale: Locale): GuideFaq[] {
+  const guideContent = getGuideContent(entry.slug);
+  if (guideContent && guideContent[locale].faqs.length > 0) {
+    return guideContent[locale].faqs;
+  }
+
   const tool = getGuideLinkLabel(entry.primaryCtaTarget, locale);
+
+  if (isNutritionCluster(entry.cluster)) {
+    if (locale === "nl") {
+      return [
+        {
+          q: "Hoe weet ik hoeveel ik op de fiets moet eten?",
+          a: "Gebruik een eenvoudige vuistregel: zorg voor brandstof bij ritten langer dan 60-90 minuten. Gebruik de calculator voor een bereik op basis van jouw gewicht en inspanningsniveau.",
+        },
+        {
+          q: "Moet ik voeding oefenen in training?",
+          a: "Ja. Test je race-voedingsstrategie nooit voor het eerst tijdens een wedstrijd.",
+        },
+      ];
+    }
+    return [
+      {
+        q: "How do I know how much to eat on the bike?",
+        a: "Start with a simple rule: fuel for rides over 60-90 minutes. Use the calculator to get a range based on your weight and effort level.",
+      },
+      {
+        q: "Should I practice nutrition in training?",
+        a: "Yes. Race-day fueling strategies should not be trialled for the first time in an event.",
+      },
+    ];
+  }
+
+  if (isPowerCluster(entry.cluster)) {
+    if (locale === "nl") {
+      return [
+        {
+          q: "Heb ik een vermogensmeter nodig voor deze gidsen?",
+          a: "Nee. De gidsen leggen de concepten helder uit zonder vermogensdata. Een vermogensmeter helpt bij precisie, maar is niet vereist.",
+        },
+        {
+          q: "Hoe vaak moet ik FTP hertesten?",
+          a: "Elke 4-8 weken tijdens een trainingsblok, of na een langere pauze of fitnesswisseling.",
+        },
+      ];
+    }
+    return [
+      {
+        q: "Do I need a power meter to use these guides?",
+        a: "No. The guides explain the concepts clearly without requiring power data. A power meter helps with precision but is not required.",
+      },
+      {
+        q: "How often should I retest FTP?",
+        a: "Every 4-8 weeks during a training block, or after a significant break or fitness change.",
+      },
+    ];
+  }
 
   if (locale === "nl") {
     return [

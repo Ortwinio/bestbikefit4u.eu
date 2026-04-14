@@ -79,6 +79,7 @@ export function isProtectedAppPath(pathname: string): boolean {
     "/profile",
     "/settings",
     "/fit-history",
+    "/saddle-selector",
     DASHBOARD_PRESSURE_CALCULATOR_PATH,
     "/feedback",
   ] as const;

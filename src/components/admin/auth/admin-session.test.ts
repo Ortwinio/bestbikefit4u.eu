@@ -41,5 +41,6 @@ describe("admin navigation helpers", () => {
 
   it("returns the matching navigation item", () => {
     expect(getAdminNavigationItem("/admin/fit-runs")?.href).toBe("/admin/fit-runs");
+    expect(getAdminNavigationItem("/admin/guides/new")?.href).toBe("/admin/guides");
   });
 });

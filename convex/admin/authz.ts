@@ -43,17 +43,18 @@ export async function requireAdminUserId(ctx: DbCtx): Promise<Id<"users">> {
 
 export async function requireAdminRole(
   ctx: DbCtx,
-  requiredRole: AdminRole
+  requiredRole: AdminRole | readonly AdminRole[]
 ): Promise<Id<"users">> {
   const userId = await requireAdminUserId(ctx);
   const user = await ctx.db.get(userId);
+  const allowedRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
 
   if (!user?.adminRole) {
     throw new Error("Not authorized: admin role required");
   }
 
-  if (user.adminRole !== "super_admin" && user.adminRole !== requiredRole) {
-    throw new Error(`Not authorized: requires ${requiredRole}`);
+  if (user.adminRole !== "super_admin" && !allowedRoles.includes(user.adminRole)) {
+    throw new Error(`Not authorized: requires one of [${allowedRoles.join(", ")}]`);
   }
 
   return userId;
