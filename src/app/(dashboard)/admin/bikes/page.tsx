@@ -20,6 +20,8 @@ import {
   useQuery,
   type PaginatedQueryItem,
 } from "convex/react";
+import type { Id } from "../../../../../convex/_generated/dataModel";
+import { AdminBikeGeometryLinkDialog } from "@/components/admin/bikes/AdminBikeGeometryLinkDialog";
 import { StatusPill as SharedStatusPill } from "@/components/admin/shared/StatusPill";
 
 type BikeRow = PaginatedQueryItem<typeof api.admin.queries.listAllBikes>;
@@ -135,9 +137,16 @@ function BikeSnapshotRow({ bike }: { bike: BikeRow }) {
         </div>
       </td>
       <td className="px-4 py-4 align-top">
-        <Button variant="outline" size="sm" render={<Link href={`/admin/bikes/${bike._id}`} />}>
-          View detail
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" render={<Link href={`/admin/bikes/${bike._id}`} />}>
+            View detail
+          </Button>
+          <AdminBikeGeometryLinkDialog
+            bikeId={bike._id as Id<"bikes">}
+            currentRecord={geometryRecord}
+            buttonLabel={geometryRecord ? "Re-link" : "Link geometry"}
+          />
+        </div>
       </td>
     </tr>
   );
@@ -215,7 +224,7 @@ export default function AdminBikesPage() {
 
       <ErrorState
         title="Bike search is still partially backend-limited"
-        description="Category and geometry-link filters are live against Convex, but the backend query still ignores the text search argument. Search is therefore applied to the loaded page locally until that query is updated."
+        description="Category and geometry-link filters are live against Convex, and bikes now load newest first. Text search still applies only to the loaded page until the backend query uses the search argument."
       />
 
       <Card>

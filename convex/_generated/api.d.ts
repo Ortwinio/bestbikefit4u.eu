@@ -13,6 +13,7 @@ import type * as admin_audit from "../admin/audit.js";
 import type * as admin_authz from "../admin/authz.js";
 import type * as admin_bootstrap from "../admin/bootstrap.js";
 import type * as admin_mutations from "../admin/mutations.js";
+import type * as admin_overviewSeries from "../admin/overviewSeries.js";
 import type * as admin_queries from "../admin/queries.js";
 import type * as analytics_mutations from "../analytics/mutations.js";
 import type * as analytics_queries from "../analytics/queries.js";
@@ -135,6 +136,7 @@ declare const fullApi: ApiFromModules<{
   "admin/authz": typeof admin_authz;
   "admin/bootstrap": typeof admin_bootstrap;
   "admin/mutations": typeof admin_mutations;
+  "admin/overviewSeries": typeof admin_overviewSeries;
   "admin/queries": typeof admin_queries;
   "analytics/mutations": typeof analytics_mutations;
   "analytics/queries": typeof analytics_queries;

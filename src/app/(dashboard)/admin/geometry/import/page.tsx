@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { api } from "../../../../../../convex/_generated/api";
 import { useAction } from "convex/react";
+import { buildGeometryCsv } from "../../../../../../shared/geometryCsv";
 import {
   Button,
   Card,
@@ -18,9 +19,60 @@ import { ErrorState } from "@/components/ui";
 import { StatusPill as SharedStatusPill } from "@/components/admin/shared/StatusPill";
 
 const GEOMETRY_TEMPLATE_PATH = "/templates/geometry-import-template.csv";
-const GEOMETRY_TEMPLATE_CSV = `brand_slug,brand_name,model_name,model_year,category,size_label,stack,reach,seat_tube_angle,head_tube_angle,wheelbase,chainstay,bb_drop,effective_top_tube,standover,fork_rake,head_tube_length,seat_tube_length,rider_height_min_cm,rider_height_max_cm,saddle_height_min_mm,saddle_height_max_mm,source,source_url
-canyon,Canyon,Endurace CF SLX,2025,endurance,54,571,387,73.5,72.5,998,415,70,548,778,50,143,500,172,180,690,760,geometry_geeks,https://geometrygeeks.bike/
-specialized,Specialized,Tarmac SL8,2024,race_road,56,565,395,73.5,73.5,990,410,72,565,801,44,155,520,175,183,705,775,geometry_geeks,https://geometrygeeks.bike/`;
+const GEOMETRY_TEMPLATE_CSV = buildGeometryCsv([
+  {
+    brand_slug: "canyon",
+    brand_name: "Canyon",
+    model_name: "Endurace CF SLX",
+    model_year: 2025,
+    category: "endurance",
+    size_label: "54",
+    stack: 571,
+    reach: 387,
+    seat_tube_angle: 73.5,
+    head_tube_angle: 72.5,
+    wheelbase: 998,
+    chainstay: 415,
+    bb_drop: 70,
+    effective_top_tube: 548,
+    standover: 778,
+    fork_rake: 50,
+    head_tube_length: 143,
+    seat_tube_length: 500,
+    rider_height_min_cm: 172,
+    rider_height_max_cm: 180,
+    saddle_height_min_mm: 690,
+    saddle_height_max_mm: 760,
+    source: "geometry_geeks",
+    source_url: "https://geometrygeeks.bike/",
+  },
+  {
+    brand_slug: "specialized",
+    brand_name: "Specialized",
+    model_name: "Tarmac SL8",
+    model_year: 2024,
+    category: "race_road",
+    size_label: "56",
+    stack: 565,
+    reach: 395,
+    seat_tube_angle: 73.5,
+    head_tube_angle: 73.5,
+    wheelbase: 990,
+    chainstay: 410,
+    bb_drop: 72,
+    effective_top_tube: 565,
+    standover: 801,
+    fork_rake: 44,
+    head_tube_length: 155,
+    seat_tube_length: 520,
+    rider_height_min_cm: 175,
+    rider_height_max_cm: 183,
+    saddle_height_min_mm: 705,
+    saddle_height_max_mm: 775,
+    source: "geometry_geeks",
+    source_url: "https://geometrygeeks.bike/",
+  },
+]);
 
 function detectCsvDelimiter(line: string) {
   const commaCount = (line.match(/,/g) ?? []).length;

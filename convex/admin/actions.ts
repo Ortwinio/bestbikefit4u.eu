@@ -3,6 +3,7 @@ import type { Doc, Id } from "../_generated/dataModel";
 import type { ActionCtx } from "../_generated/server";
 import { api } from "../_generated/api";
 import { action } from "../_generated/server";
+import { buildGeometryCsv, type GeometryCsvRow } from "../../shared/geometryCsv";
 
 type AuditLogRow = Pick<
   Doc<"admin_audit_logs">,
@@ -347,6 +348,69 @@ export const exportAuditLogsCsv = action({
 });
 
 export const exportAdminAuditLogsCsv = exportAuditLogsCsv;
+
+export const exportGeometryRecordsCsv = action({
+  args: { recordIds: v.array(v.id("geometry_records")) },
+  handler: async (ctx, { recordIds }): Promise<{ csv: string }> => {
+    const admin = await requireAdminActionUser(ctx);
+    if (!["super_admin", "ops_admin", "geometry_manager"].includes(admin.adminRole)) {
+      throw new Error("Not authorized: requires geometry role");
+    }
+
+    const rows = await ctx.runQuery(api.admin.queries.getGeometryRecordsForExport, {
+      recordIds,
+    }) as Array<{
+      brandSlug: string;
+      brandName: string;
+      modelName: string;
+      modelYear: number | null;
+      category: string;
+      sizeLabel: string;
+      stack: number | null;
+      reach: number | null;
+      seatTubeAngle: number | null;
+      headTubeAngle: number | null;
+      wheelbase: number | null;
+      chainstay: number | null;
+      bbDrop: number | null;
+      effectiveTopTube: number | null;
+      standover: number | null;
+      forkRake: number | null;
+      headTubeLength: number | null;
+      source: string;
+      sourceUrl: string | null;
+    }>;
+
+    const csvRows: GeometryCsvRow[] = rows.map((row) => ({
+      brand_slug: row.brandSlug,
+      brand_name: row.brandName,
+      model_name: row.modelName,
+      model_year: row.modelYear ?? "",
+      category: row.category,
+      size_label: row.sizeLabel,
+      stack: row.stack ?? "",
+      reach: row.reach ?? "",
+      seat_tube_angle: row.seatTubeAngle ?? "",
+      head_tube_angle: row.headTubeAngle ?? "",
+      wheelbase: row.wheelbase ?? "",
+      chainstay: row.chainstay ?? "",
+      bb_drop: row.bbDrop ?? "",
+      effective_top_tube: row.effectiveTopTube ?? "",
+      standover: row.standover ?? "",
+      fork_rake: row.forkRake ?? "",
+      head_tube_length: row.headTubeLength ?? "",
+      seat_tube_length: "",
+      rider_height_min_cm: "",
+      rider_height_max_cm: "",
+      saddle_height_min_mm: "",
+      saddle_height_max_mm: "",
+      source: row.source,
+      source_url: row.sourceUrl ?? "",
+    }));
+
+    return { csv: buildGeometryCsv(csvRows) };
+  },
+});
 
 export const exportUserData = action({
   args: { userId: v.id("users"), reason: v.string() },

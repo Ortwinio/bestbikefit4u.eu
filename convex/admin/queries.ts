@@ -4,6 +4,7 @@ import type { Doc, Id } from "../_generated/dataModel";
 import type { QueryCtx } from "../_generated/server";
 import { query } from "../_generated/server";
 import { requireAdminUserId, requireAnyRole } from "./authz";
+import { buildOverviewSeries } from "./overviewSeries";
 
 type AdminUserSummary = Pick<
   Doc<"users">,
@@ -177,6 +178,7 @@ export const getOverviewStats = query({
 
     const [
       users,
+      bikes,
       fitSessions,
       integrations,
       feedbackItems,
@@ -186,6 +188,7 @@ export const getOverviewStats = query({
       engineVersions,
     ] = await Promise.all([
       ctx.db.query("users").collect(),
+      ctx.db.query("bikes").collect(),
       ctx.db.query("fitSessions").collect(),
       ctx.db.query("integrations").collect(),
       ctx.db.query("feedback_items").collect(),
@@ -207,6 +210,11 @@ export const getOverviewStats = query({
       .filter((release) => release.status === "rolling_out" || release.status === "live")
       .sort((a, b) => (b.rolloutDate ?? b.createdAt) - (a.rolloutDate ?? a.createdAt))
       .slice(0, 5);
+    const overviewSeries = buildOverviewSeries({
+      userCreatedAt: users.map((user) => ({ timestamp: user.createdAt ?? user._creationTime })),
+      userLastLoginAt: users.map((user) => ({ timestamp: user.lastLoginAt ?? null })),
+      bikeCreatedAt: bikes.map((bike) => ({ timestamp: bike._creationTime })),
+    });
 
     return {
       totalUsers: users.length,
@@ -237,6 +245,7 @@ export const getOverviewStats = query({
       activeEngineVersion:
         engineVersions.find((version) => version.status === "active") ?? null,
       draftEngineVersion: engineVersions.find((version) => version.status === "qa") ?? null,
+      overviewSeries,
     };
   },
 });
@@ -305,6 +314,7 @@ export const listUsers = query({
         }
         return predicates.length > 0 ? q.and(...predicates) : q.eq(q.field("email"), q.field("email"));
       })
+      .order("desc")
       .paginate(args.paginationOpts);
   },
 });
@@ -437,6 +447,7 @@ export const listAllBikes = query({
         }
         return predicates.length > 0 ? q.and(...predicates) : q.eq(q.field("name"), q.field("name"));
       })
+      .order("desc")
       .paginate(args.paginationOpts);
   },
 });
@@ -590,6 +601,27 @@ export const listGeometryModels = query({
   },
 });
 
+export const listGeometryModelsForFilter = query({
+  args: { brandId: v.optional(v.id("geometry_brands")) },
+  handler: async (ctx, { brandId }) => {
+    await requireGovernanceRead(ctx);
+
+    const models = brandId
+      ? await ctx.db
+          .query("geometry_models")
+          .withIndex("by_brand", (q) => q.eq("brandId", brandId))
+          .collect()
+      : await ctx.db.query("geometry_models").collect();
+
+    return models.sort((left, right) => {
+      if (left.name !== right.name) {
+        return left.name.localeCompare(right.name);
+      }
+      return (right.yearStart ?? right.yearEnd ?? 0) - (left.yearStart ?? left.yearEnd ?? 0);
+    });
+  },
+});
+
 export const listGeometryRecords = query({
   args: { modelId: v.id("geometry_models") },
   handler: async (ctx, { modelId }) => {
@@ -688,6 +720,7 @@ export const listGeometryRecordsForAdminReview = query({
           reach: record.reach ?? null,
           status: record.status,
           source: record.source,
+          sourceUrl: record.sourceUrl ?? null,
           version: record.version,
           createdAt: record.createdAt,
         };
@@ -712,6 +745,54 @@ export const listGeometryRecordsForAdminReview = query({
       });
 
     return filteredRecords;
+  },
+});
+
+export const getGeometryRecordsForExport = query({
+  args: { recordIds: v.array(v.id("geometry_records")) },
+  handler: async (ctx, { recordIds }) => {
+    await requireGovernanceRead(ctx);
+
+    const [brands, models, records] = await Promise.all([
+      ctx.db.query("geometry_brands").collect(),
+      ctx.db.query("geometry_models").collect(),
+      Promise.all(recordIds.map(async (recordId) => await ctx.db.get(recordId))),
+    ]);
+
+    const brandsById = new Map(brands.map((brand) => [String(brand._id), brand]));
+    const modelsById = new Map(models.map((model) => [String(model._id), model]));
+
+    return records
+      .filter((record): record is NonNullable<typeof record> => record !== null)
+      .map((record) => {
+        const brand = brandsById.get(String(record.brandId)) ?? null;
+        const model = modelsById.get(String(record.modelId)) ?? null;
+
+        return {
+          recordId: record._id,
+          brandSlug: brand?.slug ?? "",
+          brandName: brand?.name ?? "",
+          modelName: model?.name ?? "",
+          modelYear: model?.yearStart ?? model?.yearEnd ?? null,
+          category: model?.category ?? "other",
+          sizeLabel: record.sizeLabel,
+          stack: record.stack ?? null,
+          reach: record.reach ?? null,
+          seatTubeAngle: record.seatTubeAngle ?? null,
+          headTubeAngle: record.headTubeAngle ?? null,
+          wheelbase: record.wheelbase ?? null,
+          chainstay: record.chainstay ?? null,
+          bbDrop: record.bbDrop ?? null,
+          effectiveTopTube: record.effectiveTopTube ?? null,
+          standover: record.standover ?? null,
+          forkRake: record.forkRake ?? null,
+          headTubeLength: record.headTubeLength ?? null,
+          source: record.source,
+          sourceUrl: record.sourceUrl ?? null,
+          createdAt: record.createdAt,
+        };
+      })
+      .sort((left, right) => right.createdAt - left.createdAt);
   },
 });
 

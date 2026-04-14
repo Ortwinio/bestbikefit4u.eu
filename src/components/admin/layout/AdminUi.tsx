@@ -2,12 +2,18 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ChevronRight } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronRight } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 import { StatusPill } from "@/components/admin/shared/StatusPill";
 
 type AdminStatusTone = "neutral" | "success" | "warning" | "danger" | "info";
+export type AdminTableSortDirection = "asc" | "desc";
+export type AdminTableColumn = {
+  key: string;
+  label: string;
+  sortable?: boolean;
+};
 
 export function AdminStatusPill({
   tone = "neutral",
@@ -149,21 +155,53 @@ export function AdminTable({
 
 export function AdminTableHead({
   columns,
+  sortKey,
+  sortDirection,
+  onSort,
 }: {
-  columns: string[];
+  columns: Array<string | AdminTableColumn>;
+  sortKey?: string;
+  sortDirection?: AdminTableSortDirection;
+  onSort?: (key: string) => void;
 }) {
   return (
     <thead className="bg-[color:color-mix(in_oklch,var(--secondary)_82%,var(--background)_18%)]">
       <tr>
-        {columns.map((column) => (
-          <th
-            key={column}
-            className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]"
-            scope="col"
-          >
-            {column}
-          </th>
-        ))}
+        {columns.map((column) => {
+          const config = typeof column === "string" ? { key: column, label: column, sortable: false } : column;
+          const isSorted = config.sortable && sortKey === config.key;
+          const SortIcon = !config.sortable
+            ? null
+            : isSorted
+              ? sortDirection === "desc"
+                ? ArrowDown
+                : ArrowUp
+              : ArrowUpDown;
+
+          return (
+            <th
+              key={config.key}
+              className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted-foreground)]"
+              scope="col"
+            >
+              {config.sortable && onSort ? (
+                <button
+                  type="button"
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-sm transition-colors hover:text-[color:var(--foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--card)]",
+                    isSorted ? "text-[color:var(--foreground)]" : ""
+                  )}
+                  onClick={() => onSort(config.key)}
+                >
+                  <span>{config.label}</span>
+                  {SortIcon ? <SortIcon className="h-3.5 w-3.5" /> : null}
+                </button>
+              ) : (
+                config.label
+              )}
+            </th>
+          );
+        })}
       </tr>
     </thead>
   );

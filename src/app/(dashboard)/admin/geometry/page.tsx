@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../../../../../convex/_generated/api";
-import { useMutation, useQuery } from "convex/react";
+import type { Id } from "../../../../../convex/_generated/dataModel";
+import { useAction, useMutation, useQuery } from "convex/react";
 import {
   Button,
   Card,
@@ -35,6 +36,14 @@ function formatStatusTone(status: FilterStatus | "superseded") {
   return "warning" as const;
 }
 
+function formatImportDate(value: number) {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(value));
+}
+
 export default function GeometryHubPage() {
   const toast = useToast();
   const [brandFilter, setBrandFilter] = useState("");
@@ -44,12 +53,13 @@ export default function GeometryHubPage() {
   const [bulkStatus, setBulkStatus] = useState<BulkStatus>("active");
   const [selectedRecordIds, setSelectedRecordIds] = useState<string[]>([]);
   const [isSubmittingBulkStatus, setIsSubmittingBulkStatus] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   const brands = useQuery(api.admin.queries.listGeometryBrands, {});
   const summary = useQuery(api.admin.queries.getGeometryHubSummary, {});
   const models = useQuery(
-    api.admin.queries.listGeometryModels,
-    brandFilter ? { brandId: brandFilter as never } : "skip"
+    api.admin.queries.listGeometryModelsForFilter,
+    { brandId: brandFilter ? (brandFilter as Id<"geometry_brands">) : undefined }
   );
   const filteredRecords = useQuery(api.admin.queries.listGeometryRecordsForAdminReview, {
     brandId: brandFilter ? (brandFilter as never) : undefined,
@@ -60,6 +70,7 @@ export default function GeometryHubPage() {
   const bulkUpdateGeometryRecordStatus = useMutation(
     api.admin.mutations.bulkUpdateGeometryRecordStatus
   );
+  const exportGeometryRecordsCsv = useAction(api.admin.actions.exportGeometryRecordsCsv);
 
   const yearOptions = useMemo(() => {
     if (!models) {
@@ -150,6 +161,35 @@ export default function GeometryHubPage() {
     }
   }
 
+  async function handleExportSelected() {
+    if (selectedRecordIds.length === 0) {
+      return;
+    }
+
+    setIsExporting(true);
+    try {
+      const result = await exportGeometryRecordsCsv({
+        recordIds: selectedRecordIds as Id<"geometry_records">[],
+      });
+      const blob = new Blob([result.csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `geometry-export-${new Date().toISOString().slice(0, 10)}.csv`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+      toast.success({
+        description: `Exported ${selectedRecordIds.length} geometry records as CSV.`,
+      });
+    } catch (error) {
+      toast.error({
+        description: error instanceof Error ? error.message : "Could not export geometry CSV.",
+      });
+    } finally {
+      setIsExporting(false);
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -157,7 +197,7 @@ export default function GeometryHubPage() {
         <h1 className="text-3xl font-semibold tracking-tight">Geometry hub</h1>
         <p className="mt-2 max-w-3xl text-[color:var(--muted-foreground)]">
           Review the live geometry library by brand, model, and year. Select matching records in
-          bulk and update their review status in one action.
+          bulk, update their review status, or export the selected set back into the import CSV format.
         </p>
       </div>
 
@@ -284,6 +324,14 @@ export default function GeometryHubPage() {
             </Button>
             <Button
               variant="outline"
+              disabled={selectedRecordIds.length === 0}
+              isLoading={isExporting}
+              onClick={() => void handleExportSelected()}
+            >
+              Export selected CSV
+            </Button>
+            <Button
+              variant="outline"
               disabled={filteredRecords.length === 0}
               onClick={() => {
                 setSelectedRecordIds(
@@ -326,6 +374,7 @@ export default function GeometryHubPage() {
                   <th className="px-4 py-3 font-medium">Stack / reach</th>
                   <th className="px-4 py-3 font-medium">Source</th>
                   <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="px-4 py-3 font-medium">Import date</th>
                   <th className="px-4 py-3 font-medium">Actions</th>
                 </tr>
               </thead>
@@ -367,6 +416,7 @@ export default function GeometryHubPage() {
                           {record.status}
                         </SharedStatusPill>
                       </td>
+                      <td className="px-4 py-4">{formatImportDate(record.createdAt)}</td>
                       <td className="px-4 py-4">
                         <Button
                           variant="outline"
@@ -406,6 +456,7 @@ export default function GeometryHubPage() {
                   <th className="px-4 py-3 font-medium">Size</th>
                   <th className="px-4 py-3 font-medium">Source</th>
                   <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="px-4 py-3 font-medium">Import date</th>
                   <th className="px-4 py-3 font-medium">Version</th>
                 </tr>
               </thead>
@@ -427,6 +478,7 @@ export default function GeometryHubPage() {
                         {record.status}
                       </SharedStatusPill>
                     </td>
+                    <td className="px-4 py-4">{formatImportDate(record.createdAt)}</td>
                     <td className="px-4 py-4">v{record.version}</td>
                   </tr>
                 ))}

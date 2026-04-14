@@ -1,4 +1,5 @@
 import type { Doc } from "../../../../convex/_generated/dataModel";
+import type { AdminRole } from "../auth/admin-auth-shared";
 
 export function displayAdminUserName(
   user: Pick<Doc<"users">, "displayName" | "name" | "email">
@@ -36,7 +37,7 @@ export function normalizeAdminUserRow(user: Doc<"users">) {
     name: displayAdminUserName(user),
     email: user.email ?? "—",
     tier: user.tier ?? null,
-    adminRole: user.adminRole ?? null,
+    adminRole: (user.adminRole ?? null) as AdminRole | null,
     suspendedAt: user.suspendedAt ?? null,
     lastLoginAt: user.lastLoginAt ?? null,
     createdAt: user.createdAt ?? null,

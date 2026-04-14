@@ -11,6 +11,7 @@ import {
   AdminSectionCard,
   AdminStatusPill,
 } from "@/components/admin/layout/AdminUi";
+import { OverviewTrendCharts } from "@/components/admin/overview/OverviewTrendCharts";
 import { formatAdminDate, formatAdminRelativeDate } from "@/components/admin/shared/live-admin-data";
 
 export function OverviewAdminClient() {
@@ -46,6 +47,8 @@ export function OverviewAdminClient() {
         <AdminMetricCard label="Manual review" value={stats.manualReviewQueueCount} description="Fit runs waiting for review" />
         <AdminMetricCard label="Active releases" value={stats.activeReleases} description="Rolling out or live" />
       </section>
+
+      <OverviewTrendCharts series={stats.overviewSeries} />
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(22rem,0.8fr)]">
         <AdminSectionCard

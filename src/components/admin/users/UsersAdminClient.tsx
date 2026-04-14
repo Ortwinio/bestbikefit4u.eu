@@ -16,6 +16,7 @@ import {
 } from "@/components/admin/layout/AdminUi";
 import { formatAdminDate, formatAdminRelativeDate, normalizeAdminUserRow } from "@/components/admin/shared/live-admin-data";
 import { formatAdminRoleLabel } from "../auth/admin-auth-shared";
+import { getDefaultUserSortDirection, sortAdminUsers, type UserSortDirection, type UserSortKey } from "./user-table-sort";
 
 type TierFilter = "all" | "free" | "pro" | "premium";
 type RoleFilter = "all" | "admin-only" | "none";
@@ -62,6 +63,8 @@ export function UsersAdminClient() {
   const [tier, setTier] = useState<TierFilter>("all");
   const [role, setRole] = useState<RoleFilter>("all");
   const [suspended, setSuspended] = useState<SuspensionFilter>("all");
+  const [sortKey, setSortKey] = useState<UserSortKey>("lastLoginAt");
+  const [sortDirection, setSortDirection] = useState<UserSortDirection>("desc");
   const deferredSearch = useDeferredValue(search);
 
   const queryArgs = {
@@ -79,6 +82,17 @@ export function UsersAdminClient() {
   );
 
   const users = results.map(normalizeAdminUserRow);
+  const sortedUsers = sortAdminUsers(users, sortKey, sortDirection);
+
+  function handleSort(nextSortKey: UserSortKey) {
+    if (sortKey === nextSortKey) {
+      setSortDirection((currentDirection) => (currentDirection === "asc" ? "desc" : "asc"));
+      return;
+    }
+
+    setSortKey(nextSortKey);
+    setSortDirection(getDefaultUserSortDirection(nextSortKey));
+  }
 
   if (status === "LoadingFirstPage" && users.length === 0) {
     return <LoadingState label="Loading users..." />;
@@ -136,7 +150,7 @@ export function UsersAdminClient() {
         </div>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-[color:var(--muted-foreground)]">
           <span>
-            Showing {users.length} loaded user{users.length === 1 ? "" : "s"}
+            Showing {sortedUsers.length} loaded user{sortedUsers.length === 1 ? "" : "s"}
             {status === "LoadingMore" ? " while fetching more..." : ""}
           </span>
           <button
@@ -158,7 +172,7 @@ export function UsersAdminClient() {
         title="Users"
         description="Rows stay live as you filter and load more results from Convex."
       >
-        {users.length === 0 ? (
+        {sortedUsers.length === 0 ? (
           <EmptyState
             title="No users found"
             description="No live user rows matched the current filters."
@@ -166,10 +180,22 @@ export function UsersAdminClient() {
         ) : (
           <AdminTable>
             <AdminTableHead
-              columns={["Name", "Email", "Tier", "Admin role", "Suspension", "Joined", "Last login", "Action"]}
+              columns={[
+                { key: "name", label: "Name", sortable: true },
+                { key: "email", label: "Email", sortable: true },
+                { key: "tier", label: "Tier", sortable: true },
+                { key: "adminRole", label: "Admin role", sortable: true },
+                { key: "suspension", label: "Suspension", sortable: true },
+                { key: "createdAt", label: "Joined", sortable: true },
+                { key: "lastLoginAt", label: "Last login", sortable: true },
+                { key: "action", label: "Action" },
+              ]}
+              sortKey={sortKey}
+              sortDirection={sortDirection}
+              onSort={(columnKey) => handleSort(columnKey as UserSortKey)}
             />
             <tbody>
-              {users.map((user) => (
+              {sortedUsers.map((user) => (
                 <AdminTableRow key={user.id}>
                   <AdminTableCell className="font-medium">
                     <div className="space-y-1">
