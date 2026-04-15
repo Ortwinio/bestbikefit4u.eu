@@ -191,7 +191,7 @@ describe("login page", () => {
 
     render(<LoginPage />);
 
-    expect(screen.getByText("Maak je account aan of log in")).toBeTruthy();
+    expect(screen.getByText("Maak je account aan en log in")).toBeTruthy();
     expect(screen.getByText("Wat je krijgt na het aanmelden")).toBeTruthy();
     expect(
       screen.getByText(

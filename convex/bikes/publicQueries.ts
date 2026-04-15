@@ -155,9 +155,8 @@ export const getMarketingShowcaseBikes = query({
           };
         }
 
-        // Opaque ID: use the string representation of the internal _id
-        // (already non-guessable Convex IDs, but we avoid exposing _id directly)
-        const showcaseId = Buffer.from(bike._id).toString("base64url");
+        // Convex ids are already opaque enough for this public showcase use case.
+        const showcaseId = String(bike._id);
 
         return {
           showcaseId,

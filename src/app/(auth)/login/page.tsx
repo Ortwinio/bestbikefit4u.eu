@@ -147,7 +147,7 @@ const loginCopy: Record<Locale, LoginCopy> = {
     changeEmailAction: "Ander e-mailadres gebruiken",
     codeSentSuccess: "Verificatiecode verzonden. Voer de code hieronder in.",
     spamHint: "Controleer je spammap als je de e-mail niet ziet.",
-    signInTitle: "Maak je account aan of log in",
+    signInTitle: "Maak je account aan en log in",
     emailLabel: "E-mailadres",
     emailPlaceholder: "jij@example.com",
     emailTooltip:
@@ -644,30 +644,6 @@ export default function LoginPage() {
   return (
     <div className="space-y-5">
       {uspPanel}
-      {campaignActive ? (
-        <Card className="public-card-surface gap-0 rounded-[1.75rem] border">
-          <CardContent className="space-y-4 px-6 py-6">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
-                {campaign.loginTitle}
-              </p>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                {campaign.loginDescription}
-              </p>
-            </div>
-            <CampaignCtaGroup
-              locale={locale}
-              pagePath={pagePath}
-              startHref={withLocalePrefix("/calculators/bike-fit", locale)}
-              startSection="login_campaign_start"
-              donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-              donateSection="login_campaign_donate"
-              startLabel={campaign.startFreeCta}
-            />
-            <p className="text-xs text-muted-foreground">{campaign.optionalNote}</p>
-          </CardContent>
-        </Card>
-      ) : null}
       <Card className="gap-0 rounded-[2rem] border border-border/70 bg-card/95 shadow-sm">
         <CardHeader className="space-y-2">
           <CardTitle>{text.signInTitle}</CardTitle>
@@ -749,6 +725,30 @@ export default function LoginPage() {
           </div>
         </CardContent>
       </Card>
+      {campaignActive ? (
+        <Card className="public-card-surface gap-0 rounded-[1.75rem] border">
+          <CardContent className="space-y-4 px-6 py-6">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
+                {campaign.loginTitle}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                {campaign.loginDescription}
+              </p>
+            </div>
+            <CampaignCtaGroup
+              locale={locale}
+              pagePath={pagePath}
+              startHref={withLocalePrefix("/calculators/bike-fit", locale)}
+              startSection="login_campaign_start"
+              donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+              donateSection="login_campaign_donate"
+              startLabel={campaign.startFreeCta}
+            />
+            <p className="text-xs text-muted-foreground">{campaign.optionalNote}</p>
+          </CardContent>
+        </Card>
+      ) : null}
     </div>
   );
 }
