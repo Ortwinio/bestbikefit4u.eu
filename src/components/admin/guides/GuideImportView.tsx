@@ -56,6 +56,7 @@ type ImportRow = {
   en?: ParsedImportFile;
   nl?: ParsedImportFile;
   ready: boolean;
+  importable: boolean;
 };
 
 type RowImportResult = {
@@ -99,55 +100,76 @@ function buildImportRows(files: ParsedImportFile[]) {
       en: pair.en,
       nl: pair.nl,
       ready: Boolean(pair.en && pair.nl),
+      importable: Boolean(pair.en || pair.nl),
       cluster: pair.en?.record.cluster ?? pair.nl?.record.cluster ?? "unknown",
     }))
     .sort((left, right) => left.slug.localeCompare(right.slug));
 }
 
-function buildImportPayload(
-  enRecord: ImportJsonRecord,
-  nlRecord: ImportJsonRecord,
-  overwrite: boolean
-) {
-  const slug = getBareSlug(enRecord.slug);
-  const relatedGuidePaths = enRecord.internalLinkTargets
+function buildImportPayload(row: ImportRow, overwrite: boolean) {
+  const enRecord = row.en?.record;
+  const nlRecord = row.nl?.record;
+  const sourceRecord = enRecord ?? nlRecord;
+  const sourceLocale: Locale = enRecord ? "en" : "nl";
+
+  if (!sourceRecord) {
+    throw new Error("Import row has no uploaded JSON.");
+  }
+
+  const slug = getBareSlug(sourceRecord.slug);
+  const relatedGuidePaths = sourceRecord.internalLinkTargets
     .map((value) => stripLocalePrefix(value.trim()))
     .filter(Boolean);
 
+  const localizedText = (
+    enValue: string | undefined,
+    nlValue: string | undefined,
+    sourceValue: string
+  ) => ({
+    en: row.ready ? (enValue ?? "") : sourceLocale === "en" ? sourceValue : "",
+    nl: row.ready ? (nlValue ?? "") : sourceLocale === "nl" ? sourceValue : "",
+  });
+
   return {
     slug,
-    path: stripLocalePrefix(enRecord.path),
-    cluster: enRecord.cluster,
-    backlogOrder: enRecord.backlogOrder,
-    importStatus: enRecord.status,
-    importNotes: enRecord.notesOrRedirects,
-    pageTitle: { en: enRecord.pageTitle, nl: nlRecord.pageTitle },
-    h1: { en: enRecord.h1, nl: nlRecord.h1 },
-    metaTitle: { en: enRecord.metaTitle, nl: nlRecord.metaTitle },
-    metaDescription: { en: enRecord.metaDescription, nl: nlRecord.metaDescription },
-    pageBrief: { en: enRecord.pageBrief, nl: nlRecord.pageBrief },
-    libraryBody: { en: enRecord.libraryBody, nl: nlRecord.libraryBody },
-    heroImageFileName: enRecord.heroImageFileName,
-    heroImagePublicPath: enRecord.heroImagePublicPath,
+    path: stripLocalePrefix(sourceRecord.path),
+    cluster: sourceRecord.cluster,
+    backlogOrder: sourceRecord.backlogOrder,
+    importStatus: sourceRecord.status,
+    importNotes: sourceRecord.notesOrRedirects,
+    pageTitle: localizedText(enRecord?.pageTitle, nlRecord?.pageTitle, sourceRecord.pageTitle),
+    h1: localizedText(enRecord?.h1, nlRecord?.h1, sourceRecord.h1),
+    metaTitle: localizedText(enRecord?.metaTitle, nlRecord?.metaTitle, sourceRecord.metaTitle),
+    metaDescription: localizedText(
+      enRecord?.metaDescription,
+      nlRecord?.metaDescription,
+      sourceRecord.metaDescription
+    ),
+    pageBrief: localizedText(enRecord?.pageBrief, nlRecord?.pageBrief, sourceRecord.pageBrief),
+    libraryBody: localizedText(enRecord?.libraryBody, nlRecord?.libraryBody, sourceRecord.libraryBody),
+    heroImageFileName: sourceRecord.heroImageFileName,
+    heroImagePublicPath: sourceRecord.heroImagePublicPath,
     relatedGuidePaths,
-    relatedKeywords: enRecord.relatedKeywords?.map((value) => value.trim()).filter(Boolean),
-    seoHints: enRecord.backlogSeoHints,
-    primaryCtaTarget: stripLocalePrefix(enRecord.primaryCtaTarget),
-    primaryCtaLabel: {
-      en: enRecord.primaryCtaLabel,
-      nl: nlRecord.primaryCtaLabel,
-    },
+    relatedKeywords: sourceRecord.relatedKeywords?.map((value) => value.trim()).filter(Boolean),
+    seoHints: sourceRecord.backlogSeoHints,
+    primaryCtaTarget: stripLocalePrefix(sourceRecord.primaryCtaTarget),
+    primaryCtaLabel: localizedText(
+      enRecord?.primaryCtaLabel,
+      nlRecord?.primaryCtaLabel,
+      sourceRecord.primaryCtaLabel
+    ),
     relatedGuides: relatedGuidePaths.map((value) => stripGuidePrefix(value)),
     robotsIndex: true,
     tableOfContents: false,
     publishedAt: Date.now(),
     lastUpdatedAt: Date.now(),
+    status: row.ready ? "published" : "draft",
     overwrite,
   };
 }
 
 function getImportSelectionSummary(count: number) {
-  return `${count} guide pair${count === 1 ? "" : "s"} selected`;
+  return `${count} guide${count === 1 ? "" : "s"} selected`;
 }
 
 export function GuideImportView() {
@@ -209,8 +231,8 @@ export function GuideImportView() {
     [allRows]
   );
   const selectedReadyRows = useMemo(
-    () => allReadyRows.filter((row) => selectedSlugs.includes(row.slug)),
-    [allReadyRows, selectedSlugs]
+    () => allRows.filter((row) => row.importable && selectedSlugs.includes(row.slug)),
+    [allRows, selectedSlugs]
   );
   const previewRow = useMemo(
     () => allRows.find((row) => row.slug === previewSlug) ?? allRows[0] ?? null,
@@ -254,7 +276,7 @@ export function GuideImportView() {
       );
       const nextRows = buildImportRows(validFiles);
       setFiles(validFiles);
-      setSelectedSlugs(nextRows.filter((row) => row.ready).map((row) => row.slug));
+      setSelectedSlugs(nextRows.filter((row) => row.importable).map((row) => row.slug));
       setRowResults({});
       setError(null);
     } catch (parseError) {
@@ -273,7 +295,7 @@ export function GuideImportView() {
 
   const handleImport = async () => {
     if (selectedReadyRows.length === 0) {
-      setError("Select at least one complete EN/NL pair before importing.");
+      setError("Select at least one uploaded guide before importing.");
       return;
     }
 
@@ -284,17 +306,13 @@ export function GuideImportView() {
     let failedCount = 0;
 
     for (const row of selectedReadyRows) {
-      if (!row.en?.record || !row.nl?.record) {
+      if (!row.importable) {
         continue;
       }
 
       try {
         const result = await importGuideFromAdmin(
-          buildImportPayload(
-            row.en.record,
-            row.nl.record,
-            overwriteMode === "overwrite"
-          ) as never
+          buildImportPayload(row, overwriteMode === "overwrite") as never
         );
         const outcome =
           typeof result === "object" && result && "outcome" in result
@@ -321,12 +339,12 @@ export function GuideImportView() {
     );
 
     if (failedCount > 0) {
-      setError(`${failedCount} guide pair${failedCount === 1 ? "" : "s"} failed to import.`);
+      setError(`${failedCount} guide${failedCount === 1 ? "" : "s"} failed to import.`);
     }
 
     if (importedCount > 0) {
       toast.success({
-        description: `Imported ${importedCount} guide pair${importedCount === 1 ? "" : "s"}.`,
+        description: `Imported ${importedCount} guide${importedCount === 1 ? "" : "s"}.`,
       });
     }
 
@@ -362,7 +380,7 @@ export function GuideImportView() {
 
       <AdminSectionCard
         title="Import source"
-        description="Load guide JSON files in batches. The importer groups rows by slug and only imports selected rows with both EN and NL."
+        description="Load guide JSON files in batches. The importer groups rows by slug, supports single-language draft imports, and preserves bilingual imports when both files are present."
       >
         <div className="grid gap-4 md:grid-cols-[minmax(0,1.35fr)_minmax(12rem,1fr)_minmax(12rem,1fr)_minmax(12rem,1fr)]">
           <Input
@@ -408,17 +426,17 @@ export function GuideImportView() {
           <Button
             type="button"
             variant="outline"
-            onClick={() => setSelectedSlugs(allReadyRows.map((row) => row.slug))}
+            onClick={() => setSelectedSlugs(allRows.filter((row) => row.importable).map((row) => row.slug))}
           >
-            Select all ready
+            Select all importable
           </Button>
           <Button
             type="button"
             variant="outline"
             onClick={() =>
               setSelectedSlugs(
-                allReadyRows
-                  .filter((row) => !existingGuideMap.has(row.slug))
+                allRows
+                  .filter((row) => row.importable && !existingGuideMap.has(row.slug))
                   .map((row) => row.slug)
               )
             }
@@ -434,7 +452,7 @@ export function GuideImportView() {
           </Button>
         </div>
         <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">
-          Existing guide status is shown from Convex so you can see whether a slug is already published, in review, unpublished, or still in draft before batch import.
+          Existing guide status is shown from Convex so you can see whether a slug is already published, in review, unpublished, or still in draft before batch import. If only one language file is uploaded, the importer creates a draft with the other locale left empty so you can translate it later.
         </p>
         {publishedCount > 0 || draftCount > 0 ? (
           <div className="mt-3 flex flex-wrap gap-2">
@@ -446,7 +464,7 @@ export function GuideImportView() {
 
       <AdminSectionCard
         title="Batch import"
-        description="Import selected ready pairs. Incomplete rows stay visible so you can see which locale is missing."
+        description="Import selected guides in batches. Bilingual rows import as published content, while single-language rows import as drafts so the missing locale can be added later."
       >
         {error ? (
           <div className="rounded-2xl border border-[color:var(--danger)]/30 bg-[color:color-mix(in_oklch,var(--danger)_10%,var(--card)_90%)] p-4 text-sm text-[color:var(--foreground)]">
@@ -455,7 +473,7 @@ export function GuideImportView() {
         ) : null}
         <div className="mt-4 flex flex-wrap gap-3">
           <Button type="button" onClick={() => void handleImport()} isLoading={isImporting}>
-            Import selected pairs
+            Import selected guides
           </Button>
           <AdminStatusPill tone="info">{getImportSelectionSummary(selectedReadyRows.length)}</AdminStatusPill>
           <AdminStatusPill tone="warning">
@@ -466,14 +484,14 @@ export function GuideImportView() {
 
       <AdminSectionCard
         title="Detected guide rows"
-        description="Each row shows uploaded EN/NL presence and the current guide state in Convex."
+        description="Each row shows uploaded EN/NL presence, whether it will import as published or draft, and the current guide state in Convex."
       >
         {importRows.length === 0 ? (
           <p className="text-sm text-[color:var(--muted-foreground)]">No JSON files loaded yet.</p>
         ) : (
           <AdminTable>
             <AdminTableHead
-              columns={["Select", "Slug", "Cluster", "Uploaded EN", "Uploaded NL", "File pair", "Current guide", "Preview", "Batch result"]}
+              columns={["Select", "Slug", "Cluster", "Uploaded EN", "Uploaded NL", "Import mode", "Current guide", "Preview", "Batch result"]}
             />
             <tbody>
               {importRows.map((row) => {
@@ -487,7 +505,7 @@ export function GuideImportView() {
                       <input
                         type="checkbox"
                         checked={isSelected}
-                        disabled={!row.ready || isImporting}
+                        disabled={!row.importable || isImporting}
                         onChange={() => toggleSlugSelection(row.slug)}
                         aria-label={`Select ${row.slug} for import`}
                         className="h-4 w-4 rounded border border-[color:var(--border)]"
@@ -524,7 +542,7 @@ export function GuideImportView() {
                     </AdminTableCell>
                     <AdminTableCell>
                       <AdminStatusPill tone={row.ready ? "success" : "warning"}>
-                        {row.ready ? "Ready to import" : "Missing locale pair"}
+                        {row.ready ? "Bilingual import" : "Single-language draft"}
                       </AdminStatusPill>
                     </AdminTableCell>
                     <AdminTableCell>

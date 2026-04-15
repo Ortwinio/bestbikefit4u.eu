@@ -29,6 +29,47 @@ function normalizeRedirectPath(value: string) {
     : withLeadingSlash;
 }
 
+function hasText(value: string | undefined | null) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function hasLocalizedGuideContent(guide: {
+  pageTitle?: { en?: string; nl?: string };
+  h1?: { en?: string; nl?: string };
+  metaTitle?: { en?: string; nl?: string };
+  metaDescription?: { en?: string; nl?: string };
+  pageBrief?: { en?: string; nl?: string };
+  body?: { en?: Array<{ items?: string[] }>; nl?: Array<{ items?: string[] }> };
+  libraryBody?: { en?: string; nl?: string };
+}, locale: "en" | "nl") {
+  const hasStructuredBody = (guide.body?.[locale] ?? []).some((section) =>
+    (section.items ?? []).some((item) => hasText(item))
+  );
+
+  return (
+    hasText(guide.pageTitle?.[locale]) &&
+    hasText(guide.h1?.[locale]) &&
+    hasText(guide.metaTitle?.[locale]) &&
+    hasText(guide.metaDescription?.[locale]) &&
+    hasText(guide.pageBrief?.[locale]) &&
+    (hasStructuredBody || hasText(guide.libraryBody?.[locale]))
+  );
+}
+
+function assertGuideReadyForReviewOrPublish(guide: {
+  pageTitle?: { en?: string; nl?: string };
+  h1?: { en?: string; nl?: string };
+  metaTitle?: { en?: string; nl?: string };
+  metaDescription?: { en?: string; nl?: string };
+  pageBrief?: { en?: string; nl?: string };
+  body?: { en?: Array<{ items?: string[] }>; nl?: Array<{ items?: string[] }> };
+  libraryBody?: { en?: string; nl?: string };
+}) {
+  if (!hasLocalizedGuideContent(guide, "en") || !hasLocalizedGuideContent(guide, "nl")) {
+    throw new Error("English and Dutch content must both be complete before review or publishing");
+  }
+}
+
 function buildGuideRecordFromArgs(
   args: any
 ) {
@@ -312,9 +353,7 @@ export const publishGuide = mutation({
       throw new Error("Guide not found");
     }
 
-    if (!guide.h1.en.trim() || !guide.h1.nl.trim()) {
-      throw new Error("H1 is required in English and Dutch before publishing");
-    }
+    assertGuideReadyForReviewOrPublish(guide);
 
     const now = Date.now();
     await ctx.db.patch(id, {
@@ -396,6 +435,8 @@ export const submitGuideForReview = mutation({
     if (guide.status === "published") {
       throw new Error("Published guides cannot be submitted for review");
     }
+
+    assertGuideReadyForReviewOrPublish(guide);
 
     await ctx.db.patch(id, {
       status: "in_review",
@@ -851,6 +892,14 @@ export const importGuide = internalMutation({
     tableOfContents: v.boolean(),
     publishedAt: v.number(),
     lastUpdatedAt: v.number(),
+    status: v.optional(
+      v.union(
+        v.literal("draft"),
+        v.literal("in_review"),
+        v.literal("published"),
+        v.literal("unpublished")
+      )
+    ),
     overwrite: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
@@ -887,6 +936,14 @@ export const importGuideFromAdmin = mutation({
     tableOfContents: v.boolean(),
     publishedAt: v.number(),
     lastUpdatedAt: v.number(),
+    status: v.optional(
+      v.union(
+        v.literal("draft"),
+        v.literal("in_review"),
+        v.literal("published"),
+        v.literal("unpublished")
+      )
+    ),
     overwrite: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
@@ -913,7 +970,7 @@ async function importGuideRecord(
       backlogOrder: args.backlogOrder,
       importStatus: args.importStatus,
       importNotes: args.importNotes,
-      status: "published",
+      status: args.status ?? "published",
       pageTitle: args.pageTitle,
       h1: args.h1,
       metaTitle: args.metaTitle,
@@ -938,7 +995,7 @@ async function importGuideRecord(
       primaryCtaTarget: args.primaryCtaTarget,
       primaryCtaLabel: args.primaryCtaLabel,
       tableOfContents: args.tableOfContents,
-      publishedAt: args.publishedAt,
+      publishedAt: (args.status ?? "published") === "published" ? args.publishedAt : undefined,
       lastUpdatedAt: args.lastUpdatedAt,
     }),
     updatedAt: now,

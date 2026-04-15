@@ -153,6 +153,10 @@ function formatAuditValue(value: unknown) {
   return JSON.stringify(value);
 }
 
+function hasValue(value: string | undefined | null) {
+  return Boolean(value?.trim());
+}
+
 function summarizeAuditEntry(entry: AuditEntry) {
   if (entry.fieldChanges.length > 0) {
     return entry.fieldChanges.slice(0, 3).map((change) => ({
@@ -357,6 +361,21 @@ export function GuideEditView({
   );
   const hasFaqs = state.faqs.en.some((faq) => faq.q.en.trim() || faq.a.en.trim())
     || state.faqs.nl.some((faq) => faq.q.nl.trim() || faq.a.nl.trim());
+  const localeHasCoreContent = (locale: LocaleKey) =>
+    hasValue(state.pageTitle[locale]) &&
+    hasValue(state.h1[locale]) &&
+    hasValue(state.pageBrief[locale]) &&
+    hasValue(state.metaTitle[locale]) &&
+    hasValue(state.metaDescription[locale]) &&
+    (
+      hasValue(state.libraryBody[locale]) ||
+      state.body[locale].some((section) =>
+        hasValue(section.title[locale]) ||
+        section.items.some((item) => hasValue(item[locale])) ||
+        section.tableHeaders.some((header) => hasValue(header[locale])) ||
+        section.tableRows.some((row) => row.some((cell) => hasValue(cell[locale])))
+      )
+    );
   const formTabs = isPublishAdmin
     ? FORM_TABS
     : FORM_TABS.filter((tab) => tab.value !== "activity");
@@ -438,34 +457,132 @@ export function GuideEditView({
     setDirty(true);
   };
 
-  const validateRequiredFields = () => {
+  const copyLocaleIntoLocale = (source: LocaleKey, target: LocaleKey) => {
+    updateState((current) => ({
+      ...current,
+      pageTitle: { ...current.pageTitle, [target]: current.pageTitle[source] },
+      h1: { ...current.h1, [target]: current.h1[source] },
+      pageBrief: { ...current.pageBrief, [target]: current.pageBrief[source] },
+      metaTitle: { ...current.metaTitle, [target]: current.metaTitle[source] },
+      metaDescription: {
+        ...current.metaDescription,
+        [target]: current.metaDescription[source],
+      },
+      ogTitle: { ...current.ogTitle, [target]: current.ogTitle[source] },
+      ogDescription: {
+        ...current.ogDescription,
+        [target]: current.ogDescription[source],
+      },
+      primaryCtaLabel: {
+        ...current.primaryCtaLabel,
+        [target]: current.primaryCtaLabel[source],
+      },
+      featuredImageAlt: {
+        ...current.featuredImageAlt,
+        [target]: current.featuredImageAlt[source],
+      },
+      ogImageAlt: { ...current.ogImageAlt, [target]: current.ogImageAlt[source] },
+      libraryBody: { ...current.libraryBody, [target]: current.libraryBody[source] },
+      quickAnswer: {
+        keyTakeaway: {
+          ...current.quickAnswer.keyTakeaway,
+          [target]: current.quickAnswer.keyTakeaway[source],
+        },
+        commonMistake: {
+          ...current.quickAnswer.commonMistake,
+          [target]: current.quickAnswer.commonMistake[source],
+        },
+        payAttention: {
+          ...current.quickAnswer.payAttention,
+          [target]: current.quickAnswer.payAttention[source],
+        },
+      },
+      body: {
+        en: current.body.en.map((section, index) => ({
+          ...section,
+          title: {
+            ...section.title,
+            [target]: current.body[source][index]?.title[source] ?? section.title[target],
+          },
+          items: section.items.map((item, itemIndex) => ({
+            ...item,
+            [target]: current.body[source][index]?.items[itemIndex]?.[source] ?? item[target],
+          })),
+          tableHeaders: section.tableHeaders.map((header, headerIndex) => ({
+            ...header,
+            [target]:
+              current.body[source][index]?.tableHeaders[headerIndex]?.[source] ?? header[target],
+          })),
+          tableRows: section.tableRows.map((row, rowIndex) =>
+            row.map((cell, cellIndex) => ({
+              ...cell,
+              [target]:
+                current.body[source][index]?.tableRows[rowIndex]?.[cellIndex]?.[source] ??
+                cell[target],
+            }))
+          ),
+        })),
+        nl: current.body.nl.map((section, index) => ({
+          ...section,
+          title: {
+            ...section.title,
+            [target]: current.body[source][index]?.title[source] ?? section.title[target],
+          },
+          items: section.items.map((item, itemIndex) => ({
+            ...item,
+            [target]: current.body[source][index]?.items[itemIndex]?.[source] ?? item[target],
+          })),
+          tableHeaders: section.tableHeaders.map((header, headerIndex) => ({
+            ...header,
+            [target]:
+              current.body[source][index]?.tableHeaders[headerIndex]?.[source] ?? header[target],
+          })),
+          tableRows: section.tableRows.map((row, rowIndex) =>
+            row.map((cell, cellIndex) => ({
+              ...cell,
+              [target]:
+                current.body[source][index]?.tableRows[rowIndex]?.[cellIndex]?.[source] ??
+                cell[target],
+            }))
+          ),
+        })),
+      },
+      faqs: {
+        en: current.faqs.en.map((faq, index) => ({
+          q: { ...faq.q, [target]: current.faqs[source][index]?.q[source] ?? faq.q[target] },
+          a: { ...faq.a, [target]: current.faqs[source][index]?.a[source] ?? faq.a[target] },
+        })),
+        nl: current.faqs.nl.map((faq, index) => ({
+          q: { ...faq.q, [target]: current.faqs[source][index]?.q[source] ?? faq.q[target] },
+          a: { ...faq.a, [target]: current.faqs[source][index]?.a[source] ?? faq.a[target] },
+        })),
+      },
+    }));
+    toast.success({
+      description: `Copied ${source.toUpperCase()} content into ${target.toUpperCase()} as a translation starting point.`,
+    });
+  };
+
+  const validateRequiredFields = (mode: "draft" | "publish") => {
     if (!normalizedSlug) {
       return "Set a unique slug before saving.";
     }
     if (slugLookup) {
       return "Choose a different slug. This one already exists.";
     }
-    if (!state.pageTitle.en.trim() || !state.pageTitle.nl.trim()) {
-      return "Page title is required in English and Dutch.";
+
+    const hasEnglish = localeHasCoreContent("en");
+    const hasDutch = localeHasCoreContent("nl");
+
+    if (mode === "draft") {
+      if (!hasEnglish && !hasDutch) {
+        return "Complete the required guide fields in at least one language before saving.";
+      }
+      return null;
     }
-    if (!state.h1.en.trim() || !state.h1.nl.trim()) {
-      return "H1 is required in English and Dutch.";
-    }
-    if (!state.pageBrief.en.trim() || !state.pageBrief.nl.trim()) {
-      return "Page brief is required in English and Dutch.";
-    }
-    if (!state.metaTitle.en.trim() || !state.metaTitle.nl.trim()) {
-      return "Meta title is required in English and Dutch.";
-    }
-    if (!state.metaDescription.en.trim() || !state.metaDescription.nl.trim()) {
-      return "Meta description is required in English and Dutch.";
-    }
-    if (
-      state.body.en.every((section) =>
-        section.items.every((item) => !item.en.trim() && !item.nl.trim())
-      )
-    ) {
-      return "Add at least one body item before saving.";
+
+    if (!hasEnglish || !hasDutch) {
+      return "English and Dutch must both be complete before review or publishing.";
     }
 
     return null;
@@ -581,7 +698,7 @@ export function GuideEditView({
 
   const saveGuide = async (allowSlugChangeConfirm = false) => {
     setError(null);
-    const validationError = validateRequiredFields();
+    const validationError = validateRequiredFields("draft");
     if (validationError) {
       setError(validationError);
       return false;
@@ -660,8 +777,9 @@ export function GuideEditView({
 
   const handlePublish = async () => {
     setError(null);
-    if (!state.h1.en.trim() || !state.h1.nl.trim()) {
-      setError("Fill the H1 in English and Dutch before publishing.");
+    const validationError = validateRequiredFields("publish");
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
@@ -682,6 +800,11 @@ export function GuideEditView({
 
   const handleSubmitForReview = async () => {
     setError(null);
+    const validationError = validateRequiredFields("publish");
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
     setIsSaving(true);
     try {
       await submitGuideForReview({ id: guide._id });
@@ -951,7 +1074,20 @@ export function GuideEditView({
 
           {formTab === "content" ? (
             <>
-              <AdminSectionCard title="Locale" description="Edit English and Dutch content side by side through one form state.">
+              <AdminSectionCard
+                title="Locale"
+                description="Edit one language at a time. Drafts can stay single-language until you add the missing translation."
+                actions={
+                  <div className="flex flex-wrap gap-2">
+                    <Button type="button" variant="outline" size="sm" onClick={() => copyLocaleIntoLocale("en", "nl")}>
+                      Copy EN {"->"} NL
+                    </Button>
+                    <Button type="button" variant="outline" size="sm" onClick={() => copyLocaleIntoLocale("nl", "en")}>
+                      Copy NL {"->"} EN
+                    </Button>
+                  </div>
+                }
+              >
                 <SegmentedControl
                   aria-label="Guide content locale"
                   value={localeTab}
@@ -961,6 +1097,14 @@ export function GuideEditView({
                   <SegmentedControlItem value="en">English</SegmentedControlItem>
                   <SegmentedControlItem value="nl">Dutch</SegmentedControlItem>
                 </SegmentedControl>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <AdminStatusPill tone={localeHasCoreContent("en") ? "success" : "warning"}>
+                    {localeHasCoreContent("en") ? "EN complete enough for draft" : "EN incomplete"}
+                  </AdminStatusPill>
+                  <AdminStatusPill tone={localeHasCoreContent("nl") ? "success" : "warning"}>
+                    {localeHasCoreContent("nl") ? "NL complete enough for draft" : "NL incomplete"}
+                  </AdminStatusPill>
+                </div>
               </AdminSectionCard>
 
               <AdminSectionCard title="Core content" description={`Editing ${localeTab === "en" ? "English" : "Dutch"} fields.`}>

@@ -83,6 +83,10 @@ function checklistStatus(valid: boolean) {
   return valid ? { tone: "success" as const, label: "Pass" } : { tone: "warning" as const, label: "Warn" };
 }
 
+function hasValue(value: string | undefined | null) {
+  return Boolean(value?.trim());
+}
+
 export function GuideCreateView({
   sessionRole,
 }: {
@@ -195,6 +199,64 @@ export function GuideCreateView({
         : undefined;
 
   const contentLocaleLabel = localeTab === "en" ? "English" : "Dutch";
+
+  const localeHasCoreContent = (locale: LocaleKey) =>
+    hasValue(pageTitle[locale]) &&
+    hasValue(h1[locale]) &&
+    hasValue(pageBrief[locale]) &&
+    hasValue(metaTitle[locale]) &&
+    hasValue(metaDescription[locale]) &&
+    (
+      hasValue(libraryBody[locale]) ||
+      body.some((section) =>
+        hasValue(section.title[locale]) ||
+        section.items.some((item) => hasValue(item[locale])) ||
+        section.tableHeaders.some((header) => hasValue(header[locale])) ||
+        section.tableRows.some((row) => row.some((cell) => hasValue(cell[locale])))
+      )
+    );
+
+  const copyLocaleIntoLocale = (source: LocaleKey, target: LocaleKey) => {
+    setPageTitle((current) => ({ ...current, [target]: current[source] }));
+    setH1((current) => ({ ...current, [target]: current[source] }));
+    setPageBrief((current) => ({ ...current, [target]: current[source] }));
+    setMetaTitle((current) => ({ ...current, [target]: current[source] }));
+    setMetaDescription((current) => ({ ...current, [target]: current[source] }));
+    setOgTitle((current) => ({ ...current, [target]: current[source] }));
+    setOgDescription((current) => ({ ...current, [target]: current[source] }));
+    setPrimaryCtaLabel((current) => ({ ...current, [target]: current[source] }));
+    setFeaturedImageAlt((current) => ({ ...current, [target]: current[source] }));
+    setOgImageAlt((current) => ({ ...current, [target]: current[source] }));
+    setLibraryBody((current) => ({ ...current, [target]: current[source] }));
+    setQuickAnswer((current) => ({
+      keyTakeaway: { ...current.keyTakeaway, [target]: current.keyTakeaway[source] },
+      commonMistake: { ...current.commonMistake, [target]: current.commonMistake[source] },
+      payAttention: { ...current.payAttention, [target]: current.payAttention[source] },
+    }));
+    setFaqs((current) =>
+      current.map((faq) => ({
+        q: { ...faq.q, [target]: faq.q[source] },
+        a: { ...faq.a, [target]: faq.a[source] },
+      }))
+    );
+    setBody((current) =>
+      current.map((section) => ({
+        ...section,
+        title: { ...section.title, [target]: section.title[source] },
+        items: section.items.map((item) => ({ ...item, [target]: item[source] })),
+        tableHeaders: section.tableHeaders.map((header) => ({
+          ...header,
+          [target]: header[source],
+        })),
+        tableRows: section.tableRows.map((row) =>
+          row.map((cell) => ({ ...cell, [target]: cell[source] }))
+        ),
+      }))
+    );
+    toast.success({
+      description: `Copied ${source.toUpperCase()} content into ${target.toUpperCase()} as a translation starting point.`,
+    });
+  };
 
   const syncSlugFromTitle = (nextTitle: string) => {
     if (!slugTouched) {
@@ -310,36 +372,26 @@ export function GuideCreateView({
     tableOfContents,
   });
 
-  const validateRequiredFields = () => {
+  const validateRequiredFields = (mode: "draft" | "review") => {
     if (!normalizedSlug) {
       return "Set a unique slug before saving.";
     }
     if (slugLookup) {
       return "Choose a different slug. This one already exists.";
     }
-    if (!pageTitle.en.trim() || !pageTitle.nl.trim()) {
-      return "Page title is required in English and Dutch.";
+
+    const hasEnglish = localeHasCoreContent("en");
+    const hasDutch = localeHasCoreContent("nl");
+
+    if (mode === "draft") {
+      if (!hasEnglish && !hasDutch) {
+        return "Complete the required guide fields in at least one language before saving a draft.";
+      }
+      return null;
     }
-    if (!h1.en.trim() || !h1.nl.trim()) {
-      return "H1 is required in English and Dutch.";
-    }
-    if (!pageBrief.en.trim() || !pageBrief.nl.trim()) {
-      return "Page brief is required in English and Dutch.";
-    }
-    if (!metaTitle.en.trim() || !metaTitle.nl.trim()) {
-      return "Meta title is required in English and Dutch.";
-    }
-    if (!metaDescription.en.trim() || !metaDescription.nl.trim()) {
-      return "Meta description is required in English and Dutch.";
-    }
-    if (
-      body.every((section) =>
-        section.items.every(
-          (item) => !item.en.trim() && !item.nl.trim()
-        )
-      )
-    ) {
-      return "Add at least one body item before saving.";
+
+    if (!hasEnglish || !hasDutch) {
+      return "English and Dutch must both be complete before submitting for review.";
     }
 
     return null;
@@ -347,7 +399,7 @@ export function GuideCreateView({
 
   const handleSave = async (mode: "draft" | "review") => {
     setError(null);
-    const validationError = validateRequiredFields();
+    const validationError = validateRequiredFields(mode);
     if (validationError) {
       setError(validationError);
       return;
@@ -430,7 +482,20 @@ export function GuideCreateView({
 
           {formTab === "content" ? (
             <>
-              <AdminSectionCard title="Locale" description="Edit English and Dutch content side by side through one form state.">
+              <AdminSectionCard
+                title="Locale"
+                description="Edit one language at a time. Drafts can be saved in a single language, then translated later."
+                actions={
+                  <div className="flex flex-wrap gap-2">
+                    <Button type="button" variant="outline" size="sm" onClick={() => copyLocaleIntoLocale("en", "nl")}>
+                      Copy EN {"->"} NL
+                    </Button>
+                    <Button type="button" variant="outline" size="sm" onClick={() => copyLocaleIntoLocale("nl", "en")}>
+                      Copy NL {"->"} EN
+                    </Button>
+                  </div>
+                }
+              >
                 <SegmentedControl
                   aria-label="Guide content locale"
                   value={localeTab}
@@ -440,6 +505,14 @@ export function GuideCreateView({
                   <SegmentedControlItem value="en">English</SegmentedControlItem>
                   <SegmentedControlItem value="nl">Dutch</SegmentedControlItem>
                 </SegmentedControl>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <AdminStatusPill tone={localeHasCoreContent("en") ? "success" : "warning"}>
+                    {localeHasCoreContent("en") ? "EN complete enough for draft" : "EN incomplete"}
+                  </AdminStatusPill>
+                  <AdminStatusPill tone={localeHasCoreContent("nl") ? "success" : "warning"}>
+                    {localeHasCoreContent("nl") ? "NL complete enough for draft" : "NL incomplete"}
+                  </AdminStatusPill>
+                </div>
               </AdminSectionCard>
 
               <AdminSectionCard title="Core content" description={`Editing ${contentLocaleLabel} fields.`}>
