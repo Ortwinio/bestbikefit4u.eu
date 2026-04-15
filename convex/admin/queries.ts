@@ -1327,47 +1327,63 @@ export const listAdminFeatureFlags = getFeatureFlags;
 export const listAdminMarketingShowcaseBikes = query({
   args: {},
   handler: async (ctx) => {
-    await requireAnyRole(ctx, ["super_admin", "ops_admin", "fit_specialist", "geometry_manager", "analyst"]);
+    await requireAnyRole(ctx, [
+      "super_admin",
+      "ops_admin",
+      "fit_specialist",
+      "geometry_manager",
+      "analyst",
+    ]);
 
-    const bikes = await ctx.db.query("bikes").collect();
+    // Use indexes to avoid full table scans
+    const [eligibleBikes, bikesWithGeometry] = await Promise.all([
+      ctx.db
+        .query("bikes")
+        .withIndex("by_marketing_eligible", (q) => q.eq("marketingEligible", true))
+        .collect(),
+      ctx.db
+        .query("bikes")
+        .withIndex("by_geometry_record")
+        .collect(),
+    ]);
 
-    const showcaseCandidates = bikes.filter(
-      (b) =>
-        b.brand &&
-        b.model &&
-        (b.geometryRecordId || (b.currentGeometry?.stackMm && b.currentGeometry?.reachMm))
+    // Merge: eligible bikes + non-eligible bikes that have geometry and brand+model
+    const eligibleIds = new Set(eligibleBikes.map((b) => b._id));
+    const candidates = bikesWithGeometry.filter(
+      (b) => !eligibleIds.has(b._id) && b.brand && b.model
     );
 
-    return Promise.all(
-      showcaseCandidates.map(async (bike) => {
-        const primaryPhoto = await ctx.db
-          .query("bikePhotos")
-          .withIndex("by_bike_primary", (q) =>
-            q.eq("bikeId", bike._id).eq("isPrimary", true)
-          )
-          .first();
+    const allRelevant = [...eligibleBikes, ...candidates];
 
-        const photoStorageId = primaryPhoto?.storageId ?? bike.photoUrl ?? null;
+    const rows = [];
+    for (const bike of allRelevant) {
+      const primaryPhoto = await ctx.db
+        .query("bikePhotos")
+        .withIndex("by_bike_primary", (q) =>
+          q.eq("bikeId", bike._id).eq("isPrimary", true)
+        )
+        .first();
 
-        const geometryRecord = bike.geometryRecordId
-          ? await ctx.db.get(bike.geometryRecordId)
-          : null;
+      const geometryRecord = bike.geometryRecordId
+        ? await ctx.db.get(bike.geometryRecordId)
+        : null;
 
-        return {
-          _id: bike._id,
-          name: bike.name,
-          brand: bike.brand ?? null,
-          model: bike.model ?? null,
-          bikeType: bike.bikeType,
-          photoStorageId,
-          marketingEligible: bike.marketingEligible ?? false,
-          marketingEligibleAt: bike.marketingEligibleAt ?? null,
-          imageModerated: bike.imageModerated ?? false,
-          hasGeometry: Boolean(bike.geometryRecordId),
-          geometryStatus: geometryRecord?.status ?? null,
-          updatedAt: bike.updatedAt,
-        };
-      })
-    );
+      rows.push({
+        _id: bike._id,
+        name: bike.name,
+        brand: bike.brand ?? null,
+        model: bike.model ?? null,
+        bikeType: bike.bikeType,
+        photoStorageId: primaryPhoto?.storageId ?? bike.photoUrl ?? null,
+        marketingEligible: bike.marketingEligible ?? false,
+        marketingEligibleAt: bike.marketingEligibleAt ?? null,
+        imageModerated: bike.imageModerated ?? false,
+        hasGeometry: Boolean(bike.geometryRecordId),
+        geometryStatus: geometryRecord?.status ?? null,
+        updatedAt: bike.updatedAt,
+      });
+    }
+
+    return rows;
   },
 });
