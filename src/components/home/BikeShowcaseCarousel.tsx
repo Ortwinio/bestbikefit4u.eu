@@ -142,9 +142,9 @@ export function BikeShowcaseCarousel({ bikes, ctaHref, copy }: BikeShowcaseCarou
         ))}
       </div>
 
-      {/* Navigation */}
+      {/* Navigation — hidden on lg+ where all bikes fit without scrolling */}
       {bikes.length > 1 && (
-        <div className="mt-4 flex items-center justify-center gap-4">
+        <div className="mt-4 flex items-center justify-center gap-4 lg:hidden">
           <Button
             variant="outline"
             size="icon-sm"

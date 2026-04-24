@@ -50,6 +50,8 @@ export function BrandLogo({
 }: BrandLogoProps) {
   const { resolvedTheme } = useTheme();
   const isAppIcon = asset === "appIcon";
+  const isHorizontalLogo = asset === "primary" || asset === "dark";
+  const shouldPrioritize = priority === true || priority === "dark";
 
   const selectedAsset =
     asset === "primary"
@@ -77,8 +79,19 @@ export function BrandLogo({
         alt={ariaLabel ?? BRAND.name}
         width={selectedAsset.width}
         height={selectedAsset.height}
-        priority={priority === true || priority === "dark"}
+        priority={shouldPrioritize}
         className="h-auto w-full"
+      />
+    </span>
+  ) : isHorizontalLogo ? (
+    <span className="relative block aspect-[5/2] w-full overflow-hidden">
+      <Image
+        src={selectedAsset.src}
+        alt={ariaLabel ?? BRAND.name}
+        fill
+        sizes="100vw"
+        priority={shouldPrioritize}
+        className={cn("object-cover object-center", imageClassName)}
       />
     </span>
   ) : (
@@ -87,7 +100,7 @@ export function BrandLogo({
       alt={ariaLabel ?? BRAND.name}
       width={selectedAsset.width}
       height={selectedAsset.height}
-      priority={priority === true || priority === "dark"}
+      priority={shouldPrioritize}
       className={cn("h-auto w-full", imageClassName)}
     />
   );

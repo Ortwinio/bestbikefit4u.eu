@@ -22,7 +22,7 @@ export function BikeShowcaseSection({ locale, copy }: BikeShowcaseSectionProps) 
 
   if (bikes === undefined) {
     return (
-      <section className="bg-background py-14 sm:py-16">
+      <section className="hidden bg-background py-14 lg:block lg:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <PublicSection
             header={{
@@ -47,7 +47,7 @@ export function BikeShowcaseSection({ locale, copy }: BikeShowcaseSectionProps) 
   const ctaHref = withLocalePrefix("/calculators/bike-fit", locale);
 
   return (
-    <section className="bg-background py-14 sm:py-16">
+    <section className="hidden bg-background py-14 lg:block lg:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <PublicSection
           header={{

@@ -57,7 +57,7 @@ export function BikeShowcaseCard({
       aria-label={ariaLabel}
       aria-roledescription="slide"
       className={cn(
-        "group min-w-[18rem] snap-start shrink-0 cursor-pointer rounded-xl border border-border bg-card text-left outline-none ring-ring transition-shadow hover:shadow-md focus-visible:ring-2 lg:min-w-[22rem]",
+        "group min-w-[16rem] snap-start shrink-0 cursor-pointer rounded-xl border border-border bg-card text-left outline-none ring-ring transition-shadow hover:shadow-md focus-visible:ring-2 lg:min-w-0 lg:w-[calc((100%-4rem)/5)]",
         className
       )}
     >
