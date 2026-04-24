@@ -9,18 +9,18 @@ import { cn } from "@/utils/cn";
 const LOGO_ASSETS = {
   primary: {
     src: BRAND.assets.logoPrimary,
-    width: 1115,
-    height: 222,
+    width: 1024,
+    height: 1024,
   },
   dark: {
     src: BRAND.assets.logoDark,
-    width: 1115,
-    height: 222,
+    width: 1024,
+    height: 1024,
   },
   mark: {
     src: BRAND.assets.mark,
-    width: 512,
-    height: 512,
+    width: 1024,
+    height: 1024,
   },
   appIcon: {
     src: BRAND.assets.appIconSvg,

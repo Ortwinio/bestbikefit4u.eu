@@ -14,17 +14,17 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#089BE9",
     icons: [
       {
-        src: "/logo/bestbikefit4u_mark.png",
-        sizes: "512x512",
-        type: "image/png",
-      },
-      {
-        src: "/logo/bestbikefit4u_icon_app.png",
+        src: BRAND.assets.appIconPng,
         sizes: "1024x1024",
         type: "image/png",
       },
       {
-        src: "/logo/bestbikefit4u_mark.svg",
+        src: BRAND.assets.appIconPng,
+        sizes: "1024x1024",
+        type: "image/png",
+      },
+      {
+        src: BRAND.assets.appIconSvg,
         sizes: "any",
         type: "image/svg+xml",
         purpose: "any",

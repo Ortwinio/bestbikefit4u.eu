@@ -28,25 +28,25 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/logo/bestbikefit4u_mark.svg",
+        url: BRAND.assets.appIconSvg,
         type: "image/svg+xml",
       },
       {
-        url: "/logo/bestbikefit4u_mark.png",
-        sizes: "512x512",
+        url: BRAND.assets.appIconPng,
+        sizes: "1024x1024",
         type: "image/png",
       },
     ],
     shortcut: [
       {
-        url: "/logo/bestbikefit4u_mark.png",
-        sizes: "512x512",
+        url: BRAND.assets.appIconPng,
+        sizes: "1024x1024",
         type: "image/png",
       },
     ],
     apple: [
       {
-        url: "/logo/bestbikefit4u_icon_app.png",
+        url: BRAND.assets.appIconPng,
         sizes: "1024x1024",
         type: "image/png",
       },
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     other: [
       {
         rel: "mask-icon",
-        url: "/logo/bestbikefit4u_mark.svg",
+        url: BRAND.assets.appIconSvg,
         color: "#089BE9",
       },
     ],

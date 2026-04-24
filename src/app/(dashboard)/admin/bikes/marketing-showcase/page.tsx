@@ -31,7 +31,7 @@ export default function AdminBikeMarketingShowcasePage() {
   }
 
   const eligible = bikes.filter((b) => b.marketingEligible);
-  const candidates = bikes.filter((b) => !b.marketingEligible);
+  const candidates = bikes.filter((b) => !b.marketingEligible && b.photoStorageId);
 
   async function toggle(bikeId: Id<"bikes">, eligible: boolean) {
     await setEligible({ bikeId, eligible });

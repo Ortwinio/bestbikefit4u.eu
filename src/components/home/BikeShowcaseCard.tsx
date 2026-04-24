@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { useState } from "react";
 import { cn } from "@/utils/cn";
 import type { PublicShowcaseBike } from "./bike-showcase.types";
 import { BikeShowcaseFallback } from "./BikeShowcaseFallback";
@@ -36,6 +36,8 @@ export function BikeShowcaseCard({
   onClick,
   className,
 }: BikeShowcaseCardProps) {
+  const [imgError, setImgError] = useState(false);
+
   const ariaLabel = copy.cardAriaLabel
     .replace("{brand}", bike.brand)
     .replace("{model}", bike.model);
@@ -61,14 +63,14 @@ export function BikeShowcaseCard({
     >
       {/* Image area */}
       <div className="relative aspect-video w-full overflow-hidden rounded-t-xl">
-        {bike.photoUrl ? (
-          <Image
+        {bike.photoUrl && !imgError ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
             src={bike.photoUrl}
             alt={`${bike.brand} ${bike.model}`}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover"
+            className="h-full w-full object-cover"
             loading="lazy"
+            onError={() => setImgError(true)}
           />
         ) : (
           <BikeShowcaseFallback bikeType={bike.bikeType} className="h-full w-full" />

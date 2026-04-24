@@ -25,6 +25,15 @@ type FormTab = "content" | "seo" | "settings";
 type SectionType = "prose" | "steps" | "cards" | "table";
 
 type BilingualText = { en: string; nl: string };
+type ChecklistItem = {
+  title: string;
+  detail: string;
+  tone: "success" | "warning";
+  label: "Pass" | "Warn";
+  tab: FormTab;
+  locale?: LocaleKey;
+  actionLabel: string;
+};
 type GuideQuickAnswerForm = {
   keyTakeaway: BilingualText;
   commonMistake: BilingualText;
@@ -80,7 +89,9 @@ function updateLocalizedValue(
 }
 
 function checklistStatus(valid: boolean) {
-  return valid ? { tone: "success" as const, label: "Pass" } : { tone: "warning" as const, label: "Warn" };
+  return valid
+    ? { tone: "success" as const, label: "Pass" as const }
+    : { tone: "warning" as const, label: "Warn" as const };
 }
 
 function hasValue(value: string | undefined | null) {
@@ -157,39 +168,6 @@ export function GuideCreateView({
   );
 
   const metaDescriptionLength = metaDescription[localeTab].trim().length;
-  const seoChecklist = [
-    {
-      title: "H1 is filled",
-      detail: "Required before publishing.",
-      ...checklistStatus(Boolean(h1.en.trim() && h1.nl.trim())),
-    },
-    {
-      title: "Meta title is filled",
-      detail: "Use a clear SERP title in both languages.",
-      ...checklistStatus(Boolean(metaTitle.en.trim() && metaTitle.nl.trim())),
-    },
-    {
-      title: "Meta description is in range",
-      detail: `${metaDescriptionLength} characters in ${localeTab.toUpperCase()} view.`,
-      ...checklistStatus(metaDescriptionLength >= 50 && metaDescriptionLength <= 160),
-    },
-    {
-      title: "Slug is available",
-      detail: normalizedSlug ? buildGuidePreviewPath(normalizedSlug) : "Choose a slug.",
-      ...checklistStatus(Boolean(normalizedSlug) && !slugLookup),
-    },
-    {
-      title: "Featured image alt text is set when needed",
-      detail: featuredImageUrl.trim()
-        ? "Add EN and NL alt text for the image."
-        : "No featured image set.",
-      ...checklistStatus(
-        !featuredImageUrl.trim() ||
-          Boolean(featuredImageAlt.en.trim() && featuredImageAlt.nl.trim())
-      ),
-    },
-  ];
-
   const previewPath = buildGuidePreviewPath(normalizedSlug);
   const slugError =
     slugTouched && !normalizedSlug
@@ -199,6 +177,12 @@ export function GuideCreateView({
         : undefined;
 
   const contentLocaleLabel = localeTab === "en" ? "English" : "Dutch";
+  const openChecklistTarget = (tab: FormTab, locale?: LocaleKey) => {
+    setFormTab(tab);
+    if (locale) {
+      setLocaleTab(locale);
+    }
+  };
 
   const localeHasCoreContent = (locale: LocaleKey) =>
     hasValue(pageTitle[locale]) &&
@@ -215,6 +199,83 @@ export function GuideCreateView({
         section.tableRows.some((row) => row.some((cell) => hasValue(cell[locale])))
       )
     );
+
+  const seoChecklist: ChecklistItem[] = [
+    {
+      title: "H1 (EN) is filled",
+      detail: "Required before publishing.",
+      ...checklistStatus(Boolean(h1.en.trim())),
+      tab: "content",
+      locale: "en",
+      actionLabel: "Open Content EN",
+    },
+    {
+      title: "H1 (NL) is filled",
+      detail: "Required before publishing.",
+      ...checklistStatus(Boolean(h1.nl.trim())),
+      tab: "content",
+      locale: "nl",
+      actionLabel: "Open Content NL",
+    },
+    {
+      title: "Meta title (EN) is filled",
+      detail: "Use a clear SERP title for English.",
+      ...checklistStatus(Boolean(metaTitle.en.trim())),
+      tab: "seo",
+      locale: "en",
+      actionLabel: "Open SEO EN",
+    },
+    {
+      title: "Meta title (NL) is filled",
+      detail: "Use a clear SERP title for Dutch.",
+      ...checklistStatus(Boolean(metaTitle.nl.trim())),
+      tab: "seo",
+      locale: "nl",
+      actionLabel: "Open SEO NL",
+    },
+    {
+      title: "Meta description (EN) is in range",
+      detail: `${metaDescription.en.trim().length} characters. Target 50-160 characters.`,
+      ...checklistStatus(
+        metaDescription.en.trim().length >= 50 &&
+          metaDescription.en.trim().length <= 160
+      ),
+      tab: "seo",
+      locale: "en",
+      actionLabel: "Open SEO EN",
+    },
+    {
+      title: "Meta description (NL) is in range",
+      detail: `${metaDescription.nl.trim().length} characters. Target 50-160 characters.`,
+      ...checklistStatus(
+        metaDescription.nl.trim().length >= 50 &&
+          metaDescription.nl.trim().length <= 160
+      ),
+      tab: "seo",
+      locale: "nl",
+      actionLabel: "Open SEO NL",
+    },
+    {
+      title: "Slug is available",
+      detail: normalizedSlug ? previewPath : "Choose a slug in Settings.",
+      ...checklistStatus(Boolean(normalizedSlug) && !slugLookup),
+      tab: "settings",
+      actionLabel: "Open Settings",
+    },
+    {
+      title: "Featured image alt text is set when needed",
+      detail: featuredImageUrl.trim()
+        ? "Add EN and NL alt text for the image."
+        : "No featured image set.",
+      ...checklistStatus(
+        !featuredImageUrl.trim() ||
+          Boolean(featuredImageAlt.en.trim() && featuredImageAlt.nl.trim())
+      ),
+      tab: "seo",
+      locale: featuredImageAlt.en.trim() ? "nl" : "en",
+      actionLabel: "Open SEO images",
+    },
+  ];
 
   const copyLocaleIntoLocale = (source: LocaleKey, target: LocaleKey) => {
     setPageTitle((current) => ({ ...current, [target]: current[source] }));
@@ -437,7 +498,7 @@ export function GuideCreateView({
       <AdminPageHeader
         eyebrow="Product / Guides"
         title="New guide"
-        description="Create a bilingual guide draft with structured content, SEO metadata, and review-ready settings."
+        description="Create a guide draft with structured content, SEO metadata, and a checklist that links directly to the missing fields."
         actions={
           <>
             <AdminStatusPill tone={guideStatusTone("draft")}>
@@ -455,11 +516,11 @@ export function GuideCreateView({
 
       <AdminSectionCard
         title="Workflow"
-        description="This create form only supports draft and review states. Publish controls belong to the edit workflow."
+        description="Save a draft as soon as one language is usable. Submit for review only when both EN and NL are complete."
       >
         <div className="flex flex-wrap gap-2 text-sm text-[color:var(--muted-foreground)]">
           <AdminStatusPill tone="neutral">Role: {sessionRole}</AdminStatusPill>
-          <span>Save as draft to keep working, or submit for review when the content is ready for admin approval.</span>
+          <span>Content fields live under Content, SEO fields live under SEO, and slug/index settings live under Settings.</span>
         </div>
       </AdminSectionCard>
 
@@ -1080,6 +1141,13 @@ export function GuideCreateView({
                     <div>
                       <p className="font-medium">{item.title}</p>
                       <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">{item.detail}</p>
+                      <button
+                        type="button"
+                        className="mt-2 text-sm font-medium text-[color:var(--foreground)] underline-offset-4 hover:underline"
+                        onClick={() => openChecklistTarget(item.tab, item.locale)}
+                      >
+                        {item.actionLabel}
+                      </button>
                     </div>
                     <AdminStatusPill tone={item.tone}>{item.label}</AdminStatusPill>
                   </div>
@@ -1088,13 +1156,16 @@ export function GuideCreateView({
             </div>
           </AdminSectionCard>
 
-          <AdminSectionCard title="Actions" description="Create the guide as a draft or move it straight into review.">
+          <AdminSectionCard title="Actions" description="Create the guide as a draft or move it straight into review once both languages are complete.">
             <div className="space-y-4">
               {error ? (
                 <div className="rounded-2xl border border-[color:var(--danger)]/30 bg-[color:color-mix(in_oklch,var(--danger)_10%,var(--card)_90%)] p-4 text-sm text-[color:var(--foreground)]">
                   {error}
                 </div>
               ) : null}
+              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-4 text-sm text-[color:var(--muted-foreground)]">
+                Minimum to save a draft: slug plus one usable locale with title, H1, brief, meta title, meta description, and body content.
+              </div>
               <div className="flex flex-wrap gap-3">
                 <Button type="button" variant="outline" onClick={() => handleSave("draft")} isLoading={isSaving}>
                   Save as draft

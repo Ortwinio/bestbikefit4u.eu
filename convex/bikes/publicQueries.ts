@@ -14,6 +14,10 @@ async function resolvePhotoUrl(
   fallbackPhotoUrl: string | undefined
 ): Promise<string | null> {
   if (storageId) {
+    // storageId may be a plain URL string (external photo) rather than a Convex Storage ID
+    if (storageId.startsWith("https://") || storageId.startsWith("http://")) {
+      return storageId;
+    }
     try {
       return await ctx.storage.getUrl(storageId as Id<"_storage">);
     } catch {
