@@ -14,7 +14,7 @@ const en = {
     tools: "Tools",
     tirePressure: "Tire Pressure",
     login: "Log in",
-    getStarted: "Get Started",
+    getStarted: "Start free",
     footer: {
       product: "Product",
       support: "Support",
@@ -66,6 +66,77 @@ const en = {
         "Try the free bike fit calculator first, then decide whether you want deeper setup guidance for your body, riding style, and next bike decision.",
       primaryCta: "Try the Free Bike Fit Calculator",
       secondaryCta: "Compare Free vs Pro",
+      signInCta: "Already have an account? Sign in",
+    },
+    homepageRedesign: {
+      howItWorks: {
+        title: "How it works",
+        subtitle: "Three clear steps from measurements to a fit plan you can use.",
+        ctaLabel: "Start free bike fit",
+        steps: [
+          {
+            title: "Measure your baseline",
+            description:
+              "Enter the core measurements the fit engine needs so the guidance matches your body.",
+          },
+          {
+            title: "Connect your bike",
+            description:
+              "Find a bike in the database or enter the geometry manually when you already know it.",
+          },
+          {
+            title: "Get your fit plan",
+            description:
+              "Review practical saddle, reach, and cockpit targets, then adjust what matters first.",
+          },
+        ],
+      },
+      differentiators: {
+        title: "Why riders keep using it",
+        subtitle: "The homepage funnel stays grounded in clear data, order, and rider context.",
+        items: [
+          {
+            title: "Geometry database",
+            description:
+              "180+ bike brands with verified geometry and pressure context in one place.",
+          },
+          {
+            title: "Structured adjustment order",
+            description:
+              "Know what to adjust first. No guesswork, just a proven sequence.",
+          },
+          {
+            title: "Riding-style aware",
+            description:
+              "Fits comfort, endurance, or aero priorities instead of one generic setup.",
+          },
+        ],
+      },
+      testimonials: {
+        title: "What riders say",
+        subtitle: "Named rider outcomes after practical fit adjustments.",
+        readMoreLabel: "Read more rider stories",
+        items: [
+          {
+            name: "Thomas V.",
+            initials: "TV",
+            bikeContext: "Canyon Endurace 2022 · Comfort rider",
+            result: "Saddle 4 mm lower, knee pain gone after two rides.",
+          },
+          {
+            name: "Laura M.",
+            initials: "LM",
+            bikeContext: "Trek Domane 2023 · Recreational rider",
+            result: "Bars 10 mm higher, no more back pain on long rides.",
+          },
+          {
+            name: "Pieter J.",
+            initials: "PJ",
+            bikeContext: "Specialized Tarmac 2021 · Sportive rider",
+            result: "Saddle 3 mm back, better pedaling efficiency.",
+          },
+        ],
+      },
     },
     howItWorks: {
       title: "How It Works",
@@ -297,6 +368,18 @@ const en = {
         "Use the free calculator first, then upgrade only if you want a deeper report and more precise next steps.",
       button: "Open the Free Bike Fit Calculator",
     },
+    bikeSearch: {
+      title: "Search your bike",
+      placeholder: "Search brand or model...",
+      submitLabel: "Search bike",
+      manualLabel: "Enter geometry manually",
+      manualHintLabel: "Can't find your bike? Enter the geometry manually instead.",
+    },
+    calculatorGrid: {
+      title: "Popular calculators",
+      subtitle: "Free tools you can use right now, no account needed.",
+      upsellLabel: "Want a complete fit plan?",
+    },
     bikeShowcase: {
       eyebrow: "Real bikes. Real data.",
       title: "Bikes on the platform — from geometry to tyre pressure",
@@ -326,6 +409,7 @@ const en = {
       geometrySource: "Source: manufacturer specifications",
       ctaButton: "Get my fit for this bike",
       viewDetails: "View details",
+      useInFitLabel: "Use in my fit",
       partialGeometry: "Partial geometry",
       mmUnit: "mm",
       degUnit: "°",

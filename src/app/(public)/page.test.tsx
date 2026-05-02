@@ -74,8 +74,95 @@ vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
   ),
 }));
 
-vi.mock("@/components/home/QuotesCarousel", () => ({
-  QuotesCarousel: () => <section>Quotes Section</section>,
+vi.mock("@/components/home/HeroBlock", () => ({
+  HeroBlock: ({
+    fitHref,
+    pricingHref,
+    loginHref,
+    primaryCta,
+    secondaryCta,
+  }: {
+    fitHref: string;
+    pricingHref: string;
+    loginHref: string;
+    primaryCta: string;
+    secondaryCta: string;
+  }) => (
+    <section>
+      <a href={fitHref}>{primaryCta}</a>
+      <a href={pricingHref}>{secondaryCta}</a>
+      <a href={loginHref}>Already have an account? Sign in</a>
+    </section>
+  ),
+}));
+
+vi.mock("@/components/home/ProofBar", () => ({
+  ProofBar: () => <section>Proof Bar</section>,
+}));
+
+vi.mock("@/components/home/CalculatorGrid", () => ({
+  CalculatorGrid: ({ tools }: { tools: Array<{ label: string }> }) => (
+    <section>{tools.map((tool) => tool.label).join(" | ")}</section>
+  ),
+}));
+
+vi.mock("@/components/home/HowItWorksStepper", () => ({
+  HowItWorksStepper: () => <section>How it works stepper</section>,
+}));
+
+vi.mock("@/components/home/DifferentiatorTriple", () => ({
+  DifferentiatorTriple: () => <section>Differentiators</section>,
+}));
+
+vi.mock("@/components/home/TestimonialSection", () => ({
+  TestimonialSection: () => <section>Testimonials</section>,
+}));
+
+vi.mock("@/components/home/BikeSearchBar", () => ({
+  BikeSearchBar: ({
+    fitHref,
+    manualHref,
+  }: {
+    fitHref: string;
+    manualHref: string;
+  }) => (
+    <section>
+      <a href={fitHref}>Bike search fit</a>
+      <a href={manualHref}>Bike search manual</a>
+    </section>
+  ),
+}));
+
+vi.mock("@/components/home/BikeShowcaseSection", () => ({
+  BikeShowcaseSection: ({
+    copy,
+  }: {
+    copy: { title: string; useInFitLabel: string };
+  }) => <section>{`${copy.title} ${copy.useInFitLabel}`}</section>,
+}));
+
+vi.mock("@/components/home/ClosingCtaBand", () => ({
+  ClosingCtaBand: ({
+    recommendation,
+    cta,
+    campaign,
+    campaignActive,
+  }: {
+    recommendation: { title: string };
+    cta: { title: string };
+    campaign: { donationUrl: string; donateCta: string; startFreeCta: string };
+    campaignActive: boolean;
+  }) => (
+    <section>
+      {`${recommendation.title} ${cta.title}`}
+      {campaignActive ? (
+        <>
+          <a href={campaign.donationUrl}>{campaign.donateCta}</a>
+          <a href="/campaign-start">{campaign.startFreeCta}</a>
+        </>
+      ) : null}
+    </section>
+  ),
 }));
 
 vi.mock("@/components/seo/JsonLd", () => ({
@@ -93,11 +180,6 @@ vi.mock("@/i18n/metadata", () => ({
 vi.mock("@/lib/seo/jsonLd", () => ({
   buildOrganizationSchema: () => ({}),
   buildWebSiteSchema: () => ({}),
-}));
-
-vi.mock("@/content/homeQuotes", () => ({
-  HOME_QUOTES_DISPLAY_COUNT: 4,
-  selectRandomHomeQuotesForLocale: () => ["Quote A", "Quote B"],
 }));
 
 vi.mock("@/i18n/getDictionary", () => ({
@@ -118,47 +200,11 @@ vi.mock("@/i18n/getDictionary", () => ({
             locale === "nl"
               ? "Krijg eerst waarde, beslis daarna over een account."
               : "Get value first, decide about an account after that.",
-          primaryCta: locale === "nl" ? "Start gratis fit" : "Start free fit",
+          primaryCta: locale === "nl" ? "Start gratis bike fit" : "Start free bike fit",
           secondaryCta: locale === "nl" ? "Bekijk prijzen" : "View pricing",
         },
         bikeQuickCheck: {
           title: "Quick check",
-        },
-        howItWorks: {
-          title: locale === "nl" ? "Hoe het werkt" : "How it works",
-          subtitle: "Three steps",
-          steps: [
-            { title: "Step 1", description: "Desc 1" },
-            { title: "Step 2", description: "Desc 2" },
-            { title: "Step 3", description: "Desc 3" },
-          ],
-        },
-        reasonsToStart: {
-          title: "Reasons",
-          subtitle: "Reasons subtitle",
-          items: [
-            { title: "Reason 1", description: "Reason desc 1" },
-            { title: "Reason 2", description: "Reason desc 2" },
-            { title: "Reason 3", description: "Reason desc 3" },
-          ],
-        },
-        features: {
-          title: "Features",
-          subtitle: "Features subtitle",
-          items: [
-            { title: "Feature 1", description: "Feature desc 1" },
-            { title: "Feature 2", description: "Feature desc 2" },
-            { title: "Feature 3", description: "Feature desc 3" },
-          ],
-        },
-        trustSection: {
-          title: "Trust",
-          subtitle: "Trust subtitle",
-          items: [
-            { title: "Trust 1", description: "Trust desc 1" },
-            { title: "Trust 2", description: "Trust desc 2" },
-            { title: "Trust 3", description: "Trust desc 3" },
-          ],
         },
         recommendationSection: {
           title: "Recommendation",
@@ -171,7 +217,39 @@ vi.mock("@/i18n/getDictionary", () => ({
         cta: {
           title: "CTA title",
           description: "CTA description",
-          button: locale === "nl" ? "Start gratis fit" : "Start free fit",
+          button: locale === "nl" ? "Start gratis bike fit" : "Start free bike fit",
+        },
+        bikeShowcase: {
+          eyebrow: "Eyebrow",
+          title: locale === "nl" ? "Fietsen op het platform" : "Bikes on the platform",
+          subtitle: "Subtitle",
+          prevLabel: "Prev",
+          nextLabel: "Next",
+          regionLabel: "Region",
+          cardAriaLabel: "View {brand} {model}",
+          geometryVerified: "Geometry verified",
+          stackLabel: "Stack",
+          reachLabel: "Reach",
+          ettLabel: "ETT",
+          staLabel: "STA",
+          htaLabel: "HTA",
+          wheelbaseLabel: "Wheelbase",
+          tyreLabel: "Tyre",
+          frontLabel: "Front",
+          rearLabel: "Rear",
+          pressureUnit: "bar",
+          psiUnit: "psi",
+          pressureDisclaimer: "Disclaimer",
+          pressureAvailable: "Pressure available",
+          geometrySection: "Geometry",
+          tyreSection: "Tyre",
+          aboutSection: "About",
+          geometrySource: "Source",
+          ctaButton: "CTA",
+          viewDetails: "View details",
+          partialGeometry: "Partial geometry",
+          mmUnit: "mm",
+          degUnit: "deg",
         },
       },
     }),
@@ -203,14 +281,17 @@ describe("home page", () => {
     expect(
       screen.getByText("Already have an account? Sign in").closest("a")?.getAttribute("href")
     ).toBe("/en/login");
-    expect(screen.queryByText("View pricing")).toBeNull();
+    expect(screen.getByText("View pricing").closest("a")?.getAttribute("href")).toBe("/en/pricing");
 
     const pageText = container.textContent ?? "";
-    expect(pageText.indexOf("Popular Calculators")).toBeGreaterThan(-1);
-    expect(pageText.indexOf("Quotes Section")).toBeGreaterThan(-1);
-    expect(pageText.indexOf("Popular Calculators")).toBeLessThan(
-      pageText.indexOf("Quotes Section")
+    expect(pageText.indexOf("Proof Bar")).toBeGreaterThan(-1);
+    expect(pageText.indexOf("Bike Quick Check")).toBeGreaterThan(-1);
+    expect(pageText.indexOf("Bike Fit Calculator")).toBeGreaterThan(-1);
+    expect(pageText.indexOf("Testimonials")).toBeGreaterThan(-1);
+    expect(pageText.indexOf("Bike Fit Calculator")).toBeLessThan(
+      pageText.indexOf("Testimonials")
     );
+    expect(screen.getByText("Bikes on the platform Use in my fit")).toBeTruthy();
   });
 
   it("keeps the Dutch CTA framing aligned", async () => {
@@ -228,7 +309,6 @@ describe("home page", () => {
         .closest("a")
         ?.getAttribute("href")
     ).toBe("https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756");
-    expect(screen.getByText("Heb je al een account? Log in")).toBeTruthy();
-    expect(screen.getByText("Populaire calculators")).toBeTruthy();
+    expect(screen.getByText("Fietsen op het platform Gebruik in mijn fit")).toBeTruthy();
   });
 });

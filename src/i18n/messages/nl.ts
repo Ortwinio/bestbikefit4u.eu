@@ -15,7 +15,7 @@ const nl = {
     tools: "Tools",
     tirePressure: "Bandenspanning",
     login: "Inloggen",
-    getStarted: "Starten",
+    getStarted: "Start gratis",
     footer: {
       product: "Product",
       support: "Support",
@@ -67,6 +67,80 @@ const nl = {
         "Probeer eerst de gratis bike fit calculator en beslis daarna pas of je diepere afstelbegeleiding wilt voor jouw lichaam, rijstijl en volgende fietskeuze.",
       primaryCta: "Probeer de gratis bike fit calculator",
       secondaryCta: "Vergelijk Free vs Pro",
+      signInCta: "Heb je al een account? Log in",
+    },
+    homepageRedesign: {
+      howItWorks: {
+        title: "Zo werkt het",
+        subtitle:
+          "Drie duidelijke stappen van meting naar een afstelplan dat je echt kunt gebruiken.",
+        ctaLabel: "Start gratis bike fit",
+        steps: [
+          {
+            title: "Meet je uitgangspunt",
+            description:
+              "Vul de kernmetingen in die de fit-engine nodig heeft zodat het advies bij je lichaam past.",
+          },
+          {
+            title: "Koppel je fiets",
+            description:
+              "Zoek een fiets in de database of voer de geometrie handmatig in als je die al weet.",
+          },
+          {
+            title: "Ontvang je afstelplan",
+            description:
+              "Bekijk praktische doelen voor zadel, reach en cockpit en pas eerst aan wat het meeste telt.",
+          },
+        ],
+      },
+      differentiators: {
+        title: "Waarom rijders het blijven gebruiken",
+        subtitle:
+          "De homepagefunnel blijft gebaseerd op duidelijke data, volgorde en rijcontext.",
+        items: [
+          {
+            title: "Geometriedatabase",
+            description:
+              "180+ fietsmerken met geverifieerde geometrie en bandenspanningscontext op één plek.",
+          },
+          {
+            title: "Gestructureerde volgorde",
+            description:
+              "Weet wat je eerst moet aanpassen. Geen giswerk, maar een bewezen volgorde.",
+          },
+          {
+            title: "Rijstijlgericht",
+            description:
+              "Past zich aan op comfort, uithoudingsvermogen of aerodynamica in plaats van één standaard setup.",
+          },
+        ],
+      },
+      testimonials: {
+        title: "Wat fietsers zeggen",
+        subtitle:
+          "Concrete uitkomsten van rijders na praktische fit-aanpassingen.",
+        readMoreLabel: "Lees meer rijdersverhalen",
+        items: [
+          {
+            name: "Thomas V.",
+            initials: "TV",
+            bikeContext: "Canyon Endurace 2022 · Comfortrijder",
+            result: "Zadel 4 mm omlaag, kniepijn weg na twee ritten.",
+          },
+          {
+            name: "Laura M.",
+            initials: "LM",
+            bikeContext: "Trek Domane 2023 · Recreatief",
+            result: "Stuur 10 mm omhoog, geen rugpijn meer op lange ritten.",
+          },
+          {
+            name: "Pieter J.",
+            initials: "PJ",
+            bikeContext: "Specialized Tarmac 2021 · Sportief",
+            result: "Zadel 3 mm achteruit, betere pedaalefficiëntie.",
+          },
+        ],
+      },
     },
     howItWorks: {
       title: "Hoe het werkt",
@@ -298,6 +372,18 @@ const nl = {
         "Gebruik eerst de gratis calculator en upgrade alleen als je een dieper rapport en scherpere vervolgstappen wilt.",
       button: "Open de gratis bike fit calculator",
     },
+    bikeSearch: {
+      title: "Zoek je fiets",
+      placeholder: "Zoek merk of model...",
+      submitLabel: "Zoek fiets",
+      manualLabel: "Geometrie handmatig invoeren",
+      manualHintLabel: "Kun je je fiets niet vinden? Voer de geometrie dan handmatig in.",
+    },
+    calculatorGrid: {
+      title: "Populaire calculators",
+      subtitle: "Gratis tools die je direct kunt gebruiken, zonder account.",
+      upsellLabel: "Wil je een compleet afstelplan?",
+    },
     bikeShowcase: {
       eyebrow: "Echte fietsen. Echte data.",
       title: "Fietsen op het platform — van geometrie tot bandenspanning",
@@ -327,6 +413,7 @@ const nl = {
       geometrySource: "Bron: fabrieksspecificaties",
       ctaButton: "Mijn fit voor deze fiets",
       viewDetails: "Details bekijken",
+      useInFitLabel: "Gebruik in mijn fit",
       partialGeometry: "Gedeeltelijke geometrie",
       mmUnit: "mm",
       degUnit: "°",

@@ -17,10 +17,11 @@ type HeaderAuthActionsProps = {
 export function HeaderAuthActions({
   locale,
   loginLabel,
-  getStartedLabel,
+  getStartedLabel: _getStartedLabel,
   dashboardLabel,
 }: HeaderAuthActionsProps) {
   const { isAuthenticated, isLoading } = useConvexAuth();
+  const startFreeLabel = locale === "nl" ? "Start gratis" : "Start free";
 
   if (isLoading) {
     return <div className="h-9 w-28 rounded-lg bg-[color:var(--surface-secondary)]" aria-hidden="true" />;
@@ -44,14 +45,19 @@ export function HeaderAuthActions({
   return (
     <>
       <Button
-        render={<Link href={withLocalePrefix("/login", locale)} />}
+        render={<Link href={withLocalePrefix("/calculators/bike-fit", locale)} />}
         variant="ghost"
+        size="sm"
+        className="text-[color:var(--primary)]"
+      >
+        {startFreeLabel}
+      </Button>
+      <Button
+        render={<Link href={withLocalePrefix("/login", locale)} />}
+        variant="outline"
         size="sm"
       >
         {loginLabel}
-      </Button>
-      <Button render={<Link href={withLocalePrefix("/login", locale)} />} size="sm">
-        {getStartedLabel}
       </Button>
     </>
   );

@@ -10,6 +10,7 @@ import {
 import type { PublicShowcaseBike } from "./bike-showcase.types";
 import { BikeShowcaseFallback } from "./BikeShowcaseFallback";
 import { pushDataLayerEvent } from "@/lib/analytics/marketing";
+import { buildBikeFitHref } from "./bikeFitHref";
 
 function barToPsi(bar: number): number {
   return Math.round(bar * 14.5038);
@@ -74,6 +75,7 @@ export function BikeShowcaseModal({
 
   const geometryRows = buildGeometryRows(bike.geometry, copy);
   const hasFullGeometry = geometryRows.length >= 4;
+  const bikeFitHref = buildBikeFitHref(ctaHref, bike);
 
   function handleCtaClick() {
     pushDataLayerEvent({ event: "bike_showcase_cta_click" });
@@ -177,7 +179,7 @@ export function BikeShowcaseModal({
           {/* CTA */}
           <Button
             className="w-full"
-            render={<Link href={ctaHref} onClick={handleCtaClick} />}
+            render={<Link href={bikeFitHref} onClick={handleCtaClick} />}
           >
             {copy.ctaButton}
           </Button>

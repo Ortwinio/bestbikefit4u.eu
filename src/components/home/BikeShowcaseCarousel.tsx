@@ -7,6 +7,7 @@ import { pushDataLayerEvent } from "@/lib/analytics/marketing";
 import type { PublicShowcaseBike } from "./bike-showcase.types";
 import { BikeShowcaseCard } from "./BikeShowcaseCard";
 import { BikeShowcaseModal } from "./BikeShowcaseModal";
+import { buildBikeFitHref } from "./bikeFitHref";
 
 type BikeShowcaseCarouselProps = {
   bikes: PublicShowcaseBike[];
@@ -34,6 +35,7 @@ type BikeShowcaseCarouselProps = {
     geometrySource: string;
     ctaButton: string;
     viewDetails: string;
+    useInFitLabel: string;
     partialGeometry: string;
     mmUnit: string;
     degUnit: string;
@@ -117,6 +119,7 @@ export function BikeShowcaseCarousel({ bikes, ctaHref, copy }: BikeShowcaseCarou
     pressureUnit: copy.pressureUnit,
     pressureAvailable: copy.pressureAvailable,
     viewDetails: copy.viewDetails,
+    useInFitLabel: copy.useInFitLabel,
     cardAriaLabel: copy.cardAriaLabel,
     mmUnit: copy.mmUnit,
   };
@@ -137,7 +140,8 @@ export function BikeShowcaseCarousel({ bikes, ctaHref, copy }: BikeShowcaseCarou
             key={bike.showcaseId}
             bike={bike}
             copy={cardCopy}
-            onClick={() => handleCardClick(bike)}
+            onDetailsClick={() => handleCardClick(bike)}
+            fitHref={buildBikeFitHref(ctaHref, bike)}
           />
         ))}
       </div>

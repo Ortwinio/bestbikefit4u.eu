@@ -66,13 +66,15 @@ describe("HeaderAuthActions", () => {
       <HeaderAuthActions
         locale="en"
         loginLabel="Log in"
-        getStartedLabel="Get started"
+        getStartedLabel="Start free"
         dashboardLabel="Dashboard"
       />
     );
 
     expect(screen.getByRole("link", { name: "Log in" }).getAttribute("href")).toBe("/en/login");
-    expect(screen.getByRole("link", { name: "Get started" }).getAttribute("href")).toBe("/en/login");
+    expect(screen.getByRole("link", { name: "Start free" }).getAttribute("href")).toBe(
+      "/en/calculators/bike-fit"
+    );
   });
 
   it("shows dashboard access and user menu for signed-in users", () => {
@@ -82,7 +84,7 @@ describe("HeaderAuthActions", () => {
       <HeaderAuthActions
         locale="en"
         loginLabel="Log in"
-        getStartedLabel="Get started"
+        getStartedLabel="Start free"
         dashboardLabel="Dashboard"
       />
     );

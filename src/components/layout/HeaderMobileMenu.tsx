@@ -42,6 +42,7 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
   const { isAuthenticated } = useConvexAuth();
   const { signOut } = useAuthActions();
   const router = useRouter();
+  const startFreeLabel = locale === "nl" ? "Start gratis" : "Start free";
 
   const close = () => setIsOpen(false);
 
@@ -165,14 +166,15 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
                 <Button
                   render={
                     <Link
-                      href={withLocalePrefix("/login", locale)}
+                      href={withLocalePrefix("/calculators/bike-fit", locale)}
                       onClick={close}
                     />
                   }
                   variant="ghost"
                   size="sm"
+                  className="text-[color:var(--primary)]"
                 >
-                  {labels.login}
+                  {startFreeLabel}
                 </Button>
                 <Button
                   render={
@@ -181,9 +183,10 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
                       onClick={close}
                     />
                   }
+                  variant="outline"
                   size="sm"
                 >
-                  {labels.getStarted}
+                  {labels.login}
                 </Button>
               </div>
             )}
