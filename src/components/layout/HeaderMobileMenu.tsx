@@ -35,9 +35,12 @@ type HeaderMobileMenuProps = {
     profile: string;
     signOut: string;
   };
+  campaignActive?: boolean;
+  donateLabel?: string;
+  donationUrl?: string;
 };
 
-export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
+export function HeaderMobileMenu({ locale, labels, campaignActive = false, donateLabel, donationUrl }: HeaderMobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { isAuthenticated } = useConvexAuth();
   const { signOut } = useAuthActions();
@@ -163,31 +166,57 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
               </>
             ) : (
               <div className="mt-2 flex items-center gap-2 rounded-2xl border border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)] p-2">
-                <Button
-                  render={
-                    <Link
-                      href={withLocalePrefix("/calculators/bike-fit", locale)}
-                      onClick={close}
-                    />
-                  }
-                  variant="ghost"
-                  size="sm"
-                  className="text-[color:var(--primary)]"
-                >
-                  {startFreeLabel}
-                </Button>
-                <Button
-                  render={
-                    <Link
-                      href={withLocalePrefix("/login", locale)}
-                      onClick={close}
-                    />
-                  }
-                  variant="outline"
-                  size="sm"
-                >
-                  {labels.login}
-                </Button>
+                {campaignActive && donateLabel && donationUrl ? (
+                  <>
+                    <Button
+                      render={<a href={donationUrl} target="_blank" rel="noopener noreferrer" onClick={close} />}
+                      variant="outline"
+                      size="sm"
+                    >
+                      {donateLabel}
+                    </Button>
+                    <Button
+                      render={
+                        <Link
+                          href={withLocalePrefix("/login", locale)}
+                          onClick={close}
+                        />
+                      }
+                      variant="outline"
+                      size="sm"
+                    >
+                      {labels.login}
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      render={
+                        <Link
+                          href={withLocalePrefix("/calculators/bike-fit", locale)}
+                          onClick={close}
+                        />
+                      }
+                      variant="ghost"
+                      size="sm"
+                      className="text-[color:var(--primary)]"
+                    >
+                      {startFreeLabel}
+                    </Button>
+                    <Button
+                      render={
+                        <Link
+                          href={withLocalePrefix("/login", locale)}
+                          onClick={close}
+                        />
+                      }
+                      variant="outline"
+                      size="sm"
+                    >
+                      {labels.login}
+                    </Button>
+                  </>
+                )}
               </div>
             )}
           </nav>

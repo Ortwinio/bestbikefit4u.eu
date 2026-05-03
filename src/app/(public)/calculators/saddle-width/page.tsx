@@ -233,46 +233,30 @@ export default async function SaddleWidthCalculatorPage() {
         }
         actions={
           campaignActive ? (
+            <CampaignCtaGroup
+              locale={locale}
+              pagePath={pagePath}
+              startHref={withLocalePrefix("/calculators/bike-fit", locale)}
+              startSection="saddle_width_result"
+              donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+              donateSection="saddle_width_campaign_donate"
+              startLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
+              donateLabel={campaign.donateCta}
+            />
+          ) : (
             <>
-              <CampaignCtaGroup
-                locale={locale}
-                pagePath={pagePath}
-                startHref={withLocalePrefix("/login", locale)}
-                startSection="saddle_width_result"
-                donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-                donateSection="saddle_width_campaign_donate"
-                startLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
-                donateLabel={campaign.donateCta}
-              />
               <Button
                 render={
                   <TrackedCtaLink
                     href={withLocalePrefix("/calculators/bike-fit", locale)}
                     locale={locale}
                     pagePath={pagePath}
-                    section="saddle_width_bike_fit_cta"
-                    ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-                  />
-                }
-                variant="outline"
-              >
-                {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/login", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
                     section="saddle_width_result"
-                    ctaLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
+                    ctaLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
                   />
                 }
               >
-                {isNl ? "Maak account aan of log in" : "Create account or sign in"}
+                {isNl ? "Start gratis bike fit" : "Start free bike fit"}
               </Button>
               <Button
                 render={
@@ -281,26 +265,12 @@ export default async function SaddleWidthCalculatorPage() {
                     locale={locale}
                     pagePath={pagePath}
                     section="saddle_width_pricing_cta"
-                    ctaLabel={isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
+                    ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
                   />
                 }
                 variant="outline"
               >
-                {isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
-              </Button>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/calculators/bike-fit", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="saddle_width_bike_fit_cta"
-                    ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-                  />
-                }
-                variant="outline"
-              >
-                {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
+                {isNl ? "Bekijk prijzen" : "Compare plans"}
               </Button>
             </>
           )

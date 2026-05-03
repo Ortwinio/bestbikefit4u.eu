@@ -5,6 +5,11 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import type { Messages } from "@/i18n/getDictionary";
 import { BrandLogo } from "@/components/branding";
 import { CampaignAnnouncementBar } from "@/components/campaign/CampaignAnnouncementBar";
+import {
+  CONSUMER_CAMPAIGN_CONFIG,
+  getConsumerCampaignCopy,
+  isConsumerCampaignActive,
+} from "@/config/commercial";
 import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { HeaderAuthActions } from "./HeaderAuthActions";
@@ -22,6 +27,8 @@ type HeaderProps = {
 };
 
 export function Header({ locale, labels }: HeaderProps) {
+  const campaignActive = isConsumerCampaignActive();
+  const campaign = getConsumerCampaignCopy(locale);
   const navItems = [
     {
       href: withLocalePrefix("/how-it-works", locale),
@@ -75,6 +82,9 @@ export function Header({ locale, labels }: HeaderProps) {
                 loginLabel={labels.nav.login}
                 getStartedLabel={labels.nav.getStarted}
                 dashboardLabel={labels.dashboardNav.dashboard}
+                campaignActive={campaignActive}
+                donateLabel={campaign.donateCta}
+                donationUrl={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
               />
             </div>
             <HeaderMobileMenu
@@ -92,6 +102,9 @@ export function Header({ locale, labels }: HeaderProps) {
                 profile: labels.dashboardNav.profile,
                 signOut: labels.dashboardSignOut,
               }}
+              campaignActive={campaignActive}
+              donateLabel={campaign.donateCta}
+              donationUrl={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
             />
           </div>
         </div>

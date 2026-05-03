@@ -79,7 +79,6 @@ export function BikeSearchBar({ locale, fitHref, manualHref, copy }: BikeSearchB
                   {content.manualLabel}
                 </Button>
               </div>
-              <p className="text-center text-sm text-muted-foreground">{content.manualHintLabel}</p>
             </form>
           </PublicSection>
         </div>

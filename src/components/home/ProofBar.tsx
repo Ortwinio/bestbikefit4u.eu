@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/config";
+import { StatCounter } from "@/components/public/StatCounter";
 import { HOME_PROOF_BAR_CONTENT } from "./homeRedesignContent";
 
 type ProofBarProps = {
@@ -28,19 +29,13 @@ export function ProofBar({ locale }: ProofBarProps) {
               </p>
             </div>
           </div>
-          <div className="grid gap-3 border-t border-[color:var(--border)] pt-5 sm:grid-cols-3 sm:pt-0 lg:min-w-[26rem] lg:border-l lg:border-t-0 lg:pl-6">
+          <div className="grid grid-cols-3 gap-3 border-t border-[color:var(--border)] pt-5 sm:pt-0 lg:min-w-[26rem] lg:border-l lg:border-t-0 lg:pl-6">
             {content.stats.map((item) => (
-              <div
+              <StatCounter
                 key={`${item.value}-${item.label}`}
-                className="rounded-2xl border border-[color:var(--border)] bg-background/80 px-4 py-3 shadow-[0_18px_40px_-34px_color-mix(in_oklch,var(--foreground)_28%,transparent)]"
-              >
-                <p className="text-xl font-semibold tracking-tight text-[color:var(--foreground)]">
-                  {item.value}
-                </p>
-                <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
-                  {item.label}
-                </p>
-              </div>
+                value={item.value}
+                label={item.label}
+              />
             ))}
           </div>
         </div>

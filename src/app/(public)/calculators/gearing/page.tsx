@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { ArrowUpDown, Gauge, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
+import {
+  CONSUMER_CAMPAIGN_CONFIG,
+  getConsumerCampaignCopy,
+  isConsumerCampaignActive,
+} from "@/config/commercial";
 import {
   PublicCtaBand,
   PublicFeatureCard,
@@ -80,6 +86,8 @@ export default async function GearingCalculatorPage() {
   const locale = await getRequestLocale();
   const isNl = locale === "nl";
   const pagePath = withLocalePrefix("/calculators/gearing", locale);
+  const campaignActive = isConsumerCampaignActive();
+  const campaign = getConsumerCampaignCopy(locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
   const faqs = buildFaqs(isNl);
   const trustPoints = isNl
@@ -211,49 +219,48 @@ export default async function GearingCalculatorPage() {
                 : "Create a free account to compare this setup with your real bike and refine the climb verdict further."
             }
             actions={
-              <>
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/login", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="gearing_login_cta"
-                      ctaLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
-                    />
-                  }
-                >
-                  {isNl ? "Maak account aan of log in" : "Create account or sign in"}
-                </Button>
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/dashboard", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="gearing_dashboard_cta"
-                      ctaLabel={isNl ? "Open dashboard" : "Open dashboard"}
-                    />
-                  }
-                  variant="outline"
-                >
-                  {isNl ? "Open dashboard" : "Open dashboard"}
-                </Button>
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/calculators/bike-fit", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="gearing_bike_fit_cta"
-                      ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-                    />
-                  }
-                  variant="outline"
-                >
-                  {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-                </Button>
-              </>
+              campaignActive ? (
+                <CampaignCtaGroup
+                  locale={locale}
+                  pagePath={pagePath}
+                  startHref={withLocalePrefix("/calculators/bike-fit", locale)}
+                  startSection="gearing_result"
+                  donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+                  donateSection="gearing_campaign_donate"
+                  startLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
+                  donateLabel={campaign.donateCta}
+                />
+              ) : (
+                <>
+                  <Button
+                    render={
+                      <TrackedCtaLink
+                        href={withLocalePrefix("/calculators/bike-fit", locale)}
+                        locale={locale}
+                        pagePath={pagePath}
+                        section="gearing_result"
+                        ctaLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
+                      />
+                    }
+                  >
+                    {isNl ? "Start gratis bike fit" : "Start free bike fit"}
+                  </Button>
+                  <Button
+                    render={
+                      <TrackedCtaLink
+                        href={withLocalePrefix("/pricing", locale)}
+                        locale={locale}
+                        pagePath={pagePath}
+                        section="gearing_pricing_cta"
+                        ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
+                      />
+                    }
+                    variant="outline"
+                  >
+                    {isNl ? "Bekijk prijzen" : "Compare plans"}
+                  </Button>
+                </>
+              )
             }
             aside={
               isNl

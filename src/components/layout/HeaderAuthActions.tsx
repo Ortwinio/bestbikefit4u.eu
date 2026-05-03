@@ -12,6 +12,9 @@ type HeaderAuthActionsProps = {
   loginLabel: string;
   getStartedLabel: string;
   dashboardLabel: string;
+  campaignActive?: boolean;
+  donateLabel?: string;
+  donationUrl?: string;
 };
 
 export function HeaderAuthActions({
@@ -19,6 +22,9 @@ export function HeaderAuthActions({
   loginLabel,
   getStartedLabel: _getStartedLabel,
   dashboardLabel,
+  campaignActive = false,
+  donateLabel,
+  donationUrl,
 }: HeaderAuthActionsProps) {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const startFreeLabel = locale === "nl" ? "Start gratis" : "Start free";
@@ -39,6 +45,27 @@ export function HeaderAuthActions({
         </Button>
         <UserMenu />
       </div>
+    );
+  }
+
+  if (campaignActive && donateLabel && donationUrl) {
+    return (
+      <>
+        <Button
+          render={<a href={donationUrl} target="_blank" rel="noopener noreferrer" />}
+          variant="outline"
+          size="sm"
+        >
+          {donateLabel}
+        </Button>
+        <Button
+          render={<Link href={withLocalePrefix("/login", locale)} />}
+          variant="outline"
+          size="sm"
+        >
+          {loginLabel}
+        </Button>
+      </>
     );
   }
 

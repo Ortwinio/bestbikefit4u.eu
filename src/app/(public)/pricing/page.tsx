@@ -280,7 +280,7 @@ export default async function PricingPage() {
                       />
                     }
                     className={`mt-8 w-full ${plan.highlighted ? "border-background/50 bg-background text-primary after:bg-background hover-only:after:bg-muted" : ""}`}
-                    variant={plan.highlighted ? "outline" : "default"}
+                    variant={plan.highlighted ? "outline" : "outline"}
                   >
                     {localized.cta}
                   </Button>
@@ -376,9 +376,9 @@ export default async function PricingPage() {
           </PublicSurfaceCard>
         </section>
 
-        <Card className="mt-16 gap-0 rounded-[2rem] bg-primary px-6 py-12 text-center text-primary-foreground shadow-lg sm:px-10">
-          <h2 className="text-2xl font-semibold text-primary-foreground">{page.ctaTitle}</h2>
-          <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-primary-foreground/82">
+        <div className="public-cta-surface mt-16 rounded-[2rem] px-6 py-12 text-center shadow-lg sm:px-10">
+          <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">{page.ctaTitle}</h2>
+          <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-[color:var(--muted-foreground)]">
             {page.ctaBody}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -389,33 +389,15 @@ export default async function PricingPage() {
                   locale={locale}
                   pagePath={pagePath}
                   section="pricing_footer_cta_primary"
-                  ctaLabel={locale === "nl" ? "Start gratis fit" : "Start free fit"}
+                  ctaLabel={locale === "nl" ? "Start gratis bike fit" : "Start free bike fit"}
                 />
               }
               size="lg"
-              variant="outline"
-              className="border-background/50 bg-background text-primary after:bg-background hover-only:after:bg-muted"
             >
-              {locale === "nl" ? "Start gratis fit" : "Start free fit"}
-            </Button>
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/case-study", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="pricing_footer_case_study_cta"
-                  ctaLabel={locale === "nl" ? "Bekijk rider cases" : "Browse rider cases"}
-                />
-              }
-              size="lg"
-              variant="outline"
-              className="border-primary-foreground/50 bg-transparent text-primary-foreground after:bg-transparent hover-only:after:bg-primary-foreground/10"
-            >
-              {locale === "nl" ? "Bekijk rider cases" : "Browse rider cases"}
+              {locale === "nl" ? "Start gratis bike fit" : "Start free bike fit"}
             </Button>
           </div>
-        </Card>
+        </div>
       </div>
     </div>
   );

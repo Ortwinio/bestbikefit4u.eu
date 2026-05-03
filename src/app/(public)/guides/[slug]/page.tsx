@@ -495,23 +495,39 @@ export default async function GuidePage({
 
         <PublicCtaBand
           className="mt-10"
-          eyebrow={isNl ? "Volgende stap" : "Next step"}
+          eyebrow={isNl ? "Klaar om je fit te starten?" : "Ready to start your fit?"}
           title={closingCta.title}
           description={closingDescription}
           actions={
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={closingHref}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="guide_closing_cta"
-                  ctaLabel={closingLabel}
-                />
-              }
-            >
-              {closingLabel}
-            </Button>
+            <>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={closingHref}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="guide_closing_cta"
+                    ctaLabel={closingLabel}
+                  />
+                }
+              >
+                {closingLabel}
+              </Button>
+              <Button
+                variant="outline"
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/guides", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="guide_closing_all_guides"
+                    ctaLabel={isNl ? "Bekijk alle gidsen" : "View all guides"}
+                  />
+                }
+              >
+                {isNl ? "Bekijk alle gidsen" : "View all guides"}
+              </Button>
+            </>
           }
         />
       </div>

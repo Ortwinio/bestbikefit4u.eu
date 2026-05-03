@@ -1,6 +1,6 @@
 import { Database, ListOrdered, Target } from "lucide-react";
+import { FeatureIconCard } from "@/components/public/FeatureIconCard";
 import { PublicSection } from "@/components/public/PublicSection";
-import { PublicSurfaceCard } from "@/components/public/PublicSurfaceCard";
 import type { Locale } from "@/i18n/config";
 import { HOME_DIFFERENTIATORS } from "./homeRedesignContent";
 
@@ -34,11 +34,11 @@ export function DifferentiatorTriple({ locale }: DifferentiatorTripleProps) {
               const Icon = DIFFERENTIATOR_ICONS[item.icon];
 
               return (
-                <PublicSurfaceCard
+                <FeatureIconCard
                   key={item.title}
+                  icon={<Icon />}
                   title={item.title}
                   description={item.description}
-                  leading={<Icon />}
                 />
               );
             })}

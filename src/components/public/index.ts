@@ -13,3 +13,7 @@ export { PublicNumberField, PublicScaleField, PublicSelectField } from "./Public
 export { PublicIconBadge } from "./PublicIconBadge";
 export { PublicCalculatorResultSummary } from "./PublicCalculatorResultSummary";
 export { CalculatorLogo, getCalculatorLogoToneClassName } from "./CalculatorLogo";
+export { FeatureIconCard } from "./FeatureIconCard";
+export { StatCounter } from "./StatCounter";
+export { RatingBadge } from "./RatingBadge";
+export { GuideLinkButton } from "./GuideLinkButton";

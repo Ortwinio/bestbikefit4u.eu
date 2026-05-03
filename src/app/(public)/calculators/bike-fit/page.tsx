@@ -212,37 +212,16 @@ export default async function BikeFitCalculatorPage() {
         }
         actions={
           campaignActive ? (
-            <>
-              <CampaignCtaGroup
-                locale={locale}
-                pagePath={pagePath}
-                startHref={withLocalePrefix("/login", locale)}
-                startSection="bike_fit_result"
-                donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-                donateSection="bike_fit_campaign_donate"
-                startLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
-                donateLabel={campaign.donateCta}
-              />
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix(
-                      getLocalizedPublicCalculatorPath("tire-pressure", locale),
-                      locale
-                    )}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="bike_fit_tire_pressure_cta"
-                    ctaLabel={
-                      isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"
-                    }
-                  />
-                }
-                variant="outline"
-              >
-                {isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"}
-              </Button>
-            </>
+            <CampaignCtaGroup
+              locale={locale}
+              pagePath={pagePath}
+              startHref={withLocalePrefix("/login", locale)}
+              startSection="bike_fit_result"
+              donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+              donateSection="bike_fit_campaign_donate"
+              startLabel={isNl ? "Meld je aan om te bewaren" : "Sign in to save results"}
+              donateLabel={campaign.donateCta}
+            />
           ) : (
             <>
               <Button
@@ -252,11 +231,11 @@ export default async function BikeFitCalculatorPage() {
                     locale={locale}
                     pagePath={pagePath}
                     section="bike_fit_result"
-                    ctaLabel={isNl ? "Maak account aan of log in" : "Create account or sign in"}
+                    ctaLabel={isNl ? "Meld je aan om te bewaren" : "Sign in to save results"}
                   />
                 }
               >
-                {isNl ? "Maak account aan of log in" : "Create account or sign in"}
+                {isNl ? "Meld je aan om te bewaren" : "Sign in to save results"}
               </Button>
               <Button
                 render={
@@ -265,31 +244,12 @@ export default async function BikeFitCalculatorPage() {
                     locale={locale}
                     pagePath={pagePath}
                     section="bike_fit_pricing_cta"
-                    ctaLabel={isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
+                    ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
                   />
                 }
                 variant="outline"
               >
-                {isNl ? "Vergelijk Free vs Pro" : "Compare Free vs Pro"}
-              </Button>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix(
-                      getLocalizedPublicCalculatorPath("tire-pressure", locale),
-                      locale
-                    )}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="bike_fit_tire_pressure_cta"
-                    ctaLabel={
-                      isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"
-                    }
-                  />
-                }
-                variant="outline"
-              >
-                {isNl ? "Open bandenspanning calculator" : "Open Tire Pressure Calculator"}
+                {isNl ? "Bekijk prijzen" : "Compare plans"}
               </Button>
             </>
           )

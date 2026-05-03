@@ -106,6 +106,8 @@ export const HOME_STEPPER_CONTENT: Localized<{
   description: string;
   cta: string;
   socialProof: string;
+  ratingValue: string;
+  ratingCount: string;
   steps: Array<{
     number: string;
     title: string;
@@ -119,6 +121,8 @@ export const HOME_STEPPER_CONTENT: Localized<{
     description: "Measure what matters, connect your bike, and get the next setup changes in a usable order.",
     cta: "Get my fit plan",
     socialProof: "Join 2,400+ riders who started with the same baseline flow.",
+    ratingValue: "4.8",
+    ratingCount: "380+ riders",
     steps: [
       {
         number: "01",
@@ -146,6 +150,8 @@ export const HOME_STEPPER_CONTENT: Localized<{
     description: "Meet wat telt, koppel je fiets en ontvang de volgende afstelstappen in een bruikbare volgorde.",
     cta: "Ontvang mijn afstelplan",
     socialProof: "Sluit je aan bij 2.400+ rijders die met deze basisflow zijn gestart.",
+    ratingValue: "4.8",
+    ratingCount: "380+ rijders",
     steps: [
       {
         number: "01",

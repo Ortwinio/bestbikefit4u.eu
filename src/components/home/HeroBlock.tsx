@@ -2,6 +2,7 @@ import { AlertCircle, CheckCircle2, Ruler } from "lucide-react";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { Card } from "@/components/prototyper-ui/ui/card";
+import { RatingBadge } from "@/components/public/RatingBadge";
 import type { Locale } from "@/i18n/config";
 import { HOME_HERO_MICROCOPY, HOME_HERO_PROOF_CARDS } from "./homeRedesignContent";
 
@@ -16,6 +17,8 @@ type HeroBlockProps = {
   description: string;
   primaryCta: string;
   secondaryCta: string;
+  ratingValue?: string;
+  ratingCount?: string;
 };
 
 export function HeroBlock({
@@ -29,6 +32,8 @@ export function HeroBlock({
   description,
   primaryCta,
   secondaryCta,
+  ratingValue,
+  ratingCount,
 }: HeroBlockProps) {
   const microcopy = HOME_HERO_MICROCOPY[locale];
   const proofCards = HOME_HERO_PROOF_CARDS[locale];
@@ -57,7 +62,12 @@ export function HeroBlock({
           <p className="mt-4 text-sm font-medium text-primary-foreground/80">
             {microcopy.trustLine}
           </p>
-          <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+          {ratingValue && ratingCount ? (
+            <div className="mt-4 flex justify-center">
+              <RatingBadge rating={ratingValue} count={ratingCount} variant="light" />
+            </div>
+          ) : null}
+          <div className="mt-6 flex flex-col justify-center gap-4 sm:flex-row">
             <Button
               size="lg"
               className="min-h-12 rounded-full px-6 text-base"

@@ -1,8 +1,7 @@
-import Link from "next/link";
+import { BookOpen } from "lucide-react";
 import { withLocalePrefix } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
-import { PublicSection, PublicSurfaceCard } from "@/components/public";
-import { ArrowRight } from "lucide-react";
+import { GuideLinkButton, PublicSection } from "@/components/public";
 
 export type RelatedLink = {
   href: string;
@@ -40,20 +39,12 @@ export function RelatedLinksSection({
     >
       <div className="grid gap-4 sm:grid-cols-2">
         {links.map((link) => (
-          <PublicSurfaceCard
+          <GuideLinkButton
             key={link.href}
-            compact
-            className="transition-transform duration-150 hover:-translate-y-0.5"
-            title={
-              <Link
-                href={withLocalePrefix(link.href, locale)}
-                className="inline-flex items-center gap-2 text-[color:var(--foreground)] outline-none transition-colors hover:text-[color:var(--primary)] focus-visible:text-[color:var(--primary)]"
-              >
-                <span>{link.label}</span>
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-            }
-            description={link.description ?? "Open the next page in this topic cluster."}
+            href={withLocalePrefix(link.href, locale)}
+            icon={<BookOpen className="h-5 w-5" />}
+            title={link.label}
+            subtitle={link.description}
           />
         ))}
       </div>

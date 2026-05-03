@@ -2,6 +2,7 @@ import { Bike, CheckCircle2, Ruler } from "lucide-react";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { PublicSection } from "@/components/public/PublicSection";
+import { RatingBadge } from "@/components/public/RatingBadge";
 import type { Locale } from "@/i18n/config";
 import { HOME_STEPPER_CONTENT } from "./homeRedesignContent";
 
@@ -84,9 +85,9 @@ export function HowItWorksStepper({
               >
                 {content.cta}
               </Button>
-              <p className="text-sm font-medium text-[color:var(--muted-foreground)]">
-                {content.socialProof}
-              </p>
+              <div className="mt-2">
+                <RatingBadge rating={content.ratingValue} count={content.ratingCount} />
+              </div>
             </div>
           </div>
         </PublicSection>
