@@ -38,7 +38,7 @@ Audit the current public-site styling primitives and add only the missing reusab
 
 ## Completion Checklist
 
-- [ ] Existing public-site primitives were reviewed before adding new utilities.
-- [ ] No parallel token system was introduced.
-- [ ] Any new utility is generic enough to justify living in shared theme code.
-- [ ] Touched homepage styling uses the same visual language as the rest of the public site.
+- [x] Existing public-site primitives were reviewed before adding new utilities.
+- [x] No parallel token system was introduced.
+- [x] Any new utility is generic enough to justify living in shared theme code.
+- [x] Touched homepage styling uses the same visual language as the rest of the public site.

@@ -123,8 +123,8 @@ Redesign the BestBikeFit4U homepage into a clearer acquisition funnel that impro
 ### Validation
 
 - [x] `npm run typecheck` passes.
-- [ ] Manual QA is completed on `/nl` and `/en`.
-- [ ] Manual QA covers at least one mobile width and one desktop width.
+- [x] Manual QA is completed on `/nl` and `/en`.
+- [x] Manual QA covers at least one mobile width and one desktop width.
 - [x] Any new client component has verified loading, empty, and hydration-safe states.
 
 ## Implementation Notes
@@ -132,7 +132,13 @@ Redesign the BestBikeFit4U homepage into a clearer acquisition funnel that impro
 - Sprint 1 landed via `HeroBlock`, `ProofBar`, and calculator-first logged-out header actions.
 - Sprint 2 landed via `HowItWorksStepper`, `DifferentiatorTriple`, and `TestimonialSection`.
 - Sprint 3 landed via `CalculatorGrid`, `BikeSearchBar`, bike-showcase CTA semantics refactor, and `ClosingCtaBand`.
+- `BikeSearchBar` submit CTA was demoted from the primary button treatment to `outline` so the homepage keeps the planned cap of three primary CTAs.
 - Automated validation completed with `npm run typecheck`, `npm run build`, and targeted Vitest coverage for the homepage and header auth actions.
+- Manual QA completed via homepage screenshots for `/en` and `/nl` at desktop and mobile widths:
+  `.tmp/browser-acceptance-artifacts/home-en-desktop.png`,
+  `.tmp/browser-acceptance-artifacts/home-en-mobile.png`,
+  `.tmp/browser-acceptance-artifacts/home-nl-desktop.png`,
+  `.tmp/browser-acceptance-artifacts/home-nl-mobile.png`.
 - Local preview is already running for this repo at `http://localhost:3001`.
 
 ## Execution Order

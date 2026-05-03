@@ -22,3 +22,8 @@
 - `npm run build`
 - `npx vitest run 'src/app/(public)/page.test.tsx' src/components/layout/HeaderAuthActions.test.tsx`
 - Local preview running at `http://localhost:3001`
+- Manual homepage QA reviewed on `/en` and `/nl` at desktop and mobile widths using:
+  - `.tmp/browser-acceptance-artifacts/home-en-desktop.png`
+  - `.tmp/browser-acceptance-artifacts/home-en-mobile.png`
+  - `.tmp/browser-acceptance-artifacts/home-nl-desktop.png`
+  - `.tmp/browser-acceptance-artifacts/home-nl-mobile.png`

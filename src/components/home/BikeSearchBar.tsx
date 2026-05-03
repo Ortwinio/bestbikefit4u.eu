@@ -62,7 +62,12 @@ export function BikeSearchBar({ locale, fitHref, manualHref, copy }: BikeSearchB
               />
             </div>
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <Button type="submit" size="lg" className="min-h-12 rounded-full px-6 text-base">
+              <Button
+                type="submit"
+                variant="outline"
+                size="lg"
+                className="min-h-12 rounded-full px-6 text-base"
+              >
                 {content.submitLabel}
               </Button>
               <Button
