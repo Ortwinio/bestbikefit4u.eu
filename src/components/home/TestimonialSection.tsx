@@ -16,7 +16,10 @@ type TestimonialBase = {
   photoUrl?: string;
 };
 
-type TestimonialSectionCopy = Messages["home"]["homepageRedesign"]["testimonials"];
+type TestimonialSectionCopy = Messages["home"]["homepageRedesign"]["testimonials"] & {
+  eyebrow?: string;
+  badgeLabel?: string;
+};
 
 type TestimonialSectionProps = {
   locale: Locale;
@@ -27,6 +30,9 @@ type TestimonialSectionProps = {
 };
 
 type TestimonialCardProps = TestimonialBase;
+type TestimonialCardWithMetaProps = TestimonialCardProps & {
+  badgeLabel: string;
+};
 
 export function TestimonialCard({
   name,
@@ -35,7 +41,8 @@ export function TestimonialCard({
   result,
   quote,
   photoUrl,
-}: TestimonialCardProps) {
+  badgeLabel,
+}: TestimonialCardWithMetaProps) {
   return (
     <Card
       variant="secondary"
@@ -52,7 +59,7 @@ export function TestimonialCard({
               loading="lazy"
             />
           ) : (
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-semibold text-[color:var(--primary-foreground)]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[color:var(--primary)]/25 bg-[color:var(--primary)] text-sm font-semibold text-[color:var(--primary-foreground)] shadow-[0_16px_36px_-24px_color-mix(in_oklch,var(--primary)_78%,transparent)] ring-2 ring-background/75">
               {initials}
             </div>
           )}
@@ -62,6 +69,9 @@ export function TestimonialCard({
             </p>
             <p className="text-xs leading-5 text-[color:var(--muted-foreground)]">
               {bikeContext}
+            </p>
+            <p className="mt-2 inline-flex rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_64%,var(--background)_36%)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
+              {badgeLabel}
             </p>
           </div>
         </div>
@@ -86,9 +96,11 @@ export function TestimonialSection({
   const fallbackCopy = HOME_QUOTES_SECTION_COPY[locale];
   const fallbackTestimonials = HOME_TESTIMONIALS[locale].items;
   const sectionCopy = copy ?? {
+    eyebrow: HOME_TESTIMONIALS[locale].eyebrow,
     title: fallbackCopy.title,
     subtitle: fallbackCopy.subtitle,
     readMoreLabel: fallbackCopy.readMoreLabel,
+    badgeLabel: HOME_TESTIMONIALS[locale].badgeLabel,
     items: fallbackTestimonials,
   };
   const sectionTestimonials = testimonials ?? fallbackTestimonials;
@@ -98,34 +110,40 @@ export function TestimonialSection({
   }
 
   return (
-    <PublicSection
-      className={className}
-      header={{
-        title: sectionCopy.title,
-        description: sectionCopy.subtitle,
-        align: "center",
-      }}
-      contentClassName="pt-8"
-    >
-      <div className="grid gap-6 md:grid-cols-3">
-        {sectionTestimonials.map((testimonial) => (
-          <TestimonialCard
-            key={`${testimonial.name}-${testimonial.initials}`}
-            {...testimonial}
-          />
-        ))}
+    <section className="bg-[color:color-mix(in_oklch,var(--muted)_44%,var(--background)_56%)] py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <PublicSection
+          className={className}
+          header={{
+            eyebrow: "eyebrow" in sectionCopy ? sectionCopy.eyebrow : HOME_TESTIMONIALS[locale].eyebrow,
+            title: sectionCopy.title,
+            description: sectionCopy.subtitle,
+            align: "center",
+          }}
+          contentClassName="pt-8"
+        >
+          <div className="grid gap-6 md:grid-cols-3">
+            {sectionTestimonials.map((testimonial) => (
+              <TestimonialCard
+                key={`${testimonial.name}-${testimonial.initials}`}
+                {...testimonial}
+                badgeLabel={sectionCopy.badgeLabel ?? HOME_TESTIMONIALS[locale].badgeLabel}
+              />
+            ))}
+          </div>
+          {readMoreHref ? (
+            <div className="mt-8 text-center">
+              <Button
+                variant="link"
+                className="text-sm font-semibold"
+                render={<Link href={readMoreHref} />}
+              >
+                {sectionCopy.readMoreLabel}
+              </Button>
+            </div>
+          ) : null}
+        </PublicSection>
       </div>
-      {readMoreHref ? (
-        <div className="mt-8 text-center">
-          <Button
-            variant="link"
-            className="text-sm font-semibold"
-            render={<Link href={readMoreHref} />}
-          >
-            {sectionCopy.readMoreLabel}
-          </Button>
-        </div>
-      ) : null}
-    </PublicSection>
+    </section>
   );
 }

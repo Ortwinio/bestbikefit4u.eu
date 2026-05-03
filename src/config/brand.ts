@@ -8,8 +8,8 @@ export const BRAND = {
   reportTitle: "BestBikeFit4U - Fit Recommendation Report",
   reportSlug: "bestbikefit4u-report",
   assets: {
-    logoPrimary: "/logo/logo-bestbikefit4u-v2.svg",
-    logoDark: "/logo/logo-bestbikefit4u-v2.svg",
+    logoPrimary: "/logo/logo-bestbikefit4u-v2.png",
+    logoDark: "/logo/logo-bestbikefit4u-v2.png",
     mark: "/logo/logo-bestbikefit4u-v2.svg",
     appIconSvg: "/logo/logo-bestbikefit4u-v2.svg",
     appIconPng: "/logo/logo-bestbikefit4u-v2.png",

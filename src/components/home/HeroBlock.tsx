@@ -1,7 +1,9 @@
+import { AlertCircle, CheckCircle2, Ruler } from "lucide-react";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { Card } from "@/components/prototyper-ui/ui/card";
 import type { Locale } from "@/i18n/config";
+import { HOME_HERO_MICROCOPY, HOME_HERO_PROOF_CARDS } from "./homeRedesignContent";
 
 type HeroBlockProps = {
   locale: Locale;
@@ -28,6 +30,15 @@ export function HeroBlock({
   primaryCta,
   secondaryCta,
 }: HeroBlockProps) {
+  const microcopy = HOME_HERO_MICROCOPY[locale];
+  const proofCards = HOME_HERO_PROOF_CARDS[locale];
+
+  const proofIcons = {
+    check: CheckCircle2,
+    ruler: Ruler,
+    alert: AlertCircle,
+  } as const;
+
   return (
     <section className="relative overflow-hidden bg-[url('/bestbikefit4u-home.gif')] bg-cover bg-center bg-no-repeat py-24 sm:py-28">
       <div className="absolute inset-0 bg-black/55" aria-hidden="true" />
@@ -42,6 +53,9 @@ export function HeroBlock({
           </h1>
           <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-primary-foreground/90">
             {description}
+          </p>
+          <p className="mt-4 text-sm font-medium text-primary-foreground/80">
+            {microcopy.trustLine}
           </p>
           <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
             <Button
@@ -62,7 +76,7 @@ export function HeroBlock({
             <Button
               variant="outline"
               size="lg"
-              className="min-h-12 rounded-full border-primary-foreground/25 bg-[color:color-mix(in_oklch,var(--background)_88%,white_12%)] px-6 text-base text-[color:var(--foreground)] shadow-[0_12px_32px_-18px_color-mix(in_oklch,var(--foreground)_28%,transparent)] after:bg-[color:color-mix(in_oklch,var(--background)_92%,white_8%)] hover-only:after:bg-[color:color-mix(in_oklch,var(--muted)_70%,var(--background)_30%)]"
+              className="min-h-12 rounded-full border-primary-foreground/30 bg-primary-foreground/10 px-6 text-base text-primary-foreground shadow-[0_12px_32px_-18px_color-mix(in_oklch,var(--foreground)_28%,transparent)] after:bg-primary-foreground/12 hover-only:border-primary-foreground/45 hover-only:bg-primary-foreground/16 hover-only:text-primary-foreground"
               render={
                 <TrackedCtaLink
                   href={pricingHref}
@@ -76,6 +90,9 @@ export function HeroBlock({
               {secondaryCta}
             </Button>
           </div>
+          <p className="mt-4 text-sm text-primary-foreground/72">
+            {microcopy.ctaNote}
+          </p>
           <p className="mt-4 text-sm text-primary-foreground/60">
             <TrackedCtaLink
               href={loginHref}
@@ -90,22 +107,31 @@ export function HeroBlock({
               {locale === "nl" ? "Heb je al een account? Log in" : "Already have an account? Sign in"}
             </TrackedCtaLink>
           </p>
-          <div className="mt-8 grid gap-3 text-left text-sm text-primary-foreground/80 sm:grid-cols-3">
-            <Card className="border border-primary-foreground/15 bg-primary-foreground/10 px-4 py-3 text-primary-foreground shadow-none">
-              {locale === "nl"
-                ? "Onderbouwde berekeningen, geen giswerk."
-                : "Method-backed calculations, not guesswork."}
-            </Card>
-            <Card className="border border-primary-foreground/15 bg-primary-foreground/10 px-4 py-3 text-primary-foreground shadow-none">
-              {locale === "nl"
-                ? "Zadelhoogte, reach en drop in millimeters."
-                : "Saddle height, reach, and drop in millimeters."}
-            </Card>
-            <Card className="border border-primary-foreground/15 bg-primary-foreground/10 px-4 py-3 text-primary-foreground shadow-none">
-              {locale === "nl"
-                ? "Eerlijk over wat online fitting wel en niet kan."
-                : "Transparent about what online fitting can and cannot do."}
-            </Card>
+          <div className="mt-8 grid gap-3 text-left sm:grid-cols-3">
+            {proofCards.map((item) => {
+              const Icon = proofIcons[item.icon];
+
+              return (
+                <Card
+                  key={item.title}
+                  className="border border-primary-foreground/18 bg-primary-foreground/10 px-4 py-4 text-primary-foreground shadow-none backdrop-blur-sm"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-primary-foreground/20 bg-primary-foreground/12 text-primary-foreground">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-primary-foreground">
+                        {item.title}
+                      </p>
+                      <p className="mt-1 text-sm leading-6 text-primary-foreground/76">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </div>

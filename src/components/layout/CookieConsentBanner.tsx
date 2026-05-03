@@ -64,7 +64,7 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 top-0 z-[95] p-3 sm:top-auto sm:bottom-0 sm:p-4">
-      <div className="panel-surface-base panel-theme-context pointer-events-auto mx-auto max-w-5xl rounded-[1.5rem] border p-4 shadow-[0_22px_60px_-36px_color-mix(in_oklch,var(--foreground)_45%,transparent)] sm:rounded-[1.75rem] sm:p-5">
+      <div className="panel-surface-base panel-theme-context pointer-events-auto mx-auto max-w-5xl rounded-[1.5rem] border bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)] p-4 shadow-[0_22px_60px_-36px_color-mix(in_oklch,var(--foreground)_45%,transparent)] sm:rounded-[1.75rem] sm:p-5">
         <h2 className="text-sm font-semibold text-[color:var(--foreground)]">{copy.title}</h2>
         <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
           {copy.body}{" "}
@@ -81,7 +81,7 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
             type="button"
             size="sm"
             variant="outline"
-            className="min-w-0"
+            className="min-w-0 rounded-full px-4"
             onClick={() => handleConsent("essential")}
           >
             {copy.essentialLabel}
@@ -89,7 +89,7 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
           <Button
             type="button"
             size="sm"
-            className="min-w-0"
+            className="min-w-0 rounded-full px-4"
             onClick={() => handleConsent("accepted")}
           >
             {copy.acceptLabel}

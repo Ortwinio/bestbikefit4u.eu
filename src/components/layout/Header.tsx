@@ -50,7 +50,7 @@ export function Header({ locale, labels }: HeaderProps) {
               href={withLocalePrefix("/", locale)}
               asset="primary"
               priority
-              className="block w-[160px] shrink-0 sm:w-[260px] lg:w-[360px]"
+              className="block w-[84px] shrink-0 sm:w-[136px] lg:w-[184px]"
               imageClassName="block"
               ariaLabel={labels.nav.brand}
             />

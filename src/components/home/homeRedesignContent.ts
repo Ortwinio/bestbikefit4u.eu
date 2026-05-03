@@ -10,7 +10,10 @@ export const HOME_PROOF_BAR_CONTENT: Localized<{
     quote: string;
     initials: string;
   };
-  stats: [string, string, string];
+  stats: Array<{
+    value: string;
+    label: string;
+  }>;
 }> = {
   en: {
     quote: {
@@ -19,7 +22,11 @@ export const HOME_PROOF_BAR_CONTENT: Localized<{
       quote: "Saddle 4 mm lower. Knee pain gone after two rides.",
       initials: "TV",
     },
-    stats: ["2,400+ fits", "180+ brands", "Free to start"],
+    stats: [
+      { value: "2,400+", label: "fits completed" },
+      { value: "180+", label: "bike brands covered" },
+      { value: "Free", label: "to start" },
+    ],
   },
   nl: {
     quote: {
@@ -28,7 +35,68 @@ export const HOME_PROOF_BAR_CONTENT: Localized<{
       quote: "Zadel 4 mm lager. Kniepijn weg na twee ritten.",
       initials: "TV",
     },
-    stats: ["2.400+ fits", "180+ merken", "Gratis starten"],
+    stats: [
+      { value: "2.400+", label: "fits uitgevoerd" },
+      { value: "180+", label: "fietsmerken gedekt" },
+      { value: "Gratis", label: "om te starten" },
+    ],
+  },
+};
+
+export const HOME_HERO_PROOF_CARDS: Localized<
+  Array<{
+    title: string;
+    description: string;
+    icon: "check" | "ruler" | "alert";
+  }>
+> = {
+  en: [
+    {
+      title: "Method-backed guidance",
+      description: "Evidence-based calculations instead of trial-and-error adjustments.",
+      icon: "check",
+    },
+    {
+      title: "Millimeter targets",
+      description: "Saddle height, reach, and drop translated into usable numbers.",
+      icon: "ruler",
+    },
+    {
+      title: "Transparent limits",
+      description: "Clear about what online fitting can solve and when to validate outdoors.",
+      icon: "alert",
+    },
+  ],
+  nl: [
+    {
+      title: "Onderbouwde begeleiding",
+      description: "Berekeningen op basis van methode in plaats van afstellen op gevoel.",
+      icon: "check",
+    },
+    {
+      title: "Doelen in millimeters",
+      description: "Zadelhoogte, reach en drop vertaald naar direct bruikbare waarden.",
+      icon: "ruler",
+    },
+    {
+      title: "Eerlijk over grenzen",
+      description: "Duidelijk over wat online fitting oplost en wat je buiten nog moet valideren.",
+      icon: "alert",
+    },
+  ],
+};
+
+export const HOME_HERO_MICROCOPY: Localized<{
+  trustLine: string;
+  ctaNote: string;
+}> = {
+  en: {
+    trustLine: "Trusted by 2,400+ riders across 180+ bike brands.",
+    ctaNote: "No credit card required. Start free and upgrade only if you want the full report.",
+  },
+  nl: {
+    trustLine: "Vertrouwd door 2.400+ rijders verdeeld over 180+ fietsmerken.",
+    ctaNote: "Geen creditcard nodig. Start gratis en upgrade alleen als je het volledige rapport wilt.",
   },
 };
 
@@ -37,6 +105,7 @@ export const HOME_STEPPER_CONTENT: Localized<{
   title: string;
   description: string;
   cta: string;
+  socialProof: string;
   steps: Array<{
     number: string;
     title: string;
@@ -49,6 +118,7 @@ export const HOME_STEPPER_CONTENT: Localized<{
     title: "A clear fit flow in three steps",
     description: "Measure what matters, connect your bike, and get the next setup changes in a usable order.",
     cta: "Get my fit plan",
+    socialProof: "Join 2,400+ riders who started with the same baseline flow.",
     steps: [
       {
         number: "01",
@@ -75,6 +145,7 @@ export const HOME_STEPPER_CONTENT: Localized<{
     title: "Een duidelijke fitflow in drie stappen",
     description: "Meet wat telt, koppel je fiets en ontvang de volgende afstelstappen in een bruikbare volgorde.",
     cta: "Ontvang mijn afstelplan",
+    socialProof: "Sluit je aan bij 2.400+ rijders die met deze basisflow zijn gestart.",
     steps: [
       {
         number: "01",
@@ -158,6 +229,7 @@ export const HOME_TESTIMONIALS: Localized<{
   eyebrow: string;
   title: string;
   description: string;
+  badgeLabel: string;
   items: Array<{
     name: string;
     initials: string;
@@ -170,6 +242,7 @@ export const HOME_TESTIMONIALS: Localized<{
     eyebrow: "Rider outcomes",
     title: "What riders changed after the fit",
     description: "Concrete setup changes are more credible than anonymous praise.",
+    badgeLabel: "Verified rider story",
     items: [
       {
         name: "Thomas V.",
@@ -198,6 +271,7 @@ export const HOME_TESTIMONIALS: Localized<{
     eyebrow: "Resultaten van rijders",
     title: "Wat rijders na de fit hebben aangepast",
     description: "Concrete afstelwijzigingen zijn geloofwaardiger dan anonieme complimenten.",
+    badgeLabel: "Geverifieerd rijderverhaal",
     items: [
       {
         name: "Thomas V.",
@@ -235,7 +309,7 @@ export const HOME_BIKE_SEARCH_CONTENT: Localized<{
   useInFitLabel: string;
 }> = {
   en: {
-    eyebrow: "Bike lookup",
+    eyebrow: "Start from your bike",
     title: "Already know your bike?",
     description: "Search by brand or model and jump into the fit flow with a better starting point.",
     placeholder: "Search brand or model...",
@@ -245,7 +319,7 @@ export const HOME_BIKE_SEARCH_CONTENT: Localized<{
     useInFitLabel: "Use in my fit",
   },
   nl: {
-    eyebrow: "Fiets opzoeken",
+    eyebrow: "Start vanuit je fiets",
     title: "Weet je al welke fiets je hebt?",
     description: "Zoek op merk of model en stap direct in de fitflow met een beter startpunt.",
     placeholder: "Zoek merk of model...",
@@ -279,14 +353,17 @@ export const HOME_CALCULATOR_SUBTITLES: Localized<Record<PublicCalculatorId, str
 
 export const HOME_CLOSING_CTA_CONTENT: Localized<{
   eyebrow: string;
+  cardEyebrow: string;
   pricingLabel: string;
 }> = {
   en: {
     eyebrow: "Ready for the next step?",
+    cardEyebrow: "Try it free first",
     pricingLabel: "Compare Free vs Pro",
   },
   nl: {
     eyebrow: "Klaar voor de volgende stap?",
+    cardEyebrow: "Probeer het vrijblijvend",
     pricingLabel: "Vergelijk Free vs Pro",
   },
 };

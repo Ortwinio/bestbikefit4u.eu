@@ -25,7 +25,7 @@ export function HowItWorksStepper({
   const content = HOME_STEPPER_CONTENT[locale];
 
   return (
-    <section className="py-16 sm:py-20">
+    <section className="bg-background py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <PublicSection
           header={{
@@ -68,21 +68,26 @@ export function HowItWorksStepper({
             })}
           </div>
           <div className="mt-8 flex justify-center">
-            <Button
-              size="lg"
-              className="min-h-12 rounded-full px-6 text-base"
-              render={
-                <TrackedCtaLink
-                  href={fitHref}
-                  locale={locale}
-                  pagePath={homePath}
-                  section="stepper_primary"
-                  ctaLabel={content.cta}
-                />
-              }
-            >
-              {content.cta}
-            </Button>
+            <div className="flex flex-col items-center gap-3">
+              <Button
+                size="lg"
+                className="min-h-12 rounded-full px-6 text-base"
+                render={
+                  <TrackedCtaLink
+                    href={fitHref}
+                    locale={locale}
+                    pagePath={homePath}
+                    section="stepper_primary"
+                    ctaLabel={content.cta}
+                  />
+                }
+              >
+                {content.cta}
+              </Button>
+              <p className="text-sm font-medium text-[color:var(--muted-foreground)]">
+                {content.socialProof}
+              </p>
+            </div>
           </div>
         </PublicSection>
       </div>

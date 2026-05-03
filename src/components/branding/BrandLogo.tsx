@@ -9,13 +9,13 @@ import { cn } from "@/utils/cn";
 const LOGO_ASSETS = {
   primary: {
     src: BRAND.assets.logoPrimary,
-    width: 1024,
-    height: 1024,
+    width: 640,
+    height: 252,
   },
   dark: {
     src: BRAND.assets.logoDark,
-    width: 1024,
-    height: 1024,
+    width: 640,
+    height: 252,
   },
   mark: {
     src: BRAND.assets.mark,
@@ -84,14 +84,14 @@ export function BrandLogo({
       />
     </span>
   ) : isHorizontalLogo ? (
-    <span className="relative block aspect-[5/2] w-full overflow-hidden">
+    <span className="block w-full overflow-hidden">
       <Image
         src={selectedAsset.src}
         alt={ariaLabel ?? BRAND.name}
-        fill
-        sizes="100vw"
+        width={selectedAsset.width}
+        height={selectedAsset.height}
         priority={shouldPrioritize}
-        className={cn("object-cover object-center", imageClassName)}
+        className={cn("h-auto w-full object-contain", imageClassName)}
       />
     </span>
   ) : (

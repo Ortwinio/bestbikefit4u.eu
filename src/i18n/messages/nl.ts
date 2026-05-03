@@ -66,7 +66,7 @@ const nl = {
       description:
         "Probeer eerst de gratis bike fit calculator en beslis daarna pas of je diepere afstelbegeleiding wilt voor jouw lichaam, rijstijl en volgende fietskeuze.",
       primaryCta: "Probeer de gratis bike fit calculator",
-      secondaryCta: "Vergelijk Free vs Pro",
+      secondaryCta: "Zie wat je precies krijgt",
       signInCta: "Heb je al een account? Log in",
     },
     homepageRedesign: {

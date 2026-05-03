@@ -65,7 +65,7 @@ const en = {
       description:
         "Try the free bike fit calculator first, then decide whether you want deeper setup guidance for your body, riding style, and next bike decision.",
       primaryCta: "Try the Free Bike Fit Calculator",
-      secondaryCta: "Compare Free vs Pro",
+      secondaryCta: "See what you get in the full report",
       signInCta: "Already have an account? Sign in",
     },
     homepageRedesign: {

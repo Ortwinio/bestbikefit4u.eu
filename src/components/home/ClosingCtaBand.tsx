@@ -70,9 +70,9 @@ export function ClosingCtaBand({
           <div className="mt-12 lg:mt-0">
             <Card className="public-cta-surface gap-0 rounded-[1.75rem] border p-8 text-foreground shadow-lg">
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">
-                {content.eyebrow}
+                {content.cardEyebrow}
               </p>
-              <h3 className="mt-3 text-2xl font-bold">
+              <h3 className="text-2xl font-bold">
                 {cta.title}
               </h3>
               <p className="mt-4 text-[color:var(--muted-foreground)]">
