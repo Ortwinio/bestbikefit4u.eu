@@ -36,6 +36,7 @@ const en = {
       crankLength: "Crank Length Calculator",
       gearing: "Gearing Calculator",
       tirePressure: "Tire Pressure Calculator",
+      passportCheck: "Bike passport check",
       allRightsReserved: "All rights reserved.",
     },
   },

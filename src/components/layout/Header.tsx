@@ -4,7 +4,6 @@ import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import type { Messages } from "@/i18n/getDictionary";
 import { BrandLogo } from "@/components/branding";
-import { CampaignAnnouncementBar } from "@/components/campaign/CampaignAnnouncementBar";
 import {
   CONSUMER_CAMPAIGN_CONFIG,
   getConsumerCampaignCopy,
@@ -49,7 +48,6 @@ export function Header({ locale, labels }: HeaderProps) {
 
   return (
     <header className="relative border-b border-[color:var(--border)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--background)_94%,var(--secondary)_6%)_0%,var(--background)_100%)] text-[color:var(--foreground)]">
-      <CampaignAnnouncementBar locale={locale} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex min-h-[4.5rem] items-center justify-between gap-3 py-3">
           <div className="flex min-w-0 items-center gap-6">
@@ -66,9 +64,11 @@ export function Header({ locale, labels }: HeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:bg-[color:var(--accent)]/70 hover:text-[color:var(--foreground)]"
+                  className="group inline-flex items-center gap-2 rounded-full border border-transparent px-4 py-2 text-sm font-medium text-[color:var(--muted-foreground)] transition-all duration-200 hover:border-[color:color-mix(in_oklch,var(--primary)_22%,var(--border))] hover:bg-[color:color-mix(in_oklch,var(--primary)_16%,var(--card)_84%)] hover:text-[color:var(--primary)]"
                 >
-                  <span className="text-[color:var(--primary)]">{item.icon}</span>
+                  <span className="text-[color:color-mix(in_oklch,var(--primary)_72%,var(--muted-foreground)_28%)] transition-colors duration-200 group-hover:text-[color:var(--primary)]">
+                    {item.icon}
+                  </span>
                   <span>{item.label}</span>
                 </Link>
               ))}

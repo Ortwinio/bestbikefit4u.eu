@@ -37,6 +37,7 @@ const nl = {
       crankLength: "Cranklengte calculator",
       gearing: "Verzet calculator",
       tirePressure: "Bandenspanningscalculator",
+      passportCheck: "Bike-passport check",
       allRightsReserved: "Alle rechten voorbehouden.",
     },
   },

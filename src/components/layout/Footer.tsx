@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import type { Messages } from "@/i18n/getDictionary";
+import { BikePassportFooterLogo } from "./BikePassportFooterLogo";
 
 type FooterProps = {
   locale: Locale;
@@ -159,9 +160,10 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/login", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
-                  Bike passport check
+                  <BikePassportFooterLogo />
+                  {f.passportCheck}
                 </Link>
               </li>
             </ul>

@@ -23,6 +23,7 @@ type PublicHeroProps = {
   actions?: ReactNode;
   illustration?: ReactNode;
   className?: string;
+  illustrationContainerClassName?: string;
 };
 
 type PublicSectionProps = {
@@ -64,6 +65,7 @@ export function PublicHero({
   actions,
   illustration,
   className,
+  illustrationContainerClassName,
 }: PublicHeroProps) {
   return (
     <Card
@@ -101,7 +103,12 @@ export function PublicHero({
         </div>
         {illustration ? (
           <div className="flex h-full items-stretch">
-            <div className="flex min-h-56 w-full items-center justify-center rounded-[var(--radius-2xl)] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_92%,var(--secondary)_8%)] p-6">
+            <div
+              className={cn(
+                "flex min-h-56 w-full items-center justify-center rounded-[var(--radius-2xl)] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_92%,var(--secondary)_8%)] p-6",
+                illustrationContainerClassName
+              )}
+            >
               {illustration}
             </div>
           </div>

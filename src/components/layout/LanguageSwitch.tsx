@@ -33,7 +33,7 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
   });
 
   const sharedClasses =
-    "rounded-lg px-3 py-1.5 text-xs font-semibold transition-[background-color,color,box-shadow] duration-150";
+    "rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all duration-200";
 
   return (
     <nav
@@ -47,8 +47,8 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
         className={cn(
           sharedClasses,
           activeLocale === "en"
-            ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] shadow-sm"
-            : "text-[color:var(--foreground)]/80 hover:bg-[color:var(--accent)]/70 hover:text-[color:var(--foreground)]"
+            ? "border-[color:color-mix(in_oklch,var(--primary)_28%,transparent)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)] shadow-[0_8px_18px_-12px_color-mix(in_oklch,var(--primary)_55%,transparent)]"
+            : "border-transparent text-[color:var(--foreground)]/78 hover:-translate-y-px hover:border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] hover:bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--card)_88%)] hover:text-[color:var(--primary)]"
         )}
       >
         EN
@@ -60,8 +60,8 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
         className={cn(
           sharedClasses,
           activeLocale === "nl"
-            ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] shadow-sm"
-            : "text-[color:var(--foreground)]/80 hover:bg-[color:var(--accent)]/70 hover:text-[color:var(--foreground)]"
+            ? "border-[color:color-mix(in_oklch,var(--primary)_28%,transparent)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)] shadow-[0_8px_18px_-12px_color-mix(in_oklch,var(--primary)_55%,transparent)]"
+            : "border-transparent text-[color:var(--foreground)]/78 hover:-translate-y-px hover:border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] hover:bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--card)_88%)] hover:text-[color:var(--primary)]"
         )}
       >
         NL

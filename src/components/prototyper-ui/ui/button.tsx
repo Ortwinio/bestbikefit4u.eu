@@ -14,6 +14,7 @@ const buttonVariants = cva(
     "focus-visible:focus-ring",
     "[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
     "shrink-0 group/button select-none no-highlight",
+    "hover-only:hover:-translate-y-px hover-only:hover:shadow-[0_14px_30px_-18px_rgba(15,23,42,0.42)]",
   ],
   {
     variants: {
@@ -33,7 +34,7 @@ const buttonVariants = cva(
           "after:bg-gradient-to-br after:from-primary after:to-primary-dark",
           "after:z-[-1] after:transition-opacity after:duration-200 after:opacity-40 after:motion-reduce:transition-none",
           // Hover state
-          "hover-only:after:opacity-100 hover-only:transition-opacity hover-only:duration-200",
+          "hover-only:before:brightness-[1.04] hover-only:after:opacity-100 hover-only:transition-opacity hover-only:duration-200",
         ].join(" "),
         destructive:
           "bg-destructive text-destructive-foreground hover-only:hover:bg-destructive-hover",
@@ -53,19 +54,19 @@ const buttonVariants = cva(
           "after:z-[-1]",
           "after:transition-colors after:duration-200 after:ease-out after:motion-reduce:transition-none",
           // Hover state
-          "hover-only:after:bg-muted",
+          "hover-only:after:bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--background)_88%)]",
         ].join(" "),
         secondary:
-          "bg-secondary text-secondary-foreground hover-only:hover:bg-accent",
+          "bg-secondary text-secondary-foreground hover-only:hover:bg-[color:color-mix(in_oklch,var(--secondary)_78%,var(--primary)_22%)]",
         ghost: "hover-only:bg-accent hover-only:text-accent-foreground motion-safe:active:scale-100",
         "primary-soft":
-          "bg-primary-soft text-primary hover-only:hover:bg-primary-soft-hover",
+          "bg-primary-soft text-primary hover-only:hover:bg-[color:color-mix(in_oklch,var(--primary)_18%,var(--background)_82%)] hover-only:hover:text-[color:color-mix(in_oklch,var(--primary)_94%,black_6%)]",
         "destructive-soft":
           "bg-destructive-soft text-destructive hover-only:hover:bg-destructive-soft-hover",
         success:
-          "bg-success text-success-foreground hover-only:hover:bg-success-hover",
+          "bg-success text-success-foreground hover-only:hover:bg-[color:color-mix(in_oklch,var(--success)_84%,black_16%)]",
         warning:
-          "bg-warning text-warning-foreground hover-only:hover:bg-warning-hover",
+          "bg-warning text-warning-foreground hover-only:hover:bg-[color:color-mix(in_oklch,var(--warning)_84%,black_16%)]",
         link: "dark:text-primary-light text-primary-dark underline-offset-4 hover-only:underline motion-safe:active:scale-100",
       },
       size: {
