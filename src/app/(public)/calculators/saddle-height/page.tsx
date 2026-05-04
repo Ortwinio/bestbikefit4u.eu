@@ -9,11 +9,13 @@ import {
   isConsumerCampaignActive,
 } from "@/config/commercial";
 import {
+  FeatureIconCard,
+  type FeatureIconCardColor,
   PublicCtaBand,
-  PublicFeatureCard,
   PublicHero,
   PublicPageShell,
   PublicSection,
+  RatingBadge,
 } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -51,6 +53,8 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates,
   };
 }
+
+const TRUST_POINT_COLORS: FeatureIconCardColor[] = ["teal", "primary", "green"];
 
 export default async function SaddleHeightCalculatorPage() {
   const locale = await getRequestLocale();
@@ -151,20 +155,25 @@ export default async function SaddleHeightCalculatorPage() {
         ]}
       />
 
-      <PublicHero
-        eyebrow="BestBikeFit4U calculator"
-        title={isNl ? "Zadelhoogte calculator" : "Saddle Height Calculator"}
-        description={
-          isNl
-            ? "Bereken een rustige, conservatieve zadelhoogte als startpunt voordat je grotere aanpassingen doet."
-            : "Calculate a clean, conservative saddle-height starting point before making larger fit changes."
-        }
-        chips={
-          isNl
-            ? ["NL en EN beschikbaar", "Conservatief startpunt", "Meetbaar thuis"]
-            : ["Available in Dutch and English", "Conservative baseline", "Measurable at home"]
-        }
-      />
+      <div>
+        <PublicHero
+          eyebrow="BestBikeFit4U calculator"
+          title={isNl ? "Zadelhoogte calculator" : "Saddle Height Calculator"}
+          description={
+            isNl
+              ? "Bereken een rustige, conservatieve zadelhoogte als startpunt voordat je grotere aanpassingen doet."
+              : "Calculate a clean, conservative saddle-height starting point before making larger fit changes."
+          }
+          chips={
+            isNl
+              ? ["NL en EN beschikbaar", "Conservatief startpunt", "Meetbaar thuis"]
+              : ["Available in Dutch and English", "Conservative baseline", "Measurable at home"]
+          }
+        />
+        <div className="mt-4">
+          <RatingBadge rating="4.8" count={isNl ? "380+ rijders" : "380+ riders"} />
+        </div>
+      </div>
 
       <PublicSection
         className="mt-10"
@@ -179,12 +188,13 @@ export default async function SaddleHeightCalculatorPage() {
         }}
       >
         <div className="grid gap-4 md:grid-cols-3">
-          {trustPoints.map((point) => (
-            <PublicFeatureCard
+          {trustPoints.map((point, index) => (
+            <FeatureIconCard
               key={point.title}
               icon={point.icon}
               title={point.title}
               description={point.description}
+              color={TRUST_POINT_COLORS[index] ?? "primary"}
             />
           ))}
         </div>

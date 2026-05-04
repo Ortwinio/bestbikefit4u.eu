@@ -5,7 +5,8 @@ import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEvent
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
   PublicCtaBand,
-  PublicFeatureCard,
+  FeatureIconCard,
+  type FeatureIconCardColor,
   PublicHero,
   PublicPageShell,
   PublicSection,
@@ -25,6 +26,7 @@ import {
 } from "@/lib/seo/jsonLd";
 
 const stepIcons = [ClipboardList, Bike, Target] as const;
+const STEP_COLORS: FeatureIconCardColor[] = ["teal", "primary", "green"];
 
 const copy: Record<
   Locale,
@@ -224,12 +226,17 @@ export default async function HowItWorksPage() {
             {page.steps.map((step, index) => {
               const Icon = stepIcons[index] ?? Target;
               return (
-                <PublicFeatureCard
-                  key={step.title}
-                  icon={<Icon className="h-5 w-5" />}
-                  title={step.title}
-                  description={step.body}
-                />
+                <div key={step.title}>
+                  <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <FeatureIconCard
+                    icon={<Icon className="h-8 w-8" />}
+                    title={step.title}
+                    description={step.body}
+                    color={STEP_COLORS[index] ?? "primary"}
+                  />
+                </div>
               );
             })}
           </div>

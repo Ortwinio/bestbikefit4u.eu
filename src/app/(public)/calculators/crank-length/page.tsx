@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Gauge, Ruler, ShieldCheck } from "lucide-react";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import {
@@ -8,11 +9,14 @@ import {
 } from "@/config/commercial";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import {
+  FeatureIconCard,
+  type FeatureIconCardColor,
   PublicCtaBand,
   PublicHero,
   PublicPageShell,
   PublicSection,
   PublicSurfaceCard,
+  RatingBadge,
 } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -59,6 +63,8 @@ interface CrankLengthCalculatorPageProps {
   searchParams: Promise<SearchParamRecord>;
 }
 
+const TRUST_POINT_COLORS: FeatureIconCardColor[] = ["teal", "primary", "green"];
+
 export default async function CrankLengthCalculatorPage({
   searchParams,
 }: CrankLengthCalculatorPageProps) {
@@ -71,6 +77,47 @@ export default async function CrankLengthCalculatorPage({
   const campaignActive = isConsumerCampaignActive();
   const campaign = getConsumerCampaignCopy(locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
+  const trustPoints = isNl
+    ? [
+        {
+          title: "Conservatief component-startpunt",
+          description:
+            "De calculator geeft een praktische eerste richting zonder te doen alsof cranklengte los staat van je totale positie.",
+          icon: <ShieldCheck className="h-5 w-5" />,
+        },
+        {
+          title: "Gebaseerd op binnenbeenlengte",
+          description:
+            "Binnenbeenlengte blijft de bruikbaarste publieke invoer om onlogische crankkeuzes sneller uit te filteren.",
+          icon: <Ruler className="h-5 w-5" />,
+        },
+        {
+          title: "Helpt keuzes vernauwen",
+          description:
+            "Gebruik de uitkomst om realistischer te vergelijken tussen 165, 170, 172.5 of 175 mm voordat je onderdelen vervangt.",
+          icon: <Gauge className="h-5 w-5" />,
+        },
+      ]
+    : [
+        {
+          title: "Conservative component starting point",
+          description:
+            "The calculator gives you a practical first direction without pretending crank length exists independently from your wider position.",
+          icon: <ShieldCheck className="h-5 w-5" />,
+        },
+        {
+          title: "Built on inseam first",
+          description:
+            "Inseam remains the most useful public input for ruling out implausible crank choices more quickly.",
+          icon: <Ruler className="h-5 w-5" />,
+        },
+        {
+          title: "Helps narrow the choice",
+          description:
+            "Use the result to compare 165, 170, 172.5, or 175 mm more realistically before you replace parts.",
+          icon: <Gauge className="h-5 w-5" />,
+        },
+      ];
   const faqs = isNl
     ? [
         {
@@ -107,20 +154,50 @@ export default async function CrankLengthCalculatorPage({
         ]}
       />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <PublicHero
-          eyebrow="BestBikeFit4U calculator"
-          title={isNl ? "Cranklengte calculator" : "Crank Length Calculator"}
-          description={
-            isNl
-              ? "Krijg een praktisch startpunt voor cranklengte voordat je componenten verandert."
-              : "Get a practical starting point for crank length before you change components."
-          }
-          chips={
-            isNl
-              ? ["Snelle eerste check", "Praktisch componentadvies", "Gratis startpunt"]
-              : ["Fast first check", "Practical component guidance", "Free starting point"]
-          }
-        />
+        <div>
+          <PublicHero
+            eyebrow="BestBikeFit4U calculator"
+            title={isNl ? "Cranklengte calculator" : "Crank Length Calculator"}
+            description={
+              isNl
+                ? "Krijg een praktisch startpunt voor cranklengte voordat je componenten verandert."
+                : "Get a practical starting point for crank length before you change components."
+            }
+            chips={
+              isNl
+                ? ["Snelle eerste check", "Praktisch componentadvies", "Gratis startpunt"]
+                : ["Fast first check", "Practical component guidance", "Free starting point"]
+            }
+          />
+          <div className="mt-4">
+            <RatingBadge rating="4.8" count={isNl ? "380+ rijders" : "380+ riders"} />
+          </div>
+        </div>
+
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: isNl ? "Waarom dit vertrouwen wekt" : "Why this builds trust",
+            title: isNl
+              ? "Praktische componentkeuze zonder schijnzekerheid"
+              : "Practical component choice without fake certainty",
+            description: isNl
+              ? "Deze publieke calculator helpt je de keuze versmallen voordat je grotere veranderingen aan je fiets doet."
+              : "This public calculator helps you narrow the choice before you make larger changes to your bike.",
+          }}
+        >
+          <div className="grid gap-4 md:grid-cols-3">
+            {trustPoints.map((point, index) => (
+              <FeatureIconCard
+                key={point.title}
+                icon={point.icon}
+                title={point.title}
+                description={point.description}
+                color={TRUST_POINT_COLORS[index] ?? "primary"}
+              />
+            ))}
+          </div>
+        </PublicSection>
 
         <CrankLengthCalculatorForm
           isNl={isNl}

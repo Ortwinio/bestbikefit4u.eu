@@ -9,11 +9,13 @@ import {
   isConsumerCampaignActive,
 } from "@/config/commercial";
 import {
+  FeatureIconCard,
+  type FeatureIconCardColor,
   PublicCtaBand,
-  PublicFeatureCard,
   PublicHero,
   PublicPageShell,
   PublicSection,
+  RatingBadge,
 } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -49,6 +51,8 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates,
   };
 }
+
+const TRUST_POINT_COLORS: FeatureIconCardColor[] = ["teal", "primary", "green"];
 
 export default async function FrameSizeCalculatorPage() {
   const locale = await getRequestLocale();
@@ -134,20 +138,25 @@ export default async function FrameSizeCalculatorPage() {
         ]}
       />
 
-      <PublicHero
-        eyebrow="BestBikeFit4U calculator"
-        title={isNl ? "Framemaat calculator" : "Frame Size Calculator"}
-        description={
-          isNl
-            ? "Maak eerst een realistische shortlist van framematen voordat je fietsen, onderdelen of afstellingen vergelijkt."
-            : "Shortlist realistic frame sizes before you compare bikes, parts, and setup changes."
-        }
-        chips={
-          isNl
-            ? ["NL en EN beschikbaar", "Snelle shortlist", "Bruikbaar thuis"]
-            : ["Available in Dutch and English", "Fast shortlist", "Useful from home"]
-        }
-      />
+      <div>
+        <PublicHero
+          eyebrow="BestBikeFit4U calculator"
+          title={isNl ? "Framemaat calculator" : "Frame Size Calculator"}
+          description={
+            isNl
+              ? "Maak eerst een realistische shortlist van framematen voordat je fietsen, onderdelen of afstellingen vergelijkt."
+              : "Shortlist realistic frame sizes before you compare bikes, parts, and setup changes."
+          }
+          chips={
+            isNl
+              ? ["NL en EN beschikbaar", "Snelle shortlist", "Bruikbaar thuis"]
+              : ["Available in Dutch and English", "Fast shortlist", "Useful from home"]
+          }
+        />
+        <div className="mt-4">
+          <RatingBadge rating="4.8" count={isNl ? "380+ rijders" : "380+ riders"} />
+        </div>
+      </div>
 
       <PublicSection
         className="mt-10"
@@ -162,12 +171,13 @@ export default async function FrameSizeCalculatorPage() {
         }}
       >
         <div className="grid gap-4 md:grid-cols-3">
-          {trustPoints.map((point) => (
-            <PublicFeatureCard
+          {trustPoints.map((point, index) => (
+            <FeatureIconCard
               key={point.title}
               icon={point.icon}
               title={point.title}
               description={point.description}
+              color={TRUST_POINT_COLORS[index] ?? "primary"}
             />
           ))}
         </div>

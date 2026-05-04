@@ -6,8 +6,14 @@ import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { Card, CardContent } from "@/components/prototyper-ui/ui/card";
-import { PublicSection } from "@/components/public/PublicSection";
-import { PublicSurfaceCard } from "@/components/public/PublicSurfaceCard";
+import {
+  PublicCtaBand,
+  PublicHero,
+  PublicPageShell,
+  PublicSection,
+  PublicSurfaceCard,
+  RatingBadge,
+} from "@/components/public";
 import {
   COMMERCIAL_FEATURE_COPY,
   CONSUMER_CAMPAIGN_CONFIG,
@@ -183,7 +189,7 @@ export default async function PricingPage() {
   ];
 
   return (
-    <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_42%,var(--background)_58%)_100%)] py-16">
+    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_42%,var(--background)_58%)_100%)]">
       <JsonLd schema={buildFaqPageSchema(pricingFaqs)} />
       <TrackMarketingEventOnView
         eventType="pricing_view"
@@ -191,114 +197,106 @@ export default async function PricingPage() {
         pagePath={pagePath}
         section="pricing"
       />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Card className="gap-0 rounded-[2.25rem] border border-border/70 bg-card/95 px-6 py-10 text-center shadow-sm sm:px-10 sm:py-12">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
-            {page.eyebrow}
-          </p>
-          <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">{page.title}</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">{page.subtitle}</p>
+      <PublicHero eyebrow={page.eyebrow} title={page.title} description={page.subtitle} />
+      <div className="mt-4">
+        <RatingBadge rating="4.8" count={locale === "nl" ? "380+ rijders" : "380+ riders"} />
+      </div>
+
+      {campaignActive ? (
+        <Card className="public-card-surface mt-14 gap-0 rounded-[2rem] border px-6 py-8 shadow-sm sm:px-8">
+          <CardContent className="px-0 py-0">
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
+              {campaign.pricingTitle}
+            </p>
+            <h2 className="mt-4 text-3xl font-semibold text-foreground sm:text-4xl">
+              {campaign.homepageTitle}
+            </h2>
+            <p className="mt-4 max-w-3xl text-base leading-7 text-muted-foreground">
+              {campaign.pricingDescription}
+            </p>
+            <div className="mt-6">
+              <CampaignCtaGroup
+                locale={locale}
+                pagePath={pagePath}
+                startHref={withLocalePrefix("/calculators/bike-fit", locale)}
+                startSection="pricing_campaign_start"
+                donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+                donateSection="pricing_campaign_donate"
+                startLabel={campaign.startFreeCta}
+                donateLabel={locale === "nl" ? "Doneer voor Alpe d'HuZes" : "Make a donation"}
+                buttonSize="lg"
+              />
+            </div>
+            <p className="mt-4 text-sm text-muted-foreground">{campaign.optionalNote}</p>
+          </CardContent>
         </Card>
-
-        {campaignActive ? (
-          <Card className="public-card-surface mt-14 gap-0 rounded-[2rem] border px-6 py-8 shadow-sm sm:px-8">
-            <CardContent className="px-0 py-0">
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
-                {campaign.pricingTitle}
-              </p>
-              <h2 className="mt-4 text-3xl font-semibold text-foreground sm:text-4xl">
-                {campaign.homepageTitle}
-              </h2>
-              <p className="mt-4 max-w-3xl text-base leading-7 text-muted-foreground">
-                {campaign.pricingDescription}
-              </p>
-              <div className="mt-6">
-                <CampaignCtaGroup
-                  locale={locale}
-                  pagePath={pagePath}
-                  startHref={withLocalePrefix("/calculators/bike-fit", locale)}
-                  startSection="pricing_campaign_start"
-                  donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-                  donateSection="pricing_campaign_donate"
-                  startLabel={campaign.startFreeCta}
-                  donateLabel={locale === "nl" ? "Doneer voor Alpe d'HuZes" : "Make a donation"}
-                  buttonSize="lg"
-                />
-              </div>
-              <p className="mt-4 text-sm text-muted-foreground">
-                {campaign.optionalNote}
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className={`mt-14 grid gap-8 ${plans.length > 1 ? "md:grid-cols-2" : "md:grid-cols-1 md:max-w-xl"} mx-auto`}>
-            {plans.map((plan) => {
-              const localized = plan.copy[locale];
-              return (
-                <Card
-                  key={plan.id}
-                  className={`gap-0 rounded-[2rem] border p-8 shadow-sm transition ${plan.highlighted ? "border-primary bg-primary text-primary-foreground shadow-lg" : "border-border/70 bg-card/95"}`}
-                >
-                  {localized.badge ? (
-                    <p className="mb-4 text-sm font-semibold uppercase tracking-[0.22em] text-current/80">
-                      {localized.badge}
-                    </p>
-                  ) : null}
-                  <h2 className="text-2xl font-semibold">{localized.name}</h2>
-                  <p className={`mt-2 text-sm ${plan.highlighted ? "text-primary-foreground/85" : "text-muted-foreground"}`}>
-                    {localized.description}
-                  </p>
-                  <div className="mt-6 flex items-end gap-2">
-                    <span className="text-4xl font-bold">
-                      {formatEuroPriceFromCents(plan.priceCentsMonthly, locale)}
-                    </span>
-                    <span className={`pb-1 text-sm ${plan.highlighted ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
-                      {page.monthlySuffix}
-                    </span>
-                  </div>
-
-                  <ul className="mt-8 space-y-3">
-                    {localized.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-3">
-                        <Check className={`mt-0.5 h-5 w-5 shrink-0 ${plan.highlighted ? "text-primary-foreground/90" : "text-primary"}`} />
-                        <span className={`text-sm ${plan.highlighted ? "text-primary-foreground" : "text-muted-foreground"}`}>
-                          {feature}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button
-                    render={
-                      <TrackedCtaLink
-                        href={withLocalePrefix("/login", locale)}
-                        locale={locale}
-                        pagePath={pagePath}
-                        section={`pricing_${plan.id}_cta`}
-                        ctaLabel={localized.cta}
-                        conversionKey="pricing_signup"
-                      />
-                    }
-                    className={`mt-8 w-full ${plan.highlighted ? "border-background/50 bg-background text-primary after:bg-background hover-only:after:bg-muted" : ""}`}
-                    variant={plan.highlighted ? "outline" : "outline"}
+      ) : (
+        <div
+          className={`mx-auto mt-14 grid gap-8 ${plans.length > 1 ? "md:grid-cols-2" : "md:max-w-xl md:grid-cols-1"}`}
+        >
+          {plans.map((plan) => {
+            const localized = plan.copy[locale];
+            return (
+              <Card
+                key={plan.id}
+                className={`gap-0 rounded-[2rem] border p-8 shadow-sm ${plan.highlighted ? "public-card-surface border-[color:var(--primary)] ring-1 ring-[color:color-mix(in_oklch,var(--primary)_22%,transparent)] shadow-lg" : "public-card-surface-subtle border-[color:var(--border)]"}`}
+              >
+                {localized.badge ? (
+                  <p
+                    className={`mb-4 text-sm font-semibold uppercase tracking-[0.22em] ${plan.highlighted ? "text-[color:var(--primary)]" : "text-[color:var(--muted-foreground)]"}`}
                   >
-                    {localized.cta}
-                  </Button>
-                </Card>
-              );
-            })}
-          </div>
-        )}
+                    {localized.badge}
+                  </p>
+                ) : null}
+                <h2 className="text-2xl font-semibold text-foreground">{localized.name}</h2>
+                <p className="mt-2 text-sm text-muted-foreground">{localized.description}</p>
+                <div className="mt-6 flex items-end gap-2">
+                  <span className="text-4xl font-bold text-foreground">
+                    {formatEuroPriceFromCents(plan.priceCentsMonthly, locale)}
+                  </span>
+                  <span className="pb-1 text-sm text-muted-foreground">{page.monthlySuffix}</span>
+                </div>
 
-        <div className="mt-14">
-          <PublicSection
-            header={{
-              title: page.proofTitle,
-              align: "start",
-            }}
-            contentClassName="pt-6"
-          >
-            <div className="grid gap-6 md:grid-cols-3">
+                <ul className="mt-8 space-y-3">
+                  {localized.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3">
+                      <Check className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                      <span className="text-sm text-muted-foreground">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Button
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/login", locale)}
+                      locale={locale}
+                      pagePath={pagePath}
+                      section={`pricing_${plan.id}_cta`}
+                      ctaLabel={localized.cta}
+                      conversionKey="pricing_signup"
+                    />
+                  }
+                  className="mt-8 w-full"
+                  variant="outline"
+                >
+                  {localized.cta}
+                </Button>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="mt-14">
+        <PublicSection
+          header={{
+            title: page.proofTitle,
+            align: "start",
+          }}
+          contentClassName="pt-6"
+        >
+          <div className="grid gap-6 md:grid-cols-3">
             {page.proofItems.map((item) => (
               <PublicSurfaceCard
                 key={item.title}
@@ -308,97 +306,97 @@ export default async function PricingPage() {
                 <div />
               </PublicSurfaceCard>
             ))}
-            </div>
-          </PublicSection>
-        </div>
-
-        <p className="mt-6 text-center text-sm text-muted-foreground">{page.confidenceLine}</p>
-
-        <div className="mt-16">
-          <PublicSection
-            header={{
-              title: page.featureCompareTitle,
-            }}
-            contentClassName="pt-6"
-          >
-            <Card className="gap-0 overflow-hidden rounded-[1.5rem] border border-border/70 bg-background/90 shadow-none">
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-muted/40">
-                      <tr className="border-b border-border">
-                        <th className="px-4 py-4 text-left font-semibold text-foreground">{page.featureLabel}</th>
-                        {plans.map((plan) => (
-                          <th key={plan.id} className="px-4 py-4 text-center font-semibold text-foreground">
-                            {plan.copy[locale].name}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border">
-                      {comparisonKeys.map((key) => (
-                        <tr key={key}>
-                          <td className="px-4 py-4 text-sm text-foreground">
-                            {COMMERCIAL_FEATURE_COPY[key][locale].title}
-                          </td>
-                          <td className="px-4 py-4 text-center text-sm text-muted-foreground">
-                            {COMMERCIAL_FEATURE_COPY[key][locale].valueFree}
-                          </td>
-                          <td className="px-4 py-4 text-center text-sm font-medium text-primary">
-                            {COMMERCIAL_FEATURE_COPY[key][locale].valuePro}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-            {!PRODUCT_LIVE_FLAGS.moneyBackGuarantee ? (
-              <p className="mt-4 text-sm text-muted-foreground">
-                {locale === "nl"
-                  ? "Er wordt op dit moment geen publieke geld-terug-garantie geclaimd."
-                  : "No public money-back guarantee is claimed at this time."}
-              </p>
-            ) : null}
-          </PublicSection>
-        </div>
-
-        <section className="mt-16 grid gap-6 md:grid-cols-3">
-          <PublicSurfaceCard title={pricingFaqs[0].q} description={commercialFaq.multipleBikeProfiles}>
-            <div />
-          </PublicSurfaceCard>
-          <PublicSurfaceCard title={pricingFaqs[1].q} description={commercialFaq.pdfReport}>
-            <div />
-          </PublicSurfaceCard>
-          <PublicSurfaceCard title={pricingFaqs[2].q} description={commercialFaq.pricing}>
-            <div />
-          </PublicSurfaceCard>
-        </section>
-
-        <div className="public-cta-surface mt-16 rounded-[2rem] px-6 py-12 text-center shadow-lg sm:px-10">
-          <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">{page.ctaTitle}</h2>
-          <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-[color:var(--muted-foreground)]">
-            {page.ctaBody}
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/calculators/bike-fit", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="pricing_footer_cta_primary"
-                  ctaLabel={locale === "nl" ? "Start gratis bike fit" : "Start free bike fit"}
-                />
-              }
-              size="lg"
-            >
-              {locale === "nl" ? "Start gratis bike fit" : "Start free bike fit"}
-            </Button>
           </div>
-        </div>
+        </PublicSection>
       </div>
-    </div>
+
+      <p className="mt-6 text-center text-sm text-muted-foreground">{page.confidenceLine}</p>
+
+      <div className="mt-16">
+        <PublicSection
+          header={{
+            title: page.featureCompareTitle,
+          }}
+          contentClassName="pt-6"
+        >
+          <Card className="gap-0 overflow-hidden rounded-[1.5rem] border border-border/70 bg-background/90 shadow-none">
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-muted/40">
+                    <tr className="border-b border-border">
+                      <th className="px-4 py-4 text-left font-semibold text-foreground">
+                        {page.featureLabel}
+                      </th>
+                      {plans.map((plan) => (
+                        <th key={plan.id} className="px-4 py-4 text-center font-semibold text-foreground">
+                          {plan.copy[locale].name}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {comparisonKeys.map((key) => (
+                      <tr key={key}>
+                        <td className="px-4 py-4 text-sm text-foreground">
+                          {COMMERCIAL_FEATURE_COPY[key][locale].title}
+                        </td>
+                        <td className="px-4 py-4 text-center text-sm text-muted-foreground">
+                          {COMMERCIAL_FEATURE_COPY[key][locale].valueFree}
+                        </td>
+                        <td className="px-4 py-4 text-center text-sm font-medium text-primary">
+                          {COMMERCIAL_FEATURE_COPY[key][locale].valuePro}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+          {!PRODUCT_LIVE_FLAGS.moneyBackGuarantee ? (
+            <p className="mt-4 text-sm text-muted-foreground">
+              {locale === "nl"
+                ? "Er wordt op dit moment geen publieke geld-terug-garantie geclaimd."
+                : "No public money-back guarantee is claimed at this time."}
+            </p>
+          ) : null}
+        </PublicSection>
+      </div>
+
+      <section className="mt-16 grid gap-6 md:grid-cols-3">
+        <PublicSurfaceCard title={pricingFaqs[0].q} description={commercialFaq.multipleBikeProfiles}>
+          <div />
+        </PublicSurfaceCard>
+        <PublicSurfaceCard title={pricingFaqs[1].q} description={commercialFaq.pdfReport}>
+          <div />
+        </PublicSurfaceCard>
+        <PublicSurfaceCard title={pricingFaqs[2].q} description={commercialFaq.pricing}>
+          <div />
+        </PublicSurfaceCard>
+      </section>
+
+      <PublicCtaBand
+        className="mt-16"
+        title={page.ctaTitle}
+        description={page.ctaBody}
+        actions={
+          <Button
+            render={
+              <TrackedCtaLink
+                href={withLocalePrefix("/calculators/bike-fit", locale)}
+                locale={locale}
+                pagePath={pagePath}
+                section="pricing_footer_cta_primary"
+                ctaLabel={locale === "nl" ? "Start gratis bike fit" : "Start free bike fit"}
+              />
+            }
+            size="lg"
+          >
+            {locale === "nl" ? "Start gratis bike fit" : "Start free bike fit"}
+          </Button>
+        }
+      />
+    </PublicPageShell>
   );
 }

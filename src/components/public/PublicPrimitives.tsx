@@ -19,7 +19,7 @@ type PublicHeroProps = {
   eyebrow?: string;
   title: string;
   description: string;
-  chips?: string[];
+  chips?: readonly string[];
   actions?: ReactNode;
   illustration?: ReactNode;
   className?: string;

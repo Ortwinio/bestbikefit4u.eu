@@ -12,6 +12,9 @@ type RatingBadgeProps = {
 
 export function RatingBadge({ rating, count, variant = "default", className }: RatingBadgeProps) {
   const isLight = variant === "light";
+  const goldTextClass = isLight
+    ? "text-[color:oklch(0.88_0.12_92)]"
+    : "text-[color:oklch(0.72_0.15_85)]";
 
   return (
     <div className={cn("inline-flex items-center gap-2", className)}>
@@ -19,14 +22,14 @@ export function RatingBadge({ rating, count, variant = "default", className }: R
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
             key={i}
-            className="h-3.5 w-3.5 fill-current text-[color:var(--warning)]"
+            className="h-3.5 w-3.5 fill-current text-[color:oklch(0.72_0.15_85)]"
           />
         ))}
       </div>
       <span
         className={cn(
           "text-sm font-semibold",
-          isLight ? "text-[color:var(--primary-foreground)]" : "text-[color:var(--foreground)]"
+          goldTextClass
         )}
       >
         {rating}
@@ -34,9 +37,7 @@ export function RatingBadge({ rating, count, variant = "default", className }: R
       <span
         className={cn(
           "text-sm",
-          isLight
-            ? "text-[color:color-mix(in_oklch,var(--primary-foreground)_70%,transparent)]"
-            : "text-[color:var(--muted-foreground)]"
+          goldTextClass
         )}
       >
         · {count}

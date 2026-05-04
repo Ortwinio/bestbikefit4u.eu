@@ -1,28 +1,20 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ArrowRight, BookOpen, Compass, FlaskConical, HeartPulse, Ruler } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
+  FeatureIconCard,
+  GuideLinkButton,
   PublicCtaBand,
-  PublicFeatureCard,
   PublicHero,
   PublicPageShell,
   PublicSection,
-  PublicSurfaceCard,
 } from "@/components/public";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { getGuideBacklog, getGuideChildren } from "@/lib/guides/backlog";
 import { buildHubIntro, resolveGuidePrimaryCta } from "@/lib/guides/content";
-
-const CLUSTER_ICONS = [
-  HeartPulse,
-  Compass,
-  Ruler,
-  FlaskConical,
-] as const;
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -86,7 +78,7 @@ export default async function GuidesHubPage() {
           }}
         >
           <div className="grid gap-4 md:grid-cols-3">
-            <PublicFeatureCard
+            <FeatureIconCard
               icon={<BookOpen className="h-5 w-5" />}
               title={isNl ? "Praktische context" : "Practical context"}
               description={
@@ -94,8 +86,9 @@ export default async function GuidesHubPage() {
                   ? "Elke hub helpt je sneller bepalen welke fitvraag eerst aandacht verdient."
                   : "Each hub helps you decide faster which fit question deserves attention first."
               }
+              color="teal"
             />
-            <PublicFeatureCard
+            <FeatureIconCard
               icon={<Compass className="h-5 w-5" />}
               title={isNl ? "Van probleem naar route" : "From problem to route"}
               description={
@@ -103,8 +96,9 @@ export default async function GuidesHubPage() {
                   ? "Gebruik discomfort, rijtype, geometrie of performance als ingang."
                   : "Start from discomfort, ride type, geometry, or performance."
               }
+              color="primary"
             />
-            <PublicFeatureCard
+            <FeatureIconCard
               icon={<ArrowRight className="h-5 w-5" />}
               title={isNl ? "Eén duidelijke CTA" : "One clear CTA"}
               description={
@@ -112,6 +106,7 @@ export default async function GuidesHubPage() {
                   ? "Lees eerst, open daarna de best passende tool of flow."
                   : "Read first, then open the best matching tool or flow."
               }
+              color="amber"
             />
           </div>
         </PublicSection>
@@ -127,40 +122,15 @@ export default async function GuidesHubPage() {
           }}
         >
           <div className="grid gap-6 md:grid-cols-2">
-            {clusterHubs.map((hub, index) => {
-              const Icon = CLUSTER_ICONS[index % CLUSTER_ICONS.length];
-              const children = getGuideChildren(hub.slug, locale);
-
-              return (
-                <PublicSurfaceCard
-                  key={hub.slug}
-                  title={hub.pageTitle}
-                  description={hub.pageBrief}
-                  leading={<Icon aria-hidden="true" className="h-5 w-5" />}
-                  footer={
-                    <Link
-                      href={withLocalePrefix(hub.path, locale)}
-                      className="inline-flex items-center gap-2 text-sm font-semibold text-primary"
-                    >
-                      {isNl ? "Open hub" : "Open hub"}
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  }
-                >
-                  <div className="space-y-2 text-sm text-muted-foreground">
-                    {children.slice(0, 3).map((child) => (
-                      <Link
-                        key={child.slug}
-                        href={withLocalePrefix(child.path, locale)}
-                        className="block outline-none hover:text-foreground focus-visible:text-foreground"
-                      >
-                        {child.pageTitle}
-                      </Link>
-                    ))}
-                  </div>
-                </PublicSurfaceCard>
-              );
-            })}
+            {clusterHubs.map((hub) => (
+              <GuideLinkButton
+                key={hub.slug}
+                href={withLocalePrefix(hub.path, locale)}
+                title={hub.pageTitle}
+                subtitle={hub.pageBrief}
+                icon={<BookOpen className="h-5 w-5" />}
+              />
+            ))}
           </div>
         </PublicSection>
 

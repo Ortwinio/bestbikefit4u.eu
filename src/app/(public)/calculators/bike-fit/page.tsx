@@ -9,11 +9,13 @@ import {
   isConsumerCampaignActive,
 } from "@/config/commercial";
 import {
+  FeatureIconCard,
+  type FeatureIconCardColor,
   PublicCtaBand,
-  PublicFeatureCard,
   PublicHero,
   PublicPageShell,
   PublicSection,
+  RatingBadge,
 } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -76,6 +78,8 @@ function buildFaqs(isNl: boolean) {
         },
       ];
 }
+
+const TRUST_POINT_COLORS: FeatureIconCardColor[] = ["teal", "primary", "green"];
 
 export default async function BikeFitCalculatorPage() {
   const locale = await getRequestLocale();
@@ -160,20 +164,25 @@ export default async function BikeFitCalculatorPage() {
         ]}
       />
 
-      <PublicHero
-        eyebrow="BestBikeFit4U calculator"
-        title={isNl ? "Gratis bike fit calculator" : "Free Bike Fit Calculator"}
-        description={
-          isNl
-            ? "Bereken een eerste inschatting voor zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel. Het is een snelle publieke intake die je helpt met je volgende stap."
-            : "Calculate a first-pass estimate for saddle height, reach, drop, and frame targets from your body measurements and riding goal. It is a fast public intake that helps you decide the next step."
-        }
-        chips={
-          isNl
-            ? ["NL en EN beschikbaar", "Gratis publieke intake", "Veilig startpunt"]
-            : ["Available in Dutch and English", "Free public intake", "Safe starting point"]
-        }
-      />
+      <div>
+        <PublicHero
+          eyebrow="BestBikeFit4U calculator"
+          title={isNl ? "Gratis bike fit calculator" : "Free Bike Fit Calculator"}
+          description={
+            isNl
+              ? "Bereken een eerste inschatting voor zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel. Het is een snelle publieke intake die je helpt met je volgende stap."
+              : "Calculate a first-pass estimate for saddle height, reach, drop, and frame targets from your body measurements and riding goal. It is a fast public intake that helps you decide the next step."
+          }
+          chips={
+            isNl
+              ? ["NL en EN beschikbaar", "Gratis publieke intake", "Veilig startpunt"]
+              : ["Available in Dutch and English", "Free public intake", "Safe starting point"]
+          }
+        />
+        <div className="mt-4">
+          <RatingBadge rating="4.8" count={isNl ? "380+ rijders" : "380+ riders"} />
+        </div>
+      </div>
 
       <PublicSection
         className="mt-10"
@@ -188,12 +197,13 @@ export default async function BikeFitCalculatorPage() {
         }}
       >
         <div className="grid gap-4 md:grid-cols-3">
-          {trustPoints.map((point) => (
-            <PublicFeatureCard
+          {trustPoints.map((point, index) => (
+            <FeatureIconCard
               key={point.title}
               icon={point.icon}
               title={point.title}
               description={point.description}
+              color={TRUST_POINT_COLORS[index] ?? "primary"}
             />
           ))}
         </div>

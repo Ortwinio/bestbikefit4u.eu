@@ -9,11 +9,13 @@ import {
   isConsumerCampaignActive,
 } from "@/config/commercial";
 import {
+  FeatureIconCard,
+  type FeatureIconCardColor,
   PublicCtaBand,
-  PublicFeatureCard,
   PublicHero,
   PublicPageShell,
   PublicSection,
+  RatingBadge,
 } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -56,6 +58,8 @@ function buildFaqs(isNl: boolean) {
         },
       ];
 }
+
+const TRUST_POINT_COLORS: FeatureIconCardColor[] = ["teal", "primary", "green"];
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -168,20 +172,25 @@ export default async function GearingCalculatorPage() {
 
       <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_26%,var(--background)_74%)_100%)] text-foreground">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <PublicHero
-            eyebrow="BestBikeFit4U calculator"
-            title={isNl ? "Verzet calculator" : "Gearing Calculator"}
-            description={
-              isNl
-                ? "Begrijp snel je lichtste en zwaarste versnelling, de snelheid bij jouw cadans en of je setup een gekozen klim aankan."
-                : "Quickly understand your easiest and hardest gear, speed at your cadence, and whether your setup can handle the climb you have in mind."
-            }
-            chips={
-              isNl
-                ? ["1x en 2x", "Snel en exact", "Dashboard hand-off"]
-                : ["1x and 2x", "Fast and exact", "Dashboard hand-off"]
-            }
-          />
+          <div>
+            <PublicHero
+              eyebrow="BestBikeFit4U calculator"
+              title={isNl ? "Verzet calculator" : "Gearing Calculator"}
+              description={
+                isNl
+                  ? "Begrijp snel je lichtste en zwaarste versnelling, de snelheid bij jouw cadans en of je setup een gekozen klim aankan."
+                  : "Quickly understand your easiest and hardest gear, speed at your cadence, and whether your setup can handle the climb you have in mind."
+              }
+              chips={
+                isNl
+                  ? ["1x en 2x", "Snel en exact", "Dashboard hand-off"]
+                  : ["1x and 2x", "Fast and exact", "Dashboard hand-off"]
+              }
+            />
+            <div className="mt-4">
+              <RatingBadge rating="4.8" count={isNl ? "380+ rijders" : "380+ riders"} />
+            </div>
+          </div>
 
           <PublicSection
             className="mt-10"
@@ -196,12 +205,13 @@ export default async function GearingCalculatorPage() {
             }}
           >
             <div className="grid gap-4 md:grid-cols-3">
-              {trustPoints.map((point) => (
-                <PublicFeatureCard
+              {trustPoints.map((point, index) => (
+                <FeatureIconCard
                   key={point.title}
                   icon={point.icon}
                   title={point.title}
                   description={point.description}
+                  color={TRUST_POINT_COLORS[index] ?? "primary"}
                 />
               ))}
             </div>

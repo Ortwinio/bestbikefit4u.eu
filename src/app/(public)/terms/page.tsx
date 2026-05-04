@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import { Button } from "@/components/prototyper-ui/ui/button";
+import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { PublicCtaBand, PublicHero, PublicPageShell } from "@/components/public";
 import { getSubscriptionTermsCopy } from "@/config/commercial";
 import type { Locale } from "@/i18n/config";
-import { getRequestLocale } from "@/i18n/request";
 import { buildLocaleAlternates } from "@/i18n/metadata";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { getRequestLocale } from "@/i18n/request";
 
 type TermsSection = {
   title: string;
@@ -27,68 +31,68 @@ type TermsCopy = {
 function getContent(locale: Locale): TermsCopy {
   if (locale === "en") {
     return {
-    metadata: {
-      title: "Terms of Service - BestBikeFit4U",
-      description: "Read the terms and conditions for using BestBikeFit4U.",
-      keywords: ["terms of service", "terms and conditions", "BestBikeFit4U terms"],
-    },
-    title: "Terms of Service",
-    lastUpdatedLabel: "Last updated",
-    lastUpdatedDate: "February 15, 2026",
-    sections: [
-      {
-        title: "1. Acceptance of Terms",
-        body: "By accessing or using BestBikeFit4U, you agree to these Terms of Service.",
+      metadata: {
+        title: "Terms of Service - BestBikeFit4U",
+        description: "Read the terms and conditions for using BestBikeFit4U.",
+        keywords: ["terms of service", "terms and conditions", "BestBikeFit4U terms"],
       },
-      {
-        title: "2. Description of Service",
-        body: "BestBikeFit4U provides algorithm-based bike fitting recommendations based on user measurements and preferences.",
-      },
-      {
-        title: "3. Important Disclaimer",
-        warningTitle: "BestBikeFit4U is not a substitute for an in-person professional bike fit.",
-        warningBody:
-          "Recommendations depend on the quality of your measurements. Riders with injuries, chronic pain, or significant asymmetry should consult a qualified fitter or medical professional.",
-      },
-      {
-        title: "4. User Accounts",
-        bullets: [
-          "You must provide a valid email address.",
-          "You are responsible for your account security.",
-          "Do not share accounts.",
-          "We may suspend accounts that violate these terms.",
-        ],
-      },
-      {
-        title: "5. Acceptable Use",
-        bullets: [
-          "Do not use the service for unlawful purposes.",
-          "Do not attempt unauthorized access.",
-          "Do not scrape or automate without consent.",
-          "Do not disrupt service integrity or performance.",
-        ],
-      },
-      {
-        title: "6. Subscription Plans",
-        body: getSubscriptionTermsCopy(locale),
-      },
-      {
-        title: "7. Limitation of Liability",
-        body: "To the maximum extent permitted by law, BestBikeFit4U is not liable for indirect or consequential damages arising from use of the service. You are responsible for implementing fit changes gradually and safely.",
-      },
-      {
-        title: "8. Intellectual Property",
-        body: "Service content, design, and algorithms are protected intellectual property.",
-      },
-      {
-        title: "9. Changes to Terms",
-        body: "We may update these terms. Continued use after updates means you accept the revised terms.",
-      },
-      {
-        title: "10. Contact",
-        body: "For questions about these terms, contact support@bestbikefit4u.eu.",
-      },
-    ],
+      title: "Terms of Service",
+      lastUpdatedLabel: "Last updated",
+      lastUpdatedDate: "February 15, 2026",
+      sections: [
+        {
+          title: "1. Acceptance of Terms",
+          body: "By accessing or using BestBikeFit4U, you agree to these Terms of Service.",
+        },
+        {
+          title: "2. Description of Service",
+          body: "BestBikeFit4U provides algorithm-based bike fitting recommendations based on user measurements and preferences.",
+        },
+        {
+          title: "3. Important Disclaimer",
+          warningTitle: "BestBikeFit4U is not a substitute for an in-person professional bike fit.",
+          warningBody:
+            "Recommendations depend on the quality of your measurements. Riders with injuries, chronic pain, or significant asymmetry should consult a qualified fitter or medical professional.",
+        },
+        {
+          title: "4. User Accounts",
+          bullets: [
+            "You must provide a valid email address.",
+            "You are responsible for your account security.",
+            "Do not share accounts.",
+            "We may suspend accounts that violate these terms.",
+          ],
+        },
+        {
+          title: "5. Acceptable Use",
+          bullets: [
+            "Do not use the service for unlawful purposes.",
+            "Do not attempt unauthorized access.",
+            "Do not scrape or automate without consent.",
+            "Do not disrupt service integrity or performance.",
+          ],
+        },
+        {
+          title: "6. Subscription Plans",
+          body: getSubscriptionTermsCopy(locale),
+        },
+        {
+          title: "7. Limitation of Liability",
+          body: "To the maximum extent permitted by law, BestBikeFit4U is not liable for indirect or consequential damages arising from use of the service. You are responsible for implementing fit changes gradually and safely.",
+        },
+        {
+          title: "8. Intellectual Property",
+          body: "Service content, design, and algorithms are protected intellectual property.",
+        },
+        {
+          title: "9. Changes to Terms",
+          body: "We may update these terms. Continued use after updates means you accept the revised terms.",
+        },
+        {
+          title: "10. Contact",
+          body: "For questions about these terms, contact support@bestbikefit4u.eu.",
+        },
+      ],
     };
   }
 
@@ -178,18 +182,24 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function TermsPage() {
   const locale = await getRequestLocale();
   const page = getContent(locale);
+  const pagePath = withLocalePrefix("/terms", locale);
 
   return (
-    <div className="py-16 text-foreground">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
-        <p className="mt-4 text-sm text-muted-foreground">
+    <PublicPageShell>
+      <PublicHero
+        eyebrow="BestBikeFit4U"
+        title={page.title}
+        description={page.metadata.description}
+      />
+
+      <div className="mt-8 max-w-4xl">
+        <p className="text-sm text-muted-foreground">
           {page.lastUpdatedLabel}: {page.lastUpdatedDate}
         </p>
 
-        <div className="mt-12 space-y-8 text-muted-foreground">
+        <div className="prose prose-sm mt-8 max-w-none text-[color:var(--muted-foreground)] prose-headings:text-[color:var(--foreground)] prose-strong:text-[color:var(--foreground)]">
           {page.sections.map((section) => (
-            <section key={section.title}>
+            <section key={section.title} className="mt-8 first:mt-0">
               <h2 className="text-2xl font-semibold text-foreground">{section.title}</h2>
 
               {section.warningTitle ? (
@@ -212,6 +222,31 @@ export default async function TermsPage() {
           ))}
         </div>
       </div>
-    </div>
+
+      <PublicCtaBand
+        className="mt-12"
+        title={locale === "nl" ? "Terug naar de homepage" : "Back to the homepage"}
+        description={
+          locale === "nl"
+            ? "Ga terug naar de homepage zodra je klaar bent met de gebruiksvoorwaarden."
+            : "Return to the homepage when you are done reviewing the terms."
+        }
+        actions={
+          <Button
+            render={
+              <TrackedCtaLink
+                href={withLocalePrefix("/", locale)}
+                locale={locale}
+                pagePath={pagePath}
+                section="terms_footer_cta"
+                ctaLabel={locale === "nl" ? "Terug naar de homepage" : "Back to the homepage"}
+              />
+            }
+          >
+            {locale === "nl" ? "Terug naar de homepage" : "Back to the homepage"}
+          </Button>
+        }
+      />
+    </PublicPageShell>
   );
 }

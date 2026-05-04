@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import { Button } from "@/components/prototyper-ui/ui/button";
+import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { PublicCtaBand, PublicHero, PublicPageShell } from "@/components/public";
 import type { Locale } from "@/i18n/config";
-import { getRequestLocale } from "@/i18n/request";
 import { buildLocaleAlternates } from "@/i18n/metadata";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { getRequestLocale } from "@/i18n/request";
 
 type Section = { title: string; body?: string; bullets?: string[]; subsections?: { title: string; body: string }[] };
 
@@ -197,18 +201,24 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PrivacyPage() {
   const locale = await getRequestLocale();
   const page = content[locale];
+  const pagePath = withLocalePrefix("/privacy", locale);
 
   return (
-    <div className="py-16 text-foreground">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-foreground">{page.title}</h1>
-        <p className="mt-4 text-sm text-muted-foreground">
+    <PublicPageShell>
+      <PublicHero
+        eyebrow="BestBikeFit4U"
+        title={page.title}
+        description={page.metadata.description}
+      />
+
+      <div className="mt-8 max-w-4xl">
+        <p className="text-sm text-muted-foreground">
           {page.lastUpdatedLabel}: {page.lastUpdatedDate}
         </p>
 
-        <div className="mt-12 space-y-8 text-muted-foreground">
+        <div className="prose prose-sm mt-8 max-w-none text-[color:var(--muted-foreground)] prose-headings:text-[color:var(--foreground)] prose-strong:text-[color:var(--foreground)]">
           {page.sections.map((section) => (
-            <section key={section.title}>
+            <section key={section.title} className="mt-8 first:mt-0">
               <h2 className="text-2xl font-semibold text-foreground">{section.title}</h2>
 
               {section.body ? <p className="mt-4">{section.body}</p> : null}
@@ -235,6 +245,31 @@ export default async function PrivacyPage() {
           ))}
         </div>
       </div>
-    </div>
+
+      <PublicCtaBand
+        className="mt-12"
+        title={locale === "nl" ? "Terug naar de calculator" : "Back to the calculator"}
+        description={
+          locale === "nl"
+            ? "Ga terug naar de gratis bike fit calculator wanneer je klaar bent met de privacydetails."
+            : "Head back to the free bike fit calculator when you are done reviewing the privacy details."
+        }
+        actions={
+          <Button
+            render={
+              <TrackedCtaLink
+                href={withLocalePrefix("/calculators/bike-fit", locale)}
+                locale={locale}
+                pagePath={pagePath}
+                section="privacy_footer_cta"
+                ctaLabel={locale === "nl" ? "Terug naar de calculator" : "Back to the calculator"}
+              />
+            }
+          >
+            {locale === "nl" ? "Terug naar de calculator" : "Back to the calculator"}
+          </Button>
+        }
+      />
+    </PublicPageShell>
   );
 }

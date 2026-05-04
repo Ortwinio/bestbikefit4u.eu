@@ -9,11 +9,13 @@ import {
   isConsumerCampaignActive,
 } from "@/config/commercial";
 import {
+  FeatureIconCard,
+  type FeatureIconCardColor,
   PublicCtaBand,
-  PublicFeatureCard,
   PublicHero,
   PublicPageShell,
   PublicSection,
+  RatingBadge,
 } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -101,6 +103,8 @@ function buildTrustPoints(isNl: boolean) {
       ];
 }
 
+const TRUST_POINT_COLORS: FeatureIconCardColor[] = ["teal", "primary", "green"];
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const isNl = locale === "nl";
@@ -181,20 +185,25 @@ export default async function SaddleWidthCalculatorPage() {
         ]}
       />
 
-      <PublicHero
-        eyebrow="BestBikeFit4U calculator"
-        title={isNl ? "Zadelbreedtecalculator" : "Saddle Width Calculator"}
-        description={
-          isNl
-            ? "Bereken een eerste zadelbreedteaanbeveling op basis van je zitbeenmeting of lichaamsgegevens en rijprofiel."
-            : "Calculate a first-pass saddle width recommendation from your sit-bone measurement or body data and riding profile."
-        }
-        chips={
-          isNl
-            ? ["Gemeten of geschatte invoer", "Zadelcategorie inbegrepen", "Gratis startpunt"]
-            : ["Measured or estimated input", "Saddle family included", "Free starting point"]
-        }
-      />
+      <div>
+        <PublicHero
+          eyebrow="BestBikeFit4U calculator"
+          title={isNl ? "Zadelbreedtecalculator" : "Saddle Width Calculator"}
+          description={
+            isNl
+              ? "Bereken een eerste zadelbreedteaanbeveling op basis van je zitbeenmeting of lichaamsgegevens en rijprofiel."
+              : "Calculate a first-pass saddle width recommendation from your sit-bone measurement or body data and riding profile."
+          }
+          chips={
+            isNl
+              ? ["Gemeten of geschatte invoer", "Zadelcategorie inbegrepen", "Gratis startpunt"]
+              : ["Measured or estimated input", "Saddle family included", "Free starting point"]
+          }
+        />
+        <div className="mt-4">
+          <RatingBadge rating="4.8" count={isNl ? "380+ rijders" : "380+ riders"} />
+        </div>
+      </div>
 
       <PublicSection
         className="mt-10"
@@ -209,12 +218,13 @@ export default async function SaddleWidthCalculatorPage() {
         }}
       >
         <div className="grid gap-4 md:grid-cols-3">
-          {trustPoints.map((point) => (
-            <PublicFeatureCard
+          {trustPoints.map((point, index) => (
+            <FeatureIconCard
               key={point.title}
               icon={point.icon}
               title={point.title}
               description={point.description}
+              color={TRUST_POINT_COLORS[index] ?? "primary"}
             />
           ))}
         </div>
