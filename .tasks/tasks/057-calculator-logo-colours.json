@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "057",
+  "title": "Differentiate CalculatorLogo colour per calculator using oklch palette",
+  "description": "Replace the single blue tone in src/components/public/CalculatorLogo.tsx with per-calculator toneClassNames using distinct oklch-tinted backgrounds and icon colours, while keeping the existing structure and CalculatorGrid integration unchanged.",
+  "goal": "11",
+  "status": "todo",
+  "assignee": null,
+  "priority": 2,
+  "created": "2026-05-04T10:00:00.000Z",
+  "updated": "2026-05-04T10:00:00.000Z",
+  "tags": [],
+  "proof": {
+    "notes": ""
+  },
+  "milestone": null,
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

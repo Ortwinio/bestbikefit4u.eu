@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "059",
+  "title": "Replace internal placeholder description in DifferentiatorTriple with real product copy",
+  "description": "Update the HOME_DIFFERENTIATORS description in src/components/home/homeRedesignContent.ts for both locales so it uses rider-facing product copy instead of internal placeholder text about what the homepage should do.",
+  "goal": "11",
+  "status": "todo",
+  "assignee": null,
+  "priority": 2,
+  "created": "2026-05-04T10:00:00.000Z",
+  "updated": "2026-05-04T10:00:00.000Z",
+  "tags": [],
+  "proof": {
+    "notes": ""
+  },
+  "milestone": null,
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

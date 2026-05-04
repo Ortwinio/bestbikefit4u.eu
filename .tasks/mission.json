@@ -39,8 +39,20 @@
         "054"
       ],
       "status": "in_progress"
+    },
+    {
+      "id": "M5",
+      "title": "Homepage improvements v1",
+      "tasks": [
+        "055",
+        "056",
+        "057",
+        "058",
+        "059"
+      ],
+      "status": "todo"
     }
   ],
   "created": "2026-04-11T12:00:00.000Z",
-  "updated": "2026-04-13T21:00:00Z"
+  "updated": "2026-05-04T10:00:00.000Z"
 }

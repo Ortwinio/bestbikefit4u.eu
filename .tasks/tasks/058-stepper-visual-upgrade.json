@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "058",
+  "title": "Enlarge and colourise stepper step visuals to 72px with per-step accent colours",
+  "description": "Update src/components/home/HowItWorksStepper.tsx to add a STEP_COLORS map, replace the filled number circles with small accent-coloured labels, enlarge icon containers to 72px with per-step tinted backgrounds, and keep the connector line and existing card structure unchanged.",
+  "goal": "11",
+  "status": "todo",
+  "assignee": null,
+  "priority": 2,
+  "created": "2026-05-04T10:00:00.000Z",
+  "updated": "2026-05-04T10:00:00.000Z",
+  "tags": [],
+  "proof": {
+    "notes": ""
+  },
+  "milestone": null,
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

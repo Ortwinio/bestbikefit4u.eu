@@ -1,0 +1,28 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [
+    "055"
+  ],
+  "id": "056",
+  "title": "Add compact bike passport entry to footer Calculators column",
+  "description": "Add a plain-text Bike passport check link to the Calculators list in src/components/layout/Footer.tsx after the tire-pressure entry, using the locale-prefixed login route as the public entry point.",
+  "goal": "11",
+  "status": "todo",
+  "assignee": null,
+  "priority": 2,
+  "created": "2026-05-04T10:00:00.000Z",
+  "updated": "2026-05-04T10:00:00.000Z",
+  "tags": [],
+  "proof": {
+    "notes": ""
+  },
+  "milestone": null,
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}

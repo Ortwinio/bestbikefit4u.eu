@@ -1,0 +1,26 @@
+{
+  "_version": 1,
+  "retryCount": 0,
+  "maxRetries": 5,
+  "lastError": null,
+  "nextRetryAt": null,
+  "depends_on": [],
+  "id": "055",
+  "title": "Remove BikeQuickCheckCard and BikeSearchBar sections from homepage",
+  "description": "Remove the BikeQuickCheckCard section wrapper and the BikeSearchBar component call from src/app/(public)/page.tsx, clean up now-unused imports, and keep BikeShowcaseSection in place.",
+  "goal": "11",
+  "status": "todo",
+  "assignee": null,
+  "priority": 2,
+  "created": "2026-05-04T10:00:00.000Z",
+  "updated": "2026-05-04T10:00:00.000Z",
+  "tags": [],
+  "proof": {
+    "notes": ""
+  },
+  "milestone": null,
+  "specialty": "frontend",
+  "fulfills": [],
+  "discoveredIssues": [],
+  "salientSummary": null
+}
