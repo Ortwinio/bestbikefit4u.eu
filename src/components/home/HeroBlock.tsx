@@ -86,7 +86,7 @@ export function HeroBlock({
             <Button
               variant="outline"
               size="lg"
-              className="min-h-12 rounded-full border-primary-foreground/30 bg-primary-foreground/10 px-6 text-base text-primary-foreground shadow-[0_12px_32px_-18px_color-mix(in_oklch,var(--foreground)_28%,transparent)] after:bg-primary-foreground/12 hover-only:border-primary-foreground/45 hover-only:bg-primary-foreground/16 hover-only:text-primary-foreground"
+              className="min-h-12 rounded-full border-white/55 bg-white/15 px-6 text-base text-white shadow-[0_12px_32px_-18px_color-mix(in_oklch,var(--foreground)_28%,transparent)] after:bg-white/10 hover-only:border-white/70 hover-only:bg-white/22 hover-only:text-white"
               render={
                 <TrackedCtaLink
                   href={pricingHref}

@@ -194,7 +194,9 @@ export default async function HomePage() {
       <div className="bg-[color:color-mix(in_oklch,var(--secondary)_55%,var(--background)_45%)]">
         <TestimonialSection locale={locale} />
       </div>
-      <BikeShowcaseSection locale={locale} copy={bikeShowcaseCopy} />
+      <div className="hidden sm:block">
+        <BikeShowcaseSection locale={locale} copy={bikeShowcaseCopy} />
+      </div>
 
       <section className="bg-[color:color-mix(in_oklch,var(--muted)_44%,var(--background)_56%)] py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
