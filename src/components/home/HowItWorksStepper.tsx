@@ -4,6 +4,7 @@ import { Button } from "@/components/prototyper-ui/ui/button";
 import { PublicSection } from "@/components/public/PublicSection";
 import { RatingBadge } from "@/components/public/RatingBadge";
 import type { Locale } from "@/i18n/config";
+import { cn } from "@/utils/cn";
 import { HOME_STEPPER_CONTENT } from "./homeRedesignContent";
 
 type HowItWorksStepperProps = {
@@ -16,6 +17,24 @@ const STEP_ICONS = {
   ruler: Ruler,
   bike: Bike,
   check: CheckCircle2,
+} as const;
+
+const STEP_COLORS = {
+  "01": {
+    bg: "bg-[color:color-mix(in_oklch,oklch(0.72_0.14_195)_22%,white_78%)]",
+    text: "text-[color:oklch(0.38_0.14_195)]",
+    label: "text-[color:oklch(0.42_0.14_195)]",
+  },
+  "02": {
+    bg: "bg-[color:color-mix(in_oklch,var(--primary)_22%,white_78%)]",
+    text: "text-[color:color-mix(in_oklch,var(--primary)_90%,black_10%)]",
+    label: "text-[color:var(--primary)]",
+  },
+  "03": {
+    bg: "bg-[color:color-mix(in_oklch,oklch(0.72_0.16_145)_22%,white_78%)]",
+    text: "text-[color:oklch(0.38_0.16_145)]",
+    label: "text-[color:oklch(0.42_0.16_145)]",
+  },
 } as const;
 
 export function HowItWorksStepper({
@@ -40,6 +59,7 @@ export function HowItWorksStepper({
           <div className="grid gap-5 lg:grid-cols-3">
             {content.steps.map((step, index) => {
               const Icon = STEP_ICONS[step.icon];
+              const color = STEP_COLORS[step.number as keyof typeof STEP_COLORS];
 
               return (
                 <div
@@ -52,13 +72,19 @@ export function HowItWorksStepper({
                       aria-hidden="true"
                     />
                   ) : null}
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-bold text-[color:var(--primary-foreground)]">
+                  <p className={cn("text-xs font-bold uppercase tracking-[0.2em]", color.label)}>
                     {step.number}
+                  </p>
+                  <div
+                    className={cn(
+                      "mt-3 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-2xl",
+                      color.bg,
+                      color.text
+                    )}
+                  >
+                    <Icon className="h-8 w-8" />
                   </div>
-                  <div className="mt-5 flex h-12 w-12 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_78%,var(--background)_22%)] text-[color:var(--primary)]">
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="mt-5 text-xl font-semibold tracking-tight text-[color:var(--foreground)]">
+                  <h3 className="mt-4 text-xl font-semibold tracking-tight text-[color:var(--foreground)]">
                     {step.title}
                   </h3>
                   <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)] sm:text-base">

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
-import { BikeSearchBar } from "@/components/home/BikeSearchBar";
 import { BikeShowcaseSection } from "@/components/home/BikeShowcaseSection";
 import { CalculatorGrid } from "@/components/home/CalculatorGrid";
 import { ClosingCtaBand } from "@/components/home/ClosingCtaBand";
@@ -11,7 +10,6 @@ import { HOME_GUIDE_LINKS, HOME_SCENARIO_LINKS } from "@/components/home/homeGui
 import { HowItWorksStepper } from "@/components/home/HowItWorksStepper";
 import { ProofBar } from "@/components/home/ProofBar";
 import { TestimonialSection } from "@/components/home/TestimonialSection";
-import { BikeQuickCheckCard } from "@/components/public/BikeQuickCheckCard";
 import { GuideLinkButton } from "@/components/public/GuideLinkButton";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -179,20 +177,6 @@ export default async function HomePage() {
         ratingCount={locale === "nl" ? "380+ rijders" : "380+ riders"}
       />
       <ProofBar locale={locale} />
-      <section className="relative z-20 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--muted)_35%,var(--background)_65%)_0%,var(--background)_100%)] py-8 sm:py-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl">
-            <BikeQuickCheckCard
-              locale={locale}
-              pagePath={homePath}
-              loginHref={loginHref}
-              profileHref={withLocalePrefix("/profile", locale)}
-              fitHref={withLocalePrefix("/fit", locale)}
-              copy={home.bikeQuickCheck}
-            />
-          </div>
-        </div>
-      </section>
       <CalculatorGrid
         locale={locale}
         tools={popularTools.map((tool) => ({
@@ -210,11 +194,6 @@ export default async function HomePage() {
       <div className="bg-[color:color-mix(in_oklch,var(--secondary)_55%,var(--background)_45%)]">
         <TestimonialSection locale={locale} />
       </div>
-      <BikeSearchBar
-        locale={locale}
-        fitHref={fitCalculatorHref}
-        manualHref={fitCalculatorHref}
-      />
       <BikeShowcaseSection locale={locale} copy={bikeShowcaseCopy} />
 
       <section className="bg-[color:color-mix(in_oklch,var(--muted)_44%,var(--background)_56%)] py-20">

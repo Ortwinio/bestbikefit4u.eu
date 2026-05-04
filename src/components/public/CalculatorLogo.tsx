@@ -6,17 +6,21 @@ type CalculatorLogoProps = {
   className?: string;
 };
 
-const blueToneClassName =
-  "bg-[color:color-mix(in_oklch,var(--primary)_16%,white_84%)] text-[color:color-mix(in_oklch,var(--primary)_92%,black_8%)]";
-
 const toneClassNames: Record<PublicCalculatorId, string> = {
-  "bike-fit": blueToneClassName,
-  "saddle-height": blueToneClassName,
-  "saddle-width": blueToneClassName,
-  "frame-size": blueToneClassName,
-  "crank-length": blueToneClassName,
-  gearing: blueToneClassName,
-  "tire-pressure": blueToneClassName,
+  "bike-fit":
+    "bg-[color:color-mix(in_oklch,var(--primary)_16%,white_84%)] text-[color:color-mix(in_oklch,var(--primary)_92%,black_8%)]",
+  "saddle-height":
+    "bg-[color:color-mix(in_oklch,oklch(0.72_0.14_195)_22%,white_78%)] text-[color:oklch(0.38_0.14_195)]",
+  "saddle-width":
+    "bg-[color:color-mix(in_oklch,var(--warning)_20%,white_80%)] text-[color:color-mix(in_oklch,var(--warning)_90%,black_10%)]",
+  "frame-size":
+    "bg-[color:color-mix(in_oklch,oklch(0.70_0.16_285)_20%,white_80%)] text-[color:oklch(0.40_0.16_285)]",
+  "crank-length":
+    "bg-[color:color-mix(in_oklch,oklch(0.72_0.16_145)_20%,white_80%)] text-[color:oklch(0.38_0.16_145)]",
+  gearing:
+    "bg-[color:color-mix(in_oklch,oklch(0.70_0.18_55)_20%,white_80%)] text-[color:oklch(0.40_0.18_55)]",
+  "tire-pressure":
+    "bg-[color:color-mix(in_oklch,oklch(0.66_0.10_260)_22%,white_78%)] text-[color:oklch(0.38_0.10_260)]",
 };
 
 function glyphForCalculator(calculatorId: PublicCalculatorId) {

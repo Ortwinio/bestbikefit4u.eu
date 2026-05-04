@@ -156,6 +156,14 @@ export function Footer({ locale, labels }: FooterProps) {
                   {f.tirePressure}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href={withLocalePrefix("/login", locale)}
+                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                >
+                  Bike passport check
+                </Link>
+              </li>
             </ul>
           </div>
           <div>

@@ -188,7 +188,7 @@ export const HOME_DIFFERENTIATORS: Localized<{
   en: {
     eyebrow: "Why it works",
     title: "Less guesswork. Better next steps.",
-    description: "The homepage should quickly show where the platform is strong: data, sequence, and rider-specific guidance.",
+    description: "Three principles that make every fit decision more concrete and reliable than guessing or starting from scratch.",
     items: [
       {
         title: "Geometry-backed database",
@@ -210,7 +210,7 @@ export const HOME_DIFFERENTIATORS: Localized<{
   nl: {
     eyebrow: "Waarom dit werkt",
     title: "Minder giswerk. Betere vervolgstappen.",
-    description: "De homepage moet snel laten zien waar het platform sterk in is: data, volgorde en rijdergerichte begeleiding.",
+    description: "Drie principes die elke fitbeslissing concreter en betrouwbaarder maken dan schatten of opnieuw beginnen.",
     items: [
       {
         title: "Geometriedatabase als basis",
