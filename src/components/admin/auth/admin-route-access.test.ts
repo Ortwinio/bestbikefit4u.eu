@@ -30,6 +30,12 @@ describe("admin route access", () => {
       "fit_specialist",
       "qa_manager",
     ]);
+    expect(getRequiredAdminRoles("/admin/guides/import")).toEqual([
+      "super_admin",
+      "ops_admin",
+      "fit_specialist",
+      "qa_manager",
+    ]);
   });
 
   it("allows and denies access by role", () => {
@@ -43,6 +49,8 @@ describe("admin route access", () => {
     expect(canAccessAdminRoute("/admin/guides/redirects", "ops_admin")).toBe(true);
     expect(canAccessAdminRoute("/admin/guides/redirects", "fit_specialist")).toBe(true);
     expect(canAccessAdminRoute("/admin/guides/redirects", "support_admin")).toBe(false);
+    expect(canAccessAdminRoute("/admin/guides/import", "qa_manager")).toBe(true);
+    expect(canAccessAdminRoute("/admin/guides/import", "analyst")).toBe(false);
     expect(canAccessAdminRoute("/admin/licenses", "billing_admin")).toBe(true);
     expect(canAccessAdminRoute("/admin/licenses", "geometry_manager")).toBe(false);
   });

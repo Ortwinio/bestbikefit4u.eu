@@ -110,9 +110,11 @@ export function GuidesAdminListClient({
         description="Manage draft, review, and published guide pages from the Convex-backed library."
         actions={
           <>
-            <Button variant="outline" render={<Link href="/admin/guides/import" />}>
-              Import JSON
-            </Button>
+            {canManageGuides ? (
+              <Button variant="outline" render={<Link href="/admin/guides/import" />}>
+                Import JSON
+              </Button>
+            ) : null}
             {canManageRedirects ? (
               <Button variant="outline" render={<Link href="/admin/guides/redirects" />}>
                 Redirects

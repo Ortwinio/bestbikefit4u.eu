@@ -50,6 +50,10 @@ const adminRouteRules: AdminRouteRule[] = [
     access: ["super_admin", "ops_admin", "fit_specialist", "qa_manager"],
   },
   {
+    prefix: "/admin/guides/import",
+    access: ["super_admin", "ops_admin", "fit_specialist", "qa_manager"],
+  },
+  {
     prefix: "/admin/guides",
     access: [
       "super_admin",

@@ -16,6 +16,7 @@ import {
   buildGuidePreviewPath,
   formatGuideStatusLabel,
   GUIDE_CLUSTER_OPTIONS,
+  isGuideAdminRole,
   guideStatusTone,
   slugifyGuideTitle,
 } from "./guide-admin-shared";
@@ -103,6 +104,7 @@ export function GuideCreateView({
 }: {
   sessionRole: string;
 }) {
+  const canImportJson = isGuideAdminRole(sessionRole);
   const router = useRouter();
   const toast = useToast();
   const createGuide = useMutation(api.guides.mutations.createGuide);
@@ -504,9 +506,11 @@ export function GuideCreateView({
             <AdminStatusPill tone={guideStatusTone("draft")}>
               {formatGuideStatusLabel("draft")}
             </AdminStatusPill>
-            <Button variant="outline" render={<Link href="/admin/guides/import" />}>
-              Import JSON
-            </Button>
+            {canImportJson ? (
+              <Button variant="outline" render={<Link href="/admin/guides/import" />}>
+                Import JSON
+              </Button>
+            ) : null}
             <Button variant="outline" render={<Link href="/admin/guides" />}>
               Back to guides
             </Button>
