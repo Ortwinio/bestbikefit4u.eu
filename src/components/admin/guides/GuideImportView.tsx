@@ -45,6 +45,17 @@ type ImportJsonRecord = {
   heroImagePublicPath?: string;
 };
 
+function normalizeImportSeoHints(value: unknown) {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+
+  const funnel = (value as { funnel?: unknown }).funnel;
+  return typeof funnel === "string" && funnel.trim().length > 0
+    ? { funnel: funnel.trim() }
+    : undefined;
+}
+
 type ParsedImportFile = {
   fileName: string;
   record: ImportJsonRecord;
@@ -151,7 +162,7 @@ function buildImportPayload(row: ImportRow, overwrite: boolean) {
     heroImagePublicPath: sourceRecord.heroImagePublicPath,
     relatedGuidePaths,
     relatedKeywords: sourceRecord.relatedKeywords?.map((value) => value.trim()).filter(Boolean),
-    seoHints: sourceRecord.backlogSeoHints,
+    seoHints: normalizeImportSeoHints(sourceRecord.backlogSeoHints),
     primaryCtaTarget: stripLocalePrefix(sourceRecord.primaryCtaTarget),
     primaryCtaLabel: localizedText(
       enRecord?.primaryCtaLabel,
