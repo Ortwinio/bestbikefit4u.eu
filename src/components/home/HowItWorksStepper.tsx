@@ -66,12 +66,6 @@ export function HowItWorksStepper({
                   key={step.number}
                   className="relative rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)] p-5 shadow-[0_16px_40px_-28px_color-mix(in_oklch,var(--foreground)_28%,transparent)]"
                 >
-                  {index < content.steps.length - 1 ? (
-                    <div
-                      className="pointer-events-none absolute left-[calc(50%+2rem)] top-9 hidden h-px w-[calc(100%-4rem)] border-t border-dashed border-[color:var(--border)] lg:block"
-                      aria-hidden="true"
-                    />
-                  ) : null}
                   <p className={cn("text-xs font-bold uppercase tracking-[0.2em]", color.label)}>
                     {step.number}
                   </p>
