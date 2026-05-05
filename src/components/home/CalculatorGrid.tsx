@@ -63,7 +63,7 @@ export function CalculatorGrid({
                 key={tool.href}
                 variant="outline"
                 size="lg"
-                className="h-auto min-h-24 justify-start rounded-2xl px-5 py-4 text-left"
+                className="h-auto min-h-24 justify-start rounded-2xl border-[color:var(--border)] bg-white px-5 py-4 text-left hover:bg-white"
                 render={<Link href={tool.href} />}
               >
                 <span className="flex items-start gap-3">

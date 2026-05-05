@@ -170,68 +170,6 @@ export function Footer({ locale, labels }: FooterProps) {
           </div>
           <div>
             <h3 className="text-sm font-semibold text-[color:var(--foreground)]">
-              {f.support}
-            </h3>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link
-                  href={withLocalePrefix("/contact", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
-                >
-                  {f.contact}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/faq", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
-                >
-                  {f.faq}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/measurement-guide", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
-                >
-                  {f.measurementGuide}
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-[color:var(--foreground)]">
-              {f.legal}
-            </h3>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link
-                  href={withLocalePrefix("/privacy", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
-                >
-                  {f.privacy}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/terms", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
-                >
-                  {f.terms}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/sitemap.xml"
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
-                >
-                  {f.sitemap}
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-[color:var(--foreground)]">
               {f.guides}
             </h3>
             <ul className="mt-4 space-y-2">
@@ -289,6 +227,68 @@ export function Footer({ locale, labels }: FooterProps) {
                   className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
                   {f.allGuides} →
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-[color:var(--foreground)]">
+              {f.support}
+            </h3>
+            <ul className="mt-4 space-y-2">
+              <li>
+                <Link
+                  href={withLocalePrefix("/contact", locale)}
+                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                >
+                  {f.contact}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={withLocalePrefix("/faq", locale)}
+                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                >
+                  {f.faq}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={withLocalePrefix("/measurement-guide", locale)}
+                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                >
+                  {f.measurementGuide}
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-[color:var(--foreground)]">
+              {f.legal}
+            </h3>
+            <ul className="mt-4 space-y-2">
+              <li>
+                <Link
+                  href={withLocalePrefix("/privacy", locale)}
+                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                >
+                  {f.privacy}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={withLocalePrefix("/terms", locale)}
+                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                >
+                  {f.terms}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/sitemap.xml"
+                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                >
+                  {f.sitemap}
                 </Link>
               </li>
             </ul>
