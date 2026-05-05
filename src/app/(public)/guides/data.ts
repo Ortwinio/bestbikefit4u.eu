@@ -614,6 +614,18 @@ export const GUIDES: Guide[] = [
   },
 ];
 
+export function getLegacyGuideSeoKeywords(
+  slug: string,
+  locale: Locale
+): string[] | undefined {
+  const guide = GUIDES.find((entry) => entry.slug === slug);
+  if (!guide) {
+    return undefined;
+  }
+
+  return guide[locale].seoKeywords;
+}
+
 export const GUIDE_SLUGS = GUIDES.map((guide) => guide.slug);
 
 export function getGuideBySlug(slug: string): Guide | undefined {

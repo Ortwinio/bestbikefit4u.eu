@@ -53,6 +53,30 @@ function toEntry(seed: RouteSeed): SitemapContentEntry {
 
 const PAGE_ROUTE_SEEDS: readonly RouteSeed[] = [
   { id: "home", path: "/", lastmod: "2026-02-23", changefreq: "weekly", priority: 1 },
+  {
+    id: "fiets-afstellen",
+    path: "/fiets-afstellen",
+    lastmod: "2026-05-05",
+    changefreq: "weekly",
+    priority: 0.9,
+    locales: ["nl"],
+  },
+  {
+    id: "bikefitting-nl",
+    path: "/bikefitting",
+    lastmod: "2026-05-05",
+    changefreq: "weekly",
+    priority: 0.9,
+    locales: ["nl"],
+  },
+  {
+    id: "bike-fitting-en",
+    path: "/bike-fitting",
+    lastmod: "2026-05-05",
+    changefreq: "weekly",
+    priority: 0.9,
+    locales: ["en"],
+  },
   { id: "about", path: "/about", lastmod: "2026-02-19", changefreq: "monthly", priority: 0.8 },
   {
     id: "how-it-works",

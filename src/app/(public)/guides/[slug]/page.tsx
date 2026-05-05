@@ -13,6 +13,7 @@ import { GuideFaqAccordion } from "@/components/content/GuideFaqAccordion";
 import { GuideMidPageCta } from "@/components/content/GuideMidPageCta";
 import { GuideSoftToolCta } from "@/components/content/GuideSoftToolCta";
 import {
+  PublicBreadcrumbs,
   PublicCtaBand,
   PublicHero,
   PublicPageShell,
@@ -22,6 +23,7 @@ import {
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { BRAND } from "@/config/brand";
+import { getLegacyGuideSeoKeywords } from "../data";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
@@ -189,6 +191,11 @@ export async function generateMetadata({
   const alternates = buildLocaleAlternates(entry.path, locale);
   const canonical = dbGuide?.canonicalUrl ?? alternates.canonical;
   const description = dbGuide?.metaDescription?.[locale] ?? entry.pageBrief;
+  // Guide keywords currently come from the fallback guide content source.
+  // We keep current precedence for title/description/canonical/OG metadata and
+  // only layer in fallback keywords here until the CMS has first-class
+  // localized keyword support.
+  const keywords = getLegacyGuideSeoKeywords(entry.slug, locale);
   const openGraphImage = dbGuide?.heroImagePublicPath
     ? new URL(dbGuide.heroImagePublicPath, BRAND.siteUrl).toString()
     : dbGuide?.ogImageUrl;
@@ -196,6 +203,7 @@ export async function generateMetadata({
   return {
     title: entry.metaTitle,
     description,
+    keywords,
     openGraph: {
       title: dbGuide?.ogTitle?.[locale] ?? entry.metaTitle,
       description: dbGuide?.ogDescription?.[locale] ?? description,
@@ -258,7 +266,7 @@ export default async function GuidePage({
   const relatedLinks = entry.internalLinkTargets.map((href) => ({
     href,
     label: getGuideLinkLabel(href, locale),
-    description: relatedLinkDescription(locale),
+    description: relatedLinkDescription(locale, href),
   }));
   const heroDescription = !isHub ? guideContent?.heroIntro ?? entry.pageBrief : entry.pageBrief;
   const libraryBody = dbGuide?.libraryBody?.[locale] ?? null;
@@ -322,6 +330,13 @@ export default async function GuidePage({
       ) : null}
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <PublicBreadcrumbs
+          items={[
+            { label: isNl ? "Home" : "Home", href: withLocalePrefix("/", locale) },
+            { label: isNl ? "Gidsen" : "Guides", href: withLocalePrefix("/guides", locale) },
+            { label: entry.h1 },
+          ]}
+        />
         {dbGuide?.heroImagePublicPath ? (
           <div className="mb-8 mt-6 overflow-hidden rounded-[var(--radius-xl)] border border-border/60">
             <Image

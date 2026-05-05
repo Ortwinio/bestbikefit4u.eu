@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { Activity, HelpCircle, Target } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
+  PublicBreadcrumbs,
   PublicCtaBand,
   PublicHero,
   PublicPageShell,
@@ -66,6 +68,16 @@ export function PainPointPageTemplate({
       />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <PublicBreadcrumbs
+          items={[
+            { label: locale === "nl" ? "Home" : "Home", href: withLocalePrefix("/", locale) },
+            {
+              label: locale === "nl" ? "Pijnklachten" : "Pain points",
+              href: withLocalePrefix("/pain", locale),
+            },
+            { label: copy.title },
+          ]}
+        />
         <PublicHero
           eyebrow={copy.categoryLabel}
           title={copy.title}
@@ -158,6 +170,18 @@ export function PainPointPageTemplate({
               </div>
             ))}
           </div>
+          {locale === "nl" ? (
+            <p className="mt-5 text-sm leading-7 text-muted-foreground">
+              Wil je eerst breder zien hoe je{" "}
+              <Link
+                href={withLocalePrefix("/fiets-afstellen", locale)}
+                className="font-medium text-primary underline underline-offset-4"
+              >
+                fiets afstellen stap voor stap
+              </Link>{" "}
+              aanpakt voordat je deze klacht verder uitsplitst? Gebruik die pagina als extra contextlaag en kom daarna terug naar de klachtgerichte checks.
+            </p>
+          ) : null}
         </PublicSection>
 
         <PublicSection

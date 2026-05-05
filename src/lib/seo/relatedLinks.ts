@@ -29,18 +29,18 @@ const RELATED_LINKS: Record<RelatedKey, Record<Locale, RelatedLink[]>> = {
   },
   "saddle-height": {
     en: [
-      { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
-      { href: "/calculators/saddle-width", label: "Saddle Width Calculator" },
-      { href: "/calculators/frame-size", label: "Frame Size Calculator" },
-      { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
+      { href: "/measurement-guide", label: "Measurement Guide" },
+      { href: "/guides/bike-fitting-for-knee-pain", label: "Bike Fitting for Knee Pain" },
       { href: "/guides/bike-fitting-for-lower-back-pain", label: "Bike Fitting for Lower Back Pain" },
+      { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
+      { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
     ],
     nl: [
-      { href: "/calculators/bike-fit", label: "Bike fit calculator" },
-      { href: "/calculators/saddle-width", label: "Zadelbreedtecalculator" },
-      { href: "/calculators/frame-size", label: "Framemaat calculator" },
-      { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
+      { href: "/measurement-guide", label: "Meetgids" },
+      { href: "/guides/bike-fitting-for-knee-pain", label: "Bikefitting bij kniepijn" },
       { href: "/guides/bike-fitting-for-lower-back-pain", label: "Bikefitting bij lage rugklachten" },
+      { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+      { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
     ],
   },
   "saddle-width": {
@@ -61,16 +61,16 @@ const RELATED_LINKS: Record<RelatedKey, Record<Locale, RelatedLink[]>> = {
   },
   "frame-size": {
     en: [
+      { href: "/science/stack-and-reach", label: "Stack and Reach Guide" },
+      { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
       { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
-      { href: "/calculators/saddle-height", label: "Saddle Height Calculator" },
-      { href: "/guides/gravel-bike-fit-guide", label: "Gravel Bike Fit Guide" },
-      { href: "/guides/bike-fit-for-tall-riders", label: "Bike Fit for Tall Riders" },
+      { href: "/why-bikefit-matters", label: "Why Bike Fit Matters" },
     ],
     nl: [
+      { href: "/science/stack-and-reach", label: "Stack en reach gids" },
+      { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
       { href: "/calculators/bike-fit", label: "Bike fit calculator" },
-      { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
-      { href: "/guides/gravel-bike-fit-guide", label: "Gravel fit gids" },
-      { href: "/guides/bike-fit-for-tall-riders", label: "Bikefit voor lange rijders" },
+      { href: "/why-bikefit-matters", label: "Waarom bike fit telt" },
     ],
   },
   "crank-length": {
@@ -89,18 +89,20 @@ const RELATED_LINKS: Record<RelatedKey, Record<Locale, RelatedLink[]>> = {
   },
   "bike-fit": {
     en: [
-      { href: "/calculators/saddle-height", label: "Saddle Height Calculator" },
-      { href: "/calculators/saddle-width", label: "Saddle Width Calculator" },
-      { href: "/calculators/frame-size", label: "Frame Size Calculator" },
+      { href: "/measurement-guide", label: "Measurement Guide" },
+      { href: "/science/bike-fit-methods", label: "Bike Fitting Methods Explained" },
+      { href: "/science/calculation-engine", label: "Calculation Engine Transparency" },
       { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
-      { href: "/guides/endurance-bike-fit-guide", label: "Endurance Bike Fit Guide" },
+      { href: "/guides/bike-fitting-for-knee-pain", label: "Bike Fitting for Knee Pain" },
+      { href: "/pain", label: "Bike Fit for Common Pain Points" },
     ],
     nl: [
-      { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
-      { href: "/calculators/saddle-width", label: "Zadelbreedtecalculator" },
-      { href: "/calculators/frame-size", label: "Framemaat calculator" },
+      { href: "/measurement-guide", label: "Meetgids" },
+      { href: "/science/bike-fit-methods", label: "Bikefit-methodes uitgelegd" },
+      { href: "/science/calculation-engine", label: "Uitleg van de rekenmotor" },
       { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
-      { href: "/guides/endurance-bike-fit-guide", label: "Endurance fit gids" },
+      { href: "/guides/bike-fitting-for-knee-pain", label: "Bikefitting bij kniepijn" },
+      { href: "/pain", label: "Bikefit bij veelvoorkomende klachten" },
     ],
   },
   "tire-pressure": {

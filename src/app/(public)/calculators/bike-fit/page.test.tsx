@@ -68,6 +68,7 @@ vi.mock("@/i18n/metadata", () => ({
 }));
 
 vi.mock("@/lib/seo/jsonLd", () => ({
+  buildBreadcrumbListSchema: () => ({}),
   buildHowToSchema: () => ({}),
   buildWebApplicationSchema: () => ({}),
 }));
@@ -92,18 +93,15 @@ describe("bike fit calculator page", () => {
 
     expect(screen.getByText("Free Bike Fit Calculator")).toBeTruthy();
     expect(screen.getByText("Bike fit form")).toBeTruthy();
-    expect(screen.getByText("Create account or sign in").closest("a")?.getAttribute("href")).toBe(
-      "/en/login"
-    );
+    expect(
+      screen.getByText("Sign in to save results").closest("a")?.getAttribute("href")
+    ).toBe("/en/login");
     expect(
       screen
         .getByText("Donate via our Alpe d'HuZes page")
         .closest("a")
         ?.getAttribute("href")
     ).toBe("https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756");
-    expect(
-      screen.getByText("Open Tire Pressure Calculator").closest("a")?.getAttribute("href")
-    ).toBe("/en/tire-pressure-calculator");
-    expect(screen.queryByText("Compare Free vs Pro")).toBeNull();
+    expect(screen.queryByText("Compare plans")).toBeNull();
   });
 });

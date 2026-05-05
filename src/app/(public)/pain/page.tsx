@@ -13,6 +13,7 @@ import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEvent
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { PainFitIllustration } from "@/components/content/PublicPageIllustrations";
 import {
+  GuideLinkButton,
   PublicCtaBand,
   PublicFeatureCard,
   PublicHero,
@@ -181,6 +182,62 @@ export default async function PainIndexPage() {
                 isNl
                   ? "Bij aanhoudende of scherpe klachten is extra beoordeling slimmer dan meer trial-and-error."
                   : "With persistent or sharp pain, extra review is safer than more trial and error."
+              }
+            />
+          </div>
+        </PublicSection>
+
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: isNl ? "Eerste checks" : "First checks",
+            title: isNl
+              ? "Verbind klachtanalyse direct met je eerste afstelstappen"
+              : "Connect symptom analysis directly to your first fit checks",
+            description: isNl
+              ? "De meeste rijders moeten eerst zadelhoogte, volledige bikefit of meetkwaliteit aanscherpen voordat kleinere tweaks logisch worden."
+              : "Most riders should tighten up saddle height, full bike fit, or measurement quality before smaller tweaks become meaningful.",
+          }}
+        >
+          <div className="grid gap-4 md:grid-cols-2">
+            <GuideLinkButton
+              href={withLocalePrefix("/calculators/saddle-height", locale)}
+              icon={<CircleDot className="h-5 w-5" />}
+              title={isNl ? "Zadelhoogte afstellen" : "Set saddle height"}
+              subtitle={
+                isNl
+                  ? "Begin hier als kniebelasting of zadeldruk je eerste verdachte is."
+                  : "Start here when knee loading or saddle pressure is the first suspect."
+              }
+            />
+            <GuideLinkButton
+              href={withLocalePrefix("/calculators/bike-fit", locale)}
+              icon={<Sparkles className="h-5 w-5" />}
+              title={isNl ? "Bike fit calculator" : "Bike Fit Calculator"}
+              subtitle={
+                isNl
+                  ? "Verbind zadel, reach en rijdoel in één volledige eerste beoordeling."
+                  : "Connect saddle, reach, and riding goal in one full first-pass review."
+              }
+            />
+            <GuideLinkButton
+              href={withLocalePrefix("/measurement-guide", locale)}
+              icon={<ArrowRight className="h-5 w-5" />}
+              title={isNl ? "Meetgids" : "Measurement Guide"}
+              subtitle={
+                isNl
+                  ? "Controleer je input eerst als adviezen niet logisch voelen."
+                  : "Check your inputs first when recommendations do not feel coherent."
+              }
+            />
+            <GuideLinkButton
+              href={withLocalePrefix("/science/stack-and-reach", locale)}
+              icon={<HeartPulse className="h-5 w-5" />}
+              title={isNl ? "Reach racefiets" : "Road bike reach"}
+              subtitle={
+                isNl
+                  ? "Gebruik stack en reach wanneer rug, nek of cockpitlengte de limiter zijn."
+                  : "Use stack and reach when back, neck, or cockpit length are the limiter."
               }
             />
           </div>

@@ -206,9 +206,10 @@ function getRawContent(locale: Locale): RawFAQCopy {
       guideBody:
         "If you came here for a specific pain point or bike type, these guides are the fastest next step.",
       guideLinks: [
+        { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
+        { href: "/calculators/saddle-height", label: "Saddle Height Calculator" },
         { href: "/guides/bike-fitting-for-knee-pain", label: "Bike Fitting for Knee Pain" },
-        { href: "/guides/gravel-bike-fit-guide", label: "Gravel Bike Fit Guide" },
-        { href: "/guides/mountain-bike-fit-guide", label: "Mountain Bike Fit Guide" },
+        { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
       ],
       nextStepTitle: "Ready to get started?",
       nextStepPrimaryCta: "Try the Free Bike Fit Calculator",
@@ -313,9 +314,10 @@ function getRawContent(locale: Locale): RawFAQCopy {
     guideTitle: "Populaire vervolggidsen",
     guideBody: "Zoek je hulp bij een specifieke klacht of discipline? Start met een van deze gidsen.",
     guideLinks: [
+      { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+      { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
       { href: "/guides/bike-fitting-for-knee-pain", label: "Bikefitting bij kniepijn" },
-      { href: "/guides/gravel-bike-fit-guide", label: "Gravel fit gids" },
-      { href: "/guides/mountain-bike-fit-guide", label: "MTB fit gids" },
+      { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
     ],
     nextStepTitle: "Klaar om te beginnen?",
     nextStepPrimaryCta: "Probeer de gratis bikefit-calculator",

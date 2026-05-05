@@ -285,13 +285,16 @@ describe("home page", () => {
 
     const pageText = container.textContent ?? "";
     expect(pageText.indexOf("Proof Bar")).toBeGreaterThan(-1);
-    expect(pageText.indexOf("Bike Quick Check")).toBeGreaterThan(-1);
+    expect(pageText.indexOf("How it works stepper")).toBeGreaterThan(-1);
     expect(pageText.indexOf("Bike Fit Calculator")).toBeGreaterThan(-1);
     expect(pageText.indexOf("Testimonials")).toBeGreaterThan(-1);
     expect(pageText.indexOf("Bike Fit Calculator")).toBeLessThan(
       pageText.indexOf("Testimonials")
     );
     expect(screen.getByText("Bikes on the platform Use in my fit")).toBeTruthy();
+    expect(screen.getByText("bike fitting at home").closest("a")?.getAttribute("href")).toBe(
+      "/en/bike-fitting"
+    );
   });
 
   it("keeps the Dutch CTA framing aligned", async () => {
@@ -310,5 +313,11 @@ describe("home page", () => {
         ?.getAttribute("href")
     ).toBe("https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756");
     expect(screen.getByText("Fietsen op het platform Gebruik in mijn fit")).toBeTruthy();
+    expect(
+      screen.getByText("fiets afstellen stap voor stap").closest("a")?.getAttribute("href")
+    ).toBe("/nl/fiets-afstellen");
+    expect(screen.getByText("online bikefitting").closest("a")?.getAttribute("href")).toBe(
+      "/nl/bikefitting"
+    );
   });
 });

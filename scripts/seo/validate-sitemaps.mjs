@@ -10,11 +10,12 @@ const expectedSitemapPaths = [
 
 const disallowedUrlPathPrefixes = [
   "/admin",
-  "/api/",
-  "/trpc/",
+  "/api",
+  "/trpc",
   "/dashboard",
   "/en/dashboard",
   "/nl/dashboard",
+  "/app",
   "/fit",
   "/en/fit",
   "/nl/fit",

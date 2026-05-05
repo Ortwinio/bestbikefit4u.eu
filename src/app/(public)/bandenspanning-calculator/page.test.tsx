@@ -2,7 +2,8 @@
 
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import BandenspanningCalculatorPage, { PressureCalculatorPageContent } from "./page";
+import BandenspanningCalculatorPage from "./page";
+import { PressureCalculatorPageContent } from "./PressureCalculatorPageContent";
 
 let locale: "en" | "nl" = "en";
 
@@ -106,7 +107,7 @@ afterEach(() => {
 
 describe("bandenspanning calculator page", () => {
   it("keeps the calculator form and next-step CTAs visible in English content", async () => {
-    const ui = await PressureCalculatorPageContent();
+    const ui = await PressureCalculatorPageContent({ locale });
     render(ui);
 
     expect(screen.getByText("Tire Pressure Calculator")).toBeTruthy();

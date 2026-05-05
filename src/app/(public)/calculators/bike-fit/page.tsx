@@ -11,6 +11,7 @@ import {
 import {
   FeatureIconCard,
   type FeatureIconCardColor,
+  PublicBreadcrumbs,
   PublicCtaBand,
   PublicHero,
   PublicPageShell,
@@ -24,7 +25,11 @@ import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
-import { buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import {
+  buildBreadcrumbListSchema,
+  buildHowToSchema,
+  buildWebApplicationSchema,
+} from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { BikeFitCalculatorForm } from "./BikeFitCalculatorForm";
 
@@ -135,6 +140,10 @@ export default async function BikeFitCalculatorPage() {
     <PublicPageShell className="text-foreground">
       <JsonLd
         schema={[
+          buildBreadcrumbListSchema([
+            { name: isNl ? "Home" : "Home", item: new URL(withLocalePrefix("/", locale), BRAND.siteUrl).toString() },
+            { name: isNl ? "Bike fit calculator" : "Bike Fit Calculator", item: pageUrl },
+          ]),
           buildWebApplicationSchema({
             name: isNl ? "BestBikeFit4U bike fit calculator" : "BestBikeFit4U Bike Fit Calculator",
             description: isNl
@@ -165,6 +174,12 @@ export default async function BikeFitCalculatorPage() {
       />
 
       <div>
+        <PublicBreadcrumbs
+          items={[
+            { label: isNl ? "Home" : "Home", href: withLocalePrefix("/", locale) },
+            { label: isNl ? "Bike fit calculator" : "Bike Fit Calculator" },
+          ]}
+        />
         <PublicHero
           eyebrow="BestBikeFit4U calculator"
           title={isNl ? "Gratis bike fit calculator" : "Free Bike Fit Calculator"}

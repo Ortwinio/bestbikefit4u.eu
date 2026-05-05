@@ -17,3 +17,4 @@ export { FeatureIconCard, type FeatureIconCardColor } from "./FeatureIconCard";
 export { StatCounter } from "./StatCounter";
 export { RatingBadge } from "./RatingBadge";
 export { GuideLinkButton } from "./GuideLinkButton";
+export { PublicBreadcrumbs, type PublicBreadcrumbItem } from "./PublicBreadcrumbs";

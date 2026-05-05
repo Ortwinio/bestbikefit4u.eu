@@ -142,9 +142,9 @@ const content: Record<Locale, AboutCopy> = {
     guideBody:
       "Use targeted guides for pain points and riding disciplines, then apply the next fit steps to your own setup.",
     guideLinks: [
-      { href: "/guides/bike-fitting-for-knee-pain", label: "Bike Fitting for Knee Pain" },
-      { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
-      { href: "/guides/triathlon-bike-fit-guide", label: "Triathlon Bike Fit Guide" },
+      { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
+      { href: "/science/bike-fit-methods", label: "Bike Fitting Methods Explained" },
+      { href: "/science/stack-and-reach", label: "Stack and Reach Guide" },
     ],
     ctaTitle: "Ready for a clearer next fit step?",
     ctaBody:
@@ -236,9 +236,9 @@ const content: Record<Locale, AboutCopy> = {
     guideBody:
       "Bekijk gerichte gidsen voor klachten en disciplines en vertaal dat naar je eigen fitbegeleiding.",
     guideLinks: [
-      { href: "/guides/bike-fitting-for-knee-pain", label: "Bikefitting bij kniepijn" },
-      { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
-      { href: "/guides/triathlon-bike-fit-guide", label: "Triathlon fit gids" },
+      { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+      { href: "/science/bike-fit-methods", label: "Bikefit-methodes uitgelegd" },
+      { href: "/science/stack-and-reach", label: "Stack en reach gids" },
     ],
     ctaTitle: "Klaar voor een duidelijkere volgende fitstap?",
     ctaBody:

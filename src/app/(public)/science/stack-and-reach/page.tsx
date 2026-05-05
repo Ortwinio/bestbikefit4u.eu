@@ -84,11 +84,11 @@ const copy: Record<
     ],
     linksTitle: "Continue reading",
     links: [
-      { href: "/guides/fit-science", label: "Fit Science" },
-      { href: "/guides/frame-size-guide", label: "Frame Size Guide" },
-      { href: "/science/bike-fit-methods", label: "Fit Methods Comparison" },
       { href: "/calculators/frame-size", label: "Frame Size Calculator" },
-      { href: "/guides/how-to-compare-two-bikes-for-fit", label: "How to Compare Two Bikes for Fit" },
+      { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
+      { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
+      { href: "/science/bike-fit-methods", label: "Bike Fitting Methods Explained" },
+      { href: "/about", label: "How BestBikeFit4U Works" },
     ],
   },
   nl: {
@@ -142,11 +142,11 @@ const copy: Record<
     ],
     linksTitle: "Verder lezen",
     links: [
-      { href: "/guides/fit-science", label: "Fit science" },
-      { href: "/guides/frame-size-guide", label: "Framemaatgids" },
-      { href: "/science/bike-fit-methods", label: "Vergelijking van bikefit-methodes" },
       { href: "/calculators/frame-size", label: "Framemaat calculator" },
-      { href: "/guides/how-to-compare-two-bikes-for-fit", label: "Twee fietsen vergelijken voor fit" },
+      { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
+      { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+      { href: "/science/bike-fit-methods", label: "Bikefit-methodes uitgelegd" },
+      { href: "/about", label: "Hoe BestBikeFit4U werkt" },
     ],
   },
 };

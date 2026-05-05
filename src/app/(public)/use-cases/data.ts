@@ -100,8 +100,8 @@ export const USE_CASES: UseCase[] = [
       ],
       relatedTitle: "Related tools and guides",
       relatedLinks: [
+        { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
         { href: "/calculators/crank-length", label: "Crank Length Calculator" },
-        { href: "/bandenspanning/mtb", label: "MTB Tire Pressure Calculator" },
         { href: "/guides/mountain-bike-fit-guide", label: "Mountain Bike Fit Guide" },
       ],
       primaryCta: "Start Free Fit",
@@ -125,8 +125,8 @@ export const USE_CASES: UseCase[] = [
       ],
       relatedTitle: "Gerelateerde tools en gidsen",
       relatedLinks: [
+        { href: "/calculators/bike-fit", label: "Bike fit calculator" },
         { href: "/calculators/crank-length", label: "Cranklengte calculator" },
-        { href: "/bandenspanning/mtb", label: "MTB bandenspanning calculator" },
         { href: "/guides/mountain-bike-fit-guide", label: "MTB fit gids" },
       ],
       primaryCta: "Start gratis fit",
@@ -153,8 +153,8 @@ export const USE_CASES: UseCase[] = [
       ],
       relatedTitle: "Related tools and guides",
       relatedLinks: [
-        { href: "/bandenspanning/gravelbike", label: "Gravel Tire Pressure Calculator" },
         { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
+        { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
         { href: "/guides/gravel-bike-fit-guide", label: "Gravel Bike Fit Guide" },
       ],
       primaryCta: "Start Free Fit",
@@ -178,8 +178,8 @@ export const USE_CASES: UseCase[] = [
       ],
       relatedTitle: "Gerelateerde tools en gidsen",
       relatedLinks: [
-        { href: "/bandenspanning/gravelbike", label: "Gravel bandenspanning calculator" },
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+        { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
         { href: "/guides/gravel-bike-fit-guide", label: "Gravel fit gids" },
       ],
       primaryCta: "Start gratis fit",
@@ -259,9 +259,9 @@ export const USE_CASES: UseCase[] = [
       ],
       relatedTitle: "Related tools and guides",
       relatedLinks: [
-        { href: "/calculators/saddle-height", label: "Saddle Height Calculator" },
-        { href: "/calculators/frame-size", label: "Frame Size Calculator" },
         { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
+        { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
+        { href: "/calculators/saddle-height", label: "Saddle Height Calculator" },
       ],
       primaryCta: "Start Free Fit",
     },
@@ -284,9 +284,9 @@ export const USE_CASES: UseCase[] = [
       ],
       relatedTitle: "Gerelateerde tools en gidsen",
       relatedLinks: [
-        { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
-        { href: "/calculators/frame-size", label: "Framemaat calculator" },
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+        { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
+        { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
       ],
       primaryCta: "Start gratis fit",
     },
@@ -312,8 +312,8 @@ export const USE_CASES: UseCase[] = [
       ],
       relatedTitle: "Related tools and guides",
       relatedLinks: [
-        { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
         { href: "/guides/bike-fitting-for-lower-back-pain", label: "Back Pain Fit Guide" },
+        { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
         { href: "/science/stack-and-reach", label: "Stack and Reach Guide" },
       ],
       primaryCta: "Start Free Fit",
@@ -337,8 +337,8 @@ export const USE_CASES: UseCase[] = [
       ],
       relatedTitle: "Gerelateerde tools en gidsen",
       relatedLinks: [
-        { href: "/calculators/bike-fit", label: "Bike fit calculator" },
         { href: "/guides/bike-fitting-for-lower-back-pain", label: "Gids bij lage rugklachten" },
+        { href: "/calculators/bike-fit", label: "Bike fit calculator" },
         { href: "/science/stack-and-reach", label: "Stack en reach gids" },
       ],
       primaryCta: "Start gratis fit",
@@ -366,7 +366,7 @@ export const USE_CASES: UseCase[] = [
       relatedTitle: "Related tools and guides",
       relatedLinks: [
         { href: "/calculators/frame-size", label: "Frame Size Calculator" },
-        { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
+        { href: "/science/stack-and-reach", label: "Stack and Reach Guide" },
         { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
       ],
       primaryCta: "Start Free Fit",
@@ -391,7 +391,7 @@ export const USE_CASES: UseCase[] = [
       relatedTitle: "Gerelateerde tools en gidsen",
       relatedLinks: [
         { href: "/calculators/frame-size", label: "Framemaat calculator" },
-        { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+        { href: "/science/stack-and-reach", label: "Stack en reach gids" },
         { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
       ],
       primaryCta: "Start gratis fit",
@@ -420,7 +420,7 @@ export const USE_CASES: UseCase[] = [
       relatedLinks: [
         { href: "/calculators/frame-size", label: "Frame Size Calculator" },
         { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
-        { href: "/guides/gravel-bike-fit-guide", label: "Gravel Bike Fit Guide" },
+        { href: "/science/stack-and-reach", label: "Stack and Reach Guide" },
       ],
       primaryCta: "Start Free Fit",
     },
@@ -445,7 +445,7 @@ export const USE_CASES: UseCase[] = [
       relatedLinks: [
         { href: "/calculators/frame-size", label: "Framemaat calculator" },
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
-        { href: "/guides/gravel-bike-fit-guide", label: "Gravel fit gids" },
+        { href: "/science/stack-and-reach", label: "Stack en reach gids" },
       ],
       primaryCta: "Start gratis fit",
     },

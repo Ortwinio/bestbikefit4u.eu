@@ -8,6 +8,7 @@ import {
   PublicSection,
   PublicSurfaceCard,
 } from "@/components/public";
+import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { HOME_QUOTES_BY_LOCALE } from "@/content/homeQuotes";
 import type { Locale } from "@/i18n/config";
 import { buildLocaleAlternates } from "@/i18n/metadata";
@@ -425,6 +426,50 @@ export default async function WhyBikeFitMattersPage() {
             ))}
           </div>
         </PublicSection>
+
+        <RelatedLinksSection
+          locale={locale}
+          title={
+            locale === "nl"
+              ? "Lees verder met de pagina die je volgende keuze ondersteunt"
+              : "Continue with the page that supports your next fit decision"
+          }
+          links={[
+            {
+              href: "/calculators/bike-fit",
+              label: locale === "nl" ? "Bike fit calculator" : "Bike Fit Calculator",
+              description:
+                locale === "nl"
+                  ? "Gebruik de hoofdcalculator als je fiets afstellen concreet wilt maken."
+                  : "Use the main calculator when you want to turn bike fitting into concrete setup targets.",
+            },
+            {
+              href: "/guides/road-bike-fit-guide",
+              label: locale === "nl" ? "Racefiets fit gids" : "Road Bike Fit Guide",
+              description:
+                locale === "nl"
+                  ? "Verbind comfort, controle en snelheid in één praktische gids."
+                  : "Connect comfort, control, and speed in one practical guide.",
+            },
+            {
+              href: "/science/bike-fit-methods",
+              label:
+                locale === "nl" ? "Bikefit-methodes uitgelegd" : "Bike Fitting Methods Explained",
+              description:
+                locale === "nl"
+                  ? "Bekijk waarom zadelhoogte, KOPS en stack/reach als startpunten werken."
+                  : "See why saddle height, KOPS, and stack/reach work as starting references.",
+            },
+            {
+              href: "/science/stack-and-reach",
+              label: locale === "nl" ? "Reach racefiets" : "Road bike reach",
+              description:
+                locale === "nl"
+                  ? "Gebruik stack en reach wanneer framekeuze of cockpitlengte de echte vraag is."
+                  : "Use stack and reach when frame choice or cockpit length is the real question.",
+            },
+          ]}
+        />
 
         <PublicCtaBand
           className="mt-12"

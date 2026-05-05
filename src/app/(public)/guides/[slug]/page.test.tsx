@@ -3,7 +3,7 @@
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import GuidePage from "./page";
+import GuidePage, { generateMetadata } from "./page";
 
 let locale: "en" | "nl" = "en";
 let isPreview = false;
@@ -150,6 +150,24 @@ vi.mock("@/lib/seo/jsonLd", () => ({
   buildArticleSchema: () => ({}),
   buildBreadcrumbListSchema: () => ({}),
   buildFaqPageSchema: () => ({}),
+}));
+
+vi.mock("../data", () => ({
+  getLegacyGuideSeoKeywords: (slug: string, activeLocale: "en" | "nl") => {
+    if (slug === "bike-fitting-for-knee-pain") {
+      return activeLocale === "nl"
+        ? ["bikefitting kniepijn", "kniepijn fietsen afstelling"]
+        : ["bike fitting for knee pain", "knee pain cycling fit"];
+    }
+
+    if (slug === "fallback-guide") {
+      return activeLocale === "nl"
+        ? ["fallback gids", "fallback zoekwoord"]
+        : ["fallback guide", "fallback keyword"];
+    }
+
+    return undefined;
+  },
 }));
 
 vi.mock("@/lib/guides/content", () => ({
@@ -481,6 +499,20 @@ afterEach(() => {
 });
 
 describe("guide page template redesign", () => {
+  it("adds keywords metadata from the fallback guide seo source without changing description precedence", async () => {
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ slug: "bike-fitting-for-knee-pain" }),
+      searchParams: Promise.resolve({}),
+    });
+
+    expect(metadata.title).toBe("Bike fitting for knee pain");
+    expect(metadata.description).toBe("Knee pain desc");
+    expect(metadata.keywords).toEqual([
+      "bike fitting for knee pain",
+      "knee pain cycling fit",
+    ]);
+  });
+
   it("renders hero, extracted quick answer, markdown body, faq accordion, related links, and all cta zones for a db guide", async () => {
     const ui = await GuidePage({
       params: Promise.resolve({ slug: "bike-fitting-for-knee-pain" }),
@@ -557,7 +589,12 @@ describe("guide page template redesign", () => {
     const { rerender } = render(ui);
 
     expect(screen.getByText("Gids")).toBeTruthy();
-    expect(screen.getByText(/bike fit voor kniepijn/i)).toBeTruthy();
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: /bike fit voor kniepijn/i,
+      })
+    ).toBeTruthy();
     expect(screen.getByText("Kniepijn intro.")).toBeTruthy();
 
     ui = await GuidePage({
@@ -566,7 +603,7 @@ describe("guide page template redesign", () => {
     });
     rerender(ui);
 
-    expect(screen.getByText("Fallback gids")).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1, name: "Fallback gids" })).toBeTruthy();
     expect(screen.getByText("Fallback inhoud.")).toBeTruthy();
     expect(screen.getByText("Fallback vraag?")).toBeTruthy();
     expect(screen.getByText("Fallback CTA description nl")).toBeTruthy();

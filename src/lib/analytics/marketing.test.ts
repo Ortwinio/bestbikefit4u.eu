@@ -11,7 +11,9 @@ describe("marketing analytics helpers", () => {
   it("keeps public event types typed and discoverable", () => {
     expect(MARKETING_EVENT_TYPES).toContain("pricing_view");
     expect(MARKETING_EVENT_TYPES).toContain("pain_page_view");
+    expect(MARKETING_EVENT_TYPES).toContain("bike_setup_page_view");
     expect(MARKETING_EVENT_TYPES).toContain("case_study_recruitment_submit");
+    expect(ANONYMOUS_MARKETING_EVENT_TYPES).toContain("bike_setup_page_view");
     expect(ANONYMOUS_MARKETING_EVENT_TYPES).toContain("case_study_recruitment_submit");
   });
 

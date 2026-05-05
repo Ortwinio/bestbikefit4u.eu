@@ -104,6 +104,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       relatedTitle: "Gerelateerde vervolgstappen",
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+        { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
         { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
         { href: "/case-study", label: "Doe mee aan een pijn-case-study" },
       ],
@@ -186,6 +187,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       relatedTitle: "Gerelateerde vervolgstappen",
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+        { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
         { href: "/how-it-works", label: "Hoe BestBikeFit4U werkt" },
         { href: "/case-study", label: "Doe mee aan een pijn-case-study" },
       ],
@@ -268,6 +270,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       relatedTitle: "Gerelateerde vervolgstappen",
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+        { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
         { href: "/pain/hand-numbness-cycling", label: "Dove handen op de fiets" },
         { href: "/case-study", label: "Doe mee aan een pijn-case-study" },
       ],
@@ -350,6 +353,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       relatedTitle: "Gerelateerde vervolgstappen",
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+        { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
         { href: "/pain/neck-pain-cycling", label: "Nekpijn tijdens fietsen" },
         { href: "/case-study", label: "Doe mee aan een pijn-case-study" },
       ],
@@ -433,6 +437,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       relatedTitle: "Gerelateerde vervolgstappen",
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
+        { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
         { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
         { href: "/pain/hand-numbness-cycling", label: "Dove handen op de fiets" },
         { href: "/case-study", label: "Doe mee aan een pijn-case-study" },

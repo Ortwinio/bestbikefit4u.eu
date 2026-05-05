@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { BikeShowcaseSection } from "@/components/home/BikeShowcaseSection";
 import { CalculatorGrid } from "@/components/home/CalculatorGrid";
@@ -12,7 +13,6 @@ import { ProofBar } from "@/components/home/ProofBar";
 import { TestimonialSection } from "@/components/home/TestimonialSection";
 import { GuideLinkButton } from "@/components/public/GuideLinkButton";
 import { Button } from "@/components/prototyper-ui/ui/button";
-import { JsonLd } from "@/components/seo/JsonLd";
 import {
   getLocalizedPublicCalculatorPath,
   type PublicCalculatorId,
@@ -21,13 +21,11 @@ import { getDictionary } from "@/i18n/getDictionary";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { buildLocaleAlternates } from "@/i18n/metadata";
-import { BRAND } from "@/config/brand";
 import {
   CONSUMER_CAMPAIGN_CONFIG,
   getConsumerCampaignCopy,
   isConsumerCampaignActive,
 } from "@/config/commercial";
-import { buildOrganizationSchema, buildWebSiteSchema } from "@/lib/seo/jsonLd";
 
 export const revalidate = 3600;
 
@@ -67,21 +65,6 @@ export default async function HomePage() {
   const fitCalculatorHref = withLocalePrefix("/calculators/bike-fit", locale);
   const pricingHref = withLocalePrefix("/pricing", locale);
   const loginHref = withLocalePrefix("/login", locale);
-  const localizedHomeUrl = new URL(
-    homePath,
-    BRAND.siteUrl
-  ).toString();
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
-      buildOrganizationSchema(),
-      buildWebSiteSchema({
-        url: localizedHomeUrl,
-        description: home.metadata.description,
-        inLanguage: locale,
-      }),
-    ],
-  };
   const popularTools: PopularTool[] =
     locale === "nl"
       ? [
@@ -152,6 +135,72 @@ export default async function HomePage() {
     ...home.bikeShowcase,
     useInFitLabel: HOME_BIKE_SEARCH_CONTENT[locale].useInFitLabel,
   };
+  const fitFoundationLinks =
+    locale === "nl"
+      ? [
+          {
+            href: "/fiets-afstellen",
+            title: "Fiets afstellen stap voor stap",
+            subtitle:
+              "Start met de praktische pagina voor zadelhoogte, fietspositie en de snelste eerste aanpassing.",
+          },
+          {
+            href: "/bikefitting",
+            title: "Bikefitting uitgelegd",
+            subtitle:
+              "Gebruik deze route als je gericht wilt vergelijken tussen online bikefitting, tools en je volgende fitstap.",
+          },
+          {
+            href: "/measurement-guide",
+            title: "Meetgids",
+            subtitle:
+              "Meet eerst goed voordat je zadelhoogte of bikefit berekent.",
+          },
+          {
+            href: "/pain",
+            title: "Bikefit bij veelvoorkomende klachten",
+            subtitle:
+              "Start hier als knieën, rug, handen of zadelcomfort het probleem zijn.",
+          },
+          {
+            href: "/science/stack-and-reach",
+            title: "Stack en reach uitgelegd",
+            subtitle:
+              "Gebruik reach racefiets en framevergelijking als geometry de limiter is.",
+          },
+        ]
+      : [
+          {
+            href: "/bike-fitting",
+            title: "Bike Fitting at Home",
+            subtitle:
+              "Start with the public landing page for bike fitting, fit priorities, and the strongest first calculator handoff.",
+          },
+          {
+            href: "/measurement-guide",
+            title: "Measurement Guide",
+            subtitle:
+              "Measure accurately before you calculate saddle height or bike fit.",
+          },
+          {
+            href: "/pain",
+            title: "Bike Fit for Common Pain Points",
+            subtitle:
+              "Start here when knees, back, hands, or saddle comfort are the main issue.",
+          },
+          {
+            href: "/science/stack-and-reach",
+            title: "Stack and Reach Explained",
+            subtitle:
+              "Use road-bike reach and frame comparison when geometry is the limiter.",
+          },
+          {
+            href: "/guides/road-bike-fit-guide",
+            title: "Road Bike Fit Guide",
+            subtitle:
+              "Connect saddle height, reach, and cockpit decisions in one practical guide.",
+          },
+        ];
 
   return (
     <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_35%,var(--background)_65%)_100%)]">
@@ -161,7 +210,6 @@ export default async function HomePage() {
         pagePath={homePath}
         section="landing"
       />
-      <JsonLd schema={structuredData} />
       <HeroBlock
         locale={locale}
         homePath={homePath}
@@ -185,6 +233,68 @@ export default async function HomePage() {
         }))}
         upsellHref={fitCalculatorHref}
       />
+      <section className="bg-[color:color-mix(in_oklch,var(--secondary)_26%,var(--background)_74%)] py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
+              {locale === "nl" ? "Fitfundament" : "Fit foundations"}
+            </p>
+            <h2 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-[color:var(--foreground)] sm:text-[2rem]">
+              {locale === "nl"
+                ? "Begin met de pagina die je volgende afstelbeslissing versnelt"
+                : "Start with the page that speeds up your next fit decision"}
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)] sm:text-base">
+              {locale === "nl"
+                ? "Gebruik de meetgids, de klachtenhub en stack en reach om sneller te bepalen of je eerst zadelhoogte, volledige bikefit of framemaat moet aanpakken."
+                : "Use the measurement guide, pain hub, and stack-and-reach page to decide faster whether saddle height, full bike fit, or frame size is the smarter first move."}
+            </p>
+          </div>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {fitFoundationLinks.map((link) => (
+              <GuideLinkButton
+                key={link.href}
+                href={withLocalePrefix(link.href, locale)}
+                icon={HOME_GUIDE_LINKS[locale][0]?.icon}
+                title={link.title}
+                subtitle={link.subtitle}
+              />
+            ))}
+          </div>
+          <div className="mt-6 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-5 py-4 text-sm leading-6 text-[color:var(--muted-foreground)]">
+            {locale === "nl" ? (
+              <p>
+                Wil je eerst breder begrijpen hoe je{" "}
+                <Link
+                  href={withLocalePrefix("/fiets-afstellen", locale)}
+                  className="font-medium text-[color:var(--primary)] underline underline-offset-4"
+                >
+                  fiets afstellen stap voor stap
+                </Link>{" "}
+                aanpakt, of liever direct zien hoe{" "}
+                <Link
+                  href={withLocalePrefix("/bikefitting", locale)}
+                  className="font-medium text-[color:var(--primary)] underline underline-offset-4"
+                >
+                  online bikefitting
+                </Link>{" "}
+                zich verhoudt tot je gratis calculator-start? Gebruik die landingspagina&apos;s als extra contextlaag voordat je dieper de tools of gidsen in gaat.
+              </p>
+            ) : (
+              <p>
+                If you want broader context before the tools, start with{" "}
+                <Link
+                  href={withLocalePrefix("/bike-fitting", locale)}
+                  className="font-medium text-[color:var(--primary)] underline underline-offset-4"
+                >
+                  bike fitting at home
+                </Link>{" "}
+                and then return to the measurement guide, pain hub, or stack-and-reach page once you know which setup question matters most.
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
       <HowItWorksStepper
         locale={locale}
         homePath={homePath}

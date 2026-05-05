@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bike, ClipboardList, ShieldCheck, Target } from "lucide-react";
+import { Bike, ClipboardList, FlaskConical, ShieldCheck, Target } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
@@ -7,6 +7,7 @@ import {
   PublicCtaBand,
   FeatureIconCard,
   type FeatureIconCardColor,
+  GuideLinkButton,
   PublicHero,
   PublicPageShell,
   PublicSection,
@@ -18,11 +19,8 @@ import type { Locale } from "@/i18n/config";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import { BRAND } from "@/config/brand";
 import {
   buildHowToSchema,
-  buildOrganizationSchema,
-  buildWebSiteSchema,
 } from "@/lib/seo/jsonLd";
 
 const stepIcons = [ClipboardList, Bike, Target] as const;
@@ -145,7 +143,6 @@ export default async function HowItWorksPage() {
   const locale = await getRequestLocale();
   const page = copy[locale];
   const pagePath = withLocalePrefix("/how-it-works", locale);
-  const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
 
   return (
     <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_42%,var(--background)_58%)_100%)]">
@@ -157,12 +154,6 @@ export default async function HowItWorksPage() {
       />
       <JsonLd
         schema={[
-          buildOrganizationSchema(),
-          buildWebSiteSchema({
-            url: pageUrl,
-            description: page.metadata.description,
-            inLanguage: locale,
-          }),
           buildHowToSchema({
             name: page.title,
             description: page.metadata.description,
@@ -267,6 +258,64 @@ export default async function HowItWorksPage() {
             >
               <div />
             </PublicSurfaceCard>
+          </div>
+        </PublicSection>
+
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: locale === "nl" ? "Werk stap voor stap" : "Work step by step",
+            title:
+              locale === "nl"
+                ? "Gebruik de juiste pagina voor elke fase van fiets afstellen"
+                : "Use the right page for each phase of bike fitting",
+            description:
+              locale === "nl"
+                ? "Meet eerst, bereken daarna je eerste bikefit, en zoom pas daarna in op zadelhoogte of reach."
+                : "Measure first, calculate your first bike fit next, and only then zoom in on saddle height or reach.",
+          }}
+        >
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <GuideLinkButton
+              href={withLocalePrefix("/measurement-guide", locale)}
+              title={locale === "nl" ? "Meetgids" : "Measurement Guide"}
+              subtitle={
+                locale === "nl"
+                  ? "Meet zorgvuldig voordat je afstelwaarden gaat vertrouwen."
+                  : "Measure carefully before you trust setup values."
+              }
+              icon={<ClipboardList className="h-5 w-5" />}
+            />
+            <GuideLinkButton
+              href={withLocalePrefix("/calculators/bike-fit", locale)}
+              title={locale === "nl" ? "Bike fit calculator" : "Bike Fit Calculator"}
+              subtitle={
+                locale === "nl"
+                  ? "Gebruik de hoofdflow voor fiets afstellen in samenhang."
+                  : "Use the main flow when you want a connected bike-fit baseline."
+              }
+              icon={<Bike className="h-5 w-5" />}
+            />
+            <GuideLinkButton
+              href={withLocalePrefix("/calculators/saddle-height", locale)}
+              title={locale === "nl" ? "Zadelhoogte afstellen" : "Set saddle height"}
+              subtitle={
+                locale === "nl"
+                  ? "Begin hier als je vooral je zadelhoogte wilt controleren."
+                  : "Start here when saddle height is the main thing you want to check."
+              }
+              icon={<Target className="h-5 w-5" />}
+            />
+            <GuideLinkButton
+              href={withLocalePrefix("/science/calculation-engine", locale)}
+              title={locale === "nl" ? "Uitleg van de rekenmotor" : "Calculation Engine Transparency"}
+              subtitle={
+                locale === "nl"
+                  ? "Bekijk welke fitlogica achter de publieke calculator en vervolgstappen zit."
+                  : "See the fit logic behind the public calculator and the next-step recommendations."
+              }
+              icon={<FlaskConical className="h-5 w-5" />}
+            />
           </div>
         </PublicSection>
 

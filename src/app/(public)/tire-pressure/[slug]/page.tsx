@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
+import { PublicBreadcrumbs } from "@/components/public";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { calculateBasicPressure } from "@/lib/pressure-engine";
 import {
@@ -14,7 +15,11 @@ import {
   buildPressureInput,
   parseEnglishPressureSlug,
 } from "@/lib/seo/programmatic/tirePressure";
-import { buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import {
+  buildBreadcrumbListSchema,
+  buildFaqPageSchema,
+  buildWebApplicationSchema,
+} from "@/lib/seo/jsonLd";
 import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { BRAND } from "@/config/brand";
@@ -93,6 +98,15 @@ export default async function ProgrammaticTirePressurePage({
     <div className="py-16">
       <JsonLd
         schema={[
+          buildBreadcrumbListSchema([
+            { name: "Home", item: new URL(withLocalePrefix("/", "en"), BRAND.siteUrl).toString() },
+            {
+              name: "Tire Pressure Calculator",
+              item: new URL(withLocalePrefix("/tire-pressure-calculator", "en"), BRAND.siteUrl).toString(),
+            },
+            { name: `Tire Pressure for ${weight}kg ${label.en} Rider`, item: pageUrl },
+          ]),
+          buildFaqPageSchema(faqs),
           buildWebApplicationSchema({
             name: `Tire Pressure for ${weight}kg ${label.en} Rider`,
             description: `Static tire-pressure recommendation page for a ${weight} kg ${label.en} rider.`,
@@ -101,6 +115,13 @@ export default async function ProgrammaticTirePressurePage({
         ]}
       />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <PublicBreadcrumbs
+          items={[
+            { label: "Home", href: withLocalePrefix("/", "en") },
+            { label: "Tire Pressure Calculator", href: withLocalePrefix("/tire-pressure-calculator", "en") },
+            { label: `Tire Pressure for ${weight}kg ${label.en} Rider` },
+          ]}
+        />
         <section className="rounded-[28px] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--primary)_12%)] p-8 shadow-sm sm:p-10">
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">

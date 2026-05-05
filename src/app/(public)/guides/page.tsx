@@ -114,6 +114,64 @@ export default async function GuidesHubPage() {
         <PublicSection
           className="mt-10"
           header={{
+            eyebrow: isNl ? "Start met de juiste route" : "Start with the right route",
+            title: isNl
+              ? "Verbind gidsen direct met calculators en fit science"
+              : "Connect guides directly to calculators and fit science",
+            description: isNl
+              ? "Gebruik deze ingangen wanneer je sneller wilt schakelen tussen fiets afstellen, zadelhoogte, klachtentriage en reach racefiets."
+              : "Use these entry points when you want to move faster between bike fitting, saddle height, symptom triage, and road-bike reach.",
+          }}
+        >
+          <div className="grid gap-4 md:grid-cols-2">
+            <GuideLinkButton
+              href={withLocalePrefix("/calculators/bike-fit", locale)}
+              title={isNl ? "Bike fit calculator" : "Bike Fit Calculator"}
+              subtitle={
+                isNl
+                  ? "Gebruik de hoofdcalculator als fiets afstellen je centrale vraag is."
+                  : "Use the main calculator when bike fitting is your central question."
+              }
+              icon={<Compass className="h-5 w-5" />}
+            />
+            <GuideLinkButton
+              href={withLocalePrefix("/calculators/saddle-height", locale)}
+              title={isNl ? "Zadelhoogte calculator" : "Saddle Height Calculator"}
+              subtitle={
+                isNl
+                  ? "Begin hier als zadelhoogte afstellen je grootste open punt is."
+                  : "Start here when setting saddle height is your biggest open question."
+              }
+              icon={<Ruler className="h-5 w-5" />}
+            />
+            <GuideLinkButton
+              href={withLocalePrefix("/pain", locale)}
+              title={
+                isNl ? "Bikefit bij veelvoorkomende klachten" : "Bike Fit for Common Pain Points"
+              }
+              subtitle={
+                isNl
+                  ? "Routeer knie-, rug- en comfortvragen eerst via de klachtenhub."
+                  : "Route knee, back, and comfort questions through the symptom hub first."
+              }
+              icon={<HeartPulse className="h-5 w-5" />}
+            />
+            <GuideLinkButton
+              href={withLocalePrefix("/science/stack-and-reach", locale)}
+              title={isNl ? "Stack en reach gids" : "Stack and Reach Guide"}
+              subtitle={
+                isNl
+                  ? "Gebruik reach racefiets en framelogica voordat je cockpitlengte gaat gokken."
+                  : "Use road-bike reach and frame logic before you guess cockpit length."
+              }
+              icon={<FlaskConical className="h-5 w-5" />}
+            />
+          </div>
+        </PublicSection>
+
+        <PublicSection
+          className="mt-10"
+          header={{
             eyebrow: isNl ? "Clusters" : "Clusters",
             title: isNl ? "Verken de gidsen per onderwerp" : "Explore the guide library by topic",
             description: isNl

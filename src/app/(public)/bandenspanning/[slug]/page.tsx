@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
+import { PublicBreadcrumbs } from "@/components/public";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { calculateBasicPressure } from "@/lib/pressure-engine";
 import {
@@ -14,7 +15,11 @@ import {
   buildPressureInput,
   parseDutchPressureSlug,
 } from "@/lib/seo/programmatic/tirePressure";
-import { buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import {
+  buildBreadcrumbListSchema,
+  buildFaqPageSchema,
+  buildWebApplicationSchema,
+} from "@/lib/seo/jsonLd";
 import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { BRAND } from "@/config/brand";
@@ -93,6 +98,15 @@ export default async function ProgrammaticBandenspanningPage({
     <div className="py-16">
       <JsonLd
         schema={[
+          buildBreadcrumbListSchema([
+            { name: "Home", item: new URL(withLocalePrefix("/", "nl"), BRAND.siteUrl).toString() },
+            {
+              name: "Bandenspanning calculator",
+              item: new URL(withLocalePrefix("/bandenspanning-calculator", "nl"), BRAND.siteUrl).toString(),
+            },
+            { name: `Bandenspanning voor ${weight}kg ${label.nl}`, item: pageUrl },
+          ]),
+          buildFaqPageSchema(faqs),
           buildWebApplicationSchema({
             name: `Bandenspanning voor ${weight}kg ${label.nl}`,
             description: `Statische bandenspanningspagina voor een rijder van ${weight} kg op een ${label.nl}.`,
@@ -101,6 +115,13 @@ export default async function ProgrammaticBandenspanningPage({
         ]}
       />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <PublicBreadcrumbs
+          items={[
+            { label: "Home", href: withLocalePrefix("/", "nl") },
+            { label: "Bandenspanning calculator", href: withLocalePrefix("/bandenspanning-calculator", "nl") },
+            { label: `Bandenspanning voor ${weight}kg ${label.nl}` },
+          ]}
+        />
         <section className="rounded-[28px] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--primary)_12%)] p-8 shadow-sm sm:p-10">
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">

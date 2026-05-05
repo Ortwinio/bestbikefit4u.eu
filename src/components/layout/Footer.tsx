@@ -232,9 +232,49 @@ export function Footer({ locale, labels }: FooterProps) {
           </div>
           <div>
             <h3 className="text-sm font-semibold text-[color:var(--foreground)]">
-              {f.resources}
+              {f.guides}
             </h3>
             <ul className="mt-4 space-y-2">
+              <li>
+                <Link
+                  href={withLocalePrefix("/guides/bike-fitting-for-knee-pain", locale)}
+                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                >
+                  {f.kneeGuide}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={withLocalePrefix("/guides/bike-fitting-for-lower-back-pain", locale)}
+                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                >
+                  {f.backPainGuide}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={withLocalePrefix("/guides/saddle-height-guide", locale)}
+                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                >
+                  {f.saddleHeightGuide}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={withLocalePrefix("/guides/road-bike-fit-guide", locale)}
+                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                >
+                  {f.roadBikeFitGuide}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={withLocalePrefix("/guides/cleat-position-basics-guide", locale)}
+                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                >
+                  {f.cleatGuide}
+                </Link>
+              </li>
               <li>
                 <Link
                   href={withLocalePrefix("/guides/fit-science", locale)}
@@ -248,7 +288,7 @@ export function Footer({ locale, labels }: FooterProps) {
                   href={withLocalePrefix("/guides", locale)}
                   className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
-                  {f.guides}
+                  {f.allGuides} →
                 </Link>
               </li>
             </ul>

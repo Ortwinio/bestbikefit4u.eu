@@ -50,6 +50,46 @@ export type GuidePageData = {
   hubQuickAnswer: GuideQuickAnswer;
 };
 
+const GUIDE_INTERNAL_LINK_OVERRIDES: Partial<Record<string, string[]>> = {
+  guides: ["/calculators/bike-fit", "/calculators/saddle-height", "/pain", "/science/stack-and-reach"],
+  "bike-fitting-for-knee-pain": [
+    "/calculators/saddle-height",
+    "/calculators/bike-fit",
+    "/measurement-guide",
+    "/guides/bike-fitting-for-lower-back-pain",
+  ],
+  "bike-fitting-for-lower-back-pain": [
+    "/science/stack-and-reach",
+    "/calculators/frame-size",
+    "/calculators/bike-fit",
+    "/guides/road-bike-fit-guide",
+  ],
+  "road-bike-fit-guide": [
+    "/calculators/bike-fit",
+    "/calculators/frame-size",
+    "/science/stack-and-reach",
+    "/calculators/saddle-height",
+  ],
+  "gravel-bike-fit-guide": [
+    "/calculators/bike-fit",
+    "/calculators/saddle-height",
+    "/guides/road-bike-fit-guide",
+    "/guides/mountain-bike-fit-guide",
+  ],
+  "mountain-bike-fit-guide": [
+    "/calculators/bike-fit",
+    "/calculators/crank-length",
+    "/guides/gravel-bike-fit-guide",
+    "/guides/road-bike-fit-guide",
+  ],
+  "triathlon-bike-fit-guide": [
+    "/calculators/bike-fit",
+    "/science/stack-and-reach",
+    "/calculators/frame-size",
+    "/guides/road-bike-fit-guide",
+  ],
+};
+
 function stripLocalePrefix(path: string): string {
   return path.replace(/^\/(en|nl)(?=\/|$)/, "") || "/";
 }
@@ -107,6 +147,7 @@ function buildGuideEntryFromDb(
         dbGuide.primaryCtaTarget || fallbackEntry?.primaryCtaTarget || "/guides"
       ),
     internalLinkTargets:
+      GUIDE_INTERNAL_LINK_OVERRIDES[slug] ??
       dbGuide.relatedGuidePaths?.map(normalizeGuidePath) ??
       fallbackEntry?.internalLinkTargets ??
       [],
@@ -245,6 +286,16 @@ export function getGuideLinkLabel(path: string, locale: Locale): string {
       nl: "Stack en reach uitgelegd",
     },
     "/faq": { en: "FAQ", nl: "FAQ" },
+    "/guides": { en: "Bike Fitting Guides", nl: "Bikefitting gidsen" },
+    "/pain": {
+      en: "Bike Fit for Common Pain Points",
+      nl: "Bikefit bij veelvoorkomende klachten",
+    },
+    "/how-it-works": { en: "How BestBikeFit4U Works", nl: "Hoe BestBikeFit4U werkt" },
+    "/why-bikefit-matters": {
+      en: "Why Bike Fit Matters",
+      nl: "Waarom bike fit telt",
+    },
     "/measurement-guide": { en: "Measurement Guide", nl: "Meetgids" },
     "/calculators/bike-fit": {
       en: "Bike Fit Calculator",
@@ -807,6 +858,58 @@ export function buildFaqs(entry: GuideBacklogEntry, locale: Locale): GuideFaq[] 
   ];
 }
 
-export function relatedLinkDescription(locale: Locale) {
-  return labels(locale).relatedDefault;
+export function relatedLinkDescription(locale: Locale, path?: string) {
+  const normalized = path ? path.replace(/^\/(en|nl)/, "") : "";
+
+  if (locale === "nl") {
+    const map: Record<string, string> = {
+      "/calculators/bike-fit":
+        "Gebruik de hoofdcalculator wanneer je van context naar een complete eerste bikefit wilt gaan.",
+      "/calculators/saddle-height":
+        "Gebruik deze calculator als zadelhoogte afstellen je logische eerste meetbare stap is.",
+      "/calculators/frame-size":
+        "Controleer eerst framelogica en reach als de hele cockpit of fietsmaat twijfelachtig voelt.",
+      "/science/stack-and-reach":
+        "Bekijk stack en reach wanneer cockpitlengte of framevergelijking de echte limiter zijn.",
+      "/science/bike-fit-methods":
+        "Gebruik deze science-pagina als je de methode achter de fitaanbeveling wilt begrijpen.",
+      "/measurement-guide":
+        "Meet eerst nauwkeuriger voordat je verdere fitconclusies trekt uit de tool- of gidsuitkomst.",
+      "/guides/road-bike-fit-guide":
+        "Verbind zadelhoogte, reach en cockpitkeuzes in één praktische racefiets-fitgids.",
+      "/guides/bike-fitting-for-knee-pain":
+        "Gebruik deze klachtgids wanneer kniebelasting of zadelhoogte je eerste verdachte blijft.",
+      "/guides/bike-fitting-for-lower-back-pain":
+        "Gebruik deze gids wanneer reach, drop of bekkenstabiliteit rugklachten beter verklaren dan pure vermoeidheid.",
+      "/pain":
+        "Gebruik de klachtenhub als je eerst wilt bepalen welke fitfactor bij jouw discomfort prioriteit verdient.",
+    };
+
+    return map[normalized] ?? labels(locale).relatedDefault;
+  }
+
+  const map: Record<string, string> = {
+    "/calculators/bike-fit":
+      "Use the main calculator when you want to turn context into one connected first-pass bike-fit baseline.",
+    "/calculators/saddle-height":
+      "Use this calculator when setting saddle height is the clearest first measurable step.",
+    "/calculators/frame-size":
+      "Check frame logic and reach first when the whole bike size or cockpit feels suspect.",
+    "/science/stack-and-reach":
+      "Use stack and reach when cockpit length or frame comparison is the real limiter.",
+    "/science/bike-fit-methods":
+      "Open the science page when you want the method behind the fit recommendation, not just the output.",
+    "/measurement-guide":
+      "Measure more carefully first before you trust the tool or guide output too far.",
+    "/guides/road-bike-fit-guide":
+      "Connect saddle height, reach, and cockpit choices inside one practical road-bike fit guide.",
+    "/guides/bike-fitting-for-knee-pain":
+      "Use this symptom guide when knee loading or saddle height still looks like the first suspect.",
+    "/guides/bike-fitting-for-lower-back-pain":
+      "Use this guide when reach, drop, or pelvic stability explain the issue better than general fatigue.",
+    "/pain":
+      "Use the symptom hub when you first need to decide which fit factor deserves priority.",
+  };
+
+  return map[normalized] ?? labels(locale).relatedDefault;
 }

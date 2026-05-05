@@ -13,6 +13,9 @@ describe("sitemap sources", () => {
     expect(localizedPaths).toContain("/nl/case-study");
     expect(localizedPaths).toContain("/en/how-it-works");
     expect(localizedPaths).toContain("/nl/how-it-works");
+    expect(localizedPaths).toContain("/nl/fiets-afstellen");
+    expect(localizedPaths).toContain("/nl/bikefitting");
+    expect(localizedPaths).toContain("/en/bike-fitting");
 
     for (const slug of PAIN_PAGE_SLUGS) {
       expect(localizedPaths).toContain(`/en/pain/${slug}`);

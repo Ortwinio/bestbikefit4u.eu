@@ -1,11 +1,9 @@
 import { permanentRedirect } from "next/navigation";
-import {
-  PressureCalculatorPageContent,
-  generateMetadata,
-} from "../bandenspanning-calculator/page";
+import { generateMetadata } from "../bandenspanning-calculator/page";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getPublicCalculatorRouteEntry } from "@/lib/public-calculators";
+import { PressureCalculatorPageContent } from "../bandenspanning-calculator/PressureCalculatorPageContent";
 
 export { generateMetadata };
 
@@ -17,5 +15,5 @@ export default async function TirePressureCalculatorPage() {
     permanentRedirect(withLocalePrefix(routeEntry.localizedPaths.nl, "nl"));
   }
 
-  return <PressureCalculatorPageContent />;
+  return <PressureCalculatorPageContent locale={locale} />;
 }

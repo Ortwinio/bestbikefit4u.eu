@@ -10,6 +10,7 @@ import {
   PublicSection,
   PublicSurfaceCard,
 } from "@/components/public";
+import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import type { Locale } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -495,6 +496,58 @@ export default async function MeasurementGuidePage() {
           ))}
         </div>
       </PublicSection>
+
+      <RelatedLinksSection
+        locale={locale}
+        title={locale === "nl" ? "Gebruik je metingen meteen goed" : "Use your measurements immediately"}
+        links={[
+          {
+            href: "/calculators/bike-fit",
+            label: locale === "nl" ? "Bike fit calculator" : "Bike Fit Calculator",
+            description:
+              locale === "nl"
+                ? "Vertaal je lichaamsmaten naar een eerste complete bikefit."
+                : "Turn body measurements into a first full bike-fit baseline.",
+          },
+          {
+            href: "/calculators/saddle-height",
+            label: locale === "nl" ? "Zadelhoogte calculator" : "Saddle Height Calculator",
+            description:
+              locale === "nl"
+                ? "Begin hier als zadelhoogte afstellen je eerste stap is."
+                : "Start here when setting saddle height is your first move.",
+          },
+          {
+            href: "/science/bike-fit-methods",
+            label:
+              locale === "nl" ? "Bikefit-methodes uitgelegd" : "Bike Fitting Methods Explained",
+            description:
+              locale === "nl"
+                ? "Bekijk hoe de meetwaarden in de fitmethodiek landen."
+                : "See how the measurements feed into the fit methodology.",
+          },
+          {
+            href: "/science/calculation-engine",
+            label:
+              locale === "nl" ? "Uitleg van de rekenmotor" : "Calculation Engine Transparency",
+            description:
+              locale === "nl"
+                ? "Bekijk hoe meetkwaliteit en fitlogica samenkomen voordat je de volledige bikefit opent."
+                : "See how measurement quality and fit logic come together before you open the full bike-fit flow.",
+          },
+          {
+            href: "/pain",
+            label:
+              locale === "nl"
+                ? "Bikefit bij veelvoorkomende klachten"
+                : "Bike Fit for Common Pain Points",
+            description:
+              locale === "nl"
+                ? "Gebruik de klachtenhub als je metingen vooral pijnvragen moeten helpen oplossen."
+                : "Use the symptom hub when your measurements mainly need to solve pain questions.",
+          },
+        ]}
+      />
 
       <PublicCtaBand
         eyebrow={locale === "nl" ? "Volgende stap" : "Next step"}
