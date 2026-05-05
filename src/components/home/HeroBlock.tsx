@@ -5,6 +5,7 @@ import { Card } from "@/components/prototyper-ui/ui/card";
 import { RatingBadge } from "@/components/public/RatingBadge";
 import type { Locale } from "@/i18n/config";
 import { HOME_HERO_MICROCOPY, HOME_HERO_PROOF_CARDS } from "./homeRedesignContent";
+import { HeroBackground } from "./HeroBackground";
 
 type HeroBlockProps = {
   locale: Locale;
@@ -45,7 +46,11 @@ export function HeroBlock({
   } as const;
 
   return (
-    <section className="relative overflow-hidden bg-[url('/bestbikefit4u-home.gif')] bg-cover bg-center bg-no-repeat py-24 sm:py-28">
+    <section className="relative overflow-hidden py-24 sm:py-28">
+      <HeroBackground
+        posterSrc="/bestbikefit4u-home-poster.jpg"
+        animatedSrc="/bestbikefit4u-home.gif"
+      />
       <div className="absolute inset-0 bg-black/55" aria-hidden="true" />
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl rounded-[2rem] border border-primary-foreground/20 bg-black/35 px-6 py-10 text-center shadow-2xl backdrop-blur-sm sm:px-10 sm:py-12">

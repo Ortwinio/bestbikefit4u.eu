@@ -52,3 +52,6 @@ messages/*
 !messages/README.md
 !messages/TEMPLATE.md
 claude/.obsidian/
+
+# temporary working files
+/.tmp/
