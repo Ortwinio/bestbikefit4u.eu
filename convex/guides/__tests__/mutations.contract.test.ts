@@ -281,6 +281,65 @@ describe("guide mutations and queries", () => {
     );
   });
 
+  it("normalizes blank optional SEO fields on update", async () => {
+    const ctx = makeCtx();
+    const createHandler = (createGuide as unknown as { _handler: TestHandler })._handler;
+    const updateHandler = (updateGuide as unknown as { _handler: TestHandler })._handler;
+
+    const guideId = (await createHandler(ctx, {
+      ...createGuideArgs(),
+      canonicalUrl: "https://bestbikefit4u.eu/en/guides/test-slug-a",
+      heroImagePublicPath: "/images/guides/test-guide.jpg",
+      featuredImageAlt: { en: "Guide hero", nl: "Gids hero" },
+    })) as string;
+
+    await updateHandler(ctx, {
+      id: guideId,
+      canonicalUrl: "   ",
+      heroImagePublicPath: "   ",
+      featuredImageUrl: "   ",
+      ogImageUrl: "   ",
+    });
+
+    expect(ctx.tables.guidePages.get(guideId)).toMatchObject({
+      canonicalUrl: undefined,
+      heroImagePublicPath: undefined,
+      featuredImageUrl: undefined,
+      ogImageUrl: undefined,
+    });
+  });
+
+  it("rejects unsafe canonical URL overrides", async () => {
+    const ctx = makeCtx();
+    const createHandler = (createGuide as unknown as { _handler: TestHandler })._handler;
+    const updateHandler = (updateGuide as unknown as { _handler: TestHandler })._handler;
+
+    const guideId = (await createHandler(ctx, createGuideArgs())) as string;
+
+    await expect(
+      updateHandler(ctx, {
+        id: guideId,
+        canonicalUrl: "https://example.com/guides/test-slug-a?ref=bad",
+      })
+    ).rejects.toThrow("Canonical URL must use bestbikefit4u.eu");
+  });
+
+  it("requires localized image alt text when publishing a guide with a hero image", async () => {
+    const ctx = makeCtx();
+    const createHandler = (createGuide as unknown as { _handler: TestHandler })._handler;
+    const publishHandler = (publishGuide as unknown as { _handler: TestHandler })._handler;
+
+    const guideId = (await createHandler(ctx, {
+      ...createGuideArgs(),
+      heroImagePublicPath: "/images/guides/test-guide.jpg",
+      featuredImageAlt: { en: "Guide hero", nl: "" },
+    })) as string;
+
+    await expect(publishHandler(ctx, { id: guideId })).rejects.toThrow(
+      "Published guides with a featured or hero image must provide English and Dutch image alt text"
+    );
+  });
+
   it("rejects slug changes on published guides for editor tokens", async () => {
     const ctx = makeCtx();
     const createHandler = (createGuide as unknown as { _handler: TestHandler })._handler;

@@ -2,6 +2,7 @@ import { internalMutation, mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { writeAuditLog } from "../admin/audit";
 import { buildGuideFieldChanges, writeGuideAuditLog } from "./audit";
+import { BRAND } from "@/config/brand";
 import {
   assertGuideSlugAvailable,
   buildGuidePath,
@@ -15,6 +16,15 @@ import {
 
 function cleanStringArray(values: string[] | undefined) {
   return values?.map((value) => value.trim()).filter(Boolean);
+}
+
+function cleanOptionalString(value: string | undefined | null) {
+  if (typeof value !== "string") {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
 }
 
 function normalizeRedirectPath(value: string) {
@@ -31,6 +41,35 @@ function normalizeRedirectPath(value: string) {
 
 function hasText(value: string | undefined | null) {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+function hasLocalizedText(
+  value: { en?: string; nl?: string } | undefined | null,
+  locale: "en" | "nl"
+) {
+  return hasText(value?.[locale]);
+}
+
+function validateCanonicalUrl(canonicalUrl: string | undefined | null) {
+  const cleaned = cleanOptionalString(canonicalUrl);
+  if (!cleaned) {
+    return;
+  }
+
+  let parsed: URL;
+  try {
+    parsed = new URL(cleaned);
+  } catch {
+    throw new Error("Canonical URL must be a valid absolute URL");
+  }
+
+  if (parsed.hostname !== BRAND.host) {
+    throw new Error(`Canonical URL must use ${BRAND.host}`);
+  }
+
+  if (parsed.search || parsed.hash) {
+    throw new Error("Canonical URL cannot include query parameters or fragments");
+  }
 }
 
 function hasLocalizedGuideContent(guide: {
@@ -64,9 +103,26 @@ function assertGuideReadyForReviewOrPublish(guide: {
   pageBrief?: { en?: string; nl?: string };
   body?: { en?: Array<{ items?: string[] }>; nl?: Array<{ items?: string[] }> };
   libraryBody?: { en?: string; nl?: string };
+  featuredImageAlt?: { en?: string; nl?: string };
+  featuredImageUrl?: string | null;
+  heroImagePublicPath?: string | null;
+  canonicalUrl?: string | null;
 }) {
   if (!hasLocalizedGuideContent(guide, "en") || !hasLocalizedGuideContent(guide, "nl")) {
     throw new Error("English and Dutch content must both be complete before review or publishing");
+  }
+
+  validateCanonicalUrl(guide.canonicalUrl);
+
+  const hasGuideImage = hasText(guide.featuredImageUrl) || hasText(guide.heroImagePublicPath);
+  if (
+    hasGuideImage &&
+    (!hasLocalizedText(guide.featuredImageAlt, "en") ||
+      !hasLocalizedText(guide.featuredImageAlt, "nl"))
+  ) {
+    throw new Error(
+      "Published guides with a featured or hero image must provide English and Dutch image alt text"
+    );
   }
 }
 
@@ -92,16 +148,16 @@ function buildGuideRecordFromArgs(
     quickAnswer: args.quickAnswer,
     libraryBody: args.libraryBody,
     heroImageFileName: args.heroImageFileName,
-    heroImagePublicPath: args.heroImagePublicPath,
+    heroImagePublicPath: cleanOptionalString(args.heroImagePublicPath),
     relatedGuidePaths: cleanStringArray(args.relatedGuidePaths),
     relatedKeywords: cleanStringArray(args.relatedKeywords),
     seoHints: args.seoHints,
-    featuredImageUrl: args.featuredImageUrl,
+    featuredImageUrl: cleanOptionalString(args.featuredImageUrl),
     featuredImageAlt: args.featuredImageAlt,
-    canonicalUrl: args.canonicalUrl,
+    canonicalUrl: cleanOptionalString(args.canonicalUrl),
     ogTitle: args.ogTitle,
     ogDescription: args.ogDescription,
-    ogImageUrl: args.ogImageUrl,
+    ogImageUrl: cleanOptionalString(args.ogImageUrl),
     ogImageAlt: args.ogImageAlt,
     robotsIndex: args.robotsIndex,
     author: args.author,
@@ -259,7 +315,7 @@ export const updateGuide = mutation({
         ? { heroImageFileName: args.heroImageFileName }
         : {}),
       ...(args.heroImagePublicPath !== undefined
-        ? { heroImagePublicPath: args.heroImagePublicPath }
+        ? { heroImagePublicPath: cleanOptionalString(args.heroImagePublicPath) }
         : {}),
       ...(args.relatedGuidePaths !== undefined
         ? { relatedGuidePaths: cleanStringArray(args.relatedGuidePaths) }
@@ -269,17 +325,21 @@ export const updateGuide = mutation({
         : {}),
       ...(args.seoHints !== undefined ? { seoHints: args.seoHints } : {}),
       ...(args.featuredImageUrl !== undefined
-        ? { featuredImageUrl: args.featuredImageUrl }
+        ? { featuredImageUrl: cleanOptionalString(args.featuredImageUrl) }
         : {}),
       ...(args.featuredImageAlt !== undefined
         ? { featuredImageAlt: args.featuredImageAlt }
         : {}),
-      ...(args.canonicalUrl !== undefined ? { canonicalUrl: args.canonicalUrl } : {}),
+      ...(args.canonicalUrl !== undefined
+        ? { canonicalUrl: cleanOptionalString(args.canonicalUrl) }
+        : {}),
       ...(args.ogTitle !== undefined ? { ogTitle: args.ogTitle } : {}),
       ...(args.ogDescription !== undefined
         ? { ogDescription: args.ogDescription }
         : {}),
-      ...(args.ogImageUrl !== undefined ? { ogImageUrl: args.ogImageUrl } : {}),
+      ...(args.ogImageUrl !== undefined
+        ? { ogImageUrl: cleanOptionalString(args.ogImageUrl) }
+        : {}),
       ...(args.ogImageAlt !== undefined ? { ogImageAlt: args.ogImageAlt } : {}),
       ...(args.robotsIndex !== undefined ? { robotsIndex: args.robotsIndex } : {}),
       ...(args.author !== undefined ? { author: args.author } : {}),
@@ -300,6 +360,8 @@ export const updateGuide = mutation({
       updatedBy: userId,
       version: guide.version + 1,
     };
+
+    validateCanonicalUrl(patch.canonicalUrl ?? guide.canonicalUrl);
 
     const auditPatch = Object.fromEntries(
       Object.entries(patch).filter(

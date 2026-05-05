@@ -14,6 +14,7 @@ import { ToastProvider } from "@/components/prototyper-ui/ui/toast";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NONCE_HEADER_NAME } from "@/lib/csp";
+import { buildOrganizationSchema, buildWebSiteSchema } from "@/lib/seo/jsonLd";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND.siteUrl),
@@ -76,6 +77,14 @@ export default async function RootLayout({
   const locale = await getRequestLocale();
   const dictionary = await getDictionary(locale);
   const nonce = (await headers()).get(NONCE_HEADER_NAME) ?? undefined;
+  const siteSchemas = [
+    buildOrganizationSchema(),
+    buildWebSiteSchema({
+      description:
+        "Precision bike fitting for comfort, alignment, and performance.",
+      inLanguage: locale,
+    }),
+  ];
 
   return (
     <ConvexAuthNextjsServerProvider>
@@ -86,6 +95,11 @@ export default async function RootLayout({
             dangerouslySetInnerHTML={{
               __html: `try{var t=localStorage.getItem('theme')||'system';if(t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}`,
             }}
+          />
+          <script
+            nonce={nonce}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchemas) }}
           />
         </head>
         <body className="relative bg-[color:var(--background)] text-[color:var(--foreground)] antialiased">

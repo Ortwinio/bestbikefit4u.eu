@@ -1677,6 +1677,7 @@ export function GuideEditView({
                       ),
                     }));
                   }}
+                  helperText="Required for published guides when a featured or hero image is present."
                 />
                 <Input
                   label="Open Graph image URL"
@@ -1726,6 +1727,7 @@ export function GuideEditView({
                     const nextValue = event.currentTarget.value;
                     updateState((current) => ({ ...current, canonicalUrl: nextValue }));
                   }}
+                  helperText="Optional. Must be an absolute bestbikefit4u.eu URL without query parameters."
                 />
                 <Select
                   label="Author"

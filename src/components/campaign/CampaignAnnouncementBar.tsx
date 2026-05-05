@@ -28,7 +28,7 @@ export function CampaignAnnouncementBar({
   const pagePath = pathname ?? withLocalePrefix("/", locale);
 
   return (
-    <div className="border-b border-[color:color-mix(in_oklch,var(--warning)_35%,transparent)] bg-[color:color-mix(in_oklch,var(--warning)_14%,var(--background)_86%)]">
+    <div className="border-b border-[color:color-mix(in_oklch,var(--primary)_42%,transparent)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--primary)_18%,var(--background)_82%)_0%,color-mix(in_oklch,var(--primary)_10%,var(--secondary)_18%,var(--background)_72%)_100%)]">
       <TrackMarketingEventOnView
         eventType="campaign_banner_view"
         locale={locale}
