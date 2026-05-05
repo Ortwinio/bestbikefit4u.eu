@@ -1,50 +1,39 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useRef } from "react";
+// Video background for the hero section.
+// The <video> element streams progressively so the animation starts playing
+// before the file is fully downloaded. The poster shows instantly while the
+// video buffers, and acts as the LCP candidate via the preload link Next.js
+// emits for the <Image priority> below.
 
 type HeroBackgroundProps = {
   posterSrc: string;
-  // Pass the GIF (or future WebM/MP4) src to lazy-load it after the poster.
-  // When a video file is available, replace animatedSrc with a <video> element.
-  animatedSrc: string;
 };
 
-export function HeroBackground({ posterSrc, animatedSrc }: HeroBackgroundProps) {
-  const overlayRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const img = new window.Image();
-    img.onload = () => {
-      const el = overlayRef.current;
-      if (!el) return;
-      el.style.backgroundImage = `url(${animatedSrc})`;
-      // Trigger reflow so the transition fires on opacity change
-      void el.offsetHeight;
-      el.style.opacity = "1";
-    };
-    img.src = animatedSrc;
-  }, [animatedSrc]);
-
+export function HeroBackground({ posterSrc }: HeroBackgroundProps) {
   return (
     <>
-      {/* Static poster: loads immediately, becomes the LCP candidate */}
-      <Image
+      {/* Shown immediately — establishes the LCP element before video buffers */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src={posterSrc}
         alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover object-center"
+        fetchPriority="high"
+        className="absolute inset-0 h-full w-full object-cover object-center"
         aria-hidden
       />
-      {/* Animated overlay: deferred until after LCP, fades in once loaded */}
-      <div
-        ref={overlayRef}
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-700"
-        style={{ opacity: 0 }}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster={posterSrc}
+        className="absolute inset-0 h-full w-full object-cover object-center"
         aria-hidden
-      />
+      >
+        <source src="/bestbikefit4u-home.webm" type="video/webm" />
+        <source src="/bestbikefit4u-home.mp4" type="video/mp4" />
+      </video>
     </>
   );
 }

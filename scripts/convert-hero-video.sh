@@ -28,14 +28,14 @@ fi
 echo "Converting $GIF → WebM…"
 ffmpeg -i "$GIF" \
   -c:v libvpx-vp9 -b:v 0 -crf 33 \
-  -vf "fps=15,scale=iw:ih:flags=lanczos" \
+  -vf "fps=15,scale=iw:ih:flags=lanczos,format=yuv420p" \
   -an -loop 0 \
   public/bestbikefit4u-home.webm
 
 echo "Converting $GIF → MP4…"
 ffmpeg -i "$GIF" \
   -c:v libx264 -preset slow -crf 28 \
-  -vf "fps=15,scale=iw:ih:flags=lanczos" \
+  -vf "fps=15,scale=iw:ih:flags=lanczos,format=yuv420p" \
   -an -movflags +faststart \
   public/bestbikefit4u-home.mp4
 
