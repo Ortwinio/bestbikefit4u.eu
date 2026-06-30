@@ -46,7 +46,7 @@ export async function POST(request: Request): Promise<Response> {
       return NextResponse.json({ error: "User not found." }, { status: 404 });
     }
 
-    const stripe = new Stripe(stripeKey, { apiVersion: "2026-03-25.dahlia" });
+    const stripe = new Stripe(stripeKey, { apiVersion: "2026-06-24.dahlia" });
 
     const successUrl = sessionId
       ? `${siteUrl}/${locale === "nl" ? "nl/" : ""}fit/${sessionId}/results?checkout=success&checkout_session_id={CHECKOUT_SESSION_ID}`

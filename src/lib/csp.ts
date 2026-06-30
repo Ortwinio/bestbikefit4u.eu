@@ -17,8 +17,9 @@ export function buildContentSecurityPolicy(nonce: string) {
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    "img-src 'self' data: blob: https://*.convex.cloud https://*.convex.site https://*.cloudfront.net https://lh3.googleusercontent.com",
+    "img-src 'self' data: blob: https://*.convex.cloud https://*.convex.site https://dgalywyr863if.cloudfront.net https://lh3.googleusercontent.com",
     "font-src 'self'",
     "frame-ancestors 'none'",
+    "upgrade-insecure-requests",
   ].join("; ");
 }

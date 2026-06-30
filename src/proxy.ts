@@ -99,11 +99,12 @@ async function getRedirectMap(request: NextRequest): Promise<Map<string, Redirec
   }
 
   try {
+    const redirectSecret = process.env.INTERNAL_REDIRECT_FETCH_SECRET ?? "";
     const response = await fetch(
       new URL("/api/guide-redirects", request.nextUrl.origin),
       {
         headers: {
-          "x-bbf-redirect-fetch": "1",
+          "x-bbf-redirect-secret": redirectSecret,
         },
       }
     );

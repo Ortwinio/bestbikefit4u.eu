@@ -247,16 +247,14 @@ http.route({
 });
 
 function timingSafeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) {
-    return false;
-  }
-
   const aBytes = new TextEncoder().encode(a);
   const bBytes = new TextEncoder().encode(b);
-  let result = 0;
+  const len = Math.max(aBytes.length, bBytes.length);
+  // Fold length difference into result to avoid early exit timing leak
+  let result = aBytes.length ^ bBytes.length;
 
-  for (let i = 0; i < aBytes.length; i += 1) {
-    result |= aBytes[i] ^ bBytes[i];
+  for (let i = 0; i < len; i++) {
+    result |= (aBytes[i] ?? 0) ^ (bBytes[i] ?? 0);
   }
 
   return result === 0;
