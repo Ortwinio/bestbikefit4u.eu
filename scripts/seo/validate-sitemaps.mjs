@@ -42,6 +42,16 @@ const disallowedUrlPathPrefixes = [
   "/nl/login",
 ];
 
+const allowedCrawlerUtilityPaths = [
+  "/robots.txt",
+  "/sitemap.xml",
+  "/sitemap-pages.xml",
+  "/sitemap-calculators.xml",
+  "/sitemap-guides.xml",
+  "/sitemap-blog.xml",
+  "/_next",
+];
+
 let hasFailure = false;
 
 function fail(message) {
@@ -256,6 +266,12 @@ async function main() {
     for (const disallowedPath of disallowedUrlPathPrefixes) {
       if (!robotsPayload.includes(`Disallow: ${disallowedPath}`)) {
         fail(`/robots.txt is missing disallow rule: ${disallowedPath}`);
+      }
+    }
+
+    for (const allowedPath of allowedCrawlerUtilityPaths) {
+      if (robotsPayload.includes(`Disallow: ${allowedPath}`)) {
+        fail(`/robots.txt should not disallow crawler utility path: ${allowedPath}`);
       }
     }
   }

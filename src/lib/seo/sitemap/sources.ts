@@ -7,7 +7,7 @@ import {
   SITEMAP_SECTION_PATHS,
   SITEMAP_SYSTEM_LASTMOD,
 } from "./config";
-import { dedupeAndSortNodes, isBlockedByRobots, isCanonicalSitemapPath } from "./filters";
+import { dedupeAndSortNodes, isCanonicalSitemapPath, isExcludedFromSitemap } from "./filters";
 import { normalizeLastmod, normalizePathname, toAbsoluteUrl } from "./normalize";
 import type {
   LocalizedPathMap,
@@ -296,7 +296,7 @@ function sanitizeLocalizedPaths(localizedPaths: LocalizedPathMap): Array<[Locale
       continue;
     }
 
-    if (isBlockedByRobots(normalizedPath)) {
+    if (isExcludedFromSitemap(normalizedPath)) {
       continue;
     }
 

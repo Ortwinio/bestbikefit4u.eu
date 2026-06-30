@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   SEO_ROBOTS_DISALLOW_PATHS,
+  SEO_SITEMAP_EXCLUDED_PATHS,
   classifySeoPath,
 } from "./routePolicy";
 
@@ -30,6 +31,17 @@ describe("seo route policy", () => {
     expect(SEO_ROBOTS_DISALLOW_PATHS).toContain("/en/dashboard");
     expect(SEO_ROBOTS_DISALLOW_PATHS).toContain("/api");
     expect(SEO_ROBOTS_DISALLOW_PATHS).toContain("/en/saddle-selector");
-    expect(SEO_ROBOTS_DISALLOW_PATHS).toContain("/sitemap.xml");
+    expect(SEO_ROBOTS_DISALLOW_PATHS).not.toContain("/sitemap.xml");
+    expect(SEO_ROBOTS_DISALLOW_PATHS).not.toContain("/robots.txt");
+    expect(SEO_ROBOTS_DISALLOW_PATHS).not.toContain("/_next");
+  });
+
+  it("keeps crawler utility and system paths excluded from sitemap URLs", () => {
+    expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/api");
+    expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/_next");
+    expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/robots.txt");
+    expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/sitemap.xml");
+    expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/dashboard");
+    expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/en/dashboard");
   });
 });

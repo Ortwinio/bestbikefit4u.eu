@@ -1,7 +1,10 @@
 import { BRAND } from "@/config/brand";
 import type { Locale } from "@/i18n/config";
 import { DEFAULT_LOCALE } from "@/i18n/config";
-import { SEO_ROBOTS_DISALLOW_PATHS } from "@/lib/seo/routePolicy";
+import {
+  SEO_ROBOTS_DISALLOW_PATHS,
+  SEO_SITEMAP_EXCLUDED_PATHS,
+} from "@/lib/seo/routePolicy";
 import type { SitemapSection } from "./types";
 
 export const SITEMAP_BASE_URL = BRAND.siteUrl;
@@ -22,4 +25,5 @@ export const DEFAULT_SITEMAP_CACHE_CONTROL =
 export const BLOG_SITEMAP_CACHE_CONTROL =
   "public, s-maxage=900, stale-while-revalidate=86400";
 
+export const SITEMAP_EXCLUDED_PATHS = [...SEO_SITEMAP_EXCLUDED_PATHS] as const;
 export const ROBOTS_DISALLOW_PATHS = [...SEO_ROBOTS_DISALLOW_PATHS] as const;

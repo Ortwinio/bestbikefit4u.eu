@@ -1,4 +1,4 @@
-import { ROBOTS_DISALLOW_PATHS } from "./config";
+import { SITEMAP_EXCLUDED_PATHS } from "./config";
 import { normalizePathname } from "./normalize";
 import type { SitemapUrlNode } from "./types";
 
@@ -10,9 +10,9 @@ function matchesDisallowedRule(pathname: string, rule: string): boolean {
   return pathname === rule || pathname.startsWith(`${rule}/`);
 }
 
-export function isBlockedByRobots(pathname: string): boolean {
+export function isExcludedFromSitemap(pathname: string): boolean {
   const normalized = normalizePathname(pathname);
-  return ROBOTS_DISALLOW_PATHS.some((rule) =>
+  return SITEMAP_EXCLUDED_PATHS.some((rule) =>
     matchesDisallowedRule(normalized, rule)
   );
 }

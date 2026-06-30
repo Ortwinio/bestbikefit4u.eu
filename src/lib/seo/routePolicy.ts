@@ -171,13 +171,30 @@ export function expandLocaleAwarePrefixes(
   return [...expanded];
 }
 
-export const SEO_ROBOTS_DISALLOW_PATHS = expandLocaleAwarePrefixes(
+const NON_INDEXABLE_SITEMAP_CLASSIFICATIONS = [
+  "private_app",
+  "auth",
+  "api_or_system",
+] satisfies SeoRouteClassification[];
+
+const ROBOTS_DISALLOW_PREFIXES = [
+  ...SEO_ROUTE_FAMILIES.filter(
+    (family) =>
+      family.classification === "private_app" ||
+      family.classification === "auth"
+  ).flatMap((family) => family.prefixes),
+  "/api",
+  "/static",
+  "/trpc",
+] as const;
+
+export const SEO_SITEMAP_EXCLUDED_PATHS = expandLocaleAwarePrefixes(
   SEO_ROUTE_FAMILIES
-    .filter(
-      (family) =>
-        family.classification === "private_app" ||
-        family.classification === "auth" ||
-        family.classification === "api_or_system"
+    .filter((family) =>
+      NON_INDEXABLE_SITEMAP_CLASSIFICATIONS.includes(family.classification)
     )
     .flatMap((family) => family.prefixes)
 );
+
+export const SEO_ROBOTS_DISALLOW_PATHS =
+  expandLocaleAwarePrefixes(ROBOTS_DISALLOW_PREFIXES);
