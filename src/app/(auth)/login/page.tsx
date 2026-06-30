@@ -27,6 +27,10 @@ import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
 type AuthStep = "email" | "code" | "success";
 const RESEND_COOLDOWN_SECONDS = 30;
 
+type OAuthBeforeUnloadWindow = Window & {
+  __bbfSuppressBeforeUnload?: boolean;
+};
+
 type LoginCopy = {
   uspTitle: string;
   uspSubtitle: string;
@@ -250,6 +254,14 @@ function AuthField({
   );
 }
 
+function setOAuthBeforeUnloadSuppression(enabled: boolean) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  (window as OAuthBeforeUnloadWindow).__bbfSuppressBeforeUnload = enabled;
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const pathname = usePathname();
@@ -298,6 +310,7 @@ export default function LoginPage() {
     const suppress = (e: Event) => {
       if (oauthRedirectingRef.current) {
         e.stopImmediatePropagation();
+        Reflect.deleteProperty(e, "returnValue");
       }
     };
     window.addEventListener("beforeunload", suppress, { capture: true });
@@ -477,6 +490,7 @@ export default function LoginPage() {
     setIsLoading(true);
     setError(null);
     oauthRedirectingRef.current = true;
+    setOAuthBeforeUnloadSuppression(true);
     let didRedirect = false;
 
     try {
@@ -497,9 +511,11 @@ export default function LoginPage() {
         return;
       }
       oauthRedirectingRef.current = false;
+      setOAuthBeforeUnloadSuppression(false);
       setError(text.googleSignInError);
     } catch (err) {
       oauthRedirectingRef.current = false;
+      setOAuthBeforeUnloadSuppression(false);
       console.error("Failed to start Google sign-in:", err);
       void logMarketingEvent({
         eventType: "login_google_error",

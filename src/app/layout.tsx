@@ -69,6 +69,17 @@ export const viewport: Viewport = {
   ],
 };
 
+const oauthBeforeUnloadGuard = `
+window.__bbfSuppressBeforeUnload = false;
+window.addEventListener("beforeunload", function(event) {
+  if (window.__bbfSuppressBeforeUnload === true) {
+    event.stopImmediatePropagation();
+    delete event.returnValue;
+    return undefined;
+  }
+}, true);
+`;
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -95,6 +106,10 @@ export default async function RootLayout({
             dangerouslySetInnerHTML={{
               __html: `try{var t=localStorage.getItem('theme')||'system';if(t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}`,
             }}
+          />
+          <script
+            nonce={nonce}
+            dangerouslySetInnerHTML={{ __html: oauthBeforeUnloadGuard }}
           />
           <script
             nonce={nonce}
