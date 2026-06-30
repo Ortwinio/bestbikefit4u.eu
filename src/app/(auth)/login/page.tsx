@@ -288,6 +288,7 @@ export default function LoginPage() {
   const localhostDevLoginRole =
     process.env.NEXT_PUBLIC_LOCALHOST_DEV_LOGIN_ROLE ?? "super_admin";
   const oauthRedirectingRef = useRef(false);
+  const authActionDisabled = isLoading || isAuthLoading;
 
   // @convex-dev/auth registers a bubble-phase beforeunload listener that calls
   // e.preventDefault() while isRefreshingToken is true (auto-refresh on page load).
@@ -469,8 +470,14 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = async () => {
+    if (authActionDisabled) {
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
+    oauthRedirectingRef.current = true;
+    let didRedirect = false;
 
     try {
       const result = await signIn("google", {
@@ -485,12 +492,14 @@ export default function LoginPage() {
       });
       if (result.redirect) {
         const redirectUrl = result.redirect.toString();
-        oauthRedirectingRef.current = true;
+        didRedirect = true;
         window.location.href = redirectUrl;
         return;
       }
+      oauthRedirectingRef.current = false;
       setError(text.googleSignInError);
     } catch (err) {
+      oauthRedirectingRef.current = false;
       console.error("Failed to start Google sign-in:", err);
       void logMarketingEvent({
         eventType: "login_google_error",
@@ -501,7 +510,9 @@ export default function LoginPage() {
       });
       setError(text.googleSignInError);
     } finally {
-      setIsLoading(false);
+      if (!didRedirect) {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -658,6 +669,7 @@ export default function LoginPage() {
                 className="w-full"
                 onClick={() => void handleGoogleSignIn()}
                 isPending={isLoading}
+                disabled={authActionDisabled}
               >
                 <GoogleIcon />
                 {text.googleSignIn}
@@ -692,7 +704,12 @@ export default function LoginPage() {
               </p>
             )}
 
-            <Button type="submit" className="w-full" isPending={isLoading}>
+            <Button
+              type="submit"
+              className="w-full"
+              isPending={isLoading}
+              disabled={authActionDisabled}
+            >
               <Mail className="h-4 w-4 mr-2" />
               {text.sendCode}
             </Button>

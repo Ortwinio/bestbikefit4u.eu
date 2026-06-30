@@ -30,6 +30,17 @@ vi.mock("@/components/analytics/MarketingEventTracker", () => ({
   useMarketingEventLogger: () => logMarketingEventMock,
 }));
 
+vi.mock("@/config/commercial", async () => {
+  const actual = await vi.importActual<typeof import("@/config/commercial")>(
+    "@/config/commercial"
+  );
+
+  return {
+    ...actual,
+    isConsumerCampaignActive: () => true,
+  };
+});
+
 vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
   CampaignCtaGroup: ({
     startHref,
@@ -126,6 +137,7 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  vi.unstubAllEnvs();
 });
 
 describe("login page", () => {
@@ -202,5 +214,19 @@ describe("login page", () => {
       screen.getByText("Hulp nodig? Mail support als je code niet aankomt of je vastloopt.")
     ).toBeTruthy();
     expect(screen.getByText("Tijdelijk gratis toegang")).toBeTruthy();
+  });
+
+  it("does not start Google sign-in while Convex auth is still loading", () => {
+    vi.stubEnv("NEXT_PUBLIC_GOOGLE_AUTH_ENABLED", "true");
+    authState = { isAuthenticated: false, isLoading: true };
+
+    render(<LoginPage />);
+
+    const googleButton = screen.getByRole("button", { name: /continue with google/i });
+    expect(googleButton).toHaveProperty("disabled", true);
+
+    fireEvent.click(googleButton);
+
+    expect(signInMock).not.toHaveBeenCalled();
   });
 });
