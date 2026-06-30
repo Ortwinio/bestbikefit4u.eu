@@ -1,0 +1,65 @@
+# BestBikeFit4U
+
+> BestBikeFit4U is a bilingual self-service bike fitting platform for cyclists who want practical fit recommendations, bike setup guidance, pressure calculations, and fit reports without booking an in-person fitting session.
+
+BestBikeFit4U serves English and Dutch cyclists, with English as the default public context for AI assistants. The platform combines guided body measurements, cycling goals, discomfort signals, bike geometry, and deterministic TypeScript calculation engines to estimate fit targets for saddle height, cockpit position, frame sizing, tire pressure, gearing, and related setup decisions.
+
+Public pages are intended as educational and decision-support material, not medical diagnosis or a substitute for an in-person professional bike fit when pain, injury, or complex biomechanical issues are present.
+
+## Core Pages
+
+- [Homepage](https://bestbikefit4u.eu/en): Overview of the bike fit platform, main value proposition, and entry points.
+- [How it works](https://bestbikefit4u.eu/en/how-it-works): Explanation of the guided fit workflow and what users receive.
+- [Pricing](https://bestbikefit4u.eu/en/pricing): Plan structure for self-service cyclists and more advanced users.
+- [Fit Pass](https://bestbikefit4u.eu/en/fit-pass): Product page for saving, tracking, and reusing bike fit results.
+- [Why bike fit matters](https://bestbikefit4u.eu/en/why-bikefit-matters): Educational overview of comfort, performance, and injury-prevention reasons for bike fitting.
+
+## Calculators
+
+- [Bike fit calculator](https://bestbikefit4u.eu/en/calculators/bike-fit): Quick estimate for fit targets based on rider measurements and riding intent.
+- [Tire pressure calculator](https://bestbikefit4u.eu/en/tire-pressure-calculator): Road, gravel, and MTB tire pressure guidance using rider, bike, tire, and surface inputs.
+- [Saddle height calculator](https://bestbikefit4u.eu/en/calculators/saddle-height): Saddle height estimate from rider measurements and cycling context.
+- [Saddle width calculator](https://bestbikefit4u.eu/en/calculators/saddle-width): Saddle width guidance from sit bone and riding position inputs.
+- [Frame size calculator](https://bestbikefit4u.eu/en/calculators/frame-size): Frame size estimate for common bike categories.
+- [Crank length calculator](https://bestbikefit4u.eu/en/calculators/crank-length): Crank length recommendation using rider proportions and bike category.
+- [Gearing calculator](https://bestbikefit4u.eu/en/calculators/gearing): Gear ratio and setup support for comparing drivetrain options.
+
+## Guides
+
+- [All guides](https://bestbikefit4u.eu/en/guides): Index of bike fit, setup, discomfort, and riding-position guides.
+- [Bike fitting for knee pain](https://bestbikefit4u.eu/en/guides/bike-fitting-for-knee-pain): Practical setup factors commonly linked with cycling knee discomfort.
+- [Bike fitting for lower back pain](https://bestbikefit4u.eu/en/guides/bike-fitting-for-lower-back-pain): Fit and position considerations for lower back discomfort.
+- [Road bike fit guide](https://bestbikefit4u.eu/en/guides/road-bike-fit-guide): Road cycling fit priorities and setup guidance.
+- [Gravel bike fit guide](https://bestbikefit4u.eu/en/guides/gravel-bike-fit-guide): Gravel fit guidance balancing comfort, control, and endurance.
+- [Mountain bike fit guide](https://bestbikefit4u.eu/en/guides/mountain-bike-fit-guide): MTB setup considerations for control and off-road riding.
+- [Triathlon bike fit guide](https://bestbikefit4u.eu/en/guides/triathlon-bike-fit-guide): Triathlon position guidance with aero and comfort tradeoffs.
+
+## Use Cases
+
+- [All use cases](https://bestbikefit4u.eu/en/use-cases): Cycling scenarios and rider profiles that BestBikeFit4U supports.
+- [Endurance cycling fit](https://bestbikefit4u.eu/en/use-cases/endurance-cycling-fit): Bike fit guidance for long-distance comfort.
+- [Gravel cycling fit](https://bestbikefit4u.eu/en/use-cases/gravel-cycling-fit): Fit priorities for mixed surfaces and longer gravel rides.
+- [Triathlon bike fit](https://bestbikefit4u.eu/en/use-cases/triathlon-bike-fit): Position guidance for triathlon-specific riding demands.
+- [Back pain cycling](https://bestbikefit4u.eu/en/use-cases/back-pain-cycling): Fit considerations for riders managing back discomfort.
+
+## Discomfort Resources
+
+- [Pain and discomfort hub](https://bestbikefit4u.eu/en/pain): Overview of common cycling discomfort topics.
+- [Knee pain cycling](https://bestbikefit4u.eu/en/pain/knee-pain-cycling): Common cycling knee pain setup factors.
+- [Lower back pain cycling](https://bestbikefit4u.eu/en/pain/lower-back-pain-cycling): Common lower back discomfort causes related to position.
+- [Neck pain cycling](https://bestbikefit4u.eu/en/pain/neck-pain-cycling): Neck and shoulder comfort guidance for cyclists.
+- [Hand numbness cycling](https://bestbikefit4u.eu/en/pain/hand-numbness-cycling): Cockpit, reach, and pressure considerations for hand numbness.
+- [Saddle discomfort cycling](https://bestbikefit4u.eu/en/pain/saddle-discomfort-cycling): Saddle position and contact-point guidance.
+
+## Technical Context
+
+- [Sitemap index](https://bestbikefit4u.eu/sitemap.xml): Public sitemap index for crawlable pages.
+- [Robots policy](https://bestbikefit4u.eu/robots.txt): Current crawler access policy.
+- [Contact](https://bestbikefit4u.eu/en/contact): Support and contact information.
+
+## Optional
+
+- [Dutch homepage](https://bestbikefit4u.eu/nl): Dutch-language entry point.
+- [FAQ](https://bestbikefit4u.eu/en/faq): Frequently asked questions about the platform and bike fitting.
+- [Privacy policy](https://bestbikefit4u.eu/en/privacy): Privacy information.
+- [Terms](https://bestbikefit4u.eu/en/terms): Terms of service.
