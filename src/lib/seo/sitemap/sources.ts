@@ -1,6 +1,5 @@
 import { PAIN_PAGE_SLUGS } from "@/content/painPages";
 import { SUPPORTED_LOCALES, type Locale } from "@/i18n/config";
-import { getGuideBacklog } from "@/lib/guides/backlog";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getProgrammaticCalculatorEntries } from "@/lib/seo/programmatic/tirePressure";
 import {
@@ -136,13 +135,6 @@ const PAGE_ROUTE_SEEDS: readonly RouteSeed[] = [
 
 const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
   {
-    id: "calculator-gearing",
-    path: "/calculators/gearing",
-    lastmod: "2026-04-10",
-    changefreq: "monthly",
-    priority: 0.8,
-  },
-  {
     id: "calculator-saddle-height",
     path: "/calculators/saddle-height",
     lastmod: "2026-02-19",
@@ -228,6 +220,7 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
     lastmod: "2026-03-17",
     changefreq: "weekly",
     priority: 0.9,
+    locales: ["nl"],
   },
   {
     id: "calculator-tire-pressure-gravel",
@@ -235,6 +228,7 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
     lastmod: "2026-03-17",
     changefreq: "weekly",
     priority: 0.9,
+    locales: ["nl"],
   },
   {
     id: "calculator-tire-pressure-mtb",
@@ -242,6 +236,7 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
     lastmod: "2026-03-17",
     changefreq: "weekly",
     priority: 0.9,
+    locales: ["nl"],
   },
   ...getProgrammaticCalculatorEntries().map<RouteSeed>((entry) => ({
     ...entry,
@@ -252,6 +247,8 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
   })),
 ] as const;
 
+// Only statically-known pages that exist regardless of Convex publish state.
+// Published guide articles are merged in dynamically by sitemap-guides.xml/route.ts.
 const GUIDE_ROUTE_SEEDS: readonly RouteSeed[] = [
   {
     id: "guide-why-bikefit-matters",
@@ -260,15 +257,13 @@ const GUIDE_ROUTE_SEEDS: readonly RouteSeed[] = [
     changefreq: "monthly",
     priority: 0.7,
   },
-  ...getGuideBacklog("en")
-    .filter((entry) => entry.path === "/guides" || entry.path.startsWith("/guides/"))
-    .map<RouteSeed>((entry) => ({
-      id: `guide-${entry.slug.replace(/\//g, "-")}`,
-      path: entry.path,
-      lastmod: "2026-04-11",
-      changefreq: "monthly",
-      priority: entry.path === "/guides" ? 0.8 : 0.7,
-    })),
+  {
+    id: "guides-index",
+    path: "/guides",
+    lastmod: "2026-04-11",
+    changefreq: "weekly",
+    priority: 0.8,
+  },
 ] as const;
 
 const BLOG_ROUTE_SEEDS: readonly RouteSeed[] = [];

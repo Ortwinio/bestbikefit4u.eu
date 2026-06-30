@@ -62,6 +62,34 @@ describe("sitemap sources", () => {
     expect(locs.some((loc) => loc.endsWith("/nl/calculators/climb-planner"))).toBe(true);
   });
 
+  it("does not generate duplicate URLs for calculator-gearing", () => {
+    const locs = getSitemapNodes("calculators").map((node) => node.loc);
+    const gearingLocs = locs.filter((loc) => loc.includes("/calculators/gearing"));
+    // exactly one EN and one NL version — no duplicates from the old duplicate seed
+    expect(gearingLocs).toHaveLength(2);
+    expect(gearingLocs.some((loc) => loc.endsWith("/en/calculators/gearing"))).toBe(true);
+    expect(gearingLocs.some((loc) => loc.endsWith("/nl/calculators/gearing"))).toBe(true);
+  });
+
+  it("does not include Dutch-only bandenspanning paths under the English locale", () => {
+    const locs = getSitemapNodes("calculators").map((node) => node.loc);
+    expect(locs.some((loc) => loc.includes("/en/bandenspanning/"))).toBe(false);
+    expect(locs.some((loc) => loc.endsWith("/nl/bandenspanning/racefiets"))).toBe(true);
+    expect(locs.some((loc) => loc.endsWith("/nl/bandenspanning/gravelbike"))).toBe(true);
+    expect(locs.some((loc) => loc.endsWith("/nl/bandenspanning/mtb"))).toBe(true);
+  });
+
+  it("guide seeds contain only static pages, not backlog stubs", () => {
+    const entries = getSitemapEntries("guides");
+    const paths = entries.flatMap((e) => Object.values(e.localizedPaths));
+    // Static seeds that must be present
+    expect(paths.some((p) => p.includes("/why-bikefit-matters"))).toBe(true);
+    expect(paths.some((p) => p.endsWith("/guides"))).toBe(true);
+    // Backlog stubs that must NOT appear as static seeds
+    expect(paths.some((p) => p.includes("/guides/pain-and-discomfort"))).toBe(false);
+    expect(paths.some((p) => p.includes("/guides/road-bike-fit-guide"))).toBe(false);
+  });
+
   it("keeps english x-default alternates for programmatic pressure pages", () => {
     const calculatorNodes = getSitemapNodes("calculators");
     const englishNode = calculatorNodes.find((node) =>
