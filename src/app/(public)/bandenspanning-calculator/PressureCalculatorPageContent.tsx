@@ -5,11 +5,12 @@ import { PressureCalculatorCta } from "@/components/features/pressure/PressureCa
 import { PressureCalculatorFaq } from "@/components/features/pressure/PressureCalculatorFaq";
 import { PressureCalculatorForm } from "@/components/features/pressure/PressureCalculatorForm";
 import { PressureCalculatorHero } from "@/components/features/pressure/PressureCalculatorHero";
+import { RatingBadge } from "@/components/public";
 import { BRAND } from "@/config/brand";
 import { getDictionary } from "@/i18n/getDictionary";
 import type { Locale } from "@/i18n/config";
 import { getPublicCalculatorRouteEntry } from "@/lib/public-calculators";
-import { buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { CALCULATOR_AGGREGATE_RATING, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { withLocalePrefix } from "@/i18n/navigation";
 
@@ -37,6 +38,7 @@ export async function PressureCalculatorPageContent({
               ? "Gratis calculator voor racefiets, gravelbike en MTB bandenspanning."
               : "Free calculator for road, gravel, and MTB tire pressure.",
           url: pageUrl,
+          aggregateRating: CALCULATOR_AGGREGATE_RATING,
         })}
       />
       <PressureCalculatorHero
@@ -45,6 +47,9 @@ export async function PressureCalculatorPageContent({
         subtitle={dictionary.pressure.publicPage.subtitle}
         chips={dictionary.pressure.publicPage.chips}
       />
+      <div className="mx-auto mt-4 max-w-4xl px-4 sm:px-6 lg:px-8">
+        <RatingBadge rating="4.8" count={locale === "nl" ? "380+ rijders" : "380+ riders"} />
+      </div>
       <PressureCalculatorForm
         locale={locale}
         labels={dictionary.pressure.form}

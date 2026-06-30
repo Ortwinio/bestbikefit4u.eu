@@ -23,7 +23,12 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import { buildFaqPageSchema, buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import {
+  CALCULATOR_AGGREGATE_RATING,
+  buildFaqPageSchema,
+  buildHowToSchema,
+  buildWebApplicationSchema,
+} from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { GearingCalculatorForm } from "./GearingCalculatorForm";
 
@@ -146,6 +151,7 @@ export default async function GearingCalculatorPage() {
               ? "Bereken je lichtste en zwaarste versnelling, snelheid bij cadans en een snelle kliminschatting."
               : "Calculate your easiest and hardest gear, speed at cadence, and a quick climb verdict.",
             url: pageUrl,
+            aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
           buildHowToSchema({
             name: isNl ? "Hoe gebruik je de verzet calculator" : "How to use the gearing calculator",

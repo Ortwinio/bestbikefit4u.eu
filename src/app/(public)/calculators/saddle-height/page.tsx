@@ -23,7 +23,11 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import { buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import {
+  CALCULATOR_AGGREGATE_RATING,
+  buildHowToSchema,
+  buildWebApplicationSchema,
+} from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { SaddleHeightCalculatorForm } from "./SaddleHeightCalculatorForm";
 
@@ -135,6 +139,7 @@ export default async function SaddleHeightCalculatorPage() {
             description:
               "Calculate a conservative saddle-height starting point using category, goal, flexibility, and core inputs.",
             url: pageUrl,
+            aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
           buildHowToSchema({
             name: isNl ? "Hoe bereken je zadelhoogte" : "How to calculate saddle height",

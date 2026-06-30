@@ -24,8 +24,8 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import {
+  CALCULATOR_AGGREGATE_RATING,
   buildBreadcrumbListSchema,
   buildHowToSchema,
   buildWebApplicationSchema,
@@ -150,6 +150,7 @@ export default async function BikeFitCalculatorPage() {
               ? "Gratis bike fit calculator voor een eerste inschatting van zadelhoogte, reach, drop en framedoelen."
               : "Free bike-fit calculator for a practical first-pass estimate of saddle height, reach, drop, and frame targets.",
             url: pageUrl,
+            aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
           buildHowToSchema({
             name: isNl ? "Hoe gebruik je de bike fit calculator" : "How to use the bike-fit calculator",

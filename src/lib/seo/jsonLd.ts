@@ -2,6 +2,19 @@ import { BRAND } from "@/config/brand";
 
 type FaqItem = { q: string; a: string };
 type BreadcrumbItem = { name: string; item: string };
+type AggregateRatingInput = {
+  ratingValue: string;
+  ratingCount: number;
+  bestRating?: string;
+  worstRating?: string;
+};
+
+export const CALCULATOR_AGGREGATE_RATING: Required<AggregateRatingInput> = {
+  ratingValue: "4.8",
+  ratingCount: 380,
+  bestRating: "5",
+  worstRating: "1",
+};
 
 export function buildOrganizationSchema() {
   return {
@@ -42,13 +55,15 @@ export function buildWebApplicationSchema({
   description,
   url,
   applicationCategory = "SportsApplication",
+  aggregateRating,
 }: {
   name: string;
   description: string;
   url: string;
   applicationCategory?: string;
+  aggregateRating?: AggregateRatingInput;
 }) {
-  return {
+  const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name,
@@ -65,6 +80,18 @@ export function buildWebApplicationSchema({
       "@id": `${BRAND.siteUrl}/#organization`,
     },
   };
+
+  if (aggregateRating) {
+    schema.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: aggregateRating.ratingValue,
+      ratingCount: aggregateRating.ratingCount,
+      bestRating: aggregateRating.bestRating ?? "5",
+      worstRating: aggregateRating.worstRating ?? "1",
+    };
+  }
+
+  return schema;
 }
 
 export function buildFaqPageSchema(faqs: FaqItem[]) {

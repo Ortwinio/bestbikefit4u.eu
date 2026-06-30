@@ -21,7 +21,7 @@ import {
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { BRAND } from "@/config/brand";
-import { buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { CALCULATOR_AGGREGATE_RATING, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { getRequestLocale } from "@/i18n/request";
@@ -150,6 +150,7 @@ export default async function CrankLengthCalculatorPage({
               ? "Bereken een praktisch startpunt voor cranklengte op basis van binnenbeenlengte en categorie."
               : "Calculate a practical crank-length starting point based on inseam and category.",
             url: pageUrl,
+            aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
         ]}
       />

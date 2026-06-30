@@ -23,7 +23,7 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import { buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { CALCULATOR_AGGREGATE_RATING, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { FrameSizeCalculatorForm } from "./FrameSizeCalculatorForm";
 
@@ -134,6 +134,7 @@ export default async function FrameSizeCalculatorPage() {
               ? "Schat een realistische framemaat op basis van lengte, binnenbeenlengte en fietsdiscipline."
               : "Estimate a realistic frame size based on height, inseam, and bike category.",
             url: pageUrl,
+            aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
         ]}
       />

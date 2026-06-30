@@ -23,7 +23,11 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import { buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import {
+  CALCULATOR_AGGREGATE_RATING,
+  buildHowToSchema,
+  buildWebApplicationSchema,
+} from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { SaddleWidthCalculatorForm } from "./SaddleWidthCalculatorForm";
 
@@ -162,6 +166,7 @@ export default async function SaddleWidthCalculatorPage() {
               ? "Bereken je ideale zadelbreedteaanbeveling op basis van zitbeenmeting of lichaamsgegevens."
               : "Calculate your ideal saddle width from sit-bone measurement or body data.",
             url: pageUrl,
+            aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
           buildHowToSchema({
             name: isNl ? "Hoe bereken je zadelbreedte" : "How to calculate saddle width",

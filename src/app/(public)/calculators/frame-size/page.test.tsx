@@ -68,6 +68,12 @@ vi.mock("@/i18n/metadata", () => ({
 }));
 
 vi.mock("@/lib/seo/jsonLd", () => ({
+  CALCULATOR_AGGREGATE_RATING: {
+    ratingValue: "4.8",
+    ratingCount: 380,
+    bestRating: "5",
+    worstRating: "1",
+  },
   buildWebApplicationSchema: () => ({}),
 }));
 
