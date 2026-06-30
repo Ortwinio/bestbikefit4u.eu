@@ -23,10 +23,10 @@ describe("seo route policy", () => {
     );
   });
 
-  it("expands locale-aware robots disallow paths for auth and private areas", () => {
-    expect(SEO_ROBOTS_DISALLOW_PATHS).toContain("/login");
-    expect(SEO_ROBOTS_DISALLOW_PATHS).toContain("/en/login");
-    expect(SEO_ROBOTS_DISALLOW_PATHS).toContain("/nl/login");
+  it("expands locale-aware robots disallow paths for private and operational areas", () => {
+    expect(SEO_ROBOTS_DISALLOW_PATHS).not.toContain("/login");
+    expect(SEO_ROBOTS_DISALLOW_PATHS).not.toContain("/en/login");
+    expect(SEO_ROBOTS_DISALLOW_PATHS).not.toContain("/nl/login");
     expect(SEO_ROBOTS_DISALLOW_PATHS).toContain("/dashboard");
     expect(SEO_ROBOTS_DISALLOW_PATHS).toContain("/en/dashboard");
     expect(SEO_ROBOTS_DISALLOW_PATHS).toContain("/api");
@@ -41,6 +41,8 @@ describe("seo route policy", () => {
     expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/_next");
     expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/robots.txt");
     expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/sitemap.xml");
+    expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/login");
+    expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/en/login");
     expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/dashboard");
     expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain("/en/dashboard");
   });

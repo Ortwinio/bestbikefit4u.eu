@@ -37,12 +37,9 @@ const disallowedUrlPathPrefixes = [
   "/feedback",
   "/en/feedback",
   "/nl/feedback",
-  "/login",
-  "/en/login",
-  "/nl/login",
 ];
 
-const allowedCrawlerUtilityPaths = [
+const allowedCrawlablePaths = [
   "/robots.txt",
   "/sitemap.xml",
   "/sitemap-pages.xml",
@@ -50,6 +47,9 @@ const allowedCrawlerUtilityPaths = [
   "/sitemap-guides.xml",
   "/sitemap-blog.xml",
   "/_next",
+  "/login",
+  "/en/login",
+  "/nl/login",
 ];
 
 let hasFailure = false;
@@ -269,9 +269,9 @@ async function main() {
       }
     }
 
-    for (const allowedPath of allowedCrawlerUtilityPaths) {
+    for (const allowedPath of allowedCrawlablePaths) {
       if (robotsPayload.includes(`Disallow: ${allowedPath}`)) {
-        fail(`/robots.txt should not disallow crawler utility path: ${allowedPath}`);
+        fail(`/robots.txt should not disallow crawlable path: ${allowedPath}`);
       }
     }
   }

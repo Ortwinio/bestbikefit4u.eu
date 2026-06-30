@@ -171,17 +171,15 @@ export function expandLocaleAwarePrefixes(
   return [...expanded];
 }
 
-const NON_INDEXABLE_SITEMAP_CLASSIFICATIONS = [
+const NON_INDEXABLE_SITEMAP_CLASSIFICATIONS: readonly SeoRouteClassification[] = [
   "private_app",
   "auth",
   "api_or_system",
-] satisfies SeoRouteClassification[];
+];
 
 const ROBOTS_DISALLOW_PREFIXES = [
   ...SEO_ROUTE_FAMILIES.filter(
-    (family) =>
-      family.classification === "private_app" ||
-      family.classification === "auth"
+    (family) => family.classification === "private_app"
   ).flatMap((family) => family.prefixes),
   "/api",
   "/static",
