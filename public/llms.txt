@@ -34,6 +34,10 @@ Public pages are intended as educational and decision-support material, not medi
 - [Mountain bike fit guide](https://bestbikefit4u.eu/en/guides/mountain-bike-fit-guide): MTB setup considerations for control and off-road riding.
 - [Triathlon bike fit guide](https://bestbikefit4u.eu/en/guides/triathlon-bike-fit-guide): Triathlon position guidance with aero and comfort tradeoffs.
 
+## Blog
+
+- [Blog](https://bestbikefit4u.eu/en/blog): Practical bike fitting articles, setup explainers, and decision-support content for cyclists.
+
 ## Use Cases
 
 - [All use cases](https://bestbikefit4u.eu/en/use-cases): Cycling scenarios and rider profiles that BestBikeFit4U supports.

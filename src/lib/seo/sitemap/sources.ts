@@ -1,3 +1,5 @@
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../../convex/_generated/api";
 import { PAIN_PAGE_SLUGS } from "@/content/painPages";
 import { SUPPORTED_LOCALES, type Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -26,6 +28,32 @@ type RouteSeed = {
   locales?: readonly Locale[];
   localizedPaths?: LocalizedPathMap;
 };
+
+type BlogSitemapRow = {
+  slug: string;
+  updatedAt: number;
+  publishedAt?: number;
+};
+
+type BlogQueryApi = {
+  blog?: {
+    queries?: {
+      listPublishedSlugs?: unknown;
+    };
+  };
+};
+
+async function fetchSitemapQuery(
+  queryRef: unknown,
+  args: Record<string, unknown>
+): Promise<unknown> {
+  const runFetchQuery = fetchQuery as unknown as (
+    query: unknown,
+    args: Record<string, unknown>
+  ) => Promise<unknown>;
+
+  return runFetchQuery(queryRef, args);
+}
 
 function buildLocalizedPaths(
   pathname: string,
@@ -282,6 +310,31 @@ export function getSitemapEntries(section: SitemapSection): SitemapContentEntry[
   }));
 }
 
+export async function getBlogSitemapEntries(): Promise<SitemapContentEntry[]> {
+  const listPublishedSlugs = (api as unknown as BlogQueryApi).blog?.queries?.listPublishedSlugs;
+  if (!listPublishedSlugs) {
+    return [];
+  }
+
+  try {
+    const rows = (await fetchSitemapQuery(listPublishedSlugs, {})) as BlogSitemapRow[];
+
+    return rows.map((row) =>
+      toEntry({
+        id: `blog-${row.slug}`,
+        path: `/blog/${row.slug}`,
+        lastmod: new Date(row.updatedAt ?? row.publishedAt ?? Date.now())
+          .toISOString()
+          .split("T")[0],
+        changefreq: "weekly",
+        priority: 0.6,
+      })
+    );
+  } catch {
+    return [];
+  }
+}
+
 function sanitizeLocalizedPaths(localizedPaths: LocalizedPathMap): Array<[Locale, string]> {
   const sanitized: Array<[Locale, string]> = [];
 
@@ -320,6 +373,12 @@ function getXDefaultPath(localizedPaths: Array<[Locale, string]>): string | null
 
 export function getSitemapNodes(section: SitemapSection): SitemapUrlNode[] {
   const entries = getSitemapEntries(section);
+  return getSitemapNodesForEntries(entries);
+}
+
+export function getSitemapNodesForEntries(
+  entries: SitemapContentEntry[]
+): SitemapUrlNode[] {
   const nodes: SitemapUrlNode[] = [];
 
   for (const entry of entries) {
@@ -357,6 +416,10 @@ export function getSitemapNodes(section: SitemapSection): SitemapUrlNode[] {
   return dedupeAndSortNodes(nodes);
 }
 
+export async function getBlogSitemapNodes(): Promise<SitemapUrlNode[]> {
+  return getSitemapNodesForEntries(await getBlogSitemapEntries());
+}
+
 export function getSitemapSectionLastmod(section: SitemapSection): string {
   const entries = getSitemapEntries(section);
   if (entries.length === 0) {
@@ -388,4 +451,25 @@ export function getSitemapIndexNodes(): SitemapIndexNode[] {
       },
     ];
   });
+}
+
+export async function getSitemapIndexNodesWithDynamicBlog(): Promise<SitemapIndexNode[]> {
+  const staticNodes = getSitemapIndexNodes();
+  const blogEntries = await getBlogSitemapEntries();
+
+  if (blogEntries.length === 0) {
+    return staticNodes;
+  }
+
+  const blogLastmod = blogEntries
+    .map((entry) => normalizeLastmod(entry.lastmod))
+    .sort((a, b) => b.localeCompare(a))[0];
+
+  return [
+    ...staticNodes.filter((node) => node.loc !== toAbsoluteUrl(SITEMAP_SECTION_PATHS.blog)),
+    {
+      loc: toAbsoluteUrl(SITEMAP_SECTION_PATHS.blog),
+      lastmod: blogLastmod,
+    },
+  ].sort((a, b) => a.loc.localeCompare(b.loc));
 }

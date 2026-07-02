@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ArrowRight, BookOpen, Compass, FlaskConical, HeartPulse, Ruler } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
+import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import {
   FeatureIconCard,
   GuideLinkButton,
@@ -15,6 +16,7 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { getGuideBacklog, getGuideChildren } from "@/lib/guides/backlog";
 import { buildHubIntro, resolveGuidePrimaryCta } from "@/lib/guides/content";
+import { listAllPublishedBlogPosts, localizeBlogText } from "../blog/data";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -45,6 +47,19 @@ export default async function GuidesHubPage() {
   }
 
   const primaryCta = resolveGuidePrimaryCta(entry.primaryCtaTarget, locale);
+  const relatedBlogPosts = (await listAllPublishedBlogPosts())
+    .filter((post) =>
+      post.relatedGuidePaths?.some((path) => {
+        const normalizedPath = path.replace(/^\/(en|nl)(?=\/|$)/, "") || "/";
+        return normalizedPath === "/guides" || normalizedPath.startsWith("/guides/");
+      })
+    )
+    .slice(0, 4)
+    .map((post) => ({
+      href: `/blog/${post.slug}`,
+      label: localizeBlogText(post.title, locale, post.slug),
+      description: localizeBlogText(post.excerpt, locale),
+    }));
 
   const clusterHubs = getGuideBacklog(locale).filter(
     (item) =>
@@ -191,6 +206,12 @@ export default async function GuidesHubPage() {
             ))}
           </div>
         </PublicSection>
+
+        <RelatedLinksSection
+          title={isNl ? "Gerelateerde blogartikelen" : "Related blog articles"}
+          links={relatedBlogPosts}
+          locale={locale}
+        />
 
         <PublicCtaBand
           className="mt-12"

@@ -152,6 +152,50 @@ export function buildArticleSchema({
   };
 }
 
+export function buildBlogPostingSchema({
+  headline,
+  description,
+  url,
+  inLanguage,
+  image,
+  datePublished,
+  dateModified,
+  authorName,
+}: {
+  headline: string;
+  description: string;
+  url: string;
+  inLanguage?: string;
+  image?: string;
+  datePublished?: string;
+  dateModified?: string;
+  authorName?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline,
+    description,
+    image,
+    url,
+    datePublished,
+    dateModified,
+    author: authorName
+      ? {
+          "@type": "Person",
+          name: authorName,
+        }
+      : {
+          "@id": `${BRAND.siteUrl}/#organization`,
+        },
+    publisher: {
+      "@id": `${BRAND.siteUrl}/#organization`,
+    },
+    mainEntityOfPage: url,
+    inLanguage,
+  };
+}
+
 export function buildHowToSchema({
   name,
   description,

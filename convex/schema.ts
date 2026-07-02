@@ -1790,6 +1790,46 @@ export default defineSchema({
     savedAt: v.number(),
   }).index("by_guideId", ["guideId"]),
 
+  blogPosts: defineTable({
+    slug: v.string(),
+    status: v.union(v.literal("draft"), v.literal("published")),
+    title: bilingualStringValidator,
+    h1: v.optional(bilingualStringValidator),
+    body: bilingualStringValidator,
+    excerpt: v.optional(bilingualStringValidator),
+    category: v.string(),
+    tags: v.optional(v.array(v.string())),
+    featuredImageUrl: v.optional(v.string()),
+    featuredImageAlt: v.optional(bilingualStringValidator),
+    authorName: v.optional(v.string()),
+    author: v.optional(v.id("users")),
+    publishedAt: v.optional(v.number()),
+    updatedAt: v.number(),
+    createdAt: v.number(),
+    version: v.number(),
+    metaTitle: bilingualStringValidator,
+    metaDescription: bilingualStringValidator,
+    canonicalUrl: v.optional(v.string()),
+    ogTitle: v.optional(bilingualStringValidator),
+    ogDescription: v.optional(bilingualStringValidator),
+    ogImageUrl: v.optional(v.string()),
+    ogImageAlt: v.optional(bilingualStringValidator),
+    robotsIndex: v.boolean(),
+    relatedPostSlugs: v.optional(v.array(v.string())),
+    relatedGuidePaths: v.optional(v.array(v.string())),
+    tableOfContents: v.boolean(),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_status_publishedAt", ["status", "publishedAt"]),
+
+  blogRevisions: defineTable({
+    postId: v.id("blogPosts"),
+    version: v.number(),
+    snapshot: v.any(),
+    savedBy: v.id("users"),
+    savedAt: v.number(),
+  }).index("by_postId", ["postId"]),
+
   guideAuditLog: defineTable({
     guideId: v.optional(v.id("guidePages")),
     action: v.string(),

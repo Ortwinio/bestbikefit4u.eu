@@ -1,5 +1,5 @@
 import { BLOG_SITEMAP_CACHE_CONTROL } from "@/lib/seo/sitemap/config";
-import { getSitemapNodes } from "@/lib/seo/sitemap/sources";
+import { getBlogSitemapNodes } from "@/lib/seo/sitemap/sources";
 import {
   buildXmlHeadResponse,
   buildXmlResponse,
@@ -10,24 +10,24 @@ export const runtime = "nodejs";
 export const dynamic = "force-static";
 export const revalidate = 900;
 
-function buildPayload() {
-  const nodes = getSitemapNodes("blog");
+async function buildPayload() {
+  const nodes = await getBlogSitemapNodes();
   return {
     lastModified: nodes.map((node) => node.lastmod).sort().at(-1),
     xml: renderUrlSetXml(nodes),
   };
 }
 
-export function GET(request: Request): Response {
-  const { xml, lastModified } = buildPayload();
+export async function GET(request: Request): Promise<Response> {
+  const { xml, lastModified } = await buildPayload();
   return buildXmlResponse(request, xml, {
     cacheControl: BLOG_SITEMAP_CACHE_CONTROL,
     lastModified,
   });
 }
 
-export function HEAD(request: Request): Response {
-  const { xml, lastModified } = buildPayload();
+export async function HEAD(request: Request): Promise<Response> {
+  const { xml, lastModified } = await buildPayload();
   return buildXmlHeadResponse(request, xml, {
     cacheControl: BLOG_SITEMAP_CACHE_CONTROL,
     lastModified,

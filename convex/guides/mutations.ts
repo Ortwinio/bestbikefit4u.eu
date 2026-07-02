@@ -2,7 +2,7 @@ import { internalMutation, mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { writeAuditLog } from "../admin/audit";
 import { buildGuideFieldChanges, writeGuideAuditLog } from "./audit";
-import { BRAND } from "@/config/brand";
+import { BRAND } from "../lib/brand";
 import {
   assertGuideSlugAvailable,
   buildGuidePath,

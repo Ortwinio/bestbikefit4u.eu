@@ -23,6 +23,7 @@ export const SEO_ROUTE_FAMILIES: readonly RouteFamily[] = [
       "/bandenspanning-calculator",
       "/bike-fitting",
       "/bikefitting",
+      "/blog",
       "/calculators",
       "/case-study",
       "/contact",

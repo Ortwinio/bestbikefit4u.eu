@@ -31,6 +31,10 @@ import {
   resolveClosingCtaCopy,
   resolveSoftCtaTool,
 } from "@/lib/guides/cta-resolver";
+import {
+  listPublishedBlogPostsForGuidePath,
+  localizeBlogText,
+} from "../../blog/data";
 import { getGuideLeafEntries } from "@/lib/guides/backlog";
 import {
   buildHubIntro,
@@ -268,6 +272,13 @@ export default async function GuidePage({
     label: getGuideLinkLabel(href, locale),
     description: relatedLinkDescription(locale, href),
   }));
+  const relatedBlogLinks = (await listPublishedBlogPostsForGuidePath(entry.path))
+    .slice(0, 4)
+    .map((post) => ({
+      href: `/blog/${post.slug}`,
+      label: localizeBlogText(post.title, locale, post.slug),
+      description: localizeBlogText(post.excerpt, locale),
+    }));
   const heroDescription = !isHub ? guideContent?.heroIntro ?? entry.pageBrief : entry.pageBrief;
   const libraryBody = dbGuide?.libraryBody?.[locale] ?? null;
   const cleanedMarkdown = libraryBody ? cleanGuideMarkdown(libraryBody) : null;
@@ -426,6 +437,12 @@ export default async function GuidePage({
               links={relatedLinks}
               locale={locale}
             />
+
+            <RelatedLinksSection
+              title={isNl ? "Gerelateerde blogartikelen" : "Related blog articles"}
+              links={relatedBlogLinks}
+              locale={locale}
+            />
           </>
         ) : (
           <>
@@ -503,6 +520,12 @@ export default async function GuidePage({
             <RelatedLinksSection
               title={isNl ? "Gerelateerde gidsen en tools" : "Related guides and tools"}
               links={relatedLinks}
+              locale={locale}
+            />
+
+            <RelatedLinksSection
+              title={isNl ? "Gerelateerde blogartikelen" : "Related blog articles"}
+              links={relatedBlogLinks}
               locale={locale}
             />
           </>

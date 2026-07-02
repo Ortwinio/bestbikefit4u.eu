@@ -5,6 +5,7 @@ import {
   BookOpenText,
   Building2,
   CalendarDays,
+  FileText,
   FlaskConical,
   LayoutDashboard,
   MessageSquare,
@@ -118,6 +119,12 @@ export const adminNavigationGroups: AdminNavigationGroup[] = [
         href: "/admin/guides",
         description: "Guide drafts, SEO fields, and publishing queue",
         icon: BookOpenText,
+      },
+      {
+        label: "Blog",
+        href: "/admin/blog",
+        description: "Article drafts, SEO fields, and publishing queue",
+        icon: FileText,
       },
       {
         label: "Feature Requests",
