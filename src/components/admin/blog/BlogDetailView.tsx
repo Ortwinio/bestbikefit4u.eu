@@ -30,9 +30,11 @@ export function BlogDetailView({ post }: { post: BlogPostRecord }) {
   const [status, setStatus] = useState<BlogStatus>(post.status);
   const [isMutating, setIsMutating] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const previewPath = buildBlogPreviewPath(post.slug);
 
   const handlePublishState = async (nextStatus: BlogStatus) => {
+    setError(null);
     setIsMutating(true);
     try {
       if (nextStatus === "published") {
@@ -45,18 +47,33 @@ export function BlogDetailView({ post }: { post: BlogPostRecord }) {
         toast.success({ description: "Blog post unpublished." });
       }
       router.refresh();
+    } catch (mutationError) {
+      console.error("Failed to update blog publishing state:", mutationError);
+      setError(
+        mutationError instanceof Error
+          ? mutationError.message
+          : "Could not update publishing state."
+      );
     } finally {
       setIsMutating(false);
     }
   };
 
   const handleDelete = async () => {
+    setError(null);
     setIsMutating(true);
     try {
       await deletePost({ id: post._id });
       toast.success({ description: "Blog draft deleted." });
       router.push("/admin/blog");
       router.refresh();
+    } catch (mutationError) {
+      console.error("Failed to delete blog post:", mutationError);
+      setError(
+        mutationError instanceof Error
+          ? mutationError.message
+          : "Could not delete the blog post."
+      );
     } finally {
       setIsMutating(false);
       setDeleteOpen(false);
@@ -106,6 +123,8 @@ export function BlogDetailView({ post }: { post: BlogPostRecord }) {
           </>
         }
       />
+
+      {error ? <p className="text-sm text-[color:var(--danger)]">{error}</p> : null}
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.7fr)]">
         <AdminSectionCard title="Preview" description="English article body preview rendered from Markdown.">
@@ -166,4 +185,3 @@ export function BlogDetailView({ post }: { post: BlogPostRecord }) {
     </div>
   );
 }
-

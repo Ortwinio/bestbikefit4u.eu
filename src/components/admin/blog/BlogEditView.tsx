@@ -156,6 +156,35 @@ export function BlogEditView({ post }: { post: BlogPostRecord }) {
     return null;
   };
 
+  const validateReadyToPublish = () => {
+    const validationError = validate();
+    if (validationError) {
+      return validationError;
+    }
+
+    const missingLocalizedRequired = ["en", "nl"].some((locale) => {
+      const key = locale as keyof BilingualText;
+      return (
+        !state.body[key].trim() ||
+        !state.metaTitle[key].trim() ||
+        !state.metaDescription[key].trim()
+      );
+    });
+
+    if (missingLocalizedRequired) {
+      return "English and Dutch body, meta title, and meta description are required before publishing.";
+    }
+
+    if (
+      state.featuredImageUrl.trim() &&
+      (!state.featuredImageAlt.en.trim() || !state.featuredImageAlt.nl.trim())
+    ) {
+      return "Featured image alt text EN and NL are required before publishing.";
+    }
+
+    return null;
+  };
+
   const handleSave = async () => {
     setError(null);
     const validationError = validate();
@@ -182,13 +211,23 @@ export function BlogEditView({ post }: { post: BlogPostRecord }) {
       return;
     }
 
+    setError(null);
+    if (nextStatus === "published") {
+      const validationError = validateReadyToPublish();
+      if (validationError) {
+        setError(validationError);
+        return;
+      }
+    }
+
     setIsPublishing(true);
     try {
       if (nextStatus === "published") {
+        await updatePost({ id: post._id, ...buildPayload(state) });
         await publishPost({ id: post._id });
         setStatus("published");
         setPublishedAt((current) => current ?? Date.now());
-        toast.success({ description: "Blog post published." });
+        toast.success({ description: "Blog post saved and published." });
       } else {
         await unpublishPost({ id: post._id });
         setStatus("draft");
