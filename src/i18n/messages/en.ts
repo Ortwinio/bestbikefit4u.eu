@@ -2028,6 +2028,16 @@ const en = {
           "Unlock Strava sync, richer tyre-pressure insights, and a more advanced setup workflow.",
         upgradeCta: "View plans",
       },
+      billing: {
+        title: "Billing",
+        description:
+          "Manage payment method, invoices, and cancellation in Stripe Customer Portal. Changes apply after Stripe webhook processing.",
+        manageCta: "Manage billing",
+        noPaidSubscription: "There is no paid subscription to manage yet.",
+        missingCustomer:
+          "This paid account is not linked to Stripe yet. Contact support before changing billing.",
+        portalUnavailable: "Billing portal is unavailable. Please try again or contact support.",
+      },
       preferences: {
         title: "Preferences",
         language: "Language",

@@ -38,13 +38,18 @@ import {
   canManageBilling,
   formatBillingInterval,
   formatBillingMoney,
+  formatBillingProviderKind,
   formatBillingPlanStatus,
   formatBillingSubscriptionSubject,
   formatBillingTier,
+  getBillingEventStripeSummary,
+  getBillingPlanStripePriceId,
+  getStripeBillingSnapshot,
   summarizeBillingEventPayload,
   type BillingEvent,
   type BillingPlan,
   type BillingSubscription,
+  type StripeBillingSnapshot,
 } from "./billing-live-data";
 
 type BillingTier = BillingPlan["tier"];
@@ -76,6 +81,12 @@ const subscriptionStatusOptions: Array<{ value: "all" | SubscriptionStatus; labe
 
 const billingEventTypes = [
   "all",
+  "checkout.session.completed",
+  "customer.subscription.created",
+  "customer.subscription.updated",
+  "customer.subscription.deleted",
+  "invoice.paid",
+  "invoice.payment_failed",
   "subscription_plan_changed",
   "subscription_canceled",
   "subscription_resumed",
@@ -161,6 +172,37 @@ function BillingField({ label, children }: { label: string; children: ReactNode 
   );
 }
 
+function BillingSupportField({
+  label,
+  value,
+}: {
+  label: string;
+  value: ReactNode;
+}) {
+  return (
+    <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+      <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">{label}</p>
+      <p className="mt-1 break-words text-sm font-medium text-[color:var(--foreground)]">{value || "—"}</p>
+    </div>
+  );
+}
+
+function BillingProviderPill({ snapshot }: { snapshot: StripeBillingSnapshot }) {
+  return (
+    <AdminStatusPill tone={snapshot.providerKind === "stripe" ? "info" : "neutral"}>
+      {formatBillingProviderKind(snapshot.providerKind)}
+    </AdminStatusPill>
+  );
+}
+
+function formatStripePeriod(snapshot: StripeBillingSnapshot) {
+  if (!snapshot.currentPeriodStart && !snapshot.currentPeriodEnd) {
+    return "—";
+  }
+
+  return `${formatAdminDateTime(snapshot.currentPeriodStart)} - ${formatAdminDateTime(snapshot.currentPeriodEnd)}`;
+}
+
 function BillingCatalogContent() {
   const currentAdmin = useQuery(api.admin.queries.getCurrentAdminUser);
   const plans = useQuery(api.admin.queries.listPlans);
@@ -221,36 +263,40 @@ function BillingCatalogContent() {
             }
           >
             <AdminTable>
-              <AdminTableHead columns={["Name", "Tier", "Price", "Seats", "Status", "Updated", "Action"]} />
+              <AdminTableHead columns={["Name", "Tier", "Price", "Stripe price", "Seats", "Status", "Updated", "Action"]} />
               <tbody>
-                {plans.map((plan: BillingPlan) => (
-                  <AdminTableRow key={String(plan._id)}>
-                    <AdminTableCell className="font-medium">{plan.name}</AdminTableCell>
-                    <AdminTableCell>
-                      <AdminStatusPill tone={billingPlanTone(plan.tier)}>{formatBillingTier(plan.tier)}</AdminStatusPill>
-                    </AdminTableCell>
-                    <AdminTableCell>
-                      {formatBillingMoney(plan.priceCents)}
-                      {formatBillingInterval(plan.billingInterval)}
-                    </AdminTableCell>
-                    <AdminTableCell>{plan.seatLimit ?? "—"}</AdminTableCell>
-                    <AdminTableCell>
-                      <AdminStatusPill tone={plan.isActive ? "success" : "neutral"}>
-                        {formatBillingPlanStatus(plan.isActive)}
-                      </AdminStatusPill>
-                    </AdminTableCell>
-                    <AdminTableCell>{formatAdminDateTime(plan.updatedAt ?? plan.createdAt)}</AdminTableCell>
-                    <AdminTableCell>
-                      <Button
-                        render={<Link href={`/admin/licenses/plans/${String(plan._id)}/edit`} />}
-                        size="sm"
-                        variant="outline"
-                      >
-                        {canManage ? "Edit" : "View"}
-                      </Button>
-                    </AdminTableCell>
-                  </AdminTableRow>
-                ))}
+                {plans.map((plan: BillingPlan) => {
+                  const stripePriceId = getBillingPlanStripePriceId(plan);
+                  return (
+                    <AdminTableRow key={String(plan._id)}>
+                      <AdminTableCell className="font-medium">{plan.name}</AdminTableCell>
+                      <AdminTableCell>
+                        <AdminStatusPill tone={billingPlanTone(plan.tier)}>{formatBillingTier(plan.tier)}</AdminStatusPill>
+                      </AdminTableCell>
+                      <AdminTableCell>
+                        {formatBillingMoney(plan.priceCents)}
+                        {formatBillingInterval(plan.billingInterval)}
+                      </AdminTableCell>
+                      <AdminTableCell className="max-w-[14rem] break-words">{stripePriceId ?? "Manual / not linked"}</AdminTableCell>
+                      <AdminTableCell>{plan.seatLimit ?? "—"}</AdminTableCell>
+                      <AdminTableCell>
+                        <AdminStatusPill tone={plan.isActive ? "success" : "neutral"}>
+                          {formatBillingPlanStatus(plan.isActive)}
+                        </AdminStatusPill>
+                      </AdminTableCell>
+                      <AdminTableCell>{formatAdminDateTime(plan.updatedAt ?? plan.createdAt)}</AdminTableCell>
+                      <AdminTableCell>
+                        <Button
+                          render={<Link href={`/admin/licenses/plans/${String(plan._id)}/edit`} />}
+                          size="sm"
+                          variant="outline"
+                        >
+                          {canManage ? "Edit" : "View"}
+                        </Button>
+                      </AdminTableCell>
+                    </AdminTableRow>
+                  );
+                })}
               </tbody>
             </AdminTable>
           </AdminSectionCard>
@@ -592,10 +638,11 @@ function SubscriptionsContent() {
       ) : (
         <AdminSectionCard title="Subscriptions" description="Plan assignments and lifecycle management.">
           <AdminTable>
-            <AdminTableHead columns={["Subject", "Plan", "Status", "Provider", "Starts", "Ends", "Action"]} />
+            <AdminTableHead columns={["Subject", "Plan", "Status", "Provider", "Stripe subscription", "Period", "Canceling", "Action"]} />
             <tbody>
               {filteredSubscriptions.map((subscription: BillingSubscription) => {
                 const plan = planMap.get(String(subscription.planId));
+                const snapshot = getStripeBillingSnapshot(subscription);
                 return (
                   <AdminTableRow key={String(subscription._id)}>
                     <AdminTableCell className="font-medium">
@@ -610,9 +657,10 @@ function SubscriptionsContent() {
                         {subscription.status}
                       </AdminStatusPill>
                     </AdminTableCell>
-                    <AdminTableCell>{subscription.provider ?? "—"}</AdminTableCell>
-                    <AdminTableCell>{formatAdminDateTime(subscription.startsAt)}</AdminTableCell>
-                    <AdminTableCell>{formatAdminDateTime(subscription.endsAt)}</AdminTableCell>
+                    <AdminTableCell><BillingProviderPill snapshot={snapshot} /></AdminTableCell>
+                    <AdminTableCell className="max-w-[13rem] break-words">{snapshot.subscriptionId ?? "—"}</AdminTableCell>
+                    <AdminTableCell>{formatStripePeriod(snapshot)}</AdminTableCell>
+                    <AdminTableCell>{snapshot.cancelAtPeriodEnd === undefined ? "—" : snapshot.cancelAtPeriodEnd ? "Yes" : "No"}</AdminTableCell>
                     <AdminTableCell>
                       <Button
                         size="sm"
@@ -659,6 +707,14 @@ function SubscriptionsContent() {
             description="Convex returned no live subscription detail for the selected row."
           />
         ) : selectedSubscription && selectedSubscriptionDetail ? (
+          (() => {
+            const snapshot = getStripeBillingSnapshot(
+              selectedSubscriptionDetail.subscription,
+              selectedSubscriptionDetail.user
+            );
+            const isStripeBacked = snapshot.providerKind === "stripe";
+
+            return (
           <div className="space-y-4">
             <div className="grid gap-3 md:grid-cols-2">
               <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
@@ -675,6 +731,19 @@ function SubscriptionsContent() {
                   Starts {formatAdminDateTime(selectedSubscriptionDetail.subscription.startsAt)} · Ends {formatAdminDateTime(selectedSubscriptionDetail.subscription.endsAt)}
                 </p>
               </div>
+            </div>
+
+            <div className="grid gap-3 md:grid-cols-2">
+              <BillingSupportField label="Billing source" value={<BillingProviderPill snapshot={snapshot} />} />
+              <BillingSupportField label="Stripe customer ID" value={snapshot.customerId} />
+              <BillingSupportField label="Stripe subscription ID" value={snapshot.subscriptionId} />
+              <BillingSupportField label="Stripe price ID" value={snapshot.priceId} />
+              <BillingSupportField label="Current period" value={formatStripePeriod(snapshot)} />
+              <BillingSupportField
+                label="Cancel at period end"
+                value={snapshot.cancelAtPeriodEnd === undefined ? "—" : snapshot.cancelAtPeriodEnd ? "Yes" : "No"}
+              />
+              <BillingSupportField label="Latest invoice" value={snapshot.latestInvoiceId} />
             </div>
 
             {selectedSubscriptionDetail.user || selectedSubscriptionDetail.organization ? (
@@ -701,8 +770,17 @@ function SubscriptionsContent() {
                 title="This subscription can only be inspected"
                 description="The selected subscription is live, but plan changes and lifecycle mutations are restricted to super_admin and billing_admin."
               />
+            ) : isStripeBacked ? (
+              <BillingReadOnlyNotice
+                title="Stripe-backed subscription"
+                description="Use Stripe Customer Portal or Stripe Dashboard for payment method, cancellation, invoice, and subscription changes. The Convex row should update from verified Stripe webhooks, not manual lifecycle buttons."
+              />
             ) : (
               <div className="space-y-4">
+                <BillingReadOnlyNotice
+                  title="Manual subscription controls"
+                  description="These actions only update Convex manual billing records and write admin audit logs. They do not call Stripe."
+                />
                 <Select
                   label="New plan"
                   value={selectedPlanId}
@@ -783,12 +861,19 @@ function SubscriptionsContent() {
                         <span className="text-[color:var(--muted-foreground)]">{formatAdminDateTime(event.occurredAt)}</span>
                       </div>
                       <p className="mt-2 text-[color:var(--muted-foreground)]">{summarizeBillingEventPayload(event.payloadJson)}</p>
+                      {getBillingEventStripeSummary(event) ? (
+                        <p className="mt-1 text-xs text-[color:var(--muted-foreground)]">
+                          {getBillingEventStripeSummary(event)}
+                        </p>
+                      ) : null}
                     </div>
                   ))}
                 </div>
               </div>
             ) : null}
           </div>
+            );
+          })()
         ) : null}
       </AccessibleDialog>
     </div>
@@ -829,28 +914,32 @@ function BillingEventsContent() {
         <AdminTable>
           <AdminTableHead columns={["Time", "Event", "Subscription", "User", "Organization", "Payload"]} />
           <tbody>
-            {rows.map((event: BillingEvent) => (
-              <AdminTableRow key={String(event._id)}>
-                <AdminTableCell className="font-medium">{formatAdminDateTime(event.occurredAt)}</AdminTableCell>
-                <AdminTableCell>
-                  <AdminStatusPill tone="neutral">{event.eventType.replaceAll("_", " ")}</AdminStatusPill>
-                </AdminTableCell>
-                <AdminTableCell>{event.subscriptionId ? String(event.subscriptionId) : "—"}</AdminTableCell>
-                <AdminTableCell>
-                  {event.userId ? <Link href={`/admin/users/${String(event.userId)}`}>{String(event.userId)}</Link> : "—"}
-                </AdminTableCell>
-                <AdminTableCell>
-                  {event.organizationId ? (
-                    <Link href={`/admin/organizations/${String(event.organizationId)}`}>{String(event.organizationId)}</Link>
-                  ) : (
-                    "—"
-                  )}
-                </AdminTableCell>
-                <AdminTableCell className="max-w-[28rem] break-words text-[color:var(--muted-foreground)]">
-                  {summarizeBillingEventPayload(event.payloadJson)}
-                </AdminTableCell>
-              </AdminTableRow>
-            ))}
+            {rows.map((event: BillingEvent) => {
+              const stripeSummary = getBillingEventStripeSummary(event);
+              return (
+                <AdminTableRow key={String(event._id)}>
+                  <AdminTableCell className="font-medium">{formatAdminDateTime(event.occurredAt)}</AdminTableCell>
+                  <AdminTableCell>
+                    <AdminStatusPill tone="neutral">{event.eventType.replaceAll("_", " ")}</AdminStatusPill>
+                  </AdminTableCell>
+                  <AdminTableCell>{event.subscriptionId ? String(event.subscriptionId) : "—"}</AdminTableCell>
+                  <AdminTableCell>
+                    {event.userId ? <Link href={`/admin/users/${String(event.userId)}`}>{String(event.userId)}</Link> : "—"}
+                  </AdminTableCell>
+                  <AdminTableCell>
+                    {event.organizationId ? (
+                      <Link href={`/admin/organizations/${String(event.organizationId)}`}>{String(event.organizationId)}</Link>
+                    ) : (
+                      "—"
+                    )}
+                  </AdminTableCell>
+                  <AdminTableCell className="max-w-[28rem] break-words text-[color:var(--muted-foreground)]">
+                    <div>{summarizeBillingEventPayload(event.payloadJson)}</div>
+                    {stripeSummary ? <div className="mt-1 text-xs">{stripeSummary}</div> : null}
+                  </AdminTableCell>
+                </AdminTableRow>
+              );
+            })}
           </tbody>
         </AdminTable>
 

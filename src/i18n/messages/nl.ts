@@ -2039,6 +2039,16 @@ const nl = {
           "Ontgrendel Strava-sync, rijkere bandenspanningsinzichten en een geavanceerdere setupworkflow.",
         upgradeCta: "Bekijk abonnementen",
       },
+      billing: {
+        title: "Facturering",
+        description:
+          "Beheer je betaalmethode, facturen en opzegging in Stripe Customer Portal. Wijzigingen gelden nadat Stripe-webhooks zijn verwerkt.",
+        manageCta: "Facturering beheren",
+        noPaidSubscription: "Er is nog geen betaald abonnement om te beheren.",
+        missingCustomer:
+          "Dit betaalde account is nog niet aan Stripe gekoppeld. Neem contact op met support voordat je facturering wijzigt.",
+        portalUnavailable: "Het factureringsportaal is niet beschikbaar. Probeer opnieuw of neem contact op met support.",
+      },
       preferences: {
         title: "Voorkeuren",
         language: "Taal",

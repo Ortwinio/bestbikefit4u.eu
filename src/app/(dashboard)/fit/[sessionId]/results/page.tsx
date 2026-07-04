@@ -26,12 +26,7 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
-import { trackAdConversion } from "@/lib/analytics/conversions";
-import {
-  COMMERCIAL_CURRENCY,
-  FIT_PASS_PRODUCT,
-  isConsumerCampaignActive,
-} from "@/config/commercial";
+import { isConsumerCampaignActive } from "@/config/commercial";
 import { trackFeedbackSignal } from "@/components/feedback/feedback-activity";
 import { RiderProfileCard } from "./components/RiderProfileCard";
 import { PriorityTable } from "./components/PriorityTable";
@@ -64,7 +59,6 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   const pagePath = withLocalePrefix(`/fit/${sessionId}/results`, locale);
   const logMarketingEvent = useMarketingEventLogger();
   const reportCopy = getReportV2Copy(locale);
-  const isNl = locale === "nl";
 
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [email, setEmail] = useState("");
@@ -201,20 +195,6 @@ export default function ResultsPage({ params }: ResultsPageProps) {
     toast.success({
       description: reportCopy.shell.fitPassActivated,
     });
-    logMarketingEvent({
-      eventType: "fit_pass_checkout_completed",
-      locale,
-      pagePath,
-      section: "fit_pass_paywall",
-      valueCents: FIT_PASS_PRODUCT.priceCents,
-      currency: COMMERCIAL_CURRENCY,
-    });
-    trackAdConversion("fit_pass_purchase", {
-      locale,
-      value: FIT_PASS_PRODUCT.priceCents / 100,
-      currency: COMMERCIAL_CURRENCY,
-    });
-
     // Clean checkout params from URL
     const cleanParams = new URLSearchParams(searchParams.toString());
     cleanParams.delete("checkout");
@@ -227,9 +207,6 @@ export default function ResultsPage({ params }: ResultsPageProps) {
     searchParams,
     sessionId,
     toast,
-    logMarketingEvent,
-    locale,
-    pagePath,
     reportCopy.shell.fitPassActivated,
     router,
   ]);
