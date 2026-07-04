@@ -270,6 +270,8 @@ export default defineSchema({
     .index("phone", ["phone"])
     .index("by_admin_role", ["adminRole"])
     .index("by_tier", ["tier"])
+    .index("by_stripe_customer", ["stripeCustomerId"])
+    .index("by_stripe_subscription", ["stripeSubscriptionId"])
     .index("by_suspended_at", ["suspendedAt"]),
 
   // User profiles - body measurements for bike fitting
@@ -2181,6 +2183,10 @@ export default defineSchema({
       v.literal("enterprise")
     ),
     priceCents: v.optional(v.number()),
+    stripeProductId: v.optional(v.string()),
+    stripePriceId: v.optional(v.string()),
+    stripeLookupKey: v.optional(v.string()),
+    currency: v.optional(v.literal("EUR")),
     billingInterval: v.optional(
       v.union(v.literal("month"), v.literal("year"), v.literal("custom"))
     ),
@@ -2188,7 +2194,10 @@ export default defineSchema({
     isActive: v.boolean(),
     createdAt: v.number(),
     updatedAt: v.optional(v.number()),
-  }).index("by_key", ["key"]),
+  })
+    .index("by_key", ["key"])
+    .index("by_stripe_price", ["stripePriceId"])
+    .index("by_stripe_lookup_key", ["stripeLookupKey"]),
 
   subscriptions: defineTable({
     userId: v.optional(v.id("users")),
@@ -2201,8 +2210,16 @@ export default defineSchema({
       v.literal("canceled"),
       v.literal("expired")
     ),
-    provider: v.optional(v.string()),
+    provider: v.optional(v.union(v.literal("stripe"), v.literal("manual"))),
     externalId: v.optional(v.string()),
+    stripeCustomerId: v.optional(v.string()),
+    stripePriceId: v.optional(v.string()),
+    currentPeriodStart: v.optional(v.number()),
+    currentPeriodEnd: v.optional(v.number()),
+    cancelAtPeriodEnd: v.optional(v.boolean()),
+    canceledAt: v.optional(v.number()),
+    latestInvoiceId: v.optional(v.string()),
+    lastPaymentStatus: v.optional(v.string()),
     startsAt: v.optional(v.number()),
     endsAt: v.optional(v.number()),
     createdAt: v.number(),
@@ -2210,7 +2227,9 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_org", ["organizationId"])
-    .index("by_plan", ["planId"]),
+    .index("by_plan", ["planId"])
+    .index("by_external_id", ["externalId"])
+    .index("by_stripe_customer", ["stripeCustomerId"]),
 
   billing_events: defineTable({
     subscriptionId: v.optional(v.id("subscriptions")),
@@ -2224,6 +2243,19 @@ export default defineSchema({
     .index("by_subscription", ["subscriptionId"])
     .index("by_user", ["userId"])
     .index("by_occurred_at", ["occurredAt"]),
+
+  stripe_events: defineTable({
+    stripeEventId: v.string(),
+    eventType: v.string(),
+    livemode: v.boolean(),
+    apiVersion: v.optional(v.string()),
+    objectId: v.optional(v.string()),
+    processedAt: v.number(),
+    payloadJson: v.string(),
+  })
+    .index("by_event_id", ["stripeEventId"])
+    .index("by_type", ["eventType"])
+    .index("by_processed_at", ["processedAt"]),
 
   feature_flags: defineTable({
     key: v.string(),

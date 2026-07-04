@@ -44,6 +44,22 @@ loadEnvFile(path.resolve(process.cwd(), ".env.local"));
 loadEnvFile(path.resolve(process.cwd(), ".env"));
 
 const requiredEnvVars = ["NEXT_PUBLIC_CONVEX_URL"];
+const requiredUrlEnvVars = new Set(["NEXT_PUBLIC_CONVEX_URL"]);
+
+const isProductionDeploy =
+  process.env.VERCEL_ENV === "production" ||
+  (process.env.VERCEL === "1" && process.env.NODE_ENV === "production");
+const billingEnabled = process.env.STRIPE_BILLING_ENABLED !== "false";
+
+if (isProductionDeploy && billingEnabled) {
+  requiredEnvVars.push(
+    "SITE_URL",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET",
+    "STRIPE_PRO_MONTHLY_PRICE_ID"
+  );
+  requiredUrlEnvVars.add("SITE_URL");
+}
 
 const errors = [];
 
@@ -54,10 +70,12 @@ for (const key of requiredEnvVars) {
     continue;
   }
 
-  try {
-    new URL(value);
-  } catch {
-    errors.push(`Invalid URL in ${key}: ${value}`);
+  if (requiredUrlEnvVars.has(key)) {
+    try {
+      new URL(value);
+    } catch {
+      errors.push(`Invalid URL in ${key}: ${value}`);
+    }
   }
 }
 

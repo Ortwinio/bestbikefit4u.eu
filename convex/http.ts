@@ -4,6 +4,7 @@ import { internal } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
 import { auth } from "./auth";
 import { fetchStravaAthlete } from "./integrations/strava";
+import { verifyStripeWebhookSignature } from "./stripe/webhook";
 
 const http = httpRouter();
 
@@ -148,116 +149,56 @@ http.route({
       return new Response("Server misconfigured", { status: 500 });
     }
 
-    const sig = request.headers.get("stripe-signature");
-    if (!sig) {
-      return new Response("Missing stripe-signature header", { status: 400 });
-    }
-
     const payload = await request.text();
-
-    // Parse the stripe-signature header: t=timestamp,v1=hash
-    const sigParts: Record<string, string[]> = {};
-    for (const part of sig.split(",")) {
-      const [key, ...rest] = part.split("=");
-      if (!sigParts[key]) sigParts[key] = [];
-      sigParts[key].push(rest.join("="));
-    }
-
-    const timestamp = sigParts["t"]?.[0];
-    const signatures = sigParts["v1"] ?? [];
-
-    if (!timestamp || signatures.length === 0) {
-      return new Response("Invalid stripe-signature format", { status: 400 });
-    }
-
-    // Verify timestamp is within tolerance (5 minutes)
-    const tolerance = 300;
-    if (Math.abs(Date.now() / 1000 - Number(timestamp)) > tolerance) {
-      return new Response("Webhook timestamp out of tolerance", { status: 400 });
-    }
-
-    // Compute expected HMAC-SHA256
-    const signedPayload = `${timestamp}.${payload}`;
-    const secretBytes = new TextEncoder().encode(webhookSecret);
-    const payloadBytes = new TextEncoder().encode(signedPayload);
-    const cryptoKey = await crypto.subtle.importKey(
-      "raw",
-      secretBytes,
-      { name: "HMAC", hash: "SHA-256" },
-      false,
-      ["sign"]
-    );
-    const hmacBuffer = await crypto.subtle.sign("HMAC", cryptoKey, payloadBytes);
-    const hmacHex = Array.from(new Uint8Array(hmacBuffer))
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-
-    const isValid = signatures.some((s) => timingSafeEqual(s, hmacHex));
-    if (!isValid) {
-      return new Response("Invalid webhook signature", { status: 400 });
+    const verification = await verifyStripeWebhookSignature({
+      payload,
+      signatureHeader: request.headers.get("stripe-signature"),
+      webhookSecret,
+    });
+    if (!verification.ok) {
+      const message =
+        verification.reason === "missing"
+          ? "Missing stripe-signature header"
+          : verification.reason === "timestamp"
+            ? "Webhook timestamp out of tolerance"
+            : verification.reason === "format"
+              ? "Invalid stripe-signature format"
+              : "Invalid webhook signature";
+      return new Response(message, { status: 400 });
     }
 
     // Parse event
-    let event: { type: string; data: { object: Record<string, unknown> } };
+    let event: { id?: string; type?: string; data?: { object?: Record<string, unknown> } };
     try {
       event = JSON.parse(payload) as typeof event;
     } catch {
       return new Response("Invalid JSON", { status: 400 });
     }
 
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
-      const metadata = session["metadata"] as Record<string, string> | null;
-      const userId = metadata?.["userId"];
-      const stripeCustomerId = session["customer"] as string | null;
-      const subscriptionId = session["subscription"] as string | null;
+    if (!event.id || !event.type || !event.data?.object) {
+      return new Response("Invalid Stripe event", { status: 400 });
+    }
 
-      if (userId) {
-        try {
-          await ctx.runMutation(internal.stripe.mutations.upgradeToPro, {
-            userId: userId as Id<"users">,
-            stripeCustomerId: stripeCustomerId ?? undefined,
-            stripeSubscriptionId: subscriptionId ?? undefined,
-          });
-          await ctx.scheduler.runAfter(0, internal.emails.fitpass.sendProWelcome, {
-            userId: userId as Id<"users">,
-          });
-        } catch (err) {
-          console.error("[stripe/webhook] Failed to upgrade user", { userId, err });
-        }
-      } else {
-        console.error("[stripe/webhook] checkout.session.completed missing userId in metadata", { session });
+    try {
+      const result = await ctx.runMutation(internal.stripe.mutations.processWebhookEvent, {
+        payloadJson: payload,
+      });
+      if ("welcomeUserId" in result && result.welcomeUserId) {
+        await ctx.scheduler.runAfter(0, internal.emails.fitpass.sendProWelcome, {
+          userId: result.welcomeUserId as Id<"users">,
+        });
       }
-    } else if (event.type === "customer.subscription.deleted") {
-      const subscription = event.data.object;
-      const stripeCustomerId = subscription["customer"] as string | null;
-      if (stripeCustomerId) {
-        try {
-          await ctx.runMutation(internal.stripe.mutations.downgradeToPro, {
-            stripeCustomerId,
-          });
-        } catch (err) {
-          console.error("[stripe/webhook] Failed to downgrade user", { stripeCustomerId, err });
-        }
-      }
+    } catch (err) {
+      console.error("[stripe/webhook] Failed to process event", {
+        eventId: event.id,
+        eventType: event.type,
+        err,
+      });
+      return new Response("Webhook processing failed", { status: 500 });
     }
 
     return new Response("ok", { status: 200 });
   }),
 });
-
-function timingSafeEqual(a: string, b: string): boolean {
-  const aBytes = new TextEncoder().encode(a);
-  const bBytes = new TextEncoder().encode(b);
-  const len = Math.max(aBytes.length, bBytes.length);
-  // Fold length difference into result to avoid early exit timing leak
-  let result = aBytes.length ^ bBytes.length;
-
-  for (let i = 0; i < len; i++) {
-    result |= (aBytes[i] ?? 0) ^ (bBytes[i] ?? 0);
-  }
-
-  return result === 0;
-}
 
 export default http;

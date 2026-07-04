@@ -31,6 +31,25 @@ export const updateProfile = mutation({
   },
 });
 
+export const storeStripeCustomerId = mutation({
+  args: {
+    stripeCustomerId: v.string(),
+  },
+  handler: async (ctx, { stripeCustomerId }) => {
+    const userId = await requireUserId(ctx);
+    const user = await ctx.db.get(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.stripeCustomerId && user.stripeCustomerId !== stripeCustomerId) {
+      throw new Error("Stripe customer already exists");
+    }
+
+    await ctx.db.patch(userId, { stripeCustomerId });
+  },
+});
+
 /**
  * Permanently delete the authenticated user's account and all associated data.
  * Cascade-deletes: profiles, bikes, fitSessions, questionnaireResponses,
