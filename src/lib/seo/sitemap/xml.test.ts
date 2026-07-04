@@ -23,6 +23,17 @@ describe("sitemap xml responses", () => {
     expect(response.headers.get("x-robots-tag")).toBe("noindex, nofollow, noarchive");
   });
 
+  it("uses forwarded production host headers before internal request URLs", () => {
+    const request = new Request("https://bestbikefit4u.vercel.app/sitemap.xml", {
+      headers: {
+        "x-forwarded-host": "bestbikefit4u.eu",
+      },
+    });
+    const response = buildXmlResponse(request, "<urlset></urlset>");
+
+    expect(response.headers.get("x-robots-tag")).toBe("index, follow");
+  });
+
   it("returns header-only responses for HEAD requests", async () => {
     const request = new Request("https://bestbikefit4u.eu/sitemap.xml", {
       method: "HEAD",

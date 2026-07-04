@@ -67,7 +67,11 @@ type XmlResponseOptions = {
 };
 
 function getSitemapRobotsTag(request: Request): string {
-  const hostname = new URL(request.url).hostname;
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const host = forwardedHost ?? request.headers.get("host");
+  const hostname = (host?.split(",")[0]?.trim().split(":")[0] || new URL(request.url).hostname)
+    .toLowerCase();
+
   return hostname === BRAND.host ? "index, follow" : "noindex, nofollow, noarchive";
 }
 
