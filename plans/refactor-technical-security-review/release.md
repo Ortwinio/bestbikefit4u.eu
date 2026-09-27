@@ -55,7 +55,10 @@ show availability notices while free signup and existing paid access are preserv
 Existing subscriber portal access and verified webhooks are retained for account
 management; this release does not cancel subscriptions or pause Stripe renewals.
 Final local validation: 196 files / 764 tests pass, typecheck and lint pass.
-Deployment is pending completion of the coordinated rollout.
+Both Vercel previews and GitHub quality, dependency and CodeQL checks passed for
+`d8a44ad`. Convex production deployment succeeded, including the two new indexes,
+without deleting indexes. Generated API declarations were refreshed during that
+deployment. Frontend production promotion and live verification are in progress.
 
 - Convex production dry run passed against `elegant-panther-767.eu-west-1.convex.cloud`, including schema validation and both new indexes. No indexes would be deleted.
 - Production auth configuration names are present and `SITE_URL` matches the live domain. No Stripe environment names or plan documents are present; confirm frontend billing status and align configuration before rollout.
