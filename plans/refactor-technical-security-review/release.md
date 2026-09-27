@@ -33,4 +33,13 @@ Keep the previous frontend deployment and Git revision available. If the fronten
 - Email request reached the code-entry screen; mailbox receipt and verification remain unconfirmed.
 - Google OAuth, live billing and the complete authenticated production fit/report journey have not been exercised.
 - Production Stripe plan/price configuration and legacy customer metadata need verification.
-- This record does not claim a successful deployment. Publication and deployment status will be recorded after the requested release scope is confirmed.
+- The user authorized production deployment. The release is published in [PR #1](https://github.com/Ortwinio/bestbikefit4u.eu/pull/1); main and production have not been changed.
+
+## Deployment preflight results
+
+- Convex production dry run passed against `elegant-panther-767.eu-west-1.convex.cloud`, including schema validation and both new indexes. No indexes would be deleted.
+- Production auth configuration names are present and `SITE_URL` matches the live domain. No Stripe environment names or plan documents are present; confirm frontend billing status and align configuration before rollout.
+- GitHub CI for `03c4abc` passed contracts, dependency audit, lint, typecheck, unit tests and build.
+- Both Vercel previews failed. Inspect deployment logs after restoring Vercel sign-in; CLI credentials are empty and the browser requires login.
+- CodeQL identified request-forgery data flow and a case-sensitive smoke-test script regex. Follow-up changes reconstruct fetch destinations from six fixed marketplace/image origins and reject other subdomains; the smoke check now includes uppercase script tags and asserts that boot scripts exist. The 21 affected fetch/import/proxy tests, typecheck and changed-file lint pass. CodeQL must rerun before promotion.
+- Production release is held until frontend deployment can be completed alongside the backend. See [CodeQL request-forgery guidance](https://codeql.github.com/codeql-query-help/javascript/js-request-forgery/) for the fixed-origin construction rationale.

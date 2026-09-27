@@ -8,8 +8,26 @@ describe("Marktplaats remote requests", () => {
     "http://www.marktplaats.nl/ad", "https://marktplaats.nl.attacker.test/ad",
     "https://127.0.0.1/ad", "https://user:password@marktplaats.nl/ad",
     "https://www.marktplaats.nl:8443/ad",
+    "https://untrusted.marktplaats.nl/ad", "https://internal.marktplaats.com/ad",
   ])("blocks unsupported destinations: %s", (url) => {
     expect(() => validateMarktplaatsUrl(url)).toThrow();
+  });
+
+  it("keeps network-looking paths and encoded query values on the fixed origin", () => {
+    const url = validateMarktplaatsUrl("https://images.marktplaats.com//127.0.0.1/photo?next=https%3A%2F%2Fattacker.test#ignored");
+    expect(url.origin).toBe("https://images.marktplaats.com");
+    expect(url.pathname).toBe("//127.0.0.1/photo");
+    expect(url.search).toBe("?next=https%3A%2F%2Fattacker.test");
+    expect(url.hash).toBe("");
+  });
+
+  it("rejects an unapproved subdomain in a redirect before fetching it", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(null, {
+      status: 302, headers: { location: "https://internal.marktplaats.nl/secret" },
+    }));
+    vi.stubGlobal("fetch", fetchMock);
+    await expect(fetchMarktplaats("https://www.marktplaats.nl/ad")).rejects.toThrow();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it("never requests a redirect to a private address", async () => {

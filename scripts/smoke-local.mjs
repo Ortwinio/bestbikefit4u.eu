@@ -32,7 +32,9 @@ for (const path of [...paths, ...protectedPaths.keys()]) {
     const nonce = policy.match(/'nonce-([^']+)'/)?.[1];
     assert(nonce, "Login requires a script nonce");
     assert(!policy.includes("'unsafe-eval'"), "Run this check against a production build");
-    for (const [, attributes] of body.matchAll(/<script\b([^>]*)>/g)) {
+    const scripts = [...body.matchAll(/<script\b([^>]*)>/gi)];
+    assert(scripts.length > 0, "Login must include its boot scripts");
+    for (const [, attributes] of scripts) {
       assert(attributes.includes(`nonce="${nonce}"`), "Every login script needs the response nonce");
     }
   }

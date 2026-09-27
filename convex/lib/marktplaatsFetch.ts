@@ -1,4 +1,10 @@
-const ALLOWED_HOSTS = ["marktplaats.nl", "marktplaats.com"];
+// Keep the network authority fixed to known marketplace and image origins.
+// A suffix allowlist also trusts unrelated or compromised subdomains.
+const ALLOWED_ORIGINS = [
+  "https://marktplaats.nl", "https://www.marktplaats.nl",
+  "https://marktplaats.com", "https://www.marktplaats.com",
+  "https://images.marktplaats.nl", "https://images.marktplaats.com",
+];
 const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
 export const ALLOWED_IMAGE_TYPES = new Set([
   "image/jpeg", "image/png", "image/webp", "image/gif", "image/avif",
@@ -6,14 +12,19 @@ export const ALLOWED_IMAGE_TYPES = new Set([
 
 export function validateMarktplaatsUrl(input: string | URL): URL {
   const url = new URL(input);
+  const allowedOrigin = ALLOWED_ORIGINS.find((origin) => url.origin === origin);
   if (
     url.protocol !== "https:" || url.username || url.password ||
     (url.port && url.port !== "443") ||
-    !ALLOWED_HOSTS.some((host) => url.hostname === host || url.hostname.endsWith(`.${host}`))
+    !allowedOrigin
   ) {
     throw new Error("Unsupported Marktplaats URL");
   }
-  return url;
+  // Assign path/query as components: a leading // must never replace the origin.
+  const destination = new URL(allowedOrigin);
+  destination.pathname = url.pathname;
+  destination.search = url.search;
+  return destination;
 }
 
 /** Validate every destination before sending a request, including redirects. */
