@@ -72,6 +72,8 @@ describe("Stripe checkout route", () => {
     process.env.SITE_URL = "https://bestbikefit4u.eu";
     process.env.STRIPE_SECRET_KEY = "sk_test_123";
     process.env.STRIPE_PRO_MONTHLY_PRICE_ID = "price_pro_monthly";
+    delete process.env.STRIPE_BILLING_ENABLED;
+    delete process.env.NEXT_PUBLIC_STRIPE_BILLING_ENABLED;
 
     mocks.token.mockResolvedValue("token-123");
     mocks.query.mockResolvedValue({
@@ -99,6 +101,20 @@ describe("Stripe checkout route", () => {
       headers: { "Content-Type": "application/json" },
     });
   }
+
+  it.each(["STRIPE_BILLING_ENABLED", "NEXT_PUBLIC_STRIPE_BILLING_ENABLED"])(
+    "blocks direct checkout without contacting Stripe when %s is false",
+    async (flag) => {
+      process.env[flag] = "false";
+      const response = await POST(checkoutRequest({ productKey: "pro_monthly" }));
+      expect(response.status).toBe(503);
+      expect(await response.json()).toMatchObject({ code: "BILLING_DISABLED" });
+      expect(mocks.token).not.toHaveBeenCalled();
+      expect(mocks.stripeConstructor).not.toHaveBeenCalled();
+      expect(mocks.customersCreate).not.toHaveBeenCalled();
+      expect(mocks.checkoutSessionsCreate).not.toHaveBeenCalled();
+    }
+  );
 
   it("returns 401 when the user is not authenticated", async () => {
     mocks.token.mockResolvedValue(undefined);

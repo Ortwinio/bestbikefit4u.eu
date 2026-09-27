@@ -47,9 +47,15 @@ Convex-only webhook secret on Vercel. Five process-level regression tests cover
 preview builds, production requirements and localhost rejection. The environment
 template now uses the monthly price variable actually consumed by checkout.
 
-Production's monthly price and Convex billing setup remain incomplete. The
-owner has been asked whether to configure payments first or release with payments
-explicitly disabled. Do not invent price IDs or webhook credentials.
+Production's monthly price and Convex billing setup remain incomplete. The owner
+authorized this release with Stripe payments disabled. Both billing flags are
+false for production and previews in the two existing Vercel projects. New checkout
+requests return 503 without contacting Stripe; English/Dutch purchase controls
+show availability notices while free signup and existing paid access are preserved.
+Existing subscriber portal access and verified webhooks are retained for account
+management; this release does not cancel subscriptions or pause Stripe renewals.
+Final local validation: 196 files / 764 tests pass, typecheck and lint pass.
+Deployment is pending completion of the coordinated rollout.
 
 - Convex production dry run passed against `elegant-panther-767.eu-west-1.convex.cloud`, including schema validation and both new indexes. No indexes would be deleted.
 - Production auth configuration names are present and `SITE_URL` matches the live domain. No Stripe environment names or plan documents are present; confirm frontend billing status and align configuration before rollout.

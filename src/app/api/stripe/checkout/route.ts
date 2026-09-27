@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { ConvexHttpClient } from "convex/browser";
 import { z } from "zod";
+import { isStripeBillingEnabled } from "@/config/billing";
 import { api } from "../../../../../convex/_generated/api";
 import {
   STRIPE_API_VERSION,
@@ -41,6 +42,12 @@ async function parseCheckoutRequest(request: Request) {
 }
 
 export async function POST(request: Request): Promise<Response> {
+  if (!isStripeBillingEnabled()) {
+    return NextResponse.json(
+      { error: "Payments are temporarily unavailable.", code: "BILLING_DISABLED" },
+      { status: 503 }
+    );
+  }
   try {
     const parsedRequest = await parseCheckoutRequest(request);
     if (!parsedRequest.success) {

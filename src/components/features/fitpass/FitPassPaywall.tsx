@@ -6,6 +6,7 @@ import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTr
 import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { Card, CardContent } from "@/components/prototyper-ui/ui/card";
+import { isStripeBillingEnabled } from "@/config/billing";
 import {
   COMMERCIAL_CURRENCY,
   CONSUMER_CAMPAIGN_CONFIG,
@@ -51,8 +52,25 @@ export function FitPassPaywall({
     });
   }, [isNl, logMarketingEvent, pagePath]);
 
-  if ((userTier === "pro" || userTier === "premium") && !campaignActive) {
+  if ((userTier === "pro" || userTier === "premium") && (!campaignActive || !isStripeBillingEnabled())) {
     return null;
+  }
+
+  if (!isStripeBillingEnabled() && !campaignActive) {
+    return (
+      <Card variant="secondary" className="mt-6">
+        <CardContent className="px-6 py-6">
+          <p className="font-semibold">
+            {isNl ? "Betalingen zijn tijdelijk niet beschikbaar." : "Payments are temporarily unavailable."}
+          </p>
+          <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
+            {isNl
+              ? "Nieuwe betaalde upgrades zijn tijdelijk uitgeschakeld. Je kunt je beschikbare fitresultaten blijven bekijken."
+              : "New paid upgrades are temporarily disabled. You can continue viewing your available fit results."}
+          </p>
+        </CardContent>
+      </Card>
+    );
   }
 
   if (campaignActive) {

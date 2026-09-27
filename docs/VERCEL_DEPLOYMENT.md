@@ -28,6 +28,15 @@ Configure `STRIPE_WEBHOOK_SECRET` on **Convex**, where `/stripe/webhook` runs,
 and align the backend plan catalog and Stripe price mappings before enabling
 payments. A Vercel webhook-secret variable alone does not configure Convex.
 
+To release with new payments paused, set both `STRIPE_BILLING_ENABLED=false`
+and `NEXT_PUBLIC_STRIPE_BILLING_ENABLED=false` in Vercel before building.
+Checkout returns 503 without contacting Stripe and purchase controls display an
+availability notice. Free signup and existing paid entitlements stay available;
+the billing portal and verified webhooks remain available for existing subscribers
+to manage or cancel their subscriptions. This does not cancel subscriptions or
+pause renewals at Stripe. Re-enable both flags only after billing configuration
+and end-to-end validation are complete, then rebuild the frontend.
+
 Set these in Convex production deployment env:
 
 - `SITE_URL=https://bestbikefit4u.eu`

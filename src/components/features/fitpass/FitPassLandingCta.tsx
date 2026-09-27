@@ -6,6 +6,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
+import { isStripeBillingEnabled } from "@/config/billing";
 import {
   CONSUMER_CAMPAIGN_CONFIG,
   getConsumerCampaignCopy,
@@ -44,14 +45,29 @@ export function FitPassLandingCta({
   }
 
   // Already on Pro
-  if (user?.tier === "pro") {
+  if (user?.tier === "pro" || user?.tier === "premium") {
     return (
       <div className="flex flex-col items-center gap-2">
         <div className="rounded-full bg-[color:var(--success)]/15 px-4 py-1.5 text-sm font-medium text-[color:var(--success)]">
           {alreadyActiveLabel}
         </div>
-        <Button render={<Link href={dashboardHref} />} variant="outline">
+        <Button render={<Link href={dashboardHref} />} nativeButton={false} variant="outline">
           {isNl ? "Ga naar mijn dashboard" : "Go to my dashboard"}
+        </Button>
+      </div>
+    );
+  }
+
+  if (!isStripeBillingEnabled()) {
+    return (
+      <div className="flex flex-col items-center gap-2">
+        <p className="text-sm text-[color:var(--muted-foreground)]">
+          {isNl ? "Betalingen zijn tijdelijk niet beschikbaar." : "Payments are temporarily unavailable."}
+        </p>
+        <Button render={<Link href={user ? dashboardHref : loginHref} />} nativeButton={false}>
+          {user
+            ? isNl ? "Ga naar mijn dashboard" : "Go to my dashboard"
+            : isNl ? "Maak een gratis account" : "Create a free account"}
         </Button>
       </div>
     );

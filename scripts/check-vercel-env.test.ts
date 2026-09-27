@@ -38,4 +38,11 @@ describe("Vercel environment preflight", () => {
     expect(result.status).toBe(1);
     expect(result.stderr).toContain("points to localhost");
   });
+
+  it.each(["STRIPE_BILLING_ENABLED", "NEXT_PUBLIC_STRIPE_BILLING_ENABLED"])(
+    "allows a production release without Stripe credentials when %s disables payments",
+    (flag) => {
+      expect(run({ VERCEL_ENV: "production", [flag]: "false" }).status).toBe(0);
+    }
+  );
 });

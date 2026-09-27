@@ -49,7 +49,8 @@ const requiredUrlEnvVars = new Set(["NEXT_PUBLIC_CONVEX_URL"]);
 const isProductionDeploy =
   process.env.VERCEL_ENV === "production" ||
   (!process.env.VERCEL_ENV && process.env.VERCEL === "1" && process.env.NODE_ENV === "production");
-const billingEnabled = process.env.STRIPE_BILLING_ENABLED !== "false";
+const billingEnabled = process.env.STRIPE_BILLING_ENABLED !== "false" &&
+  process.env.NEXT_PUBLIC_STRIPE_BILLING_ENABLED !== "false";
 
 // Stripe webhook signatures are checked by Convex, not the Vercel frontend.
 // Configure STRIPE_WEBHOOK_SECRET on the backend deployment separately.

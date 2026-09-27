@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { isStripeBillingEnabled } from "@/config/billing";
 import { Bike, CheckCircle2, FileDown, Repeat, Sparkles } from "lucide-react";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -181,7 +182,9 @@ export default async function FitPassPage() {
         <PublicHero
           eyebrow={c.eyebrow}
           title={c.hero}
-          description={c.subhero}
+          description={isStripeBillingEnabled() ? c.subhero : isNl
+            ? "Nieuwe betaalde abonnementen zijn tijdelijk niet beschikbaar. Je kunt gratis een account aanmaken en de gratis functies blijven gebruiken."
+            : "New paid subscriptions are temporarily unavailable. You can create a free account and continue using the free features."}
           chips={
             isNl
               ? ["PDF rapport", "Onbeperkte sessies", "NL en EN beschikbaar"]

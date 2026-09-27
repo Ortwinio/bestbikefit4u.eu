@@ -71,11 +71,23 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  vi.unstubAllEnvs();
   vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
 describe("pricing page", () => {
+  it.each(["en", "nl"] as const)("keeps free signup available with a payment notice in %s", async (language) => {
+    locale = language;
+    vi.setSystemTime(new Date("2026-09-27T12:00:00Z"));
+    vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "false");
+    render(await PricingPage());
+    expect(screen.getByRole("status").textContent).toContain(
+      language === "nl" ? "Betalingen zijn tijdelijk niet beschikbaar" : "Payments are temporarily unavailable"
+    );
+    expect(screen.getByText(language === "nl" ? "Start gratis" : "Start free").closest("a")?.getAttribute("href"))
+      .toMatch(new RegExp(`^/${language}/login(?:\\?|$)`));
+  });
   it("shows the campaign replacement card in English", async () => {
     const ui = await PricingPage();
     render(ui);
