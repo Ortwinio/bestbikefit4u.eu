@@ -37,6 +37,20 @@ Keep the previous frontend deployment and Git revision available. If the fronten
 
 ## Deployment preflight results
 
+### Vercel failure diagnosis
+
+The primary preview failed in `scripts/check-vercel-env.mjs` before Next.js built:
+`STRIPE_WEBHOOK_SECRET` and `STRIPE_PRO_MONTHLY_PRICE_ID` were missing. The
+production-mode Node environment incorrectly classified previews as production.
+The preflight now respects explicit `VERCEL_ENV` and no longer requires the
+Convex-only webhook secret on Vercel. Five process-level regression tests cover
+preview builds, production requirements and localhost rejection. The environment
+template now uses the monthly price variable actually consumed by checkout.
+
+Production's monthly price and Convex billing setup remain incomplete. The
+owner has been asked whether to configure payments first or release with payments
+explicitly disabled. Do not invent price IDs or webhook credentials.
+
 - Convex production dry run passed against `elegant-panther-767.eu-west-1.convex.cloud`, including schema validation and both new indexes. No indexes would be deleted.
 - Production auth configuration names are present and `SITE_URL` matches the live domain. No Stripe environment names or plan documents are present; confirm frontend billing status and align configuration before rollout.
 - GitHub CI for `03c4abc` passed contracts, dependency audit, lint, typecheck, unit tests and build.
