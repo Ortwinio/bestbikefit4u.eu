@@ -58,7 +58,25 @@ Final local validation: 196 files / 764 tests pass, typecheck and lint pass.
 Both Vercel previews and GitHub quality, dependency and CodeQL checks passed for
 `d8a44ad`. Convex production deployment succeeded, including the two new indexes,
 without deleting indexes. Generated API declarations were refreshed during that
-deployment. Frontend production promotion and live verification are in progress.
+deployment. Frontend production deployment and live verification succeeded.
+
+## Completed production release
+
+- PR #1 merged as `8dab4d44a1b4dca9ddfb3b3eba61d34105c27896`.
+- Convex functions and indexes deployed to `elegant-panther-767.eu-west-1.convex.cloud`.
+- Vercel production deployment `dpl_2cr7QhUCP7NwaD7JhxGsBaTNYYFt` is READY and
+  assigned to https://bestbikefit4u.eu and https://bestbikefit4u-eu.vercel.app.
+- Main-branch CI passed quality, contracts, dependency audit and communication tests.
+- Sixteen live routes passed, including EN/NL pricing/login, public calculator,
+  sitemap, robots and protected-page redirects. All login scripts matched the
+  production CSP nonce; eval remains blocked.
+- Live POST `/api/stripe/checkout` returns `503` with `BILLING_DISABLED`.
+- Browser verified the disabled Pro button, English payment-pause notice and
+  working free-signup navigation to the live login page, without console errors.
+- Existing production data was retained. No Stripe charge or subscription
+  cancellation was performed. Full email-code verification/OAuth remain unverified.
+- Superseded preview builds for the generated-types/documentation commit were
+  canceled after merge to clear the queue for production.
 
 - Convex production dry run passed against `elegant-panther-767.eu-west-1.convex.cloud`, including schema validation and both new indexes. No indexes would be deleted.
 - Production auth configuration names are present and `SITE_URL` matches the live domain. No Stripe environment names or plan documents are present; confirm frontend billing status and align configuration before rollout.

@@ -2,7 +2,12 @@
 
 ## Outcome
 
-Three specialist agents reviewed and improved authentication/onboarding, backend/API security, and frontend performance. A second review pass checked the integrated changes. Work is on `codex/technical-security-review`, based on `a2da02d`. The review changes have not been pushed or deployed.
+Three specialist agents reviewed and improved authentication/onboarding, backend/API security, and frontend performance. A second review pass checked the integrated changes. The initial review was based on `a2da02d`.
+
+Release update: the fixes were subsequently merged and deployed to production as
+`8dab4d4`, with new Stripe payments disabled as requested. Final release checks
+cover 764 tests, passing CI and 16 live routes plus the disabled checkout response.
+See [release.md](release.md) for deployment evidence and remaining limitations.
 
 ## Registration diagnosis
 
