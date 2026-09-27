@@ -41,8 +41,8 @@ export function PressureCalculatorCta({
       eyebrow={labels.heading}
       title={
         isNl
-          ? "Sla dit advies op en verfijn het per fiets"
-          : "Save this recommendation and refine it per bike"
+          ? "Krijg persoonlijk advies per fiets"
+          : "Get personalized advice for each bike"
       }
       description={labels.body}
       actions={

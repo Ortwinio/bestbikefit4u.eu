@@ -169,7 +169,6 @@ export function GuideCreateView({
     [relatedGuides]
   );
 
-  const metaDescriptionLength = metaDescription[localeTab].trim().length;
   const previewPath = buildGuidePreviewPath(normalizedSlug);
   const slugError =
     slugTouched && !normalizedSlug

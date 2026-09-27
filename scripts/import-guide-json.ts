@@ -1,6 +1,7 @@
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { ConvexHttpClient } from "convex/browser";
+import type { FunctionArgs, FunctionReturnType } from "convex/server";
 import { internal } from "../convex/_generated/api.js";
 import { stripGuidePrefix, stripLocalePrefix } from "./lib/locale-strip";
 
@@ -25,37 +26,27 @@ type ImportJsonRecord = {
   metaDescription: string;
   relatedKeywords?: string[];
   alternateLocalePath?: string;
-  backlogSeoHints?: unknown;
+  backlogSeoHints?: ImportPayload["seoHints"];
   heroImageFileName?: string;
   heroImagePublicPath?: string;
 };
 
-type ImportPayload = {
-  slug: string;
-  path: string;
-  cluster: string;
-  backlogOrder?: number;
-  importStatus?: string;
-  importNotes?: string;
-  pageTitle: { en: string; nl: string };
-  h1: { en: string; nl: string };
-  metaTitle: { en: string; nl: string };
-  metaDescription: { en: string; nl: string };
-  pageBrief: { en: string; nl: string };
-  libraryBody: { en: string; nl: string };
-  heroImageFileName?: string;
-  heroImagePublicPath?: string;
-  relatedGuidePaths?: string[];
-  relatedKeywords?: string[];
-  seoHints?: unknown;
-  primaryCtaTarget: string;
-  primaryCtaLabel: { en: string; nl: string };
-  relatedGuides?: string[];
-  robotsIndex: true;
-  tableOfContents: false;
-  publishedAt: number;
-  lastUpdatedAt: number;
-  overwrite?: boolean;
+type ImportArgs = FunctionArgs<typeof internal.guides.mutations.importGuide>;
+type ImportPayload = ImportArgs & {
+  libraryBody: NonNullable<ImportArgs["libraryBody"]>;
+};
+
+// Admin-authenticated HTTP clients may invoke internal functions at runtime.
+// Keep the visibility bridge narrow and retain the generated argument/results.
+type AdminImportClient = {
+  query: (
+    query: typeof internal.guides.queries.getGuideImportRecord,
+    args: FunctionArgs<typeof internal.guides.queries.getGuideImportRecord>
+  ) => Promise<FunctionReturnType<typeof internal.guides.queries.getGuideImportRecord>>;
+  mutation: (
+    mutation: typeof internal.guides.mutations.importGuide,
+    args: ImportArgs
+  ) => Promise<FunctionReturnType<typeof internal.guides.mutations.importGuide>>;
 };
 
 function parseArgs(argv: string[]) {
@@ -226,14 +217,14 @@ function pickSmokeCheckSlugs(slugs: string[]) {
 
 async function runSmokeCheck(client: ConvexHttpClient, slugs: string[]) {
   const checkSlugs = pickSmokeCheckSlugs(slugs);
-  const typedClient = client as any;
-  const results = (await Promise.all(
+  const typedClient = client as unknown as AdminImportClient;
+  const results = await Promise.all(
     checkSlugs.map((slug) => {
       return typedClient.query(internal.guides.queries.getGuideImportRecord, {
         slug,
       });
     }),
-  )) as any[];
+  );
 
   const nonNull = results.filter(Boolean);
   const hasLibraryBody = results.some(
@@ -364,14 +355,14 @@ async function main() {
   }
 
   const client = requireConvexClient();
-  const typedClient = client as any;
+  const typedClient = client as unknown as AdminImportClient;
 
   for (const payload of payloads) {
     try {
-      const result = (await typedClient.mutation(
+      const result = await typedClient.mutation(
         internal.guides.mutations.importGuide,
         payload
-      )) as any;
+      );
       if (result.outcome === "created") {
         imported += 1;
       } else if (result.outcome === "updated") {

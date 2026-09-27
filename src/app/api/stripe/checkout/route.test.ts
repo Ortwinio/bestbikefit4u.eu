@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => {
   const clientConstructor = vi.fn();
   const checkoutSessionsCreate = vi.fn();
   const customersCreate = vi.fn();
+  const customersRetrieve = vi.fn();
   const stripeConstructor = vi.fn();
 
   return {
@@ -18,6 +19,7 @@ const mocks = vi.hoisted(() => {
     clientConstructor,
     checkoutSessionsCreate,
     customersCreate,
+    customersRetrieve,
     stripeConstructor,
   };
 });
@@ -48,6 +50,7 @@ vi.mock("stripe", () => ({
 
     customers = {
       create: mocks.customersCreate,
+      retrieve: mocks.customersRetrieve,
     };
 
     constructor(key: string, options: unknown) {
@@ -69,6 +72,8 @@ describe("Stripe checkout route", () => {
     process.env.SITE_URL = "https://bestbikefit4u.eu";
     process.env.STRIPE_SECRET_KEY = "sk_test_123";
     process.env.STRIPE_PRO_MONTHLY_PRICE_ID = "price_pro_monthly";
+    delete process.env.STRIPE_BILLING_ENABLED;
+    delete process.env.NEXT_PUBLIC_STRIPE_BILLING_ENABLED;
 
     mocks.token.mockResolvedValue("token-123");
     mocks.query.mockResolvedValue({
@@ -80,6 +85,7 @@ describe("Stripe checkout route", () => {
       url: "https://checkout.stripe.com/c/session",
     });
     mocks.customersCreate.mockResolvedValue({ id: "cus_created" });
+    mocks.customersRetrieve.mockResolvedValue({ id: "cus_existing", metadata: { userId: "user_123" } });
   });
 
   afterEach(() => {
@@ -95,6 +101,20 @@ describe("Stripe checkout route", () => {
       headers: { "Content-Type": "application/json" },
     });
   }
+
+  it.each(["STRIPE_BILLING_ENABLED", "NEXT_PUBLIC_STRIPE_BILLING_ENABLED"])(
+    "blocks direct checkout without contacting Stripe when %s is false",
+    async (flag) => {
+      process.env[flag] = "false";
+      const response = await POST(checkoutRequest({ productKey: "pro_monthly" }));
+      expect(response.status).toBe(503);
+      expect(await response.json()).toMatchObject({ code: "BILLING_DISABLED" });
+      expect(mocks.token).not.toHaveBeenCalled();
+      expect(mocks.stripeConstructor).not.toHaveBeenCalled();
+      expect(mocks.customersCreate).not.toHaveBeenCalled();
+      expect(mocks.checkoutSessionsCreate).not.toHaveBeenCalled();
+    }
+  );
 
   it("returns 401 when the user is not authenticated", async () => {
     mocks.token.mockResolvedValue(undefined);
@@ -166,6 +186,7 @@ describe("Stripe checkout route", () => {
       cancel_url:
         "https://bestbikefit4u.eu/nl/fit/session_456/results?checkout=cancelled",
       customer: "cus_existing",
+      subscription_data: { metadata: { userId: "user_123" } },
       client_reference_id: "user_123",
       allow_promotion_codes: true,
       metadata: {
@@ -177,7 +198,7 @@ describe("Stripe checkout route", () => {
     });
   });
 
-  it("creates and stores a Stripe customer before creating checkout when the user has none", async () => {
+  it("creates an idempotent customer and leaves persistence to the verified webhook", async () => {
     mocks.query.mockResolvedValueOnce({
       _id: "user_123",
       email: "rider@example.com",
@@ -188,13 +209,9 @@ describe("Stripe checkout route", () => {
 
     expect(response.status).toBe(200);
     expect(mocks.customersCreate).toHaveBeenCalledWith({
-      email: "rider@example.com",
       metadata: { userId: "user_123" },
-    });
-    expect(mocks.mutation).toHaveBeenCalledWith(
-      expect.anything(),
-      { stripeCustomerId: "cus_created" }
-    );
+    }, { idempotencyKey: "customer:user_123" });
+    expect(mocks.mutation).not.toHaveBeenCalled();
     expect(mocks.checkoutSessionsCreate).toHaveBeenCalledWith(
       expect.objectContaining({
         customer: "cus_created",
@@ -208,4 +225,16 @@ describe("Stripe checkout route", () => {
       })
     );
   });
+
+  it.each([
+    { id: "cus_existing", metadata: { userId: "another_user" } },
+    { id: "cus_existing", metadata: {} },
+    { id: "cus_existing", deleted: true },
+  ])("rejects an unverified legacy customer binding: %j", async (customer) => {
+    mocks.customersRetrieve.mockResolvedValue(customer);
+    const response = await POST(checkoutRequest({ productKey: "fit_pass" }));
+    expect(response.status).toBe(409);
+    expect(mocks.checkoutSessionsCreate).not.toHaveBeenCalled();
+  });
+
 });

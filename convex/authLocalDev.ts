@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { internalMutation } from "./_generated/server";
 
-const LOCALHOST_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
+const LOCALHOST_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "[::1]"]);
 const LOCAL_DEV_ADMIN_ROLES = new Set([
   "super_admin",
   "ops_admin",
@@ -22,6 +22,26 @@ export function isProductionEnvironment() {
 
 export function isAllowedLocalhostHost(hostname: string) {
   return LOCALHOST_HOSTS.has(hostname.trim().toLowerCase());
+}
+
+// The auth backend is remotely callable even when the frontend route is local.
+// Require an explicitly local site and reject known production deployments.
+export function isLocalDevAuthAllowed() {
+  if (
+    isProductionEnvironment() ||
+    process.env.CONVEX_DEPLOYMENT?.startsWith("prod:")
+  ) {
+    return false;
+  }
+  try {
+    const site = new URL(process.env.SITE_URL ?? "");
+    return (
+      (site.protocol === "http:" || site.protocol === "https:") &&
+      isAllowedLocalhostHost(site.hostname)
+    );
+  } catch {
+    return false;
+  }
 }
 
 export function normalizeLocalDevEmail(email: string) {
@@ -104,6 +124,9 @@ export const ensureLocalDevUser = internalMutation({
     ),
   },
   handler: async (ctx, args) => {
+    if (!isLocalDevAuthAllowed() || !process.env.LOCALHOST_DEV_LOGIN_SECRET) {
+      throw new Error("Localhost dev login is disabled.");
+    }
     const now = Date.now();
     const email = normalizeLocalDevEmail(args.email);
     const name = normalizeLocalDevName(args.name, email);

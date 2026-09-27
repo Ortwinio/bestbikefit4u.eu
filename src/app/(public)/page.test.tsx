@@ -6,6 +6,10 @@ import HomePage from "./page";
 
 let locale: "en" | "nl" = "en";
 
+vi.mock("@/components/home/LatestBlogSection", () => ({
+  LatestBlogSection: () => null,
+}));
+
 vi.mock("next/link", () => ({
   default: ({
     href,
@@ -257,14 +261,26 @@ vi.mock("@/i18n/getDictionary", () => ({
 
 beforeEach(() => {
   locale = "en";
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-05-01T12:00:00Z"));
 });
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
 describe("home page", () => {
+  it("keeps the free calculator CTA after the donation campaign expires", async () => {
+    vi.setSystemTime(new Date("2026-09-27T12:00:00Z"));
+    render(await HomePage());
+
+    expect(screen.getAllByText("Start free bike fit")[0].closest("a")?.getAttribute("href"))
+      .toBe("/en/calculators/bike-fit");
+    expect(screen.queryByText("Donate via our Alpe d'HuZes page")).toBeNull();
+  });
+
   it("keeps the homepage value-first flow ahead of signup in English", async () => {
     const ui = await HomePage();
     const { container } = render(ui);

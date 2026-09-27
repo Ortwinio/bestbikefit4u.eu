@@ -6,6 +6,8 @@ import FAQPage from "./page";
 
 let locale: "en" | "nl" = "en";
 
+vi.mock("@/components/seo/JsonLd", () => ({ JsonLd: () => null }));
+
 vi.mock("next/link", () => ({
   default: ({
     href,

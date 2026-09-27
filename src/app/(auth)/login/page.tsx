@@ -104,7 +104,7 @@ const loginCopy: Record<Locale, LoginCopy> = {
     emailLabel: "Email address",
     emailPlaceholder: "you@example.com",
     emailTooltip:
-      "Enter the email linked to your BestBikeFit4U account. We'll send the login code here.",
+      "Enter your email to create an account or sign in. We'll send your verification code here.",
     sendCode: "Send Login Code",
     sendCodeError: "Failed to send verification code. Please try again.",
     resendCodeError: "Failed to resend code. Please try again.",
@@ -155,7 +155,7 @@ const loginCopy: Record<Locale, LoginCopy> = {
     emailLabel: "E-mailadres",
     emailPlaceholder: "jij@example.com",
     emailTooltip:
-      "Vul het e-mailadres in dat aan je BestBikeFit4U-account gekoppeld is. We sturen de inlogcode hiernaartoe.",
+      "Vul je e-mailadres in om een account te maken of in te loggen. We sturen je verificatiecode hiernaartoe.",
     sendCode: "Verstuur inlogcode",
     sendCodeError: "Verzenden van verificatiecode mislukt. Probeer opnieuw.",
     resendCodeError: "Opnieuw verzenden mislukt. Probeer opnieuw.",
@@ -223,33 +223,17 @@ function AuthField({
   label: string;
   tooltip?: string;
 }) {
-  const [isMounted] = useState(() => typeof window !== "undefined");
-  const nativeInputProps = props as ComponentProps<"input">;
-
   return (
     <div className="space-y-2">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
         <Label htmlFor={id}>{label}</Label>
         {tooltip ? (
-          <p className="max-w-none text-left text-xs leading-5 text-muted-foreground sm:max-w-xs sm:text-right">
+          <p id={`${id}-help`} className="max-w-none text-left text-xs leading-5 text-muted-foreground sm:max-w-xs sm:text-right">
             {tooltip}
           </p>
         ) : null}
       </div>
-      {isMounted ? (
-        <Input id={id} tooltip={tooltip} className={className} {...props} />
-      ) : (
-        <input
-          id={id}
-          className={[
-            "border-field-border bg-field-background h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base shadow-field outline-none md:text-sm placeholder:text-muted-foreground",
-            className,
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          {...nativeInputProps}
-        />
-      )}
+      <Input id={id} tooltip={tooltip} aria-describedby={tooltip ? `${id}-help` : undefined} className={className} {...props} />
     </div>
   );
 }
@@ -372,11 +356,15 @@ export default function LoginPage() {
 
   const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (authActionDisabled) return;
     setIsLoading(true);
     setError(null);
 
     try {
-      await signIn("resend", { email });
+      // Preserve case for existing case-sensitive Convex account identifiers.
+      const submittedEmail = email.trim();
+      await signIn("resend", { email: submittedEmail });
+      setEmail(submittedEmail);
       void logMarketingEvent({
         eventType: "login_code_requested",
         locale,
@@ -412,7 +400,9 @@ export default function LoginPage() {
 
     try {
       const result = await signIn("resend", { email, code });
-      void result;
+      if (!result.signingIn) {
+        throw new Error("Verification did not establish a session.");
+      }
       void logMarketingEvent({
         eventType: "login_verified",
         locale,
@@ -421,9 +411,7 @@ export default function LoginPage() {
         sourceTag,
       });
       setStep("success");
-      setTimeout(() => {
-        window.location.href = withLocalePrefix("/dashboard", locale);
-      }, 1500);
+      // The authenticated-state effect navigates once the session is ready.
     } catch (err) {
       console.error("Failed to verify code:", err);
       void logMarketingEvent({
@@ -585,6 +573,7 @@ export default function LoginPage() {
               type="button"
               variant="ghost"
               onClick={handleChangeEmail}
+              disabled={isLoading}
               className="w-fit px-0 text-sm text-muted-foreground hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
@@ -601,6 +590,7 @@ export default function LoginPage() {
                 type="button"
                 variant="ghost"
                 onClick={handleChangeEmail}
+                disabled={isLoading}
                 className="px-0 text-sm font-medium text-primary hover:text-primary-dark"
               >
                 {text.changeEmailAction}
@@ -620,15 +610,18 @@ export default function LoginPage() {
                 type="text"
                 placeholder={text.verificationCodePlaceholder}
                 value={code}
-                onChange={(e) => setCode(e.target.value.toUpperCase())}
-                maxLength={7}
+                onChange={(e) => setCode(e.target.value.replace(/\s/g, "").toUpperCase().slice(0, 7))}
+                minLength={7}
+                autoComplete="one-time-code"
+                autoCapitalize="characters"
+                spellCheck={false}
                 className="text-center text-2xl tracking-widest font-mono"
                 required
                 autoFocus
               />
 
               {error && (
-                <p className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
+                <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
                   {error}
                 </p>
               )}
@@ -707,6 +700,9 @@ export default function LoginPage() {
               label={text.emailLabel}
               tooltip={text.emailTooltip}
               type="email"
+              autoComplete="email"
+              autoCapitalize="none"
+              spellCheck={false}
               placeholder={text.emailPlaceholder}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -715,7 +711,7 @@ export default function LoginPage() {
             />
 
             {error && (
-              <p className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
+              <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
                 {error}
               </p>
             )}

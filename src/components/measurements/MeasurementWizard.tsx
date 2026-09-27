@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { wizardSchema, type WizardFormData } from "@/lib/validations/measurementWizard";
+export type { WizardFormData } from "@/lib/validations/measurementWizard";
 import {
   Button,
   Card,
@@ -21,41 +22,6 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { toPercentBucket } from "@/lib/uiPercent";
 
-const wizardSchema = z.object({
-  // Step 1: Required body measurements
-  heightCm: z.number().min(130).max(210),
-  inseamCm: z.number().min(55).max(105),
-  weightKg: z.number().min(30).max(200).optional(),
-
-  // Step 2: Optional advanced measurements
-  torsoLengthCm: z.number().min(45).max(75).optional(),
-  armLengthCm: z.number().min(45).max(75).optional(),
-  femurLengthCm: z.number().min(35).max(60).optional(),
-  shoulderWidthCm: z.number().min(30).max(55).optional(),
-
-  // Step 3: Flexibility
-  flexibilityScore: z.enum([
-    "very_limited",
-    "limited",
-    "average",
-    "good",
-    "excellent",
-  ]),
-
-  // Step 4: Core stability
-  coreStabilityScore: z.number().min(1).max(5),
-
-  // Step 5: Comfort
-  comfortScore: z.number().min(1).max(5).optional(),
-
-  // Step 6: Riding style
-  experienceLevel: z.enum(["beginner", "intermediate", "advanced"]).optional(),
-  weeklyHours: z.enum(["0-3", "3-6", "6-10", "10-15", "15+"]).optional(),
-  typicalRideLength: z.enum(["short", "medium", "long", "ultra"]).optional(),
-  positionPriority: z.enum(["comfort", "balanced", "performance"]).optional(),
-});
-
-export type WizardFormData = z.infer<typeof wizardSchema>;
 
 const steps = [
   {
@@ -123,6 +89,7 @@ export function MeasurementWizard({
       flexibilityScore: defaultValues?.flexibilityScore || "average",
       coreStabilityScore: defaultValues?.coreStabilityScore || 3,
       comfortScore: defaultValues?.comfortScore || 5,
+      painAreas: defaultValues?.painAreas ?? [],
       experienceLevel: defaultValues?.experienceLevel,
       weeklyHours: defaultValues?.weeklyHours,
       typicalRideLength: defaultValues?.typicalRideLength,
@@ -131,7 +98,7 @@ export function MeasurementWizard({
     mode: "onChange",
   });
 
-  const { handleSubmit, trigger, formState } = methods;
+  const { handleSubmit, trigger } = methods;
   const activeStep = steps[currentStep - 1];
   const percentComplete = Math.round((currentStep / steps.length) * 100);
   const percentBucket = toPercentBucket(percentComplete);
@@ -141,9 +108,11 @@ export function MeasurementWizard({
       case 1:
         return await trigger(["heightCm", "inseamCm"]);
       case 2:
+        return true; // optional measurements
       case 5:
+        return await trigger(["comfortScore", "painAreas"]);
       case 6:
-        return true; // optional steps
+        return await trigger(["experienceLevel", "weeklyHours", "typicalRideLength", "positionPriority"]);
       case 3:
         return await trigger(["flexibilityScore"]);
       case 4:
@@ -252,7 +221,7 @@ export function MeasurementWizard({
                 key="save"
                 type="submit"
                 isLoading={isSubmitting}
-                disabled={!formState.isValid}
+                disabled={isSubmitting}
               >
                 {messages.common.save}
                 <Check className="ml-1 h-4 w-4" />

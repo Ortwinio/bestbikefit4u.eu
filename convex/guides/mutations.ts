@@ -1,5 +1,6 @@
-import { internalMutation, mutation } from "../_generated/server";
-import { v } from "convex/values";
+import { internalMutation, mutation, type MutationCtx } from "../_generated/server";
+import { v, type ObjectType } from "convex/values";
+import type { Doc } from "../_generated/dataModel";
 import { writeAuditLog } from "../admin/audit";
 import { buildGuideFieldChanges, writeGuideAuditLog } from "./audit";
 import { BRAND } from "../lib/brand";
@@ -126,8 +127,12 @@ function assertGuideReadyForReviewOrPublish(guide: {
   }
 }
 
+type GuideRecordArgs = ObjectType<typeof guideEditableFields> &
+  Pick<Doc<"guidePages">, "slug"> &
+  Partial<Pick<Doc<"guidePages">, "path" | "status" | "publishedAt" | "lastUpdatedAt">>;
+
 function buildGuideRecordFromArgs(
-  args: any
+  args: GuideRecordArgs
 ) {
   const slug = normalizeGuideSlug(args.slug);
   return {
@@ -294,7 +299,7 @@ export const updateGuide = mutation({
       };
     }
 
-    const patch: any = {
+    const patch: Partial<Doc<"guidePages">> = {
       ...slugPatch,
       ...(args.cluster !== undefined ? { cluster: args.cluster } : {}),
       ...(args.backlogOrder !== undefined ? { backlogOrder: args.backlogOrder } : {}),
@@ -631,7 +636,9 @@ export const restoreGuideRevision = mutation({
       throw new Error("Revision not found");
     }
 
-    const snapshot = revision.snapshot as Record<string, unknown>;
+    // Revisions are server-authored guide snapshots; older revisions may omit
+    // newer fields. The database schema still validates the restored patch.
+    const snapshot = revision.snapshot as Partial<Doc<"guidePages">>;
     const nextSlug = normalizeGuideSlug(String(snapshot.slug ?? guide.slug));
     await assertGuideSlugAvailable(ctx, nextSlug, guideId);
 
@@ -720,7 +727,7 @@ export const restoreGuideRevision = mutation({
       version: guide.version + 1,
     };
 
-    await ctx.db.patch(guideId, patch as any);
+    await ctx.db.patch(guideId, patch);
 
     const restoredGuide = await ctx.db.get(guideId);
     if (!restoredGuide) {
@@ -925,89 +932,55 @@ export const changeSlug = mutation({
   },
 });
 
+const guideImportFields = {
+  slug: v.string(),
+  path: v.string(),
+  cluster: v.string(),
+  backlogOrder: v.optional(v.number()),
+  importStatus: v.optional(v.string()),
+  importNotes: v.optional(v.string()),
+  pageTitle: guideEditableFields.pageTitle,
+  h1: guideEditableFields.h1,
+  metaTitle: guideEditableFields.metaTitle,
+  metaDescription: guideEditableFields.metaDescription,
+  pageBrief: guideEditableFields.pageBrief,
+  body: v.optional(guideEditableFields.body),
+  faqs: v.optional(guideEditableFields.faqs),
+  quickAnswer: v.optional(guideEditableFields.quickAnswer),
+  libraryBody: v.optional(guideEditableFields.libraryBody),
+  heroImageFileName: v.optional(v.string()),
+  heroImagePublicPath: v.optional(v.string()),
+  relatedGuidePaths: v.optional(v.array(v.string())),
+  relatedKeywords: v.optional(v.array(v.string())),
+  seoHints: v.optional(guideSeoHintsValidator),
+  primaryCtaTarget: v.optional(v.string()),
+  primaryCtaLabel: v.optional(guideEditableFields.primaryCtaLabel),
+  relatedGuides: v.optional(v.array(v.string())),
+  robotsIndex: v.boolean(),
+  tableOfContents: v.boolean(),
+  publishedAt: v.number(),
+  lastUpdatedAt: v.number(),
+  status: v.optional(
+    v.union(
+      v.literal("draft"),
+      v.literal("in_review"),
+      v.literal("published"),
+      v.literal("unpublished")
+    )
+  ),
+  overwrite: v.optional(v.boolean()),
+};
+type GuideImportArgs = ObjectType<typeof guideImportFields>;
+
 export const importGuide = internalMutation({
-  args: {
-    slug: v.string(),
-    path: v.string(),
-    cluster: v.string(),
-    backlogOrder: v.optional(v.number()),
-    importStatus: v.optional(v.string()),
-    importNotes: v.optional(v.string()),
-    pageTitle: guideEditableFields.pageTitle,
-    h1: guideEditableFields.h1,
-    metaTitle: guideEditableFields.metaTitle,
-    metaDescription: guideEditableFields.metaDescription,
-    pageBrief: guideEditableFields.pageBrief,
-    body: v.optional(guideEditableFields.body),
-    faqs: v.optional(guideEditableFields.faqs),
-    quickAnswer: v.optional(guideEditableFields.quickAnswer),
-    libraryBody: v.optional(guideEditableFields.libraryBody),
-    heroImageFileName: v.optional(v.string()),
-    heroImagePublicPath: v.optional(v.string()),
-    relatedGuidePaths: v.optional(v.array(v.string())),
-    relatedKeywords: v.optional(v.array(v.string())),
-    seoHints: v.optional(guideSeoHintsValidator),
-    primaryCtaTarget: v.optional(v.string()),
-    primaryCtaLabel: v.optional(guideEditableFields.primaryCtaLabel),
-    relatedGuides: v.optional(v.array(v.string())),
-    robotsIndex: v.boolean(),
-    tableOfContents: v.boolean(),
-    publishedAt: v.number(),
-    lastUpdatedAt: v.number(),
-    status: v.optional(
-      v.union(
-        v.literal("draft"),
-        v.literal("in_review"),
-        v.literal("published"),
-        v.literal("unpublished")
-      )
-    ),
-    overwrite: v.optional(v.boolean()),
-  },
+  args: guideImportFields,
   handler: async (ctx, args) => {
     return importGuideRecord(ctx, args);
   },
 });
 
 export const importGuideFromAdmin = mutation({
-  args: {
-    slug: v.string(),
-    path: v.string(),
-    cluster: v.string(),
-    backlogOrder: v.optional(v.number()),
-    importStatus: v.optional(v.string()),
-    importNotes: v.optional(v.string()),
-    pageTitle: guideEditableFields.pageTitle,
-    h1: guideEditableFields.h1,
-    metaTitle: guideEditableFields.metaTitle,
-    metaDescription: guideEditableFields.metaDescription,
-    pageBrief: guideEditableFields.pageBrief,
-    body: v.optional(guideEditableFields.body),
-    faqs: v.optional(guideEditableFields.faqs),
-    quickAnswer: v.optional(guideEditableFields.quickAnswer),
-    libraryBody: v.optional(guideEditableFields.libraryBody),
-    heroImageFileName: v.optional(v.string()),
-    heroImagePublicPath: v.optional(v.string()),
-    relatedGuidePaths: v.optional(v.array(v.string())),
-    relatedKeywords: v.optional(v.array(v.string())),
-    seoHints: v.optional(guideSeoHintsValidator),
-    primaryCtaTarget: v.optional(v.string()),
-    primaryCtaLabel: v.optional(guideEditableFields.primaryCtaLabel),
-    relatedGuides: v.optional(v.array(v.string())),
-    robotsIndex: v.boolean(),
-    tableOfContents: v.boolean(),
-    publishedAt: v.number(),
-    lastUpdatedAt: v.number(),
-    status: v.optional(
-      v.union(
-        v.literal("draft"),
-        v.literal("in_review"),
-        v.literal("published"),
-        v.literal("unpublished")
-      )
-    ),
-    overwrite: v.optional(v.boolean()),
-  },
+  args: guideImportFields,
   handler: async (ctx, args) => {
     await requireGuideAdmin(ctx);
     return importGuideRecord(ctx, args);
@@ -1015,12 +988,12 @@ export const importGuideFromAdmin = mutation({
 });
 
 async function importGuideRecord(
-  ctx: any,
-  args: any
+  ctx: MutationCtx,
+  args: GuideImportArgs
 ) {
   const existing = await ctx.db
     .query("guidePages")
-    .withIndex("by_slug", (q: any) => q.eq("slug", normalizeGuideSlug(args.slug)))
+    .withIndex("by_slug", (q) => q.eq("slug", normalizeGuideSlug(args.slug)))
     .unique();
 
   const now = Date.now();

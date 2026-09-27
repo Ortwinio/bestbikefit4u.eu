@@ -25,12 +25,23 @@ function buildConvexClient() {
 }
 
 export async function POST(request: Request) {
-  if (!process.env.LOCALHOST_DEV_LOGIN_SECRET) {
+  if (
+    process.env.NODE_ENV !== "development" ||
+    process.env.VERCEL_ENV === "production" ||
+    process.env.CONVEX_DEPLOYMENT?.startsWith("prod:") ||
+    !process.env.LOCALHOST_DEV_LOGIN_SECRET
+  ) {
     return jsonError("Localhost dev login is disabled.", 404);
   }
 
   if (!isLocalDevRequest(request)) {
     return jsonError("Localhost dev login only works on localhost.", 403);
+  }
+
+  // Host validation alone does not prevent cross-site requests to localhost.
+  const origin = request.headers.get("origin");
+  if (origin !== new URL(request.url).origin) {
+    return jsonError("Same-origin requests only.", 403);
   }
 
   let body: {
@@ -42,6 +53,15 @@ export async function POST(request: Request) {
   try {
     body = (await request.json()) as typeof body;
   } catch {
+    return jsonError("Invalid request body.", 400);
+  }
+
+  if (
+    !body ||
+    typeof body !== "object" ||
+    Array.isArray(body) ||
+    Object.values(body).some((value) => value !== undefined && typeof value !== "string")
+  ) {
     return jsonError("Invalid request body.", 400);
   }
 

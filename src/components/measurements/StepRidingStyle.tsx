@@ -5,6 +5,7 @@ import { InfoBox } from "@/components/ui";
 import { SliderQuestion } from "@/components/profile/RidingStyleCard";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { HelpCircle, Bike } from "lucide-react";
+import type { WizardFormData } from "@/lib/validations/measurementWizard";
 
 const EXPERIENCE_KEYS = ["beginner", "intermediate", "advanced"] as const;
 const WEEKLY_HOURS_KEYS = ["0-3", "3-6", "6-10", "10-15", "15+"] as const;
@@ -12,8 +13,11 @@ const RIDE_DISTANCE_KEYS = ["short", "medium", "long", "ultra"] as const;
 const POSITION_KEYS = ["comfort", "balanced", "performance"] as const;
 
 export function StepRidingStyle() {
-  const { control } = useFormContext();
-  const { messages } = useDashboardMessages();
+  const { control, formState: { errors } } = useFormContext<WizardFormData>();
+  const hasMissingAnswers = Boolean(
+    errors.experienceLevel || errors.weeklyHours || errors.typicalRideLength || errors.positionPriority
+  );
+  const { locale, messages } = useDashboardMessages();
   const tQ = messages.questionnaire;
   const tP = messages.profile.ridingStyle;
 
@@ -36,6 +40,19 @@ export function StepRidingStyle() {
 
   return (
     <div className="space-y-6">
+      <p className="text-sm text-muted-foreground">
+        {locale === "nl"
+          ? "Beantwoord alle vier de vragen om je rijdersprofiel te voltooien."
+          : "Answer all four questions to complete your rider profile."}
+      </p>
+
+      {hasMissingAnswers && (
+        <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
+          {locale === "nl"
+            ? "Beantwoord alle vier de vragen over je rijstijl voordat je je profiel opslaat."
+            : "Please answer all four riding-style questions before saving your profile."}
+        </p>
+      )}
 
       {/* 1. Why this matters */}
       <InfoBox

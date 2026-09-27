@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { api } from "../convex/_generated/api";
 import { BRAND } from "@/config/brand";
 import { isAdminRole } from "@/components/admin/auth/admin-auth-shared";
-import { buildContentSecurityPolicy, createCspNonce, NONCE_HEADER_NAME } from "@/lib/csp";
+import { buildContentSecurityPolicy, createCspNonce, createCspRequestHeaders } from "@/lib/csp";
 import {
   LOCALE_COOKIE_NAME,
   LOCALE_HEADER_NAME,
@@ -168,9 +168,8 @@ function rewriteToLocalizedInternalPath(
   const rewriteUrl = request.nextUrl.clone();
   rewriteUrl.pathname = stripLocalePrefix(pathname);
 
-  const requestHeaders = new Headers(request.headers);
+  const requestHeaders = createCspRequestHeaders(request.headers, nonce);
   requestHeaders.set(LOCALE_HEADER_NAME, locale);
-  requestHeaders.set(NONCE_HEADER_NAME, nonce);
 
   const response = NextResponse.rewrite(rewriteUrl, {
     request: {
@@ -200,8 +199,7 @@ function applyDeploymentHeaders(
 }
 
 function createNextResponseWithNonce(request: NextRequest, nonce: string) {
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set(NONCE_HEADER_NAME, nonce);
+  const requestHeaders = createCspRequestHeaders(request.headers, nonce);
 
   return NextResponse.next({
     request: {

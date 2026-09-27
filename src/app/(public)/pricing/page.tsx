@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Check } from "lucide-react";
+import { isStripeBillingEnabled } from "@/config/billing";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
@@ -167,6 +168,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PricingPage() {
   const locale = await getRequestLocale();
+  const billingEnabled = isStripeBillingEnabled();
+  const paymentsUnavailable = locale === "nl"
+    ? "Betalingen zijn tijdelijk niet beschikbaar. Je kunt wel gratis een account aanmaken."
+    : "Payments are temporarily unavailable. You can still create a free account.";
   const page = copy[locale];
   const campaignActive = isConsumerCampaignActive();
   const campaign = getConsumerCampaignCopy(locale);
@@ -198,6 +203,7 @@ export default async function PricingPage() {
         section="pricing"
       />
       <PublicHero eyebrow={page.eyebrow} title={page.title} description={page.subtitle} />
+      {!billingEnabled && <p role="status" className="mt-6 text-center text-muted-foreground">{paymentsUnavailable}</p>}
       <div className="mt-4">
         <RatingBadge rating="4.8" count={locale === "nl" ? "380+ rijders" : "380+ riders"} />
       </div>
@@ -266,7 +272,11 @@ export default async function PricingPage() {
                   ))}
                 </ul>
 
-                <Button
+                {!billingEnabled && plan.priceCentsMonthly > 0 ? (
+                  <Button disabled className="mt-8 w-full" variant="outline">
+                    {locale === "nl" ? "Tijdelijk niet beschikbaar" : "Temporarily unavailable"}
+                  </Button>
+                ) : <Button
                   render={
                     <TrackedCtaLink
                       href={withLocalePrefix("/login", locale)}
@@ -281,7 +291,7 @@ export default async function PricingPage() {
                   variant="outline"
                 >
                   {localized.cta}
-                </Button>
+                </Button>}
               </Card>
             );
           })}
@@ -310,7 +320,7 @@ export default async function PricingPage() {
         </PublicSection>
       </div>
 
-      <p className="mt-6 text-center text-sm text-muted-foreground">{page.confidenceLine}</p>
+      <p className="mt-6 text-center text-sm text-muted-foreground">{billingEnabled ? page.confidenceLine : paymentsUnavailable}</p>
 
       <div className="mt-16">
         <PublicSection

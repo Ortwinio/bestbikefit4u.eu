@@ -1,3 +1,6 @@
+"use node";
+
+import { fetchMarktplaats, readLimitedBytes } from "../lib/marktplaatsFetch";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { action } from "../_generated/server";
 import { api, internal } from "../_generated/api";
@@ -70,9 +73,8 @@ export const previewBikeImport = action({
 
     const sourceUrl = normalizeMarktplaatsUrl(args.sourceUrl);
     try {
-      const response = await fetch(sourceUrl, {
+      const response = await fetchMarktplaats(sourceUrl, {
         headers: buildFetchHeaders(),
-        redirect: "follow",
       });
 
       if (!response.ok) {
@@ -88,7 +90,7 @@ export const previewBikeImport = action({
         );
       }
 
-      const html = await response.text();
+      const html = new TextDecoder().decode(await readLimitedBytes(response, 2 * 1024 * 1024));
       if (!html.trim()) {
         throw new ConvexError("The advert returned an empty response.");
       }

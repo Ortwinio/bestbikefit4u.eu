@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { wizardSchema } from "../../src/lib/validations/measurementWizard";
+import { comfortScoreToFields } from "../../src/lib/validations/profile";
 
 const { getAuthUserIdMock } = vi.hoisted(() => ({
   getAuthUserIdMock: vi.fn(),
@@ -203,6 +205,24 @@ describe("convex communication e2e", () => {
     currentUserId = null;
     getAuthUserIdMock.mockImplementation(async () => currentUserId);
     delete process.env.AUTH_RESEND_KEY;
+  });
+
+  it("starts a fit from wizard data with rider-selected discomfort locations", async () => {
+    const db = new InMemoryDb();
+    currentUserId = await db.insert("users", { email: "new-rider@example.com" });
+    const { comfortScore, painAreas, ...measurements } = wizardSchema.parse({
+      heightCm: 175, inseamCm: 81, flexibilityScore: "average", coreStabilityScore: 3,
+      comfortScore: 3, painAreas: ["lower_back"], experienceLevel: "intermediate",
+      weeklyHours: "3-6", typicalRideLength: "medium", positionPriority: "balanced",
+    });
+    const profileId = await handlerOf<Record<string, unknown>, string>(upsertProfile)(
+      { db }, { ...measurements, ...comfortScoreToFields(comfortScore, painAreas ?? []) }
+    );
+    expect(await db.get(profileId)).toMatchObject({ hasPain: "yes", painAreas: ["lower_back"] });
+    const sessionId = await handlerOf<Record<string, unknown>, string>(createSession)(
+      { db }, { bikeType: "road", ridingStyle: "fitness", primaryGoal: "balanced" }
+    );
+    expect(await db.get(sessionId)).toMatchObject({ profileId, userId: currentUserId, status: "in_progress" });
   });
 
   it("completes profile -> session -> questionnaire -> recommendation -> email flow", async () => {

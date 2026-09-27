@@ -520,8 +520,8 @@ const en = {
     cta: {
       heading: "What's next?",
       body:
-        "Create a free account to save these results, refine your setup with more detail, and track changes over time.",
-      primaryButton: "Create account or sign in",
+        "Create a free account to set up your bikes, calculate personalized pressure advice, and track future adjustments.",
+      primaryButton: "Create a free account",
       secondaryButton: "Compare Free vs Pro",
       loginPrompt: "Already have an account?",
       loginLink: "Log in",

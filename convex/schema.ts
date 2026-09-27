@@ -271,6 +271,7 @@ export default defineSchema({
     .index("by_admin_role", ["adminRole"])
     .index("by_tier", ["tier"])
     .index("by_stripe_customer", ["stripeCustomerId"])
+    .index("by_profile_image", ["profile_image_url"])
     .index("by_stripe_subscription", ["stripeSubscriptionId"])
     .index("by_suspended_at", ["suspendedAt"]),
 
@@ -646,6 +647,7 @@ export default defineSchema({
     .index("by_bike_passport_id", ["bikePassportId"])
     .index("by_public_fit_code", ["publicFitCode"])
     .index("by_user_imported_from_passport", ["userId", "importedFromBikePassportId"])
+    .index("by_photo_url", ["photoUrl"])
     .index("by_geometry_record", ["geometryRecordId"])
     .index("by_bike_import", ["bikeImportId"])
     .index("by_strava_gear", ["stravaGearId"])

@@ -32,6 +32,7 @@ import {
 } from "@/lib/userIdentity";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { isStripeBillingEnabled } from "@/config/billing";
 import { CheckCircle2, Trash2, User, Palette, Zap, Shield, AlertCircle, Info, CreditCard } from "lucide-react";
 
 function linkButtonProps(href: string) {
@@ -288,7 +289,18 @@ export default function SettingsPage() {
             <dl className="divide-y divide-[color:var(--border)]">
               <StatRow label={messages.settings.account.type} value={accountType} />
             </dl>
-            {user?.tier !== "pro" && user?.tier !== "premium" ? (
+            {!isPaidUser && !isStripeBillingEnabled() ? (
+              <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
+                <p className="font-medium">
+                  {locale === "nl" ? "Betalingen zijn tijdelijk niet beschikbaar." : "Payments are temporarily unavailable."}
+                </p>
+                <p className="mt-1">
+                  {locale === "nl"
+                    ? "Nieuwe betaalde upgrades zijn tijdelijk uitgeschakeld. Je gratis account blijft beschikbaar."
+                    : "New paid upgrades are temporarily disabled. Your free account remains available."}
+                </p>
+              </InfoBox>
+            ) : !isPaidUser ? (
               <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}>
                 <p className="font-medium">{messages.settings.account.upgrade}</p>
                 <p className="mt-1">{messages.settings.account.upgradeDescription}</p>

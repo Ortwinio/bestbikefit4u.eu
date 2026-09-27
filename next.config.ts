@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
+  // Keep the repository's maintained agent instructions unchanged by dev startup.
+  agentRules: false,
+  poweredByHeader: false,
   images: {
     remotePatterns: [
       {

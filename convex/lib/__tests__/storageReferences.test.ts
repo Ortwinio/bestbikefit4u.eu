@@ -29,4 +29,16 @@ describe("storage reference cleanup", () => {
 
     expect(result).toEqual([]);
   });
+
+  it("keeps another user's avatar even if a bike owner attaches and removes its storage id", () => {
+    const result = getUnreferencedStorageIds({
+      candidateStorageIds: ["victim_avatar"],
+      referencedPhotoRows: [],
+      referencedBikePhotoUrls: [],
+      referencedProfileImages: ["victim_avatar"],
+      ignoredBikeIds: ["attacker_bike" as never],
+    });
+    expect(result).toEqual([]);
+  });
+
 });

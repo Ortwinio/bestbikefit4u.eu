@@ -19,6 +19,24 @@ Set these in Vercel (Project Settings -> Environment Variables):
 - `NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud`
 - `PDF_RICH_RENDER_ENABLED=true` (optional; set `false` to force legacy PDF fallback)
 
+For production billing, also set `SITE_URL`, `STRIPE_SECRET_KEY`, and
+`STRIPE_PRO_MONTHLY_PRICE_ID` in Vercel. The previous `STRIPE_PRO_PRICE_ID`
+example is obsolete; checkout reads the monthly key. A yearly price is optional
+under `STRIPE_PRO_YEARLY_PRICE_ID`.
+
+Configure `STRIPE_WEBHOOK_SECRET` on **Convex**, where `/stripe/webhook` runs,
+and align the backend plan catalog and Stripe price mappings before enabling
+payments. A Vercel webhook-secret variable alone does not configure Convex.
+
+To release with new payments paused, set both `STRIPE_BILLING_ENABLED=false`
+and `NEXT_PUBLIC_STRIPE_BILLING_ENABLED=false` in Vercel before building.
+Checkout returns 503 without contacting Stripe and purchase controls display an
+availability notice. Free signup and existing paid entitlements stay available;
+the billing portal and verified webhooks remain available for existing subscribers
+to manage or cancel their subscriptions. This does not cancel subscriptions or
+pause renewals at Stripe. Re-enable both flags only after billing configuration
+and end-to-end validation are complete, then rebuild the frontend.
+
 Set these in Convex production deployment env:
 
 - `SITE_URL=https://bestbikefit4u.eu`
@@ -38,7 +56,7 @@ npx convex env set AUTH_EMAIL_FROM 'BestBikeFit4U <noreply@notifications.bestbik
 Deploy backend code first:
 
 ```bash
-npx convex deploy --prod
+npx convex deploy
 ```
 
 ## 4. Deploy Vercel Frontend
@@ -51,6 +69,10 @@ npx convex deploy --prod
 Notes:
 - `npm run build:vercel` runs `scripts/check-vercel-env.mjs` before `next build`.
 - The preflight fails if `NEXT_PUBLIC_CONVEX_URL` is missing, invalid, or points to `localhost`.
+- Preview builds use production-mode Next.js compilation, but do not require
+  production Stripe settings. `VERCEL_ENV`, when present, determines the target.
+- The checked-in `vercel.json` build command takes precedence over the project's
+  dashboard build command. It builds the frontend only; release Convex separately.
 
 ## 5. Validate Production
 

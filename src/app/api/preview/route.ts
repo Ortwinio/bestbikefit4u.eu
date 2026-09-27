@@ -10,7 +10,7 @@ function unauthorized(message: string, status = 401) {
   return NextResponse.json({ error: message }, { status });
 }
 
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
   return unauthorized("method_not_allowed", 405);
 }
 

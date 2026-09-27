@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
@@ -187,7 +187,7 @@ export function GuideImportView() {
   const toast = useToast();
   const importGuideFromAdmin = useMutation(api.guides.mutations.importGuideFromAdmin);
   const existingGuides =
-    (useQuery(api.guides.queries.getGuideImportStatusOverview, {}) as ExistingGuideRecord[] | undefined) ?? [];
+    useQuery(api.guides.queries.getGuideImportStatusOverview, {}) as ExistingGuideRecord[] | undefined;
   const [files, setFiles] = useState<ParsedImportFile[]>([]);
   const [overwriteMode, setOverwriteMode] = useState<"skip" | "overwrite">("skip");
   const [rowFilter, setRowFilter] = useState<"all" | "ready" | "missing_locale" | "new" | "existing">("all");
@@ -200,7 +200,7 @@ export function GuideImportView() {
   const [rowResults, setRowResults] = useState<Record<string, RowImportResult>>({});
 
   const existingGuideMap = useMemo(
-    () => new Map(existingGuides.map((guide) => [guide.slug, guide])),
+    () => new Map((existingGuides ?? []).map((guide) => [guide.slug, guide])),
     [existingGuides]
   );
 
@@ -229,10 +229,6 @@ export function GuideImportView() {
     });
   }, [existingGuideMap, files, rowFilter, slugFilter]);
 
-  const readyRows = useMemo(
-    () => importRows.filter((row) => row.ready),
-    [importRows]
-  );
   const allRows = useMemo(
     () => buildImportRows(files),
     [files]
@@ -254,17 +250,6 @@ export function GuideImportView() {
   const existingCount = allRows.filter((row) => existingGuideMap.has(row.slug)).length;
   const publishedCount = allRows.filter((row) => existingGuideMap.get(row.slug)?.status === "published").length;
   const draftCount = allRows.filter((row) => existingGuideMap.get(row.slug)?.status === "draft").length;
-
-  useEffect(() => {
-    if (!allRows.length) {
-      setPreviewSlug(null);
-      return;
-    }
-
-    if (!previewSlug || !allRows.some((row) => row.slug === previewSlug)) {
-      setPreviewSlug(allRows[0]?.slug ?? null);
-    }
-  }, [allRows, previewSlug]);
 
   const handleFileSelection = async (nextFiles: FileList | null) => {
     if (!nextFiles?.length) {

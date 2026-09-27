@@ -68,6 +68,13 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2026-06-24.dahlia" });
+    const customer = await stripe.customers.retrieve(user.stripeCustomerId);
+    if (customer.deleted || customer.metadata.userId !== user._id) {
+      return NextResponse.json(
+        { error: "Stripe customer ownership could not be verified." },
+        { status: 409 }
+      );
+    }
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: user.stripeCustomerId,
       return_url: resolveReturnUrl(siteUrl, body.locale),

@@ -524,8 +524,8 @@ const nl = {
     cta: {
       heading: "Hoe verder?",
       body:
-        "Maak een gratis account aan om deze resultaten op te slaan, je setup met meer detail te verfijnen en veranderingen bij te houden.",
-      primaryButton: "Maak account aan of log in",
+        "Maak een gratis account aan om je fietsen toe te voegen, persoonlijk bandenspanningsadvies te berekenen en toekomstige aanpassingen bij te houden.",
+      primaryButton: "Maak een gratis account aan",
       secondaryButton: "Vergelijk Free vs Pro",
       loginPrompt: "Heb je al een account?",
       loginLink: "Log in",

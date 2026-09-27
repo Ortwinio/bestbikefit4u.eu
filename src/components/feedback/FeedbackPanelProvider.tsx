@@ -9,14 +9,19 @@ import {
   type PropsWithChildren,
 } from "react";
 import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { extractLocaleFromPathname, stripLocalePrefix } from "@/i18n/navigation";
-import { FeedbackDialog } from "./FeedbackDialog";
 import { trackFeedbackPanelOpen, trackFeedbackRouteVisit } from "./feedback-activity";
 import { getFeedbackCopy, getFeedbackLocale } from "./feedback-copy";
 import { FeedbackFloatingButton } from "./FeedbackFloatingButton";
 import { getFeedbackRouteContext } from "./route-context";
 import type { FeedbackType } from "./feedback-api";
+
+const FeedbackDialog = dynamic(
+  () => import("./FeedbackDialog").then((module) => module.FeedbackDialog),
+  { ssr: false }
+);
 
 type FeedbackPanelOptions = {
   defaultType?: FeedbackType;
@@ -86,6 +91,7 @@ export function FeedbackPanelProvider({ children }: PropsWithChildren) {
   const locale = getFeedbackLocale(extractLocaleFromPathname(pathname));
   const copy = getFeedbackCopy(locale);
   const [isOpen, setIsOpen] = useState(false);
+  const [hasOpened, setHasOpened] = useState(false);
   const [panelOptions, setPanelOptions] = useState<FeedbackPanelOptions>({});
 
   const contextValue = useMemo<FeedbackPanelContextValue>(
@@ -93,6 +99,7 @@ export function FeedbackPanelProvider({ children }: PropsWithChildren) {
       openPanel: (options = {}) => {
         trackFeedbackPanelOpen(pathname);
         setPanelOptions(resolveFeedbackPanelOptions(pathname, options));
+        setHasOpened(true);
         setIsOpen(true);
       },
       closePanel: () => {
@@ -117,14 +124,16 @@ export function FeedbackPanelProvider({ children }: PropsWithChildren) {
               label={copy.page.floatingCta}
             />
           ) : null}
-          <FeedbackDialog
-            open={isOpen}
-            onClose={contextValue.closePanel}
-            defaultType={panelOptions.defaultType}
-            linkedBikeId={panelOptions.linkedBikeId}
-            linkedSessionId={panelOptions.linkedSessionId}
-            pagePath={panelOptions.pagePath}
-          />
+          {hasOpened ? (
+            <FeedbackDialog
+              open={isOpen}
+              onClose={contextValue.closePanel}
+              defaultType={panelOptions.defaultType}
+              linkedBikeId={panelOptions.linkedBikeId}
+              linkedSessionId={panelOptions.linkedSessionId}
+              pagePath={panelOptions.pagePath}
+            />
+          ) : null}
         </>
       ) : null}
     </FeedbackPanelContext.Provider>

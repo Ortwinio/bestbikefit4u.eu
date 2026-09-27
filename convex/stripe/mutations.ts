@@ -28,6 +28,8 @@ type StripeSubscriptionObject = StripeObject & {
   status?: string;
   items?: {
     data?: Array<{
+      current_period_start?: number;
+      current_period_end?: number;
       price?: {
         id?: string;
         product?: string | { id?: string } | null;
@@ -50,12 +52,24 @@ type StripeCheckoutSessionObject = StripeObject & {
 };
 
 type StripeInvoiceObject = StripeObject & {
+  parent?: {
+    subscription_details?: {
+      subscription?: string | { id?: string } | null;
+      metadata?: Record<string, string> | null;
+    } | null;
+  } | null;
   customer?: string | { id?: string } | null;
   subscription?: string | { id?: string } | null;
   status?: string;
   payment_intent?: string | { id?: string } | null;
   lines?: {
     data?: Array<{
+      pricing?: {
+        price_details?: {
+          price?: string | { id?: string; lookup_key?: string | null };
+          product?: string | { id?: string } | null;
+        } | null;
+      } | null;
       price?: {
         id?: string;
         product?: string | { id?: string } | null;
@@ -92,11 +106,13 @@ function getSubscriptionPrice(subscription: StripeSubscriptionObject) {
 }
 
 function getInvoicePrice(invoice: StripeInvoiceObject) {
-  const price = invoice.lines?.data?.[0]?.price;
+  const line = invoice.lines?.data?.[0];
+  const price = line?.price;
+  const details = line?.pricing?.price_details;
   return {
-    stripePriceId: price?.id,
-    stripeProductId: getStripeId(price?.product),
-    stripeLookupKey: price?.lookup_key ?? undefined,
+    stripePriceId: getStripeId(details?.price) ?? price?.id,
+    stripeProductId: getStripeId(details?.product) ?? getStripeId(price?.product),
+    stripeLookupKey: (typeof details?.price === "object" ? details.price.lookup_key : undefined) ?? price?.lookup_key ?? undefined,
   };
 }
 
@@ -166,22 +182,21 @@ async function findPlanForStripePrice(
 
   const mappedKey = mapStripePriceToPlanKey(
     args.stripePriceId,
-    process.env.STRIPE_PRO_MONTHLY_PRICE_ID
+    process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
+    process.env.STRIPE_PRO_YEARLY_PRICE_ID
   );
   if (mappedKey) {
-    const plan = await ctx.db
-      .query("plans")
-      .withIndex("by_key", (q) => q.eq("key", mappedKey))
-      .first();
-    if (plan) return plan;
+    // Prefer current catalog keys, retaining the original single Pro plan only
+    // for a price explicitly configured on this backend.
+    for (const key of [mappedKey, "pro"]) {
+      const plan = await ctx.db.query("plans")
+        .withIndex("by_key", (q) => q.eq("key", key)).first();
+      if (plan) return plan;
+    }
   }
 
-  const plans = await ctx.db.query("plans").collect();
-  return (
-    plans.find((plan) => plan.isActive && plan.tier === "pro") ??
-    plans.find((plan) => plan.tier === "pro") ??
-    null
-  );
+  // Unknown prices must never grant access through an arbitrary Pro fallback.
+  return null;
 }
 
 async function updateUserEntitlement(
@@ -270,8 +285,9 @@ async function upsertSubscriptionFromStripe(
     .first();
 
   const latestInvoiceId = getStripeId(args.subscription.latest_invoice);
-  const currentPeriodStart = unixSecondsToMs(args.subscription.current_period_start);
-  const currentPeriodEnd = unixSecondsToMs(args.subscription.current_period_end);
+  const firstItem = args.subscription.items?.data?.[0];
+  const currentPeriodStart = unixSecondsToMs(firstItem?.current_period_start ?? args.subscription.current_period_start);
+  const currentPeriodEnd = unixSecondsToMs(firstItem?.current_period_end ?? args.subscription.current_period_end);
   const canceledAt = unixSecondsToMs(args.subscription.canceled_at);
   const patch = {
     userId: user?._id,
@@ -348,7 +364,7 @@ async function handleCheckoutSession(
     stripeSubscriptionId,
   });
 
-  if (user) {
+  if (user && args.eventType === "checkout.session.completed") {
     await ctx.db.patch(user._id, {
       stripeCustomerId: stripeCustomerId ?? user.stripeCustomerId,
       stripeSubscriptionId: stripeSubscriptionId ?? user.stripeSubscriptionId,
@@ -381,7 +397,8 @@ async function handleInvoice(
     now: number;
   }
 ) {
-  const stripeSubscriptionId = getStripeId(args.invoice.subscription);
+  const subscriptionDetails = args.invoice.parent?.subscription_details;
+  const stripeSubscriptionId = getStripeId(subscriptionDetails?.subscription) ?? getStripeId(args.invoice.subscription);
   const stripeCustomerId = getStripeId(args.invoice.customer);
   const price = getInvoicePrice(args.invoice);
   const existing = stripeSubscriptionId
@@ -391,7 +408,7 @@ async function handleInvoice(
         .first()
     : null;
   const user = await findUserForStripeState(ctx, {
-    userId: getMetadataUserId(args.invoice),
+    userId: subscriptionDetails?.metadata?.userId as Id<"users"> | undefined ?? getMetadataUserId(args.invoice),
     stripeCustomerId,
     stripeSubscriptionId,
   });
@@ -444,7 +461,7 @@ async function handleInvoice(
   });
 
   const shouldSendWelcome =
-    user && plan
+    user && plan && stripeSubscriptionId
       ? await updateUserEntitlement(ctx, {
           user,
           plan,

@@ -12,6 +12,8 @@ BestBikeFit4U is a Next.js + Convex application for guided bike fit recommendati
 
 ## Local Development
 
+Use Node.js 24 LTS (`nvm use` reads `.nvmrc`). CI uses the same supported major version.
+
 ```bash
 npm ci
 npm run dev
@@ -28,6 +30,10 @@ npm run test:unit
 npm run test:contracts
 npm run build -- --webpack
 ```
+
+For read-only route and login CSP checks, run `npm run start -- --port 3001`
+after building, then run `npm run test:smoke:local` in another terminal.
+The smoke checker only accepts localhost URLs.
 
 ## Multi-Agent Workflow
 

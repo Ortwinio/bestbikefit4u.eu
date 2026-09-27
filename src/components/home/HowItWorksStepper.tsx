@@ -57,7 +57,7 @@ export function HowItWorksStepper({
           contentClassName="pt-8"
         >
           <div className="grid gap-5 lg:grid-cols-3">
-            {content.steps.map((step, index) => {
+            {content.steps.map((step) => {
               const Icon = STEP_ICONS[step.icon];
               const color = STEP_COLORS[step.number as keyof typeof STEP_COLORS];
 

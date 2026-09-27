@@ -1,5 +1,6 @@
 "use node";
 
+import { ALLOWED_IMAGE_TYPES, fetchMarktplaats, readLimitedBytes } from "../lib/marktplaatsFetch";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { internal } from "../_generated/api";
 import { action } from "../_generated/server";
@@ -98,8 +99,7 @@ async function fetchImageBlob(imageUrl: string): Promise<Blob> {
   const timeout = setTimeout(() => controller.abort(), IMAGE_FETCH_TIMEOUT_MS);
 
   try {
-    const response = await fetch(parsedUrl, {
-      redirect: "follow",
+    const response = await fetchMarktplaats(parsedUrl, {
       signal: controller.signal,
       headers: {
         "user-agent": "BestBikeFit/marktplaats-import",
@@ -110,8 +110,8 @@ async function fetchImageBlob(imageUrl: string): Promise<Blob> {
       throw new Error(`image_fetch_failed:${response.status}`);
     }
 
-    const contentType = response.headers.get("content-type") ?? "";
-    if (!contentType.toLowerCase().startsWith("image/")) {
+    const contentType = (response.headers.get("content-type") ?? "").split(";")[0].trim().toLowerCase();
+    if (!ALLOWED_IMAGE_TYPES.has(contentType)) {
       throw new Error("image_content_type_unsupported");
     }
 
@@ -120,11 +120,8 @@ async function fetchImageBlob(imageUrl: string): Promise<Blob> {
       throw new Error("image_too_large");
     }
 
-    const blob = await response.blob();
-    if (blob.size > MAX_IMAGE_BYTES) {
-      throw new Error("image_too_large");
-    }
-    return blob;
+    const bytes = await readLimitedBytes(response, MAX_IMAGE_BYTES);
+    return new Blob([bytes], { type: contentType });
   } catch (error) {
     if (error instanceof Error && error.name === "AbortError") {
       throw new Error("image_fetch_timeout");

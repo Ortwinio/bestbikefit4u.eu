@@ -34,6 +34,7 @@ import { toPercentBucket } from "@/lib/uiPercent";
 import {
   coreStabilityTests,
   deriveComfortScore,
+  comfortScoreToFields,
   flexibilityTests,
 } from "@/lib/validations/profile";
 import {
@@ -68,6 +69,7 @@ interface ProfileData {
   coreStabilityScore: number;
   hasPain?: string;
   painSeverity?: number;
+  painAreas?: string[];
   experienceLevel?: string;
   weeklyHours?: string;
   typicalRideLength?: string;
@@ -93,6 +95,7 @@ function getDefaultValues(profile: ProfileData): Partial<WizardFormData> {
     flexibilityScore: profile.flexibilityScore,
     coreStabilityScore: profile.coreStabilityScore,
     comfortScore: deriveComfortScore(profile.hasPain, profile.painSeverity),
+    painAreas: profile.painAreas ?? [],
     experienceLevel: profile.experienceLevel as WizardFormData["experienceLevel"],
     weeklyHours: profile.weeklyHours as WizardFormData["weeklyHours"],
     typicalRideLength: profile.typicalRideLength as WizardFormData["typicalRideLength"],
@@ -100,14 +103,6 @@ function getDefaultValues(profile: ProfileData): Partial<WizardFormData> {
   };
 }
 
-/** Map a wizard comfort score (1–5) back to hasPain + painSeverity for storage */
-function comfortScoreToFields(score: number): { hasPain: "yes" | "no"; painSeverity?: number } {
-  if (score >= 5) return { hasPain: "no" };
-  if (score === 4) return { hasPain: "yes", painSeverity: 1 };
-  if (score === 3) return { hasPain: "yes", painSeverity: 2 };
-  if (score === 2) return { hasPain: "yes", painSeverity: 4 };
-  return { hasPain: "yes", painSeverity: 5 };
-}
 
 function BMISlider({
   heightCm,
@@ -1135,7 +1130,7 @@ export default function ProfilePage() {
       const previousWeight = profileData?.weightKg;
 
       const comfortFields = data.comfortScore != null
-        ? comfortScoreToFields(data.comfortScore)
+        ? comfortScoreToFields(data.comfortScore, data.painAreas ?? [])
         : {};
 
       await upsertProfile({

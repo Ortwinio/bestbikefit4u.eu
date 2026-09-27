@@ -33,6 +33,7 @@ export function BlogArticleCard({ post, locale, priority = false }: BlogArticleC
             alt={localizeBlogText(post.featuredImageAlt, locale, title)}
             width={800}
             height={450}
+            sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 400px"
             priority={priority}
             className="aspect-video w-full object-cover transition-transform duration-300 hover:scale-[1.02]"
           />

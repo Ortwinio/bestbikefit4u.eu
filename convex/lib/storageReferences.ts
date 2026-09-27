@@ -12,6 +12,7 @@ type ReferenceSnapshot = {
     bikeId: Id<"bikes">;
   }>;
   ignoredBikeIds?: Id<"bikes">[];
+  referencedProfileImages?: string[];
 };
 
 export function getUnreferencedStorageIds({
@@ -19,10 +20,12 @@ export function getUnreferencedStorageIds({
   referencedPhotoRows,
   referencedBikePhotoUrls,
   ignoredBikeIds = [],
+  referencedProfileImages = [],
 }: ReferenceSnapshot) {
   const ignoredBikeIdsSet = new Set(ignoredBikeIds);
 
   return candidateStorageIds.filter((storageId) => {
+    if (referencedProfileImages.includes(storageId)) return false;
     const usedByPhoto = referencedPhotoRows.some(
       (row) =>
         row.storageId === storageId && !ignoredBikeIdsSet.has(row.bikeId)
@@ -69,22 +72,24 @@ export async function findUnreferencedStorageIdsForBikes({
     }))
   );
 
-  const allBikes = await ctx.db.query("bikes").collect();
-  const referencedBikePhotoUrls = allBikes
-    .filter(
-      (bike): bike is typeof bike & { photoUrl: string } =>
-        typeof bike.photoUrl === "string" &&
-        uniqueCandidateStorageIds.includes(bike.photoUrl)
-    )
-    .map((bike) => ({
-      bikeId: bike._id,
-      photoUrl: bike.photoUrl,
-    }));
+  const references = await Promise.all(uniqueCandidateStorageIds.map(async (storageId) => {
+    const [bikes, profiles] = await Promise.all([
+      ctx.db.query("bikes").withIndex("by_photo_url", (q) => q.eq("photoUrl", storageId)).collect(),
+      ctx.db.query("users").withIndex("by_profile_image", (q) => q.eq("profile_image_url", storageId)).take(1),
+    ]);
+    return {
+      bikes: bikes.map((bike) => ({ bikeId: bike._id, photoUrl: storageId })),
+      profileImage: profiles.length > 0 ? [storageId] : [],
+    };
+  }));
+  const referencedBikePhotoUrls = references.flatMap((reference) => reference.bikes);
+  const referencedProfileImages = references.flatMap((reference) => reference.profileImage);
 
   return getUnreferencedStorageIds({
     candidateStorageIds: uniqueCandidateStorageIds,
     referencedPhotoRows,
     referencedBikePhotoUrls,
+    referencedProfileImages,
     ignoredBikeIds,
   });
 }

@@ -116,10 +116,6 @@ function formatWeight(value: number | string | null | undefined) {
   return `${value} kg`;
 }
 
-function formatValue(value: number | string | null, unavailable: string) {
-  return value === null ? unavailable : String(value);
-}
-
 function joinParts(parts: Array<string | number | null | undefined>) {
   return parts.filter((part) => part !== null && part !== undefined && part !== "").join(" · ");
 }

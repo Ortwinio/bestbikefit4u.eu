@@ -77,7 +77,7 @@ describe("HeaderAuthActions", () => {
     );
   });
 
-  it("shows dashboard access and user menu for signed-in users", () => {
+  it("shows dashboard access and user menu for signed-in users", async () => {
     useConvexAuthMock.mockReturnValue({ isAuthenticated: true, isLoading: false });
 
     render(
@@ -90,7 +90,7 @@ describe("HeaderAuthActions", () => {
     );
 
     expect(screen.getByRole("link", { name: "Dashboard" }).getAttribute("href")).toBe("/en/dashboard");
-    expect(screen.getByTestId("user-menu")).toBeTruthy();
+    expect(await screen.findByTestId("user-menu")).toBeTruthy();
   });
 
   it("renders donate link when campaign is active", () => {

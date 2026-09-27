@@ -45,10 +45,14 @@ export function subscriptionStatusGrantsAccess(status: AppSubscriptionStatus) {
 
 export function mapStripePriceToPlanKey(
   stripePriceId: string | undefined,
-  configuredProPriceId: string | undefined
+  configuredProPriceId: string | undefined,
+  configuredYearlyPriceId?: string
 ) {
   if (stripePriceId && configuredProPriceId && stripePriceId === configuredProPriceId) {
-    return "pro";
+    return "pro_monthly";
+  }
+  if (stripePriceId && configuredYearlyPriceId && stripePriceId === configuredYearlyPriceId) {
+    return "pro_yearly";
   }
   return undefined;
 }

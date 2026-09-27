@@ -89,7 +89,7 @@ function renderFaqMarkdown(faqs: ReturnType<typeof buildFaqs>) {
 
 function renderLibraryBody(
   entry: GuideBacklogEntry,
-  locale: Locale,
+  _locale: Locale,
   body: ReturnType<typeof buildLeafSections>,
   faqs: ReturnType<typeof buildFaqs>
 ) {

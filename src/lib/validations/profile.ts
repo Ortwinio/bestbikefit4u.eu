@@ -207,3 +207,13 @@ export const coreStabilityTests = [
     description: "Plank hold 90+ seconds with perfect form",
   },
 ];
+
+/** Persist only the locations the rider selected; clear stale pain for no discomfort. */
+export function comfortScoreToFields(
+  score: number,
+  painAreas: string[]
+): { hasPain: "yes" | "no"; painSeverity?: number; painAreas: string[] } {
+  if (score >= 5) return { hasPain: "no", painAreas: [] };
+  const painSeverity = score === 4 ? 1 : score === 3 ? 2 : score === 2 ? 4 : 5;
+  return { hasPain: "yes", painSeverity, painAreas };
+}

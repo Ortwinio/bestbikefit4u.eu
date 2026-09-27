@@ -26,7 +26,8 @@ describe("stripe mapping helpers", () => {
   });
 
   it("maps configured Stripe price IDs to the app plan key", () => {
-    expect(mapStripePriceToPlanKey("price_pro", "price_pro")).toBe("pro");
+    expect(mapStripePriceToPlanKey("price_pro", "price_pro")).toBe("pro_monthly");
+    expect(mapStripePriceToPlanKey("price_yearly", "price_pro", "price_yearly")).toBe("pro_yearly");
     expect(mapStripePriceToPlanKey("price_other", "price_pro")).toBeUndefined();
   });
 

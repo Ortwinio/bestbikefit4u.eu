@@ -183,7 +183,9 @@ export const remove = mutation({
 
     const deletableStorageIds = await findUnreferencedStorageIdsForBikes({
       ctx,
-      candidateStorageIds: [photo.storageId],
+      candidateStorageIds: siblings.some((sibling) => sibling.storageId === photo.storageId)
+        ? []
+        : [photo.storageId],
       ignoredBikeIds: [photo.bikeId],
     });
     for (const storageId of deletableStorageIds) {

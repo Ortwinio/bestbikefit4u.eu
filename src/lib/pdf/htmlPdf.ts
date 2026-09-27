@@ -1,3 +1,5 @@
+import { isAllowedPdfResource } from "./resourcePolicy";
+
 type RenderPdfFromHtmlParams = {
   html: string;
   headerTemplate?: string;
@@ -56,7 +58,26 @@ export async function renderPdfFromHtml(
   const { browser, strategy } = await launchBrowser();
 
   try {
-    const page = await browser.newPage();
+    const page = await browser.newPage({ javaScriptEnabled: false, serviceWorkers: "block" });
+    await page.route("**/*", async (route) => {
+      const request = route.request();
+      if (!isAllowedPdfResource(request.url(), request.resourceType())) {
+        await route.abort();
+        return;
+      }
+      try {
+        // Browser redirects may bypass route handlers. Never automatically
+        // follow them, even when the original image host was allowlisted.
+        const response = await route.fetch({ maxRedirects: 0, timeout: 5_000 });
+        if (response.status() >= 300 && response.status() < 400) {
+          await route.abort();
+          return;
+        }
+        await route.fulfill({ response });
+      } catch {
+        await route.abort();
+      }
+    });
     await page.setContent(html, { waitUntil: "networkidle" });
     const pdf = await page.pdf({
       format: "A4",

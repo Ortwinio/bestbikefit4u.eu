@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { processWebhookEvent } from "../mutations";
 
 type Row = Record<string, unknown> & { _id: string };
@@ -87,6 +87,7 @@ async function runEvent(ctx: unknown, event: Record<string, unknown>) {
 }
 
 describe("stripe webhook processing", () => {
+  afterEach(() => vi.unstubAllEnvs());
   it("stores events idempotently and grants access for active subscriptions", async () => {
     const { ctx, tables } = makeCtx(baseTables());
     const event = {
@@ -217,5 +218,110 @@ describe("stripe webhook processing", () => {
       stripeSubscriptionId: undefined,
     });
   });
+
+  it("does not grant Pro access for an unrelated Stripe price", async () => {
+    const { ctx, tables } = makeCtx(baseTables());
+    await runEvent(ctx, {
+      id: "evt_unrelated", type: "customer.subscription.created", created: 1760000000,
+      data: { object: {
+        id: "sub_unrelated", customer: "cus_1", status: "active",
+        metadata: { userId: "user_1" },
+        items: { data: [{ price: { id: "price_unrelated" } }] },
+      } },
+    });
+    expect(tables.users[0].tier).toBe("free");
+    expect(tables.subscriptions).toHaveLength(0);
+    expect(tables.billing_events[0].eventType).toBe("stripe_subscription_unmapped_plan");
+  });
+
+
+  it.each(["checkout_first", "subscription_first"])("binds a first purchase with %s event ordering", async (order) => {
+    const { ctx, tables } = makeCtx(baseTables());
+    const checkout = {
+      id: "evt_checkout", type: "checkout.session.completed", created: 1760000000,
+      data: { object: { id: "cs_new", customer: "cus_new", subscription: "sub_new", metadata: { userId: "user_1" } } },
+    };
+    const subscription = {
+      id: "evt_subscription", type: "customer.subscription.created", created: 1760000000,
+      data: { object: {
+        id: "sub_new", customer: "cus_new", status: "active", metadata: { userId: "user_1" },
+        items: { data: [{ price: { id: "price_pro" }, current_period_start: 1760000000, current_period_end: 1762592000 }] },
+      } },
+    };
+    for (const event of order === "checkout_first" ? [checkout, subscription] : [subscription, checkout]) {
+      await runEvent(ctx, event);
+    }
+    expect(tables.users[0]).toMatchObject({ tier: "pro", stripeCustomerId: "cus_new", stripeSubscriptionId: "sub_new" });
+    expect(tables.subscriptions[0]).toMatchObject({ userId: "user_1", currentPeriodStart: 1760000000000, currentPeriodEnd: 1762592000000 });
+  });
+
+  it("maps current Stripe invoice metadata and pricing before any customer binding exists", async () => {
+    const { ctx, tables } = makeCtx(baseTables());
+    await runEvent(ctx, {
+      id: "evt_invoice_first", type: "invoice.paid", created: 1760000000,
+      data: { object: {
+        id: "in_new", customer: "cus_new", status: "paid",
+        parent: { subscription_details: { subscription: "sub_new", metadata: { userId: "user_1" } } },
+        lines: { data: [{ pricing: { price_details: { price: "price_pro", product: "prod_pro" } } }] },
+      } },
+    });
+    expect(tables.users[0]).toMatchObject({ tier: "pro", stripeCustomerId: "cus_new", stripeSubscriptionId: "sub_new" });
+    expect(tables.subscriptions[0]).toMatchObject({ externalId: "sub_new", stripePriceId: "price_pro", latestInvoiceId: "in_new" });
+  });
+
+  it("revokes access from a current-format failed renewal invoice", async () => {
+    const { ctx, tables } = makeCtx({ ...baseTables(),
+      users: [{ _id: "user_1", tier: "pro", stripeCustomerId: "cus_1", stripeSubscriptionId: "sub_1" }],
+      subscriptions: [{ _id: "subscription_1", planId: "plan_pro", externalId: "sub_1", userId: "user_1", status: "active" }],
+    });
+    await runEvent(ctx, {
+      id: "evt_modern_failed", type: "invoice.payment_failed", created: 1760000000,
+      data: { object: { id: "in_failed", customer: "cus_1", status: "open",
+        parent: { subscription_details: { subscription: "sub_1" } },
+      } },
+    });
+    expect(tables.users[0].tier).toBe("free");
+    expect(tables.subscriptions[0].status).toBe("past_due");
+  });
+
+  it.each(["pro_monthly", "pro_yearly", "pro"])("maps explicitly configured prices to %s catalog plans", async (key) => {
+    vi.stubEnv("STRIPE_PRO_MONTHLY_PRICE_ID", "price_configured_monthly");
+    vi.stubEnv("STRIPE_PRO_YEARLY_PRICE_ID", "price_configured_yearly");
+    const { ctx, tables } = makeCtx({ ...baseTables(), plans: [{ _id: "plan_configured", key, tier: "pro", isActive: true }] });
+    await runEvent(ctx, {
+      id: "evt_configured", type: "customer.subscription.created", created: 1760000000,
+      data: { object: {
+        id: "sub_new", customer: "cus_new", status: "active", metadata: { userId: "user_1" },
+        items: { data: [{ price: { id: key === "pro_yearly" ? "price_configured_yearly" : "price_configured_monthly" } }] },
+      } },
+    });
+    expect(tables.users[0].tier).toBe("pro");
+    expect(tables.subscriptions[0].planId).toBe("plan_configured");
+  });
+
+  it("does not overwrite a paid customer's binding when an abandoned checkout expires", async () => {
+    const { ctx, tables } = makeCtx({ ...baseTables(), users: [{
+      _id: "user_1", tier: "pro", stripeCustomerId: "cus_current", stripeSubscriptionId: "sub_current",
+    }] });
+    await runEvent(ctx, {
+      id: "evt_expired", type: "checkout.session.expired", created: 1760000000,
+      data: { object: { id: "cs_abandoned", customer: "cus_old", metadata: { userId: "user_1" } } },
+    });
+    expect(tables.users[0]).toMatchObject({ stripeCustomerId: "cus_current", stripeSubscriptionId: "sub_current", tier: "pro" });
+    expect(tables.billing_events[0].eventType).toBe("checkout.session.expired");
+  });
+
+  it("does not grant subscription entitlements from a one-off invoice", async () => {
+    const { ctx, tables } = makeCtx(baseTables());
+    await runEvent(ctx, {
+      id: "evt_one_off", type: "invoice.paid", created: 1760000000,
+      data: { object: { id: "in_one_off", customer: "cus_new", metadata: { userId: "user_1" },
+        lines: { data: [{ price: { id: "price_pro" } }] },
+      } },
+    });
+    expect(tables.users[0].tier).toBe("free");
+    expect(tables.subscriptions).toHaveLength(0);
+  });
+
 });
 

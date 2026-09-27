@@ -64,15 +64,30 @@ vi.mock("@/i18n/request", () => ({
 
 beforeEach(() => {
   locale = "en";
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-05-01T12:00:00Z"));
   useMutationMock.mockReset();
 });
 
 afterEach(() => {
   cleanup();
+  vi.unstubAllEnvs();
+  vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
 describe("pricing page", () => {
+  it.each(["en", "nl"] as const)("keeps free signup available with a payment notice in %s", async (language) => {
+    locale = language;
+    vi.setSystemTime(new Date("2026-09-27T12:00:00Z"));
+    vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "false");
+    render(await PricingPage());
+    expect(screen.getByRole("status").textContent).toContain(
+      language === "nl" ? "Betalingen zijn tijdelijk niet beschikbaar" : "Payments are temporarily unavailable"
+    );
+    expect(screen.getByText(language === "nl" ? "Start gratis" : "Start free").closest("a")?.getAttribute("href"))
+      .toMatch(new RegExp(`^/${language}/login(?:\\?|$)`));
+  });
   it("shows the campaign replacement card in English", async () => {
     const ui = await PricingPage();
     render(ui);
@@ -80,7 +95,7 @@ describe("pricing page", () => {
     expect(screen.getByText("Clear pricing for real riders")).toBeTruthy();
     expect(screen.getByText("Temporary free campaign")).toBeTruthy();
     expect(screen.getByText("Use BestBikeFit4U for free until June 4, 2026")).toBeTruthy();
-    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
+    expect(screen.getAllByText("Start free bike fit")[0].closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"
     );
     expect(screen.getByText("Make a donation").closest("a")?.getAttribute("href")).toBe(
@@ -94,9 +109,9 @@ describe("pricing page", () => {
     const ui = await PricingPage();
     render(ui);
 
-    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
-      "/en/calculators/bike-fit"
-    );
+    for (const cta of screen.getAllByText("Start free bike fit")) {
+      expect(cta.closest("a")?.getAttribute("href")).toBe("/en/calculators/bike-fit");
+    }
     expect(screen.queryByText("Start free")).toBeNull();
   });
 
@@ -109,8 +124,21 @@ describe("pricing page", () => {
     expect(screen.getByText("Heldere prijzen voor echte rijders")).toBeTruthy();
     expect(screen.getByText("Tijdelijke gratis campagne")).toBeTruthy();
     expect(screen.getByText("Gebruik BestBikeFit4U gratis tot 4 juni 2026")).toBeTruthy();
-    expect(screen.getByText("Start gratis bike fit")).toBeTruthy();
+    for (const cta of screen.getAllByText("Start gratis bike fit")) {
+      expect(cta.closest("a")?.getAttribute("href")).toBe("/nl/calculators/bike-fit");
+    }
     expect(screen.getByText("Doneer voor Alpe d'HuZes")).toBeTruthy();
     expect(screen.getByText("Doneren is volledig optioneel.")).toBeTruthy();
+  });
+
+  it("restores public plan signup after the campaign ends", async () => {
+    vi.setSystemTime(new Date("2026-09-27T12:00:00Z"));
+    render(await PricingPage());
+
+    expect(screen.queryByText("Temporary free campaign")).toBeNull();
+    expect(screen.getByText("Start free").closest("a")?.getAttribute("href"))
+      .toMatch(/^\/en\/login(?:\?|$)/);
+    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href"))
+      .toBe("/en/calculators/bike-fit");
   });
 });
