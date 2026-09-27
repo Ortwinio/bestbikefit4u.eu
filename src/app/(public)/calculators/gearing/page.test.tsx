@@ -68,10 +68,13 @@ vi.mock("./GearingCalculatorForm", () => ({
 
 beforeEach(() => {
   locale = "en";
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-09-27T12:00:00Z"));
 });
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
@@ -82,15 +85,13 @@ describe("gearing calculator page", () => {
 
     expect(screen.getByText("Gearing Calculator")).toBeTruthy();
     expect(screen.getByText("Gearing form")).toBeTruthy();
-    expect(screen.getByText("Create account or sign in").closest("a")?.getAttribute("href")).toBe(
-      "/en/login"
-    );
-    expect(screen.getByText("Open dashboard").closest("a")?.getAttribute("href")).toBe(
-      "/en/dashboard"
-    );
-    expect(screen.getByText("Open bike-fit calculator").closest("a")?.getAttribute("href")).toBe(
+    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"
     );
+    expect(screen.getByText("Compare plans").closest("a")?.getAttribute("href")).toBe(
+      "/en/pricing"
+    );
+    expect(screen.queryByText("Donate via our Alpe d'HuZes page")).toBeNull();
   });
 
   it("renders the public gearing flow in Dutch", async () => {
@@ -100,14 +101,11 @@ describe("gearing calculator page", () => {
 
     expect(screen.getByText("Verzet calculator")).toBeTruthy();
     expect(screen.getByText("Gearing form")).toBeTruthy();
-    expect(screen.getByText("Maak account aan of log in").closest("a")?.getAttribute("href")).toBe(
-      "/nl/login"
-    );
-    expect(screen.getByText("Open dashboard").closest("a")?.getAttribute("href")).toBe(
-      "/nl/dashboard"
-    );
-    expect(screen.getByText("Ga naar bike fit calculator").closest("a")?.getAttribute("href")).toBe(
+    expect(screen.getByText("Start gratis bike fit").closest("a")?.getAttribute("href")).toBe(
       "/nl/calculators/bike-fit"
+    );
+    expect(screen.getByText("Bekijk prijzen").closest("a")?.getAttribute("href")).toBe(
+      "/nl/pricing"
     );
   });
 });

@@ -19,6 +19,19 @@ const PRIMITIVE_FILES = new Set([
 ]);
 
 const EXEMPT_FILES = new Set([
+  // Administrative search/content controls use visible labels and helper copy,
+  // matching the existing admin exemptions rather than measurement tooltips.
+  "src/app/(dashboard)/admin/geometry/page.tsx",
+  "src/components/admin/bikes/AdminBikeGeometryLinkDialog.tsx",
+  "src/components/admin/blog/BlogCreateView.tsx",
+  "src/components/admin/blog/BlogEditView.tsx",
+  "src/components/admin/guides/GuideCreateView.tsx",
+  "src/components/admin/guides/GuideEditView.tsx",
+  "src/components/admin/guides/GuideImportView.tsx",
+  "src/components/admin/guides/GuideRedirectsView.tsx",
+  "src/components/admin/guides/GuidesAdminListClient.tsx",
+  // Search suggestions explain this single homepage control inline.
+  "src/components/home/BikeSearchBar.tsx",
   "src/app/(dashboard)/settings/page.tsx",
   "src/app/(dashboard)/admin/bikes/[bikeId]/page.tsx",
   "src/app/(dashboard)/admin/bikes/page.tsx",

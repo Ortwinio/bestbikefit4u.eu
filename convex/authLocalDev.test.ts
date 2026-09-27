@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   isAllowedLocalhostHost,
   isProductionEnvironment,
+  isLocalDevAuthAllowed,
   pickPreferredLocalDevUser,
   normalizeLocalDevEmail,
   normalizeLocalDevName,
@@ -63,5 +64,26 @@ describe("authLocalDev helpers", () => {
     vi.stubEnv("NODE_ENV", "development");
     vi.stubEnv("VERCEL_ENV", "production");
     expect(isProductionEnvironment()).toBe(true);
+  });
+});
+
+
+describe("local dev backend authorization", () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it("requires a local SITE_URL and rejects production deployments", () => {
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("VERCEL_ENV", "development");
+    vi.stubEnv("CONVEX_DEPLOYMENT", "dev:test");
+    vi.stubEnv("SITE_URL", "http://localhost:3000");
+    expect(isLocalDevAuthAllowed()).toBe(true);
+    vi.stubEnv("SITE_URL", "https://bestbikefit4u.eu");
+    expect(isLocalDevAuthAllowed()).toBe(false);
+    vi.stubEnv("SITE_URL", "http://localhost:3000");
+    vi.stubEnv("CONVEX_DEPLOYMENT", "prod:test");
+    expect(isLocalDevAuthAllowed()).toBe(false);
+    vi.stubEnv("CONVEX_DEPLOYMENT", "dev:test");
+    vi.stubEnv("NODE_ENV", "production");
+    expect(isLocalDevAuthAllowed()).toBe(false);
   });
 });

@@ -1,11 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useConvexAuth } from "convex/react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
-import { UserMenu } from "@/components/auth/UserMenu";
+
+const UserMenu = dynamic(
+  () => import("@/components/auth/UserMenu").then((module) => module.UserMenu)
+);
 
 type HeaderAuthActionsProps = {
   locale: Locale;

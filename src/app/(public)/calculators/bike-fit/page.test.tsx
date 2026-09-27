@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import BikeFitCalculatorPage from "./page";
 
 let locale: "en" | "nl" = "en";
+let campaignActive = true;
 
 vi.mock("next/link", () => ({
   default: ({
@@ -62,7 +63,7 @@ vi.mock("@/config/commercial", async () => {
 
   return {
     ...actual,
-    isConsumerCampaignActive: () => true,
+    isConsumerCampaignActive: () => campaignActive,
   };
 });
 
@@ -96,6 +97,7 @@ vi.mock("./BikeFitCalculatorForm", () => ({
 
 beforeEach(() => {
   locale = "en";
+  campaignActive = true;
 });
 
 afterEach(() => {
@@ -104,6 +106,19 @@ afterEach(() => {
 });
 
 describe("bike fit calculator page", () => {
+  it.each(["en", "nl"] as const)("offers a truthful %s account handoff after the campaign", async (language) => {
+    locale = language;
+    campaignActive = false;
+    render(await BikeFitCalculatorPage());
+
+    const label = locale === "nl" ? "Maak een gratis account aan" : "Create a free account";
+    expect(screen.getByText(label).closest("a")?.getAttribute("href")).toBe(`/${locale}/login`);
+    expect(screen.queryByText(/save these results|Sign in to save results|resultaten op te slaan|Meld je aan om te bewaren/))
+      .toBeNull();
+    expect(screen.getByText(locale === "nl" ? "Bekijk prijzen" : "Compare plans")
+      .closest("a")?.getAttribute("href")).toBe(`/${locale}/pricing`);
+  });
+
   it("keeps the value-first next-step CTAs visible in English", async () => {
     const ui = await BikeFitCalculatorPage();
     render(ui);
@@ -111,7 +126,7 @@ describe("bike fit calculator page", () => {
     expect(screen.getByText("Free Bike Fit Calculator")).toBeTruthy();
     expect(screen.getByText("Bike fit form")).toBeTruthy();
     expect(
-      screen.getByText("Sign in to save results").closest("a")?.getAttribute("href")
+      screen.getByText("Create a free account").closest("a")?.getAttribute("href")
     ).toBe("/en/login");
     expect(
       screen

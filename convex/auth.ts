@@ -10,6 +10,7 @@ import {
   normalizeLocalDevEmail,
   normalizeLocalDevName,
   normalizeLocalDevRole,
+  isLocalDevAuthAllowed,
 } from "./authLocalDev";
 
 // Email format validation
@@ -115,7 +116,6 @@ const EmailProvider = Email({
     {
       identifier: email,
       token,
-      expires,
     }: { identifier: string; token: string; expires: Date },
     ctx?: unknown
   ) {
@@ -124,21 +124,16 @@ const EmailProvider = Email({
       throw new Error("Invalid email address format");
     }
 
+    // Missing delivery configuration must never masquerade as a sent email.
+    if (!process.env.AUTH_RESEND_KEY?.trim()) {
+      throw new Error("Email sign-in is temporarily unavailable. Contact support.");
+    }
+
     // Check rate limit
     await checkRateLimit(email, ctx);
 
     if (token === LEGACY_BLOCKED_CODE) {
       throw new Error("This verification code is invalid. Request a new code.");
-    }
-
-    // For development without Resend API key, just log the token
-    if (!process.env.AUTH_RESEND_KEY) {
-      console.log(`\n========================================`);
-      console.log(`[DEV] Magic link code for ${email}`);
-      console.log(`[DEV] Code: ${token}`);
-      console.log(`[DEV] Expires: ${expires}`);
-      console.log(`========================================\n`);
-      return;
     }
 
     // Production: Send via Resend
@@ -172,14 +167,15 @@ const googleProviderEnabled = Boolean(
   process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
 );
 
-const localhostDevLoginEnabled = Boolean(process.env.LOCALHOST_DEV_LOGIN_SECRET);
+const localhostDevLoginEnabled =
+  Boolean(process.env.LOCALHOST_DEV_LOGIN_SECRET) && isLocalDevAuthAllowed();
 
 const localhostDevProvider = localhostDevLoginEnabled
   ? ConvexCredentials({
       id: "localhost-dev",
       authorize: async (credentials, ctx) => {
         const configuredSecret = process.env.LOCALHOST_DEV_LOGIN_SECRET;
-        if (!configuredSecret) {
+        if (!configuredSecret || !isLocalDevAuthAllowed()) {
           return null;
         }
 
@@ -234,9 +230,12 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers,
   callbacks: {
     async afterUserCreatedOrUpdated(ctx, args) {
-      const patch: Record<string, unknown> = {
-        lastLoginAt: Date.now(),
-      };
+      // Email requests create unverified users before delivery. Only a verified
+      // sign-in should count as activity in the admin dashboard.
+      const patch: Record<string, unknown> =
+        args.type === "email" || args.type === "phone"
+          ? {}
+          : { lastLoginAt: Date.now() };
 
       if (args.provider.id !== "google") {
         if (args.type === "email" || args.type === "verification") {

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { useMutation } from "convex/react";
 import { makeFunctionReference } from "convex/server";
 import type { Locale } from "@/i18n/config";
-import { canTrackMarketing } from "@/lib/cookieConsent";
+import { canTrackMarketing, subscribeToCookieConsent } from "@/lib/cookieConsent";
 import {
   pushDataLayerEvent,
   type MarketingEventType,
@@ -42,7 +42,9 @@ export function useMarketingEventLogger() {
       event: "bbf_marketing_event",
       ...args,
     });
-    void logMarketingEvent(args);
+    void logMarketingEvent(args).catch(() => {
+      console.warn("Unable to record marketing event");
+    });
   }, [logMarketingEvent]);
 }
 
@@ -59,20 +61,20 @@ export function TrackMarketingEventOnView({
   section?: string;
   sourceTag?: string;
 }) {
-  const hasTrackedRef = useRef(false);
+  const trackedEventRef = useRef<string | null>(null);
   const logEvent = useMarketingEventLogger();
 
   useEffect(() => {
-    if (hasTrackedRef.current) return;
-    hasTrackedRef.current = true;
+    const event = { eventType, locale, pagePath, section, sourceTag };
+    const eventKey = JSON.stringify(event);
+    const trackWhenConsented = () => {
+      if (trackedEventRef.current === eventKey || !canTrackMarketing()) return;
+      trackedEventRef.current = eventKey;
+      logEvent(event);
+    };
 
-    logEvent({
-      eventType,
-      locale,
-      pagePath,
-      section,
-      sourceTag,
-    });
+    trackWhenConsented();
+    return subscribeToCookieConsent(trackWhenConsented);
   }, [eventType, locale, logEvent, pagePath, section, sourceTag]);
 
   return null;

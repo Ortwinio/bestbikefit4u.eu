@@ -230,11 +230,11 @@ export default async function BikeFitCalculatorPage() {
       <PublicCtaBand
         className="mt-10"
         eyebrow={isNl ? "Hoe verder?" : "What's next?"}
-        title={isNl ? "Verfijn de uitkomst in je account" : "Refine the result in your account"}
+        title={isNl ? "Start je persoonlijke bikefit" : "Start your personalized fit"}
         description={
           isNl
-            ? "Maak een gratis account aan om deze resultaten op te slaan, je setup met meer detail te verfijnen en veranderingen bij te houden."
-            : "Create a free account to save these results, refine your setup with more detail, and track changes over time."
+            ? "Maak een gratis account aan om je rijdersprofiel op te bouwen, een persoonlijke bikefit te starten en toekomstige aanpassingen bij te houden."
+            : "Create a free account to build your rider profile, start a personalized fit, and track future adjustments."
         }
         actions={
           campaignActive ? (
@@ -245,7 +245,7 @@ export default async function BikeFitCalculatorPage() {
               startSection="bike_fit_result"
               donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
               donateSection="bike_fit_campaign_donate"
-              startLabel={isNl ? "Meld je aan om te bewaren" : "Sign in to save results"}
+              startLabel={isNl ? "Maak een gratis account aan" : "Create a free account"}
               donateLabel={campaign.donateCta}
             />
           ) : (
@@ -257,11 +257,11 @@ export default async function BikeFitCalculatorPage() {
                     locale={locale}
                     pagePath={pagePath}
                     section="bike_fit_result"
-                    ctaLabel={isNl ? "Meld je aan om te bewaren" : "Sign in to save results"}
+                    ctaLabel={isNl ? "Maak een gratis account aan" : "Create a free account"}
                   />
                 }
               >
-                {isNl ? "Meld je aan om te bewaren" : "Sign in to save results"}
+                {isNl ? "Maak een gratis account aan" : "Create a free account"}
               </Button>
               <Button
                 render={

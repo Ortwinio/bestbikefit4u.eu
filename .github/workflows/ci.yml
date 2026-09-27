@@ -8,7 +8,21 @@ on:
       - release/**
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
+  dependency-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Reject high and critical dependency advisories
+        run: npm audit --audit-level=high
+
   contracts:
     runs-on: ubuntu-latest
     steps:
@@ -20,7 +34,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
@@ -41,7 +55,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
@@ -57,6 +71,10 @@ jobs:
         run: npm run test:unit
 
       - name: Build (webpack mode)
+        env:
+          # Build-time placeholder only: CI never deploys or accesses user data.
+          NEXT_PUBLIC_CONVEX_URL: https://ci-placeholder.convex.cloud
+          NEXT_PUBLIC_CONVEX_SITE_URL: https://ci-placeholder.convex.site
         run: npm run build -- --webpack
 
       - name: Enforce plan README update when step files change
@@ -92,7 +110,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies

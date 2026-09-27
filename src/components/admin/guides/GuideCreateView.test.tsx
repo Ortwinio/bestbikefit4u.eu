@@ -3,7 +3,6 @@
 import type { ReactElement, ReactNode } from "react";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { api } from "../../../../convex/_generated/api";
 import { GuideCreateView } from "./GuideCreateView";
 
 const { pushMock, refreshMock, createGuideMock, submitGuideForReviewMock, successMock, useQueryMock, useMutationMock } =
@@ -45,8 +44,8 @@ vi.mock("convex/react", () => ({
   useMutation: (...args: unknown[]) => useMutationMock(...args),
 }));
 
-vi.mock("@/components/ui", () => {
-  const React = require("react");
+vi.mock("@/components/ui", async () => {
+  const React = await import("react");
 
   return {
     Button: ({
@@ -138,7 +137,7 @@ vi.mock("@/components/ui", () => {
     }) => (
       <div data-testid="segmented-control">
         {React.Children.map(children, (child: ReactNode) =>
-          React.isValidElement(child)
+          React.isValidElement<{ onSelect?: (value: string) => void }>(child)
             ? React.cloneElement(child, { onSelect: onValueChange })
             : child
         )}

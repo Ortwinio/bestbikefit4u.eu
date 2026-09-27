@@ -9,7 +9,7 @@ import { getDictionary } from "@/i18n/getDictionary";
 import { getRequestLocale } from "@/i18n/request";
 import { CookieConsentBanner } from "@/components/layout/CookieConsentBanner";
 import { GTMConsentLoader } from "@/components/analytics/GTMConsentLoader";
-import { FeedbackPanelProvider } from "@/components/feedback";
+import { FeedbackPanelProvider } from "@/components/feedback/FeedbackPanelProvider";
 import { ToastProvider } from "@/components/prototyper-ui/ui/toast";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -99,7 +99,7 @@ export default async function RootLayout({
 
   return (
     <ConvexAuthNextjsServerProvider>
-      <html lang={locale}>
+      <html lang={locale} suppressHydrationWarning>
         <head>
           <script
             nonce={nonce}

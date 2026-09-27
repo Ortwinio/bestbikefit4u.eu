@@ -113,9 +113,10 @@ function makeCtx({
           }
 
           if (table === "bikes") {
-            return {
-              collect: vi.fn(async () => [bikeState]),
-            };
+            return { withIndex: vi.fn(() => ({ collect: vi.fn(async () => [bikeState]) })) };
+          }
+          if (table === "users") {
+            return { withIndex: vi.fn(() => ({ take: vi.fn(async () => []) })) };
           }
 
           throw new Error(`Unexpected table query ${table}`);

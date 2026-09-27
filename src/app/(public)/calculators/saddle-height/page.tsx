@@ -213,8 +213,8 @@ export default async function SaddleHeightCalculatorPage() {
         title={isNl ? "Verfijn de uitkomst in je account" : "Refine the result in your account"}
         description={
           isNl
-            ? "Maak een gratis account aan om deze resultaten op te slaan, zadelhoogte te koppelen aan reach en drop, en veranderingen bij te houden."
-            : "Create a free account to save these results, connect saddle height to reach and drop, and track changes over time."
+            ? "Maak een gratis account aan om je rijdersprofiel op te bouwen, een persoonlijke bikefit te starten en toekomstige aanpassingen bij te houden."
+            : "Create a free account to build your rider profile, start a personalized fit, and track future adjustments."
         }
         actions={
           campaignActive ? (

@@ -40,11 +40,6 @@ type GuideRevisionEntry = Doc<"guideRevisions"> & {
 };
 
 type BilingualText = { en: string; nl: string };
-type GuideQuickAnswerForm = {
-  keyTakeaway: BilingualText;
-  commonMistake: BilingualText;
-  payAttention: BilingualText;
-};
 type GuideSectionForm = {
   title: BilingualText;
   type: SectionType;
@@ -77,14 +72,6 @@ function emptySection(): GuideSectionForm {
 
 function emptyFaq(): GuideFaqForm {
   return { q: emptyText(), a: emptyText() };
-}
-
-function emptyQuickAnswer(): GuideQuickAnswerForm {
-  return {
-    keyTakeaway: emptyText(),
-    commonMistake: emptyText(),
-    payAttention: emptyText(),
-  };
 }
 
 function updateLocalizedValue(

@@ -35,6 +35,7 @@ export default async function AuthLayout({
           <BrandLogo
             href={withLocalePrefix("/", locale)}
             asset="primary"
+            priority
             className="block w-full max-w-[468px]"
             imageClassName="block"
           />

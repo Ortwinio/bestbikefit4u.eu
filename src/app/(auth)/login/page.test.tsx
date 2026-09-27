@@ -230,3 +230,44 @@ describe("login page", () => {
     expect(signInMock).not.toHaveBeenCalled();
   });
 });
+
+it("does not claim a code was sent when delivery fails", async () => {
+  signInMock.mockRejectedValue(new Error("Email sign-in is temporarily unavailable"));
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  render(<LoginPage />);
+  const input = screen.getByPlaceholderText("you@example.com");
+  fireEvent.change(input, { target: { value: "rider@example.com" } });
+  fireEvent.submit(input.closest("form")!);
+  await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("Failed to send"));
+  expect(screen.queryByText("Enter Verification Code")).toBeNull();
+});
+
+it("normalizes pasted codes and requires an authenticated sign-in result", async () => {
+  signInMock.mockResolvedValueOnce({ signingIn: false }).mockResolvedValueOnce({ signingIn: false });
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  render(<LoginPage />);
+  const input = screen.getByPlaceholderText("you@example.com");
+  fireEvent.change(input, { target: { value: "Rider@example.com" } });
+  fireEvent.submit(input.closest("form")!);
+  const code = await screen.findByPlaceholderText("Enter verification code");
+  fireEvent.change(code, { target: { value: " abc defg " } });
+  expect(code).toHaveProperty("value", "ABCDEFG");
+  expect(code.getAttribute("autocomplete")).toBe("one-time-code");
+  fireEvent.submit(code.closest("form")!);
+  await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("Invalid or expired"));
+  expect(signInMock).toHaveBeenLastCalledWith("resend", { email: "Rider@example.com", code: "ABCDEFG" });
+  expect(screen.queryByText("Welcome to BestBikeFit4U")).toBeNull();
+  expect(logMarketingEventMock).not.toHaveBeenCalledWith(expect.objectContaining({ eventType: "login_verified" }));
+});
+
+it("shows success only after a code establishes a session", async () => {
+  signInMock.mockResolvedValueOnce({ signingIn: false }).mockResolvedValueOnce({ signingIn: true });
+  render(<LoginPage />);
+  const input = screen.getByPlaceholderText("you@example.com");
+  fireEvent.change(input, { target: { value: "rider@example.com" } });
+  fireEvent.submit(input.closest("form")!);
+  const code = await screen.findByPlaceholderText("Enter verification code");
+  fireEvent.change(code, { target: { value: "ABCDEFG" } });
+  fireEvent.submit(code.closest("form")!);
+  expect(await screen.findByText("Welcome to BestBikeFit4U")).toBeTruthy();
+});

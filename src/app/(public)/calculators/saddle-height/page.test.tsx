@@ -84,10 +84,13 @@ vi.mock("./SaddleHeightCalculatorForm", () => ({
 
 beforeEach(() => {
   locale = "en";
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-09-27T12:00:00Z"));
 });
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
@@ -98,11 +101,12 @@ describe("saddle height calculator page", () => {
 
     expect(screen.getByText("Saddle Height Calculator")).toBeTruthy();
     expect(screen.getByText("Saddle height form")).toBeTruthy();
-    expect(screen.getByText("Open bike-fit calculator").closest("a")?.getAttribute("href")).toBe(
+    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"
     );
-    expect(screen.getByText("Create account or sign in").closest("a")?.getAttribute("href")).toBe(
-      "/en/login"
+    expect(screen.getByText("Compare plans").closest("a")?.getAttribute("href")).toBe(
+      "/en/pricing"
     );
+    expect(screen.queryByText("Donate via our Alpe d'HuZes page")).toBeNull();
   });
 });

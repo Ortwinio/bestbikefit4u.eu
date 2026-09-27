@@ -83,10 +83,13 @@ vi.mock("./CrankLengthCalculatorForm", () => ({
 
 beforeEach(() => {
   locale = "en";
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-09-27T12:00:00Z"));
 });
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
@@ -99,18 +102,12 @@ describe("crank length page", () => {
 
     expect(screen.getByText("Crank Length Calculator")).toBeTruthy();
     expect(screen.getByText("Crank Form")).toBeTruthy();
-    expect(screen.getByText("Create account or sign in").closest("a")?.getAttribute("href")).toBe(
-      "/en/login"
-    );
-    expect(
-      screen
-        .getByText("Donate via our Alpe d'HuZes page")
-        .closest("a")
-        ?.getAttribute("href")
-    ).toBe("https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756");
-    expect(screen.getByText("Open bike-fit calculator").closest("a")?.getAttribute("href")).toBe(
+    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"
     );
-    expect(screen.queryByText("Compare Free vs Pro")).toBeNull();
+    expect(screen.getByText("Compare plans").closest("a")?.getAttribute("href")).toBe(
+      "/en/pricing"
+    );
+    expect(screen.queryByText("Donate via our Alpe d'HuZes page")).toBeNull();
   });
 });

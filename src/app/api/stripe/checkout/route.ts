@@ -89,17 +89,19 @@ export async function POST(request: Request): Promise<Response> {
 
     const stripe = new Stripe(stripeKey, { apiVersion: STRIPE_API_VERSION });
     let stripeCustomerId = user.stripeCustomerId;
-    if (!stripeCustomerId) {
+    if (stripeCustomerId) {
+      // Legacy customer IDs were writable through a public mutation. Validate
+      // the server-created Stripe metadata before trusting any stored binding.
+      const customer = await stripe.customers.retrieve(stripeCustomerId);
+      if (customer.deleted || customer.metadata.userId !== user._id) {
+        return NextResponse.json({ error: "Stripe customer ownership could not be verified." }, { status: 409 });
+      }
+    } else {
       const customer = await stripe.customers.create({
-        email: user.email ?? undefined,
-        metadata: {
-          userId: user._id as string,
-        },
-      });
+        metadata: { userId: user._id as string },
+      }, { idempotencyKey: `customer:${user._id}` });
       stripeCustomerId = customer.id;
-      await convex.mutation(api.users.mutations.storeStripeCustomerId, {
-        stripeCustomerId,
-      });
+      // Persist this binding only through the signature-verified webhook.
     }
 
     const successUrl = sessionId
@@ -116,6 +118,7 @@ export async function POST(request: Request): Promise<Response> {
       success_url: successUrl,
       cancel_url: cancelUrl,
       customer: stripeCustomerId,
+      subscription_data: { metadata: { userId: user._id as string } },
       client_reference_id: user._id as string,
       allow_promotion_codes: true,
       metadata: {

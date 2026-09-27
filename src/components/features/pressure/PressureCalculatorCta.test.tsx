@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PressureCalculatorCta } from "./PressureCalculatorCta";
 
 vi.mock("@/components/analytics/TrackedCtaLink", () => ({
@@ -60,14 +60,20 @@ vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
     donateLabel?: string;
   }) => (
     <div>
-      <a href={startHref}>{startLabel ?? "Create account or sign in"}</a>
+      <a href={startHref}>{startLabel ?? "Create a free account"}</a>
       <a href={donateHref}>{donateLabel ?? "Donate via our Alpe d'HuZes page"}</a>
     </div>
   ),
 }));
 
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-05-01T12:00:00Z"));
+});
+
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
@@ -79,8 +85,8 @@ describe("PressureCalculatorCta", () => {
         pagePath="/en/tire-pressure-calculator"
         labels={{
           heading: "What is next?",
-          body: "Create a free account to save these results, refine your setup with more detail, and track changes over time.",
-          primaryButton: "Create account or sign in",
+          body: "Create a free account to set up your bikes, calculate personalized pressure advice, and track future adjustments.",
+          primaryButton: "Create a free account",
           secondaryButton: "Compare Free vs Pro",
           loginPrompt: "Already have an account?",
           loginLink: "Log in",
@@ -89,7 +95,7 @@ describe("PressureCalculatorCta", () => {
     );
 
     expect(screen.getByText("What is next?")).toBeTruthy();
-    expect(screen.getByText("Create account or sign in").closest("a")?.getAttribute("href")).toBe(
+    expect(screen.getByText("Create a free account").closest("a")?.getAttribute("href")).toBe(
       "/en/login"
     );
     expect(

@@ -93,6 +93,8 @@ export const TrackedCtaLink = forwardRef<HTMLAnchorElement, TrackedCtaLinkProps>
       ctaLabel,
       ctaTargetPath: href,
       sourceTag,
+    }).catch(() => {
+      console.warn("Unable to record CTA event");
     });
 
     pushDataLayerEvent({

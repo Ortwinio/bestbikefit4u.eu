@@ -6,6 +6,9 @@ import { ComfortLevelBar } from "@/components/profile/ComfortLevelBar";
 import { SliderQuestion } from "@/components/profile/RidingStyleCard";
 import { comfortLevels } from "@/lib/validations/profile";
 import { HelpCircle, Heart, Activity } from "lucide-react";
+import { MultipleChoiceQuestion } from "@/components/questionnaire/questions/MultipleChoice";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import type { WizardFormData } from "@/lib/validations/measurementWizard";
 
 // Comfort levels: score 1 (Severe) → 5 (Comfortable), shown left to right
 const comfortOptions = comfortLevels.map((l) => ({
@@ -14,7 +17,9 @@ const comfortOptions = comfortLevels.map((l) => ({
 }));
 
 export function StepComfort() {
-  const { control } = useFormContext();
+  const { control, formState: { errors } } = useFormContext<WizardFormData>();
+  const { messages } = useDashboardMessages();
+  const painCopy = messages.questionnaire.painAreas;
   const selectedScore = useWatch({ control, name: "comfortScore" });
 
   return (
@@ -64,6 +69,31 @@ export function StepComfort() {
           />
         )}
       />
+
+      {selectedScore < 5 && (
+        <section className="space-y-3" aria-labelledby="wizard-pain-areas-label">
+          <h3 id="wizard-pain-areas-label" className="font-medium">
+            {painCopy.questionText}
+          </h3>
+          <p className="text-sm text-muted-foreground">{painCopy.helpText}</p>
+          <Controller
+            name="painAreas"
+            control={control}
+            render={({ field }) => (
+              <MultipleChoiceQuestion
+                name={field.name}
+                options={Object.entries(painCopy.areas).map(([value, area]) => ({
+                  value,
+                  label: area.label,
+                }))}
+                value={field.value ?? []}
+                onChange={field.onChange}
+              />
+            )}
+          />
+          {errors.painAreas && <p role="alert" className="text-sm text-destructive">{painCopy.selectPrompt}</p>}
+        </section>
+      )}
 
       {/* 4. Live ComfortLevelBar preview — same card as My Profile */}
       {selectedScore && (

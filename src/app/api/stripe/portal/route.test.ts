@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => {
   const setAuth = vi.fn();
   const clientConstructor = vi.fn();
   const portalCreate = vi.fn();
+  const customersRetrieve = vi.fn();
   const stripeConstructor = vi.fn();
 
   return {
@@ -14,6 +15,7 @@ const mocks = vi.hoisted(() => {
     setAuth,
     clientConstructor,
     portalCreate,
+    customersRetrieve,
     stripeConstructor,
   };
 });
@@ -35,6 +37,7 @@ vi.mock("convex/browser", () => ({
 
 vi.mock("stripe", () => ({
   default: class MockStripe {
+    customers = { retrieve: mocks.customersRetrieve };
     billingPortal = {
       sessions: {
         create: mocks.portalCreate,
@@ -62,6 +65,7 @@ describe("stripe portal route", () => {
       tier: "pro",
       stripeCustomerId: "cus_123",
     });
+    mocks.customersRetrieve.mockResolvedValue({ id: "cus_123", metadata: { userId: "user_1" } });
     mocks.portalCreate.mockResolvedValue({ url: "https://billing.stripe.com/session/test" });
   });
 
@@ -142,4 +146,16 @@ describe("stripe portal route", () => {
     });
     expect(mocks.query).not.toHaveBeenCalled();
   });
+
+  it.each([
+    { id: "cus_123", metadata: { userId: "another_user" } },
+    { id: "cus_123", metadata: {} },
+    { id: "cus_123", deleted: true },
+  ])("never creates a portal for an unverified customer: %j", async (customer) => {
+    mocks.customersRetrieve.mockResolvedValue(customer);
+    const response = await POST(request());
+    expect(response.status).toBe(409);
+    expect(mocks.portalCreate).not.toHaveBeenCalled();
+  });
+
 });

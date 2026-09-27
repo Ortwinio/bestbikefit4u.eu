@@ -9,6 +9,10 @@ let locale: "en" | "nl" = "en";
 let isPreview = false;
 let isAuthenticated = false;
 
+vi.mock("../../blog/data", () => ({
+  listPublishedBlogPostsForGuidePath: () => Promise.resolve([]),
+}));
+
 vi.mock("next/link", () => ({
   default: ({
     href,
@@ -34,7 +38,11 @@ vi.mock("next/image", () => ({
     src: string;
     alt: string;
     [key: string]: unknown;
-  }) => <img src={src} alt={alt} {...props} />,
+  }) => (
+    // Native image is intentional: this test double isolates guide rendering from Next's image optimizer.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={alt} {...props} />
+  ),
 }));
 
 vi.mock("next/headers", () => ({

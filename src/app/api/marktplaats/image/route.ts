@@ -2,19 +2,10 @@ import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { NextRequest } from "next/server";
 import { consumeRateLimit } from "@/lib/rateLimiter";
 import { getClientIp, hashIp } from "@/lib/ipHash";
+import { ALLOWED_IMAGE_TYPES, fetchMarktplaats, readLimitedBytes, validateMarktplaatsUrl } from "../../../../../convex/lib/marktplaatsFetch";
 
 const IMAGE_PROXY_LIMIT = 20;
 const IMAGE_PROXY_WINDOW_MS = 60 * 1000;
-
-function isAllowedHost(hostname: string): boolean {
-  const normalized = hostname.trim().toLowerCase();
-  return (
-    normalized === "marktplaats.nl" ||
-    normalized === "www.marktplaats.nl" ||
-    normalized.endsWith(".marktplaats.nl") ||
-    normalized.endsWith(".marktplaats.com")
-  );
-}
 
 export async function GET(request: NextRequest) {
   const token = await convexAuthNextjsToken();
@@ -46,37 +37,38 @@ export async function GET(request: NextRequest) {
 
   let remoteUrl: URL;
   try {
-    remoteUrl = new URL(rawUrl);
+    remoteUrl = validateMarktplaatsUrl(rawUrl);
   } catch {
     return new Response("Invalid url", { status: 400 });
   }
 
-  if (remoteUrl.protocol !== "https:" || !isAllowedHost(remoteUrl.hostname)) {
-    return new Response("Unsupported image host", { status: 400 });
-  }
-
-  const response = await fetch(remoteUrl.toString(), {
-    headers: {
-      "User-Agent": "BestBikeFit4U Marktplaats Import/1.0",
-      Accept: "image/*",
-    },
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
+  try {
+    const response = await fetchMarktplaats(remoteUrl, {
+      headers: {
+        "User-Agent": "BestBikeFit4U Marktplaats Import/1.0",
+        Accept: "image/*",
+      },
+      cache: "no-store",
+    });
+    if (!response.ok) {
+      await response.body?.cancel();
+      return new Response("Could not fetch remote image", { status: 502 });
+    }
+    const contentType = (response.headers.get("content-type") ?? "").split(";")[0].trim().toLowerCase();
+    if (!ALLOWED_IMAGE_TYPES.has(contentType)) {
+      await response.body?.cancel();
+      return new Response("Unsupported remote content type", { status: 415 });
+    }
+    const bytes = await readLimitedBytes(response, 10 * 1024 * 1024);
+    return new Response(bytes, {
+      status: 200,
+      headers: {
+        "Content-Type": contentType,
+        "Cache-Control": "no-store",
+        "X-Content-Type-Options": "nosniff",
+      },
+    });
+  } catch {
     return new Response("Could not fetch remote image", { status: 502 });
   }
-
-  const contentType = response.headers.get("content-type") ?? "image/jpeg";
-  if (!contentType.startsWith("image/")) {
-    return new Response("Unsupported remote content type", { status: 415 });
-  }
-
-  return new Response(response.body, {
-    status: 200,
-    headers: {
-      "Content-Type": contentType,
-      "Cache-Control": "no-store",
-    },
-  });
 }

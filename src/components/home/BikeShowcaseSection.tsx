@@ -1,8 +1,6 @@
 "use client";
 
-// TODO: A server-side fetch with fetchQuery would be preferable here to avoid
-// a client subscription on the marketing homepage, but the Convex HTTP client
-// setup is complex. Using useQuery for Phase 1 is acceptable.
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Locale } from "@/i18n/config";
@@ -20,12 +18,41 @@ type BikeShowcaseSectionProps = {
 };
 
 export function BikeShowcaseSection({ locale, copy }: BikeShowcaseSectionProps) {
-  const bikes = useQuery(api.bikes.publicQueries.getMarketingShowcaseBikes);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    if (!("IntersectionObserver" in window)) {
+      const timer = setTimeout(() => setShouldLoad(true), 0);
+      return () => clearTimeout(timer);
+    }
+
+    // The desktop-only showcase is well below the fold. Hidden mobile content
+    // never intersects, so it does not start a needless backend subscription.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "400px" }
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  const bikes = useQuery(
+    api.bikes.publicQueries.getMarketingShowcaseBikes,
+    shouldLoad ? {} : "skip"
+  );
   const ctaHref = withLocalePrefix("/calculators/bike-fit", locale);
 
   if (bikes === undefined) {
     return (
-      <section className="bg-background py-14 lg:py-16">
+      <section ref={sectionRef} className="bg-background py-14 lg:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <PublicSection
             header={{
@@ -63,7 +90,7 @@ export function BikeShowcaseSection({ locale, copy }: BikeShowcaseSectionProps) 
 
   if (!bikes || bikes.length === 0) {
     return (
-      <section className="bg-background py-14 lg:py-16">
+      <section ref={sectionRef} className="bg-background py-14 lg:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <PublicSection
             header={{
@@ -97,7 +124,7 @@ export function BikeShowcaseSection({ locale, copy }: BikeShowcaseSectionProps) 
   }
 
   return (
-    <section className="bg-background py-14 lg:py-16">
+    <section ref={sectionRef} className="bg-background py-14 lg:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <PublicSection
           header={{

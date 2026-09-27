@@ -10,6 +10,7 @@
     "build": "next build --webpack",
     "build:vercel": "node scripts/check-vercel-env.mjs && next build --webpack",
     "start": "next start",
+    "test:smoke:local": "node scripts/smoke-local.mjs",
     "vercel:preflight": "node scripts/check-vercel-env.mjs",
     "seo:validate-sitemaps": "node scripts/seo/validate-sitemaps.mjs",
     "lint": "npm-run-all lint:eslint lint:runtime-boundaries lint:tooltips",
@@ -27,9 +28,9 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@auth/core": "^0.37.4",
+    "@auth/core": "^0.41.3",
     "@base-ui/react": "^1.6.0",
-    "@convex-dev/auth": "^0.0.91",
+    "@convex-dev/auth": "^0.0.95",
     "@hookform/resolvers": "^5.2.2",
     "@sentry/nextjs": "^10.62.0",
     "@sparticuz/chromium": "^143.0.4",
@@ -39,11 +40,11 @@
     "clsx": "^2.1.1",
     "convex": "^1.42.1",
     "lucide-react": "^0.564.0",
-    "next": "^16.2.9",
+    "next": "^16.3.6",
     "playwright": "^1.58.2",
     "playwright-core": "^1.58.2",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "react-hook-form": "^7.71.1",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
@@ -60,12 +61,12 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "^16.2.3",
+    "eslint-config-next": "^16.3.6",
     "jsdom": "^29.0.2",
     "npm-run-all": "^4.1.5",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5",
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.11"
   }
 }
