@@ -38,7 +38,7 @@ npx convex env set AUTH_EMAIL_FROM 'BestBikeFit4U <noreply@notifications.bestbik
 Deploy backend code first:
 
 ```bash
-npx convex deploy --prod
+npx convex deploy
 ```
 
 ## 4. Deploy Vercel Frontend
