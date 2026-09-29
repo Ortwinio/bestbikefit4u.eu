@@ -87,7 +87,7 @@
       "title": "Illustraties",
       "w": 1440,
       "x": 1520,
-      "y": 8384
+      "y": 23292
     },
     "Login.dc.html": {
       "is_interactive": true,
@@ -102,7 +102,7 @@
       "title": "Logo & gebruik",
       "w": 1440,
       "x": 0,
-      "y": 8384
+      "y": 23292
     },
     "Main.dc.html": {
       "h": 4600,
@@ -302,6 +302,216 @@
       "h": 1144,
       "title": "App installeren",
       "is_interactive": true
+    },
+    "HowItWorks.dc.html": {
+      "x": 0,
+      "y": 8384,
+      "w": 1440,
+      "h": 3520,
+      "title": "Hoe het werkt",
+      "is_interactive": true
+    },
+    "MeasurementGuide.dc.html": {
+      "x": 1520,
+      "y": 8384,
+      "w": 1440,
+      "h": 3920,
+      "title": "Meetgids",
+      "is_interactive": true
+    },
+    "FitPass.dc.html": {
+      "x": 3040,
+      "y": 8384,
+      "w": 1440,
+      "h": 3660,
+      "title": "Fit Pass",
+      "is_interactive": true
+    },
+    "PainIndex.dc.html": {
+      "x": 4560,
+      "y": 8384,
+      "w": 1440,
+      "h": 3060,
+      "title": "Klachten · overzicht",
+      "is_interactive": true
+    },
+    "PainDetail.dc.html": {
+      "x": 6080,
+      "y": 8384,
+      "w": 1440,
+      "h": 3960,
+      "title": "Klacht · detail",
+      "is_interactive": true
+    },
+    "WhyBikeFit.dc.html": {
+      "x": 7600,
+      "y": 8384,
+      "w": 1440,
+      "h": 4240,
+      "title": "Waarom bikefit",
+      "is_interactive": true
+    },
+    "BikeFittingLanding.dc.html": {
+      "x": 9120,
+      "y": 8384,
+      "w": 1440,
+      "h": 3300,
+      "title": "Bikefitting (landing)",
+      "is_interactive": true
+    },
+    "BikeSetup.dc.html": {
+      "x": 10640,
+      "y": 8384,
+      "w": 1440,
+      "h": 6640,
+      "title": "Fiets afstellen",
+      "is_interactive": true
+    },
+    "Guides.dc.html": {
+      "x": 12160,
+      "y": 8384,
+      "w": 1440,
+      "h": 3844,
+      "title": "Gidsen",
+      "is_interactive": true
+    },
+    "GuideDetail.dc.html": {
+      "x": 13680,
+      "y": 8384,
+      "w": 1440,
+      "h": 4844,
+      "title": "Gids · detail",
+      "is_interactive": true
+    },
+    "BlogIndex.dc.html": {
+      "x": 15200,
+      "y": 8384,
+      "w": 1440,
+      "h": 2644,
+      "title": "Blog",
+      "is_interactive": true
+    },
+    "BlogArticle.dc.html": {
+      "x": 16720,
+      "y": 8384,
+      "w": 1440,
+      "h": 2740,
+      "title": "Blog · artikel",
+      "is_interactive": true
+    },
+    "ScienceArticle.dc.html": {
+      "x": 18240,
+      "y": 8384,
+      "w": 1440,
+      "h": 2884,
+      "title": "Wetenschap",
+      "is_interactive": true
+    },
+    "About.dc.html": {
+      "x": 19760,
+      "y": 8384,
+      "w": 1440,
+      "h": 3720,
+      "title": "Over ons",
+      "is_interactive": true
+    },
+    "FAQ.dc.html": {
+      "x": 21280,
+      "y": 8384,
+      "w": 1440,
+      "h": 4360,
+      "title": "FAQ",
+      "is_interactive": true
+    },
+    "Contact.dc.html": {
+      "x": 22800,
+      "y": 8384,
+      "w": 1440,
+      "h": 2220,
+      "title": "Contact",
+      "is_interactive": true
+    },
+    "CaseStudy.dc.html": {
+      "x": 24320,
+      "y": 8384,
+      "w": 1440,
+      "h": 2784,
+      "title": "Case study",
+      "is_interactive": true
+    },
+    "Legal.dc.html": {
+      "x": 25840,
+      "y": 8384,
+      "w": 1440,
+      "h": 3324,
+      "title": "Privacy & voorwaarden",
+      "is_interactive": true
+    },
+    "PressureLanding.dc.html": {
+      "x": 27360,
+      "y": 8384,
+      "w": 1440,
+      "h": 3400,
+      "title": "Bandenspanning · SEO-pagina",
+      "is_interactive": true
+    },
+    "FitReport.dc.html": {
+      "x": 28880,
+      "y": 8384,
+      "w": 794,
+      "h": 3369,
+      "title": "Fitrapport (PDF, A4)",
+      "is_interactive": true,
+      "paper": "a4",
+      "print": "flow"
+    },
+    "m/Home.dc.html": {
+      "x": 0,
+      "y": 15444,
+      "w": 390,
+      "h": 7428,
+      "title": "Mobiel · Home",
+      "is_interactive": true
+    },
+    "m/SaddleHeight.dc.html": {
+      "x": 470,
+      "y": 15444,
+      "w": 390,
+      "h": 2740,
+      "title": "Mobiel · Zadelhoogte",
+      "is_interactive": true
+    },
+    "m/BikeFit.dc.html": {
+      "x": 940,
+      "y": 15444,
+      "w": 390,
+      "h": 2660,
+      "title": "Mobiel · Bike fit",
+      "is_interactive": true
+    },
+    "m/Login.dc.html": {
+      "x": 1410,
+      "y": 15444,
+      "w": 390,
+      "h": 1280,
+      "title": "Mobiel · Inloggen",
+      "is_interactive": true
+    },
+    "m/Dashboard.dc.html": {
+      "x": 1880,
+      "y": 15444,
+      "w": 390,
+      "h": 3260,
+      "title": "Mobiel · Dashboard",
+      "is_interactive": true
+    },
+    "m/FitResults.dc.html": {
+      "x": 2350,
+      "y": 15444,
+      "w": 390,
+      "h": 2660,
+      "title": "Mobiel · Fit resultaten",
+      "is_interactive": true
     }
   },
   "createdOnFiles": {
@@ -327,7 +537,7 @@
       "text": "Merk",
       "w": 240,
       "x": 0,
-      "y": 8084
+      "y": 22992
     },
     "configs": {
       "kind": "title1",
@@ -344,6 +554,22 @@
       "w": 240,
       "x": 0,
       "y": -300
+    },
+    "content": {
+      "kind": "title1",
+      "text": "Content & SEO",
+      "x": 0,
+      "y": 8084,
+      "w": 240,
+      "maxW": 29674
+    },
+    "mobile": {
+      "kind": "title1",
+      "text": "Mobiel",
+      "x": 0,
+      "y": 15144,
+      "w": 240,
+      "maxW": 2740
     }
   },
   "order": [
@@ -383,6 +609,32 @@
     "Settings.dc.html",
     "Feedback.dc.html",
     "AppInstall.dc.html",
+    "HowItWorks.dc.html",
+    "MeasurementGuide.dc.html",
+    "FitPass.dc.html",
+    "PainIndex.dc.html",
+    "PainDetail.dc.html",
+    "WhyBikeFit.dc.html",
+    "BikeFittingLanding.dc.html",
+    "BikeSetup.dc.html",
+    "Guides.dc.html",
+    "GuideDetail.dc.html",
+    "BlogIndex.dc.html",
+    "BlogArticle.dc.html",
+    "ScienceArticle.dc.html",
+    "About.dc.html",
+    "FAQ.dc.html",
+    "Contact.dc.html",
+    "CaseStudy.dc.html",
+    "Legal.dc.html",
+    "PressureLanding.dc.html",
+    "FitReport.dc.html",
+    "m/Home.dc.html",
+    "m/SaddleHeight.dc.html",
+    "m/BikeFit.dc.html",
+    "m/Login.dc.html",
+    "m/Dashboard.dc.html",
+    "m/FitResults.dc.html",
     "Logo.dc.html",
     "Illustraties.dc.html"
   ],

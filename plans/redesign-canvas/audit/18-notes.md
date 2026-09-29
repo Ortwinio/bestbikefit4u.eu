@@ -120,3 +120,13 @@ Each namespace below is present in both `en` and `nl`; nested category/goal/step
 ## Remaining gates
 
 Batch 2 is not started. Wait for lead approval of 18.1 before proceeding.
+
+## Batch 18.3 — active; shared integration request
+
+Codex D owns only the five batch-3 calculator routes, performance.ts/tests, and matching calculator dictionaries.
+No shared UI, globals, or Header/Footer edits by D; no commit.
+
+Request to layout owner: register `/calculators/gearing` as `gearing`, and `/calculators/power-speed`,
+`/calculators/climb-planner`, `/calculators/ftp-wkg`, `/calculators/fuel-hydration` as `more` in
+`src/components/layout/ConfiguratorHeaderSwitch.tsx`. These pages reuse ConfiguratorLayout and the four extra
+pages supply MoreToolsNav. This enables the approved tools header without duplicating it inside page content.

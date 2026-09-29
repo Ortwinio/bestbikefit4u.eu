@@ -58,6 +58,10 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 
 ## Draft progress
 
+- 2026-09-29 — Codex A completed task-13's twelve library/service/report drafts via single-board subagent assignments. Both checkers PASS (109 runtime states); shared footer verified, 35 PNGs including three A4 report pages, and source gaps/handoff notes in `audit/13-notes.md`. Published blog source is empty, so blog content remains explicitly unresolved. Drafts only; awaiting lead QA.
+
+- 2026-09-29 — Codex A completed task-12's eight marketing/content drafts via one-board subagent assignments. Shared footer verified identical; both checkers PASS, with 15 renders and section-level source notes in `audit/12-notes.md`. Drafts only, awaiting lead QA; no phase-4 gate claimed.
+
 - 2026-09-29 — Codex A completed 08b review-state strips and refreshed renders, then task-10's eight account/tools/settings drafts using three subagents. Both checkers PASS (707 task-10 runtime states); source gaps, 58 renders and QA recorded in `audit/10-notes.md`. Drafts only, awaiting lead review; no phase gate claimed.
 
 - 2026-09-29 — Codex A completed 03c polish and the five task-08 account drafts. Both checkers pass; state renders and source/QA notes are in `audit/08-notes.md`. Awaiting lead review/publication; no phase-3 gate claimed.
@@ -75,3 +79,8 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 - 2026-09-29 — **15 code foundation implemented; awaiting lead diff review.** Brand tokens, fonts, assets and contrast lint in app code. Typecheck/lint/build and 640 unit tests pass; 214 contrast pairs pass. Four required route screenshots: `code-renders/15-*.png`. Mapping, results and deliberate exclusions: `audit/15-notes.md`. Uncommitted by request.
 
 - 2026-09-29 — **15 approved by lead and committed (`2c7485c`). 16 implemented; awaiting lead diff review.** Shared inputs/results/layouts and protected playground, 681 unit tests, typecheck/lint/build, desktop/mobile/existing-page captures. Lead border finding corrected in PublicSection; mobile footer labels wrap. See `audit/16-notes.md` and `code-renders/16-*.png`. No commit by Codex C.
+
+- 2026-09-29 — **16 approved/committed (`d18e640`). 18.1 implemented, awaiting lead review.** Section 0 shared border fixes plus saddle-height/frame-size/crank-length pilot pages; engines unchanged. Typecheck/lint/build, 697 unit tests, 30 i18n tests and 218 contrast checks pass. NL desktop/mobile + EN capture and matching boards: `code-renders/18-*.png`. See `audit/18-notes.md`. Uncommitted; batch 2 not started.
+- 2026-09-29 — **Phase 3 passed** (canvas v12): 23 account screens (profile, fit flow, garage + imports, account tools, settings, feedback, app). QA: linter + runtime (up to 441 states) + visual review; the questions match `convex/questionnaire/questions.ts`; the home/pricing claims trace back to current site copy, with 2 unverifiable claims marked `[CLAIM — bron?]`. Rules added during the phase: the review-state strip and example data once per screen.
+- 2026-09-29 — **Phases 4 & 5 passed** (canvas v13): 19 content/SEO pages + the A4 fitreport (3 pages) + 6 mobile boards (390 px, logic identical to desktop). Header/footer identical on every page. **The canvas design is complete: 72 boards.**
+- 2026-09-29 — **Phase 6 running**: 6a foundation (2c7485c) and 6b components (d18e640) approved; 6c configurators batch 1 (2dccd9b) approved; 18.2 (Codex C), 18.3 (Codex D), 19.1 marketing (Codex A) and 20.1 account (Codex B) in progress, with file ownership per agent.
