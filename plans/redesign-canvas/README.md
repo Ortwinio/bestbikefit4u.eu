@@ -56,6 +56,10 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 - 2026-09-29 — **FTP W/kg, power↔speed, climb planner, fuel & hydration become real tools** (decided by Ortwin). Contracts: `05-new-tool-contracts.md`; [VOORSTEL] ranges await his approval.
 - 2026-09-29 — **Palette locked: canvas lime/petrol** (decided by Ortwin). It replaces the blue/Inter palette in `plans/BestBikeFit4U_Redesign_Plan.docx`. The brand rules (colors, type, logo, tone of voice, icons) are in `reference/brand.md`, and they win over anything else.
 
+## Draft progress
+
+- 2026-09-29 — Codex A completed 03c polish and the five task-08 account drafts. Both checkers pass; state renders and source/QA notes are in `audit/08-notes.md`. Awaiting lead review/publication; no phase-3 gate claimed.
+
 ## Gate log
 
 - 2026-09-29 — **Phase 1 passed.** 01 route map: 70/70 routes, 6 claims spot-checked OK. 02 engine alignment: 28 must-fix items, 6 claims spot-checked OK. Findings carried forward:

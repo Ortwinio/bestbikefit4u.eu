@@ -33,46 +33,47 @@ input:focus-visible{outline:3px solid #9CC21F;outline-offset:1px}
 </svg>
 <div style="display: flex; flex-direction: column; gap: 12px; max-width: 520px">
 <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.05; letter-spacing: -0.02em">Je fit, je fietsen en je voortgang op één plek.</div>
-<div style="font-size: 17px; line-height: 1.5; color: #1F3A34">Bewaar je maten, vergelijk met je huidige afstelling en zie wat je als volgende aanpast.</div>
+<div style="font-size: 17px; line-height: 1.5; color: #3B4F4A">Bewaar je maten, vergelijk met je huidige afstelling en zie wat je als volgende aanpast.</div>
 </div>
 </div>
 
 <div style="display: flex; align-items: center; justify-content: center; padding: 48px">
 <div style="width: 440px; display: flex; flex-direction: column; gap: 24px">
-<div role="tablist" aria-label="Account" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 5px; border-radius: 16px; background: #E6ECE8">
-<sc-for list="{{tabs}}" as="t" hint-placeholder-count="2">
-<button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.pick}}" style="height: 46px; border: 0; border-radius: 12px; background: {{t.bg}}; color: {{t.fg}}; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: {{t.shadow}}">{{t.label}}</button>
-</sc-for>
-</div>
-
 <div>
 <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -0.02em">{{title}}</h1>
 <p style="margin: 8px 0 0; color: #4A5F5A; font-size: 16px">{{sub}}</p>
 </div>
-
-<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 12px; height: 54px; border-radius: 14px; border: 1px solid #C9D6D0; background: #FFFFFF; color: #0F2420; font-size: 16px; font-weight: 600; cursor: pointer">
-<span aria-hidden="true" style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #0F2420; font-weight: 800; font-size: 14px">G</span>Doorgaan met Google</button>
-
+<sc-if value="{{emailStep}}" hint-placeholder-val="{{true}}">
+<form onSubmit="{{sendCode}}" style="display: flex; flex-direction: column; gap: 16px">
+<button type="button" onClick="{{google}}" style="display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 54px; border-radius: 14px; border: 1px solid #DCE6E1; background: #FFFFFF; color: #0F2420; font-size: 16px; font-weight: 600; cursor: pointer">
+<span aria-hidden="true" style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #0F2420; font-weight: 800; font-size: 14px">G</span>Ga verder met Google</button>
 <div style="display: flex; align-items: center; gap: 12px; color: #4A5F5A; font-size: 14px"><span style="flex-grow: 1; height: 1px; background: #DCE6E1"></span>of met e-mail<span style="flex-grow: 1; height: 1px; background: #DCE6E1"></span></div>
-
-<div style="display: flex; flex-direction: column; gap: 16px">
-<sc-if value="{{signup}}" hint-placeholder-val="{{false}}">
-<div style="display: flex; flex-direction: column; gap: 6px">
-<label for="li-name" style="font-weight: 600; font-size: 15px">Voornaam</label>
-<input id="li-name" type="text" placeholder="Bijv. Lisa" style="height: 52px; padding: 0 16px; border-radius: 14px; border: 1px solid #C9D6D0; background: #FFFFFF; font-size: 16px; color: #0F2420">
-</div>
-</sc-if>
 <div style="display: flex; flex-direction: column; gap: 6px">
 <label for="li-mail" style="font-weight: 600; font-size: 15px">E-mailadres</label>
-<input id="li-mail" type="email" placeholder="jij@voorbeeld.nl" style="height: 52px; padding: 0 16px; border-radius: 14px; border: 1px solid #C9D6D0; background: #FFFFFF; font-size: 16px; color: #0F2420">
+<input id="li-mail" type="email" autoComplete="email" required="required" value="{{email}}" onChange="{{setEmail}}" placeholder="jij@voorbeeld.nl" style="height: 52px; padding: 0 16px; border-radius: 14px; border: 1px solid #DCE6E1; background: #FFFFFF; font-size: 16px; color: #0F2420">
 </div>
+<button type="submit" style="min-height: 56px; border: 0; border-radius: 999px; background: #0A7263; color: #FFFFFF; font-weight: 700; font-size: 17px; cursor: pointer">Stuur inlogcode</button>
+<p style="margin: 0; color: #4A5F5A; font-size: 14px; line-height: 1.5">Geen wachtwoord nodig. Nieuw hier? We maken je account aan zodra je de code bevestigt.</p>
+</form>
+</sc-if>
+<sc-if value="{{codeStep}}" hint-placeholder-val="{{false}}">
+<form onSubmit="{{verifyCode}}" style="display: flex; flex-direction: column; gap: 16px">
+<p style="margin: 0; color: #3B4F4A; overflow-wrap: anywhere">Inlogcode voor <strong>{{email}}</strong></p>
 <div style="display: flex; flex-direction: column; gap: 6px">
-<div style="display: flex; justify-content: space-between"><label for="li-pw" style="font-weight: 600; font-size: 15px">Wachtwoord</label><a href="#" style="font-size: 14px; font-weight: 600">Wachtwoord vergeten?</a></div>
-<input id="li-pw" type="password" placeholder="••••••••" style="height: 52px; padding: 0 16px; border-radius: 14px; border: 1px solid #C9D6D0; background: #FFFFFF; font-size: 16px; color: #0F2420">
+<label for="li-code" style="font-weight: 600; font-size: 15px">Inlogcode (<span style="font-family: 'DM Mono', monospace">6</span> cijfers)</label>
+<input id="li-code" type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength="6" required="required" value="{{code}}" onChange="{{setCode}}" placeholder="000000" style="height: 60px; padding: 0 16px; border-radius: 14px; border: 1px solid #DCE6E1; background: #FFFFFF; font-family: 'DM Mono', monospace; font-size: 30px; letter-spacing: 0.3em; color: #0F2420">
 </div>
+<button type="submit" style="min-height: 56px; border: 0; border-radius: 999px; background: #0A7263; color: #FFFFFF; font-weight: 700; font-size: 17px; cursor: pointer">Bevestig code</button>
+<div style="display: flex; gap: 12px">
+<button type="button" onClick="{{resend}}" style="min-height: 44px; padding: 0 14px; border: 1px solid #DCE6E1; border-radius: 12px; background: #FFFFFF; color: #0F2420; font-weight: 600; cursor: pointer">Opnieuw sturen</button>
+<button type="button" onClick="{{changeEmail}}" style="min-height: 44px; padding: 0 14px; border: 1px solid #DCE6E1; border-radius: 12px; background: #FFFFFF; color: #0F2420; font-weight: 600; cursor: pointer">Ander e-mailadres</button>
 </div>
-
-<a href="Dashboard.dc.html" style="display: flex; align-items: center; justify-content: center; height: 56px; border-radius: 999px; background: #0A7263; color: #FFFFFF; font-weight: 700; font-size: 17px; text-decoration: none">{{cta}}</a>
+</form>
+</sc-if>
+<p role="status" aria-live="polite" style="margin: 0; padding: 12px; border-radius: 12px; background: #E1F2EE; color: #0F2420; font-size: 14px; line-height: 1.5">{{notice}}</p>
+<sc-if value="{{previewReady}}" hint-placeholder-val="{{false}}">
+<a href="Dashboard.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 48px; border-radius: 999px; border: 2px solid #0F2420; color: #0F2420; font-weight: 700; text-decoration: none">Open je dashboard</a>
+</sc-if>
 <p style="margin: 0; font-size: 14px; color: #4A5F5A; text-align: center">Nog aan het kijken? <a href="BikeFit.dc.html" style="font-weight: 700">Probeer de calculator zonder account</a></p>
 </div>
 </div>
@@ -80,20 +81,34 @@ input:focus-visible{outline:3px solid #9CC21F;outline-offset:1px}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
-  constructor(props) { super(props); this.state = { tab: 0 }; }
+  constructor(props) {
+    super(props);
+    this.state = { step: 'email', email: '', code: '', previewReady: false, notice: 'Meld je aan om je maten en afstelplan te bewaren.' };
+  }
   renderVals() {
-    const t = this.state.tab;
-    const tabs = ['Inloggen', 'Account aanmaken'].map((label, i) => ({
-      label: label, sel: String(t === i),
-      bg: t === i ? '#FFFFFF' : 'transparent', fg: t === i ? '#0F2420' : '#3B4F4A',
-      shadow: t === i ? '0 1px 4px rgba(15,36,32,.18)' : 'none',
-      pick: () => this.setState({ tab: i })
-    }));
+    const state = this.state;
     return {
-      tabs: tabs, signup: t === 1,
-      title: t === 0 ? 'Welkom terug' : 'Maak je gratis account',
-      sub: t === 0 ? 'Log in om verder te gaan met je fit.' : 'Gratis, geen creditcard nodig.',
-      cta: t === 0 ? 'Inloggen' : 'Account aanmaken'
+      emailStep: state.step === 'email', codeStep: state.step === 'code',
+      email: state.email, code: state.code, notice: state.notice, previewReady: state.previewReady,
+      title: state.step === 'email' ? 'Maak je account of log in' : 'Voer je inlogcode in',
+      sub: state.step === 'email' ? 'Bewaar je maten en ga verder met je fit.' : 'Gebruik de code uit je e-mail.',
+      setEmail: (event) => this.setState({ email: event.target.value, previewReady: false }),
+      setCode: (event) => this.setState({ code: event.target.value.replace(/[^0-9]/g, '').slice(0, 6), previewReady: false }),
+      sendCode: (event) => {
+        event.preventDefault();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email.trim())) {
+          this.setState({ notice: 'Vul een geldig e-mailadres in.' });
+          return;
+        }
+        this.setState({ step: 'code', email: state.email.trim(), code: '', previewReady: false, notice: 'We hebben je een inlogcode gestuurd. Controleer ook je spammap.' });
+      },
+      resend: () => this.setState({ code: '', previewReady: false, notice: 'Nieuwe code verstuurd. Controleer je e-mail.' }),
+      changeEmail: () => this.setState({ step: 'email', code: '', previewReady: false, notice: 'Pas je e-mailadres aan en kies Stuur inlogcode.' }),
+      verifyCode: (event) => {
+        event.preventDefault();
+        this.setState({ previewReady: /^[0-9]{6}$/.test(state.code), notice: /^[0-9]{6}$/.test(state.code) ? 'Je bent ingelogd. Ga verder naar je dashboard.' : 'Vul een code van zes cijfers in.' });
+      },
+      google: () => this.setState({ previewReady: true, notice: 'Ga verder met je Google-account.' })
     };
   }
 }

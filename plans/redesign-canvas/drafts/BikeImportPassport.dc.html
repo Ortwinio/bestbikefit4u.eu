@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Fiets importeren met een bike-passport</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F8F3;font-family:Figtree,system-ui,sans-serif;color:#0F2420}*{box-sizing:border-box}a{color:#0A7263;text-decoration:none}button,input,textarea{font:inherit}button,a,input,textarea{outline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #0A7263}button{cursor:pointer}button:disabled{cursor:default;opacity:.55}h1,h2,h3,p{margin:0}h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif}h2{font-size:25px;letter-spacing:-.025em}h3{font-size:22px}p{line-height:1.5}.muted{color:#4A5F5A}.mono{font-family:'DM Mono',monospace}.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0A7263}.card{background:#FFFFFF;border:1px solid #DCE6E1;border-radius:24px;padding:26px}.button{display:inline-flex;justify-content:center;align-items:center;min-height:48px;padding:0 20px;border:0;border-radius:999px;background:#0A7263;color:#FFFFFF;font-weight:700}.secondary{background:transparent;color:#0F2420;border:1px solid #DCE6E1}.field{display:flex;flex-direction:column;gap:8px}.field label{font-size:14px;font-weight:700}input,textarea{width:100%;padding:12px 14px;border:1px solid #B9CCC6;border-radius:12px;background:#FFFFFF;color:#0F2420;min-height:48px}textarea{resize:vertical;min-height:82px}.step{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#CFF26A;font:16px 'DM Mono',monospace;margin-right:10px}.navlink{display:flex;align-items:center;gap:12px;height:46px;padding:0 14px;border-radius:12px;color:#E1F2EE;font-size:15px;font-weight:600}.navlink svg{width:20px;height:20px;flex-shrink:0}.summary{padding:16px;border:1px solid #DCE6E1;border-radius:16px;background:#FFFFFF}.summary p{font-size:13px;color:#4A5F5A;margin-bottom:6px}.review{min-height:44px;padding:0 12px;border:1px solid #B9CCC6;border-radius:9px;font-size:12px;font-weight:600}.error{padding:18px 20px;border-radius:16px;background:#FFB199;color:#0F2420}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1680px; display: grid; grid-template-columns: 264px 1fr; background: #F5F8F3; color: #0F2420; font-family: Figtree, system-ui, sans-serif">
+<aside style="display: flex; flex-direction: column; gap: 24px; padding: 28px 20px; background: #0F2420; color: #FFFFFF; box-sizing: border-box"><a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 8px; text-decoration: none; color: #FFFFFF">
+<svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#CFF26A"></circle><circle cx="11" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><circle cx="23" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><path d="M11 20l4-8h6l2 8M15 12l4 8" stroke="#0F2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px">BestBikeFit<span style="color: #CFF26A">4U</span></span>
+</a><nav aria-label="Account" style="display: flex; flex-direction: column; gap: 4px; font-size: 15px; font-weight: 600"><a href="Dashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"></path></svg>Dashboard</a><a href="Profile.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M8 8a4 4 0 1 0 8 0a4 4 0 1 0-8 0M4 21c0-8 16-8 16 0"></path></svg>Mijn profiel</a><a href="Bikes.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; background: #CFF26A; color: #0F2420; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M2 17a4 4 0 1 0 8 0a4 4 0 1 0-8 0M14 17a4 4 0 1 0 8 0a4 4 0 1 0-8 0M6 17l4-10h6l2 10M10 7l4 10"></path></svg>Mijn fietsgarage</a><a href="BikeAdd.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"></path></svg>Nieuwe fiets</a><a href="History.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M6 4h12v17H6zM9 2h6v4H9zM9 10h6M9 15h6"></path></svg>Fietsafstelling</a><a href="FitStart.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"></path></svg>Nieuwe fit-sessie</a><a href="PressureDashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 17a9 9 0 1 1 18 0M12 17l4-6"></path></svg>Bandenspanning</a><a href="GearingDashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M7 3v18M3 7l4-4 4 4M17 21V3M13 17l4 4 4-4"></path></svg>Verzet</a><a href="SaddleSelector.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 7c0-5 18-5 18 0l-6 13H9z"></path></svg>Zadelkiezer</a><a href="Settings.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"></path></svg>Instellingen</a><a href="Feedback.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 4h18v13H9l-6 4z"></path></svg>Feedback</a></nav><div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 20px; background: #17332D"><div style="font-size: 12px; color: #B9CCC6">Sanne · voorbeeldaccount</div><div style="display: flex; justify-content: space-between; align-items: center"><strong>Free</strong><span style="font-size: 13px; color: #B9CCC6"><span style="font-family: 'DM Mono', monospace">1</span> van <span style="font-family: 'DM Mono', monospace">1</span> sessie</span></div><div role="img" aria-label="Voorbeeld: één van één sessie gebruikt" style="height: 8px; border-radius: 99px; background: #2E4C45"><div style="width: 100%; height: 8px; border-radius: 99px; background: #CFF26A"></div></div><p style="margin: 0; font-size: 13px; color: #B9CCC6; line-height: 1.4">Betalen is tijdelijk gepauzeerd.</p><a href="Settings.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; text-decoration: none">Bekijk je account</a></div></aside>
+<main style="padding: 32px 48px 48px; display: flex; flex-direction: column; gap: 24px">
+<section aria-label="Weergave voor beoordeling" style="padding: 14px 18px; border: 1px dashed #B9CCC6; border-radius: 16px; background: #EEF3EF">
+<div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 12px; color: #4A5F5A"><strong>Beoordeling · kies een weergave</strong><span>Lokale voorbeelden · er wordt niets opgehaald of opgeslagen</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{reviewStates}}" as="item" hint-placeholder-count="11"><button type="button" class="review" onClick="{{item.pick}}" aria-pressed="{{item.pressed}}" style="background: {{item.bg}}; color: {{item.fg}}">{{item.label}}</button></sc-for>
+</div>
+</section>
+<header>
+<a href="BikeAdd.dc.html" style="display: inline-flex; min-height: 44px; align-items: center; font-size: 14px; font-weight: 600">← Terug naar fietsopties</a>
+<div class="eyebrow" style="margin-top: 8px">Mijn fietsgarage / Bike-passport</div>
+<h1 style="font-size: 44px; letter-spacing: -.035em; line-height: 1.1; margin: 10px 0 12px">Een gedeelde fiets. Jouw eigen kopie.</h1>
+<p class="muted">Plak een bike-passport ID, controleer de gegevens en pas je eigen versie aan.</p>
+</header>
+<section class="card" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<h2><span class="step">1</span>Plak het bike-passport ID</h2>
+<form onSubmit="{{previewBike}}" style="display: flex; flex-direction: column; gap: 12px">
+<div class="field"><label for="passport-id">Bike-passport ID</label><input id="passport-id" class="mono" type="text" value="{{passportId}}" onChange="{{setPassportId}}" placeholder="BBF-AB12-CD34" aria-describedby="passport-hint" spellCheck="false"><p id="passport-hint" class="muted" style="font-size: 13px">Voorbeeld-ID: <span class="mono">BBF-AB12-CD34</span>. Neem de koppeltekens over.</p></div>
+<div><button type="submit" class="button" disabled="{{previewDisabled}}">{{previewLabel}}</button></div>
+</form>
+</div>
+<div style="padding: 22px; background: #E1F2EE; border-radius: 20px; display: flex; flex-direction: column; gap: 12px">
+<div class="eyebrow">Delen zonder overdragen</div><h3>De originele fiets blijft van de ander.</h3>
+<p class="muted" style="font-size: 15px">Je maakt een eigen bewerkbare kopie. Jouw wijzigingen veranderen de bronfiets niet.</p>
+<p style="font-size: 14px; font-weight: 600">Alleen het bike-passport ID is nodig.</p>
+</div>
+</section>
+<sc-if value="{{idle}}" hint-placeholder-val="{{false}}">
+<section style="padding: 38px; border: 1px dashed #B9CCC6; border-radius: 24px; text-align: center"><h2>Begin met een gedeeld ID</h2><p class="muted" style="margin-top: 10px">Daarna bekijk je hier de fietsgegevens voordat je een kopie maakt.</p></section>
+</sc-if>
+<sc-if value="{{loading}}" hint-placeholder-val="{{false}}">
+<section class="card" role="status" aria-live="polite"><h2>Fietsgegevens laden…</h2><p class="muted" style="margin-top: 10px">De gedeelde fietsgegevens worden opgezocht.</p><div style="height: 10px; margin-top: 24px; background: #E1F2EE; border-radius: 99px"><div style="width: 35%; height: 10px; border-radius: 99px; background: #0A7263"></div></div></section>
+</sc-if>
+<sc-if value="{{lookupError}}" hint-placeholder-val="{{false}}"><section class="error" role="alert"><h2>Controleer je bike-passport</h2><p style="margin-top: 8px">{{errorText}}</p></section></sc-if>
+<sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
+<section class="card" style="display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; align-items: center; justify-content: space-between"><div><h2><span class="step">2</span>Controleer je eigen kopie</h2><p class="muted" style="margin-top: 8px; font-size: 14px">Alle fietsgegevens hieronder zijn voorbeelden.</p></div><span style="padding: 8px 12px; border-radius: 999px; background: #CFF26A; font-size: 12px; font-weight: 700">Voorbeeldgegevens</span></div>
+<sc-if value="{{saveError}}" hint-placeholder-val="{{false}}"><div class="error" role="alert"><strong>De kopie kon niet worden aangemaakt</strong><p>Je wijzigingen staan er nog. Probeer het opnieuw.</p></div></sc-if>
+<div style="display: grid; grid-template-columns: 1fr 1.15fr; gap: 28px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="padding: 24px; border-radius: 22px; background: #CFF26A">
+<div class="eyebrow" style="color: #0F2420">Gedeelde bronfiets · voorbeeld</div>
+<h3 style="font-size: 32px; margin-top: 14px">Canyon Endurace</h3><p style="margin-top: 6px">{{sourceBrandModel}}</p>
+<p style="margin-top: 16px; font-size: 14px">{{sourceDescription}}</p>
+<div class="mono" style="font-size: 13px; margin-top: 22px; padding-top: 16px; border-top: 1px solid #0F2420">BBF-AB12-CD34</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div class="summary"><p>Fietstype</p><strong>Racefiets</strong></div>
+<div class="summary"><p>Gedeelde foto's</p><strong class="mono">0</strong><span class="muted" style="font-size: 13px"> beschikbaar</span></div>
+<div class="summary"><p>Framemaat</p><strong class="mono">{{frameSize}}</strong></div>
+<div class="summary"><p>Stack / reach</p><strong class="mono">{{geometry}}</strong><span class="muted" style="font-size: 12px">{{geometryUnit}}</span></div>
+</div>
+<div style="padding: 18px; border-radius: 16px; background: #E1F2EE"><h3 style="font-size: 19px">Een kopie voor je eigen garage</h3><p class="muted" style="margin-top: 8px; font-size: 14px">Pas de naam, het merk, het model, het fietstype en de beschrijving aan. De fiets kan zonder foto's worden geïmporteerd.</p></div>
+<sc-if value="{{existing}}" hint-placeholder-val="{{false}}"><a class="button secondary" href="BikeProfile.dc.html">Bekijk bestaande fiets · voorbeeld</a></sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div class="field"><label for="bike-name">Naam van je fiets</label><input id="bike-name" type="text" value="{{name}}" onChange="{{setName}}"><sc-if value="{{nameMissing}}" hint-placeholder-val="{{false}}"><p class="muted" style="font-size: 13px">Vul een naam in om verder te gaan.</p></sc-if></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div class="field"><label for="bike-brand">Merk</label><input id="bike-brand" type="text" value="{{brand}}" onChange="{{setBrand}}"></div>
+<div class="field"><label for="bike-model">Model</label><input id="bike-model" type="text" value="{{model}}" onChange="{{setModel}}"></div>
+</div>
+<div><p id="bike-type-label" style="font-size: 14px; font-weight: 700; margin-bottom: 8px">Fietstype</p><div role="group" aria-labelledby="bike-type-label" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px"><sc-for list="{{bikeTypes}}" as="type" hint-placeholder-count="8"><button type="button" aria-pressed="{{type.pressed}}" onClick="{{type.pick}}" style="min-height: 44px; padding: 8px; border: 1px solid #B9CCC6; border-radius: 12px; font-size: 13px; font-weight: 600; background: {{type.bg}}; color: #0F2420">{{type.label}}</button></sc-for></div></div>
+<div class="field"><label for="bike-description">Beschrijving</label><textarea id="bike-description" value="{{description}}" onChange="{{setDescription}}" rows="2"></textarea></div>
+<button type="button" class="button" onClick="{{saveCopy}}" disabled="{{saveDisabled}}">{{saveLabel}}</button>
+<p class="muted" style="font-size: 12px">Voorbeeldactie: toont alleen de aanmaakweergave. Er komt geen fiets bij in je garage.</p>
+<button type="button" class="button secondary" onClick="{{startOver}}">Gebruik een ander bike-passport ID</button>
+<sc-if value="{{saving}}" hint-placeholder-val="{{false}}"><p role="status" aria-live="polite" style="font-size: 14px; color: #0A7263">Fiets aanmaken… <span class="muted">Voorbeeldweergave</span></p></sc-if>
+</div>
+</div>
+</section>
+</sc-if>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1680},"reviewState":{"editor":"enum","options":["idle","loading","ready","missing","invalid","notFound","owned","unavailable","saveError","saving","existing"],"default":"ready"}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const missing = props.reviewState === 'missing';
+    this.state = { view: null, passportId: props.reviewState === 'idle' ? '' : 'BBF-AB12-CD34', name: 'Canyon Endurace', brand: missing ? '' : 'Canyon', model: missing ? '' : 'Endurace', bikeType: 'road', description: missing ? '' : 'Mijn racefiets voor lange ritten.' };
+  }
+  renderVals() {
+    const state = this.state;
+    const view = state.view || this.props.reviewState || 'ready';
+    const missing = view === 'missing';
+    const saving = view === 'saving';
+    const ready = ['ready', 'missing', 'saveError', 'saving', 'existing'].includes(view);
+    const valueFrom = (event) => event.target.value === 'undefined' ? '' : String(event.target.value);
+    const errors = {
+      invalid: 'Gebruik het formaat BBF-AB12-CD34: na BBF volgen twee groepen van vier tekens, met cijfers of letters A tot en met F.',
+      notFound: 'Er is geen fiets gevonden voor dit bike-passport ID. Controleer het ID en probeer opnieuw.',
+      owned: 'Dit bike-passport hoort al bij een fiets van jou. Er is niets nieuws om te importeren.',
+      unavailable: 'De fietsgegevens kunnen nu niet worden geladen. Probeer het later opnieuw.'
+    };
+    const choices = [['idle', 'Leeg'], ['loading', 'Laden'], ['ready', 'Controleren'], ['missing', 'Zonder details'], ['invalid', 'Ongeldig ID'], ['notFound', 'Niet gevonden'], ['owned', 'Eigen fiets'], ['unavailable', 'Niet beschikbaar'], ['saveError', 'Aanmaakfout'], ['saving', 'Aanmaken'], ['existing', 'Bestaande kopie']];
+    const types = [['road', 'Racefiets'], ['gravel', 'Gravelbike'], ['mountain', 'Mountainbike'], ['hybrid', 'Hybride fiets'], ['tt_triathlon', 'TT / Triathlon'], ['cyclocross', 'Cyclocross fiets'], ['touring', 'Toerfiets'], ['city', 'Stads- / pendelfiets']];
+    return {
+      passportId: state.passportId,
+      name: state.name, brand: state.brand, model: state.model, description: state.description,
+      idle: view === 'idle', loading: view === 'loading', ready: ready, saving: saving, saveError: view === 'saveError', existing: view === 'existing',
+      lookupError: Boolean(errors[view]), errorText: errors[view] || '', nameMissing: !state.name.trim(),
+      sourceBrandModel: missing ? 'Merk en model zijn niet gedeeld.' : 'Canyon · Endurace',
+      sourceDescription: missing ? 'Er is geen gedeelde beschrijving beschikbaar.' : 'Racefiets voor lange ritten. Gedeelde brongegevens ter controle.',
+      frameSize: missing ? '—' : 'M', geometry: missing ? '— / —' : '590 / 375', geometryUnit: missing ? ' niet gedeeld' : ' mm',
+      previewDisabled: !state.passportId.trim() || view === 'loading',
+      previewLabel: view === 'loading' ? 'Fietsgegevens laden…' : 'Bekijk fiets · voorbeeld',
+      saveDisabled: !state.name.trim() || saving, saveLabel: saving ? 'Fiets aanmaken…' : 'Maak mijn kopie · voorbeeld',
+      reviewStates: choices.map(([key, label]) => ({ label: label, pressed: String(view === key), bg: view === key ? '#0F2420' : '#FFFFFF', fg: view === key ? '#FFFFFF' : '#0F2420', pick: () => this.setState({ view: key, passportId: key === 'idle' ? '' : key === 'invalid' ? 'BBF-XYZ' : 'BBF-AB12-CD34', name: 'Canyon Endurace', brand: key === 'missing' ? '' : 'Canyon', model: key === 'missing' ? '' : 'Endurace', description: key === 'missing' ? '' : 'Mijn racefiets voor lange ritten.', bikeType: 'road' }) })),
+      bikeTypes: types.map(([key, label]) => ({ label: label, pressed: String(state.bikeType === key), bg: state.bikeType === key ? '#E6F8A8' : '#FFFFFF', pick: () => this.setState({ bikeType: key }) })),
+      setPassportId: (event) => this.setState({ passportId: valueFrom(event).toUpperCase(), view: state.view || view }),
+      setName: (event) => this.setState({ name: valueFrom(event) }),
+      setBrand: (event) => this.setState({ brand: valueFrom(event) }),
+      setModel: (event) => this.setState({ model: valueFrom(event) }),
+      setDescription: (event) => this.setState({ description: valueFrom(event) }),
+      previewBike: (event) => {
+        event.preventDefault();
+        if (!state.passportId.trim() || view === 'loading') return;
+        const passport = state.passportId.trim().toUpperCase();
+        const valid = /^BBF-[A-F0-9]{4}-[A-F0-9]{4}$/.test(passport);
+        this.setState({ view: !valid ? 'invalid' : passport === 'BBF-AB12-CD34' ? 'ready' : 'unavailable', passportId: passport });
+      },
+      saveCopy: () => { if (ready && state.name.trim() && !saving) this.setState({ view: 'saving' }); },
+      startOver: () => this.setState({ view: 'idle' })
+    };
+  }
+}
+</script>
+</body>
+</html>
