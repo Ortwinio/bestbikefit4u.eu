@@ -55,3 +55,6 @@ Save a PNG per draft to `drafts/_renders/<Name>.png` (1440 wide, from your local
 - **Images**: the house illustrations from `public/illustrations/` (`src="/illustrations/<file>.webp"`; the lead converts these to canvas assets). Never stock photos.
 - **SEO structure is visible**: one H1, a logical H2/H3 order, breadcrumbs on detail pages, FAQ blocks as real `<details>`/`<summary>` or buttons with `aria-expanded`.
 - Pages use 1440 wide, and the height follows the content (often 2400–4000).
+
+## Review-state switcher (lead decision after the phase 3 visual QA)
+Boards with several states get the switcher **outside the product UI**: one compact strip at the very top of the artboard (above the header or shell), height 44 px, background `#EEF3EF`, a 1 px dashed border `#B9CCC6` at the bottom, the label "Ontwerpstaat" (12 px, 700, uppercase, `#4A5F5A`) on the left, then small pills (13 px, height 32 px within a 44 px click area) that scroll horizontally if there are many. The active pill is ink/white. **Not** inside the page content, and not styled like product buttons. The artboard grows 44 px taller for it. Boards with only one state get no strip.
