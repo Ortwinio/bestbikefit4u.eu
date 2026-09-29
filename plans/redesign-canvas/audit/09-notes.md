@@ -65,7 +65,9 @@ node plans/redesign-canvas/check-board.mjs plans/redesign-canvas/drafts/<Name>.d
 node plans/redesign-canvas/check-runtime.mjs plans/redesign-canvas/drafts/<Name>.dc.html
 ```
 
-The 53 PNG previews live in `drafts/_renders/<Name>.png` and `<Name>-<state>.png`. Default filenames cover the default state; additional images cover the review states and form tabs. Final board heights: Bikes 1360, BikeAdd 1000, BikeForm 1700, Marktplaats 2040, Passport 1680, BikeCompare 1120 px, all 1440 px wide. Long import/form boards keep their required review and field content rather than omitting functionality to meet a shorter target height.
+The 53 PNG previews live in `drafts/_renders/<Name>.png` and `<Name>-<state>.png`. Default filenames cover the default state; additional images cover the review states and form tabs. Final board heights: Bikes 1404, BikeAdd 1000, BikeForm 1744, Marktplaats 2084, Passport 1724, BikeCompare 1120 px, all 1440 px wide. Long import/form boards keep their required review and field content rather than omitting functionality to meet a shorter target height.
+
+Review-switcher follow-up: all four multi-state boards now have the specified 44 px Ontwerpstaat strip above the entire account shell, outside product content. It uses #EEF3EF, a dashed #B9CCC6 bottom border, the uppercase 12 px label, 13 px pills with 32 px visual height inside 44 px click targets, ink/white selection, and horizontal scrolling. Heights increased by exactly 44 px. BikeAdd and BikeCompare remain unchanged with no strip. All 51 affected PNGs were regenerated; both checkers still pass across 441 states.
 
 Final render metrics across all 53 states: no horizontal or fixed-height overflow, no visible link/button/input below 44 px height, no duplicate visible IDs and no unresolved template holes. Parent also asserted sidebar order/active markers, no broken compare route, garage/report transitions, unsupported Marktplaats URLs, photo deselection, empty-name save guards, passport invalid/missing states, dependent frame-selection resets, optional measurements staying unset, and delete cancellation.
 

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><title>Zo werkt je bikefit</title><script src="./support.js"></script></head>
+<body><x-dc><helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#F5F8F3;color:#0F2420;font-family:Figtree,sans-serif}button,a{font-family:inherit}a{color:#0A7263;text-decoration:none}button{cursor:pointer}h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;margin:0}p{margin:0;line-height:1.5}.num{font-family:'DM Mono',monospace}.muted{color:#4A5F5A}.card{border:1px solid #DCE6E1;background:#FFFFFF;border-radius:24px;padding:24px}.chip{border-radius:999px;padding:7px 12px;background:#E1F2EE;font-weight:700;font-size:13px}.navlink{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 14px;border-radius:12px;color:#E1F2EE;font-size:15px;font-weight:600}.primary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:999px;background:#0A7263;color:#FFFFFF;font-weight:700}button:focus-visible,a:focus-visible{outline:3px solid #0A7263;outline-offset:3px}.switch{border:1px solid #DCE6E1;border-radius:999px;min-height:44px;padding:0 16px;font-weight:700;font-size:14px}.exercise{width:100%;min-height:52px;text-align:left;padding:12px 16px;border:0;border-radius:14px;display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600}
+</style><style>.content{display:flex;flex-direction:column;gap:24px;padding:32px 48px 48px;min-width:0}.eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0A7263}.lead{font-size:18px;line-height:1.5}.section-title{font-size:28px;margin-bottom:18px}.step-number{width:36px;height:36px;flex-shrink:0;border-radius:50%;background:#CFF26A;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace}.grid-three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.grid-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.info-title{font-size:22px;margin-bottom:10px}</style></helmet>
+<div style="width:1440px;height:1940px;display:grid;grid-template-columns:264px 1fr;background:#F5F8F3">
+<aside style="display:flex;flex-direction:column;gap:28px;padding:28px 20px;background:#0F2420;color:#FFFFFF">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 0 8px; text-decoration: none; color: #FFFFFF">
+<svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#CFF26A"></circle><circle cx="11" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><circle cx="23" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><path d="M11 20l4-8h6l2 8M15 12l4 8" stroke="#0F2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px">BestBikeFit<span style="color: #CFF26A">4U</span></span>
+</a>
+<div style="padding:0 14px"><strong>Sanne · voorbeeld</strong><p style="color:#B9CCC6;font-size:13px;margin-top:5px">Je persoonlijke fietsprofiel</p></div>
+<nav aria-label="Account" style="display:flex;flex-direction:column;gap:5px"><sc-for list="{{nav}}" as="item" hint-placeholder-count="11"><a class="navlink" href="{{item.href}}" style="{{item.style}}" aria-current="{{item.current}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{item.icon}}"></path></svg>{{item.label}}</a></sc-for></nav>
+<div style="margin-top:auto;display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:20px;background:#17332D">
+<div style="display:flex;justify-content:space-between;align-items:center"><strong>Free</strong><span style="font-size:13px;color:#B9CCC6"><span class="num">1</span> van <span class="num">1</span> sessie</span></div>
+<div style="height:8px;border-radius:99px;background:#2E4C45"><div style="width:100%;height:8px;border-radius:99px;background:#CFF26A"></div></div>
+<p style="font-size:13px;color:#B9CCC6">Voorbeeldgebruik. Upgraden en betalen zijn tijdelijk gepauzeerd.</p><a href="Settings.dc.html" style="display:flex;align-items:center;justify-content:center;min-height:44px;border-radius:999px;background:#CFF26A;color:#0F2420;font-weight:700">Bekijk je abonnement</a></div>
+</aside>
+<main class="content"><a href="FitStart.dc.html" style="display:inline-flex;align-items:center;min-height:44px;font-weight:700">← Terug naar je bikefit</a>
+<header style="padding:32px;border-radius:28px;background:#CFF26A"><p class="eyebrow">Zo werkt je bikefit</p><h1 style="font-size:48px;letter-spacing:-.03em;margin:12px 0">Van jouw maten naar jouw afstelling.</h1><p class="lead">Je lichaamsmaten, hoe je beweegt en hoe je fietst vormen samen het startpunt. Daarna test je het advies op je eigen fiets.</p><div style="display:flex;align-items:center;gap:24px;margin-top:26px;font-weight:700"><span>Meten</span><span aria-hidden="true">→</span><span>Berekenen</span><span aria-hidden="true">→</span><span>Afstellen en testen</span></div></header>
+<section><h2 class="section-title">Wat nemen we mee?</h2><div class="grid-two">
+<div class="card"><h3 class="info-title">Je lichaamsmaten</h3><p class="muted">Lengte, binnenbeenlengte, romp, armen, schouders en bovenbenen. Binnenbeenlengte helpt vooral bij je zadelhoogte; romp en armen bij de afstand tot je stuur.</p></div>
+<div class="card"><h3 class="info-title">Hoe je beweegt</h3><p class="muted">Flexibiliteit, rompstabiliteit en comfort helpen bepalen welke houding je kunt volhouden.</p></div>
+<div class="card"><h3 class="info-title">Hoe je fietst</h3><p class="muted">Je ervaring, rijtijd, ritafstand en voorkeur voor comfort of prestatie tellen mee.</p></div>
+<div class="card"><h3 class="info-title">Hoe je nu zit</h3><p class="muted">Je fietstype, terrein en antwoorden over je huidige positie geven de nodige context bij je maten.</p></div>
+</div></section>
+<section class="card"><h2 class="section-title">Zo komt je advies tot stand</h2><div style="display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;gap:16px"><span class="step-number">1</span><div><h3 class="info-title">Begin bij de zadelhoogte</h3><p class="muted">Je binnenbeenlengte is de basis. Schoenen en schoenplaatjes worden meegenomen in de afstelling.</p></div></div>
+<div style="display:flex;gap:16px"><span class="step-number">2</span><div><h3 class="info-title">Bepaal je stuurpositie</h3><p class="muted">Romp- en armlengte, flexibiliteit en rompstabiliteit helpen de afstand en het hoogteverschil tot je stuur bepalen.</p></div></div>
+<div style="display:flex;gap:16px"><span class="step-number">3</span><div><h3 class="info-title">Stem af op jouw ritten</h3><p class="muted">Je voorkeur en ritcontext bepalen of je advies meer op comfort of op prestatie gericht is.</p></div></div>
+<div style="display:flex;gap:16px"><span class="step-number">4</span><div><h3 class="info-title">Neem je comfort mee</h3><p class="muted">Waar je ongemak ervaart helpt bepalen welke onderdelen van je houding aandacht nodig hebben.</p></div></div>
+<div style="display:flex;gap:16px"><span class="step-number">5</span><div><h3 class="info-title">Controleer de uitkomsten</h3><p class="muted">De maten worden onderling gecontroleerd. Waarden buiten de grenzen krijgen een waarschuwing en een voorzichtiger alternatief.</p></div></div>
+</div></section>
+<section><h2 class="section-title">Wat vind je terug in je advies?</h2><div class="grid-three">
+<div class="card"><h3 class="info-title">Zadelhoogte</h3><p class="muted">Van het midden van de trapas tot de zadeltop, langs de zitbuis.</p></div>
+<div class="card"><h3 class="info-title">Zadelterugstand</h3><p class="muted">De horizontale afstand van de trapas tot de zadelneus.</p></div>
+<div class="card"><h3 class="info-title">Stuurdrop</h3><p class="muted">Het hoogteverschil tussen de zadeltop en het stuur.</p></div>
+<div class="card"><h3 class="info-title">Reach</h3><p class="muted">De horizontale afstand van de zadelneus tot het midden van je stuur.</p></div>
+<div class="card"><h3 class="info-title">Je stuurpen</h3><p class="muted">Een lengte en hoek die helpen de geadviseerde stuurpositie te bereiken.</p></div>
+<div class="card"><h3 class="info-title">Schoenplaatjes</h3><p class="muted">Aandachtspunten voor positie en rotatie als je antwoorden daar aanleiding toe geven.</p></div>
+</div></section>
+<section style="padding:26px 30px;border-radius:24px;background:#E1F2EE"><h2 class="section-title">Maak je volgende meting scherper</h2><ul style="padding-left:20px;margin:0;display:flex;flex-direction:column;gap:10px;line-height:1.5"><li>Meet binnenbeenlengte en romp opnieuw als een uitkomst vreemd voelt.</li><li>Werk je profiel bij als je gewicht, flexibiliteit of rijdoelen veranderen.</li><li>Beschrijf waar en wanneer je ongemak voelt zo precies mogelijk.</li><li>Geef een nieuwe positie <span class="num">3–5</span> ritten voordat je conclusies trekt.</li></ul></section>
+</main></div></x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1940}}'>
+class Component extends DCLogic {
+constructor(props){super(props);this.state={};}
+renderVals(){
+const navItems = [["Dashboard","Dashboard.dc.html","M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"],["Mijn profiel","Profile.dc.html","M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 21c0-7 16-7 16 0"],["Mijn fietsgarage","Bikes.dc.html","M3 17a4 4 0 1 0 8 0 4 4 0 1 0-8 0M13 17a4 4 0 1 0 8 0 4 4 0 1 0-8 0M7 17l4-10 6 10M9 7h6"],["Nieuwe fiets","BikeAdd.dc.html","M12 4v16M4 12h16"],["Fietsafstelling","History.dc.html","M5 4h14v17H5zM9 2h6v4H9zM8 10h8M8 15h8"],["Nieuwe fit-sessie","FitStart.dc.html","M12 4v16M4 12h16"],["Bandenspanning","PressureDashboard.dc.html","M3 17a9 9 0 1 1 18 0M12 16l4-5"],["Verzet","GearingDashboard.dc.html","M7 3v18M3 7l4-4 4 4M17 21V3M13 17l4 4 4-4"],["Zadelkiezer","SaddleSelector.dc.html","M4 7c4-3 12-3 16 0l-4 5H8zM12 12v8"],["Instellingen","Settings.dc.html","M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8M12 2v3M12 19v3M2 12h3M19 12h3"],["Feedback","Feedback.dc.html","M3 3h18v14H8l-5 4z"]];
+return {nav:navItems.map((item,index)=>({label:item[0],href:item[1],icon:item[2],current:index===5?"page":"false",style:index===5?"background:#CFF26A;color:#0F2420":""}))};
+}
+}
+</script></body></html>
+

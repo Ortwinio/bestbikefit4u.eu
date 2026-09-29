@@ -58,6 +58,8 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 
 ## Draft progress
 
+- 2026-09-29 — Codex A completed 08b review-state strips and refreshed renders, then task-10's eight account/tools/settings drafts using three subagents. Both checkers PASS (707 task-10 runtime states); source gaps, 58 renders and QA recorded in `audit/10-notes.md`. Drafts only, awaiting lead review; no phase gate claimed.
+
 - 2026-09-29 — Codex A completed 03c polish and the five task-08 account drafts. Both checkers pass; state renders and source/QA notes are in `audit/08-notes.md`. Awaiting lead review/publication; no phase-3 gate claimed.
 
 ## Gate log

@@ -65,6 +65,10 @@ States: `view:pro` (default), `free`, `pass`, `no-current`, `loading`, `missing`
 
 ## Final QA
 
+### 08b — Review-state strip
+
+Moved the review controls on all five boards outside the product UI, into the prescribed 44 px top strip. Pill faces are 32 px inside 44 px click targets; active pills are ink/white, with horizontal scrolling available. Each artboard and its preview grew by exactly 44 px. All 51 state renders were refreshed; both checkers still pass (266 runtime states). Product controls such as the results position tabs remain inside the product UI.
+
 - Each of the five boards had a separate subagent owner. Codex A performed the final source review, validation and rendering.
 - `node plans/redesign-canvas/check-board.mjs plans/redesign-canvas/drafts/{Profile,ProfileImprove,FitStart,FitQuestionnaire,FitResults}.dc.html` — all PASS, no warnings.
 - `node plans/redesign-canvas/check-runtime.mjs plans/redesign-canvas/drafts/{Profile,ProfileImprove,FitStart,FitQuestionnaire,FitResults}.dc.html` — all PASS, 266 states total, no unbound handlers.
