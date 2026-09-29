@@ -33,3 +33,9 @@ Run `node plans/redesign-canvas/check-board.mjs drafts/<Name>.dc.html` for every
 
 ## Renders for the lead
 Save a PNG per draft to `drafts/_renders/<Name>.png` (1440 wide, from your local headless render). For boards with several states, save one PNG per state (`<Name>-<state>.png`). The lead reviews them visually before a board is published.
+
+## Consistency across boards (lead decision after the phase 2 visual QA)
+- **"Meer" sub-nav**: exists only on the four tools under "Meer" (the main tab "Meer" is active there). Order and labels are fixed: **Vermogen ↔ snelheid · Klimplanner · FTP / W/kg · Voeding & drinken** → `PowerSpeed.dc.html`, `ClimbPlanner.dc.html`, `FtpWkg.dc.html`, `FuelHydration.dc.html`. It is a pill row directly under the header, **above** the eyebrow; the active pill is ink with white text and `aria-current="page"`. `Gearing.dc.html` is a main tab and gets **no** sub-nav.
+- **Units in Dutch**: `km/u` (not km/h), `W`, `W/kg`, `kg`, `mm`, `cm`, `%`, `rpm`, `bar`, `min`, `uur`. Decimal comma.
+- **DM Mono only for numbers and units** (plus short formulas like "FTP = 0,95 × 20-min"). Whole sentences are in Figtree; numbers inside a sentence may be in DM Mono via `<span>`.
+- **No statistics or dev jargon in copy**: not "betrouwbaarheidsinterval", "gevoeligheidscheck", "schuifstap", "model", "engine". Honest limits are phrased for riders: "Een schatting bij constant vermogen en zonder wind."
