@@ -55,3 +55,9 @@ claude/.obsidian/
 
 # temporary working files
 /.tmp/
+
+# Redesign review screenshots: kept locally for lead QA, not versioned
+/plans/redesign-canvas/code-renders/
+/plans/redesign-canvas/final-sweep/*.png
+/plans/redesign-canvas/drafts/_renders/
+/plans/redesign-canvas/audit/**/*.png
