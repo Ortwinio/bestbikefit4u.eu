@@ -316,7 +316,7 @@ export function BikeQuickCheckCard({
     >
       <CardHeader className="gap-3 px-5 py-5 sm:px-6">
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_80%,var(--background)_20%)] text-[color:var(--primary)]">
+          <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-[color:color-mix(in_oklch,var(--secondary)_80%,var(--background)_20%)] text-[color:var(--primary)]">
             <Search className="h-5 w-5" />
           </div>
           <div className="space-y-1">
@@ -354,7 +354,7 @@ export function BikeQuickCheckCard({
           ) : null}
 
         {viewState === "loading_lookup" ? (
-          <div className="flex min-h-44 flex-col items-center justify-center gap-3 rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-8 text-center">
+          <div className="flex min-h-44 flex-col items-center justify-center gap-3 rounded-[var(--radius-xl)] border border-border bg-[color:var(--card)] px-4 py-8 text-center">
             <Loader2 className="h-6 w-6 animate-spin text-[color:var(--primary)]" />
             <p className="text-sm font-medium text-[color:var(--foreground)]">{copy.lookupLoading}</p>
           </div>
@@ -392,7 +392,7 @@ export function BikeQuickCheckCard({
                 <Button
                   type="button"
                   variant="outline"
-                  className="border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] hover:bg-[color:var(--secondary)]"
+                  className="border-border bg-[color:var(--card)] text-[color:var(--foreground)] hover:bg-[color:var(--secondary)]"
                   onClick={() => {
                     setIsExpanded(false);
                     setViewState("collapsed");
@@ -434,12 +434,12 @@ export function BikeQuickCheckCard({
         {viewState === "preview" && lookup ? (
           <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-              <div className="space-y-4 rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
+              <div className="space-y-4 rounded-[var(--radius-xl)] border border-border bg-[color:var(--card)] p-4">
                 <div className="space-y-1">
                   <p className="text-sm font-semibold text-[color:var(--foreground)]">{copy.previewTitle}</p>
                   <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">{copy.previewDescription}</p>
                 </div>
-                <div className="grid gap-3 rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_84%,var(--background)_16%)] p-3 text-sm">
+                <div className="grid gap-3 rounded-[var(--radius-lg)] border border-border bg-[color:color-mix(in_oklch,var(--secondary)_84%,var(--background)_16%)] p-3 text-sm">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
                       {copy.bikeSummaryLabel}
@@ -465,7 +465,7 @@ export function BikeQuickCheckCard({
                 </div>
               </div>
 
-              <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)]">
+              <div className="overflow-hidden rounded-[var(--radius-xl)] border border-border bg-[color:var(--card)]">
                 {lookup.primaryPhotoUrl ? (
                   <Image
                     src={lookup.primaryPhotoUrl}
@@ -505,7 +505,7 @@ export function BikeQuickCheckCard({
                 <Button
                   type="button"
                   variant="outline"
-                  className="border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] hover:bg-[color:var(--secondary)]"
+                  className="border-border bg-[color:var(--card)] text-[color:var(--foreground)] hover:bg-[color:var(--secondary)]"
                   onClick={() => {
                     setMatch(null);
                     setLookup(null);
@@ -521,7 +521,7 @@ export function BikeQuickCheckCard({
         ) : null}
 
         {viewState === "loading_match" ? (
-          <div className="flex min-h-44 flex-col items-center justify-center gap-3 rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-8 text-center">
+          <div className="flex min-h-44 flex-col items-center justify-center gap-3 rounded-[var(--radius-xl)] border border-border bg-[color:var(--card)] px-4 py-8 text-center">
             <Loader2 className="h-6 w-6 animate-spin text-[color:var(--primary)]" />
             <p className="text-sm font-medium text-[color:var(--foreground)]">{copy.previewLoading}</p>
           </div>
@@ -529,7 +529,7 @@ export function BikeQuickCheckCard({
 
         {viewState === "result" && lookup && match ? (
           <div className="space-y-4">
-            <div className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
+            <div className="rounded-[var(--radius-xl)] border border-border bg-[color:var(--card)] p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="space-y-1">
                   <p className="text-sm font-semibold text-[color:var(--foreground)]">{copy.resultTitle}</p>
@@ -545,7 +545,7 @@ export function BikeQuickCheckCard({
               </div>
 
               <div className="mt-5 grid gap-4 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_82%,var(--background)_18%)] p-4">
+                <div className="rounded-[var(--radius-lg)] border border-border bg-[color:color-mix(in_oklch,var(--secondary)_82%,var(--background)_18%)] p-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
                     {copy.scoreLabel}
                   </p>
@@ -568,7 +568,7 @@ export function BikeQuickCheckCard({
                     {copy.limitedEstimate}
                   </PublicInfoPanel>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-3 text-sm">
+                    <div className="rounded-[var(--radius-lg)] border border-border bg-[color:var(--card)] p-3 text-sm">
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
                         {copy.inseamEstimateLabel}
                       </p>
@@ -576,7 +576,7 @@ export function BikeQuickCheckCard({
                         {match.estimatedInseamCm} cm
                       </p>
                     </div>
-                    <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-3 text-sm">
+                    <div className="rounded-[var(--radius-lg)] border border-border bg-[color:var(--card)] p-3 text-sm">
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
                         {copy.geometryLabel}
                       </p>

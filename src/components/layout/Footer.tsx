@@ -19,16 +19,16 @@ export function Footer({ locale, labels }: FooterProps) {
   const f = labels.footer;
 
   return (
-    <footer className="border-t border-[color:var(--border)] bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_20%,var(--background)_80%)_100%)] text-[color:var(--foreground)]">
+    <footer className="border-t border-border bg-background text-foreground">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mb-10 grid gap-4 rounded-[1.75rem] border border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)] p-6 shadow-[0_18px_40px_-30px_color-mix(in_oklch,var(--foreground)_30%,transparent)] md:grid-cols-3">
+        <div className="mb-10 grid gap-4 rounded-[1.75rem] border border-border/80 bg-card p-6 shadow-[0_18px_40px_-30px_color-mix(in_oklch,var(--foreground)_30%,transparent)] md:grid-cols-3">
           <div className="flex items-start gap-3">
-            <div className="rounded-2xl bg-[color:var(--primary-soft)] p-3 text-[color:var(--primary)]">
+            <div className="rounded-2xl bg-[color:var(--primary-soft)] p-3 text-primary">
               <Compass className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-[color:var(--foreground)]">{f.product}</p>
-              <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+              <p className="text-sm font-semibold text-foreground">{f.product}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
                 {locale === "nl"
                   ? "Praktische calculators, fitflow en setupbegeleiding."
                   : "Practical calculators, fit flow, and setup guidance."}
@@ -36,12 +36,12 @@ export function Footer({ locale, labels }: FooterProps) {
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <div className="rounded-2xl bg-[color:var(--primary-soft)] p-3 text-[color:var(--primary)]">
+            <div className="rounded-2xl bg-[color:var(--primary-soft)] p-3 text-primary">
               <Gauge className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-[color:var(--foreground)]">{f.resources}</p>
-              <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+              <p className="text-sm font-semibold text-foreground">{f.resources}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
                 {locale === "nl"
                   ? "Handleidingen en wetenschap om beslissingen beter te onderbouwen."
                   : "Guides and science pages to make better decisions with more context."}
@@ -49,12 +49,12 @@ export function Footer({ locale, labels }: FooterProps) {
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <div className="rounded-2xl bg-[color:var(--primary-soft)] p-3 text-[color:var(--primary)]">
+            <div className="rounded-2xl bg-[color:var(--primary-soft)] p-3 text-primary">
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-[color:var(--foreground)]">{f.support}</p>
-              <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+              <p className="text-sm font-semibold text-foreground">{f.support}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
                 {locale === "nl"
                   ? "Contact, FAQ en meetgids blijven beschikbaar in NL en EN."
                   : "Contact, FAQ, and measurement guidance stay available in Dutch and English."}
@@ -64,14 +64,14 @@ export function Footer({ locale, labels }: FooterProps) {
         </div>
         <div className="grid grid-cols-2 gap-8 lg:grid-cols-5">
           <div>
-            <h3 className="text-sm font-semibold text-[color:var(--foreground)]">
+            <h3 className="text-sm font-semibold text-foreground">
               {f.product}
             </h3>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link
                   href={withLocalePrefix("/how-it-works", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {labels.howItWorks}
                 </Link>
@@ -79,7 +79,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/pricing", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {labels.pricing}
                 </Link>
@@ -87,14 +87,14 @@ export function Footer({ locale, labels }: FooterProps) {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-[color:var(--foreground)]">
+            <h3 className="text-sm font-semibold text-foreground">
               {f.calculators}
             </h3>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/bike-fit", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <CalculatorLogo calculatorId="bike-fit" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.bikeFit}
@@ -103,7 +103,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/saddle-height", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <CalculatorLogo calculatorId="saddle-height" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.saddleHeight}
@@ -112,7 +112,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/saddle-width", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <CalculatorLogo calculatorId="saddle-width" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.saddleWidth}
@@ -121,7 +121,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/frame-size", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <CalculatorLogo calculatorId="frame-size" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.frameSize}
@@ -130,7 +130,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/crank-length", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <CalculatorLogo calculatorId="crank-length" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.crankLength}
@@ -139,7 +139,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/gearing", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <CalculatorLogo calculatorId="gearing" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.gearing}
@@ -151,7 +151,7 @@ export function Footer({ locale, labels }: FooterProps) {
                     getLocalizedPublicCalculatorPath("tire-pressure", locale),
                     locale
                   )}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <CalculatorLogo calculatorId="tire-pressure" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.tirePressure}
@@ -160,7 +160,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/login", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <BikePassportFooterLogo />
                   {f.passportCheck}
@@ -169,14 +169,14 @@ export function Footer({ locale, labels }: FooterProps) {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-[color:var(--foreground)]">
+            <h3 className="text-sm font-semibold text-foreground">
               {f.guides}
             </h3>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link
                   href={withLocalePrefix("/guides/bike-fitting-for-knee-pain", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.kneeGuide}
                 </Link>
@@ -184,7 +184,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/guides/bike-fitting-for-lower-back-pain", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.backPainGuide}
                 </Link>
@@ -192,7 +192,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/guides/saddle-height-guide", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.saddleHeightGuide}
                 </Link>
@@ -200,7 +200,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/guides/road-bike-fit-guide", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.roadBikeFitGuide}
                 </Link>
@@ -208,7 +208,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/guides/cleat-position-basics-guide", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.cleatGuide}
                 </Link>
@@ -216,7 +216,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/guides/fit-science", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.science}
                 </Link>
@@ -224,7 +224,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/guides", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.allGuides} →
                 </Link>
@@ -232,14 +232,14 @@ export function Footer({ locale, labels }: FooterProps) {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-[color:var(--foreground)]">
+            <h3 className="text-sm font-semibold text-foreground">
               {f.support}
             </h3>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link
                   href={withLocalePrefix("/contact", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.contact}
                 </Link>
@@ -247,7 +247,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/faq", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.faq}
                 </Link>
@@ -255,7 +255,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/measurement-guide", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.measurementGuide}
                 </Link>
@@ -263,14 +263,14 @@ export function Footer({ locale, labels }: FooterProps) {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-[color:var(--foreground)]">
+            <h3 className="text-sm font-semibold text-foreground">
               {f.legal}
             </h3>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link
                   href={withLocalePrefix("/privacy", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.privacy}
                 </Link>
@@ -278,7 +278,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/terms", locale)}
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.terms}
                 </Link>
@@ -286,7 +286,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href="/sitemap.xml"
-                  className="text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {f.sitemap}
                 </Link>
@@ -294,8 +294,8 @@ export function Footer({ locale, labels }: FooterProps) {
             </ul>
           </div>
         </div>
-        <div className="mt-8 border-t border-[color:var(--border)] pt-8">
-          <p className="text-sm text-[color:var(--muted-foreground)]">
+        <div className="mt-8 border-t border-border pt-8">
+          <p className="text-sm text-muted-foreground">
             &copy; {new Date().getFullYear()} {BRAND.name}.{" "}
             {f.allRightsReserved}
           </p>

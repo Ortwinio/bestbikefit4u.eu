@@ -50,7 +50,7 @@ export function PublicMetricPanel({
           ) : null}
         </div>
         {icon ? (
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--background)_40%,transparent)] text-[color:var(--primary)]">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border/80 bg-[color:color-mix(in_oklch,var(--background)_40%,transparent)] text-[color:var(--primary)]">
             {icon}
           </div>
         ) : null}

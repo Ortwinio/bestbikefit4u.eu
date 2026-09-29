@@ -139,7 +139,7 @@ export function PublicNumberField({
           placeholder={placeholder}
           onChange={handleChange}
           aria-describedby={descriptionId}
-          className={cn("h-11 rounded-xl border-[color:var(--border)] pr-16 text-base", unit ? "pr-20" : null)}
+          className={cn("h-11 rounded-xl border-field-border pr-16 text-base", unit ? "pr-20" : null)}
         />
         {unit ? (
           <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-medium text-[color:var(--muted-foreground)]">
@@ -175,7 +175,7 @@ export function PublicSelectField({
         <SelectTrigger
           id={fieldId}
           aria-describedby={descriptionId}
-          className="h-11 rounded-xl border-[color:var(--border)] bg-[color:var(--card)] text-sm"
+          className="h-11 rounded-xl border-field-border bg-[color:var(--card)] text-sm"
         >
           <SelectValue placeholder={placeholder ?? label} />
         </SelectTrigger>

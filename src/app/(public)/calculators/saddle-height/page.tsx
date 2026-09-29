@@ -12,10 +12,8 @@ import {
   FeatureIconCard,
   type FeatureIconCardColor,
   PublicCtaBand,
-  PublicHero,
   PublicPageShell,
   PublicSection,
-  RatingBadge,
 } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -23,6 +21,7 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
+import { getDictionary } from "@/i18n/getDictionary";
 import {
   CALCULATOR_AGGREGATE_RATING,
   buildHowToSchema,
@@ -62,6 +61,7 @@ const TRUST_POINT_COLORS: FeatureIconCardColor[] = ["teal", "primary", "green"];
 
 export default async function SaddleHeightCalculatorPage() {
   const locale = await getRequestLocale();
+  const dictionary = await getDictionary(locale);
   const isNl = locale === "nl";
   const pagePath = withLocalePrefix("/calculators/saddle-height", locale);
   const campaignActive = isConsumerCampaignActive();
@@ -131,7 +131,7 @@ export default async function SaddleHeightCalculatorPage() {
       ];
 
   return (
-    <PublicPageShell className="text-foreground">
+    <div className="text-foreground">
       <JsonLd
         schema={[
           buildWebApplicationSchema({
@@ -160,26 +160,9 @@ export default async function SaddleHeightCalculatorPage() {
         ]}
       />
 
-      <div>
-        <PublicHero
-          eyebrow="BestBikeFit4U calculator"
-          title={isNl ? "Zadelhoogte calculator" : "Saddle Height Calculator"}
-          description={
-            isNl
-              ? "Bereken een rustige, conservatieve zadelhoogte als startpunt voordat je grotere aanpassingen doet."
-              : "Calculate a clean, conservative saddle-height starting point before making larger fit changes."
-          }
-          chips={
-            isNl
-              ? ["NL en EN beschikbaar", "Conservatief startpunt", "Meetbaar thuis"]
-              : ["Available in Dutch and English", "Conservative baseline", "Measurable at home"]
-          }
-        />
-        <div className="mt-4">
-          <RatingBadge rating="4.8" count={isNl ? "380+ rijders" : "380+ riders"} />
-        </div>
-      </div>
+      <SaddleHeightCalculatorForm isNl={isNl} copy={dictionary.saddleHeightCalculator} />
 
+      <PublicPageShell className="pt-0 md:pt-0">
       <PublicSection
         className="mt-10"
         header={{
@@ -204,8 +187,6 @@ export default async function SaddleHeightCalculatorPage() {
           ))}
         </div>
       </PublicSection>
-
-      <SaddleHeightCalculatorForm isNl={isNl} />
 
       <PublicCtaBand
         className="mt-10"
@@ -294,6 +275,7 @@ export default async function SaddleHeightCalculatorPage() {
           locale={locale}
         />
       </section>
-    </PublicPageShell>
+      </PublicPageShell>
+    </div>
   );
 }

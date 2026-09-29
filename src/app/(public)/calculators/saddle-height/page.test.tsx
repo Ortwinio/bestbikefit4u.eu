@@ -2,7 +2,7 @@
 
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import SaddleHeightCalculatorPage from "./page";
+import SaddleHeightCalculatorPage, { generateMetadata } from "./page";
 
 let locale: "en" | "nl" = "en";
 
@@ -59,6 +59,8 @@ vi.mock("@/components/seo/RelatedLinksSection", () => ({
   RelatedLinksSection: () => <section>Related links</section>,
 }));
 
+vi.mock("server-only", () => ({}));
+
 vi.mock("@/i18n/request", () => ({
   getRequestLocale: () => Promise.resolve(locale),
 }));
@@ -95,11 +97,27 @@ afterEach(() => {
 });
 
 describe("saddle height calculator page", () => {
+  it("preserves localized metadata and canonical URLs", async () => {
+    for (const language of ["en", "nl"] as const) {
+      locale = language;
+      const metadata = await generateMetadata();
+      expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${language}/calculators/saddle-height`);
+      expect(metadata.description).toBeTruthy();
+      expect(metadata.openGraph?.url).toBe(metadata.alternates?.canonical);
+    }
+  });
+
+  it("preserves Dutch FAQ content beneath the tool", async () => {
+    locale = "nl";
+    render(await SaddleHeightCalculatorPage());
+    expect(screen.getByText("Hoe meet ik mijn binnenbeenlengte voor zadelhoogte?")).toBeTruthy();
+    expect(screen.getByText("Waarom beïnvloedt flexibiliteit het advies?")).toBeTruthy();
+  });
+
   it("keeps the value-first next-step CTAs visible in English", async () => {
     const ui = await SaddleHeightCalculatorPage();
     render(ui);
 
-    expect(screen.getByText("Saddle Height Calculator")).toBeTruthy();
     expect(screen.getByText("Saddle height form")).toBeTruthy();
     expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"

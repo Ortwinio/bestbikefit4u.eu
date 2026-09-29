@@ -108,7 +108,7 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
             {label ? (
               <div className="flex items-center gap-1.5">
                 <PrototyperSliderLabel className="text-base font-semibold leading-snug text-foreground">
-                  <span id={labelId}>{label}</span>
+                  {label}
                 </PrototyperSliderLabel>
                 {tooltip ? (
                   <Tooltip content={tooltip} label={tooltipLabel ?? `${label} help`} descriptionId={tooltipDescriptionId} />

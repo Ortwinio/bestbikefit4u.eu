@@ -20,6 +20,7 @@ export function FeedbackFloatingButton({
 }: FeedbackFloatingButtonProps) {
   return (
     <Button
+      data-feedback-launcher="true"
       type="button"
       variant="default"
       size="lg"

@@ -117,7 +117,7 @@ export const SliderThumb = forwardRef<
       "relative z-10 size-5 rounded-full border border-[color:var(--border)] bg-[color:var(--card)]",
       "shadow-[0_1px_1px_rgba(0,0,0,0.08),0_6px_14px_rgba(0,0,0,0.12)] outline-none",
       "transition-[transform,box-shadow,border-color] duration-150 ease-smooth",
-      "hover:border-[color:var(--border-dark)]",
+      "hover:border-border-dark",
       "focus-visible:focus-ring focus-visible:shadow-[0_1px_1px_rgba(0,0,0,0.08),0_8px_18px_rgba(0,0,0,0.16)]",
       "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
       "motion-safe:active:scale-[0.96] motion-reduce:transition-none",

@@ -2,7 +2,12 @@
 
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import FrameSizeCalculatorPage from "./page";
+import FrameSizeCalculatorPage, { generateMetadata } from "./page";
+import { frameSizeMessages } from "@/i18n/calculators/frameSize";
+
+vi.mock("@/i18n/getDictionary", () => ({
+  getDictionary: async (language: "nl" | "en") => ({ frameSizeCalculator: frameSizeMessages[language] }),
+}));
 
 let locale: "en" | "nl" = "en";
 
@@ -94,11 +99,16 @@ afterEach(() => {
 });
 
 describe("frame size calculator page", () => {
+  it.each(["en", "nl"] as const)("keeps metadata and canonical for %s", async (language) => {
+    locale = language;
+    const metadata = await generateMetadata();
+    expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${language}/calculators/frame-size`);
+    expect(metadata.openGraph).toBeTruthy();
+  });
   it("keeps the value-first next-step CTAs visible in English", async () => {
     const ui = await FrameSizeCalculatorPage();
     render(ui);
 
-    expect(screen.getByText("Frame Size Calculator")).toBeTruthy();
     expect(screen.getByText("Frame size form")).toBeTruthy();
     expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"

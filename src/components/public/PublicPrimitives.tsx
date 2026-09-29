@@ -92,7 +92,7 @@ export function PublicHero({
               {chips.map((chip) => (
                 <span
                   key={chip}
-                  className="rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-2 text-sm font-medium text-[color:var(--foreground)] shadow-sm"
+                  className="rounded-full border border-border bg-[color:var(--card)] px-4 py-2 text-sm font-medium text-[color:var(--foreground)] shadow-sm"
                 >
                   {chip}
                 </span>
@@ -105,7 +105,7 @@ export function PublicHero({
           <div className="flex h-full items-stretch">
             <div
               className={cn(
-                "flex min-h-56 w-full items-center justify-center rounded-[var(--radius-2xl)] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_92%,var(--secondary)_8%)] p-6",
+                "flex min-h-56 w-full items-center justify-center rounded-[var(--radius-2xl)] border border-border bg-[color:color-mix(in_oklch,var(--card)_92%,var(--secondary)_8%)] p-6",
                 illustrationContainerClassName
               )}
             >
@@ -187,7 +187,7 @@ export function PublicIllustrationPanel({
   return (
     <Card
       className={cn(
-        "overflow-hidden gap-0 border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_78%,var(--card)_22%)]",
+        "overflow-hidden gap-0 border border-border bg-[color:color-mix(in_oklch,var(--secondary)_78%,var(--card)_22%)]",
         className
       )}
     >
@@ -195,7 +195,7 @@ export function PublicIllustrationPanel({
         <div className="flex items-start gap-4">
           <PublicIconBadge
             size="lg"
-            className="border-[color:var(--border)]/70 bg-[color:var(--card)]"
+            className="border-border/70 bg-[color:var(--card)]"
           >
             {icon ?? <ArrowRight className="h-6 w-6" />}
           </PublicIconBadge>

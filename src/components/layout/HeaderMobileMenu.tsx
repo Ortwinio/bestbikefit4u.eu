@@ -59,17 +59,17 @@ export function HeaderMobileMenu({ locale, labels, campaignActive = false, donat
     {
       href: withLocalePrefix("/how-it-works", locale),
       label: labels.howItWorks,
-      icon: <Compass className="h-4 w-4 text-[color:var(--primary)]" />,
+      icon: <Compass className="h-4 w-4 text-primary" />,
     },
     {
       href: withLocalePrefix(getLocalizedPublicCalculatorPath("tire-pressure", locale), locale),
       label: labels.tools,
-      icon: <Gauge className="h-4 w-4 text-[color:var(--primary)]" />,
+      icon: <Gauge className="h-4 w-4 text-primary" />,
     },
     {
       href: withLocalePrefix("/pricing", locale),
       label: labels.pricing,
-      icon: <Sparkles className="h-4 w-4 text-[color:var(--primary)]" />,
+      icon: <Sparkles className="h-4 w-4 text-primary" />,
     },
   ];
 
@@ -92,7 +92,7 @@ export function HeaderMobileMenu({ locale, labels, campaignActive = false, donat
         </DialogTrigger>
         <DialogContent
           side="top"
-          className="border-b border-border-light bg-[linear-gradient(180deg,color-mix(in_oklch,var(--background)_94%,var(--secondary)_6%)_0%,var(--background)_100%)] px-4 py-4"
+          className="border-b border-border-light bg-background px-4 py-4"
         >
           <DialogHeader className="sr-only">
             <DialogTitle>Mobile navigation</DialogTitle>
@@ -104,7 +104,7 @@ export function HeaderMobileMenu({ locale, labels, campaignActive = false, donat
             className="mb-4 block w-full max-w-[260px]"
           />
           <nav className="space-y-2">
-            <div className="rounded-2xl border border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)] p-2">
+            <div className="rounded-2xl border border-border/80 bg-card p-2">
               {publicLinks.map((item) => (
                 <Link
                   key={item.href}
@@ -165,7 +165,7 @@ export function HeaderMobileMenu({ locale, labels, campaignActive = false, donat
                 </Button>
               </>
             ) : (
-              <div className="mt-2 flex items-center gap-2 rounded-2xl border border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)] p-2">
+              <div className="mt-2 flex items-center gap-2 rounded-2xl border border-border/80 bg-card p-2">
                 {campaignActive && donateLabel && donationUrl ? (
                   <>
                     <Button
@@ -199,7 +199,7 @@ export function HeaderMobileMenu({ locale, labels, campaignActive = false, donat
                       }
                       variant="ghost"
                       size="sm"
-                      className="text-[color:var(--primary)]"
+                      className="text-primary"
                     >
                       {startFreeLabel}
                     </Button>

@@ -21,7 +21,7 @@ describe("ConfiguratorLayout", () => {
     );
     expect(html).toContain('data-slot="configurator-sticky-result"');
     expect(html).toContain('href="#resultaat"');
-    expect(html).toContain("sticky bottom-0");
+    expect(html).toContain("fixed inset-x-0 bottom-0");
     expect(html).toContain("xl:hidden");
     expect(html).not.toContain("<main");
   });

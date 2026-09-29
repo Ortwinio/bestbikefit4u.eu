@@ -1,3 +1,4 @@
+import { ConfiguratorHeaderSwitch } from "@/components/layout/ConfiguratorHeaderSwitch";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { getRequestLocale } from "@/i18n/request";
@@ -13,6 +14,7 @@ export default async function PublicLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
+      <ConfiguratorHeaderSwitch locale={locale} loginLabel={dictionary.nav.login} languageLabels={dictionary.common}>
       <Header
         locale={locale}
         labels={{
@@ -22,6 +24,7 @@ export default async function PublicLayout({
           dashboardSignOut: dictionary.dashboard.common.signOut,
         }}
       />
+      </ConfiguratorHeaderSwitch>
       <main id="main-content" tabIndex={-1} className="flex-1">
         {children}
       </main>

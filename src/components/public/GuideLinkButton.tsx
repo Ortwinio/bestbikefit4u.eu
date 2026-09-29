@@ -39,7 +39,7 @@ export function GuideLinkButton({ href, icon, title, subtitle, className }: Guid
     <Link
       href={href}
       className={cn(
-        "group flex w-full items-center gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_90%,var(--background)_10%)] px-5 py-4 transition-all hover:border-[color:color-mix(in_oklch,var(--primary)_40%,var(--border)_60%)] hover:bg-[color:var(--primary-soft)] hover:shadow-[var(--public-shadow)]",
+        "group flex w-full items-center gap-4 rounded-2xl border border-border bg-[color:color-mix(in_oklch,var(--card)_90%,var(--background)_10%)] px-5 py-4 transition-all hover:border-[color:color-mix(in_oklch,var(--primary)_40%,var(--border)_60%)] hover:bg-[color:var(--primary-soft)] hover:shadow-[var(--public-shadow)]",
         className
       )}
     >

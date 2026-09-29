@@ -20,7 +20,7 @@ export function PublicIconBadge({
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_80%,var(--background)_20%)] text-[color:var(--primary)] shadow-sm",
+        "flex shrink-0 items-center justify-center border border-border bg-[color:color-mix(in_oklch,var(--secondary)_80%,var(--background)_20%)] text-[color:var(--primary)] shadow-sm",
         sizeClassName[size],
         className
       )}

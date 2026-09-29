@@ -38,7 +38,7 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
   return (
     <nav
       aria-label={labels.language}
-      className="flex items-center rounded-xl border border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)] p-1 shadow-[0_10px_24px_-20px_color-mix(in_oklch,var(--foreground)_30%,transparent)]"
+      className="flex items-center rounded-xl border border-border/80 bg-card p-1 shadow-[0_10px_24px_-20px_color-mix(in_oklch,var(--foreground)_30%,transparent)]"
     >
       <a
         href={enHref}
@@ -47,8 +47,8 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
         className={cn(
           sharedClasses,
           activeLocale === "en"
-            ? "border-[color:color-mix(in_oklch,var(--primary)_28%,transparent)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)] shadow-[0_8px_18px_-12px_color-mix(in_oklch,var(--primary)_55%,transparent)]"
-            : "border-transparent text-[color:var(--foreground)]/78 hover:-translate-y-px hover:border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] hover:bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--card)_88%)] hover:text-[color:var(--primary)]"
+            ? "border-[color:color-mix(in_oklch,var(--primary)_28%,transparent)] bg-primary text-[color:var(--primary-foreground)] shadow-[0_8px_18px_-12px_color-mix(in_oklch,var(--primary)_55%,transparent)]"
+            : "border-transparent text-foreground/78 hover:-translate-y-px hover:border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] hover:bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--card)_88%)] hover:text-primary"
         )}
       >
         EN
@@ -60,8 +60,8 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
         className={cn(
           sharedClasses,
           activeLocale === "nl"
-            ? "border-[color:color-mix(in_oklch,var(--primary)_28%,transparent)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)] shadow-[0_8px_18px_-12px_color-mix(in_oklch,var(--primary)_55%,transparent)]"
-            : "border-transparent text-[color:var(--foreground)]/78 hover:-translate-y-px hover:border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] hover:bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--card)_88%)] hover:text-[color:var(--primary)]"
+            ? "border-[color:color-mix(in_oklch,var(--primary)_28%,transparent)] bg-primary text-[color:var(--primary-foreground)] shadow-[0_8px_18px_-12px_color-mix(in_oklch,var(--primary)_55%,transparent)]"
+            : "border-transparent text-foreground/78 hover:-translate-y-px hover:border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] hover:bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--card)_88%)] hover:text-primary"
         )}
       >
         NL

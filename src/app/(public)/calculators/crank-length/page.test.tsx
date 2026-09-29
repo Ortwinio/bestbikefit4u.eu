@@ -2,7 +2,10 @@
 
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import CrankLengthCalculatorPage from "./page";
+import CrankLengthCalculatorPage, { generateMetadata } from "./page";
+import { crankLengthMessages } from "@/i18n/calculators/crankLength";
+
+vi.mock("@/i18n/getDictionary", () => ({getDictionary: async (language: "en" | "nl") => ({crankLengthCalculator: crankLengthMessages[language]})}));
 
 let locale: "en" | "nl" = "en";
 
@@ -94,13 +97,20 @@ afterEach(() => {
 });
 
 describe("crank length page", () => {
+  it("preserves canonical metadata and Dutch FAQ content", async () => {
+    locale = "nl";
+    expect((await generateMetadata()).alternates?.canonical).toBe("https://bestbikefit4u.eu/nl/calculators/crank-length");
+    render(await CrankLengthCalculatorPage({searchParams: Promise.resolve({})}));
+    expect(screen.getByText(crankLengthMessages.nl.faqs[0].q).tagName).toBe("SUMMARY");
+    expect(screen.getByText(crankLengthMessages.nl.faqs[0].a)).toBeTruthy();
+  });
   it("keeps the calculator value-first next-step CTAs in English", async () => {
     const ui = await CrankLengthCalculatorPage({
       searchParams: Promise.resolve({}),
     });
     render(ui);
 
-    expect(screen.getByText("Crank Length Calculator")).toBeTruthy();
+    expect(screen.getByText("Practical component choice without fake certainty")).toBeTruthy();
     expect(screen.getByText("Crank Form")).toBeTruthy();
     expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"

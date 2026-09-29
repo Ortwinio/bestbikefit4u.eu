@@ -30,6 +30,7 @@ describe("FeedbackFloatingButton", () => {
     );
 
     expect(html).toContain('aria-label="Share feedback"');
+    expect(html).toContain('data-feedback-launcher="true"');
     expect(html).toContain("Share feedback");
     expect(html).toContain(FEEDBACK_FLOATING_BUTTON_PLACEMENT_CLASSNAME);
   });

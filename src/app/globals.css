@@ -123,7 +123,7 @@
   --dashboard-nav-active-surface: 94.73259% 0.1036280 118.73767;
   --dashboard-backdrop: 24.12662% 0.0283111 180.00152 / 0.38;
   --dashboard-field-background: 100.00000% 0.0000000 89.87556;
-  --dashboard-field-border: oklch(91.59516% 0.0126119 164.77798);
+  --dashboard-field-border: oklch(46.65532% 0.0267256 178.91784);
   --dashboard-field-border-hover: oklch(49.55246% 0.0880509 179.13989);
   --dashboard-card: var(--dashboard-surface);
   --background: 97.54721% 0.0073056 132.41432;
@@ -151,6 +151,7 @@
   --warning-foreground: 24.12662% 0.0283111 180.00152;
   --info: 49.55246% 0.0880509 179.13989;
   --info-foreground: 100.00000% 0.0000000 89.87556;
+  /* Decorative borders: brand rand, separate from accessible field outlines. */
   --border: 91.59516% 0.0126119 164.77798;
   --border-light: 91.59516% 0.0126119 164.77798;
   --border-dark: 91.59516% 0.0126119 164.77798;
@@ -195,7 +196,7 @@
   --destructive-soft-hover: oklch(82.90148% 0.0978429 37.82491);
   --surface-secondary: oklch(var(--public-card-subtle));
   --surface-tertiary: oklch(var(--public-hero));
-  --field-border: oklch(91.59516% 0.0126119 164.77798);
+  --field-border: oklch(46.65532% 0.0267256 178.91784);
   --field-border-hover: oklch(49.55246% 0.0880509 179.13989);
   --field-border-invalid: oklch(49.55246% 0.0880509 179.13989);
 
@@ -233,7 +234,7 @@
   --dashboard-nav-active-surface: 36.18102% 0.0424832 176.78888;
   --dashboard-backdrop: 24.12662% 0.0283111 180.00152 / 0.38;
   --dashboard-field-background: 29.74506% 0.0351159 177.67575;
-  --dashboard-field-border: oklch(46.65532% 0.0267256 178.91784);
+  --dashboard-field-border: oklch(77.23989% 0.0845368 176.14123);
   --dashboard-field-border-hover: oklch(77.23989% 0.0845368 176.14123);
   --dashboard-card: var(--dashboard-surface);
   --background: 24.12662% 0.0283111 180.00152;
@@ -261,6 +262,7 @@
   --warning-foreground: 24.12662% 0.0283111 180.00152;
   --info: 77.23989% 0.0845368 176.14123;
   --info-foreground: 24.12662% 0.0283111 180.00152;
+  /* Muted green decorative borders on ink surfaces. */
   --border: 46.65532% 0.0267256 178.91784;
   --border-light: 46.65532% 0.0267256 178.91784;
   --border-dark: 46.65532% 0.0267256 178.91784;
@@ -304,7 +306,7 @@
   --destructive-soft-hover: oklch(36.18102% 0.0424832 176.78888);
   --surface-secondary: oklch(var(--public-card-subtle));
   --surface-tertiary: oklch(var(--public-hero));
-  --field-border: oklch(46.65532% 0.0267256 178.91784);
+  --field-border: oklch(77.23989% 0.0845368 176.14123);
   --field-border-hover: oklch(77.23989% 0.0845368 176.14123);
   --field-border-invalid: oklch(77.23989% 0.0845368 176.14123);
 }
@@ -1047,3 +1049,10 @@
 .csp-scale-fill[data-scale-pct="98"] { width: calc(98 * (100% - 8px) / 100 + 4px); }
 .csp-scale-fill[data-scale-pct="99"] { width: calc(99 * (100% - 8px) / 100 + 4px); }
 .csp-scale-fill[data-scale-pct="100"] { width: calc(100 * (100% - 8px) / 100 + 4px); }
+
+/* Keep the feedback action clear of a visible mobile calculator result. */
+@media (width < 80rem) {
+  body:has([data-slot="configurator-sticky-result"]) [data-feedback-launcher] {
+    bottom: calc(6.5rem + env(safe-area-inset-bottom));
+  }
+}

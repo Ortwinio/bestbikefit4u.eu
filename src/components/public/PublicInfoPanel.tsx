@@ -19,7 +19,7 @@ const toneStyles: Record<NonNullable<PublicInfoPanelProps["tone"]>, string> = {
   primary:
     "border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_10%,var(--card)_90%)]",
   secondary:
-    "border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_88%,var(--background)_12%)]",
+    "border-border bg-[color:color-mix(in_oklch,var(--secondary)_88%,var(--background)_12%)]",
   success:
     "border-[color:color-mix(in_oklch,var(--success)_20%,var(--border))] bg-[color:color-mix(in_oklch,var(--success)_10%,var(--card)_90%)]",
   warning:

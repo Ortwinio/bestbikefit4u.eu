@@ -20,6 +20,7 @@ describe("Slider", () => {
     );
 
     expect(html).toContain('data-slot="slider"');
+    expect(html.match(/id="comfort-label"/g)).toHaveLength(1);
     expect(html).toContain('data-slot="slider-control"');
     expect(html).toContain('data-slot="slider-track"');
     expect(html).toContain('data-slot="slider-indicator"');

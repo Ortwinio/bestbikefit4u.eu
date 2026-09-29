@@ -12,16 +12,15 @@ import {
   FeatureIconCard,
   type FeatureIconCardColor,
   PublicCtaBand,
-  PublicHero,
   PublicPageShell,
   PublicSection,
-  RatingBadge,
 } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { getDictionary } from "@/i18n/getDictionary";
 import { getRequestLocale } from "@/i18n/request";
 import { CALCULATOR_AGGREGATE_RATING, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
@@ -56,6 +55,7 @@ const TRUST_POINT_COLORS: FeatureIconCardColor[] = ["teal", "primary", "green"];
 
 export default async function FrameSizeCalculatorPage() {
   const locale = await getRequestLocale();
+  const dictionary = await getDictionary(locale);
   const isNl = locale === "nl";
   const pagePath = withLocalePrefix("/calculators/frame-size", locale);
   const campaignActive = isConsumerCampaignActive();
@@ -125,7 +125,7 @@ export default async function FrameSizeCalculatorPage() {
       ];
 
   return (
-    <PublicPageShell className="text-foreground">
+    <>
       <JsonLd
         schema={[
           buildWebApplicationSchema({
@@ -139,26 +139,8 @@ export default async function FrameSizeCalculatorPage() {
         ]}
       />
 
-      <div>
-        <PublicHero
-          eyebrow="BestBikeFit4U calculator"
-          title={isNl ? "Framemaat calculator" : "Frame Size Calculator"}
-          description={
-            isNl
-              ? "Maak eerst een realistische shortlist van framematen voordat je fietsen, onderdelen of afstellingen vergelijkt."
-              : "Shortlist realistic frame sizes before you compare bikes, parts, and setup changes."
-          }
-          chips={
-            isNl
-              ? ["NL en EN beschikbaar", "Snelle shortlist", "Bruikbaar thuis"]
-              : ["Available in Dutch and English", "Fast shortlist", "Useful from home"]
-          }
-        />
-        <div className="mt-4">
-          <RatingBadge rating="4.8" count={isNl ? "380+ rijders" : "380+ riders"} />
-        </div>
-      </div>
-
+      <FrameSizeCalculatorForm locale={locale} copy={dictionary.frameSizeCalculator} />
+      <PublicPageShell className="text-foreground">
       <PublicSection
         className="mt-10"
         header={{
@@ -183,8 +165,6 @@ export default async function FrameSizeCalculatorPage() {
           ))}
         </div>
       </PublicSection>
-
-      <FrameSizeCalculatorForm isNl={isNl} />
 
       <PublicCtaBand
         className="mt-10"
@@ -273,6 +253,7 @@ export default async function FrameSizeCalculatorPage() {
           locale={locale}
         />
       </section>
-    </PublicPageShell>
+      </PublicPageShell>
+    </>
   );
 }

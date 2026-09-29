@@ -1,6 +1,12 @@
+import { crankLengthMessages } from "../calculators/crankLength";
+import { frameSizeMessages } from "../calculators/frameSize";
+import { saddleHeightMessages } from "../calculators/saddleHeight";
 import { BRAND } from "@/config/brand";
 
 const en = {
+  crankLengthCalculator: crankLengthMessages.en,
+  frameSizeCalculator: frameSizeMessages.en,
+  saddleHeightCalculator: saddleHeightMessages.en,
   common: {
     language: "Language",
     english: "English",
