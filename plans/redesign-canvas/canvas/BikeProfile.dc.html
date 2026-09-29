@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Fietsprofiel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F8F3;font-family:Figtree,system-ui,sans-serif;color:#0F2420}
+a{color:#0A7263}a:hover{color:#075A4E}
+button{font-family:inherit}
+.rng{-webkit-appearance:none;appearance:none;background:transparent;margin:0;height:44px;cursor:pointer}
+.rng::-webkit-slider-runnable-track{height:44px;background:transparent}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:9px;border-radius:50%;background:#FFFFFF;border:4px solid #0F2420;box-shadow:0 2px 8px rgba(15,36,32,.25)}
+.rng::-moz-range-track{height:44px;background:transparent}
+.rng::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#FFFFFF;border:4px solid #0F2420}
+.rng:focus-visible{outline:3px solid #9CC21F;outline-offset:2px;border-radius:12px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1180px; box-sizing: border-box; display: grid; grid-template-columns: 264px 1fr; background: #F5F8F3; color: #0F2420; font-family: Figtree, system-ui, sans-serif">
+
+<aside style="display: flex; flex-direction: column; gap: 28px; padding: 28px 20px; background: #0F2420; color: #FFFFFF">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 0 8px; text-decoration: none; color: #FFFFFF">
+<svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#CFF26A"></circle><circle cx="11" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><circle cx="23" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><path d="M11 20l4-8h6l2 8M15 12l4 8" stroke="#0F2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px">BestBikeFit<span style="color: #CFF26A">4U</span></span>
+</a>
+<nav aria-label="Account" style="display: flex; flex-direction: column; gap: 4px; font-size: 15px; font-weight: 600">
+<a href="Dashboard.dc.html" style="display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>Overzicht</a>
+<a href="BikeProfile.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 14px; border-radius: 12px; background: #CFF26A; color: #0F2420; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="17" r="3.5"></circle><circle cx="18.5" cy="17" r="3.5"></circle><path d="M5.5 17l4-8h6l3 8M9.5 9l3.5 8"></path></svg>Mijn fietsen</a>
+<a href="History.dc.html" style="display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6"></path></svg>Sessies &amp; rapporten</a>
+<a href="TirePressure.dc.html" style="display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 16a9 9 0 1 1 18 0M12 16l4-5"></path></svg>Bandenspanning</a>
+<a href="#" style="display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"></path></svg>Bike passport</a>
+<a href="#" style="display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4 4-6 8-6s7 2 8 6"></path></svg>Mijn maten</a>
+<a href="#" style="display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9L7 7M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"></path></svg>Instellingen</a>
+</nav>
+</aside>
+
+<main style="display: flex; flex-direction: column; gap: 24px; padding: 32px 48px 48px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end">
+<div>
+<a href="Dashboard.dc.html" style="font-size: 15px; font-weight: 600">← Mijn fietsen</a>
+<h1 style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.03em">Canyon Endurace</h1>
+<div style="display: flex; gap: 8px; margin-top: 10px">
+<span style="padding: 6px 12px; border-radius: 999px; background: #E1F2EE; color: #075A4E; font-size: 14px; font-weight: 700">Race · 2022</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #E1F2EE; color: #075A4E; font-size: 14px; font-weight: 700">Maat M</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #E1F2EE; color: #075A4E; font-size: 14px; font-weight: 700">Doel: comfort</span>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 16px; padding: 14px 22px; border-radius: 20px; background: #0F2420; color: #FFFFFF">
+<div style="font-size: 14px; color: #B9CCC6">Fitscore</div>
+<div style="font-family: 'DM Mono', monospace; font-size: 40px; color: #CFF26A">{{score}}</div>
+<div style="font-size: 14px; color: #B9CCC6; max-width: 120px">{{scoreLabel}}</div>
+</div>
+</div>
+
+<nav aria-label="Fietsprofiel" style="display: flex; gap: 6px; border-bottom: 1px solid #DCE6E1; font-weight: 700; font-size: 15px">
+<a href="#" aria-current="page" style="padding: 12px 18px; color: #0F2420; text-decoration: none; border-bottom: 3px solid #0A7263">Fit</a>
+<a href="#" style="padding: 12px 18px; color: #4A5F5A; text-decoration: none">Geometrie</a>
+<a href="TirePressure.dc.html" style="padding: 12px 18px; color: #4A5F5A; text-decoration: none">Banden</a>
+<a href="#" style="padding: 12px 18px; color: #4A5F5A; text-decoration: none">Bike passport</a>
+</nav>
+
+<div style="display: grid; grid-template-columns: 1fr 1.15fr; gap: 24px">
+<section style="display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 28px; background: #CFF26A">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px">Nu vs. doel</h2>
+<div style="display: flex; gap: 14px; font-size: 13px; font-weight: 600">
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 50%; background: #0A7263"></span>Doel</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 50%; border: 3px solid #0F2420; box-sizing: border-box; background: #FFFFFF"></span>Nu</span>
+</div>
+</div>
+<svg width="443" height="298" viewBox="0 0 520 350" fill="none" role="img" aria-label="Fiets met huidige en doelpositie van zadel en stuur">
+<circle cx="120" cy="250" r="78" stroke="#0F2420" stroke-width="7"></circle>
+<circle cx="400" cy="250" r="78" stroke="#0F2420" stroke-width="7"></circle>
+<path d="M120 250L230 260L198 130L120 250M198 132L360 124M230 260L368 160M372 170L400 250M360 122L372 170" stroke="#0F2420" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M198 130L192 108" stroke="#0F2420" stroke-width="8" stroke-linecap="round"></path>
+<path d="M360 122L392 116q26 0 26 24q0 20-18 22" stroke="#0F2420" stroke-width="7" stroke-linecap="round"></path>
+<circle cx="230" cy="260" r="13" stroke="#0F2420" stroke-width="6"></circle>
+<line x1="{{v.sNx}}" y1="{{v.sNy}}" x2="{{v.sTx}}" y2="{{v.sTy}}" stroke="#0F2420" stroke-width="2" stroke-dasharray="4 4"></line>
+<line x1="{{v.bNx}}" y1="{{v.bNy}}" x2="{{v.bTx}}" y2="{{v.bTy}}" stroke="#0F2420" stroke-width="2" stroke-dasharray="4 4"></line>
+<circle cx="{{v.sTx}}" cy="{{v.sTy}}" r="11" fill="#0A7263"></circle>
+<circle cx="{{v.bTx}}" cy="{{v.bTy}}" r="11" fill="#0A7263"></circle>
+<circle cx="{{v.sNx}}" cy="{{v.sNy}}" r="10" fill="#FFFFFF" stroke="#0F2420" stroke-width="4"></circle>
+<circle cx="{{v.bNx}}" cy="{{v.bNy}}" r="10" fill="#FFFFFF" stroke="#0F2420" stroke-width="4"></circle>
+</svg>
+<div style="font-size: 14px; line-height: 1.45">Verschillen zijn uitvergroot zodat ze goed zichtbaar zijn. Schuif rechts je gemeten waarden in.</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 6px; padding: 24px 28px; border-radius: 28px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<div style="display: grid; grid-template-columns: 130px 1fr 70px 96px; gap: 14px; font-size: 13px; font-weight: 700; color: #4A5F5A; text-transform: uppercase; letter-spacing: 0.05em; padding-bottom: 6px">
+<span>Maat</span><span>Jouw fiets nu</span><span style="text-align: right">Doel</span><span style="text-align: right">Verschil</span>
+</div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+<div style="display: grid; grid-template-columns: 130px 1fr 70px 96px; gap: 14px; align-items: center; padding: 4px 0; border-top: 1px solid #EEF3EF">
+<label for="{{r.id}}" style="font-weight: 600; font-size: 15px">{{r.label}}</label>
+<div style="display: flex; align-items: center; gap: 10px">
+<div style="position: relative; height: 44px; flex-grow: 1">
+<div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 99px; background: #EEF3EF"></div>
+<div style="position: absolute; top: 14px; width: 4px; height: 16px; margin-left: -2px; border-radius: 2px; background: #0A7263; left: 50%"></div>
+<input id="{{r.id}}" class="rng" type="range" min="{{r.min}}" max="{{r.max}}" step="1" value="{{r.cur}}" onChange="{{r.set}}" style="position: absolute; left: 0; top: 0; width: 100%">
+</div>
+<span style="font-family: 'DM Mono', monospace; font-size: 16px; min-width: 44px; text-align: right">{{r.cur}}</span>
+</div>
+<span style="font-family: 'DM Mono', monospace; font-size: 16px; text-align: right; color: #0A7263">{{r.target}}</span>
+<span style="justify-self: end; font-family: 'DM Mono', monospace; font-size: 14px; padding: 5px 10px; border-radius: 10px; background: {{r.chipBg}}; color: #0F2420">{{r.delta}}</span>
+</div>
+</sc-for>
+<div style="font-size: 13px; color: #4A5F5A; margin-top: 6px">Alle waarden in mm. Het groene streepje in elke balk is je doel.</div>
+</section>
+</div>
+
+<section style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 14px; padding: 24px 28px; border-radius: 24px; background: #0F2420; color: #FFFFFF">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px">Wat je nu aanpast</h2>
+<sc-for list="{{plan}}" as="p" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 14px">
+<span style="flex-shrink: 0; font-family: 'DM Mono', monospace; width: 32px; height: 32px; border-radius: 50%; background: #CFF26A; color: #0F2420; display: flex; align-items: center; justify-content: center; font-size: 14px">{{p.n}}</span>
+<span style="flex-grow: 1; font-size: 16px">{{p.text}}</span>
+</div>
+</sc-for>
+<sc-if value="{{allGood}}" hint-placeholder-val="{{false}}">
+<div style="font-size: 16px; color: #CFF26A; font-weight: 700">Alles binnen de marge. Rij en check in na een paar ritten.</div>
+</sc-if>
+</div>
+<div style="display: flex; flex-direction: column; justify-content: space-between; gap: 14px; padding: 24px 28px; border-radius: 24px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<div>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px">Rapport</h2>
+<p style="margin: 8px 0 0; color: #4A5F5A; line-height: 1.5">Stuur je fitplan naar je e-mail of naar je fitter in de winkel.</p>
+</div>
+<div style="display: flex; gap: 10px">
+<button type="button" style="flex-grow: 1; height: 50px; border-radius: 999px; border: 0; background: #0A7263; color: #FFFFFF; font-weight: 700; font-size: 15px; cursor: pointer">Mail rapport</button>
+<button type="button" style="flex-grow: 1; height: 50px; border-radius: 999px; border: 2px solid #C9D6D0; background: #FFFFFF; color: #4A5F5A; font-weight: 700; font-size: 15px; cursor: pointer">PDF · Pro</button>
+</div>
+</div>
+</section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { cur: { sh: 746, sb: 64, reach: 562, drop: 58, bw: 420, crank: 172 } };
+  }
+  renderVals() {
+    const c = this.state.cur;
+    const defs = [
+      ['sh', 'Zadelhoogte', 742, 4, 'Zadel', 'lager', 'hoger'],
+      ['sb', 'Setback', 67, 3, 'Zadel', 'naar voren', 'naar achteren'],
+      ['reach', 'Reach', 552, 8, 'Stuur', 'dichterbij (kortere stuurpen)', 'verder weg (langere stuurpen)'],
+      ['drop', 'Drop', 40, 8, 'Stuur', 'lager', 'hoger (spacers eronder)'],
+      ['bw', 'Stuurbreedte', 400, 10, 'Stuur', 'smaller', 'breder'],
+      ['crank', 'Cranklengte', 170, 2.5, 'Cranks', 'korter', 'langer']
+    ];
+    let penalty = 0;
+    const plan = [];
+    const rows = defs.map((d) => {
+      const key = d[0], target = d[2], tol = d[3];
+      const cur = c[key];
+      const diff = cur - target;
+      const within = Math.abs(diff) <= tol;
+      penalty += Math.min(25, Math.max(0, Math.abs(diff) - tol) * 1.2);
+      if (!within && plan.length < 3) {
+        const amount = Math.abs(diff);
+        const dir = diff > 0 ? d[5] : d[6];
+        const text = key === 'drop'
+          ? 'Stuur ' + (diff > 0 ? 'hoger' : 'lager') + ': ' + amount + ' mm'
+          : d[4] + ' ' + dir + ': ' + amount + ' mm';
+        plan.push({ n: plan.length + 1, text: text });
+      }
+      return {
+        id: 'bp-' + key, label: d[1], target: target, cur: cur,
+        min: target - 40, max: target + 40,
+        delta: within ? 'ok' : (diff > 0 ? '+' : '−') + Math.abs(diff),
+        chipBg: within ? '#CFF26A' : Math.abs(diff) > tol * 3 ? '#FFB199' : '#FFD66B',
+        set: (e) => { const n = Object.assign({}, this.state.cur); n[key] = Number(e.target.value); this.setState({ cur: n }); }
+      };
+    });
+    const score = Math.max(0, Math.round(100 - penalty));
+    // drawing: target positions fixed, current offset (exaggerated x3)
+    const sTx = 181, sTy = 104, bTx = 392, bTy = 116;
+    const dSh = (c.sh - 742) * 0.8, dSb = (c.sb - 67) * 0.8;
+    const sNx = sTx - dSh * 0.29 - dSb, sNy = sTy - dSh * 0.96;
+    const bNx = bTx + (c.reach - 552) * 0.8, bNy = bTy + (c.drop - 40) * 0.8;
+    const f = (n) => n.toFixed(1);
+    return {
+      rows: rows, plan: plan, allGood: plan.length === 0,
+      score: score,
+      scoreLabel: score >= 90 ? 'Op koers' : score >= 70 ? 'Bijna goed afgesteld' : 'Werk aan de winkel',
+      v: { sTx: sTx, sTy: sTy, bTx: bTx, bTy: bTy, sNx: f(sNx), sNy: f(sNy), bNx: f(bNx), bNy: f(bNy) }
+    };
+  }
+}
+</script>
+</body>
+</html>

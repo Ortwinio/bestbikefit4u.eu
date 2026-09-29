@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Framemaat configurator</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F8F3;font-family:Figtree,system-ui,sans-serif;color:#0F2420}
+a{color:#0A7263}a:hover{color:#075A4E}
+.rng{-webkit-appearance:none;appearance:none;background:transparent;margin:0;height:44px;cursor:pointer}
+.rng::-webkit-slider-runnable-track{height:44px;background:transparent}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:7px;border-radius:50%;background:#FFFFFF;border:4px solid #0A7263;box-shadow:0 2px 8px rgba(15,36,32,.25)}
+.rng::-moz-range-track{height:44px;background:transparent}
+.rng::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#FFFFFF;border:4px solid #0A7263;box-shadow:0 2px 8px rgba(15,36,32,.25)}
+.rng:focus-visible{outline:3px solid #9CC21F;outline-offset:2px;border-radius:12px}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1240px; box-sizing: border-box; display: flex; flex-direction: column; background: #F5F8F3; color: #0F2420; font-family: Figtree, system-ui, sans-serif">
+
+<header style="display: flex; align-items: center; justify-content: space-between; height: 80px; padding: 0 64px; border-bottom: 1px solid #DCE6E1">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #0F2420">
+<svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#CFF26A"></circle><circle cx="11" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><circle cx="23" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><path d="M11 20l4-8h6l2 8M15 12l4 8" stroke="#0F2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px">BestBikeFit<span style="color: #0A7263">4U</span></span>
+</a>
+<nav aria-label="Calculators" style="display: flex; gap: 6px; padding: 5px; border-radius: 999px; background: #FFFFFF; border: 1px solid #DCE6E1; font-size: 15px; font-weight: 600">
+<a href="BikeFit.dc.html" style="padding: 9px 16px; border-radius: 999px; color: #0F2420; text-decoration: none">Bike fit</a>
+<a href="SaddleHeight.dc.html" style="padding: 9px 16px; border-radius: 999px; color: #0F2420; text-decoration: none">Zadelhoogte</a>
+<a href="FrameSize.dc.html" aria-current="page" style="padding: 9px 16px; border-radius: 999px; background: #0F2420; color: #FFFFFF; text-decoration: none">Framemaat</a>
+<a href="TirePressure.dc.html" style="padding: 9px 16px; border-radius: 999px; color: #0F2420; text-decoration: none">Bandenspanning</a>
+<a href="#" style="padding: 9px 16px; border-radius: 999px; color: #0F2420; text-decoration: none">Meer</a>
+</nav>
+<a href="Login.dc.html" style="font-weight: 600; color: #0F2420; text-decoration: none">Inloggen</a>
+</header>
+
+<div style="padding: 40px 64px 28px">
+<div style="font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #0A7263">Framemaat · slim shortlisten</div>
+<h1 style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.03em">Welke maat past bij jou?</h1>
+</div>
+
+<div style="display: grid; grid-template-columns: 520px 1fr; gap: 32px; padding: 0 64px 64px; flex-grow: 1">
+<section style="align-self: flex-start; display: flex; flex-direction: column; gap: 24px; padding: 28px; border-radius: 24px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-weight: 600">Soort fiets</div>
+<div role="group" aria-label="Soort fiets" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}" style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 14px 16px; border-radius: 16px; border: 2px solid {{c.border}}; background: {{c.bg}}; color: #0F2420; text-align: left; cursor: pointer">
+<span style="font-size: 16px; font-weight: 700">{{c.label}}</span>
+<span style="font-size: 13px; color: #3B4F4A">{{c.desc}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<label for="fs-height" style="font-weight: 600">Lichaamslengte</label>
+<div style="font-family: 'DM Mono', monospace; font-size: 28px">{{height}}<span style="font-size: 14px; color: #4A5F5A"> cm</span></div>
+</div>
+<div style="position: relative; height: 44px">
+<div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 99px; background: #DCE6E1"></div>
+<div style="position: absolute; left: 0; top: 18px; height: 8px; border-radius: 99px; background: #0A7263; width: {{heightPct}}%"></div>
+<input id="fs-height" class="rng" type="range" min="150" max="205" step="1" value="{{height}}" onChange="{{setHeight}}" style="position: absolute; left: 0; top: 0; width: 100%">
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 12px; color: #4A5F5A"><span>150</span><span>165</span><span>180</span><span>195</span><span>205</span></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<label for="fs-inseam" style="font-weight: 600">Binnenbeenlengte</label>
+<div style="font-family: 'DM Mono', monospace; font-size: 28px">{{inseam}}<span style="font-size: 14px; color: #4A5F5A"> cm</span></div>
+</div>
+<div style="position: relative; height: 44px">
+<div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 99px; background: #DCE6E1"></div>
+<div style="position: absolute; left: 0; top: 18px; height: 8px; border-radius: 99px; background: #0A7263; width: {{inseamPct}}%"></div>
+<input id="fs-inseam" class="rng" type="range" min="65" max="100" step="0.5" value="{{inseam}}" onChange="{{setInseam}}" style="position: absolute; left: 0; top: 0; width: 100%">
+</div>
+<div style="font-size: 13px; color: #4A5F5A">Zelfde methode als bij zadelhoogte: blootsvoets, boek tegen de muur.</div>
+</div>
+</section>
+
+<div style="display: flex; flex-direction: column; gap: 20px">
+<section style="display: flex; flex-direction: column; gap: 28px; padding: 36px; border-radius: 28px; background: #CFF26A">
+<div style="display: flex; justify-content: space-between; align-items: flex-end">
+<div>
+<div style="font-size: 15px; font-weight: 600">Aanbevolen maat</div>
+<div style="display: flex; align-items: baseline; gap: 18px; margin-top: 6px">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 120px; line-height: 0.9; letter-spacing: -0.04em">{{size}}</span>
+<span style="font-family: 'DM Mono', monospace; font-size: 30px">{{sizeNum}}</span>
+</div>
+</div>
+<div style="max-width: 300px; font-size: 16px; line-height: 1.45">{{between}}</div>
+</div>
+
+<div aria-label="Maatschaal" style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{scale}}" as="z" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px 6px; border-radius: 16px; background: {{z.bg}}; color: {{z.fg}}; border: 2px solid {{z.border}}">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 26px">{{z.label}}</span>
+<span style="font-family: 'DM Mono', monospace; font-size: 13px">{{z.range}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 16px; padding: 28px; border-radius: 24px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px">Jouw proporties</h2>
+<span style="font-family: 'DM Mono', monospace; font-size: 18px">index {{ratio}}</span>
+</div>
+<div style="position: relative; height: 56px">
+<div style="position: absolute; left: 0; right: 0; top: 20px; height: 14px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px">
+<div style="border-radius: 99px 0 0 99px; background: #BFE3DA"></div>
+<div style="background: #DCE6E1"></div>
+<div style="border-radius: 0 99px 99px 0; background: #BFE3DA"></div>
+</div>
+<div style="position: absolute; top: 10px; width: 6px; height: 34px; margin-left: -3px; border-radius: 3px; background: #0F2420; left: {{ratioPct}}%"></div>
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 13px; color: #4A5F5A; margin-top: -8px"><span>Lang bovenlijf</span><span>Gemiddeld</span><span>Lange benen</span></div>
+<p style="margin: 0; font-size: 16px; line-height: 1.5">{{propAdvice}}</p>
+</div>
+<div style="display: flex; flex-direction: column; justify-content: space-between; gap: 16px; padding: 28px; border-radius: 24px; background: #0F2420; color: #FFFFFF">
+<div>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px">Maat is de eerste filter</h2>
+<p style="margin: 10px 0 0; color: #B9CCC6; line-height: 1.5">Stack en reach bepalen of een fiets écht past. Vergelijk je shortlist met onze geometrie-database.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<a href="BikeFit.dc.html" style="display: inline-flex; align-items: center; justify-content: center; height: 52px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; text-decoration: none">Start complete bike fit</a>
+<a href="#" style="display: inline-flex; align-items: center; justify-content: center; height: 52px; border-radius: 999px; border: 2px solid #3E5C55; color: #FFFFFF; font-weight: 700; text-decoration: none">Stack &amp; reach uitgelegd</a>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { height: 180, inseam: 84, cat: 0 };
+  }
+  renderVals() {
+    const s = this.state;
+    const letters = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    let idx, sizeNum, ranges, pos;
+    if (s.cat === 2) {
+      const h = s.height;
+      idx = h < 160 ? 0 : h < 168 ? 1 : h < 178 ? 2 : h < 188 ? 3 : h < 196 ? 4 : 5;
+      sizeNum = Math.round(s.inseam * 0.226) + '″';
+      ranges = ['<160', '160–167', '168–177', '178–187', '188–195', '196+'];
+      const bounds = [150, 160, 168, 178, 188, 196, 205];
+      pos = (h - bounds[idx]) / (bounds[idx + 1] - bounds[idx]);
+    } else {
+      const cm = s.inseam * [0.665, 0.655, 0, 0.68][s.cat];
+      const bounds = [45, 50, 52.5, 55, 57.5, 60, 64];
+      idx = cm < 50 ? 0 : cm < 52.5 ? 1 : cm < 55 ? 2 : cm < 57.5 ? 3 : cm < 60 ? 4 : 5;
+      sizeNum = cm.toFixed(0) + ' cm';
+      ranges = ['<50', '50–52', '53–54', '55–57', '58–59', '60+'];
+      pos = (cm - bounds[idx]) / (bounds[idx + 1] - bounds[idx]);
+    }
+    let between;
+    let neighbour = -1;
+    if (pos > 0.75 && idx < 5) neighbour = idx + 1;
+    if (pos < 0.25 && idx > 0) neighbour = idx - 1;
+    if (neighbour >= 0) {
+      between = 'Je zit dicht bij ' + letters[neighbour] + '. Probeer beide, of kies op basis van je proporties hieronder.';
+    } else {
+      between = 'Je zit mooi midden in deze maat. Geen twijfelgeval.';
+    }
+    const scale = letters.map((label, i) => ({
+      label: label, range: ranges[i],
+      bg: i === idx ? '#0F2420' : i === neighbour ? '#FFFFFF' : '#E6F8A8',
+      fg: i === idx ? '#CFF26A' : '#0F2420',
+      border: i === neighbour ? '#0F2420' : 'transparent'
+    }));
+    const ratio = s.inseam / s.height;
+    const ratioPct = Math.max(2, Math.min(98, ((ratio - 0.42) / 0.09) * 100));
+    let propAdvice;
+    if (ratio < 0.45) propAdvice = 'Relatief lang bovenlijf: kies bij twijfel de grotere maat of een langere stuurpen voor extra reach.';
+    else if (ratio > 0.48) propAdvice = 'Relatief lange benen: kies bij twijfel de kleinere maat met meer zadelpen en let op voldoende stack.';
+    else propAdvice = 'Gemiddelde verhoudingen: de standaard maattabel van de fabrikant past meestal goed.';
+    const catDefs = [['Race', 'Wegfiets, endurance'], ['Gravel', 'Allroad, bikepacking'], ['MTB', 'Trail, XC'], ['Stad / tour', 'Trekking, hybride']];
+    const cats = catDefs.map((d, i) => ({
+      label: d[0], desc: d[1], pressed: String(s.cat === i),
+      bg: s.cat === i ? '#E6F8A8' : '#FFFFFF',
+      border: s.cat === i ? '#0A7263' : '#DCE6E1',
+      pick: () => this.setState({ cat: i })
+    }));
+    return {
+      height: s.height, inseam: s.inseam,
+      heightPct: ((s.height - 150) / 55) * 100,
+      inseamPct: ((s.inseam - 65) / 35) * 100,
+      setHeight: (e) => this.setState({ height: Number(e.target.value) }),
+      setInseam: (e) => this.setState({ inseam: Number(e.target.value) }),
+      cats: cats, size: letters[idx], sizeNum: sizeNum, between: between, scale: scale,
+      ratio: ratio.toFixed(3), ratioPct: ratioPct, propAdvice: propAdvice
+    };
+  }
+}
+</script>
+</body>
+</html>
