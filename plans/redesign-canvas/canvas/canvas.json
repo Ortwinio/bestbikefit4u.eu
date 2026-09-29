@@ -93,6 +93,62 @@
       "w": 1440,
       "x": 1520,
       "y": 6320
+    },
+    "CrankLength.dc.html": {
+      "x": 9120,
+      "y": 0,
+      "w": 1440,
+      "h": 1240,
+      "is_interactive": true,
+      "title": "Configurator · Cranklengte"
+    },
+    "SaddleWidth.dc.html": {
+      "x": 10640,
+      "y": 0,
+      "w": 1440,
+      "h": 1300,
+      "is_interactive": true,
+      "title": "Configurator · Zadelbreedte"
+    },
+    "Gearing.dc.html": {
+      "x": 12160,
+      "y": 0,
+      "w": 1440,
+      "h": 1400,
+      "is_interactive": true,
+      "title": "Configurator · Verzet"
+    },
+    "PowerSpeed.dc.html": {
+      "x": 13680,
+      "y": 0,
+      "w": 1440,
+      "h": 1240,
+      "is_interactive": true,
+      "title": "Configurator · Vermogen ↔ snelheid"
+    },
+    "ClimbPlanner.dc.html": {
+      "x": 15200,
+      "y": 0,
+      "w": 1440,
+      "h": 1300,
+      "is_interactive": true,
+      "title": "Configurator · Klimplanner"
+    },
+    "FtpWkg.dc.html": {
+      "x": 16720,
+      "y": 0,
+      "w": 1440,
+      "h": 1240,
+      "is_interactive": true,
+      "title": "Configurator · FTP / W/kg"
+    },
+    "FuelHydration.dc.html": {
+      "x": 18240,
+      "y": 0,
+      "w": 1440,
+      "h": 1300,
+      "is_interactive": true,
+      "title": "Configurator · Voeding & drinken"
     }
   },
   "createdOnFiles": {
@@ -114,7 +170,7 @@
     },
     "configs": {
       "kind": "title1",
-      "maxW": 5920,
+      "maxW": 16640,
       "text": "Configurators",
       "w": 240,
       "x": 3040,
@@ -144,6 +200,13 @@
     "SaddleHeight.dc.html",
     "FrameSize.dc.html",
     "TirePressure.dc.html",
+    "CrankLength.dc.html",
+    "SaddleWidth.dc.html",
+    "Gearing.dc.html",
+    "PowerSpeed.dc.html",
+    "ClimbPlanner.dc.html",
+    "FtpWkg.dc.html",
+    "FuelHydration.dc.html",
     "Login.dc.html",
     "Dashboard.dc.html",
     "BikeProfile.dc.html",
