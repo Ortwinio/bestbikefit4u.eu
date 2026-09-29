@@ -25,7 +25,7 @@ export default function DashboardError({
     <div className="min-h-[60vh] flex items-center justify-center">
       <div className="max-w-md w-full px-4 text-center">
         <div className="mb-8">
-          <AlertTriangle className="mx-auto mb-4 h-16 w-16 text-warning" />
+          <AlertTriangle className="mx-auto mb-4 h-16 w-16 text-warning-text" />
           <h1 className="mb-2 text-2xl font-bold text-foreground">
             {messages.errors.generic.title}
           </h1>

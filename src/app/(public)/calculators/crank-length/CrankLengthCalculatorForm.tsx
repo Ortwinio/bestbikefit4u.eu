@@ -206,7 +206,7 @@ export function CrankLengthCalculatorForm({
             </div>
 
             {error ? (
-              <div className="rounded-2xl border border-destructive/20 bg-destructive-soft px-4 py-3 text-sm text-destructive">
+              <div className="rounded-2xl border border-destructive/20 bg-destructive-soft px-4 py-3 text-sm text-destructive-text">
                 {error}
               </div>
             ) : null}

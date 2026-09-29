@@ -19,7 +19,7 @@ export default function PublicError({
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
-        <AlertTriangle className="mx-auto mb-4 h-16 w-16 text-warning" />
+        <AlertTriangle className="mx-auto mb-4 h-16 w-16 text-warning-text" />
         <h1 className="mb-2 text-2xl font-bold text-foreground">
           Something went wrong
         </h1>

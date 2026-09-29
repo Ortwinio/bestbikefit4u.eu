@@ -553,7 +553,7 @@ export default function LoginPage() {
     return (
       <Card className="gap-0 rounded-[2rem] border border-border/70 bg-card/95 shadow-sm">
         <CardContent className="pt-8 pb-8 text-center">
-          <CheckCircle className="mx-auto mb-4 h-16 w-16 text-success" />
+          <CheckCircle className="mx-auto mb-4 h-16 w-16 text-success-text" />
           <h2 className="mb-2 text-xl font-semibold text-foreground">
             {text.successTitle}
           </h2>
@@ -596,7 +596,7 @@ export default function LoginPage() {
                 {text.changeEmailAction}
               </Button>
               {sendSuccess && (
-                <p className="rounded-lg bg-success/15 px-3 py-2 text-sm text-success">
+                <p className="rounded-lg bg-success/15 px-3 py-2 text-sm text-success-text">
                   {text.codeSentSuccess}
                 </p>
               )}
@@ -621,13 +621,13 @@ export default function LoginPage() {
               />
 
               {error && (
-                <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
+                <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive-text">
                   {error}
                 </p>
               )}
 
               {resendSuccess && (
-                <p className="rounded-lg bg-success/15 p-3 text-sm text-success">
+                <p className="rounded-lg bg-success/15 p-3 text-sm text-success-text">
                   {text.resendSuccess}
                 </p>
               )}
@@ -711,7 +711,7 @@ export default function LoginPage() {
             />
 
             {error && (
-              <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
+              <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive-text">
                 {error}
               </p>
             )}

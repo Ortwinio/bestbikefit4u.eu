@@ -265,7 +265,7 @@ export function QuestionnaireContainer({
 
       {missingRequiredQuestionIds.length > 0 && (
         <div className="mb-6 rounded-lg border border-border bg-destructive-soft p-4">
-          <p className="text-sm font-medium text-destructive">
+          <p className="text-sm font-medium text-destructive-text">
             {messages.questionnaire.missingRequired.header}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -358,7 +358,7 @@ export function QuestionnaireContainer({
               total: totalQuestions,
             })}
             {currentQuestion.isRequired && (
-              <span className="ml-1 text-destructive">*</span>
+              <span className="ml-1 text-destructive-text">*</span>
             )}
           </p>
         </>

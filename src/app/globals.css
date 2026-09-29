@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-@theme {
+@theme inline {
+  --font-sans: var(--font-body), system-ui, sans-serif;
   --color-background: oklch(var(--background));
   --color-foreground: oklch(var(--foreground));
   --color-card: oklch(var(--card));
@@ -36,6 +37,10 @@
   --color-overlay: oklch(var(--overlay));
   --color-overlay-foreground: oklch(var(--overlay-foreground));
   --color-field-background: oklch(var(--field-background));
+  --color-success-text: oklch(var(--success-text));
+  --color-warning-text: oklch(var(--warning-text));
+  --color-destructive-text: oklch(var(--destructive-text));
+  --color-danger-text: oklch(var(--destructive-text));
   --color-danger: oklch(var(--destructive));
   --color-danger-foreground: oklch(var(--destructive-foreground));
   --color-primary-hover: var(--primary-hover);
@@ -64,75 +69,98 @@
 }
 
 :root {
-  --public-shell-background: 99.20% 0.004 248.0;
-  --public-shell-elevated: 97.80% 0.010 244.0;
-  --public-card: 98.90% 0.002 248.0;
-  --public-card-subtle: 97.10% 0.010 243.0;
-  --public-card-strong: 96.40% 0.020 242.0;
-  --public-band: 95.60% 0.018 242.3;
-  --public-hero: 96.20% 0.022 241.0;
-  --public-cta: 94.80% 0.026 240.0;
-  --public-border-soft: 90.80% 0.016 242.3;
-  --public-border-strong: 84.20% 0.032 241.0;
+  /* Locked brand palette; semantic tokens below also provide dark-mode adaptation. */
+  --bbf-lime: #CFF26A;
+  --bbf-lime-zacht: #E6F8A8;
+  --bbf-petrol: #0A7263;
+  --bbf-petrol-hover: #075A4E;
+  --bbf-petrol-zacht: #E1F2EE;
+  --bbf-inkt: #0F2420;
+  --bbf-tekst: #3B4F4A;
+  --bbf-gedempt: #4A5F5A;
+  --bbf-op-donker: #B9CCC6;
+  --bbf-rand: #DCE6E1;
+  --bbf-papier: #F5F8F3;
+  --bbf-wit: #FFFFFF;
+  --bbf-warning: #FFD66B;
+  --bbf-destructive: #FFB199;
+  --bbf-font-display: var(--font-display), sans-serif;
+  --bbf-font-body: var(--font-body), system-ui, sans-serif;
+  --bbf-font-cijfers: var(--font-mono), ui-monospace, monospace;
+  --bbf-radius-knop: 999px;
+  --bbf-radius-kaart: 24px;
+  --bbf-radius-paneel: 32px;
+  --bbf-radius-veld: 14px;
+
+  --public-shell-background: 97.54721% 0.0073056 132.41432;
+  --public-shell-elevated: 94.74321% 0.0187021 180.26554;
+  --public-card: 100.00000% 0.0000000 89.87556;
+  --public-card-subtle: 94.74321% 0.0187021 180.26554;
+  --public-card-strong: 94.73259% 0.1036280 118.73767;
+  --public-band: 94.74321% 0.0187021 180.26554;
+  --public-hero: 94.73259% 0.1036280 118.73767;
+  --public-cta: 94.73259% 0.1036280 118.73767;
+  --public-border-soft: 91.59516% 0.0126119 164.77798;
+  --public-border-strong: 91.59516% 0.0126119 164.77798;
   --public-shadow: 0 12px 30px -24px color-mix(in oklch, oklch(var(--foreground)) 24%, transparent);
   --public-shadow-strong: 0 18px 40px -28px color-mix(in oklch, oklch(var(--foreground)) 28%, transparent);
-  --public-shell-glow: 66.11% 0.156 242.3 / 0.16;
-  --dashboard-shell: 98.60% 0.006 246.0;
-  --dashboard-shell-elevated: 97.50% 0.012 243.0;
-  --dashboard-sidebar: 95.60% 0.019 241.8;
-  --dashboard-sidebar-elevated: 97.20% 0.012 244.2;
-  --dashboard-surface: 98.10% 0.007 246.0;
-  --dashboard-surface-muted: 96.70% 0.014 242.0;
-  --dashboard-surface-strong: 95.90% 0.022 241.0;
-  --dashboard-hero: 95.80% 0.022 241.2;
-  --dashboard-border-soft: 86.80% 0.024 241.8;
-  --dashboard-border-strong: 79.80% 0.040 241.0;
+  --public-shell-glow: 24.12662% 0.0283111 180.00152 / 0.38;
+  --dashboard-shell: 97.54721% 0.0073056 132.41432;
+  --dashboard-shell-elevated: 94.74321% 0.0187021 180.26554;
+  --dashboard-sidebar: 94.74321% 0.0187021 180.26554;
+  --dashboard-sidebar-elevated: 94.74321% 0.0187021 180.26554;
+  --dashboard-surface: 100.00000% 0.0000000 89.87556;
+  --dashboard-surface-muted: 94.74321% 0.0187021 180.26554;
+  --dashboard-surface-strong: 94.73259% 0.1036280 118.73767;
+  --dashboard-hero: 94.73259% 0.1036280 118.73767;
+  --dashboard-border-soft: 91.59516% 0.0126119 164.77798;
+  --dashboard-border-strong: 91.59516% 0.0126119 164.77798;
   --dashboard-shadow: 0 14px 32px -24px color-mix(in oklch, oklch(var(--foreground)) 18%, transparent);
   --dashboard-shadow-strong: 0 22px 46px -30px color-mix(in oklch, oklch(var(--foreground)) 22%, transparent);
-  --dashboard-nav-foreground: 33.50% 0.032 241.0;
-  --dashboard-nav-foreground-strong: 24.50% 0.026 246.0;
-  --dashboard-nav-hover-surface: 93.80% 0.024 241.0;
-  --dashboard-nav-active-surface: 90.60% 0.038 240.8;
-  --dashboard-backdrop: 26.00% 0.012 264.0 / 0.38;
-  --dashboard-field-background: 99.40% 0.002 248.0;
-  --dashboard-field-border: oklch(0% 0 0 / 0.10);
-  --dashboard-field-border-hover: oklch(0% 0 0 / 0.18);
+  --dashboard-nav-foreground: 46.65532% 0.0267256 178.91784;
+  --dashboard-nav-foreground-strong: 24.12662% 0.0283111 180.00152;
+  --dashboard-nav-hover-surface: 94.73259% 0.1036280 118.73767;
+  --dashboard-nav-active-surface: 94.73259% 0.1036280 118.73767;
+  --dashboard-backdrop: 24.12662% 0.0283111 180.00152 / 0.38;
+  --dashboard-field-background: 100.00000% 0.0000000 89.87556;
+  --dashboard-field-border: oklch(91.59516% 0.0126119 164.77798);
+  --dashboard-field-border-hover: oklch(49.55246% 0.0880509 179.13989);
   --dashboard-card: var(--dashboard-surface);
-  --background: 100.00% 0.000 0.0;
-  --foreground: 24.08% 0.020 271.8;
+  --background: 97.54721% 0.0073056 132.41432;
+  --foreground: 24.12662% 0.0283111 180.00152;
   --card: var(--public-card);
-  --card-foreground: 24.08% 0.020 271.8;
-  --popover: 100.00% 0.000 0.0;
-  --popover-foreground: 24.08% 0.020 271.8;
-  --primary: 66.11% 0.156 242.3;
-  --primary-foreground: 98.50% 0.000 0.0;
-  --primary-light: 78.00% 0.092 240.0;
-  --primary-middle: 71.50% 0.122 241.5;
-  --primary-dark: 57.00% 0.145 242.3;
+  --card-foreground: 24.12662% 0.0283111 180.00152;
+  --popover: 97.54721% 0.0073056 132.41432;
+  --popover-foreground: 24.12662% 0.0283111 180.00152;
+  --primary: 49.55246% 0.0880509 179.13989;
+  --primary-foreground: 100.00000% 0.0000000 89.87556;
+  --primary-light: 94.74321% 0.0187021 180.26554;
+  --primary-middle: 49.55246% 0.0880509 179.13989;
+  --primary-dark: 41.99046% 0.0742164 179.31931;
   --secondary: var(--public-band);
-  --secondary-foreground: 31.00% 0.032 242.3;
-  --muted: 96.60% 0.006 248.0;
-  --muted-foreground: 50.04% 0.040 238.3;
-  --accent: 95.20% 0.032 60.0;
-  --accent-foreground: 31.00% 0.060 48.0;
-  --destructive: 63.68% 0.208 8.0;
-  --destructive-foreground: 14.00% 0.004 286.0;
-  --success: 72.05% 0.192 160.3;
-  --success-foreground: 14.00% 0.004 286.0;
-  --warning: 74.09% 0.168 60.0;
-  --warning-foreground: 24.08% 0.020 271.8;
-  --info: 66.11% 0.156 242.3;
-  --info-foreground: 98.50% 0.000 0.0;
-  --border: 90.80% 0.016 242.3;
-  --border-light: 96.80% 0.004 248.0;
-  --border-dark: 79.00% 0.025 238.3;
-  --input: 90.80% 0.016 242.3;
-  --ring: 66.11% 0.156 242.3;
+  --secondary-foreground: 24.12662% 0.0283111 180.00152;
+  --muted: 94.74321% 0.0187021 180.26554;
+  --muted-foreground: 46.65532% 0.0267256 178.91784;
+  --accent: 90.91632% 0.1665224 121.85914;
+  --accent-foreground: 24.12662% 0.0283111 180.00152;
+  --destructive: 82.90148% 0.0978429 37.82491;
+  --destructive-foreground: 24.12662% 0.0283111 180.00152;
+  --success: 90.91632% 0.1665224 121.85914;
+  --success-foreground: 24.12662% 0.0283111 180.00152;
+  --warning: 89.05702% 0.1333179 88.52761;
+  --warning-foreground: 24.12662% 0.0283111 180.00152;
+  --info: 49.55246% 0.0880509 179.13989;
+  --info-foreground: 100.00000% 0.0000000 89.87556;
+  --border: 91.59516% 0.0126119 164.77798;
+  --border-light: 91.59516% 0.0126119 164.77798;
+  --border-dark: 91.59516% 0.0126119 164.77798;
+  --input: 91.59516% 0.0126119 164.77798;
+  --ring: 49.55246% 0.0880509 179.13989;
   --surface: var(--public-card);
-  --surface-foreground: 24.08% 0.020 271.8;
-  --overlay: 100.00% 0.000 0.0;
-  --overlay-foreground: 24.08% 0.020 271.8;
-  --field-background: 100.00% 0.000 0.0;
+  --surface-foreground: 24.12662% 0.0283111 180.00152;
+  --overlay: 97.54721% 0.0073056 132.41432;
+  --overlay-foreground: 24.12662% 0.0283111 180.00152;
+  --field-background: 100.00000% 0.0000000 89.87556;
   --panel-surface: var(--dashboard-sidebar);
   --panel-surface-subtle: var(--dashboard-surface-muted);
   --panel-foreground: var(--foreground);
@@ -146,104 +174,103 @@
   --panel-field-border-hover: var(--dashboard-field-border-hover);
   --panel-shell-background: var(--dashboard-shell);
 
+  /* Text colors are separate from the pale status chip fills. */
+  --success-text: var(--foreground);
+  --warning-text: var(--foreground);
+  --destructive-text: var(--foreground);
+
   /* Backwards-compat alias */
   --danger: var(--destructive);
   --danger-foreground: var(--destructive-foreground);
 
   /* Derived */
-  --primary-hover: color-mix(in oklab, oklch(66.11% 0.156 242.3) 88%, oklch(98.50% 0.000 0.0) 12%);
-  --destructive-hover: color-mix(in oklab, oklch(63.68% 0.208 8.0) 90%, oklch(14.00% 0.004 286.0) 10%);
-  --success-hover: color-mix(in oklab, oklch(72.05% 0.192 160.3) 90%, oklch(14.00% 0.004 286.0) 10%);
-  --warning-hover: color-mix(in oklab, oklch(74.09% 0.168 60.0) 88%, oklch(24.08% 0.020 271.8) 12%);
-  --accent-hover: color-mix(in oklab, oklch(95.20% 0.032 60.0) 88%, oklch(74.09% 0.168 60.0) 12%);
-  --primary-soft: color-mix(in oklab, oklch(66.11% 0.156 242.3) 14%, transparent);
-  --primary-soft-hover: color-mix(in oklab, oklch(66.11% 0.156 242.3) 20%, transparent);
-  --destructive-soft: color-mix(in oklab, oklch(63.68% 0.208 8.0) 15%, transparent);
-  --destructive-soft-hover: color-mix(in oklab, oklch(63.68% 0.208 8.0) 20%, transparent);
-  --surface-secondary: var(--public-card-subtle);
-  --surface-tertiary: var(--public-hero);
-  --field-border: oklch(0% 0 0 / 0.12);
-  --field-border-hover: oklch(0% 0 0 / 0.22);
-  --field-border-invalid: oklch(63.68% 0.208 8.0);
+  --primary-hover: oklch(41.99046% 0.0742164 179.31931);
+  --destructive-hover: oklch(82.90148% 0.0978429 37.82491);
+  --success-hover: oklch(94.73259% 0.1036280 118.73767);
+  --warning-hover: oklch(89.05702% 0.1333179 88.52761);
+  --accent-hover: oklch(94.73259% 0.1036280 118.73767);
+  --primary-soft: oklch(94.74321% 0.0187021 180.26554);
+  --primary-soft-hover: oklch(94.74321% 0.0187021 180.26554);
+  --destructive-soft: oklch(82.90148% 0.0978429 37.82491);
+  --destructive-soft-hover: oklch(82.90148% 0.0978429 37.82491);
+  --surface-secondary: oklch(var(--public-card-subtle));
+  --surface-tertiary: oklch(var(--public-hero));
+  --field-border: oklch(91.59516% 0.0126119 164.77798);
+  --field-border-hover: oklch(49.55246% 0.0880509 179.13989);
+  --field-border-invalid: oklch(49.55246% 0.0880509 179.13989);
 
-  --font-sans:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  --font-heading: var(--font-sans);
-  --font-mono:
-    "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
 .dark {
-  --public-shell-background: 22.80% 0.019 268.0;
-  --public-shell-elevated: 26.20% 0.022 262.0;
-  --public-card: 29.20% 0.021 259.0;
-  --public-card-subtle: 32.40% 0.024 256.0;
-  --public-card-strong: 35.20% 0.035 247.0;
-  --public-band: 35.00% 0.032 246.0;
-  --public-hero: 36.00% 0.040 244.0;
-  --public-cta: 38.00% 0.046 242.0;
-  --public-border-soft: 38.00% 0.022 242.3;
-  --public-border-strong: 46.00% 0.035 241.0;
+  --public-shell-background: 24.12662% 0.0283111 180.00152;
+  --public-shell-elevated: 29.74506% 0.0351159 177.67575;
+  --public-card: 29.74506% 0.0351159 177.67575;
+  --public-card-subtle: 29.74506% 0.0351159 177.67575;
+  --public-card-strong: 36.18102% 0.0424832 176.78888;
+  --public-band: 29.74506% 0.0351159 177.67575;
+  --public-hero: 36.18102% 0.0424832 176.78888;
+  --public-cta: 36.18102% 0.0424832 176.78888;
+  --public-border-soft: 46.65532% 0.0267256 178.91784;
+  --public-border-strong: 46.65532% 0.0267256 178.91784;
   --public-shadow: 0 14px 34px -26px color-mix(in oklch, oklch(var(--foreground)) 18%, transparent);
   --public-shadow-strong: 0 20px 44px -30px color-mix(in oklch, oklch(var(--foreground)) 22%, transparent);
-  --public-shell-glow: 72.00% 0.145 242.3 / 0.22;
-  --dashboard-shell: 24.80% 0.020 266.0;
-  --dashboard-shell-elevated: 27.60% 0.022 261.0;
-  --dashboard-sidebar: 26.60% 0.024 257.0;
-  --dashboard-sidebar-elevated: 30.00% 0.028 252.0;
-  --dashboard-surface: 31.20% 0.024 258.0;
-  --dashboard-surface-muted: 34.00% 0.024 254.0;
-  --dashboard-surface-strong: 37.40% 0.036 246.0;
-  --dashboard-hero: 36.60% 0.040 244.0;
-  --dashboard-border-soft: 43.00% 0.026 242.0;
-  --dashboard-border-strong: 52.00% 0.040 241.0;
+  --public-shell-glow: 24.12662% 0.0283111 180.00152 / 0.38;
+  --dashboard-shell: 24.12662% 0.0283111 180.00152;
+  --dashboard-shell-elevated: 29.74506% 0.0351159 177.67575;
+  --dashboard-sidebar: 29.74506% 0.0351159 177.67575;
+  --dashboard-sidebar-elevated: 29.74506% 0.0351159 177.67575;
+  --dashboard-surface: 29.74506% 0.0351159 177.67575;
+  --dashboard-surface-muted: 29.74506% 0.0351159 177.67575;
+  --dashboard-surface-strong: 36.18102% 0.0424832 176.78888;
+  --dashboard-hero: 36.18102% 0.0424832 176.78888;
+  --dashboard-border-soft: 46.65532% 0.0267256 178.91784;
+  --dashboard-border-strong: 46.65532% 0.0267256 178.91784;
   --dashboard-shadow: 0 16px 36px -26px color-mix(in oklch, oklch(var(--foreground)) 14%, transparent);
   --dashboard-shadow-strong: 0 24px 52px -34px color-mix(in oklch, oklch(var(--foreground)) 18%, transparent);
-  --dashboard-nav-foreground: 87.00% 0.020 240.0;
-  --dashboard-nav-foreground-strong: 97.50% 0.010 245.0;
-  --dashboard-nav-hover-surface: 38.00% 0.034 246.5;
-  --dashboard-nav-active-surface: 44.20% 0.050 241.0;
-  --dashboard-backdrop: 0% 0 0 / 0.52;
-  --dashboard-field-background: 29.40% 0.020 258.0;
-  --dashboard-field-border: oklch(100% 0 0 / 0.12);
-  --dashboard-field-border-hover: oklch(100% 0 0 / 0.22);
+  --dashboard-nav-foreground: 82.90924% 0.0222050 174.86826;
+  --dashboard-nav-foreground-strong: 100.00000% 0.0000000 89.87556;
+  --dashboard-nav-hover-surface: 36.18102% 0.0424832 176.78888;
+  --dashboard-nav-active-surface: 36.18102% 0.0424832 176.78888;
+  --dashboard-backdrop: 24.12662% 0.0283111 180.00152 / 0.38;
+  --dashboard-field-background: 29.74506% 0.0351159 177.67575;
+  --dashboard-field-border: oklch(46.65532% 0.0267256 178.91784);
+  --dashboard-field-border-hover: oklch(77.23989% 0.0845368 176.14123);
   --dashboard-card: var(--dashboard-surface);
-  --background: 24.08% 0.020 271.8;
-  --foreground: 98.48% 0.000 0.0;
+  --background: 24.12662% 0.0283111 180.00152;
+  --foreground: 100.00000% 0.0000000 89.87556;
   --card: var(--public-card);
-  --card-foreground: 98.48% 0.000 0.0;
-  --popover: 24.08% 0.020 271.8;
-  --popover-foreground: 98.48% 0.000 0.0;
-  --primary: 72.00% 0.145 242.3;
-  --primary-foreground: 98.50% 0.000 0.0;
-  --primary-light: 80.00% 0.110 240.0;
-  --primary-middle: 75.50% 0.128 241.5;
-  --primary-dark: 63.00% 0.135 242.3;
+  --card-foreground: 100.00000% 0.0000000 89.87556;
+  --popover: 24.12662% 0.0283111 180.00152;
+  --popover-foreground: 100.00000% 0.0000000 89.87556;
+  --primary: 77.23989% 0.0845368 176.14123;
+  --primary-foreground: 24.12662% 0.0283111 180.00152;
+  --primary-light: 94.74321% 0.0187021 180.26554;
+  --primary-middle: 77.23989% 0.0845368 176.14123;
+  --primary-dark: 77.23989% 0.0845368 176.14123;
   --secondary: var(--public-band);
-  --secondary-foreground: 98.43% 0.019 243.0;
-  --muted: 30.00% 0.014 255.0;
-  --muted-foreground: 76.00% 0.018 240.0;
-  --accent: 36.00% 0.060 60.0;
-  --accent-foreground: 92.00% 0.024 80.0;
-  --destructive: 55.00% 0.180 8.0;
-  --destructive-foreground: 98.50% 0.000 0.0;
-  --success: 79.99% 0.182 160.3;
-  --success-foreground: 14.00% 0.004 286.0;
-  --warning: 78.00% 0.145 60.0;
-  --warning-foreground: 24.08% 0.020 271.8;
-  --info: 72.00% 0.145 242.3;
-  --info-foreground: 98.50% 0.000 0.0;
-  --border: 38.00% 0.022 242.3;
-  --border-light: 46.00% 0.024 240.0;
-  --border-dark: 29.00% 0.018 258.0;
-  --input: 30.00% 0.014 255.0;
-  --ring: 72.00% 0.145 242.3;
+  --secondary-foreground: 100.00000% 0.0000000 89.87556;
+  --muted: 29.74506% 0.0351159 177.67575;
+  --muted-foreground: 82.90924% 0.0222050 174.86826;
+  --accent: 90.91632% 0.1665224 121.85914;
+  --accent-foreground: 24.12662% 0.0283111 180.00152;
+  --destructive: 82.90148% 0.0978429 37.82491;
+  --destructive-foreground: 24.12662% 0.0283111 180.00152;
+  --success: 90.91632% 0.1665224 121.85914;
+  --success-foreground: 24.12662% 0.0283111 180.00152;
+  --warning: 89.05702% 0.1333179 88.52761;
+  --warning-foreground: 24.12662% 0.0283111 180.00152;
+  --info: 77.23989% 0.0845368 176.14123;
+  --info-foreground: 24.12662% 0.0283111 180.00152;
+  --border: 46.65532% 0.0267256 178.91784;
+  --border-light: 46.65532% 0.0267256 178.91784;
+  --border-dark: 46.65532% 0.0267256 178.91784;
+  --input: 46.65532% 0.0267256 178.91784;
+  --ring: 77.23989% 0.0845368 176.14123;
   --surface: var(--public-card);
-  --surface-foreground: 98.48% 0.000 0.0;
-  --overlay: 21.00% 0.018 265.0;
-  --overlay-foreground: 98.48% 0.000 0.0;
-  --field-background: 28.00% 0.020 260.0;
+  --surface-foreground: 100.00000% 0.0000000 89.87556;
+  --overlay: 24.12662% 0.0283111 180.00152;
+  --overlay-foreground: 100.00000% 0.0000000 89.87556;
+  --field-background: 29.74506% 0.0351159 177.67575;
   --panel-surface: var(--dashboard-sidebar);
   --panel-surface-subtle: var(--dashboard-surface-muted);
   --panel-foreground: var(--foreground);
@@ -257,25 +284,37 @@
   --panel-field-border-hover: var(--dashboard-field-border-hover);
   --panel-shell-background: var(--dashboard-shell);
 
+  --success-text: var(--success);
+  --warning-text: var(--warning);
+  --destructive-text: var(--destructive);
+
   /* Backwards-compat alias */
   --danger: var(--destructive);
   --danger-foreground: var(--destructive-foreground);
 
   /* Derived */
-  --primary-hover: color-mix(in oklab, oklch(72.00% 0.145 242.3) 88%, oklch(98.50% 0.000 0.0) 12%);
-  --destructive-hover: color-mix(in oklab, oklch(55.00% 0.180 8.0) 90%, oklch(98.50% 0.000 0.0) 10%);
-  --success-hover: color-mix(in oklab, oklch(79.99% 0.182 160.3) 90%, oklch(14.00% 0.004 286.0) 10%);
-  --warning-hover: color-mix(in oklab, oklch(78.00% 0.145 60.0) 88%, oklch(24.08% 0.020 271.8) 12%);
-  --accent-hover: color-mix(in oklab, oklch(36.00% 0.060 60.0) 88%, oklch(78.00% 0.145 60.0) 12%);
-  --primary-soft: color-mix(in oklab, oklch(72.00% 0.145 242.3) 18%, transparent);
-  --primary-soft-hover: color-mix(in oklab, oklch(72.00% 0.145 242.3) 24%, transparent);
-  --destructive-soft: color-mix(in oklab, oklch(55.00% 0.180 8.0) 15%, transparent);
-  --destructive-soft-hover: color-mix(in oklab, oklch(55.00% 0.180 8.0) 20%, transparent);
-  --surface-secondary: var(--public-card-subtle);
-  --surface-tertiary: var(--public-hero);
-  --field-border: oklch(100% 0 0 / 0.12);
-  --field-border-hover: oklch(100% 0 0 / 0.22);
-  --field-border-invalid: oklch(55.00% 0.180 8.0);
+  --primary-hover: oklch(94.74321% 0.0187021 180.26554);
+  --destructive-hover: oklch(82.90148% 0.0978429 37.82491);
+  --success-hover: oklch(94.73259% 0.1036280 118.73767);
+  --warning-hover: oklch(89.05702% 0.1333179 88.52761);
+  --accent-hover: oklch(94.73259% 0.1036280 118.73767);
+  --primary-soft: oklch(36.18102% 0.0424832 176.78888);
+  --primary-soft-hover: oklch(36.18102% 0.0424832 176.78888);
+  --destructive-soft: oklch(36.18102% 0.0424832 176.78888);
+  --destructive-soft-hover: oklch(36.18102% 0.0424832 176.78888);
+  --surface-secondary: oklch(var(--public-card-subtle));
+  --surface-tertiary: oklch(var(--public-hero));
+  --field-border: oklch(46.65532% 0.0267256 178.91784);
+  --field-border-hover: oklch(77.23989% 0.0845368 176.14123);
+  --field-border-invalid: oklch(77.23989% 0.0845368 176.14123);
+}
+
+@utility font-display {
+  font-family: var(--font-display), sans-serif;
+}
+
+@utility font-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
 }
 
 @utility focus-ring {
@@ -289,7 +328,7 @@
 }
 
 @utility invalid-field-ring {
-  box-shadow: 0 0 0 2px oklch(var(--destructive));
+  box-shadow: 0 0 0 2px var(--field-border-invalid);
 }
 
 @utility status-disabled {
@@ -305,7 +344,7 @@
 }
 
 @utility shadow-inset-track {
-  box-shadow: inset 0 1px 2px rgb(15 23 42 / 0.08);
+  box-shadow: inset 0 1px 2px rgb(15 36 32 / 0.08);
 }
 
 @utility no-scrollbar {
@@ -325,29 +364,17 @@
 }
 
 @utility dashboard-hero-surface {
-  background:
-    linear-gradient(
-      160deg,
-      color-mix(in oklch, oklch(var(--dashboard-hero)) 88%, oklch(var(--primary)) 12%),
-      color-mix(in oklch, oklch(var(--dashboard-surface)) 82%, oklch(var(--secondary)) 18%)
-    );
+  background: oklch(var(--dashboard-hero));
   border-color: color-mix(in oklch, oklch(var(--dashboard-border-strong)) 74%, oklch(var(--primary)) 26%);
   box-shadow: var(--dashboard-shadow-strong);
 }
 
 @utility dashboard-shell-surface {
-  background:
-    radial-gradient(circle at top, oklch(var(--public-shell-glow)), transparent 38%),
-    linear-gradient(180deg, oklch(var(--dashboard-shell)), oklch(var(--dashboard-shell-elevated)));
+  background: oklch(var(--dashboard-shell));
 }
 
 @utility dashboard-sidebar-surface {
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in oklch, oklch(var(--dashboard-sidebar)) 94%, oklch(var(--dashboard-shell)) 6%),
-      color-mix(in oklch, oklch(var(--dashboard-sidebar-elevated)) 82%, oklch(var(--dashboard-shell-elevated)) 18%)
-    );
+  background: oklch(var(--dashboard-sidebar));
   color: oklch(var(--foreground));
   border-color: oklch(var(--dashboard-border-soft));
   box-shadow:
@@ -357,7 +384,6 @@
 
 @utility dashboard-theme-context {
   --background: var(--dashboard-shell);
-  --foreground: var(--foreground);
   --card: var(--dashboard-surface);
   --card-foreground: var(--foreground);
   --secondary: var(--dashboard-surface-muted);
@@ -387,23 +413,13 @@
 }
 
 @utility public-hero-surface {
-  background:
-    linear-gradient(
-      160deg,
-      color-mix(in oklch, oklch(var(--public-hero)) 90%, oklch(var(--primary)) 10%),
-      color-mix(in oklch, oklch(var(--public-card)) 88%, oklch(var(--secondary)) 12%)
-    );
+  background: oklch(var(--public-hero));
   border-color: oklch(var(--public-border-strong));
   box-shadow: var(--public-shadow-strong);
 }
 
 @utility public-cta-surface {
-  background:
-    linear-gradient(
-      135deg,
-      color-mix(in oklch, oklch(var(--public-card-strong)) 78%, oklch(var(--primary)) 22%) 0%,
-      color-mix(in oklch, oklch(var(--public-cta)) 82%, oklch(var(--secondary)) 18%) 100%
-    );
+  background: oklch(var(--public-cta));
   border-color: color-mix(in oklch, oklch(var(--public-border-strong)) 68%, oklch(var(--primary)) 32%);
   box-shadow: var(--public-shadow-strong);
 }
@@ -421,12 +437,7 @@
 }
 
 @utility public-calculator-result {
-  background:
-    linear-gradient(
-      160deg,
-      color-mix(in oklch, oklch(var(--dashboard-hero)) 84%, oklch(var(--primary)) 16%),
-      color-mix(in oklch, oklch(var(--dashboard-surface)) 80%, oklch(var(--primary)) 20%)
-    );
+  background: oklch(var(--dashboard-hero));
   border-color: color-mix(in oklch, oklch(var(--dashboard-border-strong)) 70%, oklch(var(--primary)) 30%);
   box-shadow: var(--dashboard-shadow-strong);
 }
@@ -501,12 +512,9 @@
 
   body {
     min-height: 100vh;
-    background:
-      radial-gradient(circle at top, oklch(var(--public-shell-glow)), transparent 32%),
-      radial-gradient(circle at 18% 12%, color-mix(in oklch, oklch(var(--primary)) 8%, transparent), transparent 26%),
-      linear-gradient(180deg, oklch(var(--public-shell-background)), oklch(var(--public-shell-elevated)));
+    background: oklch(var(--public-shell-background));
     color: oklch(var(--foreground));
-    font-family: var(--font-sans);
+    font-family: var(--font-body), system-ui, sans-serif;
   }
 
   h1,
@@ -516,7 +524,7 @@
   h5,
   h6 {
     color: oklch(var(--foreground));
-    font-family: var(--font-heading);
+    font-family: var(--font-display), sans-serif;
     letter-spacing: -0.02em;
   }
 }

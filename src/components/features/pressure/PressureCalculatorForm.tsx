@@ -351,7 +351,7 @@ export function PressureCalculatorForm({
           {(findError(errors, "bodyWeightKg") ||
             findError(errors, "widthFrontMm") ||
             findError(errors, "widthRearMm")) && (
-            <div className="rounded-2xl border border-destructive/20 bg-destructive-soft px-4 py-3 text-sm text-destructive">
+            <div className="rounded-2xl border border-destructive/20 bg-destructive-soft px-4 py-3 text-sm text-destructive-text">
               {findError(errors, "bodyWeightKg") ||
                 findError(errors, "widthFrontMm") ||
                 findError(errors, "widthRearMm")}

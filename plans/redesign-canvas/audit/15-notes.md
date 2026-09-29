@@ -9,6 +9,12 @@ Implemented on `redesign/canvas`, uncommitted for lead review. No canvas or draf
 - `npm run test:unit`: 162 files, 640 tests passed.
 - `npm run build`: passed, 229 static pages generated. Google Fonts required network access outside the sandbox; no missing environment variables or invented credentials.
 
+## Visual verification
+
+Started `npm run dev:frontend`. The pre-existing server was unresponsive and required a restart; development server remains on port 3000. Headless Chromium screenshots at 1440×1000 (full page) are saved to `../code-renders/15-home.png`, `15-saddle-height.png`, `15-pricing.png`, `15-login.png` and visually reviewed. All four required routes returned HTTP 200, with no browser runtime errors, broken images, or horizontal overflow. Computed body/heading fonts are Figtree/Bricolage Grotesque. Cookie banner dismissed for final captures.
+
+External HTTPS requests were blocked for deterministic screenshots (analytics/backend feeds); the home bike feed therefore shows its existing loading state. This is visual verification, not live backend or authentication validation. Existing hero imagery, page-specific icon colors and raw-color styling remain for subsequent layout work. Login default OG metadata points to the brand social image; public metadata depends on asynchronous page metadata and was not present at screenshot time.
+
 ## Shared component compatibility
 
 - Status fills are pale brand colors; existing standalone status text classes now use `text-success-text`, `text-warning-text`, `text-destructive-text` and `text-danger-text` (including opacity variants). These are readable on existing page surfaces.

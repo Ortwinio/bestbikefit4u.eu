@@ -417,7 +417,7 @@ function BodyMeasurementsEditor({
             onChange={set("inseamCm")}
           />
           {inseamWarning && (
-            <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-warning" />}>
+            <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-warning-text" />}>
               <p className="text-sm text-warning-foreground">{inseamWarning}</p>
             </InfoBox>
           )}
@@ -432,7 +432,7 @@ function BodyMeasurementsEditor({
             onChange={set("weightKg")}
           />
           {weightWarning && (
-            <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-warning" />}>
+            <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-warning-text" />}>
               <p className="text-sm text-warning-foreground">{weightWarning}</p>
             </InfoBox>
           )}

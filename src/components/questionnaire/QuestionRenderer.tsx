@@ -70,7 +70,7 @@ export function QuestionRenderer({
           className="text-xl font-semibold text-foreground focus-visible:focus-ring"
         >
           {questionText}
-          {question.isRequired && <span className="ml-1 text-destructive">*</span>}
+          {question.isRequired && <span className="ml-1 text-destructive-text">*</span>}
         </h2>
         {helpText && (
           <div className="mt-2 flex items-start gap-2 rounded-lg border border-border bg-muted p-3">

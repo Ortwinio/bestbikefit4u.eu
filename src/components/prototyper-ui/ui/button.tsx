@@ -19,54 +19,23 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: [
-          // Base styles
-          "relative rounded-lg overflow-visible shadow-surface border border-primary dark:border-primary-dark",
-          "isolate text-primary-foreground [text-shadow:_0_1px_2px_oklch(0%_0_0_/_30%)]",
-          "[&>*]:relative [&>*]:z-[2]",
-          // Combined gradient layer with primary colors
-          "before:pointer-events-none before:absolute before:inset-[-0.5px] before:rounded-[inherit]",
-          "before:bg-gradient-to-br before:from-primary-light before:via-primary-middle before:to-primary-dark",
-          "before:dark:from-primary-light before:dark:via-primary-middle before:dark:to-primary-dark",
-          "before:z-[-1]",
-          // Additional outer border
-          "after:pointer-events-none after:absolute after:inset-[0.5px] after:rounded-[inherit]",
-          "after:bg-gradient-to-br after:from-primary after:to-primary-dark",
-          "after:z-[-1] after:transition-opacity after:duration-200 after:opacity-40 after:motion-reduce:transition-none",
-          // Hover state
-          "hover-only:before:brightness-[1.04] hover-only:after:opacity-100 hover-only:transition-opacity hover-only:duration-200",
-        ].join(" "),
+        default:
+          "bg-primary text-primary-foreground hover-only:hover:bg-primary-hover",
         destructive:
           "bg-destructive text-destructive-foreground hover-only:hover:bg-destructive-hover",
-        outline: [
-          // Base styles
-          "relative rounded-lg overflow-visible shadow-field border",
-          "isolate text-foreground",
-          "[&>*]:relative [&>*]:z-[2]",
-          // Background layer
-          "before:pointer-events-none before:absolute before:inset-[-0.5px] before:rounded-[inherit]",
-          "before:bg-gradient-to-br before:from-border-light before:via-border before:to-border-dark/50",
-          "before:dark:from-border-light before:dark:to-border-dark",
-          "before:z-[-1]",
-          // Inner background layer
-          "after:pointer-events-none after:absolute after:inset-[0.5px] after:rounded-[inherit]",
-          "after:bg-background",
-          "after:z-[-1]",
-          "after:transition-colors after:duration-200 after:ease-out after:motion-reduce:transition-none",
-          // Hover state
-          "hover-only:after:bg-[color:color-mix(in_oklch,var(--primary)_12%,var(--background)_88%)]",
-        ].join(" "),
+        outline:
+          "border border-foreground bg-background text-foreground hover-only:hover:bg-muted",
         secondary:
-          "bg-secondary text-secondary-foreground hover-only:hover:bg-[color:color-mix(in_oklch,var(--secondary)_78%,var(--primary)_22%)]",
+          "bg-secondary text-secondary-foreground hover-only:hover:bg-muted",
         ghost: "hover-only:bg-accent hover-only:text-accent-foreground motion-safe:active:scale-100",
         "primary-soft":
-          "bg-primary-soft text-primary hover-only:hover:bg-[color:color-mix(in_oklch,var(--primary)_18%,var(--background)_82%)] hover-only:hover:text-[color:color-mix(in_oklch,var(--primary)_94%,black_6%)]",
+          "bg-primary-soft text-primary hover-only:hover:bg-primary-soft-hover",
         "destructive-soft":
-          "bg-destructive-soft text-destructive hover-only:hover:bg-destructive-soft-hover",
+          "bg-destructive-soft text-destructive-text hover-only:hover:bg-destructive-soft-hover",
         success:
-          "bg-success text-success-foreground hover-only:hover:bg-[color:color-mix(in_oklch,var(--success)_84%,black_16%)]",
+          "bg-success text-success-foreground hover-only:hover:bg-success-hover",
         warning:
-          "bg-warning text-warning-foreground hover-only:hover:bg-[color:color-mix(in_oklch,var(--warning)_84%,black_16%)]",
+          "bg-warning text-warning-foreground hover-only:hover:bg-warning-hover",
         link: "dark:text-primary-light text-primary-dark underline-offset-4 hover-only:underline motion-safe:active:scale-100",
       },
       size: {

@@ -47,7 +47,7 @@ export function StepRidingStyle() {
       </p>
 
       {hasMissingAnswers && (
-        <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
+        <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive-text">
           {locale === "nl"
             ? "Beantwoord alle vier de vragen over je rijstijl voordat je je profiel opslaat."
             : "Please answer all four riding-style questions before saving your profile."}
