@@ -30,12 +30,8 @@ describe("dashboard gearing page", () => {
   it("renders the dashboard gearing shell in English", () => {
     render(<DashboardGearingPage />);
 
-    expect(screen.getByText("Gearing Calculator")).toBeTruthy();
-    expect(
-      screen.getByText(
-        "See what your current or planned gearing means for a real climb, with bike prefill and a clear recommendation for the next step."
-      )
-    ).toBeTruthy();
+    expect(screen.getByText("Can you climb it?")).toBeTruthy();
+    expect(screen.getByText("Choose your bike and adjust the numbers to match your ride.")).toBeTruthy();
     expect(screen.getByText("Dashboard gearing form")).toBeTruthy();
   });
 
@@ -43,12 +39,8 @@ describe("dashboard gearing page", () => {
     locale = "nl";
     render(<DashboardGearingPage />);
 
-    expect(screen.getByText("Versnellingscalculator")).toBeTruthy();
-    expect(
-      screen.getByText(
-        "Bekijk wat je huidige of geplande gearing betekent voor een echte klim, met bike-prefill en een duidelijk advies voor de volgende stap."
-      )
-    ).toBeTruthy();
+    expect(screen.getByText("Kom jij die klim op?")).toBeTruthy();
+    expect(screen.getByText("Kies je fiets en pas de waarden aan je rit aan.")).toBeTruthy();
     expect(screen.getByText("Dashboard gearing form")).toBeTruthy();
   });
 });

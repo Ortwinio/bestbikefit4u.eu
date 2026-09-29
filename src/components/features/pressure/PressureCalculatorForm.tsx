@@ -107,9 +107,7 @@ export function PressureCalculatorForm({
   resultLabels,
   copy = tirePressureMessages[locale],
 }: PressureCalculatorFormProps) {
-  const [discipline, setDiscipline] = useState<"road" | "gravel" | "mtb">(
-    defaultDiscipline ?? "road",
-  );
+  const [discipline, setDiscipline] = useState<"road" | "gravel" | "mtb">(defaultDiscipline ?? "road");
   const [bodyWeightKg, setBodyWeightKg] = useState(75);
   const [widthFrontMm, setWidthFrontMm] = useState(28);
   const [manualWidthRearMm, setManualWidthRearMm] = useState(28);
@@ -284,9 +282,7 @@ export function PressureCalculatorForm({
               aria-label={resultTitle}
               className="rounded-[2rem] bg-[var(--bbf-lime)] p-5 text-[var(--bbf-inkt)] sm:p-7"
             >
-              <h2 className="font-display text-2xl font-bold text-[var(--bbf-inkt)]">
-                {resultTitle}
-              </h2>
+              <h2 className="font-display text-2xl font-bold text-[var(--bbf-inkt)]">{resultTitle}</h2>
               <div className="mt-5 grid grid-cols-2 gap-3">
                 {[
                   { label: resultLabels.front, bar: result.frontBar, psi: result.frontPsi },
@@ -338,7 +334,6 @@ export function PressureCalculatorForm({
                 ))}
               </ul>
             )}
-            <p className="mt-3 text-sm text-muted-foreground">{resultLabels.disclaimer}</p>
           </section>
           <section className="rounded-3xl border border-border bg-card p-6">
             <h2 className="font-display text-2xl font-bold">{copy.scope}</h2>
@@ -356,10 +351,7 @@ export function PressureCalculatorForm({
       }
       stickyResult={
         result && (
-          <a
-            href="#pressure-result"
-            className="flex min-h-11 flex-wrap items-center justify-between gap-2"
-          >
+          <a href="#pressure-result" className="flex min-h-11 flex-wrap items-center justify-between gap-2">
             <span className="text-xs">{resultTitle}</span>
             <span className="font-mono text-xl">
               {number.format(result.frontBar)} / {number.format(result.rearBar)}{" "}

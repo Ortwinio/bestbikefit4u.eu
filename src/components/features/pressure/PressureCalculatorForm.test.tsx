@@ -31,6 +31,13 @@ function expectResult(input: Parameters<typeof calculateBasicPressure>[0]) {
   expect(status.textContent).toContain(`${expected.rearBar.toFixed(1)} bar`);
 }
 describe("public pressure calculator", () => {
+  it("shows one equipment-limit message while retaining real setup warnings", () => {
+    mount("mtb");
+    expect(screen.getByText(/Always check the maximum pressure marked/)).toBeTruthy();
+    expect(screen.queryByText(en.pressure.result.disclaimer)).toBeNull();
+    expect(screen.getByText(en.pressure.result.warningMessages.mtb_tire_width_unusual)).toBeTruthy();
+  });
+
   it("shows a disclosed example then updates the real result and meters by keyboard", () => {
     mount();
     expect(screen.getByRole("region", { name: "Example starting pressure" })).toBeTruthy();

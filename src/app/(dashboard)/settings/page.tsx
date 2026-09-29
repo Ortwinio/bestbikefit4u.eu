@@ -19,21 +19,30 @@ import {
   SectionHeader,
   InfoBox,
   StatRow,
+  LoadingState,
 } from "@/components/ui";
+import { toolsSettings } from "@/i18n/account/toolsSettings";
 import { StravaBikeImportSection } from "@/components/settings/StravaBikeImportSection";
 import { IPhoneAppInstallCard } from "@/components/settings/IPhoneAppInstallCard";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { reportClientError } from "@/lib/telemetry";
-import {
-  getEffectiveDisplayName,
-  getEffectiveProfileImageSource,
-} from "@/lib/userIdentity";
+import { getEffectiveDisplayName, getEffectiveProfileImageSource } from "@/lib/userIdentity";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { isStripeBillingEnabled } from "@/config/billing";
-import { CheckCircle2, Trash2, User, Palette, Zap, Shield, AlertCircle, Info, CreditCard } from "lucide-react";
+import {
+  CheckCircle2,
+  Trash2,
+  User,
+  Palette,
+  Zap,
+  Shield,
+  AlertCircle,
+  Info,
+  CreditCard,
+} from "lucide-react";
 
 function linkButtonProps(href: string) {
   return {
@@ -60,7 +69,7 @@ function StravaCallbackToast() {
     } else if (stravaParam === "error") {
       toast.error({ description: messages.settings.integrations.callback.error });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return null;
@@ -71,6 +80,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const { locale, messages, languageSwitchLabels } = useDashboardMessages();
   const toast = useToast();
+  const copy = toolsSettings[locale];
   const user = useQuery(api.users.queries.getCurrentUser);
   const strava = useQuery(api.integrations.queries.getStravaStatus);
   const updateProfile = useMutation(api.users.mutations.updateProfile);
@@ -97,23 +107,13 @@ export default function SettingsPage() {
     }
     return messages.settings.account.free;
   }, [messages.settings.account.free, messages.settings.account.pro, user?.tier]);
-  const effectiveDisplayName = getEffectiveDisplayName(
-    user,
-    messages.userMenu.fallbackUserName
-  );
+  const effectiveDisplayName = getEffectiveDisplayName(user, messages.userMenu.fallbackUserName);
   const profileImageSource = getEffectiveProfileImageSource(user);
-  const localeLabel = locale === "nl" ? languageSwitchLabels.dutch : languageSwitchLabels.english;
   const storedDisplayName =
-    user &&
-    "displayName" in user &&
-    typeof user.displayName === "string"
-      ? user.displayName
-      : "";
+    user && "displayName" in user && typeof user.displayName === "string" ? user.displayName : "";
   const editableDisplayName =
     storedDisplayName ||
-    (effectiveDisplayName === messages.userMenu.fallbackUserName
-      ? ""
-      : effectiveDisplayName);
+    (effectiveDisplayName === messages.userMenu.fallbackUserName ? "" : effectiveDisplayName);
   const isPaidUser = user?.tier === "pro" || user?.tier === "premium";
 
   useEffect(() => {
@@ -133,7 +133,7 @@ export default function SettingsPage() {
           action: "deleteAccount",
           operationType: "mutation",
           userMessage: messages.profile.dangerZone.deleteFailed,
-        })
+        }),
       );
     } finally {
       setIsDeleting(false);
@@ -153,7 +153,7 @@ export default function SettingsPage() {
           action: "updateDisplayName",
           operationType: "mutation",
           userMessage: messages.settings.account.displayNameSaveFailed,
-        })
+        }),
       );
     } finally {
       setIsSavingDisplayName(false);
@@ -166,7 +166,7 @@ export default function SettingsPage() {
       const url = await initiateStravaConnect({});
       window.location.href = url;
     } catch {
-      toast.error({ description: "Could not start Strava connection. Please try again." });
+      toast.error({ description: copy.connectError });
       setIsConnectingStrava(false);
     }
   };
@@ -209,420 +209,402 @@ export default function SettingsPage() {
     }
   };
 
+  if (user === undefined) return <LoadingState label={copy.loading} />;
+  if (user === null)
+    return (
+      <div className="space-y-4 rounded-3xl border border-border bg-card p-6">
+        <p>{copy.missing}</p>
+        <Button {...linkButtonProps(withLocalePrefix("/login", locale))}>{copy.login}</Button>
+      </div>
+    );
+
   return (
-    <div className="mx-auto max-w-5xl space-y-6 text-[color:var(--foreground)]">
+    <div
+      className={
+        "mx-auto max-w-6xl space-y-7 text-foreground [&_h2]:font-display [&_h2]:text-2xl " +
+        "[&_div.border]:border-border [&_.border-b]:border-border " +
+        "[&_[data-slot=card]]:border-border"
+      }
+    >
       <Suspense>
         <StravaCallbackToast />
       </Suspense>
-      <Card variant="bordered" className="dashboard-hero-surface overflow-hidden">
-        <CardContent className="grid gap-6 p-6 md:p-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)] lg:items-end">
-          <div className="space-y-4">
+      <header className="space-y-3">
+        <p className="text-xs font-bold uppercase tracking-widest text-primary">{copy.eyebrow}</p>
+        <h1 className="font-display text-3xl font-bold tracking-tight sm:text-5xl">{copy.title}</h1>
+        <p className="text-muted-foreground">{copy.subtitle}</p>
+      </header>
+
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+        <div className="min-w-0 space-y-6">
+          <Card variant="bordered" className="rounded-3xl border-border bg-card shadow-none">
             <SectionHeader
               icon={<User className="h-5 w-5 text-[color:var(--primary)]" />}
-              title={messages.settings.title}
+              title={messages.settings.account.title}
             />
-            <p className="max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
-              {messages.settings.subtitle}
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button
-                variant="outline"
-                {...linkButtonProps(withLocalePrefix("/profile", locale))}
-                className="w-full justify-center sm:w-auto"
-              >
-                {messages.settings.privacy.manageProfile}
-              </Button>
-              <Button
-                variant="ghost"
-                {...linkButtonProps(withLocalePrefix("/privacy", locale))}
-                className="w-full justify-center sm:w-auto"
-              >
-                {messages.settings.privacy.privacyPolicy}
-              </Button>
-            </div>
-          </div>
-
-          <div className="dashboard-card-surface-muted rounded-[var(--radius-2xl)] border p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
-              {messages.settings.account.title}
-            </p>
-            <dl className="mt-3 divide-y divide-[color:var(--border)]">
-              <StatRow label={messages.settings.account.type} value={accountType} />
-              <StatRow label={messages.settings.account.displayNameLabel} value={effectiveDisplayName} />
-              <StatRow label={messages.settings.preferences.language} value={localeLabel} />
-            </dl>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card variant="bordered" className="dashboard-card-surface">
-          <SectionHeader
-            icon={<User className="h-5 w-5 text-[color:var(--primary)]" />}
-            title={messages.settings.account.title}
-          />
-          <CardContent className="space-y-4">
-            <div className="dashboard-card-surface-muted flex items-center gap-4 rounded-[var(--radius-2xl)] border p-4">
-              <ProfilePhotoUpload source={profileImageSource} size="settings" />
-              <div>
-                <p className="font-semibold text-[color:var(--foreground)]">
-                  {effectiveDisplayName}
-                </p>
-                <p className="text-sm text-[color:var(--muted-foreground)]">{user?.email}</p>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <Input
-                label={messages.settings.account.displayNameLabel}
-                placeholder={messages.settings.account.displayNamePlaceholder}
-                value={displayName}
-                onChange={(event) => setDisplayName(event.target.value)}
-              />
-              {displayNameError ? <ErrorState description={displayNameError} /> : null}
-              <Button
-                onClick={() => void handleSaveDisplayName()}
-                isLoading={isSavingDisplayName}
-              >
-                {messages.settings.account.saveDisplayName}
-              </Button>
-            </div>
-            <dl className="divide-y divide-[color:var(--border)]">
-              <StatRow label={messages.settings.account.type} value={accountType} />
-            </dl>
-            {!isPaidUser && !isStripeBillingEnabled() ? (
-              <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
-                <p className="font-medium">
-                  {locale === "nl" ? "Betalingen zijn tijdelijk niet beschikbaar." : "Payments are temporarily unavailable."}
-                </p>
-                <p className="mt-1">
-                  {locale === "nl"
-                    ? "Nieuwe betaalde upgrades zijn tijdelijk uitgeschakeld. Je gratis account blijft beschikbaar."
-                    : "New paid upgrades are temporarily disabled. Your free account remains available."}
-                </p>
-              </InfoBox>
-            ) : !isPaidUser ? (
-              <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}>
-                <p className="font-medium">{messages.settings.account.upgrade}</p>
-                <p className="mt-1">{messages.settings.account.upgradeDescription}</p>
-                <Button
-                  variant="outline"
-                  {...linkButtonProps(withLocalePrefix("/pricing", locale))}
-                  className="mt-3 w-full justify-center sm:w-auto"
-                >
-                  {messages.settings.account.upgradeCta}
-                </Button>
-              </InfoBox>
-            ) : null}
-            {isPaidUser ? (
-              <InfoBox
-                variant={user?.stripeCustomerId ? "secondary" : "warning"}
-                icon={<CreditCard className="h-4 w-4 text-[color:var(--primary)]" />}
-              >
-                <p className="font-medium">{messages.settings.billing.title}</p>
-                <p className="mt-1">
-                  {user?.stripeCustomerId
-                    ? messages.settings.billing.description
-                    : messages.settings.billing.missingCustomer}
-                </p>
-                {billingPortalError ? (
-                  <ErrorState description={billingPortalError} />
-                ) : null}
-                {user?.stripeCustomerId ? (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => void handleOpenBillingPortal()}
-                    isLoading={isOpeningBillingPortal}
-                    className="mt-3 w-full justify-center sm:w-auto"
-                  >
-                    {messages.settings.billing.manageCta}
-                  </Button>
-                ) : null}
-              </InfoBox>
-            ) : (
-              <InfoBox variant="secondary" icon={<CreditCard className="h-4 w-4 text-[color:var(--primary)]" />}>
-                <p className="font-medium">{messages.settings.billing.title}</p>
-                <p className="mt-1">{messages.settings.billing.noPaidSubscription}</p>
-              </InfoBox>
-            )}
-            <Button
-              variant="ghost"
-              onClick={async () => {
-                await signOut();
-                router.push(withLocalePrefix("/", locale));
-              }}
-              className="w-full justify-start"
-            >
-              {messages.common.signOut}
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card variant="bordered" className="dashboard-card-surface">
-          <SectionHeader
-            icon={<Palette className="h-5 w-5 text-[color:var(--primary)]" />}
-            title={messages.settings.preferences.title}
-          />
-          <CardContent className="space-y-5">
-            <div className="dashboard-card-surface-muted rounded-[var(--radius-2xl)] border p-4">
-              <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
-                {messages.settings.preferences.language}
-              </p>
-              <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
-            </div>
-            <div className="dashboard-card-surface-muted rounded-[var(--radius-2xl)] border p-4">
-              <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
-                {messages.settings.preferences.appearance}
-              </p>
-              <ThemeToggle
-                labels={{
-                  light: messages.settings.preferences.light,
-                  dark: messages.settings.preferences.dark,
-                  system: messages.settings.preferences.system,
-                }}
-              />
-            </div>
-            <div className="dashboard-card-surface-muted rounded-[var(--radius-2xl)] border p-4">
-              <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
-                {messages.settings.preferences.units}
-              </p>
-              <RadioGroup
-                aria-label={messages.settings.preferences.units}
-                className="flex flex-wrap gap-2"
-                value={user?.unit_preference ?? "metric"}
-                onValueChange={(nextValue) =>
-                  void updateProfile({
-                    unit_preference: nextValue as "metric" | "imperial",
-                  })
-                }
-              >
-                {[
-                  ["metric", messages.settings.preferences.metric],
-                  ["imperial", messages.settings.preferences.imperial],
-                ].map(([value, label]) => (
-                  <Selectable
-                    key={value}
-                    mode="radio"
-                    value={value}
-                    variant="segment"
-                    fullWidth={false}
-                  >
-                    {label}
-                  </Selectable>
-                ))}
-              </RadioGroup>
-            </div>
-          </CardContent>
-        </Card>
-
-        <IPhoneAppInstallCard />
-
-        <Card variant="bordered" className="dashboard-card-surface">
-          <SectionHeader
-            icon={<Zap className="h-5 w-5 text-[color:var(--primary)]" />}
-            title={messages.settings.integrations.title}
-          />
-          <CardContent className="space-y-4">
-            <InfoBox variant="secondary" className="p-4">
-              <div className="flex items-start justify-between gap-4">
+            <CardContent className="space-y-4">
+              <div className="bg-muted/40 flex items-center gap-4 rounded-2xl border border-border p-4">
+                <ProfilePhotoUpload source={profileImageSource} size="settings" />
                 <div>
                   <p className="font-semibold text-[color:var(--foreground)]">
-                    {messages.settings.integrations.strava}
+                    {effectiveDisplayName}
                   </p>
-                  <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                    {messages.settings.integrations.stravaDescription}
-                  </p>
+                  <p className="text-sm text-[color:var(--muted-foreground)]">{user?.email}</p>
                 </div>
-                {strava?.accessStatus === "active" ? (
+              </div>
+              <div className="space-y-3">
+                <Input
+                  label={messages.settings.account.displayNameLabel}
+                  placeholder={messages.settings.account.displayNamePlaceholder}
+                  value={displayName}
+                  onChange={(event) => setDisplayName(event.target.value)}
+                />
+                {displayNameError ? <ErrorState description={displayNameError} /> : null}
+                <Button
+                  onClick={() => void handleSaveDisplayName()}
+                  isLoading={isSavingDisplayName}
+                >
+                  {messages.settings.account.saveDisplayName}
+                </Button>
+              </div>
+              <dl className="divide-y divide-[color:var(--border)]">
+                <StatRow label={messages.settings.account.type} value={accountType} />
+              </dl>
+              <Button
+                variant="link"
+                onClick={async () => {
+                  await signOut();
+                  router.push(withLocalePrefix("/", locale));
+                }}
+                className="w-full justify-start bg-transparent hover:bg-muted"
+              >
+                {messages.common.signOut}
+              </Button>
+            </CardContent>
+          </Card>
+          <Card variant="bordered" className="rounded-3xl border-border bg-card shadow-none">
+            <SectionHeader title={copy.subscription} />
+            <CardContent className="space-y-4">
+              {!isPaidUser && !isStripeBillingEnabled() ? (
+                <InfoBox
+                  variant="secondary"
+                  icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
+                >
+                  <p className="font-medium">{copy.paused}</p>
+                  <p className="mt-1">{copy.pausedDescription}</p>
+                </InfoBox>
+              ) : !isPaidUser ? (
+                <InfoBox
+                  variant="warning"
+                  icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
+                >
+                  <p className="font-medium">{messages.settings.account.upgrade}</p>
+                  <p className="mt-1">{messages.settings.account.upgradeDescription}</p>
                   <Button
-                    type="button"
                     variant="outline"
-                    disabled
-                    className="shrink-0"
+                    {...linkButtonProps(withLocalePrefix("/pricing", locale))}
+                    className="mt-3 w-full justify-center sm:w-auto"
                   >
-                    <CheckCircle2 className="h-4 w-4 text-[color:var(--success)]" />
-                    {messages.settings.integrations.connected}
+                    {messages.settings.account.upgradeCta}
                   </Button>
-                ) : (
-                  <Button
-                    type="button"
-                    onClick={() => setShowStravaConsentInline((current) => !current)}
-                    isLoading={isConnectingStrava}
-                    className="shrink-0"
-                  >
-                    {strava?.accessStatus === "error"
-                      ? messages.settings.integrations.reconnect
-                      : messages.settings.integrations.connectStrava}
-                  </Button>
-                )}
-              </div>
-
-              {/* Connected state: athlete info */}
-              {strava?.accessStatus === "active" && strava.athleteName ? (
-                <div className="mt-3 flex items-center gap-3">
-                  {strava.athleteAvatarUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={strava.athleteAvatarUrl}
-                      alt={strava.athleteName}
-                      className="h-9 w-9 rounded-full object-cover"
-                    />
-                  ) : null}
-                  <div>
-                    <p className="text-sm font-medium text-[color:var(--foreground)]">{strava.athleteName}</p>
-                    {strava.lastSyncAt ? (
-                      <p className="text-xs text-[color:var(--muted-foreground)]">
-                        {messages.settings.integrations.lastSynced}:{" "}
-                        {new Date(strava.lastSyncAt).toLocaleString()}
-                      </p>
-                    ) : null}
-                  </div>
-                </div>
-              ) : null}
-
-              <StravaBikeImportSection
-                id="strava-bike-import"
-                strava={strava}
-              />
-
-              {/* Actions */}
-              <div className="mt-4 flex flex-wrap gap-3">
-                {strava?.accessStatus === "active" ? (
-                  <>
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowStravaDisconnect(true)}
-                    >
-                      {messages.settings.integrations.disconnectStrava}
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        document
-                          .getElementById("strava-bike-import")
-                          ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                      }}
-                    >
-                      {messages.settings.integrations.importStravaData}
-                    </Button>
-                  </>
-                ) : null}
-              </div>
-
-              {strava?.accessStatus !== "active" && showStravaConsentInline ? (
-                <InfoBox variant="primary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />} className="mt-4">
-                  <div className="space-y-4 text-sm">
-                    <div>
-                      <p className="font-semibold text-[color:var(--foreground)]">
-                        {messages.settings.integrations.consent.title}
-                      </p>
-                      <p className="mt-1 text-[color:var(--muted-foreground)]">
-                        {messages.settings.integrations.consent.howWeUseDescription}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-[color:var(--foreground)]">
-                        {messages.settings.integrations.consent.whatWeAccess}
-                      </p>
-                      <ul className="mt-2 space-y-1 text-[color:var(--muted-foreground)]">
-                        <li>✓ {messages.settings.integrations.consent.accessProfile}</li>
-                        <li>✓ {messages.settings.integrations.consent.accessActivities}</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-[color:var(--foreground)]">
-                        {messages.settings.integrations.consent.whatWeDoNot}
-                      </p>
-                      <ul className="mt-2 space-y-1 text-[color:var(--muted-foreground)]">
-                        <li>✗ {messages.settings.integrations.consent.noGps}</li>
-                        <li>✗ {messages.settings.integrations.consent.noNotes}</li>
-                        <li>✗ {messages.settings.integrations.consent.noSocial}</li>
-                        <li>✗ {messages.settings.integrations.consent.noSegments}</li>
-                      </ul>
-                    </div>
-                    <p className="text-[color:var(--muted-foreground)]">
-                      {messages.settings.integrations.consent.dataNote}
-                    </p>
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-3">
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowStravaConsentInline(false)}
-                    >
-                      {messages.settings.integrations.consent.cancel}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setShowStravaConsentInline(false);
-                        void handleConnectStrava();
-                      }}
-                      isLoading={isConnectingStrava}
-                    >
-                      {messages.settings.integrations.consent.confirm}
-                    </Button>
-                  </div>
                 </InfoBox>
               ) : null}
-            </InfoBox>
-          </CardContent>
-        </Card>
+              {isPaidUser ? (
+                <InfoBox
+                  variant={user?.stripeCustomerId ? "secondary" : "warning"}
+                  icon={<CreditCard className="h-4 w-4 text-[color:var(--primary)]" />}
+                >
+                  <p className="font-medium">{messages.settings.billing.title}</p>
+                  <p className="mt-1">
+                    {user?.stripeCustomerId
+                      ? messages.settings.billing.description
+                      : messages.settings.billing.missingCustomer}
+                  </p>
+                  {billingPortalError ? <ErrorState description={billingPortalError} /> : null}
+                  {user?.stripeCustomerId ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => void handleOpenBillingPortal()}
+                      isLoading={isOpeningBillingPortal}
+                      className="mt-3 w-full justify-center sm:w-auto"
+                    >
+                      {messages.settings.billing.manageCta}
+                    </Button>
+                  ) : null}
+                </InfoBox>
+              ) : (
+                <InfoBox
+                  variant="secondary"
+                  icon={<CreditCard className="h-4 w-4 text-[color:var(--primary)]" />}
+                >
+                  <p className="font-medium">{messages.settings.billing.title}</p>
+                  <p className="mt-1">{messages.settings.billing.noPaidSubscription}</p>
+                </InfoBox>
+              )}
+            </CardContent>
+          </Card>
+          <IPhoneAppInstallCard />
+        </div>
+        <div className="min-w-0 space-y-6">
+          <Card variant="bordered" className="rounded-3xl border-border bg-card shadow-none">
+            <SectionHeader
+              icon={<Palette className="h-5 w-5 text-[color:var(--primary)]" />}
+              title={messages.settings.preferences.title}
+            />
+            <CardContent className="space-y-5">
+              <div className="bg-muted/40 rounded-2xl border border-border p-4">
+                <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
+                  {messages.settings.preferences.language}
+                </p>
+                <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
+              </div>
+              <div className="bg-muted/40 rounded-2xl border border-border p-4">
+                <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
+                  {messages.settings.preferences.appearance}
+                </p>
+                <div className="[&_[data-slot=segmented-control]]:flex [&_[data-slot=segmented-control]]:flex-wrap">
+                  <ThemeToggle
+                    labels={{
+                      light: messages.settings.preferences.light,
+                      dark: messages.settings.preferences.dark,
+                      system: messages.settings.preferences.system,
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="bg-muted/40 rounded-2xl border border-border p-4">
+                <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
+                  {messages.settings.preferences.units}
+                </p>
+                <RadioGroup
+                  aria-label={messages.settings.preferences.units}
+                  className="flex flex-wrap gap-2"
+                  value={user?.unit_preference ?? "metric"}
+                  onValueChange={(nextValue) =>
+                    void updateProfile({
+                      unit_preference: nextValue as "metric" | "imperial",
+                    }).catch(() => toast.error({ description: copy.preferenceError }))
+                  }
+                >
+                  {[
+                    ["metric", messages.settings.preferences.metric],
+                    ["imperial", messages.settings.preferences.imperial],
+                  ].map(([value, label]) => (
+                    <Selectable
+                      key={value}
+                      mode="radio"
+                      value={value}
+                      variant="segment"
+                      fullWidth={false}
+                    >
+                      {label}
+                    </Selectable>
+                  ))}
+                </RadioGroup>
+              </div>
+            </CardContent>
+          </Card>
+          <Card variant="bordered" className="rounded-3xl border-border bg-card shadow-none">
+            <SectionHeader
+              icon={<Zap className="h-5 w-5 text-[color:var(--primary)]" />}
+              title={messages.settings.integrations.title}
+            />
+            <CardContent className="space-y-4">
+              <InfoBox variant="secondary" className="p-4">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <p className="font-semibold text-[color:var(--foreground)]">
+                      {messages.settings.integrations.strava}
+                    </p>
+                    <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                      {messages.settings.integrations.stravaDescription}
+                    </p>
+                  </div>
+                  {strava?.accessStatus === "active" ? (
+                    <Button type="button" variant="outline" disabled className="shrink-0">
+                      <CheckCircle2 className="h-4 w-4 text-[color:var(--success)]" />
+                      {messages.settings.integrations.connected}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={() => setShowStravaConsentInline((current) => !current)}
+                      isLoading={isConnectingStrava}
+                      className="shrink-0"
+                    >
+                      {strava?.accessStatus === "error"
+                        ? messages.settings.integrations.reconnect
+                        : messages.settings.integrations.connectStrava}
+                    </Button>
+                  )}
+                </div>
 
-        <Card variant="bordered" className="dashboard-card-surface">
-          <SectionHeader
-            icon={<Shield className="h-5 w-5 text-[color:var(--primary)]" />}
-            title={messages.settings.privacy.title}
-          />
-          <CardContent className="space-y-2 text-sm text-[color:var(--muted-foreground)]">
-            <p>{messages.settings.privacy.description}</p>
-            <div className="flex flex-wrap gap-3">
-              <Button
-                variant="ghost"
-                {...linkButtonProps(withLocalePrefix("/privacy", locale))}
-                className="px-0 text-[color:var(--primary)]"
-              >
-                {messages.settings.privacy.privacyPolicy}
-              </Button>
-              <Button
-                variant="ghost"
-                {...linkButtonProps(withLocalePrefix("/terms", locale))}
-                className="px-0 text-[color:var(--primary)]"
-              >
-                {messages.settings.privacy.terms}
-              </Button>
-              <Button
-                variant="ghost"
-                {...linkButtonProps(withLocalePrefix("/profile", locale))}
-                className="px-0 text-[color:var(--primary)]"
-              >
-                {messages.settings.privacy.manageProfile}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                {/* Connected state: athlete info */}
+                {strava?.accessStatus === "active" && strava.athleteName ? (
+                  <div className="mt-3 flex items-center gap-3">
+                    {strava.athleteAvatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={strava.athleteAvatarUrl}
+                        alt={strava.athleteName}
+                        className="h-9 w-9 rounded-full object-cover"
+                      />
+                    ) : null}
+                    <div>
+                      <p className="text-sm font-medium text-[color:var(--foreground)]">
+                        {strava.athleteName}
+                      </p>
+                      {strava.lastSyncAt ? (
+                        <p className="text-xs text-[color:var(--muted-foreground)]">
+                          {messages.settings.integrations.lastSynced}:{" "}
+                          {new Date(strava.lastSyncAt).toLocaleString()}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
 
-        <Card
-          variant="bordered"
-          className="dashboard-card-surface border-[color:color-mix(in_oklch,var(--destructive)_28%,var(--border))]"
-        >
-          <SectionHeader
-            icon={<Trash2 className="h-5 w-5 text-[color:var(--destructive)]" />}
-            title={messages.profile.dangerZone.title}
-          />
-          <CardContent className="space-y-4">
-            {deleteError ? <ErrorState description={deleteError} /> : null}
-            <p className="text-sm text-[color:var(--muted-foreground)]">
-              {messages.profile.dangerZone.deleteConfirmDescription}
-            </p>
-            <Button
-              variant="outline"
-              onClick={() => setShowDeleteDialog(true)}
-              className="border-[color:var(--destructive)] text-[color:var(--destructive)] hover:bg-[color:color-mix(in_oklch,var(--destructive)_10%,var(--card)_90%)]"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              {messages.profile.dangerZone.deleteAccount}
-            </Button>
-          </CardContent>
-        </Card>
+                <StravaBikeImportSection id="strava-bike-import" strava={strava} />
+
+                {/* Actions */}
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {strava?.accessStatus === "active" ? (
+                    <>
+                      <Button variant="outline" onClick={() => setShowStravaDisconnect(true)}>
+                        {messages.settings.integrations.disconnectStrava}
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          document
+                            .getElementById("strava-bike-import")
+                            ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                        }}
+                      >
+                        {messages.settings.integrations.importStravaData}
+                      </Button>
+                    </>
+                  ) : null}
+                </div>
+
+                {strava?.accessStatus !== "active" && showStravaConsentInline ? (
+                  <InfoBox
+                    variant="primary"
+                    icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
+                    className="mt-4"
+                  >
+                    <div className="space-y-4 text-sm">
+                      <div>
+                        <p className="font-semibold text-[color:var(--foreground)]">
+                          {messages.settings.integrations.consent.title}
+                        </p>
+                        <p className="mt-1 text-[color:var(--muted-foreground)]">
+                          {messages.settings.integrations.consent.howWeUseDescription}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-[color:var(--foreground)]">
+                          {messages.settings.integrations.consent.whatWeAccess}
+                        </p>
+                        <ul className="mt-2 space-y-1 text-[color:var(--muted-foreground)]">
+                          <li>✓ {messages.settings.integrations.consent.accessProfile}</li>
+                          <li>✓ {messages.settings.integrations.consent.accessActivities}</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-[color:var(--foreground)]">
+                          {messages.settings.integrations.consent.whatWeDoNot}
+                        </p>
+                        <ul className="mt-2 space-y-1 text-[color:var(--muted-foreground)]">
+                          <li>✗ {messages.settings.integrations.consent.noGps}</li>
+                          <li>✗ {messages.settings.integrations.consent.noNotes}</li>
+                          <li>✗ {messages.settings.integrations.consent.noSocial}</li>
+                          <li>✗ {messages.settings.integrations.consent.noSegments}</li>
+                        </ul>
+                      </div>
+                      <p className="text-[color:var(--muted-foreground)]">
+                        {messages.settings.integrations.consent.dataNote}
+                      </p>
+                    </div>
+                    <div className="mt-4 flex flex-wrap gap-3">
+                      <Button variant="outline" onClick={() => setShowStravaConsentInline(false)}>
+                        {messages.settings.integrations.consent.cancel}
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setShowStravaConsentInline(false);
+                          void handleConnectStrava();
+                        }}
+                        isLoading={isConnectingStrava}
+                      >
+                        {messages.settings.integrations.consent.confirm}
+                      </Button>
+                    </div>
+                  </InfoBox>
+                ) : null}
+              </InfoBox>
+            </CardContent>
+          </Card>
+          <Card variant="bordered" className="rounded-3xl border-border bg-card shadow-none">
+            <SectionHeader
+              icon={<Shield className="h-5 w-5 text-[color:var(--primary)]" />}
+              title={messages.settings.privacy.title}
+            />
+            <CardContent className="space-y-2 text-sm text-[color:var(--muted-foreground)]">
+              <p>{messages.settings.privacy.description}</p>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  variant="link"
+                  {...linkButtonProps(withLocalePrefix("/privacy", locale))}
+                  className="whitespace-normal px-3 text-primary"
+                >
+                  {messages.settings.privacy.privacyPolicy}
+                </Button>
+                <Button
+                  variant="link"
+                  {...linkButtonProps(withLocalePrefix("/terms", locale))}
+                  className="whitespace-normal px-3 text-primary"
+                >
+                  {messages.settings.privacy.terms}
+                </Button>
+                <Button
+                  variant="link"
+                  {...linkButtonProps(withLocalePrefix("/profile", locale))}
+                  className="whitespace-normal px-3 text-primary"
+                >
+                  {messages.settings.privacy.manageProfile}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+          <Card
+            variant="bordered"
+            className="dashboard-card-surface border-[color:color-mix(in_oklch,var(--destructive)_28%,var(--border))]"
+          >
+            <SectionHeader
+              icon={<Trash2 className="h-5 w-5 text-[color:var(--destructive)]" />}
+              title={messages.profile.dangerZone.title}
+            />
+            <CardContent className="space-y-4">
+              {deleteError ? <ErrorState description={deleteError} /> : null}
+              <p className="text-sm text-[color:var(--muted-foreground)]">
+                {messages.profile.dangerZone.deleteConfirmDescription}
+              </p>
+              <Button
+                variant="outline"
+                onClick={() => setShowDeleteDialog(true)}
+                className={
+                  "border-[color:var(--destructive)] text-[color:var(--destructive)] " +
+                  "hover:bg-[color:color-mix(in_oklch,var(--destructive)_10%,var(--card)_90%)]"
+                }
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                {messages.profile.dangerZone.deleteAccount}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       <AccessibleDialog

@@ -340,3 +340,119 @@ have no persistence API. Fuel intake inventory and athlete rankings remain expli
 
 Validation commands: `npm run typecheck`, `npm run lint`, `npm run test:unit`, `npm run test:i18n`,
 `npm run build`. Required gates pass as detailed above. No commits by D; ready for lead review of batch18.3.
+
+## Checkpoint b40d638 — ownership and dictionary freeze follow-up
+
+Read the new “Code phase: ownership & commits” rules. Continue from the integration checkpoint;
+no checkpoint work reverted and no new commits made. C retains batch2 calculators, shared UI and
+`globals.css`. Marketing layout files belong to A; later configurators belong to D. Any further
+calculator header request will be recorded here for lead routing.
+
+All NEW18.2 strings already reside in `src/i18n/calculators/bikeFit.ts`, `saddleWidth.ts`, and
+`tirePressure.ts`. The frozen root dictionaries contain only the existing module registrations
+plus formatting of older copy. A semantic comparison of both root dictionaries against2dccd9b
+confirmed that the only value additions are `bikeFitCalculator`, `saddleWidthCalculator`, and
+`tirePressureCalculator`; all preexisting values are unchanged. No string migration or root edit
+is needed. No new root registration is requested. Future registrations are lead-owned.
+
+### Files changed after b40d638 by this follow-up
+
+- `plans/redesign-canvas/audit/18-notes.md`
+
+### Historical18.2 implementation inventory, already included in b40d638
+
+This is the batch2/formatting inventory for review, not a request to recommit checkpoint files.
+Some previously shared files are now owned by another agent; this inventory grants no further
+write ownership. The marketing Header/Footer/HeaderMobileMenu and frozen roots are intentionally
+excluded from C’s future commit list. Their pre-freeze work is already integrated.
+
+- `src/app/(public)/bandenspanning-calculator/PressureCalculatorPageContent.tsx`
+- `src/app/(public)/bandenspanning-calculator/page.test.tsx`
+- `src/app/(public)/bandenspanning/gravelbike/page.tsx`
+- `src/app/(public)/bandenspanning/mtb/page.tsx`
+- `src/app/(public)/bandenspanning/racefiets/page.tsx`
+- `src/app/(public)/calculators/bike-fit/BikeFitCalculatorForm.test.tsx`
+- `src/app/(public)/calculators/bike-fit/BikeFitCalculatorForm.tsx`
+- `src/app/(public)/calculators/bike-fit/BikeFitVisual.tsx`
+- `src/app/(public)/calculators/bike-fit/page.test.tsx`
+- `src/app/(public)/calculators/bike-fit/page.tsx`
+- `src/app/(public)/calculators/crank-length/CrankLengthCalculatorForm.test.tsx`
+- `src/app/(public)/calculators/crank-length/CrankLengthCalculatorForm.tsx`
+- `src/app/(public)/calculators/crank-length/page.test.tsx`
+- `src/app/(public)/calculators/crank-length/page.tsx`
+- `src/app/(public)/calculators/frame-size/FrameSizeCalculatorForm.test.tsx`
+- `src/app/(public)/calculators/frame-size/FrameSizeCalculatorForm.tsx`
+- `src/app/(public)/calculators/frame-size/page.test.tsx`
+- `src/app/(public)/calculators/frame-size/page.tsx`
+- `src/app/(public)/calculators/saddle-height/SaddleHeightCalculatorForm.test.tsx`
+- `src/app/(public)/calculators/saddle-height/SaddleHeightCalculatorForm.tsx`
+- `src/app/(public)/calculators/saddle-height/page.test.tsx`
+- `src/app/(public)/calculators/saddle-height/page.tsx`
+- `src/app/(public)/calculators/saddle-width/SaddleWidthCalculatorForm.test.tsx`
+- `src/app/(public)/calculators/saddle-width/SaddleWidthCalculatorForm.tsx`
+- `src/app/(public)/calculators/saddle-width/page.test.tsx`
+- `src/app/(public)/calculators/saddle-width/page.tsx`
+- `src/app/(public)/layout.tsx`
+- `src/app/globals.css`
+- `src/components/features/pressure/PressureCalculatorForm.test.tsx`
+- `src/components/features/pressure/PressureCalculatorForm.tsx`
+- `src/components/feedback/FeedbackFloatingButton.test.tsx`
+- `src/components/feedback/FeedbackFloatingButton.tsx`
+- `src/components/layout/ConfiguratorHeaderSwitch.test.tsx`
+- `src/components/layout/ConfiguratorHeaderSwitch.tsx`
+- `src/components/layout/LanguageSwitch.tsx`
+- `src/components/prototyper-ui/ui/slider.tsx`
+- `src/components/public/BikeQuickCheckCard.tsx`
+- `src/components/public/GuideLinkButton.tsx`
+- `src/components/public/PublicFormFields.tsx`
+- `src/components/public/PublicIconBadge.tsx`
+- `src/components/public/PublicIllustrationPanel.tsx`
+- `src/components/public/PublicInfoPanel.tsx`
+- `src/components/public/PublicMetricPanel.tsx`
+- `src/components/public/PublicPrimitives.tsx`
+- `src/components/ui/ConfiguratorLayout.test.tsx`
+- `src/components/ui/ConfiguratorLayout.tsx`
+- `src/components/ui/Slider.test.tsx`
+- `src/components/ui/Slider.tsx`
+- `src/i18n/calculators/bikeFit.ts`
+- `src/i18n/calculators/crankLength.ts`
+- `src/i18n/calculators/frameSize.ts`
+- `src/i18n/calculators/performance.ts`
+- `src/i18n/calculators/saddleHeight.ts`
+- `src/i18n/calculators/saddleWidth.ts`
+- `src/i18n/calculators/tirePressure.ts`
+- `tests/e2e/configurator-mobile.e2e.test.ts`
+
+Batch2 capture artifacts already integrated:
+
+- `plans/redesign-canvas/code-renders/18-bandenspanning-calculator-board.png`
+- `plans/redesign-canvas/code-renders/18-bandenspanning-calculator-desktop.png`
+- `plans/redesign-canvas/code-renders/18-bandenspanning-calculator-mobile.png`
+- `plans/redesign-canvas/code-renders/18-bandenspanning-gravelbike-board.png`
+- `plans/redesign-canvas/code-renders/18-bandenspanning-gravelbike-desktop.png`
+- `plans/redesign-canvas/code-renders/18-bandenspanning-gravelbike-mobile.png`
+- `plans/redesign-canvas/code-renders/18-bandenspanning-mtb-board.png`
+- `plans/redesign-canvas/code-renders/18-bandenspanning-mtb-desktop.png`
+- `plans/redesign-canvas/code-renders/18-bandenspanning-mtb-mobile.png`
+- `plans/redesign-canvas/code-renders/18-bandenspanning-racefiets-board.png`
+- `plans/redesign-canvas/code-renders/18-bandenspanning-racefiets-desktop.png`
+- `plans/redesign-canvas/code-renders/18-bandenspanning-racefiets-mobile.png`
+- `plans/redesign-canvas/code-renders/18-bike-fit-board.png`
+- `plans/redesign-canvas/code-renders/18-bike-fit-desktop.png`
+- `plans/redesign-canvas/code-renders/18-bike-fit-en-desktop.png`
+- `plans/redesign-canvas/code-renders/18-bike-fit-mobile.png`
+- `plans/redesign-canvas/code-renders/18-saddle-width-board.png`
+- `plans/redesign-canvas/code-renders/18-saddle-width-desktop.png`
+- `plans/redesign-canvas/code-renders/18-saddle-width-mobile.png`
+- `plans/redesign-canvas/code-renders/18-tire-pressure-calculator-board.png`
+- `plans/redesign-canvas/code-renders/18-tire-pressure-calculator-desktop.png`
+- `plans/redesign-canvas/code-renders/18-tire-pressure-calculator-mobile.png`
+
+
+## Lead approval and warning dedupe follow-up
+
+18.2 approved in checkpoint b40d638. During20.4, removed the redundant tire/rim-maximum disclaimer
+paragraph from the public PressureCalculatorForm; detailed static equipment guidance and all engine
+warnings remain. Regression checks the single guidance paragraph and retains a real MTB width
+warning. Exact files:src/components/features/pressure/PressureCalculatorForm.tsx and its.test.tsx.
+Frozen dictionaries and marketing layout untouched by this follow-up.

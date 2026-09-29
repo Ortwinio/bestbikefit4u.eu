@@ -58,6 +58,12 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 
 ## Draft progress
 
+- 2026-09-29 — Codex B implemented **19.3 guides/blog** with two disjoint page-family subagents. CMS/SEO/redirects and shared Header/Footer remain intact. 1024 unit tests, lint, 30 i18n tests, sitemap checks and 36 NL/EN browser cases pass; final whole-tree build/typecheck is blocked by concurrent science-file errors routed to their owner. Exact 19-file source/test/harness list: `audit/files-19.3.txt`; details and 58 screenshots in `audit/19-notes.md`. No commits; awaiting lead review.
+
+- 2026-09-29 — Codex A completed **19.2** after lead approval of 19.1: four home/pricing review fixes plus Measurement Guide, Fit Pass and pain index/all five detail slugs, using three subagents. Typecheck/lint/build, 985 unit tests, 30 i18n tests and production sitemap checks pass; 17 visual artifacts and exact per-batch file lists in `audit/19-notes.md`. Frozen dictionaries untouched. Awaiting lead review; no batch 3 or commit.
+
+- 2026-09-29 — Codex B completed **20.2 fit-flow presentation** plus the Dutch Dashboard enum and full-height sticky ink-sidebar fixes, using four page-family subagents. Typecheck/lint/build, 996 unit tests, 30 i18n tests and 2 locale smoke tests pass; 92 NL/EN desktop/mobile fixture cases plus final refreshes produce 142 screenshots. Exact scoped file list, validation and inherited shared-dialog target follow-up: `audit/20-notes.md`. No commits; awaiting lead review. Later account batches in the shared tree belong to other workers.
+
 - 2026-09-29 — Codex A completed content-header follow-up (12b): nineteen web headers share logo/nav/language/text-login/primary calculator action; A4 report keeps its print header. All checks and 45 state renders pass. Phase 6 task 19 batch 1 implements shared marketing layout + home/pricing/how-it-works with three page subagents; details and validation in `audit/19-notes.md`. No later batch started; awaiting lead review, no commit.
 
 - 2026-09-29 — Codex B implemented **20.1 account app presentation only** with one subagent per page family: shell, Dashboard, Profile, four ProfileImprove routes and Login. Final integration evidence, actual-component fixture screenshots and ownership follow-ups are recorded in `audit/20-notes.md`. No commits; batch 2 remains unstarted and requires lead review.
@@ -99,3 +105,9 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 - Every agent writes **only** in its own files. New copy goes in its own dictionary module: `src/i18n/calculators/*` (C/D), `src/i18n/marketing/*` (A), `src/i18n/account/*` (B). **`src/i18n/messages/nl.ts` and `en.ts` are frozen**; only the lead changes them, on request (add a line to your notes).
 - `src/components/ui/*` and `globals.css`: Codex C. `src/components/layout/*` (Header, Footer, mobile menu): Codex A. Account shell and `src/components/{dashboard,account,profile}/*`: Codex B. Calculator pages: C (batch 2) / D (batch 3).
 - At DONE, the agent gives a **file list** in its notes; the lead commits exactly that list per batch.
+
+
+- 2026-09-29 — **20.4 implemented by Codex C, awaiting lead review.** Account pressure/gearing/saddle,
+  shoe-cleat `/fit` CTA, settings, feedback and standalone app install;18.2 warning dedupe included.
+  Shell, Convex/authz/engines and frozen dictionaries unchanged by C.996 unit tests and locale gates
+  pass; actual-component fixture captures and exact file list in `audit/20-notes.md`. No commit.

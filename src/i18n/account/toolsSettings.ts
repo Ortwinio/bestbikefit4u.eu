@@ -1,0 +1,33 @@
+export const toolsSettings = {
+  nl: {
+    error: "Je instellingen konden niet worden geladen.",
+    retry: "Probeer opnieuw",
+    eyebrow: "Je account",
+    title: "Maak het jouw omgeving",
+    subtitle: "Beheer je account, voorkeuren en koppelingen.",
+    loading: "Je instellingen worden geladen…",
+    missing: "Log in om je instellingen te bekijken.",
+    login: "Inloggen",
+    paused: "Betalingen tijdelijk gepauzeerd",
+    pausedDescription:
+      "Nieuwe betaalde upgrades zijn uitgeschakeld. Je gratis account blijft beschikbaar.",
+    connectError: "Strava koppelen is niet gelukt. Probeer het opnieuw.",
+    preferenceError: "Je voorkeur is niet bewaard. Probeer het opnieuw.",
+    subscription: "Je abonnement",
+  },
+  en: {
+    error: "Your settings could not be loaded.",
+    retry: "Try again",
+    eyebrow: "Your account",
+    title: "Make it your space",
+    subtitle: "Manage your account, preferences and connections.",
+    loading: "Loading your settings…",
+    missing: "Sign in to view your settings.",
+    login: "Sign in",
+    paused: "Payments temporarily paused",
+    pausedDescription: "New paid upgrades are disabled. Your free account remains available.",
+    connectError: "Could not connect Strava. Please try again.",
+    preferenceError: "Your preference was not saved. Please try again.",
+    subscription: "Your subscription",
+  },
+};
