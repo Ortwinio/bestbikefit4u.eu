@@ -111,3 +111,4 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
   shoe-cleat `/fit` CTA, settings, feedback and standalone app install;18.2 warning dedupe included.
   Shell, Convex/authz/engines and frozen dictionaries unchanged by C.996 unit tests and locale gates
   pass; actual-component fixture captures and exact file list in `audit/20-notes.md`. No commit.
+- **Styling convention (lead decision):** Tailwind with the semantic/brand tokens first. CSS Modules only for complex layouts, and then **tokens only** (`var(--…)`), no raw colors (hex/rgb/hsl/oklch). Enforced by `npm run lint` → `lint:css-modules` (`scripts/check-css-module-tokens.mjs`). Shadows via tokens too (e.g. `--shadow-float`), or `color-mix()` with a token.
