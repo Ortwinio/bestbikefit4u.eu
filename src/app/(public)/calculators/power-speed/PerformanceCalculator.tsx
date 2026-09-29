@@ -263,8 +263,8 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
                 </svg>
               )}
               {fuel && (
-                <div className="rounded-2xl bg-white p-4 text-[var(--bbf-inkt)]">
-                  <h2 className="font-display text-2xl font-bold">{copy.pending}</h2>
+                <div className="rounded-2xl bg-[var(--bbf-wit)] p-4 text-[var(--bbf-inkt)]">
+                  <h2 className="font-display text-2xl font-bold text-[var(--bbf-inkt)]">{copy.pending}</h2>
                   <p className="mt-2">{copy.noAmounts}</p>
                 </div>
               )}
@@ -277,11 +277,12 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
             <section className="rounded-3xl border border-border bg-card p-6">
               <h2 className="font-display text-2xl font-bold">{copy.split}</h2>
               <svg viewBox="0 0 100 8" className="my-5 w-full" aria-hidden="true">
-                <rect width="100" height="8" rx="2" fill="var(--bbf-inkt)" />
+                <rect width="100" height="8" rx="2" fill="currentColor" className="text-foreground" />
                 <rect
                   width={(100 * (split.climbing + split.rolling)) / split.total}
                   height="8"
-                  fill="var(--bbf-petrol)"
+                  fill="currentColor"
+                  className="text-primary"
                 />
                 <rect width={(100 * split.climbing) / split.total} height="8" fill="var(--bbf-lime)" />
               </svg>
@@ -361,7 +362,10 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
               <p className="my-4 text-[var(--bbf-op-donker)]">{copy.nextBody}</p>
               <Link
                 href={withLocalePrefix("/calculators/gearing", locale)}
-                className="inline-flex min-h-11 items-center rounded-full bg-primary px-5 font-bold text-white"
+                className={
+                  "inline-flex min-h-11 items-center rounded-full bg-primary px-5 " +
+                  "font-bold text-primary-foreground"
+                }
               >
                 {copy.nextLink}
               </Link>

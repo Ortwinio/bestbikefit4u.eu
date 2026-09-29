@@ -21,7 +21,10 @@ const tools: { id: MoreTool; nl: string; en: string }[] = [
 /** Render only on one of the four More routes, above the configurator eyebrow. */
 export function MoreToolsNav({ activeTool, locale = "nl", className }: MoreToolsNavProps) {
   return (
-    <nav aria-label={locale === "nl" ? "Meer fietstools" : "More cycling tools"} className={cn("max-w-full min-w-0 overflow-x-auto p-1", className)}>
+    <nav
+      aria-label={locale === "nl" ? "Meer fietstools" : "More cycling tools"}
+      className={cn("max-w-full min-w-0 overflow-x-auto p-1", className)}
+    >
       <ul className="m-0 flex w-max list-none gap-2 p-0">
         {tools.map(({ id, ...labels }) => (
           <li key={id} className="shrink-0">
@@ -29,10 +32,13 @@ export function MoreToolsNav({ activeTool, locale = "nl", className }: MoreTools
               href={withLocalePrefix(`/calculators/${id}`, locale)}
               aria-current={activeTool === id ? "page" : undefined}
               className={cn(
-                "flex min-h-11 items-center justify-center whitespace-nowrap rounded-full border px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--bbf-petrol)]",
+                "flex min-h-11 items-center justify-center whitespace-nowrap rounded-full border px-4 " +
+                  "py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 " +
+                  "focus-visible:outline-ring",
                 activeTool === id
-                  ? "border-[color:var(--bbf-inkt)] bg-[color:var(--bbf-inkt)] text-[color:var(--bbf-wit)]"
-                  : "border-[color:var(--bbf-rand)] bg-[color:var(--bbf-wit)] text-[color:var(--bbf-inkt)] hover:bg-[color:var(--bbf-papier)]"
+                  ? "border-[color:var(--bbf-inkt)] bg-[color:var(--bbf-inkt)] text-[color:var(--bbf-wit)] " +
+                      "dark:bg-primary dark:text-primary-foreground"
+                  : "border-border bg-card text-card-foreground hover:bg-muted",
               )}
             >
               {labels[locale]}

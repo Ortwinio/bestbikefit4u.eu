@@ -21,18 +21,11 @@ export function FieldLabel({
 }: FieldLabelProps) {
   return (
     <div className={cn("mb-1.5 flex items-center gap-1.5", className)}>
-      <PrototyperLabel
-        htmlFor={htmlFor}
-        className="block text-sm font-medium text-[color:var(--foreground)]"
-      >
+      <PrototyperLabel htmlFor={htmlFor} className="block text-sm font-medium text-foreground">
         {label}
       </PrototyperLabel>
       {tooltip && (
-        <Tooltip
-          content={tooltip}
-          label={tooltipLabel ?? `${label} help`}
-          descriptionId={tooltipDescriptionId}
-        />
+        <Tooltip content={tooltip} label={tooltipLabel ?? `${label} help`} descriptionId={tooltipDescriptionId} />
       )}
     </div>
   );

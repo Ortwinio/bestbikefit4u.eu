@@ -9,6 +9,7 @@ import { BikePressureCard } from "@/components/features/pressure/BikePressureCar
 import { PressureWizard } from "@/components/features/pressure/PressureWizard";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
+import styles from "./PressureDashboard.module.css";
 import { toolsPressureMessages } from "@/i18n/account/toolsPressure";
 
 export function PressureDashboardClient({ initialBikeId }: { initialBikeId?: string }) {
@@ -28,7 +29,7 @@ export function PressureDashboardClient({ initialBikeId }: { initialBikeId?: str
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1280px] min-w-0 space-y-8">
+    <div className={`${styles.scope} mx-auto w-full max-w-[1280px] min-w-0 space-y-8`}>
       <header className="space-y-3">
         <p className="text-sm font-bold tracking-[0.08em] text-primary uppercase">{copy.eyebrow}</p>
         <h1 className="font-display text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
@@ -132,7 +133,10 @@ export function PressureDashboardClient({ initialBikeId }: { initialBikeId?: str
                         max={gaugeMax}
                         unit="bar"
                         locale={locale}
-                        className="text-[var(--bbf-inkt)] [&_.text-muted-foreground]:text-[var(--bbf-tekst)]"
+                        className={
+                          "text-[var(--bbf-inkt)] [--gauge-accent:var(--bbf-petrol)] " +
+                          "[&_.text-muted-foreground]:text-[var(--bbf-tekst)]"
+                        }
                       />
                     </div>
                     <div className="rounded-3xl bg-[var(--bbf-inkt)] p-3 text-[var(--bbf-wit)]">

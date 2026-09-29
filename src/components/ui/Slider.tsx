@@ -14,10 +14,7 @@ import {
   SliderValue as PrototyperSliderValue,
 } from "@/components/prototyper-ui/ui/slider";
 
-export interface SliderProps extends Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  "type" | "value" | "onChange"
-> {
+export interface SliderProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "value" | "onChange"> {
   label?: string;
   tooltip?: string;
   tooltipLabel?: string;
@@ -67,23 +64,12 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
     const errorId = error ? `${sliderId}-error` : undefined;
     const valueId = `${sliderId}-value`;
     const tooltipDescriptionId = tooltip ? `${sliderId}-tooltip-description` : undefined;
-    const normalizedMin =
-      typeof min === "number" ? min : min === undefined ? undefined : Number(min);
-    const normalizedMax =
-      typeof max === "number" ? max : max === undefined ? undefined : Number(max);
-    const normalizedStep =
-      typeof step === "number" ? step : step === undefined ? undefined : Number(step) || 1;
+    const normalizedMin = typeof min === "number" ? min : min === undefined ? undefined : Number(min);
+    const normalizedMax = typeof max === "number" ? max : max === undefined ? undefined : Number(max);
+    const normalizedStep = typeof step === "number" ? step : step === undefined ? undefined : Number(step) || 1;
     const sliderProps = props as unknown as ComponentPropsWithoutRef<typeof PrototyperSliderRoot>;
-    const labelledBy = [label ? labelId : undefined, sliderProps["aria-labelledby"]]
-      .filter(Boolean)
-      .join(" ");
-    const describedBy = [
-      sliderProps["aria-describedby"],
-      valueId,
-      tooltipDescriptionId,
-      errorId,
-      helperId,
-    ]
+    const labelledBy = [label ? labelId : undefined, sliderProps["aria-labelledby"]].filter(Boolean).join(" ");
+    const describedBy = [sliderProps["aria-describedby"], valueId, tooltipDescriptionId, errorId, helperId]
       .filter(Boolean)
       .join(" ");
 
@@ -131,9 +117,7 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
               aria-hidden="true"
             >
               {displayValue}
-              {displayUnit ? (
-                <span className="ml-1 text-sm text-muted-foreground">{displayUnit}</span>
-              ) : null}
+              {displayUnit ? <span className="ml-1 text-sm text-muted-foreground">{displayUnit}</span> : null}
             </span>
           </div>
           <PrototyperSliderValue id={valueId} className="sr-only" />
@@ -143,24 +127,19 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
               <PrototyperSliderThumb
                 className={
                   "size-[30px] border-4 border-primary bg-[var(--bbf-wit)] hover:border-primary " +
-                  "focus-visible:focus-ring"
+                  "focus-visible:focus-ring focus-within:focus-ring"
                 }
                 aria-label={sliderProps["aria-label"]}
                 aria-labelledby={labelledBy || undefined}
                 aria-describedby={describedBy || undefined}
                 aria-invalid={error ? true : undefined}
                 aria-required={required || undefined}
-                aria-valuetext={
-                  props["aria-valuetext"] ?? `${valueLabel ?? value}${unit ? ` ${unit}` : ""}`
-                }
+                aria-valuetext={props["aria-valuetext"] ?? `${valueLabel ?? value}${unit ? ` ${unit}` : ""}`}
               />
             </PrototyperSliderTrack>
           </PrototyperSliderControl>
           {ticks?.length ? (
-            <div
-              className="relative h-6 font-mono text-xs text-muted-foreground"
-              aria-hidden="true"
-            >
+            <div className="relative h-6 font-mono text-xs text-muted-foreground" aria-hidden="true">
               {ticks.map((tick, index) => (
                 <span
                   key={tick.value}
@@ -177,8 +156,7 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
                       0,
                       Math.min(
                         100,
-                        ((tick.value - (normalizedMin ?? 0)) /
-                          ((normalizedMax ?? 100) - (normalizedMin ?? 0) || 1)) *
+                        ((tick.value - (normalizedMin ?? 0)) / ((normalizedMax ?? 100) - (normalizedMin ?? 0) || 1)) *
                           100,
                       ),
                     ),

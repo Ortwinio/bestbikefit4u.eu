@@ -17,30 +17,43 @@ function linearRgb(value, tokens, seen = new Set()) {
   });
   if (value.includes("var(")) return linearRgb(value, tokens, seen);
   if (/^#[a-f\d]{6}$/i.test(value)) {
-    return value.slice(1).match(/../g).map((part) => {
-      const c = parseInt(part, 16) / 255;
-      return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-    });
+    return value
+      .slice(1)
+      .match(/../g)
+      .map((part) => {
+        const c = parseInt(part, 16) / 255;
+        return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      });
   }
   const match = value.match(/^(?:oklch\()?([\d.]+)%\s+([\d.]+)\s+([\d.]+)\)?$/);
   if (!match) throw new Error(`Unsupported color expression: ${value}`);
   const L = Number(match[1]) / 100;
   const C = Number(match[2]);
-  const h = Number(match[3]) * Math.PI / 180;
-  const a = C * Math.cos(h), b = C * Math.sin(h);
+  const h = (Number(match[3]) * Math.PI) / 180;
+  const a = C * Math.cos(h),
+    b = C * Math.sin(h);
   const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
   const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
   const s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
-  return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+  return [
+    4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
     -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
-    -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s].map((v) => Math.max(0, Math.min(1, v)));
+    -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
+  ].map((v) => Math.max(0, Math.min(1, v)));
 }
-function luminance(rgb) { return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722; }
-function ratio(a, b) { return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05); }
+function luminance(rgb) {
+  return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
+}
+function ratio(a, b) {
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+}
 const root = declarations(":root");
 let failures = 0;
 let checks = 0;
-for (const [mode, tokens] of [["light", root], ["dark", { ...root, ...declarations(".dark") }]]) {
+for (const [mode, tokens] of [
+  ["light", root],
+  ["dark", { ...root, ...declarations(".dark") }],
+]) {
   const pairs = [];
   const add = (fg, bg, minimum = 4.5, opacity = 1) => pairs.push({ fg, bg, minimum, opacity });
   // Every semantic foreground/background pair, including compatibility aliases.
@@ -49,9 +62,40 @@ for (const [mode, tokens] of [["light", root], ["dark", { ...root, ...declaratio
     if (tokens[background]) add(name, background);
   }
   add("foreground", "background");
-  for (const background of ["background", "card", "field-background", "surface-secondary", "surface-tertiary",
-    "public-shell-background", "public-shell-elevated", "public-card", "public-card-subtle", "public-card-strong", "public-band", "public-hero", "public-cta",
-    "dashboard-shell", "dashboard-shell-elevated", "dashboard-sidebar", "dashboard-sidebar-elevated", "dashboard-surface", "dashboard-surface-muted", "dashboard-surface-strong", "dashboard-hero", "dashboard-field-background"]) {
+  // Fixed brand panels deliberately retain ink text in both themes.
+  for (const background of ["bbf-lime", "bbf-lime-zacht", "bbf-warning", "bbf-destructive"]) {
+    add("bbf-inkt", background);
+    add("bbf-tekst", background);
+  }
+  add("bbf-wit", "bbf-inkt");
+  add("bbf-op-donker", "bbf-inkt");
+  add("bbf-lime", "bbf-inkt");
+  add("bbf-petrol", "bbf-lime", 3);
+  for (const background of ["background", "card", "muted"]) add("gauge-accent", background, 3);
+  for (const background of [
+    "background",
+    "card",
+    "field-background",
+    "surface-secondary",
+    "surface-tertiary",
+    "public-shell-background",
+    "public-shell-elevated",
+    "public-card",
+    "public-card-subtle",
+    "public-card-strong",
+    "public-band",
+    "public-hero",
+    "public-cta",
+    "dashboard-shell",
+    "dashboard-shell-elevated",
+    "dashboard-sidebar",
+    "dashboard-sidebar-elevated",
+    "dashboard-surface",
+    "dashboard-surface-muted",
+    "dashboard-surface-strong",
+    "dashboard-hero",
+    "dashboard-field-background",
+  ]) {
     add("foreground", background);
     add("muted-foreground", background);
   }
@@ -59,18 +103,34 @@ for (const [mode, tokens] of [["light", root], ["dark", { ...root, ...declaratio
     add("dashboard-nav-foreground", background);
     add("dashboard-nav-foreground-strong", background);
   }
-  for (const background of ["panel-surface", "panel-surface-subtle", "panel-shell-background", "panel-field-background"]) {
-    add("panel-foreground", background); add("panel-muted-foreground", background);
+  for (const background of [
+    "panel-surface",
+    "panel-surface-subtle",
+    "panel-shell-background",
+    "panel-field-background",
+  ]) {
+    add("panel-foreground", background);
+    add("panel-muted-foreground", background);
   }
-  for (const name of ["primary", "destructive", "success", "warning", "accent"]) add(`${name}-foreground`, `${name}-hover`);
-  for (const background of ["background", "card", "muted", "primary-soft", "primary-soft-hover"]) add("primary", background);
+  for (const name of ["primary", "destructive", "success", "warning", "accent"])
+    add(`${name}-foreground`, `${name}-hover`);
+  for (const background of ["background", "card", "muted", "primary-soft", "primary-soft-hover"])
+    add("primary", background);
   for (const name of ["success", "warning", "destructive"]) {
     for (const background of ["background", "card", "muted"]) add(`${name}-text`, background);
   }
-  add("destructive-text", "destructive-soft"); add("destructive-text", "destructive-soft-hover");
+  add("destructive-text", "destructive-soft");
+  add("destructive-text", "destructive-soft-hover");
   // Existing result captions use translucent text; composite sRGB before checking.
   for (const opacity of [0.8, 0.9]) add("success-text", "card", 4.5, opacity);
-  for (const background of ["background", "card", "field-background", "dashboard-field-background", "public-hero", "dashboard-hero"]) {
+  for (const background of [
+    "background",
+    "card",
+    "field-background",
+    "dashboard-field-background",
+    "public-hero",
+    "dashboard-hero",
+  ]) {
     add("ring", background, 3);
     add("field-border-invalid", background, 3);
   }
@@ -80,15 +140,19 @@ for (const [mode, tokens] of [["light", root], ["dark", { ...root, ...declaratio
     let front = linearRgb(tokens[fg], tokens);
     const back = linearRgb(tokens[bg], tokens);
     if (opacity !== 1) {
-      const encode = (c) => c <= 0.0031308 ? c * 12.92 : 1.055 * c ** (1 / 2.4) - 0.055;
-      const decode = (c) => c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      const encode = (c) => (c <= 0.0031308 ? c * 12.92 : 1.055 * c ** (1 / 2.4) - 0.055);
+      const decode = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
       front = front.map((c, i) => decode(encode(c) * opacity + encode(back[i]) * (1 - opacity)));
     }
     const contrast = ratio(luminance(front), luminance(back));
     const passed = contrast >= minimum;
     if (!passed) failures++;
     checks++;
-    return `${passed ? "PASS" : "FAIL"} ${mode} ${fg}${opacity === 1 ? "" : `/${opacity * 100}`} / ${bg}: ${contrast.toFixed(2)}:1 (minimum ${minimum}:1)`;
+    const opacityLabel = opacity === 1 ? "" : `/${opacity * 100}`;
+    return (
+      `${passed ? "PASS" : "FAIL"} ${mode} ${fg}${opacityLabel} / ${bg}: ` +
+      `${contrast.toFixed(2)}:1 (minimum ${minimum}:1)`
+    );
   });
   console.log(results.join("\n"));
 }

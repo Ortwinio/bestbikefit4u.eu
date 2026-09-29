@@ -239,17 +239,17 @@ export default function SettingsPage() {
         <div className="min-w-0 space-y-6">
           <Card variant="bordered" className="rounded-3xl border-border bg-card shadow-none">
             <SectionHeader
-              icon={<User className="h-5 w-5 text-[color:var(--primary)]" />}
+              icon={<User className="h-5 w-5 text-primary" />}
               title={messages.settings.account.title}
             />
             <CardContent className="space-y-4">
               <div className="bg-muted/40 flex items-center gap-4 rounded-2xl border border-border p-4">
                 <ProfilePhotoUpload source={profileImageSource} size="settings" />
                 <div>
-                  <p className="font-semibold text-[color:var(--foreground)]">
+                  <p className="font-semibold text-foreground">
                     {effectiveDisplayName}
                   </p>
-                  <p className="text-sm text-[color:var(--muted-foreground)]">{user?.email}</p>
+                  <p className="text-sm text-muted-foreground">{user?.email}</p>
                 </div>
               </div>
               <div className="space-y-3">
@@ -288,7 +288,7 @@ export default function SettingsPage() {
               {!isPaidUser && !isStripeBillingEnabled() ? (
                 <InfoBox
                   variant="secondary"
-                  icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
+                  icon={<Info className="h-4 w-4 text-primary" />}
                 >
                   <p className="font-medium">{copy.paused}</p>
                   <p className="mt-1">{copy.pausedDescription}</p>
@@ -296,7 +296,7 @@ export default function SettingsPage() {
               ) : !isPaidUser ? (
                 <InfoBox
                   variant="warning"
-                  icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
+                  icon={<AlertCircle className="h-4 w-4 text-warning" />}
                 >
                   <p className="font-medium">{messages.settings.account.upgrade}</p>
                   <p className="mt-1">{messages.settings.account.upgradeDescription}</p>
@@ -312,7 +312,7 @@ export default function SettingsPage() {
               {isPaidUser ? (
                 <InfoBox
                   variant={user?.stripeCustomerId ? "secondary" : "warning"}
-                  icon={<CreditCard className="h-4 w-4 text-[color:var(--primary)]" />}
+                  icon={<CreditCard className="h-4 w-4 text-primary" />}
                 >
                   <p className="font-medium">{messages.settings.billing.title}</p>
                   <p className="mt-1">
@@ -336,7 +336,7 @@ export default function SettingsPage() {
               ) : (
                 <InfoBox
                   variant="secondary"
-                  icon={<CreditCard className="h-4 w-4 text-[color:var(--primary)]" />}
+                  icon={<CreditCard className="h-4 w-4 text-primary" />}
                 >
                   <p className="font-medium">{messages.settings.billing.title}</p>
                   <p className="mt-1">{messages.settings.billing.noPaidSubscription}</p>
@@ -349,18 +349,18 @@ export default function SettingsPage() {
         <div className="min-w-0 space-y-6">
           <Card variant="bordered" className="rounded-3xl border-border bg-card shadow-none">
             <SectionHeader
-              icon={<Palette className="h-5 w-5 text-[color:var(--primary)]" />}
+              icon={<Palette className="h-5 w-5 text-primary" />}
               title={messages.settings.preferences.title}
             />
             <CardContent className="space-y-5">
               <div className="bg-muted/40 rounded-2xl border border-border p-4">
-                <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
+                <p className="mb-2 text-sm font-medium text-foreground">
                   {messages.settings.preferences.language}
                 </p>
                 <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
               </div>
               <div className="bg-muted/40 rounded-2xl border border-border p-4">
-                <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
+                <p className="mb-2 text-sm font-medium text-foreground">
                   {messages.settings.preferences.appearance}
                 </p>
                 <div className="[&_[data-slot=segmented-control]]:flex [&_[data-slot=segmented-control]]:flex-wrap">
@@ -374,7 +374,7 @@ export default function SettingsPage() {
                 </div>
               </div>
               <div className="bg-muted/40 rounded-2xl border border-border p-4">
-                <p className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
+                <p className="mb-2 text-sm font-medium text-foreground">
                   {messages.settings.preferences.units}
                 </p>
                 <RadioGroup
@@ -407,23 +407,23 @@ export default function SettingsPage() {
           </Card>
           <Card variant="bordered" className="rounded-3xl border-border bg-card shadow-none">
             <SectionHeader
-              icon={<Zap className="h-5 w-5 text-[color:var(--primary)]" />}
+              icon={<Zap className="h-5 w-5 text-primary" />}
               title={messages.settings.integrations.title}
             />
             <CardContent className="space-y-4">
               <InfoBox variant="secondary" className="p-4">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="font-semibold text-[color:var(--foreground)]">
+                    <p className="font-semibold text-foreground">
                       {messages.settings.integrations.strava}
                     </p>
-                    <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                    <p className="mt-1 text-sm text-muted-foreground">
                       {messages.settings.integrations.stravaDescription}
                     </p>
                   </div>
                   {strava?.accessStatus === "active" ? (
                     <Button type="button" variant="outline" disabled className="shrink-0">
-                      <CheckCircle2 className="h-4 w-4 text-[color:var(--success)]" />
+                      <CheckCircle2 className="h-4 w-4 text-success-text" />
                       {messages.settings.integrations.connected}
                     </Button>
                   ) : (
@@ -452,11 +452,11 @@ export default function SettingsPage() {
                       />
                     ) : null}
                     <div>
-                      <p className="text-sm font-medium text-[color:var(--foreground)]">
+                      <p className="text-sm font-medium text-foreground">
                         {strava.athleteName}
                       </p>
                       {strava.lastSyncAt ? (
-                        <p className="text-xs text-[color:var(--muted-foreground)]">
+                        <p className="text-xs text-muted-foreground">
                           {messages.settings.integrations.lastSynced}:{" "}
                           {new Date(strava.lastSyncAt).toLocaleString()}
                         </p>
@@ -491,39 +491,39 @@ export default function SettingsPage() {
                 {strava?.accessStatus !== "active" && showStravaConsentInline ? (
                   <InfoBox
                     variant="primary"
-                    icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
+                    icon={<Info className="h-4 w-4 text-primary" />}
                     className="mt-4"
                   >
                     <div className="space-y-4 text-sm">
                       <div>
-                        <p className="font-semibold text-[color:var(--foreground)]">
+                        <p className="font-semibold text-foreground">
                           {messages.settings.integrations.consent.title}
                         </p>
-                        <p className="mt-1 text-[color:var(--muted-foreground)]">
+                        <p className="mt-1 text-muted-foreground">
                           {messages.settings.integrations.consent.howWeUseDescription}
                         </p>
                       </div>
                       <div>
-                        <p className="font-semibold text-[color:var(--foreground)]">
+                        <p className="font-semibold text-foreground">
                           {messages.settings.integrations.consent.whatWeAccess}
                         </p>
-                        <ul className="mt-2 space-y-1 text-[color:var(--muted-foreground)]">
+                        <ul className="mt-2 space-y-1 text-muted-foreground">
                           <li>✓ {messages.settings.integrations.consent.accessProfile}</li>
                           <li>✓ {messages.settings.integrations.consent.accessActivities}</li>
                         </ul>
                       </div>
                       <div>
-                        <p className="font-semibold text-[color:var(--foreground)]">
+                        <p className="font-semibold text-foreground">
                           {messages.settings.integrations.consent.whatWeDoNot}
                         </p>
-                        <ul className="mt-2 space-y-1 text-[color:var(--muted-foreground)]">
+                        <ul className="mt-2 space-y-1 text-muted-foreground">
                           <li>✗ {messages.settings.integrations.consent.noGps}</li>
                           <li>✗ {messages.settings.integrations.consent.noNotes}</li>
                           <li>✗ {messages.settings.integrations.consent.noSocial}</li>
                           <li>✗ {messages.settings.integrations.consent.noSegments}</li>
                         </ul>
                       </div>
-                      <p className="text-[color:var(--muted-foreground)]">
+                      <p className="text-muted-foreground">
                         {messages.settings.integrations.consent.dataNote}
                       </p>
                     </div>
@@ -548,10 +548,10 @@ export default function SettingsPage() {
           </Card>
           <Card variant="bordered" className="rounded-3xl border-border bg-card shadow-none">
             <SectionHeader
-              icon={<Shield className="h-5 w-5 text-[color:var(--primary)]" />}
+              icon={<Shield className="h-5 w-5 text-primary" />}
               title={messages.settings.privacy.title}
             />
-            <CardContent className="space-y-2 text-sm text-[color:var(--muted-foreground)]">
+            <CardContent className="space-y-2 text-sm text-muted-foreground">
               <p>{messages.settings.privacy.description}</p>
               <div className="flex flex-wrap gap-3">
                 <Button
@@ -588,7 +588,7 @@ export default function SettingsPage() {
             />
             <CardContent className="space-y-4">
               {deleteError ? <ErrorState description={deleteError} /> : null}
-              <p className="text-sm text-[color:var(--muted-foreground)]">
+              <p className="text-sm text-muted-foreground">
                 {messages.profile.dangerZone.deleteConfirmDescription}
               </p>
               <Button

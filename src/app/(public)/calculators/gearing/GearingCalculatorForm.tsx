@@ -473,7 +473,10 @@ export function GearingCalculatorForm({ isNl }: Props) {
             <p className="my-4 text-[var(--bbf-op-donker)]">{copy.nextBody}</p>
             <Link
               href={withLocalePrefix("/calculators/climb-planner", locale)}
-              className="inline-flex min-h-11 items-center rounded-full bg-primary px-5 font-bold text-white"
+              className={
+                  "inline-flex min-h-11 items-center rounded-full bg-primary px-5 " +
+                  "font-bold text-primary-foreground"
+                }
             >
               {copy.nextLink}
             </Link>

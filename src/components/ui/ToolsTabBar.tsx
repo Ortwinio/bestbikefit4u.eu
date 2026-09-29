@@ -28,19 +28,25 @@ export function ToolsTabBar({ activeTool, locale = "nl", className }: ToolsTabBa
   return (
     <nav
       aria-label={locale === "nl" ? "Fietstools" : "Cycling tools"}
-      className={cn("max-w-full min-w-0 overflow-x-auto rounded-full border border-[color:var(--bbf-rand)] bg-[color:var(--bbf-wit)] p-1", className)}
+      className={cn("max-w-full min-w-0 overflow-x-auto rounded-full border border-border bg-card p-1", className)}
     >
       <ul className="m-0 flex w-max min-w-full list-none gap-1 p-0">
         {tabs.map(({ id, ...labels }) => (
           <li key={id} className="shrink-0">
             <Link
-              href={withLocalePrefix(id === "more" ? "/calculators/power-speed" : getLocalizedPublicCalculatorPath(id, locale), locale)}
+              href={withLocalePrefix(
+                id === "more" ? "/calculators/power-speed" : getLocalizedPublicCalculatorPath(id, locale),
+                locale,
+              )}
               aria-current={activeTool === id ? "page" : undefined}
               className={cn(
-                "flex min-h-11 items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[color:var(--bbf-petrol)]",
+                "flex min-h-11 items-center justify-center whitespace-nowrap rounded-full px-4 py-2 " +
+                  "text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-[-2px] " +
+                  "focus-visible:outline-ring",
                 activeTool === id
-                  ? "bg-[color:var(--bbf-inkt)] text-[color:var(--bbf-wit)]"
-                  : "text-[color:var(--bbf-inkt)] hover:bg-[color:var(--bbf-papier)]"
+                  ? "bg-[color:var(--bbf-inkt)] text-[color:var(--bbf-wit)] dark:bg-primary " +
+                      "dark:text-primary-foreground"
+                  : "text-card-foreground hover:bg-muted",
               )}
             >
               {labels[locale]}

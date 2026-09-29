@@ -50,9 +50,9 @@ function statusClassName(status: string) {
   const tone = getStatusTone(status);
   if (tone === "success") return "border-transparent bg-[var(--bbf-lime)] text-[var(--bbf-inkt)]";
   if (tone === "danger")
-    return "border-transparent bg-destructive text-destructive-foreground text-foreground";
+    return "border-transparent bg-destructive text-destructive-foreground";
   if (tone === "warning")
-    return "border-transparent bg-warning text-warning-foreground text-foreground";
+    return "border-transparent bg-warning text-warning-foreground";
   return "border-transparent bg-secondary text-secondary-foreground";
 }
 
@@ -188,13 +188,13 @@ export function FeedbackAccountPage() {
         }
       >
         <div className="space-y-3">
-          <p className="text-xs font-bold uppercase tracking-widest text-foreground">
+          <p className="text-xs font-bold uppercase tracking-widest text-[var(--bbf-inkt)]">
             {pageCopy.eyebrow}
           </p>
-          <h1 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-[var(--bbf-inkt)] sm:text-5xl">
             {pageCopy.title}
           </h1>
-          <p className="max-w-2xl text-foreground">{pageCopy.subtitle}</p>
+          <p className="max-w-2xl text-[var(--bbf-inkt)]">{pageCopy.subtitle}</p>
         </div>
         <Button type="button" onClick={() => openFeedbackPanel()} className="shrink-0 self-start">
           <Plus className="size-4" />

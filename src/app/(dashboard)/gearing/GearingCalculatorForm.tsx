@@ -428,7 +428,7 @@ export function GearingCalculatorForm() {
 
   return (
     <div className="space-y-6">
-      <section aria-label={copy.bike} className="space-y-6 rounded-3xl bg-[var(--bbf-petrol-zacht)] p-5 sm:p-6">
+      <section aria-label={copy.bike} className="space-y-6 rounded-3xl bg-secondary p-5 sm:p-6">
         <h2 className="text-2xl font-bold">{copy.bike}</h2>
         {bikes === undefined ? (
           <p role="status">{copy.loading}</p>

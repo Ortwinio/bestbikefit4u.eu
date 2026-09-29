@@ -1,5 +1,9 @@
 # Redesign canvas — BestBikeFit4U
 
+2026-09-29 — Codex B task 23 dark-mode pass: owned account/content page families checked
+at 1440/390 in light/dark. Token-only fixes, capture proof and validation in
+`audit/23-dark-b.md`; exact commit list `audit/files-dark-b.txt`. No commit by B.
+
 Lead: Claude (project lead, QA, canvas publishing). Agents: Codex A (pane %3), Codex B (pane %4).
 Kanban: Sfora project `bestbikefit4u-eu`. Canvas: https://claude.ai/artifact/87PNyNszcNRjBZBX9ZT3oX
 
@@ -57,6 +61,8 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 - 2026-09-29 — **Palette locked: canvas lime/petrol** (decided by Ortwin). It replaces the blue/Inter palette in `plans/BestBikeFit4U_Redesign_Plan.docx`. The brand rules (colors, type, logo, tone of voice, icons) are in `reference/brand.md`, and they win over anything else.
 
 ## Draft progress
+
+- 2026-09-29 — Codex A completed **19.6 marketing dark-mode pass**: theme-aware Header/menu/Footer and owned page families; 46 light/dark screenshots, 118 browser states and 46 unit tests. Typecheck passes; shared lint has unrelated tooltip/CSS blockers. Details: `audit/19-dark-notes.md`; exact source list: `audit/files-19.dark.txt`. No commit; awaiting lead review.
 
 - 2026-09-29 — Codex B implemented **19.5a About/FAQ/Contact/Case Study** with three page workers and parent
   integration. Real mailto and recruitment-form behavior, metadata and FAQPage schema are preserved. Build,
@@ -125,3 +131,8 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
   Typecheck/build,1,139 unit tests,i18n,sitemap and19browser cases pass. Full lint has49out-of-scope
   CSS color findings; owned modules pass. See `audit/19-notes.md` and `audit/files-19.5b.txt`.
   No commit by C; shared Header/Footer and frozen root dictionaries untouched.
+
+- 2026-09-29 — **22 Codex C dark-mode pass implemented; awaiting lead review.** Twelve calculator URLs,
+  shared UI/playground and seven account tools checked light/dark at 1440/390. Token-only fixes,
+  124 browser cases, 20 contrast/focus regressions and 162 screenshots. Validation and A/B-owned
+  follow-ups: `audit/22-notes.md`; exact files: `audit/files-dark-c.txt`. No commit by C.

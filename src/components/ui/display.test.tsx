@@ -11,7 +11,11 @@ import { AdjustOrder } from "./AdjustOrder";
 
 describe("ResultHero", () => {
   it.each(["lime", "ink"] as const)("labels the %s result and keeps units and explanation separate", (variant) => {
-    const html = renderToStaticMarkup(<ResultHero label="Jouw startpunt" value={742} unit="mm" subtext="Meet langs de zadelbuis." variant={variant}><a href="/login">Bewaar je resultaat</a></ResultHero>);
+    const html = renderToStaticMarkup(
+      <ResultHero label="Jouw startpunt" value={742} unit="mm" subtext="Meet langs de zadelbuis." variant={variant}>
+        <a href="/login">Bewaar je resultaat</a>
+      </ResultHero>,
+    );
     expect(html).toContain('aria-label="Jouw startpunt"');
     expect(html).toContain("<dt");
     expect(html).toContain(">742</span>");
@@ -23,7 +27,12 @@ describe("ResultHero", () => {
 
 describe("ResultTile / MeasurementTile compatibility", () => {
   it("uses one renderer and preserves zero values, units, and status", () => {
-    const props = { label: "Verschil", value: 0, unit: "mm", status: <StatusChip status="ok">Binnen marge</StatusChip> };
+    const props = {
+      label: "Verschil",
+      value: 0,
+      unit: "mm",
+      status: <StatusChip status="ok">Binnen marge</StatusChip>,
+    };
     const html = renderToStaticMarkup(<ResultTile {...props} />);
     expect(html).toBe(renderToStaticMarkup(<MeasurementTile {...props} />));
     expect(html).toContain(">0</span>");
@@ -39,7 +48,11 @@ describe("ResultTile / MeasurementTile compatibility", () => {
 
 describe("StatRow", () => {
   it("keeps definition semantics and leaves descriptive text in the body font", () => {
-    const numeric = renderToStaticMarkup(<dl><StatRow label="Ritten" value={0} /></dl>);
+    const numeric = renderToStaticMarkup(
+      <dl>
+        <StatRow label="Ritten" value={0} />
+      </dl>,
+    );
     expect(numeric).toContain("<dt");
     expect(numeric).toContain("<dd");
     expect(numeric).toContain("font-mono");
@@ -50,7 +63,11 @@ describe("StatRow", () => {
 
 describe("StatusChip", () => {
   it.each(["ok", "warn", "deviation"] as const)("renders readable %s status with optional live semantics", (status) => {
-    const html = renderToStaticMarkup(<StatusChip status={status} role="status">Controleer je afstelling</StatusChip>);
+    const html = renderToStaticMarkup(
+      <StatusChip status={status} role="status">
+        Controleer je afstelling
+      </StatusChip>,
+    );
     expect(html).toContain(`data-status="${status}"`);
     expect(html).toContain('role="status"');
     expect(html).toContain("Controleer je afstelling");
@@ -60,7 +77,9 @@ describe("StatusChip", () => {
 
 describe("Gauge", () => {
   it("connects its label and meter range, with a unit-bearing accessible value", () => {
-    const html = renderToStaticMarkup(<Gauge label="Bandenspanning" value={4.5} min={1} max={8} unit="bar" valueText="4,5 bar" />);
+    const html = renderToStaticMarkup(
+      <Gauge label="Bandenspanning" value={4.5} min={1} max={8} unit="bar" valueText="4,5 bar" />,
+    );
     expect(html).toContain('role="meter"');
     const labelId = html.match(/<p id="([^"]+)"/)?.[1];
     expect(labelId).toBeTruthy();
@@ -71,7 +90,10 @@ describe("Gauge", () => {
     expect(html).toContain('aria-valuetext="4,5 bar"');
     expect(html).toContain('stroke-dasharray="50 100"');
   });
-  it.each([[-5, 0], [150, 100]])("clamps %s to %s in both accessible and visual output", (value, bounded) => {
+  it.each([
+    [-5, 0],
+    [150, 100],
+  ])("clamps %s to %s in both accessible and visual output", (value, bounded) => {
     const html = renderToStaticMarkup(<Gauge label="Meter" value={value} />);
     expect(html).toContain(`aria-valuenow="${bounded}"`);
     if (bounded === 0) expect(html).not.toContain("stroke-dasharray");
@@ -85,7 +107,15 @@ describe("Gauge", () => {
 
 describe("SizeScale", () => {
   it("marks recommendation and borderline in text, without pretending to be an input", () => {
-    const html = renderToStaticMarkup(<SizeScale label="Cranklengte" options={[{ value: 165 }, { value: 170 }, { value: 172.5, label: "172,5" }]} recommended={170} borderline={[172.5]} unit="mm" />);
+    const html = renderToStaticMarkup(
+      <SizeScale
+        label="Cranklengte"
+        options={[{ value: 165 }, { value: 170 }, { value: 172.5, label: "172,5" }]}
+        recommended={170}
+        borderline={[172.5]}
+        unit="mm"
+      />,
+    );
     expect(html).toContain('aria-label="Cranklengte"');
     expect(html.match(/aria-current="true"/g)).toHaveLength(1);
     expect(html).toContain("advies");
@@ -94,21 +124,35 @@ describe("SizeScale", () => {
     expect(html).not.toContain("<button");
     expect(html).not.toContain("tabindex");
   });
-  it("keeps unselected sizes white and lets narrow rows wrap without fixed minimum widths", () => {
-    const html = renderToStaticMarkup(<SizeScale label="Maten" options={[165, 170, 172.5, 175].map(value => ({ value }))} recommended={170} borderline={[172.5]} />);
-    expect(html.match(/bg-\[var\(--bbf-wit\)\]/g)).toHaveLength(3);
+  it("uses theme-aware size surfaces and lets narrow rows wrap without fixed minimum widths", () => {
+    const html = renderToStaticMarkup(
+      <SizeScale
+        label="Maten"
+        options={[165, 170, 172.5, 175].map((value) => ({ value }))}
+        recommended={170}
+        borderline={[172.5]}
+      />,
+    );
+    expect(html.match(/bg-card/g)).toHaveLength(3);
     expect(html.match(/bg-\[var\(--bbf-inkt\)\]/g)).toHaveLength(1);
-    expect(html).toContain("border-[var(--bbf-petrol)]");
+    expect(html).toContain("border-primary");
+    expect(html).toContain("dark:bg-primary dark:text-primary-foreground");
     expect(html).toContain("flex-wrap");
     expect(html).toContain("min-w-0");
     expect(html).not.toContain("min-w-16");
   });
-
 });
 
 describe("AdjustOrder", () => {
   it("renders a named section and ordered, caller-supplied advice", () => {
-    const html = renderToStaticMarkup(<AdjustOrder steps={[{ title: "Controleer je meting." }, { title: "Verstel je zadel.", description: "Rij er twee ritten mee." }]} />);
+    const html = renderToStaticMarkup(
+      <AdjustOrder
+        steps={[
+          { title: "Controleer je meting." },
+          { title: "Verstel je zadel.", description: "Rij er twee ritten mee." },
+        ]}
+      />,
+    );
     expect(html).toContain("Pas in deze volgorde aan");
     expect(html).toContain("<ol");
     expect(html.match(/<li /g)).toHaveLength(2);

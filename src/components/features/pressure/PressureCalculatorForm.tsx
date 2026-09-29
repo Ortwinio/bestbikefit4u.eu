@@ -305,7 +305,7 @@ export function PressureCalculatorForm({
                       max={DOMAINS[discipline][1]}
                       unit="bar"
                       locale={locale}
-                      className="mt-3"
+                      className="mt-3 [--gauge-accent:var(--bbf-petrol)]"
                     />
                   </div>
                 ))}

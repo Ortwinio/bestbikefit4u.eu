@@ -69,7 +69,23 @@
 }
 
 :root {
+  /* Full colors for token-only CSS Modules; scoped aliases resolve in the active theme. */
+  --bbf-ui-foreground: oklch(var(--foreground));
+  --bbf-ui-muted-foreground: oklch(var(--muted-foreground));
+  --bbf-ui-background: oklch(var(--background));
+  --bbf-ui-card: oklch(var(--card));
+  --bbf-ui-card-foreground: oklch(var(--card-foreground));
+  --bbf-ui-secondary: oklch(var(--secondary));
+  --bbf-ui-primary: oklch(var(--primary));
+  --bbf-ui-primary-foreground: oklch(var(--primary-foreground));
+  --bbf-ui-border: oklch(var(--border));
+  --bbf-ui-ring: oklch(var(--ring));
+  --bbf-ui-muted: oklch(var(--muted));
+  --bbf-ui-success: oklch(var(--success));
+  --bbf-ui-warning-foreground: oklch(var(--warning-foreground));
+
   /* Locked brand palette; semantic tokens below also provide dark-mode adaptation. */
+  --gauge-accent: var(--bbf-petrol);
   --bbf-lime: #cff26a;
   --bbf-lime-zacht: #e6f8a8;
   --bbf-petrol: #0a7263;
@@ -103,8 +119,7 @@
   --public-border-soft: 91.59516% 0.0126119 164.77798;
   --public-border-strong: 91.59516% 0.0126119 164.77798;
   --public-shadow: 0 12px 30px -24px color-mix(in oklch, oklch(var(--foreground)) 24%, transparent);
-  --public-shadow-strong: 0 18px 40px -28px
-    color-mix(in oklch, oklch(var(--foreground)) 28%, transparent);
+  --public-shadow-strong: 0 18px 40px -28px color-mix(in oklch, oklch(var(--foreground)) 28%, transparent);
   --public-shell-glow: 24.12662% 0.0283111 180.00152 / 0.38;
   --dashboard-shell: 97.54721% 0.0073056 132.41432;
   --dashboard-shell-elevated: 94.74321% 0.0187021 180.26554;
@@ -116,10 +131,8 @@
   --dashboard-hero: 94.73259% 0.103628 118.73767;
   --dashboard-border-soft: 91.59516% 0.0126119 164.77798;
   --dashboard-border-strong: 91.59516% 0.0126119 164.77798;
-  --dashboard-shadow: 0 14px 32px -24px
-    color-mix(in oklch, oklch(var(--foreground)) 18%, transparent);
-  --dashboard-shadow-strong: 0 22px 46px -30px
-    color-mix(in oklch, oklch(var(--foreground)) 22%, transparent);
+  --dashboard-shadow: 0 14px 32px -24px color-mix(in oklch, oklch(var(--foreground)) 18%, transparent);
+  --dashboard-shadow-strong: 0 22px 46px -30px color-mix(in oklch, oklch(var(--foreground)) 22%, transparent);
   --dashboard-nav-foreground: 46.65532% 0.0267256 178.91784;
   --dashboard-nav-foreground-strong: 24.12662% 0.0283111 180.00152;
   --dashboard-nav-hover-surface: 94.73259% 0.103628 118.73767;
@@ -205,6 +218,22 @@
 }
 
 .dark {
+  /* Full colors for token-only CSS Modules; scoped aliases resolve in the active theme. */
+  --bbf-ui-foreground: oklch(var(--foreground));
+  --bbf-ui-muted-foreground: oklch(var(--muted-foreground));
+  --bbf-ui-background: oklch(var(--background));
+  --bbf-ui-card: oklch(var(--card));
+  --bbf-ui-card-foreground: oklch(var(--card-foreground));
+  --bbf-ui-secondary: oklch(var(--secondary));
+  --bbf-ui-primary: oklch(var(--primary));
+  --bbf-ui-primary-foreground: oklch(var(--primary-foreground));
+  --bbf-ui-border: oklch(var(--border));
+  --bbf-ui-ring: oklch(var(--ring));
+  --bbf-ui-muted: oklch(var(--muted));
+  --bbf-ui-success: oklch(var(--success));
+  --bbf-ui-warning-foreground: oklch(var(--warning-foreground));
+
+  --gauge-accent: oklch(var(--primary));
   --public-shell-background: 24.12662% 0.0283111 180.00152;
   --public-shell-elevated: 29.74506% 0.0351159 177.67575;
   --public-card: 29.74506% 0.0351159 177.67575;
@@ -216,8 +245,7 @@
   --public-border-soft: 46.65532% 0.0267256 178.91784;
   --public-border-strong: 46.65532% 0.0267256 178.91784;
   --public-shadow: 0 14px 34px -26px color-mix(in oklch, oklch(var(--foreground)) 18%, transparent);
-  --public-shadow-strong: 0 20px 44px -30px
-    color-mix(in oklch, oklch(var(--foreground)) 22%, transparent);
+  --public-shadow-strong: 0 20px 44px -30px color-mix(in oklch, oklch(var(--foreground)) 22%, transparent);
   --public-shell-glow: 24.12662% 0.0283111 180.00152 / 0.38;
   --dashboard-shell: 24.12662% 0.0283111 180.00152;
   --dashboard-shell-elevated: 29.74506% 0.0351159 177.67575;
@@ -229,10 +257,8 @@
   --dashboard-hero: 36.18102% 0.0424832 176.78888;
   --dashboard-border-soft: 46.65532% 0.0267256 178.91784;
   --dashboard-border-strong: 46.65532% 0.0267256 178.91784;
-  --dashboard-shadow: 0 16px 36px -26px
-    color-mix(in oklch, oklch(var(--foreground)) 14%, transparent);
-  --dashboard-shadow-strong: 0 24px 52px -34px
-    color-mix(in oklch, oklch(var(--foreground)) 18%, transparent);
+  --dashboard-shadow: 0 16px 36px -26px color-mix(in oklch, oklch(var(--foreground)) 14%, transparent);
+  --dashboard-shadow-strong: 0 24px 52px -34px color-mix(in oklch, oklch(var(--foreground)) 18%, transparent);
   --dashboard-nav-foreground: 82.90924% 0.022205 174.86826;
   --dashboard-nav-foreground-strong: 100% 0 89.87556;
   --dashboard-nav-hover-surface: 36.18102% 0.0424832 176.78888;
@@ -337,7 +363,7 @@
 }
 
 @utility invalid-field-ring {
-  box-shadow: 0 0 0 2px var(--field-border-invalid);
+  box-shadow: 0 0 0 2px oklch(var(--field-border-invalid));
 }
 
 @utility status-disabled {
@@ -367,22 +393,14 @@
 }
 
 @utility dashboard-card-surface-muted {
-  background: color-mix(
-    in oklch,
-    oklch(var(--dashboard-surface-muted)) 88%,
-    oklch(var(--background)) 12%
-  );
+  background: color-mix(in oklch, oklch(var(--dashboard-surface-muted)) 88%, oklch(var(--background)) 12%);
   border-color: oklch(var(--dashboard-border-soft));
   box-shadow: var(--dashboard-shadow);
 }
 
 @utility dashboard-hero-surface {
   background: oklch(var(--dashboard-hero));
-  border-color: color-mix(
-    in oklch,
-    oklch(var(--dashboard-border-strong)) 74%,
-    oklch(var(--primary)) 26%
-  );
+  border-color: color-mix(in oklch, oklch(var(--dashboard-border-strong)) 74%, oklch(var(--primary)) 26%);
   box-shadow: var(--dashboard-shadow-strong);
 }
 
@@ -424,11 +442,7 @@
 }
 
 @utility public-card-surface-subtle {
-  background: color-mix(
-    in oklch,
-    oklch(var(--public-card-subtle)) 86%,
-    oklch(var(--background)) 14%
-  );
+  background: color-mix(in oklch, oklch(var(--public-card-subtle)) 86%, oklch(var(--background)) 14%);
   border-color: oklch(var(--public-border-soft));
   box-shadow: var(--public-shadow);
 }
@@ -441,11 +455,7 @@
 
 @utility public-cta-surface {
   background: oklch(var(--public-cta));
-  border-color: color-mix(
-    in oklch,
-    oklch(var(--public-border-strong)) 68%,
-    oklch(var(--primary)) 32%
-  );
+  border-color: color-mix(in oklch, oklch(var(--public-border-strong)) 68%, oklch(var(--primary)) 32%);
   box-shadow: var(--public-shadow-strong);
 }
 
@@ -456,22 +466,14 @@
 }
 
 @utility public-calculator-card-subtle {
-  background: color-mix(
-    in oklch,
-    oklch(var(--dashboard-surface-muted)) 90%,
-    oklch(var(--background)) 10%
-  );
+  background: color-mix(in oklch, oklch(var(--dashboard-surface-muted)) 90%, oklch(var(--background)) 10%);
   border-color: oklch(var(--dashboard-border-soft));
   box-shadow: var(--dashboard-shadow);
 }
 
 @utility public-calculator-result {
   background: oklch(var(--dashboard-hero));
-  border-color: color-mix(
-    in oklch,
-    oklch(var(--dashboard-border-strong)) 70%,
-    oklch(var(--primary)) 30%
-  );
+  border-color: color-mix(in oklch, oklch(var(--dashboard-border-strong)) 70%, oklch(var(--primary)) 30%);
   box-shadow: var(--dashboard-shadow-strong);
 }
 
@@ -514,11 +516,7 @@
 }
 
 @utility dashboard-nav-item-active {
-  background: color-mix(
-    in oklch,
-    oklch(var(--dashboard-nav-active-surface)) 84%,
-    oklch(var(--primary)) 16%
-  );
+  background: color-mix(in oklch, oklch(var(--dashboard-nav-active-surface)) 84%, oklch(var(--primary)) 16%);
   color: oklch(var(--dashboard-nav-foreground-strong));
   box-shadow:
     inset 0 0 0 1px color-mix(in oklch, oklch(var(--dashboard-border-strong)) 44%, transparent),
@@ -526,11 +524,7 @@
 }
 
 @utility dashboard-nav-item-hover {
-  background: color-mix(
-    in oklch,
-    oklch(var(--dashboard-nav-hover-surface)) 88%,
-    oklch(var(--primary)) 12%
-  );
+  background: color-mix(in oklch, oklch(var(--dashboard-nav-hover-surface)) 88%, oklch(var(--primary)) 12%);
   color: oklch(var(--dashboard-nav-foreground-strong));
 }
 
@@ -564,7 +558,7 @@
   h4,
   h5,
   h6 {
-    color: oklch(var(--foreground));
+    color: inherit;
     font-family: var(--font-display), sans-serif;
     letter-spacing: -0.02em;
   }

@@ -192,13 +192,15 @@ export function FrameSizeCalculatorForm({
               />
               <path
                 d={`M16 30H${ratioX}`}
-                stroke="var(--bbf-petrol)"
+                stroke="currentColor"
+                className="text-primary"
                 strokeWidth="14"
                 strokeLinecap="round"
               />
               <path
                 d={`M${ratioX} 14V46`}
-                stroke="var(--bbf-inkt)"
+                stroke="currentColor"
+                className="text-foreground"
                 strokeWidth="4"
                 strokeLinecap="round"
               />
