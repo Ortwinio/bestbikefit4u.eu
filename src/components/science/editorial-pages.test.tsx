@@ -14,6 +14,7 @@ import * as DutchLanding from "@/app/(public)/bikefitting/page";
 import * as Methods from "@/app/(public)/science/bike-fit-methods/page";
 import * as Engine from "@/app/(public)/science/calculation-engine/page";
 import * as Stack from "@/app/(public)/science/stack-and-reach/page";
+import { StackReachFigure } from "./StackReachFigure";
 
 let locale: Locale = "nl";
 vi.mock("next/headers", () => ({ headers: async () => new Headers() }));
@@ -39,6 +40,14 @@ const pages = [
 ] as const;
 
 describe("editorial page SEO and localized content", () => {
+  it("uses theme tokens for the stack/reach drawing and measurement labels", async () => {
+    const html = await renderHtml(<StackReachFigure locale="nl" />);
+    expect(html).toContain('stroke="var(--marketing-foreground)"');
+    expect(html).toContain('stroke="var(--marketing-muted)"');
+    expect(html).toContain('fill="var(--marketing-link)"');
+    expect(html).not.toMatch(/(?:stroke|fill)="#/);
+  });
+
   it.each(["en", "nl"] as const)("preserves canonicals and structured data in %s", async (language) => {
     locale = language;
     for (const [path, page] of pages) {

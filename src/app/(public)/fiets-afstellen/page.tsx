@@ -277,7 +277,7 @@ export default async function BikeSetupPage() {
               <ul className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
                 {page.sections.saddleHeight.highSignals.map((signal) => (
                   <li key={signal} className="flex gap-2">
-                    <span className="mt-1 text-danger">•</span>
+                    <span className="mt-1 text-destructive-text">•</span>
                     <span>{signal}</span>
                   </li>
                 ))}
@@ -290,7 +290,7 @@ export default async function BikeSetupPage() {
               <ul className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
                 {page.sections.saddleHeight.lowSignals.map((signal) => (
                   <li key={signal} className="flex gap-2">
-                    <span className="mt-1 text-success">•</span>
+                    <span className="mt-1 text-success-text">•</span>
                     <span>{signal}</span>
                   </li>
                 ))}
@@ -548,7 +548,7 @@ export default async function BikeSetupPage() {
             <ul className="space-y-2">
               {page.sections.safety.bullets.map((bullet) => (
                 <li key={bullet} className="flex gap-2">
-                  <span className="mt-1 text-warning">•</span>
+                  <span className="mt-1 text-warning-text">•</span>
                   <span>{bullet}</span>
                 </li>
               ))}

@@ -97,7 +97,7 @@ export default function DashboardPage() {
       {/* Rider profile card */}
       <Card variant="bordered" className="gap-5 rounded-3xl p-5 shadow-none sm:p-7">
         <SectionHeader
-          icon={<User className="h-5 w-5 text-[color:var(--primary)]" />}
+          icon={<User className="h-5 w-5 text-[color:var(--color-primary)]" />}
           title={messages.dashboardHome.riderCardTitle}
           border={false}
           className="flex-wrap p-0 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-bold"
@@ -147,11 +147,11 @@ export default function DashboardPage() {
           ) : (
             <InfoBox
               variant="warning"
-              icon={<User className="mt-0.5 h-4 w-4 text-[color:var(--warning)]" />}
+              icon={<User className="mt-0.5 h-4 w-4 text-[color:var(--color-warning)]" />}
               className="text-sm"
             >
               <p className="font-medium">{messages.home.profileWarning.title}</p>
-              <p className="mt-1 text-[color:var(--muted-foreground)]">
+              <p className="mt-1 text-[color:var(--color-muted-foreground)]">
                 {messages.home.profileWarning.description}
               </p>
             </InfoBox>
@@ -174,7 +174,7 @@ export default function DashboardPage() {
       {/* Bikes section */}
       <section className="min-w-0 space-y-4" aria-label={messages.bikes.title}>
           <SectionHeader
-            icon={<Bike className="h-5 w-5 text-[color:var(--primary)]" />}
+            icon={<Bike className="h-5 w-5 text-[color:var(--color-primary)]" />}
             title={messages.bikes.title}
             border={false}
             className="flex-wrap p-0 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-bold"

@@ -236,8 +236,8 @@ function SupersededBanner({
     <div
       className={
         "flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-md)] " +
-        "border border-amber-300/70 bg-amber-100/60 px-4 py-3 text-sm text-amber-950 " +
-        "dark:border-amber-700/60 dark:bg-amber-950/30 dark:text-amber-100"
+        "border border-[var(--bbf-warning)] bg-[var(--bbf-warning)] " +
+        "px-4 py-3 text-sm text-[var(--bbf-inkt)]"
       }
     >
       <div className="flex items-center gap-2">

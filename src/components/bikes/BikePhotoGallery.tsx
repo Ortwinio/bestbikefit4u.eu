@@ -70,7 +70,7 @@ function BikePhotoThumbnail({
       })}
       className={cn(
         "relative aspect-square overflow-hidden rounded-[var(--radius-md)] border transition",
-        isSelected ? "border-primary ring-2 ring-[color:var(--primary)]/20" : "border-border",
+        isSelected ? "border-primary ring-2 ring-primary/20" : "border-border",
       )}
     >
       {imageUrl ? (
@@ -297,11 +297,11 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
             )}
             <span
               className={
-                "absolute inset-0 flex items-end justify-between bg-gradient-to-t from-black/55 " +
-                "via-black/0 to-black/0 px-4 py-4 text-white opacity-100 transition"
+                "absolute inset-0 flex items-end justify-between bg-gradient-to-t from-[var(--bbf-inkt)]/90 " +
+                "via-[var(--bbf-inkt)]/0 to-[var(--bbf-inkt)]/0 px-4 py-4 text-[var(--bbf-wit)] opacity-100 transition"
               }
             >
-              <span className="text-sm font-medium">
+              <span className="rounded-full bg-[var(--bbf-inkt)] px-3 py-1 text-sm font-medium">
                 {getBikePhotoAltText({
                   bikeName,
                   index: selectedIndex + 1,
@@ -310,7 +310,7 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
               </span>
               <span
                 className={
-                  "inline-flex items-center gap-2 rounded-full bg-black/40 px-3 py-1 text-xs " +
+                  "inline-flex items-center gap-2 rounded-full bg-[var(--bbf-inkt)] px-3 py-1 text-xs " +
                   "font-semibold backdrop-blur-sm"
                 }
               >
@@ -413,14 +413,14 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
           showCloseButton={false}
           className={
             "flex h-[min(92vh,980px)] w-[min(96vw,1320px)] max-w-none flex-col gap-4 " +
-            "overflow-hidden rounded-[var(--radius-2xl)] border border-white/10 bg-black/95 p-0 " +
-            "text-white"
+            "overflow-hidden rounded-[var(--radius-2xl)] border border-[var(--bbf-wit)]/10 bg-[var(--bbf-inkt)]/95 p-0 " +
+            "text-[var(--bbf-wit)]"
           }
         >
-          <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+          <div className="flex items-center justify-between border-b border-[var(--bbf-wit)]/10 px-5 py-4">
             <div>
-              <DialogTitle className="text-lg font-semibold text-white">{bikeName}</DialogTitle>
-              <DialogDescription className="mt-1 text-sm text-white/65">
+              <DialogTitle className="text-lg font-semibold text-[var(--bbf-wit)]">{bikeName}</DialogTitle>
+              <DialogDescription className="mt-1 text-sm text-[var(--bbf-wit)]/65">
                 {selectedIndex >= 0
                   ? getBikePhotoAltText({
                       bikeName,
@@ -436,8 +436,8 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
                   variant="ghost"
                   size="sm"
                   className={
-                    "h-10 w-10 rounded-full border border-white/10 bg-white/5 px-0 text-white " +
-                    "hover:bg-white/10"
+                    "h-10 w-10 rounded-full border border-[var(--bbf-wit)]/10 bg-[var(--bbf-wit)]/5 px-0 text-[var(--bbf-wit)] " +
+                    "hover:bg-[var(--bbf-wit)]/10"
                   }
                   aria-label={messages.bikes.gallery.closeLightbox}
                 />
@@ -451,7 +451,7 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
             <div
               className={
                 "relative flex min-h-[360px] items-center justify-center " +
-                "bg-black/40 " +
+                "bg-[var(--bbf-inkt)]/40 " +
                 "px-4 py-4 sm:px-6"
               }
             >
@@ -474,7 +474,7 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
                 <div
                   className={
                     "flex h-full w-full items-center justify-center rounded-[var(--radius-xl)] border " +
-                    "border-dashed border-white/15 text-white/60"
+                    "border-dashed border-[var(--bbf-wit)]/15 text-[var(--bbf-wit)]/60"
                   }
                 >
                   <Camera className="h-10 w-10" />
@@ -489,8 +489,8 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
                     size="icon"
                     onClick={() => selectRelativePhoto("previous")}
                     className={
-                      "absolute left-4 top-1/2 h-11 w-11 -translate-y-1/2 rounded-full border-white/10 " +
-                      "bg-black/40 text-white hover:bg-black/60"
+                      "absolute left-4 top-1/2 h-11 w-11 -translate-y-1/2 rounded-full border-[var(--bbf-wit)]/10 " +
+                      "bg-[var(--bbf-inkt)] text-[var(--bbf-wit)] hover:bg-[var(--bbf-petrol)]"
                     }
                     aria-label={messages.bikes.gallery.previousPhoto}
                   >
@@ -502,8 +502,8 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
                     size="icon"
                     onClick={() => selectRelativePhoto("next")}
                     className={
-                      "absolute right-4 top-1/2 h-11 w-11 -translate-y-1/2 rounded-full border-white/10 " +
-                      "bg-black/40 text-white hover:bg-black/60"
+                      "absolute right-4 top-1/2 h-11 w-11 -translate-y-1/2 rounded-full border-[var(--bbf-wit)]/10 " +
+                      "bg-[var(--bbf-inkt)] text-[var(--bbf-wit)] hover:bg-[var(--bbf-petrol)]"
                     }
                     aria-label={messages.bikes.gallery.nextPhoto}
                   >
@@ -513,8 +513,8 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
               ) : null}
             </div>
 
-            <div className="border-t border-white/10 bg-white/4 p-4 lg:border-l lg:border-t-0">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/55">
+            <div className="border-t border-[var(--bbf-wit)]/10 bg-[var(--bbf-wit)]/4 p-4 lg:border-l lg:border-t-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--bbf-wit)]/55">
                 {formatBikePhotoCount({
                   count: visiblePhotos.length,
                   oneLabel: messages.bikes.gallery.countOne,

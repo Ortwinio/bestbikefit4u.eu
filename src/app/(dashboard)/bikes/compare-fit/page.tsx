@@ -26,7 +26,7 @@ export default function CompareBikeFitPage() {
           <div className="space-y-5">
             <h2 className="font-display text-2xl font-bold">{copy.compareTitle}</h2>
             <p className="max-w-2xl leading-relaxed text-muted-foreground">{copy.compareBody}</p>
-            <Button render={<Link href={withLocalePrefix("/bikes", locale)} />}>
+            <Button nativeButton={false} role="link" render={<Link href={withLocalePrefix("/bikes", locale)} />}>
               {copy.openGarage}
               <ArrowRight className="h-4 w-4" />
             </Button>
@@ -37,7 +37,10 @@ export default function CompareBikeFitPage() {
         {copy.compareSteps.map((step, index) => (
           <Card key={step.title} variant="bordered">
             <CardContent className="space-y-4 p-6">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent font-mono">
+              <span className={
+                "inline-flex h-9 w-9 items-center justify-center rounded-full " +
+                "bg-accent font-mono text-accent-foreground"
+              }>
                 {index + 1}
               </span>
               <h2 className="font-display text-xl font-bold">{step.title}</h2>

@@ -50,7 +50,7 @@ export function ProfilePhotoUpload({
         type="button"
         onClick={() => fileInputRef.current?.click()}
         className={cn(
-          "group relative shrink-0 overflow-hidden rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] focus-visible:focus-ring",
+          "group relative shrink-0 overflow-hidden rounded-full border border-border bg-secondary focus-visible:focus-ring",
           sizeClasses
         )}
         aria-label={messages.profile.photo.upload}
@@ -100,7 +100,7 @@ export function ProfilePhotoUpload({
       />
 
       {error ? (
-        <p className="max-w-48 text-xs text-[color:var(--destructive)]">
+        <p className="max-w-48 text-xs text-destructive-text">
           {error === "file_too_large"
             ? messages.profile.photo.fileTooLarge
             : error === "invalid_type"

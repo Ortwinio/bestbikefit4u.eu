@@ -251,7 +251,7 @@ export function ProfileImproveGuideClient({
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
             <p className="mb-3 text-sm font-bold uppercase tracking-[0.08em]">{copy.eyebrow}</p>
-            <h1 className="font-display text-[32px] font-extrabold leading-[1.05] tracking-[-0.03em] sm:text-[42px]">
+            <h1 className="text-[var(--bbf-inkt)] font-display text-[32px] font-extrabold leading-[1.05] tracking-[-0.03em] sm:text-[42px]">
               {title}
             </h1>
             <p className="mt-3.5 max-w-[650px] text-base leading-relaxed">
@@ -307,7 +307,10 @@ export function ProfileImproveGuideClient({
                   id={`${exerciseId}-trigger-${index}`}
                   onClick={() => setOpenExercise(openExercise === index ? null : index)}
                   className="h-auto min-h-[52px] w-full justify-start gap-3 whitespace-normal rounded-[14px] px-4 py-3 text-left text-[15px] text-[var(--bbf-inkt)]"
-                  style={{ backgroundColor: openExercise === index ? "var(--bbf-lime)" : "var(--bbf-papier)" }}
+                  style={{
+                    backgroundColor: openExercise === index ? "var(--bbf-lime)" : "var(--color-background)",
+                    color: openExercise === index ? "var(--bbf-inkt)" : "var(--color-foreground)",
+                  }}
                 >
                   <span className="w-7 shrink-0 font-mono" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                   <span className="min-w-0 flex-1">{exercise.name}</span>

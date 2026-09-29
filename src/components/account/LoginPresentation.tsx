@@ -64,7 +64,7 @@ export function LoginPresentation({
           />
         </div>
         <div>
-          <h2 className="max-w-lg font-display text-3xl font-extrabold leading-[1.05] tracking-tight lg:text-[40px]">
+          <h2 className="text-[var(--bbf-inkt)] max-w-lg font-display text-3xl font-extrabold leading-[1.05] tracking-tight lg:text-[40px]">
             {text.title}
           </h2>
           <p className="mt-3 max-w-lg text-[17px] leading-relaxed text-[color:var(--bbf-tekst)]">

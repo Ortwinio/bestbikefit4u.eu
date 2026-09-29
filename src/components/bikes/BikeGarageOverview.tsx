@@ -242,8 +242,8 @@ export function BikeGarageRow({
                           <span
                             key={area}
                             className={
-                              "rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-900 " +
-                              "dark:bg-amber-900/30 dark:text-amber-300"
+                              "rounded-full bg-[var(--bbf-warning)] px-2.5 py-0.5 " +
+                              "text-xs font-medium text-[var(--bbf-inkt)]"
                             }
                           >
                             {copy.painAreas[area] ?? copy.otherDiscomfort}

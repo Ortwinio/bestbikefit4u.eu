@@ -14,7 +14,7 @@ export function AccountLanguageSwitch() {
       href={buildLocaleSwitchHref({ pathname, queryString: searchParams?.toString() ?? "", locale: language })}
       aria-label={language === "en" ? languageSwitchLabels.english : languageSwitchLabels.dutch}
       aria-current={locale === language ? "page" : undefined}
-      className={cn("flex min-h-11 min-w-11 items-center justify-center rounded-full text-xs font-bold focus-visible:outline-2 focus-visible:outline-offset-2", locale === language ? "bg-[var(--bbf-lime)] text-[var(--bbf-inkt)]" : "text-[var(--bbf-petrol-zacht)] hover:bg-white/10")}>
+      className={cn("flex min-h-11 min-w-11 items-center justify-center rounded-full text-xs font-bold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--bbf-lime)]", locale === language ? "bg-[var(--bbf-lime)] text-[var(--bbf-inkt)]" : "text-[var(--bbf-petrol-zacht)] hover:bg-white/10")}>
       {language.toUpperCase()}
     </a>)}
   </nav>;

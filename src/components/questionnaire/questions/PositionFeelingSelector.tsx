@@ -62,7 +62,7 @@ export function PositionFeelingSelector({
         ))}
       </div>
       {selectedValues.length > 0 && (
-        <div className="space-y-4 rounded-2xl bg-[var(--bbf-petrol-zacht)] p-4" aria-live="polite">
+        <div className="space-y-4 rounded-2xl bg-secondary text-secondary-foreground p-4" aria-live="polite">
           {selectedValues.map((selectedValue) => {
             const details = copy.options[selectedValue];
             if (!details) return null;

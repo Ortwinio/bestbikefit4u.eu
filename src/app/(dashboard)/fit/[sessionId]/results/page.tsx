@@ -457,10 +457,10 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       <header className="flex flex-col gap-5 rounded-[28px] bg-[var(--bbf-lime)] p-6 text-[var(--bbf-inkt)] lg:flex-row lg:items-center lg:justify-between sm:p-8">
         <div className="min-w-0">
           <p className="text-sm font-bold uppercase tracking-[0.08em]">{pageCopy.eyebrow}</p>
-          <h1 className="mt-2 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-[42px]">{pageCopy.title}</h1>
+          <h1 className="text-[var(--bbf-inkt)] mt-2 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-[42px]">{pageCopy.title}</h1>
           <p className="mt-3">{reportPayload?.bike.name}</p>
         </div>
-        <Button nativeButton={false} role="link" render={<Link href={withLocalePrefix("/fit", locale)} />} className="min-h-12 shrink-0 whitespace-normal" style={{ backgroundColor: "var(--bbf-inkt)", color: "white" }}>
+        <Button nativeButton={false} role="link" render={<Link href={withLocalePrefix("/fit", locale)} />} className="min-h-12 shrink-0 whitespace-normal" style={{ backgroundColor: "var(--bbf-inkt)", color: "var(--bbf-wit)" }}>
           {messages.results.actions.startNewFit}
         </Button>
       </header>
@@ -470,7 +470,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           {(["main", "climbing"] as const).map((tab) => (
             <Button key={tab} variant="outline" aria-pressed={activeTab === tab} onClick={() => setActiveTab(tab)}
               className="min-h-11 whitespace-normal"
-              style={activeTab === tab ? { backgroundColor: "var(--bbf-inkt)", color: "white" } : undefined}>
+              style={activeTab === tab ? { backgroundColor: "var(--color-primary)", color: "var(--color-primary-foreground)" } : undefined}>
               {tab === "main" ? messages.results.mainProfileTab : messages.results.climbingProfileTab}
             </Button>
           ))}
@@ -596,7 +596,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                   <ul className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
                     {reportCopy.shell.aboutBullets.map((bullet) => (
                       <li key={bullet} className="flex gap-2">
-                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[color:var(--primary)]" />
+                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
                         <span>{bullet}</span>
                       </li>
                     ))}

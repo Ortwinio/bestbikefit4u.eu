@@ -1,6 +1,6 @@
 .page {
-  background: var(--bbf-papier);
-  color: var(--bbf-inkt);
+  background: var(--color-background);
+  color: var(--color-foreground);
 }
 .container {
   max-width: 1440px;
@@ -25,7 +25,7 @@
   font-weight: 700;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--bbf-petrol);
+  color: var(--color-primary);
 }
 .hero .eyebrow {
   margin-bottom: 18px;
@@ -33,7 +33,7 @@
 .lead {
   font-size: 20px;
   line-height: 1.6;
-  color: var(--bbf-tekst);
+  color: var(--color-muted-foreground);
   margin: 28px 0;
 }
 .hero img {
@@ -55,13 +55,13 @@
   text-align: center;
 }
 .page a:focus-visible {
-  outline: 3px solid var(--bbf-petrol);
+  outline: 3px solid var(--color-primary);
   outline-offset: 4px;
 }
 .why {
   padding: 36px;
   border-radius: 28px;
-  background: var(--bbf-petrol-zacht);
+  background: var(--color-secondary);
   margin-bottom: 64px;
 }
 .why h2 {
@@ -71,7 +71,7 @@
 }
 .why > p:last-of-type {
   margin-top: 18px;
-  color: var(--bbf-tekst);
+  color: var(--color-muted-foreground);
   font-size: 18px;
 }
 .reasons {
@@ -88,7 +88,7 @@
 .reasons p, .side p, .side li {
   font-size: 18px;
   line-height: 1.65;
-  color: var(--bbf-tekst);
+  color: var(--color-muted-foreground);
 }
 .formLayout {
   display: grid;
@@ -98,10 +98,10 @@
   scroll-margin-top: 32px;
 }
 .formCard, .side section {
-  border: 1px solid var(--bbf-rand);
+  border: 1px solid var(--color-border);
   border-radius: 28px;
   padding: 32px;
-  background: var(--bbf-wit);
+  background: var(--color-card);
 }
 .formCard h2, .side h2 {
   font-size: 30px;
@@ -110,7 +110,7 @@
 }
 .formCard > p {
   font-size: 18px;
-  color: var(--bbf-gedempt);
+  color: var(--color-muted-foreground);
   margin-bottom: 28px;
 }
 .formCard > :global([data-slot="card"]) {
@@ -135,7 +135,7 @@
 }
 .formCard form > label {
   min-height: 64px;
-  background: var(--bbf-papier);
+  background: var(--color-background);
 }
 .formCard form > button {
   min-height: 52px;
@@ -194,4 +194,13 @@
   .lead {
     font-size: 18px;
   }
+}
+
+.page .expectation, .page .expectation h2, .page .expectation p, .page .expectation li {
+  color: var(--bbf-inkt);
+}
+:global(.dark) .hero img { mix-blend-mode: normal; border-radius: 24px; }
+.page .expectation a:focus-visible {
+  outline: 3px solid var(--bbf-inkt);
+  outline-offset: 4px;
 }

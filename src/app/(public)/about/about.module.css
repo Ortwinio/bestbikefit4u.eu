@@ -1,6 +1,6 @@
 .page {
-  background: var(--bbf-papier);
-  color: var(--bbf-inkt);
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-family: var(--bbf-font-body);
 }
 
@@ -14,7 +14,7 @@
 .page h2,
 .page h3 {
   margin: 0;
-  color: var(--bbf-inkt);
+  color: var(--color-foreground);
   font-family: var(--bbf-font-display);
   letter-spacing: -.03em;
   line-height: 1.08;
@@ -29,11 +29,11 @@
 
 .page h2 { font-size: clamp(32px, 3.1vw, 44px); }
 .page h3 { font-size: 25px; }
-.page p { margin: 0; line-height: 1.55; color: var(--bbf-tekst); }
+.page p { margin: 0; line-height: 1.55; color: var(--color-muted-foreground); }
 
 .page .eyebrow {
   margin-bottom: 18px;
-  color: var(--bbf-petrol);
+  color: var(--color-primary);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: .08em;
@@ -51,17 +51,17 @@
 .page .lead { margin-top: 28px; max-width: 600px; font-size: 22px; }
 .hero img { width: 100%; height: auto; object-fit: contain; mix-blend-mode: multiply; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 24px 0 0; list-style: none; }
-.chips li { padding: 6px 12px; border-radius: 999px; background: var(--bbf-petrol-zacht); font-size: 14px; }
+.chips li { padding: 6px 12px; border-radius: 999px; background: var(--color-secondary); font-size: 14px; }
 .section { margin-bottom: 64px; }
 .page .intro { margin: 24px 0 28px; max-width: 900px; font-size: 19px; }
 .three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-.principle { padding-top: 24px; border-top: 2px solid var(--bbf-petrol); }
+.principle { padding-top: 24px; border-top: 2px solid var(--color-primary); }
 .principle p { margin-top: 14px; font-size: 18px; }
-.card { padding: 28px; border: 1px solid var(--bbf-rand); border-radius: 24px; background: var(--bbf-wit); }
+.card { padding: 28px; border: 1px solid var(--color-border); border-radius: 24px; background: var(--color-card); }
 .card p, .drop p { margin-top: 16px; font-size: 17px; }
 .card ul { padding-left: 20px; margin: 18px 0 0; }
-.card li { margin-top: 10px; font-size: 17px; line-height: 1.55; color: var(--bbf-tekst); }
+.card li { margin-top: 10px; font-size: 17px; line-height: 1.55; color: var(--color-muted-foreground); }
 
 .drop {
   grid-column: 1 / -1;
@@ -70,15 +70,15 @@
   gap: 40px;
   padding: 28px;
   border-radius: 24px;
-  background: var(--bbf-petrol-zacht);
+  background: var(--color-secondary);
 }
 
 .drop h3 { font-size: 30px; }
 .dropValues { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; }
-.dropValues li { padding: 14px 18px; border-radius: 16px; background: var(--bbf-wit); list-style: none; }
-.dropValues li > span:first-child { display: block; margin-bottom: 6px; color: var(--bbf-gedempt); font-size: 14px; }
+.dropValues li { padding: 14px 18px; border-radius: 16px; background: var(--color-card); list-style: none; }
+.dropValues li > span:first-child { display: block; margin-bottom: 6px; color: var(--color-muted-foreground); font-size: 14px; }
 .dropValues strong { font-family: var(--bbf-font-cijfers); font-size: 23px; font-weight: 500; }
-.unit { font-family: var(--bbf-font-cijfers); font-size: 13px; color: var(--bbf-gedempt); }
+.unit { font-family: var(--bbf-font-cijfers); font-size: 13px; color: var(--color-muted-foreground); }
 
 .inputs {
   display: grid;
@@ -87,7 +87,7 @@
   margin-bottom: 64px;
   padding: 36px;
   border-radius: 28px;
-  background: var(--bbf-petrol-zacht);
+  background: var(--color-secondary);
 }
 
 .inputs h2 { font-size: 38px; }
@@ -100,7 +100,7 @@
   height: 8px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: var(--bbf-petrol);
+  background: var(--color-primary);
 }
 
 .linkCard {
@@ -110,18 +110,18 @@
   gap: 16px;
   min-height: 90px;
   padding: 22px 24px;
-  border: 1px solid var(--bbf-rand);
+  border: 1px solid var(--color-border);
   border-radius: 20px;
-  background: var(--bbf-wit);
-  color: var(--bbf-petrol);
+  background: var(--color-card);
+  color: var(--color-primary);
   font-size: 18px;
   font-weight: 700;
   text-decoration: none;
 }
 
 .linkCard svg { flex-shrink: 0; }
-.linkCard:hover { border-color: var(--bbf-petrol); }
-.page a:focus-visible { outline: 3px solid var(--bbf-petrol); outline-offset: 4px; }
+.linkCard:hover { border-color: var(--color-primary); }
+.page a:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 4px; }
 .cta {
   display: flex;
   align-items: center;
@@ -134,21 +134,21 @@
 
 .cta h2 { max-width: 680px; font-size: 36px; }
 .cta p { max-width: 650px; margin-top: 18px; font-size: 18px; }
-.cta .eyebrow { color: var(--bbf-inkt); margin-top: 0; }
+.cta .eyebrow { color: var(--color-foreground); margin-top: 0; }
 .cta .primary {
   flex-shrink: 0;
   min-height: 56px;
   padding: 12px 26px;
   border-radius: 999px;
-  background: var(--bbf-inkt);
-  color: var(--bbf-wit);
+  background: var(--color-foreground);
+  color: var(--color-card);
   font-size: 16px;
   font-weight: 700;
   white-space: normal;
   text-align: center;
 }
 
-.cta .primary:hover { background: var(--bbf-petrol-hover); }
+.cta .primary:hover { background: var(--color-primary); }
 
 @media (max-width: 1100px) {
   .container { padding: 56px 40px; }
@@ -173,4 +173,12 @@
   .dropValues strong { font-size: 21px; }
   .cta { padding: 28px; gap: 28px; flex-direction: column; align-items: stretch; }
   .cta h2 { font-size: 32px; }
+}
+
+.page .cta, .page .cta h2, .page .cta p { color: var(--bbf-inkt); }
+.cta .primary { background: var(--bbf-inkt); color: var(--bbf-wit); }
+:global(.dark) .hero img { mix-blend-mode: normal; border-radius: 24px; }
+.page .cta a:focus-visible {
+  outline: 3px solid var(--bbf-inkt);
+  outline-offset: 4px;
 }

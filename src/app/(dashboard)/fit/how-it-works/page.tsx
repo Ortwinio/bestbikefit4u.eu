@@ -25,7 +25,7 @@ export default async function HowItWorksPage() {
 
       <header className="space-y-4 rounded-[28px] bg-[var(--bbf-lime)] p-6 text-[var(--bbf-inkt)] sm:p-8">
         <p className="text-sm font-bold uppercase tracking-[0.08em]">{copy.eyebrow}</p>
-        <h1 className="max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">{copy.title}</h1>
+        <h1 className="text-[var(--bbf-inkt)] max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">{copy.title}</h1>
         <p className="max-w-3xl text-lg leading-relaxed">{copy.description}</p>
         <ol className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-2 font-bold">
           {copy.stages.map((stage, index) => (
@@ -76,7 +76,7 @@ export default async function HowItWorksPage() {
         </div>
       </section>
 
-      <section aria-labelledby="fit-method-tips" className="rounded-3xl bg-[var(--bbf-petrol-zacht)] p-6 text-[var(--bbf-inkt)] sm:p-7">
+      <section aria-labelledby="fit-method-tips" className="rounded-3xl bg-secondary p-6 text-secondary-foreground sm:p-7">
         <h2 id="fit-method-tips" className="font-display text-3xl font-bold">{copy.tipsTitle}</h2>
         <ul className="mt-4 list-disc space-y-3 pl-5 leading-relaxed">
           {copy.tips.map((tip) => <li key={tip}>{tip}</li>)}

@@ -1,5 +1,9 @@
 # Redesign canvas — BestBikeFit4U
 
+2026-09-29 — Codex B verified Sfora #30 account CTA routes, added NL/EN comparison-page
+regression coverage and corrected link semantics. Proof: `audit/30-cta-links.md`.
+No commit; awaiting lead review.
+
 2026-09-29 — Codex B task 23 dark-mode pass: owned account/content page families checked
 at 1440/390 in light/dark. Token-only fixes, capture proof and validation in
 `audit/23-dark-b.md`; exact commit list `audit/files-dark-b.txt`. No commit by B.
@@ -61,6 +65,8 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 - 2026-09-29 — **Palette locked: canvas lime/petrol** (decided by Ortwin). It replaces the blue/Inter palette in `plans/BestBikeFit4U_Redesign_Plan.docx`. The brand rules (colors, type, logo, tone of voice, icons) are in `reference/brand.md`, and they win over anything else.
 
 ## Draft progress
+
+- 2026-09-29 — Codex A completed **24 / dark-a2**, the handed-over bikes and editorial dark-mode pass: 108 light/dark desktop/mobile captures, both token/contrast linters green, full lint/typecheck and 47 focused tests pass. Notes: `audit/24-notes.md`; exact 13-file list: `audit/files-dark-a2.txt`. No commit; awaiting lead review.
 
 - 2026-09-29 — Codex A completed **19.6 marketing dark-mode pass**: theme-aware Header/menu/Footer and owned page families; 46 light/dark screenshots, 118 browser states and 46 unit tests. Typecheck passes; shared lint has unrelated tooltip/CSS blockers. Details: `audit/19-dark-notes.md`; exact source list: `audit/files-19.dark.txt`. No commit; awaiting lead review.
 

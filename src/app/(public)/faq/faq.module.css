@@ -1,6 +1,6 @@
 .page {
-  background: var(--bbf-papier);
-  color: var(--bbf-inkt);
+  background: var(--color-background);
+  color: var(--color-foreground);
 }
 
 .container {
@@ -14,7 +14,7 @@
   font-family: var(--bbf-font-display);
   font-weight: 800;
   letter-spacing: -0.035em;
-  color: var(--bbf-inkt);
+  color: var(--color-foreground);
 }
 
 .page h2 {
@@ -24,14 +24,14 @@
 
 .page p {
   margin-top: 16px;
-  color: var(--bbf-tekst);
+  color: var(--color-muted-foreground);
   font-size: 18px;
   line-height: 1.5;
 }
 
 .page .eyebrow {
   margin: 0 0 18px;
-  color: var(--bbf-petrol);
+  color: var(--color-primary);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -61,7 +61,7 @@
   margin-bottom: 64px;
   padding: 28px;
   border-radius: 28px;
-  background: var(--bbf-petrol-zacht);
+  background: var(--color-secondary);
 }
 
 .trust h2 {
@@ -87,9 +87,9 @@
 
 .disclosure {
   margin-bottom: 12px;
-  border: 1px solid var(--bbf-rand);
+  border: 1px solid var(--color-border);
   border-radius: 22px;
-  background: var(--bbf-wit);
+  background: var(--color-card);
 }
 
 .disclosure summary {
@@ -104,12 +104,12 @@
 }
 
 .disclosure summary::marker {
-  color: var(--bbf-petrol);
+  color: var(--color-primary);
 }
 
 .disclosure summary:focus-visible,
 .guideGrid a:focus-visible {
-  outline: 3px solid var(--bbf-petrol);
+  outline: 3px solid var(--color-primary);
   outline-offset: 4px;
 }
 
@@ -123,7 +123,7 @@
   margin-bottom: 56px;
   padding: 36px;
   border-radius: 28px;
-  background: var(--bbf-petrol-zacht);
+  background: var(--color-secondary);
 }
 
 .guideGrid {
@@ -140,16 +140,16 @@
   gap: 12px;
   min-height: 56px;
   padding: 12px 20px;
-  border: 1px solid var(--bbf-rand);
+  border: 1px solid var(--color-border);
   border-radius: 18px;
-  background: var(--bbf-wit);
-  color: var(--bbf-petrol);
+  background: var(--color-card);
+  color: var(--color-primary);
   font-size: 17px;
   font-weight: 700;
 }
 
 .guideGrid a:hover {
-  color: var(--bbf-petrol-hover);
+  color: var(--color-primary);
   text-decoration: underline;
 }
 
@@ -193,12 +193,12 @@
 }
 
 .cta .eyebrow {
-  color: var(--bbf-inkt);
+  color: var(--color-foreground);
 }
 
 .actions .contactButton {
-  background: var(--bbf-inkt);
-  color: var(--bbf-wit);
+  background: var(--color-foreground);
+  color: var(--color-card);
 }
 
 .cta .actions a {
@@ -206,7 +206,7 @@
 }
 
 .cta .actions .contactButton {
-  background-color: var(--bbf-inkt);
+  background-color: var(--color-foreground);
 }
 
 @media (max-width: 1100px) {
@@ -287,4 +287,15 @@
   .actions {
     min-width: 0;
   }
+}
+
+.page .cta, .page .cta h2, .page .cta p, .cta .actions a { color: var(--bbf-inkt); }
+.cta .actions a { border-color: var(--bbf-inkt); }
+.actions .contactButton, .cta .actions .contactButton {
+  background: var(--bbf-inkt);
+  color: var(--bbf-wit);
+}
+.page .cta a:focus-visible {
+  outline: 3px solid var(--bbf-inkt);
+  outline-offset: 4px;
 }

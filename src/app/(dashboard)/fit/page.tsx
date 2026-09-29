@@ -43,7 +43,7 @@ function SavedBikeImage({ source, selected }: { source?: string; selected?: bool
   return (
     <span className={cn(
       "flex h-20 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl",
-      selected ? "bg-[var(--bbf-petrol-zacht)]" : "bg-muted"
+      selected ? "bg-secondary" : "bg-muted"
     )}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -189,7 +189,7 @@ export default function NewFitSessionPage() {
 
       <header className="space-y-3 rounded-[28px] bg-[var(--bbf-lime)] p-6 text-[var(--bbf-inkt)] sm:p-8">
         <p className="text-sm font-bold uppercase tracking-[0.08em]">{copy.eyebrow}</p>
-        <h1 className="font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">{copy.title}</h1>
+        <h1 className="text-[var(--bbf-inkt)] font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">{copy.title}</h1>
         <p className="max-w-2xl text-base leading-relaxed sm:text-lg">{copy.description}</p>
         {campaignActive ? (
           <div className="space-y-3 pt-2">
@@ -215,7 +215,7 @@ export default function NewFitSessionPage() {
           {(!hasProfile || !hasRiderProfile) && (
             <section role="status" className="flex flex-col gap-4 rounded-3xl bg-[var(--bbf-warning)] p-5 text-[var(--bbf-inkt)] sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="font-display text-2xl font-bold">
+                <h2 className="font-display text-2xl font-bold text-inherit">
                   {hasProfile ? messages.fit.riderProfileWarning.title : messages.fit.profileWarning.title}
                 </h2>
                 <p className="mt-2 leading-relaxed">
@@ -241,7 +241,10 @@ export default function NewFitSessionPage() {
                       selected={selectedBikeId === bike._id}
                       onClick={() => setSelectedBikeId(bike._id)}
                       aria-label={bike.name}
-                      className={cn("min-h-32 rounded-[20px] [&_[data-slot=selectable-content]]:items-center", selectedBikeId === bike._id && "bg-[var(--bbf-petrol-zacht)]")}
+                      className={cn(
+                        "min-h-32 rounded-[20px] [&_[data-slot=selectable-content]]:items-center",
+                        selectedBikeId === bike._id && "border-primary bg-secondary text-foreground [&_svg]:text-primary"
+                      )}
                     >
                       <span className="flex min-w-0 flex-wrap items-center gap-3 sm:flex-nowrap">
                         <SavedBikeImage source={bike.photoUrl} selected={selectedBikeId === bike._id} />
@@ -305,7 +308,7 @@ export default function NewFitSessionPage() {
           {createError && (
             <div role="alert">
               <InfoBox variant="danger" className="rounded-3xl bg-[var(--bbf-destructive)] text-[var(--bbf-inkt)]" icon={<AlertCircle className="size-5" aria-hidden="true" />}>
-                <h2 className="font-display text-2xl font-bold">{messages.fit.errors.startFailedTitle}</h2>
+                <h2 className="font-display text-2xl font-bold text-inherit">{messages.fit.errors.startFailedTitle}</h2>
                 <p className="mt-2">{createError}</p>
               </InfoBox>
             </div>
@@ -313,7 +316,7 @@ export default function NewFitSessionPage() {
 
           <div className="flex flex-col gap-5 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="font-display text-2xl font-bold">{copy.nextTitle}</h2>
+              <h2 className="font-display text-2xl font-bold text-inherit">{copy.nextTitle}</h2>
               <p id="fit-start-next-hint" className="mt-2 text-sm text-muted-foreground" role="status">{nextHint}</p>
             </div>
             <Button size="lg" className="h-auto whitespace-normal sm:shrink-0" disabled={!canStart} isLoading={isCreating} aria-describedby="fit-start-next-hint" onClick={handleStartSession}>

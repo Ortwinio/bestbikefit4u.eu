@@ -1,0 +1,480 @@
+[
+  {
+    "name": "nl-bikes-filled-1440",
+    "units": [
+      {
+        "value": "733mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 78,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "55mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 78,
+        "contentWidth": 57.859375,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "480mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 78,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      }
+    ],
+    "overflow": false,
+    "width": 1440,
+    "headings": [
+      "Mijn fietsgarage"
+    ],
+    "fonts": {
+      "body": "Figtree, \"Figtree Fallback\", system-ui, sans-serif",
+      "heading": "\"Bricolage Grotesque\", \"Bricolage Grotesque Fallback\", sans-serif"
+    },
+    "queries": [
+      "users/queries:getCurrentUser",
+      "sessions/queries:listByUser",
+      "integrations/queries:getStravaStatus",
+      "messages/queries:getMyMessages",
+      "bikes/queries:listSummariesByUser",
+      "sessions/queries:getAllSessionsWithBikes"
+    ],
+    "unknownQueries": [],
+    "sliderControls": [],
+    "sidebarPlanVisible": true,
+    "smallControls": [],
+    "errors": []
+  },
+  {
+    "name": "nl-dashboard-filled-1440",
+    "units": [
+      {
+        "value": "733mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 81,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "55mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 81,
+        "contentWidth": 57.859375,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "480mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 81,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      }
+    ],
+    "overflow": false,
+    "width": 1440,
+    "headings": [
+      "Sanne"
+    ],
+    "fonts": {
+      "body": "Figtree, \"Figtree Fallback\", system-ui, sans-serif",
+      "heading": "\"Bricolage Grotesque\", \"Bricolage Grotesque Fallback\", sans-serif"
+    },
+    "queries": [
+      "users/queries:getCurrentUser",
+      "sessions/queries:listByUser",
+      "integrations/queries:getStravaStatus",
+      "messages/queries:getMyMessages",
+      "profiles/queries:getMyProfile",
+      "bikes/queries:listSummariesByUser",
+      "sessions/queries:getAllSessionsWithBikes"
+    ],
+    "unknownQueries": [],
+    "sliderControls": [],
+    "sidebarPlanVisible": true,
+    "smallControls": [],
+    "errors": []
+  },
+  {
+    "name": "nl-bikes-filled-390",
+    "units": [
+      {
+        "value": "733mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 85,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "55mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 85,
+        "contentWidth": 57.859375,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "480mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 85,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      }
+    ],
+    "overflow": false,
+    "width": 390,
+    "headings": [
+      "Mijn fietsgarage"
+    ],
+    "fonts": {
+      "body": "Figtree, \"Figtree Fallback\", system-ui, sans-serif",
+      "heading": "\"Bricolage Grotesque\", \"Bricolage Grotesque Fallback\", sans-serif"
+    },
+    "queries": [
+      "users/queries:getCurrentUser",
+      "sessions/queries:listByUser",
+      "integrations/queries:getStravaStatus",
+      "messages/queries:getMyMessages",
+      "bikes/queries:listSummariesByUser",
+      "sessions/queries:getAllSessionsWithBikes"
+    ],
+    "unknownQueries": [],
+    "sliderControls": [],
+    "sidebarPlanVisible": false,
+    "smallControls": [],
+    "errors": []
+  },
+  {
+    "name": "nl-dashboard-filled-390",
+    "units": [
+      {
+        "value": "733mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 74,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "55mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 74,
+        "contentWidth": 57.859375,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "480mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 74,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      }
+    ],
+    "overflow": false,
+    "width": 390,
+    "headings": [
+      "Sanne"
+    ],
+    "fonts": {
+      "body": "Figtree, \"Figtree Fallback\", system-ui, sans-serif",
+      "heading": "\"Bricolage Grotesque\", \"Bricolage Grotesque Fallback\", sans-serif"
+    },
+    "queries": [
+      "users/queries:getCurrentUser",
+      "sessions/queries:listByUser",
+      "integrations/queries:getStravaStatus",
+      "messages/queries:getMyMessages",
+      "profiles/queries:getMyProfile",
+      "bikes/queries:listSummariesByUser",
+      "sessions/queries:getAllSessionsWithBikes"
+    ],
+    "unknownQueries": [],
+    "sliderControls": [],
+    "sidebarPlanVisible": false,
+    "smallControls": [],
+    "errors": []
+  },
+  {
+    "name": "nl-dashboard-filled-390-menu-checks",
+    "menuChecks": [
+      {
+        "opener": "header",
+        "trapped": true,
+        "returnedFocus": true
+      },
+      {
+        "opener": "more",
+        "trapped": true,
+        "returnedFocus": true
+      }
+    ],
+    "resizeUnblocked": true
+  },
+  {
+    "name": "en-bikes-filled-1440",
+    "units": [
+      {
+        "value": "733mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 78,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "55mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 78,
+        "contentWidth": 57.859375,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "480mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 78,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      }
+    ],
+    "overflow": false,
+    "width": 1440,
+    "headings": [
+      "My Bike Garage"
+    ],
+    "fonts": {
+      "body": "Figtree, \"Figtree Fallback\", system-ui, sans-serif",
+      "heading": "\"Bricolage Grotesque\", \"Bricolage Grotesque Fallback\", sans-serif"
+    },
+    "queries": [
+      "users/queries:getCurrentUser",
+      "sessions/queries:listByUser",
+      "integrations/queries:getStravaStatus",
+      "messages/queries:getMyMessages",
+      "bikes/queries:listSummariesByUser",
+      "sessions/queries:getAllSessionsWithBikes"
+    ],
+    "unknownQueries": [],
+    "sliderControls": [],
+    "sidebarPlanVisible": true,
+    "smallControls": [],
+    "errors": []
+  },
+  {
+    "name": "en-dashboard-filled-1440",
+    "units": [
+      {
+        "value": "733mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 81,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "55mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 81,
+        "contentWidth": 57.859375,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "480mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 81,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      }
+    ],
+    "overflow": false,
+    "width": 1440,
+    "headings": [
+      "Sanne"
+    ],
+    "fonts": {
+      "body": "Figtree, \"Figtree Fallback\", system-ui, sans-serif",
+      "heading": "\"Bricolage Grotesque\", \"Bricolage Grotesque Fallback\", sans-serif"
+    },
+    "queries": [
+      "users/queries:getCurrentUser",
+      "sessions/queries:listByUser",
+      "integrations/queries:getStravaStatus",
+      "messages/queries:getMyMessages",
+      "profiles/queries:getMyProfile",
+      "bikes/queries:listSummariesByUser",
+      "sessions/queries:getAllSessionsWithBikes"
+    ],
+    "unknownQueries": [],
+    "sliderControls": [],
+    "sidebarPlanVisible": true,
+    "smallControls": [],
+    "errors": []
+  },
+  {
+    "name": "en-bikes-filled-390",
+    "units": [
+      {
+        "value": "733mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 85,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "55mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 85,
+        "contentWidth": 57.859375,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "480mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 85,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      }
+    ],
+    "overflow": false,
+    "width": 390,
+    "headings": [
+      "My Bike Garage"
+    ],
+    "fonts": {
+      "body": "Figtree, \"Figtree Fallback\", system-ui, sans-serif",
+      "heading": "\"Bricolage Grotesque\", \"Bricolage Grotesque Fallback\", sans-serif"
+    },
+    "queries": [
+      "users/queries:getCurrentUser",
+      "sessions/queries:listByUser",
+      "integrations/queries:getStravaStatus",
+      "messages/queries:getMyMessages",
+      "bikes/queries:listSummariesByUser",
+      "sessions/queries:getAllSessionsWithBikes"
+    ],
+    "unknownQueries": [],
+    "sliderControls": [],
+    "sidebarPlanVisible": false,
+    "smallControls": [],
+    "errors": []
+  },
+  {
+    "name": "en-dashboard-filled-390",
+    "units": [
+      {
+        "value": "733mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 74,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "55mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 74,
+        "contentWidth": 57.859375,
+        "fits": true,
+        "nowrap": true
+      },
+      {
+        "value": "480mm",
+        "font": "18px / 28px \"DM Mono\", \"DM Mono Fallback\"",
+        "unitFont": "12px / 16px \"DM Mono\", \"DM Mono Fallback\"",
+        "width": 74,
+        "contentWidth": 71.328125,
+        "fits": true,
+        "nowrap": true
+      }
+    ],
+    "overflow": false,
+    "width": 390,
+    "headings": [
+      "Sanne"
+    ],
+    "fonts": {
+      "body": "Figtree, \"Figtree Fallback\", system-ui, sans-serif",
+      "heading": "\"Bricolage Grotesque\", \"Bricolage Grotesque Fallback\", sans-serif"
+    },
+    "queries": [
+      "users/queries:getCurrentUser",
+      "sessions/queries:listByUser",
+      "integrations/queries:getStravaStatus",
+      "messages/queries:getMyMessages",
+      "profiles/queries:getMyProfile",
+      "bikes/queries:listSummariesByUser",
+      "sessions/queries:getAllSessionsWithBikes"
+    ],
+    "unknownQueries": [],
+    "sliderControls": [],
+    "sidebarPlanVisible": false,
+    "smallControls": [],
+    "errors": []
+  },
+  {
+    "name": "en-dashboard-filled-390-menu-checks",
+    "menuChecks": [
+      {
+        "opener": "header",
+        "trapped": true,
+        "returnedFocus": true
+      },
+      {
+        "opener": "more",
+        "trapped": true,
+        "returnedFocus": true
+      }
+    ],
+    "resizeUnblocked": true
+  },
+  {
+    "summary": true,
+    "capturedAt": "2026-09-29T20:17:46.161Z",
+    "cases": 8,
+    "failed": [],
+    "overflows": [],
+    "smallControls": [],
+    "cssSha256": "51133e51b9c3e215bd67fe207f5be65464bd57caff94458a4983624a6c163ef3",
+    "bundleSha256": "76366263549f0aa61ef208e3649f5bfccc4b8b0f0c02a567e1b58da659f5f2a9"
+  }
+]

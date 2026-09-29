@@ -1,0 +1,1088 @@
+[
+  {
+    "route": "/nl/why-bikefit-matters",
+    "status": 200,
+    "errors": [],
+    "width": 1440,
+    "scrollWidth": 1440,
+    "title": "Laat je fiets bij je passen.",
+    "canonical": "https://bestbikefit4u.eu/nl/why-bikefit-matters",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "nl",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ]
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/nl/why-bikefit-matters",
+    "status": 200,
+    "errors": [],
+    "width": 390,
+    "scrollWidth": 390,
+    "title": "Laat je fiets bij je passen.",
+    "canonical": "https://bestbikefit4u.eu/nl/why-bikefit-matters",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "nl",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ]
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/nl/bikefitting",
+    "status": 200,
+    "errors": [],
+    "width": 1440,
+    "scrollWidth": 1440,
+    "title": "Begin thuis. Stel gericht af.",
+    "canonical": "https://bestbikefit4u.eu/nl/bikefitting",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "nl",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://bestbikefit4u.eu/nl"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Bikefitting",
+              "item": "https://bestbikefit4u.eu/nl/bikefitting"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Wat krijg je uit een online bikefitting?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Je krijgt een praktisch startplan met afstelwaarden en prioriteiten: bijvoorbeeld zadelhoogte, reach, drop en de logische volgorde van aanpassingen. Het doel is een betere eerstvolgende stap, niet een vage indruk."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Voor wie is online bikefitting geschikt?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Voor rijders die thuis beter willen starten, een bestaande positie willen controleren of een nieuwe fiets/logische setup willen beoordelen zonder meteen naar een fysieke fitter te gaan."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Wanneer kies je beter voor een fysieke bikefitter?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bij terugkerende zware pijn, een blessure, duidelijke asymmetrie of een situatie waarin live observatie en directe feedback nodig zijn."
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/nl/bikefitting",
+    "status": 200,
+    "errors": [],
+    "width": 390,
+    "scrollWidth": 390,
+    "title": "Begin thuis. Stel gericht af.",
+    "canonical": "https://bestbikefit4u.eu/nl/bikefitting",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "nl",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://bestbikefit4u.eu/nl"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Bikefitting",
+              "item": "https://bestbikefit4u.eu/nl/bikefitting"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Wat krijg je uit een online bikefitting?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Je krijgt een praktisch startplan met afstelwaarden en prioriteiten: bijvoorbeeld zadelhoogte, reach, drop en de logische volgorde van aanpassingen. Het doel is een betere eerstvolgende stap, niet een vage indruk."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Voor wie is online bikefitting geschikt?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Voor rijders die thuis beter willen starten, een bestaande positie willen controleren of een nieuwe fiets/logische setup willen beoordelen zonder meteen naar een fysieke fitter te gaan."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Wanneer kies je beter voor een fysieke bikefitter?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bij terugkerende zware pijn, een blessure, duidelijke asymmetrie of een situatie waarin live observatie en directe feedback nodig zijn."
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/en/bike-fitting",
+    "status": 200,
+    "errors": [],
+    "width": 1440,
+    "scrollWidth": 1440,
+    "title": "Start at home. Adjust with purpose.",
+    "canonical": "https://bestbikefit4u.eu/en/bike-fitting",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "en",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://bestbikefit4u.eu/en"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Bike fitting",
+              "item": "https://bestbikefit4u.eu/en/bike-fitting"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Can online bike fitting actually help at home?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, as a structured first step. It helps riders turn body measurements and riding goals into specific setup targets before deciding whether they need a full in-person fit."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What does a bike fitting calculator usually improve first?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Most riders get the most value from clarifying saddle height, general reach and cockpit balance, then testing those changes one at a time on the bike."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "When should I skip straight to an in-person fitter?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "If you have persistent pain, recent injury, strong asymmetry, or a performance-specific problem that needs live observation, in-person support is still the better next step."
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/en/bike-fitting",
+    "status": 200,
+    "errors": [],
+    "width": 390,
+    "scrollWidth": 390,
+    "title": "Start at home. Adjust with purpose.",
+    "canonical": "https://bestbikefit4u.eu/en/bike-fitting",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "en",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://bestbikefit4u.eu/en"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Bike fitting",
+              "item": "https://bestbikefit4u.eu/en/bike-fitting"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Can online bike fitting actually help at home?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, as a structured first step. It helps riders turn body measurements and riding goals into specific setup targets before deciding whether they need a full in-person fit."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What does a bike fitting calculator usually improve first?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Most riders get the most value from clarifying saddle height, general reach and cockpit balance, then testing those changes one at a time on the bike."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "When should I skip straight to an in-person fitter?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "If you have persistent pain, recent injury, strong asymmetry, or a performance-specific problem that needs live observation, in-person support is still the better next step."
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/nl/fiets-afstellen",
+    "status": 200,
+    "errors": [],
+    "width": 1440,
+    "scrollWidth": 1440,
+    "title": "Fiets afstellen: praktische gids voor een betere fietspositie",
+    "canonical": "https://bestbikefit4u.eu/nl/fiets-afstellen",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "nl",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://bestbikefit4u.eu/nl"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Fiets afstellen: praktische gids voor een betere fietspositie",
+              "item": "https://bestbikefit4u.eu/nl/fiets-afstellen"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": "Fiets afstellen: praktische gids voor een betere fietspositie",
+          "description": "Leer je fiets praktisch afstellen: zadelhoogte, stuurpositie, reach, stuurdrop en schoenplaatjes. Gebruik daarna de gratis bike fit calculator voor een persoonlijk startpunt.",
+          "inLanguage": "nl",
+          "mainEntityOfPage": "https://bestbikefit4u.eu/nl/fiets-afstellen",
+          "author": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          },
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Hoe stel ik mijn fiets af als ik geen professionele bikefitting heb gedaan?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Begin met de grote contactpunten: zadelhoogte, zadelpositie, reach en drop. Werk in kleine stappen en verander niet meerdere dingen tegelijk. Gebruik een calculator als startpunt in plaats van volledig op gevoel te werken."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Waar moet ik beginnen met fiets afstellen?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Meestal begin je met zadelhoogte. Daarna kijk je naar zadelterugstand, dan naar reach en stuurdrop. Schoenplaatjes komen meestal later."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Hoe weet ik of mijn zadel te hoog staat?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Veelvoorkomende signalen zijn heupwiegelen, teenpunten onderin de pedaalslag, instabiliteit op het zadel en spanning achter de knie of in de hamstrings."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Hoe weet ik of mijn zadel te laag staat?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Een te laag zadel geeft vaak veel kniebuiging, snel zware bovenbenen en een compact trapgevoel zonder vrije extensie."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Wat betekent reach op een racefiets?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Reach gaat praktisch over hoeveel cockpitlengte je duurzaam kunt dragen zonder spanning, compensatie of verlies van controle. Het is meer dan alleen een framemaat of een los getal."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Hoeveel stuurdrop is verstandig?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Er is geen universele juiste drop. Wat logisch is, hangt af van mobiliteit, core-stabiliteit, rijdoel en belastbaarheid. Meer drop is niet automatisch beter."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Moet ik eerst mijn stuur of mijn zadel afstellen?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bijna altijd eerst het zadel. Als de basis onder je bekken niet klopt, kun je de cockpit niet goed beoordelen."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Wanneer moet ik schoenplaatjes afstellen?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Pas nadat de grotere contactpunten redelijk kloppen. Plaatjes kunnen belangrijk zijn, maar lossen een verkeerde zadelhoogte of te lange reach niet op."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Kan ik mijn racefiets zelf goed afstellen?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tot op zekere hoogte wel. Voor een eerste orde van grootte is dat haalbaar. Voor complexe klachten of fijnere optimalisatie is een begeleide workflow vaak beter."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Wanneer heb ik meer nodig dan alleen zelf afstellen?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Als klachten blijven terugkomen, meerdere dingen tegelijk verkeerd aanvoelen, of als je ondanks kleine aanpassingen geen stabiel resultaat krijgt, dan heb je meestal meer aan een completere bikefitting-aanpak."
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/nl/fiets-afstellen",
+    "status": 200,
+    "errors": [],
+    "width": 390,
+    "scrollWidth": 390,
+    "title": "Fiets afstellen: praktische gids voor een betere fietspositie",
+    "canonical": "https://bestbikefit4u.eu/nl/fiets-afstellen",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "nl",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://bestbikefit4u.eu/nl"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Fiets afstellen: praktische gids voor een betere fietspositie",
+              "item": "https://bestbikefit4u.eu/nl/fiets-afstellen"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": "Fiets afstellen: praktische gids voor een betere fietspositie",
+          "description": "Leer je fiets praktisch afstellen: zadelhoogte, stuurpositie, reach, stuurdrop en schoenplaatjes. Gebruik daarna de gratis bike fit calculator voor een persoonlijk startpunt.",
+          "inLanguage": "nl",
+          "mainEntityOfPage": "https://bestbikefit4u.eu/nl/fiets-afstellen",
+          "author": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          },
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Hoe stel ik mijn fiets af als ik geen professionele bikefitting heb gedaan?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Begin met de grote contactpunten: zadelhoogte, zadelpositie, reach en drop. Werk in kleine stappen en verander niet meerdere dingen tegelijk. Gebruik een calculator als startpunt in plaats van volledig op gevoel te werken."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Waar moet ik beginnen met fiets afstellen?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Meestal begin je met zadelhoogte. Daarna kijk je naar zadelterugstand, dan naar reach en stuurdrop. Schoenplaatjes komen meestal later."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Hoe weet ik of mijn zadel te hoog staat?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Veelvoorkomende signalen zijn heupwiegelen, teenpunten onderin de pedaalslag, instabiliteit op het zadel en spanning achter de knie of in de hamstrings."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Hoe weet ik of mijn zadel te laag staat?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Een te laag zadel geeft vaak veel kniebuiging, snel zware bovenbenen en een compact trapgevoel zonder vrije extensie."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Wat betekent reach op een racefiets?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Reach gaat praktisch over hoeveel cockpitlengte je duurzaam kunt dragen zonder spanning, compensatie of verlies van controle. Het is meer dan alleen een framemaat of een los getal."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Hoeveel stuurdrop is verstandig?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Er is geen universele juiste drop. Wat logisch is, hangt af van mobiliteit, core-stabiliteit, rijdoel en belastbaarheid. Meer drop is niet automatisch beter."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Moet ik eerst mijn stuur of mijn zadel afstellen?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bijna altijd eerst het zadel. Als de basis onder je bekken niet klopt, kun je de cockpit niet goed beoordelen."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Wanneer moet ik schoenplaatjes afstellen?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Pas nadat de grotere contactpunten redelijk kloppen. Plaatjes kunnen belangrijk zijn, maar lossen een verkeerde zadelhoogte of te lange reach niet op."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Kan ik mijn racefiets zelf goed afstellen?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tot op zekere hoogte wel. Voor een eerste orde van grootte is dat haalbaar. Voor complexe klachten of fijnere optimalisatie is een begeleide workflow vaak beter."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Wanneer heb ik meer nodig dan alleen zelf afstellen?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Als klachten blijven terugkomen, meerdere dingen tegelijk verkeerd aanvoelen, of als je ondanks kleine aanpassingen geen stabiel resultaat krijgt, dan heb je meestal meer aan een completere bikefitting-aanpak."
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/nl/science/bike-fit-methods",
+    "status": 200,
+    "errors": [],
+    "width": 1440,
+    "scrollWidth": 1440,
+    "title": "Bikefit-methodes uitgelegd",
+    "canonical": "https://bestbikefit4u.eu/nl/science/bike-fit-methods",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "nl",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Bikefit-methodes uitgelegd | BestBikeFit4U Science",
+        "description": "Leer hoe veelgebruikte bikefit-methodes zoals LeMond, KOPS en dynamische fitsystemen werken, waar elke methode helpt en wanneer je beter een gids volgt.",
+        "author": {
+          "@type": "Organization",
+          "name": "BestBikeFit4U"
+        },
+        "mainEntityOfPage": "https://bestbikefit4u.eu/nl/science/bike-fit-methods"
+      }
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/nl/science/bike-fit-methods",
+    "status": 200,
+    "errors": [],
+    "width": 390,
+    "scrollWidth": 390,
+    "title": "Bikefit-methodes uitgelegd",
+    "canonical": "https://bestbikefit4u.eu/nl/science/bike-fit-methods",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "nl",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Bikefit-methodes uitgelegd | BestBikeFit4U Science",
+        "description": "Leer hoe veelgebruikte bikefit-methodes zoals LeMond, KOPS en dynamische fitsystemen werken, waar elke methode helpt en wanneer je beter een gids volgt.",
+        "author": {
+          "@type": "Organization",
+          "name": "BestBikeFit4U"
+        },
+        "mainEntityOfPage": "https://bestbikefit4u.eu/nl/science/bike-fit-methods"
+      }
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/nl/science/calculation-engine",
+    "status": 200,
+    "errors": [],
+    "width": 1440,
+    "scrollWidth": 1440,
+    "title": "Hoe de bikefit berekeningsengine werkt",
+    "canonical": "https://bestbikefit4u.eu/nl/science/calculation-engine",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "nl",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Bikefit berekeningsengine | BestBikeFit4U Science",
+        "description": "Bekijk hoe BestBikeFit4U lichaamsmaten, fitmethodes en rijcontext combineert om zadelhoogte, reach en praktische vervolgstappen te berekenen.",
+        "author": {
+          "@type": "Organization",
+          "name": "BestBikeFit4U"
+        },
+        "mainEntityOfPage": "https://bestbikefit4u.eu/nl/science/calculation-engine"
+      }
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/nl/science/calculation-engine",
+    "status": 200,
+    "errors": [],
+    "width": 390,
+    "scrollWidth": 390,
+    "title": "Hoe de bikefit berekeningsengine werkt",
+    "canonical": "https://bestbikefit4u.eu/nl/science/calculation-engine",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "nl",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Bikefit berekeningsengine | BestBikeFit4U Science",
+        "description": "Bekijk hoe BestBikeFit4U lichaamsmaten, fitmethodes en rijcontext combineert om zadelhoogte, reach en praktische vervolgstappen te berekenen.",
+        "author": {
+          "@type": "Organization",
+          "name": "BestBikeFit4U"
+        },
+        "mainEntityOfPage": "https://bestbikefit4u.eu/nl/science/calculation-engine"
+      }
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/nl/science/stack-and-reach",
+    "status": 200,
+    "errors": [],
+    "width": 1440,
+    "scrollWidth": 1440,
+    "title": "Stack en reach uitgelegd",
+    "canonical": "https://bestbikefit4u.eu/nl/science/stack-and-reach",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "nl",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Stack en reach uitgelegd | BestBikeFit4U Science",
+        "description": "Leer hoe stack en reach werken, waarom ze beter zijn dan framematen op basis van zitbuislabels en hoe je ze gebruikt voor framevergelijking.",
+        "author": {
+          "@type": "Organization",
+          "name": "BestBikeFit4U"
+        },
+        "mainEntityOfPage": "https://bestbikefit4u.eu/nl/science/stack-and-reach"
+      }
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/nl/science/stack-and-reach",
+    "status": 200,
+    "errors": [],
+    "width": 390,
+    "scrollWidth": 390,
+    "title": "Stack en reach uitgelegd",
+    "canonical": "https://bestbikefit4u.eu/nl/science/stack-and-reach",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "nl",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Stack en reach uitgelegd | BestBikeFit4U Science",
+        "description": "Leer hoe stack en reach werken, waarom ze beter zijn dan framematen op basis van zitbuislabels en hoe je ze gebruikt voor framevergelijking.",
+        "author": {
+          "@type": "Organization",
+          "name": "BestBikeFit4U"
+        },
+        "mainEntityOfPage": "https://bestbikefit4u.eu/nl/science/stack-and-reach"
+      }
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/en/science/stack-and-reach",
+    "status": 200,
+    "errors": [],
+    "width": 1440,
+    "scrollWidth": 1440,
+    "title": "Stack and Reach Explained",
+    "canonical": "https://bestbikefit4u.eu/en/science/stack-and-reach",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "en",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Stack and Reach Explained | BestBikeFit4U Science",
+        "description": "Learn how stack and reach work, why they are better than seat-tube sizing, and how to use them for frame comparison alongside the guide library.",
+        "author": {
+          "@type": "Organization",
+          "name": "BestBikeFit4U"
+        },
+        "mainEntityOfPage": "https://bestbikefit4u.eu/en/science/stack-and-reach"
+      }
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/en/science/stack-and-reach",
+    "status": 200,
+    "errors": [],
+    "width": 390,
+    "scrollWidth": 390,
+    "title": "Stack and Reach Explained",
+    "canonical": "https://bestbikefit4u.eu/en/science/stack-and-reach",
+    "structuredData": [
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://bestbikefit4u.eu/#organization",
+          "name": "BestBikeFit4U",
+          "url": "https://bestbikefit4u.eu",
+          "email": "support@bestbikefit4u.eu"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://bestbikefit4u.eu/#website",
+          "url": "https://bestbikefit4u.eu",
+          "name": "BestBikeFit4U",
+          "description": "Precision bike fitting for comfort, alignment, and performance.",
+          "inLanguage": "en",
+          "publisher": {
+            "@id": "https://bestbikefit4u.eu/#organization"
+          }
+        }
+      ],
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Stack and Reach Explained | BestBikeFit4U Science",
+        "description": "Learn how stack and reach work, why they are better than seat-tube sizing, and how to use them for frame comparison alongside the guide library.",
+        "author": {
+          "@type": "Organization",
+          "name": "BestBikeFit4U"
+        },
+        "mainEntityOfPage": "https://bestbikefit4u.eu/en/science/stack-and-reach"
+      }
+    ],
+    "brokenImages": []
+  },
+  {
+    "route": "/nl/bike-fitting",
+    "status": 404,
+    "robots": [
+      "noindex"
+    ]
+  },
+  {
+    "route": "/en/bikefitting",
+    "status": 404,
+    "robots": [
+      "noindex"
+    ]
+  }
+]

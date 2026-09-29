@@ -312,3 +312,7 @@
 :global(.dark) .illustration {
   mix-blend-mode: normal;
 }
+.page .cta a:focus-visible, .page .quick a:focus-visible {
+  outline: 3px solid var(--bbf-inkt);
+  outline-offset: 4px;
+}

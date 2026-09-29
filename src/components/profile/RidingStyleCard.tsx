@@ -137,7 +137,7 @@ export function RidingStyleCard({
 
     return (
       <div className="space-y-5">
-        <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
+        <p className="text-sm leading-6 text-[color:var(--color-muted-foreground)]">
           {t.description}
         </p>
         <ReadOnlyScaleSlider
@@ -234,10 +234,10 @@ export function RidingStyleCard({
 
   return (
     <Card variant="bordered" className="dashboard-card-surface">
-      <CardHeader className="border-b border-[color:var(--border)]">
+      <CardHeader className="border-b border-[color:var(--color-border)]">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Bike className="h-5 w-5 text-[color:var(--primary)]" />
+            <Bike className="h-5 w-5 text-[color:var(--color-primary)]" />
             <CardTitle>{t.title}</CardTitle>
           </div>
           {!editing ? (

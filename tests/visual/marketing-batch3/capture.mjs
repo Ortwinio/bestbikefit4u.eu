@@ -4,11 +4,14 @@ import { readFile, mkdir, copyFile, writeFile } from "node:fs/promises";
 import { resolve, extname } from "node:path";
 import { createHash } from "node:crypto";
 import { chromium } from "playwright";
+import { inspectTheme } from "../dark-b/inspect.mjs";
 
+const theme = process.env.VISUAL_THEME || "light";
+const prefix = process.env.VISUAL_PREFIX || "";
 const root = process.cwd();
 const folder = resolve(root, "tests/visual/marketing-batch3");
 const origin = process.env.VISUAL_DEV_ORIGIN || "http://localhost:3000";
-const output = resolve(root, "plans/redesign-canvas/code-renders");
+const output = resolve(root, process.env.VISUAL_OUTPUT || "plans/redesign-canvas/code-renders");
 let port = Number(process.env.VISUAL_PORT || 0);
 const loginHtml = await (await fetch(`${origin}/nl/login`)).text();
 const cssPaths = [...new Set([...loginHtml.matchAll(/href="([^" ]+\.css)"/g)].map((match) => match[1]))];
@@ -91,18 +94,22 @@ const cases = [
   { name: "blog-article-fixture", path: "/blog/visual-article-1", fixture: true },
 ];
 try {
-  for (const locale of ["nl", "en"]) {
+  for (const locale of (process.env.VISUAL_LOCALES || "nl,en").split(",")) {
     for (const entry of cases.filter((item) => !process.env.VISUAL_FILTER || item.name.includes(process.env.VISUAL_FILTER))) {
       for (const width of [1440, 390]) {
-        const page = await browser.newPage({ viewport: { width, height: width === 390 ? 844 : 1000 }, colorScheme: "light" });
+        const page = await browser.newPage({ viewport: { width, height: width === 390 ? 844 : 1000 }, colorScheme: theme });
+        await page.addInitScript((value) => localStorage.setItem("theme", value), theme);
         const errors = [];
         page.on("pageerror", (error) => errors.push(error.message));
         await page.route("https://**/*", (route) => route.abort());
-        const name = "19-3-" + locale + "-" + entry.name + "-" + width;
+        const name = (prefix || "19-3-") + locale + "-" + entry.name + "-" + width;
         try {
           const response = await page.goto((entry.fixture ? "http://127.0.0.1:" + port : origin) + "/" + locale + entry.path, { waitUntil: "load", timeout: 90000 });
           if (entry.fixture) await page.waitForFunction(() => window.__visualReady);
           await page.locator("h1").waitFor();
+          await page.waitForFunction(
+            (value) => document.documentElement.classList.contains("dark") === (value === "dark"), theme,
+          );
           await page.evaluate(() => document.fonts.ready);
           await page.waitForTimeout(700);
           const consent = page.getByRole("button", { name: locale === "nl" ? "Alleen essentieel" : "Essential only", exact: true });
@@ -114,6 +121,7 @@ try {
             for (const picture of document.images) picture.loading = "eager";
             await Promise.all([...document.images].map((picture) => picture.decode().catch(() => {})));
           });
+          await inspectTheme(page, output, name);
           await page.screenshot({ path: resolve(output, name + ".png"), fullPage: true, style: "nextjs-portal { visibility: hidden; }" });
           if (width === 390) await page.screenshot({ path: resolve(output, name + "-viewport.png"), style: "nextjs-portal { visibility: hidden; }" });
           const metrics = await page.evaluate(() => ({
@@ -140,6 +148,6 @@ try {
   await browser.close();
   await new Promise((done) => server.close(done));
 }
-await writeFile(resolve(output, "19-3-results.json"), JSON.stringify({ capturedAt: new Date().toISOString(), cssSha256: createHash("sha256").update(styles + moduleCss).digest("hex"), bundleSha256: createHash("sha256").update(script).digest("hex"), results }, null, 2) + "\n");
+await writeFile(resolve(output, (prefix || "19-3-") + "results.json"), JSON.stringify({ capturedAt: new Date().toISOString(), cssSha256: createHash("sha256").update(styles + moduleCss).digest("hex"), bundleSha256: createHash("sha256").update(script).digest("hex"), results }, null, 2) + "\n");
 console.log(JSON.stringify({ cases: results.length, failed: results.filter((result) => result.error).map((result) => result.name) }));
 if (results.some((result) => result.error)) process.exitCode = 1;

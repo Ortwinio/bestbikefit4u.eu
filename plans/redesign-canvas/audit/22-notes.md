@@ -19,7 +19,8 @@ parent integration covered public pressure gauges, full browser review and valid
   Saddle-selector, shoe-cleat-fit and app needed no local source changes; all were captured and checked.
 
 Detailed source changes and exact subsets: `22-ui-notes.md`, `22-calculators-notes.md`,
-`22-account-notes.md`. Source and evidence filenames are individually listed in the manifest.
+`22-account-notes.md`. Source, tests, harness scripts and notes are listed in the manifest. Screenshots remain local review evidence
+and are excluded from version control and the file list.
 
 ## Evidence and validation
 

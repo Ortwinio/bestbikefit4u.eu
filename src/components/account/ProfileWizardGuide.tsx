@@ -41,7 +41,7 @@ export function ProfileWizardGuide({ step, locale }: { step: number; locale: Loc
   return (
     <aside className="min-w-0 space-y-6">
       {step < 3 && (
-        <div className="rounded-3xl bg-[var(--bbf-petrol-zacht)] p-5">
+        <div className="rounded-3xl bg-secondary p-5">
           <Image src="/illustrations/02-zadelhoogte-meten.webp" alt="" width={420} height={280} className="h-auto w-full object-contain" />
         </div>
       )}
@@ -54,7 +54,7 @@ export function ProfileWizardGuide({ step, locale }: { step: number; locale: Loc
         </CardContent>
       </Card>
       <div className="space-y-3 rounded-3xl bg-[var(--bbf-lime)] p-6 text-[var(--bbf-inkt)]">
-        <h3 className="font-display text-2xl font-bold">{copy.title}</h3>
+        <h3 className="font-display text-2xl font-bold text-[var(--bbf-inkt)]">{copy.title}</h3>
         <p>{copy.description}</p>
       </div>
     </aside>

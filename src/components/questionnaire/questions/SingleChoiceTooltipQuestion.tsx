@@ -51,7 +51,7 @@ export function SingleChoiceTooltipQuestion({
 
       {/* Tooltip panel */}
       {tooltip && selected && (
-        <div className="rounded-2xl bg-[var(--bbf-petrol-zacht)] p-4" aria-live="polite">
+        <div className="rounded-2xl bg-secondary text-secondary-foreground p-4" aria-live="polite">
           <p className="text-sm font-semibold text-foreground">{selected.label}</p>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
             {tooltip}

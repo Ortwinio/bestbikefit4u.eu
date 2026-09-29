@@ -42,13 +42,13 @@ export function FitResultsOverview({ locale, copy, report, fit, profileLabel, ha
           <circle cx={barX + 42} cy="264" r="82" stroke="currentColor" strokeWidth="7" />
           <path d={`M120 264L250 287L${seatX} ${seatY}L120 264M${seatX} ${seatY}L${barX - 32} ${barY + 14}M250 287L${barX - 20} ${barY + 62}M${barX - 32} ${barY + 14}L${barX - 20} ${barY + 62}L${barX + 42} 264M${seatX} ${seatY}L${saddleX} ${saddleY + 4}`} stroke="currentColor" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
           <path d={`M${barX - 32} ${barY + 14}L${barX} ${barY}q24 0 24 22q0 18-16 20`} stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
-          <path d={`M${saddleX - 24} ${saddleY}H${saddleX + 30}`} stroke="var(--bbf-petrol)" strokeWidth="10" strokeLinecap="round" />
+          <path d={`M${saddleX - 24} ${saddleY}H${saddleX + 30}`} stroke="var(--color-primary)" strokeWidth="10" strokeLinecap="round" />
           <circle cx="250" cy="287" r="13" stroke="currentColor" strokeWidth="6" />
           <path d="M250 287L268 320" stroke="currentColor" strokeWidth="7" />
           {showCurrent && <path data-current-saddle="" d={`M${currentX - 24} ${currentY}H${currentX + 30}`} stroke="currentColor" strokeWidth="3" strokeDasharray="5 5" />}
-          <path d={`M232 287L${saddleX - 18} ${saddleY}`} stroke="var(--bbf-petrol)" strokeWidth="3" strokeDasharray="7 7" />
-          <rect x="30" y="155" width="140" height="38" rx="10" fill="var(--bbf-petrol)" />
-          <text x="100" y="181" fill="white" textAnchor="middle" className="font-mono" fontSize="20">{formatFitResultsNumber(fit.saddleHeightMm, locale)} mm</text>
+          <path d={`M232 287L${saddleX - 18} ${saddleY}`} stroke="var(--color-primary)" strokeWidth="3" strokeDasharray="7 7" />
+          <rect x="30" y="155" width="140" height="38" rx="10" fill="var(--color-primary)" />
+          <text x="100" y="181" fill="var(--color-primary-foreground)" textAnchor="middle" className="font-mono" fontSize="20">{formatFitResultsNumber(fit.saddleHeightMm, locale)} mm</text>
         </svg>
         <p className="text-sm leading-relaxed text-muted-foreground">{showCurrent ? text.drawingWithCurrent : text.drawingNote}</p>
       </Card>

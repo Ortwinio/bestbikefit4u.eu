@@ -2,6 +2,21 @@
 
 ## 19.5a — About, FAQ, Contact and Case Study (Codex B)
 
+### Token-only follow-up
+
+- Lead-expanded scope: blog, Guides and DashboardBikeGarage CSS modules now use tokens only.
+  Semantic surfaces/text adapt to dark mode; fixed lime panels retain explicit ink text.
+  Shared Header/Footer and global tokens were not edited by B.
+- Manifest `audit/files-19.5a.txt` now contains 22 paths, including the three modules and theme harness.
+- Theme browser matrix passes 12/12 live NL cases: blog index, guide index and guide leaf,
+  light/dark at 1440/390. No overflow or runtime errors; computed surface/text tokens switch correctly.
+  Dark screenshots were visually inspected. Blog currently has no published CMS articles.
+  Proof: `code-renders/19-5a-token-themes.json` and `19-5a-tokens-*.png`.
+- CSS token gate passes: 17 modules, zero raw-color lines; this supersedes the historical 49-line blocker below.
+  Latest full lint is blocked only by three no-require-imports errors in the concurrently added
+  `tests/visual/marketing-dark/render.cjs`, outside B's ownership. Log: `/tmp/19.5a-token-lint.log`.
+  No commits.
+
 - Source boards: `canvas/About.dc.html`, `FAQ.dc.html`, `Contact.dc.html`, `CaseStudy.dc.html`.
   Three page workers handled About/FAQ/Contact; parent handled Case Study and final integration.
 - About keeps the original real NL/EN content in its own dictionary with the illustration-led board layout.

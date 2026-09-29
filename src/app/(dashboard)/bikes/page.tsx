@@ -88,7 +88,9 @@ export default function BikesPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="font-semibold text-foreground">
           {messages.nav.myBikes}{" "}
-          <span className="ml-2 rounded-full bg-accent px-3 py-1 font-mono">{bikes.length}</span>
+          <span className="ml-2 rounded-full bg-accent px-3 py-1 font-mono text-accent-foreground">
+            {bikes.length}
+          </span>
         </p>
         <Button variant="outline" {...linkButtonProps(withLocalePrefix("/bikes/compare-fit", locale))}>
           {getBikesCopy(locale).compare}

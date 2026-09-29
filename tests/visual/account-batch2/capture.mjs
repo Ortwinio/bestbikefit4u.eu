@@ -4,11 +4,14 @@ import { readFile, mkdir } from "node:fs/promises";
 import { resolve, extname } from "node:path";
 import { createHash } from "node:crypto";
 import { chromium } from "playwright";
+import { inspectTheme } from "../dark-b/inspect.mjs";
 
+const theme = process.env.VISUAL_THEME || "light";
+const prefix = process.env.VISUAL_PREFIX || "";
 const root = process.cwd();
 const folder = resolve(root, "tests/visual/account-batch2");
 const origin = process.env.VISUAL_DEV_ORIGIN || "http://localhost:3000";
-const output = resolve(root, "plans/redesign-canvas/audit/20.2-renders");
+const output = resolve(root, process.env.VISUAL_OUTPUT || "plans/redesign-canvas/audit/20.2-renders");
 let port = Number(process.env.VISUAL_PORT || 0);
 const loginHtml = await (await fetch(`${origin}/nl/login`)).text();
 const cssPaths = [...new Set([...loginHtml.matchAll(/href="([^" ]+\.css)"/g)].map((match) => match[1]))];
@@ -106,15 +109,19 @@ try {
   for (const locale of (process.env.VISUAL_LOCALES || "nl,en").split(",")) {
     for (const width of [1440, 390]) {
       for (const entry of selected) {
-        const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 1000 }, deviceScaleFactor: 1, colorScheme: "light", reducedMotion: "reduce", locale: locale === "nl" ? "nl-NL" : "en-GB" });
+        const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 1000 }, deviceScaleFactor: 1, colorScheme: theme, reducedMotion: "reduce", locale: locale === "nl" ? "nl-NL" : "en-GB" });
         await context.route("**/*", (route) => new URL(route.request().url()).hostname === "127.0.0.1" ? route.continue() : route.abort());
+        await context.addInitScript((value) => localStorage.setItem("theme", value), theme);
         const page = await context.newPage();
         const errors = [];
         page.on("pageerror", (error) => errors.push(error.message));
-        const name = `${locale}-${entry.route.replaceAll("/", "-")}-${entry.state}-${width}`;
+        const name = `${prefix}${locale}-${entry.route.replaceAll("/", "-")}-${entry.state}-${width}`;
         try {
           await page.goto(`http://127.0.0.1:${port}/${locale}/${entry.route}?fixture=${entry.state}&${entry.query || ""}`);
           await page.waitForFunction(() => window.__visualReady && document.querySelector("#root")?.childElementCount > 0, undefined, { timeout: 15000 });
+          await page.waitForFunction(
+            (value) => document.documentElement.classList.contains("dark") === (value === "dark"), theme,
+          );
           await page.evaluate(() => document.fonts.ready);
           await page.waitForTimeout(350);
           if (entry.route.endsWith("/results")) {
@@ -158,6 +165,7 @@ try {
               await page.evaluate(() => window.scrollTo(0, 0));
             }
           }
+          await inspectTheme(page, output, name);
           await page.screenshot({ path: resolve(output, `${name}.png`), fullPage: true, animations: "disabled" });
           if (width === 390) await page.screenshot({ path: resolve(output, `${name}-viewport.png`), animations: "disabled" });
           results.push({ name, ...metrics, errors });

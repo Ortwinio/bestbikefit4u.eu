@@ -371,3 +371,7 @@
   mix-blend-mode: normal;
   border-radius: 24px;
 }
+.surface .cta a:focus-visible {
+  outline: 3px solid var(--bbf-inkt);
+  outline-offset: 4px;
+}

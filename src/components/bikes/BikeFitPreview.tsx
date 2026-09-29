@@ -33,7 +33,7 @@ export function BikeFitPreview({ saddleHeightMm, target }: { saddleHeightMm?: nu
             aria-label={copy.diagram}
             className="w-full rounded-2xl bg-muted/40"
           >
-            <g fill="none" stroke="currentColor" strokeWidth="3" className="text-muted-foreground/40">
+            <g fill="none" stroke="currentColor" strokeWidth="3" className="text-muted-foreground">
               <circle cx="85" cy="200" r="55" />
               <circle cx="315" cy="200" r="55" />
               <path d="M85 200 145 110 195 200 85 200M145 110 275 110 195 200M275 110 315 200" />
