@@ -74,7 +74,7 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
               variant="ghost"
               aria-label={isOpen ? copy.closeMenu : copy.openMenu}
               aria-expanded={isOpen}
-              className="size-11 rounded-full p-0 text-[var(--bbf-inkt)]"
+              className="size-11 rounded-full p-0 text-foreground"
             />
           }
         >
@@ -84,8 +84,8 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
           side="top"
           showCloseButton={false}
           className={
-            "max-h-[90dvh] overflow-y-auto border-b border-[var(--bbf-rand)] " +
-            "bg-[var(--bbf-papier)] p-5 text-[var(--bbf-inkt)]"
+            "max-h-[90dvh] overflow-y-auto border-b border-border " +
+            "bg-background p-5 text-foreground"
           }
         >
           <DialogHeader className="sr-only">
@@ -101,7 +101,7 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
               type="button"
               onClick={close}
               aria-label={copy.closeMenu}
-              className="flex size-11 items-center justify-center rounded-full hover:bg-[var(--bbf-petrol-zacht)]"
+              className="flex size-11 items-center justify-center rounded-full hover:bg-primary-soft"
             >
               <X className="size-6" />
             </button>
@@ -115,13 +115,14 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
                 aria-current={pathname === withLocalePrefix(item.path, locale) ? "page" : undefined}
                 className={
                   "flex min-h-12 items-center rounded-xl px-3 text-lg font-semibold " +
-                  "hover:bg-[var(--bbf-petrol-zacht)] aria-[current=page]:bg-[var(--bbf-lime)]"
+                  "hover:bg-primary-soft aria-[current=page]:bg-[var(--bbf-lime)] " +
+                  "aria-[current=page]:text-[var(--bbf-inkt)]"
                 }
               >
                 {item.label}
               </Link>
             ))}
-            <div className="mt-4 border-t border-[var(--bbf-rand)] pt-4">
+            <div className="mt-4 border-t border-border pt-4">
               {isAuthenticated ? (
                 <div className="mb-4">
                   {accountLinks.map((item) => (
@@ -129,7 +130,7 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
                       key={item.path}
                       href={withLocalePrefix(item.path, locale)}
                       onClick={close}
-                      className="flex min-h-11 items-center rounded-xl px-3 font-semibold hover:bg-[var(--bbf-petrol-zacht)]"
+                      className="flex min-h-11 items-center rounded-xl px-3 font-semibold hover:bg-primary-soft"
                     >
                       {item.label}
                     </Link>
@@ -156,7 +157,7 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
                 onClick={close}
                 className={
                   "flex min-h-12 items-center justify-center rounded-full bg-[var(--bbf-petrol)] px-6 " +
-                  "font-bold text-white hover:bg-[var(--bbf-petrol-hover)]"
+                  "font-bold text-[var(--bbf-wit)] hover:bg-[var(--bbf-petrol-hover)]"
                 }
               >
                 {copy.start}

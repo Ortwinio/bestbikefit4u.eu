@@ -32,7 +32,12 @@ export function MarketingNavigation({ items, label }: {
       {items.map((item) => (
         <Link key={item.href} href={item.href}
           aria-current={pathname === item.href ? "page" : undefined}
-          className="inline-flex min-h-11 items-center whitespace-nowrap text-base font-semibold text-[var(--bbf-inkt)] hover:text-[var(--bbf-petrol)] aria-[current=page]:text-[var(--bbf-petrol)] aria-[current=page]:underline aria-[current=page]:decoration-[var(--bbf-lime)] aria-[current=page]:decoration-[3px] aria-[current=page]:underline-offset-8">
+          className={
+            "inline-flex min-h-11 items-center whitespace-nowrap text-base font-semibold text-foreground " +
+            "hover:text-primary aria-[current=page]:text-primary aria-[current=page]:underline " +
+            "aria-[current=page]:decoration-[var(--bbf-lime)] " +
+            "aria-[current=page]:decoration-[3px] aria-[current=page]:underline-offset-8"
+          }>
           {item.label}
         </Link>
       ))}
@@ -48,15 +53,15 @@ export function MarketingLanguageSwitch({ locale, inverse = false }: {
   const searchParams = useSearchParams();
   const copy = getMarketingLayoutMessages(locale);
   return (
-    <nav aria-label={copy.language} className={`inline-flex shrink-0 rounded-full border p-0.5 ${inverse ? "border-[var(--bbf-gedempt)]" : "border-[var(--bbf-rand)]"}`}>
+    <nav aria-label={copy.language} className={`inline-flex shrink-0 rounded-full border p-0.5 ${inverse ? "border-[var(--bbf-gedempt)]" : "border-border"}`}>
       {(["nl", "en"] as const).map((target) => (
         <a key={target}
           href={buildLocaleSwitchHref({ pathname, queryString: searchParams?.toString() ?? "", locale: target })}
           aria-label={target === "nl" ? copy.dutch : copy.english}
           aria-current={locale === target ? "page" : undefined}
           className={`inline-flex size-11 items-center justify-center rounded-full text-xs font-semibold ${locale === target
-            ? inverse ? "bg-[var(--bbf-lime)] text-[var(--bbf-inkt)]" : "bg-[var(--bbf-inkt)] text-white"
-            : inverse ? "text-[var(--bbf-op-donker)] hover:text-white" : "text-[var(--bbf-gedempt)] hover:text-[var(--bbf-inkt)]"}`}>
+            ? inverse ? "bg-[var(--bbf-lime)] text-[var(--bbf-inkt)]" : "bg-foreground text-background"
+            : inverse ? "text-[var(--bbf-op-donker)] hover:text-[var(--bbf-wit)]" : "text-muted-foreground hover:text-foreground"}`}>
           {target.toUpperCase()}
         </a>
       ))}

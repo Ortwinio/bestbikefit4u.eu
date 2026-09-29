@@ -31,7 +31,7 @@ export function Header({ locale, labels }: HeaderProps) {
     { href: withLocalePrefix("/pricing", locale), label: labels.nav.pricing },
   ];
   return (
-    <header className="border-b border-[var(--bbf-rand)] bg-[var(--bbf-papier)] text-[var(--bbf-inkt)]">
+    <header className="border-b border-border bg-background text-foreground">
       <div
         className={
           "mx-auto flex min-h-[88px] max-w-[1440px] items-center justify-between gap-3 px-5 py-3 " +
@@ -56,7 +56,7 @@ export function Header({ locale, labels }: HeaderProps) {
             href={withLocalePrefix("/calculators/bike-fit", locale)}
             className={
               "hidden min-h-12 items-center justify-center whitespace-nowrap rounded-full " +
-              "bg-[var(--bbf-petrol)] px-[22px] text-base font-bold text-white " +
+              "bg-[var(--bbf-petrol)] px-[22px] text-base font-bold text-[var(--bbf-wit)] " +
               "hover:bg-[var(--bbf-petrol-hover)] xl:inline-flex"
             }
           >

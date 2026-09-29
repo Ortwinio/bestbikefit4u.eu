@@ -79,7 +79,7 @@ export function Footer({ locale, labels }: FooterProps) {
     },
   ];
   return (
-    <footer className="bg-[var(--bbf-inkt)] text-white">
+    <footer className="bg-[var(--bbf-inkt)] text-[var(--bbf-wit)] dark:bg-surface-secondary">
       <div className="mx-auto max-w-[1440px] px-5 py-12 md:px-10 xl:px-[120px]">
         <div className="flex flex-wrap items-center gap-6 border-b border-[var(--bbf-gedempt)] pb-8">
           <BrandLogo
@@ -100,7 +100,7 @@ export function Footer({ locale, labels }: FooterProps) {
         >
           {groups.map((group) => (
             <section key={group.label} className="min-w-0">
-              <h2 className="mb-3 font-display text-lg font-bold text-white">{group.label}</h2>
+              <h2 className="mb-3 font-display text-lg font-bold text-[var(--bbf-wit)]">{group.label}</h2>
               <ul>
                 {group.links.map((item) => {
                   const Icon = "icon" in item ? item.icon : null;
@@ -114,7 +114,7 @@ export function Footer({ locale, labels }: FooterProps) {
                         }
                         className={
                           "flex min-h-11 items-center gap-2 py-2 text-sm leading-snug " +
-                          "text-[var(--bbf-op-donker)] hover:text-white"
+                          "text-[var(--bbf-op-donker)] hover:text-[var(--bbf-wit)]"
                         }
                       >
                         {Icon ? (
