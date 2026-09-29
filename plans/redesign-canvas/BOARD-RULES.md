@@ -39,3 +39,11 @@ Save a PNG per draft to `drafts/_renders/<Name>.png` (1440 wide, from your local
 - **Units in Dutch**: `km/u` (not km/h), `W`, `W/kg`, `kg`, `mm`, `cm`, `%`, `rpm`, `bar`, `min`, `uur`. Decimal comma.
 - **DM Mono only for numbers and units** (plus short formulas like "FTP = 0,95 × 20-min"). Whole sentences are in Figtree; numbers inside a sentence may be in DM Mono via `<span>`.
 - **No statistics or dev jargon in copy**: not "betrouwbaarheidsinterval", "gevoeligheidscheck", "schuifstap", "model", "engine". Honest limits are phrased for riders: "Een schatting bij constant vermogen en zonder wind."
+
+## Account screens (phase 3)
+- **Shell**: copy the sidebar + layout from `canvas/Dashboard.dc.html` (ink sidebar 264 px, active item lime, plan + usage bar at the bottom, 48 px content margin). **The sidebar items and their order come from the real app**: `src/components/layout/DashboardSidebar.tsx`. Link each item to its board (the table in `audit/route-map.md` → "Proposed board file"). The current item is lime with `aria-current="page"`.
+- **Real functionality first**: read the page and its components (`src/app/(dashboard)/<route>/page.tsx` + the imported components) and design **what the screen really does**: fields, states, actions, empty/loading/error states. Don't invent features. Something that's valuable but missing goes in your notes as a suggestion, not on the board.
+- **States**: a screen with several steps or states (wizard, import, empty/filled) is ONE artboard with state and `<sc-if>` (per `reference/format.md`), with a small state switcher only if needed for review. Name the states in your notes.
+- **Example data** is recognisable as an example (e.g. the rider "Sanne", the bike "Canyon Endurace [VOORBEELD]"), with no fake reviews or scores.
+- Payments are paused in the app: upgrade/checkout CTAs show the current state (`docs/BILLING_SUPPORT_NOTES.md`).
+- Size: 1440 wide, height as needed (usually 1000–1400).

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Welke cranklengte past bij jou?</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F8F3;font-family:Figtree,system-ui,sans-serif;color:#0F2420}
+*{box-sizing:border-box}
+button,input{font:inherit}
+a{color:#0A7263}
+a:hover{color:#075A4E}
+button:focus-visible,a:focus-visible{outline:3px solid #0A7263;outline-offset:3px}
+.rng{-webkit-appearance:none;appearance:none;background:transparent;margin:0;height:44px;cursor:pointer}
+.rng::-webkit-slider-runnable-track{height:44px;background:transparent}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:7px;border-radius:50%;background:#FFFFFF;border:4px solid #0A7263;box-shadow:0 2px 8px rgba(15,36,32,.25)}
+.rng::-moz-range-track{height:44px;background:transparent}
+.rng::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#FFFFFF;border:4px solid #0A7263}
+.rng:focus-visible{outline:3px solid #0A7263;outline-offset:2px;border-radius:12px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1240px; box-sizing: border-box; display: flex; flex-direction: column; background: #F5F8F3; color: #0F2420; font-family: Figtree, system-ui, sans-serif">
+<header style="display: flex; align-items: center; justify-content: space-between; height: 80px; flex-shrink: 0; padding: 0 64px; border-bottom: 1px solid #DCE6E1">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; color: #0F2420">
+<svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#CFF26A"></circle><circle cx="11" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><circle cx="23" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><path d="M11 20l4-8h6l2 8M15 12l4 8" stroke="#0F2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px">BestBikeFit<span style="color: #0A7263">4U</span></span>
+</a>
+<nav aria-label="Calculators" style="display: flex; gap: 2px; padding: 5px; border-radius: 999px; background: #FFFFFF; border: 1px solid #DCE6E1; font-size: 14px; font-weight: 600">
+<a href="BikeFit.dc.html" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 10px; border-radius: 999px; white-space: nowrap; background: #FFFFFF; color: #0F2420; text-decoration: none">Bike fit</a>
+<a href="SaddleHeight.dc.html" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 10px; border-radius: 999px; white-space: nowrap; background: #FFFFFF; color: #0F2420; text-decoration: none">Zadelhoogte</a>
+<a href="FrameSize.dc.html" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 10px; border-radius: 999px; white-space: nowrap; background: #FFFFFF; color: #0F2420; text-decoration: none">Framemaat</a>
+<a href="TirePressure.dc.html" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 10px; border-radius: 999px; white-space: nowrap; background: #FFFFFF; color: #0F2420; text-decoration: none">Bandenspanning</a>
+<a href="CrankLength.dc.html" aria-current="page" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 10px; border-radius: 999px; white-space: nowrap; background: #0F2420; color: #FFFFFF; text-decoration: none">Cranklengte</a>
+<a href="SaddleWidth.dc.html" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 10px; border-radius: 999px; white-space: nowrap; background: #FFFFFF; color: #0F2420; text-decoration: none">Zadelbreedte</a>
+<a href="Gearing.dc.html" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 10px; border-radius: 999px; white-space: nowrap; background: #FFFFFF; color: #0F2420; text-decoration: none">Verzet</a>
+<a href="Main.dc.html" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 10px; border-radius: 999px; white-space: nowrap; background: #FFFFFF; color: #0F2420; text-decoration: none">Meer</a>
+</nav>
+<a href="Login.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; color: #0F2420; text-decoration: none">Inloggen</a>
+</header>
+<div style="padding: 28px 64px 24px">
+<div style="font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #0A7263">Cranklengte · <span style="font-family: 'DM Mono', monospace">1</span> minuut</div>
+<h1 style="margin: 8px 0 12px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 50px; letter-spacing: -0.03em">Welke cranklengte past bij jou?</h1>
+<p style="margin: 0; font-size: 15px; color: #4A5F5A">Voorbeeldwaarden ingevuld. Schuif naar je eigen maten voor een persoonlijk startpunt.</p>
+</div>
+<div style="display: grid; grid-template-columns: 540px 1fr; align-items: start; gap: 32px; padding: 0 64px 40px">
+<div style="display: flex; flex-direction: column; gap: 16px"><section style="padding: 24px; border-radius: 24px; background: #FFFFFF; border: 1px solid #DCE6E1"><h2 style="margin: 0 0 20px; display: flex; align-items: center; gap: 12px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px"><span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: #CFF26A; font-family: 'DM Mono', monospace; font-size: 14px">1</span>Meet je binnenbeenlengte</h2><div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: baseline; justify-content: space-between"><label for="cl-inseam" style="font-weight: 600">Binnenbeenlengte</label><div style="font-family: 'DM Mono', monospace; font-size: 27px">{{inseamLabel}}<span style="font-size: 14px; color: #4A5F5A"> cm</span></div></div>
+<div style="position: relative; height: 44px"><div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; background: #DCE6E1; border-radius: 99px"></div><div style="position: absolute; left: 0; top: 18px; height: 8px; background: #0A7263; border-radius: 99px; width: {{inseamPct}}%"></div><input id="cl-inseam" class="rng" type="range" min="55" max="105" step="0.5" value="{{inseam}}" onChange="{{setInseam}}" style="position: absolute; left: 0; top: 0; width: 100%" aria-valuetext="{{inseamAria}}"></div>
+<div style="display: flex; justify-content: space-between; color: #4A5F5A; font-family: 'DM Mono', monospace; font-size: 12px"><span>55 cm</span><span>105 cm</span></div>
+</div><p style="margin: 16px 0 0; font-size: 14px; line-height: 1.5; color: #4A5F5A">Meet blootsvoets van de vloer tot de bovenkant van een boek dat je stevig tussen je benen houdt.</p></section>
+<section style="padding: 24px; border-radius: 24px; background: #FFFFFF; border: 1px solid #DCE6E1"><h2 style="margin: 0 0 20px; display: flex; align-items: center; gap: 12px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px"><span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: #CFF26A; font-family: 'DM Mono', monospace; font-size: 14px">2</span>Kies je fiets</h2><div role="group" aria-label="{{categoriesLabel}}" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px"><sc-for list="{{categories}}" as="option" hint-placeholder-count="4"><button type="button" aria-pressed="{{option.pressed}}" onClick="{{option.pick}}" style="min-height: 48px; padding: 10px 8px; border-radius: 14px; border: 2px solid {{option.border}}; background: {{option.bg}}; color: #0F2420; font-family: Figtree, sans-serif; font-weight: 700; font-size: 15px; cursor: pointer">{{option.label}}</button></sc-for></div><p style="margin: 16px 0 0; font-size: 14px; line-height: 1.5; color: #4A5F5A">{{categoryNote}}</p></section>
+<section style="padding: 24px; border-radius: 24px; background: #FFFFFF; border: 1px solid #DCE6E1"><h2 style="margin: 0 0 20px; display: flex; align-items: center; gap: 12px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px"><span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: #CFF26A; font-family: 'DM Mono', monospace; font-size: 14px">3</span>Vergelijk met nu</h2>
+<button type="button" onClick="{{toggleRefine}}" aria-expanded="{{refineExpanded}}" aria-controls="cl-refine" style="display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 48px; padding: 12px 16px; border: 1px solid #DCE6E1; border-radius: 14px; background: #F5F8F3; color: #0F2420; font-weight: 700; cursor: pointer"><span>{{refineLabel}}</span><span aria-hidden="true">{{refineSign}}</span></button>
+<sc-if value="{{refine}}" hint-placeholder-val="{{false}}"><div id="cl-refine" style="display: flex; flex-direction: column; gap: 10px; margin-top: 18px"><p style="margin: 0; font-size: 15px; color: #4A5F5A">Lees de lengte op de binnenkant van je crankarm.</p><div role="group" aria-label="{{currentOptionsLabel}}" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px"><sc-for list="{{currentOptions}}" as="option" hint-placeholder-count="5"><button type="button" aria-pressed="{{option.pressed}}" onClick="{{option.pick}}" style="min-height: 48px; padding: 10px 8px; border-radius: 14px; border: 2px solid {{option.border}}; background: {{option.bg}}; color: #0F2420; font-family: 'DM Mono', monospace; font-weight: 700; font-size: 14px; cursor: pointer">{{option.label}}</button></sc-for></div><button type="button" onClick="{{clearCurrent}}" style="align-self: flex-start; min-height: 44px; padding: 0 12px; border: 0; border-radius: 12px; background: #E1F2EE; color: #075A4E; font-weight: 700; cursor: pointer">Wis mijn huidige lengte</button></div></sc-if>
+</section></div>
+<div style="display: flex; flex-direction: column; gap: 16px"><section style="padding: 24px; border-radius: 28px; background: #CFF26A; color: #0F2420">
+<div style="display: flex; align-items: flex-start; justify-content: space-between"><div><div style="font-size: 15px; font-weight: 700">Jouw startpunt</div><div style="margin-top: 4px; font-family: 'DM Mono', monospace; font-size: 80px; line-height: 1.1">{{recommendedLabel}}<span style="font-size: 24px; color: #3B4F4A"> mm</span></div></div><span style="padding: 10px 14px; border-radius: 999px; background: #E6F8A8; font-size: 14px; font-weight: 700">{{categoryLabel}}</span></div>
+<svg width="620" height="180" viewBox="0 0 620 280" fill="none" role="img" aria-label="Cranklengte gemeten tussen het midden van de trapas en het midden van de pedaalas">
+<circle cx="160" cy="85" r="66" stroke="#0F2420" stroke-width="3"></circle><circle cx="160" cy="85" r="53" stroke="#0F2420" stroke-width="2" stroke-dasharray="3 8"></circle><path d="M160 32V138M107 85H213M123 48L197 122M123 122L197 48" stroke="#0F2420" stroke-width="2"></path>
+<sc-if value="{{hasCurrent}}" hint-placeholder-val="{{false}}"><line x1="160" y1="85" x2="{{currentX}}" y2="{{currentY}}" stroke="#0A7263" stroke-width="4" stroke-dasharray="6 6"></line><circle cx="{{currentX}}" cy="{{currentY}}" r="18" stroke="#0A7263" stroke-width="2" stroke-dasharray="5 5"></circle></sc-if>
+<line x1="165" y1="89" x2="{{pedalAccentX}}" y2="{{pedalAccentY}}" stroke="#E6F8A8" stroke-width="37" stroke-linecap="round"></line>
+<line x1="160" y1="85" x2="{{pedalX}}" y2="{{pedalY}}" stroke="#0F2420" stroke-width="32" stroke-linecap="round"></line>
+<line x1="160" y1="85" x2="{{pedalX}}" y2="{{pedalY}}" stroke="#FFFFFF" stroke-width="22" stroke-linecap="round"></line>
+<circle cx="160" cy="85" r="9" fill="#0F2420"></circle><circle cx="{{pedalX}}" cy="{{pedalY}}" r="8" fill="#0F2420"></circle>
+<rect x="{{pedalLeft}}" y="{{pedalTop}}" width="64" height="17" rx="5" fill="#0F2420"></rect>
+<line x1="187" y1="48" x2="{{dimensionX}}" y2="{{dimensionY}}" stroke="#0A7263" stroke-width="2" stroke-dasharray="5 5"></line>
+<circle cx="187" cy="48" r="4" fill="#0A7263"></circle><circle cx="{{dimensionX}}" cy="{{dimensionY}}" r="4" fill="#0A7263"></circle>
+<text x="452" y="93" fill="#0F2420" font-family="DM Mono, monospace" font-size="20">{{recommendedLabel}} mm</text>
+<text x="452" y="116" fill="#3B4F4A" font-family="Figtree, sans-serif" font-size="13">hart tot hart</text>
+</svg>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px"><sc-for list="{{scale}}" as="size" hint-placeholder-count="5"><div aria-label="{{size.aria}}" style="display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 78px; padding: 14px 6px; border: 2px solid {{size.border}}; border-radius: 14px; background: {{size.bg}}; color: {{size.fg}}"><span style="font-family: 'DM Mono', monospace; font-size: 19px">{{size.label}}</span><span style="font-size: 12px">{{size.hint}}</span></div></sc-for></div>
+<p style="margin: 16px 0 0; font-size: 14px; line-height: 1.5">{{boundaryNote}}</p>
+<p style="margin: 8px 0 0; font-size: 12px; color: #3B4F4A">Schematisch zijaanzicht. Een cranklengte is een vaste maat, geen afstelling met een testmarge.</p>
+</section>
+<section style="padding: 24px; border-radius: 24px; background: #FFFFFF; border: 1px solid #DCE6E1"><div style="display: flex; justify-content: space-between; align-items: center; gap: 16px"><h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 23px">Nu vs. advies</h2><span style="padding: 8px 12px; border-radius: 999px; background: {{comparisonBg}}; font-family: 'DM Mono', monospace; font-size: 14px"><sc-for list="{{comparisonLabelParts}}" as="part" hint-placeholder-count="3"><span style="font-family: {{part.font}}">{{part.text}}</span></sc-for></span></div><p style="margin: 14px 0 0; font-size: 15px; line-height: 1.5; color: #4A5F5A">{{comparisonAdvice}}</p></section>
+<section style="padding: 24px; border-radius: 24px; background: #FFFFFF; border: 1px solid #DCE6E1"><h2 style="margin: 0 0 18px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 23px">Pas in deze volgorde aan</h2><ol style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px"><li style="display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.45"><span style="display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: #E1F2EE; color: #075A4E; font-family: 'DM Mono', monospace; font-size: 13px">1</span><span>Controleer eerst je binnenbeenmeting en huidige cranklengte.</span></li>
+<li style="display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.45"><span style="display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: #E1F2EE; color: #075A4E; font-family: 'DM Mono', monospace; font-size: 13px">2</span><span>Beoordeel je houding en klachten voordat je onderdelen wisselt.</span></li>
+<li style="display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.45"><span style="display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: #E1F2EE; color: #075A4E; font-family: 'DM Mono', monospace; font-size: 13px">3</span><span>Controleer na een wissel opnieuw je zadelhoogte en volledige fit.</span></li></ol></section>
+<a href="Login.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 56px; border-radius: 999px; background: #0A7263; color: #FFFFFF; text-decoration: none; font-size: 17px; font-weight: 700">Bewaar in je account</a></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { inseam: 84, category: 'road', refine: false, current: null };
+  }
+  renderVals() {
+    const numberParts = (text) => text.split(/(\d+(?:[,.]\d+)?)/).filter(Boolean).map((part) => ({ text: part, font: /^\d/.test(part) ? "'DM Mono', monospace" : "Figtree, sans-serif" }));
+    const state = this.state;
+    const format = (value) => String(value).replace('.', ',');
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/constants.ts:157
+    const lengths = [165, 170, 172.5, 175, 177.5];
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:65
+    const calculate = (inseamMm) => {
+      let recommendation = inseamMm <= 739 ? 165 : inseamMm <= 819 ? 170 : inseamMm <= 879 ? 172.5 : inseamMm <= 939 ? 175 : 177.5;
+      // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:78
+      if (state.category === 'mtb' && inseamMm >= 820 && recommendation >= 175) recommendation -= 2.5;
+      return recommendation;
+    };
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:42
+    const inseamMm = Math.round(state.inseam * 10);
+    const recommended = calculate(inseamMm);
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:65
+    const neighbours = [calculate(Math.max(550, inseamMm - 5)), calculate(Math.min(1050, inseamMm + 5))].filter((value) => value !== recommended);
+    const scale = lengths.map((value) => ({
+      label: format(value), hint: value === recommended ? 'advies' : neighbours.includes(value) ? 'meetgrens' : 'mm',
+      bg: value === recommended ? '#0F2420' : '#E6F8A8',
+      fg: value === recommended ? '#FFFFFF' : '#0F2420',
+      border: neighbours.includes(value) ? '#0A7263' : value === recommended ? '#0F2420' : '#E6F8A8',
+      aria: format(value) + ' millimeter' + (value === recommended ? ', aanbevolen' : neighbours.includes(value) ? ', naastgelegen meetstap' : '')
+    }));
+    const categoryDefs = [['road', 'Race'], ['gravel', 'Gravel'], ['mtb', 'MTB'], ['city', 'Stad']];
+    const categories = categoryDefs.map(([value, label]) => ({
+      label, pressed: String(state.category === value),
+      bg: state.category === value ? '#E6F8A8' : '#FFFFFF', border: state.category === value ? '#0A7263' : '#DCE6E1',
+      pick: () => this.setState({ category: value })
+    }));
+    const currentOptions = lengths.map((value) => ({
+      label: format(value), pressed: String(state.current === value),
+      bg: state.current === value ? '#E6F8A8' : '#FFFFFF', border: state.current === value ? '#0A7263' : '#DCE6E1',
+      pick: () => this.setState({ current: value })
+    }));
+    const hasCurrent = state.current !== null;
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:65
+    const difference = hasCurrent ? state.current - recommended : 0;
+    const comparisonLabel = !hasCurrent ? 'Nog niet gekozen' : difference === 0 ? 'Dezelfde maat' : format(Math.abs(difference)) + ' mm ' + (difference > 0 ? 'langer' : 'korter');
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:65
+    const pedalX = 160 + recommended * 1.35;
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:65
+    const pedalY = 85 + recommended * 0.75;
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:65
+    const geometry = { pedalX, pedalY, pedalLeft: pedalX - 12, pedalTop: pedalY + 9, pedalAccentX: pedalX + 5, pedalAccentY: pedalY + 4, dimensionX: pedalX + 27, dimensionY: pedalY - 37, currentX: 160 + (state.current || recommended) * 1.35, currentY: 85 + (state.current || recommended) * 0.75 };
+    // VOORLOPIGE REKENREGEL — echte engine: src/app/(public)/calculators/crank-length/CrankLengthCalculatorForm.tsx:187
+    const inseamPct = ((state.inseam - 55) / 50) * 100;
+    return {
+      ...geometry, inseam: state.inseam, inseamLabel: format(state.inseam), inseamAria: format(state.inseam) + ' centimeter', inseamPct,
+      setInseam: (event) => this.setState({ inseam: Number(event.target.value) }),
+      categories, categoriesLabel: 'Type fiets', currentOptions, currentOptionsLabel: 'Huidige cranklengte in millimeters',
+      categoryLabel: categoryDefs.find(([value]) => value === state.category)[1],
+      categoryNote: state.category === 'mtb' ? 'De MTB-regel kiest bij langere benen een kortere optie voor meer bodemvrijheid.' : 'Je binnenbeenlengte bepaalt de stap in de maattabel.',
+      recommended, recommendedLabel: format(recommended), scale,
+      refine: state.refine, refineExpanded: String(state.refine), refineLabel: state.refine ? 'Sluit verfijning' : 'Verfijn met je huidige cranklengte', refineSign: state.refine ? '−' : '+',
+      toggleRefine: () => this.setState({ refine: !state.refine }), clearCurrent: () => this.setState({ current: null }),
+      hasCurrent, comparisonLabelParts: numberParts(comparisonLabel), comparisonBg: !hasCurrent ? '#E1F2EE' : difference === 0 ? '#CFF26A' : '#FFD66B',
+      comparisonAdvice: !hasCurrent ? 'Open Verfijn en kies je huidige lengte om het verschil te zien.' : difference === 0 ? 'Je huidige crank past bij dit startpunt. Geen reden om te wisselen als je geen klachten hebt.' : 'Je huidige crank wijkt af van het startpunt. Dat is op zichzelf geen reden om te wisselen als je geen klachten hebt.',
+      boundaryNote: neighbours.length ? 'Je zit bij een meetgrens. De omlijnde maat past bij een iets andere binnenbeenmeting. Meet opnieuw voordat je kiest.' : 'De donkere maat volgt uit je meting. Een rand verschijnt als een iets andere binnenbeenmeting een andere maat oplevert.'
+    };
+  }
+}
+</script>
+</body>
+</html>
