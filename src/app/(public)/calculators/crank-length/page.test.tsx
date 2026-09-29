@@ -5,7 +5,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import CrankLengthCalculatorPage, { generateMetadata } from "./page";
 import { crankLengthMessages } from "@/i18n/calculators/crankLength";
 
-vi.mock("@/i18n/getDictionary", () => ({getDictionary: async (language: "en" | "nl") => ({crankLengthCalculator: crankLengthMessages[language]})}));
+vi.mock("@/i18n/getDictionary", () => ({
+  getDictionary: async (language: "en" | "nl") => ({
+    crankLengthCalculator: crankLengthMessages[language],
+  }),
+}));
 
 let locale: "en" | "nl" = "en";
 
@@ -26,13 +30,9 @@ vi.mock("next/link", () => ({
 }));
 
 vi.mock("@/components/analytics/TrackedCtaLink", () => ({
-  TrackedCtaLink: ({
-    href,
-    children,
-  }: {
-    href: string;
-    children?: React.ReactNode;
-  }) => <a href={href}>{children}</a>,
+  TrackedCtaLink: ({ href, children }: { href: string; children?: React.ReactNode }) => (
+    <a href={href}>{children}</a>
+  ),
 }));
 
 vi.mock("@/components/seo/JsonLd", () => ({
@@ -67,7 +67,9 @@ vi.mock("@/i18n/request", () => ({
 }));
 
 vi.mock("@/i18n/metadata", () => ({
-  buildLocaleAlternates: () => ({ canonical: `https://bestbikefit4u.eu/${locale}/calculators/crank-length` }),
+  buildLocaleAlternates: () => ({
+    canonical: `https://bestbikefit4u.eu/${locale}/calculators/crank-length`,
+  }),
 }));
 
 vi.mock("@/lib/seo/jsonLd", () => ({
@@ -99,8 +101,10 @@ afterEach(() => {
 describe("crank length page", () => {
   it("preserves canonical metadata and Dutch FAQ content", async () => {
     locale = "nl";
-    expect((await generateMetadata()).alternates?.canonical).toBe("https://bestbikefit4u.eu/nl/calculators/crank-length");
-    render(await CrankLengthCalculatorPage({searchParams: Promise.resolve({})}));
+    expect((await generateMetadata()).alternates?.canonical).toBe(
+      "https://bestbikefit4u.eu/nl/calculators/crank-length",
+    );
+    render(await CrankLengthCalculatorPage({ searchParams: Promise.resolve({}) }));
     expect(screen.getByText(crankLengthMessages.nl.faqs[0].q).tagName).toBe("SUMMARY");
     expect(screen.getByText(crankLengthMessages.nl.faqs[0].a)).toBeTruthy();
   });
@@ -113,10 +117,10 @@ describe("crank length page", () => {
     expect(screen.getByText("Practical component choice without fake certainty")).toBeTruthy();
     expect(screen.getByText("Crank Form")).toBeTruthy();
     expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
-      "/en/calculators/bike-fit"
+      "/en/calculators/bike-fit",
     );
     expect(screen.getByText("Compare plans").closest("a")?.getAttribute("href")).toBe(
-      "/en/pricing"
+      "/en/pricing",
     );
     expect(screen.queryByText("Donate via our Alpe d'HuZes page")).toBeNull();
   });

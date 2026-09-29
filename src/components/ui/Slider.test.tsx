@@ -16,7 +16,7 @@ describe("Slider", () => {
         value={42}
         onChange={() => {}}
         valueLabel="42%"
-      />
+      />,
     );
 
     expect(html).toContain('data-slot="slider"');
@@ -28,7 +28,7 @@ describe("Slider", () => {
     expect(html).toContain('data-slot="slider-value"');
     expect(html).toContain('aria-label="Comfort help"');
     expect(html).toContain(
-      'aria-describedby="comfort-value comfort-tooltip-description comfort-error"'
+      'aria-describedby="comfort-value comfort-tooltip-description comfort-error"',
     );
     expect(html).toContain("Move toward comfort for longer rides.");
     expect(html).toContain("Comfort must be set.");

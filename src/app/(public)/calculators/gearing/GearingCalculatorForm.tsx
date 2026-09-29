@@ -2,49 +2,22 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "convex/react";
-import { ArrowUpDown, Gauge, ShieldCheck } from "lucide-react";
+import Link from "next/link";
 import { api } from "../../../../../convex/_generated/api";
-import {
-  PublicCalculatorResultSummary,
-  PublicInfoPanel,
-  PublicMetricPanel,
-  PublicNumberField,
-  PublicSelectField,
-  PublicSurfaceCard,
-} from "@/components/public";
-import { getConfidenceLabel } from "@/lib/publicCalculatorLogic";
+import { PublicCalculatorResultSummary } from "@/components/public";
+import { ConfiguratorLayout, OptionCard, ResultHero, ResultTile, Slider, StepCard } from "@/components/ui";
+import { gearingMessages } from "@/i18n/calculators/gearing";
+import { withLocalePrefix } from "@/i18n/navigation";
 import { calculateGearingAnalysis } from "@/lib/gearing-engine";
 import {
   calculateGearing,
   DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE,
-  formatGearRatio,
-  formatGearSpan,
-  formatSpeedKmh,
   type GearingBikeType,
   type GearingClimbBand,
   type GearingDrivetrainType,
   type GearingCalculationResult,
   validateGearingInputs,
 } from "./gearing-engine";
-
-const DRIVETRAIN_OPTIONS = [
-  { value: "2x", label: "2x" },
-  { value: "1x", label: "1x" },
-];
-
-const BIKE_TYPE_OPTIONS = [
-  { value: "road", label: "Road" },
-  { value: "gravel", label: "Gravel" },
-  { value: "mtb", label: "MTB" },
-  { value: "commuter", label: "Commuter" },
-];
-
-const CLIMB_BAND_OPTIONS = [
-  { value: "short", label: "Short < 3 km" },
-  { value: "medium", label: "Medium 3-8 km" },
-  { value: "long", label: "Long 8-20 km" },
-  { value: "alpine", label: "Alpine 20 km+" },
-];
 
 const WHEEL_PRESET_OPTIONS = [
   { value: "road", label: "Road 700 x 25 / 28" },
@@ -62,38 +35,12 @@ const CASSETTE_PRESET_OPTIONS = [
   { value: "custom", label: "Custom", smallest: 11, largest: 34 },
 ] as const;
 
-function formatClimbBandLabel(climbBand: GearingClimbBand, isNl: boolean) {
-  switch (climbBand) {
-    case "short":
-      return isNl ? "Kort < 3 km" : "Short < 3 km";
-    case "medium":
-      return isNl ? "Middel 3-8 km" : "Medium 3-8 km";
-    case "long":
-      return isNl ? "Lang 8-20 km" : "Long 8-20 km";
-    case "alpine":
-      return isNl ? "Alpine 20 km+" : "Alpine 20 km+";
-  }
-}
-
-function formatBikeTypeLabel(bikeType: GearingBikeType, isNl: boolean) {
-  switch (bikeType) {
-    case "road":
-      return isNl ? "Race" : "Road";
-    case "gravel":
-      return "Gravel";
-    case "mtb":
-      return "MTB";
-    case "commuter":
-      return isNl ? "Woon-werk / stadsfiets" : "Commuter";
-  }
-}
-
 function buildPresetValueMap() {
-  return new Map(
+  return new Map<string, number>(
     WHEEL_PRESET_OPTIONS.map((option) => [
       option.value,
       DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE[option.value as GearingBikeType],
-    ])
+    ]),
   );
 }
 
@@ -104,6 +51,13 @@ type Props = {
 };
 
 export function GearingCalculatorForm({ isNl }: Props) {
+  const locale = isNl ? "nl" : "en";
+  const copy = gearingMessages[locale];
+  const [edited, setEdited] = useState(false);
+  const format = (value: number, digits = 2) =>
+    new Intl.NumberFormat(locale, {
+      maximumFractionDigits: digits,
+    }).format(value);
   const saveSession = useMutation(api.gearing.mutations.createPublicGearingSession);
   const savedSignatureRef = useRef<string | null>(null);
   const [drivetrainType, setDrivetrainType] = useState<GearingDrivetrainType>("2x");
@@ -116,7 +70,7 @@ export function GearingCalculatorForm({ isNl }: Props) {
   const [cassetteLargestCogTeeth, setCassetteLargestCogTeeth] = useState<number | undefined>(34);
   const [wheelPreset, setWheelPreset] = useState<string>("road");
   const [wheelCircumferenceMm, setWheelCircumferenceMm] = useState<number | undefined>(
-    DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road
+    DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road,
   );
   const [cadenceRpm, setCadenceRpm] = useState<number | undefined>(80);
   const [gradientPct, setGradientPct] = useState<number | undefined>(8);
@@ -136,7 +90,7 @@ export function GearingCalculatorForm({ isNl }: Props) {
           bikeType,
           climbBand,
         },
-        isNl
+        isNl,
       ),
     [
       drivetrainType,
@@ -150,7 +104,7 @@ export function GearingCalculatorForm({ isNl }: Props) {
       bikeType,
       climbBand,
       isNl,
-    ]
+    ],
   );
 
   const result: GearingCalculationResult | null = useMemo(() => {
@@ -171,7 +125,7 @@ export function GearingCalculatorForm({ isNl }: Props) {
         bikeType,
         climbBand,
       },
-      isNl
+      isNl,
     );
   }, [
     validationIssues,
@@ -189,11 +143,6 @@ export function GearingCalculatorForm({ isNl }: Props) {
   ]);
 
   const resultModel = result?.resultEnvelope ?? null;
-  const confidenceLabel = result
-    ? getConfidenceLabel(result.confidence.level, isNl)
-    : isNl
-      ? "Lagere betrouwbaarheid"
-      : "Lower confidence";
   const errorMessages = validationIssues
     .filter((issue) => issue.severity === "error")
     .map((issue) => issue.message);
@@ -229,25 +178,19 @@ export function GearingCalculatorForm({ isNl }: Props) {
         const chainrings =
           drivetrainType === "2x"
             ? [outerChainringTeeth, innerChainringTeeth].filter(
-                (value): value is number => typeof value === "number"
+                (value): value is number => typeof value === "number",
               )
             : [outerChainringTeeth].filter((value): value is number => typeof value === "number");
         const cassetteTeeth = [cassetteSmallestCogTeeth, cassetteLargestCogTeeth].filter(
-          (value): value is number => typeof value === "number"
+          (value): value is number => typeof value === "number",
         );
         const input = {
           drivetrainType,
           chainrings,
           cassetteTeeth,
-          wheelCircumferenceMm:
-            wheelCircumferenceMm ?? DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road,
+          wheelCircumferenceMm: wheelCircumferenceMm ?? DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road,
           cadenceRpm: cadenceRpm ?? 80,
-          bikeType:
-            bikeType === "mtb"
-              ? "mountain"
-              : bikeType === "commuter"
-                ? "city"
-                : bikeType,
+          bikeType: bikeType === "mtb" ? "mountain" : bikeType === "commuter" ? "city" : bikeType,
           climbGradientPct: gradientPct,
           climbLengthBand: climbBand,
         } as const;
@@ -259,21 +202,15 @@ export function GearingCalculatorForm({ isNl }: Props) {
           chainrings:
             drivetrainType === "2x"
               ? [outerChainringTeeth, innerChainringTeeth].filter(
-                  (value): value is number => typeof value === "number"
+                  (value): value is number => typeof value === "number",
                 )
               : [outerChainringTeeth].filter((value): value is number => typeof value === "number"),
           cassetteTeeth: [cassetteSmallestCogTeeth, cassetteLargestCogTeeth].filter(
-            (value): value is number => typeof value === "number"
+            (value): value is number => typeof value === "number",
           ),
-          wheelCircumferenceMm:
-            wheelCircumferenceMm ?? DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road,
+          wheelCircumferenceMm: wheelCircumferenceMm ?? DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road,
           cadenceRpm: cadenceRpm ?? 80,
-          bikeType:
-            bikeType === "mtb"
-              ? "mountain"
-              : bikeType === "commuter"
-                ? "city"
-                : bikeType,
+          bikeType: bikeType === "mtb" ? "mountain" : bikeType === "commuter" ? "city" : bikeType,
           climbGradientPct: gradientPct,
           climbLengthBand: climbBand,
         } as const;
@@ -285,21 +222,15 @@ export function GearingCalculatorForm({ isNl }: Props) {
           chainrings:
             drivetrainType === "2x"
               ? [outerChainringTeeth, innerChainringTeeth].filter(
-                  (value): value is number => typeof value === "number"
+                  (value): value is number => typeof value === "number",
                 )
               : [outerChainringTeeth].filter((value): value is number => typeof value === "number"),
           cassetteTeeth: [cassetteSmallestCogTeeth, cassetteLargestCogTeeth].filter(
-            (value): value is number => typeof value === "number"
+            (value): value is number => typeof value === "number",
           ),
-          wheelCircumferenceMm:
-            wheelCircumferenceMm ?? DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road,
+          wheelCircumferenceMm: wheelCircumferenceMm ?? DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road,
           cadenceRpm: cadenceRpm ?? 80,
-          bikeType:
-            bikeType === "mtb"
-              ? "mountain"
-              : bikeType === "commuter"
-                ? "city"
-                : bikeType,
+          bikeType: bikeType === "mtb" ? "mountain" : bikeType === "commuter" ? "city" : bikeType,
           climbGradientPct: gradientPct,
           climbLengthBand: climbBand,
         } as const;
@@ -321,378 +252,240 @@ export function GearingCalculatorForm({ isNl }: Props) {
     climbBand,
   ]);
 
-  const cassettePresetOptions = isNl
-    ? CASSETTE_PRESET_OPTIONS.map((option) => ({
-        value: option.value,
-        label:
-          option.value === "custom"
-            ? "Aangepast"
-            : option.label,
-      }))
-    : CASSETTE_PRESET_OPTIONS.map((option) => ({
-        value: option.value,
-        label: option.label,
-      }));
-
-  const wheelPresetOptions = isNl
-    ? WHEEL_PRESET_OPTIONS.map((option) => ({
-        value: option.value,
-        label:
-          option.value === "road"
-            ? "Weg 700 x 25 / 28"
-            : option.value === "gravel"
-              ? "Gravel 700 x 38 / 40"
-              : option.value === "mtb"
-                ? "MTB 29 x 2.3"
-                : "Woon-werk / hybride",
-      }))
-    : WHEEL_PRESET_OPTIONS.map((option) => ({
-        value: option.value,
-        label: option.label,
-      }));
-
-  return (
-    <section className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-      <PublicSurfaceCard
-        title={isNl ? "Bouw je setup" : "Build your setup"}
-        description={
-          isNl
-            ? "Gebruik de kettingring, cassette en wielomtrek van je echte fiets. De tool geeft exacte verzetmath en een eenvoudige kliminschatting."
-            : "Use the chainring, cassette, and wheel circumference from your real bike. The tool gives exact gearing math and a simple climb-readiness readout."
-        }
-        className="public-calculator-card rounded-[1.75rem]"
-      >
-        <div className="space-y-6">
-          <PublicInfoPanel
-            tone="primary"
-            icon={<ShieldCheck className="h-4 w-4" />}
-            title={isNl ? "Exacte math, eenvoudige uitleg" : "Exact math, simple explanation"}
-          >
-            {isNl
-              ? "De gear ratio en snelheid worden exact berekend. De klimbeoordeling blijft een praktische vuistregel op basis van helling, band en fietstype."
-              : "Gear ratio and speed are calculated exactly. The climb verdict is a practical ruleset based on gradient, band, and bike type."}
-          </PublicInfoPanel>
-
-          <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3">
-            <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-              {confidenceLabel}
-            </span>
-            <p className="text-sm text-muted-foreground">
-              {isNl
-                ? "De standaardwaarden geven direct een bruikbaar startpunt. Wijzig ze naar je eigen setup voor een preciezere vergelijking."
-                : "The defaults give you a useful starting point right away. Change them to your own setup for a more precise comparison."}
-            </p>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-2">
-            <PublicSelectField
-              label={isNl ? "Drivetrain" : "Drivetrain"}
-              description={isNl ? "Kies 1x of 2x." : "Choose 1x or 2x."}
-              options={DRIVETRAIN_OPTIONS}
-              value={drivetrainType}
-              onChange={(value) => setDrivetrainType(value as GearingDrivetrainType)}
-            />
-            <PublicSelectField
-              label={isNl ? "Fietstype" : "Bike type"}
-              description={
-                isNl
-                  ? "Dit verfijnt de climbevaluatie."
-                  : "This refines the climb-readiness verdict."
-              }
-              options={BIKE_TYPE_OPTIONS.map((option) => ({
-                value: option.value,
-                label: formatBikeTypeLabel(option.value as GearingBikeType, isNl),
-              }))}
-              value={bikeType}
-              onChange={(value) => setBikeType(value as GearingBikeType)}
-            />
-            <PublicSelectField
-              label={isNl ? "Klimlengte" : "Climb length"}
-              description={
-                isNl
-                  ? "Gebruik de band die het dichtst bij je route ligt."
-                  : "Pick the band closest to your route."
-              }
-              options={CLIMB_BAND_OPTIONS.map((option) => ({
-                value: option.value,
-                label: isNl
-                  ? formatClimbBandLabel(option.value as GearingClimbBand, true)
-                  : option.label,
-              }))}
-              value={climbBand}
-              onChange={(value) => setClimbBand(value as GearingClimbBand)}
-            />
-            <PublicSelectField
-              label={isNl ? "Wielmaat preset" : "Wheel preset"}
-              description={
-                isNl
-                  ? "Kies een snelle omtrekinschatting of pas daarna handmatig aan."
-                  : "Choose a quick circumference estimate, then tweak it manually if needed."
-              }
-              options={wheelPresetOptions}
-              value={wheelPreset}
-              onChange={(value) => {
-                setWheelPreset(value);
-                const circumference = WHEEL_PRESET_VALUES.get(value as GearingBikeType);
-                if (circumference !== undefined) {
-                  setWheelCircumferenceMm(circumference);
-                }
+  function slider(
+    label: string,
+    value: number | undefined,
+    onChange: (value: number) => void,
+    min: number,
+    max: number,
+    unit: string,
+    step = 1,
+  ) {
+    return (
+      <Slider
+        label={label}
+        value={value ?? min}
+        onChange={(next) => {
+          onChange(next);
+          setEdited(true);
+        }}
+        min={min}
+        max={max}
+        step={step}
+        valueLabel={format(value ?? min)}
+        unit={unit}
+        aria-valuetext={`${format(value ?? min)} ${unit}`}
+      />
+    );
+  }
+  function choices<T extends string>(
+    label: string,
+    options: Record<T, string>,
+    value: T,
+    onChange: (value: T) => void,
+  ) {
+    return (
+      <fieldset className="min-w-0">
+        <legend className="mb-3 font-semibold">{label}</legend>
+        <div className="grid grid-cols-2 gap-2">
+          {(Object.entries(options) as [T, string][]).map(([key, label]) => (
+            <OptionCard
+              key={key}
+              label={label}
+              selected={value === key}
+              showCheck={false}
+              className="min-w-0 px-3 text-sm"
+              onClick={() => {
+                onChange(key);
+                setEdited(true);
               }}
             />
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-2">
-            <PublicNumberField
-              label={isNl ? "Kettingring buiten" : "Outer chainring"}
-              description={
-                isNl
-                  ? "Voor 1x gebruik je hier je enige kettingring."
-                  : "For 1x, this is your only chainring."
-              }
-              min={20}
-              max={70}
-              step={1}
-              unit="T"
-              value={outerChainringTeeth}
-              onChange={setOuterChainringTeeth}
-              placeholder={isNl ? "Bijv. 50" : "e.g. 50"}
-            />
-            {drivetrainType === "2x" ? (
-              <PublicNumberField
-                label={isNl ? "Kettingring binnen" : "Inner chainring"}
-                description={
-                  isNl
-                    ? "De kleinere ring bepaalt je lichtste versnelling."
-                    : "The smaller ring determines your easiest gear."
-                }
-                min={20}
-                max={70}
-                step={1}
-                unit="T"
-                value={innerChainringTeeth}
-                onChange={setInnerChainringTeeth}
-                placeholder={isNl ? "Bijv. 34" : "e.g. 34"}
-              />
-            ) : (
-              <PublicInfoPanel
-                tone="secondary"
-                icon={<ArrowUpDown className="h-4 w-4" />}
-                title={isNl ? "1x setup" : "1x setup"}
-              >
-                {isNl
-                  ? "Je hoeft hier maar één kettingring te beheren. De grootste krans in de cassette is je lichtste versnelling."
-                  : "You only need one chainring here. The largest cassette cog becomes your easiest gear."}
-              </PublicInfoPanel>
-            )}
-            <PublicSelectField
-              label={isNl ? "Cassette preset" : "Cassette preset"}
-              description={
-                isNl
-                  ? "Start snel met een bekende cassette en verfijn dan de kransmaten."
-                  : "Start with a known cassette, then fine-tune the cog sizes."
-              }
-              options={cassettePresetOptions}
-              value={cassettePreset}
-              onChange={(value) => {
+          ))}
+        </div>
+      </fieldset>
+    );
+  }
+  return (
+    <ConfiguratorLayout
+      eyebrow={copy.eyebrow}
+      title={copy.title}
+      description={copy.intro}
+      inputs={
+        <>
+          <StepCard number={1} title={copy.drivetrain}>
+            {choices(copy.drivetrain, { "1x": "1×", "2x": "2×" }, drivetrainType, setDrivetrainType)}
+            {slider(copy.outer, outerChainringTeeth, setOuterChainringTeeth, 20, 70, "T")}
+            {drivetrainType === "2x" &&
+              slider(copy.inner, innerChainringTeeth, setInnerChainringTeeth, 20, 70, "T")}
+            {choices(
+              copy.cassette,
+              Object.fromEntries(
+                CASSETTE_PRESET_OPTIONS.map((option) => [
+                  option.value,
+                  option.value === "custom" ? copy.custom : option.label,
+                ]),
+              ),
+              cassettePreset,
+              (value) => {
                 setCassettePreset(value);
                 const preset = CASSETTE_PRESET_OPTIONS.find((option) => option.value === value);
-                if (preset) {
+                if (preset && value !== "custom") {
                   setCassetteSmallestCogTeeth(preset.smallest);
                   setCassetteLargestCogTeeth(preset.largest);
                 }
-              }}
-            />
-            <PublicNumberField
-              label={isNl ? "Kleinste krans" : "Smallest cog"}
-              description={
-                isNl
-                  ? "Gebruik het kleinste tandwiel van je cassette."
-                  : "Use the smallest cog on your cassette."
-              }
-              min={9}
-              max={54}
-              step={1}
-              unit="T"
-              value={cassetteSmallestCogTeeth}
-              onChange={setCassetteSmallestCogTeeth}
-              placeholder={isNl ? "Bijv. 11" : "e.g. 11"}
-            />
-            <PublicNumberField
-              label={isNl ? "Grootste krans" : "Largest cog"}
-              description={
-                isNl
-                  ? "Dit is je lichtste versnelling voor klimmen."
-                  : "This is your easiest gear for climbing."
-              }
-              min={9}
-              max={54}
-              step={1}
-              unit="T"
-              value={cassetteLargestCogTeeth}
-              onChange={setCassetteLargestCogTeeth}
-              placeholder={isNl ? "Bijv. 34" : "e.g. 34"}
-            />
-            <PublicNumberField
-              label={isNl ? "Wielomtrek" : "Wheel circumference"}
-              description={
-                isNl
-                  ? "Pas deze aan als je je exacte omtrek kent."
-                  : "Adjust this if you know your exact circumference."
-              }
-              min={1800}
-              max={2600}
-              step={1}
-              unit="mm"
-              value={wheelCircumferenceMm}
-              onChange={setWheelCircumferenceMm}
-              placeholder={isNl ? "Bijv. 2148" : "e.g. 2148"}
-            />
-            <PublicNumberField
-              label={isNl ? "Trapfrequentie" : "Cadence"}
-              description={
-                isNl
-                  ? "Gebruik je normale klimpas."
-                  : "Use your usual climbing cadence."
-              }
-              min={40}
-              max={130}
-              step={1}
-              unit="rpm"
-              value={cadenceRpm}
-              onChange={setCadenceRpm}
-              placeholder="80"
-            />
-            <PublicNumberField
-              label={isNl ? "Klimhelling" : "Climb gradient"}
-              description={
-                isNl
-                  ? "De tool gebruikt dit om de lichte versnelling te beoordelen."
-                  : "The tool uses this to judge the easy gear against the climb."
-              }
-              min={0}
-              max={25}
-              step={0.1}
-              unit="%"
-              value={gradientPct}
-              onChange={setGradientPct}
-              placeholder={isNl ? "Bijv. 8" : "e.g. 8"}
-            />
-          </div>
-
-          {errorMessages.length > 0 ? (
-            <PublicInfoPanel tone="warning" role="alert" title={isNl ? "Controleer de invoer" : "Check the input"}>
-              <ul className="space-y-1">
+              },
+            )}
+            {slider(
+              copy.small,
+              cassetteSmallestCogTeeth,
+              (value) => {
+                setCassettePreset("custom");
+                setCassetteSmallestCogTeeth(value);
+              },
+              9,
+              54,
+              "T",
+            )}
+            {slider(
+              copy.large,
+              cassetteLargestCogTeeth,
+              (value) => {
+                setCassettePreset("custom");
+                setCassetteLargestCogTeeth(value);
+              },
+              9,
+              54,
+              "T",
+            )}
+          </StepCard>
+          <StepCard number={2} title={copy.wheels}>
+            {choices(copy.wheelPreset, { ...copy.wheelLabels, custom: copy.custom }, wheelPreset, (value) => {
+              setWheelPreset(value);
+              const circumference = WHEEL_PRESET_VALUES.get(value);
+              if (circumference !== undefined) setWheelCircumferenceMm(circumference);
+            })}
+            {slider(
+              copy.circumference,
+              wheelCircumferenceMm,
+              (value) => {
+                setWheelPreset("custom");
+                setWheelCircumferenceMm(value);
+              },
+              1800,
+              2600,
+              "mm",
+            )}
+            {slider(copy.cadence, cadenceRpm, setCadenceRpm, 40, 130, "rpm")}
+          </StepCard>
+          <StepCard number={3} title={copy.context}>
+            {choices(copy.bike, copy.bikes, bikeType, setBikeType)}
+            {choices(copy.climb, copy.bands, climbBand, setClimbBand)}
+            {slider(copy.gradient, gradientPct, setGradientPct, 0, 25, "%", 0.1)}
+          </StepCard>
+          {errorMessages.length > 0 && (
+            <section role="alert" className="rounded-3xl border border-border bg-card p-6">
+              <h2 className="font-display text-xl font-bold">{copy.check}</h2>
+              <ul className="mt-3 list-inside list-disc">
                 {errorMessages.map((message) => (
                   <li key={message}>{message}</li>
                 ))}
               </ul>
-            </PublicInfoPanel>
-          ) : null}
-        </div>
-      </PublicSurfaceCard>
-
-      <PublicSurfaceCard
-        title={isNl ? "Resultaat" : "Result"}
-        description={
-          isNl
-            ? "De lichtste en zwaarste versnelling, plus een snelle kliminschatting."
-            : "Your easiest and hardest gears, plus a quick climb-readiness readout."
-        }
-        className="public-calculator-card rounded-[1.75rem]"
-      >
-        <div className="space-y-5">
-          {result ? (
-            <>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <PublicMetricPanel
-                  label={isNl ? "Lichtste versnelling" : "Easiest gear"}
-                  value={`${result.easiest.chainringTeeth} x ${result.easiest.cogTeeth}`}
-                  description={
-                    isNl
-                      ? `${formatGearRatio(result.easiest.ratio)} ratio · ${result.easiest.gearInches.toFixed(1)} gear inches`
-                      : `${formatGearRatio(result.easiest.ratio)} ratio · ${result.easiest.gearInches.toFixed(1)} gear inches`
-                  }
-                  icon={<ArrowUpDown className="h-4 w-4" />}
-                />
-                <PublicMetricPanel
-                  label={isNl ? "Zwaarste versnelling" : "Hardest gear"}
-                  value={`${result.hardest.chainringTeeth} x ${result.hardest.cogTeeth}`}
-                  description={
-                    isNl
-                      ? `${formatGearRatio(result.hardest.ratio)} ratio · ${result.hardest.gearInches.toFixed(1)} gear inches`
-                      : `${formatGearRatio(result.hardest.ratio)} ratio · ${result.hardest.gearInches.toFixed(1)} gear inches`
-                  }
-                  icon={<Gauge className="h-4 w-4" />}
-                  accent="success"
-                />
-                <PublicMetricPanel
-                  label={isNl ? "Snelheid in lichtste versnelling" : "Speed in easiest gear"}
-                  value={formatSpeedKmh(result.easiest.speedKmh)}
-                  description={
-                    isNl
-                      ? `Bij ${cadenceRpm?.toFixed(0)} rpm op een ${gradientPct?.toFixed(1)}% klim.`
-                      : `At ${cadenceRpm?.toFixed(0)} rpm on a ${gradientPct?.toFixed(1)}% climb.`
-                  }
-                />
-                <PublicMetricPanel
-                  label={isNl ? "Snelheid in zwaarste versnelling" : "Speed in hardest gear"}
-                  value={formatSpeedKmh(result.hardest.speedKmh)}
-                  description={
-                    isNl
-                      ? `Handig om je top-end bereik te zien op vlak terrein.`
-                      : `Useful for seeing your top-end range on flatter roads.`
-                  }
-                  accent="warning"
-                />
-              </div>
-
-              <PublicMetricPanel
-                label={isNl ? "Versnellingsbereik" : "Gear span"}
-                value={formatGearSpan(result.gearSpan)}
-                description={
-                  isNl
-                    ? "Hoe groter dit getal, hoe ruimer je bereik tussen lichtste en zwaarste versnelling."
-                    : "The larger this is, the wider your spread from easiest to hardest gear."
-                }
-                icon={<ShieldCheck className="h-4 w-4" />}
-              />
-
-              <div className="rounded-2xl border border-border/70 bg-card px-4 py-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  {isNl ? "Kliminschatting" : "Climb verdict"}
-                </p>
-                <p className="mt-2 text-lg font-semibold text-foreground">
-                  {result.recommendation.label === "suitable"
-                    ? isNl
-                      ? "Geschikt"
-                      : "Suitable"
-                    : result.recommendation.label === "challenging"
-                      ? isNl
-                        ? "Uitdagend"
-                        : "Challenging"
-                      : isNl
-                        ? "Waarschijnlijk te zwaar"
-                        : "Likely overgeared"}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  {result.recommendation.text}
-                </p>
-              </div>
-
-              <PublicCalculatorResultSummary
-                result={resultModel ?? result.resultEnvelope}
-                isNl={isNl}
-              />
-            </>
-          ) : (
-            <PublicInfoPanel tone="warning" title={isNl ? "Nog geen resultaat" : "No result yet"}>
-              {isNl
-                ? "Vul de vereiste verzetgegevens in om de lichtste en zwaarste versnelling te zien."
-                : "Fill in the required gearing inputs to see your easiest and hardest gear."}
-            </PublicInfoPanel>
+            </section>
           )}
-        </div>
-      </PublicSurfaceCard>
-    </section>
+        </>
+      }
+      results={
+        <>
+          <div id="gearing-result" className="scroll-mt-8">
+            {result ? (
+              <ResultHero
+                label={edited ? copy.ratio : `${copy.example} · ${copy.ratio}`}
+                value={format(result.easiest.ratio)}
+                subtext={copy.limits}
+              >
+                <svg viewBox="0 0 500 200" className="w-full" role="img" aria-label={copy.diagram}>
+                  <path
+                    d={`M130 ${100 - result.easiest.chainringTeeth}L370 ${100 - result.easiest.cogTeeth}
+              M130 ${100 + result.easiest.chainringTeeth}L370 ${100 + result.easiest.cogTeeth}`}
+                    stroke="var(--bbf-inkt)"
+                    strokeWidth="4"
+                  />
+                  <circle
+                    cx="130"
+                    cy="100"
+                    r={result.easiest.chainringTeeth}
+                    data-testid="gearing-chainring"
+                    fill="var(--bbf-papier)"
+                    stroke="var(--bbf-inkt)"
+                    strokeWidth="5"
+                    strokeDasharray="4 3"
+                  />
+                  <circle
+                    cx="370"
+                    cy="100"
+                    r={result.easiest.cogTeeth}
+                    fill="var(--bbf-papier)"
+                    stroke="var(--bbf-inkt)"
+                    strokeWidth="5"
+                    strokeDasharray="4 3"
+                  />
+                </svg>
+              </ResultHero>
+            ) : (
+              <p role="status" className="rounded-3xl border border-border bg-card p-6">
+                {copy.noResult}
+              </p>
+            )}
+          </div>
+          {result && (
+            <>
+              <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+                {copy.ratio}: {format(result.easiest.ratio)}. {copy.verdicts[result.recommendation.label]}
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <ResultTile
+                  label={copy.easiest}
+                  value={`${result.easiest.chainringTeeth} × ${result.easiest.cogTeeth}`}
+                />
+                <ResultTile
+                  label={copy.hardest}
+                  value={`${result.hardest.chainringTeeth} × ${result.hardest.cogTeeth}`}
+                />
+                <ResultTile
+                  label={copy.development}
+                  value={format(result.easiest.developmentMeters)}
+                  unit="m"
+                />
+                <ResultTile label={copy.speed} value={format(result.easiest.speedKmh)} unit={copy.kmh} />
+                <ResultTile label={copy.span} value={format(result.gearSpan)} unit="×" />
+                <ResultTile label={copy.hardest} value={format(result.hardest.speedKmh)} unit={copy.kmh} />
+              </div>
+              <section className="rounded-3xl border border-border bg-card p-6">
+                <h2 className="font-display text-2xl font-bold">{copy.verdict}</h2>
+                <p className="my-3 font-semibold">{copy.verdicts[result.recommendation.label]}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">{result.recommendation.text}</p>
+              </section>
+              <PublicCalculatorResultSummary result={resultModel ?? result.resultEnvelope} isNl={isNl} />
+            </>
+          )}
+          <section className="rounded-3xl bg-[var(--bbf-inkt)] p-6 text-[var(--bbf-wit)]">
+            <h2 className="font-display text-2xl font-bold text-[var(--bbf-wit)]">{copy.next}</h2>
+            <p className="my-4 text-[var(--bbf-op-donker)]">{copy.nextBody}</p>
+            <Link
+              href={withLocalePrefix("/calculators/climb-planner", locale)}
+              className="inline-flex min-h-11 items-center rounded-full bg-primary px-5 font-bold text-white"
+            >
+              {copy.nextLink}
+            </Link>
+          </section>
+        </>
+      }
+      stickyResult={
+        <a href="#gearing-result" className="flex min-h-11 items-center justify-between gap-3">
+          <span className="text-sm font-bold">{copy.resultLink}</span>
+          <span className="font-mono text-2xl">{result ? format(result.easiest.ratio) : "—"}</span>
+        </a>
+      }
+    />
   );
 }

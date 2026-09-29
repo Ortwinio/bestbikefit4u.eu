@@ -288,27 +288,22 @@ describe("home page", () => {
     expect(screen.getAllByText("Start free bike fit")[0].closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"
     );
+    expect(screen.queryByText("Donate via our Alpe d'HuZes page")).toBeNull();
     expect(
-      screen
-        .getAllByText("Donate via our Alpe d'HuZes page")[0]
-        .closest("a")
-        ?.getAttribute("href")
-    ).toBe("https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756");
-    expect(
-      screen.getByText("Already have an account? Sign in").closest("a")?.getAttribute("href")
+      screen.getByText("Create free account").closest("a")?.getAttribute("href")
     ).toBe("/en/login");
-    expect(screen.getByText("View pricing").closest("a")?.getAttribute("href")).toBe("/en/pricing");
+    expect(screen.getByText("Compare Free and Pro").closest("a")?.getAttribute("href")).toBe("/en/pricing");
 
     const pageText = container.textContent ?? "";
-    expect(pageText.indexOf("Proof Bar")).toBeGreaterThan(-1);
-    expect(pageText.indexOf("How it works stepper")).toBeGreaterThan(-1);
-    expect(pageText.indexOf("Bike Fit Calculator")).toBeGreaterThan(-1);
-    expect(pageText.indexOf("Testimonials")).toBeGreaterThan(-1);
-    expect(pageText.indexOf("Bike Fit Calculator")).toBeLessThan(
-      pageText.indexOf("Testimonials")
+    expect(pageText.indexOf("fits completed")).toBeGreaterThan(-1);
+    expect(pageText.indexOf("From measuring to riding in three steps")).toBeGreaterThan(-1);
+    expect(pageText.indexOf("Complete bike fit")).toBeGreaterThan(-1);
+    expect(pageText.indexOf("Small adjustment, big difference")).toBeGreaterThan(-1);
+    expect(pageText.indexOf("Complete bike fit")).toBeLessThan(
+      pageText.indexOf("Create free account")
     );
-    expect(screen.getByText("Bikes on the platform Use in my fit")).toBeTruthy();
-    expect(screen.getByText("bike fitting at home").closest("a")?.getAttribute("href")).toBe(
+    expect(screen.getByRole("slider", { name: "Inseam" })).toBeTruthy();
+    expect(screen.getByText("Bike fitting at home").closest("a")?.getAttribute("href")).toBe(
       "/en/bike-fitting"
     );
   });
@@ -322,17 +317,12 @@ describe("home page", () => {
     expect(screen.getAllByText("Start gratis bike fit")[0].closest("a")?.getAttribute("href")).toBe(
       "/nl/calculators/bike-fit"
     );
+    expect(screen.queryByText("Doneer via onze Alpe d'HuZes-pagina")).toBeNull();
+    expect(screen.getByRole("slider", { name: "Binnenbeenlengte" })).toBeTruthy();
     expect(
-      screen
-        .getAllByText("Doneer via onze Alpe d'HuZes-pagina")[0]
-        .closest("a")
-        ?.getAttribute("href")
-    ).toBe("https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756");
-    expect(screen.getByText("Fietsen op het platform Gebruik in mijn fit")).toBeTruthy();
-    expect(
-      screen.getByText("fiets afstellen stap voor stap").closest("a")?.getAttribute("href")
+      screen.getByText("Fiets afstellen stap voor stap").closest("a")?.getAttribute("href")
     ).toBe("/nl/fiets-afstellen");
-    expect(screen.getByText("online bikefitting").closest("a")?.getAttribute("href")).toBe(
+    expect(screen.getByText("Bikefitting uitgelegd").closest("a")?.getAttribute("href")).toBe(
       "/nl/bikefitting"
     );
   });

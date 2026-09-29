@@ -68,15 +68,25 @@ export function PublicHero({
   illustrationContainerClassName,
 }: PublicHeroProps) {
   return (
-    <Card
-      className={cn(
-        "public-hero-surface relative overflow-hidden gap-0 border",
-        className
-      )}
-    >
-      <div className="absolute -right-14 top-0 h-40 w-40 rounded-full bg-[color:color-mix(in_oklch,var(--primary)_16%,transparent)] blur-3xl" />
-      <div className="absolute -left-10 bottom-0 h-32 w-32 rounded-full bg-[color:color-mix(in_oklch,var(--secondary)_30%,transparent)] blur-3xl" />
-      <div className="relative grid gap-8 px-6 py-10 md:grid-cols-[minmax(0,1.35fr)_minmax(240px,0.85fr)] md:px-8 md:py-12">
+    <Card className={cn("public-hero-surface relative overflow-hidden gap-0 border", className)}>
+      <div
+        className={
+          "absolute -right-14 top-0 h-40 w-40 rounded-full " +
+          "bg-[color:color-mix(in_oklch,var(--primary)_16%,transparent)] blur-3xl"
+        }
+      />
+      <div
+        className={
+          "absolute -left-10 bottom-0 h-32 w-32 rounded-full " +
+          "bg-[color:color-mix(in_oklch,var(--secondary)_30%,transparent)] blur-3xl"
+        }
+      />
+      <div
+        className={
+          "relative grid gap-8 px-6 py-10 md:grid-cols-[minmax(0,1.35fr)_minmax(240px,0.85fr)] " +
+          "md:px-8 md:py-12"
+        }
+      >
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
             {eyebrow}
@@ -92,7 +102,10 @@ export function PublicHero({
               {chips.map((chip) => (
                 <span
                   key={chip}
-                  className="rounded-full border border-border bg-[color:var(--card)] px-4 py-2 text-sm font-medium text-[color:var(--foreground)] shadow-sm"
+                  className={
+                    "rounded-full border border-border bg-[color:var(--card)] px-4 py-2 text-sm " +
+                    "font-medium text-[color:var(--foreground)] shadow-sm"
+                  }
                 >
                   {chip}
                 </span>
@@ -105,8 +118,9 @@ export function PublicHero({
           <div className="flex h-full items-stretch">
             <div
               className={cn(
-                "flex min-h-56 w-full items-center justify-center rounded-[var(--radius-2xl)] border border-border bg-[color:color-mix(in_oklch,var(--card)_92%,var(--secondary)_8%)] p-6",
-                illustrationContainerClassName
+                "flex min-h-56 w-full items-center justify-center rounded-[var(--radius-2xl)] border " +
+                  "border-border bg-[color:color-mix(in_oklch,var(--card)_92%,var(--secondary)_8%)] p-6",
+                illustrationContainerClassName,
               )}
             >
               {illustration}
@@ -147,30 +161,14 @@ export function PublicSection({
   );
 }
 
-export function PublicFeatureCard({
-  icon,
-  title,
-  description,
-  className,
-}: PublicFeatureCardProps) {
+export function PublicFeatureCard({ icon, title, description, className }: PublicFeatureCardProps) {
   return (
-    <Card
-      className={cn(
-        "public-card-surface h-full gap-0 border",
-        className
-      )}
-    >
+    <Card className={cn("public-card-surface h-full gap-0 border", className)}>
       <CardHeader className="space-y-4">
-        {icon ? (
-          <PublicIconBadge>
-            {icon}
-          </PublicIconBadge>
-        ) : null}
+        {icon ? <PublicIconBadge>{icon}</PublicIconBadge> : null}
         <div>
           <CardTitle className="text-lg">{title}</CardTitle>
-          <CardDescription className="mt-2 text-sm leading-6">
-            {description}
-          </CardDescription>
+          <CardDescription className="mt-2 text-sm leading-6">{description}</CardDescription>
         </div>
       </CardHeader>
     </Card>
@@ -187,16 +185,14 @@ export function PublicIllustrationPanel({
   return (
     <Card
       className={cn(
-        "overflow-hidden gap-0 border border-border bg-[color:color-mix(in_oklch,var(--secondary)_78%,var(--card)_22%)]",
-        className
+        "overflow-hidden gap-0 border border-border " +
+          "bg-[color:color-mix(in_oklch,var(--secondary)_78%,var(--card)_22%)]",
+        className,
       )}
     >
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
-          <PublicIconBadge
-            size="lg"
-            className="border-border/70 bg-[color:var(--card)]"
-          >
+          <PublicIconBadge size="lg" className="border-border/70 bg-[color:var(--card)]">
             {icon ?? <ArrowRight className="h-6 w-6" />}
           </PublicIconBadge>
           <div>

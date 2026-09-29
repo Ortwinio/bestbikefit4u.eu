@@ -1,124 +1,16 @@
 import type { Metadata } from "next";
-import { Bike, ClipboardList, FlaskConical, ShieldCheck, Target } from "lucide-react";
-import { Button } from "@/components/prototyper-ui/ui/button";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
-import {
-  PublicCtaBand,
-  FeatureIconCard,
-  type FeatureIconCardColor,
-  GuideLinkButton,
-  PublicHero,
-  PublicPageShell,
-  PublicSection,
-  PublicSurfaceCard,
-} from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { BikeFitProcessIllustration } from "@/components/content/PublicPageIllustrations";
-import type { Locale } from "@/i18n/config";
+import { howItWorksCopy as copy, howItWorksPresentation } from "@/i18n/marketing/howItWorks";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import {
-  buildHowToSchema,
-} from "@/lib/seo/jsonLd";
-
-const stepIcons = [ClipboardList, Bike, Target] as const;
-const STEP_COLORS: FeatureIconCardColor[] = ["teal", "primary", "green"];
-
-const copy: Record<
-  Locale,
-  {
-    metadata: { title: string; description: string; keywords: string[] };
-    eyebrow: string;
-    title: string;
-    intro: string;
-    sectionTitle: string;
-    sectionIntro: string;
-    prepTitle: string;
-    prepBody: string;
-    afterTitle: string;
-    afterBody: string;
-    primaryCta: string;
-    secondaryCta: string;
-    steps: Array<{ title: string; body: string }>;
-  }
-> = {
-  en: {
-    metadata: {
-      title: "How It Works | BestBikeFit4U",
-      description:
-        "See how BestBikeFit4U turns your measurements, riding goals, and bike context into practical fit guidance.",
-      keywords: ["how online bike fit works", "bike fit process", "digital bike fitting"],
-    },
-    eyebrow: "Transparent process",
-    title: "How BestBikeFit4U works",
-    intro:
-      "BestBikeFit4U combines your body measurements, riding goals, and bike context to help you make clearer fit decisions. The goal is a better next step on the bike you actually ride.",
-    sectionTitle: "What happens in the fit flow",
-    sectionIntro:
-      "The flow is designed to move from useful inputs to practical recommendations without forcing riders through unnecessary complexity.",
-    prepTitle: "What to prepare before you start",
-    prepBody:
-      "Bring your body measurements, a rough sense of your riding goals, and the bike context that matters most. The better the context, the clearer the output.",
-    afterTitle: "What happens after you submit",
-    afterBody:
-      "You get fit guidance that helps you review your current position, understand the likely tradeoffs, and decide what to test next in a more structured way.",
-    primaryCta: "Start Free Fit",
-    secondaryCta: "Open Bike Fit Calculator",
-    steps: [
-      {
-        title: "Step 1: Enter your measurements",
-        body: "Start with the measurements that matter most for practical fit guidance, including height and inseam, with optional extra inputs when you have them.",
-      },
-      {
-        title: "Step 2: Add your riding context",
-        body: "Describe how you ride, what kind of bike you use, and whether comfort, performance, or bike choice is the bigger priority right now.",
-      },
-      {
-        title: "Step 3: Review your recommendations",
-        body: "See a clearer fit starting point, practical setup targets, and the most sensible next adjustments to review first.",
-      },
-    ],
-  },
-  nl: {
-    metadata: {
-      title: "Hoe het werkt | BestBikeFit4U",
-      description:
-        "Bekijk hoe BestBikeFit4U jouw metingen, rijdoelen en fietscontext omzet in praktische fit-aanbevelingen.",
-      keywords: ["hoe online bikefit werkt", "bikefit proces", "digitale bikefitting"],
-    },
-    eyebrow: "Transparant proces",
-    title: "Hoe BestBikeFit4U werkt",
-    intro:
-      "BestBikeFit4U combineert je lichaamsmetingen, rijdoelen en fietscontext om je te helpen duidelijkere fitbeslissingen te nemen. Het doel is een betere volgende stap op de fiets die je echt rijdt.",
-    sectionTitle: "Wat er in de fitflow gebeurt",
-    sectionIntro:
-      "De flow is opgezet om van bruikbare input naar praktische aanbevelingen te gaan zonder rijders door onnodige complexiteit te trekken.",
-    prepTitle: "Wat je voorbereidt voordat je start",
-    prepBody:
-      "Zorg voor je lichaamsmetingen, een globaal beeld van je rijdoelen en de fietscontext die het belangrijkst is. Hoe beter de context, hoe duidelijker de uitkomst.",
-    afterTitle: "Wat er gebeurt na het invullen",
-    afterBody:
-      "Je krijgt fitadvies waarmee je je huidige positie kunt beoordelen, de belangrijkste afwegingen begrijpt en gerichter kunt bepalen wat je daarna wilt testen.",
-    primaryCta: "Start gratis fit",
-    secondaryCta: "Open Bike Fit Calculator",
-    steps: [
-      {
-        title: "Stap 1: Vul je metingen in",
-        body: "Begin met de metingen die het belangrijkst zijn voor praktisch fitadvies, zoals lengte en binnenbeenlengte, met extra optionele inputs als je die hebt.",
-      },
-      {
-        title: "Stap 2: Voeg je rijcontext toe",
-        body: "Beschrijf hoe je rijdt, wat voor fiets je gebruikt en of comfort, prestaties of fietskeuze nu de belangrijkste prioriteit is.",
-      },
-      {
-        title: "Stap 3: Bekijk je aanbevelingen",
-        body: "Zie een duidelijker fit-startpunt, praktische afsteldoelen en de meest logische volgende aanpassingen om als eerste te beoordelen.",
-      },
-    ],
-  },
-};
+import { buildHowToSchema } from "@/lib/seo/jsonLd";
+import styles from "./how-it-works.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -142,229 +34,82 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HowItWorksPage() {
   const locale = await getRequestLocale();
   const page = copy[locale];
+  const presentation = howItWorksPresentation[locale];
   const pagePath = withLocalePrefix("/how-it-works", locale);
+  const actions = (section: "hero" | "footer") => (
+    <div className={styles.actions}>
+      <TrackedCtaLink href={withLocalePrefix("/login", locale)} locale={locale} pagePath={pagePath}
+        section={section === "hero" ? "how_it_works_primary_cta" : "how_it_works_footer_primary"}
+        ctaLabel={page.primaryCta} conversionKey={section === "hero" ? "pricing_signup" : undefined}
+        className={styles.primary}>{page.primaryCta}</TrackedCtaLink>
+      <TrackedCtaLink href={withLocalePrefix("/calculators/bike-fit", locale)} locale={locale} pagePath={pagePath}
+        section={section === "hero" ? "how_it_works_secondary_cta" : "how_it_works_footer_secondary"}
+        ctaLabel={page.secondaryCta} className={styles.secondary}>{page.secondaryCta}</TrackedCtaLink>
+    </div>
+  );
 
   return (
-    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_42%,var(--background)_58%)_100%)]">
-      <TrackMarketingEventOnView
-        eventType="how_it_works_view"
-        locale={locale}
-        pagePath={pagePath}
-        section="how_it_works"
-      />
-      <JsonLd
-        schema={[
-          buildHowToSchema({
-            name: page.title,
-            description: page.metadata.description,
-            steps: page.steps.map((step) => step.title),
-          }),
-        ]}
-      />
-
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <PublicHero
-          eyebrow={page.eyebrow}
-          title={page.title}
-          description={page.intro}
-          actions={
-            <>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/login", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="how_it_works_primary_cta"
-                    ctaLabel={page.primaryCta}
-                    conversionKey="pricing_signup"
-                  />
-                }
-              >
-                {page.primaryCta}
-              </Button>
-              <Button
-                variant="outline"
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/calculators/bike-fit", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="how_it_works_secondary_cta"
-                    ctaLabel={page.secondaryCta}
-                  />
-                }
-              >
-                {page.secondaryCta}
-              </Button>
-            </>
-          }
-          illustration={<BikeFitProcessIllustration locale={locale} />}
-        />
-
-        <PublicSection
-          className="mt-10"
-          header={{
-            eyebrow: locale === "nl" ? "Waarom deze flow werkt" : "Why this flow works",
-            title:
-              locale === "nl"
-                ? "Van bruikbare input naar praktische volgende stap"
-                : "From usable input to a practical next step",
-            description: page.sectionIntro,
-          }}
-        >
-          <div className="grid gap-5 lg:grid-cols-3">
-            {page.steps.map((step, index) => {
-              const Icon = stepIcons[index] ?? Target;
-              return (
-                <div key={step.title}>
-                  <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
-                  <FeatureIconCard
-                    icon={<Icon className="h-8 w-8" />}
-                    title={step.title}
-                    description={step.body}
-                    color={STEP_COLORS[index] ?? "primary"}
-                  />
-                </div>
-              );
-            })}
+    <div className={styles.page}>
+      <TrackMarketingEventOnView eventType="how_it_works_view" locale={locale} pagePath={pagePath} section="how_it_works" />
+      <JsonLd schema={[buildHowToSchema({ name: page.title, description: page.metadata.description, steps: page.steps.map((step) => step.title) })]} />
+      <div className={styles.container}>
+        <section className={styles.hero}>
+          <div>
+            <p className={styles.eyebrow}>{page.eyebrow}</p>
+            <h1>{page.title}</h1>
+            <p className={styles.lead}>{page.intro}</p>
+            {actions("hero")}
           </div>
-        </PublicSection>
-
-        <PublicSection
-          className="mt-10"
-          header={{
-            eyebrow: locale === "nl" ? "Wat je kunt verwachten" : "What to expect",
-            title:
-              locale === "nl"
-                ? "Voorbereiding en resultaat in één oogopslag"
-                : "Preparation and output at a glance",
-          }}
-        >
-          <div className="grid gap-6 lg:grid-cols-2">
-            <PublicSurfaceCard
-              title={page.prepTitle}
-              description={page.prepBody}
-              leading={<ClipboardList className="h-5 w-5" />}
-            >
-              <div />
-            </PublicSurfaceCard>
-            <PublicSurfaceCard
-              title={page.afterTitle}
-              description={page.afterBody}
-              leading={<ShieldCheck className="h-5 w-5" />}
-            >
-              <div />
-            </PublicSurfaceCard>
+          <figure>
+            <Image src="/illustrations/01-racefiets.webp" alt={presentation.heroAlt} width={900} height={600} priority sizes="(max-width: 800px) 100vw, 40vw" />
+            <figcaption>{presentation.heroCaption}</figcaption>
+          </figure>
+        </section>
+        <section className={styles.section} aria-labelledby="fit-process">
+          <p className={styles.eyebrow}>{presentation.processEyebrow}</p>
+          <h2 id="fit-process">{presentation.processTitle}</h2>
+          <p className={styles.intro}>{page.sectionIntro}</p>
+          <div className={styles.steps}>
+            {page.steps.map((step, index) => (
+              <article className={styles.step} key={step.title}>
+                <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                <h3>{step.title.replace(/^(Stap|Step) \d+: /, "")}</h3>
+                <p>{step.body}</p>
+                {index === 0 && <Link href={withLocalePrefix("/measurement-guide", locale)}>{presentation.measurementLink}<span aria-hidden="true"> →</span></Link>}
+              </article>
+            ))}
           </div>
-        </PublicSection>
-
-        <PublicSection
-          className="mt-10"
-          header={{
-            eyebrow: locale === "nl" ? "Werk stap voor stap" : "Work step by step",
-            title:
-              locale === "nl"
-                ? "Gebruik de juiste pagina voor elke fase van fiets afstellen"
-                : "Use the right page for each phase of bike fitting",
-            description:
-              locale === "nl"
-                ? "Meet eerst, bereken daarna je eerste bikefit, en zoom pas daarna in op zadelhoogte of reach."
-                : "Measure first, calculate your first bike fit next, and only then zoom in on saddle height or reach.",
-          }}
-        >
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <GuideLinkButton
-              href={withLocalePrefix("/measurement-guide", locale)}
-              title={locale === "nl" ? "Meetgids" : "Measurement Guide"}
-              subtitle={
-                locale === "nl"
-                  ? "Meet zorgvuldig voordat je afstelwaarden gaat vertrouwen."
-                  : "Measure carefully before you trust setup values."
-              }
-              icon={<ClipboardList className="h-5 w-5" />}
-            />
-            <GuideLinkButton
-              href={withLocalePrefix("/calculators/bike-fit", locale)}
-              title={locale === "nl" ? "Bike fit calculator" : "Bike Fit Calculator"}
-              subtitle={
-                locale === "nl"
-                  ? "Gebruik de hoofdflow voor fiets afstellen in samenhang."
-                  : "Use the main flow when you want a connected bike-fit baseline."
-              }
-              icon={<Bike className="h-5 w-5" />}
-            />
-            <GuideLinkButton
-              href={withLocalePrefix("/calculators/saddle-height", locale)}
-              title={locale === "nl" ? "Zadelhoogte afstellen" : "Set saddle height"}
-              subtitle={
-                locale === "nl"
-                  ? "Begin hier als je vooral je zadelhoogte wilt controleren."
-                  : "Start here when saddle height is the main thing you want to check."
-              }
-              icon={<Target className="h-5 w-5" />}
-            />
-            <GuideLinkButton
-              href={withLocalePrefix("/science/calculation-engine", locale)}
-              title={locale === "nl" ? "Uitleg van de rekenmotor" : "Calculation Engine Transparency"}
-              subtitle={
-                locale === "nl"
-                  ? "Bekijk welke fitlogica achter de publieke calculator en vervolgstappen zit."
-                  : "See the fit logic behind the public calculator and the next-step recommendations."
-              }
-              icon={<FlaskConical className="h-5 w-5" />}
-            />
+        </section>
+        <section className={styles.preparation} aria-labelledby="fit-preparation">
+          <Image src="/illustrations/06-meetset.webp" alt={presentation.prepAlt} width={900} height={600} sizes="(max-width: 800px) 100vw, 35vw" />
+          <div>
+            <p className={styles.eyebrow}>{presentation.prepEyebrow}</p>
+            <h2 id="fit-preparation">{presentation.prepHeading}</h2>
+            <article><h3>{page.prepTitle}</h3><p>{page.prepBody}</p></article>
+            <article><h3>{page.afterTitle}</h3><p>{page.afterBody}</p></article>
           </div>
-        </PublicSection>
-
-        <PublicCtaBand
-          className="mt-12"
-          eyebrow={locale === "nl" ? "Volgende stap" : "Next step"}
-          title={
-            locale === "nl"
-              ? "Gebruik de volledige flow of begin eerst met de calculator"
-              : "Use the full flow or start with the calculator first"
-          }
-          description={
-            locale === "nl"
-              ? "De gratis fitflow geeft meer context. De calculator geeft een snelle eerste richting als je nog niet klaar bent voor de volledige intake."
-              : "The free fit flow gives you more context. The calculator gives a quick first direction if you are not ready for the full intake yet."
-          }
-          actions={
-            <>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/login", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="how_it_works_footer_primary"
-                    ctaLabel={page.primaryCta}
-                  />
-                }
-              >
-                {page.primaryCta}
-              </Button>
-              <Button
-                variant="outline"
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/calculators/bike-fit", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="how_it_works_footer_secondary"
-                    ctaLabel={page.secondaryCta}
-                  />
-                }
-              >
-                {page.secondaryCta}
-              </Button>
-            </>
-          }
-        />
+        </section>
+        <section className={styles.section} aria-labelledby="fit-help">
+          <p className={styles.eyebrow}>{presentation.helpEyebrow}</p>
+          <h2 id="fit-help">{presentation.helpTitle}</h2>
+          <p className={styles.intro}>{presentation.helpIntro}</p>
+          <div className={styles.links}>
+            {presentation.links.map((link) => (
+              <Link key={link.href} href={withLocalePrefix(link.href, locale)}>
+                <span className={styles.linkTitle}>{link.title}</span><span>{link.body}</span><ArrowUpRight aria-hidden="true" />
+              </Link>
+            ))}
+          </div>
+        </section>
+        <section className={styles.cta} aria-labelledby="fit-next-step">
+          <div>
+            <p className={styles.eyebrow}>{presentation.ctaEyebrow}</p>
+            <h2 id="fit-next-step">{presentation.ctaTitle}</h2>
+            <p>{presentation.ctaBody}</p>
+          </div>
+          {actions("footer")}
+        </section>
       </div>
-    </PublicPageShell>
+    </div>
   );
 }

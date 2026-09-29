@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { RadioGroup } from "@base-ui/react/radio-group";
@@ -137,19 +136,19 @@ function BMISlider({
   let categoryBg: string;
   if (bmi < 18.5) {
     category = t.underweight;
-    categoryColor = "text-[color:var(--color-warning)]";
+    categoryColor = "text-[var(--bbf-inkt)]";
     categoryBg = "bg-[color:var(--color-warning)]/15";
   } else if (bmi < 25) {
     category = t.normal;
-    categoryColor = "text-[color:var(--color-success)]";
+    categoryColor = "text-[var(--bbf-inkt)]";
     categoryBg = "bg-[color:var(--color-success)]/15";
   } else if (bmi < 30) {
     category = t.overweight;
-    categoryColor = "text-[color:var(--color-warning)]";
+    categoryColor = "text-[var(--bbf-inkt)]";
     categoryBg = "bg-[color:var(--color-warning)]/15";
   } else {
     category = t.obese;
-    categoryColor = "text-[color:var(--color-danger)]";
+    categoryColor = "text-[var(--bbf-inkt)]";
     categoryBg = "bg-[color:var(--color-danger)]/15";
   }
 
@@ -158,14 +157,13 @@ function BMISlider({
       <div className="mb-3 flex items-center justify-between gap-3">
         <p className="text-xs font-semibold uppercase tracking-widest text-[color:var(--muted-foreground)]">{t.label}</p>
         <div className="flex items-center gap-2">
-          <span className="text-lg font-bold text-[color:var(--foreground)]">{bmiRounded}</span>
+          <span className="font-mono text-2xl font-medium text-[color:var(--foreground)]">{bmiRounded}</span>
           <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${categoryBg} ${categoryColor}`}>
             {category}
           </span>
         </div>
       </div>
-      {/* Gradient track */}
-      <div className="relative h-3 overflow-visible rounded-full bg-gradient-to-r from-[color:var(--color-warning)] via-[color:var(--color-success)] via-60% to-[color:var(--color-danger)]">
+      <div className="relative h-3 rounded-full bg-[var(--bbf-rand)]">
         {/* Marker */}
         <div
           className="csp-fill-left absolute top-1/2 h-5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[color:var(--foreground)] ring-2 ring-[color:var(--background)] shadow-md"
@@ -173,7 +171,7 @@ function BMISlider({
         />
       </div>
       {/* Scale labels */}
-      <div className="mt-1.5 flex justify-between text-xs text-[color:var(--muted-foreground)]">
+      <div className="mt-1.5 flex justify-between font-mono text-xs text-[color:var(--muted-foreground)]">
         <span>15</span>
         <span>18.5</span>
         <span>25</span>
@@ -929,47 +927,39 @@ function ProfileSummary({
   onSaveRidingStyle: (data: RiderProfileData) => Promise<void>;
 }) {
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-6xl space-y-6 [&_button]:min-h-11 [&_a]:min-h-11">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
           <ProfilePhotoUpload source={profileImageSource} size="settings" />
           <div>
-            <h1 className="text-2xl font-bold text-[color:var(--foreground)]">
+            <h1 className="font-display text-4xl font-bold tracking-tight text-[color:var(--foreground)] sm:text-5xl">
               {messages.profile.title}
             </h1>
             <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">{displayName}</p>
           </div>
         </div>
-        <Button onClick={onEditWizard}>
+        <Button variant="outline" onClick={onEditWizard}>
           <Edit2 className="mr-2 h-4 w-4" />
           {messages.profile.actions.editMeasurements}
         </Button>
       </div>
 
-      <Card variant="bordered" className="overflow-hidden p-0">
-          <div className="flex flex-col items-center gap-4 bg-gradient-to-br from-primary to-primary/75 px-6 py-5 sm:flex-row sm:items-center sm:justify-between sm:text-left">
+      <Card variant="bordered" className="overflow-hidden rounded-3xl border-transparent p-0">
+          <div className="flex flex-col gap-5 bg-[var(--bbf-lime)] p-6 text-[var(--bbf-inkt)] sm:flex-row sm:items-center sm:justify-between sm:p-8">
             <div className="flex items-center gap-4">
-              <Image
-                src="/profile-complete.png"
-                alt=""
-                width={64}
-                height={64}
-                className="h-14 w-14 flex-shrink-0 object-contain drop-shadow-lg"
-                priority
-              />
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-primary-foreground/60">
+                <h2 className="font-display text-2xl font-bold sm:text-3xl">
                   {messages.profile.status.title}
-                </p>
-                <p className="text-sm font-semibold leading-snug text-primary-foreground">
-                  {messages.profile.status.description.split(".")[0]}.
+                </h2>
+                <p className="mt-2 leading-relaxed">
+                  {messages.profile.status.description}
                 </p>
               </div>
             </div>
             <Button
-              variant="outline"
+              variant="primary"
               size="lg"
-              className="w-full font-semibold shadow-md sm:w-auto sm:flex-shrink-0"
+              className="w-full font-semibold sm:w-auto sm:flex-shrink-0"
               {...linkButtonProps(fitHref)}
             >
               {messages.profile.status.startFitCta}
@@ -978,10 +968,10 @@ function ProfileSummary({
           </div>
         </Card>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]">
-        <Card variant="bordered" className="dashboard-card-surface xl:row-span-2">
+      <div className="grid items-start gap-6 xl:grid-cols-2 [&>div]:min-w-0 [&>div]:rounded-3xl">
+        <Card variant="bordered">
           <CardHeader className="border-b border-[color:var(--border)]">
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <Ruler className="h-5 w-5 text-[color:var(--primary)]" />
                 <CardTitle>{messages.profile.sections.bodyMeasurements}</CardTitle>
@@ -1006,25 +996,27 @@ function ProfileSummary({
           </CardContent>
         </Card>
 
-        <FlexibilityCard
-          score={profile.flexibilityScore}
-          locale={locale}
-          messages={messages}
-          editing={editingFlexibility}
-          onStartEdit={onStartFlexibilityEdit}
-          onCancel={onCancelFlexibilityEdit}
-          onSave={onSaveFlexibility}
-        />
+        <div className="space-y-6 [&>div]:rounded-3xl">
+          <FlexibilityCard
+            score={profile.flexibilityScore}
+            locale={locale}
+            messages={messages}
+            editing={editingFlexibility}
+            onStartEdit={onStartFlexibilityEdit}
+            onCancel={onCancelFlexibilityEdit}
+            onSave={onSaveFlexibility}
+          />
 
-        <CoreStabilityCard
-          score={profile.coreStabilityScore}
-          locale={locale}
-          messages={messages}
-          editing={editingCoreStability}
-          onStartEdit={onStartCoreStabilityEdit}
-          onCancel={onCancelCoreStabilityEdit}
-          onSave={onSaveCoreStability}
-        />
+          <CoreStabilityCard
+            score={profile.coreStabilityScore}
+            locale={locale}
+            messages={messages}
+            editing={editingCoreStability}
+            onStartEdit={onStartCoreStabilityEdit}
+            onCancel={onCancelCoreStabilityEdit}
+            onSave={onSaveCoreStability}
+          />
+        </div>
 
         <ComfortCard
           hasPain={fullProfile.hasPain}
@@ -1342,9 +1334,9 @@ export default function ProfilePage() {
 
   if (!profileData || isEditing) {
     return (
-      <div>
+      <div className="mx-auto max-w-6xl">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-[color:var(--foreground)]">
+          <h1 className="font-display text-4xl font-bold tracking-tight text-[color:var(--foreground)] sm:text-5xl">
             {profileData
               ? messages.profile.edit.title
               : messages.profile.onboarding.title}

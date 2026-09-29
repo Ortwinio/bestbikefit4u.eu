@@ -4,6 +4,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import BandenspanningCalculatorPage from "./page";
 import { PressureCalculatorPageContent } from "./PressureCalculatorPageContent";
+import { tirePressureMessages } from "@/i18n/calculators/tirePressure";
 
 let locale: "en" | "nl" = "en";
 
@@ -67,6 +68,7 @@ vi.mock("@/i18n/metadata", () => ({
 vi.mock("@/i18n/getDictionary", () => ({
   getDictionary: () =>
     Promise.resolve({
+      tirePressureCalculator: tirePressureMessages[locale],
       pressure: {
         publicPage: {
           title: locale === "nl" ? "Bandenspanning calculator" : "Tire Pressure Calculator",
@@ -81,8 +83,7 @@ vi.mock("@/i18n/getDictionary", () => ({
           title: locale === "nl" ? "Zet de volgende stap" : "Take the next step",
           primaryCta: locale === "nl" ? "Maak account aan of log in" : "Create account or sign in",
           secondaryCta: locale === "nl" ? "Vergelijk Free en Pro" : "Compare Free vs Pro",
-          tertiaryCta:
-            locale === "nl" ? "Open bike-fit calculator" : "Open bike-fit calculator",
+          tertiaryCta: locale === "nl" ? "Open bike-fit calculator" : "Open bike-fit calculator",
         },
       },
     }),
@@ -116,17 +117,16 @@ describe("bandenspanning calculator page", () => {
     const ui = await PressureCalculatorPageContent({ locale });
     render(ui);
 
-    expect(screen.getByText("Tire Pressure Calculator")).toBeTruthy();
     expect(screen.getByText("Tire pressure form")).toBeTruthy();
     expect(screen.getByText("Pressure FAQ")).toBeTruthy();
     expect(screen.getByText("Create account or sign in").closest("a")?.getAttribute("href")).toBe(
-      "/en/login"
+      "/en/login",
     );
     expect(screen.getByText("Compare Free vs Pro").closest("a")?.getAttribute("href")).toBe(
-      "/en/pricing"
+      "/en/pricing",
     );
     expect(screen.getByText("Open bike-fit calculator").closest("a")?.getAttribute("href")).toBe(
-      "/en/calculators/bike-fit"
+      "/en/calculators/bike-fit",
     );
   });
 
@@ -134,7 +134,7 @@ describe("bandenspanning calculator page", () => {
     locale = "en";
 
     await expect(BandenspanningCalculatorPage()).rejects.toThrow(
-      "REDIRECT:/en/tire-pressure-calculator"
+      "REDIRECT:/en/tire-pressure-calculator",
     );
     expect(permanentRedirect).toHaveBeenCalledWith("/en/tire-pressure-calculator");
   });

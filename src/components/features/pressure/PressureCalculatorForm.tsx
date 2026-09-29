@@ -1,33 +1,31 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { ShieldCheck } from "lucide-react";
-import { Button } from "@/components/prototyper-ui/ui/button";
+import { useState } from "react";
+import Link from "next/link";
 import {
-  PublicInfoPanel,
-  PublicNumberField,
-  PublicScaleField,
-  PublicSelectField,
-  PublicSurfaceCard,
-} from "@/components/public";
+  AdjustOrder,
+  Button,
+  ConfiguratorLayout,
+  Gauge,
+  OptionCard,
+  ResultHero,
+  Slider,
+  StepCard,
+} from "@/components/ui";
 import {
   calculateBasicPressure,
-  type PressureOutput,
-  type RidingGoal,
-  type Surface,
-  type ValidationError,
   validatePressureInput,
+  type Surface,
+  type RidingGoal,
+  type TubeType,
 } from "@/lib/pressure-engine";
-import {
-  createPublicCalculatorResultEnvelope,
-  getConfidenceLabel,
-  type PublicResultEnvelope,
-} from "@/lib/publicCalculatorLogic";
-import { PressureResultCard } from "./PressureResultCard";
+import { tirePressureMessages, type TirePressureCopy } from "@/i18n/calculators/tirePressure";
+import { withLocalePrefix } from "@/i18n/navigation";
 import type { PressureResultLabels } from "./shared";
 
 interface PressureCalculatorFormProps {
   locale: "en" | "nl";
+  copy?: TirePressureCopy;
   defaultDiscipline?: "road" | "gravel" | "mtb";
   labels: {
     disciplineLabel: string;
@@ -59,7 +57,7 @@ interface PressureCalculatorFormProps {
   resultLabels: PressureResultLabels;
 }
 
-const SURFACE_OPTIONS: Surface[] = [
+const SURFACES: Surface[] = [
   "smooth_asphalt",
   "average_asphalt",
   "rough_asphalt",
@@ -67,26 +65,39 @@ const SURFACE_OPTIONS: Surface[] = [
   "loose_gravel",
   "trail",
 ];
+const GOALS: RidingGoal[] = ["speed", "balance", "comfort"];
+const TUBES: TubeType[] = ["inner_tube", "latex_tube", "tubeless"];
+// Display domains mirror the unchanged discipline clamps in pressure-engine.ts.
+const DOMAINS = { road: [4, 9], gravel: [1.5, 5], mtb: [0.8, 3.5] } as const;
 
-const GOAL_OPTIONS: RidingGoal[] = ["speed", "balance", "comfort"];
-const TUBE_OPTIONS = ["inner_tube", "latex_tube", "tubeless"] as const;
-
-function findError(errors: ValidationError[], field: string): string | undefined {
-  return errors.find((error) => error.field === field)?.message;
-}
-
-function getPressureConfidenceLevel(params: {
-  hasGoal: boolean;
-  hasAdvancedBikeWeight: boolean;
-  warningCount: number;
-}): "high" | "medium" | "lower" {
-  if (params.warningCount >= 2) {
-    return "medium";
-  }
-  if (params.hasGoal && params.hasAdvancedBikeWeight) {
-    return "high";
-  }
-  return "medium";
+function Choices<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: { value: T; label: string }[];
+  value: T | undefined;
+  onChange: (value: T) => void;
+}) {
+  return (
+    <div role="group" aria-label={label} className="space-y-3">
+      <p className="font-semibold">{label}</p>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {options.map((option) => (
+          <OptionCard
+            key={option.value}
+            label={option.label}
+            selected={value === option.value}
+            onClick={() => onChange(option.value)}
+            showCheck={false}
+            className="px-3 text-sm"
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export function PressureCalculatorForm({
@@ -94,346 +105,272 @@ export function PressureCalculatorForm({
   defaultDiscipline,
   labels,
   resultLabels,
+  copy = tirePressureMessages[locale],
 }: PressureCalculatorFormProps) {
-  const isNl = locale === "nl";
   const [discipline, setDiscipline] = useState<"road" | "gravel" | "mtb">(
-    defaultDiscipline ?? "road"
+    defaultDiscipline ?? "road",
   );
-  const [bodyWeightKg, setBodyWeightKg] = useState<number>(75);
-  const [widthFrontMm, setWidthFrontMm] = useState<number>(28);
-  const [manualWidthRearMm, setManualWidthRearMm] = useState<number>(28);
-  const [tubeType, setTubeType] = useState<"inner_tube" | "latex_tube" | "tubeless">("tubeless");
+  const [bodyWeightKg, setBodyWeightKg] = useState(75);
+  const [widthFrontMm, setWidthFrontMm] = useState(28);
+  const [manualWidthRearMm, setManualWidthRearMm] = useState(28);
+  const [linked, setLinked] = useState(true);
+  const [tubeType, setTubeType] = useState<TubeType>("tubeless");
   const [surface, setSurface] = useState<Surface>("average_asphalt");
-  const [ridingGoal, setRidingGoal] = useState<RidingGoal | undefined>(undefined);
-  const [bikeWeightKg, setBikeWeightKg] = useState<number>(8);
-  const [hasManualRearWidth, setHasManualRearWidth] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const widthRearMm = hasManualRearWidth ? manualWidthRearMm : widthFrontMm;
-
-  const effectiveBikeWeightKg = showAdvanced ? bikeWeightKg : undefined;
-
-  const errors: ValidationError[] = useMemo(
-    () =>
-      validatePressureInput({
-        bodyWeightKg,
-        widthFrontMm,
-        widthRearMm,
-        discipline,
-        tubeType,
-        surface,
-        bikeWeightKg: effectiveBikeWeightKg,
-        ridingGoal,
-      }),
-    [
-      effectiveBikeWeightKg,
-      bodyWeightKg,
-      discipline,
-      ridingGoal,
-      surface,
-      tubeType,
-      widthFrontMm,
-      widthRearMm,
-    ]
-  );
-
-  const result: PressureOutput | null = useMemo(() => {
-    if (errors.length > 0) {
-      return null;
-    }
-
-    return calculateBasicPressure({
-      discipline,
-      bodyWeightKg,
-      widthFrontMm,
-      widthRearMm,
-      tubeType,
-      surface,
-      ridingGoal,
-      bikeWeightKg: effectiveBikeWeightKg,
-    });
-  }, [
-    effectiveBikeWeightKg,
-    bodyWeightKg,
+  const [ridingGoal, setRidingGoal] = useState<RidingGoal | undefined>();
+  const [bikeWeightKg, setBikeWeightKg] = useState(8);
+  const [advanced, setAdvanced] = useState(false);
+  const [edited, setEdited] = useState(false);
+  const widthRearMm = linked ? widthFrontMm : manualWidthRearMm;
+  const input = {
     discipline,
-    errors,
-    ridingGoal,
-    surface,
-    tubeType,
+    bodyWeightKg,
     widthFrontMm,
     widthRearMm,
-  ]);
-
-  const resultSummary: PublicResultEnvelope<unknown> | null = useMemo(() => {
-    if (!result) {
-      return null;
-    }
-
-    const confidenceLevel = getPressureConfidenceLevel({
-      hasGoal: Boolean(ridingGoal),
-      hasAdvancedBikeWeight: showAdvanced,
-      warningCount: result.warnings.length,
-    });
-
-    return createPublicCalculatorResultEnvelope({
-      calculatorKey: "tire-pressure",
-      recommended: {
-        frontBar: result.frontBar,
-        rearBar: result.rearBar,
-      },
-      confidence: {
-        level: confidenceLevel,
-        score: confidenceLevel === "high" ? 82 : 64,
-        reasons: [getConfidenceLabel(confidenceLevel, isNl)],
-      },
-      primaryDrivers: isNl
-        ? ["Rijdersgewicht", "Bandbreedte", "Ondergrond", "Bandtype"]
-        : ["Rider weight", "Tyre width", "Surface", "Tyre type"],
-      secondaryModifiers:
-        showAdvanced || ridingGoal
-          ? isNl
-            ? [
-                "Rijdoel verschuift het advies richting snelheid of comfort.",
-                "Fietsgewicht verfijnt de totale systeemlast.",
-              ]
-            : [
-                "Riding goal shifts the recommendation toward speed or comfort.",
-                "Bike weight refines the total system load.",
-              ]
-          : isNl
-            ? ["Open geavanceerde opties om rijdoel en fietsgewicht mee te nemen."]
-            : ["Open advanced options to include riding goal and bike weight."],
-      notCovered: isNl
-        ? [
-            "Interne velgbreedte, karkasconstructie en natte omstandigheden.",
-            "Persoonlijke voorkeur na enkele testritten.",
-          ]
-        : [
-            "Internal rim width, casing construction, and wet conditions.",
-            "Personal preference after a few validation rides.",
-          ],
-      nextAction: isNl
-        ? "Begin hier en test daarna kleine stappen van 0,1 bar per keer."
-        : "Start here, then test small 0.1 bar steps one change at a time.",
-    });
-  }, [result, ridingGoal, showAdvanced, isNl]);
-
-  const extraNotes = isNl
-    ? [
-        "Controleer grip en comfort eerst op de voorband.",
-        "Houd achterbanddruk iets hoger als je extra belasting of ruwer terrein voelt.",
-      ]
-    : [
-        "Check front-tyre grip and comfort first on the next ride.",
-        "Keep rear pressure slightly higher when the load or terrain feels harsher.",
-      ];
-
-  const disciplineOptions = [
-    { value: "road", label: labels.disciplineRoad },
-    { value: "gravel", label: labels.disciplineGravel },
-    { value: "mtb", label: labels.disciplineMtb },
+    tubeType,
+    surface,
+    ridingGoal,
+    bikeWeightKg: advanced ? bikeWeightKg : undefined,
+  };
+  const errors = validatePressureInput(input);
+  const result = errors.length ? null : calculateBasicPressure(input);
+  const number = new Intl.NumberFormat(locale, {
+    maximumFractionDigits: 1,
+    minimumFractionDigits: 1,
+  });
+  const weightNumber = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
+  function update<T>(setter: (value: T) => void) {
+    return (value: T) => {
+      setter(value);
+      setEdited(true);
+    };
+  }
+  const surfaceLabels = [
+    labels.surfaceSmoothAsphalt,
+    labels.surfaceAverageAsphalt,
+    labels.surfaceRoughAsphalt,
+    labels.surfaceHardpackGravel,
+    labels.surfaceLooseGravel,
+    labels.surfaceTrail,
   ];
-
-  const surfaceOptions = SURFACE_OPTIONS.map((option) => ({
-    value: option,
-    label:
-      {
-        smooth_asphalt: labels.surfaceSmoothAsphalt,
-        average_asphalt: labels.surfaceAverageAsphalt,
-        rough_asphalt: labels.surfaceRoughAsphalt,
-        hardpack_gravel: labels.surfaceHardpackGravel,
-        loose_gravel: labels.surfaceLooseGravel,
-        trail: labels.surfaceTrail,
-      }[option],
-  }));
-
-  const tubeOptions = TUBE_OPTIONS.map((option) => ({
-    value: option,
-    label:
-      {
-        inner_tube: labels.tubeTypeInnerTube,
-        latex_tube: labels.tubeTypeLatex,
-        tubeless: labels.tubeTypeTubeless,
-      }[option],
-  }));
-
-  const goalOptions = GOAL_OPTIONS.map((option) => ({
-    value: option,
-    label:
-      {
-        speed: labels.ridingGoalSpeed,
-        balance: labels.ridingGoalBalance,
-        comfort: labels.ridingGoalComfort,
-      }[option],
-  }));
-
+  const tubeLabels = [labels.tubeTypeInnerTube, labels.tubeTypeLatex, labels.tubeTypeTubeless];
+  const goalLabels = [labels.ridingGoalSpeed, labels.ridingGoalBalance, labels.ridingGoalComfort];
+  const resultTitle = edited ? copy.result : copy.example;
   return (
-    <section className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
-      <PublicSurfaceCard
-        title={isNl ? "Bouw je drukbasis" : "Build your pressure baseline"}
-        description={
-          isNl
-            ? "Begin met de grootste invloeden eerst. Geavanceerde opties zijn er wanneer je verder wilt verfijnen."
-            : "Start with the essentials first. Advanced options are there when you want to refine the recommendation further."
-        }
-        className="public-calculator-card rounded-[1.75rem]"
-      >
-        <div className="space-y-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-            {isNl ? "Invoer" : "Inputs"}
-          </p>
-
-          <PublicInfoPanel
-            tone="secondary"
-            title={isNl ? "Wat het resultaat het meest verandert" : "What changes the result most"}
-            icon={<ShieldCheck />}
-          >
-            {isNl
-              ? "Gewicht, bandbreedte, ondergrond en bandtype veroorzaken de grootste verschuivingen. Gebruik rijdoel en fietsgewicht alleen als je fijner wilt afstellen."
-              : "Rider weight, tyre width, surface, and tyre type drive the biggest changes. Use riding goal and bike weight only when you want a finer adjustment."}
-          </PublicInfoPanel>
-
-          <div className="grid gap-5 md:grid-cols-2">
-            <PublicSelectField
-              label={labels.disciplineLabel}
-              options={disciplineOptions}
-              value={discipline}
-              onChange={(value) => setDiscipline(value as "road" | "gravel" | "mtb")}
-            />
-            <PublicNumberField
-              label={labels.bodyWeightLabel}
-              min={35}
-              max={160}
-              step={1}
-              unit="kg"
-              value={bodyWeightKg}
-              onChange={(value) => setBodyWeightKg(value ?? 35)}
-            />
-            <PublicNumberField
-              label={labels.widthFrontLabel}
-              min={18}
-              max={80}
-              step={1}
-              unit="mm"
-              value={widthFrontMm}
-              onChange={(value) => setWidthFrontMm(value ?? 18)}
-            />
-            <PublicNumberField
-              label={labels.widthRearLabel}
-              min={18}
-              max={80}
-              step={1}
-              unit="mm"
-              value={widthRearMm}
-              onChange={(value) => {
-                setHasManualRearWidth(true);
-                setManualWidthRearMm(value ?? 18);
-              }}
-            />
-            <PublicSelectField
-              label={labels.tubeTypeLabel}
-              options={tubeOptions}
-              value={tubeType}
-              onChange={(value) => setTubeType(value as "inner_tube" | "latex_tube" | "tubeless")}
-            />
-            <PublicScaleField
-              label={labels.surfaceLabel}
-              description={
-                isNl
-                  ? "Schuif van glad naar losser naarmate je ondergrond meer grip en demping vraagt."
-                  : "Move from smoother to looser surfaces as the terrain asks for more grip and compliance."
-              }
-              options={surfaceOptions}
-              value={surface}
-              onChange={(value) => setSurface(value as Surface)}
-            />
-          </div>
-
-          {(findError(errors, "bodyWeightKg") ||
-            findError(errors, "widthFrontMm") ||
-            findError(errors, "widthRearMm")) && (
-            <div className="rounded-2xl border border-destructive/20 bg-destructive-soft px-4 py-3 text-sm text-destructive-text">
-              {findError(errors, "bodyWeightKg") ||
-                findError(errors, "widthFrontMm") ||
-                findError(errors, "widthRearMm")}
+    <ConfiguratorLayout
+      eyebrow={copy.eyebrow}
+      title={defaultDiscipline ? copy.preset[defaultDiscipline] : copy.title}
+      description={copy.intro}
+      inputs={
+        <>
+          <StepCard number={1} title={copy.body}>
+            <div className="space-y-6">
+              <Choices
+                label={labels.disciplineLabel}
+                value={discipline}
+                onChange={update(setDiscipline)}
+                options={[
+                  { value: "road", label: labels.disciplineRoad },
+                  { value: "gravel", label: labels.disciplineGravel },
+                  { value: "mtb", label: labels.disciplineMtb },
+                ]}
+              />
+              <Slider
+                label={labels.bodyWeightLabel}
+                value={bodyWeightKg}
+                onChange={update(setBodyWeightKg)}
+                min={35}
+                max={160}
+                step={1}
+                unit="kg"
+                valueLabel={weightNumber.format(bodyWeightKg)}
+                ticks={[{ value: 35 }, { value: 160 }]}
+              />
             </div>
-          )}
-
-          <div className="public-calculator-card-subtle rounded-2xl border p-4">
+          </StepCard>
+          <StepCard number={2} title={copy.tires}>
+            <div className="space-y-6">
+              <Slider
+                label={labels.widthFrontLabel}
+                value={widthFrontMm}
+                onChange={update(setWidthFrontMm)}
+                min={18}
+                max={80}
+                step={1}
+                unit="mm"
+              />
+              <Button
+                variant="outline"
+                aria-pressed={linked}
+                onClick={() => {
+                  if (linked) setManualWidthRearMm(widthFrontMm);
+                  setLinked(!linked);
+                }}
+                className="w-full whitespace-normal"
+              >
+                {copy.linked}
+              </Button>
+              <Slider
+                label={labels.widthRearLabel}
+                value={widthRearMm}
+                onChange={(value) => {
+                  setLinked(false);
+                  setManualWidthRearMm(value);
+                  setEdited(true);
+                }}
+                min={18}
+                max={80}
+                step={1}
+                unit="mm"
+              />
+              <Choices
+                label={labels.tubeTypeLabel}
+                options={TUBES.map((value, index) => ({ value, label: tubeLabels[index] }))}
+                value={tubeType}
+                onChange={update(setTubeType)}
+              />
+            </div>
+          </StepCard>
+          <StepCard number={3} title={copy.route}>
+            <Choices
+              label={labels.surfaceLabel}
+              options={SURFACES.map((value, index) => ({ value, label: surfaceLabels[index] }))}
+              value={surface}
+              onChange={update(setSurface)}
+            />
             <Button
-              type="button"
               variant="ghost"
-              onClick={() => setShowAdvanced((current) => !current)}
-              className="flex w-full items-center justify-between px-0 text-left text-sm font-semibold text-[color:var(--foreground)]"
+              className="mt-5 h-auto min-h-11 w-full whitespace-normal text-left"
+              aria-expanded={advanced}
+              aria-controls="pressure-advanced"
+              onClick={() => setAdvanced(!advanced)}
             >
-              <span>{labels.advancedOptions}</span>
-              <span>{showAdvanced ? "-" : "+"}</span>
+              {copy.advanced}
+              <span aria-hidden="true">{advanced ? "−" : "+"}</span>
             </Button>
-
-            {showAdvanced ? (
-              <div className="mt-4 grid gap-5 md:grid-cols-2">
-                <PublicScaleField
+            {advanced && (
+              <div id="pressure-advanced" className="mt-5 space-y-6">
+                <Choices
                   label={labels.ridingGoalLabel}
-                  description={
-                    isNl
-                      ? "Meer comfort vraagt meestal om wat extra marge."
-                      : "More comfort usually asks for a bit more margin."
-                  }
-                  options={goalOptions}
-                  value={ridingGoal ?? "balance"}
-                  onChange={(value) => setRidingGoal(value as RidingGoal)}
+                  options={[
+                    { value: "unset", label: copy.unset },
+                    ...GOALS.map((value, index) => ({ value, label: goalLabels[index] })),
+                  ]}
+                  value={ridingGoal ?? "unset"}
+                  onChange={(value) => {
+                    setRidingGoal(value === "unset" ? undefined : (value as RidingGoal));
+                    setEdited(true);
+                  }}
                 />
-                <PublicNumberField
+                <Slider
                   label={labels.bikeWeightLabel}
+                  value={bikeWeightKg}
+                  valueLabel={weightNumber.format(bikeWeightKg)}
+                  onChange={update(setBikeWeightKg)}
                   min={3}
                   max={20}
                   step={0.1}
                   unit="kg"
-                  value={bikeWeightKg}
-                  onChange={(value) => setBikeWeightKg(value ?? 3)}
                 />
               </div>
-            ) : null}
-          </div>
-        </div>
-      </PublicSurfaceCard>
-
-      <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-        {result ? (
-          <PressureResultCard
-            result={result}
-            labels={resultLabels}
-            isNl={isNl}
-            summary={resultSummary!}
-            extraNotes={extraNotes}
-          />
-        ) : (
-          <div className="public-calculator-card-subtle rounded-[1.75rem] border border-dashed p-6 text-sm text-[color:var(--muted-foreground)]">
-            {labels.resultPlaceholder}
-          </div>
-        )}
-
-        <PublicInfoPanel
-          tone="secondary"
-          title={isNl ? "Wat het resultaat het meest verandert" : "What changes the result most"}
-          icon={<ShieldCheck />}
-        >
-          <ul className="space-y-2">
-            {isNl ? (
-              <>
-                <li>Gewicht en bandbreedte verschuiven de basis het snelst.</li>
-                <li>Ondergrond en bandtype bepalen hoe laag je veilig kunt gaan.</li>
-                <li>Gebruik de uitkomst als startpunt en valideer daarna op rijgevoel.</li>
-              </>
-            ) : (
-              <>
-                <li>Weight and tyre width shift the baseline fastest.</li>
-                <li>Surface and tyre type change how low you can safely go.</li>
-                <li>Use the output as a starting point, then validate with ride feel.</li>
-              </>
             )}
-          </ul>
-        </PublicInfoPanel>
-      </div>
-    </section>
+          </StepCard>
+        </>
+      }
+      results={
+        <>
+          {result ? (
+            <section
+              id="pressure-result"
+              aria-label={resultTitle}
+              className="rounded-[2rem] bg-[var(--bbf-lime)] p-5 text-[var(--bbf-inkt)] sm:p-7"
+            >
+              <h2 className="font-display text-2xl font-bold text-[var(--bbf-inkt)]">
+                {resultTitle}
+              </h2>
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                {[
+                  { label: resultLabels.front, bar: result.frontBar, psi: result.frontPsi },
+                  { label: resultLabels.rear, bar: result.rearBar, psi: result.rearPsi },
+                ].map((wheel) => (
+                  <div key={wheel.label} className="min-w-0">
+                    <ResultHero
+                      label={wheel.label}
+                      value={number.format(wheel.bar)}
+                      unit={resultLabels.bar}
+                      className="p-0 sm:p-0 [&_dd]:text-[clamp(2.5rem,5vw,4.5rem)]"
+                    />
+                    <p className="mt-2 font-mono text-sm">
+                      {wheel.psi} {resultLabels.psi}
+                    </p>
+                    <Gauge
+                      label={`${wheel.label}: ${copy.gauge}`}
+                      value={wheel.bar}
+                      min={DOMAINS[discipline][0]}
+                      max={DOMAINS[discipline][1]}
+                      unit="bar"
+                      locale={locale}
+                      className="mt-3"
+                    />
+                  </div>
+                ))}
+              </div>
+              <p className="mt-4 text-sm leading-relaxed">{copy.scale}</p>
+              <p role="status" aria-label={copy.summary} className="sr-only">
+                {resultLabels.front}: {number.format(result.frontBar)} bar; {resultLabels.rear}:{" "}
+                {number.format(result.rearBar)} bar
+              </p>
+            </section>
+          ) : (
+            <p role="alert">{copy.error}</p>
+          )}
+          <section className="rounded-3xl border border-border bg-card p-6">
+            <h2 className="font-display text-2xl font-bold">{resultLabels.warningsTitle}</h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{copy.limit}</p>
+            {result && result.warnings.length > 0 && (
+              <ul aria-label={copy.warning} className="mt-4 space-y-2">
+                {result.warnings.map((warning) => (
+                  <li
+                    key={warning}
+                    className="rounded-xl bg-[var(--bbf-warning)] p-3 text-sm text-[var(--bbf-inkt)]"
+                  >
+                    {resultLabels.warningMessages[warning]}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <p className="mt-3 text-sm text-muted-foreground">{resultLabels.disclaimer}</p>
+          </section>
+          <section className="rounded-3xl border border-border bg-card p-6">
+            <h2 className="font-display text-2xl font-bold">{copy.scope}</h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{copy.excluded}</p>
+          </section>
+          <AdjustOrder title={copy.adjustment} steps={copy.steps.map((title) => ({ title }))} />
+          <section className="rounded-3xl bg-[var(--bbf-inkt)] p-6 text-[var(--bbf-wit)]">
+            <h2 className="font-display text-2xl font-bold text-[var(--bbf-wit)]">{copy.save}</h2>
+            <p className="mt-3 text-sm text-[var(--bbf-op-donker)]">{copy.saveText}</p>
+            <Button className="mt-4" render={<Link href={withLocalePrefix("/login", locale)} />}>
+              {copy.save}
+            </Button>
+          </section>
+        </>
+      }
+      stickyResult={
+        result && (
+          <a
+            href="#pressure-result"
+            className="flex min-h-11 flex-wrap items-center justify-between gap-2"
+          >
+            <span className="text-xs">{resultTitle}</span>
+            <span className="font-mono text-xl">
+              {number.format(result.frontBar)} / {number.format(result.rearBar)}{" "}
+              <span className="text-sm">bar</span>
+            </span>
+            <span className="sr-only">
+              {resultLabels.front} / {resultLabels.rear}
+            </span>
+          </a>
+        )
+      }
+    />
   );
 }

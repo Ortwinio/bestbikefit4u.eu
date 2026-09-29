@@ -74,6 +74,8 @@ for (const [mode, tokens] of [["light", root], ["dark", { ...root, ...declaratio
     add("ring", background, 3);
     add("field-border-invalid", background, 3);
   }
+  add("field-border", "field-background", 3);
+  add("dashboard-field-border", "dashboard-field-background", 3);
   const results = pairs.map(({ fg, bg, minimum, opacity }) => {
     let front = linearRgb(tokens[fg], tokens);
     const back = linearRgb(tokens[bg], tokens);

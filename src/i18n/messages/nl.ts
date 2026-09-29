@@ -1,3 +1,6 @@
+import { tirePressureMessages } from "../calculators/tirePressure";
+import { saddleWidthMessages } from "../calculators/saddleWidth";
+import { bikeFitMessages } from "../calculators/bikeFit";
 import { crankLengthMessages } from "../calculators/crankLength";
 import { frameSizeMessages } from "../calculators/frameSize";
 import { saddleHeightMessages } from "../calculators/saddleHeight";
@@ -5,6 +8,9 @@ import { BRAND } from "@/config/brand";
 import type en from "./en";
 
 const nl = {
+  tirePressureCalculator: tirePressureMessages.nl,
+  saddleWidthCalculator: saddleWidthMessages.nl,
+  bikeFitCalculator: bikeFitMessages.nl,
   crankLengthCalculator: crankLengthMessages.nl,
   frameSizeCalculator: frameSizeMessages.nl,
   saddleHeightCalculator: saddleHeightMessages.nl,
@@ -57,7 +63,8 @@ const nl = {
     metadata: {
       title: `${BRAND.name} - Online bikefitting voor comfort en prestaties`,
       description:
-        "Ontvang praktische bikefit-begeleiding passend bij jouw lichaam en rijstijl. Verbeter comfort, verfijn je positie en fiets met meer vertrouwen.",
+        "Ontvang praktische bikefit-begeleiding passend bij jouw lichaam en rijstijl. Verbeter " +
+        "comfort, verfijn je positie en fiets met meer vertrouwen.",
       openGraphTitle: `${BRAND.name} - Online bikefitting voor comfort en prestaties`,
       openGraphDescription:
         "Praktische bikefitting-begeleiding voor comfort, prestaties en betere fietskeuzes.",
@@ -77,7 +84,8 @@ const nl = {
       title: "Online bikefitting",
       titleAccent: "voor comfort en prestaties.",
       description:
-        "Probeer eerst de gratis bike fit calculator en beslis daarna pas of je diepere afstelbegeleiding wilt voor jouw lichaam, rijstijl en volgende fietskeuze.",
+        "Probeer eerst de gratis bike fit calculator en beslis daarna pas of je diepere " +
+        "afstelbegeleiding wilt voor jouw lichaam, rijstijl en volgende fietskeuze.",
       primaryCta: "Probeer de gratis bike fit calculator",
       secondaryCta: "Zie wat je precies krijgt",
       signInCta: "Heb je al een account? Log in",
@@ -108,8 +116,7 @@ const nl = {
       },
       differentiators: {
         title: "Waarom rijders het blijven gebruiken",
-        subtitle:
-          "De homepagefunnel blijft gebaseerd op duidelijke data, volgorde en rijcontext.",
+        subtitle: "De homepagefunnel blijft gebaseerd op duidelijke data, volgorde en rijcontext.",
         items: [
           {
             title: "Geometriedatabase",
@@ -124,14 +131,14 @@ const nl = {
           {
             title: "Rijstijlgericht",
             description:
-              "Past zich aan op comfort, uithoudingsvermogen of aerodynamica in plaats van één standaard setup.",
+              "Past zich aan op comfort, uithoudingsvermogen of aerodynamica in plaats van één " +
+              "standaard setup.",
           },
         ],
       },
       testimonials: {
         title: "Wat fietsers zeggen",
-        subtitle:
-          "Concrete uitkomsten van rijders na praktische fit-aanpassingen.",
+        subtitle: "Concrete uitkomsten van rijders na praktische fit-aanpassingen.",
         readMoreLabel: "Lees meer rijdersverhalen",
         items: [
           {
@@ -162,24 +169,28 @@ const nl = {
         {
           title: "Vul je metingen in",
           description:
-            "Geef je lichaamsmetingen door, zoals lengte, binnenbeenlengte en armlengte, en vul een korte flexibiliteitscheck in.",
+            "Geef je lichaamsmetingen door, zoals lengte, binnenbeenlengte en armlengte, en vul " +
+            "een korte flexibiliteitscheck in.",
         },
         {
           title: "Beantwoord vragen",
           description:
-            "Vertel over je rijstijl, doelen, trainingsuren per week en de ongemakken die op de fiets het belangrijkst zijn.",
+            "Vertel over je rijstijl, doelen, trainingsuren per week en de ongemakken die op de " +
+            "fiets het belangrijkst zijn.",
         },
         {
           title: "Bekijk je aanbevelingen",
           description:
-            "Bekijk praktische aanbevelingen voor zadelhoogte, reach, stuurpositie, cranklengte en wat je als eerste wilt controleren.",
+            "Bekijk praktische aanbevelingen voor zadelhoogte, reach, stuurpositie, cranklengte en " +
+            "wat je als eerste wilt controleren.",
         },
       ],
     },
     reasonsToStart: {
       title: "Waarom nu starten met bikefitting?",
       subtitle:
-        "Veel rijders wachten tot het setup-probleem groter wordt. Kleine aanpassingen nu geven sneller duidelijke volgende stappen.",
+        "Veel rijders wachten tot het setup-probleem groter wordt. Kleine aanpassingen nu " +
+        "geven sneller duidelijke volgende stappen.",
       items: [
         {
           title: "Sneller meer comfort",
@@ -193,8 +204,7 @@ const nl = {
         },
         {
           title: "Rijd langer met meer vertrouwen",
-          description:
-            "Een beter passende positie voelt vaak stabieler en langer vol te houden.",
+          description: "Een beter passende positie voelt vaak stabieler en langer vol te houden.",
         },
         {
           title: "Maak betere fietskeuzes",
@@ -210,8 +220,7 @@ const nl = {
     },
     features: {
       title: "Wat je krijgt in je fit-plan",
-      subtitle:
-        "Heldere aanbevelingen die je zelf kunt toepassen of met je lokale fietsenmaker",
+      subtitle: "Heldere aanbevelingen die je zelf kunt toepassen of met je lokale fietsenmaker",
       items: [
         {
           title: "Praktische fit-input",
@@ -230,8 +239,7 @@ const nl = {
         },
         {
           title: "Fietsgerichte context",
-          description:
-            "Houd je fitwerk gekoppeld aan de fiets en rijcontext die je echt gebruikt.",
+          description: "Houd je fitwerk gekoppeld aan de fiets en rijcontext die je echt gebruikt.",
         },
         {
           title: "Gerichte volgorde van aanpassingen",
@@ -247,8 +255,7 @@ const nl = {
     },
     trustSection: {
       title: "Geen giswerk, maar onderbouwde keuzes",
-      subtitle:
-        "Elke aanbeveling is gebaseerd op duidelijke logica en praktische grenzen",
+      subtitle: "Elke aanbeveling is gebaseerd op duidelijke logica en praktische grenzen",
       items: [
         {
           title: "Bewezen methodiek",
@@ -282,25 +289,27 @@ const nl = {
         "Aanbevolen framemaat",
       ],
       cardTitle: "Klaar om klachten te verminderen en sterker te fietsen?",
-      cardDescription:
-        "Start gratis en ontvang binnen enkele minuten persoonlijke afstelwaarden.",
+      cardDescription: "Start gratis en ontvang binnen enkele minuten persoonlijke afstelwaarden.",
       cardCta: "Start gratis fit",
     },
     bikeQuickCheck: {
       badge: "Bike passport quick check",
       collapsedTitle: "Check of deze fiets bij jouw maat zou kunnen passen",
       collapsedDescription:
-        "Gebruik een bike-passport ID of gedeelde fiets-code om een tweedehands fiets snel te screenen voordat je er meer tijd in steekt.",
+        "Gebruik een bike-passport ID of gedeelde fiets-code om een tweedehands fiets snel te " +
+        "screenen voordat je er meer tijd in steekt.",
       expandLabel: "Check een gedeelde fiets",
       codeLabel: "Bike-passport ID of gedeelde code",
       codePlaceholder: "Vul de bike-passport ID of gedeelde code in",
       codeHelper:
-        "Dit is een beperkte screeningstool. We gebruiken alleen de gedeelde fietsidentificatie, je lengte en de beschikbare fietsgeometrie.",
+        "Dit is een beperkte screeningstool. We gebruiken alleen de gedeelde " +
+        "fietsidentificatie, je lengte en de beschikbare fietsgeometrie.",
       lookupButton: "Bekijk deze fiets",
       lookupLoading: "De gedeelde fiets wordt gecontroleerd…",
       invalidTitle: "Deze code is nu niet beschikbaar",
       invalidDescription:
-        "De bike-passport ID of gedeelde code kan onjuist zijn, verlopen zijn of niet meer gedeeld worden. Controleer dit en probeer opnieuw.",
+        "De bike-passport ID of gedeelde code kan onjuist zijn, verlopen zijn of niet meer " +
+        "gedeeld worden. Controleer dit en probeer opnieuw.",
       invalidRetry: "Opnieuw beginnen",
       rateLimitedTitle: "Te veel pogingen voor nu",
       rateLimitedDescription:
@@ -326,19 +335,16 @@ const nl = {
       scoreSuffix: "/75",
       confidenceLabel: "Vertrouwen",
       inseamEstimateLabel: "Geschatte binnenbeenlengte",
-      limitedEstimate:
-        "Gebruik dit als eerste screeningstap, niet als definitieve fitbeslissing.",
-      geometryWeakNote:
-        "Zwakke geometriegegevens houden deze schatting beperkt.",
+      limitedEstimate: "Gebruik dit als eerste screeningstap, niet als definitieve fitbeslissing.",
+      geometryWeakNote: "Zwakke geometriegegevens houden deze schatting beperkt.",
       ctaTitle: "Wil je een betere inschatting?",
-      ctaDescription:
-        "Voeg je binnenbeenlengte en rijdersprofiel toe voor een betere inschatting.",
+      ctaDescription: "Voeg je binnenbeenlengte en rijdersprofiel toe voor een betere inschatting.",
       ctaButton: "Maak een gratis account",
-      ctaSecondary:
-        "Een volledig rijdersprofiel geeft meer precisie dan deze eerste screening.",
+      ctaSecondary: "Een volledig rijdersprofiel geeft meer precisie dan deze eerste screening.",
       signedInCtaTitle: "Wil je een betere inschatting?",
       signedInCtaDescription:
-        "Gebruik deze quick check als eerste screening. Voeg je rijdersprofiel toe of start een bike-fit flow voor een betere inschatting.",
+        "Gebruik deze quick check als eerste screening. Voeg je rijdersprofiel toe of start " +
+        "een bike-fit flow voor een betere inschatting.",
       signedInPrimaryCta: "Voeg rijdersprofiel toe",
       signedInSecondaryCta: "Open bike fit",
       confidenceLevels: {
@@ -361,8 +367,7 @@ const nl = {
         frame_size_close: "De framemaat lijkt op papier dicht bij jouw lengte te liggen.",
         frame_size_borderline:
           "De framemaat zit aan de rand van het verwachte bereik voor jouw lengte.",
-        cockpit_close:
-          "De beschikbare stack en reach lijken werkbaar voor een eerste screening.",
+        cockpit_close: "De beschikbare stack en reach lijken werkbaar voor een eerste screening.",
         limited_geometry:
           "Deze fiets heeft beperkte gedeelde geometrie, dus de schatting blijft voorzichtig.",
         limited_geometry_data:
@@ -371,8 +376,7 @@ const nl = {
           "De beschikbare geometrie lijkt op papier redelijk compatibel voor een eerste screening.",
         mixed_geometry_signals:
           "Sommige geometriesignalen lijken werkbaar, maar dit vraagt nog een extra check.",
-        weak_geometry_match:
-          "De beschikbare geometrie geeft op papier een zwakke overeenkomst.",
+        weak_geometry_match: "De beschikbare geometrie geeft op papier een zwakke overeenkomst.",
         unlikely_geometry_match:
           "De beschikbare geometrie lijkt op papier waarschijnlijk niet bij jouw maat te passen.",
         cockpit_check_needed:
@@ -382,7 +386,8 @@ const nl = {
     cta: {
       title: "Start vandaag met de gratis bike fit calculator",
       description:
-        "Gebruik eerst de gratis calculator en upgrade alleen als je een dieper rapport en scherpere vervolgstappen wilt.",
+        "Gebruik eerst de gratis calculator en upgrade alleen als je een dieper rapport en " +
+        "scherpere vervolgstappen wilt.",
       button: "Open de gratis bike fit calculator",
     },
     bikeSearch: {
@@ -401,7 +406,8 @@ const nl = {
       eyebrow: "Echte fietsen. Echte data.",
       title: "Fietsen op het platform — van geometrie tot bandenspanning",
       subtitle:
-        "Elke getoonde fiets bevat volledige geometriemetingen en geoptimaliseerde bandenspanningen. Maak een account aan om je eigen fit te berekenen.",
+        "Elke getoonde fiets bevat volledige geometriemetingen en geoptimaliseerde " +
+        "bandenspanningen. Maak een account aan om je eigen fit te berekenen.",
       prevLabel: "Vorige fiets",
       nextLabel: "Volgende fiets",
       regionLabel: "Fietsoverzicht",
@@ -418,7 +424,8 @@ const nl = {
       rearLabel: "Achter",
       pressureUnit: "bar",
       psiUnit: "psi",
-      pressureDisclaimer: "Gebaseerd op typisch gecombineerd gewicht van 70–80 kg (rijder en fiets)",
+      pressureDisclaimer:
+        "Gebaseerd op typisch gecombineerd gewicht van 70–80 kg (rijder en fiets)",
       pressureAvailable: "Bandenspanningsoptimalisatie beschikbaar voor deze fiets",
       geometrySection: "Geometrie",
       tyreSection: "Bandenspanning",
@@ -443,7 +450,8 @@ const nl = {
         "Bereken de ideale bandenspanning voor race, gravel of MTB. Gratis, zonder account.",
       h1: "Gratis bandenspanningscalculator",
       subtitle:
-        "Bereken direct de ideale bandenspanning voor race, gravel of MTB. Vul je gewicht en bandbreedte in voor direct advies.",
+        "Bereken direct de ideale bandenspanning voor race, gravel of MTB. Vul je gewicht en " +
+        "bandbreedte in voor direct advies.",
       chips: [
         "Gebaseerd op gewicht en bandbreedte",
         "Werkt voor race, gravel en MTB",
@@ -453,19 +461,18 @@ const nl = {
     roadPage: {
       title: "Bandenspanning Racefiets Calculator | BestBikeFit4U",
       description:
-        "Bereken ideale bandenspanning voor je racefiets op basis van gewicht, bandbreedte en ondergrond.",
+        "Bereken ideale bandenspanning voor je racefiets op basis van gewicht, bandbreedte en " +
+        "ondergrond.",
       h1: "Bandenspanning Racefiets",
     },
     gravelPage: {
       title: "Bandenspanning Gravelbike Calculator | BestBikeFit4U",
-      description:
-        "Vind de optimale bandenspanning voor je gravelbike op gemengd terrein.",
+      description: "Vind de optimale bandenspanning voor je gravelbike op gemengd terrein.",
       h1: "Bandenspanning Gravelbike",
     },
     mtbPage: {
       title: "Bandenspanning MTB Calculator | BestBikeFit4U",
-      description:
-        "Bereken MTB bandenspanning voor trail, XC of allround mountainbike gebruik.",
+      description: "Bereken MTB bandenspanning voor trail, XC of allround mountainbike gebruik.",
       h1: "Bandenspanning MTB",
     },
     form: {
@@ -512,14 +519,10 @@ const nl = {
           "De druk kan te laag zijn voor deze setup. Controleer karkas en terrein.",
         front_rear_pressure_mismatch:
           "Groot verschil tussen voor- en achterdruk. Controleer je invoer.",
-        inner_tube_pinch_flat_risk:
-          "Lage druk met binnenband: risico op stootlek.",
-        road_tire_width_unusual:
-          "Ongebruikelijke bandbreedte voor een racefiets. Controleer dit.",
-        gravel_tire_width_unusual:
-          "Ongebruikelijke bandbreedte voor een gravelbike.",
-        mtb_tire_width_unusual:
-          "MTB-banden zijn meestal minimaal 45 mm breed.",
+        inner_tube_pinch_flat_risk: "Lage druk met binnenband: risico op stootlek.",
+        road_tire_width_unusual: "Ongebruikelijke bandbreedte voor een racefiets. Controleer dit.",
+        gravel_tire_width_unusual: "Ongebruikelijke bandbreedte voor een gravelbike.",
+        mtb_tire_width_unusual: "MTB-banden zijn meestal minimaal 45 mm breed.",
         hookless_max_pressure_unknown:
           "Hookless velg: maximale druk onbekend. Blijf op of onder 3,5 bar tenzij anders aangegeven.",
       },
@@ -530,7 +533,8 @@ const nl = {
     cta: {
       heading: "Hoe verder?",
       body:
-        "Maak een gratis account aan om je fietsen toe te voegen, persoonlijk bandenspanningsadvies te berekenen en toekomstige aanpassingen bij te houden.",
+        "Maak een gratis account aan om je fietsen toe te voegen, persoonlijk " +
+        "bandenspanningsadvies te berekenen en toekomstige aanpassingen bij te houden.",
       primaryButton: "Maak een gratis account aan",
       secondaryButton: "Vergelijk Free vs Pro",
       loginPrompt: "Heb je al een account?",
@@ -703,7 +707,8 @@ const nl = {
       currentBikeTitle: "Huidige fiets",
       viewBike: "Bekijk fiets",
       noBikeTitle: "Nog geen fiets opgeslagen",
-      noBikeDescription: "Voeg een fiets toe om druk- en fitcontext aan een echte setup te koppelen.",
+      noBikeDescription:
+        "Voeg een fiets toe om druk- en fitcontext aan een echte setup te koppelen.",
       pressureStale: "Herberekenen aanbevolen",
       pressureWarnings: "{count} waarschuwingen in je fit- en spanningslaag",
       viewAllFits: "Alles bekijken",
@@ -714,8 +719,7 @@ const nl = {
       title: "Afstellingsgeschiedenis",
       subtitle: "Je afstellingssessies per fiets, nieuwste eerst.",
       emptyTitle: "Nog geen fit-sessies",
-      emptyDescription:
-        "Voltooi een fit-sessie om hier je fietsgeschiedenis op te bouwen.",
+      emptyDescription: "Voltooi een fit-sessie om hier je fietsgeschiedenis op te bouwen.",
       emptyCta: "Start je eerste fit-sessie",
       bikeWithoutName: "Fiets zonder naam",
       noBikeLinked: "Geen fiets gekoppeld",
@@ -731,7 +735,8 @@ const nl = {
         action: "Fit verwijderen",
         dialogTitle: "Bike fitting verwijderen?",
         dialogDescription:
-          "Dit verwijdert de fit-sessie, vragenlijstantwoorden, aanbevelingen en gerelateerde validatiedata permanent.",
+          "Dit verwijdert de fit-sessie, vragenlijstantwoorden, aanbevelingen en gerelateerde " +
+          "validatiedata permanent.",
         confirm: "Fit verwijderen",
         success: "Bike fitting verwijderd.",
         failed: "Kon de bike fitting niet verwijderen. Probeer het opnieuw.",
@@ -801,7 +806,8 @@ const nl = {
       algorithm: {
         title: "Hoe ons bike fit algoritme werkt",
         subtitle:
-          "Een transparante blik op hoe we jouw lichaamsdata en rijdoelen vertalen naar precieze, gepersonaliseerde setup-aanbevelingen.",
+          "Een transparante blik op hoe we jouw lichaamsdata en rijdoelen vertalen naar " +
+          "precieze, gepersonaliseerde setup-aanbevelingen.",
         backLink: "Terug naar fit",
         inputsTitle: "Wat er ingaat",
         processTitle: "Hoe we berekenen",
@@ -810,17 +816,16 @@ const nl = {
       },
       loading: "Fit-instellingen laden...",
       title: "Start nieuwe fit-sessie",
-      subtitle:
-        "Kies je fiets en rijdoelen om gepersonaliseerde afsteladviezen te krijgen.",
+      subtitle: "Kies je fiets en rijdoelen om gepersonaliseerde afsteladviezen te krijgen.",
       profileWarning: {
         title: "Vul eerst je profiel in",
-        description:
-          "Je moet eerst je lichaamsmetingen invullen voordat je een fit-sessie start.",
+        description: "Je moet eerst je lichaamsmetingen invullen voordat je een fit-sessie start.",
         cta: "Ga naar profiel",
       },
       riderProfileWarning: {
         title: "Vul je rijprofiel in",
-        description: "Beantwoord een paar vragen over je rijstijl voordat je een bikefitting start.",
+        description:
+          "Beantwoord een paar vragen over je rijstijl voordat je een bikefitting start.",
         cta: "Naar mijn profiel",
       },
       savedBikes: {
@@ -845,10 +850,12 @@ const nl = {
         bikeType: "Welk type fiets?",
         ridingStyle: "Hoe fiets je meestal?",
         ridingStyleTooltip:
-          "Kies de rijstijl die het best past bij hoe je deze fiets meestal gebruikt, zodat fit-aanbevelingen comfort, handling en positie goed kunnen afwegen.",
+          "Kies de rijstijl die het best past bij hoe je deze fiets meestal gebruikt, zodat " +
+          "fit-aanbevelingen comfort, handling en positie goed kunnen afwegen.",
         primaryGoal: "Wat is je belangrijkste doel?",
         primaryGoalTooltip:
-          "Kies het belangrijkste resultaat dat je met deze fiets wilt bereiken, zodat opgeslagen fietsprofielen en fit-sessies daarop kunnen sturen.",
+          "Kies het belangrijkste resultaat dat je met deze fiets wilt bereiken, zodat " +
+          "opgeslagen fietsprofielen en fit-sessies daarop kunnen sturen.",
       },
       continueCta: "Ga door naar vragen",
       profileRequirementHint: "Vul je profiel in om verder te gaan",
@@ -903,13 +910,14 @@ const nl = {
     questionnaire: {
       loading: "Vragenlijst laden...",
       title: "Vertel ons over je rijstijl",
-      subtitle:
-        "Beantwoord deze vragen zodat we je bikefit-aanbevelingen kunnen personaliseren.",
+      subtitle: "Beantwoord deze vragen zodat we je bikefit-aanbevelingen kunnen personaliseren.",
       intro: {
         eyebrow: "Bike Fit",
         title: "Vertel ons over je rijstijl",
         description:
-          "Ons fittingmodel is gebouwd op data van duizenden rijders en professioneel gevalideerde methoden. Beantwoord een paar vragen — we vertalen je lichaamsmetingen en rijstijl naar precieze, gepersonaliseerde setup-aanbevelingen.",
+          "Ons fittingmodel is gebouwd op data van duizenden rijders en professioneel " +
+          "gevalideerde methoden. Beantwoord een paar vragen — we vertalen je lichaamsmetingen " +
+          "en rijstijl naar precieze, gepersonaliseerde setup-aanbevelingen.",
         progress: {
           timeRemaining: "~7 minuten resterend",
           percentComplete: "10% voltooid",
@@ -920,8 +928,7 @@ const nl = {
       },
       sessionNotFound: {
         title: "Sessie niet gevonden",
-        description:
-          "De fit-sessie die je zoekt bestaat niet of is gearchiveerd.",
+        description: "De fit-sessie die je zoekt bestaat niet of is gearchiveerd.",
         cta: "Start nieuwe sessie",
       },
       emptyTitle: "Geen vragenlijst-items beschikbaar",
@@ -960,20 +967,22 @@ const nl = {
             label: "Nee",
             subtitle: "Ik rijd comfortabel",
             tooltip:
-              "Je huidige positie werkt goed. We richten ons op het behouden van comfort terwijl we efficiëntie en prestaties optimaliseren.",
+              "Je huidige positie werkt goed. We richten ons op het behouden van comfort terwijl we " +
+              "efficiëntie en prestaties optimaliseren.",
           },
           yes: {
             label: "Ja",
             subtitle: "Ik heb enig ongemak",
             tooltip:
-              "Ongemak tijdens het fietsen wijst vaak op een fitprobleem — zadelhoogte, reach, klikaanpassing of stuuropstelling. Je antwoorden helpen ons de oorzaak te identificeren en aan te pakken.",
+              "Ongemak tijdens het fietsen wijst vaak op een fitprobleem — zadelhoogte, reach, " +
+              "klikaanpassing of stuuropstelling. Je antwoorden helpen ons de oorzaak te " +
+              "identificeren en aan te pakken.",
           },
         },
       },
       rideDistance: {
         questionText: "Wat is je gebruikelijke ritafstand?",
-        helpText:
-          "Denk aan de afstand die je het vaakst rijdt — niet je langste incidentele rit.",
+        helpText: "Denk aan de afstand die je het vaakst rijdt — niet je langste incidentele rit.",
         radioGroupLabel: "Gebruikelijke ritafstand",
         selectPrompt: "Beweeg de schuifregelaar om je gebruikelijke ritafstand te kiezen.",
         options: {
@@ -981,62 +990,66 @@ const nl = {
             label: "< 30 km",
             subtitle: "Casual / recreatief",
             tooltip:
-              "Korte ritten geven prioriteit aan een rechtopstaande, comfortabele positie. Zadelhoogte en stuurreach zijn geoptimaliseerd voor gemak en laagdrempelig fietsen.",
+              "Korte ritten geven prioriteit aan een rechtopstaande, comfortabele positie. " +
+              "Zadelhoogte en stuurreach zijn geoptimaliseerd voor gemak en laagdrempelig fietsen.",
           },
           medium: {
             label: "30–80 km",
             subtitle: "Regelmatig trainen",
             tooltip:
-              "Middellange afstanden vereisen een balans tussen comfort en efficiëntie. Je positie kan een matige voorwaartse houding aan zonder vermoeidheid te veroorzaken.",
+              "Middellange afstanden vereisen een balans tussen comfort en efficiëntie. Je positie " +
+              "kan een matige voorwaartse houding aan zonder vermoeidheid te veroorzaken.",
           },
           long: {
             label: "80–150 km",
             subtitle: "Duurzaamheid",
             tooltip:
-              "Lange afstanden vragen om een fit die efficiëntie over uren in stand houdt. Romp­activatie en zadelcontact worden cruciaal — je positie moet krachtig én comfortabel zijn.",
+              "Lange afstanden vragen om een fit die efficiëntie over uren in stand houdt. " +
+              "Romp­activatie en zadelcontact worden cruciaal — je positie moet krachtig én " +
+              "comfortabel zijn.",
           },
           ultra: {
             label: "150+ km",
             subtitle: "Ultra-duurzaamheid",
             tooltip:
-              "Op deze afstand wordt het kleinste ongemak uitvergroot. Je fit geeft prioriteit aan gewrichtsbescherming, drukverdeling en het vermogen om de trappracht over vele uren vast te houden.",
+              "Op deze afstand wordt het kleinste ongemak uitvergroot. Je fit geeft prioriteit aan " +
+              "gewrichtsbescherming, drukverdeling en het vermogen om de trappracht over vele uren " +
+              "vast te houden.",
           },
         },
       },
       weeklyHours: {
         questionText: "Hoeveel uur per week rijd je doorgaans?",
-        helpText:
-          "Tip: Schat je gemiddelde wekelijkse rijtijd over de afgelopen 1–2 maanden.",
+        helpText: "Tip: Schat je gemiddelde wekelijkse rijtijd over de afgelopen 1–2 maanden.",
         imageAlt: "Klok die wekelijkse rijtijd weergeeft",
         radioGroupLabel: "Wekelijkse rijuren",
         selectPrompt: "Beweeg de schuifregelaar om je wekelijkse rijuren te kiezen.",
         whyTitle: "Waarom dit belangrijk is",
         whyText:
-          "Het aantal uren dat je fietst bepaalt hoe lang je je positie kunt vasthouden, hoeveel belasting je spieren en gewrichten aankunnen en hoe agressief je fietsopstelling kan zijn. Een positie die te agressief is voor jouw niveau kan leiden tot ongemak of blessures.",
+          "Het aantal uren dat je fietst bepaalt hoe lang je je positie kunt vasthouden, hoeveel " +
+          "belasting je spieren en gewrichten aankunnen en hoe agressief je fietsopstelling kan " +
+          "zijn. Een positie die te agressief is voor jouw niveau kan leiden tot ongemak of " +
+          "blessures.",
         options: {
           "0-3": {
             label: "0–3 u",
             subtitle: "Af en toe fietsen",
-            tooltip:
-              "Korte of onregelmatige ritten, voornamelijk gericht op comfort en plezier.",
+            tooltip: "Korte of onregelmatige ritten, voornamelijk gericht op comfort en plezier.",
           },
           "3-6": {
             label: "3–6 u",
             subtitle: "Regelmatig fietsen",
-            tooltip:
-              "Je rijdt meerdere keren per week en bouwt consistentie op.",
+            tooltip: "Je rijdt meerdere keren per week en bouwt consistentie op.",
           },
           "6-10": {
             label: "6–10 u",
             subtitle: "Enthousiast niveau",
-            tooltip:
-              "Je traint regelmatig en verbetert je conditie en efficiëntie.",
+            tooltip: "Je traint regelmatig en verbetert je conditie en efficiëntie.",
           },
           "10-15": {
             label: "10–15 u",
             subtitle: "Hoog volume",
-            tooltip:
-              "Je rijdt vaak, regelmatig met structuur of specifieke doelen.",
+            tooltip: "Je rijdt vaak, regelmatig met structuur of specifieke doelen.",
           },
           "15+": {
             label: "15+ u",
@@ -1049,7 +1062,9 @@ const nl = {
       experienceLevel: {
         questionText: "Wat beschrijft jouw fietsachtergrond het best?",
         helpText:
-          "Dit stelt de lichamelijke basis in voor jouw fietspositie. Wees eerlijk — een niveau dat niet bij je lichaam past, leidt tot een positie die oncomfortabel of inefficiënt is.",
+          "Dit stelt de lichamelijke basis in voor jouw fietspositie. Wees eerlijk — een niveau " +
+          "dat niet bij je lichaam past, leidt tot een positie die oncomfortabel of inefficiënt " +
+          "is.",
         radioGroupLabel: "Ervaringsniveau als fietser",
         selectPrompt: "Beweeg de schuifregelaar om je ervaringsniveau te kiezen.",
         moreAbout: "Meer over {level}",
@@ -1060,74 +1075,108 @@ const nl = {
             label: "Beginner",
             subtitle: "Comfort voorop",
             explanation:
-              "We gaan uit van een lagere basisflexibiliteit en rompstabiliteit. Je fietspositie wordt meer rechtop — minder heuphoek, minder belasting van de onderrug en een zadel-stuurhoogte die makkelijker vol te houden is op langere ritten.",
+              "We gaan uit van een lagere basisflexibiliteit en rompstabiliteit. Je fietspositie " +
+              "wordt meer rechtop — minder heuphoek, minder belasting van de onderrug en een " +
+              "zadel-stuurhoogte die makkelijker vol te houden is op langere ritten.",
             tooltip:
-              "Een niveau boven je huidige conditie kiezen leidt tot een positie die je niet comfortabel kunt vasthouden. Een lager stuur vergroot de heuphoek en vereist rompkracht om rugpijn te vermijden. Twijfel je? Begin hier.",
+              "Een niveau boven je huidige conditie kiezen leidt tot een positie die je niet " +
+              "comfortabel kunt vasthouden. Een lager stuur vergroot de heuphoek en vereist " +
+              "rompkracht om rugpijn te vermijden. Twijfel je? Begin hier.",
           },
           intermediate: {
             label: "Gemiddeld",
             subtitle: "Gebalanceerd",
             explanation:
-              "Gemiddelde flexibiliteit en rompkracht. Je fietspositie gebruikt een neutrale stuurstand — niet agressief, maar ook niet volledig rechtop. Geschikt voor regelmatige ritten van meerdere uren over gevarieerd terrein.",
+              "Gemiddelde flexibiliteit en rompkracht. Je fietspositie gebruikt een neutrale " +
+              "stuurstand — niet agressief, maar ook niet volledig rechtop. Geschikt voor " +
+              "regelmatige ritten van meerdere uren over gevarieerd terrein.",
             tooltip:
-              "Dit niveau past geen aanpassing toe op de stuurhoogte. Het is het startpunt voor de meeste fietsers na 6–12 maanden regelmatig rijden. Je lichaam kan een matige heuphoek zonder problemen aan.",
+              "Dit niveau past geen aanpassing toe op de stuurhoogte. Het is het startpunt voor de " +
+              "meeste fietsers na 6–12 maanden regelmatig rijden. Je lichaam kan een matige heuphoek " +
+              "zonder problemen aan.",
           },
           advanced: {
             label: "Gevorderd",
             subtitle: "Prestatie",
             explanation:
-              "Hogere tolerantie voor heuphoek, vollere knieextensie en de rompkracht om langdurig een aerodynamische houding vast te houden. Je fietspositie wordt agressiever — lager stuur, langere reach.",
+              "Hogere tolerantie voor heuphoek, vollere knieextensie en de rompkracht om langdurig " +
+              "een aerodynamische houding vast te houden. Je fietspositie wordt agressiever — lager " +
+              "stuur, langere reach.",
             tooltip:
-              "Wees eerlijk: als je rompkracht en flexibiliteit dit niet ondersteunen, zorgt de positie binnen de eerste 30 minuten voor ongemak. Een agressieve positie verbetert je prestaties alleen als je lichaam er klaar voor is.",
+              "Wees eerlijk: als je rompkracht en flexibiliteit dit niet ondersteunen, zorgt de " +
+              "positie binnen de eerste 30 minuten voor ongemak. Een agressieve positie verbetert je " +
+              "prestaties alleen als je lichaam er klaar voor is.",
           },
         },
       },
       painAreas: {
         questionText: "Waar ervaar je ongemak?",
-        helpText: "Selecteer alle gebieden die van toepassing zijn. Dit helpt de oorzaak van je ongemak te bepalen.",
+        helpText:
+          "Selecteer alle gebieden die van toepassing zijn. Dit helpt de oorzaak van je ongemak " +
+          "te bepalen.",
         selectPrompt: "Selecteer een of meer gebieden hierboven.",
         areas: {
           knee_front: {
             label: "Voorkant knie",
             subtitle: "Anterieur",
-            tooltip: "Pijn aan de voorkant van de knie wijst vaak op een te lage zadelhoogte, een te ver naar achteren geplaatste schoenplaat, of te veel speling in het pedaalsysteem.",
+            tooltip:
+              "Pijn aan de voorkant van de knie wijst vaak op een te lage zadelhoogte, een te ver " +
+              "naar achteren geplaatste schoenplaat, of te veel speling in het pedaalsysteem.",
           },
           knee_back: {
             label: "Achterkant knie",
             subtitle: "Posterieur",
-            tooltip: "Posterieure kniepijn wordt vaak veroorzaakt door een te hoge zadelhoogte of een te ver naar voren geplaatste schoenplaat, waardoor de hamstringaanhechting te veel wordt uitgerekt.",
+            tooltip:
+              "Posterieure kniepijn wordt vaak veroorzaakt door een te hoge zadelhoogte of een te " +
+              "ver naar voren geplaatste schoenplaat, waardoor de hamstringaanhechting te veel wordt " +
+              "uitgerekt.",
           },
           lower_back: {
             label: "Onderrug",
             subtitle: "Lumbaal",
-            tooltip: "Ongemak in de onderrug komt meestal door een te lange reach, een te hoge zadelhoogte of onvoldoende rompkracht. Een kortere stuurpen of hogere stuurhoogte kan helpen.",
+            tooltip:
+              "Ongemak in de onderrug komt meestal door een te lange reach, een te hoge zadelhoogte " +
+              "of onvoldoende rompkracht. Een kortere stuurpen of hogere stuurhoogte kan helpen.",
           },
           neck: {
             label: "Nek of schouders",
             subtitle: "Cervicaal / Trapezius",
-            tooltip: "Nek- en schouderspanning wordt vaak veroorzaakt door een te laag of te ver weg geplaatst stuur, waardoor je je hoofd langdurig omhoog moet houden.",
+            tooltip:
+              "Nek- en schouderspanning wordt vaak veroorzaakt door een te laag of te ver weg " +
+              "geplaatst stuur, waardoor je je hoofd langdurig omhoog moet houden.",
           },
           hands: {
             label: "Handen",
             subtitle: "Gevoelloosheid of pijn",
-            tooltip: "Gevoelloosheid of pijn in de handen wordt meestal veroorzaakt door te veel gewicht op het stuur, een te laag stuur of een greepbreedte die niet overeenkomt met je schouderbreedte.",
+            tooltip:
+              "Gevoelloosheid of pijn in de handen wordt meestal veroorzaakt door te veel gewicht op " +
+              "het stuur, een te laag stuur of een greepbreedte die niet overeenkomt met je " +
+              "schouderbreedte.",
           },
           saddle: {
             label: "Zadelgebied",
             subtitle: "Zitbeenderen / perineum",
-            tooltip: "Zadelpijn wijst op een verkeerde zadelhoogte, -kanteling, voor-achterwaartse positie, of een zadelbreedte/-vorm die niet past bij jouw zitbeenafstand.",
+            tooltip:
+              "Zadelpijn wijst op een verkeerde zadelhoogte, -kanteling, voor-achterwaartse positie, " +
+              "of een zadelbreedte/-vorm die niet past bij jouw zitbeenafstand.",
           },
           feet: {
             label: "Voeten",
             subtitle: "Brandende voeten of gevoelloosheid",
-            tooltip: "Brandende voeten en gevoelloosheid zijn meestal het gevolg van een schoenplaatpositie die te ver naar voren staat, of te nauwe fietsschoenen die de metatarsaalzenuwen onder belasting afknellen.",
+            tooltip:
+              "Brandende voeten en gevoelloosheid zijn meestal het gevolg van een schoenplaatpositie " +
+              "die te ver naar voren staat, of te nauwe fietsschoenen die de metatarsaalzenuwen " +
+              "onder belasting afknellen.",
           },
         },
       },
       currentPositionFeeling: {
         questionText: "Hoe voelt je huidige fietspositie aan?",
         helpText:
-          "Kleine ongemakken wijzen vaak op een verkeerde afstelling. Door die vroeg te herkennen kunnen we reach, stuurhoogte en zadelpositie gerichter verbeteren. Selecteer alles wat van toepassing is — heb je nu geen fiets, kies dan 'Sla deze stap over'.",
+          "Kleine ongemakken wijzen vaak op een verkeerde afstelling. Door die vroeg te " +
+          "herkennen kunnen we reach, stuurhoogte en zadelpositie gerichter verbeteren. " +
+          "Selecteer alles wat van toepassing is — heb je nu geen fiets, kies dan 'Sla deze stap " +
+          "over'.",
         imageAlt: "Illustratie van comfortabele versus oncomfortabele fietsposities",
         orDivider: "of beschrijf wat niet goed voelt",
         options: {
@@ -1139,34 +1188,28 @@ const nl = {
           },
           no_bike: {
             label: "Sla deze stap over",
-            subtitle:
-              "We baseren je fit volledig op je lichaamsmetingen en rijprofiel.",
-            tooltip:
-              "We baseren je fit volledig op je lichaamsmetingen en rijprofiel.",
+            subtitle: "We baseren je fit volledig op je lichaamsmetingen en rijprofiel.",
+            tooltip: "We baseren je fit volledig op je lichaamsmetingen en rijprofiel.",
           },
           too_stretched: {
             label: "Te uitgestrekt - ik moet te ver reiken",
             subtitle: "Te lange reach",
-            tooltip:
-              "Je armen, nek of onderrug kunnen op langere ritten overstrekt aanvoelen.",
+            tooltip: "Je armen, nek of onderrug kunnen op langere ritten overstrekt aanvoelen.",
           },
           too_compact: {
             label: "Te compact - ik voel me opgepropt",
             subtitle: "Te compact of te rechtop",
-            tooltip:
-              "Je positie kan ademhaling, comfort of krachtoverdracht beperken.",
+            tooltip: "Je positie kan ademhaling, comfort of krachtoverdracht beperken.",
           },
           too_low: {
             label: "Het stuur voelt te laag",
             subtitle: "Te veel druk op handen of rug",
-            tooltip:
-              "Je kunt spanning voelen in je nek, schouders of onderrug.",
+            tooltip: "Je kunt spanning voelen in je nek, schouders of onderrug.",
           },
           too_high: {
             label: "Het stuur voelt te hoog",
             subtitle: "Te weinig voorwaartse positie",
-            tooltip:
-              "Je kunt je minder efficiënt voelen of controle aan de voorkant missen.",
+            tooltip: "Je kunt je minder efficiënt voelen of controle aan de voorkant missen.",
           },
           saddle_too_high: {
             label: "Het zadel voelt te hoog",
@@ -1185,13 +1228,16 @@ const nl = {
       climbingProfile: {
         questionText: "Wil je een klimgericht fit-profiel?",
         helpText:
-          "Een klimprofiel geeft je een tweede set aanbevelingen, geoptimaliseerd voor zittend klimmen — met aangepaste zadelhoogte, setback en stuurpositie.",
+          "Een klimprofiel geeft je een tweede set aanbevelingen, geoptimaliseerd voor zittend " +
+          "klimmen — met aangepaste zadelhoogte, setback en stuurpositie.",
         imageAlt: "Illustratie van een klimmende fietser",
         options: {
           yes: {
             label: "Ja, voeg een klimprofiel toe",
             tooltip:
-              "We berekenen een tweede set metingen, geoptimaliseerd voor zittend klimmen — met aangepaste zadelhoogte, setback en stuurpositie voor meer efficiëntie op beklimmingen.",
+              "We berekenen een tweede set metingen, geoptimaliseerd voor zittend klimmen — met " +
+              "aangepaste zadelhoogte, setback en stuurpositie voor meer efficiëntie op " +
+              "beklimmingen.",
           },
           no: {
             label: "Nee, alleen standaard fit",
@@ -1203,108 +1249,134 @@ const nl = {
       climbingImportance: {
         questionText: "Hoe belangrijk is klimmen in jouw ritten?",
         helpText:
-          "Klimmen verandert hoe je lichaam met de fiets samenwerkt. We passen je positie aan om efficiëntie, comfort en controle te verbeteren op lange of steile beklimmingen.",
+          "Klimmen verandert hoe je lichaam met de fiets samenwerkt. We passen je positie aan om " +
+          "efficiëntie, comfort en controle te verbeteren op lange of steile beklimmingen.",
         options: {
           rarely: {
             label: "Ik klim zelden",
             tooltip:
-              "Op vlak terrein kunnen we je positie optimaliseren voor aerodynamica en snelheid met een lagere en meer gestrekte setup.",
+              "Op vlak terrein kunnen we je positie optimaliseren voor aerodynamica en snelheid met " +
+              "een lagere en meer gestrekte setup.",
           },
           occasional: {
             label: "Af en toe klimmen",
             tooltip:
-              "Een gebalanceerde positie helpt je efficiënt te blijven op vlakke stukken en toch comfortabel te klimmen op korte hellingen.",
+              "Een gebalanceerde positie helpt je efficiënt te blijven op vlakke stukken en toch " +
+              "comfortabel te klimmen op korte hellingen.",
           },
           regular: {
             label: "Regelmatig klimmen",
             tooltip:
-              "Klimmen vraagt om efficiënte krachtoverdracht en comfort in een meer rechtopstaande positie. We passen je setup aan om belasting tijdens langere inspanningen te beperken.",
+              "Klimmen vraagt om efficiënte krachtoverdracht en comfort in een meer rechtopstaande " +
+              "positie. We passen je setup aan om belasting tijdens langere inspanningen te " +
+              "beperken.",
           },
           climbing_focused: {
             label: "Klimmen staat centraal",
             tooltip:
-              "Lange beklimmingen vragen om een open heuphoek en stabiele houding. We optimaliseren je positie voor zittende klimefficiëntie en minder vermoeidheid.",
+              "Lange beklimmingen vragen om een open heuphoek en stabiele houding. We optimaliseren " +
+              "je positie voor zittende klimefficiëntie en minder vermoeidheid.",
           },
         },
       },
       roadRidingType: {
         questionText: "Welk type weggebruik doe je vooral?",
         helpText:
-          "Je rijtype bepaalt hoe agressief en aerodynamisch je positie moet zijn. Daarmee stemmen we je setup af op comfort, efficiëntie of maximale prestaties.",
+          "Je rijtype bepaalt hoe agressief en aerodynamisch je positie moet zijn. Daarmee " +
+          "stemmen we je setup af op comfort, efficiëntie of maximale prestaties.",
         imageAlt: "Illustratie van verschillende rijtypes",
         options: {
           casual: {
             label: "Ontspannen ritten en fitness",
             description:
-              "Gericht op comfort en plezier. We geven prioriteit aan een meer ontspannen positie met minder belasting op rug, nek en handen.",
+              "Gericht op comfort en plezier. We geven prioriteit aan een meer ontspannen positie " +
+              "met minder belasting op rug, nek en handen.",
             tooltip:
-              "Gericht op comfort en plezier. We geven prioriteit aan een meer ontspannen positie met minder belasting op rug, nek en handen.",
+              "Gericht op comfort en plezier. We geven prioriteit aan een meer ontspannen positie " +
+              "met minder belasting op rug, nek en handen.",
           },
           group: {
             label: "Groepsritten en toertochten",
             description:
-              "Een mix van duurvermogen en tempo. We balanceren comfort en efficiëntie voor langere ritten met gematigde intensiteit.",
+              "Een mix van duurvermogen en tempo. We balanceren comfort en efficiëntie voor langere " +
+              "ritten met gematigde intensiteit.",
             tooltip:
-              "Een mix van duurvermogen en tempo. We balanceren comfort en efficiëntie voor langere ritten met gematigde intensiteit.",
+              "Een mix van duurvermogen en tempo. We balanceren comfort en efficiëntie voor langere " +
+              "ritten met gematigde intensiteit.",
           },
           training: {
             label: "Gestructureerde training",
             description:
-              "Regelmatige training met specifieke doelen. We optimaliseren je positie voor efficiëntie en krachtoverdracht, zonder duurzaamheid te verliezen.",
+              "Regelmatige training met specifieke doelen. We optimaliseren je positie voor " +
+              "efficiëntie en krachtoverdracht, zonder duurzaamheid te verliezen.",
             tooltip:
-              "Regelmatige training met specifieke doelen. We optimaliseren je positie voor efficiëntie en krachtoverdracht, zonder duurzaamheid te verliezen.",
+              "Regelmatige training met specifieke doelen. We optimaliseren je positie voor " +
+              "efficiëntie en krachtoverdracht, zonder duurzaamheid te verliezen.",
           },
           racing: {
             label: "Wedstrijden (criteriums, wegwedstrijden)",
             description:
-              "Hoge intensiteit en prestatiegericht. We maken je positie agressiever voor meer snelheid, aerodynamica en directheid.",
+              "Hoge intensiteit en prestatiegericht. We maken je positie agressiever voor meer " +
+              "snelheid, aerodynamica en directheid.",
             tooltip:
-              "Hoge intensiteit en prestatiegericht. We maken je positie agressiever voor meer snelheid, aerodynamica en directheid.",
+              "Hoge intensiteit en prestatiegericht. We maken je positie agressiever voor meer " +
+              "snelheid, aerodynamica en directheid.",
           },
           tt: {
             label: "Tijdritten / triatlon",
             description:
-              "Maximale aerodynamische efficiëntie. We plaatsen je lager en meer naar voren om luchtweerstand te minimaliseren en constante snelheid te maximaliseren.",
+              "Maximale aerodynamische efficiëntie. We plaatsen je lager en meer naar voren om " +
+              "luchtweerstand te minimaliseren en constante snelheid te maximaliseren.",
             tooltip:
-              "Maximale aerodynamische efficiëntie. We plaatsen je lager en meer naar voren om luchtweerstand te minimaliseren en constante snelheid te maximaliseren.",
+              "Maximale aerodynamische efficiëntie. We plaatsen je lager en meer naar voren om " +
+              "luchtweerstand te minimaliseren en constante snelheid te maximaliseren.",
           },
         },
       },
       mtbTerrain: {
         questionText: "Op welk terrein rijd je vooral?",
         helpText:
-          "Het terrein waarop je rijdt heeft grote invloed op je ideale fietssetup. Gladde wegen laten een meer aerodynamische positie toe, terwijl ruw en technisch terrein meer controle en stabiliteit vraagt. Zo vinden we de juiste balans tussen comfort, controle, efficiëntie en prestaties.",
+          "Het terrein waarop je rijdt heeft grote invloed op je ideale fietssetup. Gladde wegen " +
+          "laten een meer aerodynamische positie toe, terwijl ruw en technisch terrein meer " +
+          "controle en stabiliteit vraagt. Zo vinden we de juiste balans tussen comfort, " +
+          "controle, efficiëntie en prestaties.",
         imageAlt: "Illustratie van fietsterrein",
         options: {
           asphalt: {
             label: "Alleen asfalt",
             tooltip:
-              "Gladde wegen maken een efficiënte en aerodynamische rijpositie mogelijk. We optimaliseren je setup voor snelheid, krachtoverdracht en minder luchtweerstand.",
+              "Gladde wegen maken een efficiënte en aerodynamische rijpositie mogelijk. We " +
+              "optimaliseren je setup voor snelheid, krachtoverdracht en minder luchtweerstand.",
           },
           paved: {
             label: "Verharde wegen en lichte gravel",
             tooltip:
-              "Gemengde ondergrond vraagt om een balans tussen comfort en efficiëntie. We vergroten de stabiliteit licht zonder snelheid te verliezen.",
+              "Gemengde ondergrond vraagt om een balans tussen comfort en efficiëntie. We vergroten " +
+              "de stabiliteit licht zonder snelheid te verliezen.",
           },
           xc: {
             label: "Cross-country (vloeiende trails, klimmen)",
             tooltip:
-              "Klimmen en lichte trails vragen om efficiënte krachtoverdracht en controle. We combineren stabiliteit met een positie voor langdurige inspanning.",
+              "Klimmen en lichte trails vragen om efficiënte krachtoverdracht en controle. We " +
+              "combineren stabiliteit met een positie voor langdurige inspanning.",
           },
           trail: {
             label: "Trail (wisselend terrein, licht technisch)",
             tooltip:
-              "Oneffen en technisch terrein vraagt om meer controle en flexibiliteit. We passen je positie aan voor betere handling en stabiliteit in afdalingen.",
+              "Oneffen en technisch terrein vraagt om meer controle en flexibiliteit. We passen je " +
+              "positie aan voor betere handling en stabiliteit in afdalingen.",
           },
           enduro: {
             label: "Enduro (technische afdalingen, flinke beklimmingen)",
             tooltip:
-              "Steile afdalingen en ruw terrein vragen om een stabiele en zelfverzekerde positie. We geven prioriteit aan controle en schokabsorptie boven aerodynamica.",
+              "Steile afdalingen en ruw terrein vragen om een stabiele en zelfverzekerde positie. We " +
+              "geven prioriteit aan controle en schokabsorptie boven aerodynamica.",
           },
           dh: {
             label: "Downhill / bikepark",
             tooltip:
-              "Afdalingen op hoge snelheid en sprongen vragen om maximale controle en veiligheid. We optimaliseren je setup voor stabiliteit, impactabsorptie en handling.",
+              "Afdalingen op hoge snelheid en sprongen vragen om maximale controle en veiligheid. We " +
+              "optimaliseren je setup voor stabiliteit, impactabsorptie en handling.",
           },
         },
       },
@@ -1314,7 +1386,8 @@ const nl = {
       numeric: {
         label: "Je numerieke antwoord",
         tooltip:
-          "Voer alleen een getal in (zonder eenheid). Gebruik de aangegeven eenheid in het label (cm/mm/graden).",
+          "Voer alleen een getal in (zonder eenheid). Gebruik de aangegeven eenheid in het label " +
+          "(cm/mm/graden).",
         placeholder: "Voer een getal in",
         range: "Bereik: {min} - {max}{unit}",
         errors: {
@@ -1326,7 +1399,8 @@ const nl = {
       text: {
         label: "Je geschreven antwoord",
         tooltip:
-          "Schrijf een kort en specifiek antwoord. Voeg relevante details toe zoals fietstype, wekelijkse uren en eventuele klachten.",
+          "Schrijf een kort en specifiek antwoord. Voeg relevante details toe zoals fietstype, " +
+          "wekelijkse uren en eventuele klachten.",
         placeholder: "Typ hier je antwoord...",
       },
     },
@@ -1336,7 +1410,9 @@ const nl = {
       title: "Jouw bikefit-aanbevelingen",
       mainProfileTab: "Jouw fit",
       climbingProfileTab: "Klimprofiel",
-      climbingProfileNote: "Dit profiel is geoptimaliseerd voor klimmen — hogere sturen, aangepaste zadelpositie en kortere reach voor meer vermogen en comfort op lange beklimmingen.",
+      climbingProfileNote:
+        "Dit profiel is geoptimaliseerd voor klimmen — hogere sturen, aangepaste zadelpositie " +
+        "en kortere reach voor meer vermogen en comfort op lange beklimmingen.",
       subtitle:
         "Op basis van je metingen en rijvoorkeuren zijn dit je gepersonaliseerde bikefit-instellingen.",
       algorithmVersionLabel: "Algoritmeversie",
@@ -1347,8 +1423,7 @@ const nl = {
       },
       questionnaireIncomplete: {
         title: "Vragenlijst niet voltooid",
-        description:
-          "Rond eerst je vragenlijst af, dan kunnen we je fit-aanbeveling genereren.",
+        description: "Rond eerst je vragenlijst af, dan kunnen we je fit-aanbeveling genereren.",
         cta: "Ga verder met vragenlijst",
       },
       processing: {
@@ -1361,12 +1436,10 @@ const nl = {
       emailDialog: {
         title: "Rapport e-mailen",
         sentTitle: "E-mail verzonden",
-        description:
-          "Stuur je bikefit-aanbevelingen naar je e-mail voor later gebruik.",
+        description: "Stuur je bikefit-aanbevelingen naar je e-mail voor later gebruik.",
         sentDescription: "Controleer je inbox voor je bikefit-rapport.",
         emailLabel: "E-mailadres",
-        emailTooltip:
-          "Voer het e-mailadres in waarop je dit rapport wilt ontvangen.",
+        emailTooltip: "Voer het e-mailadres in waarop je dit rapport wilt ontvangen.",
         emailPlaceholder: "jij@example.com",
         sendCta: "Rapport verzenden",
         errors: {
@@ -1386,9 +1459,11 @@ const nl = {
         iframeTitle: "Voorvertoning van bikefit PDF-rapport",
         emailMissing: "Er is geen e-mailadres beschikbaar voor je account.",
         inlineFailed:
-          "De PDF kon niet in de viewer worden getoond. Open het rapport fullscreen of download het bestand.",
+          "De PDF kon niet in de viewer worden getoond. Open het rapport fullscreen of download " +
+          "het bestand.",
         unsupported:
-          "Deze browser kon de PDF niet in de viewer tonen. Open het rapport in een nieuw tabblad of download het bestand.",
+          "Deze browser kon de PDF niet in de viewer tonen. Open het rapport in een nieuw " +
+          "tabblad of download het bestand.",
         openInNewTab: "Open in nieuw tabblad",
         openFullPage: "Open fullscreen",
       },
@@ -1400,13 +1475,15 @@ const nl = {
         locale: "nl",
         introTitle: "Jouw fitrapport",
         introBody:
-          "Gebruik dit rapport als praktische volgorde voor aanpassingen. Verander steeds een ding tegelijk, valideer op de fiets en noteer wat je voelt na elke rit.",
+          "Gebruik dit rapport als praktische volgorde voor aanpassingen. Verander steeds een " +
+          "ding tegelijk, valideer op de fiets en noteer wat je voelt na elke rit.",
         shell: {
           brandAlt: "BestBikeFit4U beeldmerk",
           dateLabel: "Rapportdatum",
           aboutTitle: "Over dit rapport",
           aboutBody:
-            "Dit rapport vertaalt je fitsessie naar een helder aanpasplan dat je op de fiets kunt gebruiken of kunt bespreken met een fitter of fietsenwinkel.",
+            "Dit rapport vertaalt je fitsessie naar een helder aanpasplan dat je op de fiets kunt " +
+            "gebruiken of kunt bespreken met een fitter of fietsenwinkel.",
           actionsTitle: "Rapportacties",
           aboutBullets: [
             "Volg de volgorde stap voor stap.",
@@ -1416,16 +1493,18 @@ const nl = {
           ] as string[],
           coverSupport:
             "Ontwikkeld om je huidige setup met duidelijkere vervolgstappen te beoordelen.",
-          fitPassActivated:
-            "Fit Pass geactiveerd. Je volledige rapport is nu beschikbaar.",
+          fitPassActivated: "Fit Pass geactiveerd. Je volledige rapport is nu beschikbaar.",
           summaryTitle: "Samenvatting",
           summaryFullAccess:
-            "Je volledige rapport staat klaar, inclusief de gedetailleerde aanpasvolgorde en validatiestappen.",
+            "Je volledige rapport staat klaar, inclusief de gedetailleerde aanpasvolgorde en " +
+            "validatiestappen.",
           summaryLimited:
-            "Je ziet nu de belangrijkste fitgetallen. Extra rapportacties blijven beschikbaar via Fit Pass of Pro.",
+            "Je ziet nu de belangrijkste fitgetallen. Extra rapportacties blijven beschikbaar via " +
+            "Fit Pass of Pro.",
           unlockTitle: "Volledig rapport ontgrendelen",
           unlockDescription:
-            "De gratis weergave laat je belangrijkste getallen en prioriteiten zien. Fit Pass voegt de complete aanpasvolgorde, PDF-download, e-mailrapport en validatieplan toe.",
+            "De gratis weergave laat je belangrijkste getallen en prioriteiten zien. Fit Pass " +
+            "voegt de complete aanpasvolgorde, PDF-download, e-mailrapport en validatieplan toe.",
           unlockItems: [
             "Gedetailleerde fittabel",
             "Volledige aanpasvolgorde",
@@ -1532,7 +1611,8 @@ const nl = {
               5: "Geen betekenisvol ongemak tijdens het fietsen.",
             },
             impactText:
-              "Ongemak op de fiets is een signaal, niet alleen een gevoel. Dit rapport helpt dat signaal te koppelen aan setup-aanpassingen die je op echte ritten kunt valideren.",
+              "Ongemak op de fiets is een signaal, niet alleen een gevoel. Dit rapport helpt dat " +
+              "signaal te koppelen aan setup-aanpassingen die je op echte ritten kunt valideren.",
           },
         },
         bike: {
@@ -1550,14 +1630,14 @@ const nl = {
           algorithmVersion: "Algoritmeversie",
           engineVersion: "Engineversie",
           dataQuality: "Datakwaliteit",
-          descriptionFallback:
-            "Voor dit rapport was nog geen fietsbeschrijving beschikbaar.",
+          descriptionFallback: "Voor dit rapport was nog geen fietsbeschrijving beschikbaar.",
         },
         dataQuality: {
           complete: "Compleet",
           partial: "Gedeeltelijk",
           banner:
-            "Voor sommige aanbevelingen is extra rijder- of bandendata nodig. Controleer eerst de lijst met ontbrekende gegevens en de bandenspanningssectie.",
+            "Voor sommige aanbevelingen is extra rijder- of bandendata nodig. Controleer eerst de " +
+            "lijst met ontbrekende gegevens en de bandenspanningssectie.",
         },
         status: {
           ready: "Klaar om toe te passen",
@@ -1584,12 +1664,14 @@ const nl = {
           neutral: "Op doel",
         },
         adjustmentGuideline:
-          "Verander steeds een variabele tegelijk en houd individuele stappen binnen 2-5 mm voor de volgende validatierit.",
+          "Verander steeds een variabele tegelijk en houd individuele stappen binnen 2-5 mm voor " +
+          "de volgende validatierit.",
         tirePressure: {
           readyTitle: "Bandenspanningsadvies beschikbaar",
           pendingTitle: "Verplichte data ontbreekt",
           pendingDescription:
-            "Gepersonaliseerde bandenspanning vereist rijdergewicht, bandensetup en ondergrondcontext. Gebruik de snelle tabel alleen als tijdelijke startwaarde.",
+            "Gepersonaliseerde bandenspanning vereist rijdergewicht, bandensetup en " +
+            "ondergrondcontext. Gebruik de snelle tabel alleen als tijdelijke startwaarde.",
           quickStartTitle: "Snelle startschatting",
           quickStartNote:
             "Niet gepersonaliseerd. Respecteer altijd de maximale druk van band en velg.",
@@ -1627,11 +1709,9 @@ const nl = {
           },
         },
         paywall: {
-          emailUpgradeToast:
-            "Fit Pass of Pro is nodig om het volledige rapport te e-mailen.",
+          emailUpgradeToast: "Fit Pass of Pro is nodig om het volledige rapport te e-mailen.",
           emailUpgradeButton: "E-mail rapport - Fit Pass",
-          pdfUpgradeToast:
-            "Fit Pass of Pro is nodig om je PDF te downloaden.",
+          pdfUpgradeToast: "Fit Pass of Pro is nodig om je PDF te downloaden.",
           pdfUpgradeButton: "PDF - Fit Pass of Pro",
         },
         validationPlan: {
@@ -1674,80 +1754,115 @@ const nl = {
         parameters: {
           saddleHeight: {
             label: "Zadelhoogte",
-            whyItMatters: "Bepaalt de timing van knie-extensie en is de belangrijkste stuurvariabele voor beenbelasting.",
+            whyItMatters:
+              "Bepaalt de timing van knie-extensie en is de belangrijkste stuurvariabele voor beenbelasting.",
             riderValidationCue: "Je trapt soepel zonder heupwieg na 15-20 minuten.",
-            feelDescription: "De pedaalslag voelt rond en gecontroleerd. Je hoeft niet naar het dode punt te reiken.",
+            feelDescription:
+              "De pedaalslag voelt rond en gecontroleerd. Je hoeft niet naar het dode punt te reiken.",
             watchOutHigh: "Te hoog kan heupwieg, hamstringbelasting en overreiken onderin geven.",
             watchOutLow: "Te laag kan knieën overbelasten en de slag benauwd laten voelen.",
             methodLabel: "LeMond-basis + Holmes-validatieband",
             measurementReference: "Hart trapas tot zadelbovenkant langs de zitbuislijn.",
-            sequenceNote: "Begin hier, omdat elke cockpitaanbeveling afhangt van een stabiele zadelreferentie.",
+            sequenceNote:
+              "Begin hier, omdat elke cockpitaanbeveling afhangt van een stabiele zadelreferentie.",
           },
           saddleSetback: {
             label: "Zadelterugstand",
-            whyItMatters: "Stuurt de zitbalans en helpt de belasting te verdelen tussen zadel, voeten en handen.",
-            riderValidationCue: "Je voelt je in balans boven de fiets met stabiele tractie terwijl je zit.",
-            feelDescription: "Je heupen voelen ondersteund en je handen dragen geen overmatige druk op vlak terrein.",
+            whyItMatters:
+              "Stuurt de zitbalans en helpt de belasting te verdelen tussen zadel, voeten en handen.",
+            riderValidationCue:
+              "Je voelt je in balans boven de fiets met stabiele tractie terwijl je zit.",
+            feelDescription:
+              "Je heupen voelen ondersteund en je handen dragen geen overmatige druk op vlak terrein.",
             watchOutHigh: "Te ver naar achter kan de voorkant lang en zwaar laten voelen.",
             watchOutLow: "Te ver naar voren kan kniebelasting en handdruk verhogen.",
             methodLabel: "KOPS-startpunt + stabiliteitscorrectie",
-            measurementReference: "Horizontale afstand van het trapashart naar het zadelreferentiepunt.",
-            sequenceNote: "Zet setback vast na zadelhoogte zodat de zitbalans stabiel is voor front-end werk.",
+            measurementReference:
+              "Horizontale afstand van het trapashart naar het zadelreferentiepunt.",
+            sequenceNote:
+              "Zet setback vast na zadelhoogte zodat de zitbalans stabiel is voor front-end werk.",
           },
           handlebarDrop: {
             label: "Stuurdrop",
-            whyItMatters: "Bepaalt de balans tussen comfort en aerodynamica en hoeveel mobiliteit de houding vraagt.",
-            riderValidationCue: "Je kunt zowel op de remgrepen als in de beugels rijden zonder snelle nek- of rugspanning.",
-            feelDescription: "De voorkant voelt ondersteunend in plaats van beperkend, met voldoende ruimte om te ademen.",
+            whyItMatters:
+              "Bepaalt de balans tussen comfort en aerodynamica en hoeveel mobiliteit de houding vraagt.",
+            riderValidationCue:
+              "Je kunt zowel op de remgrepen als in de beugels rijden zonder snelle nek- of rugspanning.",
+            feelDescription:
+              "De voorkant voelt ondersteunend in plaats van beperkend, met voldoende ruimte om te ademen.",
             watchOutHigh: "Te veel drop kan nek, rug en hamstrings overbelasten.",
-            watchOutLow: "Te weinig drop kan front-end support verminderen en een efficiënte houding beperken.",
+            watchOutLow:
+              "Te weinig drop kan front-end support verminderen en een efficiënte houding beperken.",
             methodLabel: "Terrein- en doelcorrectie op basis van rijstijl",
-            measurementReference: "Verticaal verschil tussen zadelreferentie en stuurcontacthoogte.",
-            sequenceNote: "Pas drop pas aan nadat het zadel stabiel is, anders verander je twee referenties tegelijk.",
+            measurementReference:
+              "Verticaal verschil tussen zadelreferentie en stuurcontacthoogte.",
+            sequenceNote:
+              "Pas drop pas aan nadat het zadel stabiel is, anders verander je twee referenties tegelijk.",
           },
           handlebarReach: {
             label: "Stuur-reach",
-            whyItMatters: "Bepaalt cockpitlengte en beïnvloedt ellebooghoek, schouderbelasting en stuurcontrole.",
-            riderValidationCue: "Je ellebogen blijven zacht en je kunt de remgrepen vasthouden zonder overmatige palmdruk.",
-            feelDescription: "De cockpit voelt lang genoeg voor steun, maar niet zo lang dat je via de schouders moet steunen.",
-            watchOutHigh: "Te lang kan de ellebogen blokkeren en hand-, nek- of schouderklachten geven.",
+            whyItMatters:
+              "Bepaalt cockpitlengte en beïnvloedt ellebooghoek, schouderbelasting en stuurcontrole.",
+            riderValidationCue:
+              "Je ellebogen blijven zacht en je kunt de remgrepen vasthouden zonder overmatige palmdruk.",
+            feelDescription:
+              "De cockpit voelt lang genoeg voor steun, maar niet zo lang dat je via de schouders " +
+              "moet steunen.",
+            watchOutHigh:
+              "Te lang kan de ellebogen blokkeren en hand-, nek- of schouderklachten geven.",
             watchOutLow: "Te kort kan de romp opvouwen en het sturen nerveus maken.",
             methodLabel: "Stack/reach- en contactpuntmodel",
-            measurementReference: "Horizontale zadel-tot-stuur reach tussen contactpuntreferenties.",
-            sequenceNote: "Zet reach na drop, omdat stackveranderingen vaak ook de ervaren lengte veranderen.",
+            measurementReference:
+              "Horizontale zadel-tot-stuur reach tussen contactpuntreferenties.",
+            sequenceNote:
+              "Zet reach na drop, omdat stackveranderingen vaak ook de ervaren lengte veranderen.",
           },
           stem: {
             label: "Stuurpen",
-            whyItMatters: "Verfijnt stuurgevoel en front-end lengte zodra zadel- en stuurdoelen duidelijk zijn.",
-            riderValidationCue: "Het stuurgedrag voelt rustig en je handen blijven licht tijdens normaal rijden.",
-            feelDescription: "De fiets volgt natuurlijk zonder dat je je aan het stuur moet vastzetten.",
+            whyItMatters:
+              "Verfijnt stuurgevoel en front-end lengte zodra zadel- en stuurdoelen duidelijk zijn.",
+            riderValidationCue:
+              "Het stuurgedrag voelt rustig en je handen blijven licht tijdens normaal rijden.",
+            feelDescription:
+              "De fiets volgt natuurlijk zonder dat je je aan het stuur moet vastzetten.",
             watchOutHigh: "Een te lange stuurpen kan het sturen vertragen en reach overbelasten.",
             watchOutLow: "Een te korte stuurpen kan het sturen nerveus en krap laten voelen.",
             methodLabel: "Fijnregeling nadat het zadel vastligt",
             measurementReference: "Stuurpenlengte hart-op-hart met gemonteerde hoek.",
-            sequenceNote: "Gebruik de stuurpen als verfijning, niet als eerste contactpuntcorrectie.",
+            sequenceNote:
+              "Gebruik de stuurpen als verfijning, niet als eerste contactpuntcorrectie.",
           },
           crankLength: {
             label: "Cranklengte",
-            whyItMatters: "Verandert hefboomwerking en gewrichtsuitslag, vooral bovenin de pedaalslag.",
+            whyItMatters:
+              "Verandert hefboomwerking en gewrichtsuitslag, vooral bovenin de pedaalslag.",
             riderValidationCue: "De top van de slag voelt vrij en krachtig zonder heupbeknelling.",
-            feelDescription: "Je kunt onder belasting trappen zonder bovenin de cirkel samengedrukt te voelen.",
+            feelDescription:
+              "Je kunt onder belasting trappen zonder bovenin de cirkel samengedrukt te voelen.",
             watchOutHigh: "Te lang kan heup- en kniecompressie bovenin vergroten.",
-            watchOutLow: "Te kort kan hefboomwerking verminderen als de rijder zich slecht aanpast.",
+            watchOutLow:
+              "Te kort kan hefboomwerking verminderen als de rijder zich slecht aanpast.",
             methodLabel: "Standaard proportionele basislijn",
             measurementReference: "Hart crank tot hart pedaalas.",
-            sequenceNote: "Beoordeel cranklengte na contactpunten, omdat andere cranks vaak de zadelsetup beïnvloeden.",
+            sequenceNote:
+              "Beoordeel cranklengte na contactpunten, omdat andere cranks vaak de zadelsetup beïnvloeden.",
           },
           handlebarWidth: {
             label: "Stuurbreedte",
-            whyItMatters: "Beïnvloedt schoudercomfort, hefboomwerking en hoe open de borstkas aanvoelt.",
-            riderValidationCue: "Je schouders blijven ontspannen en ademen voelt natuurlijk onder inspanning.",
-            feelDescription: "De stuurbreedte voelt stabiel zonder dat je ellebogen onnatuurlijk naar binnen of buiten worden geduwd.",
+            whyItMatters:
+              "Beïnvloedt schoudercomfort, hefboomwerking en hoe open de borstkas aanvoelt.",
+            riderValidationCue:
+              "Je schouders blijven ontspannen en ademen voelt natuurlijk onder inspanning.",
+            feelDescription:
+              "De stuurbreedte voelt stabiel zonder dat je ellebogen onnatuurlijk naar binnen of " +
+              "buiten worden geduwd.",
             watchOutHigh: "Te breed kan schouderbelasting en luchtweerstand vergroten.",
             watchOutLow: "Te smal kan ademruimte beperken en hefboomwerking verlagen.",
             methodLabel: "Uitlijning op schouderbreedte",
-            measurementReference: "Stuurbreedte hart-op-hart bij remgrepen of beugels, afhankelijk van het ontwerp.",
-            sequenceNote: "Bevestig breedte na de kerncockpitmaten, omdat breedte vooral comfort en controle verfijnt.",
+            measurementReference:
+              "Stuurbreedte hart-op-hart bij remgrepen of beugels, afhankelijk van het ontwerp.",
+            sequenceNote:
+              "Bevestig breedte na de kerncockpitmaten, omdat breedte vooral comfort en controle verfijnt.",
           },
         },
       },
@@ -1762,10 +1877,8 @@ const nl = {
         surfaceUnknown: "Nog geen notitie over ondergrond beschikbaar.",
         allGood: "De setup past goed bij je spanningsprofiel.",
         warningMessages: {
-          pressure_high_for_gravel:
-            "Je bandenspanning kan grip en comfort op gravel verminderen.",
-          pressure_low_general:
-            "Je bandenspanning kan stuurproblemen of snakebites veroorzaken.",
+          pressure_high_for_gravel: "Je bandenspanning kan grip en comfort op gravel verminderen.",
+          pressure_low_general: "Je bandenspanning kan stuurproblemen of snakebites veroorzaken.",
           aggressive_setup_rough_terrain:
             "Een agressieve positie plus lage druk op ruwe ondergrond kan extra discomfort geven.",
           weight_mismatch:
@@ -1812,9 +1925,13 @@ const nl = {
       ridingStyle: {
         title: "Rijstijl",
         editButton: "Bewerken",
-        description: "Je rijstijl speelt een belangrijke rol bij het bepalen van jouw optimale bikefitting. Factoren zoals je ervaringsniveau, wekelijks trainingsvolume, typische ritafstand en persoonlijke voorkeuren bepalen hoe agressief of ontspannen je positie moet zijn.",
+        description:
+          "Je rijstijl speelt een belangrijke rol bij het bepalen van jouw optimale bikefitting. " +
+          "Factoren zoals je ervaringsniveau, wekelijks trainingsvolume, typische ritafstand en " +
+          "persoonlijke voorkeuren bepalen hoe agressief of ontspannen je positie moet zijn.",
         incompleteTitle: "Vul je rijprofiel in",
-        incompleteDescription: "Beantwoord een paar vragen over je rijstijl om bikefitting te activeren.",
+        incompleteDescription:
+          "Beantwoord een paar vragen over je rijstijl om bikefitting te activeren.",
         completeCta: "Nu invullen",
         experienceLevel: "Ervaringsniveau",
         weeklyHours: "Uren per week",
@@ -1826,13 +1943,17 @@ const nl = {
       measurements: {
         summary: "Je opgeslagen lichaamsmetingen",
         impactDescription:
-          "Je lengte, binnenbeenlengte, armlengte en torsolengte bepalen direct de geometrie van je ideale bikefitting. BMI geeft een globale indicatie van je gewicht ten opzichte van je lengte — het beïnvloedt zadeldruk, vermogen-gewichtsverhouding en gewrichtsbelasting op langere ritten.",
+          "Je lengte, binnenbeenlengte, armlengte en torsolengte bepalen direct de geometrie van " +
+          "je ideale bikefitting. BMI geeft een globale indicatie van je gewicht ten opzichte " +
+          "van je lengte — het beïnvloedt zadeldruk, vermogen-gewichtsverhouding en " +
+          "gewrichtsbelasting op langere ritten.",
         improveLink: "Hoe verbeter je je BMI",
         height: "Lengte",
         inseam: "Binnenbeenlengte",
         weight: "Lichaamsgewicht",
         weightHelper: "Gebruikt voor bandenspanningsberekeningen.",
-        weightTooltip: "Je gewicht wordt gebruikt om de optimale bandenspanning voor je fietsen te berekenen.",
+        weightTooltip:
+          "Je gewicht wordt gebruikt om de optimale bandenspanning voor je fietsen te berekenen.",
         weightNotSet: "Voeg je gewicht toe om bandenspanningsberekeningen te activeren",
         torso: "Torso",
         armLength: "Armlengte",
@@ -1880,9 +2001,13 @@ const nl = {
           severe: "Ernstig",
           verySevere: "Zeer ernstig",
         },
-        editInstructions: "Stel de ernst in voor elk gebied. Laat op Geen staan als je daar geen klachten hebt.",
+        editInstructions:
+          "Stel de ernst in voor elk gebied. Laat op Geen staan als je daar geen klachten hebt.",
         impactDescription:
-          "Zelfs licht ongemak wijst meestal op een fitprobleem, niet op gewone vermoeidheid. Door bij te houden welke gebieden last geven en hoe ernstig, kunnen we gerichte aanpassingen doen aan reikwijdte, stuurhoogte en zadelstand — en van terugkerend ongemak een oplosbaar probleem maken.",
+          "Zelfs licht ongemak wijst meestal op een fitprobleem, niet op gewone vermoeidheid. " +
+          "Door bij te houden welke gebieden last geven en hoe ernstig, kunnen we gerichte " +
+          "aanpassingen doen aan reikwijdte, stuurhoogte en zadelstand — en van terugkerend " +
+          "ongemak een oplosbaar probleem maken.",
         improveLink: "Hoe verbeter je je comfort",
         noPain: "Geen ongemak",
         painAreasLabel: "Gebieden met ongemak",
@@ -1912,7 +2037,8 @@ const nl = {
         },
         impactTitle: "Wat dit betekent voor je fit",
         impactDescription:
-          "Een lagere flexibiliteitsscore leidt tot een meer rechtopstaande positie met minder stuurval. Betere flexibiliteit maakt een lagere, aerodynamischere houding mogelijk.",
+          "Een lagere flexibiliteitsscore leidt tot een meer rechtopstaande positie met minder " +
+          "stuurval. Betere flexibiliteit maakt een lagere, aerodynamischere houding mogelijk.",
       },
       coreStability: {
         helper: "Plank-houding beoordeling",
@@ -1932,18 +2058,20 @@ const nl = {
         },
         impactTitle: "Wat dit betekent voor je fit",
         impactDescription:
-          "Bij lagere rompstabiliteit beperken we hoe ver je kunt reiken en hoe laag het stuur kan staan zonder vermoeidheid. Een sterkere core ondersteunt een langere, prestatiegerichtere houding.",
+          "Bij lagere rompstabiliteit beperken we hoe ver je kunt reiken en hoe laag het stuur " +
+          "kan staan zonder vermoeidheid. Een sterkere core ondersteunt een langere, " +
+          "prestatiegerichtere houding.",
       },
       status: {
         title: "Profielstatus",
         description:
-          "Je profiel is compleet. Je kunt nu een fit-sessie starten om gepersonaliseerde bikefit-aanbevelingen te krijgen.",
+          "Je profiel is compleet. Je kunt nu een fit-sessie starten om gepersonaliseerde " +
+          "bikefit-aanbevelingen te krijgen.",
         startFitCta: "Start nieuwe fit-sessie",
       },
       edit: {
         title: "Bewerk je metingen",
-        description:
-          "Werk je lichaamsmetingen bij voor nauwkeurigere fit-aanbevelingen.",
+        description: "Werk je lichaamsmetingen bij voor nauwkeurigere fit-aanbevelingen.",
       },
       onboarding: {
         title: "Vul je profiel in",
@@ -1956,7 +2084,8 @@ const nl = {
       recalculate: {
         dialogTitle: "Bandenspanning bijwerken?",
         dialogBody:
-          "Je gewicht is gewijzigd naar {weight} kg. Wil je de aanbevolen bandenspanning voor je fietsen opnieuw laten berekenen?",
+          "Je gewicht is gewijzigd naar {weight} kg. Wil je de aanbevolen bandenspanning voor je " +
+          "fietsen opnieuw laten berekenen?",
         confirmButton: "Ja, herberekenen",
         dismissButton: "Nu niet",
         successToast: "Bandenspanningsadvies bijgewerkt voor {count} fietsen.",
@@ -1965,9 +2094,12 @@ const nl = {
       refresh: {
         title: "Wil je je fitting- en bandenspanningsinstellingen opnieuw berekenen?",
         descriptionWithPressure:
-          "Je lichaamsmetingen zijn bijgewerkt. Start een nieuwe fit-sessie om je fit-aanbevelingen te vernieuwen, of herbereken nu je bandenspanning op basis van {weight} kg.",
+          "Je lichaamsmetingen zijn bijgewerkt. Start een nieuwe fit-sessie om je " +
+          "fit-aanbevelingen te vernieuwen, of herbereken nu je bandenspanning op basis van " +
+          "{weight} kg.",
         descriptionFitOnly:
-          "Je lichaamsmetingen zijn bijgewerkt. Start een nieuwe fit-sessie om je fit-aanbevelingen te vernieuwen.",
+          "Je lichaamsmetingen zijn bijgewerkt. Start een nieuwe fit-sessie om je " +
+          "fit-aanbevelingen te vernieuwen.",
         fitButton: "Start nieuwe fit-sessie",
         pressureButton: "Herbereken bandenspanning",
         dismissButton: "Nu niet",
@@ -1976,7 +2108,10 @@ const nl = {
         bodyMeasurements: {
           title: "Hoe verbeter je je BMI",
           subtitle:
-            "BMI geeft een globale indicatie van je gewicht ten opzichte van je lengte. Voor wielrenners verbetert een gezonde lichaamssamenstelling de vermogen-gewichtsverhouding, vermindert de gewrichtsbelasting en vergroot het uithoudingsvermogen op lange ritten.",
+            "BMI geeft een globale indicatie van je gewicht ten opzichte van je lengte. Voor " +
+            "wielrenners verbetert een gezonde lichaamssamenstelling de " +
+            "vermogen-gewichtsverhouding, vermindert de gewrichtsbelasting en vergroot het " +
+            "uithoudingsvermogen op lange ritten.",
           whatItMeansTitle: "Wat je BMI betekent voor je bike fit",
           exercisesTitle: "Strategieën om je lichaamssamenstelling te verbeteren",
           progressTitle: "Zo volg je je vooruitgang",
@@ -1986,7 +2121,9 @@ const nl = {
         comfort: {
           title: "Hoe verbeter je je rijcomfort",
           subtitle:
-            "De meeste klachten tijdens het fietsen hebben een directe oorzaak in de fit. Kleine, gerichte aanpassingen aan zadelhoogte, reikwijdte of klikpedaalstand kunnen pijn volledig wegnemen.",
+            "De meeste klachten tijdens het fietsen hebben een directe oorzaak in de fit. Kleine, " +
+            "gerichte aanpassingen aan zadelhoogte, reikwijdte of klikpedaalstand kunnen pijn " +
+            "volledig wegnemen.",
           whatItMeansTitle: "Wat je comfortniveau betekent voor je bike fit",
           exercisesTitle: "Fit-aanpassingen per pijngebied",
           progressTitle: "Zo volg je je vooruitgang",
@@ -1996,7 +2133,8 @@ const nl = {
         flexibility: {
           title: "Verbeter je flexibiliteit",
           subtitle:
-            "Hamstring- en onderrugflexibiliteit bepalen hoe laag en ver naar voren je comfortabel kunt rijden.",
+            "Hamstring- en onderrugflexibiliteit bepalen hoe laag en ver naar voren je comfortabel " +
+            "kunt rijden.",
           whatItMeansTitle: "Wat je score betekent voor je bike fit",
           exercisesTitle: "Oefeningen om je flexibiliteit te verbeteren",
           progressTitle: "Zo volg je je vooruitgang",
@@ -2006,7 +2144,8 @@ const nl = {
         coreStability: {
           title: "Verbeter je rompstabiliteit",
           subtitle:
-            "Rompkracht bepaalt hoe lang je een agressieve houding kunt vasthouden zonder vermoeidheid of rugklachten.",
+            "Rompkracht bepaalt hoe lang je een agressieve houding kunt vasthouden zonder " +
+            "vermoeidheid of rugklachten.",
           whatItMeansTitle: "Wat je score betekent voor je bike fit",
           exercisesTitle: "Oefeningen om je rompstabiliteit op te bouwen",
           progressTitle: "Zo volg je je vooruitgang",
@@ -2019,9 +2158,10 @@ const nl = {
         deleteAccount: "Account verwijderen",
         deleteConfirmTitle: "Account verwijderen?",
         deleteConfirmDescription:
-          "Dit verwijdert permanent je profiel, fietsen, fit-sessies, aanbevelingen en alle andere gegevens. Deze actie kan niet ongedaan worden gemaakt.",
+          "Dit verwijdert permanent je profiel, fietsen, fit-sessies, aanbevelingen en alle " +
+          "andere gegevens. Deze actie kan niet ongedaan worden gemaakt.",
         deleteConfirmCta: "Ja, verwijder mijn account",
-        deleteConfirmInputLabel: "Typ \"Verwijder\" om te bevestigen",
+        deleteConfirmInputLabel: 'Typ "Verwijder" om te bevestigen',
         deleteConfirmInputPlaceholder: "Verwijder",
         deleteConfirmWord: "Verwijder",
         cancel: "Annuleren",
@@ -2048,12 +2188,15 @@ const nl = {
       billing: {
         title: "Facturering",
         description:
-          "Beheer je betaalmethode, facturen en opzegging in Stripe Customer Portal. Wijzigingen gelden nadat Stripe-webhooks zijn verwerkt.",
+          "Beheer je betaalmethode, facturen en opzegging in Stripe Customer Portal. Wijzigingen " +
+          "gelden nadat Stripe-webhooks zijn verwerkt.",
         manageCta: "Facturering beheren",
         noPaidSubscription: "Er is nog geen betaald abonnement om te beheren.",
         missingCustomer:
-          "Dit betaalde account is nog niet aan Stripe gekoppeld. Neem contact op met support voordat je facturering wijzigt.",
-        portalUnavailable: "Het factureringsportaal is niet beschikbaar. Probeer opnieuw of neem contact op met support.",
+          "Dit betaalde account is nog niet aan Stripe gekoppeld. Neem contact op met support " +
+          "voordat je facturering wijzigt.",
+        portalUnavailable:
+          "Het factureringsportaal is niet beschikbaar. Probeer opnieuw of neem contact op met support.",
       },
       preferences: {
         title: "Voorkeuren",
@@ -2069,28 +2212,32 @@ const nl = {
       appInstall: {
         settingsTitle: "Installeren op iPhone",
         settingsDescription:
-          "Maak een iPhone-startschermapp voor BestBikeFit4U. Wanneer je die via het icoon opent, ga je direct naar je dashboard zolang je nog bent ingelogd.",
+          "Maak een iPhone-startschermapp voor BestBikeFit4U. Wanneer je die via het icoon " +
+          "opent, ga je direct naar je dashboard zolang je nog bent ingelogd.",
         eyebrow: "iPhone-app",
         title: "Installeer BestBikeFit4U op je iPhone",
         description:
-          "Bewaar BestBikeFit4U op het startscherm van je iPhone voor een app-achtige ervaring met directe dashboardstart.",
+          "Bewaar BestBikeFit4U op het startscherm van je iPhone voor een app-achtige ervaring " +
+          "met directe dashboardstart.",
         quickStepsTitle: "Snelle stappen",
         openInstallPage: "Installatiepagina openen",
         openDashboard: "Dashboard openen",
         backToSettings: "Terug naar instellingen",
         installedTitle: "App geïnstalleerd",
-        installedDescription:
-          "BestBikeFit4U draait al in startschermmodus op dit apparaat.",
+        installedDescription: "BestBikeFit4U draait al in startschermmodus op dit apparaat.",
         openInSafariTitle: "Open dit in Safari",
         openInSafariDescription:
-          "Installeren op het iPhone-startscherm werkt alleen vanuit Safari. Open deze pagina in Safari en kies daarna Deel en Zet op beginscherm.",
+          "Installeren op het iPhone-startscherm werkt alleen vanuit Safari. Open deze pagina in " +
+          "Safari en kies daarna Deel en Zet op beginscherm.",
         dashboardLaunchTitle: "Dashboardstart",
         dashboardLaunchDescription:
-          "Nadat je deze pagina aan je startscherm hebt toegevoegd, opent het icoon je dashboard zodra je sessie nog actief is.",
+          "Nadat je deze pagina aan je startscherm hebt toegevoegd, opent het icoon je dashboard " +
+          "zodra je sessie nog actief is.",
         steps: [
           {
             title: "Open deze pagina in Safari",
-            description: "Blijf op deze installatiepagina zodat het startschermicoon naar de app-launcher verwijst.",
+            description:
+              "Blijf op deze installatiepagina zodat het startschermicoon naar de app-launcher verwijst.",
           },
           {
             title: "Tik op Deel",
@@ -2098,7 +2245,8 @@ const nl = {
           },
           {
             title: "Zet op beginscherm",
-            description: "Geef de app een naam, sla op en open hem daarna vanaf je iPhone-startscherm.",
+            description:
+              "Geef de app een naam, sla op en open hem daarna vanaf je iPhone-startscherm.",
           },
         ] as Array<{ title: string; description: string }>,
       },
@@ -2132,9 +2280,9 @@ const nl = {
           noSegments: "Je segmenten of persoonlijke records",
           howWeUse: "Hoe we dit gebruiken",
           howWeUseDescription:
-            "Je ritgeschiedenis helpt ons je terreinvoorkeur en rijstijl te begrijpen. Dit verbetert je bandenspanningsadvies en fietspassugesties.",
-          dataNote:
-            "Je data is alleen-lezen. Je kunt op elk moment ontkoppelen via Instellingen.",
+            "Je ritgeschiedenis helpt ons je terreinvoorkeur en rijstijl te begrijpen. Dit " +
+            "verbetert je bandenspanningsadvies en fietspassugesties.",
+          dataNote: "Je data is alleen-lezen. Je kunt op elk moment ontkoppelen via Instellingen.",
           confirm: "Doorgaan naar Strava",
           cancel: "Annuleren",
         },
@@ -2154,10 +2302,12 @@ const nl = {
         bikeImport: {
           title: "Jouw Strava-fietsen",
           description:
-            "Bekijk de fietsen die Strava beschikbaar maakt, selecteer wat je lokaal wilt toevoegen en bevestig ambiguë fietstypes na de importstap.",
+            "Bekijk de fietsen die Strava beschikbaar maakt, selecteer wat je lokaal wilt " +
+            "toevoegen en bevestig ambiguë fietstypes na de importstap.",
           overviewTitle: "Fietsoverzicht",
           overviewDescription:
-            "Vergelijk je Strava-fietsen op totale afstand, recente ritten en gereedheid voordat je iets importeert.",
+            "Vergelijk je Strava-fietsen op totale afstand, recente ritten en gereedheid voordat " +
+            "je iets importeert.",
           summaryBikes: "{count} fietsen",
           summaryImported: "{count} geïmporteerd",
           summaryReady: "{count} fit-ready",
@@ -2191,11 +2341,12 @@ const nl = {
           loading: "Strava-fietsen laden...",
           blockedTitle: "Strava-fietsimport is geblokkeerd",
           blockedDescription:
-            "De huidige backend geeft alleen Strava-verbinding en foto-sync terug. De gear-summary en import-contracten die deze flow nodig heeft zijn nog niet beschikbaar.",
+            "De huidige backend geeft alleen Strava-verbinding en foto-sync terug. De gear-summary " +
+            "en import-contracten die deze flow nodig heeft zijn nog niet beschikbaar.",
           backendBlocked:
-            "Ontbrekende backendondersteuning: een Strava gear-summary query, een importactie en een fiets-identificatieveld voor exacte detectie van reeds geïmporteerde fietsen.",
-          parseError:
-            "De opgeslagen Strava-payload kon niet worden gelezen als fietsimportdata.",
+            "Ontbrekende backendondersteuning: een Strava gear-summary query, een importactie en " +
+            "een fiets-identificatieveld voor exacte detectie van reeds geïmporteerde fietsen.",
+          parseError: "De opgeslagen Strava-payload kon niet worden gelezen als fietsimportdata.",
           emptyTitle: "Geen Strava-fietskandidaten beschikbaar",
           emptyDescription:
             "Er zijn geen importeerbare fietskandidaten gevonden in de huidige Strava-payload.",
@@ -2210,14 +2361,16 @@ const nl = {
           successOne: "{count} fiets geïmporteerd vanuit Strava.",
           successMany: "{count} fietsen geïmporteerd vanuit Strava.",
           partialFailureOne: "Import voltooid met 1 fiets die aandacht nodig heeft: {bikes}.",
-          partialFailureMany: "Import voltooid met {count} fietsen die aandacht nodig hebben: {bikes}.",
+          partialFailureMany:
+            "Import voltooid met {count} fietsen die aandacht nodig hebben: {bikes}.",
           failed: "Kon fietsen niet importeren vanuit Strava. Probeer het opnieuw.",
           resetSelection: "Selectie resetten",
           postImportHint:
             "Fietsen met een ambigu type openen na de eerste importstap een bevestigingsdialoog.",
           typeWizardTitle: "Fietstype bevestigen",
           typeWizardDescription:
-            "Strava markeerde {name} als ambigu. Kies het meest passende fietstype voordat het aan je bibliotheek wordt toegevoegd.",
+            "Strava markeerde {name} als ambigu. Kies het meest passende fietstype voordat het aan " +
+            "je bibliotheek wordt toegevoegd.",
           typeWizardFallback: "Typedetails niet beschikbaar",
           typeWizardPrompt: "Kies het fietstype",
           typeWizardCancel: "Annuleren",
@@ -2247,8 +2400,7 @@ const nl = {
       },
       empty: {
         title: "Nog geen fietsen toegevoegd",
-        description:
-          "Sla je eerste fiets op om fit-sessies door de tijd te vergelijken.",
+        description: "Sla je eerste fiets op om fit-sessies door de tijd te vergelijken.",
         cta: "Voeg je eerste fiets toe",
       },
       delete: {
@@ -2258,7 +2410,8 @@ const nl = {
           "Deze fiets kan niet worden verwijderd omdat er al afstelgeschiedenis aan gekoppeld is.",
         dialogTitle: 'Fiets "{bikeName}" verwijderen?',
         dialogDescription:
-          "Dit verwijdert de fiets en de direct gekoppelde wielset-, bandensetup- en bandenspanningsdata. Afstelgeschiedenis blokkeert verwijdering.",
+          "Dit verwijdert de fiets en de direct gekoppelde wielset-, bandensetup- en " +
+          "bandenspanningsdata. Afstelgeschiedenis blokkeert verwijdering.",
         dialogConfirm: "Fiets verwijderen",
       },
       defaultProfile: {
@@ -2277,7 +2430,8 @@ const nl = {
         pressureBadge: "Spanning beschikbaar",
         passportLabel: "Bike-passport ID",
         passportDescription:
-          "Deel deze ID met een andere rider als je wilt dat die een eigen bewerkbare kopie van deze fiets maakt. Wijzigingen aan hun kopie veranderen jouw fiets nooit.",
+          "Deel deze ID met een andere rider als je wilt dat die een eigen bewerkbare kopie van " +
+          "deze fiets maakt. Wijzigingen aan hun kopie veranderen jouw fiets nooit.",
         passportMissing: "Bike-passport ID is nog niet beschikbaar.",
         passportCopyAction: "ID kopiëren",
         passportCopied: "Bike-passport ID gekopieerd.",
@@ -2299,9 +2453,11 @@ const nl = {
         copied: "Publieke fitcode gekopieerd.",
         copyFailed: "Kon de publieke fitcode niet kopiëren.",
         privacyNote:
-          "Alleen previewdata van fietsmaten en geometrie worden gedeeld. Persoonlijke accountgegevens worden niet gedeeld.",
+          "Alleen previewdata van fietsmaten en geometrie worden gedeeld. Persoonlijke " +
+          "accountgegevens worden niet gedeeld.",
         weakGeometryTitle: "Previewkwaliteit is beperkt",
-        weakGeometryNote: "Voeg completere fietsgeometrie toe voor een betere publieke inschatting.",
+        weakGeometryNote:
+          "Voeg completere fietsgeometrie toe voor een betere publieke inschatting.",
         geometryQuality: {
           full: "Volledige geometrie beschikbaar",
           partial: "Gedeeltelijke geometrie beschikbaar",
@@ -2309,7 +2465,8 @@ const nl = {
         },
         followUpTitle: "Krijg een betere inschatting met je binnenbeenlengte en rider-profiel",
         followUpDescription:
-          "Gebruik de quick check als eerste screening. Voeg je rider-data toe voor een betere inschatting.",
+          "Gebruik de quick check als eerste screening. Voeg je rider-data toe voor een betere " +
+          "inschatting.",
         followUpProfileCta: "Rider-profiel toevoegen",
         followUpFitCta: "Bike fit openen",
       },
@@ -2325,10 +2482,10 @@ const nl = {
       gallery: {
         title: "Fietsgalerij",
         description:
-          "Voeg een paar foto's toe zodat deze fiets makkelijker herkenbaar is in je garage en fitgeschiedenis.",
+          "Voeg een paar foto's toe zodat deze fiets makkelijker herkenbaar is in je garage en " +
+          "fitgeschiedenis.",
         emptyTitle: "Nog geen fietsfoto's",
-        emptyDescription:
-          "Upload nu een hoofdfoto en voeg later extra hoeken toe als je wilt.",
+        emptyDescription: "Upload nu een hoofdfoto en voeg later extra hoeken toe als je wilt.",
         countOne: "1 foto",
         countMany: "{count} foto's",
         help: "Kies een thumbnail om de hoofdweergave te wijzigen of open de foto fullscreen.",
@@ -2345,13 +2502,16 @@ const nl = {
       descriptionCard: {
         title: "Fietsbeschrijving",
         description:
-          "Een korte bewerkbare samenvatting van hoe je deze fiets gebruikt. Dit is alleen beschrijvende tekst, geen technische brondata.",
+          "Een korte bewerkbare samenvatting van hoe je deze fiets gebruikt. Dit is alleen " +
+          "beschrijvende tekst, geen technische brondata.",
         empty:
-          "Er is nog geen beschrijving opgeslagen. Voeg zelf een samenvatting toe of genereer een kort concept.",
+          "Er is nog geen beschrijving opgeslagen. Voeg zelf een samenvatting toe of genereer " +
+          "een kort concept.",
         placeholder:
           "Beschrijf waar deze fiets voor bedoeld is, hoe hij aanvoelt en waar je er het meest mee rijdt.",
         helper:
-          "Houd het praktisch. Vermijd geometrieclaims of exacte specificaties tenzij je die zelf elders hebt ingevoerd.",
+          "Houd het praktisch. Vermijd geometrieclaims of exacte specificaties tenzij je die " +
+          "zelf elders hebt ingevoerd.",
         generate: "Beschrijving genereren",
         regenerate: "Opnieuw genereren",
         edit: "Handmatig bewerken",
@@ -2366,7 +2526,8 @@ const nl = {
       wheelsetManager: {
         title: "Wielsets",
         description:
-          "Beheer alle wielsets die je met deze fiets gebruikt en houd er een actief voor bandenspanningsadviezen.",
+          "Beheer alle wielsets die je met deze fiets gebruikt en houd er een actief voor " +
+          "bandenspanningsadviezen.",
         emptyTitle: "Nog geen wielsets opgeslagen",
         emptyDescription:
           "Voeg je eerste wielset toe om bandensetupdetails aan deze fiets te koppelen.",
@@ -2385,30 +2546,25 @@ const nl = {
         bikeSummary: "{bikeType} opgeslagen in je fietsoverzicht.",
         bikeFit: {
           title: "Bikefitting",
-          hasFitDescription:
-            "Laatste fitresultaat voor deze fiets, inclusief rijstijl en fitdoel.",
-          noFitDescription:
-            "Er is nog geen fitresultaat opgeslagen voor deze fiets.",
+          hasFitDescription: "Laatste fitresultaat voor deze fiets, inclusief rijstijl en fitdoel.",
+          noFitDescription: "Er is nog geen fitresultaat opgeslagen voor deze fiets.",
           lastUpdated: "Laatst bijgewerkt",
         },
         advisedPressure: {
           title: "Geadviseerde bandenspanning",
           descriptionWithSetup:
             "Laatste spanningsadvies op basis van de actieve bandensetup: {setup}.",
-          descriptionWithoutSetup:
-            "Laatste opgeslagen spanningsadvies voor deze fiets.",
+          descriptionWithoutSetup: "Laatste opgeslagen spanningsadvies voor deze fiets.",
         },
         currentSetup: {
           title: "Huidige setup",
           description:
             "Opgeslagen cockpit- en contactpuntsetup die nu als basis voor deze fiets geldt.",
-          emptyDescription:
-            "Er is nog geen huidige fietssetup opgeslagen voor deze fiets.",
+          emptyDescription: "Er is nog geen huidige fietssetup opgeslagen voor deze fiets.",
         },
         currentTyrePressure: {
           title: "Huidige bandenspanning",
-          description:
-            "De actieve wielset is {wheelset} met bandensetup {setup}.",
+          description: "De actieve wielset is {wheelset} met bandensetup {setup}.",
           emptyDescription:
             "Er is nog geen actieve wielset of bandensetup geselecteerd voor deze fiets.",
           noCurrentPressure: "Geen huidige spanning opgeslagen",
@@ -2435,18 +2591,17 @@ const nl = {
     bikeForm: {
       new: {
         title: "Nieuwe fiets toevoegen",
-        description:
-          "Sla je fietsgeometrie en huidige setup op voor betere fit-vergelijkingen.",
+        description: "Sla je fietsgeometrie en huidige setup op voor betere fit-vergelijkingen.",
       },
       edit: {
         loading: "Fiets laden...",
         title: "Fiets bewerken",
         description: "Werk fietsdetails en huidige setupwaarden bij.",
-        passportHelper: "Deze bike-passport ID wordt automatisch aangemaakt en kan niet worden bewerkt.",
+        passportHelper:
+          "Deze bike-passport ID wordt automatisch aangemaakt en kan niet worden bewerkt.",
         notFound: {
           title: "Fiets niet gevonden",
-          description:
-            "Deze fiets bestaat niet of je hebt er geen toegang toe.",
+          description: "Deze fiets bestaat niet of je hebt er geen toegang toe.",
         },
       },
       actions: {
@@ -2467,16 +2622,20 @@ const nl = {
         entryCta: "Importeer vanuit Marktplaats",
         title: "Importeer een fiets vanuit Marktplaats",
         description:
-          "Plak één Marktplaats-advertentie-URL, controleer het geparste concept en sla de fiets pas op nadat je de gegevens hebt bevestigd.",
+          "Plak één Marktplaats-advertentie-URL, controleer het geparste concept en sla de fiets " +
+          "pas op nadat je de gegevens hebt bevestigd.",
         entryTitle: "Plak een Marktplaats-advertentie-URL",
         entryDescription:
-          "De advertentie wordt server-side geparsed. Je controleert en bewerkt eerst het fietsconcept voordat er iets in je garage wordt aangemaakt.",
+          "De advertentie wordt server-side geparsed. Je controleert en bewerkt eerst het " +
+          "fietsconcept voordat er iets in je garage wordt aangemaakt.",
         previewTitle: "Controleer het geïmporteerde concept",
         previewDescription:
-          "Controleer de geparste velden, pas onzekere waarden aan en kies welke foto's je wilt bewaren voordat je opslaat.",
+          "Controleer de geparste velden, pas onzekere waarden aan en kies welke foto's je wilt " +
+          "bewaren voordat je opslaat.",
         findingsTitle: "Wat we in deze advertentie hebben gevonden",
         findingsDescription:
-          "Dit is het gestructureerde concept dat we uit de advertentie konden halen. Controleer onzekere onderdelen voordat je opslaat.",
+          "Dit is het gestructureerde concept dat we uit de advertentie konden halen. Controleer " +
+          "onzekere onderdelen voordat je opslaat.",
         findingsCount: "{count} bevindingen",
         findingDescriptionSummary: "Geïmporteerde beschrijving beschikbaar ({characters} tekens).",
         findingPhotoSummary: "{count} advertentiefoto's gevonden.",
@@ -2492,17 +2651,20 @@ const nl = {
         },
         photosTitle: "Geïmporteerde foto's",
         photosDescription:
-          "Selecteer de advertentiefoto's die je bij deze fiets wilt bewaren. Opslaan zonder foto's blijft toegestaan.",
+          "Selecteer de advertentiefoto's die je bij deze fiets wilt bewaren. Opslaan zonder " +
+          "foto's blijft toegestaan.",
         photoVerificationTitle: "Fotoverificatie",
         photoCountSummary: "{selected} van {total} geselecteerd",
         primaryPhotoTitle: "Primaire voorbeeldfoto",
         primaryPhotoDescription:
-          "Gebruik de thumbnailstrook om de advertentiefoto's te controleren. De gekozen primaire foto wordt als eerste opgeslagen.",
+          "Gebruik de thumbnailstrook om de advertentiefoto's te controleren. De gekozen " +
+          "primaire foto wordt als eerste opgeslagen.",
         photoActiveBadge: "Actief voorbeeld",
         photoPreviewBadge: "Bekijk foto",
         photosEmptyTitle: "Geen importeerbare foto's gevonden",
         photosEmptyDescription:
-          "Deze advertentie gaf geen bruikbare foto's terug. Je kunt het fietsconcept alsnog opslaan en later foto's toevoegen.",
+          "Deze advertentie gaf geen bruikbare foto's terug. Je kunt het fietsconcept alsnog " +
+          "opslaan en later foto's toevoegen.",
         photoFallbackLabel: "Advertentiefoto",
         photoSelected: "Geselecteerd voor import",
         photoDeselected: "Niet geselecteerd",
@@ -2515,19 +2677,17 @@ const nl = {
         warningMessages: {
           limited_description:
             "De advertentiebeschrijving is kort, waardoor details kunnen ontbreken.",
-          no_images_found:
-            "Er zijn geen herbruikbare advertentiefoto's gevonden.",
-          missing_advert_title:
-            "De advertentietitel kon niet volledig worden herkend.",
+          no_images_found: "Er zijn geen herbruikbare advertentiefoto's gevonden.",
+          missing_advert_title: "De advertentietitel kon niet volledig worden herkend.",
           brand_needs_review: "Merk moet gecontroleerd worden.",
           model_needs_review: "Model moet gecontroleerd worden.",
           bike_type_needs_review: "Fietstype moet gecontroleerd worden.",
           no_size_mention_found:
             "Er is geen duidelijke framemaatvermelding in de advertentietekst gevonden.",
-          already_imported:
-            "Deze advertentie is eerder al voor deze rider geïmporteerd.",
+          already_imported: "Deze advertentie is eerder al voor deze rider geïmporteerd.",
           one_photo_only:
-            "Er is maar één advertentiefoto beschikbaar, controleer dus extra goed of dit de juiste fiets is.",
+            "Er is maar één advertentiefoto beschikbaar, controleer dus extra goed of dit de " +
+            "juiste fiets is.",
           no_photos_selected:
             "Er zijn momenteel geen foto's geselecteerd. Opslaan zonder foto's blijft toegestaan.",
           partial_photo_selection:
@@ -2573,37 +2733,41 @@ const nl = {
         errors: {
           title: "Import heeft aandacht nodig",
           unsupportedUrl:
-            "Gebruik een geldige Marktplaats-advertentie-URL. Links van niet-ondersteunde marktplaatsen worden geweigerd.",
+            "Gebruik een geldige Marktplaats-advertentie-URL. Links van niet-ondersteunde " +
+            "marktplaatsen worden geweigerd.",
           previewFailed:
             "Het importvoorbeeld kon niet worden geladen. Controleer de URL of probeer het zo opnieuw.",
-          saveFailed:
-            "Het fietsconcept kon niet worden opgeslagen. Probeer opnieuw.",
+          saveFailed: "Het fietsconcept kon niet worden opgeslagen. Probeer opnieuw.",
           saveInProgress:
             "Deze fietsimport wordt nog afgerond. Wacht even en probeer het daarna opnieuw.",
           backendUnavailable:
-            "De Marktplaats-importbackend is nog niet beschikbaar in deze workspace. De rider-flow staat klaar, maar preview en opslaan kunnen pas afronden zodra het backendcontract er is.",
+            "De Marktplaats-importbackend is nog niet beschikbaar in deze workspace. De rider-flow " +
+            "staat klaar, maar preview en opslaan kunnen pas afronden zodra het backendcontract er " +
+            "is.",
         },
       },
       createChooser: {
         title: "Hoe wil je deze fiets toevoegen?",
         description:
-          "Kies de route die past bij de informatie die je al hebt. Je kunt de fiets later altijd nog aanpassen.",
+          "Kies de route die past bij de informatie die je al hebt. Je kunt de fiets later " +
+          "altijd nog aanpassen.",
         manual: {
           title: "Fiets handmatig aanmaken",
-          description:
-            "Begin vanaf nul en voer zelf de fietsgegevens, geometrie en setup in.",
+          description: "Begin vanaf nul en voer zelf de fietsgegevens, geometrie en setup in.",
           cta: "Start handmatige invoer",
         },
         marktplaats: {
           title: "Importeren vanuit Marktplaats",
           description:
-            "Plak één advertentie-URL, controleer wat we hebben gevonden en sla pas op nadat je het concept hebt bevestigd.",
+            "Plak één advertentie-URL, controleer wat we hebben gevonden en sla pas op nadat je " +
+            "het concept hebt bevestigd.",
           cta: "Open Marktplaats-import",
         },
         passport: {
           title: "Gebruik bike-passport ID",
           description:
-            "Plak een bike-passport ID van een andere rider en maak in enkele seconden je eigen bewerkbare kopie.",
+            "Plak een bike-passport ID van een andere rider en maak in enkele seconden je eigen " +
+            "bewerkbare kopie.",
           cta: "Gebruik bike-passport ID",
         },
       },
@@ -2611,10 +2775,12 @@ const nl = {
         entryCta: "Gebruik bike-passport ID",
         title: "Importeer een fiets met een bike-passport ID",
         description:
-          "Plak een gedeelde bike-passport ID, bekijk de fietsgegevens en maak daarna je eigen bewerkbare kopie.",
+          "Plak een gedeelde bike-passport ID, bekijk de fietsgegevens en maak daarna je eigen " +
+          "bewerkbare kopie.",
         entryTitle: "Plak een bike-passport ID",
         entryDescription:
-          "Een bike-passport ID is veilig om te delen. Je kunt er een nieuwe kopie van een andere rider's fiets mee importeren zonder eigenaar te worden van het origineel.",
+          "Een bike-passport ID is veilig om te delen. Je kunt er een nieuwe kopie van een " +
+          "andere rider's fiets mee importeren zonder eigenaar te worden van het origineel.",
         previewTitle: "Bekijk je geïmporteerde kopie",
         previewDescription:
           "Controleer de gedeelde fietsgegevens voordat je jouw eigen versie in de garage aanmaakt.",
@@ -2623,15 +2789,18 @@ const nl = {
         noDescription: "Er is geen gedeelde beschrijving voor deze fiets beschikbaar.",
         confirmationTitle: "Wat er nu gebeurt",
         confirmationDescription:
-          "Deze actie voegt een nieuwe fiets toe aan jouw garage onder jouw account. Je kunt hem daarna vrij bewerken en de originele fiets van de andere rider blijft ongewijzigd.",
-        photoCopied: "Deze preview bevat de gedeelde hoofdfoto van de fiets als die beschikbaar is.",
+          "Deze actie voegt een nieuwe fiets toe aan jouw garage onder jouw account. Je kunt hem " +
+          "daarna vrij bewerken en de originele fiets van de andere rider blijft ongewijzigd.",
+        photoCopied:
+          "Deze preview bevat de gedeelde hoofdfoto van de fiets als die beschikbaar is.",
         photoNotCopied: "Deze fiets kan in deze eerste versie zonder foto's worden geïmporteerd.",
         photoMissing: "Er is geen gedeelde fietsfoto beschikbaar voor deze passport-preview.",
         copyCard: {
           eyebrow: "Veilig delen tussen riders",
           title: "Bike-passport IDs maken persoonlijke kopieën",
           description:
-            "Deze importroute is bedoeld voor hergebruik, niet voor gedeeld eigenaarschap. Je krijgt vanaf het begin je eigen versie van de fiets.",
+            "Deze importroute is bedoeld voor hergebruik, niet voor gedeeld eigenaarschap. Je " +
+            "krijgt vanaf het begin je eigen versie van de fiets.",
           ownCopy: "Je maakt je eigen bewerkbare kopie in je garage.",
           sourceUnaffected: "Wijzigingen die jij maakt raken de oorspronkelijke fiets nooit.",
           shareableId: "De passport ID is het enige dat de andere rider hoeft te delen.",
@@ -2675,10 +2844,10 @@ const nl = {
             "Deze bike-passport hoort al bij een fiets van jou, dus er is niets nieuws om te importeren.",
           previewFailed:
             "De bike-passport preview kon nu niet worden geladen. Probeer het opnieuw.",
-          saveFailed:
-            "Je bewerkbare fietskopie kon niet worden aangemaakt. Probeer het opnieuw.",
+          saveFailed: "Je bewerkbare fietskopie kon niet worden aangemaakt. Probeer het opnieuw.",
           backendUnavailable:
-            "De bike-passport backend is nog niet beschikbaar in deze workspace. De rider-flow staat klaar, maar preview en import hebben het backendcontract nog nodig.",
+            "De bike-passport backend is nog niet beschikbaar in deze workspace. De rider-flow " +
+            "staat klaar, maar preview en import hebben het backendcontract nog nodig.",
         },
         success: "{bikeName} staat nu in je fietsgarage.",
       },
@@ -2686,7 +2855,9 @@ const nl = {
         confirm: "Deze fiets verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
         title: "Fiets verwijderen?",
         description:
-          "Dit verwijdert de fiets en de direct gekoppelde wielset-, bandensetup- en bandenspanningsdata. Als de fiets al afstelgeschiedenis heeft, wordt verwijdering geblokkeerd.",
+          "Dit verwijdert de fiets en de direct gekoppelde wielset-, bandensetup- en " +
+          "bandenspanningsdata. Als de fiets al afstelgeschiedenis heeft, wordt verwijdering " +
+          "geblokkeerd.",
         confirmButton: "Fiets verwijderen",
       },
       sections: {
@@ -2705,7 +2876,8 @@ const nl = {
         type: {
           label: "Fietstype",
           tooltip:
-            "Kies het exacte type fiets dat je wilt fitten. Dit beïnvloedt houdingsdoelen en veiligheidsgrenzen.",
+            "Kies het exacte type fiets dat je wilt fitten. Dit beïnvloedt houdingsdoelen en " +
+            "veiligheidsgrenzen.",
           placeholder: "Kies fietstype",
           staticLabel: "Fietstype:",
         },
@@ -2729,34 +2901,38 @@ const nl = {
         geometryLink: {
           title: "Fietsgeometrie koppelen",
           description:
-            "Selecteer je fiets stap voor stap uit de geometriebibliotheek: merk, model, jaar en maat. Staat je fiets er niet in, dan kun je alsnog je eigen merk en model opslaan.",
+            "Selecteer je fiets stap voor stap uit de geometriebibliotheek: merk, model, jaar en " +
+            "maat. Staat je fiets er niet in, dan kun je alsnog je eigen merk en model opslaan.",
           loadingBrands: "Standaard merken laden...",
           loadingModels: "Modellen voor het gekozen merk laden...",
           noBrands:
-            "Er zijn nog geen standaardmerken met geometrie beschikbaar. Je kunt je fiets nog steeds opslaan met je eigen merk en model.",
+            "Er zijn nog geen standaardmerken met geometrie beschikbaar. Je kunt je fiets nog " +
+            "steeds opslaan met je eigen merk en model.",
           selectBrandFirst:
             "Begin met een standaard merk om deze fiets aan opgeslagen geometriegegevens te koppelen.",
           selectModelFirst:
             "Selecteer het model dat bij je fiets past. Alleen modellen van het gekozen merk worden getoond.",
           noModels:
-            "Er zijn nog geen standaard modellen beschikbaar voor dit merk. Je kunt de fiets nog steeds opslaan zonder match in de geometriebibliotheek.",
+            "Er zijn nog geen standaard modellen beschikbaar voor dit merk. Je kunt de fiets nog " +
+            "steeds opslaan zonder match in de geometriebibliotheek.",
           selectionSummary: "Geselecteerde standaard fietsidentiteit",
           selectionSummaryEmpty:
             "Er is nog geen standaard pad uit de geometriebibliotheek gekozen.",
           linkedTitle: "Gekoppelde geometrie blijft bewaard",
           linkedDescription:
-            "Deze fiets is nu gekoppeld aan een referentie-record uit de bibliotheek. Zodra je de custom fallback start, wordt die koppeling voor deze opslag verwijderd.",
+            "Deze fiets is nu gekoppeld aan een referentie-record uit de bibliotheek. Zodra je de " +
+            "custom fallback start, wordt die koppeling voor deze opslag verwijderd.",
           standardBrand: {
             label: "Standaard merk",
             placeholder: "Kies een merk",
             helper:
-              "Begin met het fietsmerk uit de geometriebibliotheek. Daarna wordt de juiste modellijst beschikbaar.",
+              "Begin met het fietsmerk uit de geometriebibliotheek. Daarna wordt de juiste " +
+              "modellijst beschikbaar.",
           },
           standardModel: {
             label: "Standaard model",
             placeholder: "Kies een model",
-            helper:
-              "Kies het model dat hoort bij je fiets voor het geselecteerde merk.",
+            helper: "Kies het model dat hoort bij je fiets voor het geselecteerde merk.",
           },
           year: {
             label: "Modeljaar",
@@ -2769,7 +2945,8 @@ const nl = {
             label: "Framemaat",
             placeholder: "Kies een maat",
             helper:
-              "Kies de framemaat die bij je fiets past. Zodra je die kiest, verschijnt hieronder het exacte geometrievoorbeeld.",
+              "Kies de framemaat die bij je fiets past. Zodra je die kiest, verschijnt hieronder het " +
+              "exacte geometrievoorbeeld.",
           },
           preview: {
             title: "Voorbeeld gekoppelde geometrie",
@@ -2786,7 +2963,8 @@ const nl = {
           customBrandAction: "Mijn fiets staat niet in de lijst",
           customModelAction: "Mijn model staat er niet tussen",
           customExplanation:
-            "Custom merk- en modelwaarden worden alleen op jouw fiets opgeslagen. Ze veranderen de gedeelde geometriebibliotheek niet.",
+            "Custom merk- en modelwaarden worden alleen op jouw fiets opgeslagen. Ze veranderen de " +
+            "gedeelde geometriebibliotheek niet.",
         },
         bikeWeightKg: {
           label: "Fietsgewicht (kg)",
@@ -2806,45 +2984,45 @@ const nl = {
           stack: {
             label: "Stack (mm)",
             tooltip:
-              "Verticale afstand van hart trapas tot bovenzijde balhoofdbuis (mm). Te vinden in de geometriechart van de fabrikant.",
+              "Verticale afstand van hart trapas tot bovenzijde balhoofdbuis (mm). Te vinden in de " +
+              "geometriechart van de fabrikant.",
           },
           reach: {
             label: "Reach (mm)",
             tooltip:
-              "Horizontale afstand van hart trapas tot bovenzijde balhoofdbuis (mm). Te vinden in de geometriechart van de fabrikant.",
+              "Horizontale afstand van hart trapas tot bovenzijde balhoofdbuis (mm). Te vinden in de " +
+              "geometriechart van de fabrikant.",
           },
           seatTubeAngle: {
             label: "Zitbuishoek (graden)",
             tooltip:
-              "Hoek van de zitbuis (graden). Gebruik de fabrikantgegevens. Beïnvloedt de zadelpositie voor dezelfde zadelhoogte.",
+              "Hoek van de zitbuis (graden). Gebruik de fabrikantgegevens. Beïnvloedt de " +
+              "zadelpositie voor dezelfde zadelhoogte.",
           },
           headTubeAngle: {
             label: "Balhoofdhoek (graden)",
-            tooltip:
-              "Hoek van de balhoofdbuis (graden). Beïnvloedt stuurgedrag en stabiliteit.",
+            tooltip: "Hoek van de balhoofdbuis (graden). Beïnvloedt stuurgedrag en stabiliteit.",
           },
           frameSize: {
             label: "Framemaat",
             tooltip:
-              "Voer de maat in zoals het merk die aangeeft (bijv. 54, 56, M, L). Bij twijfel zijn stack/reach nauwkeuriger.",
+              "Voer de maat in zoals het merk die aangeeft (bijv. 54, 56, M, L). Bij twijfel zijn " +
+              "stack/reach nauwkeuriger.",
             placeholder: "bijv. 54",
           },
         },
         setup: {
           saddleHeight: {
             label: "Zadelhoogte (mm)",
-            tooltip:
-              "Meet van hart trapas tot bovenkant zadel langs de zitbuislijn (mm).",
+            tooltip: "Meet van hart trapas tot bovenkant zadel langs de zitbuislijn (mm).",
           },
           saddleSetback: {
             label: "Zadelterugstand (mm)",
-            tooltip:
-              "Meet de horizontale afstand van hart trapas tot zadelpunt (mm).",
+            tooltip: "Meet de horizontale afstand van hart trapas tot zadelpunt (mm).",
           },
           stemLength: {
             label: "Stuurpenlengte (mm)",
-            tooltip:
-              "Lengte die op de stuurpen staat (mm), hart-op-hart.",
+            tooltip: "Lengte die op de stuurpen staat (mm), hart-op-hart.",
           },
           stemAngle: {
             label: "Stuurpenhoek (graden)",
@@ -2853,13 +3031,11 @@ const nl = {
           },
           handlebarWidth: {
             label: "Stuurbreedte (mm)",
-            tooltip:
-              "Breedte gemeten hart-op-hart bij de shifters (mm).",
+            tooltip: "Breedte gemeten hart-op-hart bij de shifters (mm).",
           },
           crankLength: {
             label: "Cranklengte (mm)",
-            tooltip:
-              "Lengte die op de crankarm staat (mm).",
+            tooltip: "Lengte die op de crankarm staat (mm).",
           },
         },
       },
@@ -2893,14 +3069,11 @@ const nl = {
             "De druk kan te laag zijn voor deze setup. Controleer karkas en terrein.",
           front_rear_pressure_mismatch:
             "Groot verschil tussen voor- en achterdruk. Controleer je invoer.",
-          inner_tube_pinch_flat_risk:
-            "Lage druk met binnenband: risico op stootlek.",
+          inner_tube_pinch_flat_risk: "Lage druk met binnenband: risico op stootlek.",
           road_tire_width_unusual:
             "Ongebruikelijke bandbreedte voor een racefiets. Controleer dit.",
-          gravel_tire_width_unusual:
-            "Ongebruikelijke bandbreedte voor een gravelbike.",
-          mtb_tire_width_unusual:
-            "MTB-banden zijn meestal minimaal 45 mm breed.",
+          gravel_tire_width_unusual: "Ongebruikelijke bandbreedte voor een gravelbike.",
+          mtb_tire_width_unusual: "MTB-banden zijn meestal minimaal 45 mm breed.",
           hookless_max_pressure_unknown:
             "Hookless velg: maximale druk onbekend. Blijf op of onder 3,5 bar tenzij anders aangegeven.",
         },
@@ -2930,15 +3103,18 @@ const nl = {
       },
       overview: {
         title: "Laatste bandenspanning per fiets",
-        subtitle: "Bekijk je laatste advies, voeg notities toe en start direct een nieuwe berekening.",
+        subtitle:
+          "Bekijk je laatste advies, voeg notities toe en start direct een nieuwe berekening.",
         description:
-          "Je nieuwste bandenspanningsadvies blijft hier zichtbaar per fiets, zodat je setups kunt vergelijken zonder eerst de wizard te openen.",
+          "Je nieuwste bandenspanningsadvies blijft hier zichtbaar per fiets, zodat je setups " +
+          "kunt vergelijken zonder eerst de wizard te openen.",
         startNew: "Nieuwe berekening starten",
         frontPressure: "Voordruk",
         rearPressure: "Achterdruk",
         lastCalculated: "Laatst berekend",
         recalculate: "Herberekenen",
-        noCalculation: "Nog geen berekening voor deze fiets. Start een advies om er een op te slaan.",
+        noCalculation:
+          "Nog geen berekening voor deze fiets. Start een advies om er een op te slaan.",
         noCalculationCta: "Advies ophalen",
         noBikesTitle: "Nog geen fietsen opgeslagen",
         noBikesDescription:
@@ -2948,7 +3124,8 @@ const nl = {
         userNotes: {
           label: "Rijnotities",
           placeholder: "Wat merkte je op op de weg of trail?",
-          helper: "Gebruik notities voor feedback, terreininformatie of setup-herinneringen. Maximaal 300 tekens.",
+          helper:
+            "Gebruik notities voor feedback, terreininformatie of setup-herinneringen. Maximaal 300 tekens.",
           empty: "Nog geen rijnotities.",
           editButton: "Notitie bewerken",
           saveButton: "Notitie opslaan",
@@ -3041,8 +3218,7 @@ const nl = {
     errors: {
       generic: {
         title: "Er ging iets mis",
-        description:
-          "Er is een fout opgetreden bij het laden van deze pagina. Probeer opnieuw.",
+        description: "Er is een fout opgetreden bij het laden van deze pagina. Probeer opnieuw.",
         errorIdLabel: "Fout-ID:",
         retry: "Probeer opnieuw",
         goDashboard: "Ga naar dashboard",

@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useId, useState } from "react";
+import { ArrowLeft, Minus, Plus } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+import { Button, Card } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { comfortLevels, coreStabilityTests, deriveComfortScore, flexibilityTests } from "@/lib/validations/profile";
@@ -37,6 +39,8 @@ export function ProfileImproveGuideClient({
 }) {
   const { locale, messages } = useDashboardMessages();
   const profile = useQuery(api.profiles.queries.getMyProfile);
+  const exerciseId = useId();
+  const [openExercise, setOpenExercise] = useState<number | null>(0);
 
   const isFlexibility = variant === "flexibility";
   const isComfort = variant === "comfort";
@@ -56,6 +60,39 @@ export function ProfileImproveGuideClient({
   const exercisesTitle = improveMessages.exercisesTitle;
   const progressTitle = improveMessages.progressTitle;
   const updateScoreCta = improveMessages.updateScoreCta;
+  const copy = locale === "nl"
+    ? {
+        eyebrow: "Je profiel · stap voor stap",
+        inProfile: "In je profiel",
+        current: "Jouw niveau",
+        loading: "Je profiel laden…",
+        missing: "Nog niet ingevuld",
+        levelIntro: isBmi ? "Categorie op basis van je lengte en gewicht." : "Je huidige niveau komt uit je profiel.",
+      }
+    : {
+        eyebrow: "Your profile · step by step",
+        inProfile: "In your profile",
+        current: "Your level",
+        loading: "Loading your profile…",
+        missing: "Not yet recorded",
+        levelIntro: isBmi ? "Category based on your height and weight." : "Your current level comes from your profile.",
+      };
+  const hasScore = Boolean(profile && (isFlexibility
+    ? profile.flexibilityScore
+    : isComfort
+      ? profile.hasPain
+      : isBmi
+        ? profile.heightCm && profile.weightKg
+        : profile.coreStabilityScore));
+  const localizedComfortLevels = locale === "nl"
+    ? [
+        { label: "Ernstig ongemak", description: "Duidelijke pijn die fietsen beperkt of verhindert." },
+        { label: "Veel ongemak", description: "Terugkerende pijn die je ritten regelmatig beïnvloedt." },
+        { label: "Matig ongemak", description: "Merkbaar ongemak op langere of zwaardere ritten." },
+        { label: "Licht ongemak", description: "Af en toe licht, beheersbaar ongemak." },
+        { label: "Comfortabel", description: "Geen pijn of ongemak tijdens het fietsen." },
+      ]
+    : comfortLevels;
 
   const localizedFlexibilityTests = locale === "nl"
     ? [
@@ -157,8 +194,8 @@ export function ProfileImproveGuideClient({
         )
       ]?.label ?? localizedFlexibilityTests[2].label
     : isComfort
-      ? comfortLevels[(deriveComfortScore(profile?.hasPain, profile?.painSeverity) ?? 5) - 1]?.label ??
-        comfortLevels[4].label
+      ? localizedComfortLevels[deriveComfortScore(profile?.hasPain, profile?.painSeverity) - 1]?.label ??
+        localizedComfortLevels[4].label
       : isBmi
         ? bmiCategoryLabels[bmiCategoryIndex]
         : localizedCoreStabilityTests[Math.max(0, Math.min(4, (profile?.coreStabilityScore ?? 3) - 1))]?.label ??
@@ -169,8 +206,7 @@ export function ProfileImproveGuideClient({
         (test) => test.score === (profile?.flexibilityScore ?? "average")
       )
     : isComfort
-      ? comfortLevels[(deriveComfortScore(profile?.hasPain, profile?.painSeverity) ?? 5) - 1]?.label ??
-        comfortLevels[4].label
+      ? deriveComfortScore(profile?.hasPain, profile?.painSeverity) - 1
       : isBmi
         ? bmiCategoryIndex
         : Math.max(0, Math.min(4, (profile?.coreStabilityScore ?? 3) - 1));
@@ -182,7 +218,7 @@ export function ProfileImproveGuideClient({
         highlighted: index === scoreIndex,
       }))
     : isComfort
-      ? comfortLevels.map((level, index) => ({
+      ? localizedComfortLevels.map((level, index) => ({
           title: level.label,
           description: `${level.description} ${comfortImplications[index]}`,
           highlighted: index === scoreIndex,
@@ -202,93 +238,117 @@ export function ProfileImproveGuideClient({
   const editTarget = isFlexibility ? "flexibility" : isComfort ? "comfort" : isBmi ? "measurements" : "core";
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
+    <div className="mx-auto min-w-0 max-w-[1080px] space-y-6 text-foreground">
       <Link
         href={withLocalePrefix("/profile", locale)}
-        className="inline-flex text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
+        className="inline-flex min-h-11 items-center gap-2 rounded-lg font-bold text-primary hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
       >
+        <ArrowLeft className="size-5 shrink-0" aria-hidden="true" />
         {backLabel}
       </Link>
 
-      <section className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
-        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-[color:var(--foreground)]">
+      <header className="rounded-[28px] bg-[var(--bbf-lime)] p-6 text-[var(--bbf-inkt)] sm:px-8 sm:py-7">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <p className="mb-3 text-sm font-bold uppercase tracking-[0.08em]">{copy.eyebrow}</p>
+            <h1 className="font-display text-[32px] font-extrabold leading-[1.05] tracking-[-0.03em] sm:text-[42px]">
               {title}
             </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
+            <p className="mt-3.5 max-w-[650px] text-base leading-relaxed">
               {subtitle}
             </p>
           </div>
-          <span className="inline-flex rounded-full bg-[color:var(--secondary)] px-3 py-1 text-sm font-semibold text-[color:var(--secondary-foreground)]">
-            {currentScoreLabel}
-          </span>
+          <div className="shrink-0 lg:max-w-[190px] lg:text-right" role="status">
+            <p className="text-sm">{copy.inProfile}</p>
+            <strong className="mt-2 block text-xl">
+              {profile === undefined ? copy.loading : hasScore ? currentScoreLabel : copy.missing}
+            </strong>
+          </div>
         </div>
-      </section>
+      </header>
 
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-[color:var(--foreground)]">
+      <div className="grid items-start gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
+      <Card className="min-w-0 gap-0 p-5 sm:p-6" role="region" aria-labelledby={`${exerciseId}-levels`}>
+        <h2 id={`${exerciseId}-levels`} className="font-display text-2xl font-bold">
           {whatItMeansTitle}
         </h2>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <p className="mb-5 mt-2 text-sm leading-relaxed text-muted-foreground">{copy.levelIntro}</p>
+        <div className="space-y-2.5">
           {scoreLevels.map((level) => (
-            <Card
+            <div
               key={level.title}
-              variant="bordered"
-              className={level.highlighted ? "border-[color:var(--primary)] shadow-sm" : ""}
+              aria-current={hasScore && level.highlighted ? "true" : undefined}
+              className={`rounded-2xl border p-3.5 ${hasScore && level.highlighted ? "border-primary bg-primary-soft" : "border-border bg-card"}`}
             >
-              <CardHeader>
-                <CardTitle>{level.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="font-display text-lg font-bold">{level.title}</h3>
+                {hasScore && level.highlighted && <span className="text-xs font-bold">{copy.current}</span>}
+              </div>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                   {level.description}
                 </p>
-              </CardContent>
-            </Card>
+            </div>
           ))}
         </div>
-      </section>
+      </Card>
 
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-[color:var(--foreground)]">
+      <Card className="min-w-0 gap-0 p-5 sm:p-6" role="region" aria-labelledby={`${exerciseId}-exercises`}>
+        <h2 id={`${exerciseId}-exercises`} className="mb-5 font-display text-2xl font-bold">
           {exercisesTitle}
         </h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {exercises.map((exercise) => (
-            <Card key={exercise.name} variant="bordered">
-              <CardHeader>
-                <CardTitle>{exercise.name}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-sm text-[color:var(--muted-foreground)]">
+        <div className="space-y-1.5">
+          {exercises.map((exercise, index) => (
+            <div key={exercise.name}>
+              <h3>
+                <Button
+                  variant="ghost"
+                  aria-expanded={openExercise === index}
+                  aria-controls={`${exerciseId}-${index}`}
+                  id={`${exerciseId}-trigger-${index}`}
+                  onClick={() => setOpenExercise(openExercise === index ? null : index)}
+                  className="h-auto min-h-[52px] w-full justify-start gap-3 whitespace-normal rounded-[14px] px-4 py-3 text-left text-[15px] text-[var(--bbf-inkt)]"
+                  style={{ backgroundColor: openExercise === index ? "var(--bbf-lime)" : "var(--bbf-papier)" }}
+                >
+                  <span className="w-7 shrink-0 font-mono" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="min-w-0 flex-1">{exercise.name}</span>
+                  {openExercise === index ? <Minus className="size-4 shrink-0" aria-hidden="true" /> : <Plus className="size-4 shrink-0" aria-hidden="true" />}
+                </Button>
+              </h3>
+              <div id={`${exerciseId}-${index}`} hidden={openExercise !== index} aria-labelledby={`${exerciseId}-trigger-${index}`} className="space-y-3 px-4 pb-5 pt-3.5">
+                <p className="text-sm leading-relaxed text-muted-foreground">
                   {exercise.detail}
                 </p>
-                <p className="text-sm font-medium text-[color:var(--foreground)]">
+                <p className="text-sm font-bold text-foreground">
                   {exercise.cadence}
                 </p>
-                <ul className="space-y-1 text-sm leading-6 text-[color:var(--muted-foreground)]">
+                <ol className="list-decimal space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
                   {exercise.steps.map((step) => (
-                    <li key={step}>• {step}</li>
+                    <li key={step}>{step}</li>
                   ))}
-                </ul>
-              </CardContent>
-            </Card>
+                </ol>
+              </div>
+            </div>
           ))}
         </div>
-      </section>
+      </Card>
+      </div>
 
-      <section className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
-        <h2 className="text-xl font-semibold text-[color:var(--foreground)]">
+      <section className="flex flex-col gap-6 rounded-3xl bg-primary-soft p-6 sm:px-7 lg:flex-row lg:items-center">
+        <div className="min-w-0 flex-1">
+        <h2 className="font-display text-2xl font-bold">
           {progressTitle}
         </h2>
-        <ul className="mt-4 space-y-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
+        <ul className="mt-3.5 list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
           {progressTips.map((tip) => (
-            <li key={tip}>• {tip}</li>
+            <li key={tip}>{tip}</li>
           ))}
         </ul>
-        <div className="mt-6">
+        </div>
+        <div className="lg:w-[210px] lg:shrink-0">
           <Button
+            nativeButton={false}
+            role="link"
+            className="h-auto min-h-12 w-full whitespace-normal py-3 text-center"
             render={<Link href={withLocalePrefix(`/profile?edit=${editTarget}`, locale)} />}
           >
             {updateScoreCta}

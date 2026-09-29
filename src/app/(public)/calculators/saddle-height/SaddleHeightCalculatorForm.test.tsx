@@ -10,9 +10,18 @@ afterEach(cleanup);
 const en = saddleHeightMessages.en;
 
 function expected(inseamCm = 84, category: "road" | "city" = "road", flexibility: 1 | 3 = 3) {
-  return runSaddleHeightCalculation({ inseamCm, category, ridingGoal: "balanced", flexibility, coreStability: 3, inseamSource: "measured" });
+  return runSaddleHeightCalculation({
+    inseamCm,
+    category,
+    ridingGoal: "balanced",
+    flexibility,
+    coreStability: 3,
+    inseamSource: "measured",
+  });
 }
-function confirmInseam() { fireEvent.click(screen.getByRole("button", { name: `${en.measured} ${en.measuredHint}` })); }
+function confirmInseam() {
+  fireEvent.click(screen.getByRole("button", { name: `${en.measured} ${en.measuredHint}` }));
+}
 
 describe("SaddleHeightCalculatorForm", () => {
   it("starts with an honest example and accessible sliders, not typed numeric fields", () => {
@@ -40,7 +49,9 @@ describe("SaddleHeightCalculatorForm", () => {
     expect(screen.getByText(en.confidenceLevels.high)).toBeTruthy();
     let region = screen.getByRole("region", { name: en.result });
     expect(within(region).getByText(String(expected(84.5).height))).toBeTruthy();
-    expect(within(region).getByText(`${expected(84.5).range.min}–${expected(84.5).range.max}`)).toBeTruthy();
+    expect(
+      within(region).getByText(`${expected(84.5).range.min}–${expected(84.5).range.max}`),
+    ).toBeTruthy();
     const visual = screen.getByRole("img", { name: en.visualAlt });
     const initialHip = visual.querySelector("line")?.getAttribute("y1");
     fireEvent.click(screen.getByRole("radio", { name: en.categories.city }));
@@ -62,28 +73,41 @@ describe("SaddleHeightCalculatorForm", () => {
     expect(inseam.getAttribute("min")).toBe("55");
     expect(inseam.getAttribute("max")).toBe("105");
     expect(inseam.getAttribute("step")).toBe("0.5");
-    for (const [key, value] of [["Home", 55], ["End", 105]] as const) {
+    for (const [key, value] of [
+      ["Home", 55],
+      ["End", 105],
+    ] as const) {
       fireEvent.keyDown(inseam, { key });
       const result = expected(value);
-      expect(within(screen.getByRole("region", { name: en.result })).getByText(String(result.height))).toBeTruthy();
+      expect(
+        within(screen.getByRole("region", { name: en.result })).getByText(String(result.height)),
+      ).toBeTruthy();
       expect((current as HTMLInputElement).value).toBe("755");
       const delta = result.height - 755;
       expect(screen.getByText(`${delta > 0 ? "+" : ""}${delta}`)).toBeTruthy();
     }
     fireEvent.click(screen.getByRole("button", { name: en.compareHide }));
     fireEvent.click(screen.getByRole("button", { name: en.compareToggle }));
-    expect((screen.getByRole("slider", { name: en.current }) as HTMLInputElement).value).toBe("755");
+    expect((screen.getByRole("slider", { name: en.current }) as HTMLInputElement).value).toBe(
+      "755",
+    );
   });
 
   it("uses genuine lower confidence for estimated measurements and localized Dutch values", () => {
     const nl = saddleHeightMessages.nl;
     render(<SaddleHeightCalculatorForm isNl copy={nl} />);
     fireEvent.keyDown(screen.getByRole("slider", { name: nl.inseam }), { key: "ArrowRight" });
-    expect(screen.getByRole("slider", { name: nl.inseam }).getAttribute("aria-valuetext")).toBe("84,5 cm");
+    expect(screen.getByRole("slider", { name: nl.inseam }).getAttribute("aria-valuetext")).toBe(
+      "84,5 cm",
+    );
     fireEvent.click(screen.getByRole("button", { name: `${nl.estimated} ${nl.estimatedHint}` }));
     expect(screen.getByText(nl.confidenceLevels.medium)).toBeTruthy();
     expect(screen.queryByText(en.title)).toBeNull();
-    expect(screen.getByRole("link", { name: nl.accountCta }).getAttribute("href")).toBe("/nl/calculators/bike-fit");
-    expect(screen.getByRole("link", { name: nl.stickyLink }).getAttribute("href")).toBe("#saddle-result");
+    expect(screen.getByRole("link", { name: nl.accountCta }).getAttribute("href")).toBe(
+      "/nl/calculators/bike-fit",
+    );
+    expect(screen.getByRole("link", { name: nl.stickyLink }).getAttribute("href")).toBe(
+      "#saddle-result",
+    );
   });
 });

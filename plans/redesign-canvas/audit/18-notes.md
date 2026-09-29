@@ -119,7 +119,7 @@ Each namespace below is present in both `en` and `nl`; nested category/goal/step
 
 ## Remaining gates
 
-Batch 2 is not started. Wait for lead approval of 18.1 before proceeding.
+18.1 approved and committed as `2dccd9b`. Batch2 implementation below; batch3 awaits lead approval.
 
 ## Batch 18.3 — active; shared integration request
 
@@ -130,3 +130,213 @@ Request to layout owner: register `/calculators/gearing` as `gearing`, and `/cal
 `/calculators/climb-planner`, `/calculators/ftp-wkg`, `/calculators/fuel-hydration` as `more` in
 `src/components/layout/ConfiguratorHeaderSwitch.tsx`. These pages reuse ConfiguratorLayout and the four extra
 pages supply MoreToolsNav. This enables the approved tools header without duplicating it inside page content.
+
+
+## Batch18.2 — shared changes and lead fixes
+
+Batch2 uses the approved configurator header on both pressure aliases and all three discipline routes, plus saddle-width and bike-fit. Header tests cover every route and preserve the marketing fallback for later batches. Calculator engines remain unchanged.
+
+Reformatted batch1 and all batch2 touched code with the already-installed Prettier (no dependency changes), wrapping long copy and utility strings without changing their content. Named two existing public panel gradients in globals.css to keep full Tailwind utility tokens intact while meeting the120-column limit. AST review confirmed formatting-only string content and utility boundaries. Concurrent header/footer marketing edits are owned by their separate agent.
+
+Mobile feedback is hidden below the xl breakpoint whenever ConfiguratorLayout renders its sticky result. Desktop feedback and mobile pages without a result retain the launcher. Added an opt-in local Playwright regression at tests/e2e/configurator-mobile.e2e.test.ts covering390/768/1440px, visibility, bar bounds and horizontal overflow across pilot/new calculators, plus the pricing-page control.
+
+## Batch 18.2 — Saddle width
+
+Owned paths: saddle-width page/form and their two test files; new `src/i18n/calculators/saddleWidth.ts`. Root dictionary registration `saddleWidthCalculator` owned by parent. All touched TSX/dictionary files formatted with installed Prettier, printWidth120; long copy/class/path expressions split without changing text.
+
+Board elements: question heading, measured/estimated segmented paths, numbered input cards, seven riding-type option cards, posture segments, lime main result and true ±5mm test window, live schematic saddle/contact-spacing SVG, discrete width-class scale, measurement provenance, real confidence level, actual suitability family/shape details, ordered adjustment steps, account next step, fixed mobile main result via shared ConfiguratorLayout. Parent supplies tools header, so no duplicate nav. FAQs, trust/explanation blocks, related links and campaign CTA remain below calculator. Existing canonical, metadata, WebApplication and HowTo JSON-LD retained.
+
+Source: unchanged calculateSaddleWidth/classifySaddleSuitability from `src/lib/saddle-width-engine`. Sit-bone 60–200mm, hip70–160cm from engine config; height140–220cm and weight40–150kg preserve actual public-page domains (engine only requires finite height/weight). All numeric steps1. Width classes use WIDTH_BINS, including actual adjacent-class results. Final width is never clamped to class range: if below125 or above190mm the UI explicitly says outside shown classes, removes active/adjacent styling, and keeps the actual width/test window. Shape/profile/padding labels translate actual suitability enums. No copied canvas formulas, invented confidence/measurements or geometry assurances.
+
+Example/provenance: defaults125mm,180cm,75kg,100cm are visibly examples. Measured mode becomes personal only on sit-bone movement/confirmation; estimated mode requires each of height/weight/hip changed or a deliberate confirmation of the visible measurements. Mode changes never pass inactive measured/body data to the engine or persistence. Category/posture alone cannot confirm example measurements. Confidence is actual engine level; example context explicitly says it is not yet the user's measured confidence. Estimated sit-bone range is shown separately from the saddle-width test window.
+
+Persistence: existing debounced createPublicSaddleWidthSession retained, but examples are never automatically saved. Full payload signature includes all active inputs (so differing measurements with the same recommendation are not accidentally deduplicated). Success alone records signature; rejections caught and localized notice shown. UI calculations stay available if save fails. Engine extreme values can lie outside backend persistence validation (e.g.60mm/TT aggressive final67mm vs backend minimum70); surfaced save failure is honest, backend/engine untouched.
+
+Deviations: board saddle drawing is explicitly schematic, changing outline width/contact markers only, not pretending to identify a saddle model. Classes are white/ink from shared SizeScale, ranges shown below from actual bins. Public board/form have no advanced symptom/setup inputs; those remain in the account saddle selector, with accurate account CTA. Home-measurement help is an accessible details block. Account CTA says continue rather than claiming authentication automatically transfers a saved result. Anonymous session persistence is not represented as account save.
+
+I18n module covers all new copy: heading/input/provenance/example states, measurement instructions, riding/posture labels, exact-engine confidence/family/nose/profile/padding enum labels, outside-class guidance, visual label, next steps, account/sticky text and save failure. Existing legacy inline SEO/FAQ prose remains unchanged.
+
+Validation:8 targeted tests pass across form+page: NL/EN example/provenance labels, no spinbuttons/selects, keyboard updates/endpoints, real engine recommendation and live diagram, measured vs estimated payload omission, all estimated fields confirmed before saving, no example persistence, outside-bin recommendation handling, category/posture changes, metadata canonicals and retained CTA links. Targeted ESLint clean. Typecheck before parent registration only reported missing saddleWidthCalculator/tirePressureCalculator root keys; parent runs full validation/render comparison.
+
+
+# Batch 18.2 — Bike-fit calculator
+
+## Files and implementation
+
+- Rebuilt `src/app/(public)/calculators/bike-fit/BikeFitCalculatorForm.tsx` with shared ConfiguratorLayout, StepCard, Slider, SegmentedControl, OptionCard/RadioGroup, ResultTile, StatusChip and AdjustOrder.
+- New local `BikeFitVisual.tsx` draws the lime bike panel with actual height/reach/drop labels. The saddle and cockpit coordinates react to adapter measurements; signed drop changes handlebar elevation in the correct direction. Marked explicitly illustrative/not to scale. SVG labels stay inside the viewBox at supported input extremes.
+- Updated page layout puts the interactive two-column tool first, retaining breadcrumbs, existing explanatory/trust blocks, FAQs, related links, campaign/account CTA behavior and all metadata/canonical/JSON-LD construction below/around it. One H1 from ConfiguratorLayout. Parent supplies tools header and fixed mobile result summary behavior.
+- New `src/i18n/calculators/bikeFit.ts`: `bikeFitMessages.en/nl`, `BikeFitMessages` type. Parent registered root `bikeFitCalculator`; server page calls getDictionary and passes copy. Every newly written UI/help/warning/CTA string comes from this dictionary; localized number formatting and standard units. Existing copy in the preserved page sections is unchanged.
+
+## Real engine / board corrections
+
+- Existing `runBikeFitCalculation` adapter and all engine files remain untouched. All numeric outputs use its real return values; no temporary canvas fit or confidence formulas copied.
+- Height now **130–210cm, step1**, correcting the old frontend's 140–220 mismatch. Inseam **55–105cm, step0.5**. Flexibility/core **1–5, step1**. Four real category and goal enums preserved.
+- Initial 180/84 values are explicitly **example**. Source selector offers example/measured/estimated; moving sliders does not silently claim measurement confirmation. Confidence uses existing public baseline/requirements/validation helper, never click counts or invented percentages. Estimated source can still be high with complete context under the actual helper; this is not overridden.
+- Real saddle guardrail and reach range are shown. Negative city/MTB drop is preserved in the tile, direction label and SVG marker. Frame shortlist uses actual quick-estimate cm bands for road/gravel and letter bands for city/MTB; no invented single size. Centimetre units render small beside the numeric band.
+- Actual frame stack/reach targets retained. Setback now shown as an exact behind-bottom-bracket target, without ±. Aero on MTB/city is disclosed as the effective performance setting.
+- Actual engine warning types map to translated rider-facing messages; unusual height/inseam ratios, saddle warnings, reach, flexibility and core cautions remain visible for confirmed inputs. Raw English engine messages and internal jargon are not surfaced.
+- Board adjustment sequence stays qualitative and explicitly identifies the public-preview scope; copy explains full account flow includes cleats/current setup. No promised save: CTA goes to real /login, stating these calculator values are not saved automatically.
+- No new unsupported advanced fields (torso/arm/foot/etc.) or engine inputs added. No current-bike inputs existed here; entered body measures remain unchanged as other controls move.
+
+## Validation and formatting
+
+10 tests pass across the updated real-engine form and existing page suites. Tests cover:
+- honest example/confirmation and accessible sliders/choices;
+- actual adapter outputs after decimal input;
+- signed city drop and upward cockpit geometry, actual frame band and aero disclosure;
+- both full height/inseam endpoints and preservation of the other measurement;
+- actual range/frame-target/warning/confidence values and core refinement;
+- Dutch comma/translated warnings/localized truthful account handoff;
+- locale metadata/canonical/FAQ preservation and both active/inactive campaign CTAs.
+
+Focused ESLint passes. Final typecheck passes; rerun output is `/private/tmp/bbf182-bikefit-types.log`. All six touched files formatted with existing Prettier at print-width120; audited every line and no line exceeds120. Long preserved page-copy literals were split by concatenation without changing their rendered text.
+
+No commits; no shared component, engine, draft or canvas edits. Parent handles full gates and browser screenshots/board comparison.
+
+
+## Tire pressure public family — 18.2
+
+Rebuilt `PressureCalculatorForm` (public only; dashboard wizard/result components untouched) and main public content plus three discipline landing pages. Existing form API retains locale/defaultDiscipline/labels/resultLabels, adds optional `copy: TirePressureCopy`; dictionary fallback preserves standalone callers. `tirePressureMessages` NL/EN export is registered by parent under tirePressureCalculator. All authored strings use dictionary; existing pressure form/result dictionary warnings remain intact.
+
+Board components: question heading, numbered steps, body/width/bike-weight sliders, discipline/tube/surface/goal option cards, explicit linking/unlinking for widths, advanced disclosure aria-expanded/controls, front/rear lime results with localized bar and actual returned PSI, two real-pressure gauges, warning panel, adjustment list, account continuation, fixed-mobile two-number summary via ConfiguratorLayout. No nested legacy max-width shell; tool gets 1440 canvas width/64px margins. Parent provides shared tools navigation. Defaults are clearly labeled examples until interaction.
+
+Real engine remains `calculateBasicPressure`, validated with `validatePressureInput`; no copied canvas formulas or engine edits. Gauge domains reflect road4–9,gravel1.5–5,MTB0.8–3.5 clamps and explicitly state these are NOT equipment safety limits. All returned warning keys resolve through original localized warningMessages. Tire/rim maximum warning prominent (lowest manufacturer maximum wins). Front/rear output and rounding are the real engine. Public widths18–80mm step1, rider35–160kg step1, optional bike3–20kg step0.1. Rear follows front until manually adjusted, explicit button restores linking. Goal remains optional/unset; closing advanced removes bike weight but preserves chosen riding goal, matching existing behavior.
+
+Discipline landing defaults preserved exactly (road/gravel/mtb only; original28mm/asphalt example retained, never silently substitute widths or surface on discipline change). Existing route redirects, metadata/canonical/JSON-LD, FAQ text, campaign CTA and related links preserved. Existing public pages never had saved session/preset state; account state/persistence untouched.
+
+Deliberate board exclusions per lead scope: basic public form does not expose luggage/wet/casing/rim widths/max equipment inputs (those are account advanced contract). Explicit omitted-factors copy and account CTA remain; no invented safety margins, contribution percentages or confidence scores. Removed older above-tool marketing hero/rating; retained underlying requested JSON-LD. Board account warning placeholder replaced by actual basic engine warnings and clear equipment note.
+
+Verification:8 tests in2 suites pass. Real input/output comparison, keyboard bounds/live meters, linked→independent→relinked widths, all3 discipline defaults/warnings/gauge domains, optional goal/bike weights and collapse semantics, English route CTA and canonical alias redirect. Focused ESLint passes. All touched code formatted with installed Prettier print-width110; long authored copy split with concatenation. Full typecheck initially blocked by pending dictionary registration and unrelated dashboard agent file, parent handles aggregate validation. No commits/drafts edits.
+
+
+
+## Batch18.2 dictionary keys
+
+- `saddleWidthCalculator`: eyebrow, title, description, measurements, riding, posture, method, measured, estimated, sitBone, height, weight, hip, sitBoneHint, heightHint, weightHint, hipHint, example, confirm, confirmed, exampleResult, result, range, view, measureHelp, measureSteps, measuredSource, estimatedSource, measuredTrust, estimatedTrust, exampleTrust, confidence, confidenceLevels, scale, recommended, alternate, outside, diagram, diagramNote, family, families, shape, nose, profiles, cutout, fullShell, padding, order, steps, account, accountNote, saveFailed, rides, postures. Nested localized options, messages and steps live in the corresponding module.
+
+- `bikeFitCalculator`: eyebrow, title, description, bodyTitle, ridingTitle, height, heightHint, inseam, inseamHint, measureLink, source, sources, exampleNote, measuredNote, estimatedNote, category, categories, goal, goals, goalHints, aeroAdjusted, flexibility, flexibilityHint, flexibilityLevels, core, coreHint, coreLevels, example, resultTitle, visualHint, visualAlt, resultsLabel, confidenceLabel, confidence, saddle, saddleReference, saddleBand, reach, reachReference, reachBand, drop, barsAbove, barsBelow, barsLevel, frameSize, frameHint, frameTargets, stack, frameReach, targetsHint, setback, setbackReference, orderTitle, orderHeight, orderHeightHint, orderSetback, orderSetbackHint, orderBars, orderBarsHint, warningsTitle, warnings, limitsTitle, limits, accountCta, accountHint, stickyLink. Nested localized options, messages and steps live in the corresponding module.
+
+- `tirePressureCalculator`: eyebrow, title, intro, body, tires, route, example, result, linked, advanced, unset, limit, excluded, adjustment, steps, save, saveText, warning, error, summary, related, gauge, scope, scale, preset. Nested localized options, messages and steps live in the corresponding module.
+
+
+## Batch18.2 final validation and review handoff
+
+- 58 targeted calculator/layout tests pass (14 files), including both batches and header aliases.
+- Local browser regression:5/5 pass at390/768/1440px. Feedback hides only with the mobile result;
+  ordinary mobile pages and desktop retain it. The regression also caught saddle-width method
+  labels overflowing; bounded wrapping segments fix document width451→390px.
+- i18n:30/30 tests pass. Contrast:218/218 checks pass. Runtime boundary check passes.
+- Focused ESLint on the touched batch1/batch2 file inventory passes; diff whitespace check passes.
+- Captures:all7 NL routes at1440/390 plus EN bike-fit desktop, with matching board copies.
+  All final routes return200, have no horizontal overflow, retain canonical/JSON-LD, and pass
+  keyboard Home/End bounds. No browser page errors. NL tire-pressure alias correctly resolves
+  to the canonical bandenspanning-calculator. Development badge hidden only for captures.
+- Engine implementation files unchanged by C. No commits. Batch3 not started by C.
+
+Full shared-repository gates are NOT all green because parallel app work continued during QA.
+Latest full unit run:804 pass,2 fail (homepage donation-copy assertions). Production compilation
+passes but typecheck fails in concurrently added power-speed/PerformanceCalculator.tsx importing
+an unexported MoreTool type. Full lint fails in account-batch1/runtime.jsx (hook naming); tooltip
+coverage separately flags the concurrent home/SaddleHeightTeaser.tsx. These are outside batch2,
+recorded for the lead in messages/20260929-2125-codex-c-to-lead-batch2-validation.md. Earlier shared
+pricing missing CSS and dashboard mocks have resolved. Do not interpret DONE18.2 as a green
+whole-repository gate; the lead must rerun those gates after parallel owners finish.
+
+Visual review:calculator layouts and signed/real engine values reviewed against boards by page
+owners. Pressure deliberately combines front/rear lime results and uses actual gauge bounds;
+bike-fit uses2×2 result tiles and retains frame targets; saddle-width includes actual confidence,
+suitability and range caveats. Shared concurrently rewritten Footer headings still inherit dark
+heading color on ink; reported to its owner/lead, not overwritten here.
+
+18.3 shared gate observation (21:30): own focused suites pass (18 tests), dictionary parity passes,
+and all owned edited/new files have lines <=120. Full unit run: 835 passed, one failure in
+`src/components/home/SaddleHeightTeaser.test.tsx` (missing named status `Startpunt voor je zadel`).
+Request to Codex A: fix the home teaser regression. Full typecheck raced concurrent `.next/types`
+regeneration (TS6053); D will retry after builds settle. No out-of-scope changes by D.
+
+## Batch 18.3 — implementation and validation
+
+Owner: Codex D; no commits. Code edits confined to the five specified calculator route directories,
+`src/lib/public-calculators/performance.ts` and its test, plus matching
+`src/i18n/calculators/{performance,gearing}.ts`. Shared UI, engines, globals and Header/Footer untouched by D.
+The four new tools import one client form from the owned power-speed directory; no new shared-UI API needed.
+
+### Per-page implementation and engine differences
+
+- **Gearing / Gearing board:** question heading, numbered input cards, full public-domain sliders,
+  drivetrain/cassette/wheel/bike/climb option cards, live chainring illustration, lime easiest ratio,
+  real easiest/hardest pairs, development, speed, gear span, verdict and explanation, mobile result link.
+  Existing public calculation/validation and automatic Convex session-saving behavior retained.
+  Existing public adapter returns endpoint metrics, not a complete cassette tooth sequence; no invented
+  intermediate cog table, target cadence or personal power verdict is shown. Original engine files have no diff.
+  Invalid chainring/cog ordering clears the result and exposes the real validation messages.
+  Manual cassette/wheel edits select the custom option; selecting custom preserves entered measurements.
+- **Power ↔ speed / PowerSpeed board:** both input modes, mass/gradient sliders, bike and surface cards,
+  engine-derived bike defaults, live speed gauge, power split, total-mass/speed tiles, ordered guidance
+  and mobile main result.
+  `calculateClimbPowerWatts` and `solveSpeedForPowerWatts` drive outputs directly. Decomposition calls the
+  same power helper with zero CdA/Crr so constants and drivetrain loss stay consistent; no board arithmetic copied.
+  Solver saturation is explicitly flagged, never presented as an exact speed prediction. No wind input is invented.
+- **Climb planner / ClimbPlanner board:** distance/gradient/FTP/mass/bike inputs, dynamic slope profile,
+  estimated time/speed/target power, real gearing link and mobile time result. Uses engine bike/CdA/Crr defaults,
+  the existing <3/<8/<20/else length bands and duration multipliers 1.1/1/0.9/0.82, capped at 1.1 FTP.
+  Time comes from the physics solver rather than a simplified board formula. No unsupported personal readiness score.
+- **FTP W/kg / FtpWkg board:** known FTP, twenty-minute and ramp modes, distinct retained slider values,
+  body mass, FTP/Wkg outputs, flat speed and the documented 5km/7% reference climb at FTP, mobile W/kg result.
+  Proposed 0.95/0.75 conversion factors are named constants; reference bike/road/no-wind context is visible.
+  No unverified athlete-level ranking or colored performance-category gauge is invented.
+- **Fuel & hydration / FuelHydration board:** duration/intensity/temperature/sweat controls,
+  ride-progress timeline and explicit `Advies volgt` / `Advice to follow` result, mobile duration summary.
+  The source page contains no quantitative intake guidance. No grams, millilitres, bottle quantities,
+  eating/drinking frequency or sodium recommendation is generated. Timeline labels mean start/halfway/finish,
+  not recommended intake intervals. A numeric inventory input is omitted until intake guidance has a source.
+
+### Contracts, copy and SEO
+
+- `PROPOSED_RANGES` holds every new numeric input domain/default/step, explicitly marked awaiting approval
+  per `05-new-tool-contracts.md`. FTP conversion factors are separately named `PROPOSED_FTP_FACTORS`.
+  Runtime validation rejects non-finite/out-of-range values; the shared solver's 0.36–54km/h domain is explicit.
+- New visible copy is in the directly loaded NL/EN calculator dictionaries. This avoids concurrent edits to
+  the root message dictionaries. Dedicated recursive key-parity tests cover both new modules.
+  Namespaces: performance titles, inputs, bikes/surfaces/modes/methods, estimates, physics caveats, pending advice,
+  intensity/sweat, timeline and next-step labels; gearing inputs/presets/context, results/verdicts and caveats.
+  Numbers use Intl.NumberFormat for locale-appropriate decimals and units; sliders have aria-valuetext.
+- Original metadata, canonical alternates, OpenGraph, WebApplication/HowTo/FAQ JSON-LD and FAQ content retained.
+  Existing below-tool explanation, FAQ and related-link sections remain. Old hero wrappers/rating decorations
+  above the tools are replaced by the question layout, with a single H1. Removed narrow PublicPageShell wrapper
+  so ConfiguratorLayout supplies the actual 16px mobile / 64px desktop margins.
+- No checkout, account-save promise or new persistence introduced for the four new tools.
+
+### QA status
+
+- Focused new/updated tests: 27 passing across five suites (physics, performance interaction, gearing interaction,
+  gearing page, and eight NL/EN SEO page cases). Real physics and public gearing engines are used in the form tests;
+  only the existing Convex save mutation and async server JSON-LD wrapper are mocked.
+- Full lint passes, including 218/218 contrast checks. i18n passes (30 tests). Full typecheck passes after
+  generated .next types stabilized. Final production build passes (network-enabled font fetch; concurrent build lock cleared first).
+- Final full unit run: 188 files / 845 tests PASS; the concurrent home-teaser failure is resolved.
+  An additional public high-power saturation regression then passed in the focused performance suite (7/7).
+- Desktop1440/mobile390 browser checks pass for all five pages: HTTP200, single translated H1, localized canonical,
+  JSON-LD, no select/number inputs, no horizontal overflow, keyboard Home/End reaches supported bounds,
+  aria-valuetext includes units, no page runtime errors. External backend/analytics traffic blocked during QA.
+- Required page captures and comparison boards: `code-renders/18-{gearing,power-speed,climb-planner,ftp-wkg,
+  fuel-hydration}-{desktop,mobile,board}.png`; EN power-speed capture also supplied. Additional mobile viewport
+  captures prove the fixed result summary. Development overlay hidden only in screenshot harness.
+- Every edited/new owned TypeScript/TSX line <=120 characters; git diff whitespace check clean.
+- Shared tools-header registration is still requested above; D has not edited the layout owner's files.
+  Current screenshots therefore include the existing marketing header; the four extra pages already have
+  their MoreToolsNav row. The owner can enable the common tools header through the five route mappings.
+
+
+### Final visual adaptations
+
+The approved board comparisons are alongside the application PNGs. The production pages retain their existing
+below-tool content, so they are longer than the design boards. Option cards wrap into two columns on small
+screens; the power split uses a readable value list under its bar. The board's arbitrary ±5W sensitivity band
+is omitted because the helper returns a point estimate, not an uncertainty interval. Gauge scale is the actual
+solver speed domain. Account-save CTAs for new tools are replaced by working related-tool links; these tools
+have no persistence API. Fuel intake inventory and athlete rankings remain explicitly unavailable.
+
+Validation commands: `npm run typecheck`, `npm run lint`, `npm run test:unit`, `npm run test:i18n`,
+`npm run build`. Required gates pass as detailed above. No commits by D; ready for lead review of batch18.3.

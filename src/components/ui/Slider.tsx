@@ -14,8 +14,10 @@ import {
   SliderValue as PrototyperSliderValue,
 } from "@/components/prototyper-ui/ui/slider";
 
-export interface SliderProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "value" | "onChange"> {
+export interface SliderProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "type" | "value" | "onChange"
+> {
   label?: string;
   tooltip?: string;
   tooltipLabel?: string;
@@ -52,7 +54,7 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
       defaultValue: _defaultValue,
       ...props
     },
-    ref
+    ref,
   ) => {
     const generatedId = useId().replace(/:/g, "");
     const displayLabel = valueLabel ?? String(value);
@@ -65,21 +67,23 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
     const errorId = error ? `${sliderId}-error` : undefined;
     const valueId = `${sliderId}-value`;
     const tooltipDescriptionId = tooltip ? `${sliderId}-tooltip-description` : undefined;
-    const normalizedMin = typeof min === "number" ? min : min === undefined ? undefined : Number(min);
-    const normalizedMax = typeof max === "number" ? max : max === undefined ? undefined : Number(max);
+    const normalizedMin =
+      typeof min === "number" ? min : min === undefined ? undefined : Number(min);
+    const normalizedMax =
+      typeof max === "number" ? max : max === undefined ? undefined : Number(max);
     const normalizedStep =
-      typeof step === "number"
-        ? step
-        : step === undefined
-          ? undefined
-          : Number(step) || 1;
-    const sliderProps = props as unknown as ComponentPropsWithoutRef<
-      typeof PrototyperSliderRoot
-    >;
+      typeof step === "number" ? step : step === undefined ? undefined : Number(step) || 1;
+    const sliderProps = props as unknown as ComponentPropsWithoutRef<typeof PrototyperSliderRoot>;
     const labelledBy = [label ? labelId : undefined, sliderProps["aria-labelledby"]]
       .filter(Boolean)
       .join(" ");
-    const describedBy = [sliderProps["aria-describedby"], valueId, tooltipDescriptionId, errorId, helperId]
+    const describedBy = [
+      sliderProps["aria-describedby"],
+      valueId,
+      tooltipDescriptionId,
+      errorId,
+      helperId,
+    ]
       .filter(Boolean)
       .join(" ");
 
@@ -94,7 +98,7 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
           step={normalizedStep}
           value={[value]}
           onValueChange={(nextValue) => {
-            if (!disabled) onChange(Array.isArray(nextValue) ? nextValue[0] ?? value : nextValue);
+            if (!disabled) onChange(Array.isArray(nextValue) ? (nextValue[0] ?? value) : nextValue);
           }}
           disabled={disabled}
           name={name}
@@ -111,13 +115,25 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
                   {label}
                 </PrototyperSliderLabel>
                 {tooltip ? (
-                  <Tooltip content={tooltip} label={tooltipLabel ?? `${label} help`} descriptionId={tooltipDescriptionId} />
+                  <Tooltip
+                    content={tooltip}
+                    label={tooltipLabel ?? `${label} help`}
+                    descriptionId={tooltipDescriptionId}
+                  />
                 ) : null}
               </div>
             ) : null}
-            <span className={cn("ml-auto shrink-0 font-medium text-foreground", numericLabel ? "font-mono text-3xl tabular-nums" : "text-base")} aria-hidden="true">
+            <span
+              className={cn(
+                "ml-auto shrink-0 font-medium text-foreground",
+                numericLabel ? "font-mono text-3xl tabular-nums" : "text-base",
+              )}
+              aria-hidden="true"
+            >
               {displayValue}
-              {displayUnit ? <span className="ml-1 text-sm text-muted-foreground">{displayUnit}</span> : null}
+              {displayUnit ? (
+                <span className="ml-1 text-sm text-muted-foreground">{displayUnit}</span>
+              ) : null}
             </span>
           </div>
           <PrototyperSliderValue id={valueId} className="sr-only" />
@@ -125,20 +141,49 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
             <PrototyperSliderTrack className="h-2 overflow-visible bg-border">
               <PrototyperSliderIndicator className="bg-primary" />
               <PrototyperSliderThumb
-                className="size-[30px] border-4 border-primary bg-[var(--bbf-wit)] hover:border-primary focus-visible:focus-ring"
+                className={
+                  "size-[30px] border-4 border-primary bg-[var(--bbf-wit)] hover:border-primary " +
+                  "focus-visible:focus-ring"
+                }
                 aria-label={sliderProps["aria-label"]}
                 aria-labelledby={labelledBy || undefined}
                 aria-describedby={describedBy || undefined}
                 aria-invalid={error ? true : undefined}
                 aria-required={required || undefined}
-                aria-valuetext={props["aria-valuetext"] ?? `${valueLabel ?? value}${unit ? ` ${unit}` : ""}`}
+                aria-valuetext={
+                  props["aria-valuetext"] ?? `${valueLabel ?? value}${unit ? ` ${unit}` : ""}`
+                }
               />
             </PrototyperSliderTrack>
           </PrototyperSliderControl>
           {ticks?.length ? (
-            <div className="relative h-6 font-mono text-xs text-muted-foreground" aria-hidden="true">
+            <div
+              className="relative h-6 font-mono text-xs text-muted-foreground"
+              aria-hidden="true"
+            >
               {ticks.map((tick, index) => (
-                <span key={tick.value} className={cn("csp-range-left absolute border-t border-border pt-1", index === 0 ? "translate-x-0" : index === ticks.length - 1 ? "-translate-x-full" : "-translate-x-1/2")} data-range-pct={Math.round(Math.max(0, Math.min(100, (tick.value - (normalizedMin ?? 0)) / ((normalizedMax ?? 100) - (normalizedMin ?? 0) || 1) * 100)))}>
+                <span
+                  key={tick.value}
+                  className={cn(
+                    "csp-range-left absolute border-t border-border pt-1",
+                    index === 0
+                      ? "translate-x-0"
+                      : index === ticks.length - 1
+                        ? "-translate-x-full"
+                        : "-translate-x-1/2",
+                  )}
+                  data-range-pct={Math.round(
+                    Math.max(
+                      0,
+                      Math.min(
+                        100,
+                        ((tick.value - (normalizedMin ?? 0)) /
+                          ((normalizedMax ?? 100) - (normalizedMin ?? 0) || 1)) *
+                          100,
+                      ),
+                    ),
+                  )}
+                >
                   {tick.label ?? tick.value}
                 </span>
               ))}
@@ -157,7 +202,7 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
         </PrototyperSliderRoot>
       </Field.Root>
     );
-  }
+  },
 );
 
 Slider.displayName = "Slider";

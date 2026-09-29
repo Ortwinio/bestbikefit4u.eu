@@ -40,7 +40,7 @@ export function ProfilePhotoUpload({
       case "settings":
         return "h-16 w-16";
       default:
-        return "h-10 w-10";
+        return "h-11 w-11";
     }
   }, [size]);
 
@@ -50,7 +50,7 @@ export function ProfilePhotoUpload({
         type="button"
         onClick={() => fileInputRef.current?.click()}
         className={cn(
-          "group relative overflow-hidden rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)]",
+          "group relative shrink-0 overflow-hidden rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] focus-visible:focus-ring",
           sizeClasses
         )}
         aria-label={messages.profile.photo.upload}

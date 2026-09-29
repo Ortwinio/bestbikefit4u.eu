@@ -12,11 +12,12 @@ import {
 } from "@/components/ui";
 import {
   ReadOnlyScaleSlider,
-  ScaleSliderQuestion,
 } from "@/components/shared/ScaleSlider";
+import { ProfileChoiceQuestion as ScaleSliderQuestion } from "@/components/account/ProfileChoiceQuestion";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
-export { ReadOnlyScaleSlider as ReadOnlySlider, ScaleSliderQuestion as SliderQuestion };
+export { ReadOnlyScaleSlider as ReadOnlySlider };
+export { ProfileAssessmentSlider as SliderQuestion } from "@/components/account/ProfileChoiceQuestion";
 
 type ExperienceLevel = "beginner" | "intermediate" | "advanced";
 type WeeklyHours = "0-3" | "3-6" | "6-10" | "10-15" | "15+";
@@ -131,7 +132,7 @@ export function RidingStyleCard({
     }));
     const positionOptions = POSITION_KEYS.map((k) => ({
       key: k,
-      label: k.charAt(0).toUpperCase() + k.slice(1),
+      label: messages.fit.goals[k].label,
     }));
 
     return (
@@ -181,7 +182,7 @@ export function RidingStyleCard({
 
     const positionOptions = POSITION_KEYS.map((k) => ({
       key: k,
-      label: k.charAt(0).toUpperCase() + k.slice(1),
+      label: messages.fit.goals[k].label,
     }));
 
     return (

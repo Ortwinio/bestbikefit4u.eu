@@ -2,7 +2,14 @@
 
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import SaddleWidthCalculatorPage from "./page";
+import SaddleWidthCalculatorPage, { generateMetadata } from "./page";
+import { saddleWidthMessages } from "@/i18n/calculators/saddleWidth";
+
+vi.mock("@/i18n/getDictionary", () => ({
+  getDictionary: async (language: "nl" | "en") => ({
+    saddleWidthCalculator: saddleWidthMessages[language],
+  }),
+}));
 
 let locale: "en" | "nl" = "en";
 
@@ -23,13 +30,9 @@ vi.mock("next/link", () => ({
 }));
 
 vi.mock("@/components/analytics/TrackedCtaLink", () => ({
-  TrackedCtaLink: ({
-    href,
-    children,
-  }: {
-    href: string;
-    children?: React.ReactNode;
-  }) => <a href={href}>{children}</a>,
+  TrackedCtaLink: ({ href, children }: { href: string; children?: React.ReactNode }) => (
+    <a href={href}>{children}</a>
+  ),
 }));
 
 vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
@@ -91,17 +94,24 @@ afterEach(() => {
 });
 
 describe("saddle width calculator page", () => {
+  it.each(["en", "nl"] as const)("preserves metadata in %s", async (language) => {
+    locale = language;
+    const metadata = await generateMetadata();
+    expect(metadata.alternates?.canonical).toBe(
+      `https://bestbikefit4u.eu/${language}/calculators/saddle-width`,
+    );
+    expect(metadata.openGraph).toBeTruthy();
+  });
   it("renders the public saddle-width flow in English", async () => {
     const ui = await SaddleWidthCalculatorPage();
     render(ui);
 
-    expect(screen.getByText("Saddle Width Calculator")).toBeTruthy();
     expect(screen.getByText("Saddle width form")).toBeTruthy();
     expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
-      "/en/calculators/bike-fit"
+      "/en/calculators/bike-fit",
     );
     expect(screen.getByText("Compare plans").closest("a")?.getAttribute("href")).toBe(
-      "/en/pricing"
+      "/en/pricing",
     );
     expect(screen.queryByText("Donate via our Alpe d'HuZes page")).toBeNull();
   });

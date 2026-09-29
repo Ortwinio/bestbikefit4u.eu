@@ -4,26 +4,26 @@ import { Footer } from "@/components/layout/Footer";
 import { getRequestLocale } from "@/i18n/request";
 import { getDictionary } from "@/i18n/getDictionary";
 
-export default async function PublicLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const locale = await getRequestLocale();
   const dictionary = await getDictionary(locale);
 
   return (
     <div className="flex min-h-screen flex-col">
-      <ConfiguratorHeaderSwitch locale={locale} loginLabel={dictionary.nav.login} languageLabels={dictionary.common}>
-      <Header
+      <ConfiguratorHeaderSwitch
         locale={locale}
-        labels={{
-          common: dictionary.common,
-          nav: dictionary.nav,
-          dashboardNav: dictionary.dashboard.nav,
-          dashboardSignOut: dictionary.dashboard.common.signOut,
-        }}
-      />
+        loginLabel={dictionary.nav.login}
+        languageLabels={dictionary.common}
+      >
+        <Header
+          locale={locale}
+          labels={{
+            common: dictionary.common,
+            nav: dictionary.nav,
+            dashboardNav: dictionary.dashboard.nav,
+            dashboardSignOut: dictionary.dashboard.common.signOut,
+          }}
+        />
       </ConfiguratorHeaderSwitch>
       <main id="main-content" tabIndex={-1} className="flex-1">
         {children}

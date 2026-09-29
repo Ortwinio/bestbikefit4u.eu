@@ -58,6 +58,10 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 
 ## Draft progress
 
+- 2026-09-29 — Codex A completed content-header follow-up (12b): nineteen web headers share logo/nav/language/text-login/primary calculator action; A4 report keeps its print header. All checks and 45 state renders pass. Phase 6 task 19 batch 1 implements shared marketing layout + home/pricing/how-it-works with three page subagents; details and validation in `audit/19-notes.md`. No later batch started; awaiting lead review, no commit.
+
+- 2026-09-29 — Codex B implemented **20.1 account app presentation only** with one subagent per page family: shell, Dashboard, Profile, four ProfileImprove routes and Login. Final integration evidence, actual-component fixture screenshots and ownership follow-ups are recorded in `audit/20-notes.md`. No commits; batch 2 remains unstarted and requires lead review.
+
 - 2026-09-29 — Codex A completed task-13's twelve library/service/report drafts via single-board subagent assignments. Both checkers PASS (109 runtime states); shared footer verified, 35 PNGs including three A4 report pages, and source gaps/handoff notes in `audit/13-notes.md`. Published blog source is empty, so blog content remains explicitly unresolved. Drafts only; awaiting lead QA.
 
 - 2026-09-29 — Codex A completed task-12's eight marketing/content drafts via one-board subagent assignments. Shared footer verified identical; both checkers PASS, with 15 renders and section-level source notes in `audit/12-notes.md`. Drafts only, awaiting lead QA; no phase-4 gate claimed.
@@ -84,3 +88,9 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 - 2026-09-29 — **Phase 3 passed** (canvas v12): 23 account screens (profile, fit flow, garage + imports, account tools, settings, feedback, app). QA: linter + runtime (up to 441 states) + visual review; the questions match `convex/questionnaire/questions.ts`; the home/pricing claims trace back to current site copy, with 2 unverifiable claims marked `[CLAIM — bron?]`. Rules added during the phase: the review-state strip and example data once per screen.
 - 2026-09-29 — **Phases 4 & 5 passed** (canvas v13): 19 content/SEO pages + the A4 fitreport (3 pages) + 6 mobile boards (390 px, logic identical to desktop). Header/footer identical on every page. **The canvas design is complete: 72 boards.**
 - 2026-09-29 — **Phase 6 running**: 6a foundation (2c7485c) and 6b components (d18e640) approved; 6c configurators batch 1 (2dccd9b) approved; 18.2 (Codex C), 18.3 (Codex D), 19.1 marketing (Codex A) and 20.1 account (Codex B) in progress, with file ownership per agent.
+
+- 2026-09-29 — **18.1 approved/committed (`2dccd9b`).18.2 implemented, awaiting lead review.**
+  Saddle-width, bike-fit and public pressure family; batch1 formatting and mobile feedback fix.
+  58 targeted tests,5 browser regressions,30 i18n tests and218 contrast pairs pass. NL desktop/mobile
+  and EN screenshots refreshed. Full shared gates have concurrent out-of-scope failures documented
+  in `audit/18-notes.md`; no commit by C, and C has not started batch3.

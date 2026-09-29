@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 
 import type { ReactNode } from "react";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import DashboardLayout, {
@@ -23,6 +23,7 @@ const { usePathnameMock, useRouterMock, useConvexAuthMock, useQueryMock } = vi.h
 vi.mock("next/navigation", () => ({
   usePathname: usePathnameMock,
   useRouter: useRouterMock,
+  useSearchParams: () => new URLSearchParams("from=test"),
 }));
 
 vi.mock("next/link", () => ({
@@ -55,6 +56,10 @@ vi.mock("@/components/ui", () => ({
 
 vi.mock("@/components/layout/DashboardSidebar", () => ({
   DashboardSidebar: () => <aside data-testid="sidebar" />,
+}));
+
+vi.mock("@/components/account/AccountMenuFooter", () => ({
+  AccountMenuFooter: () => <div>Account plan</div>,
 }));
 
 vi.mock("@/components/branding", () => ({
@@ -117,6 +122,7 @@ vi.mock("@/i18n/useDashboardMessages", () => ({
 
 afterEach(() => {
   cleanup();
+  useConvexAuthMock.mockReturnValue({ isLoading: false, isAuthenticated: true });
 });
 
 function renderLayout(pathname: string) {
@@ -141,8 +147,8 @@ describe("DashboardLayout feedback context integration", () => {
     expect(DASHBOARD_MOBILE_HEADER_CLASSNAME).not.toContain("bg-card/90");
     expect(DASHBOARD_MOBILE_HEADER_CLASSNAME).not.toContain("backdrop-blur");
     expect(DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME).toContain("panel-backdrop");
-    expect(DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME).toContain("dashboard-sidebar-surface");
-    expect(DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME).toContain("dashboard-theme-context");
+    expect(DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME).toContain("bg-[var(--bbf-inkt)]");
+    expect(DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME).toContain("overflow-y-auto");
   });
 
   it("exposes the saddle selector in the mobile dashboard menu", () => {
@@ -159,5 +165,50 @@ describe("DashboardLayout feedback context integration", () => {
     expect(screen.getByRole("link", { name: "Saddle Selector" }).getAttribute("href")).toBe(
       "/nl/saddle-selector"
     );
+  });
+
+  it("keeps locale and query when switching languages", () => {
+    const html = renderLayout("/nl/profile/improve/flexibility");
+    expect(html).toContain('/en/profile/improve/flexibility?from=test');
+    expect(html).toContain('Accountnavigatie');
+    expect(html).toContain('href="/nl/profile" aria-current="page"');
+  });
+
+  it("opens a labelled modal from More and closes after navigating", () => {
+    usePathnameMock.mockReturnValue("/nl/dashboard");
+    render(<DashboardLayout><div>Content</div></DashboardLayout>);
+    fireEvent.click(screen.getByRole("button", { name: "Meer" }));
+    expect(screen.getByRole("dialog", { name: "Meer in je account" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("link", { name: "Saddle Selector" }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("does not expose account children before authentication", () => {
+    const replace = vi.fn();
+    useRouterMock.mockReturnValue({ replace });
+    usePathnameMock.mockReturnValue("/nl/profile");
+    useConvexAuthMock.mockReturnValue({ isLoading: false, isAuthenticated: false });
+    render(<DashboardLayout><div>Private measurements</div></DashboardLayout>);
+    expect(screen.queryByText("Private measurements")).toBeNull();
+    expect(replace).toHaveBeenCalledWith("/nl/login");
+  });
+
+  it("closes the mobile modal when crossing to desktop", () => {
+    let resize: ((event: { matches: boolean }) => void) | undefined;
+    const removeEventListener = vi.fn();
+    const matchMedia = vi.fn(() => ({
+      addEventListener: (_name: string, callback: typeof resize) => { resize = callback; },
+      removeEventListener,
+    }));
+    vi.stubGlobal("matchMedia", matchMedia);
+    usePathnameMock.mockReturnValue("/nl/dashboard");
+    const { unmount } = render(<DashboardLayout><div>Content</div></DashboardLayout>);
+    fireEvent.click(screen.getByRole("button", { name: "Meer" }));
+    expect(resize).toBeTypeOf("function");
+    act(() => resize?.({ matches: true }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+    unmount();
+    expect(removeEventListener).toHaveBeenCalledWith("change", resize);
+    vi.unstubAllGlobals();
   });
 });

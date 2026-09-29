@@ -13,6 +13,7 @@ const { usePathnameMock, useRouterMock, signOutMock } = vi.hoisted(() => ({
 vi.mock("next/navigation", () => ({
   usePathname: usePathnameMock,
   useRouter: useRouterMock,
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 vi.mock("next/link", () => ({

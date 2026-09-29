@@ -1,305 +1,138 @@
 import Link from "next/link";
-import { Compass, Gauge, Sparkles } from "lucide-react";
-import { CalculatorLogo } from "@/components/public/CalculatorLogo";
+import {
+  Bike,
+  Ruler,
+  MoveHorizontal,
+  Frame,
+  RotateCw,
+  Cog,
+  Gauge,
+  ClipboardCheck,
+} from "lucide-react";
+import { BrandLogo } from "@/components/branding";
 import { BRAND } from "@/config/brand";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import type { Messages } from "@/i18n/getDictionary";
-import { BikePassportFooterLogo } from "./BikePassportFooterLogo";
+import { getMarketingLayoutMessages } from "@/i18n/marketing/layout";
+import { MarketingLanguageSwitch } from "./MarketingNavigation";
 
 type FooterProps = {
   locale: Locale;
-  labels: Pick<Messages["nav"], "howItWorks" | "pricing"> & {
-    footer: Messages["nav"]["footer"];
-  };
+  labels: Pick<Messages["nav"], "howItWorks" | "pricing"> & { footer: Messages["nav"]["footer"] };
 };
 
 export function Footer({ locale, labels }: FooterProps) {
-  const f = labels.footer;
-
+  const footer = labels.footer;
+  const copy = getMarketingLayoutMessages(locale);
+  const calculators = [
+    { path: "/calculators/bike-fit", label: footer.bikeFit, icon: Bike },
+    { path: "/calculators/saddle-height", label: footer.saddleHeight, icon: Ruler },
+    { path: "/calculators/saddle-width", label: footer.saddleWidth, icon: MoveHorizontal },
+    { path: "/calculators/frame-size", label: footer.frameSize, icon: Frame },
+    { path: "/calculators/crank-length", label: footer.crankLength, icon: RotateCw },
+    { path: "/calculators/gearing", label: footer.gearing, icon: Cog },
+    {
+      path: getLocalizedPublicCalculatorPath("tire-pressure", locale),
+      label: footer.tirePressure,
+      icon: Gauge,
+    },
+    { path: "/login", label: footer.passportCheck, icon: ClipboardCheck },
+  ];
+  const groups = [
+    {
+      label: footer.product,
+      links: [
+        { path: "/how-it-works", label: labels.howItWorks },
+        { path: "/pricing", label: labels.pricing },
+      ],
+    },
+    { label: footer.calculators, links: calculators },
+    {
+      label: footer.guides,
+      links: [
+        { path: "/guides/bike-fitting-for-knee-pain", label: footer.kneeGuide },
+        { path: "/guides/bike-fitting-for-lower-back-pain", label: footer.backPainGuide },
+        { path: "/guides/saddle-height-guide", label: footer.saddleHeightGuide },
+        { path: "/guides/road-bike-fit-guide", label: footer.roadBikeFitGuide },
+        { path: "/guides/cleat-position-basics-guide", label: footer.cleatGuide },
+        { path: "/guides/fit-science", label: footer.science },
+        { path: "/guides", label: footer.allGuides + " →" },
+      ],
+    },
+    {
+      label: footer.support,
+      links: [
+        { path: "/contact", label: footer.contact },
+        { path: "/faq", label: footer.faq },
+        { path: "/measurement-guide", label: footer.measurementGuide },
+      ],
+    },
+    {
+      label: footer.legal,
+      links: [
+        { path: "/privacy", label: footer.privacy },
+        { path: "/terms", label: footer.terms },
+        { path: "/sitemap.xml", label: footer.sitemap },
+      ],
+    },
+  ];
   return (
-    <footer className="border-t border-border bg-background text-foreground">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mb-10 grid gap-4 rounded-[1.75rem] border border-border/80 bg-card p-6 shadow-[0_18px_40px_-30px_color-mix(in_oklch,var(--foreground)_30%,transparent)] md:grid-cols-3">
-          <div className="flex items-start gap-3">
-            <div className="rounded-2xl bg-[color:var(--primary-soft)] p-3 text-primary">
-              <Compass className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">{f.product}</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {locale === "nl"
-                  ? "Praktische calculators, fitflow en setupbegeleiding."
-                  : "Practical calculators, fit flow, and setup guidance."}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <div className="rounded-2xl bg-[color:var(--primary-soft)] p-3 text-primary">
-              <Gauge className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">{f.resources}</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {locale === "nl"
-                  ? "Handleidingen en wetenschap om beslissingen beter te onderbouwen."
-                  : "Guides and science pages to make better decisions with more context."}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <div className="rounded-2xl bg-[color:var(--primary-soft)] p-3 text-primary">
-              <Sparkles className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">{f.support}</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {locale === "nl"
-                  ? "Contact, FAQ en meetgids blijven beschikbaar in NL en EN."
-                  : "Contact, FAQ, and measurement guidance stay available in Dutch and English."}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-8 lg:grid-cols-5">
-          <div>
-            <h3 className="text-sm font-semibold text-foreground">
-              {f.product}
-            </h3>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link
-                  href={withLocalePrefix("/how-it-works", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {labels.howItWorks}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/pricing", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {labels.pricing}
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-foreground">
-              {f.calculators}
-            </h3>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link
-                  href={withLocalePrefix("/calculators/bike-fit", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <CalculatorLogo calculatorId="bike-fit" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
-                  {f.bikeFit}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/calculators/saddle-height", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <CalculatorLogo calculatorId="saddle-height" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
-                  {f.saddleHeight}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/calculators/saddle-width", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <CalculatorLogo calculatorId="saddle-width" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
-                  {f.saddleWidth}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/calculators/frame-size", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <CalculatorLogo calculatorId="frame-size" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
-                  {f.frameSize}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/calculators/crank-length", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <CalculatorLogo calculatorId="crank-length" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
-                  {f.crankLength}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/calculators/gearing", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <CalculatorLogo calculatorId="gearing" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
-                  {f.gearing}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix(
-                    getLocalizedPublicCalculatorPath("tire-pressure", locale),
-                    locale
-                  )}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <CalculatorLogo calculatorId="tire-pressure" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
-                  {f.tirePressure}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/login", locale)}
-                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <BikePassportFooterLogo />
-                  {f.passportCheck}
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-foreground">
-              {f.guides}
-            </h3>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link
-                  href={withLocalePrefix("/guides/bike-fitting-for-knee-pain", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.kneeGuide}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/guides/bike-fitting-for-lower-back-pain", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.backPainGuide}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/guides/saddle-height-guide", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.saddleHeightGuide}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/guides/road-bike-fit-guide", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.roadBikeFitGuide}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/guides/cleat-position-basics-guide", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.cleatGuide}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/guides/fit-science", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.science}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/guides", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.allGuides} →
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-foreground">
-              {f.support}
-            </h3>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link
-                  href={withLocalePrefix("/contact", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.contact}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/faq", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.faq}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/measurement-guide", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.measurementGuide}
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-foreground">
-              {f.legal}
-            </h3>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link
-                  href={withLocalePrefix("/privacy", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.privacy}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={withLocalePrefix("/terms", locale)}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.terms}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/sitemap.xml"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {f.sitemap}
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="mt-8 border-t border-border pt-8">
-          <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} {BRAND.name}.{" "}
-            {f.allRightsReserved}
+    <footer className="bg-[var(--bbf-inkt)] text-white">
+      <div className="mx-auto max-w-[1440px] px-5 py-12 md:px-10 xl:px-[120px]">
+        <div className="flex flex-wrap items-center gap-6 border-b border-[var(--bbf-gedempt)] pb-8">
+          <BrandLogo
+            href={withLocalePrefix("/", locale)}
+            asset="dark"
+            className="flex min-h-11 w-[200px] items-center"
+          />
+          <p className="min-w-0 flex-1 basis-[260px] text-sm leading-relaxed text-[var(--bbf-op-donker)]">
+            {copy.tagline}
           </p>
+          <MarketingLanguageSwitch locale={locale} inverse />
         </div>
+        <div
+          className={
+            "grid grid-cols-2 gap-x-6 gap-y-8 py-8 md:grid-cols-3 " +
+            "xl:grid-cols-[1fr_1.55fr_1.55fr_1fr_1fr] xl:gap-10"
+          }
+        >
+          {groups.map((group) => (
+            <section key={group.label} className="min-w-0">
+              <h2 className="mb-3 font-display text-lg font-bold text-white">{group.label}</h2>
+              <ul>
+                {group.links.map((item) => {
+                  const Icon = "icon" in item ? item.icon : null;
+                  return (
+                    <li key={item.path}>
+                      <Link
+                        href={
+                          item.path === "/sitemap.xml"
+                            ? item.path
+                            : withLocalePrefix(item.path, locale)
+                        }
+                        className={
+                          "flex min-h-11 items-center gap-2 py-2 text-sm leading-snug " +
+                          "text-[var(--bbf-op-donker)] hover:text-white"
+                        }
+                      >
+                        {Icon ? (
+                          <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden="true" />
+                        ) : null}
+                        <span className="min-w-0 break-words">{item.label}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+        </div>
+        <p className="border-t border-[var(--bbf-gedempt)] pt-6 text-xs leading-relaxed text-[var(--bbf-op-donker)]">
+          &copy; <span className="font-mono">{new Date().getFullYear()}</span> {BRAND.name}.{" "}
+          {footer.allRightsReserved}
+        </p>
       </div>
     </footer>
   );

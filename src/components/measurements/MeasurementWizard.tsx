@@ -17,7 +17,8 @@ import { StepFlexibility } from "./StepFlexibility";
 import { StepCoreStability } from "./StepCoreStability";
 import { StepComfort } from "./StepComfort";
 import { StepRidingStyle } from "./StepRidingStyle";
-import { ListChecks, Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { ProfileWizardGuide, profileWizardCopy } from "@/components/account/ProfileWizardGuide";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { toPercentBucket } from "@/lib/uiPercent";
@@ -99,7 +100,7 @@ export function MeasurementWizard({
   });
 
   const { handleSubmit, trigger } = methods;
-  const activeStep = steps[currentStep - 1];
+  const copy = profileWizardCopy[locale];
   const percentComplete = Math.round((currentStep / steps.length) * 100);
   const percentBucket = toPercentBucket(percentComplete);
 
@@ -160,38 +161,33 @@ export function MeasurementWizard({
 
   return (
     <FormProvider {...methods}>
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto w-full max-w-6xl">
 
         {/* Progress bar — outside the card */}
-        <div className="mb-6 flex items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-muted/50 px-4 py-3">
-          <ListChecks className="h-4 w-4 shrink-0 text-primary" />
-          <span className="text-sm text-muted-foreground">
-            Step {currentStep} of {steps.length}
+        <div className="mb-6 flex flex-wrap items-center gap-3">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--bbf-lime)] font-mono text-lg text-[var(--bbf-inkt)]">{currentStep}</span>
+          <span className="font-semibold">{copy.steps[currentStep - 1]}</span>
+          <span className="ml-auto text-sm text-muted-foreground">
+            {copy.step} <span className="font-mono">{currentStep}</span> {copy.of} <span className="font-mono">{steps.length}</span>
           </span>
-          <span className="text-border">·</span>
-          <div className="flex flex-1 items-center gap-2">
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-border">
+          <div className="basis-full" role="progressbar" aria-label={copy.steps[currentStep - 1]} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percentComplete}>
+            <div className="h-2 overflow-hidden rounded-full bg-border">
               <div
                 className="csp-fill-width h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
                 data-fill-pct={percentBucket}
               />
             </div>
-            <span className="shrink-0 text-sm text-muted-foreground">
-              {percentComplete}%
-            </span>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)]">
+        <form className="min-w-0" onSubmit={handleSubmit(onSubmit)}>
           {/* Card — title inside CardContent */}
-          <Card variant="bordered" className="mb-6">
-            <CardContent className="pt-6">
+          <Card variant="bordered" className="mb-6 rounded-3xl">
+            <CardContent className="p-5 sm:p-7">
               <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                  {activeStep.category}
-                </p>
-                <h2 className="mt-1 text-xl font-semibold text-foreground">
-                  {activeStep.title}
+                <h2 className="font-display text-3xl font-bold text-foreground">
+                  {copy.steps[currentStep - 1]}
                 </h2>
               </div>
 
@@ -200,7 +196,7 @@ export function MeasurementWizard({
           </Card>
 
           {/* Navigation buttons — outside the card */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3 [&_button]:min-h-11">
             <Button
               type="button"
               variant="outline"
@@ -229,6 +225,8 @@ export function MeasurementWizard({
             )}
           </div>
         </form>
+        <ProfileWizardGuide step={currentStep} locale={locale} />
+        </div>
 
       </div>
     </FormProvider>

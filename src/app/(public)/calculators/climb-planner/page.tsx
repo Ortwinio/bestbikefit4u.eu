@@ -1,3 +1,4 @@
+import { PerformanceCalculator } from "../power-speed/PerformanceCalculator";
 import type { Metadata } from "next";
 import { Mountain, Route, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -5,8 +6,6 @@ import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
   PublicCtaBand,
   PublicFeatureCard,
-  PublicHero,
-  PublicPageShell,
   PublicSection,
   PublicSurfaceCard,
 } from "@/components/public";
@@ -16,32 +15,31 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import {
-  buildFaqPageSchema,
-  buildHowToSchema,
-  buildWebApplicationSchema,
-} from "@/lib/seo/jsonLd";
+import { buildFaqPageSchema, buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 
 const copy = {
   en: {
     metadata: {
       title: "Climb Planner | BestBikeFit4U",
       description:
-        "Plan climbing effort, pacing, and fueling context before a route or event so the first hard climb does not become a guess.",
+        "Plan climbing effort, pacing, and fueling context before a route or event so the" +
+        " first hard climb does not become a guess.",
       keywords: ["climb planner", "cycling climb calculator", "pacing planner"],
     },
     hero: {
       eyebrow: "BestBikeFit4U calculator",
       title: "Climb Planner",
       description:
-        "Plan a climb with the right pacing and fueling context before the effort starts, then refine the plan in the dashboard if needed.",
+        "Plan a climb with the right pacing and fueling context before the effort starts," +
+        " then refine the plan in the dashboard if needed.",
       chips: ["Climb pacing", "Event prep", "Fueling context"],
     },
     intro: {
       eyebrow: "What this tool is for",
       title: "A practical way to plan harder climbs",
       description:
-        "A climb is not just a gradient. Duration, effort, body mass, wind, and fueling all shape how the climb feels and how well you can execute it.",
+        "A climb is not just a gradient. Duration, effort, body mass, wind, and fueling " +
+        "all shape how the climb feels and how well you can execute it.",
     },
     features: [
       {
@@ -59,7 +57,8 @@ const copy = {
       {
         title: "Flag risk early",
         description:
-          "If the plan depends on aggressive pacing, poor fueling, or unrealistic expectations, the tool should make that obvious.",
+          "If the plan depends on aggressive pacing, poor fueling, or unrealistic " +
+          "expectations, the tool should make that obvious.",
         icon: <ShieldAlert className="h-5 w-5" />,
       },
     ],
@@ -92,7 +91,9 @@ const copy = {
     faqs: [
       {
         q: "Is this only useful for racing?",
-        a: "No. It is also useful for long training rides, gran fondos, and route planning when climbs change how the ride should be managed.",
+        a:
+          "No. It is also useful for long training rides, gran fondos, and route planning " +
+          "when climbs change how the ride should be managed.",
       },
       {
         q: "Should fueling be part of climb planning?",
@@ -110,7 +111,8 @@ const copy = {
       eyebrow: "Next step",
       title: "Keep the route plan in the dashboard",
       description:
-        "Start a free account to keep climb, bike, and pacing decisions together and continue the guided workflow when the route gets more complex.",
+        "Start a free account to keep climb, bike, and pacing decisions together and " +
+        "continue the guided workflow when the route gets more complex.",
       label: "Start Free Fit",
     },
   },
@@ -118,39 +120,45 @@ const copy = {
     metadata: {
       title: "Klimplanner | BestBikeFit4U",
       description:
-        "Plan kliminspanning, pacing en voedingscontext vóór een route of event zodat de eerste echte klim geen gok wordt.",
+        "Plan kliminspanning, pacing en voedingscontext vóór een route of event zodat de " +
+        "eerste echte klim geen gok wordt.",
       keywords: ["klimplanner", "fiets klim calculator", "pacing planner"],
     },
     hero: {
       eyebrow: "BestBikeFit4U calculator",
       title: "Klimplanner",
       description:
-        "Plan een klim met de juiste pacing- en voedingscontext voordat de inspanning start en verfijn daarna indien nodig in het dashboard.",
+        "Plan een klim met de juiste pacing- en voedingscontext voordat de inspanning " +
+        "start en verfijn daarna indien nodig in het dashboard.",
       chips: ["Klimpacing", "Eventvoorbereiding", "Voedingscontext"],
     },
     intro: {
       eyebrow: "Waar deze tool voor is",
       title: "Een praktische manier om zwaardere klimmen te plannen",
       description:
-        "Een klim is niet alleen een klimpercentage. Duur, inspanning, lichaamsmassa, wind en voeding bepalen samen hoe de klim voelt en hoe goed je hem uitvoert.",
+        "Een klim is niet alleen een klimpercentage. Duur, inspanning, lichaamsmassa, " +
+        "wind en voeding bepalen samen hoe de klim voelt en hoe goed je hem uitvoert.",
     },
     features: [
       {
         title: "Bouw een pacingplan",
         description:
-          "Gebruik klimpercentage en duur om een realistischer openingsvermogen te kiezen en te voorkomen dat je te hard opent.",
+          "Gebruik klimpercentage en duur om een realistischer openingsvermogen te kiezen " +
+          "en te voorkomen dat je te hard opent.",
         icon: <Route className="h-5 w-5" />,
       },
       {
         title: "Houd de inspanning houdbaar",
         description:
-          "Een goed klimplan beschermt ook de rest van de rit of wedstrijd, niet alleen de eerste tien minuten van de klim.",
+          "Een goed klimplan beschermt ook de rest van de rit of wedstrijd, niet alleen de " +
+          "eerste tien minuten van de klim.",
         icon: <Mountain className="h-5 w-5" />,
       },
       {
         title: "Markeer risico vroeg",
         description:
-          "Als het plan leunt op agressieve pacing, te weinig voeding of onrealistische verwachtingen, moet de tool dat zichtbaar maken.",
+          "Als het plan leunt op agressieve pacing, te weinig voeding of onrealistische " +
+          "verwachtingen, moet de tool dat zichtbaar maken.",
         icon: <ShieldAlert className="h-5 w-5" />,
       },
     ],
@@ -201,7 +209,8 @@ const copy = {
       eyebrow: "Volgende stap",
       title: "Bewaar je routeplan in het dashboard",
       description:
-        "Start een gratis account om klim-, fiets- en pacingkeuzes samen te houden en gebruik daarna de begeleide workflow bij complexere routes.",
+        "Start een gratis account om klim-, fiets- en pacingkeuzes samen te houden en " +
+        "gebruik daarna de begeleide workflow bij complexere routes.",
       label: "Start gratis fit",
     },
   },
@@ -234,7 +243,7 @@ export default async function ClimbPlannerPage() {
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
 
   return (
-    <PublicPageShell className="text-foreground">
+    <div className="text-foreground">
       <JsonLd
         schema={[
           buildWebApplicationSchema({
@@ -265,14 +274,9 @@ export default async function ClimbPlannerPage() {
         ]}
       />
 
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <PublicHero
-          eyebrow={page.hero.eyebrow}
-          title={page.hero.title}
-          description={page.hero.description}
-          chips={[...page.hero.chips]}
-        />
+      <PerformanceCalculator tool="climb-planner" locale={locale} />
 
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <PublicSection
           className="mt-10"
           header={{
@@ -294,11 +298,7 @@ export default async function ClimbPlannerPage() {
         </PublicSection>
 
         {page.sections.map((section) => (
-          <PublicSection
-            key={section.title}
-            className="mt-10"
-            header={{ title: section.title }}
-          >
+          <PublicSection key={section.title} className="mt-10" header={{ title: section.title }}>
             <div className="grid gap-4">
               {section.items.map((item) => (
                 <PublicSurfaceCard key={item} description={item} />
@@ -315,11 +315,7 @@ export default async function ClimbPlannerPage() {
           </div>
         </PublicSection>
 
-        <RelatedLinksSection
-          title={page.relatedTitle}
-          links={[...page.relatedLinks]}
-          locale={locale}
-        />
+        <RelatedLinksSection title={page.relatedTitle} links={[...page.relatedLinks]} locale={locale} />
 
         <PublicCtaBand
           className="mt-10"
@@ -343,6 +339,6 @@ export default async function ClimbPlannerPage() {
           }
         />
       </div>
-    </PublicPageShell>
+    </div>
   );
 }
