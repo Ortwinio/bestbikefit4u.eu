@@ -58,6 +58,12 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 
 ## Draft progress
 
+- 2026-09-29 — Codex B implemented **19.5a About/FAQ/Contact/Case Study** with three page workers and parent
+  integration. Real mailto and recruitment-form behavior, metadata and FAQPage schema are preserved. Build,
+  typecheck, 1065 unit tests, i18n and sitemaps pass. New CSS-token lint flags earlier-batch files only;
+  routed to their owners. Scoped file list: `audit/files-19.5a.txt`; validation/renders: `audit/19-notes.md`.
+  No commits; awaiting lead review.
+
 - 2026-09-29 — Codex B implemented **19.3 guides/blog** with two disjoint page-family subagents. CMS/SEO/redirects and shared Header/Footer remain intact. 1024 unit tests, lint, 30 i18n tests, sitemap checks and 36 NL/EN browser cases pass; final whole-tree build/typecheck is blocked by concurrent science-file errors routed to their owner. Exact 19-file source/test/harness list: `audit/files-19.3.txt`; details and 58 screenshots in `audit/19-notes.md`. No commits; awaiting lead review.
 
 - 2026-09-29 — Codex A completed **19.2** after lead approval of 19.1: four home/pricing review fixes plus Measurement Guide, Fit Pass and pain index/all five detail slugs, using three subagents. Typecheck/lint/build, 985 unit tests, 30 i18n tests and production sitemap checks pass; 17 visual artifacts and exact per-batch file lists in `audit/19-notes.md`. Frozen dictionaries untouched. Awaiting lead review; no batch 3 or commit.
@@ -113,3 +119,9 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
   pass; actual-component fixture captures and exact file list in `audit/20-notes.md`. No commit.
 - **Styling convention (lead decision):** Tailwind with the semantic/brand tokens first. CSS Modules only for complex layouts, and then **tokens only** (`var(--…)`), no raw colors (hex/rgb/hsl/oklch). Enforced by `npm run lint` → `lint:css-modules` (`scripts/check-css-module-tokens.mjs`). Shadows via tokens too (e.g. `--shadow-float`), or `color-mix()` with a token.
 - Open item for the final sweep: in dark mode the marketing header stays light on a dark page (Header = Codex A).
+
+- 2026-09-29 — **19.5b implemented by Codex C, awaiting lead review.** Shared readable legal template
+  preserves original privacy/terms text; programmatic pressure pages retain source slugs/SEO/engine.
+  Typecheck/build,1,139 unit tests,i18n,sitemap and19browser cases pass. Full lint has49out-of-scope
+  CSS color findings; owned modules pass. See `audit/19-notes.md` and `audit/files-19.5b.txt`.
+  No commit by C; shared Header/Footer and frozen root dictionaries untouched.
