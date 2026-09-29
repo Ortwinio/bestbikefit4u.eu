@@ -78,6 +78,12 @@ for (const file of process.argv.slice(2)) {
     const id = m[0].match(/id="([^"]+)"/);
     if (!/type="hidden"/.test(m[0]) && !/aria-label=/.test(m[0]) && !(id && body.includes(`for="${id[1]}"`))) err(`<input> without <label for> or aria-label: ${m[0].slice(0, 60)}`);
   }
+  // rider-facing copy must not contain developer/mockup language (BOARD-RULES → Copy)
+  const JARGON = /engine|contract|voorlopig|demo\b|canvas|placeholder|adapter|guardrail|\bboard\b|integratie|rekenvoorbeeld/i;
+  const visible = body.replace(/<helmet>[\s\S]*?<\/helmet>/, "").replace(/<script[\s\S]*?<\/script>/g, "").replace(/<[^>]+>/g, "\n").split("\n");
+  const logic = script ? script[1].replace(/\/\/[^\n]*/g, "") : "";
+  const literals = [...logic.matchAll(/(['"`])((?:(?!\1)[^\\\n]|\\.){6,})\1/g)].map((m) => m[2]).filter((t) => /\s/.test(t));
+  for (const t of [...visible, ...literals]) if (JARGON.test(t)) err(`jargon in rider-facing copy: "${t.trim().slice(0, 80)}"`);
   if (!/DM Mono/.test(src)) warns.push("DM Mono never used (fine only if the board shows no numbers)");
 
   // colors

@@ -30,3 +30,6 @@ The lead rejects any draft that breaks one of these rules.
 
 ## Self-check before you say DONE
 Run `node plans/redesign-canvas/check-board.mjs drafts/<Name>.dc.html` for every draft and fix everything it reports.
+
+## Renders for the lead
+Save a PNG per draft to `drafts/_renders/<Name>.png` (1440 wide, from your local headless render). For boards with several states, save one PNG per state (`<Name>-<state>.png`). The lead reviews them visually before a board is published.
