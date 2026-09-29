@@ -47,3 +47,11 @@ Save a PNG per draft to `drafts/_renders/<Name>.png` (1440 wide, from your local
 - **Example data** is recognisable as an example (e.g. the rider "Sanne", the bike "Canyon Endurace [VOORBEELD]"), with no fake reviews or scores.
 - Payments are paused in the app: upgrade/checkout CTAs show the current state (`docs/BILLING_SUPPORT_NOTES.md`).
 - Size: 1440 wide, height as needed (usually 1000–1400).
+
+## Marketing & content pages (phase 4)
+- **Header**: copy it from `canvas/Pricing.dc.html` (120 px side margins), with nav: Calculators → `BikeFit.dc.html`, Hoe het werkt → `HowItWorks.dc.html`, Gidsen → `Guides.dc.html`, Prijzen → `Pricing.dc.html`, plus the NL/EN pill and "Inloggen" → `Login.dc.html`. The current page gets `aria-current="page"`.
+- **Footer**: one shared footer on ink, based on the real footer (`src/components/layout/` → Footer), with the negative logo, the columns from the real footer, and a language switch. Build it identically on every page (copy it from the first approved content board).
+- **Copy = the real content.** Take headings, sections, FAQs and texts from the page itself, from `messages/` or the i18n files, or from the CMS seed/import (`docs/cms-import`, `convex/guides`). Shorten and sharpen them in the brand tone, but **don't invent facts**. For templates (`[slug]`) use one real example (name which one in your notes).
+- **Images**: the house illustrations from `public/illustrations/` (`src="/illustrations/<file>.webp"`; the lead converts these to canvas assets). Never stock photos.
+- **SEO structure is visible**: one H1, a logical H2/H3 order, breadcrumbs on detail pages, FAQ blocks as real `<details>`/`<summary>` or buttons with `aria-expanded`.
+- Pages use 1440 wide, and the height follows the content (often 2400–4000).

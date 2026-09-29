@@ -146,7 +146,7 @@ button{font-family:inherit}
 <path d="M20 118A90 90 0 0 1 200 118" stroke="{{gg.arc}}" stroke-width="16" stroke-linecap="round" stroke-dasharray="{{gg.dash}}"></path>
 </svg>
 <div style="margin-top: -84px; font-family: 'DM Mono', monospace; font-size: 64px; line-height: 1">{{gg.bar}}</div>
-<div style="font-size: 16px; font-weight: 600">bar · <span style="font-family: 'DM Mono', monospace">{{gg.psi}}</span> psi<br><span style="font-family: 'DM Mono', monospace; font-size: 13px">{{gg.domain}}</span></div>
+<div style="font-size: 16px; font-weight: 600">bar · <span style="font-family: 'DM Mono', monospace">{{gg.psi}}</span> psi<br><span style="font-family: Figtree, sans-serif; font-size: 13px">Schaal <span style="font-family: 'DM Mono', monospace">0–{{gg.maximum}}</span> bar · veilige marge <span style="font-family: 'DM Mono', monospace">{{gg.minimum}}–{{gg.maximum}}</span></span></div>
 </div>
 </sc-for>
 </section>
@@ -168,7 +168,7 @@ button{font-family:inherit}
 <p style="margin: 6px 0">Controleer altijd de maximale druk op je band en velg (hookless!). [WAARSCHUWINGEN UIT JE ACCOUNT]</p>
 </div></div>
 </div>
-<div style="display: flex; flex-direction: column; justify-content: space-between; gap: 16px; padding: 28px; border-radius: 24px; background: #0F2420; color: #FFFFFF">
+<div style="display: flex; flex-direction: column; align-self: start; gap: 16px; padding: 28px; border-radius: 24px; background: #0F2420; color: #FFFFFF">
 <div>
 <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px">Test en verfijn</h2>
 <p style="margin: 10px 0 0; color: #B9CCC6; line-height: 1.5">Begin hier en pas in stappen van 0,1 bar aan. Check eerst grip en comfort voor.</p>
@@ -212,7 +212,7 @@ class Component extends DCLogic {
       // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:104
       dash: ((value / limits[1]) * 282.7).toFixed(1) + ' 400',
     // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:134
-      domain: 'Schaal 0–' + limits[1] + ' bar · veilige marge ' + limits[0] + '–' + limits[1],
+      minimum: limits[0], maximum: limits[1],
       bg: dark ? '#0F2420' : '#CFF26A',
       fg: dark ? '#FFFFFF' : '#0F2420',
       track: dark ? '#2E4C45' : '#B6D94C',
@@ -230,7 +230,6 @@ class Component extends DCLogic {
     if (s.type === 1 && (s.front < 30 || s.front > 65)) warnings.push('Ongebruikelijke bandbreedte voor een gravelfiets.');
     // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:260
     if (s.type === 2 && s.front < 45) warnings.push('Ongebruikelijke bandbreedte voor een MTB.');
-    if (!warnings.length) warnings.push('Controleer de druklimieten van je band en velg voordat je gaat pompen.');
     const surfaceOptions = surfaces.map((label, index) => ({
       label, pressed: String(s.surface === index), bg: s.surface === index ? '#E6F8A8' : '#FFFFFF',
       pick: () => this.setState({ surface: index })
