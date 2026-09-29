@@ -94,3 +94,8 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
   58 targeted tests,5 browser regressions,30 i18n tests and218 contrast pairs pass. NL desktop/mobile
   and EN screenshots refreshed. Full shared gates have concurrent out-of-scope failures documented
   in `audit/18-notes.md`; no commit by C, and C has not started batch3.
+
+## Code phase: ownership & commits (from checkpoint b40d638)
+- Every agent writes **only** in its own files. New copy goes in its own dictionary module: `src/i18n/calculators/*` (C/D), `src/i18n/marketing/*` (A), `src/i18n/account/*` (B). **`src/i18n/messages/nl.ts` and `en.ts` are frozen**; only the lead changes them, on request (add a line to your notes).
+- `src/components/ui/*` and `globals.css`: Codex C. `src/components/layout/*` (Header, Footer, mobile menu): Codex A. Account shell and `src/components/{dashboard,account,profile}/*`: Codex B. Calculator pages: C (batch 2) / D (batch 3).
+- At DONE, the agent gives a **file list** in its notes; the lead commits exactly that list per batch.
