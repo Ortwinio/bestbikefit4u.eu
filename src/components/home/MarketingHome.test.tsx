@@ -24,7 +24,11 @@ describe("marketing home", () => {
     expect(screen.getByRole("link", { name: /Bandenspanning Voor/ }).getAttribute("href")).toBe("/nl/bandenspanning-calculator");
     expect(screen.getByRole("link", { name: "Maak gratis account" }).getAttribute("href")).toBe("/nl/login");
     expect(screen.getByRole("link", { name: "Wat zit in het rapport?" }).getAttribute("href")).toBe("#fit-report");
-    expect(document.body.textContent).not.toMatch(/CLAIM|bron\?|Meest populair|Meetduur:/);
+    expect(document.body.textContent).not.toMatch(/CLAIM|bron\?|Meest populair|Meetduur:|Voorbeeldgegevens/);
+    const rating = screen.getByText(/van.*rijders/).closest("div");
+    expect(rating?.textContent).toContain("4,8 van 380+ rijders");
+    expect([...rating!.querySelectorAll("span span")].map((part) => part.textContent)).toEqual(["4,8", "380+"]);
+    expect(screen.getByText("Schuif naar jouw maat")).toBeTruthy();
     expect(document.body.textContent).toContain("Betalingen zijn tijdelijk niet beschikbaar");
     expect(document.querySelector('a[href="/nl/pain/hand-numbness-cycling"]')).toBeTruthy();
   });

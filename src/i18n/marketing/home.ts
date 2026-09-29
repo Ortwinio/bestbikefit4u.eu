@@ -10,7 +10,7 @@ type HomeCopy = {
   closingTitle: string; paused: string; account: string; compare: string;
   discover: string; foundations: string; guides: string; scenarios: string; allGuides: string;
   foundationLinks: { href: string; title: string }[];
-  teaser: { try: string; title: string; inseam: string; direction: string; context: string; refine: string; example: string };
+  teaser: { try: string; title: string; inseam: string; direction: string; context: string; refine: string; adjust: string };
 };
 
 export const homeMarketing: Record<Locale, HomeCopy> = {
@@ -41,7 +41,7 @@ export const homeMarketing: Record<Locale, HomeCopy> = {
     closingTitle: "Begin met een gratis account.", paused: "Betalingen zijn tijdelijk niet beschikbaar. Je kunt wel gratis een account aanmaken.", account: "Maak gratis account", compare: "Vergelijk Free en Pro",
     discover: "Verdiep je verder", foundations: "Fitfundament", guides: "Bikefitting gidsen", scenarios: "Rijsituaties en klachten", allGuides: "Bekijk alle gidsen",
     foundationLinks: [{ href: "/fiets-afstellen", title: "Fiets afstellen stap voor stap" }, { href: "/bikefitting", title: "Bikefitting uitgelegd" }, { href: "/measurement-guide", title: "Meetgids" }, { href: "/pain", title: "Bikefit bij veelvoorkomende klachten" }, { href: "/science/stack-and-reach", title: "Stack en reach uitgelegd" }],
-    teaser: { try: "Probeer het nu", title: "Startpunt voor je zadel", inseam: "Binnenbeenlengte", direction: "trapas → bovenkant zadel", context: "Racefiets · gebalanceerd · gemiddelde lenigheid en rompstabiliteit. Aanpassingsmarge:", refine: "Verfijn je zadelhoogte", example: "Voorbeeldgegevens" },
+    teaser: { try: "Probeer het nu", title: "Startpunt voor je zadel", inseam: "Binnenbeenlengte", direction: "trapas → bovenkant zadel", context: "Racefiets · gebalanceerd · gemiddelde lenigheid en rompstabiliteit. Aanpassingsmarge:", refine: "Verfijn je zadelhoogte", adjust: "Schuif naar jouw maat" },
   },
   en: {
     badge: "Online bike fit · start free, no account needed", title: "Get more from every ride.",
@@ -70,6 +70,6 @@ export const homeMarketing: Record<Locale, HomeCopy> = {
     closingTitle: "Start with a free account.", paused: "Payments are temporarily unavailable. You can still create a free account.", account: "Create free account", compare: "Compare Free and Pro",
     discover: "Explore further", foundations: "Fit foundations", guides: "Bike fitting guides", scenarios: "Riding scenarios and discomfort", allGuides: "View all guides",
     foundationLinks: [{ href: "/bike-fitting", title: "Bike fitting at home" }, { href: "/measurement-guide", title: "Measurement guide" }, { href: "/pain", title: "Bike fit for common pain points" }, { href: "/science/stack-and-reach", title: "Stack and reach explained" }, { href: "/guides/road-bike-fit-guide", title: "Road bike fit guide" }],
-    teaser: { try: "Try it now", title: "A starting point for your saddle", inseam: "Inseam", direction: "bottom bracket → saddle top", context: "Road bike · balanced · average flexibility and core stability. Adjustment range:", refine: "Refine your saddle height", example: "Example measurements" },
+    teaser: { try: "Try it now", title: "A starting point for your saddle", inseam: "Inseam", direction: "bottom bracket → saddle top", context: "Road bike · balanced · average flexibility and core stability. Adjustment range:", refine: "Refine your saddle height", adjust: "Slide to your measurement" },
   },
 };

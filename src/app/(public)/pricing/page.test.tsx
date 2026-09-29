@@ -114,6 +114,7 @@ describe("pricing redesign", () => {
     const unavailable = screen.getByRole("button", { name: "Tijdelijk niet beschikbaar" }) as HTMLButtonElement;
     expect(unavailable.disabled).toBe(true);
     expect(unavailable.getAttribute("aria-describedby")).toBe(screen.getByRole("status").id);
+    expect(screen.queryByText(/Meest gekozen|Most popular/i)).toBeNull();
     expect(screen.getByRole("link", { name: "Start gratis" }).getAttribute("href")).toBe("/nl/login");
     expect(screen.getByRole("link", { name: "Start gratis bike fit" }).getAttribute("href")).toBe("/nl/calculators/bike-fit");
     expect(screen.queryByRole("link", { name: /Start Pro/ })).toBeNull();

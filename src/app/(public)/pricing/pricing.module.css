@@ -23,7 +23,6 @@
 .planHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .plan h2 { font-size: 32px; line-height: 1.15; }
 .description { color: var(--bbf-gedempt); font-size: 16px; margin-top: -16px; }
-.badge { border-radius: 999px; background: var(--bbf-lime); padding: 6px 12px; color: var(--bbf-inkt); font-size: 13px; font-weight: 700; }
 .pro { background: var(--bbf-inkt); color: var(--bbf-wit); border-color: var(--bbf-inkt); }
 .pro h2, .pro .features svg { color: var(--bbf-lime); }
 .pro .description, .pro .price span:last-child { color: var(--bbf-op-donker); }

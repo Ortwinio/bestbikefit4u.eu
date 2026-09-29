@@ -119,7 +119,6 @@ export default async function PricingPage() {
               <article key={plan.id} className={`${styles.plan} ${plan.highlighted ? styles.pro : ""}`}>
                 <div className={styles.planHeading}>
                   <h2>{localized.name}</h2>
-                  {localized.badge && <span className={styles.badge}>{localized.badge}</span>}
                 </div>
                 <p className={styles.description}>{localized.description}</p>
                 <p className={styles.price}><span>{formatEuroPriceFromCents(plan.priceCentsMonthly, locale)}</span><span>{page.monthlySuffix}</span></p>

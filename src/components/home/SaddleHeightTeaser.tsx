@@ -30,6 +30,7 @@ export function SaddleHeightTeaser({ locale }: { locale: Locale }) {
       <path d="M214 252L180 100" stroke="#0A7263" strokeWidth="3" strokeDasharray="7 7" />
     </svg>
     <div className={styles.teaserCard}>
+      <p className={styles.context}>{copy.adjust}</p>
       <div className={`${styles.teaserHeading} max-sm:!flex-col`}>
         <div><p className={styles.eyebrow}>{copy.try}</p><h2>{copy.title}</h2></div>
         <div className={styles.result}><output aria-label={copy.title} aria-live="polite" htmlFor="home-inseam">{estimate.height}<small> mm</small></output><p>{copy.direction}</p></div>
