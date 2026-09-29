@@ -103,30 +103,22 @@ export function BikeDescriptionEditor({
         {savedValue ? (
           <>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-[color:var(--secondary)] px-2.5 py-1 text-xs font-semibold text-[color:var(--secondary-foreground)]">
+              <span className="rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold text-secondary-foreground">
                 {sourceLabel}
               </span>
             </div>
-            <p className="whitespace-pre-wrap text-sm leading-6 text-[color:var(--foreground)]">
-              {savedValue}
-            </p>
+            <p className="whitespace-pre-wrap text-sm leading-6 text-foreground">{savedValue}</p>
           </>
         ) : (
-          <p className="text-sm text-[color:var(--muted-foreground)]">
-            {messages.bikes.descriptionCard.empty}
-          </p>
+          <p className="text-sm text-muted-foreground">{messages.bikes.descriptionCard.empty}</p>
         )}
-        <p className="text-xs text-[color:var(--muted-foreground)]">
-          {messages.bikes.descriptionCard.disclaimer}
-        </p>
+        <p className="text-xs text-muted-foreground">{messages.bikes.descriptionCard.disclaimer}</p>
         <div className="flex flex-wrap gap-3">
           <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
             {messages.bikes.descriptionCard.edit}
           </Button>
           <Button size="sm" onClick={() => void handleGenerate()} isLoading={isGenerating}>
-            {savedValue
-              ? messages.bikes.descriptionCard.regenerate
-              : messages.bikes.descriptionCard.generate}
+            {savedValue ? messages.bikes.descriptionCard.regenerate : messages.bikes.descriptionCard.generate}
           </Button>
         </div>
       </div>
@@ -147,17 +139,13 @@ export function BikeDescriptionEditor({
         helperText={`${messages.bikes.descriptionCard.helper} ${value.length}/420`}
         error={error ?? undefined}
       />
-      <p className="text-xs text-[color:var(--muted-foreground)]">
-        {messages.bikes.descriptionCard.disclaimer}
-      </p>
+      <p className="text-xs text-muted-foreground">{messages.bikes.descriptionCard.disclaimer}</p>
       <div className="flex flex-wrap gap-3">
         <Button size="sm" onClick={() => void handleSave()} isLoading={isSaving}>
           {messages.bikes.descriptionCard.save}
         </Button>
         <Button variant="outline" size="sm" onClick={() => void handleGenerate()} isLoading={isGenerating}>
-          {savedValue
-            ? messages.bikes.descriptionCard.regenerate
-            : messages.bikes.descriptionCard.generate}
+          {savedValue ? messages.bikes.descriptionCard.regenerate : messages.bikes.descriptionCard.generate}
         </Button>
         <Button
           variant="outline"

@@ -22,9 +22,7 @@ export function BikeGearingCard({
   const isNl = locale === "nl";
   const completeness = deriveBikeGearingCompleteness(gearing);
 
-  let summary:
-    | ReturnType<typeof calculateGearMath>
-    | null = null;
+  let summary: ReturnType<typeof calculateGearMath> | null = null;
 
   if (
     gearing?.drivetrainType &&
@@ -47,7 +45,7 @@ export function BikeGearingCard({
   }
 
   return (
-    <Card variant="bordered" className="dashboard-card-surface">
+    <Card variant="bordered" className="bg-card">
       <CardHeader>
         <CardTitle>{isNl ? "Versnelling" : "Gearing"}</CardTitle>
       </CardHeader>
@@ -73,9 +71,7 @@ export function BikeGearingCard({
               />
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button
-                render={<Link href={withLocalePrefix(`/gearing?bikeId=${bikeId}`, locale)} />}
-              >
+              <Button render={<Link href={withLocalePrefix(`/gearing?bikeId=${bikeId}`, locale)} />}>
                 <ArrowUpDown className="h-4 w-4" />
                 {isNl ? "Open gearing calculator" : "Open gearing calculator"}
               </Button>
@@ -89,7 +85,12 @@ export function BikeGearingCard({
           </>
         ) : (
           <>
-            <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/25 p-4 text-sm text-muted-foreground">
+            <div
+              className={
+                "rounded-[var(--radius-md)] border border-border bg-secondary/25 p-4 text-sm " +
+                "text-muted-foreground"
+              }
+            >
               <p className="font-medium text-foreground">
                 {completeness === "missing"
                   ? isNl
@@ -101,14 +102,14 @@ export function BikeGearingCard({
               </p>
               <p className="mt-1">
                 {isNl
-                  ? "Vul kettingbladen, cassette en wielomtrek in om deze fiets direct in de gearing calculator te gebruiken."
-                  : "Add chainrings, cassette, and wheel circumference to use this bike directly in the gearing calculator."}
+                  ? "Vul kettingbladen, cassette en wielomtrek in om deze fiets direct in " +
+                    "de gearing calculator te gebruiken."
+                  : "Add chainrings, cassette, and wheel circumference to use this bike " +
+                    "directly in the gearing calculator."}
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button
-                render={<Link href={withLocalePrefix(`/bikes/${bikeId}/edit`, locale)} />}
-              >
+              <Button render={<Link href={withLocalePrefix(`/bikes/${bikeId}/edit`, locale)} />}>
                 {isNl ? "Voeg gearing toe" : "Add gearing"}
               </Button>
               <Button
@@ -127,7 +128,7 @@ export function BikeGearingCard({
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--background)] p-3">
+    <div className="rounded-[var(--radius-md)] border border-border bg-background p-3">
       <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
       <p className="mt-2 text-base font-semibold text-foreground">{value}</p>
     </div>

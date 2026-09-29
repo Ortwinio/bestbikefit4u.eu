@@ -7,6 +7,7 @@ import { api } from "../../../../convex/_generated/api";
 import { BikeGarageRow, buildLatestFitByBike } from "@/components/bikes/BikeGarageOverview";
 import { Button, Card, CardContent, EmptyState, LoadingState } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { getBikesCopy } from "@/i18n/account/bikes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { CopyPlus, Plus, Store } from "lucide-react";
 
@@ -21,25 +22,18 @@ export default function BikesPage() {
   const { locale, messages } = useDashboardMessages();
   const bikes = useQuery(api.bikes.queries.listSummariesByUser);
   const sessionsWithBikes = useQuery(api.sessions.queries.getAllSessionsWithBikes);
-  const ensurePassportIdsForOwnedBikes = useMutation(
-    api.bikes.mutations.ensurePassportIdsForOwnedBikes
-  );
+  const ensurePassportIdsForOwnedBikes = useMutation(api.bikes.mutations.ensurePassportIdsForOwnedBikes);
 
   const latestFitByBike = useMemo(
-    () =>
-      buildLatestFitByBike(
-        sessionsWithBikes as Parameters<typeof buildLatestFitByBike>[0]
-      ),
-    [sessionsWithBikes]
+    () => buildLatestFitByBike(sessionsWithBikes as Parameters<typeof buildLatestFitByBike>[0]),
+    [sessionsWithBikes],
   );
 
   useEffect(() => {
     if (
       !bikes?.some((bike) => {
         const bikePassportId =
-          "bikePassportId" in bike
-            ? ((bike as { bikePassportId?: string }).bikePassportId ?? null)
-            : null;
+          "bikePassportId" in bike ? ((bike as { bikePassportId?: string }).bikePassportId ?? null) : null;
         return !bikePassportId;
       })
     ) {
@@ -54,16 +48,14 @@ export default function BikesPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <Card variant="bordered" className="dashboard-hero-surface overflow-hidden">
+    <div className="mx-auto max-w-6xl space-y-6">
+      <Card variant="bordered" className="bg-card overflow-hidden">
         <CardContent className="flex flex-col gap-6 p-6 md:p-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-3">
-            <h1 className="text-3xl font-semibold tracking-tight text-[color:var(--foreground)]">
+            <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl text-foreground">
               {messages.nav.myBikes}
             </h1>
-            <p className="max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
-              {messages.bikes.subtitle}
-            </p>
+            <p className="max-w-2xl text-sm leading-6 text-muted-foreground">{messages.bikes.subtitle}</p>
           </div>
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap lg:justify-end">
             <Button
@@ -93,8 +85,17 @@ export default function BikesPage() {
         </CardContent>
       </Card>
 
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="font-semibold text-foreground">
+          {messages.nav.myBikes}{" "}
+          <span className="ml-2 rounded-full bg-accent px-3 py-1 font-mono">{bikes.length}</span>
+        </p>
+        <Button variant="outline" {...linkButtonProps(withLocalePrefix("/bikes/compare-fit", locale))}>
+          {getBikesCopy(locale).compare}
+        </Button>
+      </div>
       {bikes.length === 0 ? (
-        <Card variant="bordered" className="dashboard-card-surface-muted">
+        <Card variant="bordered" className="bg-muted/40">
           <CardContent className="pt-6">
             <EmptyState
               title={messages.bikes.empty.title}

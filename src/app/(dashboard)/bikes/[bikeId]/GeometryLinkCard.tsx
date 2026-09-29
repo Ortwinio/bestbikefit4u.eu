@@ -45,11 +45,11 @@ export function getGeometryCardCopy(locale: Locale) {
   if (locale === "nl") {
     return {
       linkedTitle: "Gekoppeld geometrie-record",
-      linkedDescription:
-        "Deze fiets is gekoppeld aan een referentie-record uit de geometriebibliotheek.",
+      linkedDescription: "Deze fiets is gekoppeld aan een referentie-record uit de geometriebibliotheek.",
       unlinkedTitle: "Geen gekoppeld geometrie-record",
       unlinkedDescription:
-        "Deze fiets is opgeslagen zonder match in de geometriebibliotheek. Je kunt de fiets later nog bewerken en geometrie koppelen.",
+        "Deze fiets is opgeslagen zonder match in de geometriebibliotheek. Je " +
+          "kunt de fiets later nog bewerken en geometrie koppelen.",
       missingRecordDescription:
         "Deze fiets verwijst nog naar een geometrie-record dat nu niet meer beschikbaar is in de bibliotheek.",
       supersededBanner: "Nieuwere geometriedata beschikbaar",
@@ -60,8 +60,7 @@ export function getGeometryCardCopy(locale: Locale) {
       manualLabel: "Handmatig",
       noGeometryLinked: "Geen geometrie-record gekoppeld",
       geometryUnavailable: "Het geometrie-record is niet meer beschikbaar",
-      linkPrompt:
-        "Koppeling met de geometriebibliotheek zorgt voor nauwkeurigere berekeningen.",
+      linkPrompt: "Koppeling met de geometriebibliotheek zorgt voor nauwkeurigere berekeningen.",
       fields: {
         year: "Jaar",
         frameSize: "Framemaat",
@@ -76,8 +75,7 @@ export function getGeometryCardCopy(locale: Locale) {
 
   return {
     linkedTitle: "Linked geometry record",
-    linkedDescription:
-      "This bike is linked to a reference geometry record from the library.",
+    linkedDescription: "This bike is linked to a reference geometry record from the library.",
     unlinkedTitle: "No linked geometry record",
     unlinkedDescription:
       "This bike is saved without a geometry-library match. You can still edit the bike and link geometry later.",
@@ -215,14 +213,12 @@ function GeometryNumbersGrid({
       {items.map((item) => (
         <div
           key={item.label}
-          className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/25 px-4 py-3"
+          className="rounded-[var(--radius-md)] border border-border bg-secondary/25 px-4 py-3"
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             {item.label}
           </p>
-          <p className="mt-2 text-2xl font-semibold tracking-tight text-[color:var(--foreground)]">
-            {item.value}
-          </p>
+          <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{item.value}</p>
         </div>
       ))}
     </div>
@@ -237,7 +233,13 @@ function SupersededBanner({
   copy: ReturnType<typeof getGeometryCardCopy>;
 }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-md)] border border-amber-300/70 bg-amber-100/60 px-4 py-3 text-sm text-amber-950 dark:border-amber-700/60 dark:bg-amber-950/30 dark:text-amber-100">
+    <div
+      className={
+        "flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-md)] " +
+        "border border-amber-300/70 bg-amber-100/60 px-4 py-3 text-sm text-amber-950 " +
+        "dark:border-amber-700/60 dark:bg-amber-950/30 dark:text-amber-100"
+      }
+    >
       <div className="flex items-center gap-2">
         <AlertTriangle className="h-4 w-4" />
         <span className="font-medium">{copy.supersededBanner}</span>
@@ -259,47 +261,44 @@ function UnlinkedContent({
   copy: ReturnType<typeof getGeometryCardCopy>;
 }) {
   const manualGeometry = bike.currentGeometry ?? null;
-  const hasManualValues = Boolean(
-    manualGeometry?.stackMm !== null && manualGeometry?.stackMm !== undefined
-  ) ||
+  const hasManualValues =
+    Boolean(manualGeometry?.stackMm !== null && manualGeometry?.stackMm !== undefined) ||
     Boolean(manualGeometry?.reachMm !== null && manualGeometry?.reachMm !== undefined) ||
     Boolean(manualGeometry?.frameSize);
 
-  const description =
-    state === "missing_record" ? copy.missingRecordDescription : copy.unlinkedDescription;
+  const description = state === "missing_record" ? copy.missingRecordDescription : copy.unlinkedDescription;
 
   return (
     <div className="space-y-4">
       {hasManualValues ? (
-        <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/25 px-4 py-3 text-sm text-[color:var(--foreground)]">
+        <div
+          className={
+            "rounded-[var(--radius-md)] border border-border bg-secondary/25 px-4 py-3 text-sm " +
+            "text-foreground"
+          }
+        >
           <span className="font-semibold">{copy.manualLabel}</span>
-          <span className="mx-2 text-[color:var(--muted-foreground)]">·</span>
+          <span className="mx-2 text-muted-foreground">·</span>
           <span>
             {copy.fields.stack}: {formatNumber(manualGeometry?.stackMm, " mm", copy.unavailable)}
           </span>
-          <span className="mx-2 text-[color:var(--muted-foreground)]">·</span>
+          <span className="mx-2 text-muted-foreground">·</span>
           <span>
             {copy.fields.reach}: {formatNumber(manualGeometry?.reachMm, " mm", copy.unavailable)}
           </span>
-          <span className="mx-2 text-[color:var(--muted-foreground)]">·</span>
+          <span className="mx-2 text-muted-foreground">·</span>
           <span>
             {copy.fields.frameSize}: {manualGeometry?.frameSize || copy.unavailable}
           </span>
         </div>
       ) : null}
       <CardDescription className="text-sm leading-6">{description}</CardDescription>
-      <p className="text-sm text-[color:var(--muted-foreground)]">{copy.linkPrompt}</p>
+      <p className="text-sm text-muted-foreground">{copy.linkPrompt}</p>
     </div>
   );
 }
 
-function BikeFooterRow({
-  bike,
-  messages,
-}: {
-  bike: GeometryCardBike;
-  messages: DashboardMessages;
-}) {
+function BikeFooterRow({ bike, messages }: { bike: GeometryCardBike; messages: DashboardMessages }) {
   const items = [
     getBikeTypeLabel(bike.bikeType as Parameters<typeof getBikeTypeLabel>[0], messages),
     getRidingStyleLabel(bike, messages),
@@ -307,11 +306,7 @@ function BikeFooterRow({
     formatWeight(bike.bikeWeightKg),
   ];
 
-  return (
-    <div className="border-t border-[color:var(--border)] pt-4 text-sm text-[color:var(--muted-foreground)]">
-      {items.join(" · ")}
-    </div>
-  );
+  return <div className="border-t border-border pt-4 text-sm text-muted-foreground">{items.join(" · ")}</div>;
 }
 
 export function GeometryLinkCard({
@@ -332,7 +327,7 @@ export function GeometryLinkCard({
   const copy = getGeometryCardCopy(locale);
 
   return (
-    <Card variant="bordered" className="dashboard-card-surface">
+    <Card variant="bordered" className="bg-card">
       <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
           <CardTitle>

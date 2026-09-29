@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { Button } from "@/components/ui";
+
 import { use } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
@@ -66,6 +69,9 @@ export default function EditBikePage({ params }: EditBikePageProps) {
       <EmptyState
         title={messages.bikeForm.edit.notFound.title}
         description={messages.bikeForm.edit.notFound.description}
+        action={<Button render={<Link href={withLocalePrefix("/bikes", locale)} />}>
+          {messages.nav.myBikes}
+        </Button>}
       />
     );
   }
@@ -99,8 +105,7 @@ export default function EditBikePage({ params }: EditBikePageProps) {
         initialData={initialData}
         bikePassportId={bikePassportId}
         publicFitState={{
-          publicFitCode:
-            typeof bike.publicFitCode === "string" ? bike.publicFitCode : null,
+          publicFitCode: typeof bike.publicFitCode === "string" ? bike.publicFitCode : null,
           publicFitEnabled: bike.publicFitEnabled === true,
           geometryQuality: bike.publicFitSnapshot?.geometryQuality ?? null,
         }}
