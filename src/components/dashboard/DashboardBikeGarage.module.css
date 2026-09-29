@@ -7,9 +7,9 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 0;
   overflow: hidden;
-  border: 1px solid oklch(var(--border));
+  border: 1px solid var(--color-border);
   border-radius: 24px;
-  background: oklch(var(--card));
+  background: var(--color-card);
 }
 
 .row > div > div {
@@ -17,12 +17,12 @@
   padding: 20px;
   border: 0;
   border-radius: 0;
-  background: oklch(var(--card));
+  background: var(--color-card);
   box-shadow: none;
 }
 
 .row > div > div + div {
-  border-top: 1px solid oklch(var(--border));
+  border-top: 1px solid var(--color-border);
 }
 
 .row > div > div > div:first-child {
@@ -53,7 +53,7 @@
   padding: 12px;
   border: 0;
   border-radius: 14px;
-  background: oklch(var(--background));
+  background: var(--color-background);
 }
 
 .row dl > dd {
@@ -75,6 +75,6 @@
 
   .row > div > div + div {
     border-top: 0;
-    border-left: 1px solid oklch(var(--border));
+    border-left: 1px solid var(--color-border);
   }
 }
