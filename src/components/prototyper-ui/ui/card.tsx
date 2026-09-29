@@ -7,18 +7,18 @@ import { cn } from "@/components/lib/utils"
 
 const cardVariants = cva(
   [
-    "relative flex flex-col gap-3 overflow-hidden rounded-xl p-4",
+    "relative flex flex-col gap-3 overflow-hidden rounded-3xl border border-border p-4",
     "text-foreground",
     "transition-[transform,box-shadow,border-color] duration-200 ease-out-fluid motion-reduce:transition-none",
   ],
   {
     variants: {
       variant: {
-        default: "bg-surface shadow-surface",
-        secondary: "bg-surface-secondary shadow-surface",
-        tertiary: "bg-surface-tertiary shadow-surface",
-        elevated: "bg-surface shadow-overlay",
-        transparent: "bg-transparent shadow-none",
+        default: "bg-card",
+        secondary: "bg-secondary",
+        tertiary: "bg-accent text-accent-foreground",
+        elevated: "bg-card shadow-[0_18px_40px_rgba(15,36,32,0.12)]",
+        transparent: "border-transparent bg-transparent shadow-none",
       },
       interactive: {
         true: "cursor-pointer hover-only:hover:-translate-y-0.5 hover-only:hover:shadow-overlay motion-safe:active:scale-[0.99]",
@@ -57,7 +57,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"h3">) {
   return (
     <h3
       data-slot="card-title"
-      className={cn("text-sm font-medium", className)}
+      className={cn("font-display text-2xl font-bold", className)}
       {...props}
     />
   )

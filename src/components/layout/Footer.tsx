@@ -94,7 +94,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/bike-fit", locale)}
-                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
                   <CalculatorLogo calculatorId="bike-fit" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.bikeFit}
@@ -103,7 +103,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/saddle-height", locale)}
-                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
                   <CalculatorLogo calculatorId="saddle-height" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.saddleHeight}
@@ -112,7 +112,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/saddle-width", locale)}
-                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
                   <CalculatorLogo calculatorId="saddle-width" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.saddleWidth}
@@ -121,7 +121,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/frame-size", locale)}
-                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
                   <CalculatorLogo calculatorId="frame-size" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.frameSize}
@@ -130,7 +130,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/crank-length", locale)}
-                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
                   <CalculatorLogo calculatorId="crank-length" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.crankLength}
@@ -139,7 +139,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/calculators/gearing", locale)}
-                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
                   <CalculatorLogo calculatorId="gearing" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.gearing}
@@ -151,7 +151,7 @@ export function Footer({ locale, labels }: FooterProps) {
                     getLocalizedPublicCalculatorPath("tire-pressure", locale),
                     locale
                   )}
-                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
                   <CalculatorLogo calculatorId="tire-pressure" className="h-7 w-7 rounded-xl [&_svg]:h-7 [&_svg]:w-7" />
                   {f.tirePressure}
@@ -160,7 +160,7 @@ export function Footer({ locale, labels }: FooterProps) {
               <li>
                 <Link
                   href={withLocalePrefix("/login", locale)}
-                  className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
+                  className="flex min-w-0 items-center gap-2 text-sm [overflow-wrap:anywhere] text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)]"
                 >
                   <BikePassportFooterLogo />
                   {f.passportCheck}

@@ -1,6 +1,7 @@
 "use client";
 
 import { forwardRef, useId, type ComponentPropsWithoutRef, type InputHTMLAttributes } from "react";
+import { Field } from "@base-ui/react/field";
 import { cn } from "@/utils/cn";
 import { Tooltip } from "./Tooltip";
 import {
@@ -23,6 +24,8 @@ export interface SliderProps
   value: number;
   onChange: (value: number) => void;
   valueLabel?: string;
+  unit?: string;
+  ticks?: readonly { value: number; label?: string }[];
 }
 
 export const Slider = forwardRef<HTMLDivElement, SliderProps>(
@@ -41,6 +44,8 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
       value,
       onChange,
       valueLabel,
+      unit,
+      ticks,
       disabled,
       name,
       required,
@@ -50,7 +55,11 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
     ref
   ) => {
     const generatedId = useId().replace(/:/g, "");
-    const sliderId = id || label?.toLowerCase().replace(/\s+/g, "-") || `slider-${generatedId}`;
+    const displayLabel = valueLabel ?? String(value);
+    const numericLabel = displayLabel.match(/^([-+−]?\d+(?:[.,]\d+)?)\s*(.*)$/);
+    const displayValue = numericLabel?.[1] ?? displayLabel;
+    const displayUnit = unit ?? numericLabel?.[2];
+    const sliderId = id || `slider-${generatedId}`;
     const labelId = `${sliderId}-label`;
     const helperId = helperText && !error ? `${sliderId}-helper` : undefined;
     const errorId = error ? `${sliderId}-error` : undefined;
@@ -75,64 +84,78 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
       .join(" ");
 
     return (
-      <PrototyperSliderRoot
-        {...sliderProps}
-        ref={ref}
-        id={sliderId}
-        min={normalizedMin}
-        max={normalizedMax}
-        step={normalizedStep}
-        value={[value]}
-        onValueChange={(nextValue) => {
-          onChange(Array.isArray(nextValue) ? nextValue[0] ?? value : nextValue);
-        }}
-        disabled={disabled}
-        name={name}
-        aria-labelledby={labelledBy || undefined}
-        aria-describedby={describedBy || undefined}
-        aria-invalid={error ? true : undefined}
-        aria-required={required || undefined}
-        className={cn("w-full", className)}
-      >
-        {label ? (
-          <div className="flex items-center justify-between gap-3">
-            <div id={labelId} className="flex items-center gap-1.5">
-              <PrototyperSliderLabel className="text-sm font-medium leading-none text-[color:var(--foreground)]">
-                {label}
-              </PrototyperSliderLabel>
-              {tooltip ? (
-                <Tooltip
-                  content={tooltip}
-                  label={tooltipLabel ?? `${label} help`}
-                  descriptionId={tooltipDescriptionId}
-                />
-              ) : null}
-            </div>
-            {valueLabel ? (
-              <span className="text-sm font-medium tabular-nums text-[color:var(--muted-foreground)]">
-                {valueLabel}
-              </span>
+      <Field.Root invalid={Boolean(error)} className="contents">
+        <PrototyperSliderRoot
+          {...sliderProps}
+          ref={ref}
+          id={sliderId}
+          min={normalizedMin}
+          max={normalizedMax}
+          step={normalizedStep}
+          value={[value]}
+          onValueChange={(nextValue) => {
+            if (!disabled) onChange(Array.isArray(nextValue) ? nextValue[0] ?? value : nextValue);
+          }}
+          disabled={disabled}
+          name={name}
+          aria-labelledby={labelledBy || undefined}
+          aria-describedby={describedBy || undefined}
+          aria-invalid={error ? true : undefined}
+          aria-required={required || undefined}
+          className={cn("w-full", className)}
+        >
+          <div className="flex items-baseline justify-between gap-3">
+            {label ? (
+              <div className="flex items-center gap-1.5">
+                <PrototyperSliderLabel className="text-base font-semibold leading-snug text-foreground">
+                  <span id={labelId}>{label}</span>
+                </PrototyperSliderLabel>
+                {tooltip ? (
+                  <Tooltip content={tooltip} label={tooltipLabel ?? `${label} help`} descriptionId={tooltipDescriptionId} />
+                ) : null}
+              </div>
             ) : null}
+            <span className={cn("ml-auto shrink-0 font-medium text-foreground", numericLabel ? "font-mono text-3xl tabular-nums" : "text-base")} aria-hidden="true">
+              {displayValue}
+              {displayUnit ? <span className="ml-1 text-sm text-muted-foreground">{displayUnit}</span> : null}
+            </span>
           </div>
-        ) : null}
-        <PrototyperSliderValue id={valueId} className="sr-only" />
-        <PrototyperSliderControl>
-          <PrototyperSliderTrack>
-            <PrototyperSliderIndicator />
-            <PrototyperSliderThumb aria-describedby={describedBy || undefined} />
-          </PrototyperSliderTrack>
-        </PrototyperSliderControl>
-        {error ? (
-          <p id={errorId} className="text-sm text-[color:var(--danger)]">
-            {error}
-          </p>
-        ) : null}
-        {helperText && !error ? (
-          <p id={helperId} className="text-sm text-[color:var(--muted-foreground)]">
-            {helperText}
-          </p>
-        ) : null}
-      </PrototyperSliderRoot>
+          <PrototyperSliderValue id={valueId} className="sr-only" />
+          <PrototyperSliderControl className="h-11 min-h-11">
+            <PrototyperSliderTrack className="h-2 overflow-visible bg-border">
+              <PrototyperSliderIndicator className="bg-primary" />
+              <PrototyperSliderThumb
+                className="size-[30px] border-4 border-primary bg-[var(--bbf-wit)] hover:border-primary focus-visible:focus-ring"
+                aria-label={sliderProps["aria-label"]}
+                aria-labelledby={labelledBy || undefined}
+                aria-describedby={describedBy || undefined}
+                aria-invalid={error ? true : undefined}
+                aria-required={required || undefined}
+                aria-valuetext={props["aria-valuetext"] ?? `${valueLabel ?? value}${unit ? ` ${unit}` : ""}`}
+              />
+            </PrototyperSliderTrack>
+          </PrototyperSliderControl>
+          {ticks?.length ? (
+            <div className="relative h-6 font-mono text-xs text-muted-foreground" aria-hidden="true">
+              {ticks.map((tick, index) => (
+                <span key={tick.value} className={cn("csp-range-left absolute border-t border-border pt-1", index === 0 ? "translate-x-0" : index === ticks.length - 1 ? "-translate-x-full" : "-translate-x-1/2")} data-range-pct={Math.round(Math.max(0, Math.min(100, (tick.value - (normalizedMin ?? 0)) / ((normalizedMax ?? 100) - (normalizedMin ?? 0) || 1) * 100)))}>
+                  {tick.label ?? tick.value}
+                </span>
+              ))}
+            </div>
+          ) : null}
+          {error ? (
+            <p id={errorId} className="text-sm text-destructive-text">
+              {error}
+            </p>
+          ) : null}
+          {helperText && !error ? (
+            <p id={helperId} className="text-sm text-muted-foreground">
+              {helperText}
+            </p>
+          ) : null}
+        </PrototyperSliderRoot>
+      </Field.Root>
     );
   }
 );

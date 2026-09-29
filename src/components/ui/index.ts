@@ -71,3 +71,14 @@ export {
   PublicCtaBand,
   PublicIllustrationPanel,
 } from "@/components/public";
+export { OptionCard, type OptionCardProps } from "./OptionCard";
+export { StepCard, type StepCardProps } from "./StepCard";
+export { ResultHero, type ResultHeroProps } from "./ResultHero";
+export { ResultTile, type ResultTileProps } from "./ResultTile";
+export { StatusChip, type StatusChipProps } from "./StatusChip";
+export { Gauge, type GaugeProps } from "./Gauge";
+export { SizeScale, type SizeScaleProps } from "./SizeScale";
+export { AdjustOrder, type AdjustOrderProps } from "./AdjustOrder";
+export { ToolsTabBar, type ToolsTabBarProps } from "./ToolsTabBar";
+export { MoreToolsNav, type MoreToolsNavProps } from "./MoreToolsNav";
+export { ConfiguratorLayout, type ConfiguratorLayoutProps } from "./ConfiguratorLayout";

@@ -7,7 +7,7 @@ import { cn } from "@/components/lib/utils"
 
 const buttonVariants = cva(
   [
-    "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium",
+    "inline-flex items-center justify-center whitespace-nowrap rounded-full text-base font-bold",
     "transform-gpu transition-[color,background-color,border-color,box-shadow,opacity,transform] duration-150 ease-smooth",
     "motion-reduce:transition-none",
     "disabled:status-disabled",
@@ -24,7 +24,7 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hover-only:hover:bg-destructive-hover",
         outline:
-          "border border-foreground bg-background text-foreground hover-only:hover:bg-muted",
+          "border-2 border-foreground bg-background text-foreground hover-only:hover:bg-muted",
         secondary:
           "bg-secondary text-secondary-foreground hover-only:hover:bg-muted",
         ghost: "hover-only:bg-accent hover-only:text-accent-foreground motion-safe:active:scale-100",
@@ -39,14 +39,14 @@ const buttonVariants = cva(
         link: "dark:text-primary-light text-primary-dark underline-offset-4 hover-only:underline motion-safe:active:scale-100",
       },
       size: {
-        default: "h-9 gap-2 px-4 py-1 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 motion-safe:active:scale-[0.97]",
-        xs: "h-6 gap-1 rounded-lg px-2 text-xs in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3 motion-safe:active:scale-[0.985]",
-        sm: "h-8 gap-1.5 rounded-lg px-3 text-xs in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 motion-safe:active:scale-[0.98]",
-        lg: "h-10 gap-2 rounded-lg px-8 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3 motion-safe:active:scale-[0.96]",
-        icon: "size-9 motion-safe:active:scale-[0.97]",
-        "icon-xs": "size-6 rounded-lg in-data-[slot=button-group]:rounded-md motion-safe:active:scale-[0.985]",
-        "icon-sm": "size-8 rounded-lg in-data-[slot=button-group]:rounded-md motion-safe:active:scale-[0.98]",
-        "icon-lg": "size-10 motion-safe:active:scale-[0.96]",
+        default: "min-h-12 gap-2 px-4 py-1 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 motion-safe:active:scale-[0.97]",
+        xs: "min-h-11 gap-1 rounded-full px-2 text-xs in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3 motion-safe:active:scale-[0.985]",
+        sm: "min-h-11 gap-1.5 rounded-full px-3 text-xs in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 motion-safe:active:scale-[0.98]",
+        lg: "min-h-14 gap-2 rounded-full px-8 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3 motion-safe:active:scale-[0.96]",
+        icon: "size-12 motion-safe:active:scale-[0.97]",
+        "icon-xs": "size-11 rounded-full in-data-[slot=button-group]:rounded-md motion-safe:active:scale-[0.985]",
+        "icon-sm": "size-11 rounded-full in-data-[slot=button-group]:rounded-md motion-safe:active:scale-[0.98]",
+        "icon-lg": "size-14 motion-safe:active:scale-[0.96]",
       },
     },
     defaultVariants: {
