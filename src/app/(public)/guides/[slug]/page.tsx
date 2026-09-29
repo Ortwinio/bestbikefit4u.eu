@@ -1,7 +1,6 @@
 import { isAuthenticatedNextjs } from "@convex-dev/auth/nextjs/server";
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, BookOpen, HelpCircle, ShieldCheck } from "lucide-react";
@@ -15,14 +14,16 @@ import { GuideSoftToolCta } from "@/components/content/GuideSoftToolCta";
 import {
   PublicBreadcrumbs,
   PublicCtaBand,
-  PublicHero,
-  PublicPageShell,
   PublicSection,
   PublicSurfaceCard,
 } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { BRAND } from "@/config/brand";
+import { GuideHero } from "@/components/guides/GuideHero";
+import { GuideQuickAnswer } from "@/components/guides/GuideQuickAnswer";
+import styles from "@/components/guides/Guides.module.css";
+import { getGuidesMessages } from "@/i18n/marketing/guides";
 import { getLegacyGuideSeoKeywords } from "../data";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -239,6 +240,7 @@ export default async function GuidePage({
 }: GuidePageProps) {
   const locale = await getRequestLocale();
   const isNl = locale === "nl";
+  const copy = getGuidesMessages(locale);
   const { slug } = await params;
   const resolvedSearchParams = (await searchParams) ?? {};
   const draftGuideId = getSearchParam(resolvedSearchParams.draftId);
@@ -301,7 +303,7 @@ export default async function GuidePage({
     : closingCta.ctaLabel;
 
   return (
-    <PublicPageShell>
+    <div className={styles.page}>
       <JsonLd
         schema={[
           buildArticleSchema({
@@ -340,7 +342,7 @@ export default async function GuidePage({
         </div>
       ) : null}
 
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div className={styles.container}>
         <PublicBreadcrumbs
           items={[
             { label: isNl ? "Home" : "Home", href: withLocalePrefix("/", locale) },
@@ -348,56 +350,38 @@ export default async function GuidePage({
             { label: entry.h1 },
           ]}
         />
-        {dbGuide?.heroImagePublicPath ? (
-          <div className="mb-8 mt-6 overflow-hidden rounded-[var(--radius-xl)] border border-border/60">
-            <Image
-              src={dbGuide.heroImagePublicPath}
-              alt={dbGuide.featuredImageAlt?.[locale] ?? `${entry.h1} — ${BRAND.name} guide`}
-              width={1200}
-              height={675}
-              className="w-full object-cover"
-            />
-          </div>
-        ) : null}
-
-        <PublicHero
-          eyebrow={isHub ? "Hub" : isNl ? "Gids" : "Guide"}
+        <GuideHero
+          eyebrow={isHub ? copy.hub : copy.guide}
           title={entry.h1}
           description={heroDescription}
-          chips={
-            isHub
-              ? [
-                  isNl ? `${childPages.length} child-pagina's` : `${childPages.length} child pages`,
-                  isNl ? "EN + NL parity" : "EN + NL parity",
-                  isNl ? "Navigatie + context" : "Navigation + context",
-                ]
-              : [
-                  isNl ? `${leafSections.length} secties` : `${leafSections.length} sections`,
-                  isNl
-                    ? `${entry.internalLinkTargets.length} gerelateerde links`
-                    : `${entry.internalLinkTargets.length} related links`,
-                  isNl ? "Praktische gids" : "Practical guide",
-                ]
-          }
-          actions={
-            <Button
-              variant="outline"
-              render={<Link href={withLocalePrefix("/guides", locale)} />}
-            >
-              {isNl ? "Terug naar gidsen" : "Back to guides"}
-            </Button>
-          }
-        />
+          image={dbGuide?.heroImagePublicPath ?? "/illustrations/03-cockpit-afstellen.webp"}
+          imageAlt={dbGuide?.heroImagePublicPath
+            ? dbGuide.featuredImageAlt?.[locale] ?? `${entry.h1} — ${BRAND.name} guide`
+            : copy.detailImage}
+          illustration={!dbGuide?.heroImagePublicPath}
+        >
+          <Button nativeButton={false} role="link" variant="outline" render={<Link href={withLocalePrefix("/guides", locale)} />}>
+            {copy.back}
+          </Button>
+        </GuideHero>
 
+        <GuideQuickAnswer answer={isHub ? guide.hubQuickAnswer : quickAnswer} locale={locale} />
+
+        <div className={styles.reading}>
+          <nav className={styles.toc} aria-label={copy.contents}>
+            <h2>{copy.contents}</h2>
+            <a href="#guide-content">{isHub ? copy.childrenTitle : copy.article}</a>
+            {faqs.length > 0 ? <a href="#guide-faq">{copy.faq}</a> : null}
+            {relatedLinks.length > 0 || relatedBlogLinks.length > 0 ? <a href="#guide-related">{copy.related}</a> : null}
+          </nav>
+          <article className={styles.article} id="guide-content">
         {isHub ? (
           <>
             <PublicSection
               className="mt-10"
               header={{
                 eyebrow: isNl ? "Start hier" : "Start here",
-                title: isNl
-                  ? "Kies de juiste child-gids voor dit cluster"
-                  : "Choose the right child guide for this cluster",
+                title: copy.childrenTitle,
                 description: buildHubIntro(entry, locale).join(" "),
               }}
             >
@@ -422,6 +406,18 @@ export default async function GuidePage({
               </div>
             </PublicSection>
 
+            {cleanedMarkdown ? (
+              <PublicSection className="mt-10">
+                <GuideBodyMarkdown content={cleanedMarkdown} />
+              </PublicSection>
+            ) : null}
+
+            {faqs.length > 0 ? (
+              <PublicSection id="guide-faq" className="mt-10" header={{ title: copy.faq }}>
+                <GuideFaqAccordion faqs={faqs} />
+              </PublicSection>
+            ) : null}
+
             <div className="mt-10">
               <GuideMidPageCta
                 funnel={funnel}
@@ -432,6 +428,7 @@ export default async function GuidePage({
               />
             </div>
 
+            <div id="guide-related">
             <RelatedLinksSection
               title={isNl ? "Verder verkennen" : "Explore next"}
               links={relatedLinks}
@@ -443,38 +440,11 @@ export default async function GuidePage({
               links={relatedBlogLinks}
               locale={locale}
             />
+            </div>
           </>
         ) : (
           <>
             {entry.cluster.toLowerCase().includes("pain") ? <FitDisclaimer locale={locale} /> : null}
-
-            {quickAnswer ? (
-              <PublicSection
-                className="mt-10"
-                header={{
-                  eyebrow: isNl ? "Snel antwoord" : "Quick answer",
-                  title: isNl ? "Wat je hier als eerste uit haalt" : "What to take away first",
-                  description: isNl
-                    ? "Gebruik dit blok als samenvatting voordat je de details en meetstappen doorloopt."
-                    : "Use this block as the practical summary before you work through the detail and measurement steps.",
-                }}
-              >
-                <div className="grid gap-4 md:grid-cols-3">
-                  <PublicSurfaceCard
-                    title={isNl ? "Belangrijkste inzicht" : "Key takeaway"}
-                    description={quickAnswer.keyTakeaway}
-                  />
-                  <PublicSurfaceCard
-                    title={isNl ? "Veelgemaakte fout" : "Most common mistake"}
-                    description={quickAnswer.commonMistake}
-                  />
-                  <PublicSurfaceCard
-                    title={isNl ? "Let extra op als..." : "Pay extra attention if..."}
-                    description={quickAnswer.payAttention}
-                  />
-                </div>
-              </PublicSection>
-            ) : null}
 
             {softTool ? (
               <div className="mt-6">
@@ -507,6 +477,7 @@ export default async function GuidePage({
 
             {faqs.length > 0 ? (
               <PublicSection
+                id="guide-faq"
                 className="mt-10"
                 header={{
                   title: "FAQ",
@@ -517,6 +488,7 @@ export default async function GuidePage({
               </PublicSection>
             ) : null}
 
+            <div id="guide-related">
             <RelatedLinksSection
               title={isNl ? "Gerelateerde gidsen en tools" : "Related guides and tools"}
               links={relatedLinks}
@@ -528,17 +500,23 @@ export default async function GuidePage({
               links={relatedBlogLinks}
               locale={locale}
             />
+            </div>
           </>
         )}
 
+          </article>
+        </div>
+
         <PublicCtaBand
-          className="mt-10"
+          className={styles.cta}
           eyebrow={isNl ? "Klaar om je fit te starten?" : "Ready to start your fit?"}
           title={closingCta.title}
           description={closingDescription}
           actions={
             <>
               <Button
+                nativeButton={false}
+                role="link"
                 render={
                   <TrackedCtaLink
                     href={closingHref}
@@ -552,6 +530,8 @@ export default async function GuidePage({
                 {closingLabel}
               </Button>
               <Button
+                nativeButton={false}
+                role="link"
                 variant="outline"
                 render={
                   <TrackedCtaLink
@@ -569,6 +549,6 @@ export default async function GuidePage({
           }
         />
       </div>
-    </PublicPageShell>
+    </div>
   );
 }
