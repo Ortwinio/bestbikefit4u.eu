@@ -119,6 +119,13 @@ afterEach(() => {
 });
 
 describe("DashboardSidebar", () => {
+  it("keeps navigation sticky inside the full-height account column", () => {
+    render(<DashboardSidebar />);
+    const sidebar = screen.getByRole("complementary");
+    expect(sidebar.className).toContain("sticky top-0");
+    expect(sidebar.className).not.toContain("fixed");
+  });
+
   it("links the saddle selector to the canonical dashboard route", () => {
     render(<DashboardSidebar />);
 

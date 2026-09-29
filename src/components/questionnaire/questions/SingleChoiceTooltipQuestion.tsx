@@ -1,7 +1,8 @@
 "use client";
 
-import { CheckCircle2 } from "lucide-react";
-import { cn } from "@/utils/cn";
+import { RadioGroup } from "@base-ui/react/radio-group";
+import { OptionCard } from "@/components/ui";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 interface Option {
   value: string;
@@ -18,53 +19,41 @@ interface SingleChoiceTooltipQuestionProps {
 }
 
 export function SingleChoiceTooltipQuestion({
+  name,
   options,
   tooltips,
   value,
   onChange,
 }: SingleChoiceTooltipQuestionProps) {
+  const { messages } = useDashboardMessages();
   const selected = options.find((o) => o.value === value) ?? null;
   const tooltip = selected
     ? (tooltips?.[selected.value] ?? selected.description ?? null)
     : null;
 
   return (
-    <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border">
-      <div role="radiogroup" className="divide-y divide-border">
+    <div className="space-y-4">
+      <RadioGroup<string> name={name} aria-label={messages.questionnaire.a11y.singleChoiceLegend} value={value ?? undefined} onValueChange={onChange} className="grid gap-3 sm:grid-cols-2">
         {options.map((option) => {
           const isSelected = value === option.value;
           return (
-            <button
+            <OptionCard
               key={option.value}
-              type="button"
-              role="radio"
-              aria-checked={isSelected}
-              onClick={() => onChange(option.value)}
-              className={cn(
-                "relative flex w-full items-center gap-4 px-5 py-3 text-left transition-colors duration-150",
-                "focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary",
-                isSelected
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-card text-foreground hover:bg-accent"
-              )}
-            >
-              <CheckCircle2
-                className={cn(
-                  "h-4 w-4 shrink-0 transition-opacity duration-150",
-                  isSelected ? "opacity-100" : "opacity-0"
-                )}
-              />
-              <span className="text-sm font-medium">{option.label}</span>
-            </button>
+              mode="radio"
+              value={option.value}
+              selected={isSelected}
+              label={option.label}
+              className="min-h-[88px] min-w-0 rounded-[18px] p-4"
+            />
           );
         })}
-      </div>
+      </RadioGroup>
 
       {/* Tooltip panel */}
       {tooltip && selected && (
-        <div className="border-t border-border px-6 py-4">
-          <p className="text-xs font-semibold text-foreground">{selected.label}</p>
-          <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+        <div className="rounded-2xl bg-[var(--bbf-petrol-zacht)] p-4" aria-live="polite">
+          <p className="text-sm font-semibold text-foreground">{selected.label}</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
             {tooltip}
           </p>
         </div>

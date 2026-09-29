@@ -24,6 +24,8 @@ import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTr
 import { reportClientError } from "@/lib/telemetry";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { getFitResultsCopy } from "@/i18n/account/fitResults";
+import { FitResultsOverview } from "@/components/account/FitResultsOverview";
 import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
 import { isConsumerCampaignActive } from "@/config/commercial";
@@ -59,6 +61,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   const pagePath = withLocalePrefix(`/fit/${sessionId}/results`, locale);
   const logMarketingEvent = useMarketingEventLogger();
   const reportCopy = getReportV2Copy(locale);
+  const pageCopy = getFitResultsCopy(locale);
 
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [email, setEmail] = useState("");
@@ -312,7 +315,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         title={messages.results.sessionNotFound.title}
         description={messages.results.sessionNotFound.description}
         action={
-          <Button render={<Link href={withLocalePrefix("/dashboard", locale)} />}>
+          <Button nativeButton={false} role="link" render={<Link href={withLocalePrefix("/dashboard", locale)} />}>
             {messages.results.sessionNotFound.cta}
           </Button>
         }
@@ -332,6 +335,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           description={messages.results.questionnaireIncomplete.description}
           action={
             <Button
+              nativeButton={false} role="link"
               render={
                 <Link href={withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale)} />
               }
@@ -346,14 +350,14 @@ export default function ResultsPage({ params }: ResultsPageProps) {
     return (
       <div className="max-w-2xl mx-auto text-center py-12">
         <RefreshCw
-          className={`mx-auto mb-4 h-12 w-12 text-[color:var(--primary)] ${
+          className={`mx-auto mb-4 h-12 w-12 text-primary ${
             isGenerating ? "animate-spin" : ""
           }`}
         />
-        <h1 className="mb-4 text-2xl font-bold text-[color:var(--foreground)]">
+        <h1 className="mb-4 text-2xl font-bold text-foreground">
           {messages.results.processing.title}
         </h1>
-        <p className="text-[color:var(--muted-foreground)]">
+        <p className="text-muted-foreground">
           {messages.results.processing.description}
         </p>
         {generationError ? (
@@ -375,7 +379,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   }
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto min-w-0 max-w-[1080px] space-y-6">
       <AccessibleDialog
         open={showEmailModal}
         onClose={() => {
@@ -395,12 +399,13 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       >
         {emailSent ? (
           <div className="text-center py-2">
-            <CheckCircle className="mx-auto mb-3 h-10 w-10 text-[color:var(--success)]" />
+            <CheckCircle className="mx-auto mb-3 h-10 w-10 text-primary" />
           </div>
         ) : (
           <>
             <Input
               type="email"
+              className="min-h-11"
               label={messages.results.emailDialog.emailLabel}
               tooltip={messages.results.emailDialog.emailTooltip}
               value={email}
@@ -416,14 +421,14 @@ export default function ResultsPage({ params }: ResultsPageProps) {
               />
             ) : null}
 
-            <div className="mt-6 flex gap-3">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Button
                 variant="outline"
                 onClick={() => {
                   setEmailError(null);
                   setShowEmailModal(false);
                 }}
-                className="flex-1"
+                className="min-h-12 flex-1 whitespace-normal"
               >
                 {messages.common.cancel}
               </Button>
@@ -431,7 +436,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                 onClick={handleSendEmail}
                 isLoading={isSending}
                 disabled={!email}
-                className="flex-1"
+                className="min-h-12 flex-1 whitespace-normal"
               >
                 <Send className="h-4 w-4 mr-2" />
                 {messages.results.emailDialog.sendCta}
@@ -441,44 +446,56 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         )}
       </AccessibleDialog>
 
-      <div className="mb-5">
-        <Link
-          href={withLocalePrefix("/dashboard", locale)}
-          className="inline-flex items-center gap-1 rounded-full border border-[color:oklch(var(--dashboard-border-soft))] bg-[color:color-mix(in_oklch,var(--dashboard-surface-muted)_88%,var(--background)_12%)] px-3 py-1.5 text-sm font-medium text-[color:oklch(var(--dashboard-nav-foreground-strong))] transition-colors hover:bg-[color:color-mix(in_oklch,var(--dashboard-surface-strong)_84%,var(--background)_16%)]"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          {messages.results.backToDashboard}
-        </Link>
-      </div>
+      <Link
+        href={withLocalePrefix("/dashboard", locale)}
+        className="inline-flex min-h-11 items-center gap-2 rounded-lg font-bold text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+      >
+        <ArrowLeft className="size-5" aria-hidden="true" />
+        {messages.results.backToDashboard}
+      </Link>
 
-      <Card variant="bordered" className="dashboard-hero-surface mb-6 overflow-hidden">
-        <CardContent className="grid gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.72fr)] lg:items-start">
-            <div>
-              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[color:color-mix(in_oklch,var(--dashboard-border-strong)_76%,var(--background)_24%)] bg-[color:color-mix(in_oklch,var(--dashboard-surface)_82%,var(--background)_18%)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--primary)] shadow-sm">
-                <CheckCircle className="h-3.5 w-3.5" />
-                {reportCopy.sections.about}
-              </div>
-              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-[color:var(--foreground)] sm:text-4xl">
-                {reportCopy.introTitle}
-              </h1>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)] sm:text-base">
-                {reportCopy.introBody}
-              </p>
-              <p className="mt-4 text-sm font-medium text-[color:var(--foreground)]/85">
-                {reportCopy.shell.coverSupport}
-              </p>
+      <header className="flex flex-col gap-5 rounded-[28px] bg-[var(--bbf-lime)] p-6 text-[var(--bbf-inkt)] lg:flex-row lg:items-center lg:justify-between sm:p-8">
+        <div className="min-w-0">
+          <p className="text-sm font-bold uppercase tracking-[0.08em]">{pageCopy.eyebrow}</p>
+          <h1 className="mt-2 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-[42px]">{pageCopy.title}</h1>
+          <p className="mt-3">{reportPayload?.bike.name}</p>
+        </div>
+        <Button nativeButton={false} role="link" render={<Link href={withLocalePrefix("/fit", locale)} />} className="min-h-12 shrink-0 whitespace-normal" style={{ backgroundColor: "var(--bbf-inkt)", color: "white" }}>
+          {messages.results.actions.startNewFit}
+        </Button>
+      </header>
 
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Button render={<Link href={withLocalePrefix("/fit", locale)} />}>
-                  {messages.results.actions.startNewFit}
-                </Button>
-                <div className="dashboard-card-surface-muted rounded-[var(--radius-xl)] border px-3 py-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:oklch(var(--dashboard-nav-foreground))]">
-                    {reportCopy.shell.actionsTitle}
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-3">
+      {hasClimbingProfile && (
+        <div className="flex flex-wrap gap-2" role="group" aria-label={pageCopy.profileChoice}>
+          {(["main", "climbing"] as const).map((tab) => (
+            <Button key={tab} variant="outline" aria-pressed={activeTab === tab} onClick={() => setActiveTab(tab)}
+              className="min-h-11 whitespace-normal"
+              style={activeTab === tab ? { backgroundColor: "var(--bbf-inkt)", color: "white" } : undefined}>
+              {tab === "main" ? messages.results.mainProfileTab : messages.results.climbingProfileTab}
+            </Button>
+          ))}
+        </div>
+      )}
+      {activeTab === "climbing" && <p className="rounded-2xl bg-primary-soft p-4 text-sm leading-relaxed">{messages.results.climbingProfileNote}</p>}
+
+      {reportPayload && activeReportSource?.recommendation && (
+        <FitResultsOverview
+          locale={locale} copy={reportCopy} report={reportPayload}
+          fit={activeReportSource.recommendation.calculatedFit}
+          profileLabel={activeTab === "main" ? messages.results.mainProfileTab : messages.results.climbingProfileTab}
+          hasPaidAccess={hasPaidReportAccess}
+        />
+      )}
+
+      <section className="flex flex-col gap-5 rounded-3xl bg-[var(--bbf-inkt)] p-6 text-white xl:flex-row xl:items-center xl:justify-between">
+        <div className="max-w-xl">
+          <h2 className="font-display text-2xl font-bold text-white">{pageCopy.reportTitle}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--bbf-op-donker)]">{pageCopy.reportBody}</p>
+        </div>
+        <div className="flex flex-wrap gap-3">
                     <Button
                       variant="outline"
+                      className="min-h-12 whitespace-normal border-white/40 bg-transparent text-white hover-only:hover:bg-white/10"
                       onClick={() => {
                         if (!hasPaidReportAccess) {
                           toast.info({
@@ -502,6 +519,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                     {hasPaidReportAccess ? (
                       <Button
                         variant="outline"
+                      className="min-h-12 whitespace-normal border-white/40 bg-transparent text-white hover-only:hover:bg-white/10"
                         onClick={handleDownloadPdf}
                         isLoading={isDownloading}
                       >
@@ -511,6 +529,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                     ) : (
                       <Button
                         variant="outline"
+                      className="min-h-12 whitespace-normal border-white/40 bg-transparent text-white hover-only:hover:bg-white/10"
                         disabled
                         onClick={() => {
                           toast.info({
@@ -522,124 +541,38 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                         {reportCopy.paywall.pdfUpgradeButton}
                       </Button>
                     )}
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div className="dashboard-card-surface rounded-[var(--radius-2xl)] border p-5">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="dashboard-card-surface-muted rounded-[var(--radius-lg)] border px-4 py-3">
-                  <p className="text-xs uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
-                    {reportCopy.shell.dateLabel}
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-[color:var(--foreground)]">
-                    {reportDateLabel}
-                  </p>
-                </div>
-                <div className="dashboard-card-surface-muted rounded-[var(--radius-lg)] border px-4 py-3">
-                  <p className="text-xs uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
-                    {messages.results.algorithmVersionLabel}
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-[color:var(--foreground)]">
-                    {recommendation.algorithmVersion}
-                  </p>
-                </div>
-              </div>
-
-              <div className="dashboard-card-surface-muted mt-5 rounded-[var(--radius-xl)] border px-4 py-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:oklch(var(--dashboard-nav-foreground))]">
-                  {reportCopy.shell.summaryTitle}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
-                  {hasPaidReportAccess
-                    ? reportCopy.shell.summaryFullAccess
-                    : reportCopy.shell.summaryLimited}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-      </Card>
-
-      {/* Profile tab switcher */}
-      {hasClimbingProfile && (
-        <div className="mb-4 flex gap-2">
-          <button
-            onClick={() => setActiveTab("main")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-              activeTab === "main"
-                ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
-                : "bg-[color:var(--muted)] text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)]"
-            }`}
-          >
-            {messages.results.mainProfileTab}
-          </button>
-          <button
-            onClick={() => setActiveTab("climbing")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-              activeTab === "climbing"
-                ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
-                : "bg-[color:var(--muted)] text-[color:var(--muted-foreground)] hover:bg-[color:var(--accent)]"
-            }`}
-          >
-            {messages.results.climbingProfileTab}
-          </button>
         </div>
+      </section>
+      {downloadError && <ErrorState title={messages.results.errors.downloadTitle} description={downloadError} />}
+
+      {!hasPaidReportAccess && (
+              <Card variant="bordered">
+                <CardHeader>
+                  <CardTitle>
+                    {reportCopy.shell.unlockTitle}
+                  </CardTitle>
+                  <CardDescription>
+                    {reportCopy.shell.unlockDescription}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-3 sm:grid-cols-2">
+                  {reportCopy.shell.unlockItems.map((item) => (
+                    <div
+                      key={item}
+                      className="dashboard-card-surface-muted rounded-[var(--radius-lg)] border border-dashed px-4 py-4 text-sm text-muted-foreground"
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
       )}
 
-      {/* Climbing profile info banner */}
-      {activeTab === "climbing" && (
-        <div className="dashboard-card-surface-muted mb-4 rounded-[var(--radius-xl)] border px-4 py-3 text-sm text-[color:var(--muted-foreground)]">
-          {messages.results.climbingProfileNote}
-        </div>
-      )}
-
-      {/* Primary numbers hero stats */}
-      {(() => {
-        const fit = recommendation.calculatedFit;
-        const primaryStats = [
-          {
-            key: "saddleHeight",
-            label: reportCopy.parameters.saddleHeight.label,
-            value: fit.saddleHeightMm,
-          },
-          {
-            key: "saddleSetback",
-            label: reportCopy.parameters.saddleSetback.label,
-            value: fit.saddleSetbackMm,
-          },
-          {
-            key: "handlebarDrop",
-            label: reportCopy.parameters.handlebarDrop.label,
-            value: fit.handlebarDropMm,
-          },
-          {
-            key: "stemLength",
-            label: reportCopy.parameters.stem.label,
-            value: fit.stemLengthMm,
-          },
-        ];
-        return (
-          <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {primaryStats.map((stat) => (
-              <div
-                key={stat.key}
-                className="dashboard-card-surface rounded-2xl border p-4 text-center"
-              >
-                <p className="text-xs font-medium uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
-                  {stat.label}
-                </p>
-                <p className="mt-2 text-2xl font-bold text-[color:var(--foreground)]">
-                  {stat.value}mm
-                </p>
-              </div>
-            ))}
-          </div>
-        );
-      })()}
-
-      {/* Results Grid */}
-      <div className="space-y-8">
+      <details className="group rounded-3xl border border-border bg-card p-5 sm:p-6">
+        <summary className="min-h-11 cursor-pointer rounded-lg py-3 font-display text-xl font-bold focus-visible:outline-2 focus-visible:outline-primary">{pageCopy.detailsTitle}</summary>
+        <dl className="mt-4 flex flex-wrap gap-6 text-sm"><div><dt className="text-muted-foreground">{reportCopy.shell.dateLabel}</dt><dd>{reportDateLabel}</dd></div><div><dt className="text-muted-foreground">{messages.results.algorithmVersionLabel}</dt><dd className="font-mono">{recommendation.algorithmVersion}</dd></div></dl>
+        <div className="mt-6 space-y-6">
         {reportPayload ? (
           <>
             <Card variant="bordered">
@@ -649,18 +582,18 @@ export default function ResultsPage({ params }: ResultsPageProps) {
               </CardHeader>
               <CardContent className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(260px,0.8fr)]">
                 <div className="dashboard-card-surface rounded-[var(--radius-lg)] border px-5 py-5">
-                  <p className="text-base font-semibold text-[color:var(--foreground)]">
+                  <p className="text-base font-semibold text-foreground">
                     {reportCopy.shell.aboutTitle}
                   </p>
-                  <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
                     {reportCopy.introBody}
                   </p>
                 </div>
                 <div className="dashboard-card-surface-muted rounded-[var(--radius-lg)] border px-5 py-5">
-                  <p className="text-sm font-semibold text-[color:var(--foreground)]">
+                  <p className="text-sm font-semibold text-foreground">
                     {reportCopy.shell.aboutTitle}
                   </p>
-                  <ul className="mt-3 space-y-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
                     {reportCopy.shell.aboutBullets.map((bullet) => (
                       <li key={bullet} className="flex gap-2">
                         <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[color:var(--primary)]" />
@@ -698,7 +631,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                       <CardTitle>{reportCopy.sections.fitNotes}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <ul className="space-y-2 text-sm text-[color:var(--muted-foreground)]">
+                      <ul className="space-y-2 text-sm text-muted-foreground">
                         {reportPayload.fitNotes.map((note) => (
                           <li key={note}>{note}</li>
                         ))}
@@ -708,29 +641,13 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                 ) : null}
               </>
             ) : (
-              <Card variant="bordered">
-                <CardHeader>
-                  <CardTitle>
-                    {reportCopy.shell.unlockTitle}
-                  </CardTitle>
-                  <CardDescription>
-                    {reportCopy.shell.unlockDescription}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-3 sm:grid-cols-2">
-                  {reportCopy.shell.unlockItems.map((item) => (
-                    <div
-                      key={item}
-                      className="dashboard-card-surface-muted rounded-[var(--radius-lg)] border border-dashed px-4 py-4 text-sm text-[color:var(--muted-foreground)]"
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+              null
             )}
           </>
         ) : null}
+        </div>
+      </details>
+      <div className="space-y-6 [&_button]:min-h-11 [&_a]:min-h-11">
         {user && session && (
           <CaseStudyOptIn
             locale={locale}
@@ -742,13 +659,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           <FitPassPaywall locale={locale} sessionId={sessionId} userTier={user.tier} />
         )}
       </div>
-      {downloadError ? (
-        <ErrorState
-          className="mt-6 pb-8"
-          title={messages.results.errors.downloadTitle}
-          description={downloadError}
-        />
-      ) : <div className="pb-8" />}
+
     </div>
   );
 }

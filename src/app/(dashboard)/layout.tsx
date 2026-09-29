@@ -92,8 +92,8 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="hidden md:block">
+    <div className="min-h-screen bg-background text-foreground md:grid md:grid-cols-[264px_minmax(0,1fr)]">
+      <div className="hidden bg-[var(--bbf-inkt)] md:row-span-2 md:block">
         <DashboardSidebar />
       </div>
 
@@ -223,7 +223,7 @@ export default function DashboardLayout({
         </DialogContent>
       </Dialog>
 
-      <div className="md:pl-[264px]">
+      <div className="min-w-0">
         <main
           id="main-content"
           tabIndex={-1}

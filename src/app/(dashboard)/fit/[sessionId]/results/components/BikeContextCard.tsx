@@ -220,7 +220,7 @@ export function BikeContextCard({ bike, copy }: BikeContextCardProps) {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-          <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--primary)_8%,white_92%)_0%,white_100%)]">
+          <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-primary-soft">
             {bike.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -229,7 +229,7 @@ export function BikeContextCard({ bike, copy }: BikeContextCardProps) {
                 className="aspect-[4/3] h-full w-full object-cover"
               />
             ) : (
-              <div className="flex aspect-[4/3] items-center justify-center bg-[linear-gradient(135deg,color-mix(in_oklch,var(--primary)_16%,white_84%)_0%,color-mix(in_oklch,var(--secondary)_22%,white_78%)_100%)] text-[color:var(--primary)]">
+              <div className="flex aspect-[4/3] items-center justify-center bg-primary-soft text-primary">
                 <Bike className="h-16 w-16" />
               </div>
             )}
@@ -239,15 +239,15 @@ export function BikeContextCard({ bike, copy }: BikeContextCardProps) {
             {primaryStats.map(({ label, value, icon: Icon }) => (
               <div
                 key={label}
-                className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/35 px-4 py-4"
+                className="rounded-[var(--radius-lg)] border border-border bg-secondary/35 px-4 py-4"
               >
-                <div className="flex items-center gap-2 text-[color:var(--primary)]">
+                <div className="flex items-center gap-2 text-primary">
                   <Icon className="h-4 w-4" />
-                  <p className="text-xs uppercase tracking-[0.16em] text-[color:var(--muted-foreground)]">
+                  <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
                     {label}
                   </p>
                 </div>
-                <p className="mt-2 text-sm font-semibold text-[color:var(--foreground)]">
+                <p className="mt-2 text-sm font-semibold text-foreground">
                   {value}
                 </p>
               </div>
@@ -258,7 +258,7 @@ export function BikeContextCard({ bike, copy }: BikeContextCardProps) {
         {secondaryContext.length ? (
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {secondaryContext.map(([label, value]) => (
-              <MetricTile key={label} label={label} value={value} />
+              <MetricTile key={label} label={label} value={value} formatNumbers={false} />
             ))}
           </div>
         ) : null}

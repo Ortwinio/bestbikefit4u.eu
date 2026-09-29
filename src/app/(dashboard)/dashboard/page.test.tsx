@@ -47,6 +47,21 @@ function setup(overrides: Record<string, unknown> = {}) {
 beforeEach(() => { state.locale = "nl"; state.query.mockReset(); });
 
 describe("dashboard home presentation", () => {
+  it.each(["nl", "en"] as const)("localizes questionnaire values in the %s garage without changing saved enums", (locale) => {
+    state.locale = locale;
+    const responses = { experience_level: "intermediate", weekly_hours: "3-6", typical_ride_length: "medium", position_priority: "balanced", road_riding_type: "group", has_pain: "yes", pain_areas: ["lower_back"] };
+    const original = structuredClone(responses);
+    const html = setup({
+      "bikes/queries:listSummariesByUser": [bike],
+      "sessions/queries:getAllSessionsWithBikes": [{ bike, session: { _id: "fit" }, recommendation: { calculatedFit: { saddleHeightMm: 750 } }, responses }],
+    });
+    const dutch = ["Enige ervaring", "3–6 uur/week", "Gemiddeld (30–80 km)", "Gebalanceerd", "Groepsritten", "Onderrug"];
+    const english = ["Intermediate", "3–6 hrs/week", "Medium (30–80 km)", "Balanced", "Group rides", "Lower back"];
+    for (const label of locale === "nl" ? dutch : english) expect(html).toContain(label);
+    if (locale === "nl") for (const label of english) expect(html).not.toContain(label);
+    expect(responses).toEqual(original);
+  });
+
   it.each(["profiles/queries:getMyProfile", "users/queries:getCurrentUser", "bikes/queries:listSummariesByUser", "sessions/queries:getAllSessionsWithBikes"])("waits for %s without showing empty data", (query) => {
     const html = setup({ [query]: undefined });
     expect(html).toContain(getDashboardMessages("nl").layout.loading);

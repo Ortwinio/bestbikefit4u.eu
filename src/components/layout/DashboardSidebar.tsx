@@ -75,7 +75,7 @@ export function DashboardSidebar() {
   const adminNavIconClassName = "h-[0.95rem] w-[0.95rem] shrink-0";
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-dvh w-[264px] bg-[var(--bbf-inkt)] text-white">
+    <aside className="sticky top-0 z-40 h-dvh w-[264px] bg-[var(--bbf-inkt)] text-white">
       <div className="flex h-full flex-col overflow-y-auto">
         <div className="flex shrink-0 items-center border-b border-white/10 px-4 py-4">
           <BrandLogo

@@ -1,5 +1,7 @@
 "use client";
 
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { FitResultsValue } from "@/components/account/FitResultsValue";
 import type { ReactNode } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 
@@ -14,11 +16,11 @@ type ResultsSectionProps = {
 
 const TONE_CLASSES: Record<NonNullable<ResultsSectionProps["tone"]>, string> = {
   default:
-    "border-[color:var(--border)] bg-[color:var(--card)]",
+    "border-border bg-card",
   highlight:
-    "border-[color:color-mix(in_oklch,var(--primary)_22%,var(--border))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--primary)_7%,white_93%)_0%,white_100%)]",
+    "border-border bg-primary-soft",
   muted:
-    "border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_40%,var(--card)_60%)]",
+    "border-border bg-primary-soft",
 };
 
 export function ResultsSection({
@@ -30,19 +32,19 @@ export function ResultsSection({
   contentClassName,
 }: ResultsSectionProps) {
   return (
-    <Card variant="bordered" className={`overflow-hidden ${TONE_CLASSES[tone]}`}>
-      <CardHeader className="gap-3 border-b border-[color:var(--border)]/70 pb-5">
+    <Card variant="bordered" className={`min-w-0 overflow-hidden rounded-3xl ${TONE_CLASSES[tone]}`}>
+      <CardHeader className="gap-3 border-b border-border/70 pb-5">
         {eyebrow ? (
-          <div className="inline-flex w-fit rounded-full border border-[color:var(--border)] bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[color:var(--primary)] shadow-sm">
+          <div className="inline-flex w-fit rounded-full border border-border bg-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary shadow-sm">
             {eyebrow}
           </div>
         ) : null}
         <div>
-          <CardTitle className="text-2xl tracking-tight text-[color:var(--foreground)]">
+          <CardTitle className="text-2xl tracking-tight text-foreground">
             {title}
           </CardTitle>
           {description ? (
-            <CardDescription className="mt-2 max-w-3xl text-sm leading-6 text-[color:var(--muted-foreground)]">
+            <CardDescription className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
               {description}
             </CardDescription>
           ) : null}
@@ -58,29 +60,32 @@ export function MetricTile({
   value,
   detail,
   emphasis = "default",
+  formatNumbers = true,
 }: {
   label: string;
   value: ReactNode;
   detail?: ReactNode;
   emphasis?: "default" | "primary" | "success" | "warning";
+  formatNumbers?: boolean;
 }) {
+  const { locale } = useDashboardMessages();
   const emphasisClass =
     emphasis === "primary"
-      ? "border-[color:color-mix(in_oklch,var(--primary)_24%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_10%,var(--card)_90%)]"
+      ? "border-border bg-primary-soft"
       : emphasis === "success"
-        ? "border-[color:color-mix(in_oklch,var(--success)_22%,var(--border))] bg-[color:color-mix(in_oklch,var(--success)_10%,var(--card)_90%)]"
+        ? "border-border bg-primary-soft"
         : emphasis === "warning"
-          ? "border-[color:color-mix(in_oklch,var(--warning)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_10%,var(--card)_90%)]"
-          : "border-[color:var(--border)] bg-[color:var(--secondary)]/35";
+          ? "border-border bg-primary-soft"
+          : "border-border bg-secondary/35";
 
   return (
     <div className={`rounded-[var(--radius-lg)] border px-4 py-4 ${emphasisClass}`}>
-      <p className="text-[11px] uppercase tracking-[0.16em] text-[color:var(--muted-foreground)]">
+      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
         {label}
       </p>
-      <p className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">{value}</p>
+      <p className="mt-2 break-words text-lg font-semibold text-foreground">{formatNumbers && (typeof value === "number" || typeof value === "string") ? <FitResultsValue value={value} locale={locale} /> : value}</p>
       {detail ? (
-        <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">{detail}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{typeof detail === "number" || typeof detail === "string" ? <FitResultsValue value={detail} locale={locale} /> : detail}</p>
       ) : null}
     </div>
   );
@@ -95,12 +100,12 @@ export function StatusPill({
 }) {
   const toneClass =
     tone === "success"
-      ? "border-[color:color-mix(in_oklch,var(--success)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--success)_10%,var(--card)_90%)] text-[color:var(--success)]"
+      ? "border-border bg-primary-soft text-primary"
       : tone === "warning"
-        ? "border-[color:color-mix(in_oklch,var(--warning)_28%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_10%,var(--card)_90%)] text-[color:var(--warning)]"
+        ? "border-border bg-primary-soft text-foreground"
         : tone === "primary"
-          ? "border-[color:color-mix(in_oklch,var(--primary)_24%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_10%,var(--card)_90%)] text-[color:var(--primary)]"
-          : "border-[color:var(--border)] bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]";
+          ? "border-border bg-primary-soft text-primary"
+          : "border-border bg-secondary text-muted-foreground";
 
   return (
     <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] ${toneClass}`}>

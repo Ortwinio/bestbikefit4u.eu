@@ -11,13 +11,13 @@ import {
 } from "@/components/ui";
 import { QuestionRenderer } from "./QuestionRenderer";
 import { QuestionnaireIntro } from "./QuestionnaireIntro";
-import { QuestionnaireProgressBar } from "./QuestionnaireProgressBar";
+import { FitQuestionnaireProgress } from "@/components/account/FitQuestionnaireProgress";
 import { getErrorMessage, reportClientError } from "@/lib/telemetry";
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
-import { formatMessage } from "@/i18n/dashboardMessages";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import type { QuestionDefinition, QuestionnaireResponseValue } from "./types";
 import { getLocalizedQuestion } from "./localization";
+import { FitQuestionnaireGuide } from "@/components/account/FitQuestionnaireGuide";
 
 const SERVER_MISSING_REQUIRED_MARKER = "Missing required responses:";
 
@@ -68,7 +68,7 @@ export function QuestionnaireContainer({
   onComplete,
   isLoading = false,
 }: QuestionnaireContainerProps) {
-  const { messages } = useDashboardMessages();
+  const { locale, messages } = useDashboardMessages();
   const [showIntro, setShowIntro] = useState(
     () => Object.keys(responses).length === 0
   );
@@ -100,11 +100,6 @@ export function QuestionnaireContainer({
   const currentQuestion = visibleQuestions[currentIndex];
   const totalQuestions = visibleQuestions.length;
   const isLastQuestion = currentIndex === totalQuestions - 1;
-  const remainingQuestions = Math.max(totalQuestions - currentIndex, 0);
-  const estimatedMinutesRemaining = Math.max(
-    1,
-    Math.ceil((remainingQuestions * 40) / 60)
-  );
   const percentComplete = showIntro
     ? 0
     : Math.round((currentIndex / totalQuestions) * 100);
@@ -255,16 +250,9 @@ export function QuestionnaireContainer({
   const canProceed = !currentQuestion.isRequired || hasResponse;
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <div className="mb-6">
-        <QuestionnaireProgressBar
-          estimatedMinutes={estimatedMinutesRemaining}
-          percentComplete={percentComplete}
-        />
-      </div>
-
+    <div className="min-w-0">
       {missingRequiredQuestionIds.length > 0 && (
-        <div className="mb-6 rounded-lg border border-border bg-destructive-soft p-4">
+        <div role="alert" className="mb-6 rounded-2xl border border-border bg-destructive-soft p-4">
           <p className="text-sm font-medium text-destructive-text">
             {messages.questionnaire.missingRequired.header}
           </p>
@@ -276,6 +264,7 @@ export function QuestionnaireContainer({
                   key={questionId}
                   size="sm"
                   variant="outline"
+                  className="min-h-11 max-w-full whitespace-normal text-left"
                   onClick={() => jumpToQuestion(questionId)}
                 >
                   {question ? getLocalizedQuestion(question, messages).questionText : questionId}
@@ -286,83 +275,82 @@ export function QuestionnaireContainer({
         </div>
       )}
 
-      <Card variant="bordered" className="mb-6">
-        <CardContent className="pt-6">
-          {showIntro ? (
-            <QuestionnaireIntro onStart={() => setShowIntro(false)} />
-          ) : (
-            <QuestionRenderer
-              question={currentQuestion}
-              value={currentResponse}
-              onChange={setCurrentResponse}
-              headingId={questionHeadingId(currentQuestion.questionId)}
-            />
-          )}
-        </CardContent>
-      </Card>
-
-      {!showIntro && (
-        <>
-          <div className="flex items-center justify-between">
-            <Button
-              variant="outline"
-              onClick={handlePrevious}
-              disabled={isSaving || isCompleting}
-            >
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              {messages.questionnaire.actions.previous}
-            </Button>
-
-            <div className="flex items-center gap-2">
-              {!currentQuestion.isRequired && !isLastQuestion && (
-                <Button
-                  variant="ghost"
-                  onClick={handleSkip}
-                  disabled={isSaving || isCompleting}
-                >
-                  {messages.questionnaire.actions.skip}
-                </Button>
-              )}
-
-              <Button
-                onClick={handleNext}
-                disabled={!canProceed || isSaving || isCompleting}
-                isLoading={isSaving || isCompleting}
-              >
-                {isLastQuestion ? (
-                  <>
-                    {messages.questionnaire.actions.complete}
-                    <Check className="h-4 w-4 ml-1" />
-                  </>
-                ) : (
-                  <>
-                    {messages.questionnaire.actions.next}
-                    <ChevronRight className="h-4 w-4 ml-1" />
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-
-          {actionError ? (
-            <ErrorState
-              className="mt-4"
-              description={actionError}
-              title={messages.questionnaire.errors.completeStepTitle}
-            />
-          ) : null}
-
-          <p className="mt-4 text-center text-sm text-muted-foreground">
-            {formatMessage(messages.questionnaire.progress.questionOf, {
-              current: currentIndex + 1,
-              total: totalQuestions,
-            })}
-            {currentQuestion.isRequired && (
-              <span className="ml-1 text-destructive-text">*</span>
+      <div className={showIntro ? "" : "grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_288px]"}>
+        <Card variant="bordered" className="min-w-0 rounded-[28px] p-0">
+          <CardContent className="p-5 sm:p-7">
+            {showIntro ? (
+              <QuestionnaireIntro onStart={() => setShowIntro(false)} />
+            ) : (
+              <>
+                <div className="mb-6">
+                  <FitQuestionnaireProgress current={currentIndex + 1} total={totalQuestions} percentComplete={percentComplete} />
+                </div>
+                <QuestionRenderer
+                  question={currentQuestion}
+                  value={currentResponse}
+                  onChange={setCurrentResponse}
+                  headingId={questionHeadingId(currentQuestion.questionId)}
+                />
+              </>
             )}
-          </p>
-        </>
-      )}
+
+            {!showIntro && (
+              <>
+                <div className="mt-6 flex flex-wrap items-center justify-between gap-3 [&_button]:min-h-12 [&_button]:whitespace-normal">
+                  <Button
+                    variant="outline"
+                    onClick={handlePrevious}
+                    disabled={isSaving || isCompleting}
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-1" />
+                    {messages.questionnaire.actions.previous}
+                  </Button>
+
+                  <div className="ml-auto flex flex-wrap items-center gap-2">
+                    {!currentQuestion.isRequired && !isLastQuestion && (
+                      <Button
+                        variant="ghost"
+                        onClick={handleSkip}
+                        disabled={isSaving || isCompleting}
+                      >
+                        {messages.questionnaire.actions.skip}
+                      </Button>
+                    )}
+
+                    <Button
+                      onClick={handleNext}
+                      disabled={!canProceed || isSaving || isCompleting}
+                      isLoading={isSaving || isCompleting}
+                    >
+                      {isLastQuestion ? (
+                        <>
+                          {messages.questionnaire.actions.complete}
+                          <Check className="h-4 w-4 ml-1" />
+                        </>
+                      ) : (
+                        <>
+                          {messages.questionnaire.actions.next}
+                          <ChevronRight className="h-4 w-4 ml-1" />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                {actionError ? (
+                  <ErrorState
+                    className="mt-4"
+                    description={actionError}
+                    title={messages.questionnaire.errors.completeStepTitle}
+                  />
+                ) : null}
+
+              </>
+            )}
+          </CardContent>
+        </Card>
+      {!showIntro && <FitQuestionnaireGuide questions={visibleQuestions} currentIndex={currentIndex} locale={locale} messages={messages} />}
+      </div>
     </div>
   );
 }

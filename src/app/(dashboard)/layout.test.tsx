@@ -141,6 +141,9 @@ describe("DashboardLayout feedback context integration", () => {
     expect(html).toContain('data-testid="sidebar"');
     expect(html).toContain("Dashboard content");
     expect(html).toContain('data-testid="dashboard-message-surface"');
+    expect(html).toContain("md:grid-cols-[264px_minmax(0,1fr)]");
+    expect(html).toContain("hidden bg-[var(--bbf-inkt)] md:row-span-2 md:block");
+    expect(html).not.toContain("md:pl-[264px]");
   });
 
   it("defines an opaque mobile panel contract", () => {
