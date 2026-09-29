@@ -53,6 +53,7 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 
 ## Decisions
 
+- 2026-09-29 — **FTP W/kg, power↔speed, climb planner, fuel & hydration become real tools** (decided by Ortwin). Contracts: `05-new-tool-contracts.md`; [VOORSTEL] ranges await his approval.
 - 2026-09-29 — **Palette locked: canvas lime/petrol** (decided by Ortwin). It replaces the blue/Inter palette in `plans/BestBikeFit4U_Redesign_Plan.docx`. The brand rules (colors, type, logo, tone of voice, icons) are in `reference/brand.md`, and they win over anything else.
 
 ## Gate log
