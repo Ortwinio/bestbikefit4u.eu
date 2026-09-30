@@ -29,6 +29,10 @@ Review the current website, fix verified defects and security weaknesses, and va
 ## Status
 Local review and implementation complete, including a second independent review pass. Final integrated suite: 194 files / 742 tests pass; lint and typecheck pass; dependency audit reports zero vulnerabilities. Production build and browser/HTTP checks are recorded in [validation-report.md](validation-report.md).
 
-Live email receipt/verification awaits the user's code and confirmation. Production deployment, Google OAuth completion, and live payment verification have not been performed. Release requirements and remaining findings are explicit in the validation report.
+Production frontend and backend were released on 2026-09-27 through merged PR #1
+(`8dab4d4`). New Stripe payments are paused by the owner's instruction. Final
+validation: 764 tests; main-branch CI including communication checks; 16 live route
+checks, production login CSP and disabled checkout verification all pass. Live
+email-code verification and Google OAuth completion remain unverified.
 
 The coordinated frontend/backend candidate and rollout sequence are recorded in [release.md](release.md).

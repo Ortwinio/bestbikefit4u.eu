@@ -1,9 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/prototyper-ui/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/prototyper-ui/ui/card";
 import { cn } from "@/utils/cn";
 
 type PublicInfoPanelProps = ComponentPropsWithoutRef<"div"> & {
@@ -17,15 +13,19 @@ type PublicInfoPanelProps = ComponentPropsWithoutRef<"div"> & {
 
 const toneStyles: Record<NonNullable<PublicInfoPanelProps["tone"]>, string> = {
   primary:
-    "border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_10%,var(--card)_90%)]",
+    "border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] " +
+    "bg-[color:color-mix(in_oklch,var(--primary)_10%,var(--card)_90%)]",
   secondary:
-    "border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_88%,var(--background)_12%)]",
+    "border-border bg-[color:color-mix(in_oklch,var(--secondary)_88%,var(--background)_12%)]",
   success:
-    "border-[color:color-mix(in_oklch,var(--success)_20%,var(--border))] bg-[color:color-mix(in_oklch,var(--success)_10%,var(--card)_90%)]",
+    "border-[color:color-mix(in_oklch,var(--success)_20%,var(--border))] " +
+    "bg-[color:color-mix(in_oklch,var(--success)_10%,var(--card)_90%)]",
   warning:
-    "border-[color:color-mix(in_oklch,var(--warning)_24%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)]",
+    "border-[color:color-mix(in_oklch,var(--warning)_24%,var(--border))] " +
+    "bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)]",
   danger:
-    "border-[color:color-mix(in_oklch,var(--danger)_24%,var(--border))] bg-[color:color-mix(in_oklch,var(--danger)_12%,var(--card)_88%)]",
+    "border-[color:color-mix(in_oklch,var(--danger)_24%,var(--border))] " +
+    "bg-[color:color-mix(in_oklch,var(--danger)_12%,var(--card)_88%)]",
 };
 
 export function PublicInfoPanel({
@@ -47,7 +47,7 @@ export function PublicInfoPanel({
       className={cn(
         "gap-0 rounded-[var(--radius-xl)] border p-0 shadow-sm",
         toneStyles[tone],
-        className
+        className,
       )}
       {...props}
     >

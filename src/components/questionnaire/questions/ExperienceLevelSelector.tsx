@@ -67,15 +67,20 @@ export function ExperienceLevelSelector({
                 type="button"
                 role="radio"
                 aria-checked={isActive}
+                aria-label={t.levels[key].label}
                 onClick={() => onChange(key)}
-                className={cn(
-                  "relative z-10 rounded-full bg-primary transition-all duration-200",
-                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
-                  isActive
-                    ? "size-8 border-4 border-background shadow-lg"
-                    : "size-4 opacity-60 hover:opacity-100"
-                )}
-              />
+                className="group relative z-10 flex size-11 shrink-0 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "rounded-full bg-primary transition-all duration-200",
+                    isActive
+                      ? "size-8 border-4 border-background shadow-lg"
+                      : "size-4 opacity-60 group-hover:opacity-100"
+                  )}
+                />
+              </button>
             );
           })}
         </div>

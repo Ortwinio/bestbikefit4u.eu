@@ -1,0 +1,20 @@
+.page {
+  --marketing-background: var(--bbf-papier);
+  --marketing-foreground: var(--bbf-inkt);
+  --marketing-text: var(--bbf-tekst);
+  --marketing-muted: var(--bbf-gedempt);
+  --marketing-card: var(--bbf-wit);
+  --marketing-border: var(--bbf-rand);
+  --marketing-link: var(--bbf-petrol);
+  --marketing-soft: var(--primary-soft);
+}
+
+:global(.dark) .page {
+  --marketing-background: var(--bbf-inkt);
+  --marketing-foreground: var(--bbf-wit);
+  --marketing-text: var(--bbf-op-donker);
+  --marketing-muted: var(--bbf-op-donker);
+  --marketing-card: var(--surface-secondary);
+  --marketing-border: var(--field-border);
+  --marketing-link: var(--bbf-lime);
+}

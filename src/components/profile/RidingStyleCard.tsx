@@ -12,11 +12,12 @@ import {
 } from "@/components/ui";
 import {
   ReadOnlyScaleSlider,
-  ScaleSliderQuestion,
 } from "@/components/shared/ScaleSlider";
+import { ProfileChoiceQuestion as ScaleSliderQuestion } from "@/components/account/ProfileChoiceQuestion";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
-export { ReadOnlyScaleSlider as ReadOnlySlider, ScaleSliderQuestion as SliderQuestion };
+export { ReadOnlyScaleSlider as ReadOnlySlider };
+export { ProfileAssessmentSlider as SliderQuestion } from "@/components/account/ProfileChoiceQuestion";
 
 type ExperienceLevel = "beginner" | "intermediate" | "advanced";
 type WeeklyHours = "0-3" | "3-6" | "6-10" | "10-15" | "15+";
@@ -131,12 +132,12 @@ export function RidingStyleCard({
     }));
     const positionOptions = POSITION_KEYS.map((k) => ({
       key: k,
-      label: k.charAt(0).toUpperCase() + k.slice(1),
+      label: messages.fit.goals[k].label,
     }));
 
     return (
       <div className="space-y-5">
-        <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
+        <p className="text-sm leading-6 text-[color:var(--color-muted-foreground)]">
           {t.description}
         </p>
         <ReadOnlyScaleSlider
@@ -181,7 +182,7 @@ export function RidingStyleCard({
 
     const positionOptions = POSITION_KEYS.map((k) => ({
       key: k,
-      label: k.charAt(0).toUpperCase() + k.slice(1),
+      label: messages.fit.goals[k].label,
     }));
 
     return (
@@ -233,10 +234,10 @@ export function RidingStyleCard({
 
   return (
     <Card variant="bordered" className="dashboard-card-surface">
-      <CardHeader className="border-b border-[color:var(--border)]">
+      <CardHeader className="border-b border-[color:var(--color-border)]">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Bike className="h-5 w-5 text-[color:var(--primary)]" />
+            <Bike className="h-5 w-5 text-[color:var(--color-primary)]" />
             <CardTitle>{t.title}</CardTitle>
           </div>
           {!editing ? (

@@ -3,7 +3,10 @@
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import GuidePage, { generateMetadata } from "./page";
+import GuidePage, { generateMetadata, generateStaticParams } from "./page";
+import { getGuidePageData, listPublishedGuideRecords } from "@/lib/guides/content";
+import { buildArticleSchema, buildBreadcrumbListSchema, buildFaqPageSchema } from "@/lib/seo/jsonLd";
+import { getGuideLeafEntries } from "@/lib/guides/backlog";
 
 let locale: "en" | "nl" = "en";
 let isPreview = false;
@@ -57,6 +60,7 @@ vi.mock("@/components/prototyper-ui/ui/button", () => ({
   Button: ({
     children,
     render,
+    nativeButton: _nativeButton,
     ...props
   }: {
     children?: React.ReactNode;
@@ -155,9 +159,9 @@ vi.mock("@/i18n/metadata", () => ({
 }));
 
 vi.mock("@/lib/seo/jsonLd", () => ({
-  buildArticleSchema: () => ({}),
-  buildBreadcrumbListSchema: () => ({}),
-  buildFaqPageSchema: () => ({}),
+  buildArticleSchema: vi.fn(() => ({})),
+  buildBreadcrumbListSchema: vi.fn(() => ({})),
+  buildFaqPageSchema: vi.fn(() => ({})),
 }));
 
 vi.mock("../data", () => ({
@@ -195,9 +199,9 @@ vi.mock("@/lib/guides/content", () => ({
       : undefined,
   getGuideLinkLabel: (href: string, activeLocale: string) =>
     `${activeLocale}:${href.replace(/^\/(en|nl)/, "")}`,
-  getGuidePageData: (slug: string, activeLocale: string) =>
-    Promise.resolve(makeGuidePageData(slug, activeLocale as "en" | "nl")),
-  listPublishedGuideRecords: () => Promise.resolve([]),
+  getGuidePageData: vi.fn((slug: string, activeLocale: string) =>
+    Promise.resolve(makeGuidePageData(slug, activeLocale as "en" | "nl"))),
+  listPublishedGuideRecords: vi.fn(() => Promise.resolve([])),
   relatedLinkDescription: (activeLocale: string) =>
     activeLocale === "nl"
       ? "Open de volgende relevante pagina."
@@ -496,6 +500,7 @@ Ja, vooral wanneer belasting en positie samenkomen.
 }
 
 beforeEach(() => {
+  vi.clearAllMocks();
   locale = "en";
   isPreview = false;
   isAuthenticated = false;
@@ -507,6 +512,90 @@ afterEach(() => {
 });
 
 describe("guide page template redesign", () => {
+  it.each(["en", "nl"] as const)("keeps CMS hub content, child destinations and working sidebar anchors in %s", async (activeLocale) => {
+    locale = activeLocale;
+    const { container } = render(await GuidePage({ params: Promise.resolve({ slug: "ride-types" }) }));
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect(screen.getByText(activeLocale === "nl" ? "Hub markdown nl" : "Hub markdown")).toBeTruthy();
+    expect(screen.getByText("Hub key takeaway")).toBeTruthy();
+    expect(screen.getByRole("link", { name: /^(Open gids|Open guide)$/ }).getAttribute("href")).toBe(`/${activeLocale}/guides/endurance-bike-fit-guide`);
+    const navigation = screen.getByRole("navigation", { name: activeLocale === "nl" ? "In deze gids" : "In this guide" });
+    for (const link of navigation.querySelectorAll("a")) {
+      expect(container.querySelector(link.getAttribute("href")!)).toBeTruthy();
+    }
+    expect(navigation.querySelector('a[href="#guide-faq"]')).toBeNull();
+  });
+
+  it("passes draft IDs only in preview and preserves the exit URL and authenticated CTA", async () => {
+    const props = { params: Promise.resolve({ slug: "fallback-guide" }), searchParams: Promise.resolve({ draftId: ["draft-123", "ignored"] }) };
+    await GuidePage(props);
+    expect(getGuidePageData).toHaveBeenLastCalledWith("fallback-guide", "en", undefined);
+    isPreview = true;
+    isAuthenticated = true;
+    render(await GuidePage(props));
+    expect(getGuidePageData).toHaveBeenLastCalledWith("fallback-guide", "en", "draft-123");
+    expect(screen.getByRole("link", { name: "Exit preview" }).getAttribute("href")).toBe("/api/preview-exit?slug=fallback-guide&locale=en");
+    expect(document.querySelector('[data-section="guide_closing_cta"]')?.getAttribute("href")).toBe("/en/dashboard");
+    expect(document.querySelector('[data-section="guide_closing_all_guides"]')?.getAttribute("href")).toBe("/en/guides");
+  });
+
+  it.each([
+    ["hub CMS", "ride-types", true],
+    ["hub fallback", "ride-types", false],
+    ["article CMS", "bike-fitting-for-knee-pain", true],
+    ["article fallback", "fallback-guide", false],
+  ] as const)("renders every sidebar target and existing FAQ content for %s", async (_label, slug, usesCms) => {
+    const data = makeGuidePageData(slug, "en");
+    data.faqs = [{ q: "Existing fallback question?", a: "Existing fallback answer." }];
+    if (usesCms && data.dbGuide) {
+      data.dbGuide.libraryBody.en = "Existing CMS body.\n\n## FAQ\n\n### Existing CMS question?\n\nExisting CMS answer.";
+    } else {
+      data.dbGuide = null;
+    }
+    vi.mocked(getGuidePageData).mockResolvedValueOnce(data as Awaited<ReturnType<typeof getGuidePageData>>);
+    const { container } = render(await GuidePage({ params: Promise.resolve({ slug }) }));
+    const navigation = screen.getByRole("navigation", { name: "In this guide" });
+    expect(navigation.querySelector('a[href="#guide-faq"]')).toBeTruthy();
+    for (const link of navigation.querySelectorAll("a")) {
+      expect(container.querySelector(link.getAttribute("href")!)).toBeTruthy();
+    }
+    const question = usesCms ? "Existing CMS question?" : "Existing fallback question?";
+    const answer = usesCms ? "Existing CMS answer." : "Existing fallback answer.";
+    fireEvent.click(screen.getByRole("button", { name: question }));
+    expect(screen.getByText(answer)).toBeTruthy();
+  });
+
+  it("preserves schema inputs, localized canonicals, social images and FAQ data", async () => {
+    locale = "nl";
+    const props = { params: Promise.resolve({ slug: "bike-fitting-for-knee-pain" }) };
+    const metadata = await generateMetadata(props);
+    expect(metadata.alternates?.canonical).toBe("https://bestbikefit4u.eu/nl/guides/bike-fitting-for-knee-pain");
+    expect(metadata.openGraph).toMatchObject({
+      type: "article",
+      url: metadata.alternates?.canonical,
+      images: [{ url: "https://bestbikefit4u.eu/guides/media/003--guides--bike-fitting-for-knee-pain-hero.png", alt: "Kniepijn hero" }],
+    });
+    render(await GuidePage(props));
+    expect(buildArticleSchema).toHaveBeenCalledWith(expect.objectContaining({ inLanguage: "nl", description: "Kniepijn desc", url: metadata.alternates?.canonical }));
+    expect(buildFaqPageSchema).toHaveBeenCalledWith([{ q: "Kan bike fit kniepijn veroorzaken?", a: "Ja, vooral wanneer belasting en positie samenkomen.\n\n[Start Free Fit](/nl/login)" }]);
+    expect(buildBreadcrumbListSchema).toHaveBeenCalledWith([
+      { name: "Home", item: "https://bestbikefit4u.eu/nl" },
+      { name: "Gidsen", item: "https://bestbikefit4u.eu/nl/guides" },
+      { name: "Bike Fit voor kniepijn: oorzaken en eerste aanpassingen", item: metadata.alternates?.canonical },
+    ]);
+  });
+
+  it("preserves static fallback routes and merges published CMS slugs without duplicates", async () => {
+    const fallback = getGuideLeafEntries("en");
+    vi.mocked(listPublishedGuideRecords).mockResolvedValueOnce([
+      { slug: fallback[0].slug }, { slug: "cms-only-guide" },
+    ] as Awaited<ReturnType<typeof listPublishedGuideRecords>>);
+    const params = await generateStaticParams();
+    expect(params).toContainEqual({ slug: "cms-only-guide" });
+    expect(params.filter((item) => item.slug === fallback[0].slug)).toHaveLength(1);
+    expect(params).toHaveLength(fallback.length + 1);
+  });
+
   it("adds keywords metadata from the fallback guide seo source without changing description precedence", async () => {
     const metadata = await generateMetadata({
       params: Promise.resolve({ slug: "bike-fitting-for-knee-pain" }),

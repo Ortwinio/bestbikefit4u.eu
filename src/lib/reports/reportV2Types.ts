@@ -50,6 +50,7 @@ export type ReportRiderSection = {
   flexibilityLabel: string | null;
   coreStabilityScore: number | null;
   comfortScore: number | null;
+  painAreas?: string[];
 };
 
 export type ReportBikeSection = {
@@ -57,6 +58,7 @@ export type ReportBikeSection = {
   bikeType: string;
   brand: string | null;
   model: string | null;
+  currentFrameSize?: string | null;
   ridingStyle: string | null;
   goal: string | null;
   description: string | null;

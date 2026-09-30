@@ -12,17 +12,15 @@ const sizeClassName = {
   lg: "h-14 w-14 rounded-[var(--radius-xl)] [&_svg]:h-6 [&_svg]:w-6",
 };
 
-export function PublicIconBadge({
-  children,
-  className,
-  size = "md",
-}: PublicIconBadgeProps) {
+export function PublicIconBadge({ children, className, size = "md" }: PublicIconBadgeProps) {
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_80%,var(--background)_20%)] text-[color:var(--primary)] shadow-sm",
+        "flex shrink-0 items-center justify-center border border-border " +
+          "bg-[color:color-mix(in_oklch,var(--secondary)_80%,var(--background)_20%)] " +
+          "text-[color:var(--primary)] shadow-sm",
         sizeClassName[size],
-        className
+        className,
       )}
     >
       {children}

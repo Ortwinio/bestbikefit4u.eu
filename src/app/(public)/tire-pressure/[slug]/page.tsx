@@ -1,29 +1,14 @@
+import { PressureLanding } from "./PressureLanding";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
-import { JsonLd } from "@/components/seo/JsonLd";
-import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
-import { PublicBreadcrumbs } from "@/components/public";
-import { Button } from "@/components/prototyper-ui/ui/button";
-import { calculateBasicPressure } from "@/lib/pressure-engine";
 import {
   BIKE_TYPE_LABELS,
   EN_BIKE_TYPES,
   WEIGHT_STEPS,
   buildPressureAlternates,
   buildEnglishPressureSlug,
-  buildPressureInput,
   parseEnglishPressureSlug,
 } from "@/lib/seo/programmatic/tirePressure";
-import {
-  buildBreadcrumbListSchema,
-  buildFaqPageSchema,
-  buildWebApplicationSchema,
-} from "@/lib/seo/jsonLd";
-import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
-import { getRelatedLinks } from "@/lib/seo/relatedLinks";
-import { BRAND } from "@/config/brand";
-import { withLocalePrefix } from "@/i18n/navigation";
 
 interface ProgrammaticPressurePageProps {
   params: Promise<{ slug: string }>;
@@ -33,13 +18,11 @@ export function generateStaticParams() {
   return WEIGHT_STEPS.flatMap((weight) =>
     EN_BIKE_TYPES.map((bikeType) => ({
       slug: buildEnglishPressureSlug(weight, bikeType),
-    }))
+    })),
   );
 }
 
-export async function generateMetadata({
-  params,
-}: ProgrammaticPressurePageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: ProgrammaticPressurePageProps): Promise<Metadata> {
   const { slug } = await params;
   const parsed = parseEnglishPressureSlug(slug);
 
@@ -51,7 +34,9 @@ export async function generateMetadata({
 
   return {
     title: `Tire Pressure for ${parsed.weight}kg ${label.en} Rider | BestBikeFit4U`,
-    description: `Recommended front and rear tire pressure for a ${parsed.weight} kg ${label.en} rider, with bar and PSI values plus a quick tube-type comparison.`,
+    description:
+      `Recommended front and rear tire pressure for a ${parsed.weight} kg ${label.en} rider, ` +
+      "with bar and PSI values plus a quick tube-type comparison.",
     keywords: [
       `tire pressure ${parsed.weight}kg ${label.en}`,
       `${label.en} tire pressure ${parsed.weight}kg`,
@@ -60,176 +45,18 @@ export async function generateMetadata({
     alternates: buildPressureAlternates(parsed.weight, parsed.bikeType, "en"),
     openGraph: {
       title: `Tire Pressure for ${parsed.weight}kg ${label.en} Rider | BestBikeFit4U`,
-      description: `Recommended front and rear tire pressure for a ${parsed.weight} kg ${label.en} rider, with bar and PSI values plus a quick tube-type comparison.`,
+      description:
+        `Recommended front and rear tire pressure for a ${parsed.weight} kg ${label.en} rider, ` +
+        "with bar and PSI values plus a quick tube-type comparison.",
       type: "website",
       url: buildPressureAlternates(parsed.weight, parsed.bikeType, "en").canonical,
     },
   };
 }
 
-export default async function ProgrammaticTirePressurePage({
-  params,
-}: ProgrammaticPressurePageProps) {
+export default async function ProgrammaticTirePressurePage({ params }: ProgrammaticPressurePageProps) {
   const { slug } = await params;
   const parsed = parseEnglishPressureSlug(slug);
-
-  if (!parsed) {
-    notFound();
-  }
-
-  const { weight, bikeType } = parsed;
-  const label = BIKE_TYPE_LABELS[bikeType];
-  const tubeless = calculateBasicPressure(buildPressureInput(weight, bikeType, "tubeless"));
-  const innerTube = calculateBasicPressure(buildPressureInput(weight, bikeType, "inner_tube"));
-  const pagePath = withLocalePrefix(`/tire-pressure/${slug}`, "en");
-  const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
-  const faqs = [
-    {
-      q: `Is ${tubeless.frontBar}/${tubeless.rearBar} bar a fixed pressure for every ${weight}kg rider?`,
-      a: "No. It is a strong starting point based on rider weight, default tire width, surface, and bike type. Your exact setup can still change the final number.",
-    },
-    {
-      q: "Why compare tubeless with inner tubes?",
-      a: "Tube type changes the safe and comfortable pressure range. Tubeless setups usually support slightly lower pressures for the same rider and tire width.",
-    },
-  ];
-
-  return (
-    <div className="py-16">
-      <JsonLd
-        schema={[
-          buildBreadcrumbListSchema([
-            { name: "Home", item: new URL(withLocalePrefix("/", "en"), BRAND.siteUrl).toString() },
-            {
-              name: "Tire Pressure Calculator",
-              item: new URL(withLocalePrefix("/tire-pressure-calculator", "en"), BRAND.siteUrl).toString(),
-            },
-            { name: `Tire Pressure for ${weight}kg ${label.en} Rider`, item: pageUrl },
-          ]),
-          buildFaqPageSchema(faqs),
-          buildWebApplicationSchema({
-            name: `Tire Pressure for ${weight}kg ${label.en} Rider`,
-            description: `Static tire-pressure recommendation page for a ${weight} kg ${label.en} rider.`,
-            url: pageUrl,
-          }),
-        ]}
-      />
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <PublicBreadcrumbs
-          items={[
-            { label: "Home", href: withLocalePrefix("/", "en") },
-            { label: "Tire Pressure Calculator", href: withLocalePrefix("/tire-pressure-calculator", "en") },
-            { label: `Tire Pressure for ${weight}kg ${label.en} Rider` },
-          ]}
-        />
-        <section className="rounded-[28px] border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--primary)_12%)] p-8 shadow-sm sm:p-10">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
-              BestBikeFit4U pressure guide
-            </p>
-            <h1 className="mt-4 text-4xl font-bold text-[color:var(--foreground)] sm:text-5xl">
-              Tire Pressure for {weight}kg {label.en} Rider
-            </h1>
-            <p className="mt-4 max-w-3xl text-lg text-[color:var(--muted-foreground)]">
-              This landing page gives a static starting recommendation for a {weight} kg rider on a{" "}
-              {label.en} with common tire widths. Use it as a quick reference, then move to the full
-              calculator for your exact setup.
-            </p>
-          </div>
-        </section>
-
-        <section className="mt-10 grid gap-6 md:grid-cols-2">
-          <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface-secondary)] p-6 shadow-sm">
-            <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Tubeless recommendation</h2>
-            <p className="mt-4 text-[color:var(--foreground)]">Front: {tubeless.frontBar} bar / {tubeless.frontPsi} PSI</p>
-            <p className="mt-1 text-[color:var(--foreground)]">Rear: {tubeless.rearBar} bar / {tubeless.rearPsi} PSI</p>
-            <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">{tubeless.explanation}</p>
-          </div>
-          <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
-            <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Inner-tube comparison</h2>
-            <p className="mt-4 text-[color:var(--foreground)]">Front: {innerTube.frontBar} bar / {innerTube.frontPsi} PSI</p>
-            <p className="mt-1 text-[color:var(--foreground)]">Rear: {innerTube.rearBar} bar / {innerTube.rearPsi} PSI</p>
-            <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">
-              Inner tubes typically require slightly higher pressure to reduce pinch-flat risk.
-            </p>
-          </div>
-        </section>
-
-        <section className="mt-10 rounded-3xl border border-[color:var(--border)] bg-[color:var(--secondary)] p-6 shadow-sm sm:p-8">
-          <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">How to use this baseline</h2>
-          <div className="mt-4 grid gap-3 md:grid-cols-3">
-            {[
-              "Use it as a starting point, not as a fixed race-day pressure.",
-              "Exact tire width, surface, and casing construction can still move the recommendation.",
-              "Switch to the full calculator when you want setup-specific numbers.",
-            ].map((item) => (
-              <div
-                key={item}
-                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-4 text-sm text-[color:var(--muted-foreground)]"
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-10 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6">
-          <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">FAQ</h2>
-          <div className="mt-4 space-y-4">
-            {faqs.map((faq) => (
-              <div key={faq.q}>
-                <h3 className="font-semibold text-[color:var(--foreground)]">{faq.q}</h3>
-                <p className="mt-1 text-[color:var(--muted-foreground)]">{faq.a}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-8 rounded-3xl border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--card)_88%,var(--secondary)_12%)] p-6 shadow-sm sm:p-8">
-          <h2 className="text-2xl font-semibold text-[color:var(--foreground)]">Next step</h2>
-          <p className="mt-3 max-w-2xl text-[color:var(--muted-foreground)]">
-            If you want a recommendation tied to your exact tire width, terrain, and tube type, use the full calculator next.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix(
-                    getLocalizedPublicCalculatorPath("tire-pressure", "en"),
-                    "en"
-                  )}
-                  locale="en"
-                  pagePath={pagePath}
-                  section="programmatic_pressure_primary_cta"
-                  ctaLabel="Open Tire Pressure Calculator"
-                />
-              }
-            >
-              Open Tire Pressure Calculator
-            </Button>
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix(label.guideHref, "en")}
-                  locale="en"
-                  pagePath={pagePath}
-                  section="programmatic_pressure_secondary_cta"
-                  ctaLabel={`Read ${label.en[0].toUpperCase() + label.en.slice(1)} Fit Guide`}
-                />
-              }
-              variant="outline"
-            >
-              Read {label.en[0].toUpperCase() + label.en.slice(1)} Fit Guide
-            </Button>
-          </div>
-        </section>
-
-        <RelatedLinksSection
-          title="Related tools and guides"
-          links={getRelatedLinks("tire-pressure", "en")}
-          locale="en"
-        />
-      </div>
-    </div>
-  );
+  if (!parsed) notFound();
+  return <PressureLanding locale="en" slug={slug} weight={parsed.weight} bikeType={parsed.bikeType} />;
 }

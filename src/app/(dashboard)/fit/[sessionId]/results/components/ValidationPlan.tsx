@@ -16,22 +16,22 @@ export function ValidationPlan({ copy }: ValidationPlanProps) {
       tone="muted"
     >
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[720px] text-left text-sm">
-          <thead>
-            <tr className="border-b border-[color:var(--border)]">
+        <table className="block w-full text-left text-sm lg:table">
+          <thead className="hidden lg:table-header-group">
+            <tr className="border-b border-border">
               <th className="pb-3 pr-4 font-medium">{copy.validationPlan.dayBlock}</th>
               <th className="pb-3 pr-4 font-medium">{copy.validationPlan.change}</th>
               <th className="pb-3 pr-4 font-medium">{copy.validationPlan.rideDuration}</th>
               <th className="pb-3 font-medium">{copy.validationPlan.whatToScore}</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="block lg:table-row-group">
             {copy.validationPlan.rows.map((row) => (
-              <tr key={row.dayBlock} className="border-b border-[color:var(--border)]/70 align-top">
-                <td className="py-4 pr-4 font-medium">{row.dayBlock}</td>
-                <td className="py-4 pr-4 text-[color:var(--muted-foreground)]">{row.change}</td>
-                <td className="py-4 pr-4">{row.rideDuration}</td>
-                <td className="py-4 text-[color:var(--muted-foreground)]">{row.whatToScore}</td>
+              <tr key={row.dayBlock} className="grid gap-2 border-b border-border py-4 lg:table-row">
+                <td className="lg:py-4 lg:pr-4 font-medium">{row.dayBlock}</td>
+                <td className="lg:py-4 lg:pr-4 text-muted-foreground"><span className="block font-semibold lg:hidden">{copy.validationPlan.change}</span>{row.change}</td>
+                <td className="lg:py-4 lg:pr-4"><span className="block font-semibold lg:hidden">{copy.validationPlan.rideDuration}</span>{row.rideDuration}</td>
+                <td className="lg:py-4 text-muted-foreground"><span className="block font-semibold lg:hidden">{copy.validationPlan.whatToScore}</span>{row.whatToScore}</td>
               </tr>
             ))}
           </tbody>

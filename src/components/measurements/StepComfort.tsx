@@ -91,7 +91,7 @@ export function StepComfort() {
               />
             )}
           />
-          {errors.painAreas && <p role="alert" className="text-sm text-destructive">{painCopy.selectPrompt}</p>}
+          {errors.painAreas && <p role="alert" className="text-sm text-destructive-text">{painCopy.selectPrompt}</p>}
         </section>
       )}
 

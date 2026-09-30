@@ -26,7 +26,7 @@ export function LoadingState({ label = "Loading...", className }: LoadingStatePr
   return (
     <div className={cn("flex items-center justify-center py-12", className)}>
       <div className="w-full max-w-xs space-y-3">
-        <div className="flex items-center justify-center gap-2 text-sm text-[color:var(--muted-foreground)]">
+        <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
           <span>{label}</span>
         </div>
@@ -36,48 +36,28 @@ export function LoadingState({ label = "Loading...", className }: LoadingStatePr
   );
 }
 
-export function EmptyState({
-  title,
-  description,
-  action,
-  className,
-}: EmptyStateProps) {
+export function EmptyState({ title, description, action, className }: EmptyStateProps) {
   return (
-    <div
-      className={cn(
-        "rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-8 text-center shadow-sm",
-        className
-      )}
-    >
-      <Inbox className="mx-auto h-8 w-8 text-[color:var(--muted-foreground)] opacity-60" />
-      <h2 className="mt-3 text-lg font-semibold text-[color:var(--foreground)]">{title}</h2>
-      {description ? (
-        <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">{description}</p>
-      ) : null}
+    <div className={cn("rounded-[var(--radius-lg)] border border-border bg-card p-8 text-center shadow-sm", className)}>
+      <Inbox className="mx-auto h-8 w-8 text-muted-foreground opacity-60" />
+      <h2 className="mt-3 text-lg font-semibold text-foreground">{title}</h2>
+      {description ? <p className="mt-2 text-sm text-muted-foreground">{description}</p> : null}
       {action ? <div className="mt-4">{action}</div> : null}
     </div>
   );
 }
 
-export function ErrorState({
-  title = "Something went wrong",
-  description,
-  action,
-  className,
-}: ErrorStateProps) {
+export function ErrorState({ title = "Something went wrong", description, action, className }: ErrorStateProps) {
   return (
     <div
-      className={cn(
-        "rounded-[var(--radius-lg)] border border-[color:var(--danger)]/30 bg-[color:var(--danger)]/8 p-4",
-        className
-      )}
+      className={cn("rounded-[var(--radius-lg)] border border-destructive/30 bg-destructive/8 p-4", className)}
       role="alert"
     >
       <div className="flex items-start gap-2">
-        <AlertCircle className="mt-0.5 h-4 w-4 text-[color:var(--danger)]" />
+        <AlertCircle className="mt-0.5 h-4 w-4 text-destructive-text" />
         <div>
-          <p className="text-sm font-medium text-[color:var(--danger)]">{title}</p>
-          {description ? <p className="mt-1 text-sm text-[color:var(--danger)]">{description}</p> : null}
+          <p className="text-sm font-medium text-destructive-text">{title}</p>
+          {description ? <p className="mt-1 text-sm text-destructive-text">{description}</p> : null}
           {action ? <div className="mt-3">{action}</div> : null}
         </div>
       </div>

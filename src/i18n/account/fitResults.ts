@@ -1,0 +1,56 @@
+import type { Locale } from "@/i18n/config";
+
+const fitResults = {
+  nl: {
+    eyebrow: "Je persoonlijke fietsafstelling",
+    title: "Van meten naar fijner fietsen.",
+    positionTitle: "Je positie op de fiets",
+    positionDescription: "Schematische fiets met je geadviseerde zadelhoogte en stuurpositie",
+    drawingNote: "Petrol: je doel. De tekening is schematisch.",
+    drawingWithCurrent: "Petrol: je doel. Gestreept: je huidige zadelhoogte. De tekening is schematisch.",
+    prioritiesTitle: "Begin met deze maten",
+    prioritiesDescription: "Pas niet alles tegelijk aan. Test wat verandert.",
+    comparisonTitle: "Nu naast je doel",
+    comparisonDescription: "Ontbreekt een huidige maat? Dan tonen we geen verschil. Je afstelling bewerk je bij je fiets.",
+    current: "Nu",
+    target: "Doel",
+    difference: "Verschil",
+    unknown: "Niet bekend",
+    noDifference: "Niet berekend",
+    reportTitle: "Neem je rapport mee naar je fiets.",
+    reportBody: "Je afstelling, volgorde van aanpassen en testplan bij elkaar.",
+    detailsTitle: "Bekijk de onderbouwing en alle afstelwaarden",
+    profileChoice: "Kies je positie",
+    readyTargets: "Beschikbare afstelwaarden",
+    priorities: "Afstelpunten",
+    unavailable: "Niet beschikbaar",
+  },
+  en: {
+    eyebrow: "Your personal bike setup",
+    title: "From measurements to better rides.",
+    positionTitle: "Your position on the bike",
+    positionDescription: "Schematic bicycle showing your recommended saddle height and handlebar position",
+    drawingNote: "Petrol: your target. The drawing is schematic.",
+    drawingWithCurrent: "Petrol: your target. Dashed: your current saddle height. The drawing is schematic.",
+    prioritiesTitle: "Start with these measurements",
+    prioritiesDescription: "Change one thing at a time. Test how it feels.",
+    comparisonTitle: "Your current setup and target",
+    comparisonDescription: "If a current measurement is missing, no difference is shown. Edit your setup on your bike page.",
+    current: "Current",
+    target: "Target",
+    difference: "Difference",
+    unknown: "Not known",
+    noDifference: "Not calculated",
+    reportTitle: "Take your report to your bike.",
+    reportBody: "Your setup, adjustment order and test plan together.",
+    detailsTitle: "View the reasoning and all setup values",
+    profileChoice: "Choose your position",
+    readyTargets: "Available targets",
+    priorities: "Setup priorities",
+    unavailable: "Not available",
+  },
+} satisfies Record<Locale, Record<string, string>>;
+
+export function getFitResultsCopy(locale: Locale) {
+  return fitResults[locale];
+}

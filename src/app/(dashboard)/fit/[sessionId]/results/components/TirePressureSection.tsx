@@ -59,7 +59,7 @@ export function TirePressureSection({
                 {tirePressure.inputs.map((input) => (
                   <span
                     key={input.label}
-                    className="rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-1 text-xs text-[color:var(--muted-foreground)]"
+                    className="rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground"
                   >
                     {copy.tirePressure.inputLabels[
                       input.label as keyof typeof copy.tirePressure.inputLabels
@@ -77,7 +77,7 @@ export function TirePressureSection({
                   {tirePressure.warnings.map((warning) => (
                     <div
                       key={warning}
-                      className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] px-4 py-3 text-sm text-[color:var(--warning-foreground)]"
+                      className="rounded-[var(--radius-md)] border border-border bg-primary-soft px-4 py-3 text-sm text-foreground"
                     >
                       {warningMessages[warning] ?? warning}
                     </div>
@@ -90,7 +90,7 @@ export function TirePressureSection({
           </>
         ) : (
           <>
-            <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] px-4 py-3 text-sm text-[color:var(--warning-foreground)]">
+            <div className="rounded-[var(--radius-md)] border border-border bg-primary-soft px-4 py-3 text-sm text-foreground">
               <p className="font-semibold">{copy.tirePressure.pendingTitle}</p>
               <p className="mt-1">{copy.tirePressure.pendingDescription}</p>
             </div>
@@ -98,7 +98,7 @@ export function TirePressureSection({
               {tirePressure.required.map((item) => (
                 <span
                   key={item}
-                  className="rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-1 text-xs text-[color:var(--muted-foreground)]"
+                  className="rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground"
                 >
                   {copy.tirePressure.missingDataLabels[
                     item as keyof typeof copy.tirePressure.missingDataLabels
@@ -108,13 +108,13 @@ export function TirePressureSection({
             </div>
             <div>
               <p className="text-sm font-semibold">{copy.tirePressure.quickStartTitle}</p>
-              <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {copy.tirePressure.quickStartNote}
               </p>
               <div className="mt-3 overflow-x-auto">
-                <table className="w-full min-w-[420px] text-left text-sm">
+                <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b border-[color:var(--border)]">
+                    <tr className="border-b border-border">
                       <th className="pb-2 pr-4 font-medium">
                         {copy.tirePressure.quickStartColumns.weight}
                       </th>
@@ -128,7 +128,7 @@ export function TirePressureSection({
                   </thead>
                   <tbody>
                     {tirePressure.quickStartTable.map((row) => (
-                      <tr key={`${row.weightLabel}-${row.tireSizeLabel}`} className="border-b border-[color:var(--border)]/70">
+                      <tr key={`${row.weightLabel}-${row.tireSizeLabel}`} className="border-b border-border/70">
                         <td className="py-3 pr-4">{row.weightLabel}</td>
                         <td className="py-3 pr-4">{row.tireSizeLabel}</td>
                         <td className="py-3">{row.psiLabel}</td>

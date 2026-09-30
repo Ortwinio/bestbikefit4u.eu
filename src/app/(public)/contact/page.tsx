@@ -1,20 +1,14 @@
 import type { Metadata } from "next";
-import { Languages, Mail, MessageSquare, ShieldCheck } from "lucide-react";
+import { Languages, Mail } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
-import {
-  PublicCtaBand,
-  PublicFeatureCard,
-  PublicHero,
-  PublicPageShell,
-  PublicSection,
-  PublicSurfaceCard,
-} from "@/components/public";
 import { getSupportResponseItems } from "@/config/commercial";
 import type { Locale } from "@/i18n/config";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
+import { contactPresentation } from "@/i18n/marketing/contact";
+import styles from "./contact.module.css";
 
 type ContactCopy = {
   metadata: {
@@ -43,7 +37,7 @@ function getContent(locale: Locale): ContactCopy {
       metadata: {
         title: "Contact Us - BestBikeFit4U",
         description:
-          "Get in touch with the BestBikeFit4U team. We are here to help with your bike fitting questions and support needs.",
+    "Get in touch with the BestBikeFit4U team. We are here to help with your bike fitting questions and support needs.",
         keywords: ["contact BestBikeFit4U", "bike fit support", "cycling help"],
       },
       title: "Contact Us",
@@ -57,7 +51,8 @@ function getContent(locale: Locale): ContactCopy {
       responseItems: getSupportResponseItems(locale),
       directContactTitle: "Send us an email directly",
       directContactBody:
-        "For now, the fastest support route is direct email. Include your bike type, goal, and where you are stuck so we can help quickly.",
+        "For now, the fastest support route is direct email. " +
+        "Include your bike type, goal, and where you are stuck so we can help quickly.",
       directContactCta: "Open email app",
       directContactHint: "Address: support@bestbikefit4u.eu",
     };
@@ -81,7 +76,8 @@ function getContent(locale: Locale): ContactCopy {
     responseItems: getSupportResponseItems(locale),
     directContactTitle: "Mail ons direct",
     directContactBody:
-      "Op dit moment helpen we je het snelst via directe e-mail. Vermeld je fietstype, doel en waar je vastloopt voor sneller antwoord.",
+      "Op dit moment helpen we je het snelst via directe e-mail. " +
+      "Vermeld je fietstype, doel en waar je vastloopt voor sneller antwoord.",
     directContactCta: "Open e-mailapp",
     directContactHint: "Adres: support@bestbikefit4u.eu",
   };
@@ -110,154 +106,98 @@ export default async function ContactPage() {
   const locale = await getRequestLocale();
   const page = getContent(locale);
   const pagePath = withLocalePrefix("/contact", locale);
-  const trustPoints =
-    locale === "nl"
-      ? [
-          {
-            title: "Directe supportroute",
-            description:
-              "Je ziet meteen welke contactroute het snelst werkt, zonder verborgen formulierstappen.",
-            icon: <Mail className="h-5 w-5" />,
-          },
-          {
-            title: "Duidelijke verwachtingen",
-            description:
-              "We tonen responstijden en vragen om de informatie die nodig is om sneller en nauwkeuriger te helpen.",
-            icon: <ShieldCheck className="h-5 w-5" />,
-          },
-          {
-            title: "NL en EN beschikbaar",
-            description:
-              "Contact, FAQ en vervolgstappen blijven bruikbaar in zowel Nederlands als Engels.",
-            icon: <Languages className="h-5 w-5" />,
-          },
-        ]
-      : [
-          {
-            title: "Direct support route",
-            description:
-              "You immediately see the fastest contact path, without hidden form steps.",
-            icon: <Mail className="h-5 w-5" />,
-          },
-          {
-            title: "Clear expectations",
-            description:
-              "We show response times and ask for the context that helps us respond faster and more accurately.",
-            icon: <ShieldCheck className="h-5 w-5" />,
-          },
-          {
-            title: "Available in Dutch and English",
-            description:
-              "Contact, FAQ, and next steps stay usable in both Dutch and English.",
-            icon: <Languages className="h-5 w-5" />,
-          },
-        ];
+  const presentation = contactPresentation[locale];
 
   return (
-    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_32%,var(--background)_68%)_100%)] text-foreground">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <PublicHero
-          eyebrow={locale === "nl" ? "We helpen je verder" : "We can help"}
-          title={page.title}
-          description={page.subtitle}
-          chips={
-            locale === "nl"
-              ? ["NL en EN beschikbaar", "Directe e-mailroute", "Heldere responstijden"]
-              : ["Available in Dutch and English", "Direct email route", "Clear response times"]
-          }
-        />
+    <div className={styles.page}>
+      <div className={styles.container}>
+        <section className={styles.hero} aria-labelledby="contact-title">
+          <div>
+            <p className={styles.eyebrow}>{page.title} · {presentation.eyebrow}</p>
+            <h1 id="contact-title">{presentation.title}<br />{presentation.titleEnd}</h1>
+            <p className={styles.intro}>{page.subtitle}</p>
+            <span className={styles.chip}>
+              <Languages size={20} aria-hidden="true" />
+              {presentation.languages}
+            </span>
+          </div>
+          <section className={styles.email} aria-labelledby="contact-email">
+            <div className={styles.icon}><Mail size={28} aria-hidden="true" /></div>
+            <p className={styles.eyebrow}>{presentation.directEyebrow}</p>
+            <h2 id="contact-email">{page.directContactTitle}</h2>
+            <p>{page.emailSupportText}</p>
+            <a href="mailto:support@bestbikefit4u.eu" className={styles.address}>
+              support@bestbikefit<span className={styles.mono}>4</span>u.eu
+            </a>
+            <Button
+              className={styles.action}
+              role="link"
+              render={
+                <TrackedCtaLink
+                  href="mailto:support@bestbikefit4u.eu"
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="contact_email_cta"
+                  ctaLabel={page.directContactCta}
+                />
+              }
+            >
+              {page.directContactCta}
+            </Button>
+          </section>
+        </section>
 
-        <PublicSection
-          className="mt-10"
-          header={{
-            eyebrow: locale === "nl" ? "Waarom dit betrouwbaar voelt" : "Why this feels trustworthy",
-            title:
-              locale === "nl"
-                ? "Contact zonder omwegen"
-                : "Contact without unnecessary friction",
-            description:
-              locale === "nl"
-                ? "De contactpagina maakt duidelijk hoe je ons bereikt, wat je kunt verwachten en hoe je sneller een bruikbaar antwoord krijgt."
-                : "The contact page makes it clear how to reach us, what to expect, and how to get a more useful answer faster.",
-          }}
-        >
-          <div className="grid gap-4 md:grid-cols-3">
-            {trustPoints.map((point) => (
-              <PublicFeatureCard
-                key={point.title}
-                icon={point.icon}
-                title={point.title}
-                description={point.description}
-              />
+        <section aria-labelledby="contact-context">
+          <p className={styles.eyebrow}>{presentation.contextEyebrow}</p>
+          <h2 id="contact-context">{presentation.contextTitle}</h2>
+          <p>{page.directContactBody}</p>
+          <ol className={styles.steps}>
+            {presentation.steps.map((step, index) => (
+              <li className={styles.card} key={step.title}>
+                <span className={styles.step} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                <h3>{step.title}</h3>
+                <p>{step.body}</p>
+              </li>
             ))}
-          </div>
-        </PublicSection>
+          </ol>
+        </section>
 
-        <div className="mt-12 grid gap-8 md:grid-cols-2">
-          <div className="space-y-6">
-            <PublicSurfaceCard
-              title={page.emailTitle}
-              description={page.emailSupportText}
-              leading={<Mail className="h-5 w-5" />}
+        <div className={styles.bottom}>
+          <section className={styles.response} aria-labelledby="contact-response">
+            <p className={styles.eyebrow}>{page.responseTimes}</p>
+            <h2 id="contact-response">{presentation.responseTitle}</h2>
+            <ul className={styles.times}>
+              {page.responseItems.map((item) => (
+                <li key={item}>
+                  {item.split(/(\d+)/).map((part, index) => (
+                    /\d/.test(part) ? <span className={styles.mono} key={index}>{part}</span> : part
+                  ))}
+                </li>
+              ))}
+            </ul>
+          </section>
+          <section className={styles.faq} aria-labelledby="contact-faq">
+            <p className={styles.eyebrow}>{presentation.faqEyebrow}</p>
+            <h2 id="contact-faq">{presentation.faqTitle}</h2>
+            <p>{page.faqText}</p>
+            <Button
+              className={styles.action}
+              role="link"
+              render={
+                <TrackedCtaLink
+                  href={withLocalePrefix("/faq", locale)}
+                  locale={locale}
+                  pagePath={pagePath}
+                  section="contact_faq_link"
+                  ctaLabel={page.faqLink}
+                />
+              }
             >
-              <a
-                href="mailto:support@bestbikefit4u.eu"
-                className="inline-block text-primary hover:text-primary-dark"
-              >
-                support@bestbikefit4u.eu
-              </a>
-            </PublicSurfaceCard>
-
-            <PublicSurfaceCard
-              title={page.faqTitle}
-              description={page.faqText}
-              leading={<MessageSquare className="h-5 w-5" />}
-            >
-              <TrackedCtaLink
-                href={withLocalePrefix("/faq", locale)}
-                locale={locale}
-                pagePath={pagePath}
-                section="contact_faq_link"
-                ctaLabel={page.faqLink}
-                className="inline-block text-primary hover:text-primary-dark"
-              >
-                {page.faqLink}
-              </TrackedCtaLink>
-            </PublicSurfaceCard>
-
-            <PublicSurfaceCard title={page.responseTimes}>
-              <ul className="space-y-1 text-sm text-muted-foreground">
-                {page.responseItems.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </PublicSurfaceCard>
-          </div>
-
-          <PublicCtaBand
-            eyebrow={locale === "nl" ? "Direct contact opnemen" : "Direct contact"}
-            title={page.directContactTitle}
-            description={page.directContactBody}
-            actions={
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href="mailto:support@bestbikefit4u.eu"
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="contact_email_cta"
-                    ctaLabel={page.directContactCta}
-                  />
-                }
-                variant="outline"
-              >
-                {page.directContactCta}
-              </Button>
-            }
-            aside={page.directContactHint}
-          />
+              {page.faqLink}
+            </Button>
+          </section>
         </div>
       </div>
-    </PublicPageShell>
+    </div>
   );
 }

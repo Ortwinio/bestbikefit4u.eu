@@ -1,93 +1,42 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
-import {
-  HOME_QUOTES_BY_LOCALE,
-  HOME_QUOTES_SECTION_COPY,
-  selectRandomHomeQuotes,
-} from "@/content/homeQuotes";
+import { formatFitQuestionnaireNumber, getFitQuestionnaireCopy } from "@/i18n/account/fitQuestionnaire";
 
 interface QuestionnaireIntroProps {
   onStart: () => void;
 }
 
 export function QuestionnaireIntro({ onStart }: QuestionnaireIntroProps) {
-  const { locale, messages } = useDashboardMessages();
-  const t = messages.questionnaire.intro;
-  const quoteCopy = HOME_QUOTES_SECTION_COPY[locale];
-
-  const [quotes] = useState(() =>
-    selectRandomHomeQuotes(HOME_QUOTES_BY_LOCALE[locale], 3)
-  );
+  const { locale } = useDashboardMessages();
+  const copy = getFitQuestionnaireCopy(locale);
 
   return (
-    <div className="space-y-6">
-      {/* Text */}
-      <div className="text-center">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-          {t.eyebrow}
-        </p>
-        <h2 className="mt-2 text-2xl font-bold text-foreground">
-          {t.title}
-        </h2>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          {t.description}
-        </p>
+    <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+      <div className="min-w-0 space-y-5">
+        <p className="text-sm font-bold uppercase tracking-widest text-primary">{copy.introEyebrow}</p>
+        <h2 className="text-foreground font-display text-3xl font-bold leading-tight sm:text-4xl">{copy.introTitle}</h2>
+        <p className="text-lg leading-relaxed text-muted-foreground">{copy.introDescription}</p>
+        <Button onClick={onStart} size="lg" className="min-h-12 max-w-full whitespace-normal">
+          {copy.introStart}<ArrowRight className="size-4" aria-hidden="true" />
+        </Button>
+        <Link href={withLocalePrefix("/fit/how-it-works", locale)} className="flex min-h-11 items-center rounded-lg font-semibold text-primary focus-visible:focus-ring">{copy.method}</Link>
       </div>
-
-      {/* Illustration */}
-      <div className="-mt-10 mb-2 relative h-80 overflow-hidden">
-        <Image
-          src="/profile-complete.png"
-          alt={t.illustrationAlt}
-          width={448}
-          height={448}
-          className="absolute left-1/2 top-1/2 h-[48rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-md"
-          priority
-        />
-      </div>
-
-      {/* Quotes */}
-      <div className="space-y-3">
-        <p className="text-sm font-semibold text-[color:var(--foreground)]">
-          {quoteCopy.title}
-        </p>
-        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1">
-          {quotes.map((quote, i) => (
-            <div
-              key={i}
-              className="min-w-[14rem] max-w-[14rem] snap-start rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--muted)]/40 p-4"
-            >
-              <p className="text-sm italic leading-relaxed text-[color:var(--foreground)]">
-                &ldquo;{quote}&rdquo;
-              </p>
-            </div>
+      <section className="min-w-0 rounded-3xl bg-[var(--bbf-lime)] p-6 text-[var(--bbf-inkt)] sm:p-8">
+        <h3 className="font-display text-2xl font-bold text-[var(--bbf-inkt)]">{copy.introStepsTitle}</h3>
+        <ol className="mt-5 divide-y divide-[var(--bbf-inkt)]/15">
+          {copy.introSteps.map((step, index) => (
+            <li key={step} className="flex items-center gap-3 py-4">
+              <span className="font-mono">{formatFitQuestionnaireNumber(index + 1, locale).padStart(2, "0")}</span>
+              <span>{step}</span>
+            </li>
           ))}
-        </div>
-      </div>
-
-      {/* CTA */}
-      <Button onClick={onStart} size="lg" className="w-full">
-        {t.start}
-        <ArrowRight className="ml-2 h-4 w-4" />
-      </Button>
-
-      {/* Algorithm link */}
-      <div className="flex justify-center">
-        <Link
-          href={withLocalePrefix("/fit/how-it-works", locale)}
-          className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
-        >
-          {t.algorithmLink}
-          <ArrowRight className="h-3.5 w-3.5 shrink-0" />
-        </Link>
-      </div>
+        </ol>
+      </section>
     </div>
   );
 }

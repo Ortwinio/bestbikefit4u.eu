@@ -11,7 +11,8 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       type={type}
       data-slot="input"
       className={cn(
-        "border-field-border bg-field-background h-9 rounded-md border px-3 py-1 text-base shadow-field md:text-sm placeholder:text-muted-foreground w-full min-w-0 outline-none",
+        "border-field-border bg-field-background h-11 min-h-11 rounded-md border px-3 py-1 text-base " +
+          "shadow-field md:text-sm placeholder:text-muted-foreground w-full min-w-0 outline-none",
         "file:h-7 file:text-sm file:font-medium file:text-foreground file:inline-flex file:border-0 file:bg-transparent",
         "hover-only:hover:border-field-border-hover",
         "focus-visible:border-field-border-focus focus-visible:focus-field-ring",

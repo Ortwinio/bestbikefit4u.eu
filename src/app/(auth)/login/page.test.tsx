@@ -1,8 +1,9 @@
 /* @vitest-environment jsdom */
 
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import LoginPage from "./page";
+import AuthLayout, { generateMetadata } from "../layout";
 
 const pushMock = vi.fn();
 const signInMock = vi.fn();
@@ -11,6 +12,15 @@ const logMarketingEventMock = vi.fn();
 let pathname = "/en/login";
 let search = new URLSearchParams("src=pricing_free_cta");
 let authState = { isAuthenticated: false, isLoading: false };
+let campaignActive = true;
+
+vi.mock("@/i18n/request", () => ({
+  getRequestLocale: async () => pathname.startsWith("/nl") ? "nl" : "en",
+}));
+
+vi.mock("@/components/providers/ThemeProvider", () => ({
+  useTheme: () => ({ resolvedTheme: "light" }),
+}));
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: pushMock }),
@@ -37,7 +47,7 @@ vi.mock("@/config/commercial", async () => {
 
   return {
     ...actual,
-    isConsumerCampaignActive: () => true,
+    isConsumerCampaignActive: () => campaignActive,
   };
 });
 
@@ -129,6 +139,7 @@ beforeEach(() => {
   pathname = "/en/login";
   search = new URLSearchParams("src=pricing_free_cta");
   authState = { isAuthenticated: false, isLoading: false };
+  campaignActive = true;
   pushMock.mockReset();
   signInMock.mockReset();
   logMarketingEventMock.mockReset();
@@ -136,6 +147,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.restoreAllMocks();
   vi.unstubAllEnvs();
 });
@@ -270,4 +282,122 @@ it("shows success only after a code establishes a session", async () => {
   fireEvent.change(code, { target: { value: "ABCDEFG" } });
   fireEvent.submit(code.closest("form")!);
   expect(await screen.findByText("Welcome to BestBikeFit4U")).toBeTruthy();
+  expect(screen.getByRole("status").textContent).toContain("Redirecting to your dashboard");
+  expect(pushMock).not.toHaveBeenCalled();
+});
+
+it("keeps the resend cooldown, retry feedback and email reset", async () => {
+  vi.useFakeTimers();
+  signInMock.mockResolvedValue({ signingIn: false });
+  render(<LoginPage />);
+  const emailInput = screen.getByLabelText("Email address");
+  fireEvent.change(emailInput, { target: { value: " Rider@example.com " } });
+  await act(async () => { fireEvent.submit(emailInput.closest("form")!); });
+  expect(signInMock).toHaveBeenLastCalledWith("resend", { email: "Rider@example.com" });
+  expect(screen.getByRole("button", { name: "Resend available in 30s" })).toHaveProperty("disabled", true);
+  for (let seconds = 0; seconds < 30; seconds += 1) {
+    await act(async () => { vi.advanceTimersByTime(1000); });
+  }
+  await act(async () => {
+    fireEvent.click(screen.getByRole("button", { name: /didn't receive the code/i }));
+  });
+  expect(signInMock).toHaveBeenCalledTimes(2);
+  expect(screen.getByRole("button", { name: "Resend available in 30s" })).toHaveProperty("disabled", true);
+  expect(logMarketingEventMock).toHaveBeenCalledWith(expect.objectContaining({
+    eventType: "login_code_resent", sourceTag: "pricing_free_cta", section: "code_form",
+  }));
+  expect(screen.getByRole("status").textContent).toContain("New code sent");
+  fireEvent.click(screen.getByRole("button", { name: "Use a different email" }));
+  expect(screen.getByLabelText("Email address")).toHaveProperty("value", "Rider@example.com");
+  expect(screen.queryByLabelText("Verification Code")).toBeNull();
+  expect(screen.queryByRole("status")).toBeNull();
+});
+
+it.each(["en", "nl"])("redirects authenticated %s sessions to the localized dashboard", (locale) => {
+  pathname = `/${locale}/login`;
+  authState = { isAuthenticated: true, isLoading: false };
+  render(<LoginPage />);
+  expect(pushMock).toHaveBeenCalledWith(`/${locale}/dashboard`);
+});
+
+it("keeps Google locale, source tracking and failure recovery", async () => {
+  vi.stubEnv("NEXT_PUBLIC_GOOGLE_AUTH_ENABLED", "true");
+  pathname = "/nl/login";
+  signInMock.mockResolvedValue({});
+  render(<LoginPage />);
+  fireEvent.click(screen.getByRole("button", { name: "Doorgaan met Google" }));
+  await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("Google-login kon niet worden gestart"));
+  expect(signInMock).toHaveBeenCalledWith("google", { redirectTo: "/nl/dashboard" });
+  expect(logMarketingEventMock).toHaveBeenCalledWith(expect.objectContaining({
+    eventType: "login_google_started", locale: "nl", sourceTag: "pricing_free_cta",
+  }));
+  expect(screen.getByRole("button", { name: "Doorgaan met Google" })).toHaveProperty("disabled", false);
+  expect(Reflect.get(window, "__bbfSuppressBeforeUnload")).toBe(false);
+});
+
+it("keeps one page heading and a localized calculator link with the campaign off", () => {
+  campaignActive = false;
+  pathname = "/nl/login";
+  render(<LoginPage />);
+  expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+  expect(screen.queryByText("Tijdelijk gratis toegang")).toBeNull();
+  expect(screen.getByRole("link", { name: "Probeer de calculator zonder account" }).getAttribute("href")).toBe("/nl/calculators/bike-fit");
+  expect(screen.queryByRole("button", { name: /google/i })).toBeNull();
+  expect(screen.queryByText("Ontwerpstaat")).toBeNull();
+  expect(screen.queryByText("Voorbeeld")).toBeNull();
+});
+
+it("shows a resend error without leaving code entry or claiming success", async () => {
+  vi.useFakeTimers();
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  signInMock.mockResolvedValueOnce({ signingIn: false }).mockRejectedValueOnce(new Error("Delivery failed"));
+  render(<LoginPage />);
+  const emailInput = screen.getByLabelText("Email address");
+  fireEvent.change(emailInput, { target: { value: "rider@example.com" } });
+  await act(async () => { fireEvent.submit(emailInput.closest("form")!); });
+  for (let seconds = 0; seconds < 30; seconds += 1) {
+    await act(async () => { vi.advanceTimersByTime(1000); });
+  }
+  await act(async () => {
+    fireEvent.click(screen.getByRole("button", { name: /didn't receive the code/i }));
+  });
+  expect(screen.getByRole("alert").textContent).toContain("Failed to resend code");
+  expect(screen.getByLabelText("Verification Code")).toBeTruthy();
+  expect(screen.queryByRole("status")).toBeNull();
+  expect(logMarketingEventMock).toHaveBeenCalledWith(expect.objectContaining({
+    eventType: "login_send_error", section: "code_form_resend", sourceTag: "pricing_free_cta",
+  }));
+});
+
+it("recovers from a rejected Google request and logs its error", async () => {
+  vi.stubEnv("NEXT_PUBLIC_GOOGLE_AUTH_ENABLED", "true");
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  signInMock.mockRejectedValue(new Error("OAuth failed"));
+  render(<LoginPage />);
+  fireEvent.click(screen.getByRole("button", { name: "Continue with Google" }));
+  await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("Google sign-in could not be started"));
+  expect(logMarketingEventMock).toHaveBeenCalledWith(expect.objectContaining({
+    eventType: "login_google_error", section: "google_button", sourceTag: "pricing_free_cta",
+  }));
+  expect(Reflect.get(window, "__bbfSuppressBeforeUnload")).toBe(false);
+  expect(screen.getByRole("button", { name: "Send Login Code" })).toHaveProperty("disabled", false);
+});
+
+it("renders the login in one full-width main without a layout-owned logo", () => {
+  const { container } = render(<AuthLayout><LoginPage /></AuthLayout>);
+  const main = screen.getByRole("main");
+  expect(main.id).toBe("main-content");
+  expect(main.tabIndex).toBe(-1);
+  expect(main.parentElement).toBe(container);
+  expect(main.className).not.toContain("max-w");
+  expect(screen.getAllByRole("link", { name: "BestBikeFit4U" })).toHaveLength(2);
+  expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+});
+
+it.each(["en", "nl"])("preserves %s login metadata and indexing rules", async (locale) => {
+  pathname = `/${locale}/login`;
+  const metadata = await generateMetadata();
+  expect(metadata.title).toBe(locale === "nl" ? "Inloggen | BestBikeFit4U" : "Sign In | BestBikeFit4U");
+  expect(metadata.robots).toEqual({ index: false, follow: true });
+  expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}/login`);
 });

@@ -14,7 +14,7 @@ export function FitNotes({ notes }: FitNotesProps) {
     <Card variant="bordered">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Lightbulb className="h-5 w-5 text-warning" />
+          <Lightbulb className="h-5 w-5 text-warning-text" />
           <CardTitle>Personalized Notes</CardTitle>
         </div>
       </CardHeader>

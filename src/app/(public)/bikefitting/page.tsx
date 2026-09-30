@@ -1,11 +1,23 @@
+import { EditorialFaq } from "@/components/science/EditorialLayout";
+import {
+  nlLandingCopy as page,
+  nlLandingFaq as faqItems,
+  nlLandingLinks as relatedLinks,
+} from "@/i18n/marketing/landing";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, ClipboardList, Ruler, ShieldCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
-import { PublicCtaBand, PublicHero, PublicPageShell, PublicSection, PublicSurfaceCard } from "@/components/public";
+import {
+  EditorialCta as PublicCtaBand,
+  EditorialHero as PublicHero,
+  EditorialShell as PublicPageShell,
+  EditorialSection as PublicSection,
+  EditorialCard as PublicSurfaceCard,
+} from "@/components/science/EditorialLayout";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { RelatedLinksSection, type RelatedLink } from "@/components/seo/RelatedLinksSection";
+import { EditorialLinks as RelatedLinksSection } from "@/components/science/EditorialLayout";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { BRAND } from "@/config/brand";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -15,44 +27,6 @@ import { buildSelectiveLocaleAlternates } from "@/lib/seo/pageAlternates";
 
 const PAGE_PATH = "/bikefitting";
 const ALTERNATES = buildSelectiveLocaleAlternates({ nl: PAGE_PATH }, "nl");
-
-const faqItems = [
-  {
-    q: "Wat krijg je uit een online bikefitting?",
-    a: "Je krijgt een praktisch startplan met afstelwaarden en prioriteiten: bijvoorbeeld zadelhoogte, reach, drop en de logische volgorde van aanpassingen. Het doel is een betere eerstvolgende stap, niet een vage indruk.",
-  },
-  {
-    q: "Voor wie is online bikefitting geschikt?",
-    a: "Voor rijders die thuis beter willen starten, een bestaande positie willen controleren of een nieuwe fiets/logische setup willen beoordelen zonder meteen naar een fysieke fitter te gaan.",
-  },
-  {
-    q: "Wanneer kies je beter voor een fysieke bikefitter?",
-    a: "Bij terugkerende zware pijn, een blessure, duidelijke asymmetrie of een situatie waarin live observatie en directe feedback nodig zijn.",
-  },
-] as const;
-
-const relatedLinks: RelatedLink[] = [
-  {
-    href: "/calculators/bike-fit",
-    label: "Bike fit calculator",
-    description: "De hoofdroute voor een complete online bikefitting-start.",
-  },
-  {
-    href: "/how-it-works",
-    label: "Hoe het werkt",
-    description: "Bekijk hoe metingen, rijdoelen en fietscontext samenkomen in het fitproces.",
-  },
-  {
-    href: "/pricing",
-    label: "Free vs Pro",
-    description: "Zie wat je gratis krijgt en wanneer een uitgebreider rapport zinvol is.",
-  },
-  {
-    href: "/measurement-guide",
-    label: "Meetgids",
-    description: "Meet eerst nauwkeuriger voordat je je online bikefitting start.",
-  },
-];
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -67,7 +41,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Bikefitting thuis beginnen | BestBikeFit4U",
     description:
-      "Ontdek hoe online bikefitting je helpt met een praktisch startplan voor zadelhoogte, reach, drop en comfort. Begin thuis en zie wanneer een fysieke fitter nodig is.",
+      "Ontdek hoe online bikefitting je helpt met een praktisch startplan voor " +
+      "zadelhoogte, reach, drop en comfort. Begin thuis en zie wanneer een fysieke " +
+      "fitter nodig is.",
     keywords: [
       "bikefitting",
       "online bikefitting",
@@ -78,7 +54,8 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: "Bikefitting thuis beginnen | BestBikeFit4U",
       description:
-        "Een productgerichte landingspagina voor rijders die online bikefitting willen gebruiken als eerste stap.",
+        "Een productgerichte landingspagina voor rijders die online bikefitting " +
+        "willen gebruiken als eerste stap.",
       type: "website",
       url: ALTERNATES.canonical,
     },
@@ -98,7 +75,7 @@ export default async function BikefittingPage() {
   const homeUrl = new URL(withLocalePrefix("/", "nl"), BRAND.siteUrl).toString();
 
   return (
-    <PublicPageShell className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--muted)_38%,var(--background)_62%)_100%)]">
+    <PublicPageShell>
       <JsonLd
         schema={[
           buildBreadcrumbListSchema([
@@ -110,10 +87,9 @@ export default async function BikefittingPage() {
       />
 
       <PublicHero
-        eyebrow="Online bikefitting"
-        title="Bikefitting als eerste stap, zonder direct te gokken"
-        description="Online bikefitting werkt het best als je snel duidelijkheid wilt over je huidige positie, je belangrijkste afstellingen en de vraag of je thuis al voldoende verder kunt. Het resultaat moet concreet zijn: millimeters, prioriteiten en trade-offs."
-        chips={["Zadel, reach en drop", "Comfort versus prestatie", "Heldere vervolgstap"]}
+        eyebrow={page.eyebrow}
+        title={page.heroTitle}
+        description={page.intro}
         actions={
           <>
             <Button
@@ -123,11 +99,11 @@ export default async function BikefittingPage() {
                   locale="nl"
                   pagePath={pagePath}
                   section="hero_primary"
-                  ctaLabel="Start online bikefitting"
+                  ctaLabel={page.text4}
                 />
               }
             >
-              Start online bikefitting
+              {page.text5}
             </Button>
             <Button
               variant="outline"
@@ -137,11 +113,11 @@ export default async function BikefittingPage() {
                   locale="nl"
                   pagePath={pagePath}
                   section="hero_secondary"
-                  ctaLabel="Maak account voor rapport"
+                  ctaLabel={page.text6}
                 />
               }
             >
-              Maak account voor rapport
+              {page.text7}
             </Button>
           </>
         }
@@ -150,39 +126,20 @@ export default async function BikefittingPage() {
       <PublicSection
         className="mt-10"
         header={{
-          eyebrow: "Wat je eruit haalt",
-          title: "Waar online bikefitting goed in is",
-          description:
-            "Dit is geen algemene blogpagina. Deze route is bedoeld voor rijders die een concrete afstelbeslissing willen nemen en daarna gericht willen testen.",
+          eyebrow: page.text8,
+          title: page.text9,
+          description: page.text10,
         }}
       >
         <div className="grid gap-5 lg:grid-cols-3">
-          <PublicSurfaceCard
-            title="Concrete startwaarden"
-            description="Geen losse tips, maar een verdedigbare eerste fit in millimeters."
-            leading={<Ruler className="h-5 w-5" />}
-          >
-            <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
-              Denk aan zadelhoogte, globale reach en cockpitbalans als startwaarden die je daarna op de fiets beoordeelt.
-            </p>
+          <PublicSurfaceCard title={page.text11} description={page.text12} leading="01">
+            <p className="text-sm leading-6 text-muted-foreground">{page.text13}</p>
           </PublicSurfaceCard>
-          <PublicSurfaceCard
-            title="Betere prioriteiten"
-            description="Je ziet welke aanpassing eerst logisch is en welke pas later zin heeft."
-            leading={<ClipboardList className="h-5 w-5" />}
-          >
-            <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
-              Dat voorkomt het bekende patroon van willekeurig iets veranderen en niet meer weten wat het effect was.
-            </p>
+          <PublicSurfaceCard title={page.text14} description={page.text15} leading="02">
+            <p className="text-sm leading-6 text-muted-foreground">{page.text16}</p>
           </PublicSurfaceCard>
-          <PublicSurfaceCard
-            title="Eerlijke grenzen"
-            description="Online fitting is sterk als eerste laag, niet als vervanging van elke fysieke observatie."
-            leading={<ShieldCheck className="h-5 w-5" />}
-          >
-            <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
-              Bij zware klachten of duidelijke asymmetrie moet de volgende stap nog steeds een fitter of specialist zijn.
-            </p>
+          <PublicSurfaceCard title={page.text17} description={page.text18} leading="03">
+            <p className="text-sm leading-6 text-muted-foreground">{page.text19}</p>
           </PublicSurfaceCard>
         </div>
       </PublicSection>
@@ -190,54 +147,39 @@ export default async function BikefittingPage() {
       <PublicSection
         className="mt-10"
         header={{
-          eyebrow: "Kies de juiste route",
-          title: "Wanneer online bikefitting logisch is",
-          description:
-            "De beste gebruikers zijn niet per se professionals, maar rijders die thuis een goede eerste structuur willen voordat ze verder investeren.",
+          eyebrow: page.text20,
+          title: page.text21,
+          description: page.text22,
         }}
       >
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <PublicSurfaceCard title="Goede match voor online" leading={<ArrowRight className="h-5 w-5" />}>
-            <ul className="space-y-3 text-sm leading-6 text-[color:var(--foreground)]">
-              <li>Je wilt je huidige positie beter begrijpen zonder direct een afspraak te plannen.</li>
-              <li>Je bent net begonnen met serieuzer fietsen en wilt een logisch startpunt.</li>
-              <li>Je wilt een nieuwe fiets of setup eerst thuis beoordelen.</li>
-              <li>Je wilt voorbereid een eventuele fysieke fit ingaan.</li>
+          <PublicSurfaceCard title={page.text23} leading={<ArrowRight className="h-5 w-5" />}>
+            <ul className="space-y-3 text-sm leading-6 text-foreground">
+              <li>{page.text24}</li>
+              <li>{page.text25}</li>
+              <li>{page.text26}</li>
+              <li>{page.text27}</li>
             </ul>
           </PublicSurfaceCard>
-          <PublicSurfaceCard title="Minder geschikt als enige stap" leading={<ShieldCheck className="h-5 w-5" />}>
-            <ul className="space-y-3 text-sm leading-6 text-[color:var(--foreground)]">
-              <li>Je hebt terugkerende kniepijn, rugklachten of gevoelloosheid ondanks eerdere aanpassingen.</li>
-              <li>Je herstelt van een blessure of hebt duidelijke links-rechtsverschillen.</li>
-              <li>Je hebt een complexe prestatiedoelstelling waarbij live observatie belangrijk is.</li>
+          <PublicSurfaceCard title={page.text28} leading={<ShieldCheck className="h-5 w-5" />}>
+            <ul className="space-y-3 text-sm leading-6 text-foreground">
+              <li>{page.text29}</li>
+              <li>{page.text30}</li>
+              <li>{page.text31}</li>
             </ul>
           </PublicSurfaceCard>
         </div>
       </PublicSection>
 
-      <RelatedLinksSection locale="nl" title="Verdiep je online bikefitting-route" links={relatedLinks} />
+      <RelatedLinksSection locale="nl" title={page.text32} links={relatedLinks} />
 
-      <PublicSection
-        className="mt-10"
-        header={{
-          eyebrow: "FAQ",
-          title: "Veelgestelde vragen over bikefitting",
-        }}
-      >
-        <div className="space-y-4">
-          {faqItems.map((item) => (
-            <PublicSurfaceCard key={item.q} title={item.q} titleAs="h3">
-              <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">{item.a}</p>
-            </PublicSurfaceCard>
-          ))}
-        </div>
-      </PublicSection>
+      <EditorialFaq eyebrow={page.text33} title={page.text34} items={faqItems} />
 
       <div className="mt-10">
         <PublicCtaBand
-          eyebrow="Start je eerste rapport"
-          title="Wil je jouw bikefitting omzetten naar een praktisch afstelplan?"
-          description="Begin met de bike-fit calculator en gebruik daarna je account als je sessies, meerdere fietsen of rapportopslag nodig hebt."
+          eyebrow={page.text35}
+          title={page.text36}
+          description={page.text37}
           actions={
             <>
               <Button
@@ -247,18 +189,18 @@ export default async function BikefittingPage() {
                     locale="nl"
                     pagePath={pagePath}
                     section="closing_primary"
-                    ctaLabel="Start gratis bike fit"
+                    ctaLabel={page.text38}
                   />
                 }
               >
-                Start gratis bike fit
+                {page.text39}
               </Button>
               <Button variant="outline" render={<Link href={withLocalePrefix("/login", "nl")} />}>
-                Maak account aan
+                {page.text40}
               </Button>
             </>
           }
-          aside="Geschikt als eerste laag voordat je beslist of een fysieke bikefitting nog nodig is."
+          aside={page.text41}
         />
       </div>
     </PublicPageShell>

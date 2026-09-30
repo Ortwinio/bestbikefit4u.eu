@@ -6,7 +6,19 @@ import { useMutation, useQuery } from "convex/react";
 import { useSearchParams } from "next/navigation";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { api } from "../../../../convex/_generated/api";
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, NumberInput, Select, Textarea } from "@/components/ui";
+import {
+  AdjustOrder,
+  Button,
+  Input,
+  OptionCard,
+  ResultTile,
+  SegmentedControl,
+  SegmentedControlItem,
+  StatusChip,
+  StepCard,
+} from "@/components/ui";
+import { toolsGearingMessages } from "@/i18n/account/toolsGearing";
+import { CassetteEditor, GearLadder, ValueSlider } from "./GearingControls";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { calculateGearingAnalysis } from "@/lib/gearing-engine";
@@ -20,34 +32,6 @@ import {
   type GearingDrivetrainType,
 } from "./gearingMath";
 
-type HistoryEntry = {
-  createdAt: number;
-  bikeId?: string | null;
-  label: string;
-  recommendation: string;
-  confidence: string;
-};
-
-const EVENT_TYPES = [
-  { value: "local_hills", label: "Local hills" },
-  { value: "sportive", label: "Mountain sportive" },
-  { value: "alpine", label: "Alpine holiday" },
-  { value: "race", label: "Race" },
-  { value: "bikepacking", label: "Bikepacking" },
-];
-
-function formatRatio(value: number | null) {
-  return value === null ? "—" : value.toFixed(2);
-}
-
-function formatKmh(value: number | null) {
-  return value === null ? "—" : `${value.toFixed(1)} km/h`;
-}
-
-function formatWatts(value: number | null) {
-  return value === null ? "—" : `${Math.round(value)} W`;
-}
-
 function parseWheelCircumference(value: string) {
   const parsed = Number(value);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
@@ -58,8 +42,11 @@ function parsePositiveNumber(value: string) {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
 }
 
-function buildBikeLabel(bike?: { name: string; brand?: string | null; model?: string | null }) {
-  if (!bike) return "Manual setup";
+function buildBikeLabel(
+  bike: { name: string; brand?: string | null; model?: string | null } | undefined,
+  fallback: string,
+) {
+  if (!bike) return fallback;
   return [bike.name, bike.brand, bike.model].filter(Boolean).join(" - ");
 }
 
@@ -113,16 +100,14 @@ function buildGearingData({
 export function GearingCalculatorForm() {
   const { locale } = useDashboardMessages();
   const isNl = locale === "nl";
+  const copy = toolsGearingMessages[locale === "nl" ? "nl" : "en"];
   const searchParams = useSearchParams();
   const bikeIdParam = searchParams.get("bikeId") as Id<"bikes"> | null;
   const [selectedBikeIdOverride, setSelectedBikeIdOverride] = useState<string | null>(null);
   const selectedBikeId = selectedBikeIdOverride ?? bikeIdParam ?? "";
   const bikes = useQuery(api.bikes.queries.list, {});
   const profile = useQuery(api.profiles.queries.getMyProfile);
-  const bike = useQuery(
-    api.bikes.queries.get,
-    selectedBikeId ? { bikeId: selectedBikeId as Id<"bikes"> } : "skip"
-  );
+  const bike = useQuery(api.bikes.queries.get, selectedBikeId ? { bikeId: selectedBikeId as Id<"bikes"> } : "skip");
   const recentSessions = useQuery(api.gearing.queries.listGearingSessions, { limit: 5 });
   const saveSession = useMutation(api.gearing.mutations.createDashboardGearingSession);
   const [drivetrainType, setDrivetrainType] = useState<GearingDrivetrainType | "">("2x");
@@ -141,6 +126,9 @@ export function GearingCalculatorForm() {
   const [eventType, setEventType] = useState("sportive");
   const [comparisonCassetteCsv, setComparisonCassetteCsv] = useState("");
   const savedSignatureRef = useRef<string | null>(null);
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [retryCount, setRetryCount] = useState(0);
+  const [prefilledBikeId, setPrefilledBikeId] = useState("");
 
   useEffect(() => {
     if (!bike) return;
@@ -148,9 +136,9 @@ export function GearingCalculatorForm() {
     const currentSetup = bike.currentSetup ?? null;
 
     startTransition(() => {
+      setPrefilledBikeId(String(bike._id));
       setDrivetrainType(
-        gearing?.drivetrainType ??
-          (bike.bikeType === "gravel" || bike.bikeType === "mountain" ? "1x" : "2x")
+        gearing?.drivetrainType ?? (bike.bikeType === "gravel" || bike.bikeType === "mountain" ? "1x" : "2x"),
       );
       setFrontChainring(gearing?.chainrings?.[0]?.toString() ?? "");
       setInnerChainring(gearing?.chainrings?.[1]?.toString() ?? "");
@@ -184,7 +172,7 @@ export function GearingCalculatorForm() {
         value: String(row._id),
         label: [row.name, row.brand, row.model].filter(Boolean).join(" - ") || row.name,
       })),
-    [bikes]
+    [bikes],
   );
 
   const currentData = useMemo(
@@ -199,7 +187,16 @@ export function GearingCalculatorForm() {
         groupsetName,
         derailleurMaxCog,
       }),
-    [drivetrainType, frontChainring, innerChainring, cassetteCsv, wheelCircumferenceMm, bike, groupsetName, derailleurMaxCog]
+    [
+      drivetrainType,
+      frontChainring,
+      innerChainring,
+      cassetteCsv,
+      wheelCircumferenceMm,
+      bike,
+      groupsetName,
+      derailleurMaxCog,
+    ],
   );
 
   useEffect(() => {
@@ -212,7 +209,7 @@ export function GearingCalculatorForm() {
 
   const currentMetrics = useMemo(
     () => computeGearingMetrics(currentData, Number(preferredCadenceRpm) || 90),
-    [currentData, preferredCadenceRpm]
+    [currentData, preferredCadenceRpm],
   );
 
   const currentSuitability = useMemo(
@@ -241,7 +238,7 @@ export function GearingCalculatorForm() {
       profile?.weightKg,
       riderWeightKg,
       currentMetrics,
-    ]
+    ],
   );
 
   const comparisonMetrics = useMemo(() => {
@@ -297,9 +294,7 @@ export function GearingCalculatorForm() {
       preferredCadenceRpm: parsePositiveNumber(preferredCadenceRpm) ?? undefined,
       climbGradientPct: parsePositiveNumber(gradientPercent) ?? undefined,
       climbLengthKm: parsePositiveNumber(climbMinutes)
-        ? ((currentMetrics.lowestGearSpeedAtCadenceKmh ?? 0) *
-            (parsePositiveNumber(climbMinutes) ?? 0)) /
-          60
+        ? ((currentMetrics.lowestGearSpeedAtCadenceKmh ?? 0) * (parsePositiveNumber(climbMinutes) ?? 0)) / 60
         : undefined,
       eventType,
       rideIntent:
@@ -339,7 +334,7 @@ export function GearingCalculatorForm() {
     }
   }, [persistenceInput]);
 
-  const history = useMemo<HistoryEntry[]>(
+  const history = useMemo(
     () =>
       (recentSessions ?? []).map((session) => ({
         createdAt: session.createdAt,
@@ -347,17 +342,22 @@ export function GearingCalculatorForm() {
         label:
           session.bikeId && bikes
             ? buildBikeLabel(
-                bikes.find((row) => String(row._id) === String(session.bikeId))
+                bikes.find((row) => String(row._id) === String(session.bikeId)),
+                copy.selectedBike,
               )
-            : "Manual setup",
-        recommendation: session.suitability.recommendationText,
+            : copy.manual,
+        verdict: session.suitability.publicVerdict,
         confidence: session.suitability.confidence.level,
       })),
-    [recentSessions, bikes]
+    [recentSessions, bikes, copy.manual, copy.selectedBike],
   );
 
   useEffect(() => {
-    if (!persistenceInput || !persistenceAnalysis) {
+    if (
+      !persistenceInput ||
+      !persistenceAnalysis ||
+      (selectedBikeId && (!bike || prefilledBikeId !== selectedBikeId))
+    ) {
       return;
     }
 
@@ -372,298 +372,362 @@ export function GearingCalculatorForm() {
     }
     savedSignatureRef.current = signature;
 
+    startTransition(() => setSaveState("saving"));
     void saveSession({
       bikeId: selectedBikeId ? (selectedBikeId as Id<"bikes">) : undefined,
       scenarioName: comparisonCassetteCsv.trim() ? "comparison-cassette" : undefined,
       input: persistenceInput,
       math: persistenceAnalysis.math,
       suitability: persistenceAnalysis.suitability,
-    });
+    })
+      .then(() => {
+        if (savedSignatureRef.current === signature) setSaveState("saved");
+      })
+      .catch(() => {
+        if (savedSignatureRef.current === signature) {
+          savedSignatureRef.current = null;
+          setSaveState("error");
+        }
+      });
   }, [
     comparisonCassetteCsv,
     persistenceAnalysis,
     persistenceInput,
     saveSession,
     selectedBikeId,
+    prefilledBikeId,
+    bike,
+    retryCount,
   ]);
 
   const completenessLabel = summarizeCompleteness(currentData);
-  const bikeLabel = bike ? buildBikeLabel(bike) : selectedBikeId ? "Selected bike" : "Manual setup";
-  const confidenceLabel =
-    currentSuitability.confidence === "high"
-      ? isNl
-        ? "Hoge betrouwbaarheid"
-        : "High confidence"
-      : currentSuitability.confidence === "medium"
-        ? isNl
-          ? "Gemiddelde betrouwbaarheid"
-          : "Medium confidence"
-        : isNl
-          ? "Lage betrouwbaarheid"
-          : "Low confidence";
+  const bikeLabel = bike ? buildBikeLabel(bike, copy.selectedBike) : selectedBikeId ? copy.selectedBike : copy.manual;
+  const format = (value: number | null, digits = 1) =>
+    value === null
+      ? "—"
+      : new Intl.NumberFormat(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(value);
+  const hasGears = currentMetrics.lowestGearRatio !== null;
+  const hasPower = currentSuitability.requiredPowerW !== null && currentSuitability.sustainablePowerW !== null;
+  const recommendation = !hasGears
+    ? copy.missingGears
+    : !hasPower
+      ? copy.missingPower
+      : copy.recommendations[currentSuitability.label];
+  const comparisonCogs = parseCommaSeparatedNumbers(comparisonCassetteCsv);
+  const exceedsLimit = Boolean(
+    Number(derailleurMaxCog) &&
+    Math.max(...(currentData.cassetteTeeth ?? []), ...comparisonCogs) > Number(derailleurMaxCog),
+  );
+  const verdictStatus = !hasPower
+    ? "warn"
+    : currentSuitability.label === "good_match"
+      ? "ok"
+      : currentSuitability.label === "borderline"
+        ? "warn"
+        : "deviation";
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.9fr)]">
-      <div className="space-y-6">
-        <Card variant="bordered" className="dashboard-card-surface">
-          <CardHeader>
-            <CardTitle>{isNl ? "Bike-preset" : "Bike prefill"}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4 sm:grid-cols-2">
-            <Select
-              label={isNl ? "Kies een fiets" : "Choose a bike"}
-              value={selectedBikeId}
-              onChange={(event) => setSelectedBikeIdOverride(event.target.value || null)}
-              options={[
-                { value: "", label: isNl ? "Handmatige invoer" : "Manual input" },
-                ...bikeOptions,
-              ]}
+    <div className="space-y-6">
+      <section aria-label={copy.bike} className="space-y-6 rounded-3xl bg-secondary p-5 sm:p-6">
+        <h2 className="text-2xl font-bold">{copy.bike}</h2>
+        {bikes === undefined ? (
+          <p role="status">{copy.loading}</p>
+        ) : !bikes.length ? (
+          <p className="text-sm">{copy.emptyBikes}</p>
+        ) : null}
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {bikeOptions.map((option) => (
+            <OptionCard
+              key={option.value}
+              label={option.label}
+              selected={selectedBikeId === option.value}
+              onClick={() => setSelectedBikeIdOverride(option.value)}
             />
-            <Select
-              label={isNl ? "Type aandrijving" : "Drivetrain type"}
-              value={drivetrainType}
-              onChange={(event) => setDrivetrainType(event.target.value as GearingDrivetrainType)}
-              options={[
-                { value: "1x", label: "1x" },
-                { value: "2x", label: "2x" },
-              ]}
-            />
-          </CardContent>
-        </Card>
-
-        <Card variant="bordered" className="dashboard-card-surface">
-          <CardHeader>
-            <CardTitle>{isNl ? "Gearing-invoer" : "Gearing input"}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4 sm:grid-cols-2">
-            <NumberInput
-              label={isNl ? "Voorblad buiten" : "Front chainring"}
-              value={frontChainring ? Number(frontChainring) : null}
-              onChange={(value) => setFrontChainring(value === null ? "" : String(value))}
-            />
-            <NumberInput
-              label={isNl ? "Voorblad binnen" : "Inner chainring"}
-              value={innerChainring ? Number(innerChainring) : null}
-              onChange={(value) => setInnerChainring(value === null ? "" : String(value))}
-            />
-            <Textarea
-              label={isNl ? "Cassette-tanden" : "Cassette teeth"}
-              value={cassetteCsv}
-              onChange={(event) => setCassetteCsv(event.target.value)}
-              placeholder="11, 12, 13, 15, 17, 19, 21, 24, 28, 32"
-              helperText={isNl ? "Gebruik komma's of spaties." : "Use commas or spaces."}
-            />
-            <NumberInput
-              label={isNl ? "Wielomtrek" : "Wheel circumference"}
-              value={wheelCircumferenceMm ? Number(wheelCircumferenceMm) : null}
-              onChange={(value) => setWheelCircumferenceMm(value === null ? "" : String(value))}
-              unit="mm"
-            />
-            <Input
-              label={isNl ? "Groepset" : "Groupset"}
-              value={groupsetName}
-              onChange={(event) => setGroupsetName(event.target.value)}
-              placeholder={isNl ? "Bijv. Ultegra / GRX / GX" : "e.g. Ultegra / GRX / GX"}
-            />
-            <NumberInput
-              label={isNl ? "Max. grootste tandwiel" : "Rear derailleur max cog"}
-              value={derailleurMaxCog ? Number(derailleurMaxCog) : null}
-              onChange={(value) => setDerailleurMaxCog(value === null ? "" : String(value))}
-            />
-          </CardContent>
-        </Card>
-
-        <Card variant="bordered" className="dashboard-card-surface">
-          <CardHeader>
-            <CardTitle>{isNl ? "Rijder en rit" : "Rider and ride"}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4 sm:grid-cols-2">
-            <NumberInput
-              label={isNl ? "Rijdergewicht" : "Rider weight"}
-              value={riderWeightKg ? Number(riderWeightKg) : null}
-              onChange={(value) => setRiderWeightKg(value === null ? "" : String(value))}
-              unit="kg"
-            />
-            <NumberInput
-              label={isNl ? "Fietsgewicht" : "Bike weight"}
-              value={bikeWeightKg ? Number(bikeWeightKg) : null}
-              onChange={(value) => setBikeWeightKg(value === null ? "" : String(value))}
-              unit="kg"
-            />
-            <NumberInput
-              label="FTP"
-              value={ftpW ? Number(ftpW) : null}
-              onChange={(value) => setFtpW(value === null ? "" : String(value))}
-              unit="W"
-            />
-            <NumberInput
-              label={isNl ? "Voorkeurcadans" : "Preferred cadence"}
-              value={preferredCadenceRpm ? Number(preferredCadenceRpm) : null}
-              onChange={(value) => setPreferredCadenceRpm(value === null ? "" : String(value))}
-              unit="rpm"
-            />
-            <NumberInput
-              label={isNl ? "Gemiddelde klimhelling" : "Average climb gradient"}
-              value={gradientPercent ? Number(gradientPercent) : null}
-              onChange={(value) => setGradientPercent(value === null ? "" : String(value))}
+          ))}
+          <OptionCard label={copy.manual} selected={!selectedBikeId} onClick={() => setSelectedBikeIdOverride("")} />
+        </div>
+        {selectedBikeId && bike === undefined ? <p role="status">{copy.loading}</p> : null}
+        {selectedBikeId && bike === null ? <p role="alert">{copy.unavailable}</p> : null}
+        <p className="text-sm">{copy.profileNote}</p>
+        <div className="grid gap-6 md:grid-cols-3">
+          <ValueSlider
+            label={copy.riderWeight}
+            value={riderWeightKg}
+            onChange={setRiderWeightKg}
+            min={40}
+            max={150}
+            step={0.5}
+            unit="kg"
+            copy={copy}
+          />
+          <ValueSlider
+            label={copy.bikeWeight}
+            value={bikeWeightKg}
+            onChange={setBikeWeightKg}
+            min={3}
+            max={20}
+            step={0.5}
+            unit="kg"
+            copy={copy}
+          />
+          <ValueSlider
+            label={copy.ftp}
+            value={ftpW}
+            onChange={setFtpW}
+            min={80}
+            max={500}
+            step={5}
+            unit="W"
+            copy={copy}
+            optional
+          />
+        </div>
+      </section>
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="min-w-0 space-y-5">
+          <StepCard number={1} title={copy.setup} description={copy.setupDescription}>
+            <div className="space-y-6">
+              <SegmentedControl
+                aria-label={copy.drivetrain}
+                value={drivetrainType}
+                variant="strong"
+                onValueChange={(value) => setDrivetrainType(value as GearingDrivetrainType)}
+              >
+                <SegmentedControlItem value="1x">1×</SegmentedControlItem>
+                <SegmentedControlItem value="2x">2×</SegmentedControlItem>
+              </SegmentedControl>
+              <ValueSlider
+                label={copy.outer}
+                value={frontChainring}
+                onChange={setFrontChainring}
+                min={20}
+                max={70}
+                step={1}
+                unit={copy.teeth}
+                copy={copy}
+              />
+              {drivetrainType === "2x" ? (
+                <ValueSlider
+                  label={copy.inner}
+                  value={innerChainring}
+                  onChange={setInnerChainring}
+                  min={20}
+                  max={70}
+                  step={1}
+                  unit={copy.teeth}
+                  copy={copy}
+                />
+              ) : null}
+              <CassetteEditor label={copy.cassette} value={cassetteCsv} onChange={setCassetteCsv} copy={copy} />
+            </div>
+          </StepCard>
+          <StepCard number={2} title={copy.climb}>
+            <ValueSlider
+              label={copy.gradient}
+              value={gradientPercent}
+              onChange={setGradientPercent}
+              min={0}
+              max={25}
+              step={0.1}
               unit="%"
+              copy={copy}
             />
-            <NumberInput
-              label={isNl ? "Klimduur" : "Climb duration"}
-              value={climbMinutes ? Number(climbMinutes) : null}
-              onChange={(value) => setClimbMinutes(value === null ? "" : String(value))}
-              unit="min"
+          </StepCard>
+          <StepCard number={3} title={copy.cadenceStep}>
+            <ValueSlider
+              label={copy.cadence}
+              value={preferredCadenceRpm}
+              onChange={setPreferredCadenceRpm}
+              min={40}
+              max={130}
+              step={1}
+              unit="rpm"
+              copy={copy}
             />
-            <Select
-              label={isNl ? "Rittype" : "Event type"}
-              value={eventType}
-              onChange={(event) => setEventType(event.target.value)}
-              options={EVENT_TYPES}
-            />
-            <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/30 p-4 text-sm text-muted-foreground">
-              <p className="font-medium text-foreground">
-                {isNl ? "Gekoppelde fiets" : "Linked bike"}
-              </p>
-              <p className="mt-1">{bikeLabel}</p>
-              <p className="mt-2">
-                {isNl
-                  ? "Een gedeeltelijke setup blijft bruikbaar, maar de classificatie wordt dan conservatiever."
-                  : "A partial setup remains usable, but the classification becomes more conservative."}
-              </p>
+          </StepCard>
+          <details className="rounded-3xl border border-border bg-card p-6">
+            <summary className="min-h-11 cursor-pointer py-2 text-lg font-semibold">{copy.refine}</summary>
+            <div className="mt-6 space-y-6">
+              <ValueSlider
+                label={copy.wheel}
+                value={wheelCircumferenceMm}
+                onChange={setWheelCircumferenceMm}
+                min={1500}
+                max={2800}
+                step={1}
+                unit="mm"
+                copy={copy}
+              />
+              <h2 className="text-xl font-semibold">{copy.ride}</h2>
+              <ValueSlider
+                label={copy.duration}
+                value={climbMinutes}
+                onChange={setClimbMinutes}
+                min={1}
+                max={180}
+                step={1}
+                unit="min"
+                copy={copy}
+              />
+              <fieldset className="space-y-3">
+                <legend className="mb-3 font-medium">{copy.event}</legend>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {Object.entries(copy.events).map(([value, label]) => (
+                    <OptionCard
+                      key={value}
+                      label={label}
+                      selected={eventType === value}
+                      onClick={() => setEventType(value)}
+                    />
+                  ))}
+                </div>
+              </fieldset>
+              <Input
+                label={copy.groupset}
+                value={groupsetName}
+                onChange={(event) => setGroupsetName(event.target.value)}
+              />
+              <ValueSlider
+                label={copy.maxCog}
+                value={derailleurMaxCog}
+                onChange={setDerailleurMaxCog}
+                min={9}
+                max={54}
+                step={1}
+                unit={copy.teeth}
+                copy={copy}
+                optional
+              />
+              <p className="text-sm text-muted-foreground">{copy.comparisonNote}</p>
+              <CassetteEditor
+                label={copy.alternative}
+                value={comparisonCassetteCsv}
+                onChange={setComparisonCassetteCsv}
+                copy={copy}
+              />
             </div>
-          </CardContent>
-        </Card>
-
-        <Card variant="bordered" className="dashboard-card-surface">
-          <CardHeader>
-            <CardTitle>{isNl ? "Vergelijking" : "Scenario comparison"}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4 sm:grid-cols-2">
-            <Textarea
-              label={isNl ? "Alternatieve cassette" : "Alternative cassette"}
-              value={comparisonCassetteCsv}
-              onChange={(event) => setComparisonCassetteCsv(event.target.value)}
-              placeholder="11, 12, 13, 15, 17, 19, 21, 24, 28, 34"
-              helperText={isNl ? "Laat leeg om geen scenario te vergelijken." : "Leave empty if you do not want a comparison."}
-            />
-            <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/30 p-4 text-sm text-muted-foreground">
-              <p className="font-medium text-foreground">
-                {isNl ? "Vergelijkingscriterium" : "Comparison criterion"}
-              </p>
-              <p className="mt-1">
-                {isNl
-                  ? "Gebruik het alternatief om te zien hoeveel makkelijker de klim wordt."
-                  : "Use the alternative to see how much easier the climb becomes."}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="flex flex-wrap items-center gap-3">
+          </details>
           <Button
-            type="button"
             render={
               <Link
-                href={withLocalePrefix(
-                  selectedBikeId ? `/bikes/${selectedBikeId}` : "/bikes",
-                  locale
-                )}
+                role="link"
+                href={withLocalePrefix(selectedBikeId ? `/bikes/${selectedBikeId}` : "/bikes", locale)}
               />
             }
           >
-            {isNl ? "Ga terug naar fiets" : "Back to bike"}
+            {copy.back}
           </Button>
         </div>
-      </div>
-
-      <div className="space-y-6">
-        <Card variant="bordered" className="dashboard-card-surface">
-          <CardHeader>
-            <CardTitle>{isNl ? "Resultaat" : "Result"}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/30 p-4">
-              <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                {isNl ? "Gearing-compleetheid" : "Gearing completeness"}
+        <div className="min-w-0 space-y-5">
+          <section
+            aria-label={copy.ladder}
+            className="rounded-3xl bg-[var(--bbf-lime)] p-5 text-[var(--bbf-inkt)] sm:p-6"
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest">{bikeLabel}</p>
+            <h2 className="mt-2 text-3xl font-bold text-inherit">{copy.ladder}</h2>
+            <GearLadder data={currentData} copy={copy} locale={locale} />
+          </section>
+          <div className="grid grid-cols-2 gap-3" aria-live="polite">
+            <ResultTile label={copy.low} value={format(currentMetrics.lowestGearRatio, 2)} />
+            <ResultTile label={copy.high} value={format(currentMetrics.highestGearRatio, 2)} />
+            <ResultTile label={copy.lowSpeed} value={format(currentMetrics.lowestGearSpeedAtCadenceKmh)} unit="km/h" />
+            <ResultTile
+              label={copy.highSpeed}
+              value={format(currentMetrics.highestGearSpeedAtCadenceKmh)}
+              unit="km/h"
+            />
+          </div>
+          <section aria-label={copy.check} className="space-y-5 rounded-3xl border border-border bg-card p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-2xl font-bold">{copy.check}</h2>
+              <StatusChip status={verdictStatus}>
+                {hasPower ? copy.verdicts[currentSuitability.label] : copy.unset}
+              </StatusChip>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {copy.completeness}: {formatGearingLabel(completenessLabel, isNl)} ·{" "}
+              {copy.confidence[currentSuitability.confidence]}
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <ResultTile label={copy.required} value={format(currentSuitability.requiredPowerW, 0)} unit="W" />
+              <ResultTile label={copy.sustainable} value={format(currentSuitability.sustainablePowerW, 0)} unit="W" />
+              <ResultTile
+                label={copy.neededCadence}
+                value={format(currentSuitability.cadenceNeededRpm, 0)}
+                unit="rpm"
+              />
+            </div>
+            <p role="status" className="font-medium">
+              {recommendation}
+            </p>
+            {currentSuitability.warnings.length > 1 && hasPower ? (
+              <p className="text-sm text-muted-foreground">
+                {(currentSuitability.cadenceNeededRpm ?? 0) < 70 ? copy.warningCadence : copy.warningCassette}
               </p>
-              <p className="mt-2 text-lg font-semibold text-foreground">{formatGearingLabel(completenessLabel, isNl)}</p>
-              <p className="mt-1 text-sm text-muted-foreground">{confidenceLabel}</p>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <ResultTile label={isNl ? "Lichtste versnelling" : "Lowest gear"} value={formatRatio(currentMetrics.lowestGearRatio)} />
-              <ResultTile label={isNl ? "Zwaarste versnelling" : "Highest gear"} value={formatRatio(currentMetrics.highestGearRatio)} />
-              <ResultTile label={isNl ? "Snelheid in laagste versnelling" : "Low-gear speed"} value={formatKmh(currentMetrics.lowestGearSpeedAtCadenceKmh)} />
-              <ResultTile label={isNl ? "Snelheid in hoogste versnelling" : "High-gear speed"} value={formatKmh(currentMetrics.highestGearSpeedAtCadenceKmh)} />
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <ResultTile label={isNl ? "Benodigd vermogen" : "Required power"} value={formatWatts(currentSuitability.requiredPowerW)} />
-              <ResultTile label={isNl ? "Duurzaam vermogen" : "Sustainable power"} value={formatWatts(currentSuitability.sustainablePowerW)} />
-              <ResultTile label={isNl ? "Benodigde cadans" : "Cadence needed"} value={currentSuitability.cadenceNeededRpm ? `${currentSuitability.cadenceNeededRpm.toFixed(0)} rpm` : "—"} />
-              <ResultTile label={isNl ? "Beoordeling" : "Verdict"} value={currentSuitability.label.replaceAll("_", " ")} />
-            </div>
-
-            <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--background)] p-4">
-              <p className="text-sm font-medium text-foreground">{currentSuitability.recommendation}</p>
-              {currentSuitability.warnings.length ? (
-                <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                  {currentSuitability.warnings.map((warning) => (
-                    <li key={warning}>• {warning}</li>
-                  ))}
-                </ul>
-              ) : null}
-            </div>
-
+            ) : null}
+            {exceedsLimit ? (
+              <p role="alert" className="rounded-2xl bg-warning/20 p-4 text-sm">
+                {copy.compatibility}
+              </p>
+            ) : null}
             {comparisonMetrics ? (
-              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/30 p-4">
-                <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                  {isNl ? "Scenario-delta" : "Scenario delta"}
-                </p>
-                <p className="mt-2 text-sm text-foreground">
-                  {isNl
-                    ? `Het alternatief verandert de laagste versnelling naar ${formatRatio(comparisonMetrics.lowestGearRatio)}.`
-                    : `The alternative changes the lowest gear ratio to ${formatRatio(comparisonMetrics.lowestGearRatio)}.`}
-                </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <ResultTile label={copy.alternativeRatio} value={format(comparisonMetrics.lowestGearRatio, 2)} />
+                <ResultTile
+                  label={copy.alternativeSpeed}
+                  value={format(comparisonMetrics.lowestGearSpeedAtCadenceKmh)}
+                  unit="km/h"
+                />
               </div>
             ) : null}
-          </CardContent>
-        </Card>
-
-        <Card variant="bordered" className="dashboard-card-surface">
-          <CardHeader>
-            <CardTitle>{isNl ? "Recente berekeningen" : "Recent calculations"}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {history.length ? (
-              history.map((entry) => (
-                <div key={`${entry.createdAt}-${entry.label}`} className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--background)] p-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="font-medium text-foreground">{entry.label}</p>
-                    <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">{entry.confidence}</span>
-                  </div>
-                  <p className="mt-1 text-sm text-muted-foreground">{entry.recommendation}</p>
-                </div>
-              ))
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                {isNl
-                  ? "Je berekeningen verschijnen hier op dit apparaat."
-                  : "Your calculations will appear here on this device."}
+          </section>
+          <AdjustOrder
+            title={copy.next}
+            steps={[
+              { title: copy.nextOne, description: copy.nextOneBody },
+              { title: copy.nextTwo, description: copy.nextTwoBody },
+              { title: copy.nextThree, description: copy.nextThreeBody },
+            ]}
+          />
+          <section aria-label={copy.history} className="space-y-4 rounded-3xl border border-border bg-card p-6">
+            <h2 className="text-2xl font-bold">{copy.history}</h2>
+            <p className="text-sm text-muted-foreground">{copy.autoSave}</p>
+            {saveState === "error" ? (
+              <div role="alert" className="space-y-3">
+                <p>{copy.saveError}</p>
+                <Button variant="outline" onClick={() => setRetryCount((count) => count + 1)}>
+                  {copy.retry}
+                </Button>
+              </div>
+            ) : saveState !== "idle" ? (
+              <p role="status" className="text-sm">
+                {saveState === "saving" ? copy.saving : copy.saved}
               </p>
+            ) : null}
+            {recentSessions === undefined ? (
+              <p role="status">{copy.loading}</p>
+            ) : history.length ? (
+              <ul className="divide-y divide-border">
+                {history.map((entry, index) => (
+                  <li key={`${entry.createdAt}-${index}`} className="space-y-1 py-4">
+                    <p className="font-semibold">{entry.label}</p>
+                    <p className="text-sm">
+                      {copy.historyVerdicts[entry.verdict]} · {copy.confidence[entry.confidence]}
+                    </p>
+                    <time dateTime={new Date(entry.createdAt).toISOString()} className="text-xs text-muted-foreground">
+                      {new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(
+                        entry.createdAt,
+                      )}
+                    </time>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-muted-foreground">{copy.emptyHistory}</p>
             )}
-          </CardContent>
-        </Card>
+          </section>
+        </div>
       </div>
-    </div>
-  );
-}
-
-function ResultTile({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--background)] p-3">
-      <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
-      <p className="mt-2 text-base font-semibold text-foreground">{value}</p>
     </div>
   );
 }

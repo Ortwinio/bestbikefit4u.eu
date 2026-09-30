@@ -48,15 +48,16 @@ function NumberInputFieldLabel({
 }) {
   return (
     <div className="mb-1.5 flex items-center gap-1.5">
-      <Field.Label className="flex items-center gap-2 text-sm font-medium leading-none text-[color:var(--foreground)] data-[disabled]:status-disabled data-[invalid]:text-[color:var(--danger)] select-none">
+      <Field.Label
+        className={
+          "flex items-center gap-2 text-sm font-medium leading-none text-foreground " +
+          "data-[disabled]:status-disabled data-[invalid]:text-destructive-text select-none"
+        }
+      >
         {label}
       </Field.Label>
       {tooltip ? (
-        <Tooltip
-          content={tooltip}
-          label={tooltipLabel ?? `${label} help`}
-          descriptionId={tooltipDescriptionId}
-        />
+        <Tooltip content={tooltip} label={tooltipLabel ?? `${label} help`} descriptionId={tooltipDescriptionId} />
       ) : null}
     </div>
   );
@@ -87,19 +88,14 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       allowOutOfRange = true,
       "aria-describedby": ariaDescribedBy,
     },
-    ref
+    ref,
   ) => {
     const generatedId = useId().replace(/:/g, "");
-    const inputId =
-      id || label?.toLowerCase().replace(/\s+/g, "-") || `number-input-${generatedId}`;
+    const inputId = id || label?.toLowerCase().replace(/\s+/g, "-") || `number-input-${generatedId}`;
     const helperId = helperText && !error ? `${inputId}-helper` : undefined;
     const errorId = error ? `${inputId}-error` : undefined;
-    const tooltipDescriptionId = tooltip
-      ? `${inputId}-tooltip-description`
-      : undefined;
-    const describedBy = [ariaDescribedBy, tooltipDescriptionId, errorId, helperId]
-      .filter(Boolean)
-      .join(" ");
+    const tooltipDescriptionId = tooltip ? `${inputId}-tooltip-description` : undefined;
+    const describedBy = [ariaDescribedBy, tooltipDescriptionId, errorId, helperId].filter(Boolean).join(" ");
 
     return (
       <Field.Root
@@ -139,13 +135,15 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 aria-invalid={error ? true : undefined}
                 placeholder={placeholder}
                 onBlur={onBlur}
-                className={cn(
-                  unit ? "pr-10" : "pr-3",
-                  inputClassName
-                )}
+                className={cn(unit ? "pr-10" : "pr-3", inputClassName)}
               />
               {unit ? (
-                <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-[color:var(--muted-foreground)]">
+                <span
+                  className={
+                    "pointer-events-none absolute inset-y-0 right-3 flex items-center " +
+                    "text-sm text-muted-foreground"
+                  }
+                >
                   {unit}
                 </span>
               ) : null}
@@ -154,25 +152,18 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
           </NumberFieldGroup>
         </NumberFieldRoot>
         {error ? (
-          <Field.Error
-            match={true}
-            id={errorId}
-            className="mt-1 text-sm text-[color:var(--danger)]"
-          >
+          <Field.Error match={true} id={errorId} className="mt-1 text-sm text-destructive-text">
             {error}
           </Field.Error>
         ) : null}
         {helperText && !error ? (
-          <Field.Description
-            id={helperId}
-            className="mt-1 text-sm text-[color:var(--muted-foreground)]"
-          >
+          <Field.Description id={helperId} className="mt-1 text-sm text-muted-foreground">
             {helperText}
           </Field.Description>
         ) : null}
       </Field.Root>
     );
-  }
+  },
 );
 
 NumberInput.displayName = "NumberInput";

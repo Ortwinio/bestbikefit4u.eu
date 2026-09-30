@@ -1,0 +1,438 @@
+[
+  {
+    "locale": "nl",
+    "fixture": "baseline",
+    "file": "plans/redesign-canvas/code-renders/26-report-nl.pdf",
+    "sha256": "cfd7480af6bde9e0ff45dbd91c7717f34f532f04af0ed7f78af18daa6fae4c99",
+    "errors": [],
+    "pages": [
+      {
+        "number": 1,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fitrapport · Ortwin · 21-03-2026 · bestbikefit4u.eu\n1 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-pdf-nl-1.png"
+      },
+      {
+        "number": 2,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fitrapport · Ortwin · 21-03-2026 · bestbikefit4u.eu\n2 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-pdf-nl-2.png"
+      },
+      {
+        "number": 3,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fitrapport · Ortwin · 21-03-2026 · bestbikefit4u.eu\n3 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-pdf-nl-3.png"
+      },
+      {
+        "number": 4,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fitrapport · Ortwin · 21-03-2026 · bestbikefit4u.eu\n4 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-pdf-nl-4.png"
+      },
+      {
+        "number": 5,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fitrapport · Ortwin · 21-03-2026 · bestbikefit4u.eu\n5 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-pdf-nl-5.png"
+      },
+      {
+        "number": 6,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fitrapport · Ortwin · 21-03-2026 · bestbikefit4u.eu\n6 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-pdf-nl-6.png"
+      }
+    ],
+    "fonts": [
+      {
+        "xref": 5,
+        "name": "AAAAAA+Figtree-Bold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 6,
+        "name": "BAAAAA+BricolageGrotesque-ExtraBold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 7,
+        "name": "CAAAAA+Figtree-Regular",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 8,
+        "name": "DAAAAA+DMMono-Medium",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 10,
+        "name": "EAAAAA+BricolageGrotesque-Bold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 12,
+        "name": "FAAAAA+Figtree-SemiBold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 16,
+        "name": "GAAAAA+Figtree-ExtraBold",
+        "type": "Type0",
+        "embedded": true
+      }
+    ],
+    "pageCount": 6,
+    "passed": true
+  },
+  {
+    "locale": "nl",
+    "fixture": "full",
+    "file": "plans/redesign-canvas/code-renders/26-full-report-nl.pdf",
+    "sha256": "02884bea08d0b4a45f4ce147848f01926bf5049df0e0312d92db975d77a415e5",
+    "errors": [],
+    "pages": [
+      {
+        "number": 1,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fitrapport · Ortwin · 21-03-2026 · bestbikefit4u.eu\n1 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-full-pdf-nl-1.png"
+      },
+      {
+        "number": 2,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fitrapport · Ortwin · 21-03-2026 · bestbikefit4u.eu\n2 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-full-pdf-nl-2.png"
+      },
+      {
+        "number": 3,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fitrapport · Ortwin · 21-03-2026 · bestbikefit4u.eu\n3 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-full-pdf-nl-3.png"
+      },
+      {
+        "number": 4,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fitrapport · Ortwin · 21-03-2026 · bestbikefit4u.eu\n4 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-full-pdf-nl-4.png"
+      },
+      {
+        "number": 5,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fitrapport · Ortwin · 21-03-2026 · bestbikefit4u.eu\n5 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-full-pdf-nl-5.png"
+      },
+      {
+        "number": 6,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fitrapport · Ortwin · 21-03-2026 · bestbikefit4u.eu\n6 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-full-pdf-nl-6.png"
+      }
+    ],
+    "fonts": [
+      {
+        "xref": 5,
+        "name": "AAAAAA+Figtree-Bold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 6,
+        "name": "BAAAAA+BricolageGrotesque-ExtraBold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 7,
+        "name": "CAAAAA+Figtree-Regular",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 8,
+        "name": "DAAAAA+DMMono-Medium",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 10,
+        "name": "EAAAAA+BricolageGrotesque-Bold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 12,
+        "name": "FAAAAA+Figtree-SemiBold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 16,
+        "name": "GAAAAA+Figtree-ExtraBold",
+        "type": "Type0",
+        "embedded": true
+      }
+    ],
+    "pageCount": 6,
+    "passed": true
+  },
+  {
+    "locale": "en",
+    "fixture": "baseline",
+    "file": "plans/redesign-canvas/code-renders/26-report-en.pdf",
+    "sha256": "ac7b80de54cb005ab57197444a8e884bd8f4e1672241991d3de653e38fc09e06",
+    "errors": [],
+    "pages": [
+      {
+        "number": 1,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fit report · Ortwin · 03/21/2026 · bestbikefit4u.eu\n1 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-pdf-en-1.png"
+      },
+      {
+        "number": 2,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fit report · Ortwin · 03/21/2026 · bestbikefit4u.eu\n2 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-pdf-en-2.png"
+      },
+      {
+        "number": 3,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fit report · Ortwin · 03/21/2026 · bestbikefit4u.eu\n3 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-pdf-en-3.png"
+      },
+      {
+        "number": 4,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fit report · Ortwin · 03/21/2026 · bestbikefit4u.eu\n4 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-pdf-en-4.png"
+      },
+      {
+        "number": 5,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fit report · Ortwin · 03/21/2026 · bestbikefit4u.eu\n5 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-pdf-en-5.png"
+      },
+      {
+        "number": 6,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fit report · Ortwin · 03/21/2026 · bestbikefit4u.eu\n6 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-pdf-en-6.png"
+      }
+    ],
+    "fonts": [
+      {
+        "xref": 5,
+        "name": "AAAAAA+Figtree-Bold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 6,
+        "name": "BAAAAA+BricolageGrotesque-ExtraBold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 7,
+        "name": "CAAAAA+Figtree-Regular",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 8,
+        "name": "DAAAAA+DMMono-Medium",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 10,
+        "name": "EAAAAA+BricolageGrotesque-Bold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 12,
+        "name": "FAAAAA+Figtree-SemiBold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 16,
+        "name": "GAAAAA+Figtree-ExtraBold",
+        "type": "Type0",
+        "embedded": true
+      }
+    ],
+    "pageCount": 6,
+    "passed": true
+  },
+  {
+    "locale": "en",
+    "fixture": "full",
+    "file": "plans/redesign-canvas/code-renders/26-full-report-en.pdf",
+    "sha256": "4ac54938d821a6d8059ca999d5fd31824b29813dce34f5f2410ba4e3ff286c86",
+    "errors": [],
+    "pages": [
+      {
+        "number": 1,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fit report · Ortwin · 03/21/2026 · bestbikefit4u.eu\n1 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-full-pdf-en-1.png"
+      },
+      {
+        "number": 2,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fit report · Ortwin · 03/21/2026 · bestbikefit4u.eu\n2 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-full-pdf-en-2.png"
+      },
+      {
+        "number": 3,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fit report · Ortwin · 03/21/2026 · bestbikefit4u.eu\n3 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-full-pdf-en-3.png"
+      },
+      {
+        "number": 4,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fit report · Ortwin · 03/21/2026 · bestbikefit4u.eu\n4 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-full-pdf-en-4.png"
+      },
+      {
+        "number": 5,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fit report · Ortwin · 03/21/2026 · bestbikefit4u.eu\n5 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-full-pdf-en-5.png"
+      },
+      {
+        "number": 6,
+        "widthPt": 594.9599609375,
+        "heightPt": 841.9199829101562,
+        "a4": true,
+        "footer": "Fit report · Ortwin · 03/21/2026 · bestbikefit4u.eu\n6 / 6",
+        "footerCorrect": true,
+        "render": "plans/redesign-canvas/code-renders/26-full-pdf-en-6.png"
+      }
+    ],
+    "fonts": [
+      {
+        "xref": 5,
+        "name": "AAAAAA+Figtree-Bold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 6,
+        "name": "BAAAAA+BricolageGrotesque-ExtraBold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 7,
+        "name": "CAAAAA+Figtree-Regular",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 8,
+        "name": "DAAAAA+DMMono-Medium",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 10,
+        "name": "EAAAAA+BricolageGrotesque-Bold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 12,
+        "name": "FAAAAA+Figtree-SemiBold",
+        "type": "Type0",
+        "embedded": true
+      },
+      {
+        "xref": 16,
+        "name": "GAAAAA+Figtree-ExtraBold",
+        "type": "Type0",
+        "embedded": true
+      }
+    ],
+    "pageCount": 6,
+    "passed": true
+  }
+]

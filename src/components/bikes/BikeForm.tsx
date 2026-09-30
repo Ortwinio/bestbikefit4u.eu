@@ -10,16 +10,14 @@ import {
   CardHeader,
   CardTitle,
   Input,
-  NumberInput,
-  Select,
   Selectable,
   Textarea,
 } from "@/components/ui";
+import { BikeNumberField, BikeChoiceField, BikeCassetteField } from "./BikeFormControls";
+import { getBikesCopy } from "@/i18n/account/bikes";
+import { SegmentedControl, SegmentedControlItem } from "@/components/ui";
 import { BikeGeometryLibraryFields } from "./BikeGeometryLibraryFields";
-import {
-  BikePublicFitControls,
-  type PublicFitGeometryQuality,
-} from "./BikePublicFitControls";
+import { BikePublicFitControls, type PublicFitGeometryQuality } from "./BikePublicFitControls";
 import {
   createBikeGeometryFallbackState,
   normalizeBikeGeometryIdentityPayload,
@@ -29,13 +27,7 @@ import { Field } from "@/components/ui/Field";
 import { getBikeTypeLabel, getBikeTypeOptions, type BikeType } from "@/lib/bikes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
-type RidingStyle =
-  | "recreational"
-  | "fitness"
-  | "sportive"
-  | "racing"
-  | "commuting"
-  | "touring";
+type RidingStyle = "recreational" | "fitness" | "sportive" | "racing" | "commuting" | "touring";
 
 type PrimaryGoal = "comfort" | "balanced" | "performance" | "aerodynamics";
 
@@ -150,44 +142,64 @@ export function BikeForm({
   onDelete,
 }: BikeFormProps) {
   const { locale, messages } = useDashboardMessages();
+  const copy = getBikesCopy(locale);
+  const [section, setSection] = useState("details");
   const [name, setName] = useState(initialData?.name ?? "");
   const [notes, setNotes] = useState(initialData?.notes ?? "");
   const [bikeType, setBikeType] = useState<BikeType | "">(initialData?.bikeType ?? "");
-  const [geometryFallbackState, setGeometryFallbackState] =
-    useState<BikeGeometryFallbackState>(() =>
-      createBikeGeometryFallbackState({
-        brand: initialData?.brand,
-        model: initialData?.model,
-        geometryRecordId: initialData?.geometryRecordId ?? null,
-        geometrySizeLabel: initialData?.currentGeometry?.frameSize ?? null,
-      })
-    );
+  const [geometryFallbackState, setGeometryFallbackState] = useState<BikeGeometryFallbackState>(() =>
+    createBikeGeometryFallbackState({
+      brand: initialData?.brand,
+      model: initialData?.model,
+      geometryRecordId: initialData?.geometryRecordId ?? null,
+      geometrySizeLabel: initialData?.currentGeometry?.frameSize ?? null,
+    }),
+  );
   const [ridingStyle, setRidingStyle] = useState<RidingStyle | "">(initialData?.ridingStyle ?? "");
   const [primaryGoal, setPrimaryGoal] = useState<PrimaryGoal | "">(initialData?.primaryGoal ?? "");
   const [stackMm, setStackMm] = useState(initialData?.currentGeometry?.stackMm?.toString() ?? "");
   const [reachMm, setReachMm] = useState(initialData?.currentGeometry?.reachMm?.toString() ?? "");
-  const [seatTubeAngle, setSeatTubeAngle] = useState(initialData?.currentGeometry?.seatTubeAngle?.toString() ?? "");
-  const [headTubeAngle, setHeadTubeAngle] = useState(initialData?.currentGeometry?.headTubeAngle?.toString() ?? "");
+  const [seatTubeAngle, setSeatTubeAngle] = useState(
+    initialData?.currentGeometry?.seatTubeAngle?.toString() ?? "",
+  );
+  const [headTubeAngle, setHeadTubeAngle] = useState(
+    initialData?.currentGeometry?.headTubeAngle?.toString() ?? "",
+  );
   const [frameSize, setFrameSize] = useState(initialData?.currentGeometry?.frameSize ?? "");
-  const [saddleHeightMm, setSaddleHeightMm] = useState(initialData?.currentSetup?.saddleHeightMm?.toString() ?? "");
-  const [saddleSetbackMm, setSaddleSetbackMm] = useState(initialData?.currentSetup?.saddleSetbackMm?.toString() ?? "");
+  const [saddleHeightMm, setSaddleHeightMm] = useState(
+    initialData?.currentSetup?.saddleHeightMm?.toString() ?? "",
+  );
+  const [saddleSetbackMm, setSaddleSetbackMm] = useState(
+    initialData?.currentSetup?.saddleSetbackMm?.toString() ?? "",
+  );
   const [stemLengthMm, setStemLengthMm] = useState(initialData?.currentSetup?.stemLengthMm?.toString() ?? "");
   const [stemAngle, setStemAngle] = useState(initialData?.currentSetup?.stemAngle?.toString() ?? "");
-  const [handlebarWidthMm, setHandlebarWidthMm] = useState(initialData?.currentSetup?.handlebarWidthMm?.toString() ?? "");
-  const [crankLengthMm, setCrankLengthMm] = useState(initialData?.currentSetup?.crankLengthMm?.toString() ?? "");
-  const [drivetrainType, setDrivetrainType] = useState<"1x" | "2x">(
-    initialData?.gearing?.drivetrainType ?? (initialData?.bikeType === "gravel" || initialData?.bikeType === "mountain" ? "1x" : "2x")
+  const [handlebarWidthMm, setHandlebarWidthMm] = useState(
+    initialData?.currentSetup?.handlebarWidthMm?.toString() ?? "",
   );
-  const [frontChainring, setFrontChainring] = useState(initialData?.gearing?.chainrings?.[0]?.toString() ?? "");
-  const [innerChainring, setInnerChainring] = useState(initialData?.gearing?.chainrings?.[1]?.toString() ?? "");
+  const [crankLengthMm, setCrankLengthMm] = useState(
+    initialData?.currentSetup?.crankLengthMm?.toString() ?? "",
+  );
+  const [drivetrainType, setDrivetrainType] = useState<"1x" | "2x">(
+    initialData?.gearing?.drivetrainType ??
+      (initialData?.bikeType === "gravel" || initialData?.bikeType === "mountain" ? "1x" : "2x"),
+  );
+  const [frontChainring, setFrontChainring] = useState(
+    initialData?.gearing?.chainrings?.[0]?.toString() ?? "",
+  );
+  const [innerChainring, setInnerChainring] = useState(
+    initialData?.gearing?.chainrings?.[1]?.toString() ?? "",
+  );
   const [cassetteTeethCsv, setCassetteTeethCsv] = useState(
-    initialData?.gearing?.cassetteTeeth?.length ? initialData.gearing.cassetteTeeth.join(", ") : ""
+    initialData?.gearing?.cassetteTeeth?.length ? initialData.gearing.cassetteTeeth.join(", ") : "",
   );
   const [wheelCircumferenceMm, setWheelCircumferenceMm] = useState(
-    initialData?.gearing?.wheelCircumferenceMm?.toString() ?? "2105"
+    initialData?.gearing?.wheelCircumferenceMm?.toString() ?? "2105",
   );
   const [groupsetName, setGroupsetName] = useState(initialData?.gearing?.groupsetName ?? "");
-  const [derailleurMaxCog, setDerailleurMaxCog] = useState(initialData?.gearing?.derailleurMaxCog?.toString() ?? "");
+  const [derailleurMaxCog, setDerailleurMaxCog] = useState(
+    initialData?.gearing?.derailleurMaxCog?.toString() ?? "",
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -199,11 +211,7 @@ export function BikeForm({
       return;
     }
 
-    setFrameSize((current) =>
-      current === sizeLabel
-        ? current
-        : sizeLabel
-    );
+    setFrameSize((current) => (current === sizeLabel ? current : sizeLabel));
   }, [geometryFallbackState.geometrySizeLabel]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -212,10 +220,12 @@ export function BikeForm({
 
     const trimmedName = name.trim();
     if (!trimmedName) {
+      setSection("details");
       setError(messages.bikeForm.errors.nameRequired);
       return;
     }
     if (!bikeType) {
+      setSection("details");
       setError(messages.bikeForm.errors.typeRequired);
       return;
     }
@@ -236,7 +246,7 @@ export function BikeForm({
       crankLengthMm: numberFromInput(crankLengthMm),
     };
     const chainrings = [numberFromInput(frontChainring), numberFromInput(innerChainring)].filter(
-      (value): value is number => typeof value === "number"
+      (value): value is number => typeof value === "number",
     );
     const cassetteTeeth = parseCommaSeparatedNumbers(cassetteTeethCsv);
     const wheelCircumference = numberFromInput(wheelCircumferenceMm);
@@ -247,21 +257,18 @@ export function BikeForm({
       typeof wheelCircumference === "number" ||
       Boolean(groupsetName.trim()) ||
       typeof numberFromInput(derailleurMaxCog) === "number";
-    const gearing =
-      hasGearingInput
-        ? {
-            drivetrainType: drivetrainType || undefined,
-            chainrings: chainrings.length ? chainrings : undefined,
-            cassetteTeeth: cassetteTeeth.length ? cassetteTeeth : undefined,
-            wheelCircumferenceMm: wheelCircumference,
-            crankLengthMm: numberFromInput(crankLengthMm),
-            groupsetName: groupsetName.trim() || undefined,
-            derailleurMaxCog: numberFromInput(derailleurMaxCog),
-          }
-        : undefined;
-    const normalizedIdentity = normalizeBikeGeometryIdentityPayload(
-      geometryFallbackState
-    );
+    const gearing = hasGearingInput
+      ? {
+          drivetrainType: drivetrainType || undefined,
+          chainrings: chainrings.length ? chainrings : undefined,
+          cassetteTeeth: cassetteTeeth.length ? cassetteTeeth : undefined,
+          wheelCircumferenceMm: wheelCircumference,
+          crankLengthMm: numberFromInput(crankLengthMm),
+          groupsetName: groupsetName.trim() || undefined,
+          derailleurMaxCog: numberFromInput(derailleurMaxCog),
+        }
+      : undefined;
+    const normalizedIdentity = normalizeBikeGeometryIdentityPayload(geometryFallbackState);
 
     setIsSubmitting(true);
     try {
@@ -302,14 +309,38 @@ export function BikeForm({
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div
+      className={
+        "mx-auto max-w-4xl " +
+        "[&_[data-slot=tooltip-trigger]]:min-h-11 [&_[data-slot=tooltip-trigger]]:min-w-11 " +
+        "[&_[data-slot=tooltip-trigger]]:justify-center"
+      }
+    >
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[color:var(--foreground)]">{title}</h1>
-        <p className="mt-2 text-[color:var(--muted-foreground)]">{description}</p>
+        <h1 className="font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+          {title}
+        </h1>
+        <p className="mt-2 text-muted-foreground">{description}</p>
       </div>
 
+      <SegmentedControl
+        aria-label={title}
+        value={section}
+        onValueChange={(value) => setSection(String(value))}
+        className="mb-6 flex flex-wrap"
+      >
+        {(["details", "measurements", "gearing", "notes"] as const).map((key) => (
+          <SegmentedControlItem key={key} value={key} className="min-w-[8rem] whitespace-normal">
+            {copy[key]}
+          </SegmentedControlItem>
+        ))}
+      </SegmentedControl>
       <form onSubmit={handleSubmit} className="space-y-6">
-        {bikeId && publicFitState && onEnablePublicFitPreview && onDisablePublicFitPreview ? (
+        {section === "details" &&
+        bikeId &&
+        publicFitState &&
+        onEnablePublicFitPreview &&
+        onDisablePublicFitPreview ? (
           <BikePublicFitControls
             bikeId={bikeId}
             publicFitCode={publicFitState.publicFitCode}
@@ -320,27 +351,29 @@ export function BikeForm({
           />
         ) : null}
 
-        <Card variant="bordered" className="dashboard-card-surface">
+        <Card
+          variant="bordered"
+          style={{ display: section === "details" ? undefined : "none" }}
+          className="bg-card"
+        >
           <CardHeader>
             <CardTitle>{messages.bikeForm.sections.basics}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {bikePassportId ? (
-              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] px-3 py-3 text-sm">
-                <p className="font-medium text-[color:var(--foreground)]">
-                  {messages.bikes.identity.passportLabel}
-                </p>
-                <p className="mt-1 font-mono text-[color:var(--foreground)]">{bikePassportId}</p>
+              <div className="rounded-[var(--radius-md)] border border-border bg-secondary px-3 py-3 text-sm">
+                <p className="font-medium text-foreground">{messages.bikes.identity.passportLabel}</p>
+                <p className="mt-1 font-mono text-foreground">{bikePassportId}</p>
               </div>
             ) : null}
 
             <Input
+              className="min-h-11"
               label={messages.bikeForm.fields.name.label}
               tooltip={messages.bikeForm.fields.name.tooltip}
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder={messages.bikeForm.fields.name.placeholder}
-              required
             />
 
             <BikeGeometryLibraryFields
@@ -351,10 +384,10 @@ export function BikeForm({
 
             {showBikeTypeSelect ? (
               <Field.Root className="space-y-3">
-                <Field.Label className="text-sm font-medium text-[color:var(--foreground)]">
+                <Field.Label className="text-sm font-medium text-foreground">
                   {messages.bikeForm.fields.type.label}
                 </Field.Label>
-                <Field.Description className="text-sm text-[color:var(--muted-foreground)]">
+                <Field.Description className="text-sm text-muted-foreground">
                   {messages.bikeForm.fields.type.tooltip}
                 </Field.Description>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -371,19 +404,24 @@ export function BikeForm({
                 </div>
               </Field.Root>
             ) : (
-              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] px-3 py-2 text-sm text-[color:var(--muted-foreground)]">
-                <span className="font-medium text-[color:var(--foreground)]">
+              <div
+                className={
+                  "rounded-[var(--radius-md)] border border-border bg-secondary px-3 py-2 text-sm " +
+                  "text-muted-foreground"
+                }
+              >
+                <span className="font-medium text-foreground">
                   {messages.bikeForm.fields.type.staticLabel}
                 </span>{" "}
                 {bikeType ? getBikeTypeLabel(bikeType, messages) : "-"}
               </div>
             )}
 
-            <Select
+            <BikeChoiceField
               label={messages.fit.sections.ridingStyle}
               tooltip={messages.fit.sections.ridingStyleTooltip}
               value={ridingStyle}
-              onChange={(event) => setRidingStyle(event.target.value as RidingStyle)}
+              onChange={(value) => setRidingStyle(value as RidingStyle)}
               options={[
                 { value: "recreational", label: messages.fit.ridingStyles.recreational.label },
                 { value: "fitness", label: messages.fit.ridingStyles.fitness.label },
@@ -392,58 +430,161 @@ export function BikeForm({
                 { value: "commuting", label: messages.fit.ridingStyles.commuting.label },
                 { value: "touring", label: messages.fit.ridingStyles.touring.label },
               ]}
-              placeholder={messages.fit.sections.ridingStyle}
+              optional
             />
 
-            <Select
+            <BikeChoiceField
               label={messages.fit.sections.primaryGoal}
               tooltip={messages.fit.sections.primaryGoalTooltip}
               value={primaryGoal}
-              onChange={(event) => setPrimaryGoal(event.target.value as PrimaryGoal)}
+              onChange={(value) => setPrimaryGoal(value as PrimaryGoal)}
               options={[
                 { value: "comfort", label: messages.fit.goals.comfort.label },
                 { value: "balanced", label: messages.fit.goals.balanced.label },
                 { value: "performance", label: messages.fit.goals.performance.label },
                 { value: "aerodynamics", label: messages.fit.goals.aerodynamics.label },
               ]}
-              placeholder={messages.fit.sections.primaryGoal}
+              optional
             />
           </CardContent>
         </Card>
 
-        <Card variant="bordered" className="dashboard-card-surface">
+        <Card
+          variant="bordered"
+          style={{ display: section === "measurements" ? undefined : "none" }}
+          className="bg-card"
+        >
           <CardHeader>
             <CardTitle>{messages.bikeForm.sections.geometry}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
-            <NumberInput label={messages.bikeForm.fields.geometry.stack.label} tooltip={messages.bikeForm.fields.geometry.stack.tooltip} value={numberToInputValue(stackMm)} onChange={(value) => setStackMm(value === null ? "" : String(value))} />
-            <NumberInput label={messages.bikeForm.fields.geometry.reach.label} tooltip={messages.bikeForm.fields.geometry.reach.tooltip} value={numberToInputValue(reachMm)} onChange={(value) => setReachMm(value === null ? "" : String(value))} />
-            <NumberInput label={messages.bikeForm.fields.geometry.seatTubeAngle.label} tooltip={messages.bikeForm.fields.geometry.seatTubeAngle.tooltip} step={0.1} value={numberToInputValue(seatTubeAngle)} onChange={(value) => setSeatTubeAngle(value === null ? "" : String(value))} />
-            <NumberInput label={messages.bikeForm.fields.geometry.headTubeAngle.label} tooltip={messages.bikeForm.fields.geometry.headTubeAngle.tooltip} step={0.1} value={numberToInputValue(headTubeAngle)} onChange={(value) => setHeadTubeAngle(value === null ? "" : String(value))} />
-            <Input label={messages.bikeForm.fields.geometry.frameSize.label} tooltip={messages.bikeForm.fields.geometry.frameSize.tooltip} value={frameSize} onChange={(event) => setFrameSize(event.target.value)} placeholder={messages.bikeForm.fields.geometry.frameSize.placeholder} />
+            <BikeNumberField
+              label={messages.bikeForm.fields.geometry.stack.label}
+              tooltip={messages.bikeForm.fields.geometry.stack.tooltip}
+              min={200}
+              max={900}
+              unit="mm"
+              value={numberToInputValue(stackMm)}
+              onChange={(value) => setStackMm(value === null ? "" : String(value))}
+            />
+            <BikeNumberField
+              label={messages.bikeForm.fields.geometry.reach.label}
+              tooltip={messages.bikeForm.fields.geometry.reach.tooltip}
+              min={200}
+              max={600}
+              unit="mm"
+              value={numberToInputValue(reachMm)}
+              onChange={(value) => setReachMm(value === null ? "" : String(value))}
+            />
+            <BikeNumberField
+              label={messages.bikeForm.fields.geometry.seatTubeAngle.label}
+              tooltip={messages.bikeForm.fields.geometry.seatTubeAngle.tooltip}
+              step={0.1}
+              min={50}
+              max={90}
+              unit="°"
+              value={numberToInputValue(seatTubeAngle)}
+              onChange={(value) => setSeatTubeAngle(value === null ? "" : String(value))}
+            />
+            <BikeNumberField
+              label={messages.bikeForm.fields.geometry.headTubeAngle.label}
+              tooltip={messages.bikeForm.fields.geometry.headTubeAngle.tooltip}
+              step={0.1}
+              min={50}
+              max={90}
+              unit="°"
+              value={numberToInputValue(headTubeAngle)}
+              onChange={(value) => setHeadTubeAngle(value === null ? "" : String(value))}
+            />
+            <Input
+              className="min-h-11"
+              label={messages.bikeForm.fields.geometry.frameSize.label}
+              tooltip={messages.bikeForm.fields.geometry.frameSize.tooltip}
+              value={frameSize}
+              onChange={(event) => setFrameSize(event.target.value)}
+              placeholder={messages.bikeForm.fields.geometry.frameSize.placeholder}
+            />
           </CardContent>
         </Card>
 
-        <Card variant="bordered" className="dashboard-card-surface">
+        <Card
+          variant="bordered"
+          style={{ display: section === "measurements" ? undefined : "none" }}
+          className="bg-card"
+        >
           <CardHeader>
             <CardTitle>{messages.bikeForm.sections.setup}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
-            <NumberInput label={messages.bikeForm.fields.setup.saddleHeight.label} tooltip={messages.bikeForm.fields.setup.saddleHeight.tooltip} value={numberToInputValue(saddleHeightMm)} onChange={(value) => setSaddleHeightMm(value === null ? "" : String(value))} />
-            <NumberInput label={messages.bikeForm.fields.setup.saddleSetback.label} tooltip={messages.bikeForm.fields.setup.saddleSetback.tooltip} value={numberToInputValue(saddleSetbackMm)} onChange={(value) => setSaddleSetbackMm(value === null ? "" : String(value))} />
-            <NumberInput label={messages.bikeForm.fields.setup.stemLength.label} tooltip={messages.bikeForm.fields.setup.stemLength.tooltip} value={numberToInputValue(stemLengthMm)} onChange={(value) => setStemLengthMm(value === null ? "" : String(value))} />
-            <NumberInput label={messages.bikeForm.fields.setup.stemAngle.label} tooltip={messages.bikeForm.fields.setup.stemAngle.tooltip} step={0.1} value={numberToInputValue(stemAngle)} onChange={(value) => setStemAngle(value === null ? "" : String(value))} />
-            <NumberInput label={messages.bikeForm.fields.setup.handlebarWidth.label} tooltip={messages.bikeForm.fields.setup.handlebarWidth.tooltip} value={numberToInputValue(handlebarWidthMm)} onChange={(value) => setHandlebarWidthMm(value === null ? "" : String(value))} />
-            <NumberInput label={messages.bikeForm.fields.setup.crankLength.label} tooltip={messages.bikeForm.fields.setup.crankLength.tooltip} step={0.1} value={numberToInputValue(crankLengthMm)} onChange={(value) => setCrankLengthMm(value === null ? "" : String(value))} />
+            <BikeNumberField
+              label={messages.bikeForm.fields.setup.saddleHeight.label}
+              tooltip={messages.bikeForm.fields.setup.saddleHeight.tooltip}
+              min={400}
+              max={1000}
+              unit="mm"
+              value={numberToInputValue(saddleHeightMm)}
+              onChange={(value) => setSaddleHeightMm(value === null ? "" : String(value))}
+            />
+            <BikeNumberField
+              label={messages.bikeForm.fields.setup.saddleSetback.label}
+              tooltip={messages.bikeForm.fields.setup.saddleSetback.tooltip}
+              min={-100}
+              max={200}
+              unit="mm"
+              value={numberToInputValue(saddleSetbackMm)}
+              onChange={(value) => setSaddleSetbackMm(value === null ? "" : String(value))}
+            />
+            <BikeNumberField
+              label={messages.bikeForm.fields.setup.stemLength.label}
+              tooltip={messages.bikeForm.fields.setup.stemLength.tooltip}
+              min={20}
+              max={200}
+              unit="mm"
+              value={numberToInputValue(stemLengthMm)}
+              onChange={(value) => setStemLengthMm(value === null ? "" : String(value))}
+            />
+            <BikeNumberField
+              label={messages.bikeForm.fields.setup.stemAngle.label}
+              tooltip={messages.bikeForm.fields.setup.stemAngle.tooltip}
+              step={0.1}
+              min={-45}
+              max={45}
+              unit="°"
+              value={numberToInputValue(stemAngle)}
+              onChange={(value) => setStemAngle(value === null ? "" : String(value))}
+            />
+            <BikeNumberField
+              label={messages.bikeForm.fields.setup.handlebarWidth.label}
+              tooltip={messages.bikeForm.fields.setup.handlebarWidth.tooltip}
+              min={300}
+              max={900}
+              unit="mm"
+              value={numberToInputValue(handlebarWidthMm)}
+              onChange={(value) => setHandlebarWidthMm(value === null ? "" : String(value))}
+            />
+            <BikeNumberField
+              label={messages.bikeForm.fields.setup.crankLength.label}
+              tooltip={messages.bikeForm.fields.setup.crankLength.tooltip}
+              step={0.1}
+              min={120}
+              max={220}
+              unit="mm"
+              value={numberToInputValue(crankLengthMm)}
+              onChange={(value) => setCrankLengthMm(value === null ? "" : String(value))}
+            />
           </CardContent>
         </Card>
 
-        <Card variant="bordered" className="dashboard-card-surface">
+        <Card
+          variant="bordered"
+          style={{ display: section === "gearing" ? undefined : "none" }}
+          className="bg-card"
+        >
           <CardHeader>
             <CardTitle>{locale === "nl" ? "Versnelling" : "Gearing"}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
-            <Select
+            <BikeChoiceField
               label={locale === "nl" ? "Aandrijving" : "Drivetrain"}
               tooltip={
                 locale === "nl"
@@ -451,41 +592,44 @@ export function BikeForm({
                   : "Choose 1x or 2x so chainring and cassette inputs are interpreted correctly."
               }
               value={drivetrainType}
-              onChange={(event) => setDrivetrainType(event.target.value as "1x" | "2x")}
+              onChange={(value) => setDrivetrainType(value as "1x" | "2x")}
               options={[
                 { value: "1x", label: "1x" },
                 { value: "2x", label: "2x" },
               ]}
             />
-            <NumberInput
+            <BikeNumberField
               label={locale === "nl" ? "Buitenste kettingblad" : "Outer chainring"}
+              min={20}
+              max={70}
               value={numberToInputValue(frontChainring)}
               onChange={(value) => setFrontChainring(value === null ? "" : String(value))}
               unit="t"
             />
-            <NumberInput
+            <BikeNumberField
               label={locale === "nl" ? "Binnenste kettingblad" : "Inner chainring"}
+              min={20}
+              max={60}
               value={numberToInputValue(innerChainring)}
               onChange={(value) => setInnerChainring(value === null ? "" : String(value))}
               disabled={drivetrainType !== "2x"}
               unit="t"
             />
-            <NumberInput
+            <BikeNumberField
               label={locale === "nl" ? "Wielomtrek" : "Wheel circumference"}
+              min={1000}
+              max={3000}
               value={numberToInputValue(wheelCircumferenceMm)}
               onChange={(value) => setWheelCircumferenceMm(value === null ? "" : String(value))}
               unit="mm"
             />
-            <Textarea
+            <BikeCassetteField
               label={locale === "nl" ? "Cassette-tanden" : "Cassette teeth"}
               value={cassetteTeethCsv}
-              onChange={(event) => setCassetteTeethCsv(event.target.value)}
-              placeholder="11, 12, 13, 15, 17, 19, 21, 24, 28, 32"
-              helperText={
-                locale === "nl" ? "Gebruik komma's of spaties." : "Use commas or spaces."
-              }
+              onChange={setCassetteTeethCsv}
             />
             <Input
+              className="min-h-11"
               label={locale === "nl" ? "Groepset" : "Groupset"}
               tooltip={
                 locale === "nl"
@@ -496,21 +640,34 @@ export function BikeForm({
               onChange={(event) => setGroupsetName(event.target.value)}
               placeholder="Ultegra / GRX / GX"
             />
-            <NumberInput
+            <BikeNumberField
               label={locale === "nl" ? "Max. achtertand derailleur" : "Rear derailleur max cog"}
+              min={10}
+              max={60}
               value={numberToInputValue(derailleurMaxCog)}
               onChange={(value) => setDerailleurMaxCog(value === null ? "" : String(value))}
               unit="t"
             />
-            <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/30 p-4 text-sm text-muted-foreground">
+            <div
+              className={
+                "rounded-[var(--radius-md)] border border-border bg-secondary/30 p-4 text-sm " +
+                "text-muted-foreground"
+              }
+            >
               {locale === "nl"
-                ? "Bestaande fietsen mogen gedeeltelijk ingevuld blijven, maar nieuwe fietsen moeten genoeg gearing-data hebben voor bruikbare resultaten."
-                : "Existing bikes may remain partially filled, but new bikes should have enough gearing data for usable calculator results."}
+                ? "Bestaande fietsen mogen gedeeltelijk ingevuld blijven, maar nieuwe " +
+                  "fietsen moeten genoeg gearing-data hebben voor bruikbare resultaten."
+                : "Existing bikes may remain partially filled, but new bikes should have " +
+                  "enough gearing data for usable calculator results."}
             </div>
           </CardContent>
         </Card>
 
-        <Card variant="bordered" className="dashboard-card-surface">
+        <Card
+          variant="bordered"
+          style={{ display: section === "notes" ? undefined : "none" }}
+          className="bg-card"
+        >
           <CardHeader>
             <CardTitle>{messages.bikeForm.sections.notes}</CardTitle>
           </CardHeader>
@@ -525,13 +682,32 @@ export function BikeForm({
           </CardContent>
         </Card>
 
-        {error ? <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--danger)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--card)_92%,var(--danger)_8%)] px-4 py-3 text-sm text-[color:var(--danger)]">{error}</div> : null}
+        {error ? (
+          <div
+            className={
+              "rounded-[var(--radius-md)] border border-destructive bg-destructive/15 px-4 py-3 " +
+              "text-sm text-danger"
+            }
+          >
+            {error}
+          </div>
+        ) : null}
 
         <div className="flex flex-wrap items-center gap-3">
-          <Button type="submit" isLoading={isSubmitting}>{submitLabel}</Button>
-          <Button variant="outline" {...linkButtonProps(cancelHref)}>{messages.common.cancel}</Button>
+          <Button type="submit" isLoading={isSubmitting}>
+            {submitLabel}
+          </Button>
+          <Button variant="outline" {...linkButtonProps(cancelHref)}>
+            {messages.common.cancel}
+          </Button>
           {onDelete ? (
-            <Button type="button" variant="destructive" onClick={() => setShowDeleteDialog(true)} isLoading={isDeleting} className="ml-auto">
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => setShowDeleteDialog(true)}
+              isLoading={isDeleting}
+              className="ml-auto"
+            >
               {messages.bikeForm.actions.deleteBike}
             </Button>
           ) : null}

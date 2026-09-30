@@ -1,64 +1,121 @@
-/* @vitest-environment jsdom */
+// @vitest-environment jsdom
 
-import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import ContactPage from "./page";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import * as commercial from "@/config/commercial";
+import { contactPresentation } from "@/i18n/marketing/contact";
+import ContactPage, { generateMetadata } from "./page";
 
-let locale: "en" | "nl" = "en";
-
-vi.mock("next/link", () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string;
-    children?: React.ReactNode;
-    [key: string]: unknown;
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
+const mocks = vi.hoisted(() => ({
+  locale: "nl" as "nl" | "en",
+  logEvent: vi.fn().mockResolvedValue(undefined),
+  pushEvent: vi.fn(),
 }));
 
-vi.mock("@/components/analytics/TrackedCtaLink", () => ({
-  TrackedCtaLink: ({
-    href,
-    children,
-  }: {
-    href: string;
-    children?: React.ReactNode;
-  }) => <a href={href}>{children}</a>,
-}));
-
-vi.mock("@/i18n/request", () => ({
-  getRequestLocale: () => Promise.resolve(locale),
-}));
-
-vi.mock("@/i18n/metadata", () => ({
-  buildLocaleAlternates: () => ({ canonical: `https://bestbikefit4u.eu/${locale}/contact` }),
-}));
-
-beforeEach(() => {
-  locale = "en";
-});
+vi.mock("@/i18n/request", () => ({ getRequestLocale: async () => mocks.locale }));
+vi.mock("convex/react", () => ({ useMutation: () => mocks.logEvent }));
+vi.mock("@/lib/cookieConsent", () => ({ canTrackMarketing: () => true }));
+vi.mock("@/lib/analytics/marketing", () => ({ pushDataLayerEvent: mocks.pushEvent }));
+vi.mock("@/lib/analytics/conversions", () => ({ trackAdConversion: vi.fn() }));
 
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  vi.clearAllMocks();
 });
 
-describe("contact page", () => {
-  it("keeps support reassurance and conversion paths visible in English", async () => {
-    const ui = await ContactPage();
-    render(ui);
+describe("Contact marketing page", () => {
+  it.each(["nl", "en"] as const)("keeps real support content and mail-only channels in %s", async (locale) => {
+    mocks.locale = locale;
+    const { container } = render(await ContactPage());
+    const copy = contactPresentation[locale];
 
-    expect(screen.getByText("Contact Us")).toBeTruthy();
-    expect(screen.getByText("Direct support route")).toBeTruthy();
-    expect(screen.getByText("View FAQ").closest("a")?.getAttribute("href")).toBe("/en/faq");
-    expect(screen.getByText("Open email app").closest("a")?.getAttribute("href")).toBe(
-      "mailto:support@bestbikefit4u.eu"
-    );
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(copy.title + copy.titleEnd);
+    expect(screen.getByText(copy.languages)).toBeTruthy();
+    expect(screen.getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent))
+      .toEqual(copy.steps.map((step) => step.title));
+    for (const step of copy.steps) expect(screen.getByText(step.body)).toBeTruthy();
+    for (const response of commercial.getSupportResponseItems(locale)) {
+      expect(Array.from(container.querySelectorAll("li")).some((item) => item.textContent === response)).toBe(true);
+    }
+    const links = screen.getAllByRole("link");
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      "mailto:support@bestbikefit4u.eu",
+      "mailto:support@bestbikefit4u.eu",
+      `/${locale}/faq`,
+    ]);
+    expect(screen.getByRole("link", { name: "support@bestbikefit4u.eu" })).toBeTruthy();
+    expect(container.querySelector("form, input, textarea, select")).toBeNull();
+    expect(container.querySelector("header, footer, main")).toBeNull();
+    expect(container.textContent).not.toMatch(/Ontwerpstaat|Voorbeeldgegevens|\[PLACEHOLDER\]/);
+    expect(container.textContent).toContain(locale === "nl"
+      ? "Vermeld je fietstype, doel en waar je vastloopt voor sneller antwoord."
+      : "Include your bike type, goal, and where you are stuck so we can help quickly.");
+  });
+
+  it.each(["nl", "en"] as const)("preserves email and FAQ CTA analytics in %s", async (locale) => {
+    mocks.locale = locale;
+    render(await ContactPage());
+    const actions = [
+      { label: locale === "nl" ? "Open e-mailapp" : "Open email app",
+        target: "mailto:support@bestbikefit4u.eu", section: "contact_email_cta" },
+      { label: locale === "nl" ? "Bekijk FAQ" : "View FAQ",
+        target: `/${locale}/faq`, section: "contact_faq_link" },
+    ];
+
+    for (const action of actions) {
+      document.addEventListener("click", (event) => event.preventDefault(), { once: true });
+      fireEvent.click(screen.getByRole("link", { name: action.label }));
+      expect(mocks.logEvent).toHaveBeenLastCalledWith({
+        eventType: "cta_click",
+        locale,
+        pagePath: `/${locale}/contact`,
+        section: action.section,
+        ctaLabel: action.label,
+        ctaTargetPath: action.target,
+        sourceTag: `/${locale}/contact:${action.section}`,
+      });
+      expect(mocks.pushEvent).toHaveBeenLastCalledWith(expect.objectContaining({
+        event: "bbf_cta_click", ctaTargetPath: action.target, locale,
+      }));
+    }
+    expect(mocks.logEvent).toHaveBeenCalledTimes(2);
+  });
+
+  it.each(["nl", "en"] as const)("retains metadata, canonicals and language alternates in %s", async (locale) => {
+    mocks.locale = locale;
+    const metadata = await generateMetadata();
+    const title = locale === "nl" ? "Contact - BestBikeFit4U" : "Contact Us - BestBikeFit4U";
+    const description = locale === "nl"
+      ? "Neem contact op met het BestBikeFit4U-team. We helpen je graag met vragen over bike fitting en support."
+      : "Get in touch with the BestBikeFit4U team. " +
+        "We are here to help with your bike fitting questions and support needs.";
+    expect(metadata).toEqual({
+      title,
+      description,
+      keywords: ["contact BestBikeFit4U", "bike fit support", locale === "nl" ? "fiets hulp" : "cycling help"],
+      openGraph: { title, description, type: "website", url: `https://bestbikefit4u.eu/${locale}/contact` },
+      alternates: {
+        canonical: `https://bestbikefit4u.eu/${locale}/contact`,
+        languages: {
+          nl: "https://bestbikefit4u.eu/nl/contact",
+          en: "https://bestbikefit4u.eu/en/contact",
+          "x-default": "https://bestbikefit4u.eu/en/contact",
+        },
+      },
+    });
+  });
+
+  it("reads response expectations from commercial configuration", async () => {
+    vi.spyOn(commercial, "getSupportResponseItems").mockReturnValue(["Support response from configuration"]);
+    render(await ContactPage());
+    expect(screen.getByText("Support response from configuration")).toBeTruthy();
+  });
+
+  it("provides equivalent presentation fields and guidance in both languages", () => {
+    expect(Object.keys(contactPresentation.nl).sort()).toEqual(Object.keys(contactPresentation.en).sort());
+    expect(contactPresentation.nl.steps).toHaveLength(3);
+    expect(contactPresentation.en.steps).toHaveLength(3);
   });
 });

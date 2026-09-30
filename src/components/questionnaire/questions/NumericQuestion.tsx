@@ -88,7 +88,7 @@ export function NumericQuestion({
       />
 
       {rangeMessage && !error ? (
-        <p className="text-sm text-[color:var(--muted-foreground)]">
+        <p className="text-sm text-[color:var(--color-muted-foreground)]">
           {rangeMessage}
         </p>
       ) : null}

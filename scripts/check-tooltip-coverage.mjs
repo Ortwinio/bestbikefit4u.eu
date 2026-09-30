@@ -76,6 +76,7 @@ const EXEMPT_FILES = new Set([
 ]);
 
 const INPUT_SELECT_ENFORCED_FILES = new Set([
+  "src/app/(public)/design-system/Playground.tsx",
   "src/app/(auth)/login/page.tsx",
   "src/app/(dashboard)/fit/[sessionId]/results/page.tsx",
   "src/components/bikes/BikeForm.tsx",
@@ -149,7 +150,8 @@ function validateNativeControlCoverage(filePath, content, errors) {
   const fieldLabelsWithTooltip = content.match(/<FieldLabel[^>]*\btooltip=/g) || [];
   if (fieldLabelsWithTooltip.length !== controls.length) {
     errors.push(
-      `${filePath}: native controls (${controls.length}) do not match FieldLabel+tooltip count (${fieldLabelsWithTooltip.length}).`
+      `${filePath}: native controls (${controls.length}) do not match ` +
+        `FieldLabel+tooltip count (${fieldLabelsWithTooltip.length}).`,
     );
   }
 }
@@ -184,9 +186,7 @@ async function main() {
     const isNativeFile = NATIVE_CONTROL_ENFORCED_FILES.has(file.path);
 
     if (!isInputSelectFile && !isNativeFile) {
-      errors.push(
-        `${file.path}: contains form controls but is not tracked in tooltip coverage guardrail lists.`
-      );
+      errors.push(`${file.path}: contains form controls but is not tracked in tooltip coverage guardrail lists.`);
       continue;
     }
 
@@ -205,12 +205,8 @@ async function main() {
     process.exit(1);
   }
 
-  const trackedFileCount = filesWithControls.filter(
-    (file) => !PRIMITIVE_FILES.has(file.path)
-  ).length;
-  console.log(
-    `[tooltip-coverage] OK: ${trackedFileCount} form-control files verified with tooltip guardrails.`
-  );
+  const trackedFileCount = filesWithControls.filter((file) => !PRIMITIVE_FILES.has(file.path)).length;
+  console.log(`[tooltip-coverage] OK: ${trackedFileCount} form-control files verified with tooltip guardrails.`);
 }
 
 main().catch((error) => {

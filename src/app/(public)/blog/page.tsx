@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { BookOpen } from "lucide-react";
-import { BlogArticleCard } from "@/components/content/BlogArticleCard";
-import { Button } from "@/components/prototyper-ui/ui/button";
-import {
-  PublicCtaBand,
-  PublicHero,
-  PublicPageShell,
-  PublicSection,
-} from "@/components/public";
+import { BlogCard, BlogCta, BlogShell } from "@/components/blog/BlogPresentation";
+import styles from "@/components/blog/blog.module.css";
+import { PublicBreadcrumbs } from "@/components/public";
+import { blogMessages } from "@/i18n/marketing/blog";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
@@ -62,7 +59,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
   const locale = await getRequestLocale();
-  const isNl = locale === "nl";
+  const copy = blogMessages[locale];
   const resolvedSearchParams = (await searchParams) ?? {};
   const selectedCategory = getSearchParam(resolvedSearchParams.category);
   const currentPage = parsePage(getSearchParam(resolvedSearchParams.page));
@@ -78,7 +75,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
   const homeUrl = new URL(withLocalePrefix("/", locale), BRAND.siteUrl).toString();
 
   return (
-    <PublicPageShell>
+    <BlogShell>
       <JsonLd
         schema={buildBreadcrumbListSchema([
           { name: "Home", item: homeUrl },
@@ -86,62 +83,41 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
         ])}
       />
 
-      <PublicHero
-        eyebrow={isNl ? "Kennisbank" : "Knowledge base"}
-        title="Blog"
-        description={
-          isNl
-            ? "Praktische artikelen die bikefit-keuzes vertalen naar comfort, controle en betere vervolgstappen."
-            : "Practical articles that turn bike fit questions into clearer comfort, control, and setup decisions."
-        }
-        chips={[
-          isNl ? `${allPosts.length} artikelen` : `${allPosts.length} articles`,
-          isNl ? "Bikefitting" : "Bike fitting",
-          isNl ? "EN + NL" : "EN + NL",
-        ]}
-      />
+      <PublicBreadcrumbs items={[{ label: "Home", href: withLocalePrefix("/", locale) }, { label: copy.title }]} />
+      <section className={styles.hero}>
+        <div>
+          <p className={styles.eyebrow}>{copy.eyebrow}</p>
+          <h1>{copy.title}</h1>
+          <p className={styles.lead}>{copy.intro}</p>
+          <span className={styles.tag}><span className={styles.number}>{allPosts.length.toLocaleString(locale)}</span> {copy.articles}</span>
+        </div>
+        <Image className={styles.heroImage} src="/illustrations/06-meetset.webp" alt={copy.imageAlt} width={552} height={300} priority />
+      </section>
 
-      <PublicSection
-        className="mt-10"
-        header={{
-          eyebrow: isNl ? "Laatste artikelen" : "Latest articles",
-          title: isNl ? "Verdiep je fitbeslissing" : "Go deeper on your fit decision",
-          description: isNl
-            ? "Filter op onderwerp of scan de nieuwste artikelen vanuit de blogbibliotheek."
-            : "Filter by topic or scan the latest articles from the blog library.",
-        }}
-      >
+      <section aria-labelledby="blog-articles">
+        <h2 id="blog-articles" className={styles.sectionTitle}>{copy.sectionTitle}</h2>
+        <p className={styles.sectionCopy}>{copy.sectionCopy}</p>
         {categories.length > 0 ? (
-          <div className="mb-6 flex flex-wrap gap-2">
-            <Button
-              size="sm"
-              variant={!selectedCategory ? "default" : "outline"}
-              render={<Link href={withLocalePrefix("/blog", locale)} />}
-            >
-              {isNl ? "Alles" : "All"}
-            </Button>
+          <nav className={styles.filters} aria-label={copy.filters}>
+            <Link className={styles.pill} aria-current={!selectedCategory ? "page" : undefined} href={withLocalePrefix("/blog", locale)}>{copy.all}</Link>
             {categories.map((category) => (
-              <Button
+              <Link
                 key={category}
-                size="sm"
-                variant={selectedCategory === category ? "default" : "outline"}
-                render={
-                  <Link
-                    href={`${withLocalePrefix("/blog", locale)}?category=${encodeURIComponent(category)}`}
-                  />
-                }
+                className={styles.pill}
+                aria-current={selectedCategory === category ? "page" : undefined}
+                href={`${withLocalePrefix("/blog", locale)}?category=${encodeURIComponent(category)}`}
               >
                 {getBlogCategoryLabel(category, locale)}
-              </Button>
+              </Link>
             ))}
-          </div>
+          </nav>
         ) : null}
 
         {posts.length > 0 ? (
           <>
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className={styles.cards}>
               {posts.map((post, index) => (
-                <BlogArticleCard
+                <BlogCard
                   key={post.slug}
                   post={{
                     ...post,
@@ -156,7 +132,7 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
               ))}
             </div>
             {pageCount > 1 ? (
-              <div className="mt-8 flex flex-wrap justify-center gap-2">
+              <nav className={styles.pagination} aria-label={copy.pages}>
                 {Array.from({ length: pageCount }, (_, index) => index + 1).map((page) => {
                   const params = new URLSearchParams();
                   if (selectedCategory) {
@@ -168,48 +144,28 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
                   const query = params.toString();
 
                   return (
-                    <Button
+                    <Link
                       key={page}
-                      size="sm"
-                      variant={page === safePage ? "default" : "outline"}
-                      render={
-                        <Link
-                          href={`${withLocalePrefix("/blog", locale)}${query ? `?${query}` : ""}`}
-                        />
-                      }
+                      className={styles.pill}
+                      aria-label={`${copy.page} ${page}`}
+                      aria-current={page === safePage ? "page" : undefined}
+                      href={`${withLocalePrefix("/blog", locale)}${query ? `?${query}` : ""}`}
                     >
                       {page}
-                    </Button>
+                    </Link>
                   );
                 })}
-              </div>
+              </nav>
             ) : null}
           </>
         ) : (
-          <div className="rounded-[var(--radius-xl)] border border-border/70 bg-card p-6 text-sm leading-6 text-muted-foreground">
-            <BookOpen className="mb-4 h-5 w-5 text-primary" aria-hidden="true" />
-            {isNl
-              ? "Er zijn nog geen gepubliceerde blogartikelen voor deze selectie."
-              : "There are no published blog articles for this selection yet."}
+          <div className={styles.empty}>
+            <div className={styles.emptyIcon}><BookOpen size={36} aria-hidden="true" /></div>
+            <div><h3>{copy.emptyTitle}</h3><p>{copy.emptyCopy}</p></div>
           </div>
         )}
-      </PublicSection>
-
-      <PublicCtaBand
-        className="mt-12"
-        eyebrow={isNl ? "Volgende stap" : "Next step"}
-        title={isNl ? "Pas de inzichten toe op je eigen fit" : "Apply the insights to your own fit"}
-        description={
-          isNl
-            ? "Gebruik de gratis bike fit calculator om je metingen en setup-vragen concreet te maken."
-            : "Use the free bike fit calculator to turn your measurements and setup questions into practical targets."
-        }
-        actions={
-          <Button render={<Link href={withLocalePrefix("/calculators/bike-fit", locale)} />}>
-            {isNl ? "Open bike fit calculator" : "Open bike fit calculator"}
-          </Button>
-        }
-      />
-    </PublicPageShell>
+      </section>
+      <BlogCta locale={locale} />
+    </BlogShell>
   );
 }

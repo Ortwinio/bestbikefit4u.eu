@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Bandenspanning configurator</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F8F3;font-family:Figtree,system-ui,sans-serif;color:#0F2420}
+a{color:#0A7263}a:hover{color:#075A4E}
+.rng{-webkit-appearance:none;appearance:none;background:transparent;margin:0;height:44px;cursor:pointer}
+.rng::-webkit-slider-runnable-track{height:44px;background:transparent}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:7px;border-radius:50%;background:#FFFFFF;border:4px solid #0A7263;box-shadow:0 2px 8px rgba(15,36,32,.25)}
+.rng::-moz-range-track{height:44px;background:transparent}
+.rng::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#FFFFFF;border:4px solid #0A7263;box-shadow:0 2px 8px rgba(15,36,32,.25)}
+.rng:focus-visible{outline:3px solid #9CC21F;outline-offset:2px;border-radius:12px}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1300px; box-sizing: border-box; display: flex; flex-direction: column; background: #F5F8F3; color: #0F2420; font-family: Figtree, system-ui, sans-serif">
+
+<header style="display: flex; align-items: center; justify-content: space-between; height: 80px; padding: 0 64px; border-bottom: 1px solid #DCE6E1">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #0F2420">
+<svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#CFF26A"></circle><circle cx="11" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><circle cx="23" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><path d="M11 20l4-8h6l2 8M15 12l4 8" stroke="#0F2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px">BestBikeFit<span style="color: #0A7263">4U</span></span>
+</a>
+<nav aria-label="Calculators" style="display: flex; gap: 2px; padding: 5px; border-radius: 999px; background: #FFFFFF; border: 1px solid #DCE6E1; font-size: 14px; font-weight: 600">
+<a href="BikeFit.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Bike fit</a>
+<a href="SaddleHeight.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Zadelhoogte</a>
+<a href="FrameSize.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Framemaat</a>
+<a href="TirePressure.dc.html" aria-current="page" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; background: #0F2420; color: #FFFFFF; text-decoration: none; white-space: nowrap">Bandenspanning</a>
+<a href="CrankLength.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Cranklengte</a>
+<a href="SaddleWidth.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Zadelbreedte</a>
+<a href="Gearing.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Verzet</a>
+<a href="Main.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Meer</a>
+</nav>
+<a href="Login.dc.html" style="font-weight: 600; color: #0F2420; text-decoration: none">Inloggen</a>
+</header>
+
+<div style="padding: 40px 64px 28px">
+<div style="font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #0A7263">Bandenspanning · jouw startpunt</div>
+<h1 style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.03em">Meer grip, minder weerstand</h1>
+</div>
+
+<div style="display: grid; grid-template-columns: 560px 1fr; gap: 32px; padding: 0 64px 64px; flex-grow: 1">
+<section style="align-self: flex-start; display: flex; flex-direction: column; gap: 22px; padding: 28px; border-radius: 24px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<div role="group" aria-label="Soort fiets" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 5px; border-radius: 16px; background: #EEF3EF">
+<sc-for list="{{types}}" as="t" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{t.pressed}}" onClick="{{t.pick}}" style="height: 46px; border: 0; border-radius: 12px; background: {{t.bg}}; color: {{t.fg}}; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: {{t.shadow}}">{{t.label}}</button>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<label for="tp-weight" style="font-weight: 600">Lichaamsgewicht</label>
+<div style="font-family: 'DM Mono', monospace; font-size: 26px">{{weight}}<span style="font-size: 14px; color: #4A5F5A"> kg</span></div>
+</div>
+<div style="position: relative; height: 44px">
+<div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 99px; background: #DCE6E1"></div>
+<div style="position: absolute; left: 0; top: 18px; height: 8px; border-radius: 99px; background: #0A7263; width: {{weightPct}}%"></div>
+<input id="tp-weight" class="rng" type="range" min="35" max="160" step="1" value="{{weight}}" onChange="{{setWeight}}" style="position: absolute; left: 0; top: 0; width: 100%">
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<div style="font-weight: 600">Bandbreedte</div>
+<button type="button" aria-pressed="{{linkedStr}}" onClick="{{toggleLink}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #DCE6E1; background: {{linkBg}}; color: #0F2420; font-size: 13px; font-weight: 700; cursor: pointer">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>{{linkLabel}}</button>
+</div>
+<div style="display: grid; grid-template-columns: 70px 1fr 82px; align-items: center; gap: 12px">
+<label for="tp-front" style="font-size: 15px; color: #3B4F4A">Voor</label>
+<div style="position: relative; height: 44px">
+<div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 99px; background: #DCE6E1"></div>
+<div style="position: absolute; left: 0; top: 18px; height: 8px; border-radius: 99px; background: #0A7263; width: {{frontPct}}%"></div>
+<input id="tp-front" class="rng" type="range" min="18" max="80" step="1" value="{{front}}" onChange="{{setFront}}" style="position: absolute; left: 0; top: 0; width: 100%">
+</div>
+<div style="font-family: 'DM Mono', monospace; font-size: 20px; text-align: right">{{front}} mm</div>
+<label for="tp-rear" style="font-size: 15px; color: #3B4F4A">Achter</label>
+<div style="position: relative; height: 44px">
+<div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 99px; background: #DCE6E1"></div>
+<div style="position: absolute; left: 0; top: 18px; height: 8px; border-radius: 99px; background: #0A7263; width: {{rearPct}}%"></div>
+<input id="tp-rear" class="rng" type="range" min="18" max="80" step="1" value="{{rear}}" onChange="{{setRear}}" style="position: absolute; left: 0; top: 0; width: 100%">
+</div>
+<div style="font-family: 'DM Mono', monospace; font-size: 20px; text-align: right">{{rear}} mm</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-weight: 600">Band</div>
+<div role="group" aria-label="Soort band" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{tubes}}" as="t" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{t.pressed}}" onClick="{{t.pick}}" style="height: 46px; border-radius: 14px; border: 2px solid {{t.border}}; background: {{t.bg}}; color: #0F2420; font-size: 15px; font-weight: 700; cursor: pointer">{{t.label}}</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="font-weight: 600">Ondergrond</div>
+<div role="group" aria-label="Ondergrond" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{surfaceOptions}}" as="surfaceOption" hint-placeholder-count="6">
+<button type="button" aria-pressed="{{surfaceOption.pressed}}" onClick="{{surfaceOption.pick}}" style="min-height: 44px; border: 1px solid #DCE6E1; border-radius: 12px; background: {{surfaceOption.bg}}; color: #0F2420; font-weight: 600">{{surfaceOption.label}}</button>
+</sc-for>
+</div>
+</div>
+
+<button type="button" aria-expanded="{{advStr}}" onClick="{{toggleAdv}}" style="display: flex; align-items: center; justify-content: space-between; height: 48px; padding: 0 16px; border-radius: 14px; border: 1px dashed #DCE6E1; background: transparent; color: #0F2420; font-size: 15px; font-weight: 700; cursor: pointer">Verfijn fietsgewicht en bagage<span style="font-family: 'DM Mono', monospace">{{advSign}}</span></button>
+<sc-if value="{{adv}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<label for="tp-bike" style="font-weight: 600">Fietsgewicht</label>
+<div style="font-family: 'DM Mono', monospace; font-size: 22px">{{bike}}<span style="font-size: 14px; color: #4A5F5A"> kg</span></div>
+</div>
+<div style="position: relative; height: 44px">
+<div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 99px; background: #DCE6E1"></div>
+<div style="position: absolute; left: 0; top: 18px; height: 8px; border-radius: 99px; background: #0A7263; width: {{bikePct}}%"></div>
+<input id="tp-bike" class="rng" type="range" min="3" max="20" step="0.1" value="{{bike}}" onChange="{{setBike}}" style="position: absolute; left: 0; top: 0; width: 100%">
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<label for="tp-luggage" style="font-weight: 600">Extra bagage</label>
+<div style="font-family: 'DM Mono', monospace; font-size: 22px">{{luggage}}<span style="font-size: 14px; color: #4A5F5A"> kg</span></div>
+</div>
+<div style="position: relative; height: 44px">
+<div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 99px; background: #DCE6E1"></div>
+<div style="position: absolute; left: 0; top: 18px; height: 8px; border-radius: 99px; background: #0A7263; width: {{luggagePct}}%"></div>
+<input id="tp-luggage" class="rng" type="range" min="0" max="30" step="1" value="{{luggage}}" onChange="{{setLuggage}}" style="position: absolute; left: 0; top: 0; width: 100%">
+</div>
+<div style="font-size: 13px; color: #4A5F5A">Extra bagage telt mee in het advies voor je achterband.</div>
+</div>
+</sc-if>
+</section>
+
+<div style="display: flex; flex-direction: column; gap: 20px">
+<section aria-label="Aanbevolen spanning" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+<sc-for list="{{gauges}}" as="gg" hint-placeholder-count="2">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 28px 24px; border-radius: 28px; background: {{gg.bg}}; color: {{gg.fg}}">
+<div style="align-self: flex-start; font-size: 16px; font-weight: 700">{{gg.label}}</div>
+<svg width="300" height="170" viewBox="0 0 220 128" fill="none" aria-hidden="true">
+<path d="M20 118A90 90 0 0 1 200 118" stroke="{{gg.track}}" stroke-width="16" stroke-linecap="round"></path>
+<path d="M20 118A90 90 0 0 1 200 118" stroke="{{gg.arc}}" stroke-width="16" stroke-linecap="round" stroke-dasharray="{{gg.dash}}"></path>
+</svg>
+<div style="margin-top: -84px; font-family: 'DM Mono', monospace; font-size: 64px; line-height: 1">{{gg.bar}}</div>
+<div style="font-size: 16px; font-weight: 600">bar · <span style="font-family: 'DM Mono', monospace">{{gg.psi}}</span> psi<br><span style="font-family: Figtree, sans-serif; font-size: 13px">Schaal <span style="font-family: 'DM Mono', monospace">0–{{gg.maximum}}</span> bar · veilige marge <span style="font-family: 'DM Mono', monospace">{{gg.minimum}}–{{gg.maximum}}</span></span></div>
+</div>
+</sc-for>
+</section>
+
+<section style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 16px; padding: 28px; border-radius: 24px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px">Wat je hebt ingevuld</h2>
+<sc-for list="{{drivers}}" as="d" hint-placeholder-count="4">
+<div style="display: grid; grid-template-columns: 140px 1fr 110px; align-items: center; gap: 12px; font-size: 15px">
+<span style="font-weight: 600">{{d.label}}</span>
+<div style="height: 10px; border-radius: 99px; background: #EEF3EF; overflow: hidden"><div style="height: 10px; border-radius: 99px; background: #0A7263; width: {{d.pct}}%"></div></div>
+<span style="color: #4A5F5A; text-align: right">{{d.value}}</span>
+</div>
+</sc-for>
+<div style="font-size: 14px; color: #4A5F5A; line-height: 1.5">{{scopeNote}} Blijf altijd onder het maximum van band en velg.
+<div role="status" aria-live="polite" style="margin-top: 12px; padding: 12px; border-radius: 12px; background: #FFD66B; color: #0F2420">
+<strong>Waarschuwingen</strong>
+<sc-for list="{{warnings}}" as="warning" hint-placeholder-count="1"><p style="margin: 6px 0">{{warning}}</p></sc-for>
+<p style="margin: 6px 0">Controleer altijd de maximale druk op je band en velg (hookless!). [WAARSCHUWINGEN UIT JE ACCOUNT]</p>
+</div></div>
+</div>
+<div style="display: flex; flex-direction: column; align-self: start; gap: 16px; padding: 28px; border-radius: 24px; background: #0F2420; color: #FFFFFF">
+<div>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px">Test en verfijn</h2>
+<p style="margin: 10px 0 0; color: #B9CCC6; line-height: 1.5">Begin hier en pas in stappen van 0,1 bar aan. Check eerst grip en comfort voor.</p>
+</div>
+<a href="#" style="display: inline-flex; align-items: center; justify-content: center; height: 52px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; text-decoration: none">Bewaar per fiets in je account</a>
+</div>
+</section>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { type: 0, weight: 75, front: 28, rear: 28, linked: true, tube: 0, surface: 1, adv: false, bike: 8, luggage: 0 };
+  }
+  renderVals() {
+    const s = this.state;
+    const surfaces = ['Glad asfalt', 'Gemiddeld asfalt', 'Ruw asfalt', 'Hard grind', 'Los grind', 'Trail'];
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:134
+    const sys = s.weight + s.bike;
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:70
+    const multiplier = [1, 0.72, 0.5][s.type];
+    const limits = [[4, 9], [1.5, 5], [0.8, 3.5]][s.type];
+    const surfaceAdjustment = [0.2, 0, -0.2, -0.3, -0.5, -0.7][s.surface];
+    const tubeAdjustment = [[-0.2, -0.3], [0, 0], [-0.1, -0.1]][s.tube];
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:134
+    const rawFront = sys * 0.4 / s.front * 4.55 * multiplier + surfaceAdjustment + tubeAdjustment[0];
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:168
+    const rawRear = sys * 0.6 / s.rear * 3.32 * multiplier + surfaceAdjustment + tubeAdjustment[1] + s.luggage * 0.005;
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:198
+    const frontBar = Math.round(Math.max(limits[0], Math.min(limits[1], rawFront)) * 10) / 10;
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:198
+    const rearBar = Math.round(Math.max(frontBar, Math.max(limits[0], Math.min(limits[1], rawRear))) * 10) / 10;
+    const gauge = (label, value, dark) => ({
+      label: label,
+      bar: value.toFixed(1).replace('.', ','),
+      // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:300
+      psi: Math.round(value * 14.5038),
+      // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:104
+      dash: ((value / limits[1]) * 282.7).toFixed(1) + ' 400',
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:134
+      minimum: limits[0], maximum: limits[1],
+      bg: dark ? '#0F2420' : '#CFF26A',
+      fg: dark ? '#FFFFFF' : '#0F2420',
+      track: dark ? '#2E4C45' : '#B6D94C',
+      arc: dark ? '#CFF26A' : '#0F2420'
+    });
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:214
+    const warnings = [];
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:240
+    if (s.tube === 1 && Math.min(frontBar, rearBar) < 1.5) warnings.push('Binnenband: risico op stootlek; druk te laag voor deze setup.');
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:245
+    if (rearBar > frontBar * 1.4) warnings.push('Groot drukverschil tussen voor- en achterband; controleer je setup.');
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:249
+    if (s.type === 0 && (s.front < 20 || s.front > 40)) warnings.push('Ongebruikelijke bandbreedte voor een racefiets.');
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:253
+    if (s.type === 1 && (s.front < 30 || s.front > 65)) warnings.push('Ongebruikelijke bandbreedte voor een gravelfiets.');
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:260
+    if (s.type === 2 && s.front < 45) warnings.push('Ongebruikelijke bandbreedte voor een MTB.');
+    const surfaceOptions = surfaces.map((label, index) => ({
+      label, pressed: String(s.surface === index), bg: s.surface === index ? '#E6F8A8' : '#FFFFFF',
+      pick: () => this.setState({ surface: index })
+    }));
+    const defaults = [[28, 28], [40, 40], [58, 58]];
+    const types = ['Race', 'Gravel', 'MTB'].map((label, i) => ({
+      label: label, pressed: String(s.type === i),
+      bg: s.type === i ? '#FFFFFF' : 'transparent',
+      fg: s.type === i ? '#0F2420' : '#3B4F4A',
+      shadow: s.type === i ? '0 1px 4px rgba(15,36,32,.18)' : 'none',
+      pick: () => this.setState({ type: i, front: defaults[i][0], rear: defaults[i][1], surface: [1, 3, 5][i] })
+    }));
+    const tubes = ['Tubeless', 'Binnenband', 'Latex'].map((label, i) => ({
+      label: label, pressed: String(s.tube === i),
+      bg: s.tube === i ? '#E6F8A8' : '#FFFFFF',
+      border: s.tube === i ? '#0A7263' : '#DCE6E1',
+      pick: () => this.setState({ tube: i })
+    }));
+    const drivers = [
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:134
+      { label: 'Gewicht', pct: ((sys - 38) / 142) * 100, value: sys + ' kg + ' + s.luggage + ' kg bagage' },
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:134
+      { label: 'Bandbreedte', pct: ((80 - s.rear) / 62) * 100, value: s.front + ' / ' + s.rear + ' mm' },
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:134
+      { label: 'Ondergrond', pct: (s.surface / 5) * 100, value: surfaces[s.surface] },
+      { label: 'Band', pct: [40, 60, 30][s.tube], value: ['Tubeless', 'Binnenband', 'Latex'][s.tube] }
+    ];
+    const setW = (key) => (e) => {
+      const v = Number(e.target.value);
+      if (this.state.linked) this.setState({ front: v, rear: v });
+      else { const o = {}; o[key] = v; this.setState(o); }
+    };
+    return {
+      types: types, tubes: tubes, drivers: drivers, surfaceOptions: surfaceOptions, warnings: warnings,
+      scopeNote: 'Een sterk startpunt — test het op je fiets. In je account rekenen we ook met nat weer, karkas en velgbreedte.',
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:134
+      luggage: s.luggage, luggagePct: s.luggage / 30 * 100,
+      setLuggage: (event) => this.setState({ luggage: Number(event.target.value) }),
+      weight: s.weight, front: s.front, rear: s.rear, surface: s.surface, bike: s.bike,
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:134
+      weightPct: ((s.weight - 35) / 125) * 100,
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:134
+      frontPct: ((s.front - 18) / 62) * 100, rearPct: ((s.rear - 18) / 62) * 100,
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/pressure-engine.ts:134
+      bikePct: ((s.bike - 3) / 17) * 100,
+      surfaceLabel: surfaces[s.surface],
+      setWeight: (e) => this.setState({ weight: Number(e.target.value) }),
+      setFront: setW('front'), setRear: setW('rear'),
+      setBike: (e) => this.setState({ bike: Number(e.target.value) }),
+      linkedStr: String(s.linked), linkBg: s.linked ? '#E6F8A8' : '#FFFFFF',
+      linkLabel: s.linked ? 'Gelijk voor en achter' : 'Los instellen',
+      toggleLink: () => this.setState({ linked: !s.linked, rear: !s.linked ? s.front : s.rear }),
+      adv: s.adv, advStr: String(s.adv), advSign: s.adv ? '−' : '+',
+      toggleAdv: () => this.setState({ adv: !s.adv }),
+      gauges: [gauge('Voorband', frontBar, false), gauge('Achterband', rearBar, true)]
+    };
+  }
+}
+</script>
+</body>
+</html>

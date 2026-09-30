@@ -127,7 +127,7 @@ export function UserMenu() {
             <Button
               variant="ghost"
               onClick={handleSignOut}
-              className="flex w-full items-center justify-start gap-3 px-4 py-2 text-sm text-destructive hover:bg-destructive-soft"
+              className="flex w-full items-center justify-start gap-3 px-4 py-2 text-sm text-destructive-text hover:bg-destructive-soft"
             >
               <LogOut className="h-4 w-4" />
               {messages.common.signOut}

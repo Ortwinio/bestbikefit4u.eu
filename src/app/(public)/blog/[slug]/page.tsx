@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BlogBodyMarkdown } from "@/components/content/BlogBodyMarkdown";
 import { BlogTableOfContents } from "@/components/content/BlogTableOfContents";
-import { Button } from "@/components/prototyper-ui/ui/button";
-import {
-  PublicBreadcrumbs,
-  PublicCtaBand,
-  PublicPageShell,
-  PublicSection,
-} from "@/components/public";
+import { PublicBreadcrumbs } from "@/components/public";
+import { BlogCta, BlogShell } from "@/components/blog/BlogPresentation";
+import styles from "@/components/blog/blog.module.css";
+import { blogMessages } from "@/i18n/marketing/blog";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { BRAND } from "@/config/brand";
@@ -112,7 +108,7 @@ export async function generateMetadata({ params }: BlogArticleProps): Promise<Me
 
 export default async function BlogArticlePage({ params }: BlogArticleProps) {
   const locale = await getRequestLocale();
-  const isNl = locale === "nl";
+  const copy = blogMessages[locale];
   const { slug } = await params;
   const post = await getPublishedPostData(slug);
 
@@ -145,7 +141,7 @@ export default async function BlogArticlePage({ params }: BlogArticleProps) {
   const relatedGuides = (post.relatedGuidePaths ?? []).map((path) => getGuideLink(path, locale));
 
   return (
-    <PublicPageShell>
+    <BlogShell>
       <JsonLd
         schema={[
           buildBlogPostingSchema({
@@ -184,86 +180,69 @@ export default async function BlogArticlePage({ params }: BlogArticleProps) {
         ]}
       />
 
-      <article className="mt-6">
-        <header className="mx-auto max-w-4xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
+      <article>
+        <header className={styles.articleHeader}>
+          <p className={styles.eyebrow}>
             {categoryLabel}
           </p>
-          <h1 className="mt-4 text-balance text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+          <h1>
             {h1}
           </h1>
-          <p className="mt-5 text-base leading-7 text-muted-foreground">
-            {publishedDate ? `${publishedDate} · ` : null}
-            {readingTime} {isNl ? "min lezen" : "min read"}
-            {post.authorName ? ` · ${isNl ? "door" : "by"} ${post.authorName}` : null}
-          </p>
+          <div className={styles.metadata}>
+            {publishedDate ? <time className={styles.number} dateTime={new Date(post.publishedAt!).toISOString()}>{publishedDate}</time> : null}
+            <span><span className={styles.number}>{readingTime}</span> {copy.readTime}</span>
+            {post.authorName ? <span>{copy.by} {post.authorName}</span> : null}
+          </div>
           {localizeBlogText(post.excerpt, locale) ? (
-            <p className="mt-5 text-lg leading-8 text-muted-foreground">
+            <p className={styles.lead}>
               {localizeBlogText(post.excerpt, locale)}
             </p>
           ) : null}
         </header>
 
         {imageUrl ? (
-          <div className="mt-8 overflow-hidden rounded-[var(--radius-xl)] border border-border/70">
+          <div>
             <Image
               src={imageUrl}
               alt={imageAlt}
               width={1200}
               height={630}
               priority
-              className="aspect-[1200/630] w-full object-cover"
+              sizes="(max-width: 639px) 100vw, (max-width: 1199px) 90vw, 1200px"
+              className={styles.articleImage}
             />
           </div>
         ) : null}
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
-          <PublicSection as="div" contentClassName="px-5 py-6 sm:px-7 sm:py-8">
+        <div className={`${styles.bodyGrid} ${!post.tableOfContents ? styles.bodyGridSingle : ""}`}>
+          <div className={styles.body}>
             <BlogBodyMarkdown content={body} />
-          </PublicSection>
+          </div>
           {post.tableOfContents ? (
-            <aside className="lg:sticky lg:top-24 lg:self-start">
+            <aside className={styles.toc}>
               <BlogTableOfContents
                 content={body}
-                title={isNl ? "In dit artikel" : "In this article"}
+                title={copy.toc}
               />
             </aside>
           ) : null}
         </div>
 
+        <div className={styles.related}>
         <RelatedLinksSection
-          title={isNl ? "Gerelateerde artikelen" : "Related articles"}
+          title={copy.relatedPosts}
           links={relatedPosts}
           locale={locale}
         />
 
         <RelatedLinksSection
-          title={isNl ? "Gerelateerde gidsen" : "Related guides"}
+          title={copy.relatedGuides}
           links={relatedGuides}
           locale={locale}
         />
+        </div>
       </article>
-
-      <PublicCtaBand
-        className="mt-10"
-        eyebrow={isNl ? "Volgende stap" : "Next step"}
-        title={isNl ? "Maak je setup concreet" : "Make your setup practical"}
-        description={
-          isNl
-            ? "Gebruik de calculator om dit artikel te vertalen naar persoonlijke fitdoelen."
-            : "Use the calculator to turn this article into personal fit targets."
-        }
-        actions={
-          <>
-            <Button render={<Link href={withLocalePrefix("/calculators/bike-fit", locale)} />}>
-              {isNl ? "Open calculator" : "Open calculator"}
-            </Button>
-            <Button variant="outline" render={<Link href={withLocalePrefix("/blog", locale)} />}>
-              {isNl ? "Alle artikelen" : "All articles"}
-            </Button>
-          </>
-        }
-      />
-    </PublicPageShell>
+      <BlogCta locale={locale} detail />
+    </BlogShell>
   );
 }

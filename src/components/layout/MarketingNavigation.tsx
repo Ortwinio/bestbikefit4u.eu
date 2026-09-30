@@ -1,0 +1,70 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useConvexAuth } from "convex/react";
+import type { Locale } from "@/i18n/config";
+import { withLocalePrefix } from "@/i18n/navigation";
+import { buildLocaleSwitchHref } from "@/i18n/switchHref";
+import { getMarketingLayoutMessages } from "@/i18n/marketing/layout";
+
+export function MarketingAccountLink({ locale, loginLabel, dashboardLabel }: {
+  locale: Locale;
+  loginLabel: string;
+  dashboardLabel: string;
+}) {
+  const { isAuthenticated } = useConvexAuth();
+  return (
+    <Link href={withLocalePrefix(isAuthenticated ? "/dashboard" : "/login", locale)}
+      className="hidden min-h-11 items-center text-base font-semibold hover:underline xl:inline-flex">
+      {isAuthenticated ? dashboardLabel : loginLabel}
+    </Link>
+  );
+}
+
+export function MarketingNavigation({ items, label }: {
+  items: { href: string; label: string }[];
+  label: string;
+}) {
+  const pathname = usePathname();
+  return (
+    <nav aria-label={label} className="hidden items-center gap-5 xl:flex">
+      {items.map((item) => (
+        <Link key={item.href} href={item.href}
+          aria-current={pathname === item.href ? "page" : undefined}
+          className={
+            "inline-flex min-h-11 items-center whitespace-nowrap text-base font-semibold text-foreground " +
+            "hover:text-primary aria-[current=page]:text-primary aria-[current=page]:underline " +
+            "aria-[current=page]:decoration-[var(--bbf-lime)] " +
+            "aria-[current=page]:decoration-[3px] aria-[current=page]:underline-offset-8"
+          }>
+          {item.label}
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
+export function MarketingLanguageSwitch({ locale, inverse = false }: {
+  locale: Locale;
+  inverse?: boolean;
+}) {
+  const pathname = usePathname() ?? "/";
+  const searchParams = useSearchParams();
+  const copy = getMarketingLayoutMessages(locale);
+  return (
+    <nav aria-label={copy.language} className={`inline-flex shrink-0 rounded-full border p-0.5 ${inverse ? "border-[var(--bbf-gedempt)]" : "border-border"}`}>
+      {(["nl", "en"] as const).map((target) => (
+        <a key={target}
+          href={buildLocaleSwitchHref({ pathname, queryString: searchParams?.toString() ?? "", locale: target })}
+          aria-label={target === "nl" ? copy.dutch : copy.english}
+          aria-current={locale === target ? "page" : undefined}
+          className={`inline-flex size-11 items-center justify-center rounded-full text-xs font-semibold ${locale === target
+            ? inverse ? "bg-[var(--bbf-lime)] text-[var(--bbf-inkt)]" : "bg-foreground text-background"
+            : inverse ? "text-[var(--bbf-op-donker)] hover:text-[var(--bbf-wit)]" : "text-muted-foreground hover:text-foreground"}`}>
+          {target.toUpperCase()}
+        </a>
+      ))}
+    </nav>
+  );
+}

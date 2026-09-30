@@ -8,11 +8,11 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@/components/prototyper-ui/ui/card";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { Label } from "@/components/prototyper-ui/ui/label";
 import { Input } from "@/components/ui";
+import { LoginPresentation } from "@/components/account/LoginPresentation";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
@@ -225,15 +225,15 @@ function AuthField({
 }) {
   return (
     <div className="space-y-2">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+      <div className="flex flex-col gap-2">
         <Label htmlFor={id}>{label}</Label>
         {tooltip ? (
-          <p id={`${id}-help`} className="max-w-none text-left text-xs leading-5 text-muted-foreground sm:max-w-xs sm:text-right">
+          <p id={`${id}-help`} className="text-sm leading-5 text-muted-foreground">
             {tooltip}
           </p>
         ) : null}
       </div>
-      <Input id={id} tooltip={tooltip} aria-describedby={tooltip ? `${id}-help` : undefined} className={className} {...props} />
+      <Input id={id} tooltip={tooltip} aria-describedby={tooltip ? `${id}-help` : undefined} className={`min-h-[52px] rounded-[14px] bg-card ${className ?? ""}`} {...props} />
     </div>
   );
 }
@@ -302,13 +302,10 @@ export default function LoginPage() {
   }, []);
 
   const uspPanel = (
-    <section className="rounded-[1.75rem] border border-border/70 bg-card/90 p-6 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
-        {locale === "nl" ? "Gratis account" : "Free account"}
-      </p>
-      <h2 className="mt-3 text-xl font-semibold text-foreground">{text.uspTitle}</h2>
-      <p className="mt-2 text-sm text-muted-foreground">{text.uspSubtitle}</p>
-      <ul className="mt-4 space-y-3 text-sm text-foreground">
+    <details className="mt-5 text-[color:var(--bbf-inkt)]">
+      <summary className="min-h-11 cursor-pointer rounded-lg py-3 font-semibold focus-visible:focus-ring">{text.uspTitle}</summary>
+      <p className="mt-2 text-sm">{text.uspSubtitle}</p>
+      <ul className="mt-4 space-y-3 text-sm">
         {text.uspItems.map((item) => (
           <li key={item} className="flex items-start gap-3">
             <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />
@@ -316,10 +313,7 @@ export default function LoginPage() {
           </li>
         ))}
       </ul>
-      <p className="mt-4 rounded-2xl bg-primary-soft px-4 py-3 text-sm text-foreground">
-        {text.accountCreationHint}
-      </p>
-    </section>
+    </details>
   );
 
   useEffect(() => {
@@ -551,24 +545,25 @@ export default function LoginPage() {
 
   if (step === "success") {
     return (
-      <Card className="gap-0 rounded-[2rem] border border-border/70 bg-card/95 shadow-sm">
-        <CardContent className="pt-8 pb-8 text-center">
-          <CheckCircle className="mx-auto mb-4 h-16 w-16 text-success" />
-          <h2 className="mb-2 text-xl font-semibold text-foreground">
-            {text.successTitle}
-          </h2>
-          <p className="text-muted-foreground">{text.successSubtitle}</p>
-        </CardContent>
-      </Card>
+      <LoginPresentation locale={locale}>
+        <Card className="gap-0 overflow-visible border-0 bg-transparent p-0 shadow-none" role="status" aria-live="polite">
+          <CardContent className="px-0 pt-8 pb-8 text-center">
+            <CheckCircle className="mx-auto mb-4 h-16 w-16 text-success-text" />
+            <h1 className="mb-2 font-display text-[40px] font-extrabold leading-[1.05] tracking-tight text-foreground">
+              {text.successTitle}
+            </h1>
+            <p className="text-muted-foreground">{text.successSubtitle}</p>
+          </CardContent>
+        </Card>
+      </LoginPresentation>
     );
   }
 
   if (step === "code") {
     return (
-      <div className="space-y-5">
-        {uspPanel}
-        <Card className="gap-0 rounded-[2rem] border border-border/70 bg-card/95 shadow-sm">
-          <CardHeader className="space-y-4">
+      <LoginPresentation locale={locale} benefits={uspPanel}>
+        <Card className="gap-0 overflow-visible border-0 bg-transparent p-0 shadow-none">
+          <CardHeader className="space-y-4 px-0 pb-6">
             <Button
               type="button"
               variant="ghost"
@@ -579,10 +574,10 @@ export default function LoginPage() {
               <ArrowLeft className="h-4 w-4 mr-1" />
               {text.back}
             </Button>
-            <CardTitle>{text.enterVerificationCode}</CardTitle>
+            <h1 className="font-display text-[44px] font-extrabold leading-[1.05] tracking-tight lg:text-[40px]">{text.enterVerificationCode}</h1>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">
+          <CardContent className="space-y-4 px-0">
+            <p className="text-sm text-muted-foreground [overflow-wrap:anywhere]">
               {text.codeSentTo} <strong>{email}</strong>
             </p>
             <div className="flex flex-wrap items-center gap-3">
@@ -596,7 +591,7 @@ export default function LoginPage() {
                 {text.changeEmailAction}
               </Button>
               {sendSuccess && (
-                <p className="rounded-lg bg-success/15 px-3 py-2 text-sm text-success">
+                <p role="status" className="rounded-lg bg-success/15 px-3 py-2 text-sm text-success-text">
                   {text.codeSentSuccess}
                 </p>
               )}
@@ -621,18 +616,18 @@ export default function LoginPage() {
               />
 
               {error && (
-                <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
+                <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive-text">
                   {error}
                 </p>
               )}
 
               {resendSuccess && (
-                <p className="rounded-lg bg-success/15 p-3 text-sm text-success">
+                <p role="status" className="rounded-lg bg-success/15 p-3 text-sm text-success-text">
                   {text.resendSuccess}
                 </p>
               )}
 
-              <Button type="submit" className="w-full" isPending={isLoading}>
+              <Button type="submit" className="min-h-14 w-full whitespace-normal" isPending={isLoading}>
                 {text.verifyCode}
               </Button>
             </form>
@@ -643,7 +638,7 @@ export default function LoginPage() {
                 variant="ghost"
                 onClick={handleResendCode}
                 disabled={isLoading || resendCooldown > 0}
-                className="px-0 text-sm text-primary hover:text-primary-dark"
+                className="min-h-11 max-w-full whitespace-normal px-0 text-sm text-primary hover:text-primary-dark"
               >
                 {resendCooldown > 0
                   ? `${text.resendIn} ${resendCooldown}s`
@@ -657,25 +652,24 @@ export default function LoginPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </LoginPresentation>
     );
   }
 
   return (
-    <div className="space-y-5">
-      {uspPanel}
-      <Card className="gap-0 rounded-[2rem] border border-border/70 bg-card/95 shadow-sm">
-        <CardHeader className="space-y-2">
-          <CardTitle>{text.signInTitle}</CardTitle>
-          <p className="text-sm text-muted-foreground">{text.noPasswordHint}</p>
+    <LoginPresentation locale={locale} benefits={uspPanel}>
+      <Card className="gap-0 overflow-visible border-0 bg-transparent p-0 shadow-none">
+        <CardHeader className="space-y-3 px-0 pb-6">
+          <h1 className="font-display text-[44px] font-extrabold leading-[1.05] tracking-tight lg:text-[40px]">{text.signInTitle}</h1>
+          <p className="text-base text-muted-foreground">{text.noPasswordHint}</p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-0">
           {googleAuthEnabled ? (
             <>
               <Button
                 type="button"
                 variant="outline"
-                className="w-full"
+                className="min-h-[54px] w-full whitespace-normal rounded-[14px] bg-card"
                 onClick={() => void handleGoogleSignIn()}
                 isPending={isLoading}
                 disabled={authActionDisabled}
@@ -711,14 +705,14 @@ export default function LoginPage() {
             />
 
             {error && (
-              <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
+              <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive-text">
                 {error}
               </p>
             )}
 
             <Button
               type="submit"
-              className="w-full"
+              className="min-h-14 w-full whitespace-normal"
               isPending={isLoading}
               disabled={authActionDisabled}
             >
@@ -726,6 +720,7 @@ export default function LoginPage() {
               {text.sendCode}
             </Button>
           </form>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{text.accountCreationHint}</p>
 
           {localhostDevReady ? (
             <div className="mt-6 rounded-lg border border-primary/25 bg-primary-soft p-4">
@@ -735,7 +730,7 @@ export default function LoginPage() {
               <Button
                 type="button"
                 variant="outline"
-                className="mt-3 w-full"
+                className="mt-3 w-full whitespace-normal"
                 onClick={() => void handleLocalhostDevLogin()}
                 isPending={isLoading}
               >
@@ -755,7 +750,7 @@ export default function LoginPage() {
         </CardContent>
       </Card>
       {campaignActive ? (
-        <Card className="public-card-surface gap-0 rounded-[1.75rem] border">
+        <Card className="gap-0 rounded-3xl border border-border bg-card shadow-none">
           <CardContent className="space-y-4 px-6 py-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
@@ -778,6 +773,6 @@ export default function LoginPage() {
           </CardContent>
         </Card>
       ) : null}
-    </div>
+    </LoginPresentation>
   );
 }

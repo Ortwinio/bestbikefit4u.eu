@@ -12,10 +12,7 @@ interface BikeNotesEditorProps {
   initialNotes?: string;
 }
 
-export function BikeNotesEditor({
-  bikeId,
-  initialNotes,
-}: BikeNotesEditorProps) {
+export function BikeNotesEditor({ bikeId, initialNotes }: BikeNotesEditorProps) {
   const { messages } = useDashboardMessages();
   const toast = useToast();
   const updateBike = useMutation(api.bikes.mutations.update);
@@ -55,7 +52,7 @@ export function BikeNotesEditor({
   if (!isEditing) {
     return (
       <div className="space-y-3">
-        <p className="whitespace-pre-wrap text-sm text-[color:var(--foreground)]">
+        <p className="whitespace-pre-wrap text-sm text-foreground">
           {savedValue || messages.bikeForm.fields.notes.placeholder}
         </p>
         <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>

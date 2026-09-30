@@ -7,6 +7,8 @@ import { ArrowRight, Copy, Gauge, Route, Ruler, Target } from "lucide-react";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
+import { BikeFitPreview } from "@/components/bikes/BikeFitPreview";
+import { getBikesCopy } from "@/i18n/account/bikes";
 import { BikeDescriptionEditor } from "@/components/bikes/BikeDescriptionEditor";
 import { BikeFitHistorySection } from "@/components/bikes/BikeFitHistorySection";
 import { BikeNotesEditor } from "@/components/bikes/BikeNotesEditor";
@@ -31,11 +33,7 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getBikeTypeLabel } from "@/lib/bikes";
 
-export default function BikeDetailPage({
-  params,
-}: {
-  params: Promise<{ bikeId: string }>;
-}) {
+export default function BikeDetailPage({ params }: { params: Promise<{ bikeId: string }> }) {
   const { bikeId } = use(params);
   const { locale, messages } = useDashboardMessages();
   const toast = useToast();
@@ -45,18 +43,13 @@ export default function BikeDetailPage({
   const bikeDetail = useQuery(api.bikes.queries.getDetail, {
     bikeId: bikeId as Id<"bikes">,
   });
-  const ensureDefaultBikeProfile = useMutation(
-    api.bikeProfiles.mutations.ensureDefaultForBike
-  );
-  const ensurePassportIdForBike = useMutation(
-    api.bikes.mutations.ensurePassportIdForBike
-  );
+  const ensureDefaultBikeProfile = useMutation(api.bikeProfiles.mutations.ensureDefaultForBike);
+  const ensurePassportIdForBike = useMutation(api.bikes.mutations.ensurePassportIdForBike);
   const bike = bikeDetail?.bike ?? null;
   const bikeProfiles = bikeDetail?.bikeProfiles;
   const linkedGeometry = bikeDetail?.linkedGeometry ?? null;
   const geometryLinkState: GeometryLinkState =
-    bikeDetail?.geometryLinkState === "linked" ||
-    bikeDetail?.geometryLinkState === "missing_record"
+    bikeDetail?.geometryLinkState === "linked" || bikeDetail?.geometryLinkState === "missing_record"
       ? bikeDetail.geometryLinkState
       : "unlinked";
   const activeWheelset = bikeDetail?.activeWheelset ?? null;
@@ -77,28 +70,18 @@ export default function BikeDetailPage({
     }
 
     const hasDefaultProfile = bikeProfiles.some((profile) => profile.isDefault);
-    const hasClimbingProfile = bikeProfiles.some(
-      (profile) => profile.profileType === "climbing"
-    );
+    const hasClimbingProfile = bikeProfiles.some((profile) => profile.profileType === "climbing");
 
     if (!hasDefaultProfile || (shouldHaveClimbingProfile && !hasClimbingProfile)) {
       void ensureDefaultBikeProfile({ bikeId: bike._id });
     }
     const ensuredBikePassportId =
-      "bikePassportId" in bike
-        ? ((bike as { bikePassportId?: string }).bikePassportId ?? null)
-        : null;
+      "bikePassportId" in bike ? ((bike as { bikePassportId?: string }).bikePassportId ?? null) : null;
 
     if (!ensuredBikePassportId) {
       void ensurePassportIdForBike({ bikeId: bike._id });
     }
-  }, [
-    bike,
-    bikeProfiles,
-    ensureDefaultBikeProfile,
-    ensurePassportIdForBike,
-    shouldHaveClimbingProfile,
-  ]);
+  }, [bike, bikeProfiles, ensureDefaultBikeProfile, ensurePassportIdForBike, shouldHaveClimbingProfile]);
 
   useEffect(() => {
     if (!bike) {
@@ -106,9 +89,7 @@ export default function BikeDetailPage({
     }
 
     const eventType =
-      geometryLinkState === "linked"
-        ? "bike_geometry_card_viewed"
-        : "bike_geometry_unlinked_state_viewed";
+      geometryLinkState === "linked" ? "bike_geometry_card_viewed" : "bike_geometry_unlinked_state_viewed";
     const trackingKey = `${bike._id}:${geometryLinkState}`;
     if (geometryViewTrackedRef.current === trackingKey) {
       return;
@@ -133,18 +114,16 @@ export default function BikeDetailPage({
       <EmptyState
         title={messages.bikeForm.edit.notFound.title}
         description={messages.bikeForm.edit.notFound.description}
+        action={<Button render={<Link href={withLocalePrefix("/bikes", locale)} />}>
+          {getBikesCopy(locale).back}
+        </Button>}
       />
     );
   }
 
-  const ridingStyleLabel = bike.ridingStyle
-    ? messages.fit.ridingStyles[bike.ridingStyle].label
-    : "-";
-  const primaryGoalLabel = bike.primaryGoal
-    ? messages.fit.goals[bike.primaryGoal].label
-    : "-";
-  const defaultBikeProfile =
-    bikeProfiles?.find((profile) => profile.isDefault) ?? bikeProfiles?.[0];
+  const ridingStyleLabel = bike.ridingStyle ? messages.fit.ridingStyles[bike.ridingStyle].label : "-";
+  const primaryGoalLabel = bike.primaryGoal ? messages.fit.goals[bike.primaryGoal].label : "-";
+  const defaultBikeProfile = bikeProfiles?.find((profile) => profile.isDefault) ?? bikeProfiles?.[0];
   const defaultBikeProfileDescription = bike.ridingStyle
     ? messages.fit.ridingStyles[bike.ridingStyle].description
     : null;
@@ -167,8 +146,7 @@ export default function BikeDetailPage({
     return null;
   };
   const bikeSubtitle =
-    [bike.brand, bike.model].filter(Boolean).join(" ") ||
-    messages.bikes.identity.emptyBrandModel;
+    [bike.brand, bike.model].filter(Boolean).join(" ") || messages.bikes.identity.emptyBrandModel;
   const hasFit = Boolean(recommendation);
   const hasPressureSetup = Boolean(activeWheelset && activeTireSetup);
   const bikePassportId =
@@ -181,12 +159,15 @@ export default function BikeDetailPage({
       : false;
   return (
     <div className="mx-auto max-w-6xl space-y-6">
+      <Button variant="outline" render={<Link href={withLocalePrefix("/bikes", locale)} />}>
+        {getBikesCopy(locale).back}
+      </Button>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-[color:var(--foreground)]">{bike.name}</h1>
-          <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-            {bikeSubtitle}
-          </p>
+          <h1 className="font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+            {bike.name}
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">{bikeSubtitle}</p>
         </div>
         <Button
           variant="outline"
@@ -196,51 +177,49 @@ export default function BikeDetailPage({
         </Button>
       </div>
 
-      <Card variant="bordered" className="dashboard-card-surface overflow-hidden">
+      <Card variant="bordered" className="bg-card overflow-hidden">
         <CardContent className="grid gap-6 p-0 lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.9fr)]">
-          <div className="space-y-5 bg-[linear-gradient(135deg,color-mix(in_oklch,var(--secondary)_72%,var(--background)_28%),color-mix(in_oklch,var(--card)_88%,var(--primary)_12%))] px-6 py-6">
+          <div className="space-y-5 bg-primary-soft px-6 py-6">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-[color:var(--secondary)] px-3 py-1 text-xs font-semibold text-[color:var(--secondary-foreground)]">
+              <span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
                 {getBikeTypeLabel(bike.bikeType, messages)}
               </span>
               {hasFit ? (
-                <span className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs font-semibold text-[color:var(--foreground)]">
+                <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-foreground">
                   {messages.bikes.identity.fitBadge}
                 </span>
               ) : null}
               {hasPressureSetup ? (
-                <span className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs font-semibold text-[color:var(--foreground)]">
+                <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-foreground">
                   {messages.bikes.identity.pressureBadge}
                 </span>
               ) : null}
             </div>
             <div className="space-y-2">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 {messages.bikes.title}
               </p>
-              <h2 className="text-3xl font-bold tracking-tight text-[color:var(--foreground)]">
-                {bike.name}
-              </h2>
-              <p className="text-base text-[color:var(--muted-foreground)]">{bikeSubtitle}</p>
-              <p className="max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
+              <h2 className="text-3xl font-bold tracking-tight text-foreground">{bike.name}</h2>
+              <p className="text-base text-muted-foreground">{bikeSubtitle}</p>
+              <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
                 {messages.bikes.cards.bikeSummary.replace(
                   "{bikeType}",
-                  getBikeTypeLabel(bike.bikeType, messages)
+                  getBikeTypeLabel(bike.bikeType, messages),
                 )}
               </p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-              <div className="sm:col-span-2 rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/80 p-4">
+              <div className="sm:col-span-2 rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                       {messages.bikes.identity.passportLabel}
                     </p>
-                    <p className="mt-2 font-mono text-lg font-semibold text-[color:var(--foreground)]">
+                    <p className="mt-2 font-mono text-lg font-semibold text-foreground">
                       {bikePassportId ?? messages.bikes.identity.passportMissing}
                     </p>
-                    <p className="mt-2 max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
                       {messages.bikes.identity.passportDescription}
                     </p>
                   </div>
@@ -267,39 +246,55 @@ export default function BikeDetailPage({
                   ) : null}
                 </div>
               </div>
-              <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/80 p-4">
-                <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+              <div className="rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
+                <p
+                  className={
+                    "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] " +
+                    "text-muted-foreground"
+                  }
+                >
                   <Route className="h-4 w-4" />
                   {messages.fit.sections.ridingStyle}
                 </p>
-                <p className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
-                  {ridingStyleLabel}
-                </p>
+                <p className="mt-2 text-lg font-semibold text-foreground">{ridingStyleLabel}</p>
               </div>
-              <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/80 p-4">
-                <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+              <div className="rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
+                <p
+                  className={
+                    "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] " +
+                    "text-muted-foreground"
+                  }
+                >
                   <Target className="h-4 w-4" />
                   {messages.fit.sections.primaryGoal}
                 </p>
-                <p className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
-                  {primaryGoalLabel}
-                </p>
+                <p className="mt-2 text-lg font-semibold text-foreground">{primaryGoalLabel}</p>
               </div>
-              <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/80 p-4">
-                <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+              <div className="rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
+                <p
+                  className={
+                    "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] " +
+                    "text-muted-foreground"
+                  }
+                >
                   <Gauge className="h-4 w-4" />
                   {messages.pressure.bikeDetail.activeWheelset}
                 </p>
-                <p className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
+                <p className="mt-2 text-lg font-semibold text-foreground">
                   {activeWheelset?.name ?? messages.pressure.bikeDetail.noWheelset}
                 </p>
               </div>
-              <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/80 p-4">
-                <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+              <div className="rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
+                <p
+                  className={
+                    "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] " +
+                    "text-muted-foreground"
+                  }
+                >
                   <Ruler className="h-4 w-4" />
                   {messages.pressure.bikeDetail.activeTireSetup}
                 </p>
-                <p className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
+                <p className="mt-2 text-lg font-semibold text-foreground">
                   {activeTireSetup?.name ?? messages.pressure.bikeDetail.noTireSetup}
                 </p>
               </div>
@@ -307,28 +302,21 @@ export default function BikeDetailPage({
           </div>
 
           <div className="space-y-4 px-6 py-6">
-            <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/25 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+            <div className="rounded-[var(--radius-lg)] border border-border bg-secondary/25 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                 {messages.results.title}
               </p>
               {recommendation ? (
                 <div className="mt-3 space-y-3">
-                  <p className="text-sm text-[color:var(--muted-foreground)]">
+                  <p className="text-sm text-muted-foreground">
                     {messages.results.algorithmVersionLabel}:{" "}
-                    <span className="font-semibold text-[color:var(--foreground)]">
-                      {recommendation.algorithmVersion}
-                    </span>
+                    <span className="font-semibold text-foreground">{recommendation.algorithmVersion}</span>
                   </p>
                   <Button
                     variant="outline"
                     size="sm"
                     render={
-                      <Link
-                        href={withLocalePrefix(
-                          `/fit/${recommendation.sessionId}/results`,
-                          locale
-                        )}
-                      />
+                      <Link href={withLocalePrefix(`/fit/${recommendation.sessionId}/results`, locale)} />
                     }
                   >
                     {messages.home.recentSessions.actions.viewResults}
@@ -336,52 +324,58 @@ export default function BikeDetailPage({
                   </Button>
                 </div>
               ) : (
-                <p className="mt-3 text-sm text-[color:var(--muted-foreground)]">
-                  {messages.dashboardFit.noResultsYet}
-                </p>
+                <p className="mt-3 text-sm text-muted-foreground">{messages.dashboardFit.noResultsYet}</p>
               )}
             </div>
 
-            <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/25 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+            <div className="rounded-[var(--radius-lg)] border border-border bg-secondary/25 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                 {messages.bikes.defaultProfile.title}
               </p>
-              <div className="mt-3 space-y-3 text-sm text-[color:var(--foreground)]">
+              <div className="mt-3 space-y-3 text-sm text-foreground">
                 {bikeProfiles && bikeProfiles.length > 0 ? (
                   bikeProfiles.map((profile) => (
                     <div
                       key={profile._id}
-                      className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--background)]/80 p-3"
+                      className="rounded-[var(--radius-md)] border border-border bg-background/80 p-3"
                     >
-                      <p className="font-medium text-[color:var(--foreground)]">
+                      <p className="font-medium text-foreground">
                         {bikeProfileName(profile)}
                         {profile.isDefault ? (
-                          <span className="ml-2 rounded-full bg-[color:var(--secondary)] px-2 py-1 text-xs font-semibold text-[color:var(--secondary-foreground)]">
+                          <span
+                            className={"ml-2 rounded-full bg-secondary px-2 py-1 " +
+                            "text-xs font-semibold text-secondary-foreground"}>
                             {messages.fit.savedBikes.defaultBadge}
                           </span>
                         ) : null}
                       </p>
-                      <p className="mt-1 text-[color:var(--muted-foreground)]">
+                      <p className="mt-1 text-muted-foreground">
                         {messages.bikes.defaultProfile.profileType}:{" "}
                         {messages.bikeProfileTypes[profile.profileType]}
                       </p>
                       {bikeProfileDescription(profile.profileType) ? (
-                        <p className="mt-1 text-[color:var(--muted-foreground)]">
+                        <p className="mt-1 text-muted-foreground">
                           {bikeProfileDescription(profile.profileType)}
                         </p>
                       ) : null}
                     </div>
                   ))
                 ) : (
-                  <p className="text-[color:var(--muted-foreground)]">
-                    {messages.bikes.defaultProfile.empty}
-                  </p>
+                  <p className="text-muted-foreground">{messages.bikes.defaultProfile.empty}</p>
                 )}
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {recommendation?.calculatedFit ? (
+        <BikeFitPreview
+          key={recommendation._id}
+          saddleHeightMm={bike.currentSetup?.saddleHeightMm}
+          target={recommendation.calculatedFit}
+        />
+      ) : null}
 
       {publicFitEnabled ? (
         <SignedInFitFollowUpCard
@@ -407,7 +401,7 @@ export default function BikeDetailPage({
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-        <Card variant="bordered" className="dashboard-card-surface">
+        <Card variant="bordered" className="bg-card">
           <CardHeader>
             <CardTitle>{messages.bikes.gallery.title}</CardTitle>
             <CardDescription>{messages.bikes.gallery.description}</CardDescription>
@@ -437,23 +431,25 @@ export default function BikeDetailPage({
 
           <BikeGearingCard
             bikeId={String(bike._id)}
-            gearing={(bike as { gearing?: unknown }).gearing as
-              | {
-                  drivetrainType?: "1x" | "2x";
-                  chainrings?: number[];
-                  cassetteTeeth?: number[];
-                  wheelCircumferenceMm?: number;
-                  crankLengthMm?: number;
-                  groupsetName?: string;
-                  derailleurMaxCog?: number;
-                  completeness?: "missing" | "partial" | "complete" | "validated";
-                }
-              | null
-              | undefined}
+            gearing={
+              (bike as { gearing?: unknown }).gearing as
+                | {
+                    drivetrainType?: "1x" | "2x";
+                    chainrings?: number[];
+                    cassetteTeeth?: number[];
+                    wheelCircumferenceMm?: number;
+                    crankLengthMm?: number;
+                    groupsetName?: string;
+                    derailleurMaxCog?: number;
+                    completeness?: "missing" | "partial" | "complete" | "validated";
+                  }
+                | null
+                | undefined
+            }
             locale={locale}
           />
 
-          <Card variant="bordered" className="dashboard-card-surface">
+          <Card variant="bordered" className="bg-card">
             <CardHeader>
               <CardTitle>{messages.bikes.descriptionCard.title}</CardTitle>
               <CardDescription>{messages.bikes.descriptionCard.description}</CardDescription>
@@ -467,7 +463,7 @@ export default function BikeDetailPage({
             </CardContent>
           </Card>
 
-          <Card variant="bordered" className="dashboard-card-surface">
+          <Card variant="bordered" className="bg-card">
             <CardHeader>
               <CardTitle>{messages.bikes.sections.notes}</CardTitle>
             </CardHeader>
@@ -476,7 +472,7 @@ export default function BikeDetailPage({
             </CardContent>
           </Card>
 
-          <Card variant="bordered" className="dashboard-card-surface">
+          <Card variant="bordered" className="bg-card">
             <CardHeader>
               <CardTitle>{messages.bikes.wheelsetManager.title}</CardTitle>
               <CardDescription>{messages.bikes.wheelsetManager.description}</CardDescription>
@@ -485,7 +481,6 @@ export default function BikeDetailPage({
               <BikeWheelsetManager bikeId={bike._id} wheelsets={bikeDetail.wheelsets} />
             </CardContent>
           </Card>
-
         </div>
       </div>
 

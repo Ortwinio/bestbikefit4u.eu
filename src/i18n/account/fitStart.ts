@@ -1,0 +1,56 @@
+import type { Locale } from "@/i18n/config";
+
+const fitStart = {
+  nl: {
+    back: "Naar je dashboard",
+    eyebrow: "Nieuwe fit-sessie",
+    title: "Begin bij je fiets.",
+    description: "Kies de fiets die je wilt afstellen. We gebruiken je profiel en de rijstijl en het doel van deze fiets.",
+    chooseBike: "Kies een fiets",
+    sessionEyebrow: "Voor deze sessie",
+    selectionTitle: "Jouw fiets en je doel",
+    selectionHint: "Kies een fiets. Daarna zie je hier de bijbehorende rijstijl en het doel.",
+    contextHint: "Deze gegevens horen bij je gekozen fiets.",
+    bikeType: "Fietstype",
+    ridingStyle: "Rijstijl",
+    goal: "Doel",
+    missingValue: "Nog aan te vullen",
+    nextTitle: "Daarna: vragen over je ritten",
+    nextHint: "Je antwoorden helpen je afsteladvies te bepalen.",
+    chooseHint: "Kies eerst een fiets om verder te gaan.",
+    profileHint: "Vul je profiel in om verder te gaan.",
+    bikeHint: "Vul je fietsgegevens in om verder te gaan.",
+    aeroWarning: "Het doel aerodynamica is alleen beschikbaar voor een racefiets of tijdrit-/triatlonfiets. Pas het doel van deze fiets aan om verder te gaan.",
+    creating: "Je sessie starten…",
+    continue: "Ga door naar vragen",
+    method: "Zo werkt je bikefit",
+  },
+  en: {
+    back: "Back to your dashboard",
+    eyebrow: "New fit session",
+    title: "Start with your bike.",
+    description: "Choose the bike you want to adjust. We use your profile and this bike’s riding style and goal.",
+    chooseBike: "Choose a bike",
+    sessionEyebrow: "For this session",
+    selectionTitle: "Your bike and your goal",
+    selectionHint: "Choose a bike to see its riding style and goal here.",
+    contextHint: "These details belong to your selected bike.",
+    bikeType: "Bike type",
+    ridingStyle: "Riding style",
+    goal: "Goal",
+    missingValue: "Still to complete",
+    nextTitle: "Next: questions about your rides",
+    nextHint: "Your answers help shape your fit advice.",
+    chooseHint: "Choose a bike to continue.",
+    profileHint: "Complete your profile to continue.",
+    bikeHint: "Complete your bike details to continue.",
+    aeroWarning: "The aerodynamics goal is only available for a road or time trial/triathlon bike. Update this bike’s goal to continue.",
+    creating: "Starting your session…",
+    continue: "Continue to questions",
+    method: "How your bike fit works",
+  },
+};
+
+export function getFitStartCopy(locale: Locale) {
+  return fitStart[locale];
+}

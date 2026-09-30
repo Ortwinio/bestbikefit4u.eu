@@ -1,6 +1,18 @@
+import { tirePressureMessages } from "../calculators/tirePressure";
+import { saddleWidthMessages } from "../calculators/saddleWidth";
+import { bikeFitMessages } from "../calculators/bikeFit";
+import { crankLengthMessages } from "../calculators/crankLength";
+import { frameSizeMessages } from "../calculators/frameSize";
+import { saddleHeightMessages } from "../calculators/saddleHeight";
 import { BRAND } from "@/config/brand";
 
 const en = {
+  tirePressureCalculator: tirePressureMessages.en,
+  saddleWidthCalculator: saddleWidthMessages.en,
+  bikeFitCalculator: bikeFitMessages.en,
+  crankLengthCalculator: crankLengthMessages.en,
+  frameSizeCalculator: frameSizeMessages.en,
+  saddleHeightCalculator: saddleHeightMessages.en,
   common: {
     language: "Language",
     english: "English",
@@ -50,7 +62,8 @@ const en = {
     metadata: {
       title: `${BRAND.name} - Online Bike Fitting for Comfort and Performance`,
       description:
-        "Get practical bike fit guidance matched to your body and riding style. Improve comfort, refine your position, and ride with more confidence.",
+        "Get practical bike fit guidance matched to your body and riding style. Improve " +
+        "comfort, refine your position, and ride with more confidence.",
       openGraphTitle: `${BRAND.name} - Online Bike Fitting for Comfort and Performance`,
       openGraphDescription:
         "Get practical bike fit guidance for comfort, performance, and better bike decisions.",
@@ -70,7 +83,8 @@ const en = {
       title: "Online Bike Fitting",
       titleAccent: "for Comfort and Performance.",
       description:
-        "Try the free bike fit calculator first, then decide whether you want deeper setup guidance for your body, riding style, and next bike decision.",
+        "Try the free bike fit calculator first, then decide whether you want deeper setup " +
+        "guidance for your body, riding style, and next bike decision.",
       primaryCta: "Try the Free Bike Fit Calculator",
       secondaryCta: "See what you get in the full report",
       signInCta: "Already have an account? Sign in",
@@ -109,8 +123,7 @@ const en = {
           },
           {
             title: "Structured adjustment order",
-            description:
-              "Know what to adjust first. No guesswork, just a proven sequence.",
+            description: "Know what to adjust first. No guesswork, just a proven sequence.",
           },
           {
             title: "Riding-style aware",
@@ -152,24 +165,28 @@ const en = {
         {
           title: "Enter Your Measurements",
           description:
-            "Provide your body measurements including height, inseam, arm length, and a short flexibility assessment.",
+            "Provide your body measurements including height, inseam, arm length, and a short " +
+            "flexibility assessment.",
         },
         {
           title: "Answer Questions",
           description:
-            "Tell us about your riding style, goals, weekly hours, and the discomfort points that matter most on the bike.",
+            "Tell us about your riding style, goals, weekly hours, and the discomfort points that " +
+            "matter most on the bike.",
         },
         {
           title: "Review Your Recommendations",
           description:
-            "Review practical recommendations for saddle height, reach, handlebar position, crank length, and what to check first.",
+            "Review practical recommendations for saddle height, reach, handlebar position, crank " +
+            "length, and what to check first.",
         },
       ],
     },
     reasonsToStart: {
       title: "Why start bike fitting now?",
       subtitle:
-        "Most riders wait until the setup problem becomes bigger. Small changes now can create much clearer next steps.",
+        "Most riders wait until the setup problem becomes bigger. Small changes now can create " +
+        "much clearer next steps.",
       items: [
         {
           title: "Improve comfort sooner",
@@ -178,8 +195,7 @@ const en = {
         },
         {
           title: "Refine your riding position",
-          description:
-            "Use clearer setup targets for saddle height, reach, and cockpit balance.",
+          description: "Use clearer setup targets for saddle height, reach, and cockpit balance.",
         },
         {
           title: "Ride longer with more confidence",
@@ -210,8 +226,7 @@ const en = {
         },
         {
           title: "Goal-Based Setup",
-          description:
-            "Your fit adapts to comfort, endurance, performance, or aero priorities.",
+          description: "Your fit adapts to comfort, endurance, performance, or aero priorities.",
         },
         {
           title: "Clear Setup Targets",
@@ -220,8 +235,7 @@ const en = {
         },
         {
           title: "Bike-Specific Context",
-          description:
-            "Keep fit work connected to the bike and riding context you actually use.",
+          description: "Keep fit work connected to the bike and riding context you actually use.",
         },
         {
           title: "Focused Adjustment Order",
@@ -237,8 +251,7 @@ const en = {
     },
     trustSection: {
       title: "Built for trust, not guesswork",
-      subtitle:
-        "Every recommendation is grounded in clear logic and practical constraints",
+      subtitle: "Every recommendation is grounded in clear logic and practical constraints",
       items: [
         {
           title: "Method-backed calculations",
@@ -272,33 +285,33 @@ const en = {
         "Recommended frame size",
       ],
       cardTitle: "Ready to fix discomfort and ride stronger?",
-      cardDescription:
-        "Start free and get personalized setup targets in minutes.",
+      cardDescription: "Start free and get personalized setup targets in minutes.",
       cardCta: "Start Free Fit",
     },
     bikeQuickCheck: {
       badge: "Bike passport quick check",
       collapsedTitle: "Check whether this bike could suit your size",
       collapsedDescription:
-        "Use a bike-passport ID or shared bike code to screen a second-hand bike before you spend more time on it.",
+        "Use a bike-passport ID or shared bike code to screen a second-hand bike before you " +
+        "spend more time on it.",
       expandLabel: "Check a shared bike",
       codeLabel: "Bike-passport ID or shared code",
       codePlaceholder: "Enter the bike-passport ID or shared code",
       codeHelper:
-        "This is a limited screening tool. We use the shared bike identifier, your height, and the bike geometry that is available.",
+        "This is a limited screening tool. We use the shared bike identifier, your height, and " +
+        "the bike geometry that is available.",
       lookupButton: "Preview this bike",
       lookupLoading: "Checking the shared bike…",
       invalidTitle: "This code is not available right now",
       invalidDescription:
-        "The bike-passport ID or shared code may be wrong, expired, or no longer shared. Please check it and try again.",
+        "The bike-passport ID or shared code may be wrong, expired, or no longer shared. " +
+        "Please check it and try again.",
       invalidRetry: "Start again",
       rateLimitedTitle: "Too many attempts for now",
-      rateLimitedDescription:
-        "Please wait before trying another bike-passport ID or shared code.",
+      rateLimitedDescription: "Please wait before trying another bike-passport ID or shared code.",
       rateLimitedRetry: "Try again",
       previewTitle: "Bike preview",
-      previewDescription:
-        "We found the shared bike. Enter your height for a first estimate.",
+      previewDescription: "We found the shared bike. Enter your height for a first estimate.",
       previewHeightPrompt: "Enter your height for a first estimate",
       previewSupport: "Estimate based on height and available geometry.",
       previewButton: "Run quick check",
@@ -316,19 +329,16 @@ const en = {
       scoreSuffix: "/75",
       confidenceLabel: "Confidence",
       inseamEstimateLabel: "Estimated inseam",
-      limitedEstimate:
-        "Use this as a first screening step, not as a final fit decision.",
-      geometryWeakNote:
-        "Weak geometry data keeps this estimate limited.",
+      limitedEstimate: "Use this as a first screening step, not as a final fit decision.",
+      geometryWeakNote: "Weak geometry data keeps this estimate limited.",
       ctaTitle: "Want a better estimate?",
-      ctaDescription:
-        "Add your inseam and rider profile for a better estimate.",
+      ctaDescription: "Add your inseam and rider profile for a better estimate.",
       ctaButton: "Create a free account",
-      ctaSecondary:
-        "A full rider profile improves precision beyond this first screen.",
+      ctaSecondary: "A full rider profile improves precision beyond this first screen.",
       signedInCtaTitle: "Want a better estimate?",
       signedInCtaDescription:
-        "Use this quick check as a first screen. Add your rider profile or start a bike-fit flow for a better estimate.",
+        "Use this quick check as a first screen. Add your rider profile or start a bike-fit " +
+        "flow for a better estimate.",
       signedInPrimaryCta: "Add rider profile",
       signedInSecondaryCta: "Open bike fit",
       confidenceLevels: {
@@ -351,18 +361,15 @@ const en = {
         frame_size_close: "The frame size looks close to your height on paper.",
         frame_size_borderline:
           "The frame size sits near the edge of the expected range for your height.",
-        cockpit_close:
-          "The available stack and reach look workable for a first screen.",
-        limited_geometry:
-          "This bike has limited shared geometry, so the estimate stays cautious.",
+        cockpit_close: "The available stack and reach look workable for a first screen.",
+        limited_geometry: "This bike has limited shared geometry, so the estimate stays cautious.",
         limited_geometry_data:
           "This bike has limited shared geometry, so the estimate stays cautious.",
         geometry_looks_compatible:
           "The available geometry looks reasonably compatible on paper for a first screen.",
         mixed_geometry_signals:
           "Some geometry signals look workable, but this still needs a closer check.",
-        weak_geometry_match:
-          "The available geometry gives a weak match on paper.",
+        weak_geometry_match: "The available geometry gives a weak match on paper.",
         unlikely_geometry_match:
           "The available geometry looks unlikely to suit your size on paper.",
         cockpit_check_needed:
@@ -372,7 +379,8 @@ const en = {
     cta: {
       title: "Start with the free bike fit calculator today",
       description:
-        "Use the free calculator first, then upgrade only if you want a deeper report and more precise next steps.",
+        "Use the free calculator first, then upgrade only if you want a deeper report and more " +
+        "precise next steps.",
       button: "Open the Free Bike Fit Calculator",
     },
     bikeSearch: {
@@ -391,7 +399,8 @@ const en = {
       eyebrow: "Real bikes. Real data.",
       title: "Bikes on the platform — from geometry to tyre pressure",
       subtitle:
-        "Every bike shown comes with full geometry measurements and optimised tyre pressures. Create an account to run your own.",
+        "Every bike shown comes with full geometry measurements and optimised tyre pressures. " +
+        "Create an account to run your own.",
       prevLabel: "Previous bike",
       nextLabel: "Next bike",
       regionLabel: "Bike showcase",
@@ -433,7 +442,8 @@ const en = {
         "Calculate the ideal tire pressure for road, gravel or MTB. Free, no account needed.",
       h1: "Free Tire Pressure Calculator",
       subtitle:
-        "Calculate your ideal tyre pressure for road, gravel or MTB. Enter your weight and tyre size for an instant recommendation.",
+        "Calculate your ideal tyre pressure for road, gravel or MTB. Enter your weight and " +
+        "tyre size for an instant recommendation.",
       chips: [
         "Based on weight and tyre width",
         "Works for road, gravel and MTB",
@@ -448,14 +458,12 @@ const en = {
     },
     gravelPage: {
       title: "Gravel Bike Tire Pressure Calculator | BestBikeFit4U",
-      description:
-        "Find the optimal gravel bike tyre pressure for mixed surfaces.",
+      description: "Find the optimal gravel bike tyre pressure for mixed surfaces.",
       h1: "Gravel Bike Tire Pressure",
     },
     mtbPage: {
       title: "MTB Tire Pressure Calculator | BestBikeFit4U",
-      description:
-        "Calculate mountain bike tyre pressure for trail, enduro or XC.",
+      description: "Calculate mountain bike tyre pressure for trail, enduro or XC.",
       h1: "MTB Tire Pressure",
     },
     form: {
@@ -494,22 +502,17 @@ const en = {
       warningsTitle: "Warnings",
       disclaimer: "Always follow the manufacturer's maximum pressure limits.",
       warningMessages: {
-        max_rim_pressure_exceeded:
-          "Recommended pressure exceeds the tyre or rim maximum.",
+        max_rim_pressure_exceeded: "Recommended pressure exceeds the tyre or rim maximum.",
         hookless_limit_exceeded:
           "Hookless rim: maximum pressure limit exceeded. Check specifications.",
         pressure_too_low_for_setup:
           "Pressure may be too low for this setup. Verify casing support and terrain.",
         front_rear_pressure_mismatch:
           "Large difference between front and rear pressure. Check your inputs.",
-        inner_tube_pinch_flat_risk:
-          "Low pressure with inner tube: risk of pinch flat.",
-        road_tire_width_unusual:
-          "Unusual tyre width for a road bike. Please verify.",
-        gravel_tire_width_unusual:
-          "Unusual tyre width for a gravel bike.",
-        mtb_tire_width_unusual:
-          "MTB tyres are typically at least 45 mm wide.",
+        inner_tube_pinch_flat_risk: "Low pressure with inner tube: risk of pinch flat.",
+        road_tire_width_unusual: "Unusual tyre width for a road bike. Please verify.",
+        gravel_tire_width_unusual: "Unusual tyre width for a gravel bike.",
+        mtb_tire_width_unusual: "MTB tyres are typically at least 45 mm wide.",
         hookless_max_pressure_unknown:
           "Hookless rim: maximum pressure unknown. Stay at or below 3.5 bar unless otherwise stated.",
       },
@@ -520,7 +523,8 @@ const en = {
     cta: {
       heading: "What's next?",
       body:
-        "Create a free account to set up your bikes, calculate personalized pressure advice, and track future adjustments.",
+        "Create a free account to set up your bikes, calculate personalized pressure advice, " +
+        "and track future adjustments.",
       primaryButton: "Create a free account",
       secondaryButton: "Compare Free vs Pro",
       loginPrompt: "Already have an account?",
@@ -704,8 +708,7 @@ const en = {
       title: "Bike Fitting History",
       subtitle: "Your fitting sessions grouped by bike, newest first.",
       emptyTitle: "No fitting sessions yet",
-      emptyDescription:
-        "Complete a fitting session to build up your bike history.",
+      emptyDescription: "Complete a fitting session to build up your bike history.",
       emptyCta: "Start your first fit session",
       bikeWithoutName: "Bike without name",
       noBikeLinked: "No bike linked",
@@ -721,7 +724,8 @@ const en = {
         action: "Delete fitting",
         dialogTitle: "Delete bike fitting?",
         dialogDescription:
-          "This permanently deletes the fitting session, its questionnaire answers, recommendations, and related validation data.",
+          "This permanently deletes the fitting session, its questionnaire answers, " +
+          "recommendations, and related validation data.",
         confirm: "Delete fitting",
         success: "Bike fitting deleted.",
         failed: "Could not delete the bike fitting. Please try again.",
@@ -791,7 +795,8 @@ const en = {
       algorithm: {
         title: "How Our Bike Fit Algorithm Works",
         subtitle:
-          "A transparent look at how we translate your body data and riding goals into precise, personalised setup recommendations.",
+          "A transparent look at how we translate your body data and riding goals into precise, " +
+          "personalised setup recommendations.",
         backLink: "Back to fit",
         inputsTitle: "What goes in",
         processTitle: "How we calculate",
@@ -808,7 +813,8 @@ const en = {
       },
       riderProfileWarning: {
         title: "Complete your riding profile",
-        description: "Answer a few questions about your riding style before starting a fit session.",
+        description:
+          "Answer a few questions about your riding style before starting a fit session.",
         cta: "Go to My Profile",
       },
       savedBikes: {
@@ -832,10 +838,12 @@ const en = {
         bikeType: "What type of bike?",
         ridingStyle: "How do you typically ride?",
         ridingStyleTooltip:
-          "Choose the riding style that best matches how this bike is usually used so fit recommendations can balance comfort, handling, and position correctly.",
+          "Choose the riding style that best matches how this bike is usually used so fit " +
+          "recommendations can balance comfort, handling, and position correctly.",
         primaryGoal: "What's your primary goal?",
         primaryGoalTooltip:
-          "Pick the main outcome you want from this bike setup so saved bike profiles and fit sessions can bias toward that priority.",
+          "Pick the main outcome you want from this bike setup so saved bike profiles and fit " +
+          "sessions can bias toward that priority.",
       },
       continueCta: "Continue to Questions",
       profileRequirementHint: "Complete your profile to continue",
@@ -895,7 +903,9 @@ const en = {
         eyebrow: "Bike Fit",
         title: "Tell us about your riding style",
         description:
-          "Our fitting model is built on data from thousands of riders and professionally validated methods. Answer a few questions — we'll translate your body metrics and riding style into precise, personalised setup recommendations.",
+          "Our fitting model is built on data from thousands of riders and professionally " +
+          "validated methods. Answer a few questions — we'll translate your body metrics and " +
+          "riding style into precise, personalised setup recommendations.",
         progress: {
           timeRemaining: "~7 minutes remaining",
           percentComplete: "10% complete",
@@ -945,13 +955,16 @@ const en = {
             label: "No",
             subtitle: "I'm comfortable",
             tooltip:
-              "Your current position is working well. We'll focus on maintaining comfort while optimising efficiency and performance.",
+              "Your current position is working well. We'll focus on maintaining comfort while " +
+              "optimising efficiency and performance.",
           },
           yes: {
             label: "Yes",
             subtitle: "I have some discomfort",
             tooltip:
-              "Discomfort while cycling often points to a fit issue — saddle height, reach, cleat position, or handlebar setup. Your responses will help us identify and address the cause.",
+              "Discomfort while cycling often points to a fit issue — saddle height, reach, cleat " +
+              "position, or handlebar setup. Your responses will help us identify and address the " +
+              "cause.",
           },
         },
       },
@@ -966,62 +979,65 @@ const en = {
             label: "< 30 km",
             subtitle: "Casual / recreational",
             tooltip:
-              "Short rides prioritise an upright, comfortable position. Saddle height and handlebar reach are optimised for ease and low-impact cycling.",
+              "Short rides prioritise an upright, comfortable position. Saddle height and handlebar " +
+              "reach are optimised for ease and low-impact cycling.",
           },
           medium: {
             label: "30–80 km",
             subtitle: "Regular training",
             tooltip:
-              "Medium distances require a balance between comfort and efficiency. Your position can tolerate moderate forward lean without causing fatigue.",
+              "Medium distances require a balance between comfort and efficiency. Your position can " +
+              "tolerate moderate forward lean without causing fatigue.",
           },
           long: {
             label: "80–150 km",
             subtitle: "Endurance",
             tooltip:
-              "Long distances demand a fit that sustains efficiency over hours. Core engagement and saddle contact become critical — your position must be powerful yet comfortable.",
+              "Long distances demand a fit that sustains efficiency over hours. Core engagement and " +
+              "saddle contact become critical — your position must be powerful yet comfortable.",
           },
           ultra: {
             label: "150+ km",
             subtitle: "Ultra-endurance",
             tooltip:
-              "At this distance, the smallest discomfort is amplified. Your fit prioritises joint protection, pressure distribution, and the ability to maintain power output over many hours.",
+              "At this distance, the smallest discomfort is amplified. Your fit prioritises joint " +
+              "protection, pressure distribution, and the ability to maintain power output over many " +
+              "hours.",
           },
         },
       },
       weeklyHours: {
         questionText: "How many hours per week do you typically ride?",
-        helpText:
-          "Tip: Estimate your average weekly riding time over the past 1–2 months.",
+        helpText: "Tip: Estimate your average weekly riding time over the past 1–2 months.",
         imageAlt: "Clock representing weekly riding time",
         radioGroupLabel: "Weekly riding hours",
         selectPrompt: "Move the slider to select your weekly riding hours.",
         whyTitle: "Why this matters",
         whyText:
-          "The number of hours you ride influences how long you can maintain your position, how much load your muscles and joints can handle, and how aggressive your bike setup can be. A position that is too aggressive for your current level may lead to discomfort or injury.",
+          "The number of hours you ride influences how long you can maintain your position, how " +
+          "much load your muscles and joints can handle, and how aggressive your bike setup can " +
+          "be. A position that is too aggressive for your current level may lead to discomfort " +
+          "or injury.",
         options: {
           "0-3": {
             label: "0–3 h",
             subtitle: "Occasional riding",
-            tooltip:
-              "Short or infrequent rides, mainly focused on comfort and enjoyment.",
+            tooltip: "Short or infrequent rides, mainly focused on comfort and enjoyment.",
           },
           "3-6": {
             label: "3–6 h",
             subtitle: "Regular riding",
-            tooltip:
-              "You ride multiple times per week and are building consistency.",
+            tooltip: "You ride multiple times per week and are building consistency.",
           },
           "6-10": {
             label: "6–10 h",
             subtitle: "Enthusiast level",
-            tooltip:
-              "You train regularly and are improving your fitness and efficiency.",
+            tooltip: "You train regularly and are improving your fitness and efficiency.",
           },
           "10-15": {
             label: "10–15 h",
             subtitle: "High volume",
-            tooltip:
-              "You ride frequently, often with structure or specific goals.",
+            tooltip: "You ride frequently, often with structure or specific goals.",
           },
           "15+": {
             label: "15+ h",
@@ -1034,7 +1050,8 @@ const en = {
       experienceLevel: {
         questionText: "What best describes your cycling experience?",
         helpText:
-          "This sets the physical baseline for your fit. Be honest — choosing a level that doesn't match your body will produce a position that is uncomfortable or inefficient.",
+          "This sets the physical baseline for your fit. Be honest — choosing a level that " +
+          "doesn't match your body will produce a position that is uncomfortable or inefficient.",
         radioGroupLabel: "Cycling experience level",
         selectPrompt: "Move the slider to select your experience level.",
         moreAbout: "More about {level}",
@@ -1045,119 +1062,145 @@ const en = {
             label: "Beginner",
             subtitle: "Comfort first",
             explanation:
-              "We assume lower baseline flexibility and core stability. Your fit will be more upright — less hip closure, less lower-back strain, and a saddle-to-bar height that is easier to sustain on longer rides.",
+              "We assume lower baseline flexibility and core stability. Your fit will be more " +
+              "upright — less hip closure, less lower-back strain, and a saddle-to-bar height that " +
+              "is easier to sustain on longer rides.",
             tooltip:
-              "Choosing a level above your current fitness leads to a position you cannot hold comfortably. Lower bars increase hip closure and require core strength to avoid back pain. If in doubt, start here.",
+              "Choosing a level above your current fitness leads to a position you cannot hold " +
+              "comfortably. Lower bars increase hip closure and require core strength to avoid back " +
+              "pain. If in doubt, start here.",
           },
           intermediate: {
             label: "Intermediate",
             subtitle: "Balanced",
             explanation:
-              "Average flexibility and core strength. Your fit uses a neutral handlebar position — neither aggressive nor fully upright. Suited for regular multi-hour rides across varied terrain.",
+              "Average flexibility and core strength. Your fit uses a neutral handlebar position — " +
+              "neither aggressive nor fully upright. Suited for regular multi-hour rides across " +
+              "varied terrain.",
             tooltip:
-              "This level applies no modifier to bar drop. It is the baseline most riders fit into after 6–12 months of regular riding. Your body can sustain moderate hip closure without strain.",
+              "This level applies no modifier to bar drop. It is the baseline most riders fit into " +
+              "after 6–12 months of regular riding. Your body can sustain moderate hip closure " +
+              "without strain.",
           },
           advanced: {
             label: "Advanced",
             subtitle: "Performance",
             explanation:
-              "Higher tolerance for hip closure, fuller knee extension, and the core strength to hold an aerodynamic posture for extended periods. Your fit will be more aggressive — lower bars, longer reach.",
+              "Higher tolerance for hip closure, fuller knee extension, and the core strength to " +
+              "hold an aerodynamic posture for extended periods. Your fit will be more aggressive — " +
+              "lower bars, longer reach.",
             tooltip:
-              "Be honest: if your core and flexibility do not support this, the position will cause discomfort within the first 30 minutes. An aggressive fit only improves performance when your body is conditioned for it.",
+              "Be honest: if your core and flexibility do not support this, the position will cause " +
+              "discomfort within the first 30 minutes. An aggressive fit only improves performance " +
+              "when your body is conditioned for it.",
           },
         },
       },
       painAreas: {
         questionText: "Where do you experience discomfort?",
-        helpText: "Select all areas that apply. This helps pinpoint the root cause of your discomfort.",
+        helpText:
+          "Select all areas that apply. This helps pinpoint the root cause of your discomfort.",
         selectPrompt: "Select one or more areas above.",
         areas: {
           knee_front: {
             label: "Front of knee",
             subtitle: "Anterior",
-            tooltip: "Pain at the front of the knee often points to saddle height being too low, cleats positioned too far back, or excessive float in the pedal system.",
+            tooltip:
+              "Pain at the front of the knee often points to saddle height being too low, cleats " +
+              "positioned too far back, or excessive float in the pedal system.",
           },
           knee_back: {
             label: "Back of knee",
             subtitle: "Posterior",
-            tooltip: "Posterior knee pain is commonly caused by saddle height being too high or cleats positioned too far forward, stretching the hamstring attachment.",
+            tooltip:
+              "Posterior knee pain is commonly caused by saddle height being too high or cleats " +
+              "positioned too far forward, stretching the hamstring attachment.",
           },
           lower_back: {
             label: "Lower back",
             subtitle: "Lumbar",
-            tooltip: "Lower back discomfort usually comes from a reach that is too long, saddle too high, or insufficient core strength. A shorter stem or higher bar height can help.",
+            tooltip:
+              "Lower back discomfort usually comes from a reach that is too long, saddle too high, " +
+              "or insufficient core strength. A shorter stem or higher bar height can help.",
           },
           neck: {
             label: "Neck or shoulders",
             subtitle: "Cervical / Trapezius",
-            tooltip: "Neck and shoulder tension is often caused by bars that are too low or too far away, forcing you to hold your head up for extended periods.",
+            tooltip:
+              "Neck and shoulder tension is often caused by bars that are too low or too far away, " +
+              "forcing you to hold your head up for extended periods.",
           },
           hands: {
             label: "Hands",
             subtitle: "Numbness or pain",
-            tooltip: "Hand numbness or pain is typically caused by too much weight on the bars, bars too low, or grip width not matching shoulder width. Padded gloves and ergonomic bar tape can also help.",
+            tooltip:
+              "Hand numbness or pain is typically caused by too much weight on the bars, bars too " +
+              "low, or grip width not matching shoulder width. Padded gloves and ergonomic bar tape " +
+              "can also help.",
           },
           saddle: {
             label: "Saddle area",
             subtitle: "Sit bones / perineum",
-            tooltip: "Saddle discomfort points to saddle height, tilt, fore-aft position, or saddle width/shape not matching your sit bone width. A professional saddle fitting is recommended.",
+            tooltip:
+              "Saddle discomfort points to saddle height, tilt, fore-aft position, or saddle " +
+              "width/shape not matching your sit bone width. A professional saddle fitting is " +
+              "recommended.",
           },
           feet: {
             label: "Feet",
             subtitle: "Hot foot or numbness",
-            tooltip: "Hot foot and numbness usually stem from cleat position (too far forward) or cycling shoes that are too narrow, compressing the metatarsal nerves under load.",
+            tooltip:
+              "Hot foot and numbness usually stem from cleat position (too far forward) or cycling " +
+              "shoes that are too narrow, compressing the metatarsal nerves under load.",
           },
         },
       },
       currentPositionFeeling: {
         questionText: "How does your current bike position feel?",
         helpText:
-          "Small discomforts often indicate misalignment in your setup. By identifying these early, we can adjust key parameters like reach, handlebar height, and saddle position to improve comfort and performance. Select all that apply — if you don't have a current bike, choose 'Skip this step'.",
+          "Small discomforts often indicate misalignment in your setup. By identifying these " +
+          "early, we can adjust key parameters like reach, handlebar height, and saddle position " +
+          "to improve comfort and performance. Select all that apply — if you don't have a " +
+          "current bike, choose 'Skip this step'.",
         imageAlt: "Illustration of comfortable versus uncomfortable cycling positions",
         orDivider: "or describe what feels off",
         options: {
           good: {
             label: "Generally good, minor tweaks needed",
             subtitle: "Minor adjustments needed",
-            tooltip:
-              "Your position feels mostly comfortable with small improvements possible.",
+            tooltip: "Your position feels mostly comfortable with small improvements possible.",
           },
           no_bike: {
             label: "Skip this step",
-            subtitle:
-              "We'll base your fit entirely on your body measurements and riding profile.",
-            tooltip:
-              "We'll base your fit entirely on your body measurements and riding profile.",
+            subtitle: "We'll base your fit entirely on your body measurements and riding profile.",
+            tooltip: "We'll base your fit entirely on your body measurements and riding profile.",
           },
           too_stretched: {
             label: "Too stretched out - reaching too far",
             subtitle: "Too long a reach",
-            tooltip:
-              "Your arms, neck, or lower back may feel overstretched on longer rides.",
+            tooltip: "Your arms, neck, or lower back may feel overstretched on longer rides.",
           },
           too_compact: {
             label: "Too compact - feel cramped",
             subtitle: "Feeling cramped or too upright",
-            tooltip:
-              "Your position may limit breathing, comfort, or power output.",
+            tooltip: "Your position may limit breathing, comfort, or power output.",
           },
           too_low: {
             label: "Handlebars feel too low",
             subtitle: "Too much pressure on hands or back",
-            tooltip:
-              "You may feel strain in your neck, shoulders, or lower back.",
+            tooltip: "You may feel strain in your neck, shoulders, or lower back.",
           },
           too_high: {
             label: "Handlebars feel too high",
             subtitle: "Not enough forward position",
-            tooltip:
-              "You may feel less efficient or lack front-end control.",
+            tooltip: "You may feel less efficient or lack front-end control.",
           },
           saddle_too_high: {
             label: "Saddle feels too high",
             subtitle: "Possible hip rocking",
             tooltip:
-              "A saddle that's too high causes the hips to rock, stresses the knees, and reduces power transfer.",
+              "A saddle that's too high causes the hips to rock, stresses the knees, and reduces " +
+              "power transfer.",
           },
           saddle_too_low: {
             label: "Saddle feels too low",
@@ -1170,13 +1213,15 @@ const en = {
       climbingProfile: {
         questionText: "Would you like a climbing-specific fit profile?",
         helpText:
-          "A climbing profile gives you a second set of recommendations optimised for seated climbing efficiency — adjusted saddle height, setback, and handlebar position.",
+          "A climbing profile gives you a second set of recommendations optimised for seated " +
+          "climbing efficiency — adjusted saddle height, setback, and handlebar position.",
         imageAlt: "Climbing cyclist illustration",
         options: {
           yes: {
             label: "Yes, add a climbing profile",
             tooltip:
-              "We'll calculate a second set of measurements optimised for seated climbing — adjusted saddle height, setback, and handlebar position to improve efficiency on climbs.",
+              "We'll calculate a second set of measurements optimised for seated climbing — adjusted " +
+              "saddle height, setback, and handlebar position to improve efficiency on climbs.",
           },
           no: {
             label: "No, standard fit only",
@@ -1188,108 +1233,133 @@ const en = {
       climbingImportance: {
         questionText: "How important is climbing in your riding?",
         helpText:
-          "Climbing changes how your body interacts with the bike. We adjust your position to improve efficiency, comfort, and control on long or steep climbs.",
+          "Climbing changes how your body interacts with the bike. We adjust your position to " +
+          "improve efficiency, comfort, and control on long or steep climbs.",
         options: {
           rarely: {
             label: "Rarely climb",
             tooltip:
-              "On flat terrain, we can optimize your position for aerodynamics and speed with a lower and more stretched setup.",
+              "On flat terrain, we can optimize your position for aerodynamics and speed with a " +
+              "lower and more stretched setup.",
           },
           occasional: {
             label: "Occasional climbs",
             tooltip:
-              "A balanced position helps you stay efficient on flats while remaining comfortable on short climbs.",
+              "A balanced position helps you stay efficient on flats while remaining comfortable on " +
+              "short climbs.",
           },
           regular: {
             label: "Regular climbing",
             tooltip:
-              "Climbing requires efficient power transfer and comfort in a more upright position. We adjust your setup to reduce strain during sustained efforts.",
+              "Climbing requires efficient power transfer and comfort in a more upright position. We " +
+              "adjust your setup to reduce strain during sustained efforts.",
           },
           climbing_focused: {
             label: "Climbing-focused",
             tooltip:
-              "Long climbs demand an open hip angle and stable posture. We optimize your position for seated climbing efficiency and reduced fatigue.",
+              "Long climbs demand an open hip angle and stable posture. We optimize your position " +
+              "for seated climbing efficiency and reduced fatigue.",
           },
         },
       },
       roadRidingType: {
         questionText: "What type of road riding do you primarily do?",
         helpText:
-          "Your riding type influences how aggressive and aerodynamic your position should be. We use this to tailor your setup for comfort, efficiency, or maximum performance.",
+          "Your riding type influences how aggressive and aerodynamic your position should be. " +
+          "We use this to tailor your setup for comfort, efficiency, or maximum performance.",
         imageAlt: "Type of riding illustration",
         options: {
           casual: {
             label: "Casual rides and fitness",
             description:
-              "Focused on comfort and enjoyment. We prioritize a more relaxed position with reduced strain on your back, neck, and hands.",
+              "Focused on comfort and enjoyment. We prioritize a more relaxed position with reduced " +
+              "strain on your back, neck, and hands.",
             tooltip:
-              "Focused on comfort and enjoyment. We prioritize a more relaxed position with reduced strain on your back, neck, and hands.",
+              "Focused on comfort and enjoyment. We prioritize a more relaxed position with reduced " +
+              "strain on your back, neck, and hands.",
           },
           group: {
             label: "Group rides and sportives",
             description:
-              "A mix of endurance and pace. We balance comfort and efficiency to support longer rides with moderate intensity.",
+              "A mix of endurance and pace. We balance comfort and efficiency to support longer " +
+              "rides with moderate intensity.",
             tooltip:
-              "A mix of endurance and pace. We balance comfort and efficiency to support longer rides with moderate intensity.",
+              "A mix of endurance and pace. We balance comfort and efficiency to support longer " +
+              "rides with moderate intensity.",
           },
           training: {
             label: "Structured training",
             description:
-              "Regular training with specific goals. We optimize your position for efficiency and power transfer while maintaining sustainability.",
+              "Regular training with specific goals. We optimize your position for efficiency and " +
+              "power transfer while maintaining sustainability.",
             tooltip:
-              "Regular training with specific goals. We optimize your position for efficiency and power transfer while maintaining sustainability.",
+              "Regular training with specific goals. We optimize your position for efficiency and " +
+              "power transfer while maintaining sustainability.",
           },
           racing: {
             label: "Racing (crits, road races)",
             description:
-              "High intensity and performance-focused. We create a more aggressive position to improve speed, aerodynamics, and responsiveness.",
+              "High intensity and performance-focused. We create a more aggressive position to " +
+              "improve speed, aerodynamics, and responsiveness.",
             tooltip:
-              "High intensity and performance-focused. We create a more aggressive position to improve speed, aerodynamics, and responsiveness.",
+              "High intensity and performance-focused. We create a more aggressive position to " +
+              "improve speed, aerodynamics, and responsiveness.",
           },
           tt: {
             label: "Time trials / triathlon",
             description:
-              "Maximum aerodynamic efficiency. We position you lower and more forward to minimize air resistance and maximize sustained speed.",
+              "Maximum aerodynamic efficiency. We position you lower and more forward to minimize " +
+              "air resistance and maximize sustained speed.",
             tooltip:
-              "Maximum aerodynamic efficiency. We position you lower and more forward to minimize air resistance and maximize sustained speed.",
+              "Maximum aerodynamic efficiency. We position you lower and more forward to minimize " +
+              "air resistance and maximize sustained speed.",
           },
         },
       },
       mtbTerrain: {
         questionText: "What terrain do you primarily ride?",
         helpText:
-          "The terrain you ride has a major impact on your ideal bike setup. Smooth roads allow for a more aerodynamic position, while rough and technical terrain requires more control and stability. We use this to find the right balance between comfort, control, efficiency, and performance.",
+          "The terrain you ride has a major impact on your ideal bike setup. Smooth roads allow " +
+          "for a more aerodynamic position, while rough and technical terrain requires more " +
+          "control and stability. We use this to find the right balance between comfort, " +
+          "control, efficiency, and performance.",
         imageAlt: "Bike terrain illustration",
         options: {
           asphalt: {
             label: "Only asphalt",
             tooltip:
-              "Smooth roads allow for an efficient and aerodynamic riding position. We optimize your setup for speed, power transfer, and reduced air resistance.",
+              "Smooth roads allow for an efficient and aerodynamic riding position. We optimize your " +
+              "setup for speed, power transfer, and reduced air resistance.",
           },
           paved: {
             label: "Paved roads and light gravel",
             tooltip:
-              "Mixed surfaces require a balance between comfort and efficiency. We slightly increase stability while maintaining a fast, efficient position.",
+              "Mixed surfaces require a balance between comfort and efficiency. We slightly increase " +
+              "stability while maintaining a fast, efficient position.",
           },
           xc: {
             label: "Cross-country (smooth trails, climbing)",
             tooltip:
-              "Climbing and light trails require efficient power transfer and control. We balance stability with a position suited for sustained effort.",
+              "Climbing and light trails require efficient power transfer and control. We balance " +
+              "stability with a position suited for sustained effort.",
           },
           trail: {
             label: "Trail (varied terrain, some technical)",
             tooltip:
-              "Uneven and technical terrain demands more control and flexibility. We adjust your position to improve handling and stability on descents.",
+              "Uneven and technical terrain demands more control and flexibility. We adjust your " +
+              "position to improve handling and stability on descents.",
           },
           enduro: {
             label: "Enduro (technical descents, big climbs)",
             tooltip:
-              "Steep descents and rough terrain require a stable and confident position. We prioritize control and shock absorption over aerodynamics.",
+              "Steep descents and rough terrain require a stable and confident position. We " +
+              "prioritize control and shock absorption over aerodynamics.",
           },
           dh: {
             label: "Downhill / bike park",
             tooltip:
-              "High-speed descents and jumps require maximum control and safety. We optimize your setup for stability, impact absorption, and handling.",
+              "High-speed descents and jumps require maximum control and safety. We optimize your " +
+              "setup for stability, impact absorption, and handling.",
           },
         },
       },
@@ -1298,8 +1368,7 @@ const en = {
       },
       numeric: {
         label: "Your numeric answer",
-        tooltip:
-          "Enter a number only (no units). Use the specified unit in the label (cm/mm/deg).",
+        tooltip: "Enter a number only (no units). Use the specified unit in the label (cm/mm/deg).",
         placeholder: "Enter a number",
         range: "Range: {min} - {max}{unit}",
         errors: {
@@ -1311,7 +1380,8 @@ const en = {
       text: {
         label: "Your written answer",
         tooltip:
-          "Write a short, specific answer. Include relevant details like bike type, weekly volume, and any discomfort.",
+          "Write a short, specific answer. Include relevant details like bike type, weekly " +
+          "volume, and any discomfort.",
         placeholder: "Type your answer here...",
       },
     },
@@ -1321,9 +1391,12 @@ const en = {
       title: "Your Bike Fit Recommendations",
       mainProfileTab: "Your fit",
       climbingProfileTab: "Climbing fit",
-      climbingProfileNote: "This setup is optimised for climbing — higher bars, adjusted saddle setback, and shorter reach to improve power output and comfort on long ascents.",
+      climbingProfileNote:
+        "This setup is optimised for climbing — higher bars, adjusted saddle setback, and " +
+        "shorter reach to improve power output and comfort on long ascents.",
       subtitle:
-        "Based on your measurements and riding preferences, here are your personalized bike fit settings.",
+        "Based on your measurements and riding preferences, here are your personalized bike " +
+        "fit settings.",
       algorithmVersionLabel: "Algorithm version",
       sessionNotFound: {
         title: "Session not found",
@@ -1346,8 +1419,7 @@ const en = {
       emailDialog: {
         title: "Email report",
         sentTitle: "Email sent",
-        description:
-          "Send your bike fit recommendations to your email for future reference.",
+        description: "Send your bike fit recommendations to your email for future reference.",
         sentDescription: "Check your inbox for your bike fit report.",
         emailLabel: "Email address",
         emailTooltip: "Enter the email address where you want to receive this report.",
@@ -1372,7 +1444,8 @@ const en = {
         inlineFailed:
           "The PDF could not be shown inside the viewer. Open it full page or download it instead.",
         unsupported:
-          "This browser could not display the PDF inside the viewer. Open it in a new tab or download it instead.",
+          "This browser could not display the PDF inside the viewer. Open it in a new tab or " +
+          "download it instead.",
         openInNewTab: "Open in new tab",
         openFullPage: "Open full page",
       },
@@ -1384,13 +1457,15 @@ const en = {
         locale: "en",
         introTitle: "Your fit report",
         introBody:
-          "Use this report as a practical adjustment sequence. Change one variable at a time, validate on the bike, and keep notes after each ride.",
+          "Use this report as a practical adjustment sequence. Change one variable at a time, " +
+          "validate on the bike, and keep notes after each ride.",
         shell: {
           brandAlt: "BestBikeFit4U brand mark",
           dateLabel: "Report date",
           aboutTitle: "About this report",
           aboutBody:
-            "This report translates your fit session into a clear adjustment plan you can use on the bike or review with a fitter or bike shop.",
+            "This report translates your fit session into a clear adjustment plan you can use on " +
+            "the bike or review with a fitter or bike shop.",
           actionsTitle: "Report actions",
           aboutBullets: [
             "Follow the sequence one step at a time.",
@@ -1398,18 +1473,18 @@ const en = {
             "Use the notes and pressure guidance before making bigger setup changes.",
             "Compare your bike context and your body profile before changing components.",
           ] as string[],
-          coverSupport:
-            "Built to help you review your current setup with clearer next steps.",
-          fitPassActivated:
-            "Fit Pass activated. Your full report is now available.",
+          coverSupport: "Built to help you review your current setup with clearer next steps.",
+          fitPassActivated: "Fit Pass activated. Your full report is now available.",
           summaryTitle: "Summary",
           summaryFullAccess:
             "Your full report is ready, including the detailed adjustment sequence and validation steps.",
           summaryLimited:
-            "You are seeing the core fit numbers now. Additional report actions remain available through Fit Pass or Pro.",
+            "You are seeing the core fit numbers now. Additional report actions remain available " +
+            "through Fit Pass or Pro.",
           unlockTitle: "Unlock the full report",
           unlockDescription:
-            "The free view shows your core numbers and priorities. Fit Pass adds the full adjustment sequence, PDF download, email report, and validation plan.",
+            "The free view shows your core numbers and priorities. Fit Pass adds the full " +
+            "adjustment sequence, PDF download, email report, and validation plan.",
           unlockItems: [
             "Detailed fit table",
             "Full adjustment sequence",
@@ -1516,7 +1591,8 @@ const en = {
               5: "No meaningful discomfort while riding.",
             },
             impactText:
-              "Discomfort on the bike is a signal, not just a feeling. This report helps connect that signal to setup changes you can validate on real rides.",
+              "Discomfort on the bike is a signal, not just a feeling. This report helps connect " +
+              "that signal to setup changes you can validate on real rides.",
           },
         },
         bike: {
@@ -1534,14 +1610,14 @@ const en = {
           algorithmVersion: "Algorithm version",
           engineVersion: "Engine version",
           dataQuality: "Data quality",
-          descriptionFallback:
-            "No bike description was available for this report yet.",
+          descriptionFallback: "No bike description was available for this report yet.",
         },
         dataQuality: {
           complete: "Complete",
           partial: "Partial",
           banner:
-            "Some recommendations need more rider or tyre data. Review the missing-data list and the tire-pressure section before making bigger changes.",
+            "Some recommendations need more rider or tyre data. Review the missing-data list and " +
+            "the tire-pressure section before making bigger changes.",
         },
         status: {
           ready: "Ready to apply",
@@ -1568,12 +1644,14 @@ const en = {
           neutral: "On target",
         },
         adjustmentGuideline:
-          "Change one variable at a time and keep single moves within 2-5 mm before the next validation ride.",
+          "Change one variable at a time and keep single moves within 2-5 mm before the next " +
+          "validation ride.",
         tirePressure: {
           readyTitle: "Pressure guidance available",
           pendingTitle: "Pending required data",
           pendingDescription:
-            "Personalized tyre pressure needs rider weight, tyre setup, and surface context. Use the quick-start table only as a temporary starting point.",
+            "Personalized tyre pressure needs rider weight, tyre setup, and surface context. Use " +
+            "the quick-start table only as a temporary starting point.",
           quickStartTitle: "Quick-start estimate",
           quickStartNote: "Not personalized. Always respect tyre and rim maximum limits.",
           quickStartColumns: {
@@ -1610,11 +1688,9 @@ const en = {
           },
         },
         paywall: {
-          emailUpgradeToast:
-            "Fit Pass or Pro is required to email the full report.",
+          emailUpgradeToast: "Fit Pass or Pro is required to email the full report.",
           emailUpgradeButton: "Email report - Fit Pass",
-          pdfUpgradeToast:
-            "Fit Pass or Pro is required to download your PDF.",
+          pdfUpgradeToast: "Fit Pass or Pro is required to download your PDF.",
           pdfUpgradeButton: "PDF - Fit Pass or Pro",
         },
         validationPlan: {
@@ -1659,78 +1735,110 @@ const en = {
             label: "Saddle height",
             whyItMatters: "Sets knee extension timing and is the main driver of lower-limb load.",
             riderValidationCue: "You spin smoothly without hip rocking after 15-20 minutes.",
-            feelDescription: "The pedal stroke feels round and controlled. You do not reach for the bottom of the stroke.",
-            watchOutHigh: "Too high can cause hip rocking, hamstring strain, and overreaching at the bottom.",
+            feelDescription:
+              "The pedal stroke feels round and controlled. You do not reach for the bottom of the stroke.",
+            watchOutHigh:
+              "Too high can cause hip rocking, hamstring strain, and overreaching at the bottom.",
             watchOutLow: "Too low can overload the knees and make the stroke feel cramped.",
             methodLabel: "LeMond baseline + Holmes validation band",
             measurementReference: "Bottom-bracket center to saddle top along the seat-tube line.",
-            sequenceNote: "Start here because every cockpit recommendation depends on a stable saddle reference.",
+            sequenceNote:
+              "Start here because every cockpit recommendation depends on a stable saddle reference.",
           },
           saddleSetback: {
             label: "Saddle setback",
-            whyItMatters: "Controls seated balance and helps distribute load between saddle, feet, and hands.",
+            whyItMatters:
+              "Controls seated balance and helps distribute load between saddle, feet, and hands.",
             riderValidationCue: "You feel balanced over the bike with steady seated traction.",
-            feelDescription: "Your hips feel supported and your hands do not carry excess weight on flat terrain.",
+            feelDescription:
+              "Your hips feel supported and your hands do not carry excess weight on flat terrain.",
             watchOutHigh: "Too far back can make the front end feel long and heavy.",
             watchOutLow: "Too far forward can increase knee load and overload the hands.",
             methodLabel: "KOPS-informed starting point + stability correction",
-            measurementReference: "Horizontal distance from bottom-bracket center to saddle nose reference point.",
-            sequenceNote: "Lock setback after saddle height so the rider's seated balance is stable before front-end work.",
+            measurementReference:
+              "Horizontal distance from bottom-bracket center to saddle nose reference point.",
+            sequenceNote:
+              "Lock setback after saddle height so the rider's seated balance is stable before front-end work.",
           },
           handlebarDrop: {
             label: "Handlebar drop",
-            whyItMatters: "Sets the comfort-to-aero balance and changes how much spinal and hip mobility the position needs.",
-            riderValidationCue: "You can use hoods and drops without neck or low-back tension building quickly.",
-            feelDescription: "The front end feels supportive rather than restrictive, with room to breathe under effort.",
+            whyItMatters:
+              "Sets the comfort-to-aero balance and changes how much spinal and hip mobility the " +
+              "position needs.",
+            riderValidationCue:
+              "You can use hoods and drops without neck or low-back tension building quickly.",
+            feelDescription:
+              "The front end feels supportive rather than restrictive, with room to breathe under effort.",
             watchOutHigh: "Too much drop can overload the neck, back, and hamstrings.",
-            watchOutLow: "Too little drop can reduce front-end support and limit an efficient road posture.",
+            watchOutLow:
+              "Too little drop can reduce front-end support and limit an efficient road posture.",
             methodLabel: "Terrain and goal correction for riding style",
-            measurementReference: "Vertical difference between saddle reference height and handlebar contact height.",
-            sequenceNote: "Only adjust drop after the saddle is stable, otherwise you chase two changing references.",
+            measurementReference:
+              "Vertical difference between saddle reference height and handlebar contact height.",
+            sequenceNote:
+              "Only adjust drop after the saddle is stable, otherwise you chase two changing references.",
           },
           handlebarReach: {
             label: "Handlebar reach",
-            whyItMatters: "Determines cockpit length and influences elbow bend, shoulder load, and steering control.",
-            riderValidationCue: "Your elbows stay soft and you can hold the hoods without excess palm pressure.",
-            feelDescription: "The cockpit feels long enough for support but not so long that you brace through the shoulders.",
-            watchOutHigh: "Too long can lock the elbows and increase hand, neck, or shoulder discomfort.",
+            whyItMatters:
+              "Determines cockpit length and influences elbow bend, shoulder load, and steering control.",
+            riderValidationCue:
+              "Your elbows stay soft and you can hold the hoods without excess palm pressure.",
+            feelDescription:
+              "The cockpit feels long enough for support but not so long that you brace through the shoulders.",
+            watchOutHigh:
+              "Too long can lock the elbows and increase hand, neck, or shoulder discomfort.",
             watchOutLow: "Too short can crowd the torso and make steering feel nervous.",
             methodLabel: "Stack/reach and contact-point model",
-            measurementReference: "Horizontal saddle-to-handlebar reach between contact-point references.",
-            sequenceNote: "Set reach after drop because stack changes often alter how long the cockpit feels.",
+            measurementReference:
+              "Horizontal saddle-to-handlebar reach between contact-point references.",
+            sequenceNote:
+              "Set reach after drop because stack changes often alter how long the cockpit feels.",
           },
           stem: {
             label: "Stem",
-            whyItMatters: "Fine-tunes steering feel and front-end length once saddle and bar targets are clear.",
+            whyItMatters:
+              "Fine-tunes steering feel and front-end length once saddle and bar targets are clear.",
             riderValidationCue: "Steering feels calm and your hands stay light in normal riding.",
             feelDescription: "The bike tracks naturally without making you brace at the bars.",
             watchOutHigh: "A longer stem than needed can slow steering and overload reach.",
             watchOutLow: "A shorter stem than needed can make steering feel abrupt and cramped.",
             methodLabel: "Fine-tuned after saddle is locked",
             measurementReference: "Center-to-center stem length with installed angle.",
-            sequenceNote: "Treat the stem as a refinement tool, not the first contact-point adjustment.",
+            sequenceNote:
+              "Treat the stem as a refinement tool, not the first contact-point adjustment.",
           },
           crankLength: {
             label: "Crank length",
-            whyItMatters: "Changes leverage and joint travel, especially through the top of the pedal stroke.",
-            riderValidationCue: "The top of the stroke feels clear and powerful without hip pinching.",
-            feelDescription: "You can pedal under load without feeling compressed at the top of the circle.",
-            watchOutHigh: "Too long can increase hip and knee compression at the top of the stroke.",
+            whyItMatters:
+              "Changes leverage and joint travel, especially through the top of the pedal stroke.",
+            riderValidationCue:
+              "The top of the stroke feels clear and powerful without hip pinching.",
+            feelDescription:
+              "You can pedal under load without feeling compressed at the top of the circle.",
+            watchOutHigh:
+              "Too long can increase hip and knee compression at the top of the stroke.",
             watchOutLow: "Too short can reduce leverage if the rider adapts poorly.",
             methodLabel: "Standard proportional baseline",
             measurementReference: "Crank center to pedal spindle center.",
-            sequenceNote: "Review crank length after contact points because changing cranks often affects saddle setup.",
+            sequenceNote:
+              "Review crank length after contact points because changing cranks often affects saddle setup.",
           },
           handlebarWidth: {
             label: "Handlebar width",
-            whyItMatters: "Affects shoulder comfort, leverage, and how open the rider's chest feels.",
-            riderValidationCue: "Your shoulders stay relaxed and breathing feels natural under effort.",
-            feelDescription: "The bar width feels stable without forcing the elbows in or out unnaturally.",
+            whyItMatters:
+              "Affects shoulder comfort, leverage, and how open the rider's chest feels.",
+            riderValidationCue:
+              "Your shoulders stay relaxed and breathing feels natural under effort.",
+            feelDescription:
+              "The bar width feels stable without forcing the elbows in or out unnaturally.",
             watchOutHigh: "Too wide can increase shoulder strain and upper-body drag.",
             watchOutLow: "Too narrow can crowd breathing and reduce steering leverage.",
             methodLabel: "Shoulder-width alignment",
-            measurementReference: "Bar width measured center-to-center at the hoods or drops depending on design.",
-            sequenceNote: "Confirm width after the core cockpit numbers because width mainly refines comfort and control.",
+            measurementReference:
+              "Bar width measured center-to-center at the hoods or drops depending on design.",
+            sequenceNote:
+              "Confirm width after the core cockpit numbers because width mainly refines comfort and control.",
           },
         },
       },
@@ -1747,14 +1855,12 @@ const en = {
         warningMessages: {
           pressure_high_for_gravel:
             "Your tyre pressure may reduce grip and comfort on gravel surfaces.",
-          pressure_low_general:
-            "Your tyre pressure may cause handling issues or pinch flats.",
+          pressure_low_general: "Your tyre pressure may cause handling issues or pinch flats.",
           aggressive_setup_rough_terrain:
             "An aggressive position plus low pressure on rough terrain may increase discomfort.",
           weight_mismatch:
             "Your current weight differs from the weight used in the latest pressure calculation.",
-          gravel_road_conflict:
-            "This road-bike setup is paired with a gravel surface profile.",
+          gravel_road_conflict: "This road-bike setup is paired with a gravel surface profile.",
           mtb_pressure_stability:
             "Your front tyre pressure is high for MTB use and may reduce stability.",
           performance_posture_low_pressure:
@@ -1795,9 +1901,13 @@ const en = {
       ridingStyle: {
         title: "Riding Style",
         editButton: "Edit",
-        description: "Your riding style plays a key role in determining your optimal bike fit. Factors such as your experience level, weekly training volume, typical ride distance, and personal preferences influence how aggressive or relaxed your position should be.",
+        description:
+          "Your riding style plays a key role in determining your optimal bike fit. Factors such " +
+          "as your experience level, weekly training volume, typical ride distance, and personal " +
+          "preferences influence how aggressive or relaxed your position should be.",
         incompleteTitle: "Complete your riding profile",
-        incompleteDescription: "Answer a few questions about your riding style to enable bike fitting.",
+        incompleteDescription:
+          "Answer a few questions about your riding style to enable bike fitting.",
         completeCta: "Complete now",
         experienceLevel: "Experience level",
         weeklyHours: "Weekly hours",
@@ -1809,7 +1919,9 @@ const en = {
       measurements: {
         summary: "Your saved rider measurements",
         impactDescription:
-          "Your height, inseam, arm length, and torso length directly determine the geometry of your ideal bike fit. BMI gives a broad indication of weight relative to height — it influences saddle pressure, power-to-weight ratio, and joint load on longer rides.",
+          "Your height, inseam, arm length, and torso length directly determine the geometry of " +
+          "your ideal bike fit. BMI gives a broad indication of weight relative to height — it " +
+          "influences saddle pressure, power-to-weight ratio, and joint load on longer rides.",
         improveLink: "How to improve your BMI",
         height: "Height",
         inseam: "Inseam",
@@ -1869,7 +1981,8 @@ const en = {
         },
         impactTitle: "How this affects your fit",
         impactDescription:
-          "Lower flexibility scores lead to a more upright position with less handlebar drop. Better flexibility allows a lower, more aerodynamic posture.",
+          "Lower flexibility scores lead to a more upright position with less handlebar drop. " +
+          "Better flexibility allows a lower, more aerodynamic posture.",
       },
       comfort: {
         editButton: "Edit",
@@ -1882,9 +1995,13 @@ const en = {
           severe: "Severe",
           verySevere: "Very severe",
         },
-        editInstructions: "Set the severity for each area. Leave on None if you have no discomfort there.",
+        editInstructions:
+          "Set the severity for each area. Leave on None if you have no discomfort there.",
         impactDescription:
-          "Even minor discomfort usually signals a fit issue rather than just fatigue. By tracking which areas are affected and how severe, we can make precise adjustments to reach, handlebar height, and saddle position — turning recurring discomfort into a solvable problem.",
+          "Even minor discomfort usually signals a fit issue rather than just fatigue. By " +
+          "tracking which areas are affected and how severe, we can make precise adjustments to " +
+          "reach, handlebar height, and saddle position — turning recurring discomfort into a " +
+          "solvable problem.",
         improveLink: "How to improve your comfort",
         noPain: "No discomfort",
         painAreasLabel: "Areas of discomfort",
@@ -1915,23 +2032,24 @@ const en = {
         },
         impactTitle: "How this affects your fit",
         impactDescription:
-          "Lower core stability limits how far you can reach and how low your handlebars can go without fatigue. A stronger core supports a longer, more performance-oriented position.",
+          "Lower core stability limits how far you can reach and how low your handlebars can go " +
+          "without fatigue. A stronger core supports a longer, more performance-oriented " +
+          "position.",
       },
       status: {
         title: "Profile Status",
         description:
-          "Your profile is complete. You can now start a fit session to get personalized bike setup recommendations.",
+          "Your profile is complete. You can now start a fit session to get personalized bike " +
+          "setup recommendations.",
         startFitCta: "Start New Fit Session",
       },
       edit: {
         title: "Edit Your Measurements",
-        description:
-          "Update your body measurements for more accurate fit recommendations.",
+        description: "Update your body measurements for more accurate fit recommendations.",
       },
       onboarding: {
         title: "Complete Your Profile",
-        description:
-          "Enter your body measurements to get personalized bike fit recommendations.",
+        description: "Enter your body measurements to get personalized bike fit recommendations.",
       },
       errors: {
         saveFailedTitle: "Could not save profile",
@@ -1939,7 +2057,8 @@ const en = {
       recalculate: {
         dialogTitle: "Update tire pressure?",
         dialogBody:
-          "Your weight changed to {weight} kg. Would you like to recalculate the recommended tire pressure for your bikes?",
+          "Your weight changed to {weight} kg. Would you like to recalculate the recommended " +
+          "tire pressure for your bikes?",
         confirmButton: "Yes, recalculate",
         dismissButton: "Not now",
         successToast: "Updated tire pressure recommendations for {count} bikes.",
@@ -1948,9 +2067,11 @@ const en = {
       refresh: {
         title: "Do you want to recalculate your fitting and tire pressure settings?",
         descriptionWithPressure:
-          "Your body measurements were updated. Start a new fitting session to refresh your fit recommendations, or recalculate tire pressure now based on {weight} kg.",
+          "Your body measurements were updated. Start a new fitting session to refresh your fit " +
+          "recommendations, or recalculate tire pressure now based on {weight} kg.",
         descriptionFitOnly:
-          "Your body measurements were updated. Start a new fitting session to refresh your fit recommendations.",
+          "Your body measurements were updated. Start a new fitting session to refresh your fit " +
+          "recommendations.",
         fitButton: "Start new fit session",
         pressureButton: "Recalculate tire pressure",
         dismissButton: "Not now",
@@ -1959,7 +2080,9 @@ const en = {
         bodyMeasurements: {
           title: "How to Improve Your BMI",
           subtitle:
-            "BMI gives a broad indication of weight relative to height. For cyclists, managing body composition improves power-to-weight ratio, reduces joint load, and enhances long-ride endurance.",
+            "BMI gives a broad indication of weight relative to height. For cyclists, managing " +
+            "body composition improves power-to-weight ratio, reduces joint load, and enhances " +
+            "long-ride endurance.",
           whatItMeansTitle: "What your BMI means for your bike fit",
           exercisesTitle: "Strategies to improve body composition",
           progressTitle: "How to track your progress",
@@ -1969,7 +2092,8 @@ const en = {
         comfort: {
           title: "How to Improve Your Riding Comfort",
           subtitle:
-            "Most cycling discomfort has a direct fit cause. Small, targeted adjustments to saddle height, reach, or cleat position can eliminate pain entirely.",
+            "Most cycling discomfort has a direct fit cause. Small, targeted adjustments to saddle " +
+            "height, reach, or cleat position can eliminate pain entirely.",
           whatItMeansTitle: "What your comfort level means for your bike fit",
           exercisesTitle: "Fit adjustments by pain area",
           progressTitle: "How to track your progress",
@@ -1989,7 +2113,8 @@ const en = {
         coreStability: {
           title: "Improve Your Core Stability",
           subtitle:
-            "Core strength determines how long you can hold an aggressive position without fatigue or back pain.",
+            "Core strength determines how long you can hold an aggressive position without fatigue " +
+            "or back pain.",
           whatItMeansTitle: "What your score means for your bike fit",
           exercisesTitle: "Exercises to build core stability",
           progressTitle: "How to track your progress",
@@ -2002,9 +2127,10 @@ const en = {
         deleteAccount: "Delete Account",
         deleteConfirmTitle: "Delete your account?",
         deleteConfirmDescription:
-          "This will permanently delete your profile, bikes, fit sessions, recommendations, and all other data. This action cannot be undone.",
+          "This will permanently delete your profile, bikes, fit sessions, recommendations, and " +
+          "all other data. This action cannot be undone.",
         deleteConfirmCta: "Yes, delete my account",
-        deleteConfirmInputLabel: "Type \"Delete\" to confirm",
+        deleteConfirmInputLabel: 'Type "Delete" to confirm',
         deleteConfirmInputPlaceholder: "Delete",
         deleteConfirmWord: "Delete",
         cancel: "Cancel",
@@ -2031,7 +2157,8 @@ const en = {
       billing: {
         title: "Billing",
         description:
-          "Manage payment method, invoices, and cancellation in Stripe Customer Portal. Changes apply after Stripe webhook processing.",
+          "Manage payment method, invoices, and cancellation in Stripe Customer Portal. Changes " +
+          "apply after Stripe webhook processing.",
         manageCta: "Manage billing",
         noPaidSubscription: "There is no paid subscription to manage yet.",
         missingCustomer:
@@ -2052,11 +2179,13 @@ const en = {
       appInstall: {
         settingsTitle: "Install on iPhone",
         settingsDescription:
-          "Create an iPhone home-screen app for BestBikeFit4U. When you open it from the icon, the app will take you straight into your dashboard if you're still signed in.",
+          "Create an iPhone home-screen app for BestBikeFit4U. When you open it from the icon, " +
+          "the app will take you straight into your dashboard if you're still signed in.",
         eyebrow: "iPhone app",
         title: "Install BestBikeFit4U on your iPhone",
         description:
-          "Save BestBikeFit4U to your iPhone home screen for an app-like experience with direct dashboard launch.",
+          "Save BestBikeFit4U to your iPhone home screen for an app-like experience with direct " +
+          "dashboard launch.",
         quickStepsTitle: "Quick steps",
         openInstallPage: "Open install page",
         openDashboard: "Open dashboard",
@@ -2066,14 +2195,17 @@ const en = {
           "BestBikeFit4U is already running in home-screen mode on this device.",
         openInSafariTitle: "Open this in Safari",
         openInSafariDescription:
-          "iPhone home-screen install only works from Safari. Open this page in Safari, then use Share and Add to Home Screen.",
+          "iPhone home-screen install only works from Safari. Open this page in Safari, then use " +
+          "Share and Add to Home Screen.",
         dashboardLaunchTitle: "Dashboard launch",
         dashboardLaunchDescription:
-          "After you add this page to your home screen, opening the icon will route to your dashboard when your session is still active.",
+          "After you add this page to your home screen, opening the icon will route to your " +
+          "dashboard when your session is still active.",
         steps: [
           {
             title: "Open this page in Safari",
-            description: "Stay on this install page so the home-screen icon points to the app launcher.",
+            description:
+              "Stay on this install page so the home-screen icon points to the app launcher.",
           },
           {
             title: "Tap Share",
@@ -2115,9 +2247,9 @@ const en = {
           noSegments: "Your segments or personal records",
           howWeUse: "How we use this",
           howWeUseDescription:
-            "Your riding history helps us understand your terrain preference and riding style. This improves your tyre pressure recommendations and bike fit suggestions.",
-          dataNote:
-            "Your data is read-only. You can disconnect at any time from Settings.",
+            "Your riding history helps us understand your terrain preference and riding style. " +
+            "This improves your tyre pressure recommendations and bike fit suggestions.",
+          dataNote: "Your data is read-only. You can disconnect at any time from Settings.",
           confirm: "Continue to Strava",
           cancel: "Cancel",
         },
@@ -2130,17 +2262,20 @@ const en = {
         photoImport: {
           importButton: "Use Strava photo",
           confirmTitle: "Use your Strava profile photo?",
-          confirmBody: "This will replace your current profile photo with the one from your Strava account.",
+          confirmBody:
+            "This will replace your current profile photo with the one from your Strava account.",
           confirm: "Use Strava photo",
           cancel: "Keep current",
         },
         bikeImport: {
           title: "Your Strava bikes",
           description:
-            "Review the bikes Strava exposes, see how each one is used, and import the bikes you want to fit and ride with.",
+            "Review the bikes Strava exposes, see how each one is used, and import the bikes you " +
+            "want to fit and ride with.",
           overviewTitle: "Bike overview",
           overviewDescription:
-            "Compare your Strava bikes by lifetime distance, recent usage, and readiness before you import anything.",
+            "Compare your Strava bikes by lifetime distance, recent usage, and readiness before " +
+            "you import anything.",
           summaryBikes: "{count} bikes",
           summaryImported: "{count} imported",
           summaryReady: "{count} fit ready",
@@ -2174,11 +2309,12 @@ const en = {
           loading: "Loading Strava bike candidates...",
           blockedTitle: "Strava bike import is blocked",
           blockedDescription:
-            "The current backend only exposes Strava connection status and photo sync. The gear summary and bike import contracts needed for this flow are not available yet.",
+            "The current backend only exposes Strava connection status and photo sync. The gear " +
+            "summary and bike import contracts needed for this flow are not available yet.",
           backendBlocked:
-            "Missing backend support: a Strava gear summary query, an import action, and a bike identity field for exact already-imported detection.",
-          parseError:
-            "The stored Strava payload could not be parsed as bike import data.",
+            "Missing backend support: a Strava gear summary query, an import action, and a bike " +
+            "identity field for exact already-imported detection.",
+          parseError: "The stored Strava payload could not be parsed as bike import data.",
           emptyTitle: "No Strava bike candidates available",
           emptyDescription:
             "No importable bike candidates were found in the current Strava payload.",
@@ -2200,7 +2336,8 @@ const en = {
             "Bikes with an ambiguous type will open a confirmation dialog after the initial import step.",
           typeWizardTitle: "Confirm bike type",
           typeWizardDescription:
-            "Strava flagged {name} as ambiguous. Choose the closest bike type before it is added to your library.",
+            "Strava flagged {name} as ambiguous. Choose the closest bike type before it is added " +
+            "to your library.",
           typeWizardFallback: "Type details unavailable",
           typeWizardPrompt: "Choose the bike type",
           typeWizardCancel: "Cancel",
@@ -2241,11 +2378,11 @@ const en = {
       delete: {
         confirm: 'Delete "{bikeName}"? This action cannot be undone.',
         failed: "Could not delete bike. Please try again.",
-        blocked:
-          "This bike cannot be deleted because it already has fitting history.",
+        blocked: "This bike cannot be deleted because it already has fitting history.",
         dialogTitle: 'Delete "{bikeName}"?',
         dialogDescription:
-          "This removes the bike and its direct wheelset, tire setup, and pressure setup data. Fitting history prevents deletion.",
+          "This removes the bike and its direct wheelset, tire setup, and pressure setup data. " +
+          "Fitting history prevents deletion.",
         dialogConfirm: "Delete bike",
       },
       defaultProfile: {
@@ -2264,7 +2401,8 @@ const en = {
         pressureBadge: "Pressure ready",
         passportLabel: "Bike-passport ID",
         passportDescription:
-          "Share this ID with another rider if you want them to create their own editable copy of this bike. Their edits never change your bike.",
+          "Share this ID with another rider if you want them to create their own editable copy " +
+          "of this bike. Their edits never change your bike.",
         passportMissing: "Passport ID not available yet.",
         passportCopyAction: "Copy ID",
         passportCopied: "Bike-passport ID copied.",
@@ -2277,8 +2415,7 @@ const en = {
         enabledBadge: "Preview enabled",
         disabledBadge: "Preview disabled",
         codeLabel: "Public fit code",
-        codeHint:
-          "This code stays stable when you disable and re-enable the preview.",
+        codeHint: "This code stays stable when you disable and re-enable the preview.",
         copyAction: "Copy fit code",
         enableAction: "Enable preview",
         reenableAction: "Re-enable preview",
@@ -2314,8 +2451,7 @@ const en = {
         description:
           "Add a few photos so this bike is easier to recognize in your garage and fit history.",
         emptyTitle: "No bike photos yet",
-        emptyDescription:
-          "Upload a main photo now and add extra angles later if you want.",
+        emptyDescription: "Upload a main photo now and add extra angles later if you want.",
         countOne: "1 photo",
         countMany: "{count} photos",
         help: "Choose a thumbnail to change the main preview or open the photo fullscreen.",
@@ -2332,13 +2468,13 @@ const en = {
       descriptionCard: {
         title: "Bike description",
         description:
-          "A short editable summary of how you use this bike. This is descriptive only, not technical source data.",
-        empty:
-          "No description saved yet. Add your own summary or generate a concise draft.",
-        placeholder:
-          "Describe what this bike is for, how it feels, and where you ride it most.",
+          "A short editable summary of how you use this bike. This is descriptive only, not " +
+          "technical source data.",
+        empty: "No description saved yet. Add your own summary or generate a concise draft.",
+        placeholder: "Describe what this bike is for, how it feels, and where you ride it most.",
         helper:
-          "Keep it practical. Avoid geometry claims or exact specs unless you entered them yourself elsewhere.",
+          "Keep it practical. Avoid geometry claims or exact specs unless you entered them " +
+          "yourself elsewhere.",
         generate: "Generate description",
         regenerate: "Regenerate",
         edit: "Edit manually",
@@ -2347,16 +2483,14 @@ const en = {
         sourceGenerated: "AI-assisted draft",
         sourceManual: "Manual description",
         sourceTemplate: "Starter draft",
-        disclaimer:
-          "Generated text is editable rider-facing copy, not authoritative bike data.",
+        disclaimer: "Generated text is editable rider-facing copy, not authoritative bike data.",
       },
       wheelsetManager: {
         title: "Wheelsets",
         description:
           "Manage every wheelset you use with this bike and keep one active for pressure recommendations.",
         emptyTitle: "No wheelsets saved yet",
-        emptyDescription:
-          "Add your first wheelset to connect tyre setup details to this bike.",
+        emptyDescription: "Add your first wheelset to connect tyre setup details to this bike.",
         activeBadge: "Active",
         activeAction: "Set active",
         add: "Add wheelset",
@@ -2374,30 +2508,25 @@ const en = {
           title: "Bike fitting",
           hasFitDescription:
             "Latest fit result saved for this bike, including riding style and fit goal context.",
-          noFitDescription:
-            "No fit result has been saved for this bike yet.",
+          noFitDescription: "No fit result has been saved for this bike yet.",
           lastUpdated: "Last updated",
         },
         advisedPressure: {
           title: "Advised tyre pressure",
           descriptionWithSetup:
             "Latest pressure recommendation based on the active tyre setup: {setup}.",
-          descriptionWithoutSetup:
-            "Latest saved pressure recommendation for this bike.",
+          descriptionWithoutSetup: "Latest saved pressure recommendation for this bike.",
         },
         currentSetup: {
           title: "Current setup",
           description:
             "Saved cockpit and contact-point setup currently used as the baseline for this bike.",
-          emptyDescription:
-            "No current bike setup has been saved for this bike yet.",
+          emptyDescription: "No current bike setup has been saved for this bike yet.",
         },
         currentTyrePressure: {
           title: "Current tyre pressure",
-          description:
-            "The active wheelset is {wheelset} with tyre setup {setup}.",
-          emptyDescription:
-            "No active wheelset or tyre setup is selected for this bike yet.",
+          description: "The active wheelset is {wheelset} with tyre setup {setup}.",
+          emptyDescription: "No active wheelset or tyre setup is selected for this bike yet.",
           noCurrentPressure: "No current pressure recorded",
         },
       },
@@ -2417,8 +2546,7 @@ const en = {
     bikeForm: {
       new: {
         title: "Add New Bike",
-        description:
-          "Save your bike geometry and current setup for better fit comparisons.",
+        description: "Save your bike geometry and current setup for better fit comparisons.",
       },
       edit: {
         loading: "Loading bike...",
@@ -2448,16 +2576,20 @@ const en = {
         entryCta: "Import from Marktplaats",
         title: "Import a bike from Marktplaats",
         description:
-          "Paste one Marktplaats advert URL, review the parsed draft, and save the bike only after you confirm the details.",
+          "Paste one Marktplaats advert URL, review the parsed draft, and save the bike only " +
+          "after you confirm the details.",
         entryTitle: "Paste a Marktplaats advert URL",
         entryDescription:
-          "The advert is parsed on the server. You review and edit the bike draft before anything is created in your garage.",
+          "The advert is parsed on the server. You review and edit the bike draft before " +
+          "anything is created in your garage.",
         previewTitle: "Review imported draft",
         previewDescription:
-          "Check the parsed fields, adjust any uncertain values, and decide which photos to keep before saving.",
+          "Check the parsed fields, adjust any uncertain values, and decide which photos to keep " +
+          "before saving.",
         findingsTitle: "What we found in this advert",
         findingsDescription:
-          "This is the structured draft we could recover from the advert. Review anything that looks uncertain before saving.",
+          "This is the structured draft we could recover from the advert. Review anything that " +
+          "looks uncertain before saving.",
         findingsCount: "{count} findings",
         findingDescriptionSummary: "Imported description available ({characters} characters).",
         findingPhotoSummary: "{count} advert photos found.",
@@ -2478,41 +2610,37 @@ const en = {
         photoCountSummary: "{selected} of {total} selected",
         primaryPhotoTitle: "Primary preview image",
         primaryPhotoDescription:
-          "Use the thumbnail strip to inspect the advert photos. The selected primary image is saved first.",
+          "Use the thumbnail strip to inspect the advert photos. The selected primary image is " +
+          "saved first.",
         photoActiveBadge: "Active preview",
         photoPreviewBadge: "View photo",
         photosEmptyTitle: "No importable photos found",
         photosEmptyDescription:
-          "This advert did not expose reusable photos. You can still save the bike draft and add photos later.",
+          "This advert did not expose reusable photos. You can still save the bike draft and add " +
+          "photos later.",
         photoFallbackLabel: "Advert photo",
         photoSelected: "Selected for import",
         photoDeselected: "Not selected",
         photoBadgeSelected: "Selected",
         photoBadgeOptional: "Optional",
-        nameHint:
-          "The bike name is fully editable. It does not have to match the advert title.",
+        nameHint: "The bike name is fully editable. It does not have to match the advert title.",
         warningsTitle: "Needs review",
         confidenceBadge: "{level} confidence",
         warningMessages: {
           limited_description:
             "The advert description is short, so some details may still be missing.",
-          no_images_found:
-            "No reusable advert photos were found in this advert.",
-          missing_advert_title:
-            "The advert title could not be recovered cleanly.",
+          no_images_found: "No reusable advert photos were found in this advert.",
+          missing_advert_title: "The advert title could not be recovered cleanly.",
           brand_needs_review: "Brand needs review.",
           model_needs_review: "Model needs review.",
           bike_type_needs_review: "Bike type needs review.",
-          no_size_mention_found:
-            "No clear frame-size mention was detected in the advert text.",
-          already_imported:
-            "This advert was already imported before for this rider.",
+          no_size_mention_found: "No clear frame-size mention was detected in the advert text.",
+          already_imported: "This advert was already imported before for this rider.",
           one_photo_only:
             "Only one advert photo is available, so double-check that it shows the right bike.",
           no_photos_selected:
             "No photos are currently selected. Saving without photos is still allowed.",
-          partial_photo_selection:
-            "Only the selected photos will be imported with this bike.",
+          partial_photo_selection: "Only the selected photos will be imported with this bike.",
         },
         success: "Bike draft created from Marktplaats.",
         loading: {
@@ -2557,18 +2685,19 @@ const en = {
             "Use a valid Marktplaats advert URL. Unsupported marketplace links are not accepted.",
           previewFailed:
             "The advert preview could not be loaded. Please check the URL or try again in a moment.",
-          saveFailed:
-            "The bike draft could not be saved. Please try again.",
+          saveFailed: "The bike draft could not be saved. Please try again.",
           saveInProgress:
             "This bike import is still being finalized. Please wait a moment and try again.",
           backendUnavailable:
-            "The Marktplaats import backend is not available in this workspace yet. The rider flow is wired, but preview/save cannot complete until the backend contract lands.",
+            "The Marktplaats import backend is not available in this workspace yet. The rider flow " +
+            "is wired, but preview/save cannot complete until the backend contract lands.",
         },
       },
       createChooser: {
         title: "How would you like to add this bike?",
         description:
-          "Choose the path that matches the information you already have. You can always edit the bike later.",
+          "Choose the path that matches the information you already have. You can always edit " +
+          "the bike later.",
         manual: {
           title: "Create bike manually",
           description:
@@ -2595,7 +2724,8 @@ const en = {
           "Paste a shared bike-passport ID, preview the bike details, and create your own editable copy.",
         entryTitle: "Paste a bike-passport ID",
         entryDescription:
-          "A bike-passport ID is safe to share. It lets you import a fresh copy of another rider's bike without taking ownership of the original.",
+          "A bike-passport ID is safe to share. It lets you import a fresh copy of another " +
+          "rider's bike without taking ownership of the original.",
         previewTitle: "Preview your imported copy",
         previewDescription:
           "Review the shared bike details before you create your own version in the garage.",
@@ -2604,7 +2734,8 @@ const en = {
         noDescription: "No shared description was included with this bike.",
         confirmationTitle: "What happens next",
         confirmationDescription:
-          "Creating this bike adds a new bike to your garage under your account. You can edit it freely, and the original rider's bike stays unchanged.",
+          "Creating this bike adds a new bike to your garage under your account. You can edit it " +
+          "freely, and the original rider's bike stays unchanged.",
         photoCopied: "This preview includes the main shared bike photo when available.",
         photoNotCopied: "This bike may import without photos in this first release.",
         photoMissing: "No shared bike photo is available for this passport preview.",
@@ -2612,7 +2743,8 @@ const en = {
           eyebrow: "Rider-safe sharing",
           title: "Bike-passport IDs create personal copies",
           description:
-            "This import path is designed for reuse, not shared ownership. You get your own version of the bike from the start.",
+            "This import path is designed for reuse, not shared ownership. You get your own " +
+            "version of the bike from the start.",
           ownCopy: "You create your own editable copy in your garage.",
           sourceUnaffected: "Changes you make never affect the original rider's bike.",
           shareableId: "The passport ID is the only thing the other rider has to share.",
@@ -2648,18 +2780,17 @@ const en = {
         },
         errors: {
           title: "Bike-passport import needs attention",
-          invalidPassport:
-            "Use a valid bike-passport ID. Letters, numbers, and hyphens only.",
+          invalidPassport: "Use a valid bike-passport ID. Letters, numbers, and hyphens only.",
           notFound:
             "We could not find a bike for that bike-passport ID. Check the ID and try again.",
           alreadyOwned:
             "This bike-passport already belongs to one of your bikes, so there is nothing new to import.",
           previewFailed:
             "The bike-passport preview could not be loaded right now. Please try again.",
-          saveFailed:
-            "Your editable bike copy could not be created. Please try again.",
+          saveFailed: "Your editable bike copy could not be created. Please try again.",
           backendUnavailable:
-            "The bike-passport backend is not available in this workspace yet. The rider flow is ready, but preview and import need the backend contract to finish.",
+            "The bike-passport backend is not available in this workspace yet. The rider flow is " +
+            "ready, but preview and import need the backend contract to finish.",
         },
         success: "{bikeName} is now in your bike garage.",
       },
@@ -2667,7 +2798,8 @@ const en = {
         confirm: "Delete this bike? This action cannot be undone.",
         title: "Delete bike?",
         description:
-          "This removes the bike and its direct wheelset, tire setup, and pressure setup data. If the bike already has fitting history, deletion will be blocked.",
+          "This removes the bike and its direct wheelset, tire setup, and pressure setup data. " +
+          "If the bike already has fitting history, deletion will be blocked.",
         confirmButton: "Delete bike",
       },
       sections: {
@@ -2710,23 +2842,26 @@ const en = {
         geometryLink: {
           title: "Link bike geometry",
           description:
-            "Select your bike from the geometry library step by step: brand, model, year, and size. If your bike is not listed, you can still save your own brand and model.",
+            "Select your bike from the geometry library step by step: brand, model, year, and " +
+            "size. If your bike is not listed, you can still save your own brand and model.",
           loadingBrands: "Loading standard brands...",
           loadingModels: "Loading models for the selected brand...",
           noBrands:
-            "No standard brands with geometry are available yet. You can still save your bike with your own brand and model.",
+            "No standard brands with geometry are available yet. You can still save your bike with " +
+            "your own brand and model.",
           selectBrandFirst:
             "Start with a standard brand to connect this bike to stored geometry data.",
           selectModelFirst:
             "Select the model that matches your bike. Only models for the selected brand are shown.",
           noModels:
-            "No standard models are available for this brand yet. You can still save the bike without a geometry-library match.",
+            "No standard models are available for this brand yet. You can still save the bike " +
+            "without a geometry-library match.",
           selectionSummary: "Selected standard bike identity",
-          selectionSummaryEmpty:
-            "No standard geometry-library path selected yet.",
+          selectionSummaryEmpty: "No standard geometry-library path selected yet.",
           linkedTitle: "Linked geometry record kept",
           linkedDescription:
-            "This bike is currently linked to a reference geometry record. Starting a custom fallback clears that linked record for this save.",
+            "This bike is currently linked to a reference geometry record. Starting a custom " +
+            "fallback clears that linked record for this save.",
           standardBrand: {
             label: "Standard brand",
             placeholder: "Choose a brand",
@@ -2736,21 +2871,20 @@ const en = {
           standardModel: {
             label: "Standard model",
             placeholder: "Choose a model",
-            helper:
-              "Choose the model that matches your bike for the selected brand.",
+            helper: "Choose the model that matches your bike for the selected brand.",
           },
           year: {
             label: "Model year",
             placeholder: "Choose a year",
-            helper:
-              "Select the year only when multiple model-year variants exist in the library.",
+            helper: "Select the year only when multiple model-year variants exist in the library.",
             unknownOptionLabel: "Year not specified ({count})",
           },
           size: {
             label: "Frame size",
             placeholder: "Choose a size",
             helper:
-              "Choose the frame size that matches your bike. As soon as you select it, the exact geometry preview appears below.",
+              "Choose the frame size that matches your bike. As soon as you select it, the exact " +
+              "geometry preview appears below.",
           },
           preview: {
             title: "Linked geometry preview",
@@ -2767,7 +2901,8 @@ const en = {
           customBrandAction: "My bike is not in the list",
           customModelAction: "My model is not listed",
           customExplanation:
-            "Custom brand and model values are saved only on your bike. They do not change the shared geometry library.",
+            "Custom brand and model values are saved only on your bike. They do not change the " +
+            "shared geometry library.",
         },
         bikeWeightKg: {
           label: "Bike weight (kg)",
@@ -2779,35 +2914,39 @@ const en = {
         },
         notes: {
           label: "My Notes",
-          placeholder:
-            "Add personal notes about this bike, setup changes, or ride observations...",
+          placeholder: "Add personal notes about this bike, setup changes, or ride observations...",
           helper: "Up to 500 characters.",
         },
         geometry: {
           stack: {
             label: "Stack (mm)",
             tooltip:
-              "Vertical distance from BB center to top of head tube (mm). Found on the manufacturer geometry chart; determines handlebar height potential.",
+              "Vertical distance from BB center to top of head tube (mm). Found on the manufacturer " +
+              "geometry chart; determines handlebar height potential.",
           },
           reach: {
             label: "Reach (mm)",
             tooltip:
-              "Horizontal distance from BB center to top of head tube (mm). Found on the manufacturer geometry chart; determines cockpit length baseline.",
+              "Horizontal distance from BB center to top of head tube (mm). Found on the " +
+              "manufacturer geometry chart; determines cockpit length baseline.",
           },
           seatTubeAngle: {
             label: "Seat Tube Angle (deg)",
             tooltip:
-              "Angle of the seat tube (degrees). Use the manufacturer spec. Affects how far forward/back your saddle sits for the same saddle height.",
+              "Angle of the seat tube (degrees). Use the manufacturer spec. Affects how far " +
+              "forward/back your saddle sits for the same saddle height.",
           },
           headTubeAngle: {
             label: "Head Tube Angle (deg)",
             tooltip:
-              "Angle of the head tube (degrees). Use the manufacturer spec. Influences steering stability and trail.",
+              "Angle of the head tube (degrees). Use the manufacturer spec. Influences steering " +
+              "stability and trail.",
           },
           frameSize: {
             label: "Frame Size",
             tooltip:
-              "Enter the size label used by the brand (e.g., 54, 56, M, L). If unsure, use stack/reach instead for best accuracy.",
+              "Enter the size label used by the brand (e.g., 54, 56, M, L). If unsure, use " +
+              "stack/reach instead for best accuracy.",
             placeholder: "e.g. 54",
           },
         },
@@ -2815,27 +2954,32 @@ const en = {
           saddleHeight: {
             label: "Saddle Height (mm)",
             tooltip:
-              "Measure from BB center to top of saddle along the seat tube line (mm). Use for comparing current vs. recommended fit.",
+              "Measure from BB center to top of saddle along the seat tube line (mm). Use for " +
+              "comparing current vs. recommended fit.",
           },
           saddleSetback: {
             label: "Saddle Setback (mm)",
             tooltip:
-              "Measure horizontal distance from BB center to saddle nose (mm). Positive values mean the saddle nose is behind the BB.",
+              "Measure horizontal distance from BB center to saddle nose (mm). Positive values mean " +
+              "the saddle nose is behind the BB.",
           },
           stemLength: {
             label: "Stem Length (mm)",
             tooltip:
-              "Length printed on the stem (mm), center-to-center. Used to compare your current cockpit with recommendations.",
+              "Length printed on the stem (mm), center-to-center. Used to compare your current " +
+              "cockpit with recommendations.",
           },
           stemAngle: {
             label: "Stem Angle (deg)",
             tooltip:
-              "Angle printed on the stem (degrees). Affects handlebar height; note that flipping the stem changes the sign.",
+              "Angle printed on the stem (degrees). Affects handlebar height; note that flipping the " +
+              "stem changes the sign.",
           },
           handlebarWidth: {
             label: "Handlebar Width (mm)",
             tooltip:
-              "Width measured center-to-center at the hoods (mm). Typically matches shoulder width for comfort and control.",
+              "Width measured center-to-center at the hoods (mm). Typically matches shoulder width " +
+              "for comfort and control.",
           },
           crankLength: {
             label: "Crank Length (mm)",
@@ -2866,22 +3010,17 @@ const en = {
         warningsTitle: "Warnings",
         disclaimer: "Always follow the manufacturer's maximum pressure limits.",
         warningMessages: {
-          max_rim_pressure_exceeded:
-            "Recommended pressure exceeds the tyre or rim maximum.",
+          max_rim_pressure_exceeded: "Recommended pressure exceeds the tyre or rim maximum.",
           hookless_limit_exceeded:
             "Hookless rim: maximum pressure limit exceeded. Check specifications.",
           pressure_too_low_for_setup:
             "Pressure may be too low for this setup. Verify casing support and terrain.",
           front_rear_pressure_mismatch:
             "Large difference between front and rear pressure. Check your inputs.",
-          inner_tube_pinch_flat_risk:
-            "Low pressure with inner tube: risk of pinch flat.",
-          road_tire_width_unusual:
-            "Unusual tyre width for a road bike. Please verify.",
-          gravel_tire_width_unusual:
-            "Unusual tyre width for a gravel bike.",
-          mtb_tire_width_unusual:
-            "MTB tyres are typically at least 45 mm wide.",
+          inner_tube_pinch_flat_risk: "Low pressure with inner tube: risk of pinch flat.",
+          road_tire_width_unusual: "Unusual tyre width for a road bike. Please verify.",
+          gravel_tire_width_unusual: "Unusual tyre width for a gravel bike.",
+          mtb_tire_width_unusual: "MTB tyres are typically at least 45 mm wide.",
           hookless_max_pressure_unknown:
             "Hookless rim: maximum pressure unknown. Stay at or below 3.5 bar unless otherwise stated.",
         },
@@ -2911,9 +3050,11 @@ const en = {
       },
       overview: {
         title: "Latest pressure per bike",
-        subtitle: "Review your latest recommendation, capture notes, and start a recalculation from the same page.",
+        subtitle:
+          "Review your latest recommendation, capture notes, and start a recalculation from the same page.",
         description:
-          "Your latest tyre-pressure recommendation stays visible here for every bike, so you can compare setups without opening the wizard first.",
+          "Your latest tyre-pressure recommendation stays visible here for every bike, so you " +
+          "can compare setups without opening the wizard first.",
         startNew: "Start new calculation",
         frontPressure: "Front pressure",
         rearPressure: "Rear pressure",
@@ -2929,7 +3070,8 @@ const en = {
         userNotes: {
           label: "Ride notes",
           placeholder: "What did you notice on the road or trail?",
-          helper: "Use notes for rider feedback, terrain observations, or setup reminders. Max 300 characters.",
+          helper:
+            "Use notes for rider feedback, terrain observations, or setup reminders. Max 300 characters.",
           empty: "No rider notes yet.",
           editButton: "Edit note",
           saveButton: "Save note",
@@ -3022,8 +3164,7 @@ const en = {
     errors: {
       generic: {
         title: "Something went wrong",
-        description:
-          "We encountered an error while loading this page. Please try again.",
+        description: "We encountered an error while loading this page. Please try again.",
         errorIdLabel: "Error ID:",
         retry: "Try Again",
         goDashboard: "Go to Dashboard",

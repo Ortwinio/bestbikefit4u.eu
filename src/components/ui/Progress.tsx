@@ -48,14 +48,14 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(
           color="default"
           size="lg"
           className={cn(
-            "shadow-inset-track relative h-2.5 w-full overflow-hidden rounded-full bg-[color:var(--muted)]",
+            "relative h-2 w-full overflow-hidden rounded-full bg-border",
             trackClassName
           )}
         >
           <ProgressIndicator
             color="default"
             className={cn(
-              "csp-fill-width h-full rounded-full bg-[color:var(--primary)] transition-transform duration-300 ease-out motion-reduce:transition-none",
+              "csp-fill-width h-full rounded-full bg-primary transition-transform duration-300 ease-out motion-reduce:transition-none",
               value === null && "animate-pulse",
               indicatorClassName
             )}

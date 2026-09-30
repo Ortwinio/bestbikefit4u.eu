@@ -1,0 +1,65 @@
+.row {
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.row > div {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  background: var(--color-card);
+}
+
+.row > div > div {
+  min-width: 0;
+  padding: 20px;
+  border: 0;
+  border-radius: 0;
+  background: var(--color-card);
+  box-shadow: none;
+}
+
+.row > div > div + div {
+  border-top: 1px solid var(--color-border);
+}
+
+.row > div > div > div:first-child {
+  padding: 0 0 12px;
+  border: 0;
+}
+
+.row h2 {
+  overflow-wrap: anywhere;
+  font-family: var(--bbf-font-display);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.row a,
+.row button {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.row a {
+  border-radius: 999px;
+}
+
+@container (min-width: 960px) {
+  .row > div {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.12fr);
+  }
+
+  .row > div > div {
+    padding: 24px;
+  }
+
+  .row > div > div + div {
+    border-top: 0;
+    border-left: 1px solid var(--color-border);
+  }
+}

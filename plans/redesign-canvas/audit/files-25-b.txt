@@ -1,0 +1,7 @@
+src/components/profile/FlexibilityScale.tsx
+src/components/profile/FlexibilityScale.test.tsx
+src/components/measurements/MeasurementWizard.tsx
+src/components/measurements/MeasurementWizard.test.tsx
+plans/redesign-canvas/README.md
+plans/redesign-canvas/audit/25-b-notes.md
+plans/redesign-canvas/audit/files-25-b.txt

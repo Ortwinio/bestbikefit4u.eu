@@ -1,0 +1,2526 @@
+{
+  "capturedAt": "2026-09-29T20:45:14.205Z",
+  "origin": "http://localhost:3000",
+  "cases": 19,
+  "failures": [],
+  "results": [
+    {
+      "name": "19-5b-privacy-desktop",
+      "route": "/nl/privacy",
+      "width": 1440,
+      "legal": "privacy",
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "legalText": true,
+        "legalMetadata": true,
+        "tocTargets": true,
+        "tocClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Privacyverklaring - BestBikeFit4U",
+        "description": "Lees hoe BestBikeFit4U jouw persoonsgegevens verzamelt, gebruikt en beschermt.",
+        "canonical": "https://bestbikefit4u.eu/nl/privacy",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/privacy"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/privacy"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/privacy"
+          ]
+        ],
+        "h1": [
+          "Privacyverklaring"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "nl",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Juridische informatie\n\nPrivacyverklaring\n\nLees hoe BestBikeFit4U jouw persoonsgegevens verzamelt, gebruikt en beschermt.\n\nLaatst bijgewerkt: 15 februari 2026\n\nPrivacyverklaring\nGebruiksvoorwaarden\nOp deze pagina\n1. Welke gegevens we verzamelen\n2. Hoe we je gegevens gebruiken\n3. Externe diensten\n4. Bewaartermijnen\n5. Cookies\n6. Jouw rechten\n7. Beveiliging\n8. Contact\n1.\nWelke gegevens we verzamelen\nAccountgegevens\n\nBij het aanmaken van een account verzamelen we je e-mailadres voor authenticatie. We gebruiken passwordless login en slaan geen wachtwoorden op.\n\nLichaamsmetingen\n\nVoor fit-aanbevelingen slaan we door jou ingevoerde metingen op, zoals lengte, binnenbeenlengte en optionele waarden.\n\nFit-sessiegegevens\n\nWe bewaren rijvoorkeuren, antwoorden uit vragenlijsten, aanbevelingen en sessiegeschiedenis om de dienst te leveren en te verbeteren.\n\n2.\nHoe we je gegevens gebruiken\nPersoonlijke bike fit-aanbevelingen genereren\nAangevraagde fit-rapporten per e-mail verzenden\nSessiegeschiedenis en fietsprofielen beheren\nKwaliteit van het algoritme verbeteren\nBelangrijke service-updates communiceren\n3.\nExterne diensten\nConvex (database)\n\nWe gebruiken Convex voor veilige opslag en backend-functionaliteit.\n\nResend (e-mail)\n\nWe gebruiken Resend voor verificatiecodes en aangevraagde rapporten via e-mail.\n\n4.\nBewaartermijnen\n\nWe bewaren account- en fit-sessiegegevens zolang je account actief is. Je kunt op elk moment verwijdering van je account en data aanvragen.\n\n5.\nCookies\n\nWe gebruiken essentiële cookies voor authenticatie, sessiebeheer en taalvoorkeur. Optionele analytics-cookies gebruiken we alleen na jouw toestemming. We gebruiken geen advertentietrackers.\n\n6.\nJouw rechten\nInzage in je persoonsgegevens\nCorrectie van onjuiste gegevens\nVerwijdering van account en data aanvragen\nExport van je data in machineleesbaar formaat\n7.\nBeveiliging\n\nWe nemen technische en organisatorische maatregelen, waaronder HTTPS, invoervalidatie en runtime-beveiliging.\n\n8.\nContact\n\nVoor privacyvragen kun je contact opnemen via support@bestbikefit4u.eu.\n\nTerug naar de calculator\n\nGa terug naar de gratis bike fit calculator wanneer je klaar bent met de privacydetails.\n\nTerug naar de calculator\n→",
+        "width": 1440,
+        "anchors": [
+          {
+            "href": "#privacy-1",
+            "exists": true
+          },
+          {
+            "href": "#privacy-2",
+            "exists": true
+          },
+          {
+            "href": "#privacy-3",
+            "exists": true
+          },
+          {
+            "href": "#privacy-4",
+            "exists": true
+          },
+          {
+            "href": "#privacy-5",
+            "exists": true
+          },
+          {
+            "href": "#privacy-6",
+            "exists": true
+          },
+          {
+            "href": "#privacy-7",
+            "exists": true
+          },
+          {
+            "href": "#privacy-8",
+            "exists": true
+          }
+        ]
+      },
+      "missingLegalText": []
+    },
+    {
+      "name": "19-5b-privacy-mobile",
+      "route": "/nl/privacy",
+      "width": 390,
+      "legal": "privacy",
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "legalText": true,
+        "legalMetadata": true,
+        "tocTargets": true,
+        "tocClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Privacyverklaring - BestBikeFit4U",
+        "description": "Lees hoe BestBikeFit4U jouw persoonsgegevens verzamelt, gebruikt en beschermt.",
+        "canonical": "https://bestbikefit4u.eu/nl/privacy",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/privacy"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/privacy"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/privacy"
+          ]
+        ],
+        "h1": [
+          "Privacyverklaring"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "nl",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Juridische informatie\n\nPrivacyverklaring\n\nLees hoe BestBikeFit4U jouw persoonsgegevens verzamelt, gebruikt en beschermt.\n\nLaatst bijgewerkt: 15 februari 2026\n\nPrivacyverklaring\nGebruiksvoorwaarden\nOp deze pagina\n1. Welke gegevens we verzamelen\n2. Hoe we je gegevens gebruiken\n3. Externe diensten\n4. Bewaartermijnen\n5. Cookies\n6. Jouw rechten\n7. Beveiliging\n8. Contact\n1.\nWelke gegevens we verzamelen\nAccountgegevens\n\nBij het aanmaken van een account verzamelen we je e-mailadres voor authenticatie. We gebruiken passwordless login en slaan geen wachtwoorden op.\n\nLichaamsmetingen\n\nVoor fit-aanbevelingen slaan we door jou ingevoerde metingen op, zoals lengte, binnenbeenlengte en optionele waarden.\n\nFit-sessiegegevens\n\nWe bewaren rijvoorkeuren, antwoorden uit vragenlijsten, aanbevelingen en sessiegeschiedenis om de dienst te leveren en te verbeteren.\n\n2.\nHoe we je gegevens gebruiken\nPersoonlijke bike fit-aanbevelingen genereren\nAangevraagde fit-rapporten per e-mail verzenden\nSessiegeschiedenis en fietsprofielen beheren\nKwaliteit van het algoritme verbeteren\nBelangrijke service-updates communiceren\n3.\nExterne diensten\nConvex (database)\n\nWe gebruiken Convex voor veilige opslag en backend-functionaliteit.\n\nResend (e-mail)\n\nWe gebruiken Resend voor verificatiecodes en aangevraagde rapporten via e-mail.\n\n4.\nBewaartermijnen\n\nWe bewaren account- en fit-sessiegegevens zolang je account actief is. Je kunt op elk moment verwijdering van je account en data aanvragen.\n\n5.\nCookies\n\nWe gebruiken essentiële cookies voor authenticatie, sessiebeheer en taalvoorkeur. Optionele analytics-cookies gebruiken we alleen na jouw toestemming. We gebruiken geen advertentietrackers.\n\n6.\nJouw rechten\nInzage in je persoonsgegevens\nCorrectie van onjuiste gegevens\nVerwijdering van account en data aanvragen\nExport van je data in machineleesbaar formaat\n7.\nBeveiliging\n\nWe nemen technische en organisatorische maatregelen, waaronder HTTPS, invoervalidatie en runtime-beveiliging.\n\n8.\nContact\n\nVoor privacyvragen kun je contact opnemen via support@bestbikefit4u.eu.\n\nTerug naar de calculator\n\nGa terug naar de gratis bike fit calculator wanneer je klaar bent met de privacydetails.\n\nTerug naar de calculator\n→",
+        "width": 390,
+        "anchors": [
+          {
+            "href": "#privacy-1",
+            "exists": true
+          },
+          {
+            "href": "#privacy-2",
+            "exists": true
+          },
+          {
+            "href": "#privacy-3",
+            "exists": true
+          },
+          {
+            "href": "#privacy-4",
+            "exists": true
+          },
+          {
+            "href": "#privacy-5",
+            "exists": true
+          },
+          {
+            "href": "#privacy-6",
+            "exists": true
+          },
+          {
+            "href": "#privacy-7",
+            "exists": true
+          },
+          {
+            "href": "#privacy-8",
+            "exists": true
+          }
+        ]
+      },
+      "missingLegalText": []
+    },
+    {
+      "name": "19-5b-terms-desktop",
+      "route": "/nl/terms",
+      "width": 1440,
+      "legal": "terms",
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "legalText": true,
+        "legalMetadata": true,
+        "tocTargets": true,
+        "tocClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Gebruiksvoorwaarden - BestBikeFit4U",
+        "description": "Lees de voorwaarden voor het gebruik van BestBikeFit4U.",
+        "canonical": "https://bestbikefit4u.eu/nl/terms",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/terms"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/terms"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/terms"
+          ]
+        ],
+        "h1": [
+          "Gebruiksvoorwaarden"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "nl",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Juridische informatie\n\nGebruiksvoorwaarden\n\nLees de voorwaarden voor het gebruik van BestBikeFit4U.\n\nLaatst bijgewerkt: 15 februari 2026\n\nPrivacyverklaring\nGebruiksvoorwaarden\nOp deze pagina\n1. Acceptatie van voorwaarden\n2. Beschrijving van de dienst\n3. Belangrijke disclaimer\n4. Gebruikersaccounts\n5. Toegestaan gebruik\n6. Abonnementsplannen\n7. Beperking van aansprakelijkheid\n8. Intellectueel eigendom\n9. Wijzigingen van voorwaarden\n10. Contact\n1.\nAcceptatie van voorwaarden\n\nDoor BestBikeFit4U te gebruiken ga je akkoord met deze gebruiksvoorwaarden.\n\n2.\nBeschrijving van de dienst\n\nBestBikeFit4U biedt algoritme-gedreven bike fitting aanbevelingen op basis van jouw metingen en voorkeuren.\n\n3.\nBelangrijke disclaimer\n\nBestBikeFit4U vervangt geen professionele fysieke bike fitting.\n\nAanbevelingen hangen af van de nauwkeurigheid van je metingen. Bij blessures, chronische pijn of duidelijke asymmetrie raden we professionele begeleiding aan.\n\n4.\nGebruikersaccounts\nJe moet een geldig e-mailadres gebruiken.\nJe bent verantwoordelijk voor de beveiliging van je account.\nHet delen van accounts is niet toegestaan.\nWe kunnen accounts blokkeren bij overtreding van deze voorwaarden.\n5.\nToegestaan gebruik\nGebruik de dienst niet voor onwettige doeleinden.\nProbeer geen ongeautoriseerde toegang te krijgen.\nAutomatisering/scraping zonder toestemming is niet toegestaan.\nVerstoor de dienst niet.\n6.\nAbonnementsplannen\n\nBestBikeFit4U toont publiek Free en Pro. Betaalde Pro-plannen worden maandelijks in euro gefactureerd en kunnen op elk moment worden opgezegd.\n\n7.\nBeperking van aansprakelijkheid\n\nVoor zover wettelijk toegestaan is BestBikeFit4U niet aansprakelijk voor indirecte of gevolgschade. Je blijft zelf verantwoordelijk voor het veilig doorvoeren van aanpassingen.\n\n8.\nIntellectueel eigendom\n\nInhoud, ontwerp en algoritmes van de dienst zijn beschermd intellectueel eigendom.\n\n9.\nWijzigingen van voorwaarden\n\nWe kunnen deze voorwaarden aanpassen. Door de dienst te blijven gebruiken, ga je akkoord met de nieuwe versie.\n\n10.\nContact\n\nVoor vragen over deze voorwaarden: support@bestbikefit4u.eu.\n\nTerug naar de homepage\n\nGa terug naar de homepage zodra je klaar bent met de gebruiksvoorwaarden.\n\nTerug naar de homepage\n→",
+        "width": 1440,
+        "anchors": [
+          {
+            "href": "#terms-1",
+            "exists": true
+          },
+          {
+            "href": "#terms-2",
+            "exists": true
+          },
+          {
+            "href": "#terms-3",
+            "exists": true
+          },
+          {
+            "href": "#terms-4",
+            "exists": true
+          },
+          {
+            "href": "#terms-5",
+            "exists": true
+          },
+          {
+            "href": "#terms-6",
+            "exists": true
+          },
+          {
+            "href": "#terms-7",
+            "exists": true
+          },
+          {
+            "href": "#terms-8",
+            "exists": true
+          },
+          {
+            "href": "#terms-9",
+            "exists": true
+          },
+          {
+            "href": "#terms-10",
+            "exists": true
+          }
+        ]
+      },
+      "missingLegalText": []
+    },
+    {
+      "name": "19-5b-terms-mobile",
+      "route": "/nl/terms",
+      "width": 390,
+      "legal": "terms",
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "legalText": true,
+        "legalMetadata": true,
+        "tocTargets": true,
+        "tocClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Gebruiksvoorwaarden - BestBikeFit4U",
+        "description": "Lees de voorwaarden voor het gebruik van BestBikeFit4U.",
+        "canonical": "https://bestbikefit4u.eu/nl/terms",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/terms"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/terms"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/terms"
+          ]
+        ],
+        "h1": [
+          "Gebruiksvoorwaarden"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "nl",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Juridische informatie\n\nGebruiksvoorwaarden\n\nLees de voorwaarden voor het gebruik van BestBikeFit4U.\n\nLaatst bijgewerkt: 15 februari 2026\n\nPrivacyverklaring\nGebruiksvoorwaarden\nOp deze pagina\n1. Acceptatie van voorwaarden\n2. Beschrijving van de dienst\n3. Belangrijke disclaimer\n4. Gebruikersaccounts\n5. Toegestaan gebruik\n6. Abonnementsplannen\n7. Beperking van aansprakelijkheid\n8. Intellectueel eigendom\n9. Wijzigingen van voorwaarden\n10. Contact\n1.\nAcceptatie van voorwaarden\n\nDoor BestBikeFit4U te gebruiken ga je akkoord met deze gebruiksvoorwaarden.\n\n2.\nBeschrijving van de dienst\n\nBestBikeFit4U biedt algoritme-gedreven bike fitting aanbevelingen op basis van jouw metingen en voorkeuren.\n\n3.\nBelangrijke disclaimer\n\nBestBikeFit4U vervangt geen professionele fysieke bike fitting.\n\nAanbevelingen hangen af van de nauwkeurigheid van je metingen. Bij blessures, chronische pijn of duidelijke asymmetrie raden we professionele begeleiding aan.\n\n4.\nGebruikersaccounts\nJe moet een geldig e-mailadres gebruiken.\nJe bent verantwoordelijk voor de beveiliging van je account.\nHet delen van accounts is niet toegestaan.\nWe kunnen accounts blokkeren bij overtreding van deze voorwaarden.\n5.\nToegestaan gebruik\nGebruik de dienst niet voor onwettige doeleinden.\nProbeer geen ongeautoriseerde toegang te krijgen.\nAutomatisering/scraping zonder toestemming is niet toegestaan.\nVerstoor de dienst niet.\n6.\nAbonnementsplannen\n\nBestBikeFit4U toont publiek Free en Pro. Betaalde Pro-plannen worden maandelijks in euro gefactureerd en kunnen op elk moment worden opgezegd.\n\n7.\nBeperking van aansprakelijkheid\n\nVoor zover wettelijk toegestaan is BestBikeFit4U niet aansprakelijk voor indirecte of gevolgschade. Je blijft zelf verantwoordelijk voor het veilig doorvoeren van aanpassingen.\n\n8.\nIntellectueel eigendom\n\nInhoud, ontwerp en algoritmes van de dienst zijn beschermd intellectueel eigendom.\n\n9.\nWijzigingen van voorwaarden\n\nWe kunnen deze voorwaarden aanpassen. Door de dienst te blijven gebruiken, ga je akkoord met de nieuwe versie.\n\n10.\nContact\n\nVoor vragen over deze voorwaarden: support@bestbikefit4u.eu.\n\nTerug naar de homepage\n\nGa terug naar de homepage zodra je klaar bent met de gebruiksvoorwaarden.\n\nTerug naar de homepage\n→",
+        "width": 390,
+        "anchors": [
+          {
+            "href": "#terms-1",
+            "exists": true
+          },
+          {
+            "href": "#terms-2",
+            "exists": true
+          },
+          {
+            "href": "#terms-3",
+            "exists": true
+          },
+          {
+            "href": "#terms-4",
+            "exists": true
+          },
+          {
+            "href": "#terms-5",
+            "exists": true
+          },
+          {
+            "href": "#terms-6",
+            "exists": true
+          },
+          {
+            "href": "#terms-7",
+            "exists": true
+          },
+          {
+            "href": "#terms-8",
+            "exists": true
+          },
+          {
+            "href": "#terms-9",
+            "exists": true
+          },
+          {
+            "href": "#terms-10",
+            "exists": true
+          }
+        ]
+      },
+      "missingLegalText": []
+    },
+    {
+      "name": "19-5b-privacy-en-desktop",
+      "route": "/en/privacy",
+      "width": 1440,
+      "legal": "privacy",
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "legalText": true,
+        "legalMetadata": true,
+        "tocTargets": true,
+        "tocClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Privacy Policy - BestBikeFit4U",
+        "description": "Learn how BestBikeFit4U collects, uses, and protects your personal data.",
+        "canonical": "https://bestbikefit4u.eu/en/privacy",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/privacy"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/privacy"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/privacy"
+          ]
+        ],
+        "h1": [
+          "Privacy Policy"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Legal information\n\nPrivacy Policy\n\nLearn how BestBikeFit4U collects, uses, and protects your personal data.\n\nLast updated: February 15, 2026\n\nPrivacy Policy\nTerms of Service\nOn this page\n1. Information We Collect\n2. How We Use Your Information\n3. Third-Party Services\n4. Data Retention\n5. Cookies\n6. Your Rights\n7. Security\n8. Contact\n1.\nInformation We Collect\nAccount Information\n\nWhen you create an account, we collect your email address for authentication. We use passwordless login and do not store passwords.\n\nBody Measurements\n\nTo generate fit recommendations, we store measurements you provide, such as height, inseam, and optional dimensions.\n\nFit Session Data\n\nWe store riding preferences, questionnaire answers, recommendations, and session history to provide and improve the service.\n\n2.\nHow We Use Your Information\nGenerate personalized bike fit recommendations\nSend requested fit reports by email\nMaintain session history and bike profiles\nImprove algorithm quality\nCommunicate important service updates\n3.\nThird-Party Services\nConvex (Database)\n\nWe use Convex for secure data storage and application backend functionality.\n\nResend (Email)\n\nWe use Resend to deliver verification codes and requested reports by email.\n\n4.\nData Retention\n\nWe retain account and fit-session data while your account is active. You can request deletion of your account and associated data at any time.\n\n5.\nCookies\n\nWe use essential cookies for authentication, session management, and language preference. Optional analytics cookies are only used after you grant consent. We do not use advertising trackers.\n\n6.\nYour Rights\nAccess your personal data\nCorrect inaccurate information\nRequest account deletion\nRequest portable export of your data\n7.\nSecurity\n\nWe use technical and organizational safeguards including HTTPS, input validation, and runtime protection controls.\n\n8.\nContact\n\nFor privacy-related questions, contact us at support@bestbikefit4u.eu.\n\nBack to the calculator\n\nHead back to the free bike fit calculator when you are done reviewing the privacy details.\n\nBack to the calculator\n→",
+        "width": 1440,
+        "anchors": [
+          {
+            "href": "#privacy-1",
+            "exists": true
+          },
+          {
+            "href": "#privacy-2",
+            "exists": true
+          },
+          {
+            "href": "#privacy-3",
+            "exists": true
+          },
+          {
+            "href": "#privacy-4",
+            "exists": true
+          },
+          {
+            "href": "#privacy-5",
+            "exists": true
+          },
+          {
+            "href": "#privacy-6",
+            "exists": true
+          },
+          {
+            "href": "#privacy-7",
+            "exists": true
+          },
+          {
+            "href": "#privacy-8",
+            "exists": true
+          }
+        ]
+      },
+      "missingLegalText": []
+    },
+    {
+      "name": "19-5b-pressure-nl-desktop",
+      "route": "/nl/bandenspanning/75kg-racefiets",
+      "width": 1440,
+      "pressure": true,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "schemas": true,
+        "twoFaq": true,
+        "hreflang": true,
+        "engineValues": true,
+        "faqClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Bandenspanning voor 75kg racefiets | BestBikeFit4U",
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 75 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+          ]
+        ],
+        "h1": [
+          "Bandenspanning voor 75kg racefiets"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "nl",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ],
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://bestbikefit4u.eu/nl"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Bandenspanning calculator",
+                  "item": "https://bestbikefit4u.eu/nl/bandenspanning-calculator"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Bandenspanning voor 75kg racefiets",
+                  "item": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Is 5.2/5.6 bar altijd juist voor elke rijder van 75 kg?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Nee. Dit is een sterk startpunt op basis van gewicht, standaard bandbreedte, ondergrond en fietstype. Je precieze setup kan het eindadvies nog verschuiven."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Waarom vergelijken jullie tubeless met binnenband?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Het bandtype verandert het veilige en comfortabele drukbereik. Tubeless kan meestal iets lager gereden worden bij dezelfde rijder en bandbreedte."
+                  }
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Bandenspanning voor 75kg racefiets",
+              "description": "Statische bandenspanningspagina voor een rijder van 75 kg op een racefiets.",
+              "url": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets",
+              "applicationCategory": "SportsApplication",
+              "operatingSystem": "Any",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Home\n/\nBandenspanning calculator\n/\n75 kg · racefiets\n\nBESTBIKEFIT4U BANDENSPANNING GIDS · RACEFIETS\n\nStartadvies\nBandenspanning voor 75kg racefiets\n\nDeze pagina geeft een statisch startadvies voor een rijder van 75 kg op een racefiets met gangbare bandbreedtes. Gebruik het als snelle referentie en ga daarna verder naar de volledige calculator voor jouw exacte setup.\n\nHier is het advies op gebaseerd.\nRijder en fiets\n75 + 8 kg\nBandbreedte voor en achter\n28 mm\nOndergrond\nGemiddeld asfalt\nVoorkeur\nBalans\n\nHet fietsgewicht is een vaste aanname; er is geen persoonlijk fietsprofiel ingevuld.\n\nVOOR- EN ACHTERBAND\n\nJe startdruk, naast elkaar.\nBandtype\tVoorband\tAchterband\nTubeless\t5,2bar\n75 PSI\n\t5,6bar\n81 PSI\n\nBinnenband\t5,4bar\n78 PSI\n\t5,9bar\n86 PSI\n\nAanbevolen spanning voor een tubeless setup van 28 mm op gemiddeld asfalt. Binnenband vraagt meestal iets meer druk om stootlekken te beperken.\n\nZO GEBRUIK JE DE WAARDEN\n\nEen referentie, geen eindpunt.\n01\nBegin bij dit advies\n\nGebruik dit als startpunt, niet als definitieve wedstrijdspanning.\n\n02\nBekijk je eigen banden\n\nBandbreedte, ondergrond en bandtype kunnen je echte ideale druk nog verschuiven.\n\n03\nVerfijn de berekening\n\nGa voor je exacte setup daarna naar de volledige calculator.\n\nVEELGESTELDE VRAGEN\n\nPast dit advies altijd?\nIs 5.2/5.6 bar altijd juist voor elke rijder van 75 kg?\nWaarom vergelijken jullie tubeless met binnenband?\nMaak het advies passend voor jouw fiets.\n\nWil je een advies op basis van jouw precieze bandbreedte, ondergrond en bandtype, gebruik dan daarna de volledige calculator.\n\nOpen bandenspanning calculator\nLees racefiets fit gids\nGerelateerde tools en gidsen\nBike fit calculator\nGravel fit gids\nMTB fit gids\nRacefiets fit gids",
+        "width": 1440,
+        "anchors": []
+      },
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "BreadcrumbList",
+        "FAQPage",
+        "WebApplication"
+      ],
+      "expectedEngine": {
+        "tubeless": {
+          "frontBar": 5.2,
+          "rearBar": 5.6,
+          "frontPsi": 75,
+          "rearPsi": 81,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 28mm tubeless setup on average_asphalt."
+        },
+        "innerTube": {
+          "frontBar": 5.4,
+          "rearBar": 5.9,
+          "frontPsi": 78,
+          "rearPsi": 86,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 28mm inner tube setup on average_asphalt."
+        }
+      },
+      "pressureCells": [
+        "5,2bar75 PSI",
+        "5,6bar81 PSI",
+        "5,4bar78 PSI",
+        "5,9bar86 PSI"
+      ]
+    },
+    {
+      "name": "19-5b-pressure-en-desktop",
+      "route": "/en/tire-pressure/75kg-road-bike",
+      "width": 1440,
+      "pressure": true,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "schemas": true,
+        "twoFaq": true,
+        "hreflang": true,
+        "engineValues": true,
+        "faqClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Tire Pressure for 75kg road bike Rider | BestBikeFit4U",
+        "description": "Recommended front and rear tire pressure for a 75 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "canonical": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+          ]
+        ],
+        "h1": [
+          "Tire Pressure for 75kg road bike Rider"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ],
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://bestbikefit4u.eu/en"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Tire Pressure Calculator",
+                  "item": "https://bestbikefit4u.eu/en/tire-pressure-calculator"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Tire Pressure for 75kg road bike Rider",
+                  "item": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Is 5.2/5.6 bar a fixed pressure for every 75kg rider?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. It is a strong starting point based on rider weight, default tire width, surface, and bike type. Your exact setup can still change the final number."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Why compare tubeless with inner tubes?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Tube type changes the safe and comfortable pressure range. Tubeless setups usually support slightly lower pressures for the same rider and tire width."
+                  }
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Tire Pressure for 75kg road bike Rider",
+              "description": "Static tire-pressure recommendation page for a 75 kg road bike rider.",
+              "url": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike",
+              "applicationCategory": "SportsApplication",
+              "operatingSystem": "Any",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Home\n/\nTire Pressure Calculator\n/\n75 kg · road bike\n\nBESTBIKEFIT4U PRESSURE GUIDE · ROAD BIKE\n\nStarting recommendation\nTire Pressure for 75kg road bike Rider\n\nThis landing page gives a static starting recommendation for a 75 kg rider on a road bike with common tire widths. Use it as a quick reference, then move to the full calculator for your exact setup.\n\nHere is what the recommendation is based on.\nRider and bike\n75 + 8 kg\nFront and rear tire width\n28 mm\nSurface\nAverage asphalt\nRiding goal\nBalance\n\nBike weight is a fixed assumption; no personal bike profile has been entered.\n\nFRONT AND REAR TIRES\n\nYour starting pressures, side by side.\nTire setup\tFront\tRear\nTubeless\t5.2bar\n75 PSI\n\t5.6bar\n81 PSI\n\nInner tube\t5.4bar\n78 PSI\n\t5.9bar\n86 PSI\n\nRecommended pressure for a 28mm tubeless setup on Average asphalt. Inner tubes typically require slightly higher pressure to reduce pinch-flat risk.\n\nHOW TO USE THIS BASELINE\n\nA reference, not a finish line.\n01\nStart with this recommendation\n\nUse it as a starting point, not as a fixed race-day pressure.\n\n02\nCheck your own tires\n\nExact tire width, surface, and casing construction can still move the recommendation.\n\n03\nRefine the calculation\n\nSwitch to the full calculator when you want setup-specific numbers.\n\nFREQUENTLY ASKED QUESTIONS\n\nDoes this advice always fit?\nIs 5.2/5.6 bar a fixed pressure for every 75kg rider?\nWhy compare tubeless with inner tubes?\nMake the recommendation fit your bike.\n\nIf you want a recommendation tied to your exact tire width, terrain, and tube type, use the full calculator next.\n\nOpen Tire Pressure Calculator\nRead Road bike Fit Guide\nRelated tools and guides\nBike Fit Calculator\nGravel Bike Fit Guide\nMountain Bike Fit Guide\nRoad Bike Fit Guide",
+        "width": 1440,
+        "anchors": []
+      },
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "BreadcrumbList",
+        "FAQPage",
+        "WebApplication"
+      ],
+      "expectedEngine": {
+        "tubeless": {
+          "frontBar": 5.2,
+          "rearBar": 5.6,
+          "frontPsi": 75,
+          "rearPsi": 81,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 28mm tubeless setup on average_asphalt."
+        },
+        "innerTube": {
+          "frontBar": 5.4,
+          "rearBar": 5.9,
+          "frontPsi": 78,
+          "rearPsi": 86,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 28mm inner tube setup on average_asphalt."
+        }
+      },
+      "pressureCells": [
+        "5.2bar75 PSI",
+        "5.6bar81 PSI",
+        "5.4bar78 PSI",
+        "5.9bar86 PSI"
+      ]
+    },
+    {
+      "name": "19-5b-pressure-nl-mobile",
+      "route": "/nl/bandenspanning/75kg-racefiets",
+      "width": 390,
+      "pressure": true,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "schemas": true,
+        "twoFaq": true,
+        "hreflang": true,
+        "engineValues": true,
+        "faqClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Bandenspanning voor 75kg racefiets | BestBikeFit4U",
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 75 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+          ]
+        ],
+        "h1": [
+          "Bandenspanning voor 75kg racefiets"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "nl",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ],
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://bestbikefit4u.eu/nl"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Bandenspanning calculator",
+                  "item": "https://bestbikefit4u.eu/nl/bandenspanning-calculator"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Bandenspanning voor 75kg racefiets",
+                  "item": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Is 5.2/5.6 bar altijd juist voor elke rijder van 75 kg?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Nee. Dit is een sterk startpunt op basis van gewicht, standaard bandbreedte, ondergrond en fietstype. Je precieze setup kan het eindadvies nog verschuiven."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Waarom vergelijken jullie tubeless met binnenband?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Het bandtype verandert het veilige en comfortabele drukbereik. Tubeless kan meestal iets lager gereden worden bij dezelfde rijder en bandbreedte."
+                  }
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Bandenspanning voor 75kg racefiets",
+              "description": "Statische bandenspanningspagina voor een rijder van 75 kg op een racefiets.",
+              "url": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets",
+              "applicationCategory": "SportsApplication",
+              "operatingSystem": "Any",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Home\n/\nBandenspanning calculator\n/\n75 kg · racefiets\n\nBESTBIKEFIT4U BANDENSPANNING GIDS · RACEFIETS\n\nStartadvies\nBandenspanning voor 75kg racefiets\n\nDeze pagina geeft een statisch startadvies voor een rijder van 75 kg op een racefiets met gangbare bandbreedtes. Gebruik het als snelle referentie en ga daarna verder naar de volledige calculator voor jouw exacte setup.\n\nHier is het advies op gebaseerd.\nRijder en fiets\n75 + 8 kg\nBandbreedte voor en achter\n28 mm\nOndergrond\nGemiddeld asfalt\nVoorkeur\nBalans\n\nHet fietsgewicht is een vaste aanname; er is geen persoonlijk fietsprofiel ingevuld.\n\nVOOR- EN ACHTERBAND\n\nJe startdruk, naast elkaar.\nBandtype\tVoorband\tAchterband\nTubeless\t5,2bar\n75 PSI\n\t5,6bar\n81 PSI\n\nBinnenband\t5,4bar\n78 PSI\n\t5,9bar\n86 PSI\n\nAanbevolen spanning voor een tubeless setup van 28 mm op gemiddeld asfalt. Binnenband vraagt meestal iets meer druk om stootlekken te beperken.\n\nZO GEBRUIK JE DE WAARDEN\n\nEen referentie, geen eindpunt.\n01\nBegin bij dit advies\n\nGebruik dit als startpunt, niet als definitieve wedstrijdspanning.\n\n02\nBekijk je eigen banden\n\nBandbreedte, ondergrond en bandtype kunnen je echte ideale druk nog verschuiven.\n\n03\nVerfijn de berekening\n\nGa voor je exacte setup daarna naar de volledige calculator.\n\nVEELGESTELDE VRAGEN\n\nPast dit advies altijd?\nIs 5.2/5.6 bar altijd juist voor elke rijder van 75 kg?\nWaarom vergelijken jullie tubeless met binnenband?\nMaak het advies passend voor jouw fiets.\n\nWil je een advies op basis van jouw precieze bandbreedte, ondergrond en bandtype, gebruik dan daarna de volledige calculator.\n\nOpen bandenspanning calculator\nLees racefiets fit gids\nGerelateerde tools en gidsen\nBike fit calculator\nGravel fit gids\nMTB fit gids\nRacefiets fit gids",
+        "width": 390,
+        "anchors": []
+      },
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "BreadcrumbList",
+        "FAQPage",
+        "WebApplication"
+      ],
+      "expectedEngine": {
+        "tubeless": {
+          "frontBar": 5.2,
+          "rearBar": 5.6,
+          "frontPsi": 75,
+          "rearPsi": 81,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 28mm tubeless setup on average_asphalt."
+        },
+        "innerTube": {
+          "frontBar": 5.4,
+          "rearBar": 5.9,
+          "frontPsi": 78,
+          "rearPsi": 86,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 28mm inner tube setup on average_asphalt."
+        }
+      },
+      "pressureCells": [
+        "5,2bar75 PSI",
+        "5,6bar81 PSI",
+        "5,4bar78 PSI",
+        "5,9bar86 PSI"
+      ]
+    },
+    {
+      "name": "19-5b-pressure-en-mobile",
+      "route": "/en/tire-pressure/75kg-road-bike",
+      "width": 390,
+      "pressure": true,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "schemas": true,
+        "twoFaq": true,
+        "hreflang": true,
+        "engineValues": true,
+        "faqClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Tire Pressure for 75kg road bike Rider | BestBikeFit4U",
+        "description": "Recommended front and rear tire pressure for a 75 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "canonical": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+          ]
+        ],
+        "h1": [
+          "Tire Pressure for 75kg road bike Rider"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ],
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://bestbikefit4u.eu/en"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Tire Pressure Calculator",
+                  "item": "https://bestbikefit4u.eu/en/tire-pressure-calculator"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Tire Pressure for 75kg road bike Rider",
+                  "item": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Is 5.2/5.6 bar a fixed pressure for every 75kg rider?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. It is a strong starting point based on rider weight, default tire width, surface, and bike type. Your exact setup can still change the final number."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Why compare tubeless with inner tubes?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Tube type changes the safe and comfortable pressure range. Tubeless setups usually support slightly lower pressures for the same rider and tire width."
+                  }
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Tire Pressure for 75kg road bike Rider",
+              "description": "Static tire-pressure recommendation page for a 75 kg road bike rider.",
+              "url": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike",
+              "applicationCategory": "SportsApplication",
+              "operatingSystem": "Any",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Home\n/\nTire Pressure Calculator\n/\n75 kg · road bike\n\nBESTBIKEFIT4U PRESSURE GUIDE · ROAD BIKE\n\nStarting recommendation\nTire Pressure for 75kg road bike Rider\n\nThis landing page gives a static starting recommendation for a 75 kg rider on a road bike with common tire widths. Use it as a quick reference, then move to the full calculator for your exact setup.\n\nHere is what the recommendation is based on.\nRider and bike\n75 + 8 kg\nFront and rear tire width\n28 mm\nSurface\nAverage asphalt\nRiding goal\nBalance\n\nBike weight is a fixed assumption; no personal bike profile has been entered.\n\nFRONT AND REAR TIRES\n\nYour starting pressures, side by side.\nTire setup\tFront\tRear\nTubeless\t5.2bar\n75 PSI\n\t5.6bar\n81 PSI\n\nInner tube\t5.4bar\n78 PSI\n\t5.9bar\n86 PSI\n\nRecommended pressure for a 28mm tubeless setup on Average asphalt. Inner tubes typically require slightly higher pressure to reduce pinch-flat risk.\n\nHOW TO USE THIS BASELINE\n\nA reference, not a finish line.\n01\nStart with this recommendation\n\nUse it as a starting point, not as a fixed race-day pressure.\n\n02\nCheck your own tires\n\nExact tire width, surface, and casing construction can still move the recommendation.\n\n03\nRefine the calculation\n\nSwitch to the full calculator when you want setup-specific numbers.\n\nFREQUENTLY ASKED QUESTIONS\n\nDoes this advice always fit?\nIs 5.2/5.6 bar a fixed pressure for every 75kg rider?\nWhy compare tubeless with inner tubes?\nMake the recommendation fit your bike.\n\nIf you want a recommendation tied to your exact tire width, terrain, and tube type, use the full calculator next.\n\nOpen Tire Pressure Calculator\nRead Road bike Fit Guide\nRelated tools and guides\nBike Fit Calculator\nGravel Bike Fit Guide\nMountain Bike Fit Guide\nRoad Bike Fit Guide",
+        "width": 390,
+        "anchors": []
+      },
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "BreadcrumbList",
+        "FAQPage",
+        "WebApplication"
+      ],
+      "expectedEngine": {
+        "tubeless": {
+          "frontBar": 5.2,
+          "rearBar": 5.6,
+          "frontPsi": 75,
+          "rearPsi": 81,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 28mm tubeless setup on average_asphalt."
+        },
+        "innerTube": {
+          "frontBar": 5.4,
+          "rearBar": 5.9,
+          "frontPsi": 78,
+          "rearPsi": 86,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 28mm inner tube setup on average_asphalt."
+        }
+      },
+      "pressureCells": [
+        "5.2bar75 PSI",
+        "5.6bar81 PSI",
+        "5.4bar78 PSI",
+        "5.9bar86 PSI"
+      ]
+    },
+    {
+      "route": "/nl/bandenspanning/75kg-racefiets",
+      "width": 390,
+      "pressure": true,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "schemas": true,
+        "twoFaq": true,
+        "hreflang": true,
+        "engineValues": true,
+        "faqClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Bandenspanning voor 75kg racefiets | BestBikeFit4U",
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 75 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+          ]
+        ],
+        "h1": [
+          "Bandenspanning voor 75kg racefiets"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "nl",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ],
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://bestbikefit4u.eu/nl"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Bandenspanning calculator",
+                  "item": "https://bestbikefit4u.eu/nl/bandenspanning-calculator"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Bandenspanning voor 75kg racefiets",
+                  "item": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Is 5.2/5.6 bar altijd juist voor elke rijder van 75 kg?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Nee. Dit is een sterk startpunt op basis van gewicht, standaard bandbreedte, ondergrond en fietstype. Je precieze setup kan het eindadvies nog verschuiven."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Waarom vergelijken jullie tubeless met binnenband?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Het bandtype verandert het veilige en comfortabele drukbereik. Tubeless kan meestal iets lager gereden worden bij dezelfde rijder en bandbreedte."
+                  }
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Bandenspanning voor 75kg racefiets",
+              "description": "Statische bandenspanningspagina voor een rijder van 75 kg op een racefiets.",
+              "url": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets",
+              "applicationCategory": "SportsApplication",
+              "operatingSystem": "Any",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Home\n/\nBandenspanning calculator\n/\n75 kg · racefiets\n\nBESTBIKEFIT4U BANDENSPANNING GIDS · RACEFIETS\n\nStartadvies\nBandenspanning voor 75kg racefiets\n\nDeze pagina geeft een statisch startadvies voor een rijder van 75 kg op een racefiets met gangbare bandbreedtes. Gebruik het als snelle referentie en ga daarna verder naar de volledige calculator voor jouw exacte setup.\n\nHier is het advies op gebaseerd.\nRijder en fiets\n75 + 8 kg\nBandbreedte voor en achter\n28 mm\nOndergrond\nGemiddeld asfalt\nVoorkeur\nBalans\n\nHet fietsgewicht is een vaste aanname; er is geen persoonlijk fietsprofiel ingevuld.\n\nVOOR- EN ACHTERBAND\n\nJe startdruk, naast elkaar.\nBandtype\tVoorband\tAchterband\nTubeless\t5,2bar\n75 PSI\n\t5,6bar\n81 PSI\n\nBinnenband\t5,4bar\n78 PSI\n\t5,9bar\n86 PSI\n\nAanbevolen spanning voor een tubeless setup van 28 mm op gemiddeld asfalt. Binnenband vraagt meestal iets meer druk om stootlekken te beperken.\n\nZO GEBRUIK JE DE WAARDEN\n\nEen referentie, geen eindpunt.\n01\nBegin bij dit advies\n\nGebruik dit als startpunt, niet als definitieve wedstrijdspanning.\n\n02\nBekijk je eigen banden\n\nBandbreedte, ondergrond en bandtype kunnen je echte ideale druk nog verschuiven.\n\n03\nVerfijn de berekening\n\nGa voor je exacte setup daarna naar de volledige calculator.\n\nVEELGESTELDE VRAGEN\n\nPast dit advies altijd?\nIs 5.2/5.6 bar altijd juist voor elke rijder van 75 kg?\nWaarom vergelijken jullie tubeless met binnenband?\nMaak het advies passend voor jouw fiets.\n\nWil je een advies op basis van jouw precieze bandbreedte, ondergrond en bandtype, gebruik dan daarna de volledige calculator.\n\nOpen bandenspanning calculator\nLees racefiets fit gids\nGerelateerde tools en gidsen\nBike fit calculator\nGravel fit gids\nMTB fit gids\nRacefiets fit gids",
+        "width": 390,
+        "anchors": []
+      },
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "BreadcrumbList",
+        "FAQPage",
+        "WebApplication"
+      ],
+      "expectedEngine": {
+        "tubeless": {
+          "frontBar": 5.2,
+          "rearBar": 5.6,
+          "frontPsi": 75,
+          "rearPsi": 81,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 28mm tubeless setup on average_asphalt."
+        },
+        "innerTube": {
+          "frontBar": 5.4,
+          "rearBar": 5.9,
+          "frontPsi": 78,
+          "rearPsi": 86,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 28mm inner tube setup on average_asphalt."
+        }
+      },
+      "pressureCells": [
+        "5,2bar75 PSI",
+        "5,6bar81 PSI",
+        "5,4bar78 PSI",
+        "5,9bar86 PSI"
+      ]
+    },
+    {
+      "route": "/nl/bandenspanning/75kg-gravelbike",
+      "width": 390,
+      "pressure": true,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "schemas": true,
+        "twoFaq": true,
+        "hreflang": true,
+        "engineValues": true,
+        "faqClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Bandenspanning voor 75kg gravelbike | BestBikeFit4U",
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 75 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-gravelbike",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/bandenspanning/75kg-gravelbike"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike"
+          ]
+        ],
+        "h1": [
+          "Bandenspanning voor 75kg gravelbike"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "nl",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ],
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://bestbikefit4u.eu/nl"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Bandenspanning calculator",
+                  "item": "https://bestbikefit4u.eu/nl/bandenspanning-calculator"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Bandenspanning voor 75kg gravelbike",
+                  "item": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-gravelbike"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Is 2.2/2.4 bar altijd juist voor elke rijder van 75 kg?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Nee. Dit is een sterk startpunt op basis van gewicht, standaard bandbreedte, ondergrond en fietstype. Je precieze setup kan het eindadvies nog verschuiven."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Waarom vergelijken jullie tubeless met binnenband?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Het bandtype verandert het veilige en comfortabele drukbereik. Tubeless kan meestal iets lager gereden worden bij dezelfde rijder en bandbreedte."
+                  }
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Bandenspanning voor 75kg gravelbike",
+              "description": "Statische bandenspanningspagina voor een rijder van 75 kg op een gravelbike.",
+              "url": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-gravelbike",
+              "applicationCategory": "SportsApplication",
+              "operatingSystem": "Any",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Home\n/\nBandenspanning calculator\n/\n75 kg · gravelbike\n\nBESTBIKEFIT4U BANDENSPANNING GIDS · GRAVELBIKE\n\nStartadvies\nBandenspanning voor 75kg gravelbike\n\nDeze pagina geeft een statisch startadvies voor een rijder van 75 kg op een gravelbike met gangbare bandbreedtes. Gebruik het als snelle referentie en ga daarna verder naar de volledige calculator voor jouw exacte setup.\n\nHier is het advies op gebaseerd.\nRijder en fiets\n75 + 8 kg\nBandbreedte voor en achter\n40 mm\nOndergrond\nHard gravel\nVoorkeur\nBalans\n\nHet fietsgewicht is een vaste aanname; er is geen persoonlijk fietsprofiel ingevuld.\n\nVOOR- EN ACHTERBAND\n\nJe startdruk, naast elkaar.\nBandtype\tVoorband\tAchterband\nTubeless\t2,2bar\n32 PSI\n\t2,4bar\n35 PSI\n\nBinnenband\t2,4bar\n35 PSI\n\t2,7bar\n39 PSI\n\nAanbevolen spanning voor een tubeless setup van 40 mm op hard gravel. Binnenband vraagt meestal iets meer druk om stootlekken te beperken.\n\nZO GEBRUIK JE DE WAARDEN\n\nEen referentie, geen eindpunt.\n01\nBegin bij dit advies\n\nGebruik dit als startpunt, niet als definitieve wedstrijdspanning.\n\n02\nBekijk je eigen banden\n\nBandbreedte, ondergrond en bandtype kunnen je echte ideale druk nog verschuiven.\n\n03\nVerfijn de berekening\n\nGa voor je exacte setup daarna naar de volledige calculator.\n\nVEELGESTELDE VRAGEN\n\nPast dit advies altijd?\nIs 2.2/2.4 bar altijd juist voor elke rijder van 75 kg?\nWaarom vergelijken jullie tubeless met binnenband?\nMaak het advies passend voor jouw fiets.\n\nWil je een advies op basis van jouw precieze bandbreedte, ondergrond en bandtype, gebruik dan daarna de volledige calculator.\n\nOpen bandenspanning calculator\nLees gravelbike fit gids\nGerelateerde tools en gidsen\nBike fit calculator\nGravel fit gids\nMTB fit gids\nRacefiets fit gids",
+        "width": 390,
+        "anchors": []
+      },
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "BreadcrumbList",
+        "FAQPage",
+        "WebApplication"
+      ],
+      "expectedEngine": {
+        "tubeless": {
+          "frontBar": 2.2,
+          "rearBar": 2.4,
+          "frontPsi": 32,
+          "rearPsi": 35,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 40mm tubeless setup on hardpack_gravel."
+        },
+        "innerTube": {
+          "frontBar": 2.4,
+          "rearBar": 2.7,
+          "frontPsi": 35,
+          "rearPsi": 39,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 40mm inner tube setup on hardpack_gravel."
+        }
+      },
+      "pressureCells": [
+        "2,2bar32 PSI",
+        "2,4bar35 PSI",
+        "2,4bar35 PSI",
+        "2,7bar39 PSI"
+      ]
+    },
+    {
+      "route": "/nl/bandenspanning/75kg-mountainbike",
+      "width": 390,
+      "pressure": true,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "schemas": true,
+        "twoFaq": true,
+        "hreflang": true,
+        "engineValues": true,
+        "faqClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Bandenspanning voor 75kg mountainbike | BestBikeFit4U",
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 75 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-mountainbike",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/bandenspanning/75kg-mountainbike"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike"
+          ]
+        ],
+        "h1": [
+          "Bandenspanning voor 75kg mountainbike"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "nl",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ],
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://bestbikefit4u.eu/nl"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Bandenspanning calculator",
+                  "item": "https://bestbikefit4u.eu/nl/bandenspanning-calculator"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Bandenspanning voor 75kg mountainbike",
+                  "item": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-mountainbike"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Is 0.8/0.8 bar altijd juist voor elke rijder van 75 kg?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Nee. Dit is een sterk startpunt op basis van gewicht, standaard bandbreedte, ondergrond en fietstype. Je precieze setup kan het eindadvies nog verschuiven."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Waarom vergelijken jullie tubeless met binnenband?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Het bandtype verandert het veilige en comfortabele drukbereik. Tubeless kan meestal iets lager gereden worden bij dezelfde rijder en bandbreedte."
+                  }
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Bandenspanning voor 75kg mountainbike",
+              "description": "Statische bandenspanningspagina voor een rijder van 75 kg op een mountainbike.",
+              "url": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-mountainbike",
+              "applicationCategory": "SportsApplication",
+              "operatingSystem": "Any",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Home\n/\nBandenspanning calculator\n/\n75 kg · mountainbike\n\nBESTBIKEFIT4U BANDENSPANNING GIDS · MOUNTAINBIKE\n\nStartadvies\nBandenspanning voor 75kg mountainbike\n\nDeze pagina geeft een statisch startadvies voor een rijder van 75 kg op een mountainbike met gangbare bandbreedtes. Gebruik het als snelle referentie en ga daarna verder naar de volledige calculator voor jouw exacte setup.\n\nHier is het advies op gebaseerd.\nRijder en fiets\n75 + 8 kg\nBandbreedte voor en achter\n57 mm\nOndergrond\nBospad\nVoorkeur\nBalans\n\nHet fietsgewicht is een vaste aanname; er is geen persoonlijk fietsprofiel ingevuld.\n\nVOOR- EN ACHTERBAND\n\nJe startdruk, naast elkaar.\nBandtype\tVoorband\tAchterband\nTubeless\t0,8bar\n12 PSI\n\t0,8bar\n12 PSI\n\nBinnenband\t0,8bar\n12 PSI\n\t0,8bar\n12 PSI\n\nAanbevolen spanning voor een tubeless setup van 57 mm op bospad. Binnenband vraagt meestal iets meer druk om stootlekken te beperken.\n\nZO GEBRUIK JE DE WAARDEN\n\nEen referentie, geen eindpunt.\n01\nBegin bij dit advies\n\nGebruik dit als startpunt, niet als definitieve wedstrijdspanning.\n\n02\nBekijk je eigen banden\n\nBandbreedte, ondergrond en bandtype kunnen je echte ideale druk nog verschuiven.\n\n03\nVerfijn de berekening\n\nGa voor je exacte setup daarna naar de volledige calculator.\n\nVEELGESTELDE VRAGEN\n\nPast dit advies altijd?\nIs 0.8/0.8 bar altijd juist voor elke rijder van 75 kg?\nWaarom vergelijken jullie tubeless met binnenband?\nMaak het advies passend voor jouw fiets.\n\nWil je een advies op basis van jouw precieze bandbreedte, ondergrond en bandtype, gebruik dan daarna de volledige calculator.\n\nOpen bandenspanning calculator\nLees mountainbike fit gids\nGerelateerde tools en gidsen\nBike fit calculator\nGravel fit gids\nMTB fit gids\nRacefiets fit gids",
+        "width": 390,
+        "anchors": []
+      },
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "BreadcrumbList",
+        "FAQPage",
+        "WebApplication"
+      ],
+      "expectedEngine": {
+        "tubeless": {
+          "frontBar": 0.8,
+          "rearBar": 0.8,
+          "frontPsi": 12,
+          "rearPsi": 12,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 57mm tubeless setup on trail."
+        },
+        "innerTube": {
+          "frontBar": 0.8,
+          "rearBar": 0.8,
+          "frontPsi": 12,
+          "rearPsi": 12,
+          "warnings": [
+            "inner_tube_pinch_flat_risk",
+            "pressure_too_low_for_setup"
+          ],
+          "explanation": "Recommended pressure for a 57mm inner tube setup on trail."
+        }
+      },
+      "pressureCells": [
+        "0,8bar12 PSI",
+        "0,8bar12 PSI",
+        "0,8bar12 PSI",
+        "0,8bar12 PSI"
+      ]
+    },
+    {
+      "route": "/en/tire-pressure/75kg-road-bike",
+      "width": 1440,
+      "pressure": true,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "schemas": true,
+        "twoFaq": true,
+        "hreflang": true,
+        "engineValues": true,
+        "faqClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Tire Pressure for 75kg road bike Rider | BestBikeFit4U",
+        "description": "Recommended front and rear tire pressure for a 75 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "canonical": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+          ]
+        ],
+        "h1": [
+          "Tire Pressure for 75kg road bike Rider"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ],
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://bestbikefit4u.eu/en"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Tire Pressure Calculator",
+                  "item": "https://bestbikefit4u.eu/en/tire-pressure-calculator"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Tire Pressure for 75kg road bike Rider",
+                  "item": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Is 5.2/5.6 bar a fixed pressure for every 75kg rider?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. It is a strong starting point based on rider weight, default tire width, surface, and bike type. Your exact setup can still change the final number."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Why compare tubeless with inner tubes?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Tube type changes the safe and comfortable pressure range. Tubeless setups usually support slightly lower pressures for the same rider and tire width."
+                  }
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Tire Pressure for 75kg road bike Rider",
+              "description": "Static tire-pressure recommendation page for a 75 kg road bike rider.",
+              "url": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike",
+              "applicationCategory": "SportsApplication",
+              "operatingSystem": "Any",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Home\n/\nTire Pressure Calculator\n/\n75 kg · road bike\n\nBESTBIKEFIT4U PRESSURE GUIDE · ROAD BIKE\n\nStarting recommendation\nTire Pressure for 75kg road bike Rider\n\nThis landing page gives a static starting recommendation for a 75 kg rider on a road bike with common tire widths. Use it as a quick reference, then move to the full calculator for your exact setup.\n\nHere is what the recommendation is based on.\nRider and bike\n75 + 8 kg\nFront and rear tire width\n28 mm\nSurface\nAverage asphalt\nRiding goal\nBalance\n\nBike weight is a fixed assumption; no personal bike profile has been entered.\n\nFRONT AND REAR TIRES\n\nYour starting pressures, side by side.\nTire setup\tFront\tRear\nTubeless\t5.2bar\n75 PSI\n\t5.6bar\n81 PSI\n\nInner tube\t5.4bar\n78 PSI\n\t5.9bar\n86 PSI\n\nRecommended pressure for a 28mm tubeless setup on Average asphalt. Inner tubes typically require slightly higher pressure to reduce pinch-flat risk.\n\nHOW TO USE THIS BASELINE\n\nA reference, not a finish line.\n01\nStart with this recommendation\n\nUse it as a starting point, not as a fixed race-day pressure.\n\n02\nCheck your own tires\n\nExact tire width, surface, and casing construction can still move the recommendation.\n\n03\nRefine the calculation\n\nSwitch to the full calculator when you want setup-specific numbers.\n\nFREQUENTLY ASKED QUESTIONS\n\nDoes this advice always fit?\nIs 5.2/5.6 bar a fixed pressure for every 75kg rider?\nWhy compare tubeless with inner tubes?\nMake the recommendation fit your bike.\n\nIf you want a recommendation tied to your exact tire width, terrain, and tube type, use the full calculator next.\n\nOpen Tire Pressure Calculator\nRead Road bike Fit Guide\nRelated tools and guides\nBike Fit Calculator\nGravel Bike Fit Guide\nMountain Bike Fit Guide\nRoad Bike Fit Guide",
+        "width": 1440,
+        "anchors": []
+      },
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "BreadcrumbList",
+        "FAQPage",
+        "WebApplication"
+      ],
+      "expectedEngine": {
+        "tubeless": {
+          "frontBar": 5.2,
+          "rearBar": 5.6,
+          "frontPsi": 75,
+          "rearPsi": 81,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 28mm tubeless setup on average_asphalt."
+        },
+        "innerTube": {
+          "frontBar": 5.4,
+          "rearBar": 5.9,
+          "frontPsi": 78,
+          "rearPsi": 86,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 28mm inner tube setup on average_asphalt."
+        }
+      },
+      "pressureCells": [
+        "5.2bar75 PSI",
+        "5.6bar81 PSI",
+        "5.4bar78 PSI",
+        "5.9bar86 PSI"
+      ]
+    },
+    {
+      "route": "/en/tire-pressure/75kg-gravel-bike",
+      "width": 1440,
+      "pressure": true,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "schemas": true,
+        "twoFaq": true,
+        "hreflang": true,
+        "engineValues": true,
+        "faqClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Tire Pressure for 75kg gravel bike Rider | BestBikeFit4U",
+        "description": "Recommended front and rear tire pressure for a 75 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "canonical": "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/bandenspanning/75kg-gravelbike"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike"
+          ]
+        ],
+        "h1": [
+          "Tire Pressure for 75kg gravel bike Rider"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ],
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://bestbikefit4u.eu/en"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Tire Pressure Calculator",
+                  "item": "https://bestbikefit4u.eu/en/tire-pressure-calculator"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Tire Pressure for 75kg gravel bike Rider",
+                  "item": "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Is 2.2/2.4 bar a fixed pressure for every 75kg rider?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. It is a strong starting point based on rider weight, default tire width, surface, and bike type. Your exact setup can still change the final number."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Why compare tubeless with inner tubes?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Tube type changes the safe and comfortable pressure range. Tubeless setups usually support slightly lower pressures for the same rider and tire width."
+                  }
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Tire Pressure for 75kg gravel bike Rider",
+              "description": "Static tire-pressure recommendation page for a 75 kg gravel bike rider.",
+              "url": "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike",
+              "applicationCategory": "SportsApplication",
+              "operatingSystem": "Any",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Home\n/\nTire Pressure Calculator\n/\n75 kg · gravel bike\n\nBESTBIKEFIT4U PRESSURE GUIDE · GRAVEL BIKE\n\nStarting recommendation\nTire Pressure for 75kg gravel bike Rider\n\nThis landing page gives a static starting recommendation for a 75 kg rider on a gravel bike with common tire widths. Use it as a quick reference, then move to the full calculator for your exact setup.\n\nHere is what the recommendation is based on.\nRider and bike\n75 + 8 kg\nFront and rear tire width\n40 mm\nSurface\nHardpack gravel\nRiding goal\nBalance\n\nBike weight is a fixed assumption; no personal bike profile has been entered.\n\nFRONT AND REAR TIRES\n\nYour starting pressures, side by side.\nTire setup\tFront\tRear\nTubeless\t2.2bar\n32 PSI\n\t2.4bar\n35 PSI\n\nInner tube\t2.4bar\n35 PSI\n\t2.7bar\n39 PSI\n\nRecommended pressure for a 40mm tubeless setup on Hardpack gravel. Inner tubes typically require slightly higher pressure to reduce pinch-flat risk.\n\nHOW TO USE THIS BASELINE\n\nA reference, not a finish line.\n01\nStart with this recommendation\n\nUse it as a starting point, not as a fixed race-day pressure.\n\n02\nCheck your own tires\n\nExact tire width, surface, and casing construction can still move the recommendation.\n\n03\nRefine the calculation\n\nSwitch to the full calculator when you want setup-specific numbers.\n\nFREQUENTLY ASKED QUESTIONS\n\nDoes this advice always fit?\nIs 2.2/2.4 bar a fixed pressure for every 75kg rider?\nWhy compare tubeless with inner tubes?\nMake the recommendation fit your bike.\n\nIf you want a recommendation tied to your exact tire width, terrain, and tube type, use the full calculator next.\n\nOpen Tire Pressure Calculator\nRead Gravel bike Fit Guide\nRelated tools and guides\nBike Fit Calculator\nGravel Bike Fit Guide\nMountain Bike Fit Guide\nRoad Bike Fit Guide",
+        "width": 1440,
+        "anchors": []
+      },
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "BreadcrumbList",
+        "FAQPage",
+        "WebApplication"
+      ],
+      "expectedEngine": {
+        "tubeless": {
+          "frontBar": 2.2,
+          "rearBar": 2.4,
+          "frontPsi": 32,
+          "rearPsi": 35,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 40mm tubeless setup on hardpack_gravel."
+        },
+        "innerTube": {
+          "frontBar": 2.4,
+          "rearBar": 2.7,
+          "frontPsi": 35,
+          "rearPsi": 39,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 40mm inner tube setup on hardpack_gravel."
+        }
+      },
+      "pressureCells": [
+        "2.2bar32 PSI",
+        "2.4bar35 PSI",
+        "2.4bar35 PSI",
+        "2.7bar39 PSI"
+      ]
+    },
+    {
+      "route": "/en/tire-pressure/75kg-mountain-bike",
+      "width": 1440,
+      "pressure": true,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "schemas": true,
+        "twoFaq": true,
+        "hreflang": true,
+        "engineValues": true,
+        "faqClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Tire Pressure for 75kg mountain bike Rider | BestBikeFit4U",
+        "description": "Recommended front and rear tire pressure for a 75 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "canonical": "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/bandenspanning/75kg-mountainbike"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike"
+          ]
+        ],
+        "h1": [
+          "Tire Pressure for 75kg mountain bike Rider"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ],
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://bestbikefit4u.eu/en"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Tire Pressure Calculator",
+                  "item": "https://bestbikefit4u.eu/en/tire-pressure-calculator"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Tire Pressure for 75kg mountain bike Rider",
+                  "item": "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Is 0.8/0.8 bar a fixed pressure for every 75kg rider?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. It is a strong starting point based on rider weight, default tire width, surface, and bike type. Your exact setup can still change the final number."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Why compare tubeless with inner tubes?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Tube type changes the safe and comfortable pressure range. Tubeless setups usually support slightly lower pressures for the same rider and tire width."
+                  }
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Tire Pressure for 75kg mountain bike Rider",
+              "description": "Static tire-pressure recommendation page for a 75 kg mountain bike rider.",
+              "url": "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike",
+              "applicationCategory": "SportsApplication",
+              "operatingSystem": "Any",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Home\n/\nTire Pressure Calculator\n/\n75 kg · mountain bike\n\nBESTBIKEFIT4U PRESSURE GUIDE · MOUNTAIN BIKE\n\nStarting recommendation\nTire Pressure for 75kg mountain bike Rider\n\nThis landing page gives a static starting recommendation for a 75 kg rider on a mountain bike with common tire widths. Use it as a quick reference, then move to the full calculator for your exact setup.\n\nHere is what the recommendation is based on.\nRider and bike\n75 + 8 kg\nFront and rear tire width\n57 mm\nSurface\nTrail\nRiding goal\nBalance\n\nBike weight is a fixed assumption; no personal bike profile has been entered.\n\nFRONT AND REAR TIRES\n\nYour starting pressures, side by side.\nTire setup\tFront\tRear\nTubeless\t0.8bar\n12 PSI\n\t0.8bar\n12 PSI\n\nInner tube\t0.8bar\n12 PSI\n\t0.8bar\n12 PSI\n\nRecommended pressure for a 57mm tubeless setup on Trail. Inner tubes typically require slightly higher pressure to reduce pinch-flat risk.\n\nHOW TO USE THIS BASELINE\n\nA reference, not a finish line.\n01\nStart with this recommendation\n\nUse it as a starting point, not as a fixed race-day pressure.\n\n02\nCheck your own tires\n\nExact tire width, surface, and casing construction can still move the recommendation.\n\n03\nRefine the calculation\n\nSwitch to the full calculator when you want setup-specific numbers.\n\nFREQUENTLY ASKED QUESTIONS\n\nDoes this advice always fit?\nIs 0.8/0.8 bar a fixed pressure for every 75kg rider?\nWhy compare tubeless with inner tubes?\nMake the recommendation fit your bike.\n\nIf you want a recommendation tied to your exact tire width, terrain, and tube type, use the full calculator next.\n\nOpen Tire Pressure Calculator\nRead Mountain bike Fit Guide\nRelated tools and guides\nBike Fit Calculator\nGravel Bike Fit Guide\nMountain Bike Fit Guide\nRoad Bike Fit Guide",
+        "width": 1440,
+        "anchors": []
+      },
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "BreadcrumbList",
+        "FAQPage",
+        "WebApplication"
+      ],
+      "expectedEngine": {
+        "tubeless": {
+          "frontBar": 0.8,
+          "rearBar": 0.8,
+          "frontPsi": 12,
+          "rearPsi": 12,
+          "warnings": [],
+          "explanation": "Recommended pressure for a 57mm tubeless setup on trail."
+        },
+        "innerTube": {
+          "frontBar": 0.8,
+          "rearBar": 0.8,
+          "frontPsi": 12,
+          "rearPsi": 12,
+          "warnings": [
+            "inner_tube_pinch_flat_risk",
+            "pressure_too_low_for_setup"
+          ],
+          "explanation": "Recommended pressure for a 57mm inner tube setup on trail."
+        }
+      },
+      "pressureCells": [
+        "0.8bar12 PSI",
+        "0.8bar12 PSI",
+        "0.8bar12 PSI",
+        "0.8bar12 PSI"
+      ]
+    },
+    {
+      "route": "/en/tire-pressure/77kg-road-bike",
+      "width": 390,
+      "pressure": true,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "schemas": true,
+        "twoFaq": true,
+        "hreflang": true,
+        "faqClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Tire Pressure for 77kg road bike Rider | BestBikeFit4U",
+        "description": "Recommended front and rear tire pressure for a 77 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "canonical": "https://bestbikefit4u.eu/en/tire-pressure/77kg-road-bike",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/tire-pressure/77kg-road-bike"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/bandenspanning/77kg-racefiets"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/tire-pressure/77kg-road-bike"
+          ]
+        ],
+        "h1": [
+          "Tire Pressure for 77kg road bike Rider"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ],
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://bestbikefit4u.eu/en"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Tire Pressure Calculator",
+                  "item": "https://bestbikefit4u.eu/en/tire-pressure-calculator"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Tire Pressure for 77kg road bike Rider",
+                  "item": "https://bestbikefit4u.eu/en/tire-pressure/77kg-road-bike"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Is 5.3/5.7 bar a fixed pressure for every 77kg rider?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. It is a strong starting point based on rider weight, default tire width, surface, and bike type. Your exact setup can still change the final number."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Why compare tubeless with inner tubes?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Tube type changes the safe and comfortable pressure range. Tubeless setups usually support slightly lower pressures for the same rider and tire width."
+                  }
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Tire Pressure for 77kg road bike Rider",
+              "description": "Static tire-pressure recommendation page for a 77 kg road bike rider.",
+              "url": "https://bestbikefit4u.eu/en/tire-pressure/77kg-road-bike",
+              "applicationCategory": "SportsApplication",
+              "operatingSystem": "Any",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+              },
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Home\n/\nTire Pressure Calculator\n/\n77 kg · road bike\n\nBESTBIKEFIT4U PRESSURE GUIDE · ROAD BIKE\n\nStarting recommendation\nTire Pressure for 77kg road bike Rider\n\nThis landing page gives a static starting recommendation for a 77 kg rider on a road bike with common tire widths. Use it as a quick reference, then move to the full calculator for your exact setup.\n\nHere is what the recommendation is based on.\nRider and bike\n77 + 8 kg\nFront and rear tire width\n28 mm\nSurface\nAverage asphalt\nRiding goal\nBalance\n\nBike weight is a fixed assumption; no personal bike profile has been entered.\n\nFRONT AND REAR TIRES\n\nYour starting pressures, side by side.\nTire setup\tFront\tRear\nTubeless\t5.3bar\n77 PSI\n\t5.7bar\n83 PSI\n\nInner tube\t5.5bar\n80 PSI\n\t6bar\n87 PSI\n\nRecommended pressure for a 28mm tubeless setup on Average asphalt. Inner tubes typically require slightly higher pressure to reduce pinch-flat risk.\n\nHOW TO USE THIS BASELINE\n\nA reference, not a finish line.\n01\nStart with this recommendation\n\nUse it as a starting point, not as a fixed race-day pressure.\n\n02\nCheck your own tires\n\nExact tire width, surface, and casing construction can still move the recommendation.\n\n03\nRefine the calculation\n\nSwitch to the full calculator when you want setup-specific numbers.\n\nFREQUENTLY ASKED QUESTIONS\n\nDoes this advice always fit?\nIs 5.3/5.7 bar a fixed pressure for every 77kg rider?\nWhy compare tubeless with inner tubes?\nMake the recommendation fit your bike.\n\nIf you want a recommendation tied to your exact tire width, terrain, and tube type, use the full calculator next.\n\nOpen Tire Pressure Calculator\nRead Road bike Fit Guide\nRelated tools and guides\nBike Fit Calculator\nGravel Bike Fit Guide\nMountain Bike Fit Guide\nRoad Bike Fit Guide",
+        "width": 390,
+        "anchors": []
+      },
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "BreadcrumbList",
+        "FAQPage",
+        "WebApplication"
+      ]
+    },
+    {
+      "route": "/en/tire-pressure/not-a-pressure",
+      "width": 390,
+      "expectedStatus": 404,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true
+      },
+      "status": 404,
+      "dom": {
+        "title": "Not found",
+        "description": "Precision bike fitting for comfort, alignment, and performance.",
+        "alternates": [],
+        "robots": "noindex, nofollow",
+        "h1": [
+          "Our mascot rode to the wrong page"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "404\n\nOur mascot rode to the wrong page\n\nThe page you tried to open does not exist here anymore, the link may be outdated, or the URL may have a typo.\n\nBroken or outdated link\nMistyped URL\nPage moved\nGo to homepage\nBack to dashboard\nWhat to try next\nCheck the web address\n\nLook for a typing mistake in the URL or remove extra characters after the main path.\n\nOpen a core section\n\nStart again from the homepage, guides, or calculators and navigate from there.\n\nResume your workflow\n\nIf you came from a saved fit or bike page, go back to your dashboard and reopen it from the main navigation.\n\nNEED A QUICK RESET?\n\nUse one of the links below to get back to a stable starting point.\n\nHomepage\nBike fit calculator\nGuides overview\nDashboard",
+        "width": 390,
+        "anchors": []
+      }
+    },
+    {
+      "route": "/nl/bandenspanning/ongeldig",
+      "width": 390,
+      "expectedStatus": 404,
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true
+      },
+      "status": 404,
+      "dom": {
+        "title": "Niet gevonden",
+        "description": "Precision bike fitting for comfort, alignment, and performance.",
+        "alternates": [],
+        "robots": "noindex, nofollow",
+        "h1": [
+          "Onze mascotte is naar de verkeerde pagina gereden"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "nl",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "404\n\nOnze mascotte is naar de verkeerde pagina gereden\n\nDe pagina die je probeerde te openen bestaat hier niet meer, de link kan verouderd zijn of het webadres bevat een typefout.\n\nVerouderde of kapotte link\nTypefout in de URL\nPagina verplaatst\nGa naar home\nTerug naar dashboard\nWat kun je nu doen?\nControleer het webadres\n\nKijk of er een typefout in de URL staat of verwijder extra tekens achter het hoofdpad.\n\nOpen een hoofdsectie\n\nBegin opnieuw via de homepage, gidsen of calculators en navigeer van daaruit verder.\n\nPak je workflow weer op\n\nKwam je van een opgeslagen fit of fiets, ga dan terug naar je dashboard en open die pagina opnieuw via de navigatie.\n\nSNEL OPNIEUW BEGINNEN?\n\nGebruik een van deze links om terug te gaan naar een stabiel startpunt.\n\nHomepage\nBike fit calculator\nGidsenoverzicht\nDashboard",
+        "width": 390,
+        "anchors": []
+      }
+    },
+    {
+      "route": "/en/terms",
+      "width": 390,
+      "legal": "terms",
+      "errors": [],
+      "checks": {
+        "status": true,
+        "noOverflow": true,
+        "oneH1": true,
+        "canonical": true,
+        "metadata": true,
+        "legalText": true,
+        "legalMetadata": true,
+        "tocTargets": true,
+        "tocClick": true
+      },
+      "status": 200,
+      "dom": {
+        "title": "Terms of Service - BestBikeFit4U",
+        "description": "Read the terms and conditions for using BestBikeFit4U.",
+        "canonical": "https://bestbikefit4u.eu/en/terms",
+        "alternates": [
+          [
+            "en",
+            "https://bestbikefit4u.eu/en/terms"
+          ],
+          [
+            "nl",
+            "https://bestbikefit4u.eu/nl/terms"
+          ],
+          [
+            "x-default",
+            "https://bestbikefit4u.eu/en/terms"
+          ]
+        ],
+        "h1": [
+          "Terms of Service"
+        ],
+        "jsonLd": [
+          [
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bestbikefit4u.eu/#organization",
+              "name": "BestBikeFit4U",
+              "url": "https://bestbikefit4u.eu",
+              "email": "support@bestbikefit4u.eu"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bestbikefit4u.eu/#website",
+              "url": "https://bestbikefit4u.eu",
+              "name": "BestBikeFit4U",
+              "description": "Precision bike fitting for comfort, alignment, and performance.",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://bestbikefit4u.eu/#organization"
+              }
+            }
+          ]
+        ],
+        "text": "Legal information\n\nTerms of Service\n\nRead the terms and conditions for using BestBikeFit4U.\n\nLast updated: February 15, 2026\n\nPrivacy Policy\nTerms of Service\nOn this page\n1. Acceptance of Terms\n2. Description of Service\n3. Important Disclaimer\n4. User Accounts\n5. Acceptable Use\n6. Subscription Plans\n7. Limitation of Liability\n8. Intellectual Property\n9. Changes to Terms\n10. Contact\n1.\nAcceptance of Terms\n\nBy accessing or using BestBikeFit4U, you agree to these Terms of Service.\n\n2.\nDescription of Service\n\nBestBikeFit4U provides algorithm-based bike fitting recommendations based on user measurements and preferences.\n\n3.\nImportant Disclaimer\n\nBestBikeFit4U is not a substitute for an in-person professional bike fit.\n\nRecommendations depend on the quality of your measurements. Riders with injuries, chronic pain, or significant asymmetry should consult a qualified fitter or medical professional.\n\n4.\nUser Accounts\nYou must provide a valid email address.\nYou are responsible for your account security.\nDo not share accounts.\nWe may suspend accounts that violate these terms.\n5.\nAcceptable Use\nDo not use the service for unlawful purposes.\nDo not attempt unauthorized access.\nDo not scrape or automate without consent.\nDo not disrupt service integrity or performance.\n6.\nSubscription Plans\n\nBestBikeFit4U publicly offers Free and Pro. Paid Pro plans are billed monthly in EUR and can be cancelled at any time.\n\n7.\nLimitation of Liability\n\nTo the maximum extent permitted by law, BestBikeFit4U is not liable for indirect or consequential damages arising from use of the service. You are responsible for implementing fit changes gradually and safely.\n\n8.\nIntellectual Property\n\nService content, design, and algorithms are protected intellectual property.\n\n9.\nChanges to Terms\n\nWe may update these terms. Continued use after updates means you accept the revised terms.\n\n10.\nContact\n\nFor questions about these terms, contact support@bestbikefit4u.eu.\n\nBack to the homepage\n\nReturn to the homepage when you are done reviewing the terms.\n\nBack to the homepage\n→",
+        "width": 390,
+        "anchors": [
+          {
+            "href": "#terms-1",
+            "exists": true
+          },
+          {
+            "href": "#terms-2",
+            "exists": true
+          },
+          {
+            "href": "#terms-3",
+            "exists": true
+          },
+          {
+            "href": "#terms-4",
+            "exists": true
+          },
+          {
+            "href": "#terms-5",
+            "exists": true
+          },
+          {
+            "href": "#terms-6",
+            "exists": true
+          },
+          {
+            "href": "#terms-7",
+            "exists": true
+          },
+          {
+            "href": "#terms-8",
+            "exists": true
+          },
+          {
+            "href": "#terms-9",
+            "exists": true
+          },
+          {
+            "href": "#terms-10",
+            "exists": true
+          }
+        ]
+      },
+      "missingLegalText": []
+    }
+  ]
+}

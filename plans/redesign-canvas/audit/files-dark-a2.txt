@@ -1,0 +1,13 @@
+src/app/(dashboard)/bikes/[bikeId]/GeometryLinkCard.tsx
+src/app/(dashboard)/bikes/compare-fit/page.tsx
+src/app/(dashboard)/bikes/page.tsx
+src/app/(public)/fiets-afstellen/page.tsx
+src/components/bikes/BikeFitPreview.tsx
+src/components/bikes/BikeGarageOverview.tsx
+src/components/bikes/BikePhotoGallery.tsx
+src/components/science/StackReachFigure.tsx
+src/components/science/editorial-pages.test.tsx
+src/components/science/editorial.module.css
+tests/visual/dark-a2/capture.mjs
+tests/visual/dark-a2/fixture.mjs
+tests/visual/dark-a2/runtime.jsx

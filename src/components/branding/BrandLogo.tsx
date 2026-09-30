@@ -9,23 +9,23 @@ import { cn } from "@/utils/cn";
 const LOGO_ASSETS = {
   primary: {
     src: BRAND.assets.logoPrimary,
-    width: 640,
-    height: 252,
+    width: 381,
+    height: 64,
   },
   dark: {
     src: BRAND.assets.logoDark,
-    width: 640,
-    height: 252,
+    width: 381,
+    height: 64,
   },
   mark: {
     src: BRAND.assets.mark,
-    width: 1024,
-    height: 1024,
+    width: 64,
+    height: 64,
   },
   appIcon: {
     src: BRAND.assets.appIconSvg,
-    width: 1024,
-    height: 1024,
+    width: 64,
+    height: 64,
   },
 } as const;
 
@@ -49,8 +49,6 @@ export function BrandLogo({
   ariaLabel,
 }: BrandLogoProps) {
   const { resolvedTheme } = useTheme();
-  const isAppIcon = asset === "appIcon";
-  const isHorizontalLogo = asset === "primary" || asset === "dark";
   const shouldPrioritize = priority === true || priority === "dark";
 
   const selectedAsset =
@@ -60,48 +58,16 @@ export function BrandLogo({
         : resolvedTheme === "dark"
           ? LOGO_ASSETS.dark
           : LOGO_ASSETS.primary
-      : isAppIcon
-        ? LOGO_ASSETS.mark
       : LOGO_ASSETS[asset];
 
-  const image = isAppIcon ? (
-    <span
-      className={cn(
-        "flex aspect-square w-full items-center justify-center overflow-hidden rounded-[22%] border p-[18%] shadow-[0_14px_28px_-20px_color-mix(in_oklch,var(--foreground)_28%,transparent)] transition-colors",
-        resolvedTheme === "dark"
-          ? "border-[color:color-mix(in_oklch,var(--dashboard-border-strong)_56%,transparent)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--dashboard-sidebar-elevated)_88%,var(--primary)_12%)_0%,color-mix(in_oklch,var(--dashboard-sidebar)_92%,var(--background)_8%)_100%)]"
-          : "border-[color:color-mix(in_oklch,var(--dashboard-border-soft)_88%,transparent)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--background)_96%,white_4%)_0%,color-mix(in_oklch,var(--dashboard-surface-muted)_94%,var(--background)_6%)_100%)]",
-        imageClassName
-      )}
-    >
-      <Image
-        src={selectedAsset.src}
-        alt={ariaLabel ?? BRAND.name}
-        width={selectedAsset.width}
-        height={selectedAsset.height}
-        priority={shouldPrioritize}
-        className="h-auto w-full"
-      />
-    </span>
-  ) : isHorizontalLogo ? (
-    <span className="block w-full overflow-hidden">
-      <Image
-        src={selectedAsset.src}
-        alt={ariaLabel ?? BRAND.name}
-        width={selectedAsset.width}
-        height={selectedAsset.height}
-        priority={shouldPrioritize}
-        className={cn("h-auto w-full object-contain", imageClassName)}
-      />
-    </span>
-  ) : (
+  const image = (
     <Image
       src={selectedAsset.src}
       alt={ariaLabel ?? BRAND.name}
       width={selectedAsset.width}
       height={selectedAsset.height}
       priority={shouldPrioritize}
-      className={cn("h-auto w-full", imageClassName)}
+      className={cn("block h-auto w-full object-contain", imageClassName)}
     />
   );
 
@@ -110,7 +76,11 @@ export function BrandLogo({
   }
 
   return (
-    <Link href={href} aria-label={ariaLabel ?? BRAND.name} className={className}>
+    <Link
+      href={href}
+      aria-label={ariaLabel ?? BRAND.name}
+      className={cn(className, "flex min-h-11 min-w-11 items-center")}
+    >
       {image}
     </Link>
   );

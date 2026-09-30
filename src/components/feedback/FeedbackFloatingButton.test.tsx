@@ -26,10 +26,11 @@ import {
 describe("FeedbackFloatingButton", () => {
   it("renders an accessible label and the responsive placement contract", () => {
     const html = renderToStaticMarkup(
-      <FeedbackFloatingButton onClick={() => {}} label="Share feedback" />
+      <FeedbackFloatingButton onClick={() => {}} label="Share feedback" />,
     );
 
     expect(html).toContain('aria-label="Share feedback"');
+    expect(html).toContain('data-feedback-launcher="true"');
     expect(html).toContain("Share feedback");
     expect(html).toContain(FEEDBACK_FLOATING_BUTTON_PLACEMENT_CLASSNAME);
   });

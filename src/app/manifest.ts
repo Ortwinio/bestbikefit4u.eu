@@ -10,24 +10,24 @@ export default function manifest(): MetadataRoute.Manifest {
     scope: "/",
     display: "standalone",
     orientation: "portrait",
-    background_color: "#ffffff",
-    theme_color: "#089BE9",
+    background_color: "#F5F8F3",
+    theme_color: "#0F2420",
     icons: [
       {
-        src: BRAND.assets.appIconPng,
-        sizes: "1024x1024",
+        src: BRAND.assets.appIcon192,
+        sizes: "192x192",
         type: "image/png",
       },
       {
         src: BRAND.assets.appIconPng,
-        sizes: "1024x1024",
+        sizes: "512x512",
         type: "image/png",
       },
       {
-        src: BRAND.assets.appIconSvg,
-        sizes: "any",
-        type: "image/svg+xml",
-        purpose: "any",
+        src: BRAND.assets.appIconMaskable,
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable",
       },
     ],
   };

@@ -7,11 +7,9 @@ import { cn } from "@/utils/cn";
 
 type SegmentedControlSize = "sm" | "md";
 
-type SegmentedControlGroupProps = Omit<
-  ComponentPropsWithoutRef<typeof RadioGroup>,
-  "className" | "children"
-> & {
+type SegmentedControlGroupProps = Omit<ComponentPropsWithoutRef<typeof RadioGroup>, "className" | "children"> & {
   size?: SegmentedControlSize;
+  variant?: "default" | "strong";
   className?: string;
   children: ReactNode;
 };
@@ -35,31 +33,24 @@ const itemSizeClassMap: Record<SegmentedControlSize, string> = {
 };
 
 export const SegmentedControl = forwardRef<HTMLDivElement, SegmentedControlGroupProps>(
-  (
-    {
-      className,
-      size = "md",
-      children,
-      ...props
-    },
-    ref
-  ) => {
+  ({ className, size = "md", variant = "default", children, ...props }, ref) => {
     return (
       <RadioGroup
         ref={ref as never}
         data-slot="segmented-control"
         data-size={size}
+        data-variant={variant}
         className={cn(
-          "inline-flex items-stretch gap-1 rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]",
+          "group/segments inline-flex items-stretch gap-1 rounded-2xl bg-muted",
           controlSizeClassMap[size],
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </RadioGroup>
     );
-  }
+  },
 );
 
 SegmentedControl.displayName = "SegmentedControl";
@@ -71,20 +62,26 @@ export const SegmentedControlItem = forwardRef<HTMLButtonElement, SegmentedContr
         ref={ref as never}
         data-slot="segmented-control-item"
         className={cn(
-          "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium",
-          "cursor-pointer select-none transition-[color,background-color,box-shadow,transform] duration-150 ease-smooth motion-reduce:transition-none",
-          "text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)]",
-          "focus-ring data-checked:bg-[color:var(--card)] data-checked:text-[color:var(--foreground)] data-checked:shadow-sm",
+          "inline-flex min-h-11 min-w-11 flex-1 items-center justify-center gap-2 whitespace-nowrap font-semibold",
+          "cursor-pointer select-none transition-[color,background-color,box-shadow,transform] " +
+            "duration-150 ease-smooth motion-reduce:transition-none",
+          "text-muted-foreground hover:text-foreground",
+          "focus-visible:focus-ring data-checked:bg-card data-checked:text-foreground " +
+            "data-checked:shadow-sm dark:data-checked:bg-primary dark:data-checked:text-primary-foreground " +
+            "group-data-[variant=strong]/segments:data-checked:bg-[var(--bbf-inkt)] " +
+            "group-data-[variant=strong]/segments:data-checked:text-[var(--bbf-wit)] " +
+            "dark:group-data-[variant=strong]/segments:data-checked:bg-primary " +
+            "dark:group-data-[variant=strong]/segments:data-checked:text-primary-foreground",
           "data-disabled:cursor-not-allowed data-disabled:opacity-50",
           itemSizeClassMap[size],
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </Radio.Root>
     );
-  }
+  },
 );
 
 SegmentedControlItem.displayName = "SegmentedControlItem";

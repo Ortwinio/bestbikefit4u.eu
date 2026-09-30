@@ -20,26 +20,20 @@ export interface AccessibleDialogProps {
   children: ReactNode;
 }
 
-export function AccessibleDialog({
-  open,
-  title,
-  description,
-  onClose,
-  children,
-}: AccessibleDialogProps) {
+export function AccessibleDialog({ open, title, description, onClose, children }: AccessibleDialogProps) {
   if (typeof window === "undefined") {
     if (!open) {
       return null;
     }
 
     return (
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        data-slot="dialog"
-      >
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" data-slot="dialog">
         <div className="panel-backdrop fixed inset-0" />
         <div
-          className="panel-surface-base panel-theme-context relative z-10 w-full max-w-md rounded-[var(--radius-xl)] border p-6 shadow-2xl"
+          className={
+            "panel-surface-base panel-theme-context relative z-10 w-full max-w-md " +
+            "rounded-[var(--radius-xl)] border p-6 shadow-2xl"
+          }
           data-slot="dialog-content"
         >
           <DialogHeader className="relative pr-10">
@@ -47,22 +41,20 @@ export function AccessibleDialog({
               type="button"
               aria-label="Close dialog"
               onClick={onClose}
-              className="absolute right-0 top-0 inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-md)] text-[color:var(--muted-foreground)] transition-colors hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+              className={
+                "absolute right-0 top-0 inline-flex h-8 w-8 items-center justify-center " +
+                "rounded-[var(--radius-md)] text-muted-foreground transition-colors hover:bg-accent " +
+                "hover:text-foreground"
+              }
             >
               <XIcon className="h-4 w-4" />
               <span className="sr-only">Close dialog</span>
             </button>
-            <h2
-              className="text-lg font-semibold tracking-tight text-[color:var(--foreground)]"
-              data-slot="dialog-title"
-            >
+            <h2 className="text-lg font-semibold tracking-tight text-foreground" data-slot="dialog-title">
               {title}
             </h2>
             {description ? (
-              <p
-                className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]"
-                data-slot="dialog-description"
-              >
+              <p className="mt-2 text-sm leading-6 text-muted-foreground" data-slot="dialog-description">
                 {description}
               </p>
             ) : null}
@@ -87,23 +79,13 @@ export function AccessibleDialog({
         className="max-w-md gap-0 rounded-[var(--radius-xl)] border p-6 shadow-2xl"
       >
         <DialogHeader className="relative pr-10">
-          <DialogClose
-            render={
-              <Button
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-0 h-8 w-8 px-0"
-              />
-            }
-          >
+          <DialogClose render={<Button variant="ghost" size="sm" className="absolute right-0 top-0 h-8 w-8 px-0" />}>
             <XIcon className="h-4 w-4" />
             <span className="sr-only">Close dialog</span>
           </DialogClose>
-          <DialogTitle className="text-lg font-semibold tracking-tight text-[color:var(--foreground)]">
-            {title}
-          </DialogTitle>
+          <DialogTitle className="text-lg font-semibold tracking-tight text-foreground">{title}</DialogTitle>
           {description ? (
-            <DialogDescription className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
+            <DialogDescription className="mt-2 text-sm leading-6 text-muted-foreground">
               {description}
             </DialogDescription>
           ) : null}

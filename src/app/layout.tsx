@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Bricolage_Grotesque, Figtree, DM_Mono } from "next/font/google";
 import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { headers } from "next/headers";
@@ -16,11 +17,37 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NONCE_HEADER_NAME } from "@/lib/csp";
 import { buildOrganizationSchema, buildWebSiteSchema } from "@/lib/seo/jsonLd";
 
+const displayFont = Bricolage_Grotesque({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  variable: "--font-display",
+  display: "swap",
+});
+const bodyFont = Figtree({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
+  display: "swap",
+});
+const monoFont = DM_Mono({
+  subsets: ["latin"],
+  weight: "500",
+  variable: "--font-mono",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND.siteUrl),
   applicationName: BRAND.name,
   title: BRAND.name,
   description: "Precision bike fitting for comfort, alignment, and performance.",
+  openGraph: {
+    images: [{ url: BRAND.assets.socialImage, width: 1200, height: 630, alt: BRAND.name }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [BRAND.assets.socialImage],
+  },
   appleWebApp: {
     capable: true,
     title: BRAND.name,
@@ -34,21 +61,21 @@ export const metadata: Metadata = {
       },
       {
         url: BRAND.assets.appIconPng,
-        sizes: "1024x1024",
+        sizes: "512x512",
         type: "image/png",
       },
     ],
     shortcut: [
       {
-        url: BRAND.assets.appIconPng,
-        sizes: "1024x1024",
-        type: "image/png",
+        url: BRAND.assets.favicon,
+        sizes: "16x16 32x32 48x48",
+        type: "image/x-icon",
       },
     ],
     apple: [
       {
-        url: BRAND.assets.appIconPng,
-        sizes: "1024x1024",
+        url: BRAND.assets.appleTouchIcon,
+        sizes: "180x180",
         type: "image/png",
       },
     ],
@@ -56,7 +83,7 @@ export const metadata: Metadata = {
       {
         rel: "mask-icon",
         url: BRAND.assets.appIconSvg,
-        color: "#089BE9",
+        color: "#0F2420",
       },
     ],
   },
@@ -64,8 +91,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#089BE9" },
-    { media: "(prefers-color-scheme: dark)", color: "#1C1F29" },
+    { media: "(prefers-color-scheme: light)", color: "#0F2420" },
+    { media: "(prefers-color-scheme: dark)", color: "#0F2420" },
   ],
 };
 
@@ -99,7 +126,11 @@ export default async function RootLayout({
 
   return (
     <ConvexAuthNextjsServerProvider>
-      <html lang={locale} suppressHydrationWarning>
+      <html
+        lang={locale}
+        className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`}
+        suppressHydrationWarning
+      >
         <head>
           <script
             nonce={nonce}
@@ -117,7 +148,7 @@ export default async function RootLayout({
             dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchemas) }}
           />
         </head>
-        <body className="relative bg-[color:var(--background)] text-[color:var(--foreground)] antialiased">
+        <body className="relative bg-background font-sans text-foreground antialiased">
           <a
             href="#main-content"
             className="skip-link absolute left-4 top-3 z-[100] rounded-md border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm font-medium text-[color:var(--foreground)] shadow"

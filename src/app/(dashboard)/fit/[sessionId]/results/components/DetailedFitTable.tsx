@@ -28,12 +28,12 @@ export function DetailedFitTable({ rows, copy }: DetailedFitTableProps) {
           return (
             <div
               key={row.key}
-              className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)] px-4 py-4"
+              className="rounded-[var(--radius-lg)] border border-border bg-background px-4 py-4"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <p className="text-base font-semibold">{parameter.label}</p>
-                  <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     {parameter.methodLabel}
                   </p>
                 </div>
@@ -53,18 +53,18 @@ export function DetailedFitTable({ rows, copy }: DetailedFitTableProps) {
 
               <div className="mt-4 grid gap-4 lg:grid-cols-2">
                 <div>
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
                     {copy.table.feelDescription}
                   </p>
-                  <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     {parameter.feelDescription}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--muted-foreground)]">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
                     {copy.table.watchOuts}
                   </p>
-                  <ul className="mt-1 space-y-1 text-sm text-[color:var(--muted-foreground)]">
+                  <ul className="mt-1 space-y-1 text-sm text-muted-foreground">
                     <li>{parameter.watchOutHigh}</li>
                     <li>{parameter.watchOutLow}</li>
                   </ul>

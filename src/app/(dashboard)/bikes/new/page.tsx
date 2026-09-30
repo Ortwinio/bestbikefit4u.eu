@@ -37,7 +37,9 @@ export default async function NewBikePage() {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">{t.title}</h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+          {t.title}
+        </h1>
         <p className="mt-2 text-sm text-muted-foreground">{t.description}</p>
       </div>
 
@@ -45,9 +47,9 @@ export default async function NewBikePage() {
         {options.map((option) => {
           const Icon = option.icon;
           return (
-            <Card key={option.href} variant="bordered" className="dashboard-card-surface h-full">
+            <Card key={option.href} variant="bordered" className="bg-card h-full">
               <CardContent className="flex h-full flex-col pt-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--secondary)] text-primary">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-primary">
                   <Icon className="h-5 w-5" />
                 </div>
                 <h2 className="mt-5 text-lg font-semibold text-foreground">{option.title}</h2>

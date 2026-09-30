@@ -17,19 +17,15 @@ type SignedInFitFollowUpCardProps = {
   onCtaClick: (targetPath: string, ctaLabel: string) => void;
 };
 
-export function SignedInFitFollowUpCard({
-  locale,
-  copy,
-  onCtaClick,
-}: SignedInFitFollowUpCardProps) {
+export function SignedInFitFollowUpCard({ locale, copy, onCtaClick }: SignedInFitFollowUpCardProps) {
   const profilePath = withLocalePrefix("/profile", locale);
   const fitPath = withLocalePrefix("/fit", locale);
 
   return (
-    <Card variant="bordered" className="dashboard-card-surface">
+    <Card variant="bordered" className="bg-card">
       <CardHeader className="space-y-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[color:var(--primary-soft)] text-[color:var(--primary)]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-soft text-primary">
             <LineChart className="h-5 w-5" />
           </div>
           <div>
@@ -39,10 +35,7 @@ export function SignedInFitFollowUpCard({
         </div>
       </CardHeader>
       <CardContent className="flex flex-wrap gap-3">
-        <Button
-          render={<Link href={profilePath} />}
-          onClick={() => onCtaClick(profilePath, copy.profileCta)}
-        >
+        <Button render={<Link href={profilePath} />} onClick={() => onCtaClick(profilePath, copy.profileCta)}>
           {copy.profileCta}
         </Button>
         <Button

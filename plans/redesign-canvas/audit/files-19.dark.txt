@@ -1,0 +1,13 @@
+src/app/(public)/fit-pass/fit-pass.module.css
+src/app/(public)/how-it-works/how-it-works.module.css
+src/app/(public)/measurement-guide/measurement-guide.module.css
+src/app/(public)/pain/pain.module.css
+src/app/(public)/pricing/pricing.module.css
+src/components/layout/Footer.tsx
+src/components/layout/Header.tsx
+src/components/layout/HeaderMobileMenu.tsx
+src/components/layout/MarketingLogo.tsx
+src/components/layout/MarketingLogo.test.tsx
+src/components/layout/MarketingNavigation.tsx
+src/components/layout/MarketingTheme.module.css
+tests/visual/marketing-dark/render.mjs

@@ -8,13 +8,15 @@ import { BikeWithFitHistory } from "@/components/bikes/BikeWithFitHistory";
 import { Button, EmptyState, ErrorState, LoadingState } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { fitHistoryCopy } from "@/i18n/account/fitHistory";
 
 export default function FitHistoryPage() {
-  const { locale, messages } = useDashboardMessages();
+  const { locale } = useDashboardMessages();
+  const text = fitHistoryCopy[locale];
   const sessions = useQuery(api.sessions.queries.getAllSessionsWithBikes);
 
   const groupedSessions = useMemo(() => {
-    if (!sessions) {
+    if (!Array.isArray(sessions)) {
       return [];
     }
 
@@ -50,37 +52,36 @@ export default function FitHistoryPage() {
     );
   }, [sessions]);
 
-  if (sessions === undefined) {
-    return <LoadingState label={messages.layout.loading} />;
-  }
-
-  if (!Array.isArray(sessions)) {
-    return <ErrorState description={messages.fitHistory.emptyDescription} />;
-  }
-
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">
-          {messages.fitHistory.title}
+    <div className="min-w-0 space-y-6">
+      <header>
+        <h1 className="font-display text-3xl font-extrabold tracking-tight text-foreground [overflow-wrap:anywhere] sm:text-[44px]">
+          {text.title}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {messages.fitHistory.subtitle}
+        <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+          {text.subtitle}
         </p>
-      </div>
+      </header>
 
-      {groupedSessions.length === 0 ? (
+      {sessions === undefined ? (
+        <div role="status" aria-busy="true" className="rounded-[28px] border border-border bg-card p-6">
+          <LoadingState label={text.loading} />
+        </div>
+      ) : !Array.isArray(sessions) ? (
+        <ErrorState title={text.errorTitle} description={text.errorDescription} />
+      ) : groupedSessions.length === 0 ? (
         <EmptyState
-          title={messages.fitHistory.emptyTitle}
-          description={messages.fitHistory.emptyDescription}
+          className="rounded-[28px] border-border bg-card px-5 py-12 shadow-none sm:py-16"
+          title={text.emptyTitle}
+          description={text.emptyDescription}
           action={
-            <Button render={<Link href={withLocalePrefix("/fit", locale)} />}>
-              {messages.fitHistory.emptyCta}
+            <Button role="link" className="whitespace-normal" render={<Link href={withLocalePrefix("/fit", locale)} />}>
+              {text.emptyCta}
             </Button>
           }
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {groupedSessions.map((group) => (
             <BikeWithFitHistory
               key={group.bike?._id ?? group.entries[0]?.session._id}
