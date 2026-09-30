@@ -99,3 +99,20 @@ The second command builds the actual shared Slider with development React and co
 and hydrated text in NL/EN browsers using the original failing route defaults (2105 mm, 8.5 kg).
 It writes `25d-slider-hydration.json`, including the full non-minified message and component stack.
 An optional positional repository/saved-snapshot path reproduces an earlier source version.
+
+## 29d: HTTPS preview
+
+The production preview now serves HTTPS on loopback. Each run generates a one-day self-signed
+certificate using the installed `openssl`, under a private OS temporary directory. Shutdown removes
+its key/certificate; nothing is installed in a trust store or written into the repository.
+Node readiness, sitemap and fixture-asset requests trust that certificate only for the exact preview
+origin, retaining hostname validation. Other origins use normal fetch/TLS verification.
+Production Playwright contexts set `ignoreHTTPSErrors: true` for this throwaway certificate; fixture
+contexts retain normal certificate checking. This limits certificate-chain verification in those
+production contexts, including their subrequests, so the sweep does not certify deployment TLS.
+
+Production CSP remains unchanged, including `upgrade-insecure-requests`. Login redirects and Next
+prefetch requests now have a real HTTPS endpoint. SSL/protocol errors are not classified away or
+suppressed: ordinary console/page error checks still fail on them. Do not set
+`NODE_TLS_REJECT_UNAUTHORIZED=0`. Fixture servers continue to serve their own pages over loopback HTTP
+and retrieve production assets with the scoped certificate-aware GET adapter.

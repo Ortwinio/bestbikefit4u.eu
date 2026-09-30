@@ -5,9 +5,11 @@ import { readFile } from "node:fs/promises";
 import { resolve, extname } from "node:path";
 
 /** Actual account components with deterministic read-only Convex/auth fixtures from batch 20. */
-export async function prepareAccountFixtures({ root = process.cwd(), origin, port = 0 } = {}) {
+export async function prepareAccountFixtures({
+  root = process.cwd(), origin, fetch: previewFetch = fetch, port = 0,
+} = {}) {
   if (!origin) throw new Error("Account fixtures require the running production origin");
-  const loginResponse = await fetch(new URL("/nl/login", origin));
+  const loginResponse = await previewFetch(new URL("/nl/login", origin));
   if (!loginResponse.ok) throw new Error(`Cannot load production CSS: login HTTP ${loginResponse.status}`);
   const loginHtml = await loginResponse.text();
   const cssPaths = [
@@ -17,7 +19,7 @@ export async function prepareAccountFixtures({ root = process.cwd(), origin, por
   const styles = (
     await Promise.all(
       cssPaths.map(async (path) => {
-        const response = await fetch(new URL(path, origin));
+        const response = await previewFetch(new URL(path, origin));
         if (!response.ok) throw new Error(`Production CSS returned ${response.status}: ${path}`);
         return response.text();
       }),
@@ -115,7 +117,7 @@ export async function prepareAccountFixtures({ root = process.cwd(), origin, por
         return;
       }
       if (url.pathname.startsWith("/_next/")) {
-        const remote = await fetch(new URL(url.pathname + url.search, origin));
+        const remote = await previewFetch(new URL(url.pathname + url.search, origin));
         response.statusCode = remote.status;
         response.setHeader("content-type", remote.headers.get("content-type") || "application/octet-stream");
         response.end(Buffer.from(await remote.arrayBuffer()));

@@ -6,16 +6,16 @@ import { resolve, extname } from "node:path";
 const escapeAttribute = (value) => value.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
 
 /** Runs the existing article components with the established CMS fixture, without editing app files. */
-export async function prepareBlogFixture({ root, origin, port = 0 }) {
+export async function prepareBlogFixture({ root, origin, fetch: previewFetch = fetch, port = 0 }) {
   const folder = resolve(root, "tests/visual/marketing-batch3");
-  const login = await fetch(new URL("/nl/login", origin));
+  const login = await previewFetch(new URL("/nl/login", origin));
   if (!login.ok) throw new Error(`Cannot load production styles: login returned ${login.status}`);
   const loginHtml = await login.text();
   const cssPaths = [...new Set([...loginHtml.matchAll(/href="([^" ]+\.css(?:\?[^" ]*)?)"/g)]
     .map((match) => match[1]))];
   if (!cssPaths.length) throw new Error("No Next CSS found for the blog visual fixture");
   const styles = (await Promise.all(cssPaths.map(async (path) => {
-    const response = await fetch(new URL(path, origin));
+    const response = await previewFetch(new URL(path, origin));
     if (!response.ok) throw new Error(`Production stylesheet returned ${response.status}: ${path}`);
     return response.text();
   }))).join("\n");
@@ -77,7 +77,7 @@ export async function prepareBlogFixture({ root, origin, port = 0 }) {
         return;
       }
       if (pathname.startsWith("/_next/") || extname(pathname)) {
-        const remote = await fetch(new URL(pathname + url.search, origin));
+        const remote = await previewFetch(new URL(pathname + url.search, origin));
         response.statusCode = remote.status;
         response.setHeader("content-type", remote.headers.get("content-type") || "application/octet-stream");
         response.end(Buffer.from(await remote.arrayBuffer()));

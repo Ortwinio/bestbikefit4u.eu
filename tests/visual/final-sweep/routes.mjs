@@ -152,8 +152,8 @@ export function resolveRoutes({ blogSlug } = {}) {
 export const routes = resolveRoutes();
 
 /** Read only the app's public sitemap; never use credentials or mutate CMS content. */
-export async function discoverBlogSlug(baseURL) {
-  const response = await fetch(new URL("/sitemap-blog.xml", baseURL), { signal: AbortSignal.timeout(15000) });
+export async function discoverBlogSlug(baseURL, previewFetch = fetch) {
+  const response = await previewFetch(new URL("/sitemap-blog.xml", baseURL), { signal: AbortSignal.timeout(15000) });
   if (!response.ok) throw new Error(`Blog sitemap returned HTTP ${response.status}`);
   const xml = await response.text();
   for (const match of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) {
