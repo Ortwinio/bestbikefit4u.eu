@@ -35,7 +35,8 @@ no separate save step. "Verzet" does not work well now. Check every page behind 
   again on the next visit. Backend change allowed but minimal and ownership-checked
   (`requireUserId` / `requireBikeOwner`), with Convex tests; no schema change unless unavoidable
   (then tell the lead first). Also apply the contract to your other account tools: settings,
-  pressure-calculator, saddle-selector, shoe-cleat-fit, feedback where values are edited.
+  saddle-selector, shoe-cleat-fit, feedback where values are edited. (The pressure calculator behind
+  the login moved to task 42, Codex A.)
 - **41b — Codex B:** "Mijn profiel" (all blocks: body measurements, extra measurements, flexibility,
   core, comfort/pain areas), the dashboard profile tiles if editable, and other B-owned account pages
   (fit flow drafts, results where values are edited). Remove the Bewerken/Opslaan pattern. Use C's
@@ -54,3 +55,30 @@ no separate save step. "Verzet" does not work well now. Check every page behind 
   `code-renders/41<x>-*`. Sweep with `--filter` on the changed routes (a11y, 44px, no overflow).
 - `npm run lint`, `npm run typecheck`, focused tests. Notes + `files-41<x>.txt`. No commit.
   Print **DONE 41a / 41b / 41c**.
+
+## 42 — Tire pressure calculator behind the login = the public calculator (Codex A)
+
+Request (Ortwin, 2026-09-30): the logged-in pressure calculator (`src/app/(dashboard)/pressure-calculator`,
+now a multi-step `PressureWizard`) looks very different from the public one
+(`src/app/(public)/bandenspanning-calculator` → `components/features/pressure/PressureCalculatorForm`).
+Make the logged-in version the same design and interaction as the public calculator, with one
+difference: values are remembered and saved, so they are correct after logging in again.
+
+- Reuse `PressureCalculatorForm` (add props such as `initialValues`, `onValuesChange`, optional header
+  slot) instead of a second implementation; the public page must look and behave exactly as today.
+- Add a bike selector (the user's bikes; none → the form still works and saves without a bike).
+- Prefill per selected bike from the latest saved calculation
+  (`api.pressureCalculations.queries.getLatestByBikeForUser`), else from the profile weight and the
+  bike's tire setup, else the public defaults.
+- Autosave per the 41 contract (C's shared primitives after the lead confirms DONE 41a; until then
+  build layout, prefill and tests). Save the current inputs and the result for that bike; update rather
+  than create a new row per slider move if the backend allows (check `pressureCalculations` mutations;
+  minimal, ownership-checked change with Convex tests if needed; no schema change without the lead).
+- Keep what the logged-in page offers beyond the public one (per-bike overview/cards, stale-pressure
+  warning, dashboard links) below or beside the form, in the canvas style.
+- Remove `PressureWizard` from this page if nothing else uses it (check first).
+- Ownership for this task: A owns `src/app/(dashboard)/pressure-calculator/*` and may add props to
+  `components/features/pressure/PressureCalculatorForm*` (C is informed); keep the public page tests green.
+- Acceptance: side-by-side screenshots public vs logged-in (NL/EN, 1440/390, light/dark), reload/relogin
+  test shows the saved values, focused tests, lint, typecheck, sweep `--filter=/pressure-calculator,/bandenspanning-calculator`.
+  Notes `audit/42-notes.md`, `files-42.txt`, print **DONE 42**.
