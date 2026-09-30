@@ -21,31 +21,37 @@ import {
   bikeDefaults,
   climbPlan,
   ftpEstimate,
+  ftpRating,
   fuelTimeline,
+  fuelHydration,
+  type SweatLevel,
   powerAtSpeed,
   powerSplit,
   speedAtPower,
-  PROPOSED_RANGES,
+  TOOL_RANGES,
   type FtpMethod,
   type PerformanceBike,
   type PerformanceSurface,
 } from "@/lib/public-calculators/performance";
 
+import { FtpRatings, FuelHeadline, FuelResults, Sources } from "./SourcedResults";
+
 // Shared only by these four public routes; all calculations live in performance.ts.
 export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale: Locale }) {
   const copy = performanceMessages[locale];
-  const [values, setValues] = useState<Record<keyof typeof PROPOSED_RANGES, number>>(
+  const [values, setValues] = useState<Record<keyof typeof TOOL_RANGES, number>>(
     () =>
       Object.fromEntries(
-        Object.entries(PROPOSED_RANGES).map(([key, range]) => [key, range.initial]),
-      ) as Record<keyof typeof PROPOSED_RANGES, number>,
+        Object.entries(TOOL_RANGES).map(([key, range]) => [key, range.initial]),
+      ) as Record<keyof typeof TOOL_RANGES, number>,
   );
   const [bike, setBike] = useState<PerformanceBike>("road");
   const [surface, setSurface] = useState<PerformanceSurface>("road");
   const [mode, setMode] = useState<"power" | "speed">("power");
+  const [comparison, setComparison] = useState<"both" | "men" | "women">("both");
   const [method, setMethod] = useState<FtpMethod>("known");
   const [intensity, setIntensity] = useState("endurance");
-  const [sweat, setSweat] = useState("normal");
+  const [sweat, setSweat] = useState<SweatLevel>("medium");
   const [edited, setEdited] = useState(false);
   const format = (value: number, digits = 1) =>
     new Intl.NumberFormat(locale, {
@@ -71,9 +77,18 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
   });
   const ftp = ftpEstimate(method, values[method === "known" ? "ftp" : method], values.riderMass);
   const fuel = tool === "fuel-hydration";
+  const guidance = fuelHydration({
+    durationHours: values.duration,
+    temperatureC: values.temperature,
+    sweat,
+    bottleSizeMl: values.bottleSize,
+  });
   const timeline = fuelTimeline(values.duration, values.temperature);
+  const carbs = guidance.carbohydrate;
+  const fuelValue = carbs.band === "none" ? copy.noCarbs : carbs.gramsPerHour === null ? copy.smallCarbs
+    : `${copy.upTo} ${format(carbs.gramsPerHour)}`;
   const mainValue = fuel
-    ? format(values.duration, 2)
+    ? fuelValue
     : tool === "ftp-wkg"
       ? format(ftp.wattsPerKg, 2)
       : tool === "climb-planner"
@@ -82,7 +97,7 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
           : format(climb.minutes)
         : format(mode === "power" ? speed : watts);
   const unit = fuel
-    ? copy.hour
+    ? carbs.gramsPerHour && carbs.band !== "none" ? copy.carbsPerHour : ""
     : tool === "ftp-wkg"
       ? "W/kg"
       : tool === "climb-planner"
@@ -91,7 +106,7 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
           ? copy.kmh
           : "W";
   const metric = fuel
-    ? copy.duration
+    ? copy.carbohydrate
     : tool === "ftp-wkg"
       ? copy.wattsPerKg
       : tool === "climb-planner"
@@ -107,14 +122,14 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
         : null;
   const resultId = `${tool}-result`;
 
-  function slider(key: keyof typeof PROPOSED_RANGES, unit: string) {
+  function slider(key: keyof typeof TOOL_RANGES, unit: string) {
     return (
       <Slider
         key={key}
         label={copy[key]}
-        min={PROPOSED_RANGES[key].min}
-        max={PROPOSED_RANGES[key].max}
-        step={PROPOSED_RANGES[key].step}
+        min={TOOL_RANGES[key].min}
+        max={TOOL_RANGES[key].max}
+        step={TOOL_RANGES[key].step}
         value={values[key]}
         valueLabel={format(values[key], 2)}
         unit={unit}
@@ -195,10 +210,11 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
               </>
             )}
           </StepCard>
-          <StepCard number={2} title={fuel ? copy.conditions : copy.rider}>
+          <StepCard number={2} title={fuel ? copy.fuelConditions : copy.rider}>
             {fuel ? (
               <>
                 {slider("temperature", "°C")}
+                {slider("bottleSize", "ml")}
                 {choices(copy.sweat, copy.sweats, sweat, setSweat)}
               </>
             ) : (
@@ -227,11 +243,16 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
       results={
         <>
           <div id={resultId} className="scroll-mt-8">
-            <ResultHero
+            {fuel ? (
+              <FuelHeadline locale={locale} carbohydrate={carbs} durationHours={values.duration}
+                fluid={guidance.fluidLitresPerHour} />
+            ) : <ResultHero
               label={edited ? metric : `${copy.example} · ${metric}`}
               value={mainValue}
-              unit={unit}
-              subtext={fuel ? copy.pendingBody : copy.noWind}
+              unit={tool === "ftp-wkg" && comparison !== "both"
+                ? `${unit} · ${copy.comparisons[comparison]} · ${copy.ratings[ftpRating(ftp.wattsPerKg, comparison)]}`
+                : unit}
+              subtext={fuel ? copy.fuelStart : copy.noWind}
             >
               {isLimited && (
                 <p role="status" className="font-bold">
@@ -262,16 +283,10 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
                   />
                 </svg>
               )}
-              {fuel && (
-                <div className="rounded-2xl bg-[var(--bbf-wit)] p-4 text-[var(--bbf-inkt)]">
-                  <h2 className="font-display text-2xl font-bold text-[var(--bbf-inkt)]">{copy.pending}</h2>
-                  <p className="mt-2">{copy.noAmounts}</p>
-                </div>
-              )}
-            </ResultHero>
+            </ResultHero>}
           </div>
           <p role="status" aria-label={metric} aria-live="polite" aria-atomic="true" className="sr-only">
-            {metric}: {mainValue} {unit}. {isLimited ? copy.capped : fuel ? copy.pending : ""}
+            {metric}: {mainValue} {unit}. {isLimited ? copy.capped : fuel ? copy.fuelStart : ""}
           </p>
           {tool === "power-speed" && (
             <section className="rounded-3xl border border-border bg-card p-6">
@@ -320,6 +335,7 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
           )}
           {tool === "ftp-wkg" && (
             <>
+              <FtpRatings locale={locale} wattsPerKg={ftp.wattsPerKg} onComparisonChange={setComparison} />
               <ResultTile label={copy.ftpResult} value={format(ftp.ftpWatts)} unit="W" />
               <div className="grid grid-cols-2 gap-3">
                 <ResultTile
@@ -335,10 +351,12 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
                 />
               </div>
               <p className="px-2 text-sm text-muted-foreground">
-                {copy.reference} {copy.noRanking}
+                {copy.reference}
               </p>
             </>
           )}
+          {fuel && <FuelResults locale={locale} guidance={guidance} easy={intensity === "easy"} />}
+          {(fuel || tool === "ftp-wkg") && <Sources locale={locale} fuel={fuel} />}
           {fuel && (
             <section className="rounded-3xl border border-border bg-card p-6">
               <h2 className="font-display text-2xl font-bold">{copy.timeline}</h2>
@@ -375,8 +393,9 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
       }
       stickyResult={
         <a href={`#${resultId}`} className="flex min-h-11 items-center justify-between gap-3">
-          <span className="min-w-0 text-sm font-bold">{fuel ? copy.pending : copy.resultLink}</span>
-          <span className="shrink-0 font-mono text-2xl">
+          <span className="min-w-0 text-sm font-bold">{copy.resultLink}</span>
+          <span className={fuel && carbs.gramsPerHour === null
+            ? "min-w-0 flex-1 text-right font-mono text-sm" : "shrink-0 font-mono text-2xl"}>
             {isLimited ? "≥ " : ""}
             {mainValue}
             <span className="ml-1 text-sm text-muted-foreground">{unit}</span>

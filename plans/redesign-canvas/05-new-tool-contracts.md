@@ -4,6 +4,14 @@
 
 Reading key: **[ENGINE]** = the value comes from existing code (file:line). **[VOORSTEL]** = a proposal by the lead, to be approved by Ortwin. On a board, show [VOORSTEL] values normally, but put the comment `// VOORSTEL-CONTRACT (05) — nog geen engine` above the formula.
 
+**Approval 2026-09-30 (Ortwin):** all proposed tool ranges and FTP conversion factors below are approved.
+The original `[VOORSTEL]` labels and source-selection placeholders are retained as design history,
+not outstanding approval requirements. [30-tool-sources.md](30-tool-sources.md) supersedes the old
+FTP-level-table prohibition and fuel placeholders with the selected sources and exact output bands.
+Production names are `TOOL_RANGES` and `FTP_TEST_FACTORS`; the bottle slider is 500–750 ml, default 500 ml.
+The 0.95 twenty-minute factor is the Allen & Coggan convention; 0.75 of final-minute ramp power is
+the common ramp-test convention. Neither factor is an individual physiological measurement.
+
 ## Shared physics [ENGINE]
 
 `src/lib/gearing-engine/math.ts:175` `calculateClimbPowerWatts` and `:197` `solveSpeedForPowerWatts`:
