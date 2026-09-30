@@ -2,6 +2,7 @@
 import { Progress } from "@/components/ui";
 import { cn } from "@/utils/cn";
 import { flexibilityTests } from "@/lib/validations/profile";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 type FlexibilityScore = (typeof flexibilityTests)[number]["score"];
 
@@ -31,6 +32,7 @@ export function FlexibilityScale({
   score: FlexibilityScore;
   className?: string;
 }) {
+  const { messages } = useDashboardMessages();
   const meta = getFlexibilityMeta(score);
 
   return (
@@ -44,6 +46,7 @@ export function FlexibilityScale({
         </span>
       </div>
       <Progress
+        label={messages.profile.sections.flexibility}
         value={meta.index * 20}
         indicatorClassName={meta.indicatorClassName}
       />
