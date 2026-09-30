@@ -253,7 +253,7 @@ export function FeedbackAccountPage() {
                           </div>
                           <button
                             type="button"
-                            className="text-left font-display text-2xl font-bold text-foreground hover:underline"
+                            className="min-h-11 text-left font-display text-2xl font-bold text-foreground hover:underline"
                             onClick={() => {
                               trackFeedbackSignal(
                                 pathname ?? "/feedback",

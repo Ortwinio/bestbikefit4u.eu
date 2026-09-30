@@ -19,6 +19,11 @@ describe("tooltip rendering and a11y wiring", () => {
     expect(html).toContain('data-slot="tooltip-trigger"');
     expect(html).toContain("Helpful guidance for this field.");
     expect(html).toContain('id="tooltip-desc-test"');
+    const trigger = html.match(/<button[^>]*>/)?.[0];
+    expect(trigger).toContain("min-h-11");
+    expect(trigger).toContain("min-w-11");
+    expect(trigger).toContain("shrink-0");
+    expect(html).toMatch(/<svg[^>]*class="[^"]*h-4 w-4/);
   });
 
   it("associates input aria-describedby with tooltip description", () => {

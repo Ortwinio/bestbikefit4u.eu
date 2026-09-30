@@ -18,13 +18,14 @@ const selectTriggerVariants = cva(
     "disabled:status-disabled",
     "motion-reduce:transition-none",
     "no-highlight",
+    "min-h-11",
     "motion-safe:active:scale-[0.97]",
     "[&>span]:line-clamp-1",
   ],
   {
     variants: {
       size: {
-        default: "h-9",
+        default: "h-11",
         sm: "h-8 px-2 text-xs",
         lg: "h-10 px-4",
       },

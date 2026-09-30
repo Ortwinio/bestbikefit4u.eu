@@ -1,5 +1,11 @@
 # Redesign canvas — BestBikeFit4U
 
+2026-09-30 — Codex B completed **29b account mobile targets**: gearing summaries
+and feedback titles now have 44px minimum targets. Settings verified against C's
+shared Input fix without a local change. 15 tests, full lint and 16 filtered sweep
+cases pass, including NL/EN 390. Notes: `audit/29b-notes.md`; files: `audit/files-29b.txt`.
+No commit or push.
+
 2026-09-30 — Codex B completed **27.1 visual corrections**: Dutch core heading,
 numeric mono typography, padded range bands, bike pills and usage chips. Fixed
 fixture font URL resolution; 56 focused tests and 72 real-font captures pass.
@@ -180,3 +186,8 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
   canvas order 1,6,2,5,3,4, existing reportV2 data, NL/EN and embedded local fonts. Missing data
   is omitted; D measurement reference corrected to match the engine. Gates and actual PDF QA
   recorded in `audit/26-notes.md`; exact manifest `audit/files-26.txt`. No commit or push.
+
+- 2026-09-30 — **29a implemented by C; awaiting lead review.** Shared Tooltip/Input/Select minimum
+  targets are 44px; icon and larger overrides preserved. Owned mobile cases: 10 failures/18 small
+  targets → 0. Combined B/C/D sweep: 280 cases without failures. Proof `audit/29a-notes.md`;
+  manifest `audit/files-29a.txt`. No commit/push by C.
