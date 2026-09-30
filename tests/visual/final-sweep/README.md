@@ -22,6 +22,10 @@ false, and builds a copied source tree under the OS temporary directory. Only th
 receives `distDir: ".next-final-sweep"`; repository app/config/env files and `.next` are not changed.
 The source and public build-environment fingerprint determines the cache directory.
 Matching successful builds are reused.
+Build inputs include `tests/fixtures`, which source PDF tests import during Next's TypeScript check,
+alongside the existing external source dependencies in `convex` and `shared`.
+The same input list controls copying and hashing: fixture additions, edits and deletions invalidate
+the cached build. Visual harness scripts are copied separately after the build and refreshed on reuse.
 Production startup uses the established custom Next server and a dedicated local port (4321).
 The same snapshot produced a self-redirect loop with `next start`; the custom server returned 200.
 This harness validates that preview topology, not a deployed router or CDN. Fixture imports resolve

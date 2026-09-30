@@ -1,0 +1,5 @@
+tests/visual/final-sweep/production.mjs
+tests/visual/final-sweep/production.test.mjs
+tests/visual/final-sweep/README.md
+plans/redesign-canvas/audit/25-d-notes.md
+plans/redesign-canvas/audit/files-25-f.txt
