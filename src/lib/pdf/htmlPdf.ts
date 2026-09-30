@@ -4,6 +4,7 @@ type RenderPdfFromHtmlParams = {
   html: string;
   headerTemplate?: string;
   footerTemplate?: string;
+  pageLayout?: "fixed-a4";
 };
 
 export type PdfRenderStrategy = "playwright" | "serverless-chromium";
@@ -16,9 +17,9 @@ export type RenderPdfFromHtmlResult = {
 function isServerlessRuntime() {
   return Boolean(
     process.env.VERCEL ||
-      process.env.AWS_REGION ||
-      process.env.AWS_EXECUTION_ENV ||
-      process.env.LAMBDA_TASK_ROOT
+    process.env.AWS_REGION ||
+    process.env.AWS_EXECUTION_ENV ||
+    process.env.LAMBDA_TASK_ROOT,
   );
 }
 
@@ -50,9 +51,7 @@ async function launchBrowser() {
   };
 }
 
-export async function renderPdfFromHtml(
-  params: RenderPdfFromHtmlParams
-): Promise<RenderPdfFromHtmlResult> {
+export async function renderPdfFromHtml(params: RenderPdfFromHtmlParams): Promise<RenderPdfFromHtmlResult> {
   const { html, headerTemplate, footerTemplate } = params;
 
   const { browser, strategy } = await launchBrowser();
@@ -79,18 +78,23 @@ export async function renderPdfFromHtml(
       }
     });
     await page.setContent(html, { waitUntil: "networkidle" });
+    await page.evaluate(() => document.fonts.ready);
+    const fixedPages = params.pageLayout === "fixed-a4";
     const pdf = await page.pdf({
+      preferCSSPageSize: fixedPages,
       format: "A4",
       printBackground: true,
-      displayHeaderFooter: Boolean(headerTemplate || footerTemplate),
+      displayHeaderFooter: !fixedPages && Boolean(headerTemplate || footerTemplate),
       headerTemplate: headerTemplate ?? "<div></div>",
       footerTemplate: footerTemplate ?? "<div></div>",
-      margin: {
-        top: headerTemplate ? "28mm" : "18mm",
-        right: "18mm",
-        bottom: footerTemplate ? "24mm" : "16mm",
-        left: "18mm",
-      },
+      margin: fixedPages
+        ? { top: "0", right: "0", bottom: "0", left: "0" }
+        : {
+            top: headerTemplate ? "28mm" : "18mm",
+            right: "18mm",
+            bottom: footerTemplate ? "24mm" : "16mm",
+            left: "18mm",
+          },
     });
 
     return {

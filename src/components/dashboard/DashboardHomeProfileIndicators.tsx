@@ -1,72 +1,45 @@
 import type { Doc } from "../../../convex/_generated/dataModel";
-import { Progress } from "@/components/ui";
 import type { Locale } from "@/i18n/config";
 import type { DashboardMessages } from "@/i18n/dashboardMessages";
-import { coreStabilityTests, flexibilityTests } from "@/lib/validations/profile";
+import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
+import { deriveComfortScore, flexibilityTests } from "@/lib/validations/profile";
+import { getDashboardReportCopy } from "@/i18n/account/dashboardReport";
+import { DashboardNumber } from "./DashboardNumber";
 
-const dutchFlexibility = [
-  ["Zeer beperkt", "Je reikt zittend met gestrekte benen niet tot je knieën."],
-  ["Beperkt", "Je reikt zittend tot halverwege je schenen."],
-  ["Gemiddeld", "Je kunt zittend je enkels aanraken."],
-  ["Goed", "Je kunt zittend je tenen aanraken."],
-  ["Uitstekend", "Je reikt zittend voorbij je tenen."],
-];
-
-const dutchCore = [
-  ["Zeer laag", "Plank minder dan 20 seconden vasthouden."],
-  ["Laag", "Plank 20–40 seconden vasthouden."],
-  ["Gemiddeld", "Plank 40–60 seconden vasthouden."],
-  ["Goed", "Plank 60–90 seconden vasthouden."],
-  ["Uitstekend", "Plank 90+ seconden vasthouden met een goede houding."],
-];
-
-export function DashboardHomeProfileIndicators({ profile, locale, messages }: {
-  profile: Pick<Doc<"profiles">, "flexibilityScore" | "coreStabilityScore">;
+export function DashboardHomeProfileIndicators({ profile, locale }: {
+  profile: Pick<Doc<"profiles">, "flexibilityScore" | "coreStabilityScore" | "hasPain" | "painSeverity">;
   locale: Locale;
   messages: DashboardMessages;
 }) {
-  const flexibilityIndex = flexibilityTests.findIndex((test) => test.score === profile.flexibilityScore);
-  const coreIndex = Math.max(1, Math.min(5, profile.coreStabilityScore)) - 1;
-  const flexibility = flexibilityTests[flexibilityIndex];
-  const core = coreStabilityTests[coreIndex];
+  const copy = getReportV2Copy(locale);
   const indicators = [
-    {
-      title: messages.profile.sections.flexibility,
-      score: flexibilityIndex + 1,
-      label: locale === "nl" ? dutchFlexibility[flexibilityIndex][0] : flexibility.label,
-      description: locale === "nl" ? dutchFlexibility[flexibilityIndex][1] : flexibility.description,
-      segmented: false,
-    },
-    {
-      title: messages.profile.sections.coreStability,
-      score: coreIndex + 1,
-      label: locale === "nl" ? dutchCore[coreIndex][0] : core.label,
-      description: locale === "nl" ? dutchCore[coreIndex][1] : core.description,
-      segmented: true,
-    },
+    { key: "flexibility" as const,
+      score: flexibilityTests.findIndex((test) => test.score === profile.flexibilityScore) + 1 },
+    { key: "coreStability" as const, score: profile.coreStabilityScore },
+    { key: "comfort" as const, score: profile.hasPain === undefined && profile.painSeverity === undefined
+      ? null : deriveComfortScore(profile.hasPain, profile.painSeverity) },
   ];
 
-  return (
-    <div className="grid gap-6 pt-2 md:grid-cols-2">
-      {indicators.map((indicator) => (
-        <section key={indicator.title} aria-label={indicator.title} className="min-w-0 space-y-3">
-          <h3 className="font-display text-xl font-bold">{indicator.title}</h3>
+  return <div className="grid gap-6 pt-2 md:grid-cols-3">
+    {indicators.map(({ key, score }) => {
+      const meta = copy.scoreMeta[key];
+      const title = key === "coreStability" ? getDashboardReportCopy(locale).coreStability : meta.title;
+      const validScore = score != null && score >= 1 && score <= 5 ? score as 1 | 2 | 3 | 4 | 5 : null;
+      return <section key={key} aria-label={title} className="min-w-0 space-y-3">
+        <h3 className="font-display text-xl font-bold">{title}</h3>
+        {validScore ? <>
           <div className="flex items-baseline justify-between gap-3">
-            <p className="font-semibold">{indicator.label}</p>
-            <span className="font-mono text-sm">{indicator.score}/5</span>
+            <p className="font-semibold">{meta.labels[validScore]}</p>
+            <span className="text-sm"><DashboardNumber value={`${validScore}/5`} /></span>
           </div>
-          {indicator.segmented ? (
-            <div role="meter" aria-label={indicator.title} aria-valuenow={indicator.score} aria-valuemin={0} aria-valuemax={5} className="flex gap-2">
-              {[1, 2, 3, 4, 5].map((segment) => (
-                <span key={segment} className={`h-2.5 flex-1 rounded-full ${segment <= indicator.score ? "bg-[var(--bbf-lime)]" : "bg-border"}`} />
-              ))}
-            </div>
-          ) : (
-            <Progress value={indicator.score} max={5} label={indicator.title} trackClassName="h-2.5" indicatorClassName="bg-[var(--bbf-lime)]" />
-          )}
-          <p className="text-sm leading-relaxed text-muted-foreground">{indicator.description}</p>
-        </section>
-      ))}
-    </div>
-  );
+          <div role="meter" aria-label={title} aria-valuenow={validScore}
+            aria-valuemin={1} aria-valuemax={5} className="flex gap-2">
+            {[1, 2, 3, 4, 5].map((segment) => <span key={segment}
+              className={`h-2.5 flex-1 rounded-sm ${segment <= validScore ? "bg-primary" : "border border-border"}`} />)}
+          </div>
+          <p className="text-sm leading-relaxed text-muted-foreground">{meta.descriptions[validScore]}</p>
+        </> : <p className="text-sm text-muted-foreground">{getDashboardReportCopy(locale).missing}</p>}
+      </section>;
+    })}
+  </div>;
 }

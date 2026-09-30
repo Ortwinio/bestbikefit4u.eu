@@ -16,12 +16,14 @@ import {
 } from "@/components/ui";
 import { DashboardMessageSurface } from "@/components/dashboard-messages";
 import {
-  BikeGarageRow,
   buildLatestFitByBike,
 } from "@/components/bikes/BikeGarageOverview";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { DashboardHomeProfileIndicators } from "@/components/dashboard/DashboardHomeProfileIndicators";
+import { DashboardReportBike } from "@/components/dashboard/DashboardReportBike";
+import { getDashboardReportCopy } from "@/i18n/account/dashboardReport";
 import garageStyles from "@/components/dashboard/DashboardBikeGarage.module.css";
+import numberStyles from "@/components/dashboard/DashboardNumbers.module.css";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import {
@@ -32,6 +34,7 @@ import { ArrowRight, Plus, User, Bike } from "lucide-react";
 
 export default function DashboardPage() {
   const { locale, messages } = useDashboardMessages();
+  const copy = getDashboardReportCopy(locale);
   const profile = useQuery(api.profiles.queries.getMyProfile);
   const user = useQuery(api.users.queries.getCurrentUser);
   const bikes = useQuery(api.bikes.queries.listSummariesByUser);
@@ -59,7 +62,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-w-0 space-y-6">
+    <div className={`${numberStyles.scope} min-w-0 space-y-6`}>
       <DashboardMessageSurface showBanners={false} showModal={false} />
 
       <header className="flex min-w-0 flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
@@ -114,7 +117,7 @@ export default function DashboardPage() {
         <CardContent className="gap-5">
           {profile ? (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 <MeasurementTile
                   label={messages.profile.measurements.height}
                   value={profile.heightCm}
@@ -133,6 +136,13 @@ export default function DashboardPage() {
                   unit="kg"
                   className="rounded-2xl border-0 bg-background p-3 [&_dd]:text-2xl"
                 />
+                <div className="rounded-2xl border border-dashed border-border p-3">
+                  <p className="text-sm text-muted-foreground">{copy.extra}</p>
+                  <p className="mt-2 font-semibold">
+                    {[profile.torsoLengthCm, profile.armLengthCm, profile.shoulderWidthCm, profile.femurLengthCm]
+                      .every((value) => value != null) ? copy.complete : copy.missing}
+                  </p>
+                </div>
                 {profile.weightKg == null ? (
                   <div className="rounded-2xl bg-background p-3">
                     <p className="text-sm text-muted-foreground">{messages.dashboardHome.weightLabel}</p>
@@ -143,6 +153,11 @@ export default function DashboardPage() {
                 ) : null}
               </div>
               <DashboardHomeProfileIndicators profile={profile} locale={locale} messages={messages} />
+              {[profile.torsoLengthCm, profile.armLengthCm, profile.shoulderWidthCm, profile.femurLengthCm]
+                .some((value) => value == null) && <div className="rounded-2xl bg-accent p-4 text-accent-foreground">
+                <p className="font-semibold">{copy.improve}</p>
+                <p className="mt-1 text-sm">{copy.improveBody}</p>
+              </div>}
             </div>
           ) : (
             <InfoBox
@@ -207,11 +222,9 @@ export default function DashboardPage() {
               <div className="space-y-4">
                 {bikes.map((bike) => (
                   <article key={bike._id} aria-label={bike.name} className={garageStyles.row}>
-                    <BikeGarageRow
+                    <DashboardReportBike
                     bike={bike}
                     latestFit={latestFitByBike.get(bike._id) ?? null}
-                    locale={locale}
-                    messages={messages}
                   />
                   </article>
                 ))}

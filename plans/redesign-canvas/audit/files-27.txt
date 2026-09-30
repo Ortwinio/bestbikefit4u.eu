@@ -1,0 +1,17 @@
+src/app/(dashboard)/dashboard/page.tsx
+src/app/(dashboard)/dashboard/page.test.tsx
+src/components/dashboard/DashboardHomeProfileIndicators.tsx
+src/components/dashboard/DashboardHomeProfileIndicators.test.tsx
+src/components/dashboard/DashboardReportBike.tsx
+src/components/dashboard/DashboardFitRange.tsx
+src/components/dashboard/DashboardFitRange.test.tsx
+src/components/dashboard/DashboardNumber.tsx
+src/components/dashboard/DashboardNumber.test.tsx
+src/components/dashboard/DashboardNumbers.module.css
+src/components/dashboard/DashboardBikeGarage.module.css
+src/i18n/account/dashboardReport.ts
+tests/visual/account-batch1/capture.mjs
+tests/visual/account-batch1/runtime.jsx
+plans/redesign-canvas/README.md
+plans/redesign-canvas/audit/27-notes.md
+plans/redesign-canvas/audit/files-27.txt

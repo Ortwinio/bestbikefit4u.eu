@@ -1,4 +1,5 @@
 import { getFunctionName } from "convex/server";
+import { fitResultsSource } from "../../../src/app/(dashboard)/fit/[sessionId]/results/fixture.test-support";
 
 const params = new URLSearchParams(window.location.search);
 export const fixture = params.get("fixture") || "filled";
@@ -19,6 +20,9 @@ const user = {
 const bike = {
   _id: "visual-bike", name: "Endurance racefiets", brand: "Trek", model: "Domane",
   bikeType: "road", ridingStyle: "sportive", primaryGoal: "comfort",
+  currentGeometry: { frameSize: "56" },
+  activeWheelsetSummary: null,
+  activeTireSetupSummary: { widthFrontMm: 28, widthRearMm: 28, tubeType: "tubeless" },
   advisedPressureSummary: {
     createdAt: 1780000000000, recommendedFrontBar: 4.2, recommendedRearBar: 4.5,
     recommendedFrontPsi: 61, recommendedRearPsi: 65, currentFrontBar: 4.2, currentRearBar: 4.5,
@@ -37,8 +41,22 @@ const fit = {
   responses: { experience_level: "intermediate", weekly_hours: "3-6", typical_ride_length: "medium", position_priority: "balanced", road_riding_type: "group", has_pain: "yes", pain_areas: ["lower_back"] },
 };
 const values = {
+  "recommendations/queries:getReportV2": fixture === "report-loading" ? undefined :
+    fixture === "report-missing" ? null : {
+      ...fitResultsSource, session, bike, profile, user,
+      recommendation: { ...fitResultsSource.recommendation,
+        calculatedFit: { ...fitResultsSource.recommendation.calculatedFit, ...fit.recommendation.calculatedFit,
+          saddleHeightRange: { min: 727, max: 739 } },
+        recommendationItems: [] },
+      questionnaireResponses: Object.entries(fit.responses).map(([questionId, response]) => ({ questionId, response })),
+      latestPressureCalculation: fixture === "no-pressure" ? null : {
+        ...fitResultsSource.latestPressureCalculation, ...bike.advisedPressureSummary },
+    },
   "users/queries:getCurrentUser": user,
-  "profiles/queries:getMyProfile": fixture === "loading" ? undefined : fixture === "empty" || fixture === "missing-profile" ? null : fixture === "missing-weight" ? { ...profile, weightKg: undefined } : profile,
+  "profiles/queries:getMyProfile": fixture === "loading" ? undefined :
+    fixture === "empty" || fixture === "missing-profile" ? null :
+      fixture === "missing-weight" ? { ...profile, weightKg: undefined } :
+        fixture === "missing-extra" ? { ...profile, torsoLengthCm: undefined, armLengthCm: undefined } : profile,
   "bikes/queries:listSummariesByUser": fixture === "loading" ? undefined : fixture === "empty" || fixture === "no-bikes" ? empty : [bike],
   "sessions/queries:getAllSessionsWithBikes": fixture === "loading" ? undefined : fixture === "empty" || fixture === "no-fit" ? empty : [fit],
   "sessions/queries:listByUser": fixture === "loading" ? undefined : fixture === "empty" || fixture === "no-fit" ? empty : [session],

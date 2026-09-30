@@ -16,7 +16,15 @@ const port = Number(process.env.VISUAL_PORT || 4317);
 const loginHtml = await (await fetch(`${origin}/nl/login`)).text();
 const cssPaths = [...new Set([...loginHtml.matchAll(/href="([^" ]+\.css)"/g)].map((match) => match[1]))];
 if (!cssPaths.length) throw new Error("No real Next CSS found on local login route");
-const styles = (await Promise.all(cssPaths.map(async (path) => (await fetch(new URL(path, origin))).text()))).join("\n");
+const styles = (await Promise.all(cssPaths.map(async (path) => {
+  const stylesheetUrl = new URL(path, origin);
+  const css = await (await fetch(stylesheetUrl)).text();
+  return css.replace(/url\(["']?([^"')]+)["']?\)/g, (match, asset) => {
+    if (asset.startsWith("data:") || asset.startsWith("#")) return match;
+    const resolved = new URL(asset, stylesheetUrl);
+    return resolved.origin === stylesheetUrl.origin ? `url("${resolved.pathname}${resolved.search}")` : match;
+  });
+}))).join("\n");
 const htmlClass = loginHtml.match(/<html[^>]*class="([^"]+)"/)?.[1] || "";
 const bodyClass = loginHtml.match(/<body[^>]*class="([^"]+)"/)?.[1] || "font-sans";
 const aliases = {
@@ -82,6 +90,11 @@ const cases = [
   { route: "dashboard", state: "empty" },
   { route: "dashboard", state: "loading" },
   { route: "dashboard", state: "missing-weight" },
+  { route: "dashboard", state: "missing-extra" },
+  { route: "dashboard", state: "no-fit" },
+  { route: "dashboard", state: "no-pressure" },
+  { route: "dashboard", state: "report-loading" },
+  { route: "dashboard", state: "report-missing" },
   { route: "profile", state: "filled" },
   { route: "profile", state: "empty" },
   { route: "profile", state: "loading" },
@@ -113,6 +126,14 @@ try {
             (value) => document.documentElement.classList.contains("dark") === (value === "dark"), theme,
           );
           await page.evaluate(() => document.fonts.ready);
+          await page.evaluate(async () => {
+            for (const family of ["DM Mono", "Figtree", "Bricolage Grotesque"]) {
+              const loaded = await document.fonts.load(`500 16px "${family}"`, "178");
+              if (!loaded.length || loaded.some((face) => face.status !== "loaded")) {
+                throw new Error(`Required font did not load: ${family}`);
+              }
+            }
+          });
           if (entry.route === "login" && ["code", "error"].includes(entry.state)) {
             await page.locator('input[type="email"]').fill("visual@example.invalid");
             await page.locator('button[type="submit"]').first().click();
@@ -124,6 +145,9 @@ try {
             width: document.documentElement.scrollWidth,
             headings: [...document.querySelectorAll("h1")].map((node) => node.textContent),
             fonts: { body: getComputedStyle(document.body).fontFamily, heading: document.querySelector("h1") && getComputedStyle(document.querySelector("h1")).fontFamily },
+            numericFonts: [...document.querySelectorAll("main [data-dashboard-number], main dd.font-mono span")]
+              .filter((node) => node.getBoundingClientRect().width > 0)
+              .map((node) => ({ text: node.textContent, family: getComputedStyle(node).fontFamily })),
             queries: window.__visualQueries,
             unknownQueries: window.__visualUnknownQueries,
             sliderControls: [...document.querySelectorAll('[data-slot="slider-control"]')].map((node) => ({ width: node.getBoundingClientRect().width, height: node.getBoundingClientRect().height })),
@@ -137,6 +161,9 @@ try {
               return rect.width > 0 && rect.height > 0 && (rect.width < 44 || rect.height < 44);
             }).map((node) => ({ text: (node.textContent || node.getAttribute("aria-label") || node.getAttribute("type") || "").trim().slice(0, 90), width: Math.round(node.getBoundingClientRect().width), height: Math.round(node.getBoundingClientRect().height) })),
           }));
+          if (entry.route === "dashboard" && metrics.numericFonts.some((item) => !/DM.?Mono/i.test(item.family))) {
+            throw new Error("Dashboard values are not rendered in DM Mono: " + JSON.stringify(metrics.numericFonts));
+          }
           await inspectTheme(page, output, name);
           await page.screenshot({ path: resolve(output, `${name}.png`), fullPage: true, animations: "disabled" });
           if (width === 390) await page.screenshot({ path: resolve(output, `${name}-viewport.png`), animations: "disabled" });
