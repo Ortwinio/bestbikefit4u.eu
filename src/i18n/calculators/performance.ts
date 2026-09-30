@@ -1,5 +1,59 @@
 export const performanceMessages = {
   nl: {
+    bottleSize: "Inhoud van je bidon",
+    fuelConditions: "Weer, zweet en bidon",
+    fuelStart: "Startpunt, test het op training.",
+    carbohydrate: "Koolhydraten",
+    carbsPerHour: "g/uur",
+    upTo: "Tot",
+    noCarbs: "Geen koolhydraten nodig",
+    smallCarbs: "Zeer kleine hoeveelheden of mondspoeling",
+    rideTotal: "Totaal voor je rit",
+    multipleCarbs: "Alleen met meerdere transporteerbare koolhydraten: glucose + fructose.",
+    singleCarbs: "Een enkele koolhydraatbron volstaat.",
+    easyCarbs: "Bij een rustige rit: lager kan volstaan.",
+    fluid: "Vocht per uur",
+    sodium: "Natrium in je drank",
+    sodiumConcentration: "20–30 mmol/L, ca. 460–690 mg per liter",
+    sodiumPerBottle: "Natrium per bidon",
+    sodiumConversion: "Omrekening van de drankconcentratie naar je bidoninhoud, geen hoeveelheid per uur.",
+    fluidContext:
+      "ACSM noemt 0,4–0,8 L/uur als startpunt voor marathonlopers. " +
+      "Dit is geen vaste fietsnorm: pas het aan je rit en je eigen zweetverlies aan.",
+    bandPosition: "Positie binnen de ACSM-bandbreedte, geen meting.",
+    bandReason: "Koel en weinig zweet: onderkant. Warm en veel zweet: bovenkant.",
+    selectedPosition: "Positie op basis van je invoer",
+    bottles: "Bidons voor je rit",
+    bottleMath: "Bidons = vocht per uur × ritduur / bidoninhoud. Een omrekening, geen extra advies.",
+    weigh: "Weeg jezelf voor en na een training om je eigen zweetverlies te leren kennen.",
+    bodyMass: "Pas dit aan op jezelf; probeer meer dan 2% verlies van lichaamsgewicht te voorkomen.",
+    comparison: "Vergelijk met",
+    comparisons: { both: "Beide", men: "Mannen", women: "Vrouwen" },
+    ratingTitle: "Je FTP op de referentieschaal",
+    indication: "Indicatie, geen oordeel. Beide tabellen zijn zichtbaar; kies zelf waarmee je vergelijkt.",
+    rating: "Niveau",
+    ratingPrecision: "Je band gebruikt de ongeronde W/kg-waarde; de getoonde waarde is afgerond.",
+    ratings: {
+      superior: "Uitstekend", excellent: "Zeer goed", good: "Goed", fair: "Redelijk", untrained: "Ongetraind",
+    },
+    yourBand: "Jouw band",
+    sources: "Bronnen",
+    carbSource:
+      "Jeukendrup A. A Step Towards Personalized Sports Nutrition: Carbohydrate Intake During Exercise. " +
+      "Sports Med. 2014;44(Suppl 1):25–33, figuur 1. doi:10.1007/s40279-014-0148-z.",
+    carbSourceUrl: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4008807/",
+    fluidSource:
+      "Sawka MN et al. American College of Sports Medicine position stand. Exercise and fluid replacement. " +
+      "Med Sci Sports Exerc. 2007;39(2):377–390. Pagina 384: vocht als startpunt voor marathonlopers. " +
+      "Pagina 385: 20–30 mEq/L natrium in sportdrank bij langdurige inspanning. " +
+      "Deze tool toont de concentratie voor ritten langer dan een uur.",
+    fluidSourceUrl: "https://doi.org/10.1249/mss.0b013e31802ca597",
+    ftpSource:
+      "Allen H, Coggan A. Training and Racing with a Power Meter. 2e editie. VeloPress, 2010. " +
+      "FTP-niveaus zoals gepubliceerd door Garmin.",
+    ftpSourceUrl:
+      "https://www8.garmin.com/manuals-apac/webhelp/fenix7series/EN-SG/" +
+      "GUID-6C0F3C49-1E05-4AE5-8EC0-367A47C07DAB-4498.html",
     eyebrow: "Gratis fietstools · jouw startpunt",
     titles: {
       "power-speed": "Hoe snel ga je met jouw vermogen?",
@@ -58,25 +112,20 @@ export const performanceMessages = {
     noWind: "Een schatting bij constant vermogen, vaste houding en zonder wind. Test dit op je eigen route.",
     capped: "Je snelheid valt buiten het berekenbare bereik. De getoonde grens is geen exacte schatting.",
     pacing: "Het richtvermogen volgt de lengte van de klim. Houd rekening met je conditie en vermoeidheid.",
-    convention: "Testfactoren geven een schatting. Een testprotocol en je eigen ervaring blijven belangrijk.",
+    convention:
+      "Twintigminutentest: gemiddeld vermogen × 0,95 (Allen & Coggan). " +
+      "Ramptest: vermogen in de laatste minuut × 0,75 (gangbare ramptestconventie). Beide zijn schattingen.",
     reference: "Referentie: racefiets met standaardgewicht, asfalt en geen wind.",
     referenceClimb: "Referentieklim: 5 km met 7% helling",
     flat: "Vlakke weg bij FTP",
-    noRanking: "Er is nog geen onderbouwde niveautabel beschikbaar. Vergelijk vooral je eigen ontwikkeling.",
-    pending: "Advies volgt",
-    pendingBody:
-      "Je rit staat klaar. Hoeveelheden voor eten en drinken volgen zodra " +
-      ("de gebruikte richtlijnen zijn bevestigd. Deze tijdlijn geeft alleen het verloop van " +
-        "je rit weer."),
     intensity: "Intensiteit",
     intensities: { easy: "Rustig", endurance: "Duur", tempo: "Tempo", race: "Wedstrijd" },
     sweat: "Hoeveel zweet je?",
-    sweats: { low: "Weinig", normal: "Gemiddeld", high: "Veel" },
+    sweats: { low: "Weinig", medium: "Gemiddeld", high: "Veel" },
     timeline: "Je rit in beeld",
     start: "Start",
     middle: "Halverwege",
     finish: "Finish",
-    noAmounts: "Nog geen advies voor koolhydraten, vocht of bidons.",
     next: "Past je verzet bij je klim?",
     nextBody: "Vergelijk je kettingbladen en cassette voordat je vertrekt.",
     nextLink: "Bekijk je verzet",
@@ -85,6 +134,60 @@ export const performanceMessages = {
     hour: "uur",
   },
   en: {
+    bottleSize: "Bottle size",
+    fuelConditions: "Weather, sweat and bottle",
+    fuelStart: "A starting point; test it in training.",
+    carbohydrate: "Carbohydrate",
+    carbsPerHour: "g/h",
+    upTo: "Up to",
+    noCarbs: "No carbohydrate needed",
+    smallCarbs: "Very small amounts or mouth rinse",
+    rideTotal: "Total for your ride",
+    multipleCarbs: "Only with multiple transportable carbohydrates: glucose + fructose.",
+    singleCarbs: "A single carbohydrate source is fine.",
+    easyCarbs: "For an easy ride: less may be enough.",
+    fluid: "Fluid per hour",
+    sodium: "Sodium in your drink",
+    sodiumConcentration: "20–30 mmol/L, approximately 460–690 mg per litre",
+    sodiumPerBottle: "Sodium per bottle",
+    sodiumConversion: "Drink concentration converted to your bottle size, not an hourly amount.",
+    fluidContext:
+      "ACSM gives 0.4–0.8 L/hour as a starting point for marathon runners. " +
+      "This is not a fixed cycling requirement: adapt it to your ride and your own sweat loss.",
+    bandPosition: "Position within the ACSM range, not a measurement.",
+    bandReason: "Cool with little sweat: lower end. Hot with heavy sweat: upper end.",
+    selectedPosition: "Position based on your inputs",
+    bottles: "Bottles for your ride",
+    bottleMath: "Bottles = hourly fluid × ride duration / bottle size. A conversion, not extra advice.",
+    weigh: "Weigh yourself before and after training to learn your own sweat loss.",
+    bodyMass: "Individualise this guidance; aim to avoid losing more than 2% of body mass.",
+    comparison: "Compare with",
+    comparisons: { both: "Both", men: "Men", women: "Women" },
+    ratingTitle: "Your FTP on the reference scale",
+    indication: "An indication, not a judgement. Both tables are shown; choose your own comparison.",
+    rating: "Rating",
+    ratingPrecision: "Your band uses the unrounded W/kg value; the displayed value is rounded.",
+    ratings: {
+      superior: "Superior", excellent: "Excellent", good: "Good", fair: "Fair", untrained: "Untrained",
+    },
+    yourBand: "Your band",
+    sources: "Sources",
+    carbSource:
+      "Jeukendrup A. A Step Towards Personalized Sports Nutrition: Carbohydrate Intake During Exercise. " +
+      "Sports Med. 2014;44(Suppl 1):25–33, Figure 1. doi:10.1007/s40279-014-0148-z.",
+    carbSourceUrl: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4008807/",
+    fluidSource:
+      "Sawka MN et al. American College of Sports Medicine position stand. Exercise and fluid replacement. " +
+      "Med Sci Sports Exerc. 2007;39(2):377–390. Page 384: fluid starting point for marathon runners. " +
+      "Page 385: 20–30 mEq/L sodium in sports drinks for prolonged exercise. " +
+      "This tool shows concentration for rides longer than one hour.",
+    fluidSourceUrl: "https://doi.org/10.1249/mss.0b013e31802ca597",
+    ftpSource:
+      "Allen H, Coggan A. Training and Racing with a Power Meter. 2nd ed. VeloPress, 2010. " +
+      "FTP ratings as published by Garmin.",
+    ftpSourceUrl:
+      "https://www8.garmin.com/manuals-apac/webhelp/fenix7series/EN-SG/" +
+      "GUID-6C0F3C49-1E05-4AE5-8EC0-367A47C07DAB-4498.html",
     eyebrow: "Free cycling tools · your starting point",
     titles: {
       "power-speed": "How fast can you ride at your power?",
@@ -143,24 +246,20 @@ export const performanceMessages = {
     noWind: "An estimate at constant power, a fixed position and no wind. Test it on your own route.",
     capped: "Your speed is outside the calculation range. The displayed boundary is not an exact estimate.",
     pacing: "Target power follows climb length. Account for your fitness and fatigue.",
-    convention: "Test factors provide an estimate. Your test protocol and experience still matter.",
+    convention:
+      "Twenty-minute test: average power × 0.95 (Allen & Coggan). " +
+      "Ramp test: final-minute power × 0.75 (common ramp-test convention). Both are estimates.",
     reference: "Reference: road bike with standard weight, tarmac and no wind.",
     referenceClimb: "Reference climb: 5 km at 7%",
     flat: "Flat road at FTP",
-    noRanking: "An evidence-based level table is not available yet. Focus on your own progress.",
-    pending: "Advice to follow",
-    pendingBody:
-      "Your ride is ready. Food and drink quantities will follow once " +
-      "the guidelines have been confirmed. This timeline only shows the progress of your ride.",
     intensity: "Intensity",
     intensities: { easy: "Easy", endurance: "Endurance", tempo: "Tempo", race: "Race" },
     sweat: "How much do you sweat?",
-    sweats: { low: "Little", normal: "Average", high: "A lot" },
+    sweats: { low: "Little", medium: "Average", high: "A lot" },
     timeline: "Your ride at a glance",
     start: "Start",
     middle: "Halfway",
     finish: "Finish",
-    noAmounts: "No carbohydrate, fluid or bottle recommendations yet.",
     next: "Does your gearing suit the climb?",
     nextBody: "Compare your chainrings and cassette before setting off.",
     nextLink: "Check your gearing",

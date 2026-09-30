@@ -6,8 +6,8 @@ import {
 } from "@/lib/gearing-engine/config";
 import { calculateClimbPowerWatts, solveSpeedForPowerWatts } from "@/lib/gearing-engine/math";
 
-// Proposed UI contracts from plans/redesign-canvas/05-new-tool-contracts.md; awaiting approval.
-export const PROPOSED_RANGES = {
+// UI contracts approved 2026-09-30 in plans/redesign-canvas/05-new-tool-contracts.md.
+export const TOOL_RANGES = {
   power: { min: 50, max: 600, step: 5, initial: 200 },
   speed: { min: 10, max: 50, step: 0.5, initial: 30 },
   riderMass: { min: 40, max: 150, step: 0.5, initial: 75 },
@@ -20,17 +20,18 @@ export const PROPOSED_RANGES = {
   ramp: { min: 150, max: 700, step: 5, initial: 320 },
   duration: { min: 0.5, max: 8, step: 0.25, initial: 2 },
   temperature: { min: 0, max: 40, step: 1, initial: 20 },
+  bottleSize: { min: 500, max: 750, step: 50, initial: 500 },
 } as const;
 
 export type PerformanceBike = "road" | "gravel" | "mountain" | "city" | "tt_triathlon";
 export type PerformanceSurface = "road" | "gravel" | "mtb" | "commuter";
 export type FtpMethod = "known" | "twentyMinute" | "ramp";
-export const PROPOSED_FTP_FACTORS = { known: 1, twentyMinute: 0.95, ramp: 0.75 } as const;
+export const FTP_TEST_FACTORS = { known: 1, twentyMinute: 0.95, ramp: 0.75 } as const;
 export const SPEED_DOMAIN_KMH = { min: 0.36, max: 54 } as const;
 export const REFERENCE_CLIMB = { distanceKm: 5, gradientPct: 7 } as const;
 
-function range(value: number, key: keyof typeof PROPOSED_RANGES) {
-  const { min, max } = PROPOSED_RANGES[key];
+function range(value: number, key: keyof typeof TOOL_RANGES) {
+  const { min, max } = TOOL_RANGES[key];
   if (!Number.isFinite(value) || value < min || value > max) {
     throw new RangeError(`${key} must be between ${min} and ${max}.`);
   }
@@ -91,7 +92,7 @@ export function powerSplit(input: RidingConditions, speedKmh: number) {
 }
 
 export function speedAtPower(input: RidingConditions, powerWatts: number) {
-  // Climb pacing and proposed FTP conversions can extend beyond the power slider's 50–600 W range.
+  // Climb pacing and FTP conversions can extend beyond the power slider's 50–600 W range.
   if (!Number.isFinite(powerWatts) || powerWatts <= 0 || powerWatts > 1000) {
     throw new RangeError("Power must be positive and no more than 1000 W.");
   }
@@ -135,10 +136,10 @@ export function climbPlan(input: {
 }
 
 export function ftpEstimate(method: FtpMethod, watts: number, riderMassKg: number) {
-  if (!Object.hasOwn(PROPOSED_FTP_FACTORS, method)) throw new RangeError("Unknown FTP method.");
+  if (!Object.hasOwn(FTP_TEST_FACTORS, method)) throw new RangeError("Unknown FTP method.");
   range(watts, method === "known" ? "ftp" : method);
   range(riderMassKg, "riderMass");
-  const ftpWatts = watts * PROPOSED_FTP_FACTORS[method];
+  const ftpWatts = watts * FTP_TEST_FACTORS[method];
   const conditions: RidingConditions = {
     riderMassKg,
     bikeMassKg: DEFAULT_BIKE_MASS_KG_BY_TYPE.road,
@@ -156,9 +157,95 @@ export function ftpEstimate(method: FtpMethod, watts: number, riderMassKg: numbe
   };
 }
 
+// Jeukendrup 2014, Figure 1. The longer-duration band wins where the published bands overlap.
+export function carbohydrateGuidance(durationHours: number) {
+  if (!Number.isFinite(durationHours) || durationHours < 0 || durationHours > TOOL_RANGES.duration.max) {
+    throw new RangeError("Duration must be between 0 and 8 hours.");
+  }
+  const band = durationHours < 0.5 ? "none"
+    : durationHours < 1 ? "small"
+      : durationHours < 2 ? "upTo30"
+        : durationHours <= 2.5 ? "upTo60" : "upTo90";
+  const gramsPerHour = band === "none" ? 0 : band === "small" ? null
+    : band === "upTo30" ? 30 : band === "upTo60" ? 60 : 90;
+  return {
+    band,
+    gramsPerHour,
+    totalGrams: gramsPerHour === null ? null : gramsPerHour * durationHours,
+    requiresMultipleCarbohydrates: band === "upTo90",
+  };
+}
+
+// Sawka et al., ACSM 2007: fluid 0.4–0.8 L/h; sports-drink sodium concentration 20–30 mmol/L.
+// The corrected tool contract displays sodium only for rides longer than 1 h.
+// Using approximately 23 mg/mmol converts the sodium concentration to 460–690 mg/L.
+// The selected position is a UI heuristic, not a sweat measurement.
+export const HYDRATION_BANDS = {
+  fluidLitresPerHour: { min: 0.4, max: 0.8 },
+  sodiumMgPerLitre: { min: 460, max: 690 },
+} as const;
+export type SweatLevel = "low" | "medium" | "high";
+
+export function fuelHydration(input: {
+  durationHours: number;
+  temperatureC: number;
+  sweat: SweatLevel;
+  bottleSizeMl: number;
+}) {
+  range(input.durationHours, "duration");
+  range(input.temperatureC, "temperature");
+  range(input.bottleSizeMl, "bottleSize");
+  const sweatPositions = { low: 0, medium: 0.5, high: 1 } as const;
+  if (!Object.hasOwn(sweatPositions, input.sweat)) throw new RangeError("Unknown sweat level.");
+  const position = (input.temperatureC / TOOL_RANGES.temperature.max + sweatPositions[input.sweat]) / 2;
+  const fluid = HYDRATION_BANDS.fluidLitresPerHour;
+  const sodium = input.durationHours > 1 ? HYDRATION_BANDS.sodiumMgPerLitre : null;
+  const selectedFluidLitresPerHour = fluid.min + position * (fluid.max - fluid.min);
+  const totalFluidLitres = { min: fluid.min * input.durationHours, max: fluid.max * input.durationHours };
+  const bottleLitres = input.bottleSizeMl / 1000;
+  return {
+    carbohydrate: carbohydrateGuidance(input.durationHours),
+    fluidLitresPerHour: fluid,
+    sodiumMgPerLitre: sodium,
+    sodiumMgPerBottle: sodium ? { min: sodium.min * bottleLitres, max: sodium.max * bottleLitres } : null,
+    position,
+    positionBasis: "heuristic-not-measurement" as const,
+    selectedFluidLitresPerHour,
+    totalFluidLitres,
+    bottles: { min: totalFluidLitres.min / bottleLitres, max: totalFluidLitres.max / bottleLitres },
+    selectedBottles: selectedFluidLitresPerHour * input.durationHours / bottleLitres,
+    markersMinutes: [0, input.durationHours * 30, input.durationHours * 60],
+  };
+}
+
+export type FtpRating = "superior" | "excellent" | "good" | "fair" | "untrained";
+export type FtpComparison = "men" | "women";
+// Allen & Coggan (2010), as published in Garmin's FTP ratings. Compare unrounded W/kg with lower bounds.
+export const FTP_RATING_THRESHOLDS = {
+  men: [
+    { rating: "superior", min: 5.05 },
+    { rating: "excellent", min: 3.93 },
+    { rating: "good", min: 2.79 },
+    { rating: "fair", min: 2.23 },
+    { rating: "untrained", min: 0 },
+  ],
+  women: [
+    { rating: "superior", min: 4.3 },
+    { rating: "excellent", min: 3.33 },
+    { rating: "good", min: 2.36 },
+    { rating: "fair", min: 1.9 },
+    { rating: "untrained", min: 0 },
+  ],
+} as const;
+
+export function ftpRating(wattsPerKg: number, comparison: FtpComparison): FtpRating {
+  if (!Number.isFinite(wattsPerKg) || wattsPerKg < 0) throw new RangeError("W/kg must be finite and nonnegative.");
+  if (!Object.hasOwn(FTP_RATING_THRESHOLDS, comparison)) throw new RangeError("Unknown FTP comparison table.");
+  return FTP_RATING_THRESHOLDS[comparison].find(({ min }) => wattsPerKg >= min)!.rating;
+}
+
 export function fuelTimeline(durationHours: number, temperatureC: number) {
   range(durationHours, "duration");
   range(temperatureC, "temperature");
-  // Progress markers only, NOT invented food/drink doses or recommended intake intervals.
-  return { adviceAvailable: false as const, markersMinutes: [0, durationHours * 30, durationHours * 60] };
+  return { markersMinutes: [0, durationHours * 30, durationHours * 60] };
 }
