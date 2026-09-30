@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Dashboard overzicht</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F8F3;font-family:Figtree,system-ui,sans-serif;color:#0F2420}
+a{color:#0A7263}a:hover{color:#075A4E}
+button{font-family:inherit}
+
+*{box-sizing:border-box}
+h2,h3,p{margin:0}h2,h3{font-family:'Bricolage Grotesque',sans-serif}h2{font-size:24px}h3{font-size:20px}p{line-height:1.5}
+.num{font-family:'DM Mono',monospace}.muted{color:#4A5F5A}.eyebrow{color:#0A7263;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 18px;border-radius:999px;border:1px solid #DCE6E1;background:#FFFFFF;color:#0F2420;font-weight:700;font-size:14px;text-decoration:none;cursor:pointer}.primary{background:#0A7263;color:#FFFFFF;border-color:#0A7263}.link{display:inline-flex;align-items:center;min-height:44px;font-weight:700;font-size:14px}.chip{display:inline-flex;align-items:center;border-radius:999px;padding:4px 11px;background:#E1F2EE;color:#0F2420;font-size:12px;font-weight:700}
+.panel{padding:28px;border-radius:28px;background:#FFFFFF;border:1px solid #DCE6E1}.rows{display:flex;flex-direction:column;gap:18px}.actions{display:flex;flex-wrap:wrap;gap:8px}.bike-row{display:grid;grid-template-columns:1fr 1fr 1.12fr;background:#FFFFFF;border:1px solid #DCE6E1;border-radius:24px;overflow:hidden}.cell{padding:24px;min-width:0;display:flex;flex-direction:column;gap:16px}.cell+.cell{border-left:1px solid #DCE6E1}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.stat{padding:12px;background:#F5F8F3;border-radius:14px}.stat-label{font-size:12px;color:#4A5F5A;margin-bottom:8px}.stat .num{font-size:23px}.unit{font-size:12px!important;color:#4A5F5A}dl{margin:0}dl div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #DCE6E1;font-size:14px}dt{color:#4A5F5A}dd{margin:0;text-align:right;font-weight:600}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #0A7263;outline-offset:4px}
+.review-state-strip button{display:inline-flex;flex-shrink:0;align-items:center;justify-content:center;height:44px;min-height:44px;padding:0 2px;border:0;border-radius:0;background:transparent;color:#0F2420;font-family:Figtree,sans-serif;font-size:13px;font-weight:600;cursor:pointer}.review-state-strip button span{display:inline-flex;align-items:center;height:32px;padding:0 10px;border:1px solid #B9CCC6;border-radius:999px;background:#FFFFFF;box-sizing:border-box}.review-state-strip button[aria-pressed="true"] span{background:#0F2420;color:#FFFFFF;border-color:#0F2420}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1604px; box-sizing: border-box; display: grid; grid-template-rows: 44px minmax(0, 1fr); position: relative; grid-template-columns: 264px 1fr; background: #F5F8F3; color: #0F2420; font-family: Figtree, system-ui, sans-serif">
+<section aria-label="Ontwerpstaat" class="review-state-strip" style="grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; height: 44px; min-width: 0; padding: 0 16px; border-bottom: 1px dashed #B9CCC6; background: #EEF3EF; box-sizing: border-box"><strong style="flex-shrink: 0; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #4A5F5A">Ontwerpstaat</strong><div role="group" aria-label="Kies een ontwerpstaat" style="display: flex; min-width: 0; gap: 4px; overflow-x: auto; white-space: nowrap; height: 44px"><sc-for list="{{reviewStates}}" as="review" hint-placeholder-count="14"><button type="button" aria-pressed="{{review.pressed}}" onClick="{{review.pick}}"><span>{{review.label}}</span></button></sc-for></div></section>
+
+<aside style="display: flex; flex-direction: column; gap: 24px; padding: 28px 20px; background: #0F2420; color: #FFFFFF; box-sizing: border-box; font-family: Figtree, sans-serif; font-size: 15px; font-weight: 400; line-height: 1.4"><a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 8px; text-decoration: none; color: #FFFFFF">
+<svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#CFF26A"></circle><circle cx="11" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><circle cx="23" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><path d="M11 20l4-8h6l2 8M15 12l4 8" stroke="#0F2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px">BestBikeFit<span style="color: #CFF26A">4U</span></span>
+</a><nav aria-label="Account" style="display: flex; flex-direction: column; gap: 4px; font-size: 15px; font-weight: 600"><a href="Dashboard.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; background: #CFF26A; color: #0F2420; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"></path></svg>Dashboard</a><a href="Profile.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M8 8a4 4 0 1 0 8 0a4 4 0 1 0-8 0M4 21c0-8 16-8 16 0"></path></svg>Mijn profiel</a><a href="Bikes.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M2 17a4 4 0 1 0 8 0a4 4 0 1 0-8 0M14 17a4 4 0 1 0 8 0a4 4 0 1 0-8 0M6 17l4-10h6l2 10M10 7l4 10"></path></svg>Mijn fietsgarage</a><a href="BikeAdd.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"></path></svg>Nieuwe fiets</a><a href="History.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M6 4h12v17H6zM9 2h6v4H9zM9 10h6M9 15h6"></path></svg>Fietsafstelling</a><a href="FitStart.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"></path></svg>Nieuwe fit-sessie</a><a href="PressureDashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 17a9 9 0 1 1 18 0M12 17l4-6"></path></svg>Bandenspanning</a><a href="GearingDashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M7 3v18M3 7l4-4 4 4M17 21V3M13 17l4 4 4-4"></path></svg>Verzet</a><a href="SaddleSelector.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 7c0-5 18-5 18 0l-6 13H9z"></path></svg>Zadelkiezer</a><a href="Settings.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"></path></svg>Instellingen</a><a href="Feedback.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 4h18v13H9l-6 4z"></path></svg>Feedback</a></nav><div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 20px; background: #17332D"><div style="font-size: 12px; color: #B9CCC6">Sanne</div><div style="display: flex; justify-content: space-between; align-items: center"><strong>Free</strong><span style="font-size: 13px; color: #B9CCC6"><span style="font-family: 'DM Mono', monospace">1</span> van <span style="font-family: 'DM Mono', monospace">1</span> sessie</span></div><div role="img" aria-label="Eén van één sessie gebruikt" style="height: 8px; border-radius: 99px; background: #2E4C45"><div style="width: 100%; height: 8px; border-radius: 99px; background: #CFF26A"></div></div><p style="margin: 0; font-size: 13px; color: #B9CCC6; line-height: 1.4">Betalen is tijdelijk gepauzeerd.</p><a href="Settings.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; text-decoration: none">Bekijk je account</a></div></aside>
+
+<main style="display: flex; flex-direction: column; gap: 24px; padding: 32px 48px 48px; min-width: 0">
+<sc-if value="{{loading}}" hint-placeholder-val="{{false}}"><section class="panel rows" role="status" aria-busy="true"><div style="display:flex;align-items:center;gap:14px"><h1 style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 32px">Dashboard laden…</h1><span style="display:inline-flex;padding:5px 10px;border-radius:999px;background:#E1F2EE;color:#075A4E;font-size:12px;white-space:nowrap">Voorbeeldgegevens</span></div><div style="height: 8px; background: #DCE6E1; border-radius: 99px"></div></section></sc-if>
+<sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
+<div class="rows" style="gap: 24px">
+<sc-if value="{{message}}" hint-placeholder-val="{{false}}"><section class="panel rows" style="background: #E1F2EE"><h2>Vul je profiel aan</h2><p>Controleer je lichaamsmaten voordat je een nieuwe fit start.</p><div class="actions"><a class="btn" href="Profile.dc.html">Bekijk je profiel</a><button class="btn" type="button" onClick="{{dismissMessage}}">Sluit bericht</button></div></section></sc-if>
+<header style="display: flex; justify-content: space-between; align-items: center; gap: 20px">
+<div><div style="font-size: 15px; color: #4A5F5A">Welkom terug</div><div style="display: flex; align-items: center; gap: 14px"><h1 style="margin: 4px 0 8px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.03em">Hoi Lisa</h1><span class="chip">Voorbeeldgegevens</span></div><p class="muted">Je rijdersprofiel, fietssetup en bandenspanningsadvies op een plek.</p></div>
+<div class="actions" style="justify-content: flex-end"><a class="btn primary" href="FitStart.dc.html">Start fit</a><a class="btn" href="BikeAdd.dc.html">Voeg een fiets toe</a><button type="button" aria-label="Wijzig profielfoto" onClick="{{openPhoto}}" style="width: 50px; height: 50px; border-radius: 50%; border: 0; background: #CFF26A; color: #0F2420; font-weight: 800; font-size: 17px; cursor: pointer">L</button></div>
+</header>
+<sc-if value="{{photoOpen}}" hint-placeholder-val="{{false}}"><section class="panel rows" role="dialog" aria-modal="true" aria-label="Wijzig profielfoto" style="position: absolute; top: 220px; left: 480px; width: 640px; z-index: 1; border: 2px solid #0F2420; box-shadow: 0 18px 40px rgba(15,36,32,.12)"><h2>Wijzig profielfoto</h2><label for="profile-photo">Kies een foto (JPEG, PNG of WebP)</label><input id="profile-photo" type="file" accept="image/jpeg,image/png,image/webp" onChange="{{selectPhoto}}" style="min-height: 44px"><p class="muted">De foto wordt in dit ontwerp niet geüpload of opgeslagen.</p><sc-if value="{{photoError}}" hint-placeholder-val="{{false}}"><p role="alert" style="padding: 12px; border-radius: 12px; background: #FFB199">Uploaden mislukt. Probeer het opnieuw.</p></sc-if><button class="btn" type="button" onClick="{{closePhoto}}" style="align-self: start">Sluit foto-invoer</button></section></sc-if>
+<section class="panel rows">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2>Rijdersprofiel</h2><a class="btn" href="Profile.dc.html">Bewerk profiel</a></div>
+<sc-if value="{{hasProfile}}" hint-placeholder-val="{{true}}">
+<div class="stats"><div class="stat"><p class="stat-label">Lengte</p><span class="num">178</span> <span class="num unit">cm</span></div><div class="stat"><p class="stat-label">Binnenbeenlengte</p><span class="num">84</span> <span class="num unit">cm</span></div><sc-if value="{{hasWeight}}" hint-placeholder-val="{{true}}"><div class="stat"><p class="stat-label">Lichaamsgewicht</p><span class="num">72</span> <span class="num unit">kg</span></div></sc-if></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 16px">
+<div class="rows" style="gap: 10px"><h3>Flexibiliteit</h3><div style="display: flex; justify-content: space-between"><strong>Goed</strong><span class="num">4/5</span></div><div role="img" aria-label="Flexibiliteit: vier van vijf" style="height: 10px; border-radius: 99px; background: #DCE6E1"><div style="width: 80%; height: 10px; border-radius: 99px; background: #CFF26A"></div></div><p class="muted" style="font-size: 14px">Je kunt zittend je tenen aanraken.</p></div>
+<div class="rows" style="gap: 10px"><h3>Rompstabiliteit</h3><div style="display: flex; justify-content: space-between"><strong>Gemiddeld</strong><span class="num">3/5</span></div><div role="img" aria-label="Rompstabiliteit: drie van vijf" style="display: flex; gap: 8px"><sc-for list="{{coreSegments}}" as="segment" hint-placeholder-count="5"><div style="flex: 1; height: 10px; border-radius: 99px; background: {{segment.color}}"></div></sc-for></div><p class="muted" style="font-size: 14px">Plank <span class="num">40–60</span> seconden vasthouden.</p></div>
+</div>
+</sc-if>
+<sc-if value="{{missingProfile}}" hint-placeholder-val="{{false}}"><div class="rows" style="gap: 8px; padding: 20px; border-radius: 18px; background: #FFD66B"><h3>Vul je profiel aan</h3><p>Vul je lichaamsmaten in voor persoonlijk fitadvies.</p><a class="link" href="Profile.dc.html">Vul je profiel in →</a></div></sc-if>
+<a class="link" href="FitStart.dc.html">Start nieuwe fit-sessie →</a>
+</section>
+<section class="rows">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2>Mijn fietsen</h2><a class="btn" href="Bikes.dc.html">Bekijk mijn fietsgarage</a></div>
+<sc-if value="{{emptyBikes}}" hint-placeholder-val="{{false}}"><section class="panel rows" style="text-align: center; align-items: center; padding: 64px 28px"><h3>Nog geen fiets opgeslagen</h3><p class="muted">Voeg een fiets toe om druk- en fitcontext aan een echte setup te koppelen.</p><a class="btn primary" href="BikeAdd.dc.html">Voeg een fiets toe</a></section></sc-if>
+<sc-if value="{{hasBikes}}" hint-placeholder-val="{{true}}"><article class="bike-row">
+<div class="cell">
+<div><span class="eyebrow">Racefiets</span><h2 style="margin-top: 6px">Canyon Endurace</h2></div>
+<div style="background: #E1F2EE; border-radius: 18px; padding: 12px; display: flex; justify-content: center">
+<svg width="260" height="120" viewBox="0 0 280 130" fill="none" stroke="#0F2420" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Schematische racefiets"><circle cx="66" cy="84" r="34"></circle><circle cx="217" cy="84" r="34"></circle><path d="M66 84l43-57 35 57H66l110-48h18l23 48M109 27l-5-13M91 14h26M184 36l-5-20h23q13 0 13 10t-12 10" stroke-width="3"></path><path d="M109 27l67 9-32 48" stroke="#0A7263" stroke-width="5"></path><circle cx="144" cy="84" r="8" fill="#CFF26A"></circle><path d="M144 84l12 11h10M39 112h196"></path></svg>
+</div>
+<dl><div><dt>Rijstijl</dt><dd>Endurance</dd></div><div><dt>Doel</dt><dd>Comfort</dd></div></dl>
+<div class="actions"><a class="btn" href="BikeProfile.dc.html">Bekijk fiets</a><a class="btn primary" href="FitStart.dc.html">Start fit</a></div>
+</div>
+<div class="cell">
+<h3>Fietsgebruik</h3><sc-if value="{{hasFit}}" hint-placeholder-val="{{true}}"><span class="chip" style="align-self: start; background: #CFF26A">Fitadvies beschikbaar</span>
+<p class="muted" style="font-size: 13px">Uit je laatste sessie met fitadvies</p>
+<dl><div><dt>Ervaring</dt><dd>Gevorderd</dd></div><div><dt>Per week</dt><dd><span class="num">3–6</span> uur</dd></div><div><dt>Ritafstand</dt><dd><span class="num">30–80</span> km</dd></div><div><dt>Houding</dt><dd>Comfort</dd></div><div><dt>Ritten</dt><dd>Groepsritten</dd></div></dl>
+<div><p class="muted" style="font-size: 12px; margin-bottom: 8px">Gemeld ongemak</p><span class="chip" style="background: #FFD66B">Onderrug</span></div>
+<div class="actions"><button class="btn" type="button" onClick="{{openReport}}">Bekijk rapport</button><button class="btn" type="button" onClick="{{previewDownload}}">Download PDF</button><button class="btn" type="button" onClick="{{previewEmail}}">E-mail rapport</button></div>
+<a class="link" href="FitStart.dc.html">Herbereken fit →</a></sc-if><sc-if value="{{noFit}}" hint-placeholder-val="{{false}}"><p class="muted">Nog geen fit-sessie. Start een fit-sessie om je fietsgebruik en aanbevelingen hier te zien.</p><a class="btn primary" href="FitStart.dc.html">Start nieuwe fit-sessie</a></sc-if>
+</div>
+<div class="cell">
+<div><h3>Laatste fitadvies</h3></div>
+<sc-if value="{{hasFit}}" hint-placeholder-val="{{true}}"><div class="stats"><div class="stat"><p class="stat-label">Zadelhoogte</p><span class="num">742</span> <span class="num unit">mm</span></div><div class="stat"><p class="stat-label">Stuurdrop</p><span class="num">55</span> <span class="num unit">mm</span></div><div class="stat"><p class="stat-label">Stuurreach</p><span class="num">530</span> <span class="num unit">mm</span></div></div>
+<sc-if value="{{climbing}}" hint-placeholder-val="{{false}}"><div style="background: #E1F2EE; padding: 12px; border-radius: 14px"><strong style="font-size: 13px">Klimprofiel inbegrepen</strong><p style="font-size: 12px; margin-top: 8px">Zadel <span class="num">740 mm</span> · drop <span class="num">45 mm</span> · reach <span class="num">525 mm</span></p></div></sc-if>
+<div style="border-top: 1px solid #DCE6E1; padding-top: 18px"><h3 style="font-size: 18px; margin-bottom: 14px">Bandenspanning</h3>
+<sc-if value="{{hasPressure}}" hint-placeholder-val="{{true}}"><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px"><div class="stat"><p class="stat-label">Voor · advies</p><span class="num">4,2</span> <span class="num unit">bar</span><p class="muted" style="font-size: 12px; margin-top: 8px">Huidig <span class="num">4,5 bar</span></p></div><div class="stat"><p class="stat-label">Achter · advies</p><span class="num">4,5</span> <span class="num unit">bar</span><p class="muted" style="font-size: 12px; margin-top: 8px">Huidig <span class="num">4,8 bar</span></p></div></div></sc-if>
+<sc-if value="{{stale}}" hint-placeholder-val="{{false}}"><p style="background: #FFD66B; border-radius: 12px; padding: 12px; font-size: 13px; margin-top: 12px">Je setup is gewijzigd. Bereken je bandenspanning opnieuw.</p></sc-if>
+<sc-if value="{{noPressure}}" hint-placeholder-val="{{false}}"><p class="muted" style="font-size: 14px">Nog geen bandenspanning berekend voor deze fiets.</p></sc-if>
+<a class="link" href="PressureDashboard.dc.html">{{pressureAction}} →</a>
+</div></sc-if><sc-if value="{{noFit}}" hint-placeholder-val="{{false}}"><p class="muted">Nog geen fit-sessie. Start een fit-sessie om je aanbevelingen hier te zien.</p><a class="link" href="FitStart.dc.html">Start nieuwe fit-sessie →</a></sc-if>
+</div>
+</article></sc-if>
+</section>
+<sc-if value="{{noticeVisible}}" hint-placeholder-val="{{false}}"><div class="panel actions" role="status" style="background: #E1F2EE; align-items: center; justify-content: space-between"><p>{{notice}}</p><button class="btn" type="button" onClick="{{dismissNotice}}">Sluit melding</button></div></sc-if>
+</div>
+</sc-if>
+</main>
+
+<sc-if value="{{reportOpen}}" hint-placeholder-val="{{false}}"><section role="dialog" aria-modal="true" aria-label="Fitrapport" style="position: absolute; top: 250px; left: 440px; width: 740px; padding: 32px; border: 2px solid #0F2420; border-radius: 24px; background: #FFFFFF; box-shadow: 0 18px 40px rgba(15,36,32,.12); display: flex; flex-direction: column; gap: 24px">
+<div class="actions" style="justify-content: space-between"><h2>Fitrapport</h2><button type="button" class="btn" onClick="{{closeReport}}">Sluit rapport</button></div>
+<sc-if value="{{reportError}}" hint-placeholder-val="{{false}}"><p role="alert" style="background: #FFB199; border-radius: 16px; padding: 24px">Rapport kon niet worden geladen.</p></sc-if>
+<sc-if value="{{reportReady}}" hint-placeholder-val="{{true}}"><div class="panel rows"><h3>Canyon Endurace</h3><dl><div><dt>Zadelhoogte</dt><dd class="num">742 <span class="unit">mm</span></dd></div><div><dt>Stuurdrop</dt><dd class="num">55 <span class="unit">mm</span></dd></div><div><dt>Stuurreach</dt><dd class="num">530 <span class="unit">mm</span></dd></div></dl></div></sc-if>
+<div class="actions"><a class="btn" href="FitResults.dc.html">Open volledige weergave</a><button class="btn" type="button" onClick="{{previewDownload}}">Download PDF</button><button class="btn" type="button" onClick="{{previewEmail}}">E-mail rapport</button></div><p role="status">{{notice}}</p>
+</section></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1604}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'filled', report: 'closed', notice: '', photoOpen: false, messageDismissed: false };
+  }
+  renderVals() {
+    const current = this.state;
+    const definitions = [
+      ['filled', 'Gevuld'], ['empty', 'Nieuw account'], ['loading', 'Laden'],
+      ['missing-profile', 'Geen profiel'], ['no-bikes', 'Geen fietsen'],
+      ['no-fit', 'Geen fit'], ['missing-weight', 'Geen gewicht'],
+      ['stale', 'Druk verouderd'], ['no-pressure', 'Geen drukadvies'],
+      ['climbing', 'Klimprofiel'], ['report', 'Rapport'],
+      ['report-error', 'Rapportfout'], ['photo-error', 'Fotofout'], ['message', 'Bericht']
+    ];
+    const hasFit = !['empty', 'no-bikes', 'no-fit', 'loading'].includes(current.view);
+    return {
+      reviewStates: definitions.map((definition) => ({
+        label: definition[1], pressed: String(current.view === definition[0]),
+        pick: () => this.setState({ view: definition[0], report: definition[0] === 'report-error' ? 'error' : definition[0] === 'report' ? 'ready' : 'closed', notice: '', photoOpen: definition[0] === 'photo-error', messageDismissed: false })
+      })),
+      loading: current.view === 'loading', ready: current.view !== 'loading',
+      hasProfile: !['empty', 'missing-profile'].includes(current.view),
+      missingProfile: ['empty', 'missing-profile'].includes(current.view),
+      hasWeight: current.view !== 'missing-weight',
+      emptyBikes: ['empty', 'no-bikes'].includes(current.view),
+      hasBikes: !['empty', 'no-bikes'].includes(current.view),
+      hasFit: hasFit, noFit: !hasFit,
+      used: current.view === 'empty' ? 0 : 1, usagePct: current.view === 'empty' ? 0 : 100,
+      coreSegments: [1, 2, 3, 4, 5].map((segment) => ({ color: segment <= 3 ? '#FFD66B' : '#DCE6E1' })),
+      hasPressure: current.view !== 'no-pressure',
+      noPressure: current.view === 'no-pressure', stale: current.view === 'stale',
+      climbing: current.view === 'climbing',
+      pressureAction: current.view === 'no-pressure' ? 'Bereken bandenspanning' : 'Herbereken bandenspanning',
+      message: current.view === 'message' && !current.messageDismissed,
+      dismissMessage: () => this.setState({ messageDismissed: true }),
+      photoOpen: current.photoOpen, photoError: current.view === 'photo-error',
+      openPhoto: () => this.setState({ photoOpen: true }),
+      closePhoto: () => this.setState({ photoOpen: false }),
+      selectPhoto: () => this.setState({ notice: 'Je gekozen foto staat klaar om te bewaren.' }),
+      reportOpen: current.report !== 'closed',
+      reportError: current.report === 'error', reportReady: current.report === 'ready',
+      openReport: () => this.setState({ report: 'ready', notice: '' }),
+      closeReport: () => this.setState({ report: 'closed', notice: '' }),
+      previewDownload: () => this.setState({ notice: 'Je PDF staat klaar.' }),
+      previewEmail: () => this.setState({ notice: 'Je rapport is verstuurd naar je accountadres.' }),
+      notice: current.notice, noticeVisible: current.notice.length > 0,
+      dismissNotice: () => this.setState({ notice: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

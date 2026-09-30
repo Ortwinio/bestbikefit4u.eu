@@ -32,7 +32,7 @@ export function PublicSectionHeader({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 border-b border-[color:var(--border)]/80 px-5 py-5 sm:px-6",
+        "flex flex-col gap-4 border-b border-border/80 px-5 py-5 sm:px-6",
         align === "center" ? "items-center text-center" : null,
         className
       )}
@@ -45,7 +45,7 @@ export function PublicSectionHeader({
           )}
         >
           {eyebrow ? (
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
               {eyebrow}
             </p>
           ) : null}
@@ -56,16 +56,16 @@ export function PublicSectionHeader({
             )}
           >
             {icon ? (
-              <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_oklch,var(--secondary)_78%,var(--background)_22%)] text-[color:var(--primary)]">
+              <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-secondary text-primary">
                 {icon}
               </div>
             ) : null}
             <div className="min-w-0 space-y-2">
-              <h2 className="text-balance text-2xl font-semibold tracking-tight text-[color:var(--foreground)] sm:text-[2rem]">
+              <h2 className="text-balance text-2xl font-semibold tracking-tight text-foreground sm:text-[2rem]">
                 {title}
               </h2>
               {description ? (
-                <p className="max-w-3xl text-pretty text-sm leading-6 text-[color:var(--muted-foreground)] sm:text-base">
+                <p className="max-w-3xl text-pretty text-sm leading-6 text-muted-foreground sm:text-base">
                   {description}
                 </p>
               ) : null}
@@ -92,9 +92,9 @@ export function PublicSection<T extends ElementType = "section">({
     <Component className={className} {...props}>
       <Card
         variant="secondary"
-        className="overflow-hidden gap-0 border border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--card)_90%,var(--background)_10%)] shadow-[0_16px_40px_-28px_color-mix(in_oklch,var(--foreground)_28%,transparent)]"
+        className="overflow-hidden gap-0 border border-border/80 bg-card shadow-none"
       >
-        <div className="h-1 w-full bg-[linear-gradient(90deg,color-mix(in_oklch,var(--primary)_72%,transparent)_0%,color-mix(in_oklch,var(--secondary)_82%,var(--background)_18%)_100%)]" />
+        <div className="h-1 w-full bg-accent" />
         {header ? <PublicSectionHeader {...header} /> : null}
         <CardContent className={cn("px-5 py-5 sm:px-6 sm:py-6", contentClassName)}>
           {children}

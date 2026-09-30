@@ -1,0 +1,44 @@
+/* Scope legacy pressure feature token adapters to the account route. */
+.scope [class~="text-[color:var(--foreground)]"] {
+  color: var(--bbf-ui-foreground);
+}
+
+.scope [class~="text-[color:var(--muted-foreground)]"] {
+  color: var(--bbf-ui-muted-foreground);
+}
+
+.scope [class~="text-[color:var(--primary)]"] {
+  color: var(--bbf-ui-primary);
+}
+
+.scope [class~="text-[color:var(--success)]"] {
+  color: var(--bbf-ui-primary);
+}
+
+.scope [class~="text-[color:var(--warning-foreground)]"] {
+  color: var(--bbf-ui-warning-foreground);
+}
+
+.scope [class~="bg-[color:var(--card)]"] {
+  background-color: var(--bbf-ui-card);
+}
+
+.scope [class~="bg-[color:var(--secondary)]"] {
+  background-color: var(--bbf-ui-secondary);
+}
+
+.scope [class~="bg-[color:var(--muted)]"] {
+  background-color: var(--bbf-ui-muted);
+}
+
+.scope [class~="border-[color:var(--border)]"] {
+  border-color: var(--bbf-ui-border);
+}
+.scope [class~="text-amber-700"] {
+  color: var(--bbf-ui-foreground);
+}
+
+.scope [class*="color-mix"][class~="text-[color:var(--warning-foreground)]"] {
+  background-color: var(--bbf-warning);
+  color: var(--bbf-inkt);
+}

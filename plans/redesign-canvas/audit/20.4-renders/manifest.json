@@ -1,0 +1,2188 @@
+{
+  "summary": {
+    "summary": true,
+    "cases": 48,
+    "failed": [],
+    "overflows": [],
+    "cssSha256": "e2bfc18fffcea2f21c0d833ff443e07461479c0e1a0f86fbcc0ff62e09e940dd",
+    "bundleSha256": "aac19ee4cc0e8077b4564cddb4c3b76842fc922e28b76d8bca665bcc4d16e8a6"
+  },
+  "results": [
+    {
+      "name": "nl-pressure-calculator-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Meer grip, minder weerstand"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "bikes/queries:listByUser",
+        "pressureCalculations/queries:getLatestByBikeForUser",
+        "bikes/queries:list",
+        "profiles/queries:getMyProfile",
+        "wheelsets/queries:listForBike"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-gearing-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Kom jij die klim op?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "bikes/queries:list",
+        "profiles/queries:getMyProfile",
+        "bikes/queries:get",
+        "gearing/queries:listGearingSessions"
+      ],
+      "actions": [
+        {
+          "name": "gearing/mutations:createDashboardGearingSession",
+          "args": [
+            {
+              "bikeId": "bike1",
+              "input": {
+                "drivetrainType": "2x",
+                "chainrings": [
+                  50,
+                  34
+                ],
+                "cassetteTeeth": [
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  17,
+                  19,
+                  21,
+                  24,
+                  27,
+                  30
+                ],
+                "wheelCircumferenceMm": 2105,
+                "crankLengthMm": 172.5,
+                "cadenceRpm": 85,
+                "bikeType": "road",
+                "riderWeightKg": 75,
+                "bikeWeightKg": 8.5,
+                "preferredCadenceRpm": 85,
+                "climbGradientPct": 8,
+                "climbLengthKm": 6.083449999999999,
+                "eventType": "sportive",
+                "rideIntent": "mountain_sportive"
+              },
+              "math": {
+                "drivetrainType": "2x",
+                "normalizedChainrings": [
+                  34,
+                  50
+                ],
+                "normalizedCassetteTeeth": [
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  17,
+                  19,
+                  21,
+                  24,
+                  27,
+                  30
+                ],
+                "wheelCircumferenceMm": 2105,
+                "wheelDiameterInches": 26.38,
+                "wheelRadiusMm": 335,
+                "gearPairs": [
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 30,
+                    "ratio": 1.1333,
+                    "developmentM": 2.386,
+                    "gearInches": 29.9,
+                    "gainRatio": 2.201,
+                    "speedKmhAtCadence": 12.17
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 27,
+                    "ratio": 1.2593,
+                    "developmentM": 2.651,
+                    "gearInches": 33.22,
+                    "gainRatio": 2.446,
+                    "speedKmhAtCadence": 13.52
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 24,
+                    "ratio": 1.4167,
+                    "developmentM": 2.982,
+                    "gearInches": 37.37,
+                    "gainRatio": 2.751,
+                    "speedKmhAtCadence": 15.21
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 21,
+                    "ratio": 1.619,
+                    "developmentM": 3.408,
+                    "gearInches": 42.71,
+                    "gainRatio": 3.144,
+                    "speedKmhAtCadence": 17.38
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 30,
+                    "ratio": 1.6667,
+                    "developmentM": 3.508,
+                    "gearInches": 43.97,
+                    "gainRatio": 3.237,
+                    "speedKmhAtCadence": 17.89
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 19,
+                    "ratio": 1.7895,
+                    "developmentM": 3.767,
+                    "gearInches": 47.21,
+                    "gainRatio": 3.475,
+                    "speedKmhAtCadence": 19.21
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 27,
+                    "ratio": 1.8519,
+                    "developmentM": 3.898,
+                    "gearInches": 48.85,
+                    "gainRatio": 3.597,
+                    "speedKmhAtCadence": 19.88
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 17,
+                    "ratio": 2,
+                    "developmentM": 4.21,
+                    "gearInches": 52.76,
+                    "gainRatio": 3.884,
+                    "speedKmhAtCadence": 21.47
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 24,
+                    "ratio": 2.0833,
+                    "developmentM": 4.385,
+                    "gearInches": 54.96,
+                    "gainRatio": 4.046,
+                    "speedKmhAtCadence": 22.37
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 15,
+                    "ratio": 2.2667,
+                    "developmentM": 4.771,
+                    "gearInches": 59.79,
+                    "gainRatio": 4.402,
+                    "speedKmhAtCadence": 24.33
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 21,
+                    "ratio": 2.381,
+                    "developmentM": 5.012,
+                    "gearInches": 62.81,
+                    "gainRatio": 4.624,
+                    "speedKmhAtCadence": 25.56
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 14,
+                    "ratio": 2.4286,
+                    "developmentM": 5.112,
+                    "gearInches": 64.06,
+                    "gainRatio": 4.717,
+                    "speedKmhAtCadence": 26.07
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 13,
+                    "ratio": 2.6154,
+                    "developmentM": 5.505,
+                    "gearInches": 68.99,
+                    "gainRatio": 5.079,
+                    "speedKmhAtCadence": 28.08
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 19,
+                    "ratio": 2.6316,
+                    "developmentM": 5.539,
+                    "gearInches": 69.42,
+                    "gainRatio": 5.111,
+                    "speedKmhAtCadence": 28.25
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 12,
+                    "ratio": 2.8333,
+                    "developmentM": 5.964,
+                    "gearInches": 74.74,
+                    "gainRatio": 5.503,
+                    "speedKmhAtCadence": 30.42
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 17,
+                    "ratio": 2.9412,
+                    "developmentM": 6.191,
+                    "gearInches": 77.59,
+                    "gainRatio": 5.712,
+                    "speedKmhAtCadence": 31.58
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 11,
+                    "ratio": 3.0909,
+                    "developmentM": 6.506,
+                    "gearInches": 81.54,
+                    "gainRatio": 6.003,
+                    "speedKmhAtCadence": 33.18
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 15,
+                    "ratio": 3.3333,
+                    "developmentM": 7.017,
+                    "gearInches": 87.93,
+                    "gainRatio": 6.474,
+                    "speedKmhAtCadence": 35.78
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 14,
+                    "ratio": 3.5714,
+                    "developmentM": 7.518,
+                    "gearInches": 94.21,
+                    "gainRatio": 6.936,
+                    "speedKmhAtCadence": 38.34
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 13,
+                    "ratio": 3.8462,
+                    "developmentM": 8.096,
+                    "gearInches": 101.46,
+                    "gainRatio": 7.47,
+                    "speedKmhAtCadence": 41.29
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 12,
+                    "ratio": 4.1667,
+                    "developmentM": 8.771,
+                    "gearInches": 109.92,
+                    "gainRatio": 8.092,
+                    "speedKmhAtCadence": 44.73
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 11,
+                    "ratio": 4.5455,
+                    "developmentM": 9.568,
+                    "gearInches": 119.91,
+                    "gainRatio": 8.828,
+                    "speedKmhAtCadence": 48.8
+                  }
+                ],
+                "easiestGear": {
+                  "frontChainringTeeth": 34,
+                  "rearCogTeeth": 30,
+                  "ratio": 1.1333,
+                  "developmentM": 2.386,
+                  "gearInches": 29.9,
+                  "gainRatio": 2.201,
+                  "speedKmhAtCadence": 12.17
+                },
+                "hardestGear": {
+                  "frontChainringTeeth": 50,
+                  "rearCogTeeth": 11,
+                  "ratio": 4.5455,
+                  "developmentM": 9.568,
+                  "gearInches": 119.91,
+                  "gainRatio": 8.828,
+                  "speedKmhAtCadence": 48.8
+                },
+                "rangeRatio": 4.011,
+                "rangePercent": 301.1
+              },
+              "suitability": {
+                "publicVerdict": "likely_overgeared",
+                "setupLabel": "needs bailout gear",
+                "gearRangeScore": 89,
+                "climbSuitabilityScore": 17,
+                "eventReadinessScore": 43,
+                "requiredPowerWatts": 248,
+                "estimatedClimbDurationMinutes": 26.1,
+                "assumptions": [
+                  "Exact gear math uses chainring teeth, cassette teeth, wheel circumference, and cadence only.",
+                  "Climb suitability uses a steady-state climbing model with gravity, rolling resistance, aero drag, and drivetrain efficiency."
+                ],
+                "warnings": [],
+                "recommendationText": "Your current 34 x 30 low gear is too hard for long climbing comfort. A larger cassette, smaller inner ring, or both would give you a safer cadence margin.",
+                "confidence": {
+                  "score": 1,
+                  "level": "high",
+                  "mathScore": 100,
+                  "suitabilityScore": 100,
+                  "reasons": [
+                    "FTP missing, so sustainable climbing power is estimated directionally."
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-saddle-selector-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Hoe breed moet je zadel zijn?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "profiles/queries:getMyProfile",
+        "bikes/queries:list",
+        "saddleWidth/queries:listSaddleWidthSessions"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-shoe-cleat-fit-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Begin bij je voeten."
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-settings-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Maak het jouw omgeving"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "integrations/queries:getStravaBikeOverview"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-feedback-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Wat kan er beter?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "feedback/queries:getMyFeedback",
+        "feedback/queries:getFeatureBoard",
+        "releases/queries:getPublicReleases"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-app-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Zet BestBikeFit4U op je beginscherm."
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-pressure-calculator-loading-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Meer grip, minder weerstand"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "bikes/queries:listByUser",
+        "pressureCalculations/queries:getLatestByBikeForUser"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-pressure-calculator-empty-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Meer grip, minder weerstand"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "bikes/queries:listByUser",
+        "pressureCalculations/queries:getLatestByBikeForUser",
+        "bikes/queries:list",
+        "profiles/queries:getMyProfile"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-saddle-selector-empty-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Hoe breed moet je zadel zijn?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "profiles/queries:getMyProfile",
+        "bikes/queries:list",
+        "saddleWidth/queries:listSaddleWidthSessions"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-feedback-loading-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Wat kan er beter?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "feedback/queries:getMyFeedback",
+        "feedback/queries:getFeatureBoard",
+        "releases/queries:getPublicReleases"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-feedback-empty-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Wat kan er beter?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "feedback/queries:getMyFeedback",
+        "feedback/queries:getFeatureBoard",
+        "releases/queries:getPublicReleases"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-feedback-filled-board-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Wat kan er beter?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "feedback/queries:getMyFeedback",
+        "feedback/queries:getFeatureBoard",
+        "releases/queries:getPublicReleases"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-feedback-filled-changelog-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Wat kan er beter?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "feedback/queries:getMyFeedback",
+        "feedback/queries:getFeatureBoard",
+        "releases/queries:getPublicReleases"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-settings-filled-delete-dialog-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Maak het jouw omgeving"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "integrations/queries:getStravaBikeOverview"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-app-filled-android-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Zet BestBikeFit4U op je beginscherm."
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-app-filled-desktop-platform-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Zet BestBikeFit4U op je beginscherm."
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-pressure-calculator-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Meer grip, minder weerstand"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "bikes/queries:listByUser",
+        "pressureCalculations/queries:getLatestByBikeForUser",
+        "bikes/queries:list",
+        "profiles/queries:getMyProfile",
+        "wheelsets/queries:listForBike"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-gearing-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Kom jij die klim op?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "bikes/queries:list",
+        "profiles/queries:getMyProfile",
+        "bikes/queries:get",
+        "gearing/queries:listGearingSessions"
+      ],
+      "actions": [
+        {
+          "name": "gearing/mutations:createDashboardGearingSession",
+          "args": [
+            {
+              "bikeId": "bike1",
+              "input": {
+                "drivetrainType": "2x",
+                "chainrings": [
+                  50,
+                  34
+                ],
+                "cassetteTeeth": [
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  17,
+                  19,
+                  21,
+                  24,
+                  27,
+                  30
+                ],
+                "wheelCircumferenceMm": 2105,
+                "crankLengthMm": 172.5,
+                "cadenceRpm": 85,
+                "bikeType": "road",
+                "riderWeightKg": 75,
+                "bikeWeightKg": 8.5,
+                "preferredCadenceRpm": 85,
+                "climbGradientPct": 8,
+                "climbLengthKm": 6.083449999999999,
+                "eventType": "sportive",
+                "rideIntent": "mountain_sportive"
+              },
+              "math": {
+                "drivetrainType": "2x",
+                "normalizedChainrings": [
+                  34,
+                  50
+                ],
+                "normalizedCassetteTeeth": [
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  17,
+                  19,
+                  21,
+                  24,
+                  27,
+                  30
+                ],
+                "wheelCircumferenceMm": 2105,
+                "wheelDiameterInches": 26.38,
+                "wheelRadiusMm": 335,
+                "gearPairs": [
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 30,
+                    "ratio": 1.1333,
+                    "developmentM": 2.386,
+                    "gearInches": 29.9,
+                    "gainRatio": 2.201,
+                    "speedKmhAtCadence": 12.17
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 27,
+                    "ratio": 1.2593,
+                    "developmentM": 2.651,
+                    "gearInches": 33.22,
+                    "gainRatio": 2.446,
+                    "speedKmhAtCadence": 13.52
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 24,
+                    "ratio": 1.4167,
+                    "developmentM": 2.982,
+                    "gearInches": 37.37,
+                    "gainRatio": 2.751,
+                    "speedKmhAtCadence": 15.21
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 21,
+                    "ratio": 1.619,
+                    "developmentM": 3.408,
+                    "gearInches": 42.71,
+                    "gainRatio": 3.144,
+                    "speedKmhAtCadence": 17.38
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 30,
+                    "ratio": 1.6667,
+                    "developmentM": 3.508,
+                    "gearInches": 43.97,
+                    "gainRatio": 3.237,
+                    "speedKmhAtCadence": 17.89
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 19,
+                    "ratio": 1.7895,
+                    "developmentM": 3.767,
+                    "gearInches": 47.21,
+                    "gainRatio": 3.475,
+                    "speedKmhAtCadence": 19.21
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 27,
+                    "ratio": 1.8519,
+                    "developmentM": 3.898,
+                    "gearInches": 48.85,
+                    "gainRatio": 3.597,
+                    "speedKmhAtCadence": 19.88
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 17,
+                    "ratio": 2,
+                    "developmentM": 4.21,
+                    "gearInches": 52.76,
+                    "gainRatio": 3.884,
+                    "speedKmhAtCadence": 21.47
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 24,
+                    "ratio": 2.0833,
+                    "developmentM": 4.385,
+                    "gearInches": 54.96,
+                    "gainRatio": 4.046,
+                    "speedKmhAtCadence": 22.37
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 15,
+                    "ratio": 2.2667,
+                    "developmentM": 4.771,
+                    "gearInches": 59.79,
+                    "gainRatio": 4.402,
+                    "speedKmhAtCadence": 24.33
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 21,
+                    "ratio": 2.381,
+                    "developmentM": 5.012,
+                    "gearInches": 62.81,
+                    "gainRatio": 4.624,
+                    "speedKmhAtCadence": 25.56
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 14,
+                    "ratio": 2.4286,
+                    "developmentM": 5.112,
+                    "gearInches": 64.06,
+                    "gainRatio": 4.717,
+                    "speedKmhAtCadence": 26.07
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 13,
+                    "ratio": 2.6154,
+                    "developmentM": 5.505,
+                    "gearInches": 68.99,
+                    "gainRatio": 5.079,
+                    "speedKmhAtCadence": 28.08
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 19,
+                    "ratio": 2.6316,
+                    "developmentM": 5.539,
+                    "gearInches": 69.42,
+                    "gainRatio": 5.111,
+                    "speedKmhAtCadence": 28.25
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 12,
+                    "ratio": 2.8333,
+                    "developmentM": 5.964,
+                    "gearInches": 74.74,
+                    "gainRatio": 5.503,
+                    "speedKmhAtCadence": 30.42
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 17,
+                    "ratio": 2.9412,
+                    "developmentM": 6.191,
+                    "gearInches": 77.59,
+                    "gainRatio": 5.712,
+                    "speedKmhAtCadence": 31.58
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 11,
+                    "ratio": 3.0909,
+                    "developmentM": 6.506,
+                    "gearInches": 81.54,
+                    "gainRatio": 6.003,
+                    "speedKmhAtCadence": 33.18
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 15,
+                    "ratio": 3.3333,
+                    "developmentM": 7.017,
+                    "gearInches": 87.93,
+                    "gainRatio": 6.474,
+                    "speedKmhAtCadence": 35.78
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 14,
+                    "ratio": 3.5714,
+                    "developmentM": 7.518,
+                    "gearInches": 94.21,
+                    "gainRatio": 6.936,
+                    "speedKmhAtCadence": 38.34
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 13,
+                    "ratio": 3.8462,
+                    "developmentM": 8.096,
+                    "gearInches": 101.46,
+                    "gainRatio": 7.47,
+                    "speedKmhAtCadence": 41.29
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 12,
+                    "ratio": 4.1667,
+                    "developmentM": 8.771,
+                    "gearInches": 109.92,
+                    "gainRatio": 8.092,
+                    "speedKmhAtCadence": 44.73
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 11,
+                    "ratio": 4.5455,
+                    "developmentM": 9.568,
+                    "gearInches": 119.91,
+                    "gainRatio": 8.828,
+                    "speedKmhAtCadence": 48.8
+                  }
+                ],
+                "easiestGear": {
+                  "frontChainringTeeth": 34,
+                  "rearCogTeeth": 30,
+                  "ratio": 1.1333,
+                  "developmentM": 2.386,
+                  "gearInches": 29.9,
+                  "gainRatio": 2.201,
+                  "speedKmhAtCadence": 12.17
+                },
+                "hardestGear": {
+                  "frontChainringTeeth": 50,
+                  "rearCogTeeth": 11,
+                  "ratio": 4.5455,
+                  "developmentM": 9.568,
+                  "gearInches": 119.91,
+                  "gainRatio": 8.828,
+                  "speedKmhAtCadence": 48.8
+                },
+                "rangeRatio": 4.011,
+                "rangePercent": 301.1
+              },
+              "suitability": {
+                "publicVerdict": "likely_overgeared",
+                "setupLabel": "needs bailout gear",
+                "gearRangeScore": 89,
+                "climbSuitabilityScore": 17,
+                "eventReadinessScore": 43,
+                "requiredPowerWatts": 248,
+                "estimatedClimbDurationMinutes": 26.1,
+                "assumptions": [
+                  "Exact gear math uses chainring teeth, cassette teeth, wheel circumference, and cadence only.",
+                  "Climb suitability uses a steady-state climbing model with gravity, rolling resistance, aero drag, and drivetrain efficiency."
+                ],
+                "warnings": [],
+                "recommendationText": "Your current 34 x 30 low gear is too hard for long climbing comfort. A larger cassette, smaller inner ring, or both would give you a safer cadence margin.",
+                "confidence": {
+                  "score": 1,
+                  "level": "high",
+                  "mathScore": 100,
+                  "suitabilityScore": 100,
+                  "reasons": [
+                    "FTP missing, so sustainable climbing power is estimated directionally."
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-saddle-selector-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Hoe breed moet je zadel zijn?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "profiles/queries:getMyProfile",
+        "bikes/queries:list",
+        "saddleWidth/queries:listSaddleWidthSessions"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-shoe-cleat-fit-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Begin bij je voeten."
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-settings-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Maak het jouw omgeving"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "integrations/queries:getStravaBikeOverview"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-feedback-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Wat kan er beter?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "feedback/queries:getMyFeedback",
+        "feedback/queries:getFeatureBoard",
+        "releases/queries:getPublicReleases"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-app-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Zet BestBikeFit4U op je beginscherm."
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-pressure-calculator-loading-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Meer grip, minder weerstand"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "bikes/queries:listByUser",
+        "pressureCalculations/queries:getLatestByBikeForUser"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-pressure-calculator-empty-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Meer grip, minder weerstand"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "bikes/queries:listByUser",
+        "pressureCalculations/queries:getLatestByBikeForUser",
+        "bikes/queries:list",
+        "profiles/queries:getMyProfile"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-saddle-selector-empty-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Hoe breed moet je zadel zijn?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "profiles/queries:getMyProfile",
+        "bikes/queries:list",
+        "saddleWidth/queries:listSaddleWidthSessions"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-feedback-loading-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Wat kan er beter?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "feedback/queries:getMyFeedback",
+        "feedback/queries:getFeatureBoard",
+        "releases/queries:getPublicReleases"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-feedback-empty-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Wat kan er beter?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "feedback/queries:getMyFeedback",
+        "feedback/queries:getFeatureBoard",
+        "releases/queries:getPublicReleases"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-feedback-filled-board-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Wat kan er beter?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "feedback/queries:getMyFeedback",
+        "feedback/queries:getFeatureBoard",
+        "releases/queries:getPublicReleases"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-feedback-filled-changelog-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Wat kan er beter?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "feedback/queries:getMyFeedback",
+        "feedback/queries:getFeatureBoard",
+        "releases/queries:getPublicReleases"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-settings-filled-delete-dialog-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Maak het jouw omgeving"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "integrations/queries:getStravaBikeOverview"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-app-filled-android-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Zet BestBikeFit4U op je beginscherm."
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "nl-app-filled-desktop-platform-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Zet BestBikeFit4U op je beginscherm."
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-pressure-calculator-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "More grip, less resistance"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "bikes/queries:listByUser",
+        "pressureCalculations/queries:getLatestByBikeForUser",
+        "bikes/queries:list",
+        "profiles/queries:getMyProfile",
+        "wheelsets/queries:listForBike"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-gearing-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Can you climb it?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "bikes/queries:list",
+        "profiles/queries:getMyProfile",
+        "bikes/queries:get",
+        "gearing/queries:listGearingSessions"
+      ],
+      "actions": [
+        {
+          "name": "gearing/mutations:createDashboardGearingSession",
+          "args": [
+            {
+              "bikeId": "bike1",
+              "input": {
+                "drivetrainType": "2x",
+                "chainrings": [
+                  50,
+                  34
+                ],
+                "cassetteTeeth": [
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  17,
+                  19,
+                  21,
+                  24,
+                  27,
+                  30
+                ],
+                "wheelCircumferenceMm": 2105,
+                "crankLengthMm": 172.5,
+                "cadenceRpm": 85,
+                "bikeType": "road",
+                "riderWeightKg": 75,
+                "bikeWeightKg": 8.5,
+                "preferredCadenceRpm": 85,
+                "climbGradientPct": 8,
+                "climbLengthKm": 6.083449999999999,
+                "eventType": "sportive",
+                "rideIntent": "mountain_sportive"
+              },
+              "math": {
+                "drivetrainType": "2x",
+                "normalizedChainrings": [
+                  34,
+                  50
+                ],
+                "normalizedCassetteTeeth": [
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  17,
+                  19,
+                  21,
+                  24,
+                  27,
+                  30
+                ],
+                "wheelCircumferenceMm": 2105,
+                "wheelDiameterInches": 26.38,
+                "wheelRadiusMm": 335,
+                "gearPairs": [
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 30,
+                    "ratio": 1.1333,
+                    "developmentM": 2.386,
+                    "gearInches": 29.9,
+                    "gainRatio": 2.201,
+                    "speedKmhAtCadence": 12.17
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 27,
+                    "ratio": 1.2593,
+                    "developmentM": 2.651,
+                    "gearInches": 33.22,
+                    "gainRatio": 2.446,
+                    "speedKmhAtCadence": 13.52
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 24,
+                    "ratio": 1.4167,
+                    "developmentM": 2.982,
+                    "gearInches": 37.37,
+                    "gainRatio": 2.751,
+                    "speedKmhAtCadence": 15.21
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 21,
+                    "ratio": 1.619,
+                    "developmentM": 3.408,
+                    "gearInches": 42.71,
+                    "gainRatio": 3.144,
+                    "speedKmhAtCadence": 17.38
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 30,
+                    "ratio": 1.6667,
+                    "developmentM": 3.508,
+                    "gearInches": 43.97,
+                    "gainRatio": 3.237,
+                    "speedKmhAtCadence": 17.89
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 19,
+                    "ratio": 1.7895,
+                    "developmentM": 3.767,
+                    "gearInches": 47.21,
+                    "gainRatio": 3.475,
+                    "speedKmhAtCadence": 19.21
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 27,
+                    "ratio": 1.8519,
+                    "developmentM": 3.898,
+                    "gearInches": 48.85,
+                    "gainRatio": 3.597,
+                    "speedKmhAtCadence": 19.88
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 17,
+                    "ratio": 2,
+                    "developmentM": 4.21,
+                    "gearInches": 52.76,
+                    "gainRatio": 3.884,
+                    "speedKmhAtCadence": 21.47
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 24,
+                    "ratio": 2.0833,
+                    "developmentM": 4.385,
+                    "gearInches": 54.96,
+                    "gainRatio": 4.046,
+                    "speedKmhAtCadence": 22.37
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 15,
+                    "ratio": 2.2667,
+                    "developmentM": 4.771,
+                    "gearInches": 59.79,
+                    "gainRatio": 4.402,
+                    "speedKmhAtCadence": 24.33
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 21,
+                    "ratio": 2.381,
+                    "developmentM": 5.012,
+                    "gearInches": 62.81,
+                    "gainRatio": 4.624,
+                    "speedKmhAtCadence": 25.56
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 14,
+                    "ratio": 2.4286,
+                    "developmentM": 5.112,
+                    "gearInches": 64.06,
+                    "gainRatio": 4.717,
+                    "speedKmhAtCadence": 26.07
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 13,
+                    "ratio": 2.6154,
+                    "developmentM": 5.505,
+                    "gearInches": 68.99,
+                    "gainRatio": 5.079,
+                    "speedKmhAtCadence": 28.08
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 19,
+                    "ratio": 2.6316,
+                    "developmentM": 5.539,
+                    "gearInches": 69.42,
+                    "gainRatio": 5.111,
+                    "speedKmhAtCadence": 28.25
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 12,
+                    "ratio": 2.8333,
+                    "developmentM": 5.964,
+                    "gearInches": 74.74,
+                    "gainRatio": 5.503,
+                    "speedKmhAtCadence": 30.42
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 17,
+                    "ratio": 2.9412,
+                    "developmentM": 6.191,
+                    "gearInches": 77.59,
+                    "gainRatio": 5.712,
+                    "speedKmhAtCadence": 31.58
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 11,
+                    "ratio": 3.0909,
+                    "developmentM": 6.506,
+                    "gearInches": 81.54,
+                    "gainRatio": 6.003,
+                    "speedKmhAtCadence": 33.18
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 15,
+                    "ratio": 3.3333,
+                    "developmentM": 7.017,
+                    "gearInches": 87.93,
+                    "gainRatio": 6.474,
+                    "speedKmhAtCadence": 35.78
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 14,
+                    "ratio": 3.5714,
+                    "developmentM": 7.518,
+                    "gearInches": 94.21,
+                    "gainRatio": 6.936,
+                    "speedKmhAtCadence": 38.34
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 13,
+                    "ratio": 3.8462,
+                    "developmentM": 8.096,
+                    "gearInches": 101.46,
+                    "gainRatio": 7.47,
+                    "speedKmhAtCadence": 41.29
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 12,
+                    "ratio": 4.1667,
+                    "developmentM": 8.771,
+                    "gearInches": 109.92,
+                    "gainRatio": 8.092,
+                    "speedKmhAtCadence": 44.73
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 11,
+                    "ratio": 4.5455,
+                    "developmentM": 9.568,
+                    "gearInches": 119.91,
+                    "gainRatio": 8.828,
+                    "speedKmhAtCadence": 48.8
+                  }
+                ],
+                "easiestGear": {
+                  "frontChainringTeeth": 34,
+                  "rearCogTeeth": 30,
+                  "ratio": 1.1333,
+                  "developmentM": 2.386,
+                  "gearInches": 29.9,
+                  "gainRatio": 2.201,
+                  "speedKmhAtCadence": 12.17
+                },
+                "hardestGear": {
+                  "frontChainringTeeth": 50,
+                  "rearCogTeeth": 11,
+                  "ratio": 4.5455,
+                  "developmentM": 9.568,
+                  "gearInches": 119.91,
+                  "gainRatio": 8.828,
+                  "speedKmhAtCadence": 48.8
+                },
+                "rangeRatio": 4.011,
+                "rangePercent": 301.1
+              },
+              "suitability": {
+                "publicVerdict": "likely_overgeared",
+                "setupLabel": "needs bailout gear",
+                "gearRangeScore": 89,
+                "climbSuitabilityScore": 17,
+                "eventReadinessScore": 43,
+                "requiredPowerWatts": 248,
+                "estimatedClimbDurationMinutes": 26.1,
+                "assumptions": [
+                  "Exact gear math uses chainring teeth, cassette teeth, wheel circumference, and cadence only.",
+                  "Climb suitability uses a steady-state climbing model with gravity, rolling resistance, aero drag, and drivetrain efficiency."
+                ],
+                "warnings": [],
+                "recommendationText": "Your current 34 x 30 low gear is too hard for long climbing comfort. A larger cassette, smaller inner ring, or both would give you a safer cadence margin.",
+                "confidence": {
+                  "score": 1,
+                  "level": "high",
+                  "mathScore": 100,
+                  "suitabilityScore": 100,
+                  "reasons": [
+                    "FTP missing, so sustainable climbing power is estimated directionally."
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-saddle-selector-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "How wide should your saddle be?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "profiles/queries:getMyProfile",
+        "bikes/queries:list",
+        "saddleWidth/queries:listSaddleWidthSessions"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-shoe-cleat-fit-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Start with your feet."
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-settings-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Make it your space"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "integrations/queries:getStravaBikeOverview"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-feedback-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "What could be better?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "feedback/queries:getMyFeedback",
+        "feedback/queries:getFeatureBoard",
+        "releases/queries:getPublicReleases"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-app-filled-1440",
+      "width": 1440,
+      "overflow": false,
+      "headings": [
+        "Add BestBikeFit4U to your home screen."
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-pressure-calculator-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "More grip, less resistance"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "bikes/queries:listByUser",
+        "pressureCalculations/queries:getLatestByBikeForUser",
+        "bikes/queries:list",
+        "profiles/queries:getMyProfile",
+        "wheelsets/queries:listForBike"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-gearing-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Can you climb it?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "bikes/queries:list",
+        "profiles/queries:getMyProfile",
+        "bikes/queries:get",
+        "gearing/queries:listGearingSessions"
+      ],
+      "actions": [
+        {
+          "name": "gearing/mutations:createDashboardGearingSession",
+          "args": [
+            {
+              "bikeId": "bike1",
+              "input": {
+                "drivetrainType": "2x",
+                "chainrings": [
+                  50,
+                  34
+                ],
+                "cassetteTeeth": [
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  17,
+                  19,
+                  21,
+                  24,
+                  27,
+                  30
+                ],
+                "wheelCircumferenceMm": 2105,
+                "crankLengthMm": 172.5,
+                "cadenceRpm": 85,
+                "bikeType": "road",
+                "riderWeightKg": 75,
+                "bikeWeightKg": 8.5,
+                "preferredCadenceRpm": 85,
+                "climbGradientPct": 8,
+                "climbLengthKm": 6.083449999999999,
+                "eventType": "sportive",
+                "rideIntent": "mountain_sportive"
+              },
+              "math": {
+                "drivetrainType": "2x",
+                "normalizedChainrings": [
+                  34,
+                  50
+                ],
+                "normalizedCassetteTeeth": [
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  17,
+                  19,
+                  21,
+                  24,
+                  27,
+                  30
+                ],
+                "wheelCircumferenceMm": 2105,
+                "wheelDiameterInches": 26.38,
+                "wheelRadiusMm": 335,
+                "gearPairs": [
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 30,
+                    "ratio": 1.1333,
+                    "developmentM": 2.386,
+                    "gearInches": 29.9,
+                    "gainRatio": 2.201,
+                    "speedKmhAtCadence": 12.17
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 27,
+                    "ratio": 1.2593,
+                    "developmentM": 2.651,
+                    "gearInches": 33.22,
+                    "gainRatio": 2.446,
+                    "speedKmhAtCadence": 13.52
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 24,
+                    "ratio": 1.4167,
+                    "developmentM": 2.982,
+                    "gearInches": 37.37,
+                    "gainRatio": 2.751,
+                    "speedKmhAtCadence": 15.21
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 21,
+                    "ratio": 1.619,
+                    "developmentM": 3.408,
+                    "gearInches": 42.71,
+                    "gainRatio": 3.144,
+                    "speedKmhAtCadence": 17.38
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 30,
+                    "ratio": 1.6667,
+                    "developmentM": 3.508,
+                    "gearInches": 43.97,
+                    "gainRatio": 3.237,
+                    "speedKmhAtCadence": 17.89
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 19,
+                    "ratio": 1.7895,
+                    "developmentM": 3.767,
+                    "gearInches": 47.21,
+                    "gainRatio": 3.475,
+                    "speedKmhAtCadence": 19.21
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 27,
+                    "ratio": 1.8519,
+                    "developmentM": 3.898,
+                    "gearInches": 48.85,
+                    "gainRatio": 3.597,
+                    "speedKmhAtCadence": 19.88
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 17,
+                    "ratio": 2,
+                    "developmentM": 4.21,
+                    "gearInches": 52.76,
+                    "gainRatio": 3.884,
+                    "speedKmhAtCadence": 21.47
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 24,
+                    "ratio": 2.0833,
+                    "developmentM": 4.385,
+                    "gearInches": 54.96,
+                    "gainRatio": 4.046,
+                    "speedKmhAtCadence": 22.37
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 15,
+                    "ratio": 2.2667,
+                    "developmentM": 4.771,
+                    "gearInches": 59.79,
+                    "gainRatio": 4.402,
+                    "speedKmhAtCadence": 24.33
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 21,
+                    "ratio": 2.381,
+                    "developmentM": 5.012,
+                    "gearInches": 62.81,
+                    "gainRatio": 4.624,
+                    "speedKmhAtCadence": 25.56
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 14,
+                    "ratio": 2.4286,
+                    "developmentM": 5.112,
+                    "gearInches": 64.06,
+                    "gainRatio": 4.717,
+                    "speedKmhAtCadence": 26.07
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 13,
+                    "ratio": 2.6154,
+                    "developmentM": 5.505,
+                    "gearInches": 68.99,
+                    "gainRatio": 5.079,
+                    "speedKmhAtCadence": 28.08
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 19,
+                    "ratio": 2.6316,
+                    "developmentM": 5.539,
+                    "gearInches": 69.42,
+                    "gainRatio": 5.111,
+                    "speedKmhAtCadence": 28.25
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 12,
+                    "ratio": 2.8333,
+                    "developmentM": 5.964,
+                    "gearInches": 74.74,
+                    "gainRatio": 5.503,
+                    "speedKmhAtCadence": 30.42
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 17,
+                    "ratio": 2.9412,
+                    "developmentM": 6.191,
+                    "gearInches": 77.59,
+                    "gainRatio": 5.712,
+                    "speedKmhAtCadence": 31.58
+                  },
+                  {
+                    "frontChainringTeeth": 34,
+                    "rearCogTeeth": 11,
+                    "ratio": 3.0909,
+                    "developmentM": 6.506,
+                    "gearInches": 81.54,
+                    "gainRatio": 6.003,
+                    "speedKmhAtCadence": 33.18
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 15,
+                    "ratio": 3.3333,
+                    "developmentM": 7.017,
+                    "gearInches": 87.93,
+                    "gainRatio": 6.474,
+                    "speedKmhAtCadence": 35.78
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 14,
+                    "ratio": 3.5714,
+                    "developmentM": 7.518,
+                    "gearInches": 94.21,
+                    "gainRatio": 6.936,
+                    "speedKmhAtCadence": 38.34
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 13,
+                    "ratio": 3.8462,
+                    "developmentM": 8.096,
+                    "gearInches": 101.46,
+                    "gainRatio": 7.47,
+                    "speedKmhAtCadence": 41.29
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 12,
+                    "ratio": 4.1667,
+                    "developmentM": 8.771,
+                    "gearInches": 109.92,
+                    "gainRatio": 8.092,
+                    "speedKmhAtCadence": 44.73
+                  },
+                  {
+                    "frontChainringTeeth": 50,
+                    "rearCogTeeth": 11,
+                    "ratio": 4.5455,
+                    "developmentM": 9.568,
+                    "gearInches": 119.91,
+                    "gainRatio": 8.828,
+                    "speedKmhAtCadence": 48.8
+                  }
+                ],
+                "easiestGear": {
+                  "frontChainringTeeth": 34,
+                  "rearCogTeeth": 30,
+                  "ratio": 1.1333,
+                  "developmentM": 2.386,
+                  "gearInches": 29.9,
+                  "gainRatio": 2.201,
+                  "speedKmhAtCadence": 12.17
+                },
+                "hardestGear": {
+                  "frontChainringTeeth": 50,
+                  "rearCogTeeth": 11,
+                  "ratio": 4.5455,
+                  "developmentM": 9.568,
+                  "gearInches": 119.91,
+                  "gainRatio": 8.828,
+                  "speedKmhAtCadence": 48.8
+                },
+                "rangeRatio": 4.011,
+                "rangePercent": 301.1
+              },
+              "suitability": {
+                "publicVerdict": "likely_overgeared",
+                "setupLabel": "needs bailout gear",
+                "gearRangeScore": 89,
+                "climbSuitabilityScore": 17,
+                "eventReadinessScore": 43,
+                "requiredPowerWatts": 248,
+                "estimatedClimbDurationMinutes": 26.1,
+                "assumptions": [
+                  "Exact gear math uses chainring teeth, cassette teeth, wheel circumference, and cadence only.",
+                  "Climb suitability uses a steady-state climbing model with gravity, rolling resistance, aero drag, and drivetrain efficiency."
+                ],
+                "warnings": [],
+                "recommendationText": "Your current 34 x 30 low gear is too hard for long climbing comfort. A larger cassette, smaller inner ring, or both would give you a safer cadence margin.",
+                "confidence": {
+                  "score": 1,
+                  "level": "high",
+                  "mathScore": 100,
+                  "suitabilityScore": 100,
+                  "reasons": [
+                    "FTP missing, so sustainable climbing power is estimated directionally."
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-saddle-selector-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "How wide should your saddle be?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "profiles/queries:getMyProfile",
+        "bikes/queries:list",
+        "saddleWidth/queries:listSaddleWidthSessions"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-shoe-cleat-fit-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Start with your feet."
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-settings-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Make it your space"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "integrations/queries:getStravaBikeOverview"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-feedback-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "What could be better?"
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser",
+        "sessions/queries:listByUser",
+        "integrations/queries:getStravaStatus",
+        "messages/queries:getMyMessages",
+        "feedback/queries:getMyFeedback",
+        "feedback/queries:getFeatureBoard",
+        "releases/queries:getPublicReleases"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    },
+    {
+      "name": "en-app-filled-390",
+      "width": 390,
+      "overflow": false,
+      "headings": [
+        "Add BestBikeFit4U to your home screen."
+      ],
+      "unknownQueries": [],
+      "queries": [
+        "users/queries:getCurrentUser"
+      ],
+      "actions": [],
+      "wide": [],
+      "errors": []
+    }
+  ]
+}

@@ -10,24 +10,27 @@ import { BrandLogo } from "@/components/branding";
 import { Button, LoadingState } from "@/components/ui";
 import { DashboardMessageSurface } from "@/components/dashboard-messages";
 import { StravaAutoImportTrigger } from "@/components/integrations/StravaAutoImportTrigger";
-import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
+import { AccountLanguageSwitch } from "@/components/account/AccountLanguageSwitch";
+import { AccountBottomTabs } from "@/components/account/AccountBottomTabs";
+import { AccountMenuFooter } from "@/components/account/AccountMenuFooter";
+import { accountNavigation, activeAccountPath, accountActiveClassName, accountIdleClassName, accountNavClassName } from "@/components/account/account-navigation";
+import { Dialog, DialogContent, DialogTitle } from "@/components/prototyper-ui/ui/dialog";
 import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
-import { DASHBOARD_PRESSURE_CALCULATOR_PATH } from "@/lib/pressureRoutes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { cn } from "@/utils/cn";
 import { Menu, X } from "lucide-react";
-import { adminNavigationGroups } from "@/components/admin/layout/admin-navigation";
+import { adminNavigationGroups, isAdminNavigationActive } from "@/components/admin/layout/admin-navigation";
 import { canAccessAdminRoute } from "@/components/admin/auth/admin-route-access";
 import { isAdminRole } from "@/components/admin/auth/admin-auth-shared";
 
 export const DASHBOARD_MOBILE_HEADER_CLASSNAME =
-  "dashboard-sidebar-surface dashboard-theme-context sticky top-0 z-30 flex items-center justify-between border-b px-4 py-3 md:hidden";
+  "sticky top-0 z-30 flex min-h-[76px] items-center justify-between gap-3 bg-[var(--bbf-inkt)] px-4 py-3 text-white md:hidden";
 
 export const DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME =
   "panel-backdrop fixed inset-0 z-30 md:hidden";
 
 export const DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME =
-  "dashboard-sidebar-surface dashboard-theme-context fixed inset-y-0 left-0 z-40 w-72 overflow-y-auto border-r p-4 md:hidden";
+  "w-[calc(100%-32px)] max-h-[80dvh] overflow-y-auto rounded-3xl border-0 bg-[var(--bbf-inkt)] p-5 text-white md:hidden";
 
 export default function DashboardLayout({
   children,
@@ -52,14 +55,14 @@ export default function DashboardLayout({
         : [],
     [adminRole]
   );
-  const { locale, messages, languageSwitchLabels } = useDashboardMessages();
+  const { locale, messages } = useDashboardMessages();
   const internalPathname = stripLocalePrefix(pathname ?? "/");
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
   const loginPath = toLocalizedPath("/login");
-  const mobileSectionLabelClassName =
-    "px-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:oklch(var(--dashboard-nav-foreground))]";
-  const mobileNavItemClassName =
-    "block rounded-lg px-3 py-2.5 text-[0.95rem] font-medium tracking-[-0.01em] transition-colors";
+  const mobileSectionLabelClassName = "px-3 text-xs font-bold uppercase tracking-widest text-[var(--bbf-op-donker)]";
+  const mobileNavItemClassName = accountNavClassName;
+  const navigation = accountNavigation(messages);
+  const activePath = activeAccountPath(internalPathname, navigation.map((item) => item.href));
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -67,9 +70,19 @@ export default function DashboardLayout({
     }
   }, [isLoading, isAuthenticated, loginPath, router]);
 
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    const desktop = window.matchMedia("(min-width: 768px)");
+    const closeOnDesktop = (event: MediaQueryListEvent) => {
+      if (event.matches) setIsMobileMenuOpen(false);
+    };
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => desktop.removeEventListener("change", closeOnDesktop);
+  }, []);
+
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="dashboard-shell-surface min-h-screen bg-background">
+      <div className="min-h-screen bg-background text-foreground">
         <LoadingState
           label={messages.layout.loading}
           className="min-h-screen"
@@ -79,21 +92,21 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="dashboard-shell-surface min-h-screen bg-background">
-      <div className="hidden md:block">
+    <div className="min-h-screen bg-background text-foreground md:grid md:grid-cols-[264px_minmax(0,1fr)]">
+      <div className="hidden bg-[var(--bbf-inkt)] md:row-span-2 md:block">
         <DashboardSidebar />
       </div>
 
       <div className={DASHBOARD_MOBILE_HEADER_CLASSNAME}>
         <BrandLogo
           href={toLocalizedPath("/")}
-          asset="appIcon"
-          className="block w-10 shrink-0"
+          asset="dark"
+          className="flex min-h-11 w-[140px] shrink-0 items-center sm:w-[170px]"
           imageClassName="block"
           ariaLabel={messages.layout.website.home}
         />
         <div className="flex items-center gap-2">
-          <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
+          <AccountLanguageSwitch />
           <Button
             type="button"
             variant="outline"
@@ -104,56 +117,37 @@ export default function DashboardLayout({
                 : messages.layout.mobileMenu.openAria
             }
             onClick={() => setIsMobileMenuOpen((current) => !current)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border-[color:oklch(var(--dashboard-border-soft))] bg-[color:color-mix(in_oklch,var(--dashboard-surface-muted)_92%,var(--background)_8%)] px-0 text-[color:oklch(var(--dashboard-nav-foreground-strong))] hover:bg-[color:color-mix(in_oklch,var(--dashboard-surface-strong)_84%,var(--background)_16%)]"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border-white/30 bg-transparent px-0 text-white hover:bg-white/10"
           >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
       </div>
 
-      {isMobileMenuOpen && (
-        <>
-          <button
-            type="button"
-            aria-label={messages.layout.mobileMenu.overlayCloseAria}
-            onClick={() => setIsMobileMenuOpen(false)}
-            className={DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME}
-          />
-          <nav className={DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME}>
-            <BrandLogo
-              href={toLocalizedPath("/")}
-              asset="appIcon"
-              className="mb-5 block w-14"
-              imageClassName="block"
-              ariaLabel={messages.layout.website.home}
-            />
+      <Dialog open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+        <DialogContent showCloseButton={false} className={DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME}>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <DialogTitle className="font-display text-xl font-bold text-white">{locale === "nl" ? "Meer in je account" : "More in your account"}</DialogTitle>
+            <Button variant="ghost" aria-label={messages.layout.mobileMenu.closeAria} onClick={() => setIsMobileMenuOpen(false)} className="min-h-11 min-w-11 text-white hover:bg-white/10"><X size={20} /></Button>
+          </div>
+          <nav>
             <div className="space-y-5">
               <section className="space-y-2">
                 <p className={mobileSectionLabelClassName}>
                   {messages.layout.sections.dashboard}
                 </p>
-                <div className="dashboard-card-surface-muted space-y-1 rounded-[calc(var(--radius-xl)+0.125rem)] border p-2">
-                  {[
-                    { href: "/dashboard", label: messages.nav.dashboard },
-                    { href: "/feedback", label: messages.nav.feedback },
-                    { href: "/profile", label: messages.nav.profile },
-                    { href: "/bikes", label: messages.nav.myBikes },
-                    { href: "/bikes/new", label: messages.nav.newBike },
-                    { href: "/fit-history", label: messages.nav.bikeFitting },
-                    { href: "/fit", label: messages.nav.newFitSession },
-                    { href: "/saddle-selector", label: messages.nav.saddleSelector },
-                    { href: DASHBOARD_PRESSURE_CALCULATOR_PATH, label: messages.nav.tirePressure },
-                    { href: "/settings", label: messages.nav.settings },
-                  ].map((item) => (
+                <div className="space-y-1">
+                  {navigation.map((item) => (
                     <Link
                       key={item.href}
                       href={toLocalizedPath(item.href)}
+                      aria-current={activePath === item.href ? "page" : undefined}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={cn(
                         mobileNavItemClassName,
-                        internalPathname === item.href || internalPathname.startsWith(`${item.href}/`)
-                          ? "dashboard-nav-item-active"
-                          : "dashboard-nav-item hover:dashboard-nav-item-hover"
+                        activePath === item.href
+                          ? accountActiveClassName
+                          : accountIdleClassName
                       )}
                     >
                       {item.label}
@@ -166,7 +160,7 @@ export default function DashboardLayout({
                 <p className={mobileSectionLabelClassName}>
                   {messages.layout.sections.website}
                 </p>
-                <div className="dashboard-card-surface-muted space-y-1 rounded-[calc(var(--radius-xl)+0.125rem)] border p-2">
+                <div className="space-y-1">
                   {[
                     { href: "/", label: messages.layout.website.home },
                     { href: "/about", label: messages.layout.website.howItWorks },
@@ -179,8 +173,8 @@ export default function DashboardLayout({
                       className={cn(
                         mobileNavItemClassName,
                         internalPathname === item.href || internalPathname.startsWith(`${item.href}/`)
-                          ? "dashboard-nav-item-active"
-                          : "dashboard-nav-item hover:dashboard-nav-item-hover"
+                          ? accountActiveClassName
+                          : accountIdleClassName
                       )}
                     >
                       {item.label}
@@ -194,7 +188,7 @@ export default function DashboardLayout({
                   <p className={mobileSectionLabelClassName}>
                     {messages.layout.sections.admin}
                   </p>
-                  <div className="dashboard-card-surface-muted space-y-4 rounded-[calc(var(--radius-xl)+0.125rem)] border p-2">
+                  <div className="space-y-4">
                     {visibleAdminNavigationGroups.map((group) => (
                       <div key={group.label}>
                         <p className={cn(mobileSectionLabelClassName, "pb-1")}>
@@ -205,12 +199,13 @@ export default function DashboardLayout({
                             <Link
                               key={item.href}
                               href={item.href}
+                              aria-current={isAdminNavigationActive(internalPathname, item.href) ? "page" : undefined}
                               onClick={() => setIsMobileMenuOpen(false)}
                               className={cn(
-                                "block rounded-lg px-3 py-2 text-[0.88rem] font-medium tracking-[-0.01em] transition-colors",
-                                internalPathname === item.href || internalPathname.startsWith(`${item.href}/`)
-                                  ? "dashboard-nav-item-active"
-                                  : "dashboard-nav-item hover:dashboard-nav-item-hover"
+                                "flex min-h-11 items-center rounded-lg px-3 py-2 text-[0.88rem] font-medium tracking-[-0.01em] transition-colors",
+                                isAdminNavigationActive(internalPathname, item.href)
+                                  ? accountActiveClassName
+                                  : accountIdleClassName
                               )}
                             >
                               {item.label}
@@ -224,14 +219,15 @@ export default function DashboardLayout({
               )}
             </div>
           </nav>
-        </>
-      )}
+          <AccountMenuFooter />
+        </DialogContent>
+      </Dialog>
 
-      <div className="md:pl-80">
+      <div className="min-w-0">
         <main
           id="main-content"
           tabIndex={-1}
-          className="mx-auto w-full max-w-7xl p-4 sm:p-6 md:p-8"
+          className="mx-auto w-full max-w-[1440px] px-4 pt-6 pb-[calc(100px+env(safe-area-inset-bottom))] md:p-12"
         >
           <StravaAutoImportTrigger
             userId={user?._id ?? null}
@@ -245,6 +241,7 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
+      <AccountBottomTabs open={isMobileMenuOpen} onOpen={() => setIsMobileMenuOpen(true)} />
       <DashboardMessageSurface showBanners={false} showHomeCards={false} />
     </div>
   );

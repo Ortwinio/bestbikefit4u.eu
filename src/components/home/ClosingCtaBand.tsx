@@ -59,7 +59,7 @@ export function ClosingCtaBand({
             <ul className="mt-8 space-y-4">
               {recommendation.items.map((item) => (
                 <li key={item} className="flex items-center gap-3">
-                  <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-success/15 text-success">
+                  <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-success/15 text-success-text">
                     <CheckCircle2 className="h-4 w-4" />
                   </div>
                   <span className="text-foreground">{item}</span>

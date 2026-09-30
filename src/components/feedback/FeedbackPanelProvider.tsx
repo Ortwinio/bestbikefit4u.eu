@@ -15,6 +15,7 @@ import { extractLocaleFromPathname, stripLocalePrefix } from "@/i18n/navigation"
 import { trackFeedbackPanelOpen, trackFeedbackRouteVisit } from "./feedback-activity";
 import { getFeedbackCopy, getFeedbackLocale } from "./feedback-copy";
 import { FeedbackFloatingButton } from "./FeedbackFloatingButton";
+import { accountFeedbackPlacement } from "@/components/account/account-feedback-placement";
 import { getFeedbackRouteContext } from "./route-context";
 import type { FeedbackType } from "./feedback-api";
 
@@ -122,6 +123,7 @@ export function FeedbackPanelProvider({ children }: PropsWithChildren) {
             <FeedbackFloatingButton
               onClick={() => contextValue.openPanel()}
               label={copy.page.floatingCta}
+              className={accountFeedbackPlacement(pathname)}
             />
           ) : null}
           {hasOpened ? (

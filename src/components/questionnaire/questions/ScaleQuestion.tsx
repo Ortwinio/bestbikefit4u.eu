@@ -48,7 +48,7 @@ export function ScaleQuestion({ config, value, onChange }: ScaleQuestionProps) {
         })}
       </RadioGroup>
 
-      <div className="flex justify-between text-sm text-[color:var(--muted-foreground)]">
+      <div className="flex justify-between text-sm text-[color:var(--color-muted-foreground)]">
         <span>{minLabel}</span>
         <span>{maxLabel}</span>
       </div>

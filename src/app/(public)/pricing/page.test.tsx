@@ -1,82 +1,47 @@
 /* @vitest-environment jsdom */
 
+import type { ReactNode } from "react";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import PricingPage from "./page";
+import PricingPage, { generateMetadata } from "./page";
 
-const useMutationMock = vi.fn();
-let locale: "en" | "nl" = "en";
+let locale: "en" | "nl" = "nl";
 
-vi.mock("next/link", () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string;
-    children?: React.ReactNode;
-    [key: string]: unknown;
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
-}));
-
-vi.mock("convex/react", () => ({
-  useMutation: () => useMutationMock,
-}));
-
-vi.mock("@/lib/cookieConsent", () => ({
-  canTrackMarketing: () => false,
+vi.mock("@/i18n/request", () => ({
+  getRequestLocale: () => Promise.resolve(locale),
 }));
 
 vi.mock("@/components/analytics/MarketingEventTracker", () => ({
   TrackMarketingEventOnView: () => null,
 }));
 
-vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
-  CampaignCtaGroup: ({
-    startHref,
-    donateHref,
-    startLabel,
-    donateLabel,
-  }: {
-    startHref: string;
-    donateHref: string;
-    startLabel?: string;
-    donateLabel?: string;
-  }) => (
-    <div>
-      <a href={startHref}>{startLabel ?? "Start free bike fit"}</a>
-      <a href={donateHref}>{donateLabel ?? "Make a donation"}</a>
-    </div>
-  ),
-}));
-
 vi.mock("@/components/seo/JsonLd", () => ({
-  JsonLd: () => null,
+  JsonLd: ({ schema }: { schema: unknown }) => <script type="application/ld+json">{JSON.stringify(schema)}</script>,
 }));
 
-vi.mock("@/i18n/request", () => ({
-  getRequestLocale: () => Promise.resolve(locale),
+vi.mock("@/components/analytics/TrackedCtaLink", () => ({
+  TrackedCtaLink: ({ href, children }: { href: string; children: ReactNode }) => <a href={href}>{children}</a>,
 }));
 
 beforeEach(() => {
-  locale = "en";
-  vi.useFakeTimers({ toFake: ["Date"] });
-  vi.setSystemTime(new Date("2026-05-01T12:00:00Z"));
-  useMutationMock.mockReset();
+  locale = "nl";
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2026-09-29T12:00:00Z"));
+  vi.stubEnv("STRIPE_BILLING_ENABLED", "false");
+  vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "false");
 });
 
 afterEach(() => {
   cleanup();
-  vi.unstubAllEnvs();
   vi.useRealTimers();
-  vi.restoreAllMocks();
+  vi.unstubAllEnvs();
 });
 
-describe("pricing page", () => {
+describe("pricing campaign regression", () => {
+  beforeEach(() => {
+    locale = "en";
+    vi.setSystemTime(new Date("2026-05-01T12:00:00Z"));
+  });
   it.each(["en", "nl"] as const)("keeps free signup available with a payment notice in %s", async (language) => {
     locale = language;
     vi.setSystemTime(new Date("2026-09-27T12:00:00Z"));
@@ -140,5 +105,44 @@ describe("pricing page", () => {
       .toMatch(/^\/en\/login(?:\?|$)/);
     expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href"))
       .toBe("/en/calculators/bike-fit");
+  });
+});
+
+describe("pricing redesign", () => {
+  it("keeps paused Pro unavailable and the free signup and calculator usable", async () => {
+    render(await PricingPage());
+    const unavailable = screen.getByRole("button", { name: "Tijdelijk niet beschikbaar" }) as HTMLButtonElement;
+    expect(unavailable.disabled).toBe(true);
+    expect(unavailable.getAttribute("aria-describedby")).toBe(screen.getByRole("status").id);
+    expect(screen.queryByText(/Meest gekozen|Most popular/i)).toBeNull();
+    expect(screen.getByRole("link", { name: "Start gratis" }).getAttribute("href")).toBe("/nl/login");
+    expect(screen.getByRole("link", { name: "Start gratis bike fit" }).getAttribute("href")).toBe("/nl/calculators/bike-fit");
+    expect(screen.queryByRole("link", { name: /Start Pro/ })).toBeNull();
+    expect(screen.queryByText(/Doneer voor/)).toBeNull();
+    expect(screen.getAllByRole("columnheader")).toHaveLength(3);
+  });
+
+  it("localizes the pause, headings, navigation and FAQ schema in English", async () => {
+    locale = "en";
+    const { container } = render(await PricingPage());
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Clear pricing for real riders");
+    expect(screen.getByRole("button", { name: "Temporarily unavailable" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Start free" }).getAttribute("href")).toBe("/en/login");
+    const schema = container.querySelector('script[type="application/ld+json"]')?.textContent ?? "";
+    expect(schema).toContain("Can I manage multiple bikes?");
+    const metadata = await generateMetadata();
+    expect(metadata.title).toBe("Pricing | BestBikeFit4U");
+    expect(metadata.alternates?.canonical).toBe("https://bestbikefit4u.eu/en/pricing");
+  });
+
+  it("honors either billing kill switch and restores only the existing login route when enabled", async () => {
+    vi.stubEnv("STRIPE_BILLING_ENABLED", "true");
+    render(await PricingPage());
+    expect((screen.getByRole("button", { name: "Tijdelijk niet beschikbaar" }) as HTMLButtonElement).disabled).toBe(true);
+    cleanup();
+    vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "true");
+    render(await PricingPage());
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(screen.getByRole("link", { name: "Start Pro - EUR 9/maand" }).getAttribute("href")).toBe("/nl/login");
   });
 });

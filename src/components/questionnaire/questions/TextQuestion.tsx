@@ -32,7 +32,7 @@ export function TextQuestion({
         rows={4}
         className="text-base"
       />
-      <p className="flex justify-end text-sm text-[color:var(--muted-foreground)]">
+      <p className="flex justify-end text-sm text-[color:var(--color-muted-foreground)]">
         {currentLength} / {maxLength}
       </p>
     </div>

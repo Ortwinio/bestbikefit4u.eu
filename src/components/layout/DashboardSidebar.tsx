@@ -7,24 +7,16 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { BrandLogo } from "@/components/branding";
-import { LanguageSwitch } from "./LanguageSwitch";
+import { AccountLanguageSwitch } from "@/components/account/AccountLanguageSwitch";
+import { AccountPlan } from "@/components/account/AccountPlan";
+import { accountNavigation, activeAccountPath, accountNavClassName, accountActiveClassName, accountIdleClassName } from "@/components/account/account-navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
-import { DASHBOARD_PRESSURE_CALCULATOR_PATH } from "@/lib/pressureRoutes";
 import { cn } from "@/utils/cn";
 import {
-  LayoutDashboard,
-  Bike,
-  User,
-  Settings,
   LogOut,
-  Gauge,
-  ClipboardList,
-  PlusCircle,
-  MessageSquareMore,
   ChevronDown,
   CircuitBoard,
-  ArrowUpDown,
 } from "lucide-react";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { Button } from "@/components/ui";
@@ -43,23 +35,12 @@ export function DashboardSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { signOut } = useAuthActions();
-  const { locale, messages, languageSwitchLabels } = useDashboardMessages();
+  const { locale, messages } = useDashboardMessages();
   const internalPathname = stripLocalePrefix(pathname ?? "/");
 
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
-  const navigation = [
-    { name: messages.nav.dashboard, href: "/dashboard", icon: LayoutDashboard },
-    { name: messages.nav.profile, href: "/profile", icon: User },
-    { name: messages.nav.myBikes, href: "/bikes", icon: Bike },
-    { name: messages.nav.newBike, href: "/bikes/new", icon: PlusCircle },
-    { name: messages.nav.bikeFitting, href: "/fit-history", icon: ClipboardList },
-    { name: messages.nav.newFitSession, href: "/fit", icon: PlusCircle },
-    { name: messages.nav.tirePressure, href: DASHBOARD_PRESSURE_CALCULATOR_PATH, icon: Gauge },
-    { name: messages.nav.gearing, href: "/gearing", icon: ArrowUpDown },
-    { name: messages.nav.saddleSelector, href: "/saddle-selector", icon: ArrowUpDown },
-    { name: messages.nav.settings, href: "/settings", icon: Settings },
-    { name: messages.nav.feedback, href: "/feedback", icon: MessageSquareMore },
-  ];
+  const navigation = accountNavigation(messages);
+  const activePath = activeAccountPath(internalPathname, navigation.map((item) => item.href));
 
   const user = useQuery(api.users.queries.getCurrentUser);
   const adminRole = isAdminRole(user?.adminRole) ? user.adminRole : null;
@@ -88,56 +69,46 @@ export function DashboardSidebar() {
   const displayName = getEffectiveDisplayName(user, messages.userMenu.fallbackUserName);
   const email = user?.email || "";
   const profileImageSource = getEffectiveProfileImageSource(user);
-  const sectionLabelClassName =
-    "px-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:oklch(var(--dashboard-nav-foreground))]";
-  const navItemClassName =
-    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-[0.95rem] font-medium tracking-[-0.01em] transition-colors";
+  const sectionLabelClassName = "px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--bbf-op-donker)]";
+  const navItemClassName = accountNavClassName;
   const navIconClassName = "h-[1.1rem] w-[1.1rem] shrink-0";
   const adminNavIconClassName = "h-[0.95rem] w-[0.95rem] shrink-0";
 
   return (
-    <aside className="dashboard-sidebar-surface dashboard-theme-context fixed left-0 top-0 z-40 h-screen w-80 border-r">
-      <div className="flex h-full flex-col">
-        <div className="flex min-h-fit items-center border-b border-[color:oklch(var(--dashboard-border-soft))] px-4 py-4">
+    <aside className="sticky top-0 z-40 h-dvh w-[264px] bg-[var(--bbf-inkt)] text-white">
+      <div className="flex h-full flex-col overflow-y-auto">
+        <div className="flex shrink-0 items-center border-b border-white/10 px-4 py-4">
           <BrandLogo
             href={toLocalizedPath("/")}
-            asset="primary"
-            className="block w-[264px]"
+            asset="dark"
+            className="flex min-h-11 w-[208px] items-center"
             imageClassName="block"
             ariaLabel={messages.layout.website.home}
           />
         </div>
-        <div className="border-b border-[color:oklch(var(--dashboard-border-soft))] px-4 py-4">
-          <div className="dashboard-card-surface-muted rounded-[calc(var(--radius-xl)+0.125rem)] border px-3 py-3">
-            <p className={cn(sectionLabelClassName, "px-0 pb-2")}>
-              {languageSwitchLabels.language}
-            </p>
-            <LanguageSwitch locale={locale} labels={languageSwitchLabels} />
-          </div>
-        </div>
+        <div className="shrink-0 px-5 py-2"><AccountLanguageSwitch /></div>
 
-        <div className="flex-1 overflow-y-auto px-3 py-5">
+        <div className="min-h-[88px] flex-1 overflow-y-auto px-4 py-3">
           <div className="space-y-6">
             <section className="space-y-2">
               <p className={sectionLabelClassName}>{messages.layout.sections.dashboard}</p>
-              <nav className="space-y-1">
+              <nav aria-label={locale === "nl" ? "Accountpagina’s" : "Account pages"} className="space-y-1">
                 {navigation.map((item) => {
-                  const isActive =
-                    internalPathname === item.href ||
-                    internalPathname.startsWith(item.href + "/");
+                  const isActive = activePath === item.href;
                   return (
                     <Link
-                      key={item.name}
+                      key={item.href}
                       href={toLocalizedPath(item.href)}
+                      aria-current={isActive ? "page" : undefined}
                       className={cn(
                         navItemClassName,
                         isActive
-                          ? "dashboard-nav-item-active"
-                          : "dashboard-nav-item hover:dashboard-nav-item-hover"
+                          ? accountActiveClassName
+                          : accountIdleClassName
                       )}
                     >
                       <item.icon className={navIconClassName} />
-                      <span className="leading-none">{item.name}</span>
+                      <span className="leading-none">{item.label}</span>
                     </Link>
                   );
                 })}
@@ -145,18 +116,20 @@ export function DashboardSidebar() {
             </section>
 
             {visibleAdminNavigationGroups.length > 0 && (
-              <section className="dashboard-card-surface-muted rounded-[calc(var(--radius-xl)+0.125rem)] border px-2 py-3">
+              <section className="rounded-[20px] bg-white/5 px-2 py-3">
                 <p className={cn(sectionLabelClassName, "pb-2")}>
                   {messages.layout.sections.admin}
                 </p>
                 <button
                   type="button"
+                  aria-expanded={isAdminOpen}
+                  aria-controls="account-admin-navigation"
                   onClick={() => setIsAdminOpen((v) => !v)}
                   className={cn(
                     navItemClassName,
                     internalPathname.startsWith("/admin")
-                      ? "dashboard-nav-item-active"
-                      : "dashboard-nav-item hover:dashboard-nav-item-hover"
+                      ? accountActiveClassName
+                      : accountIdleClassName
                   )}
                 >
                   <CircuitBoard className={navIconClassName} />
@@ -165,14 +138,14 @@ export function DashboardSidebar() {
                   </span>
                   <ChevronDown
                     className={cn(
-                      "h-4 w-4 shrink-0 text-[color:oklch(var(--dashboard-nav-foreground))] transition-transform duration-200",
+                      "h-4 w-4 shrink-0 transition-transform duration-200",
                       isAdminOpen && "rotate-180"
                     )}
                   />
                 </button>
 
                 {isAdminOpen && (
-                  <div className="mt-3 space-y-4 border-t border-[color:oklch(var(--dashboard-border-soft))] pt-3">
+                  <div id="account-admin-navigation" className="mt-3 space-y-4 border-t border-white/10 pt-3">
                     {visibleAdminNavigationGroups.map((group) => {
                       const hideLabel = ["Command center", "People", "Rider data", "Technical"].includes(group.label);
                       return (
@@ -187,11 +160,12 @@ export function DashboardSidebar() {
                                 <Link
                                   key={item.href}
                                   href={item.href}
+                                  aria-current={isActive ? "page" : undefined}
                                   className={cn(
-                                    "flex items-center gap-3 rounded-lg px-3 py-2 text-[0.88rem] font-medium tracking-[-0.01em] transition-colors",
+                                    "flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-[0.88rem] font-medium tracking-[-0.01em] transition-colors",
                                     isActive
-                                      ? "dashboard-nav-item-active"
-                                      : "dashboard-nav-item hover:dashboard-nav-item-hover"
+                                      ? accountActiveClassName
+                                      : accountIdleClassName
                                   )}
                                 >
                                   <item.icon className={adminNavIconClassName} />
@@ -210,18 +184,19 @@ export function DashboardSidebar() {
           </div>
         </div>
 
-        <div className="border-t border-[color:oklch(var(--dashboard-border-soft))] p-3">
-          <div className="dashboard-card-surface-muted rounded-[calc(var(--radius-xl)+0.125rem)] border px-3 py-3">
+        <div className="shrink-0 space-y-3 p-4">
+          <AccountPlan />
+          <div className="rounded-[20px] bg-white/5 px-3 py-3">
             <p className={cn(sectionLabelClassName, "px-0 pb-3")}>
               {messages.nav.settings}
             </p>
             <div className="flex items-center gap-3">
               <ProfilePhotoUpload source={profileImageSource} size="sidebar" />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold tracking-[-0.01em] text-[color:var(--foreground)]">
+                <p className="truncate text-sm font-semibold tracking-[-0.01em] text-white">
                   {displayName}
                 </p>
-                <p className="truncate text-[11px] font-medium text-[color:var(--muted-foreground)]">
+                <p className="truncate text-[11px] font-medium text-[var(--bbf-op-donker)]">
                   {email}
                 </p>
               </div>
@@ -231,7 +206,7 @@ export function DashboardSidebar() {
               <Button
                 variant="ghost"
                 onClick={handleSignOut}
-                className="w-full justify-start gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[color:oklch(var(--dashboard-nav-foreground-strong))] hover:bg-[color:color-mix(in_oklch,var(--dashboard-surface-muted)_86%,var(--primary)_14%)]"
+                className="min-h-11 w-full justify-start gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[var(--bbf-petrol-zacht)] hover:bg-white/10"
               >
                 <LogOut className="h-5 w-5" />
                 {messages.common.signOut}

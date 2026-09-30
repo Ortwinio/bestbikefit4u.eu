@@ -40,15 +40,16 @@ function SelectFieldLabel({
 }) {
   return (
     <div className="mb-1.5 flex items-center gap-1.5">
-      <Field.Label className="flex items-center gap-2 text-sm font-medium leading-none text-[color:var(--foreground)] data-[disabled]:status-disabled data-[invalid]:text-[color:var(--danger)] select-none">
+      <Field.Label
+        className={
+          "flex items-center gap-2 text-sm font-medium leading-none text-foreground " +
+          "data-[disabled]:status-disabled data-[invalid]:text-destructive-text select-none"
+        }
+      >
         {label}
       </Field.Label>
       {tooltip ? (
-        <Tooltip
-          content={tooltip}
-          label={tooltipLabel ?? `${label} help`}
-          descriptionId={tooltipDescriptionId}
-        />
+        <Tooltip content={tooltip} label={tooltipLabel ?? `${label} help`} descriptionId={tooltipDescriptionId} />
       ) : null}
     </div>
   );
@@ -79,19 +80,14 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(
       "aria-describedby": ariaDescribedBy,
       ...props
     },
-    ref
+    ref,
   ) => {
     const generatedId = useId().replace(/:/g, "");
-    const selectId =
-      id || label?.toLowerCase().replace(/\s+/g, "-") || `select-${generatedId}`;
+    const selectId = id || label?.toLowerCase().replace(/\s+/g, "-") || `select-${generatedId}`;
     const helperId = helperText && !error ? `${selectId}-helper` : undefined;
     const errorId = error ? `${selectId}-error` : undefined;
-    const tooltipDescriptionId = tooltip
-      ? `${selectId}-tooltip-description`
-      : undefined;
-    const describedBy = [ariaDescribedBy, tooltipDescriptionId, errorId, helperId]
-      .filter(Boolean)
-      .join(" ");
+    const tooltipDescriptionId = tooltip ? `${selectId}-tooltip-description` : undefined;
+    const describedBy = [ariaDescribedBy, tooltipDescriptionId, errorId, helperId].filter(Boolean).join(" ");
 
     return (
       <Field.Root
@@ -117,13 +113,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(
           required={props.required}
           disabled={props.disabled}
           value={typeof value === "string" ? (value === "" ? null : value) : undefined}
-          defaultValue={
-            typeof defaultValue === "string"
-              ? defaultValue === ""
-                ? null
-                : defaultValue
-              : undefined
-          }
+          defaultValue={typeof defaultValue === "string" ? (defaultValue === "" ? null : defaultValue) : undefined}
           onValueChange={(nextValue) => {
             onChange?.(createSelectChangeEvent((nextValue ?? "") as string));
           }}
@@ -138,36 +128,25 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(
           </SelectTrigger>
           <SelectContent>
             {options.map((option) => (
-              <SelectItem
-                key={option.value}
-                value={option.value}
-                disabled={option.disabled}
-              >
+              <SelectItem key={option.value} value={option.value} disabled={option.disabled}>
                 {option.label}
               </SelectItem>
             ))}
           </SelectContent>
         </PrototyperSelect>
         {error ? (
-          <Field.Error
-            match={true}
-            id={errorId}
-            className="mt-1 text-sm text-[color:var(--danger)]"
-          >
+          <Field.Error match={true} id={errorId} className="mt-1 text-sm text-destructive-text">
             {error}
           </Field.Error>
         ) : null}
         {helperText && !error ? (
-          <Field.Description
-            id={helperId}
-            className="mt-1 text-sm text-[color:var(--muted-foreground)]"
-          >
+          <Field.Description id={helperId} className="mt-1 text-sm text-muted-foreground">
             {helperText}
           </Field.Description>
         ) : null}
       </Field.Root>
     );
-  }
+  },
 );
 
 Select.displayName = "Select";

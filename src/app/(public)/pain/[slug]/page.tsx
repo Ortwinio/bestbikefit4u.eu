@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { getRequestLocale } from "@/i18n/request";
 import { PAIN_PAGE_SLUGS, getPainPageBySlug, getPainPageCopy } from "@/content/painPages";
-import { PainPointPageTemplate } from "@/components/public/PainPointPageTemplate";
+import { PainDetail } from "../PainDetail";
 
 export function generateStaticParams() {
   return PAIN_PAGE_SLUGS.map((slug) => ({ slug }));
@@ -55,5 +55,5 @@ export default async function PainPage({
     notFound();
   }
 
-  return <PainPointPageTemplate locale={locale} slug={slug} copy={getPainPageCopy(page, locale)} />;
+  return <PainDetail locale={locale} slug={slug} copy={getPainPageCopy(page, locale)} />;
 }

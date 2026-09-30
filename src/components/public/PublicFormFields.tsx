@@ -10,9 +10,7 @@ import {
 } from "@/components/prototyper-ui/ui/select";
 import { Input } from "@/components/prototyper-ui/ui/input";
 import { Label } from "@/components/prototyper-ui/ui/label";
-import {
-  ScaleSliderQuestion,
-} from "@/components/shared/ScaleSlider";
+import { ScaleSliderQuestion } from "@/components/shared/ScaleSlider";
 import { cn } from "@/utils/cn";
 
 type PublicFieldOption = {
@@ -72,17 +70,11 @@ function PublicFieldShell({
   return (
     <div className={cn("space-y-3", className)}>
       <div className="space-y-1">
-        <Label
-          htmlFor={fieldId}
-          className="text-sm font-semibold text-[color:var(--foreground)]"
-        >
+        <Label htmlFor={fieldId} className="text-sm font-semibold text-[color:var(--foreground)]">
           {label}
         </Label>
         {description ? (
-          <p
-            id={descriptionId}
-            className="text-sm leading-6 text-[color:var(--muted-foreground)]"
-          >
+          <p id={descriptionId} className="text-sm leading-6 text-[color:var(--muted-foreground)]">
             {description}
           </p>
         ) : null}
@@ -139,10 +131,18 @@ export function PublicNumberField({
           placeholder={placeholder}
           onChange={handleChange}
           aria-describedby={descriptionId}
-          className={cn("h-11 rounded-xl border-[color:var(--border)] pr-16 text-base", unit ? "pr-20" : null)}
+          className={cn(
+            "h-11 rounded-xl border-field-border pr-16 text-base",
+            unit ? "pr-20" : null,
+          )}
         />
         {unit ? (
-          <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-medium text-[color:var(--muted-foreground)]">
+          <span
+            className={
+              "pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-medium " +
+              "text-[color:var(--muted-foreground)]"
+            }
+          >
             {unit}
           </span>
         ) : null}
@@ -175,7 +175,7 @@ export function PublicSelectField({
         <SelectTrigger
           id={fieldId}
           aria-describedby={descriptionId}
-          className="h-11 rounded-xl border-[color:var(--border)] bg-[color:var(--card)] text-sm"
+          className="h-11 rounded-xl border-field-border bg-[color:var(--card)] text-sm"
         >
           <SelectValue placeholder={placeholder ?? label} />
         </SelectTrigger>

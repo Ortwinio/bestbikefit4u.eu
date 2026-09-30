@@ -28,31 +28,31 @@ export interface SelectableProps
 
 const variantClassMap = {
   card: {
-    base: "rounded-[var(--radius-lg)] border-2 p-4 text-left",
+    base: "min-h-11 rounded-2xl border-2 p-4 text-left",
     selected:
-      "border-primary bg-primary text-primary-foreground",
+      "border-[var(--bbf-petrol)] bg-[var(--bbf-lime-zacht)] text-[var(--bbf-inkt)]",
     idle:
-      "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] hover-only:hover:border-[color:color-mix(in_oklch,var(--border)_70%,var(--foreground)_30%)] hover-only:hover:bg-[color:var(--accent)]",
+      "border-border bg-card text-foreground hover-only:hover:border-[var(--bbf-petrol)]",
     semantic:
-      "rounded-[var(--radius-lg)] border-2 p-4 text-left transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth motion-reduce:transition-none focus-visible:focus-ring motion-safe:active:scale-[0.98] data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground data-unchecked:border-[color:var(--border)] data-unchecked:bg-[color:var(--card)] data-unchecked:text-[color:var(--foreground)] hover-only:hover:border-[color:color-mix(in_oklch,var(--border)_70%,var(--foreground)_30%)] hover-only:hover:bg-[color:var(--accent)]",
+      "min-h-11 rounded-2xl border-2 p-4 text-left transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth motion-reduce:transition-none focus-visible:focus-ring motion-safe:active:scale-[0.98] data-checked:border-[var(--bbf-petrol)] data-checked:bg-[var(--bbf-lime-zacht)] data-checked:text-[var(--bbf-inkt)] data-unchecked:border-border data-unchecked:bg-card data-unchecked:text-foreground hover-only:hover:border-[var(--bbf-petrol)]",
   },
   pill: {
     base: "rounded-full px-4 py-2 text-sm",
     selected:
-      "border border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]",
+      "border border-primary bg-primary text-primary-foreground",
     idle:
-      "border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] hover-only:hover:bg-[color:var(--accent)]",
+      "border border-border bg-card text-foreground",
     semantic:
-      "rounded-full px-4 py-2 text-sm transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth motion-reduce:transition-none focus-visible:focus-ring motion-safe:active:scale-[0.98] data-checked:border data-checked:border-[color:var(--primary)] data-checked:bg-[color:var(--primary)] data-checked:text-[color:var(--primary-foreground)] data-unchecked:border data-unchecked:border-[color:var(--border)] data-unchecked:bg-[color:var(--card)] data-unchecked:text-[color:var(--foreground)] hover-only:hover:bg-[color:var(--accent)]",
+      "rounded-full px-4 py-2 text-sm transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth motion-reduce:transition-none focus-visible:focus-ring motion-safe:active:scale-[0.98] data-checked:border data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground data-unchecked:border data-unchecked:border-border data-unchecked:bg-card data-unchecked:text-foreground",
   },
   segment: {
     base: "rounded-[var(--radius-md)] px-4 py-3 text-sm",
     selected:
-      "border border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]",
+      "border border-primary bg-primary text-primary-foreground",
     idle:
-      "border border-[color:var(--border)] bg-[color:var(--secondary)] text-[color:var(--secondary-foreground)] hover-only:hover:bg-[color:var(--accent)]",
+      "border border-border bg-secondary text-secondary-foreground",
     semantic:
-      "rounded-[var(--radius-md)] px-4 py-3 text-sm transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth motion-reduce:transition-none focus-visible:focus-ring motion-safe:active:scale-[0.98] data-checked:border data-checked:border-[color:var(--primary)] data-checked:bg-[color:var(--primary)] data-checked:text-[color:var(--primary-foreground)] data-unchecked:border data-unchecked:border-[color:var(--border)] data-unchecked:bg-[color:var(--secondary)] data-unchecked:text-[color:var(--secondary-foreground)] hover-only:hover:bg-[color:var(--accent)]",
+      "rounded-[var(--radius-md)] px-4 py-3 text-sm transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth motion-reduce:transition-none focus-visible:focus-ring motion-safe:active:scale-[0.98] data-checked:border data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground data-unchecked:border data-unchecked:border-border data-unchecked:bg-secondary data-unchecked:text-secondary-foreground",
   },
 } as const;
 
@@ -81,13 +81,14 @@ export const Selectable = forwardRef<HTMLButtonElement, SelectableProps>(
       trailing ??
       (variant === "card" ? (
         <Check
+          aria-hidden="true"
           className={cn(
             "h-5 w-5 shrink-0",
             semantic
-              ? "text-[color:var(--primary)] opacity-0 transition-opacity group-data-checked:opacity-100 group-data-checked:text-primary-foreground"
+              ? "text-[var(--bbf-petrol)] opacity-0 transition-opacity group-data-checked:opacity-100"
               : selected
-                ? "text-primary-foreground"
-                : "text-[color:var(--primary)]"
+                ? "text-[var(--bbf-petrol)]"
+                : "text-primary opacity-0"
           )}
         />
       ) : null);
@@ -108,10 +109,10 @@ export const Selectable = forwardRef<HTMLButtonElement, SelectableProps>(
               className={cn(
                 "mt-1 text-sm",
                 semantic
-                  ? "text-[color:var(--muted-foreground)] group-data-checked:text-primary-foreground/80"
+                  ? variant === "card" ? "text-muted-foreground group-data-checked:text-[var(--bbf-tekst)]" : "text-muted-foreground group-data-checked:text-primary-foreground/80"
                   : selected
-                    ? "text-primary-foreground/80"
-                    : "text-[color:var(--muted-foreground)]"
+                    ? variant === "card" ? "text-[var(--bbf-tekst)]" : "text-primary-foreground/80"
+                    : "text-muted-foreground"
               )}
             >
               {description}
@@ -124,7 +125,7 @@ export const Selectable = forwardRef<HTMLButtonElement, SelectableProps>(
     );
 
     const sharedClassName = cn(
-      "group no-highlight transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth motion-reduce:transition-none focus-visible:focus-ring motion-safe:active:scale-[0.98]",
+      "group min-h-11 disabled:cursor-not-allowed disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:opacity-50 no-highlight transition-[color,background-color,border-color,box-shadow,opacity] duration-150 ease-smooth motion-reduce:transition-none focus-visible:focus-ring motion-safe:active:scale-[0.98]",
       fullWidth ? "w-full" : "",
       semantic
         ? variantClasses.semantic

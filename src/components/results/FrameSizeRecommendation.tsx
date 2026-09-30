@@ -33,17 +33,17 @@ export function FrameSizeRecommendation({
               className="flex items-center justify-between rounded-lg border border-success/20 bg-success/10 p-4"
             >
               <div>
-                <p className="text-2xl font-bold text-success">{rec.size}</p>
+                <p className="text-2xl font-bold text-success-text">{rec.size}</p>
                 {rec.brand && (
-                  <p className="mt-0.5 text-sm text-success/80">{rec.brand}</p>
+                  <p className="mt-0.5 text-sm text-success-text/80">{rec.brand}</p>
                 )}
                 {rec.notes && (
-                  <p className="mt-1 text-sm text-success/90">{rec.notes}</p>
+                  <p className="mt-1 text-sm text-success-text/90">{rec.notes}</p>
                 )}
               </div>
               <div className="text-right">
-                <div className="text-sm text-success/80">Fit Score</div>
-                <div className="text-2xl font-bold text-success">
+                <div className="text-sm text-success-text/80">Fit Score</div>
+                <div className="text-2xl font-bold text-success-text">
                   {rec.fitScore}%
                 </div>
               </div>

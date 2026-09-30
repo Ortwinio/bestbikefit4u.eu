@@ -1,3 +1,4 @@
+import { PerformanceCalculator } from "../power-speed/PerformanceCalculator";
 import type { Metadata } from "next";
 import { Droplets, FlameKindling, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -5,8 +6,6 @@ import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
   PublicCtaBand,
   PublicFeatureCard,
-  PublicHero,
-  PublicPageShell,
   PublicSection,
   PublicSurfaceCard,
 } from "@/components/public";
@@ -16,11 +15,7 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import {
-  buildFaqPageSchema,
-  buildHowToSchema,
-  buildWebApplicationSchema,
-} from "@/lib/seo/jsonLd";
+import { buildFaqPageSchema, buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 
 const copy = {
   en: {
@@ -28,42 +23,44 @@ const copy = {
       title: "Fuel & Hydration Planner | BestBikeFit4U",
       description:
         "Plan carbs, fluids, and sodium for long rides with a practical first-pass fueling and hydration workflow.",
-      keywords: [
-        "fuel hydration planner",
-        "cycling nutrition planner",
-        "hydration calculator",
-      ],
+      keywords: ["fuel hydration planner", "cycling nutrition planner", "hydration calculator"],
     },
     hero: {
       eyebrow: "BestBikeFit4U calculator",
       title: "Fuel & Hydration Planner",
       description:
-        "Plan a realistic fueling and hydration strategy before a long ride, event, or indoor session starts to drift into avoidable fatigue.",
+        "Plan a realistic fueling and hydration strategy before a long ride, event, or " +
+        "indoor session starts to drift into avoidable fatigue.",
       chips: ["Carbs per hour", "Sweat-rate context", "Race-day planning"],
     },
     intro: {
       eyebrow: "What this tool is for",
       title: "A safe first pass for ride fueling",
       description:
-        "This page helps you think in ranges instead of guessing from habit. It is designed to make the next decision clearer, not to overpromise exact numbers for every rider.",
+        "This page helps you think in ranges instead of guessing from habit. It is " +
+        "designed to make the next decision clearer, not to overpromise exact numbers for" +
+        " every rider.",
     },
     features: [
       {
         title: "Plan before the ride starts",
         description:
-          "Use ride duration, intensity, and expected heat to choose a workable starting plan rather than reacting after fatigue already hits.",
+          "Use ride duration, intensity, and expected heat to choose a workable starting " +
+          "plan rather than reacting after fatigue already hits.",
         icon: <FlameKindling className="h-5 w-5" />,
       },
       {
         title: "Keep hydration realistic",
         description:
-          "Bottle count, refill points, and sweat loss matter together. A useful plan should fit the route and the conditions you actually ride in.",
+          "Bottle count, refill points, and sweat loss matter together. A useful plan " +
+          "should fit the route and the conditions you actually ride in.",
         icon: <Droplets className="h-5 w-5" />,
       },
       {
         title: "Stay cautious with assumptions",
         description:
-          "Gut tolerance, climate, and training load change the answer. Conservative planning is usually more durable than chasing a single exact target.",
+          "Gut tolerance, climate, and training load change the answer. Conservative " +
+          "planning is usually more durable than chasing a single exact target.",
         icon: <ShieldCheck className="h-5 w-5" />,
       },
     ],
@@ -96,11 +93,15 @@ const copy = {
     faqs: [
       {
         q: "Is this meant to replace a nutrition coach?",
-        a: "No. It gives a practical first-pass plan and a clearer decision path. Complex cases still benefit from a coach or sports nutrition review.",
+        a:
+          "No. It gives a practical first-pass plan and a clearer decision path. Complex " +
+          "cases still benefit from a coach or sports nutrition review.",
       },
       {
         q: "Should hydration always be measured in exact milliliters per hour?",
-        a: "No. Sweat rate, weather, and access to bottles make ranges more useful than pretending there is one universal number.",
+        a:
+          "No. Sweat rate, weather, and access to bottles make ranges more useful than " +
+          "pretending there is one universal number.",
       },
     ],
     relatedTitle: "Related guides",
@@ -114,7 +115,8 @@ const copy = {
       eyebrow: "Next step",
       title: "Turn the plan into your own workflow",
       description:
-        "Start a free account to save your fit and training decisions in one place, then use the dashboard when you want more detail.",
+        "Start a free account to save your fit and training decisions in one place, then " +
+        "use the dashboard when you want more detail.",
       label: "Start Free Fit",
     },
   },
@@ -122,43 +124,46 @@ const copy = {
     metadata: {
       title: "Brandstof- en hydratatieplanner | BestBikeFit4U",
       description:
-        "Plan koolhydraten, vocht en natrium voor lange ritten met een praktische eerste richting voor voeding en hydratatie.",
-      keywords: [
-        "voeding hydratatie planner",
-        "fietsvoeding calculator",
-        "hydratatie calculator",
-      ],
+        "Plan koolhydraten, vocht en natrium voor lange ritten met een praktische eerste " +
+        "richting voor voeding en hydratatie.",
+      keywords: ["voeding hydratatie planner", "fietsvoeding calculator", "hydratatie calculator"],
     },
     hero: {
       eyebrow: "BestBikeFit4U calculator",
       title: "Brandstof- en hydratatieplanner",
       description:
-        "Werk een realistische voedings- en hydratatiestrategie uit voordat een lange rit, wedstrijd of indoor sessie in onnodige vermoeidheid eindigt.",
+        "Werk een realistische voedings- en hydratatiestrategie uit voordat een lange " +
+        "rit, wedstrijd of indoor sessie in onnodige vermoeidheid eindigt.",
       chips: ["Koolhydraten per uur", "Zweetcontext", "Wedstrijdplanning"],
     },
     intro: {
       eyebrow: "Waar deze tool voor is",
       title: "Een veilig eerste plan voor voeding onderweg",
       description:
-        "Deze pagina helpt je in bandbreedtes te denken in plaats van te gokken op gewoonte. De bedoeling is om de volgende keuze duidelijker te maken, niet om voor elke rijder een exact getal te beloven.",
+        "Deze pagina helpt je in bandbreedtes te denken in plaats van te gokken op " +
+        "gewoonte. De bedoeling is om de volgende keuze duidelijker te maken, niet om " +
+        "voor elke rijder een exact getal te beloven.",
     },
     features: [
       {
         title: "Plan vóór je vertrekt",
         description:
-          "Gebruik ritduur, intensiteit en verwachte warmte om een werkbaar startplan te kiezen voordat vermoeidheid toeslaat.",
+          "Gebruik ritduur, intensiteit en verwachte warmte om een werkbaar startplan te " +
+          "kiezen voordat vermoeidheid toeslaat.",
         icon: <FlameKindling className="h-5 w-5" />,
       },
       {
         title: "Houd hydratatie realistisch",
         description:
-          "Flesvolume, bevoorrading en zweetverlies horen samen. Een bruikbaar plan past bij de route en de omstandigheden waarin je echt rijdt.",
+          "Flesvolume, bevoorrading en zweetverlies horen samen. Een bruikbaar plan past " +
+          "bij de route en de omstandigheden waarin je echt rijdt.",
         icon: <Droplets className="h-5 w-5" />,
       },
       {
         title: "Wees voorzichtig met aannames",
         description:
-          "Gut tolerance, klimaat en trainingsbelasting veranderen het antwoord. Conservatief plannen is meestal duurzamer dan een enkel exact getal najagen.",
+          "Gut tolerance, klimaat en trainingsbelasting veranderen het antwoord. " +
+          "Conservatief plannen is meestal duurzamer dan een enkel exact getal najagen.",
         icon: <ShieldCheck className="h-5 w-5" />,
       },
     ],
@@ -191,11 +196,16 @@ const copy = {
     faqs: [
       {
         q: "Vervangt dit een sportdiëtist?",
-        a: "Nee. Het geeft een praktisch eerste plan en een duidelijkere beslisroute. Complexe situaties profiteren nog steeds van een coach of sports nutrition review.",
+        a:
+          "Nee. Het geeft een praktisch eerste plan en een duidelijkere beslisroute. " +
+          "Complexe situaties profiteren nog steeds van een coach of sports nutrition " +
+          "review.",
       },
       {
         q: "Moet hydratatie altijd exact in milliliters per uur worden uitgedrukt?",
-        a: "Nee. Zweetverlies, weer en flesvoorziening maken bandbreedtes bruikbaarder dan doen alsof er één universeel getal is.",
+        a:
+          "Nee. Zweetverlies, weer en flesvoorziening maken bandbreedtes bruikbaarder dan " +
+          "doen alsof er één universeel getal is.",
       },
     ],
     relatedTitle: "Gerelateerde gidsen",
@@ -209,7 +219,8 @@ const copy = {
       eyebrow: "Volgende stap",
       title: "Zet het plan om in je eigen workflow",
       description:
-        "Start een gratis account om je fit- en trainingskeuzes op één plek op te slaan en gebruik daarna het dashboard voor meer detail.",
+        "Start een gratis account om je fit- en trainingskeuzes op één plek op te slaan " +
+        "en gebruik daarna het dashboard voor meer detail.",
       label: "Start gratis fit",
     },
   },
@@ -242,7 +253,7 @@ export default async function FuelHydrationPlannerPage() {
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
 
   return (
-    <PublicPageShell className="text-foreground">
+    <div className="text-foreground">
       <JsonLd
         schema={[
           buildWebApplicationSchema({
@@ -251,7 +262,9 @@ export default async function FuelHydrationPlannerPage() {
             url: pageUrl,
           }),
           buildHowToSchema({
-            name: isNl ? "Hoe gebruik je de brandstof- en hydratatieplanner" : "How to use the fuel and hydration planner",
+            name: isNl
+              ? "Hoe gebruik je de brandstof- en hydratatieplanner"
+              : "How to use the fuel and hydration planner",
             description: isNl
               ? "Een eenvoudige flow om een realistisch plan voor lange ritten te maken."
               : "A short flow for building a realistic plan for longer rides.",
@@ -273,14 +286,9 @@ export default async function FuelHydrationPlannerPage() {
         ]}
       />
 
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <PublicHero
-          eyebrow={page.hero.eyebrow}
-          title={page.hero.title}
-          description={page.hero.description}
-          chips={[...page.hero.chips]}
-        />
+      <PerformanceCalculator tool="fuel-hydration" locale={locale} />
 
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <PublicSection
           className="mt-10"
           header={{
@@ -302,11 +310,7 @@ export default async function FuelHydrationPlannerPage() {
         </PublicSection>
 
         {page.sections.map((section) => (
-          <PublicSection
-            key={section.title}
-            className="mt-10"
-            header={{ title: section.title }}
-          >
+          <PublicSection key={section.title} className="mt-10" header={{ title: section.title }}>
             <div className="grid gap-4">
               {section.items.map((item) => (
                 <PublicSurfaceCard key={item} description={item} />
@@ -315,10 +319,7 @@ export default async function FuelHydrationPlannerPage() {
           </PublicSection>
         ))}
 
-        <PublicSection
-          className="mt-10"
-          header={{ eyebrow: "FAQ", title: "FAQ" }}
-        >
+        <PublicSection className="mt-10" header={{ eyebrow: "FAQ", title: "FAQ" }}>
           <div className="grid gap-4">
             {page.faqs.map((faq) => (
               <PublicSurfaceCard key={faq.q} title={faq.q} description={faq.a} />
@@ -326,11 +327,7 @@ export default async function FuelHydrationPlannerPage() {
           </div>
         </PublicSection>
 
-        <RelatedLinksSection
-          title={page.relatedTitle}
-          links={[...page.relatedLinks]}
-          locale={locale}
-        />
+        <RelatedLinksSection title={page.relatedTitle} links={[...page.relatedLinks]} locale={locale} />
 
         <PublicCtaBand
           className="mt-10"
@@ -354,6 +351,6 @@ export default async function FuelHydrationPlannerPage() {
           }
         />
       </div>
-    </PublicPageShell>
+    </div>
   );
 }

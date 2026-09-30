@@ -26,15 +26,16 @@ function InputFieldLabel({
 }) {
   return (
     <div className="mb-1.5 flex items-center gap-1.5">
-      <Field.Label className="flex items-center gap-2 text-sm font-medium leading-none text-[color:var(--foreground)] data-[disabled]:status-disabled data-[invalid]:text-[color:var(--danger)] select-none">
+      <Field.Label
+        className={
+          "flex items-center gap-2 text-sm font-medium leading-none text-foreground " +
+          "data-[disabled]:status-disabled data-[invalid]:text-destructive-text select-none"
+        }
+      >
         {label}
       </Field.Label>
       {tooltip ? (
-        <Tooltip
-          content={tooltip}
-          label={tooltipLabel ?? `${label} help`}
-          descriptionId={tooltipDescriptionId}
-        />
+        <Tooltip content={tooltip} label={tooltipLabel ?? `${label} help`} descriptionId={tooltipDescriptionId} />
       ) : null}
     </div>
   );
@@ -42,30 +43,15 @@ function InputFieldLabel({
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
-    {
-      className,
-      label,
-      tooltip,
-      tooltipLabel,
-      error,
-      helperText,
-      id,
-      "aria-describedby": ariaDescribedBy,
-      ...props
-    },
-    ref
+    { className, label, tooltip, tooltipLabel, error, helperText, id, "aria-describedby": ariaDescribedBy, ...props },
+    ref,
   ) => {
     const generatedId = useId().replace(/:/g, "");
-    const inputId =
-      id || label?.toLowerCase().replace(/\s+/g, "-") || `input-${generatedId}`;
+    const inputId = id || label?.toLowerCase().replace(/\s+/g, "-") || `input-${generatedId}`;
     const helperId = helperText && !error ? `${inputId}-helper` : undefined;
     const errorId = error ? `${inputId}-error` : undefined;
-    const tooltipDescriptionId = tooltip
-      ? `${inputId}-tooltip-description`
-      : undefined;
-    const describedBy = [ariaDescribedBy, tooltipDescriptionId, errorId, helperId]
-      .filter(Boolean)
-      .join(" ");
+    const tooltipDescriptionId = tooltip ? `${inputId}-tooltip-description` : undefined;
+    const describedBy = [ariaDescribedBy, tooltipDescriptionId, errorId, helperId].filter(Boolean).join(" ");
 
     return (
       <Field.Root
@@ -92,25 +78,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error ? (
-          <Field.Error
-            match={true}
-            id={errorId}
-            className="mt-1 text-sm text-[color:var(--danger)]"
-          >
+          <Field.Error match={true} id={errorId} className="mt-1 text-sm text-destructive-text">
             {error}
           </Field.Error>
         ) : null}
         {helperText && !error ? (
-          <Field.Description
-            id={helperId}
-            className="mt-1 text-sm text-[color:var(--muted-foreground)]"
-          >
+          <Field.Description id={helperId} className="mt-1 text-sm text-muted-foreground">
             {helperText}
           </Field.Description>
         ) : null}
       </Field.Root>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";

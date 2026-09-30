@@ -8,11 +8,7 @@ import {
   type ComponentPropsWithoutRef,
   type ReactNode,
 } from "react";
-import {
-  Toast as BaseToast,
-  type ToastManagerAddOptions,
-  type ToastManagerUpdateOptions,
-} from "@base-ui/react/toast";
+import { Toast as BaseToast, type ToastManagerAddOptions, type ToastManagerUpdateOptions } from "@base-ui/react/toast";
 import { CheckCircle2, CircleAlert, Info, TriangleAlert, X } from "lucide-react";
 import { cn } from "@/utils/cn";
 
@@ -22,10 +18,7 @@ type AppToastData = {
   kind: AppToastKind;
 };
 
-export type ToastActionOptions = Omit<
-  ComponentPropsWithoutRef<"button">,
-  "children"
-> & {
+export type ToastActionOptions = Omit<ComponentPropsWithoutRef<"button">, "children"> & {
   label: ReactNode;
 };
 
@@ -46,32 +39,20 @@ export type ToastPromiseOptions<Value> = {
   error: ToastPromiseEntry<unknown>;
 };
 
-type ToastPromiseEntry<Value> =
-  | string
-  | ToastOptions
-  | ((value: Value) => string | ToastOptions);
+type ToastPromiseEntry<Value> = string | ToastOptions | ((value: Value) => string | ToastOptions);
 
 export type ToastApi = {
-  toast: (
-    titleOrOptions: ReactNode | ToastOptions,
-    options?: Omit<ToastOptions, "title">
-  ) => string;
+  toast: (titleOrOptions: ReactNode | ToastOptions, options?: Omit<ToastOptions, "title">) => string;
   success: (options: ShowToastOptions) => string;
   error: (options: ShowToastOptions) => string;
   info: (options: ShowToastOptions) => string;
   warning: (options: ShowToastOptions) => string;
-  promise: <Value>(
-    promiseValue: Promise<Value>,
-    options: ToastPromiseOptions<Value>
-  ) => Promise<Value>;
+  promise: <Value>(promiseValue: Promise<Value>, options: ToastPromiseOptions<Value>) => Promise<Value>;
   close: (toastId?: string) => void;
 };
 
 export type ToastFunction = ToastApi & {
-  (
-    titleOrOptions: ReactNode | ToastOptions,
-    options?: Omit<ToastOptions, "title">
-  ): string;
+  (titleOrOptions: ReactNode | ToastOptions, options?: Omit<ToastOptions, "title">): string;
 };
 
 const TOAST_TIMEOUT_MS = 4_200;
@@ -80,36 +61,26 @@ const TOAST_LIMIT = 4;
 const toastManager = BaseToast.createToastManager<AppToastData>();
 const ToastContext = createContext<ToastApi | null>(null);
 
-const toastToneClassMap: Record<
-  AppToastKind,
-  { border: string; surface: string; icon: string }
-> = {
+const toastToneClassMap: Record<AppToastKind, { border: string; surface: string; icon: string }> = {
   success: {
-    border:
-      "border-[color:color-mix(in_oklch,var(--success)_32%,var(--border))]",
-    surface:
-      "bg-[color:color-mix(in_oklch,var(--card)_92%,var(--success)_8%)]",
-    icon: "bg-[color:color-mix(in_oklch,var(--success)_15%,var(--secondary))]",
+    border: "border-[color:color-mix(in_oklch,oklch(var(--success))_32%,oklch(var(--border)))]",
+    surface: "bg-[color:color-mix(in_oklch,oklch(var(--card))_92%,oklch(var(--success))_8%)]",
+    icon: "bg-[color:color-mix(in_oklch,oklch(var(--success))_15%,oklch(var(--secondary)))]",
   },
   error: {
-    border:
-      "border-[color:color-mix(in_oklch,var(--danger)_30%,var(--border))]",
-    surface:
-      "bg-[color:color-mix(in_oklch,var(--card)_92%,var(--danger)_8%)]",
-    icon: "bg-[color:color-mix(in_oklch,var(--danger)_15%,var(--secondary))]",
+    border: "border-[color:color-mix(in_oklch,oklch(var(--danger))_30%,oklch(var(--border)))]",
+    surface: "bg-[color:color-mix(in_oklch,oklch(var(--card))_92%,oklch(var(--danger))_8%)]",
+    icon: "bg-[color:color-mix(in_oklch,oklch(var(--danger))_15%,oklch(var(--secondary)))]",
   },
   info: {
-    border: "border-[color:color-mix(in_oklch,var(--primary)_28%,var(--border))]",
-    surface:
-      "bg-[color:color-mix(in_oklch,var(--card)_92%,var(--primary)_8%)]",
-    icon: "bg-[color:color-mix(in_oklch,var(--primary)_15%,var(--secondary))]",
+    border: "border-[color:color-mix(in_oklch,oklch(var(--primary))_28%,oklch(var(--border)))]",
+    surface: "bg-[color:color-mix(in_oklch,oklch(var(--card))_92%,oklch(var(--primary))_8%)]",
+    icon: "bg-[color:color-mix(in_oklch,oklch(var(--primary))_15%,oklch(var(--secondary)))]",
   },
   warning: {
-    border:
-      "border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))]",
-    surface:
-      "bg-[color:color-mix(in_oklch,var(--card)_92%,var(--warning)_8%)]",
-    icon: "bg-[color:color-mix(in_oklch,var(--warning)_15%,var(--secondary))]",
+    border: "border-[color:color-mix(in_oklch,oklch(var(--warning))_30%,oklch(var(--border)))]",
+    surface: "bg-[color:color-mix(in_oklch,oklch(var(--card))_92%,oklch(var(--warning))_8%)]",
+    icon: "bg-[color:color-mix(in_oklch,oklch(var(--warning))_15%,oklch(var(--secondary)))]",
   },
 };
 
@@ -121,12 +92,7 @@ const toastIconMap = {
 } as const;
 
 function isAppToastKind(value: string | undefined): value is AppToastKind {
-  return (
-    value === "success" ||
-    value === "error" ||
-    value === "info" ||
-    value === "warning"
-  );
+  return value === "success" || value === "error" || value === "info" || value === "warning";
 }
 
 export function getToastKind(toast: { type?: string; data?: AppToastData }) {
@@ -156,12 +122,12 @@ function isToastOptions(value: ReactNode | ToastOptions): value is ToastOptions 
 
 export function buildToastManagerOptions(
   kind: AppToastKind,
-  options: ToastOptions
+  options: ToastOptions,
 ): ToastManagerAddOptions<AppToastData> {
   return {
     title: options.title,
     description: options.description,
-    timeout: kind === "error" ? 0 : options.timeout ?? TOAST_TIMEOUT_MS,
+    timeout: kind === "error" ? 0 : (options.timeout ?? TOAST_TIMEOUT_MS),
     priority: kind === "error" ? "high" : "low",
     type: kind,
     data: { kind },
@@ -171,7 +137,7 @@ export function buildToastManagerOptions(
 
 export function normalizeToastInput(
   titleOrOptions: ReactNode | ToastOptions,
-  options?: Omit<ToastOptions, "title">
+  options?: Omit<ToastOptions, "title">,
 ): ToastOptions {
   if (isToastOptions(titleOrOptions)) {
     return titleOrOptions;
@@ -185,7 +151,7 @@ export function normalizeToastInput(
 
 export function normalizeToastPromiseEntry(
   entry: string | ToastOptions,
-  kind: AppToastKind = "info"
+  kind: AppToastKind = "info",
 ): string | ToastManagerUpdateOptions<AppToastData> {
   if (typeof entry === "string") {
     return entry;
@@ -196,12 +162,10 @@ export function normalizeToastPromiseEntry(
 
 function resolveToastPromiseEntry<Value>(
   entry: ToastPromiseEntry<Value>,
-  value?: Value
+  value?: Value,
 ): string | ToastManagerUpdateOptions<AppToastData> {
   const resolved =
-    typeof entry === "function"
-      ? (entry as (value: Value) => string | ToastOptions)(value as Value)
-      : entry;
+    typeof entry === "function" ? (entry as (value: Value) => string | ToastOptions)(value as Value) : entry;
 
   return normalizeToastPromiseEntry(resolved);
 }
@@ -239,21 +203,16 @@ export const toast = Object.assign(
     info: (options: ShowToastOptions) => addToast("info", options),
     warning: (options: ShowToastOptions) => addToast("warning", options),
     close: (toastId?: string) => toastManager.close(toastId),
-    promise: <Value,>(
-      promiseValue: Promise<Value>,
-      options: ToastPromiseOptions<Value>
-    ) =>
+    promise: <Value,>(promiseValue: Promise<Value>, options: ToastPromiseOptions<Value>) =>
       toastManager.promise(promiseValue, {
         loading: normalizeToastPromiseEntry(options.loading),
         success: (result) => resolveToastPromiseEntry(options.success, result),
         error: (error) => resolveToastPromiseEntry(options.error, error),
       }),
-  }
+  },
 ) as ToastFunction;
 
-function Toaster(
-  props: Omit<ComponentPropsWithoutRef<typeof BaseToast.Viewport>, "children">
-) {
+function Toaster(props: Omit<ComponentPropsWithoutRef<typeof BaseToast.Viewport>, "children">) {
   const { toasts } = BaseToast.useToastManager<AppToastData>();
   const { className, ...viewportProps } = props;
 
@@ -262,8 +221,9 @@ function Toaster(
       <BaseToast.Viewport
         data-slot="toaster"
         className={cn(
-          "pointer-events-none fixed inset-x-0 bottom-0 z-[110] flex max-h-screen flex-col-reverse gap-3 p-4 sm:right-0 sm:left-auto sm:w-full sm:max-w-sm",
-          className
+          "pointer-events-none fixed inset-x-0 bottom-0 z-[110] flex max-h-screen " +
+            "flex-col-reverse gap-3 p-4 sm:right-0 sm:left-auto sm:w-full sm:max-w-sm",
+          className,
         )}
         {...viewportProps}
       >
@@ -285,9 +245,12 @@ function Toaster(
               <BaseToast.Content
                 data-slot="toast-content"
                 className={cn(
-                  "rounded-[var(--radius-lg)] border p-4 shadow-lg shadow-black/10 backdrop-blur transition data-[starting]:animate-in data-[starting]:fade-in data-[starting]:slide-in-from-bottom-2 data-[ending]:animate-out data-[ending]:fade-out data-[ending]:slide-out-to-right-6",
+                  "rounded-[var(--radius-lg)] border p-4 shadow-lg shadow-black/10 backdrop-blur " +
+                    "transition data-[starting]:animate-in data-[starting]:fade-in " +
+                    "data-[starting]:slide-in-from-bottom-2 data-[ending]:animate-out " +
+                    "data-[ending]:fade-out data-[ending]:slide-out-to-right-6",
                   toneClasses.border,
-                  toneClasses.surface
+                  toneClasses.surface,
                 )}
               >
                 <div data-slot="toast-body" className="flex items-start gap-3">
@@ -295,28 +258,22 @@ function Toaster(
                     data-slot="toast-icon"
                     aria-hidden="true"
                     className={cn(
-                      "mt-0.5 flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--foreground)]",
-                      toneClasses.icon
+                      "mt-0.5 flex h-8 w-8 items-center justify-center rounded-full text-foreground",
+                      toneClasses.icon,
                     )}
                   >
                     <Icon className="h-4 w-4" />
                   </div>
                   <div data-slot="toast-text" className="min-w-0 flex-1">
                     {toastItem.title ? (
-                      <BaseToast.Title
-                        data-slot="toast-title"
-                        className="text-sm font-semibold text-[color:var(--foreground)]"
-                      >
+                      <BaseToast.Title data-slot="toast-title" className="text-sm font-semibold text-foreground">
                         {toastItem.title}
                       </BaseToast.Title>
                     ) : null}
                     {toastItem.description ? (
                       <BaseToast.Description
                         data-slot="toast-description"
-                        className={cn(
-                          "text-sm leading-6 text-[color:var(--muted-foreground)]",
-                          toastItem.title ? "mt-1" : null
-                        )}
+                        className={cn("text-sm leading-6 text-muted-foreground", toastItem.title ? "mt-1" : null)}
                       >
                         {toastItem.description}
                       </BaseToast.Description>
@@ -325,13 +282,19 @@ function Toaster(
                   {toastItem.actionProps ? (
                     <BaseToast.Action
                       data-slot="toast-action"
-                      className="inline-flex h-8 items-center justify-center rounded-full border border-[color:var(--border)] px-3 text-xs font-medium text-[color:var(--foreground)] transition-colors hover:bg-[color:var(--accent)]"
+                      className={
+                        "inline-flex h-8 items-center justify-center rounded-full border border-border px-3 " +
+                        "text-xs font-medium text-foreground transition-colors hover:bg-accent"
+                      }
                     />
                   ) : null}
                   <BaseToast.Close
                     data-slot="toast-close"
                     aria-label="Dismiss notification"
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--muted-foreground)] transition-colors hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
+                    className={
+                      "inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground " +
+                      "transition-colors hover:bg-accent hover:text-foreground"
+                    }
                   >
                     <X className="h-4 w-4" />
                   </BaseToast.Close>
@@ -353,11 +316,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
   return (
     <ToastContext.Provider value={value}>
-      <BaseToast.Provider
-        toastManager={toastManager}
-        timeout={TOAST_TIMEOUT_MS}
-        limit={TOAST_LIMIT}
-      >
+      <BaseToast.Provider toastManager={toastManager} timeout={TOAST_TIMEOUT_MS} limit={TOAST_LIMIT}>
         {children}
         <Toaster />
       </BaseToast.Provider>

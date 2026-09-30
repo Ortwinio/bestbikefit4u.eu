@@ -1,0 +1,192 @@
+export const crankLengthMessages = {
+  en: {
+    eyebrow: "Crank length calculator",
+    title: "Which crank length suits you?",
+    intro:
+      "Example measurements are filled in. Adjust them to your own measurements for a " +
+      "personal starting point.",
+    measure: "Measure your inseam",
+    inseam: "Inseam",
+    measureHint:
+      "Barefoot, measure from the floor to the top of a book held firmly between your legs.",
+    choose: "Choose your bike",
+    category: "Bike category",
+    categories: { road: "Road", gravel: "Gravel", mtb: "Mountain bike", city: "City bike" },
+    categoryHint: "Choose the category that matches your bike and intended use.",
+    result: "Your starting point",
+    exampleResult: "Example starting point",
+    personalIntro: "Check the measurements from your link and adjust them if needed.",
+    recommendation: "Recommended crank length",
+    resultHint:
+      "A practical component starting point. Hip compression, pedaling feel and saddle " +
+      "height still need a separate check.",
+    visual: "Crank length measured between the centre of the bottom bracket and the pedal axle",
+    sizes: "Available crank recommendations",
+    recommended: "recommended",
+    adjustment: "Check in this order",
+    steps: [
+      "Measure your inseam again before changing parts.",
+      "Check saddle height and knee angle together with crank length.",
+      "Test your position on a short ride before making further changes.",
+    ],
+    scope: "What this guidance does and does not tell you",
+    scopeText:
+      "This result helps you rule out unrealistic crank options. Saddle height, posture, and " +
+      "intended use still determine whether a change is actually worth making.",
+    guidance: "Guidance",
+    guidancePoints: [
+      "Crank length should match inseam, bike category, and posture demands.",
+      "Shorter is not automatically better. The right choice balances clearance, comfort, " +
+        "and pedaling feel.",
+      "Use this together with saddle height and full fit targets rather than in isolation.",
+    ],
+    next: "What's next?",
+    nextTitle: "Use this as a springboard, not the finish line",
+    nextText:
+      "Create a free account to build your rider profile, start a personalized fit, and " +
+      "track future adjustments.",
+    start: "Start free bike fit",
+    pricing: "Compare plans",
+    save: "Build your rider profile",
+    saveHint: "Create an account to continue with a personal bike fit.",
+    aside:
+      "The calculator gives a practical starting point. An in-person fitter can add value " +
+      "for complex biomechanical issues.",
+    faqTitle: "FAQ",
+    faqs: [
+      {
+        q: "Does a shorter crank always improve comfort?",
+        a:
+          "Not always. Crank length needs to match your inseam, bike category, and position " +
+          "goals rather than following a blanket rule.",
+      },
+      {
+        q: "Why is MTB crank guidance sometimes shorter?",
+        a: "MTB setups may favor slightly shorter cranks for pedal clearance and terrain control.",
+      },
+    ],
+    related: "Related tools and guides",
+    trustTitle: "Practical component choice without fake certainty",
+    trustText:
+      "This public calculator helps you narrow the choice before you make larger changes to your bike.",
+    trust: [
+      {
+        title: "Conservative component starting point",
+        description:
+          "The calculator gives you a practical first direction without pretending crank length " +
+          "exists independently from your wider position.",
+      },
+      {
+        title: "Built on inseam first",
+        description:
+          "Inseam remains the most useful public input for ruling out implausible crank choices " +
+          "more quickly.",
+      },
+      {
+        title: "Helps narrow the choice",
+        description: "Use the result to compare available crank sizes before you replace parts.",
+      },
+    ],
+    invalid:
+      "The measurement in the link was outside the range. An example is shown; adjust it to " +
+      "your own inseam.",
+    warning:
+      "This crank length is on the long side for this category. Recheck saddle height if you try it.",
+  },
+  nl: {
+    eyebrow: "Cranklengte calculator",
+    title: "Welke cranklengte past bij jou?",
+    intro: "Voorbeeldwaarden ingevuld. Schuif naar je eigen maten voor een persoonlijk startpunt.",
+    measure: "Meet je binnenbeenlengte",
+    inseam: "Binnenbeenlengte",
+    measureHint:
+      "Meet blootsvoets van de vloer tot de bovenkant van een boek dat je stevig tussen je " +
+      "benen houdt.",
+    choose: "Kies je fiets",
+    category: "Fietsdiscipline",
+    categories: { road: "Race", gravel: "Gravel", mtb: "Mountainbike", city: "Stadsfiets" },
+    categoryHint: "Kies de discipline die past bij je fiets en gebruik.",
+    result: "Jouw startpunt",
+    exampleResult: "Voorbeeldstartpunt",
+    personalIntro: "Controleer de maten uit je link en pas ze aan waar nodig.",
+    recommendation: "Aanbevolen cranklengte",
+    resultHint:
+      "Een praktisch startpunt voor je componentkeuze. Heupcompressie, trapgevoel en " +
+      "zadelhoogte vragen nog een aparte controle.",
+    visual: "Cranklengte gemeten tussen het midden van de trapas en het midden van de pedaalas",
+    sizes: "Beschikbare crankadviezen",
+    recommended: "advies",
+    adjustment: "Controleer in deze volgorde",
+    steps: [
+      "Meet je binnenbeenlengte opnieuw voordat je onderdelen wisselt.",
+      "Controleer zadelhoogte en kniehoek samen met je cranklengte.",
+      "Test je positie tijdens een korte rit voordat je verder aanpast.",
+    ],
+    scope: "Wat dit advies wel en niet doet",
+    scopeText:
+      "Deze uitkomst helpt je om onlogische crankopties weg te strepen. Zadelhoogte, houding " +
+      "en gebruiksdoel bepalen daarna of een verandering echt zinvol is.",
+    guidance: "Richtlijnen",
+    guidancePoints: [
+      "Cranklengte moet passen bij binnenbeenlengte, fietsdiscipline en houdingsdoelen.",
+      "Korter is niet automatisch beter. De juiste keuze balanceert ruimte, comfort en trapgevoel.",
+      "Gebruik dit samen met zadelhoogte en volledige fit-doelen, niet los daarvan.",
+    ],
+    next: "Hoe verder?",
+    nextTitle: "Gebruik dit als springplank, niet als eindstation",
+    nextText:
+      "Maak een gratis account aan om je rijdersprofiel op te bouwen, een persoonlijke " +
+      "bikefit te starten en toekomstige aanpassingen bij te houden.",
+    start: "Start gratis bike fit",
+    pricing: "Bekijk prijzen",
+    save: "Bouw je rijdersprofiel op",
+    saveHint: "Maak een account aan en ga verder met een persoonlijke bikefit.",
+    aside:
+      "De calculator geeft een praktisch startpunt. Een persoonlijke fitter kan toegevoegde " +
+      "waarde bieden bij complexe biomechanische kwesties.",
+    faqTitle: "Veelgestelde vragen",
+    faqs: [
+      {
+        q: "Maakt een kortere crank altijd comfortabeler?",
+        a:
+          "Niet altijd. Cranklengte moet passen bij je binnenbeenlengte, categorie en " +
+          "positie-doel, niet bij een algemene regel.",
+      },
+      {
+        q: "Waarom is de cranklengte voor MTB soms korter?",
+        a: "MTB-opstellingen kiezen soms iets korter voor meer pedaalvrijheid en controle op terrein.",
+      },
+    ],
+    related: "Gerelateerde tools en gidsen",
+    trustTitle: "Praktische componentkeuze zonder schijnzekerheid",
+    trustText:
+      "Deze publieke calculator helpt je de keuze versmallen voordat je grotere " +
+      "veranderingen aan je fiets doet.",
+    trust: [
+      {
+        title: "Conservatief component-startpunt",
+        description:
+          "De calculator geeft een praktische eerste richting zonder te doen alsof cranklengte " +
+          "los staat van je totale positie.",
+      },
+      {
+        title: "Gebaseerd op binnenbeenlengte",
+        description:
+          "Binnenbeenlengte blijft de bruikbaarste publieke invoer om onlogische crankkeuzes " +
+          "sneller uit te filteren.",
+      },
+      {
+        title: "Helpt keuzes vernauwen",
+        description:
+          "Gebruik de uitkomst om beschikbare crankmaten te vergelijken voordat je onderdelen vervangt.",
+      },
+    ],
+    invalid:
+      "De maat in de link viel buiten het bereik. Je ziet een voorbeeld; schuif naar je " +
+      "eigen binnenbeenlengte.",
+    warning:
+      "Deze cranklengte is aan de lange kant voor deze categorie. Controleer ook je " +
+      "zadelhoogte als je dit probeert.",
+  },
+};
+export type CrankLengthCopy = typeof crankLengthMessages.en;

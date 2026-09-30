@@ -16,6 +16,7 @@ import {
 interface FitPassLandingCtaProps {
   locale: string;
   label: string;
+  loadingLabel?: string;
   alreadyActiveLabel: string;
   loginHref: string;
   dashboardHref: string;
@@ -24,6 +25,7 @@ interface FitPassLandingCtaProps {
 export function FitPassLandingCta({
   locale,
   label,
+  loadingLabel,
   alreadyActiveLabel,
   loginHref,
   dashboardHref,
@@ -39,7 +41,7 @@ export function FitPassLandingCta({
   if (user === undefined) {
     return (
       <Button disabled className="min-w-[200px]">
-        {label}
+        {loadingLabel ?? label}
       </Button>
     );
   }

@@ -1,0 +1,73 @@
+/* @vitest-environment jsdom */
+
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import nl from "@/i18n/messages/nl";
+import { Header } from "./Header";
+import { Footer } from "./Footer";
+import { MarketingAccountLink, MarketingLanguageSwitch } from "./MarketingNavigation";
+import { HeaderMobileMenu } from "./HeaderMobileMenu";
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/nl/how-it-works",
+  useSearchParams: () => new URLSearchParams("source=test"),
+  useRouter: () => ({ push: vi.fn() }),
+}));
+const auth = vi.hoisted(() => ({ isAuthenticated: false }));
+vi.mock("convex/react", () => ({ useConvexAuth: () => auth }));
+vi.mock("@convex-dev/auth/react", () => ({ useAuthActions: () => ({ signOut: vi.fn() }) }));
+vi.mock("@/components/branding", () => ({
+  BrandLogo: ({ href }: { href: string }) => <a href={href}>BestBikeFit4U</a>,
+}));
+afterEach(() => { cleanup(); auth.isAuthenticated = false; });
+
+const mobileLabels = {
+  howItWorks: nl.nav.howItWorks, tools: "Calculators", pricing: nl.nav.pricing,
+  login: nl.nav.login, getStarted: "Start gratis bike fit", dashboard: "Dashboard",
+  newFitSession: "Nieuwe fit", bikeFitting: "Mijn fits", myBikes: "Mijn fietsen",
+  profile: "Profiel", signOut: "Uitloggen",
+};
+
+describe("marketing layout", () => {
+  it("retains dashboard access for an authenticated rider", () => {
+    auth.isAuthenticated = true;
+    render(<MarketingAccountLink locale="en" loginLabel="Log in" dashboardLabel="Dashboard" />);
+    expect(screen.getByRole("link", { name: "Dashboard" }).getAttribute("href")).toBe("/en/dashboard");
+  });
+  it("uses the approved header links, one primary action and active-page semantics", () => {
+    render(<Header locale="nl" labels={{ common: nl.common, nav: nl.nav, dashboardNav: nl.dashboard.nav, dashboardSignOut: nl.dashboard.common.signOut }} />);
+    const nav = screen.getByRole("navigation", { name: "Hoofdmenu" });
+    expect(within(nav).getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual([
+      "/nl/calculators/bike-fit", "/nl/how-it-works", "/nl/guides", "/nl/pricing",
+    ]);
+    expect(within(nav).getByRole("link", { name: nl.nav.howItWorks }).getAttribute("aria-current")).toBe("page");
+    expect(screen.getAllByRole("link", { name: "Start gratis bike fit" })).toHaveLength(1);
+    expect(screen.getByRole("link", { name: "Start gratis bike fit" }).getAttribute("href")).toBe("/nl/calculators/bike-fit");
+    expect(screen.getByRole("link", { name: nl.nav.login }).className).not.toContain("bg-");
+  });
+
+  it("preserves the current page and query when changing language, NL first", () => {
+    render(<MarketingLanguageSwitch locale="nl" />);
+    const links = screen.getAllByRole("link");
+    expect(links.map((link) => link.textContent)).toEqual(["NL", "EN"]);
+    expect(links[1].getAttribute("href")).toBe("/en/how-it-works?source=test");
+    expect(links[0].getAttribute("aria-current")).toBe("page");
+  });
+
+  it("retains footer routes and uses stroke icons instead of legacy colored logos", () => {
+    const { container } = render(<Footer locale="nl" labels={{ howItWorks: nl.nav.howItWorks, pricing: nl.nav.pricing, footer: nl.nav.footer }} />);
+    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(5);
+    expect(screen.getByRole("link", { name: nl.nav.footer.tirePressure }).getAttribute("href")).toBe("/nl/bandenspanning-calculator");
+    expect(screen.getByRole("link", { name: nl.nav.footer.sitemap }).getAttribute("href")).toBe("/sitemap.xml");
+    expect(container.querySelectorAll("svg[stroke='currentColor']")).toHaveLength(8);
+  });
+
+  it("opens a localized mobile menu with the same CTA and closes it accessibly", async () => {
+    render(<HeaderMobileMenu locale="nl" labels={mobileLabels} />);
+    fireEvent.click(screen.getByRole("button", { name: "Open navigatiemenu" }));
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByRole("link", { name: "Gidsen" }).getAttribute("href")).toBe("/nl/guides");
+    expect(within(dialog).getByRole("link", { name: "Start gratis bike fit" }).getAttribute("href")).toBe("/nl/calculators/bike-fit");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Sluit navigatiemenu" }));
+  });
+});

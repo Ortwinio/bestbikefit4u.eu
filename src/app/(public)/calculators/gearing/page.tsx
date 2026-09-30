@@ -12,10 +12,7 @@ import {
   FeatureIconCard,
   type FeatureIconCardColor,
   PublicCtaBand,
-  PublicHero,
-  PublicPageShell,
   PublicSection,
-  RatingBadge,
 } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -37,25 +34,35 @@ function buildFaqs(isNl: boolean) {
     ? [
         {
           q: "Wat is mijn lichtste en zwaarste versnelling?",
-          a: "De lichtste versnelling is je kleinste kettingring met de grootste krans. De zwaarste versnelling is je grootste kettingring met de kleinste krans.",
+          a:
+            "De lichtste versnelling is je kleinste kettingring met de grootste krans. De " +
+            "zwaarste versnelling is je grootste kettingring met de kleinste krans.",
         },
         {
           q: "Waarom helpt trapfrequentie bij verzetadvies?",
-          a: "Dezelfde versnelling voelt anders als je sneller of langzamer trapt. De calculator laat daarom de snelheid bij jouw gekozen cadans zien.",
+          a:
+            "Dezelfde versnelling voelt anders als je sneller of langzamer trapt. De " +
+            "calculator laat daarom de snelheid bij jouw gekozen cadans zien.",
         },
         {
           q: "Is 1x altijd genoeg voor beklimmingen?",
-          a: "Niet altijd. 1x kan prima werken, maar voor lange of steile beklimmingen is een ruimer bereik vaak prettiger.",
+          a:
+            "Niet altijd. 1x kan prima werken, maar voor lange of steile beklimmingen is een " +
+            "ruimer bereik vaak prettiger.",
         },
       ]
     : [
         {
           q: "What are my easiest and hardest gears?",
-          a: "Your easiest gear is your smallest chainring paired with the largest cassette cog. Your hardest gear is your largest chainring paired with the smallest cog.",
+          a:
+            "Your easiest gear is your smallest chainring paired with the largest cassette " +
+            "cog. Your hardest gear is your largest chainring paired with the smallest cog.",
         },
         {
           q: "Why does cadence matter in a gearing calculator?",
-          a: "The same gear feels very different if you spin faster or slower. That is why the calculator shows speed at your chosen cadence.",
+          a:
+            "The same gear feels very different if you spin faster or slower. That is why the" +
+            " calculator shows speed at your chosen cadence.",
         },
         {
           q: "Is 1x always enough for climbing?",
@@ -74,8 +81,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: isNl ? "Verzet calculator | BestBikeFit4U" : "Gearing Calculator | BestBikeFit4U",
     description: isNl
-      ? "Bereken je lichtste en zwaarste versnelling, snelheid bij cadans en een snelle kliminschatting op basis van kettingring, cassette en wielmaat."
-      : "Calculate your easiest and hardest gear, speed at cadence, and a quick climb-readiness verdict from chainring, cassette, and wheel size.",
+      ? "Bereken je lichtste en zwaarste versnelling, snelheid bij cadans en een snelle " +
+        "kliminschatting op basis van kettingring, cassette en wielmaat."
+      : "Calculate your easiest and hardest gear, speed at cadence, and a quick climb-" +
+        "readiness verdict from chainring, cassette, and wheel size.",
     keywords: isNl
       ? ["verzet calculator", "gear ratio calculator", "klimverzet calculator", "cassette calculator"]
       : ["gearing calculator", "gear ratio calculator", "climb gearing calculator", "cassette calculator"],
@@ -130,7 +139,8 @@ export default async function GearingCalculatorPage() {
         {
           title: "Honest climb verdict",
           description:
-            "The tool does not pretend to know more than it does: the climb readout is a practical rule, not a power meter.",
+            "The tool does not pretend to know more than it does: the climb readout is a " +
+            "practical rule, not a power meter.",
           icon: <ShieldCheck className="h-5 w-5" />,
         },
         {
@@ -142,7 +152,7 @@ export default async function GearingCalculatorPage() {
       ];
 
   return (
-    <PublicPageShell className="text-foreground">
+    <div className="text-foreground">
       <JsonLd
         schema={[
           buildWebApplicationSchema({
@@ -176,35 +186,14 @@ export default async function GearingCalculatorPage() {
         ]}
       />
 
-      <div className="bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--secondary)_26%,var(--background)_74%)_100%)] text-foreground">
+      <GearingCalculatorForm isNl={isNl} />
+      <div className="text-foreground">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div>
-            <PublicHero
-              eyebrow="BestBikeFit4U calculator"
-              title={isNl ? "Verzet calculator" : "Gearing Calculator"}
-              description={
-                isNl
-                  ? "Begrijp snel je lichtste en zwaarste versnelling, de snelheid bij jouw cadans en of je setup een gekozen klim aankan."
-                  : "Quickly understand your easiest and hardest gear, speed at your cadence, and whether your setup can handle the climb you have in mind."
-              }
-              chips={
-                isNl
-                  ? ["1x en 2x", "Snel en exact", "Dashboard hand-off"]
-                  : ["1x and 2x", "Fast and exact", "Dashboard hand-off"]
-              }
-            />
-            <div className="mt-4">
-              <RatingBadge rating="4.8" count={isNl ? "380+ rijders" : "380+ riders"} />
-            </div>
-          </div>
-
           <PublicSection
             className="mt-10"
             header={{
               eyebrow: isNl ? "Waarom dit werkt" : "Why this works",
-              title: isNl
-                ? "Exacte verzetmath, snelle route-check"
-                : "Exact gearing math, fast route check",
+              title: isNl ? "Exacte verzetmath, snelle route-check" : "Exact gearing math, fast route check",
               description: isNl
                 ? "De public calculator legt de basis. In het dashboard koppel je daar later rijder en event aan."
                 : "The public calculator lays the groundwork. The dashboard later adds rider and event context.",
@@ -223,16 +212,16 @@ export default async function GearingCalculatorPage() {
             </div>
           </PublicSection>
 
-          <GearingCalculatorForm isNl={isNl} />
-
           <PublicCtaBand
             className="mt-10"
             eyebrow={isNl ? "Hoe verder?" : "What's next?"}
             title={isNl ? "Vergelijk dit met je dashboard setup" : "Compare this with your dashboard setup"}
             description={
               isNl
-                ? "Maak een gratis account aan om deze setup naast je echte fiets te zetten en de kliminschatting verder te verfijnen."
-                : "Create a free account to compare this setup with your real bike and refine the climb verdict further."
+                ? "Maak een gratis account aan om deze setup naast je echte fiets te zetten en de " +
+                  "kliminschatting verder te verfijnen."
+                : "Create a free account to compare this setup with your real bike and refine the " +
+                  "climb verdict further."
             }
             actions={
               campaignActive ? (
@@ -280,8 +269,10 @@ export default async function GearingCalculatorPage() {
             }
             aside={
               isNl
-                ? "De public versie is bedoeld voor snelle oriëntatie. Het dashboard gaat verder met rijder, event en climb demand."
-                : "The public version is for quick orientation. The dashboard goes further with rider, event, and climb demand."
+                ? "De public versie is bedoeld voor snelle oriëntatie. Het dashboard gaat verder " +
+                  "met rijder, event en climb demand."
+                : "The public version is for quick orientation. The dashboard goes further with " +
+                  "rider, event, and climb demand."
             }
           />
 
@@ -292,6 +283,6 @@ export default async function GearingCalculatorPage() {
           />
         </div>
       </div>
-    </PublicPageShell>
+    </div>
   );
 }

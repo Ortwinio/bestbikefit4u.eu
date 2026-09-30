@@ -1,0 +1,22 @@
+import { Suspense } from "react";
+import { createRoot } from "react-dom/client";
+import Dashboard from "@/app/(dashboard)/dashboard/page";
+import FitStart from "@/app/(dashboard)/fit/page";
+import Questionnaire from "@/app/(dashboard)/fit/[sessionId]/questionnaire/page";
+import Results from "@/app/(dashboard)/fit/[sessionId]/results/page";
+import FitHistory from "@/app/(dashboard)/fit-history/page";
+import FitMethod from "@/app/(dashboard)/fit/how-it-works/page";
+import DashboardLayout from "@/app/(dashboard)/layout";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { ToastProvider } from "@/components/ui/Toast";
+import { FeedbackFloatingButton } from "@/components/feedback/FeedbackFloatingButton";
+import { accountFeedbackPlacement } from "@/components/account/account-feedback-placement";
+import { getFeedbackCopy } from "@/components/feedback/feedback-copy";
+import { locale } from "./runtime";
+
+const pathname = window.location.pathname.replace(/^\/(nl|en)/, "");
+const sessionParams = Promise.resolve({ sessionId: "visual-session" });
+const content = pathname === "/dashboard" ? <Dashboard /> : pathname === "/fit" ? <FitStart /> : pathname.endsWith("/questionnaire") ? <Questionnaire params={sessionParams} /> : pathname.endsWith("/results") ? <Results params={sessionParams} /> : pathname === "/fit-history" ? <FitHistory /> : await FitMethod();
+document.documentElement.lang = locale;
+createRoot(document.getElementById("root")).render(<ThemeProvider><ToastProvider><DashboardLayout><Suspense fallback={<p>Loading fixture</p>}>{content}</Suspense></DashboardLayout><FeedbackFloatingButton label={getFeedbackCopy(locale).page.floatingCta} className={accountFeedbackPlacement(window.location.pathname)} onClick={() => {}} /></ToastProvider></ThemeProvider>);
+window.__visualReady = true;

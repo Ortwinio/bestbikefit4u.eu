@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Bike fit configurator</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F8F3;font-family:Figtree,system-ui,sans-serif;color:#0F2420}
+a{color:#0A7263}a:hover{color:#075A4E}
+.rng{-webkit-appearance:none;appearance:none;background:transparent;margin:0;height:44px;cursor:pointer}
+.rng::-webkit-slider-runnable-track{height:44px;background:transparent}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:7px;border-radius:50%;background:#FFFFFF;border:4px solid #0A7263;box-shadow:0 2px 8px rgba(15,36,32,.25)}
+.rng::-moz-range-track{height:44px;background:transparent}
+.rng::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#FFFFFF;border:4px solid #0A7263;box-shadow:0 2px 8px rgba(15,36,32,.25)}
+.rng:focus-visible{outline:3px solid #9CC21F;outline-offset:2px;border-radius:12px}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1400px; box-sizing: border-box; display: flex; flex-direction: column; background: #F5F8F3; color: #0F2420; font-family: Figtree, system-ui, sans-serif">
+
+<header style="display: flex; align-items: center; justify-content: space-between; height: 80px; padding: 0 64px; border-bottom: 1px solid #DCE6E1">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #0F2420">
+<svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#CFF26A"></circle><circle cx="11" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><circle cx="23" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><path d="M11 20l4-8h6l2 8M15 12l4 8" stroke="#0F2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px">BestBikeFit<span style="color: #0A7263">4U</span></span>
+</a>
+<nav aria-label="Calculators" style="display: flex; gap: 2px; padding: 5px; border-radius: 999px; background: #FFFFFF; border: 1px solid #DCE6E1; font-size: 14px; font-weight: 600">
+<a href="BikeFit.dc.html" aria-current="page" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; background: #0F2420; color: #FFFFFF; text-decoration: none; white-space: nowrap">Bike fit</a>
+<a href="SaddleHeight.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Zadelhoogte</a>
+<a href="FrameSize.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Framemaat</a>
+<a href="TirePressure.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Bandenspanning</a>
+<a href="CrankLength.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Cranklengte</a>
+<a href="SaddleWidth.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Zadelbreedte</a>
+<a href="Gearing.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Verzet</a>
+<a href="Main.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 999px; color: #0F2420; text-decoration: none; white-space: nowrap">Meer</a>
+</nav>
+<a href="Login.dc.html" style="font-weight: 600; color: #0F2420; text-decoration: none">Inloggen</a>
+</header>
+
+<div style="display: flex; align-items: flex-end; justify-content: space-between; padding: 40px 64px 28px">
+<div>
+<div style="font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #0A7263">Gratis bike fit · jouw startpunt</div>
+<h1 style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.03em">Bouw je eerste fitprofiel</h1>
+</div>
+<div style="display: flex; align-items: center; gap: 14px; padding: 12px 18px; border-radius: 18px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<div style="font-size: 14px; color: #4A5F5A">Invoerkwaliteit</div>
+<div style="width: 140px; height: 8px; border-radius: 99px; background: #DCE6E1; overflow: hidden"><div style="height: 8px; border-radius: 99px; background: #0A7263; width: {{conf}}%"></div></div>
+<div style="font-weight: 700; font-size: 15px; min-width: 76px">{{confLabel}}</div>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: 560px 1fr; gap: 32px; padding: 0 64px 64px; flex-grow: 1">
+
+<div style="display: flex; flex-direction: column; gap: 20px">
+
+<section style="display: flex; flex-direction: column; gap: 20px; padding: 28px; border-radius: 24px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h2 style="margin: 0; display: flex; align-items: center; gap: 12px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px"><span style="font-family: 'DM Mono', monospace; font-size: 14px; width: 32px; height: 32px; border-radius: 50%; background: #CFF26A; display: flex; align-items: center; justify-content: center">1</span>Jouw lichaam</h2>
+<a href="#" style="font-size: 14px; font-weight: 600">Hoe meet ik dit?</a>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<label for="bf-height" style="font-weight: 600">Lichaamslengte</label>
+<div style="font-family: 'DM Mono', monospace; font-size: 24px">{{height}}<span style="font-size: 14px; color: #4A5F5A"> cm</span></div>
+</div>
+<div style="position: relative; height: 44px">
+<div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 99px; background: #DCE6E1"></div>
+<div style="position: absolute; left: 0; top: 18px; height: 8px; border-radius: 99px; background: #0A7263; width: {{heightPct}}%"></div>
+<input id="bf-height" class="rng" type="range" min="130" max="210" step="1" value="{{height}}" onChange="{{setHeight}}" style="position: absolute; left: 0; top: 0; width: 100%">
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 12px; color: #4A5F5A"><span>130</span><span>150</span><span>170</span><span>190</span><span>210</span></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<label for="bf-inseam" style="font-weight: 600">Binnenbeenlengte</label>
+<div style="font-family: 'DM Mono', monospace; font-size: 24px">{{inseam}}<span style="font-size: 14px; color: #4A5F5A"> cm</span></div>
+</div>
+<div style="position: relative; height: 44px">
+<div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 99px; background: #DCE6E1"></div>
+<div style="position: absolute; left: 0; top: 18px; height: 8px; border-radius: 99px; background: #0A7263; width: {{inseamPct}}%"></div>
+<input id="bf-inseam" class="rng" type="range" min="55" max="105" step="0.5" value="{{inseam}}" onChange="{{setInseam}}" style="position: absolute; left: 0; top: 0; width: 100%">
+</div>
+<div style="font-size: 13px; color: #4A5F5A">Blootsvoets, boek stevig tussen de benen, meten tot de bovenkant van het boek.</div>
+<div role="group" aria-label="Herkomst van je maten" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{sources}}" as="source" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{source.pressed}}" onClick="{{source.pick}}" style="min-height: 44px; border: 1px solid #DCE6E1; border-radius: 12px; background: {{source.bg}}; color: #0F2420; font-weight: 600">{{source.label}}</button>
+</sc-for>
+</div>
+<div role="status" style="font-size: 13px; color: #4A5F5A">{{measurementNote}}</div>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 20px; padding: 28px; border-radius: 24px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<h2 style="margin: 0; display: flex; align-items: center; gap: 12px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px"><span style="font-family: 'DM Mono', monospace; font-size: 14px; width: 32px; height: 32px; border-radius: 50%; background: #CFF26A; display: flex; align-items: center; justify-content: center">2</span>Jouw fiets en rijstijl</h2>
+
+<div role="group" aria-label="Type fiets" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}" style="height: 48px; border-radius: 14px; border: 2px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-size: 15px; font-weight: 700; cursor: pointer">{{c.label}}</button>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-weight: 600">Doel</div>
+<div role="group" aria-label="Rijdoel" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{goals}}" as="g" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{g.pressed}}" onClick="{{g.pick}}" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px; min-height: 84px; border-radius: 14px; border: 2px solid {{g.border}}; background: {{g.bg}}; color: #0F2420; text-align: left; cursor: pointer">
+<span style="font-size: 15px; font-weight: 700">{{g.label}}</span>
+<span style="font-size: 12px; line-height: 1.35; color: #3B4F4A">{{g.desc}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<label for="bf-flex" style="font-weight: 600">Lenigheid</label>
+<div style="font-weight: 700; color: #0A7263">{{flexLabel}}</div>
+</div>
+<div style="position: relative; height: 44px">
+<div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 99px; background: #DCE6E1"></div>
+<div style="position: absolute; left: 0; top: 18px; height: 8px; border-radius: 99px; background: #0A7263; width: {{flexPct}}%"></div>
+<input id="bf-flex" class="rng" type="range" min="1" max="5" step="1" value="{{flex}}" onChange="{{setFlex}}" style="position: absolute; left: 0; top: 0; width: 100%">
+</div>
+<div style="font-size: 13px; color: #4A5F5A">Tip: raak je met gestrekte benen je tenen? Dan zit je op ‘Goed’.</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<label for="bf-core" style="font-weight: 600">Rompstabiliteit</label>
+<div style="font-weight: 700; color: #0A7263">{{coreLabel}}</div>
+</div>
+<div style="position: relative; height: 44px">
+<div style="position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 99px; background: #DCE6E1"></div>
+<div style="position: absolute; left: 0; top: 18px; height: 8px; border-radius: 99px; background: #0A7263; width: {{corePct}}%"></div>
+<input id="bf-core" class="rng" type="range" min="1" max="5" step="1" value="{{core}}" onChange="{{setCore}}" style="position: absolute; left: 0; top: 0; width: 100%">
+</div>
+<div style="font-size: 13px; color: #4A5F5A">Tip: houd je 60 seconden een plank vol? Dan zit je op ‘Goed’.</div>
+</div>
+</section>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 20px">
+<section aria-label="Live voorbeeld" style="position: relative; border-radius: 28px; background: #CFF26A; padding: 20px 28px 12px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px"><span style="font-family: 'DM Mono', monospace; font-size: 14px; display: inline-flex; width: 32px; height: 32px; border-radius: 50%; background: #0F2420; color: #CFF26A; align-items: center; justify-content: center; margin-right: 12px">3</span>Jouw positie, live</h2>
+<div style="font-size: 14px; font-weight: 600">Illustratie, niet op schaal</div>
+</div>
+<svg width="664" height="420" viewBox="0 0 600 380" fill="none" role="img" aria-label="Zijaanzicht van de fiets met zadelhoogte, reach en drop">
+<line x1="20" y1="346" x2="580" y2="346" stroke="#0F2420" stroke-opacity="0.2" stroke-width="2"></line>
+<circle cx="{{g.rx}}" cy="264" r="82" stroke="#0F2420" stroke-width="7"></circle>
+<circle cx="{{g.fx}}" cy="264" r="82" stroke="#0F2420" stroke-width="7"></circle>
+<path d="{{g.frame}}" stroke="#0F2420" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="{{g.cockpit}}" stroke="#0F2420" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path>
+<line x1="{{g.saddleL}}" y1="{{g.sy}}" x2="{{g.saddleR}}" y2="{{g.sy2}}" stroke="#0F2420" stroke-width="9" stroke-linecap="round"></line>
+<circle cx="250" cy="287" r="13" stroke="#0F2420" stroke-width="6"></circle>
+<line x1="250" y1="287" x2="268" y2="320" stroke="#0F2420" stroke-width="7" stroke-linecap="round"></line>
+<line x1="{{g.dimBx}}" y1="{{g.dimBy}}" x2="{{g.dimSx}}" y2="{{g.dimSy}}" stroke="#0A7263" stroke-width="3" stroke-dasharray="7 7"></line>
+<circle cx="{{g.dimBx}}" cy="{{g.dimBy}}" r="5" fill="#0A7263"></circle>
+<circle cx="{{g.dimSx}}" cy="{{g.dimSy}}" r="5" fill="#0A7263"></circle>
+<line x1="{{g.sx}}" y1="{{g.reachY}}" x2="{{g.bx}}" y2="{{g.reachY}}" stroke="#0F2420" stroke-width="2" stroke-dasharray="5 6"></line>
+<line x1="{{g.bx}}" y1="{{g.reachY}}" x2="{{g.bx}}" y2="{{g.by}}" stroke="#0A7263" stroke-width="3"></line>
+<rect x="{{g.lblSx}}" y="{{g.lblSy}}" width="112" height="34" rx="10" fill="#0A7263"></rect>
+<text x="{{g.lblStx}}" y="{{g.lblSty}}" fill="#FFFFFF" font-family="DM Mono, monospace" font-size="16" text-anchor="middle">{{sh}} mm</text>
+<rect x="{{g.lblRx}}" y="{{g.lblRy}}" width="112" height="34" rx="10" fill="#0F2420"></rect>
+<text x="{{g.lblRtx}}" y="{{g.lblRty}}" fill="#CFF26A" font-family="DM Mono, monospace" font-size="16" text-anchor="middle">{{reach}} mm</text>
+<rect x="{{g.lblDx}}" y="{{g.lblDy}}" width="96" height="30" rx="10" fill="#FFFFFF"></rect>
+<text x="{{g.lblDtx}}" y="{{g.lblDty}}" fill="#0F2420" font-family="DM Mono, monospace" font-size="14" text-anchor="middle">{{dropArrow}} {{dropAbs}} mm</text>
+</svg>
+</section>
+
+<section aria-label="Resultaat" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px">
+<div style="padding: 20px; border-radius: 20px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<div style="font-size: 14px; color: #4A5F5A">Zadelhoogte</div>
+<div style="font-family: 'DM Mono', monospace; font-size: 34px; margin-top: 6px">{{sh}}<span style="font-size: 15px; color: #4A5F5A"> mm</span></div>
+<div style="font-size: 13px; color: #0A7263; font-weight: 600; margin-top: 4px">veilige marge {{shLo}}–{{shHi}} mm</div>
+</div>
+<div style="padding: 20px; border-radius: 20px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<div style="font-size: 14px; color: #4A5F5A">Reach zadelneus → stuur</div>
+<div style="font-family: 'DM Mono', monospace; font-size: 34px; margin-top: 6px">{{reach}}<span style="font-size: 15px; color: #4A5F5A"> mm</span></div>
+<div style="font-size: 13px; color: #4A5F5A; margin-top: 4px">horizontaal tot stuurmidden</div>
+</div>
+<div style="padding: 20px; border-radius: 20px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<div style="font-size: 14px; color: #4A5F5A">Drop zadel → stuur</div>
+<div style="font-family: 'DM Mono', monospace; font-size: 34px; margin-top: 6px">{{drop}}<span style="font-size: 15px; color: #4A5F5A"> mm</span></div>
+<div style="font-size: 13px; color: #4A5F5A; margin-top: 4px">{{dropHint}}</div>
+</div>
+<div style="padding: 20px; border-radius: 20px; background: #0F2420; color: #FFFFFF">
+<div style="font-size: 14px; color: #B9CCC6">Framemaat</div>
+<div style="font-family: 'DM Mono', monospace; font-size: 34px; margin-top: 6px; color: #CFF26A">{{size}}</div>
+<div style="font-size: 13px; color: #B9CCC6; margin-top: 4px">{{sizeDetail}}</div>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 14px">
+<div style="padding: 24px; border-radius: 20px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<h3 style="margin: 0 0 14px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 20px">Pas in deze volgorde aan</h3>
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 15px">
+<li style="display: flex; gap: 12px; align-items: center"><span style="font-family: 'DM Mono', monospace; width: 28px; height: 28px; border-radius: 50%; background: #E1F2EE; color: #075A4E; display: flex; align-items: center; justify-content: center; font-size: 13px">1</span>Zadelhoogte, in stappen van max. 5 mm</li>
+<li style="display: flex; gap: 12px; align-items: center"><span style="font-family: 'DM Mono', monospace; width: 28px; height: 28px; border-radius: 50%; background: #E1F2EE; color: #075A4E; display: flex; align-items: center; justify-content: center; font-size: 13px">2</span>Zadelneus: {{setback}} mm achter de trapas (BB)</li>
+<li style="display: flex; gap: 12px; align-items: center"><span style="font-family: 'DM Mono', monospace; width: 28px; height: 28px; border-radius: 50%; background: #E1F2EE; color: #075A4E; display: flex; align-items: center; justify-content: center; font-size: 13px">3</span>Stuurhoogte en stuurpen, pas daarna</li>
+</ol>
+<p style="font-size: 13px; color: #4A5F5A; line-height: 1.4">Begin hier. In je account krijg je het volledige plan: eerst cleats, dan zadelhoogte, setback, drop en stuurpen.</p>
+<p style="font-size: 13px; color: #4A5F5A">{{goalNote}}</p>
+</div>
+<div style="display: flex; flex-direction: column; justify-content: space-between; gap: 14px; padding: 24px; border-radius: 20px; background: #0A7263; color: #FFFFFF">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 20px; line-height: 1.25">Vergelijk met de fiets die je al hebt</div>
+<a href="#" style="display: inline-flex; align-items: center; justify-content: center; height: 52px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; text-decoration: none">Bewaar gratis in je account</a>
+</div>
+</section>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1400}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { height: 180, inseam: 84, cat: 0, goal: 1, flex: 3, core: 3, source: 0 };
+  }
+  renderVals() {
+    const s = this.state;
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+    const r = (n) => Math.round(n);
+    const levels = ['Zeer beperkt', 'Beperkt', 'Gemiddeld', 'Goed', 'Uitstekend'];
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:109
+    const effectiveGoal = s.cat >= 2 && s.goal === 3 ? 2 : s.goal;
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/validation.ts:115
+    const flexIndex = [2, 4, 5, 7, 9][s.flex - 1] - 5;
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/validation.ts:136
+    const coreIndex = [2, 4, 5, 7, 9][s.core - 1] - 5;
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:118
+    const shLo = r(s.inseam * 8.6), shHi = r(s.inseam * 9.1);
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:90
+    const sh = Math.max(shLo, Math.min(shHi, r(s.inseam * [8.83, 8.8, 8.75, 8.7][s.cat] + [-4, 0, 3, 6][effectiveGoal] + Math.max(-8, Math.min(4, 1.5 * flexIndex)) + Math.max(-4, Math.min(2, 0.8 * coreIndex)))));
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:201
+    const reach = r(s.height * 3.3 + [-20, 0, 10, 25][effectiveGoal] + flexIndex * 3 + coreIndex * 2 + [0, -10, -60, -120][s.cat]);
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/constants.ts:201
+    const dropBounds = [[40, 150], [20, 120], [-10, 70], [-140, 40]][s.cat];
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:156
+    const drop = Math.max(dropBounds[0], Math.min(dropBounds[1], r(sh * [[0.07, 0.1, 0.13, 0.16], [0.05, 0.07, 0.09, 0.11], [0.01, 0.03, 0.05, 0.05], [-0.06, -0.04, -0.02, -0.02]][s.cat][effectiveGoal] + Math.max(-25, Math.min(15, 5 * flexIndex)) + Math.max(-20, Math.min(10, 4 * coreIndex)))));
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/calculations.ts:132
+    const setback = r(s.inseam * 0.7 - 5 + [0, 5, -5, 10][s.cat] + [6, 0, -6, -18][effectiveGoal]);
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/index.ts:265
+    const sizeBands = s.cat < 2 ? ['48–50', '51–53', '54–55', '56–57', '58–59', '60–62'] : ['XS–S', 'S–M', 'M–L', 'L–XL', 'XL–XXL'];
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/index.ts:265
+    const thresholds = s.cat < 2 ? [160, 168, 175, 183, 190] : [160, 170, 180, 190];
+    // VOORLOPIGE REKENREGEL — echte engine: convex/lib/fitAlgorithm/index.ts:265
+    const bandIndex = thresholds.filter(threshold => s.height >= threshold).length;
+    const size = sizeBands[bandIndex];
+    const sizeDetail = s.cat < 2 ? 'cm · je shortlist' : 'je shortlist';
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/publicCalculatorLogic.ts:263
+    const ratio = s.inseam / s.height;
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/publicCalculatorLogic.ts:344
+    const warningCount = ratio < 0.41 || ratio > 0.54 ? 1 : 0;
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/publicCalculatorLogic.ts:344
+    const conf = s.source === 0 ? 0 : Math.max(0, Math.min(100, 20 + (s.source === 1 ? 30 : 12) + 12 + 10 + 24 - warningCount * 8));
+    const confLabel = s.source === 0 ? 'Voorbeeld' : conf >= 75 ? 'Hoog' : conf >= 50 ? 'Gemiddeld' : 'Lager';
+    const sources = ['Voorbeeld', 'Zelf gemeten', 'Geschat'].map((label, index) => ({
+      label, pressed: String(s.source === index), bg: s.source === index ? '#E6F8A8' : '#FFFFFF',
+      pick: () => this.setState({ source: index })
+    }));
+
+    // geometry for the live drawing
+    const k = 0.26;
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+    const L = sh * k;
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+    const sx = 250 - 0.292 * L, sy = 287 - 0.956 * L;
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+    const bx = sx + reach * 0.36, by = sy + drop * 0.36;
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+    const stx = 250 - 0.292 * L * 0.72, sty = 287 - 0.956 * L * 0.72;
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+    const htx = bx - 32, hty = by + 14, hbx = bx - 20, hby = by + 62;
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+    const fx = bx + 42, rx = 120;
+    const f = (n) => n.toFixed(1);
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+    const frame = 'M' + rx + ' 264L250 287L' + f(stx) + ' ' + f(sty) + 'L' + rx + ' 264' +
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      'M' + f(stx) + ' ' + f(sty + 2) + 'L' + f(htx) + ' ' + f(hty) +
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      'M250 287L' + f(hbx) + ' ' + f(hby) +
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      'M' + f(htx) + ' ' + f(hty) + 'L' + f(hbx) + ' ' + f(hby) + 'L' + f(fx) + ' 264' +
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      'M' + f(stx) + ' ' + f(sty) + 'L' + f(sx) + ' ' + f(sy + 4);
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+    const cockpit = 'M' + f(htx) + ' ' + f(hty) + 'L' + f(bx) + ' ' + f(by) +
+      'q24 0 24 22q0 18-16 20';
+    const g = {
+      rx: rx, fx: f(fx), frame: frame, cockpit: cockpit,
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      sx: f(sx), sy: f(sy), sy2: f(sy - 2), bx: f(bx), by: f(by),
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      saddleL: f(sx - 24), saddleR: f(sx + 30),
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      dimBx: f(250 - 18), dimBy: 287, dimSx: f(sx - 18), dimSy: f(sy + 4),
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      reachY: f(sy - 22),
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      lblSx: f(sx - 150), lblSy: f((sy + 287) / 2 - 17), lblStx: f(sx - 94), lblSty: f((sy + 287) / 2 + 6),
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      lblRx: f((sx + bx) / 2 - 56), lblRy: f(sy - 66), lblRtx: f((sx + bx) / 2), lblRty: f(sy - 43),
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      lblDx: f(bx + 36), lblDy: f(by - 34), lblDtx: f(bx + 84), lblDty: f(by - 14)
+    };
+
+    const cats = ['Race', 'Gravel', 'MTB', 'Stad / tour'].map((label, i) => ({
+      label: label,
+      pressed: String(s.cat === i),
+      bg: s.cat === i ? '#0F2420' : '#FFFFFF',
+      fg: s.cat === i ? '#FFFFFF' : '#0F2420',
+      border: s.cat === i ? '#0F2420' : '#DCE6E1',
+      pick: () => this.setState({ cat: i })
+    }));
+    const goalDefs = [
+      ['Comfort', 'Rechtop, ontspannen'],
+      ['Gebalanceerd', 'Allround'],
+      ['Prestatie', 'Sportief, lager'],
+      ['Aero', 'Laag en gestrekt']
+    ];
+    const goals = goalDefs.map((d, i) => ({
+      label: d[0], desc: d[1],
+      pressed: String(s.goal === i),
+      bg: s.goal === i ? '#E6F8A8' : '#FFFFFF',
+      border: s.goal === i ? '#0A7263' : '#DCE6E1',
+      pick: () => this.setState({ goal: i })
+    }));
+
+    return {
+      height: s.height, inseam: s.inseam, flex: s.flex, core: s.core,
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      heightPct: ((s.height - 130) / 80) * 100,
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      inseamPct: ((s.inseam - 55) / 50) * 100,
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      flexPct: ((s.flex - 1) / 4) * 100,
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      corePct: ((s.core - 1) / 4) * 100,
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      flexLabel: levels[s.flex - 1], coreLabel: levels[s.core - 1],
+      setHeight: (e) => this.setState({ height: Number(e.target.value) }),
+      setInseam: (e) => this.setState({ inseam: Number(e.target.value) }),
+      setFlex: (e) => this.setState({ flex: Number(e.target.value) }),
+      setCore: (e) => this.setState({ core: Number(e.target.value) }),
+      cats: cats, goals: goals,
+      sh: sh, shLo: shLo, shHi: shHi, reach: reach, drop: drop, setback: setback,
+      dropHint: drop < 0 ? 'stuur boven het zadel' : drop === 0 ? 'stuur op zadelhoogte' : 'stuur onder het zadel',
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      dropArrow: drop < 0 ? '↑' : drop > 0 ? '↓' : '↔', dropAbs: Math.abs(drop),
+      sources: sources,
+      measurementNote: warningCount ? 'Controleer je maten: deze verhouding is ongebruikelijk. Meet ze nog eens na.' : s.source === 0 ? 'Voorbeeldmaten — schuif ze naar jouw maten en kies hoe je hebt gemeten.' : 'Hoe nauwkeuriger je meet, hoe scherper je advies.',
+    // VOORLOPIGE REKENREGEL — echte engine: src/lib/public-calculators/fitAdapters.ts:63
+      goalNote: s.cat >= 2 && s.goal === 3 ? 'Bij MTB en stad/tour rekent Aero als Prestatie.' : 'Een sterk startpunt — test het op je fiets.',
+      size: size, sizeDetail: sizeDetail,
+      conf: conf, confLabel: confLabel,
+      g: g
+    };
+  }
+}
+</script>
+</body>
+</html>

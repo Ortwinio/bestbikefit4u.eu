@@ -1,4 +1,4 @@
-import { PressureCalculatorDashboard } from "@/components/features/pressure/PressureCalculatorDashboard";
+import { PressureDashboardClient } from "./PressureDashboardClient";
 
 export default async function PressureCalculatorPage({
   searchParams,
@@ -7,5 +7,5 @@ export default async function PressureCalculatorPage({
 }) {
   const params = await searchParams;
 
-  return <PressureCalculatorDashboard initialBikeId={params.bikeId} />;
+  return <PressureDashboardClient initialBikeId={params.bikeId} />;
 }

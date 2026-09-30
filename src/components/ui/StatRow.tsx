@@ -11,8 +11,8 @@ export function StatRow({ label, value, className }: StatRowProps) {
 
   return (
     <div className={cn("flex items-center justify-between gap-4 py-1.5", className)}>
-      <dt className="text-xs text-[color:var(--muted-foreground)]">{label}</dt>
-      <dd className="text-sm font-semibold text-[color:var(--foreground)]">{value}</dd>
+      <dt className="text-sm text-muted-foreground">{label}</dt>
+      <dd className={cn("text-sm font-medium text-foreground", typeof value === "number" && "font-mono")}>{value}</dd>
     </div>
   );
 }

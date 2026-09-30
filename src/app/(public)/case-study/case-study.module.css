@@ -1,0 +1,206 @@
+.page {
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+.container {
+  max-width: 1440px;
+  margin: auto;
+  padding: 64px 120px 72px;
+}
+.hero {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 48px;
+  align-items: center;
+  margin-bottom: 64px;
+}
+.hero h1 {
+  font-size: clamp(44px, 6.1vw, 88px);
+  line-height: .98;
+  font-weight: 800;
+  letter-spacing: -.035em;
+}
+.eyebrow {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+.hero .eyebrow {
+  margin-bottom: 18px;
+}
+.lead {
+  font-size: 20px;
+  line-height: 1.6;
+  color: var(--color-muted-foreground);
+  margin: 28px 0;
+}
+.hero img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.actions a, .side a {
+  min-height: 52px;
+  height: auto;
+  padding: 12px 24px;
+  white-space: normal;
+  text-align: center;
+}
+.page a:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 4px;
+}
+.why {
+  padding: 36px;
+  border-radius: 28px;
+  background: var(--color-secondary);
+  margin-bottom: 64px;
+}
+.why h2 {
+  font-size: clamp(30px, 3.5vw, 48px);
+  line-height: 1.1;
+  margin-top: 14px;
+}
+.why > p:last-of-type {
+  margin-top: 18px;
+  color: var(--color-muted-foreground);
+  font-size: 18px;
+}
+.reasons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin-top: 32px;
+}
+.reasons h3 {
+  font-size: 25px;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+.reasons p, .side p, .side li {
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--color-muted-foreground);
+}
+.formLayout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+  align-items: start;
+  scroll-margin-top: 32px;
+}
+.formCard, .side section {
+  border: 1px solid var(--color-border);
+  border-radius: 28px;
+  padding: 32px;
+  background: var(--color-card);
+}
+.formCard h2, .side h2 {
+  font-size: 30px;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.formCard > p {
+  font-size: 18px;
+  color: var(--color-muted-foreground);
+  margin-bottom: 28px;
+}
+.formCard > :global([data-slot="card"]) {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+}
+.formCard > :global([data-slot="card"]) > div {
+  padding: 0;
+}
+.formCard form > div:first-child {
+  grid-template-columns: minmax(0, 1fr);
+}
+.formCard input:not([type="checkbox"]) {
+  min-height: 48px;
+}
+.formCard textarea {
+  min-height: 160px;
+}
+.formCard form > label {
+  min-height: 64px;
+  background: var(--color-background);
+}
+.formCard form > button {
+  min-height: 52px;
+  height: auto;
+  white-space: normal;
+}
+.side {
+  display: grid;
+  gap: 24px;
+}
+.side ul {
+  padding-left: 22px;
+  list-style: disc;
+  margin-top: 20px;
+}
+.side li + li {
+  margin-top: 12px;
+}
+.side .expectation {
+  background: var(--bbf-lime);
+  border-color: var(--bbf-lime);
+}
+.side a {
+  margin-top: 24px;
+}
+@media (max-width: 1199px) {
+  .container {
+    padding: 48px 40px 64px;
+  }
+  .hero {
+    gap: 32px;
+  }
+}
+@media (max-width: 800px) {
+  .hero, .formLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hero img {
+    max-height: 280px;
+  }
+  .reasons {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+}
+@media (max-width: 639px) {
+  .container {
+    padding: 36px 20px 48px;
+  }
+  .hero, .why {
+    margin-bottom: 40px;
+  }
+  .why, .formCard, .side section {
+    padding: 24px;
+  }
+  .lead {
+    font-size: 18px;
+  }
+}
+
+.page .expectation, .page .expectation h2, .page .expectation p, .page .expectation li {
+  color: var(--bbf-inkt);
+}
+:global(.dark) .hero img { mix-blend-mode: normal; border-radius: 24px; }
+.page .expectation a:focus-visible {
+  outline: 3px solid var(--bbf-inkt);
+  outline-offset: 4px;
+}

@@ -73,6 +73,7 @@ export const SEO_ROUTE_FAMILIES: readonly RouteFamily[] = [
   {
     classification: "api_or_system",
     prefixes: [
+      "/design-system",
       "/_next",
       "/api",
       "/robots.txt",

@@ -2,7 +2,7 @@
 
 import { useFormContext, Controller } from "react-hook-form";
 import { InfoBox } from "@/components/ui";
-import { SliderQuestion } from "@/components/profile/RidingStyleCard";
+import { ProfileChoiceQuestion as SliderQuestion } from "@/components/account/ProfileChoiceQuestion";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { HelpCircle, Bike } from "lucide-react";
 import type { WizardFormData } from "@/lib/validations/measurementWizard";
@@ -35,7 +35,7 @@ export function StepRidingStyle() {
   }));
   const positionOptions = POSITION_KEYS.map((k) => ({
     key: k,
-    label: k.charAt(0).toUpperCase() + k.slice(1),
+    label: messages.fit.goals[k].label,
   }));
 
   return (
@@ -47,7 +47,7 @@ export function StepRidingStyle() {
       </p>
 
       {hasMissingAnswers && (
-        <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive">
+        <p role="alert" className="rounded-lg bg-destructive-soft p-3 text-sm text-destructive-text">
           {locale === "nl"
             ? "Beantwoord alle vier de vragen over je rijstijl voordat je je profiel opslaat."
             : "Please answer all four riding-style questions before saving your profile."}

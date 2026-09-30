@@ -5,7 +5,15 @@ import { useQuery } from "convex/react";
 import { ArrowRight, CalendarDays, History } from "lucide-react";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { api } from "../../../convex/_generated/api";
-import { Button, Card, CardContent, LoadingState, EmptyState, SectionHeader, MeasurementTile } from "@/components/ui";
+import {
+  Button,
+  Card,
+  CardContent,
+  LoadingState,
+  EmptyState,
+  SectionHeader,
+  MeasurementTile,
+} from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { FitReportActionGroup } from "@/components/reports";
@@ -21,9 +29,7 @@ function linkButtonProps(href: string) {
   };
 }
 
-export function BikeFitHistorySection({
-  bikeId,
-}: BikeFitHistorySectionProps) {
+export function BikeFitHistorySection({ bikeId }: BikeFitHistorySectionProps) {
   const { locale, messages } = useDashboardMessages();
   const history = useQuery(api.sessions.queries.getSessionsWithRecommendationsByBike, {
     bikeId,
@@ -49,9 +55,9 @@ export function BikeFitHistorySection({
   };
 
   return (
-    <Card variant="bordered" className="dashboard-card-surface overflow-hidden">
+    <Card variant="bordered" className="bg-card overflow-hidden">
       <SectionHeader
-        icon={<History className="h-5 w-5 text-[color:var(--primary)]" />}
+        icon={<History className="h-5 w-5 text-primary" />}
         title={messages.bikes.sections.fittingHistory}
       />
       <CardContent className="p-6">
@@ -70,20 +76,18 @@ export function BikeFitHistorySection({
             {history.map(({ session, recommendation }) => (
               <div
                 key={session._id}
-                className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--secondary)]/20 p-4"
+                className="rounded-[var(--radius-xl)] border border-border bg-secondary/20 p-4"
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="space-y-3">
                     <div>
-                      <p className="flex items-center gap-2 text-sm font-semibold text-[color:var(--foreground)]">
-                        <CalendarDays className="h-4 w-4 text-[color:var(--primary)]" />
-                      {new Date(session.completedAt ?? session.createdAt).toLocaleDateString(
-                        locale === "nl" ? "nl-NL" : "en-US"
-                      )}
+                      <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                        <CalendarDays className="h-4 w-4 text-primary" />
+                        {new Date(session.completedAt ?? session.createdAt).toLocaleDateString(
+                          locale === "nl" ? "nl-NL" : "en-US",
+                        )}
                       </p>
-                      <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                        {getStatusLabel(session.status)}
-                      </p>
+                      <p className="mt-1 text-sm text-muted-foreground">{getStatusLabel(session.status)}</p>
                     </div>
 
                     {recommendation ? (
@@ -95,17 +99,25 @@ export function BikeFitHistorySection({
                         />
                         <MeasurementTile
                           label={messages.fitHistory.handlebarDrop}
-                          value={recommendation.calculatedFit.handlebarDropMm != null ? Math.round(recommendation.calculatedFit.handlebarDropMm) : null}
+                          value={
+                            recommendation.calculatedFit.handlebarDropMm != null
+                              ? Math.round(recommendation.calculatedFit.handlebarDropMm)
+                              : null
+                          }
                           unit="mm"
                         />
                         <MeasurementTile
                           label={messages.fitHistory.handlebarReach}
-                          value={recommendation.calculatedFit.handlebarReachMm != null ? Math.round(recommendation.calculatedFit.handlebarReachMm) : null}
+                          value={
+                            recommendation.calculatedFit.handlebarReachMm != null
+                              ? Math.round(recommendation.calculatedFit.handlebarReachMm)
+                              : null
+                          }
                           unit="mm"
                         />
                       </div>
                     ) : (
-                      <p className="text-sm text-[color:var(--muted-foreground)]">
+                      <p className="text-sm text-muted-foreground">
                         {messages.fitHistory.noRecommendationYet}
                       </p>
                     )}

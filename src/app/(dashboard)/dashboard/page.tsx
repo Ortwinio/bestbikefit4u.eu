@@ -20,15 +20,15 @@ import {
   buildLatestFitByBike,
 } from "@/components/bikes/BikeGarageOverview";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
-import { FlexibilityScale } from "@/components/profile/FlexibilityScale";
-import { CoreStabilityBar } from "@/components/profile/CoreStabilityBar";
+import { DashboardHomeProfileIndicators } from "@/components/dashboard/DashboardHomeProfileIndicators";
+import garageStyles from "@/components/dashboard/DashboardBikeGarage.module.css";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import {
   getEffectiveDisplayName,
   getEffectiveProfileImageSource,
 } from "@/lib/userIdentity";
-import { ArrowRight, Plus, User, Bike, Activity, Dumbbell } from "lucide-react";
+import { ArrowRight, Plus, User, Bike } from "lucide-react";
 
 export default function DashboardPage() {
   const { locale, messages } = useDashboardMessages();
@@ -45,7 +45,6 @@ export default function DashboardPage() {
 
   const displayName = getEffectiveDisplayName(user, messages.userMenu.fallbackUserName);
   const profileImageSource = getEffectiveProfileImageSource(user);
-  const dashboardCardClassName = "dashboard-card-surface";
 
   const latestFitByBike = useMemo(
     () =>
@@ -60,112 +59,99 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6">
       <DashboardMessageSurface showBanners={false} showModal={false} />
 
-      <Card variant="bordered" className="dashboard-hero-surface overflow-hidden">
-        <CardContent className="px-6 py-6 sm:px-7 sm:py-7">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="flex items-center gap-4">
-              <ProfilePhotoUpload source={profileImageSource} size="hero" />
-              <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted-foreground)]">
-                  {messages.dashboardHome.welcomeBack}
-                </p>
-                <h1 className="text-2xl font-semibold text-[color:var(--foreground)] sm:text-3xl">
-                  {displayName}
-                </h1>
-                <p className="max-w-2xl text-sm leading-6 text-[color:var(--muted-foreground)]">
-                  {messages.dashboardHome.subtitle}
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button
-                size="sm"
-                render={<Link href={withLocalePrefix("/fit", locale)} />}
-              >
-                {messages.dashboardHome.startFit}
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                render={<Link href={withLocalePrefix("/bikes/new", locale)} />}
-              >
-                <Plus className="h-4 w-4" />
-                {messages.nav.newBike}
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <header className="flex min-w-0 flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+        <div className="min-w-0 space-y-2">
+          <p className="text-sm text-muted-foreground">
+            {messages.dashboardHome.welcomeBack}
+          </p>
+          <h1 className="break-words font-display text-4xl font-extrabold tracking-tight text-foreground sm:text-[2.75rem]">
+            {displayName}
+          </h1>
+          <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
+            {messages.dashboardHome.subtitle}
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 xl:max-w-md xl:justify-end">
+          <Button
+            nativeButton={false}
+            render={<Link href={withLocalePrefix("/fit", locale)} />}
+          >
+            {messages.dashboardHome.startFit}
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link href={withLocalePrefix("/bikes/new", locale)} />}
+          >
+            <Plus className="h-4 w-4" />
+            {messages.nav.newBike}
+          </Button>
+          <ProfilePhotoUpload source={profileImageSource} size="settings" />
+        </div>
+      </header>
 
       {/* Rider profile card */}
-      <Card variant="bordered" className={dashboardCardClassName}>
+      <Card variant="bordered" className="gap-5 rounded-3xl p-5 shadow-none sm:p-7">
         <SectionHeader
-          icon={<User className="h-5 w-5 text-[color:var(--primary)]" />}
+          icon={<User className="h-5 w-5 text-[color:var(--color-primary)]" />}
           title={messages.dashboardHome.riderCardTitle}
+          border={false}
+          className="flex-wrap p-0 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-bold"
           action={
             <Button
               variant="outline"
-              size="sm"
+              nativeButton={false}
               render={<Link href={withLocalePrefix("/profile", locale)} />}
             >
               {messages.dashboardHome.editProfile}
             </Button>
           }
         />
-        <CardContent className="space-y-5 pt-5">
+        <CardContent className="gap-5">
           {profile ? (
             <div className="space-y-4">
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 <MeasurementTile
                   label={messages.profile.measurements.height}
                   value={profile.heightCm}
                   unit="cm"
+                  className="rounded-2xl border-0 bg-background p-3 [&_dd]:text-2xl"
                 />
                 <MeasurementTile
                   label={messages.profile.measurements.inseam}
                   value={profile.inseamCm}
                   unit="cm"
+                  className="rounded-2xl border-0 bg-background p-3 [&_dd]:text-2xl"
                 />
                 <MeasurementTile
                   label={messages.dashboardHome.weightLabel}
                   value={profile.weightKg ?? undefined}
                   unit="kg"
+                  className="rounded-2xl border-0 bg-background p-3 [&_dd]:text-2xl"
                 />
+                {profile.weightKg == null ? (
+                  <div className="rounded-2xl bg-background p-3">
+                    <p className="text-sm text-muted-foreground">{messages.dashboardHome.weightLabel}</p>
+                    <Button variant="link" className="mt-1 h-auto min-h-11 whitespace-normal px-0 text-left" nativeButton={false} render={<Link href={withLocalePrefix("/profile", locale)} />}>
+                      {messages.dashboardHome.weightMissing}
+                    </Button>
+                  </div>
+                ) : null}
               </div>
-
-              <div className="grid gap-3 lg:grid-cols-2">
-                <div className="dashboard-card-surface-muted rounded-[var(--radius-xl)] border px-4 py-4">
-                  <SectionHeader
-                    icon={<Activity className="h-4 w-4 text-[color:var(--primary)]" />}
-                    title={messages.profile.sections.flexibility}
-                    border={false}
-                    className="px-0 py-0 pb-3"
-                  />
-                  <FlexibilityScale score={profile.flexibilityScore} />
-                </div>
-                <div className="dashboard-card-surface-muted rounded-[var(--radius-xl)] border px-4 py-4">
-                  <SectionHeader
-                    icon={<Dumbbell className="h-4 w-4 text-[color:var(--primary)]" />}
-                    title={messages.profile.sections.coreStability}
-                    border={false}
-                    className="px-0 py-0 pb-3"
-                  />
-                  <CoreStabilityBar score={profile.coreStabilityScore} />
-                </div>
-              </div>
+              <DashboardHomeProfileIndicators profile={profile} locale={locale} messages={messages} />
             </div>
           ) : (
             <InfoBox
               variant="warning"
-              icon={<User className="mt-0.5 h-4 w-4 text-[color:var(--warning)]" />}
+              icon={<User className="mt-0.5 h-4 w-4 text-[color:var(--color-warning)]" />}
               className="text-sm"
             >
               <p className="font-medium">{messages.home.profileWarning.title}</p>
-              <p className="mt-1 text-[color:var(--muted-foreground)]">
+              <p className="mt-1 text-[color:var(--color-muted-foreground)]">
                 {messages.home.profileWarning.description}
               </p>
             </InfoBox>
@@ -173,8 +159,9 @@ export default function DashboardPage() {
 
           <div className="flex flex-wrap gap-3">
             <Button
-              variant="outline"
-              size="sm"
+              variant="link"
+              className="px-0"
+              nativeButton={false}
               render={<Link href={withLocalePrefix("/fit", locale)} />}
             >
               {messages.dashboardHome.newFit}
@@ -185,15 +172,16 @@ export default function DashboardPage() {
       </Card>
 
       {/* Bikes section */}
-      <section className="space-y-4">
-        <Card variant="bordered" className={dashboardCardClassName}>
+      <section className="min-w-0 space-y-4" aria-label={messages.bikes.title}>
           <SectionHeader
-            icon={<Bike className="h-5 w-5 text-[color:var(--primary)]" />}
+            icon={<Bike className="h-5 w-5 text-[color:var(--color-primary)]" />}
             title={messages.bikes.title}
+            border={false}
+            className="flex-wrap p-0 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-bold"
             action={
               <Button
                 variant="outline"
-                size="sm"
+                nativeButton={false}
                 render={<Link href={withLocalePrefix("/bikes", locale)} />}
               >
                 {messages.nav.myBikes}
@@ -201,36 +189,34 @@ export default function DashboardPage() {
               </Button>
             }
           />
-          <CardContent className="pt-5">
             {bikes.length === 0 ? (
               <EmptyState
                 title={messages.dashboardHome.noBikeTitle}
                 description={messages.dashboardHome.noBikeDescription}
                 action={
                   <Button
-                    size="sm"
+                    nativeButton={false}
                     render={<Link href={withLocalePrefix("/bikes/new", locale)} />}
                   >
                     {messages.bikes.actions.addBike}
                   </Button>
                 }
-                className="border-0 p-0 shadow-none"
+                className="rounded-3xl border border-border bg-card px-5 py-12 shadow-none"
               />
             ) : (
               <div className="space-y-4">
                 {bikes.map((bike) => (
-                  <BikeGarageRow
-                    key={bike._id}
+                  <article key={bike._id} aria-label={bike.name} className={garageStyles.row}>
+                    <BikeGarageRow
                     bike={bike}
                     latestFit={latestFitByBike.get(bike._id) ?? null}
                     locale={locale}
                     messages={messages}
                   />
+                  </article>
                 ))}
               </div>
             )}
-          </CardContent>
-        </Card>
       </section>
     </div>
   );

@@ -23,13 +23,9 @@ vi.mock("next/link", () => ({
 }));
 
 vi.mock("@/components/analytics/TrackedCtaLink", () => ({
-  TrackedCtaLink: ({
-    href,
-    children,
-  }: {
-    href: string;
-    children?: React.ReactNode;
-  }) => <a href={href}>{children}</a>,
+  TrackedCtaLink: ({ href, children }: { href: string; children?: React.ReactNode }) => (
+    <a href={href}>{children}</a>
+  ),
 }));
 
 vi.mock("@/components/seo/JsonLd", () => ({
@@ -83,14 +79,11 @@ describe("gearing calculator page", () => {
     const ui = await GearingCalculatorPage();
     render(ui);
 
-    expect(screen.getByText("Gearing Calculator")).toBeTruthy();
     expect(screen.getByText("Gearing form")).toBeTruthy();
     expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
-      "/en/calculators/bike-fit"
+      "/en/calculators/bike-fit",
     );
-    expect(screen.getByText("Compare plans").closest("a")?.getAttribute("href")).toBe(
-      "/en/pricing"
-    );
+    expect(screen.getByText("Compare plans").closest("a")?.getAttribute("href")).toBe("/en/pricing");
     expect(screen.queryByText("Donate via our Alpe d'HuZes page")).toBeNull();
   });
 
@@ -99,13 +92,10 @@ describe("gearing calculator page", () => {
     const ui = await GearingCalculatorPage();
     render(ui);
 
-    expect(screen.getByText("Verzet calculator")).toBeTruthy();
     expect(screen.getByText("Gearing form")).toBeTruthy();
     expect(screen.getByText("Start gratis bike fit").closest("a")?.getAttribute("href")).toBe(
-      "/nl/calculators/bike-fit"
+      "/nl/calculators/bike-fit",
     );
-    expect(screen.getByText("Bekijk prijzen").closest("a")?.getAttribute("href")).toBe(
-      "/nl/pricing"
-    );
+    expect(screen.getByText("Bekijk prijzen").closest("a")?.getAttribute("href")).toBe("/nl/pricing");
   });
 });

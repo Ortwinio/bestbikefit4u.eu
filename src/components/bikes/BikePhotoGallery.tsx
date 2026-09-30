@@ -70,9 +70,7 @@ function BikePhotoThumbnail({
       })}
       className={cn(
         "relative aspect-square overflow-hidden rounded-[var(--radius-md)] border transition",
-        isSelected
-          ? "border-[color:var(--primary)] ring-2 ring-[color:var(--primary)]/20"
-          : "border-[color:var(--border)]"
+        isSelected ? "border-primary ring-2 ring-primary/20" : "border-border",
       )}
     >
       {imageUrl ? (
@@ -87,12 +85,17 @@ function BikePhotoThumbnail({
           className="h-full w-full object-cover"
         />
       ) : (
-        <div className="flex h-full items-center justify-center bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]">
+        <div className="flex h-full items-center justify-center bg-secondary text-muted-foreground">
           <Camera className="h-4 w-4" />
         </div>
       )}
       {photo.isPrimary ? (
-        <span className="absolute left-2 top-2 rounded-full bg-[color:var(--background)]/90 px-2 py-1 text-[10px] font-semibold text-[color:var(--foreground)]">
+        <span
+          className={
+            "absolute left-2 top-2 rounded-full bg-background/90 px-2 py-1 text-[10px] " +
+            "font-semibold text-foreground"
+          }
+        >
           <Star className="mr-1 inline h-3 w-3" />
           {messages.bikes.gallery.primaryBadge}
         </span>
@@ -117,8 +120,7 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const visiblePhotos = optimisticPhotos ?? photos;
-  const selectedPhoto =
-    visiblePhotos.find((photo) => photo.id === selectedId) ?? visiblePhotos[0] ?? null;
+  const selectedPhoto = visiblePhotos.find((photo) => photo.id === selectedId) ?? visiblePhotos[0] ?? null;
   const selectedPhotoUrl = useResolvedImageUrl(selectedPhoto?.storageId);
   const selectedIndex = selectedPhoto
     ? visiblePhotos.findIndex((photo) => photo.id === selectedPhoto.id)
@@ -145,41 +147,40 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
     };
   }, []);
 
-  const { uploadImage, isUploading, error, clearError } = useImageUpload(
-    async ({ storageId, url }) => {
-      const photoId = await createPhoto({ bikeId, storageId });
-      setOptimisticPhotos((current) => {
-        const next = current ?? photos;
-        return [
-          {
-            id: String(photoId),
-            storageId,
-            caption: undefined,
-            isPrimary: next.length === 0,
-            isLegacy: false,
-          },
-          ...next.map((photo, index) =>
-            next.length === 0
-              ? { ...photo, isPrimary: index === 0 ? false : photo.isPrimary }
-              : photo
-          ),
-        ];
-      });
-      if (url) {
-        setSelectedId(String(photoId));
-      }
-      toast.success({ description: messages.common.toasts.bikePhotoAdded });
+  const { uploadImage, isUploading, error, clearError } = useImageUpload(async ({ storageId, url }) => {
+    const photoId = await createPhoto({ bikeId, storageId });
+    setOptimisticPhotos((current) => {
+      const next = current ?? photos;
+      return [
+        {
+          id: String(photoId),
+          storageId,
+          caption: undefined,
+          isPrimary: next.length === 0,
+          isLegacy: false,
+        },
+        ...next.map((photo, index) =>
+          next.length === 0 ? { ...photo, isPrimary: index === 0 ? false : photo.isPrimary } : photo,
+        ),
+      ];
+    });
+    if (url) {
+      setSelectedId(String(photoId));
     }
-  );
+    toast.success({ description: messages.common.toasts.bikePhotoAdded });
+  });
 
   const galleryError = actionError ?? error;
   const emptyState = useMemo(
     () => (
-      <div className="flex aspect-video flex-col items-center justify-center rounded-[var(--radius-lg)] border border-dashed border-[color:var(--border)] bg-[color:var(--secondary)]/25 px-6 text-center">
-        <p className="text-sm font-semibold text-[color:var(--foreground)]">
-          {messages.bikes.gallery.emptyTitle}
-        </p>
-        <p className="mt-2 max-w-md text-sm text-[color:var(--muted-foreground)]">
+      <div
+        className={
+          "flex aspect-video flex-col items-center justify-center rounded-[var(--radius-lg)] " +
+          "border border-dashed border-border bg-secondary/25 px-6 text-center"
+        }
+      >
+        <p className="text-sm font-semibold text-foreground">{messages.bikes.gallery.emptyTitle}</p>
+        <p className="mt-2 max-w-md text-sm text-muted-foreground">
           {messages.bikes.gallery.emptyDescription}
         </p>
         <Button className="mt-4" size="sm" onClick={() => fileInputRef.current?.click()}>
@@ -187,7 +188,11 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
         </Button>
       </div>
     ),
-    [messages.bikes.gallery.emptyDescription, messages.bikes.gallery.emptyTitle, messages.bikes.gallery.upload]
+    [
+      messages.bikes.gallery.emptyDescription,
+      messages.bikes.gallery.emptyTitle,
+      messages.bikes.gallery.upload,
+    ],
   );
 
   async function handleRemove() {
@@ -199,9 +204,7 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
     setIsRemoving(true);
     try {
       await removePhoto({ photoId: selectedPhoto.id as Id<"bikePhotos"> });
-      setOptimisticPhotos((current) =>
-        (current ?? photos).filter((photo) => photo.id !== selectedPhoto.id)
-      );
+      setOptimisticPhotos((current) => (current ?? photos).filter((photo) => photo.id !== selectedPhoto.id));
       toast.success({ description: messages.common.toasts.bikePhotoRemoved });
     } catch (removeError) {
       console.error("Failed to remove bike photo:", removeError);
@@ -227,7 +230,7 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
         (current ?? photos).map((photo) => ({
           ...photo,
           isPrimary: photo.id === selectedPhoto.id,
-        }))
+        })),
       );
       toast.success({
         description: messages.common.toasts.bikePhotoPrimaryUpdated,
@@ -258,22 +261,23 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
       {selectedPhoto ? (
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-sm font-medium text-[color:var(--foreground)]">
+            <p className="text-sm font-medium text-foreground">
               {formatBikePhotoCount({
                 count: visiblePhotos.length,
                 oneLabel: messages.bikes.gallery.countOne,
                 manyLabel: messages.bikes.gallery.countMany,
               })}
             </p>
-            <p className="text-xs text-[color:var(--muted-foreground)]">
-              {messages.bikes.gallery.help}
-            </p>
+            <p className="text-xs text-muted-foreground">{messages.bikes.gallery.help}</p>
           </div>
           <button
             type="button"
             onClick={() => setIsLightboxOpen(true)}
             aria-label={messages.bikes.gallery.openLightbox}
-            className="group relative block w-full overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/25 text-left"
+            className={
+              "group relative block w-full overflow-hidden rounded-[var(--radius-lg)] border " +
+              "border-border bg-secondary/25 text-left"
+            }
           >
             {selectedPhotoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -287,30 +291,36 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
                 className="aspect-video w-full object-cover transition duration-300 group-hover:scale-[1.01]"
               />
             ) : (
-              <div className="flex aspect-video items-center justify-center text-[color:var(--muted-foreground)]">
+              <div className="flex aspect-video items-center justify-center text-muted-foreground">
                 <Camera className="h-8 w-8" />
               </div>
             )}
-            <span className="absolute inset-0 flex items-end justify-between bg-gradient-to-t from-black/55 via-black/0 to-black/0 px-4 py-4 text-white opacity-100 transition">
-              <span className="text-sm font-medium">
+            <span
+              className={
+                "absolute inset-0 flex items-end justify-between bg-gradient-to-t from-[var(--bbf-inkt)]/90 " +
+                "via-[var(--bbf-inkt)]/0 to-[var(--bbf-inkt)]/0 px-4 py-4 text-[var(--bbf-wit)] opacity-100 transition"
+              }
+            >
+              <span className="rounded-full bg-[var(--bbf-inkt)] px-3 py-1 text-sm font-medium">
                 {getBikePhotoAltText({
                   bikeName,
                   index: selectedIndex + 1,
                   total: visiblePhotos.length,
                 })}
               </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-black/40 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
+              <span
+                className={
+                  "inline-flex items-center gap-2 rounded-full bg-[var(--bbf-inkt)] px-3 py-1 text-xs " +
+                  "font-semibold backdrop-blur-sm"
+                }
+              >
                 <Maximize2 className="h-3.5 w-3.5" />
                 {messages.bikes.gallery.openLightbox}
               </span>
             </span>
           </button>
           <div className="flex flex-wrap gap-3">
-            <Button
-              size="sm"
-              onClick={() => fileInputRef.current?.click()}
-              isLoading={isUploading}
-            >
+            <Button size="sm" onClick={() => fileInputRef.current?.click()} isLoading={isUploading}>
               {messages.bikes.gallery.upload}
             </Button>
             {!selectedPhoto.isLegacy && !selectedPhoto.isPrimary ? (
@@ -324,12 +334,7 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
               </Button>
             ) : null}
             {!selectedPhoto.isLegacy ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => void handleRemove()}
-                isLoading={isRemoving}
-              >
+              <Button variant="outline" size="sm" onClick={() => void handleRemove()} isLoading={isRemoving}>
                 <Trash2 className="h-4 w-4" />
                 {messages.bikes.gallery.remove}
               </Button>
@@ -356,7 +361,11 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex aspect-square items-center justify-center rounded-[var(--radius-md)] border border-dashed border-[color:var(--border)] text-[color:var(--muted-foreground)] transition hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]"
+            className={
+              "flex aspect-square items-center justify-center rounded-[var(--radius-md)] border " +
+              "border-dashed border-border text-muted-foreground transition hover:border-primary " +
+              "hover:text-primary"
+            }
           >
             {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
           </button>
@@ -385,7 +394,7 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
       />
 
       {galleryError ? (
-        <p className="text-xs text-[color:var(--destructive)]">
+        <p className="text-xs text-destructive">
           {galleryError === "file_too_large"
             ? messages.profile.photo.fileTooLarge
             : galleryError === "invalid_type"
@@ -402,14 +411,16 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
       >
         <DialogContent
           showCloseButton={false}
-          className="flex h-[min(92vh,980px)] w-[min(96vw,1320px)] max-w-none flex-col gap-4 overflow-hidden rounded-[var(--radius-2xl)] border border-white/10 bg-black/95 p-0 text-white"
+          className={
+            "flex h-[min(92vh,980px)] w-[min(96vw,1320px)] max-w-none flex-col gap-4 " +
+            "overflow-hidden rounded-[var(--radius-2xl)] border border-[var(--bbf-wit)]/10 bg-[var(--bbf-inkt)]/95 p-0 " +
+            "text-[var(--bbf-wit)]"
+          }
         >
-          <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+          <div className="flex items-center justify-between border-b border-[var(--bbf-wit)]/10 px-5 py-4">
             <div>
-              <DialogTitle className="text-lg font-semibold text-white">
-                {bikeName}
-              </DialogTitle>
-              <DialogDescription className="mt-1 text-sm text-white/65">
+              <DialogTitle className="text-lg font-semibold text-[var(--bbf-wit)]">{bikeName}</DialogTitle>
+              <DialogDescription className="mt-1 text-sm text-[var(--bbf-wit)]/65">
                 {selectedIndex >= 0
                   ? getBikePhotoAltText({
                       bikeName,
@@ -424,7 +435,10 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-10 w-10 rounded-full border border-white/10 bg-white/5 px-0 text-white hover:bg-white/10"
+                  className={
+                    "h-10 w-10 rounded-full border border-[var(--bbf-wit)]/10 bg-[var(--bbf-wit)]/5 px-0 text-[var(--bbf-wit)] " +
+                    "hover:bg-[var(--bbf-wit)]/10"
+                  }
                   aria-label={messages.bikes.gallery.closeLightbox}
                 />
               }
@@ -434,7 +448,13 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
           </div>
 
           <div className="grid flex-1 gap-0 lg:grid-cols-[minmax(0,1fr)_320px]">
-            <div className="relative flex min-h-[360px] items-center justify-center bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_45%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(0,0,0,0))] px-4 py-4 sm:px-6">
+            <div
+              className={
+                "relative flex min-h-[360px] items-center justify-center " +
+                "bg-[var(--bbf-inkt)]/40 " +
+                "px-4 py-4 sm:px-6"
+              }
+            >
               {selectedPhotoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -451,7 +471,12 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
                   className="max-h-full w-auto max-w-full rounded-[var(--radius-xl)] object-contain shadow-2xl"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center rounded-[var(--radius-xl)] border border-dashed border-white/15 text-white/60">
+                <div
+                  className={
+                    "flex h-full w-full items-center justify-center rounded-[var(--radius-xl)] border " +
+                    "border-dashed border-[var(--bbf-wit)]/15 text-[var(--bbf-wit)]/60"
+                  }
+                >
                   <Camera className="h-10 w-10" />
                 </div>
               )}
@@ -463,7 +488,10 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
                     variant="outline"
                     size="icon"
                     onClick={() => selectRelativePhoto("previous")}
-                    className="absolute left-4 top-1/2 h-11 w-11 -translate-y-1/2 rounded-full border-white/10 bg-black/40 text-white hover:bg-black/60"
+                    className={
+                      "absolute left-4 top-1/2 h-11 w-11 -translate-y-1/2 rounded-full border-[var(--bbf-wit)]/10 " +
+                      "bg-[var(--bbf-inkt)] text-[var(--bbf-wit)] hover:bg-[var(--bbf-petrol)]"
+                    }
                     aria-label={messages.bikes.gallery.previousPhoto}
                   >
                     <ChevronLeft className="h-5 w-5" />
@@ -473,7 +501,10 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
                     variant="outline"
                     size="icon"
                     onClick={() => selectRelativePhoto("next")}
-                    className="absolute right-4 top-1/2 h-11 w-11 -translate-y-1/2 rounded-full border-white/10 bg-black/40 text-white hover:bg-black/60"
+                    className={
+                      "absolute right-4 top-1/2 h-11 w-11 -translate-y-1/2 rounded-full border-[var(--bbf-wit)]/10 " +
+                      "bg-[var(--bbf-inkt)] text-[var(--bbf-wit)] hover:bg-[var(--bbf-petrol)]"
+                    }
                     aria-label={messages.bikes.gallery.nextPhoto}
                   >
                     <ChevronRight className="h-5 w-5" />
@@ -482,8 +513,8 @@ export function BikePhotoGallery({ bikeId, bikeName, photos }: BikePhotoGalleryP
               ) : null}
             </div>
 
-            <div className="border-t border-white/10 bg-white/4 p-4 lg:border-l lg:border-t-0">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/55">
+            <div className="border-t border-[var(--bbf-wit)]/10 bg-[var(--bbf-wit)]/4 p-4 lg:border-l lg:border-t-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--bbf-wit)]/55">
                 {formatBikePhotoCount({
                   count: visiblePhotos.length,
                   oneLabel: messages.bikes.gallery.countOne,

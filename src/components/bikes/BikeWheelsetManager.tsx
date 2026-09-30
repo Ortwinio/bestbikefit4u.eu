@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import { useMutation } from "convex/react";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { api } from "../../../convex/_generated/api";
-import { Button, Input, NumberInput, Select, useToast } from "@/components/ui";
+import { Button, Input, useToast } from "@/components/ui";
+import { BikeNumberField, BikeChoiceField } from "./BikeFormControls";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 type WheelsetWithSummary = {
@@ -26,10 +27,7 @@ interface BikeWheelsetManagerProps {
   wheelsets: WheelsetWithSummary[];
 }
 
-export function BikeWheelsetManager({
-  bikeId,
-  wheelsets,
-}: BikeWheelsetManagerProps) {
+export function BikeWheelsetManager({ bikeId, wheelsets }: BikeWheelsetManagerProps) {
   const { messages } = useDashboardMessages();
   const toast = useToast();
   const createWheelset = useMutation(api.wheelsets.mutations.create);
@@ -120,32 +118,33 @@ export function BikeWheelsetManager({
           {wheelsets.map((wheelset) => (
             <div
               key={wheelset._id}
-              className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/25 p-4"
+              className="rounded-[var(--radius-lg)] border border-border bg-secondary/25 p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-semibold text-[color:var(--foreground)]">
-                      {wheelset.name}
-                    </p>
+                    <p className="font-semibold text-foreground">{wheelset.name}</p>
                     {wheelset.isActive ? (
-                      <span className="rounded-full bg-[color:var(--secondary)] px-2.5 py-1 text-xs font-semibold text-[color:var(--secondary-foreground)]">
+                      <span
+                        className={"rounded-full bg-secondary px-2.5 py-1 " +
+                        "text-xs font-semibold text-secondary-foreground"}>
                         {messages.bikes.wheelsetManager.activeBadge}
                       </span>
                     ) : null}
                   </div>
-                  <p className="text-sm text-[color:var(--muted-foreground)]">
+                  <p className="text-sm text-muted-foreground">
                     {messages.bikes.wheelsetManager.rimType}: {wheelset.rimType}
                   </p>
-                  <p className="text-sm text-[color:var(--muted-foreground)]">
+                  <p className="text-sm text-muted-foreground">
                     {messages.bikes.wheelsetManager.frontWidth}: {wheelset.internalRimWidthFrontMm ?? "-"} mm
                     {" · "}
                     {messages.bikes.wheelsetManager.rearWidth}: {wheelset.internalRimWidthRearMm ?? "-"} mm
                   </p>
-                  <p className="text-sm text-[color:var(--muted-foreground)]">
+                  <p className="text-sm text-muted-foreground">
                     {messages.bikes.wheelsetManager.tireSetup}:{" "}
                     {wheelset.activeTireSetup
-                      ? `${wheelset.activeTireSetup.name} (${wheelset.activeTireSetup.widthFrontMm}/${wheelset.activeTireSetup.widthRearMm} mm)`
+                      ? `${wheelset.activeTireSetup.name} ` +
+                        `(${wheelset.activeTireSetup.widthFrontMm}/${wheelset.activeTireSetup.widthRearMm} mm)`
                       : messages.bikes.wheelsetManager.noTireSetup}
                   </p>
                 </div>
@@ -174,51 +173,50 @@ export function BikeWheelsetManager({
           ))}
         </div>
       ) : (
-        <div className="rounded-[var(--radius-lg)] border border-dashed border-[color:var(--border)] bg-[color:var(--secondary)]/20 px-4 py-5">
-          <p className="text-sm font-semibold text-[color:var(--foreground)]">
-            {messages.bikes.wheelsetManager.emptyTitle}
-          </p>
-          <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+        <div className="rounded-[var(--radius-lg)] border border-dashed border-border bg-secondary/20 px-4 py-5">
+          <p className="text-sm font-semibold text-foreground">{messages.bikes.wheelsetManager.emptyTitle}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
             {messages.bikes.wheelsetManager.emptyDescription}
           </p>
         </div>
       )}
 
       {isAdding ? (
-        <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/15 p-4">
+        <div className="rounded-[var(--radius-lg)] border border-border bg-secondary/15 p-4">
           <div className="grid gap-4 md:grid-cols-2">
             <Input
+              className="min-h-11"
               label={messages.pressure.wizard.wheelsetName}
               value={name}
               onChange={(event) => setName(event.target.value)}
               error={error ?? undefined}
             />
-            <Select
+            <BikeChoiceField
               label={messages.bikes.wheelsetManager.rimType}
               value={rimType}
-              onChange={(event) =>
-                setRimType(event.target.value as "hooked" | "hookless")
-              }
+              onChange={(value) => setRimType(value as "hooked" | "hookless")}
               options={[
                 { value: "hooked", label: "hooked" },
                 { value: "hookless", label: "hookless" },
               ]}
             />
-            <NumberInput
+            <BikeNumberField
+              min={10}
+              max={60}
+              step={0.5}
+              unit="mm"
               label={messages.bikes.wheelsetManager.frontWidth}
               value={frontWidth}
+              onChange={setFrontWidth}
+            />
+            <BikeNumberField
               min={10}
               max={60}
-              onChange={setFrontWidth}
+              step={0.5}
               unit="mm"
-            />
-            <NumberInput
               label={messages.bikes.wheelsetManager.rearWidth}
               value={rearWidth}
-              min={10}
-              max={60}
               onChange={setRearWidth}
-              unit="mm"
             />
           </div>
           <div className="mt-4 flex flex-wrap gap-3">

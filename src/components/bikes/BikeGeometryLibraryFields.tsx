@@ -22,9 +22,7 @@ import {
 type BikeGeometryLibraryFieldsProps = {
   state: BikeGeometryFallbackState;
   onChange: (
-    updater:
-      | BikeGeometryFallbackState
-      | ((current: BikeGeometryFallbackState) => BikeGeometryFallbackState)
+    updater: BikeGeometryFallbackState | ((current: BikeGeometryFallbackState) => BikeGeometryFallbackState),
   ) => void;
   messages: DashboardMessages;
 };
@@ -126,20 +124,22 @@ function compareAutocompleteMatches(left: string, right: string, query: string) 
   return left.localeCompare(right, undefined, { sensitivity: "base" });
 }
 
-function SelectedBadge({
-  label,
-  onClear,
-}: {
-  label: string;
-  onClear: () => void;
-}) {
+function SelectedBadge({ label, onClear }: { label: string; onClear: () => void }) {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--primary)] bg-[color:var(--primary)]/12 px-3 py-1.5 text-sm font-medium text-[color:var(--foreground)]">
+    <div
+      className={
+        "inline-flex items-center gap-2 rounded-full border border-primary bg-primary/12 " +
+        "px-3 py-1.5 text-sm font-medium text-foreground"
+      }
+    >
       <Check className="h-4 w-4" />
       <span>{label}</span>
       <button
         type="button"
-        className="rounded-full p-0.5 text-[color:var(--muted-foreground)] transition hover:bg-[color:var(--background)] hover:text-[color:var(--foreground)]"
+        className={
+          "flex min-h-11 min-w-11 items-center justify-center rounded-full " +
+          "text-muted-foreground transition hover:bg-background hover:text-foreground"
+        }
         onClick={onClear}
         aria-label={label}
       >
@@ -163,10 +163,10 @@ function ChipButton({
       type="button"
       onClick={onClick}
       className={cx(
-        "inline-flex min-h-10 items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition",
+        "inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition",
         selected
-          ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
-          : "border-[color:var(--border)] bg-[color:var(--background)] text-[color:var(--foreground)] hover:border-[color:var(--primary)]/50 hover:bg-[color:var(--secondary)]/40"
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-border bg-background text-foreground hover:border-primary/50 hover:bg-secondary/40",
       )}
     >
       {selected ? <Check className="h-4 w-4" /> : null}
@@ -193,8 +193,8 @@ function SectionShell({
   return (
     <section
       className={cx(
-        "space-y-3 rounded-[var(--radius-lg)] border bg-[color:var(--card)] p-4",
-        disabled ? "border-[color:var(--border)]/60 opacity-70" : "border-[color:var(--border)]"
+        "space-y-3 rounded-[var(--radius-lg)] border bg-card p-4",
+        disabled ? "border-border/60 opacity-70" : "border-border",
       )}
     >
       <div className="space-y-1">
@@ -203,19 +203,17 @@ function SectionShell({
             className={cx(
               "inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold",
               complete
-                ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
+                ? "bg-primary text-primary-foreground"
                 : disabled
-                  ? "bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]"
-                  : "bg-[color:var(--secondary)] text-[color:var(--foreground)]"
+                  ? "bg-secondary text-muted-foreground"
+                  : "bg-secondary text-foreground",
             )}
           >
             {complete ? <Check className="h-4 w-4" /> : step}
           </div>
-          <p className="text-sm font-semibold text-[color:var(--foreground)]">{title}</p>
+          <p className="text-sm font-semibold text-foreground">{title}</p>
         </div>
-        {description ? (
-          <p className="text-sm text-[color:var(--muted-foreground)]">{description}</p>
-        ) : null}
+        {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
       </div>
       {children}
     </section>
@@ -224,7 +222,12 @@ function SectionShell({
 
 function EmptyChipState({ message }: { message: string }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-dashed border-[color:var(--border)] px-4 py-3 text-sm text-[color:var(--muted-foreground)]">
+    <div
+      className={
+        "rounded-[var(--radius-md)] border border-dashed border-border px-4 py-3 text-sm " +
+        "text-muted-foreground"
+      }
+    >
       {message}
     </div>
   );
@@ -240,22 +243,17 @@ function SelectionSummary({
   messages: DashboardMessages;
 }) {
   const copy = messages.bikeForm.fields.geometryLink;
-  const selection = [
-    state.standardBrand,
-    state.standardModel,
-    yearLabel,
-    state.geometrySizeLabel,
-  ].filter(Boolean);
+  const selection = [state.standardBrand, state.standardModel, yearLabel, state.geometrySizeLabel].filter(
+    Boolean,
+  );
 
   return (
-    <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--card)] p-4">
+    <div className="rounded-[var(--radius-lg)] border border-border bg-card p-4">
       <div className="flex items-center gap-2">
-        <ListChecks className="h-4 w-4 text-[color:var(--muted-foreground)]" />
-        <p className="text-sm font-semibold text-[color:var(--foreground)]">
-          {copy.selectionSummary}
-        </p>
+        <ListChecks className="h-4 w-4 text-muted-foreground" />
+        <p className="text-sm font-semibold text-foreground">{copy.selectionSummary}</p>
       </div>
-      <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
+      <p className="mt-2 text-sm text-muted-foreground">
         {selection.length > 0 ? selection.join(" · ") : copy.selectionSummaryEmpty}
       </p>
     </div>
@@ -289,22 +287,15 @@ function GeometryPreviewCard({
   ];
 
   return (
-    <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/25 p-4">
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
-        {copy.title}
-      </p>
+    <div className="rounded-[var(--radius-lg)] border border-border bg-secondary/25 p-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{copy.title}</p>
       <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {items.map((item) => (
-          <div
-            key={item.label}
-            className="rounded-[var(--radius-md)] bg-[color:var(--background)] px-3 py-3"
-          >
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--muted-foreground)]">
+          <div key={item.label} className="rounded-[var(--radius-md)] bg-background px-3 py-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
               {item.label}
             </p>
-            <p className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
-              {item.value}
-            </p>
+            <p className="mt-2 text-lg font-semibold text-foreground">{item.value}</p>
           </div>
         ))}
       </div>
@@ -343,6 +334,7 @@ function Phase1BrandSelector({
       }
     >
       <Input
+        className="min-h-11"
         label={copy.standardBrand.label}
         value={filter}
         onChange={(event) => onFilterChange(event.target.value)}
@@ -360,9 +352,7 @@ function Phase1BrandSelector({
           ))}
         </div>
       ) : null}
-      {brands !== undefined && brands.length === 0 ? (
-        <EmptyChipState message={copy.noBrands} />
-      ) : null}
+      {brands !== undefined && brands.length === 0 ? <EmptyChipState message={copy.noBrands} /> : null}
     </SectionShell>
   );
 }
@@ -393,13 +383,14 @@ function Phase2ModelSelector({
   messages: DashboardMessages;
 }) {
   const copy = messages.bikeForm.fields.geometryLink;
-  const selectedFamily =
-    models?.find((family) => family.modelKey === selectedModelFamilyKey) ?? null;
+  const selectedFamily = models?.find((family) => family.modelKey === selectedModelFamilyKey) ?? null;
 
   return (
     <SectionShell
       step={2}
-      complete={Boolean(selectedModelFamilyKey) && Boolean(selectedModelId || !selectedFamily?.yearSelectionRequired)}
+      complete={
+        Boolean(selectedModelFamilyKey) && Boolean(selectedModelId || !selectedFamily?.yearSelectionRequired)
+      }
       disabled={!selectedBrandName}
       title={copy.standardModel.label}
       description={
@@ -414,6 +405,7 @@ function Phase2ModelSelector({
     >
       <SelectedBadge label={selectedBrandName} onClear={onClearBrand} />
       <Input
+        className="min-h-11"
         label={copy.standardModel.label}
         value={filter}
         onChange={(event) => onFilterChange(event.target.value)}
@@ -431,16 +423,12 @@ function Phase2ModelSelector({
           ))}
         </div>
       ) : null}
-      {models !== undefined && models.length === 0 ? (
-        <EmptyChipState message={copy.noModels} />
-      ) : null}
+      {models !== undefined && models.length === 0 ? <EmptyChipState message={copy.noModels} /> : null}
       {selectedFamily?.yearSelectionRequired ? (
-        <div className="space-y-3 rounded-[var(--radius-md)] bg-[color:var(--secondary)]/30 p-3">
-          <p className="text-sm font-semibold text-[color:var(--foreground)]">
-            {selectedModelLabel ?? selectedFamily.name}
-          </p>
+        <div className="space-y-3 rounded-[var(--radius-md)] bg-secondary/30 p-3">
+          <p className="text-sm font-semibold text-foreground">{selectedModelLabel ?? selectedFamily.name}</p>
           <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--muted-foreground)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
               {copy.year.label}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -449,10 +437,7 @@ function Phase2ModelSelector({
                   key={String(option.modelId)}
                   label={
                     option.yearLabel ??
-                    copy.year.unknownOptionLabel.replace(
-                      "{count}",
-                      String(option.sizeRecordCount)
-                    )
+                    copy.year.unknownOptionLabel.replace("{count}", String(option.sizeRecordCount))
                   }
                   selected={String(option.modelId) === selectedModelId}
                   onClick={() => onYearSelect(selectedFamily, option)}
@@ -532,7 +517,7 @@ function CustomFallbackDisclosure({
   const copy = messages.bikeForm.fields.geometryLink;
 
   return (
-    <section className="rounded-[var(--radius-lg)] border border-dashed border-[color:var(--border)] bg-[color:var(--secondary)]/20">
+    <section className="rounded-[var(--radius-lg)] border border-dashed border-border bg-secondary/20">
       <button
         type="button"
         className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left"
@@ -550,24 +535,18 @@ function CustomFallbackDisclosure({
         }}
       >
         <div>
-          <p className="text-sm font-semibold text-[color:var(--foreground)]">
-            {copy.customBrandAction}
-          </p>
-          <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-            {copy.customExplanation}
-          </p>
+          <p className="text-sm font-semibold text-foreground">{copy.customBrandAction}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{copy.customExplanation}</p>
         </div>
         <ChevronDown
-          className={cx(
-            "h-4 w-4 shrink-0 text-[color:var(--muted-foreground)] transition",
-            open && "rotate-180"
-          )}
+          className={cx("h-4 w-4 shrink-0 text-muted-foreground transition", open && "rotate-180")}
         />
       </button>
 
       {open ? (
-        <div className="space-y-4 border-t border-[color:var(--border)] px-4 py-4">
+        <div className="space-y-4 border-t border-border px-4 py-4">
           <Input
+            className="min-h-11"
             label={messages.bikeForm.fields.brand.label}
             value={state.customBrand}
             onChange={(event) => {
@@ -577,9 +556,7 @@ function CustomFallbackDisclosure({
                   return disableCustomBrandFallback(current);
                 }
 
-                const enabled = current.customBrandEnabled
-                  ? current
-                  : enableCustomBrandFallback(current);
+                const enabled = current.customBrandEnabled ? current : enableCustomBrandFallback(current);
 
                 return {
                   ...enabled,
@@ -590,6 +567,7 @@ function CustomFallbackDisclosure({
             placeholder={messages.bikeForm.fields.brand.placeholder}
           />
           <Input
+            className="min-h-11"
             label={messages.bikeForm.fields.model.label}
             value={state.customModel}
             onChange={(event) =>
@@ -619,37 +597,29 @@ function CustomFallbackDisclosure({
   );
 }
 
-export function BikeGeometryLibraryFields({
-  state,
-  onChange,
-  messages,
-}: BikeGeometryLibraryFieldsProps) {
+export function BikeGeometryLibraryFields({ state, onChange, messages }: BikeGeometryLibraryFieldsProps) {
   const setState = asStateSetter(onChange);
   const [brandFilter, setBrandFilter] = useState("");
   const [modelFilter, setModelFilter] = useState("");
-  const [customOpen, setCustomOpen] = useState(
-    state.customBrandEnabled || state.customModelEnabled
-  );
-  const brands = useQuery(api.geometry.queries.listBrandsForRider, {}) as
-    | BrandOption[]
-    | undefined;
+  const [customOpen, setCustomOpen] = useState(state.customBrandEnabled || state.customModelEnabled);
+  const brands = useQuery(api.geometry.queries.listBrandsForRider, {}) as BrandOption[] | undefined;
   const models = useQuery(
     api.geometry.queries.listModelsForRiderBrand,
     state.standardBrandId && !state.customBrandEnabled
       ? { brandId: state.standardBrandId as Id<"geometry_brands"> }
-      : "skip"
+      : "skip",
   ) as ModelFamilyOption[] | undefined;
   const sizes = useQuery(
     api.geometry.queries.listSizeRecordsForRiderModel,
     state.standardModelId && !state.customBrandEnabled && !state.customModelEnabled
       ? { modelId: state.standardModelId as Id<"geometry_models"> }
-      : "skip"
+      : "skip",
   ) as { sizeOptions: SizeOption[] } | null | undefined;
   const geometryPreview = useQuery(
     api.geometry.queries.getGeometryRecordPreview,
     state.geometryRecordId && !state.customBrandEnabled && !state.customModelEnabled
       ? { recordId: state.geometryRecordId as Id<"geometry_records"> }
-      : "skip"
+      : "skip",
   ) as GeometryPreview | null | undefined;
   const geometrySelection = useQuery(
     api.geometry.queries.getGeometryRecordSelectionForRider,
@@ -658,11 +628,10 @@ export function BikeGeometryLibraryFields({
       !state.customModelEnabled &&
       (!state.standardBrandId || !state.standardModelId)
       ? { recordId: state.geometryRecordId as Id<"geometry_records"> }
-      : "skip"
+      : "skip",
   ) as GeometryRecordSelection | null | undefined;
 
-  const customDisclosureOpen =
-    customOpen || state.customBrandEnabled || state.customModelEnabled;
+  const customDisclosureOpen = customOpen || state.customBrandEnabled || state.customModelEnabled;
 
   useEffect(() => {
     if (
@@ -693,7 +662,7 @@ export function BikeGeometryLibraryFields({
         modelName: geometrySelection.modelName,
         geometryRecordId: String(geometrySelection.recordId),
         sizeLabel: geometrySelection.sizeLabel,
-      })
+      }),
     );
   }, [
     geometrySelection,
@@ -732,28 +701,21 @@ export function BikeGeometryLibraryFields({
   const selectedModelFamily =
     models?.find((family) => family.modelKey === state.standardModelFamilyKey) ?? null;
   const selectedYearOption =
-    selectedModelFamily?.yearOptions.find(
-      (option) => String(option.modelId) === state.standardModelId
-    ) ?? null;
-  const resolvedYearLabel =
-    selectedYearOption?.yearLabel ?? geometrySelection?.yearLabel ?? null;
+    selectedModelFamily?.yearOptions.find((option) => String(option.modelId) === state.standardModelId) ??
+    null;
+  const resolvedYearLabel = selectedYearOption?.yearLabel ?? geometrySelection?.yearLabel ?? null;
   const selectedModelLabel = [state.standardBrand, state.standardModel, resolvedYearLabel]
     .filter(Boolean)
     .join(" · ");
   const isModelSelectionComplete = Boolean(
-    selectedModelFamily &&
-      (selectedModelFamily.yearSelectionRequired ? state.standardModelId : true)
+    selectedModelFamily && (selectedModelFamily.yearSelectionRequired ? state.standardModelId : true),
   );
 
   return (
-    <div className="space-y-5 rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)] p-4">
+    <div className="space-y-5 rounded-[var(--radius-md)] border border-border bg-secondary p-4">
       <div className="space-y-1">
-        <p className="text-sm font-medium text-[color:var(--foreground)]">
-          {messages.bikeForm.fields.geometryLink.title}
-        </p>
-        <p className="text-sm text-[color:var(--muted-foreground)]">
-          {messages.bikeForm.fields.geometryLink.description}
-        </p>
+        <p className="text-sm font-medium text-foreground">{messages.bikeForm.fields.geometryLink.title}</p>
+        <p className="text-sm text-muted-foreground">{messages.bikeForm.fields.geometryLink.description}</p>
       </div>
 
       <SelectionSummary state={state} yearLabel={resolvedYearLabel} messages={messages} />
@@ -770,7 +732,7 @@ export function BikeGeometryLibraryFields({
                 applyStandardBrandSelection(current, {
                   brandId: String(brand.brandId),
                   brandName: brand.name,
-                })
+                }),
               );
               setBrandFilter("");
               setModelFilter("");
@@ -795,7 +757,7 @@ export function BikeGeometryLibraryFields({
                   applyStandardBrandSelection(current, {
                     brandId: undefined,
                     brandName: undefined,
-                  })
+                  }),
                 );
                 setBrandFilter("");
                 setModelFilter("");
@@ -827,7 +789,7 @@ export function BikeGeometryLibraryFields({
                   applyStandardModelVariantSelection(current, {
                     modelId: String(option.modelId),
                     modelName: family.name,
-                  })
+                  }),
                 );
                 trackGeometrySelection("bike_geometry_year_selected", {
                   brandName: state.standardBrand,
@@ -847,7 +809,7 @@ export function BikeGeometryLibraryFields({
                   applyStandardModelFamilySelection(current, {
                     modelFamilyKey: undefined,
                     modelName: undefined,
-                  })
+                  }),
                 );
                 setModelFilter("");
               }}
@@ -858,7 +820,7 @@ export function BikeGeometryLibraryFields({
                   applyGeometryRecordSelection(current, {
                     geometryRecordId: String(size.recordId),
                     sizeLabel: size.sizeLabel,
-                  })
+                  }),
                 );
                 trackGeometrySelection("bike_geometry_size_selected", {
                   brandName: state.standardBrand,

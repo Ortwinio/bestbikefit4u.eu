@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth } from "convex/react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -14,11 +14,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/prototyper-ui/ui/dialog";
-import { BrandLogo } from "@/components/branding";
+import { MarketingLogo } from "./MarketingLogo";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
-import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
-import { Compass, Gauge, Menu, Sparkles, X } from "lucide-react";
+import { getMarketingLayoutMessages } from "@/i18n/marketing/layout";
+import { Menu, X } from "lucide-react";
 
 type HeaderMobileMenuProps = {
   locale: Locale;
@@ -35,190 +35,134 @@ type HeaderMobileMenuProps = {
     profile: string;
     signOut: string;
   };
-  campaignActive?: boolean;
-  donateLabel?: string;
-  donationUrl?: string;
 };
 
-export function HeaderMobileMenu({ locale, labels, campaignActive = false, donateLabel, donationUrl }: HeaderMobileMenuProps) {
+export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { isAuthenticated } = useConvexAuth();
   const { signOut } = useAuthActions();
   const router = useRouter();
-  const startFreeLabel = locale === "nl" ? "Start gratis" : "Start free";
-
+  const pathname = usePathname();
+  const copy = getMarketingLayoutMessages(locale);
   const close = () => setIsOpen(false);
-
-  const handleSignOut = async () => {
+  const publicLinks = [
+    { path: "/calculators/bike-fit", label: copy.calculators },
+    { path: "/how-it-works", label: labels.howItWorks },
+    { path: "/guides", label: copy.guides },
+    { path: "/pricing", label: labels.pricing },
+  ];
+  const accountLinks = [
+    { path: "/dashboard", label: labels.dashboard },
+    { path: "/fit", label: labels.newFitSession },
+    { path: "/fit-history", label: labels.bikeFitting },
+    { path: "/bikes", label: labels.myBikes },
+    { path: "/profile", label: labels.profile },
+  ];
+  async function handleSignOut() {
     await signOut();
     close();
     router.push(withLocalePrefix("/", locale));
-  };
-
-  const publicLinks = [
-    {
-      href: withLocalePrefix("/how-it-works", locale),
-      label: labels.howItWorks,
-      icon: <Compass className="h-4 w-4 text-[color:var(--primary)]" />,
-    },
-    {
-      href: withLocalePrefix(getLocalizedPublicCalculatorPath("tire-pressure", locale), locale),
-      label: labels.tools,
-      icon: <Gauge className="h-4 w-4 text-[color:var(--primary)]" />,
-    },
-    {
-      href: withLocalePrefix("/pricing", locale),
-      label: labels.pricing,
-      icon: <Sparkles className="h-4 w-4 text-[color:var(--primary)]" />,
-    },
-  ];
-
+  }
   return (
-    <div className="md:hidden">
+    <div className="xl:hidden">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger
           render={
             <Button
               id="mobile-navigation-trigger"
               type="button"
-              variant="outline"
-              aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+              variant="ghost"
+              aria-label={isOpen ? copy.closeMenu : copy.openMenu}
               aria-expanded={isOpen}
-              className="inline-flex h-9 w-9 items-center justify-center px-0 text-muted-foreground"
+              className="size-11 rounded-full p-0 text-foreground"
             />
           }
         >
-          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {isOpen ? <X className="size-6" /> : <Menu className="size-6" />}
         </DialogTrigger>
         <DialogContent
           side="top"
-          className="border-b border-border-light bg-[linear-gradient(180deg,color-mix(in_oklch,var(--background)_94%,var(--secondary)_6%)_0%,var(--background)_100%)] px-4 py-4"
+          showCloseButton={false}
+          className={
+            "max-h-[90dvh] overflow-y-auto border-b border-border " +
+            "bg-background p-5 text-foreground"
+          }
         >
           <DialogHeader className="sr-only">
-            <DialogTitle>Mobile navigation</DialogTitle>
-            <DialogDescription>Site navigation and account actions.</DialogDescription>
+            <DialogTitle>{copy.navigation}</DialogTitle>
+            <DialogDescription>{copy.menuDescription}</DialogDescription>
           </DialogHeader>
-          <BrandLogo
-            href={withLocalePrefix("/", locale)}
-            asset="primary"
-            className="mb-4 block w-full max-w-[260px]"
-          />
-          <nav className="space-y-2">
-            <div className="rounded-2xl border border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)] p-2">
-              {publicLinks.map((item) => (
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <MarketingLogo
+              href={withLocalePrefix("/", locale)}
+              className="block w-[200px]"
+            />
+            <button
+              type="button"
+              onClick={close}
+              aria-label={copy.closeMenu}
+              className="flex size-11 items-center justify-center rounded-full hover:bg-primary-soft"
+            >
+              <X className="size-6" />
+            </button>
+          </div>
+          <nav aria-label={copy.navigation} className="space-y-1">
+            {publicLinks.map((item) => (
+              <Link
+                key={item.path}
+                href={withLocalePrefix(item.path, locale)}
+                onClick={close}
+                aria-current={pathname === withLocalePrefix(item.path, locale) ? "page" : undefined}
+                className={
+                  "flex min-h-12 items-center rounded-xl px-3 text-lg font-semibold " +
+                  "hover:bg-primary-soft aria-[current=page]:bg-[var(--bbf-lime)] " +
+                  "aria-[current=page]:text-[var(--bbf-inkt)]"
+                }
+              >
+                {item.label}
+              </Link>
+            ))}
+            <div className="mt-4 border-t border-border pt-4">
+              {isAuthenticated ? (
+                <div className="mb-4">
+                  {accountLinks.map((item) => (
+                    <Link
+                      key={item.path}
+                      href={withLocalePrefix(item.path, locale)}
+                      onClick={close}
+                      className="flex min-h-11 items-center rounded-xl px-3 font-semibold hover:bg-primary-soft"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="min-h-11 px-3 font-semibold hover:underline"
+                  >
+                    {labels.signOut}
+                  </button>
+                </div>
+              ) : (
                 <Link
-                  key={item.href}
-                  href={item.href}
+                  href={withLocalePrefix("/login", locale)}
                   onClick={close}
-                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                  className="mb-3 flex min-h-11 items-center justify-center font-semibold hover:underline"
                 >
-                  {item.icon}
-                  <span>{item.label}</span>
+                  {labels.login}
                 </Link>
-              ))}
+              )}
+              <Link
+                href={withLocalePrefix("/calculators/bike-fit", locale)}
+                onClick={close}
+                className={
+                  "flex min-h-12 items-center justify-center rounded-full bg-[var(--bbf-petrol)] px-6 " +
+                  "font-bold text-[var(--bbf-wit)] hover:bg-[var(--bbf-petrol-hover)]"
+                }
+              >
+                {copy.start}
+              </Link>
             </div>
-
-            {isAuthenticated ? (
-              <>
-                <Link
-                  href={withLocalePrefix("/dashboard", locale)}
-                  onClick={close}
-                  className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                >
-                  {labels.dashboard}
-                </Link>
-                <Link
-                  href={withLocalePrefix("/fit", locale)}
-                  onClick={close}
-                  className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                >
-                  {labels.newFitSession}
-                </Link>
-                <Link
-                  href={withLocalePrefix("/fit-history", locale)}
-                  onClick={close}
-                  className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                >
-                  {labels.bikeFitting}
-                </Link>
-                <Link
-                  href={withLocalePrefix("/bikes", locale)}
-                  onClick={close}
-                  className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                >
-                  {labels.myBikes}
-                </Link>
-                <Link
-                  href={withLocalePrefix("/profile", locale)}
-                  onClick={close}
-                  className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                >
-                  {labels.profile}
-                </Link>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleSignOut}
-                  className="mt-2 w-full justify-start text-left text-sm"
-                >
-                  {labels.signOut}
-                </Button>
-              </>
-            ) : (
-              <div className="mt-2 flex items-center gap-2 rounded-2xl border border-[color:var(--border)]/80 bg-[color:color-mix(in_oklch,var(--card)_94%,var(--background)_6%)] p-2">
-                {campaignActive && donateLabel && donationUrl ? (
-                  <>
-                    <Button
-                      render={<a href={donationUrl} target="_blank" rel="noopener noreferrer" onClick={close} />}
-                      variant="outline"
-                      size="sm"
-                    >
-                      {donateLabel}
-                    </Button>
-                    <Button
-                      render={
-                        <Link
-                          href={withLocalePrefix("/login", locale)}
-                          onClick={close}
-                        />
-                      }
-                      variant="outline"
-                      size="sm"
-                    >
-                      {labels.login}
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      render={
-                        <Link
-                          href={withLocalePrefix("/calculators/bike-fit", locale)}
-                          onClick={close}
-                        />
-                      }
-                      variant="ghost"
-                      size="sm"
-                      className="text-[color:var(--primary)]"
-                    >
-                      {startFreeLabel}
-                    </Button>
-                    <Button
-                      render={
-                        <Link
-                          href={withLocalePrefix("/login", locale)}
-                          onClick={close}
-                        />
-                      }
-                      variant="outline"
-                      size="sm"
-                    >
-                      {labels.login}
-                    </Button>
-                  </>
-                )}
-              </div>
-            )}
           </nav>
         </DialogContent>
       </Dialog>

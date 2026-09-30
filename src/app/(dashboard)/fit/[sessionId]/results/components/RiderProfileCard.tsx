@@ -55,7 +55,7 @@ export function RiderProfileCard({
         </div>
 
         {profile.dataQualityStatus === "partial" ? (
-          <div className="rounded-[var(--radius-md)] border border-[color:color-mix(in_oklch,var(--warning)_30%,var(--border))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)] px-4 py-3 text-sm text-[color:var(--warning-foreground)]">
+          <div className="rounded-[var(--radius-md)] border border-border bg-primary-soft px-4 py-3 text-sm text-foreground">
             {copy.dataQuality.banner}
           </div>
         ) : null}
@@ -63,7 +63,7 @@ export function RiderProfileCard({
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <div className="grid gap-3 sm:grid-cols-2">
             {overview.map(([label, value]) => (
-              <MetricTile key={label} label={label} value={value} />
+              <MetricTile key={label} label={label} value={value} formatNumbers={false} />
             ))}
           </div>
 
@@ -105,8 +105,8 @@ export function RiderProfileCard({
           </div>
         </div>
 
-        <div className="rounded-[var(--radius-lg)] border border-[color:color-mix(in_oklch,var(--primary)_20%,var(--border))] bg-[color:color-mix(in_oklch,var(--primary)_7%,var(--card)_93%)] px-5 py-5">
-          <p className="text-sm font-semibold text-[color:var(--foreground)]">
+        <div className="rounded-[var(--radius-lg)] border border-border bg-primary-soft px-5 py-5">
+          <p className="text-sm font-semibold text-foreground">
             {copy.sections.frameTargets}
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -127,7 +127,7 @@ export function RiderProfileCard({
             />
           </div>
           {frameTargets.recommendedFrameLabel ? (
-            <p className="mt-3 text-sm text-[color:var(--muted-foreground)]">
+            <p className="mt-3 text-sm text-muted-foreground">
               {frameTargets.recommendedFrameLabel}
             </p>
           ) : null}
@@ -135,14 +135,14 @@ export function RiderProfileCard({
 
         {profile.missingData.length ? (
           <div>
-            <p className="text-sm font-semibold text-[color:var(--foreground)]">
+            <p className="text-sm font-semibold text-foreground">
               {copy.profileFields.missingData}
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
               {profile.missingData.map((item) => (
                 <span
                   key={item}
-                  className="rounded-full border border-[color:var(--border)] bg-[color:var(--background)] px-3 py-1 text-xs text-[color:var(--muted-foreground)]"
+                  className="rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground"
                 >
                   {copy.tirePressure.missingDataLabels[
                     item as keyof typeof copy.tirePressure.missingDataLabels

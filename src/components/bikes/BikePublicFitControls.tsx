@@ -4,15 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Copy, Lock, Radar } from "lucide-react";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  useToast,
-} from "@/components/ui";
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, useToast } from "@/components/ui";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
 export type PublicFitGeometryQuality = "full" | "partial" | "none" | null;
@@ -59,15 +51,12 @@ export function BikePublicFitControls({
   const { locale, messages } = useDashboardMessages();
   const toast = useToast();
   const logMarketingEvent = useMarketingEventLogger();
-  const [actionState, setActionState] = useState<"idle" | "enable" | "disable" | "copy">(
-    "idle"
-  );
+  const [actionState, setActionState] = useState<"idle" | "enable" | "disable" | "copy">("idle");
 
   const t = messages.bikes.publicFit;
   const hasCode = Boolean(publicFitCode);
   const statusLabel = publicFitEnabled ? t.enabledBadge : t.disabledBadge;
-  const geometryQualityLabel =
-    geometryQuality ? t.geometryQuality[geometryQuality] : t.geometryQuality.none;
+  const geometryQualityLabel = geometryQuality ? t.geometryQuality[geometryQuality] : t.geometryQuality.none;
 
   async function handleCopy() {
     if (!publicFitCode) {
@@ -129,37 +118,35 @@ export function BikePublicFitControls({
   }
 
   return (
-    <Card variant="bordered" className="dashboard-card-surface">
+    <Card variant="bordered" className="bg-card">
       <CardHeader className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <CardTitle>{t.title}</CardTitle>
             <CardDescription>{t.description}</CardDescription>
           </div>
-          <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] px-3 py-1 text-xs font-semibold text-[color:var(--secondary-foreground)]">
+          <span
+            className={
+              "rounded-full border border-border bg-secondary px-3 py-1 text-xs font-semibold " +
+              "text-secondary-foreground"
+            }
+          >
             {statusLabel}
           </span>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--secondary)]/30 p-4">
+        <div className="rounded-[var(--radius-lg)] border border-border bg-secondary/30 p-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                 {t.codeLabel}
               </p>
-              <p className="mt-2 font-mono text-lg font-semibold text-[color:var(--foreground)]">
-                {publicFitCode ?? "—"}
-              </p>
-              <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">{t.codeHint}</p>
+              <p className="mt-2 font-mono text-lg font-semibold text-foreground">{publicFitCode ?? "—"}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{t.codeHint}</p>
             </div>
             {hasCode ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCopy}
-                isLoading={actionState === "copy"}
-              >
+              <Button variant="outline" size="sm" onClick={handleCopy} isLoading={actionState === "copy"}>
                 <Copy className="h-4 w-4" />
                 {t.copyAction}
               </Button>
@@ -167,37 +154,31 @@ export function BikePublicFitControls({
           </div>
         </div>
 
-        <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)] p-4">
-          <p className="flex items-center gap-2 text-sm font-medium text-[color:var(--foreground)]">
-            <Lock className="h-4 w-4 text-[color:var(--primary)]" />
+        <div className="rounded-[var(--radius-lg)] border border-border bg-background p-4">
+          <p className="flex items-center gap-2 text-sm font-medium text-foreground">
+            <Lock className="h-4 w-4 text-primary" />
             {t.privacyNote}
           </p>
         </div>
 
-        <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)] p-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+        <div className="rounded-[var(--radius-lg)] border border-border bg-background p-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             {t.geometryQuality[geometryQuality ?? "none"]}
           </p>
           {shouldShowWeakPublicFitGuidance(geometryQuality) ? (
-            <div className="mt-3 rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--secondary)]/40 p-3">
-              <p className="flex items-center gap-2 text-sm font-medium text-[color:var(--foreground)]">
-                <Radar className="h-4 w-4 text-[color:var(--warning)]" />
+            <div className="mt-3 rounded-[var(--radius-md)] border border-border bg-secondary/40 p-3">
+              <p className="flex items-center gap-2 text-sm font-medium text-foreground">
+                <Radar className="h-4 w-4 text-warning" />
                 {t.weakGeometryTitle}
               </p>
-              <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
-                {t.weakGeometryNote}
-              </p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{t.weakGeometryNote}</p>
             </div>
           ) : null}
         </div>
 
         <div className="flex flex-wrap gap-3">
           {publicFitEnabled ? (
-            <Button
-              variant="outline"
-              onClick={handleDisable}
-              isLoading={actionState === "disable"}
-            >
+            <Button variant="outline" onClick={handleDisable} isLoading={actionState === "disable"}>
               {t.disableAction}
             </Button>
           ) : (
@@ -211,9 +192,7 @@ export function BikePublicFitControls({
               })}
             </Button>
           )}
-          <p className="self-center text-sm text-[color:var(--muted-foreground)]">
-            {geometryQualityLabel}
-          </p>
+          <p className="self-center text-sm text-muted-foreground">{geometryQualityLabel}</p>
         </div>
       </CardContent>
     </Card>

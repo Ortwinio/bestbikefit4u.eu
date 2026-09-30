@@ -13,6 +13,7 @@ const { usePathnameMock, useRouterMock, signOutMock } = vi.hoisted(() => ({
 vi.mock("next/navigation", () => ({
   usePathname: usePathnameMock,
   useRouter: useRouterMock,
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 vi.mock("next/link", () => ({
@@ -118,6 +119,13 @@ afterEach(() => {
 });
 
 describe("DashboardSidebar", () => {
+  it("keeps navigation sticky inside the full-height account column", () => {
+    render(<DashboardSidebar />);
+    const sidebar = screen.getByRole("complementary");
+    expect(sidebar.className).toContain("sticky top-0");
+    expect(sidebar.className).not.toContain("fixed");
+  });
+
   it("links the saddle selector to the canonical dashboard route", () => {
     render(<DashboardSidebar />);
 

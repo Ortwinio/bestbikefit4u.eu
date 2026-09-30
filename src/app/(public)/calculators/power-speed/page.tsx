@@ -1,3 +1,4 @@
+import { PerformanceCalculator } from "./PerformanceCalculator";
 import type { Metadata } from "next";
 import { Gauge, Route, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -5,8 +6,6 @@ import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
   PublicCtaBand,
   PublicFeatureCard,
-  PublicHero,
-  PublicPageShell,
   PublicSection,
   PublicSurfaceCard,
 } from "@/components/public";
@@ -16,50 +15,52 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import {
-  buildFaqPageSchema,
-  buildHowToSchema,
-  buildWebApplicationSchema,
-} from "@/lib/seo/jsonLd";
+import { buildFaqPageSchema, buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 
 const copy = {
   en: {
     metadata: {
       title: "Power / Speed Estimator | BestBikeFit4U",
       description:
-        "Estimate speed from power with terrain, drag, and rider context in mind instead of treating watts as a shortcut.",
+        "Estimate speed from power with terrain, drag, and rider context in mind instead " +
+        "of treating watts as a shortcut.",
       keywords: ["power speed estimator", "cycling speed calculator", "power to speed"],
     },
     hero: {
       eyebrow: "BestBikeFit4U calculator",
       title: "Power / Speed Estimator",
       description:
-        "Estimate how power translates into speed on a given course, then use the result as a practical pacing reference rather than a promise.",
+        "Estimate how power translates into speed on a given course, then use the result " +
+        "as a practical pacing reference rather than a promise.",
       chips: ["Power to speed", "Course context", "Pacing reference"],
     },
     intro: {
       eyebrow: "What this tool is for",
       title: "Translate watts into course reality",
       description:
-        "Speed is shaped by more than power. This page keeps gradient, drag, and rider context visible so the result stays useful rather than falsely precise.",
+        "Speed is shaped by more than power. This page keeps gradient, drag, and rider " +
+        "context visible so the result stays useful rather than falsely precise.",
     },
     features: [
       {
         title: "Context over shortcuts",
         description:
-          "A raw watt number does not tell you enough. Course profile, wind, and position change the answer in real riding conditions.",
+          "A raw watt number does not tell you enough. Course profile, wind, and position " +
+          "change the answer in real riding conditions.",
         icon: <Route className="h-5 w-5" />,
       },
       {
         title: "Keep uncertainty visible",
         description:
-          "The estimator is best treated as a range and a conversation starter, not a substitute for testing or race experience.",
+          "The estimator is best treated as a range and a conversation starter, not a " +
+          "substitute for testing or race experience.",
         icon: <ShieldCheck className="h-5 w-5" />,
       },
       {
         title: "Useful for pacing decisions",
         description:
-          "Once speed expectations are clearer, it becomes easier to plan climbs, time trials, and long steady efforts with fewer surprises.",
+          "Once speed expectations are clearer, it becomes easier to plan climbs, time " +
+          "trials, and long steady efforts with fewer surprises.",
         icon: <Gauge className="h-5 w-5" />,
       },
     ],
@@ -96,7 +97,9 @@ const copy = {
       },
       {
         q: "Can this be used for time trial pacing?",
-        a: "Yes, as a first-pass reference. For a serious event plan, use the dashboard and real course testing as the next step.",
+        a:
+          "Yes, as a first-pass reference. For a serious event plan, use the dashboard and " +
+          "real course testing as the next step.",
       },
     ],
     relatedTitle: "Related guides",
@@ -110,7 +113,8 @@ const copy = {
       eyebrow: "Next step",
       title: "Use the dashboard when you want more precision",
       description:
-        "Start a free account to keep your estimates together and move into the guided workflow when you want deeper context.",
+        "Start a free account to keep your estimates together and move into the guided " +
+        "workflow when you want deeper context.",
       label: "Start Free Fit",
     },
   },
@@ -118,39 +122,46 @@ const copy = {
     metadata: {
       title: "Power- / snelheidsschatting | BestBikeFit4U",
       description:
-        "Schat snelheid op basis van vermogen met terrein, luchtweerstand en rijdercontext meegewogen in plaats van watts als shortcut te zien.",
+        "Schat snelheid op basis van vermogen met terrein, luchtweerstand en " +
+        "rijdercontext meegewogen in plaats van watts als shortcut te zien.",
       keywords: ["power speed estimator", "snelheid calculator", "vermogen naar snelheid"],
     },
     hero: {
       eyebrow: "BestBikeFit4U calculator",
       title: "Power- / snelheidsschatting",
       description:
-        "Schat hoe vermogen zich vertaalt naar snelheid op een bepaald parcours en gebruik dat als praktisch pacingreferentiepunt in plaats van als belofte.",
+        "Schat hoe vermogen zich vertaalt naar snelheid op een bepaald parcours en " +
+        "gebruik dat als praktisch pacingreferentiepunt in plaats van als belofte.",
       chips: ["Vermogen naar snelheid", "Parcourscontext", "Pacingreferentie"],
     },
     intro: {
       eyebrow: "Waar deze tool voor is",
       title: "Zet watts om naar parcoursrealiteit",
       description:
-        "Snelheid hangt van meer af dan vermogen. Deze pagina houdt klimpercentage, luchtweerstand en rijdercontext zichtbaar zodat de uitkomst bruikbaar blijft in plaats van schijnnauwkeurig.",
+        "Snelheid hangt van meer af dan vermogen. Deze pagina houdt klimpercentage, " +
+        "luchtweerstand en rijdercontext zichtbaar zodat de uitkomst bruikbaar blijft in " +
+        "plaats van schijnnauwkeurig.",
     },
     features: [
       {
         title: "Context boven shortcuts",
         description:
-          "Een ruwe wattwaarde zegt niet genoeg. Parcours, wind en positie veranderen het antwoord in echte rijomstandigheden.",
+          "Een ruwe wattwaarde zegt niet genoeg. Parcours, wind en positie veranderen het " +
+          "antwoord in echte rijomstandigheden.",
         icon: <Route className="h-5 w-5" />,
       },
       {
         title: "Houd onzekerheid zichtbaar",
         description:
-          "De schatter werkt het best als bandbreedte en gesprekshulp, niet als vervanging van testen of wedstrijdervaring.",
+          "De schatter werkt het best als bandbreedte en gesprekshulp, niet als vervanging " +
+          "van testen of wedstrijdervaring.",
         icon: <ShieldCheck className="h-5 w-5" />,
       },
       {
         title: "Nuttig voor pacingkeuzes",
         description:
-          "Als snelheidsverwachtingen duidelijker zijn, wordt het makkelijker om klimmen, tijdritten en steady efforts beter te plannen.",
+          "Als snelheidsverwachtingen duidelijker zijn, wordt het makkelijker om klimmen, " +
+          "tijdritten en steady efforts beter te plannen.",
         icon: <Gauge className="h-5 w-5" />,
       },
     ],
@@ -183,11 +194,15 @@ const copy = {
     faqs: [
       {
         q: "Waarom is snelheid lastiger in te schatten dan vermogen?",
-        a: "Omdat snelheid niet alleen door vermogen wordt bepaald maar ook door klimpercentage, wind, ondergrond, houding en massa.",
+        a:
+          "Omdat snelheid niet alleen door vermogen wordt bepaald maar ook door " +
+          "klimpercentage, wind, ondergrond, houding en massa.",
       },
       {
         q: "Kan dit voor een tijdrit worden gebruikt?",
-        a: "Ja, als eerste referentie. Voor een serieuze wedstrijdaanpak gebruik je daarna het dashboard en tests op echt parcours.",
+        a:
+          "Ja, als eerste referentie. Voor een serieuze wedstrijdaanpak gebruik je daarna " +
+          "het dashboard en tests op echt parcours.",
       },
     ],
     relatedTitle: "Gerelateerde gidsen",
@@ -201,7 +216,8 @@ const copy = {
       eyebrow: "Volgende stap",
       title: "Gebruik het dashboard als je meer precisie wilt",
       description:
-        "Start een gratis account om je schattingen samen te bewaren en stap daarna over naar de begeleide workflow voor meer context.",
+        "Start een gratis account om je schattingen samen te bewaren en stap daarna over " +
+        "naar de begeleide workflow voor meer context.",
       label: "Start gratis fit",
     },
   },
@@ -234,7 +250,7 @@ export default async function PowerSpeedEstimatorPage() {
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
 
   return (
-    <PublicPageShell className="text-foreground">
+    <div className="text-foreground">
       <JsonLd
         schema={[
           buildWebApplicationSchema({
@@ -243,7 +259,9 @@ export default async function PowerSpeedEstimatorPage() {
             url: pageUrl,
           }),
           buildHowToSchema({
-            name: isNl ? "Hoe gebruik je de power- / snelheidsschatting" : "How to use the power / speed estimator",
+            name: isNl
+              ? "Hoe gebruik je de power- / snelheidsschatting"
+              : "How to use the power / speed estimator",
             description: isNl
               ? "Een korte flow om vermogen te vertalen naar bruikbare snelheidscontext."
               : "A short flow for translating power into usable speed context.",
@@ -265,14 +283,9 @@ export default async function PowerSpeedEstimatorPage() {
         ]}
       />
 
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <PublicHero
-          eyebrow={page.hero.eyebrow}
-          title={page.hero.title}
-          description={page.hero.description}
-          chips={[...page.hero.chips]}
-        />
+      <PerformanceCalculator tool="power-speed" locale={locale} />
 
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <PublicSection
           className="mt-10"
           header={{
@@ -294,11 +307,7 @@ export default async function PowerSpeedEstimatorPage() {
         </PublicSection>
 
         {page.sections.map((section) => (
-          <PublicSection
-            key={section.title}
-            className="mt-10"
-            header={{ title: section.title }}
-          >
+          <PublicSection key={section.title} className="mt-10" header={{ title: section.title }}>
             <div className="grid gap-4">
               {section.items.map((item) => (
                 <PublicSurfaceCard key={item} description={item} />
@@ -315,11 +324,7 @@ export default async function PowerSpeedEstimatorPage() {
           </div>
         </PublicSection>
 
-        <RelatedLinksSection
-          title={page.relatedTitle}
-          links={[...page.relatedLinks]}
-          locale={locale}
-        />
+        <RelatedLinksSection title={page.relatedTitle} links={[...page.relatedLinks]} locale={locale} />
 
         <PublicCtaBand
           className="mt-10"
@@ -343,6 +348,6 @@ export default async function PowerSpeedEstimatorPage() {
           }
         />
       </div>
-    </PublicPageShell>
+    </div>
   );
 }

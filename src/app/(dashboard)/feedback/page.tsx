@@ -1,5 +1,5 @@
-import { FeedbackHubPage } from "@/components/feedback";
+import { FeedbackAccountPage } from "./FeedbackAccountPage";
 
 export default function FeedbackPage() {
-  return <FeedbackHubPage />;
+  return <FeedbackAccountPage />;
 }

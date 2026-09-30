@@ -14,9 +14,9 @@ import { ScaleQuestion } from "./questions/ScaleQuestion";
 import { NumericQuestion } from "./questions/NumericQuestion";
 import { TextQuestion } from "./questions/TextQuestion";
 import Image from "next/image";
-import { HelpCircle } from "lucide-react";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getLocalizedQuestion } from "./localization";
+import { getFitQuestionnaireCopy } from "@/i18n/account/fitQuestionnaire";
 
 interface QuestionRendererProps {
   question: QuestionDefinition;
@@ -31,7 +31,8 @@ export function QuestionRenderer({
   onChange,
   headingId,
 }: QuestionRendererProps) {
-  const { messages } = useDashboardMessages();
+  const { locale, messages } = useDashboardMessages();
+  const copy = getFitQuestionnaireCopy(locale);
   const localizedQuestion = getLocalizedQuestion(question, messages);
   const isExperienceLevel = question.questionId === "experience_level";
   const isWeeklyHours = question.questionId === "weekly_hours";
@@ -67,15 +68,14 @@ export function QuestionRenderer({
         <h2
           id={headingId}
           tabIndex={-1}
-          className="text-xl font-semibold text-foreground focus-visible:focus-ring"
+          className="font-display text-2xl font-bold leading-tight text-foreground focus-visible:focus-ring sm:text-[29px]"
         >
           {questionText}
-          {question.isRequired && <span className="ml-1 text-destructive">*</span>}
+          {question.isRequired && <span className="ml-2 font-sans text-sm font-medium text-muted-foreground">({copy.required})</span>}
         </h2>
         {helpText && (
-          <div className="mt-2 flex items-start gap-2 rounded-lg border border-border bg-muted p-3">
-            <HelpCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-            <p className="text-sm text-muted-foreground">{helpText}</p>
+          <div className="mt-3">
+            <p className="text-base leading-relaxed text-muted-foreground">{helpText}</p>
           </div>
         )}
       </div>
@@ -111,7 +111,7 @@ export function QuestionRenderer({
 
         {question.questionId === "pain_areas" && (
           <PainAreasSelector
-            value={(value as string[]) || []}
+            value={Array.isArray(value) ? value : []}
             onChange={onChange}
           />
         )}
@@ -121,45 +121,6 @@ export function QuestionRenderer({
             <Image
               src="/riding-position.png"
               alt="Riding position illustration"
-              width={1024}
-              height={1024}
-              className="h-auto max-h-56 w-full object-cover"
-              priority
-            />
-          </div>
-        )}
-
-        {question.questionId === "road_riding_type" && (
-          <div className="mb-4 overflow-hidden rounded-[var(--radius-lg)] border border-border">
-            <Image
-              src="/type-of-riding.png"
-              alt={messages.questionnaire.roadRidingType.imageAlt}
-              width={1024}
-              height={1024}
-              className="h-auto max-h-56 w-full object-cover"
-              priority
-            />
-          </div>
-        )}
-
-        {question.questionId === "wants_climbing_profile" && (
-          <div className="mb-4 overflow-hidden rounded-[var(--radius-lg)] border border-border">
-            <Image
-              src="/climbing-cyclist.png"
-              alt={messages.questionnaire.climbingProfile.imageAlt}
-              width={1024}
-              height={1024}
-              className="h-auto max-h-56 w-full object-cover"
-              priority
-            />
-          </div>
-        )}
-
-        {question.questionId === "mtb_terrain" && (
-          <div className="mb-4 overflow-hidden rounded-[var(--radius-lg)] border border-border">
-            <Image
-              src="/bike-terrain.png"
-              alt={messages.questionnaire.mtbTerrain.imageAlt}
               width={1024}
               height={1024}
               className="h-auto max-h-56 w-full object-cover"
@@ -262,7 +223,7 @@ export function QuestionRenderer({
           <PositionFeelingSelector
             options={localizedQuestion.options}
             copy={messages.questionnaire.currentPositionFeeling}
-            value={(value as string[]) || []}
+            value={Array.isArray(value) ? value : []}
             onChange={onChange}
           />
         )}
@@ -274,7 +235,7 @@ export function QuestionRenderer({
           <MultipleChoiceQuestion
             name={question.questionId}
             options={localizedQuestion.options}
-            value={(value as string[]) || []}
+            value={Array.isArray(value) ? value : []}
             onChange={onChange}
           />
         )}

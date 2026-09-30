@@ -13,10 +13,8 @@ import {
   type FeatureIconCardColor,
   PublicBreadcrumbs,
   PublicCtaBand,
-  PublicHero,
   PublicPageShell,
   PublicSection,
-  RatingBadge,
 } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -24,6 +22,7 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
+import { getDictionary } from "@/i18n/getDictionary";
 import {
   CALCULATOR_AGGREGATE_RATING,
   buildBreadcrumbListSchema,
@@ -43,8 +42,10 @@ export async function generateMetadata(): Promise<Metadata> {
       ? "Gratis bike fit calculator | BestBikeFit4U"
       : "Free Bike Fit Calculator | BestBikeFit4U",
     description: isNl
-      ? "Bereken een gratis eerste inschatting voor zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel."
-      : "Calculate a free first-pass estimate for saddle height, reach, drop, and frame targets based on your body measurements and riding goal.",
+      ? "Bereken een gratis eerste inschatting voor zadelhoogte, reach, drop en framedoelen op " +
+        "basis van je lichaamsmaten en rijdoel."
+      : "Calculate a free first-pass estimate for saddle height, reach, drop, and frame " +
+        "targets based on your body measurements and riding goal.",
     keywords: isNl
       ? ["bike fit calculator", "gratis bikefit", "online bikefitting"]
       : ["bike fit calculator", "free bike fit", "online bike fitting tool"],
@@ -65,21 +66,31 @@ function buildFaqs(isNl: boolean) {
     ? [
         {
           q: "Hoe nauwkeurig is deze gratis bike fit calculator?",
-          a: "De calculator geeft een bruikbare eerste inschatting op basis van je maten en rijdoel. In het dashboard kun je daarna verder verfijnen met meer context rond je huidige setup.",
+          a:
+            "De calculator geeft een bruikbare eerste inschatting op basis van je maten en " +
+            "rijdoel. In het dashboard kun je daarna verder verfijnen met meer context rond je " +
+            "huidige setup.",
         },
         {
           q: "Welke waarde moet ik als eerste aanpassen?",
-          a: "Begin meestal met zadelhoogte en algemene cockpitbalans. Daarna kun je reach, drop en framedoelen stap voor stap verfijnen.",
+          a:
+            "Begin meestal met zadelhoogte en algemene cockpitbalans. Daarna kun je reach, drop en " +
+            "framedoelen stap voor stap verfijnen.",
         },
       ]
     : [
         {
           q: "How accurate is this free bike-fit calculator?",
-          a: "It provides a useful first-pass estimate based on your measurements and riding goal. Inside the dashboard you can refine it further with more context around your current setup.",
+          a:
+            "It provides a useful first-pass estimate based on your measurements and riding goal. " +
+            "Inside the dashboard you can refine it further with more context around your current " +
+            "setup.",
         },
         {
           q: "Which value should I adjust first?",
-          a: "Start with saddle height and overall cockpit balance. Then refine reach, drop, and frame targets step by step.",
+          a:
+            "Start with saddle height and overall cockpit balance. Then refine reach, drop, and " +
+            "frame targets step by step.",
         },
       ];
 }
@@ -88,6 +99,7 @@ const TRUST_POINT_COLORS: FeatureIconCardColor[] = ["teal", "primary", "green"];
 
 export default async function BikeFitCalculatorPage() {
   const locale = await getRequestLocale();
+  const dictionary = await getDictionary(locale);
   const isNl = locale === "nl";
   const pagePath = withLocalePrefix("/calculators/bike-fit", locale);
   const campaignActive = isConsumerCampaignActive();
@@ -99,19 +111,22 @@ export default async function BikeFitCalculatorPage() {
         {
           title: "Heldere start, geen loze precisie",
           description:
-            "Je ziet direct welke richting logisch is voor zadelhoogte, reach en drop, zonder te doen alsof een publieke intake al je volledige fit vervangt.",
+            "Je ziet direct welke richting logisch is voor zadelhoogte, reach en drop, zonder te " +
+            "doen alsof een publieke intake al je volledige fit vervangt.",
           icon: <ShieldCheck className="h-5 w-5" />,
         },
         {
           title: "Zelfde rekenmotor als het product",
           description:
-            "Deze calculator gebruikt dezelfde fitlogica als het dashboard. De publieke versie houdt het alleen bewust bij een veilige eerste stap.",
+            "Deze calculator gebruikt dezelfde fitlogica als het dashboard. De publieke versie " +
+            "houdt het alleen bewust bij een veilige eerste stap.",
           icon: <Gauge className="h-5 w-5" />,
         },
         {
           title: "Gebouwd voor de volgende beslissing",
           description:
-            "Gebruik de uitkomst om een huidige setup, een nieuwe fiets of een verdere fitanalyse beter te beoordelen.",
+            "Gebruik de uitkomst om een huidige setup, een nieuwe fiets of een verdere fitanalyse " +
+            "beter te beoordelen.",
           icon: <Compass className="h-5 w-5" />,
         },
       ]
@@ -119,44 +134,56 @@ export default async function BikeFitCalculatorPage() {
         {
           title: "Clear starting point, no fake precision",
           description:
-            "You immediately see a sensible direction for saddle height, reach, and drop, without pretending a public intake replaces a full fit.",
+            "You immediately see a sensible direction for saddle height, reach, and drop, without " +
+            "pretending a public intake replaces a full fit.",
           icon: <ShieldCheck className="h-5 w-5" />,
         },
         {
           title: "Same fit engine as the product",
           description:
-            "This calculator uses the same fit logic as the dashboard. The public version simply keeps the output to a safe first step.",
+            "This calculator uses the same fit logic as the dashboard. The public version simply " +
+            "keeps the output to a safe first step.",
           icon: <Gauge className="h-5 w-5" />,
         },
         {
           title: "Built for the next decision",
           description:
-            "Use the result to assess your current setup, shortlist a new bike, or decide whether you need deeper fit work.",
+            "Use the result to assess your current setup, shortlist a new bike, or decide whether " +
+            "you need deeper fit work.",
           icon: <Compass className="h-5 w-5" />,
         },
       ];
 
   return (
-    <PublicPageShell className="text-foreground">
+    <div className="text-foreground">
       <JsonLd
         schema={[
           buildBreadcrumbListSchema([
-            { name: isNl ? "Home" : "Home", item: new URL(withLocalePrefix("/", locale), BRAND.siteUrl).toString() },
+            {
+              name: isNl ? "Home" : "Home",
+              item: new URL(withLocalePrefix("/", locale), BRAND.siteUrl).toString(),
+            },
             { name: isNl ? "Bike fit calculator" : "Bike Fit Calculator", item: pageUrl },
           ]),
           buildWebApplicationSchema({
             name: isNl ? "BestBikeFit4U bike fit calculator" : "BestBikeFit4U Bike Fit Calculator",
             description: isNl
-              ? "Gratis bike fit calculator voor een eerste inschatting van zadelhoogte, reach, drop en framedoelen."
-              : "Free bike-fit calculator for a practical first-pass estimate of saddle height, reach, drop, and frame targets.",
+              ? "Gratis bike fit calculator voor een eerste inschatting van zadelhoogte, reach, drop " +
+                "en framedoelen."
+              : "Free bike-fit calculator for a practical first-pass estimate of saddle height, reach, " +
+                "drop, and frame targets.",
             url: pageUrl,
             aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
           buildHowToSchema({
-            name: isNl ? "Hoe gebruik je de bike fit calculator" : "How to use the bike-fit calculator",
+            name: isNl
+              ? "Hoe gebruik je de bike fit calculator"
+              : "How to use the bike-fit calculator",
             description: isNl
-              ? "Meet lengte en binnenbeenlengte, kies je rijdoel en beoordeel flexibiliteit en core als startpunt."
-              : "Measure height and inseam, choose your riding goal, and rate flexibility and core stability as a starting point.",
+              ? "Meet lengte en binnenbeenlengte, kies je rijdoel en beoordeel flexibiliteit en core " +
+                "als startpunt."
+              : "Measure height and inseam, choose your riding goal, and rate flexibility and core " +
+                "stability as a starting point.",
             steps: isNl
               ? [
                   "Meet lengte en binnenbeenlengte zorgvuldig.",
@@ -174,148 +201,135 @@ export default async function BikeFitCalculatorPage() {
         ]}
       />
 
-      <div>
+      <div className="mx-auto max-w-[1440px] px-4 pt-6 sm:px-8 xl:px-16">
         <PublicBreadcrumbs
           items={[
             { label: isNl ? "Home" : "Home", href: withLocalePrefix("/", locale) },
             { label: isNl ? "Bike fit calculator" : "Bike Fit Calculator" },
           ]}
         />
-        <PublicHero
-          eyebrow="BestBikeFit4U calculator"
-          title={isNl ? "Gratis bike fit calculator" : "Free Bike Fit Calculator"}
+      </div>
+      <BikeFitCalculatorForm isNl={isNl} copy={dictionary.bikeFitCalculator} />
+      <PublicPageShell className="pt-0 md:pt-0">
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: isNl ? "Waarom rijders hiermee starten" : "Why riders start here",
+            title: isNl
+              ? "Betrouwbaar genoeg om de juiste volgende stap te kiezen"
+              : "Reliable enough to choose the right next step",
+            description: isNl
+              ? "De publieke calculator is bedoeld om je richting te geven, niet om schijnzekerheid te verkopen."
+              : "The public calculator is built to give you direction, not to sell false certainty.",
+          }}
+        >
+          <div className="grid gap-4 md:grid-cols-3">
+            {trustPoints.map((point, index) => (
+              <FeatureIconCard
+                key={point.title}
+                icon={point.icon}
+                title={point.title}
+                description={point.description}
+                color={TRUST_POINT_COLORS[index] ?? "primary"}
+              />
+            ))}
+          </div>
+        </PublicSection>
+
+        <PublicCtaBand
+          className="mt-10"
+          eyebrow={isNl ? "Hoe verder?" : "What's next?"}
+          title={isNl ? "Start je persoonlijke bikefit" : "Start your personalized fit"}
           description={
             isNl
-              ? "Bereken een eerste inschatting voor zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel. Het is een snelle publieke intake die je helpt met je volgende stap."
-              : "Calculate a first-pass estimate for saddle height, reach, drop, and frame targets from your body measurements and riding goal. It is a fast public intake that helps you decide the next step."
+              ? "Maak een gratis account aan om je rijdersprofiel op te bouwen, een persoonlijke " +
+                "bikefit te starten en toekomstige aanpassingen bij te houden."
+              : "Create a free account to build your rider profile, start a personalized fit, and " +
+                "track future adjustments."
           }
-          chips={
+          actions={
+            campaignActive ? (
+              <CampaignCtaGroup
+                locale={locale}
+                pagePath={pagePath}
+                startHref={withLocalePrefix("/login", locale)}
+                startSection="bike_fit_result"
+                donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
+                donateSection="bike_fit_campaign_donate"
+                startLabel={isNl ? "Maak een gratis account aan" : "Create a free account"}
+                donateLabel={campaign.donateCta}
+              />
+            ) : (
+              <>
+                <Button
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/login", locale)}
+                      locale={locale}
+                      pagePath={pagePath}
+                      section="bike_fit_result"
+                      ctaLabel={isNl ? "Maak een gratis account aan" : "Create a free account"}
+                    />
+                  }
+                >
+                  {isNl ? "Maak een gratis account aan" : "Create a free account"}
+                </Button>
+                <Button
+                  render={
+                    <TrackedCtaLink
+                      href={withLocalePrefix("/pricing", locale)}
+                      locale={locale}
+                      pagePath={pagePath}
+                      section="bike_fit_pricing_cta"
+                      ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
+                    />
+                  }
+                  variant="outline"
+                >
+                  {isNl ? "Bekijk prijzen" : "Compare plans"}
+                </Button>
+              </>
+            )
+          }
+          aside={
             isNl
-              ? ["NL en EN beschikbaar", "Gratis publieke intake", "Veilig startpunt"]
-              : ["Available in Dutch and English", "Free public intake", "Safe starting point"]
+              ? "De calculator geeft een praktisch startpunt. Een persoonlijke fitter kan toegevoegde " +
+                "waarde bieden bij complexe biomechanische kwesties."
+              : "The calculator gives a practical starting point. An in-person fitter can add value " +
+                "for complex biomechanical issues."
           }
         />
-        <div className="mt-4">
-          <RatingBadge rating="4.8" count={isNl ? "380+ rijders" : "380+ riders"} />
-        </div>
-      </div>
 
-      <PublicSection
-        className="mt-10"
-        header={{
-          eyebrow: isNl ? "Waarom rijders hiermee starten" : "Why riders start here",
-          title: isNl
-            ? "Betrouwbaar genoeg om de juiste volgende stap te kiezen"
-            : "Reliable enough to choose the right next step",
-          description: isNl
-            ? "De publieke calculator is bedoeld om je richting te geven, niet om schijnzekerheid te verkopen."
-            : "The public calculator is built to give you direction, not to sell false certainty.",
-        }}
-      >
-        <div className="grid gap-4 md:grid-cols-3">
-          {trustPoints.map((point, index) => (
-            <FeatureIconCard
-              key={point.title}
-              icon={point.icon}
-              title={point.title}
-              description={point.description}
-              color={TRUST_POINT_COLORS[index] ?? "primary"}
-            />
-          ))}
-        </div>
-      </PublicSection>
-
-      <BikeFitCalculatorForm isNl={isNl} />
-
-      <PublicCtaBand
-        className="mt-10"
-        eyebrow={isNl ? "Hoe verder?" : "What's next?"}
-        title={isNl ? "Start je persoonlijke bikefit" : "Start your personalized fit"}
-        description={
-          isNl
-            ? "Maak een gratis account aan om je rijdersprofiel op te bouwen, een persoonlijke bikefit te starten en toekomstige aanpassingen bij te houden."
-            : "Create a free account to build your rider profile, start a personalized fit, and track future adjustments."
-        }
-        actions={
-          campaignActive ? (
-            <CampaignCtaGroup
-              locale={locale}
-              pagePath={pagePath}
-              startHref={withLocalePrefix("/login", locale)}
-              startSection="bike_fit_result"
-              donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-              donateSection="bike_fit_campaign_donate"
-              startLabel={isNl ? "Maak een gratis account aan" : "Create a free account"}
-              donateLabel={campaign.donateCta}
-            />
-          ) : (
-            <>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/login", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="bike_fit_result"
-                    ctaLabel={isNl ? "Maak een gratis account aan" : "Create a free account"}
-                  />
-                }
+        <PublicSection
+          className="mt-10"
+          header={{
+            title: "FAQ",
+            description: isNl
+              ? "Korte antwoorden op de belangrijkste vragen."
+              : "Short answers to the most common questions.",
+          }}
+        >
+          <div className="space-y-4">
+            {faqs.map((faq) => (
+              <div
+                key={faq.q}
+                className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
               >
-                {isNl ? "Maak een gratis account aan" : "Create a free account"}
-              </Button>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/pricing", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="bike_fit_pricing_cta"
-                    ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
-                  />
-                }
-                variant="outline"
-              >
-                {isNl ? "Bekijk prijzen" : "Compare plans"}
-              </Button>
-            </>
-          )
-        }
-        aside={
-          isNl
-            ? "De calculator geeft een praktisch startpunt. Een persoonlijke fitter kan toegevoegde waarde bieden bij complexe biomechanische kwesties."
-            : "The calculator gives a practical starting point. An in-person fitter can add value for complex biomechanical issues."
-        }
-      />
+                <h3 className="font-semibold text-foreground">{faq.q}</h3>
+                <p className="mt-2 text-muted-foreground">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </PublicSection>
 
-      <PublicSection
-        className="mt-10"
-        header={{
-          title: "FAQ",
-          description: isNl
-            ? "Korte antwoorden op de belangrijkste vragen."
-            : "Short answers to the most common questions.",
-        }}
-      >
-        <div className="space-y-4">
-          {faqs.map((faq) => (
-            <div
-              key={faq.q}
-              className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
-            >
-              <h3 className="font-semibold text-foreground">{faq.q}</h3>
-              <p className="mt-2 text-muted-foreground">{faq.a}</p>
-            </div>
-          ))}
-        </div>
-      </PublicSection>
-
-      <section className="mt-10">
-        <RelatedLinksSection
-          title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}
-          links={getRelatedLinks("bike-fit", locale)}
-          locale={locale}
-        />
-      </section>
-    </PublicPageShell>
+        <section className="mt-10">
+          <RelatedLinksSection
+            title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}
+            links={getRelatedLinks("bike-fit", locale)}
+            locale={locale}
+          />
+        </section>
+      </PublicPageShell>
+    </div>
   );
 }

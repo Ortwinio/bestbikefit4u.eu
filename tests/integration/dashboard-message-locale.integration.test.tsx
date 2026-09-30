@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 const { usePathnameMock, useRouterMock, useConvexAuthMock, useQueryMock, useMutationMock } =
   vi.hoisted(() => ({
     usePathnameMock: vi.fn(),
-    useRouterMock: vi.fn(() => ({ replace: vi.fn() })),
+    useRouterMock: vi.fn(() => ({ replace: vi.fn(), push: vi.fn() })),
     useConvexAuthMock: vi.fn(() => ({
       isLoading: false,
       isAuthenticated: true,
@@ -16,6 +16,11 @@ const { usePathnameMock, useRouterMock, useConvexAuthMock, useQueryMock, useMuta
 vi.mock("next/navigation", () => ({
   usePathname: usePathnameMock,
   useRouter: useRouterMock,
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+vi.mock("@convex-dev/auth/react", () => ({
+  useAuthActions: () => ({ signOut: vi.fn() }),
 }));
 
 vi.mock("convex/react", () => ({
@@ -76,6 +81,8 @@ vi.mock("@/i18n/useDashboardMessages", () => ({
   useDashboardMessages: () => ({
     locale: "nl",
     messages: {
+      common: { signOut: "Uitloggen" },
+      userMenu: { fallbackUserName: "Gebruiker" },
       nav: {
         dashboard: "Dashboard",
         feedback: "Feedback",

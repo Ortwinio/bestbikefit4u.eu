@@ -13,7 +13,7 @@
     "test:smoke:local": "node scripts/smoke-local.mjs",
     "vercel:preflight": "node scripts/check-vercel-env.mjs",
     "seo:validate-sitemaps": "node scripts/seo/validate-sitemaps.mjs",
-    "lint": "npm-run-all lint:eslint lint:runtime-boundaries lint:tooltips",
+    "lint": "npm-run-all lint:eslint lint:runtime-boundaries lint:tooltips lint:contrast lint:css-modules",
     "lint:eslint": "eslint",
     "lint:runtime-boundaries": "node scripts/check-convex-runtime-boundaries.mjs",
     "lint:tooltips": "node scripts/check-tooltip-coverage.mjs",
@@ -25,7 +25,9 @@
     "test:e2e:i18n": "vitest run tests/e2e/homepage-language-switch.e2e.test.ts --bail=1",
     "test:i18n": "vitest run src/i18n/config.test.ts src/i18n/getDictionary.test.ts src/i18n/dashboardMessages.test.ts src/i18n/messages/messages-parity.test.ts tests/integration/locale-routing.integration.test.ts tests/integration/dashboard-locale-switch.integration.test.ts --bail=1",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "lint:contrast": "node scripts/check-brand-contrast.mjs",
+    "lint:css-modules": "node scripts/check-css-module-tokens.mjs"
   },
   "dependencies": {
     "@auth/core": "^0.41.3",
@@ -54,6 +56,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",

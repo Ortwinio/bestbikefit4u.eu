@@ -1,3 +1,4 @@
+import { PerformanceCalculator } from "../power-speed/PerformanceCalculator";
 import type { Metadata } from "next";
 import { Activity, Gauge, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -5,8 +6,6 @@ import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
   PublicCtaBand,
   PublicFeatureCard,
-  PublicHero,
-  PublicPageShell,
   PublicSection,
   PublicSurfaceCard,
 } from "@/components/public";
@@ -16,11 +15,7 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import {
-  buildFaqPageSchema,
-  buildHowToSchema,
-  buildWebApplicationSchema,
-} from "@/lib/seo/jsonLd";
+import { buildFaqPageSchema, buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 
 const copy = {
   en: {
@@ -34,32 +29,38 @@ const copy = {
       eyebrow: "BestBikeFit4U calculator",
       title: "FTP / W/kg Calculator",
       description:
-        "Convert threshold power into a clearer performance context, then use that context to make pacing and climbing decisions.",
+        "Convert threshold power into a clearer performance context, then use that " +
+        "context to make pacing and climbing decisions.",
       chips: ["FTP context", "W/kg", "Pacing decisions"],
     },
     intro: {
       eyebrow: "What this tool is for",
       title: "A practical way to read threshold power",
       description:
-        "FTP is useful, but only if you understand what it can and cannot tell you. This page turns that number into a safer first-pass context for training and climbing.",
+        "FTP is useful, but only if you understand what it can and cannot tell you. This " +
+        "page turns that number into a safer first-pass context for training and " +
+        "climbing.",
     },
     features: [
       {
         title: "Compare power in context",
         description:
-          "W/kg matters most when gradient and body mass shape the outcome. That makes climbs and event pacing easier to interpret.",
+          "W/kg matters most when gradient and body mass shape the outcome. That makes " +
+          "climbs and event pacing easier to interpret.",
         icon: <Gauge className="h-5 w-5" />,
       },
       {
         title: "Keep the assumptions visible",
         description:
-          "A threshold number is only as good as the test behind it. This page keeps the limits clear so riders do not overread the result.",
+          "A threshold number is only as good as the test behind it. This page keeps the " +
+          "limits clear so riders do not overread the result.",
         icon: <ShieldCheck className="h-5 w-5" />,
       },
       {
         title: "Connect training and pacing",
         description:
-          "The value of FTP is not just a label. It helps you decide how hard to start, hold, and finish a climb or event.",
+          "The value of FTP is not just a label. It helps you decide how hard to start, " +
+          "hold, and finish a climb or event.",
         icon: <Activity className="h-5 w-5" />,
       },
     ],
@@ -92,11 +93,15 @@ const copy = {
     faqs: [
       {
         q: "Is FTP the same as race power?",
-        a: "Not exactly. FTP is a useful threshold reference, but race execution also depends on duration, terrain, and how well you pace fatigue.",
+        a:
+          "Not exactly. FTP is a useful threshold reference, but race execution also " +
+          "depends on duration, terrain, and how well you pace fatigue.",
       },
       {
         q: "Why does W/kg matter more on climbs than on flats?",
-        a: "Because gravity dominates uphill. On flatter roads, aerodynamics and speed management matter more than threshold alone.",
+        a:
+          "Because gravity dominates uphill. On flatter roads, aerodynamics and speed " +
+          "management matter more than threshold alone.",
       },
     ],
     relatedTitle: "Related guides",
@@ -110,7 +115,8 @@ const copy = {
       eyebrow: "Next step",
       title: "Bring the number into the dashboard",
       description:
-        "Start a free account to keep the result alongside your ride setup, then use the dashboard when you want more detail and follow-up.",
+        "Start a free account to keep the result alongside your ride setup, then use the " +
+        "dashboard when you want more detail and follow-up.",
       label: "Start Free Fit",
     },
   },
@@ -118,39 +124,45 @@ const copy = {
     metadata: {
       title: "FTP- / W/kg-calculator | BestBikeFit4U",
       description:
-        "Vertaal drempelvermogen naar W/kg en gebruik het om klimcontext, pacing en prestatiedoelen beter te vergelijken.",
+        "Vertaal drempelvermogen naar W/kg en gebruik het om klimcontext, pacing en " +
+        "prestatiedoelen beter te vergelijken.",
       keywords: ["FTP calculator", "W/kg calculator", "drempelvermogen fietsen"],
     },
     hero: {
       eyebrow: "BestBikeFit4U calculator",
       title: "FTP- / W/kg-calculator",
       description:
-        "Zet drempelvermogen om in duidelijkere prestatiecontext en gebruik die context om pacing- en klimkeuzes beter te maken.",
+        "Zet drempelvermogen om in duidelijkere prestatiecontext en gebruik die context " +
+        "om pacing- en klimkeuzes beter te maken.",
       chips: ["FTP-context", "W/kg", "Pacing-keuzes"],
     },
     intro: {
       eyebrow: "Waar deze tool voor is",
       title: "Een praktische manier om drempelvermogen te lezen",
       description:
-        "FTP is nuttig, maar alleen als je weet wat het wel en niet zegt. Deze pagina zet dat getal om in een veilig eerste contextbeeld voor training en klimmen.",
+        "FTP is nuttig, maar alleen als je weet wat het wel en niet zegt. Deze pagina zet" +
+        " dat getal om in een veilig eerste contextbeeld voor training en klimmen.",
     },
     features: [
       {
         title: "Vergelijk vermogen in context",
         description:
-          "W/kg is vooral belangrijk wanneer klimpercentage en lichaamsmassa samen het resultaat bepalen. Dat maakt klim- en eventpacing beter leesbaar.",
+          "W/kg is vooral belangrijk wanneer klimpercentage en lichaamsmassa samen het " +
+          "resultaat bepalen. Dat maakt klim- en eventpacing beter leesbaar.",
         icon: <Gauge className="h-5 w-5" />,
       },
       {
         title: "Houd de aannames zichtbaar",
         description:
-          "Een drempelgetal is slechts zo goed als de test die eraan voorafging. Deze pagina houdt de grenzen duidelijk zodat je de uitkomst niet overschat.",
+          "Een drempelgetal is slechts zo goed als de test die eraan voorafging. Deze " +
+          "pagina houdt de grenzen duidelijk zodat je de uitkomst niet overschat.",
         icon: <ShieldCheck className="h-5 w-5" />,
       },
       {
         title: "Koppel training aan pacing",
         description:
-          "De waarde van FTP is niet alleen een label. Het helpt je bepalen hoe hard je een klim of event moet openen, vasthouden en afronden.",
+          "De waarde van FTP is niet alleen een label. Het helpt je bepalen hoe hard je een" +
+          " klim of event moet openen, vasthouden en afronden.",
         icon: <Activity className="h-5 w-5" />,
       },
     ],
@@ -183,11 +195,15 @@ const copy = {
     faqs: [
       {
         q: "Is FTP hetzelfde als racevermogen?",
-        a: "Niet precies. FTP is een bruikbare drempelreferentie, maar wedstrijduitvoering hangt ook af van duur, terrein en hoe goed je vermoeidheid doseert.",
+        a:
+          "Niet precies. FTP is een bruikbare drempelreferentie, maar wedstrijduitvoering " +
+          "hangt ook af van duur, terrein en hoe goed je vermoeidheid doseert.",
       },
       {
         q: "Waarom is W/kg belangrijker op klimmen dan op vlakke wegen?",
-        a: "Omdat zwaartekracht bergop domineert. Op vlakke wegen zijn aerodynamica en snelheidsbeheer belangrijker dan drempel alleen.",
+        a:
+          "Omdat zwaartekracht bergop domineert. Op vlakke wegen zijn aerodynamica en " +
+          "snelheidsbeheer belangrijker dan drempel alleen.",
       },
     ],
     relatedTitle: "Gerelateerde gidsen",
@@ -201,7 +217,8 @@ const copy = {
       eyebrow: "Volgende stap",
       title: "Breng het getal naar het dashboard",
       description:
-        "Start een gratis account om de uitkomst naast je setup te bewaren en gebruik daarna het dashboard voor meer detail en opvolging.",
+        "Start een gratis account om de uitkomst naast je setup te bewaren en gebruik " +
+        "daarna het dashboard voor meer detail en opvolging.",
       label: "Start gratis fit",
     },
   },
@@ -234,7 +251,7 @@ export default async function FtpWkgCalculatorPage() {
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
 
   return (
-    <PublicPageShell className="text-foreground">
+    <div className="text-foreground">
       <JsonLd
         schema={[
           buildWebApplicationSchema({
@@ -265,14 +282,9 @@ export default async function FtpWkgCalculatorPage() {
         ]}
       />
 
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <PublicHero
-          eyebrow={page.hero.eyebrow}
-          title={page.hero.title}
-          description={page.hero.description}
-          chips={[...page.hero.chips]}
-        />
+      <PerformanceCalculator tool="ftp-wkg" locale={locale} />
 
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <PublicSection
           className="mt-10"
           header={{
@@ -294,11 +306,7 @@ export default async function FtpWkgCalculatorPage() {
         </PublicSection>
 
         {page.sections.map((section) => (
-          <PublicSection
-            key={section.title}
-            className="mt-10"
-            header={{ title: section.title }}
-          >
+          <PublicSection key={section.title} className="mt-10" header={{ title: section.title }}>
             <div className="grid gap-4">
               {section.items.map((item) => (
                 <PublicSurfaceCard key={item} description={item} />
@@ -315,11 +323,7 @@ export default async function FtpWkgCalculatorPage() {
           </div>
         </PublicSection>
 
-        <RelatedLinksSection
-          title={page.relatedTitle}
-          links={[...page.relatedLinks]}
-          locale={locale}
-        />
+        <RelatedLinksSection title={page.relatedTitle} links={[...page.relatedLinks]} locale={locale} />
 
         <PublicCtaBand
           className="mt-10"
@@ -343,6 +347,6 @@ export default async function FtpWkgCalculatorPage() {
           }
         />
       </div>
-    </PublicPageShell>
+    </div>
   );
 }

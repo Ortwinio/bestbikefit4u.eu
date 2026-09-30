@@ -6,8 +6,7 @@ import { Field } from "./Field";
 import { cn } from "@/utils/cn";
 import { Textarea as PrototyperTextarea } from "@/components/prototyper-ui/ui/textarea";
 
-export interface TextareaProps
-  extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   tooltip?: string;
   tooltipLabel?: string;
@@ -29,16 +28,15 @@ function TextareaFieldLabel({
   return (
     <div className="mb-1.5 flex items-center gap-1.5">
       <Field.Label
-        className="flex items-center gap-2 text-sm font-medium leading-none text-[color:var(--foreground)] data-[disabled]:status-disabled data-[invalid]:text-[color:var(--danger)] select-none"
+        className={
+          "flex items-center gap-2 text-sm font-medium leading-none text-foreground " +
+          "data-[disabled]:status-disabled data-[invalid]:text-destructive-text select-none"
+        }
       >
         {label}
       </Field.Label>
       {tooltip ? (
-        <Tooltip
-          content={tooltip}
-          label={tooltipLabel ?? `${label} help`}
-          descriptionId={tooltipDescriptionId}
-        />
+        <Tooltip content={tooltip} label={tooltipLabel ?? `${label} help`} descriptionId={tooltipDescriptionId} />
       ) : null}
     </div>
   );
@@ -58,19 +56,14 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       rows = 4,
       ...props
     },
-    ref
+    ref,
   ) => {
     const generatedId = useId().replace(/:/g, "");
-    const textareaId =
-      id || label?.toLowerCase().replace(/\s+/g, "-") || `textarea-${generatedId}`;
+    const textareaId = id || label?.toLowerCase().replace(/\s+/g, "-") || `textarea-${generatedId}`;
     const helperId = helperText && !error ? `${textareaId}-helper` : undefined;
     const errorId = error ? `${textareaId}-error` : undefined;
-    const tooltipDescriptionId = tooltip
-      ? `${textareaId}-tooltip-description`
-      : undefined;
-    const describedBy = [ariaDescribedBy, tooltipDescriptionId, errorId, helperId]
-      .filter(Boolean)
-      .join(" ");
+    const tooltipDescriptionId = tooltip ? `${textareaId}-tooltip-description` : undefined;
+    const describedBy = [ariaDescribedBy, tooltipDescriptionId, errorId, helperId].filter(Boolean).join(" ");
 
     return (
       <Field.Root
@@ -98,25 +91,18 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           {...props}
         />
         {error ? (
-          <Field.Error
-            match={true}
-            id={errorId}
-            className="mt-1 text-sm text-[color:var(--danger)]"
-          >
+          <Field.Error match={true} id={errorId} className="mt-1 text-sm text-destructive-text">
             {error}
           </Field.Error>
         ) : null}
         {helperText && !error ? (
-          <Field.Description
-            id={helperId}
-            className="mt-1 text-sm text-[color:var(--muted-foreground)]"
-          >
+          <Field.Description id={helperId} className="mt-1 text-sm text-muted-foreground">
             {helperText}
           </Field.Description>
         ) : null}
       </Field.Root>
     );
-  }
+  },
 );
 
 Textarea.displayName = "Textarea";

@@ -33,10 +33,10 @@ export function PainSolutions({ solutions }: PainSolutionsProps) {
     >
       <CardHeader className="bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--card)_88%)]">
         <div className="flex items-center gap-2">
-          <HeartPulse className="h-5 w-5 text-warning" />
+          <HeartPulse className="h-5 w-5 text-warning-text" />
           <CardTitle className="text-warning-foreground">Pain Point Solutions</CardTitle>
         </div>
-        <p className="mt-1 text-sm text-warning">
+        <p className="mt-1 text-sm text-warning-text">
           Based on the discomfort areas you mentioned
         </p>
       </CardHeader>
@@ -48,13 +48,13 @@ export function PainSolutions({ solutions }: PainSolutionsProps) {
               className="rounded-lg border border-border bg-card p-4"
             >
               <h4 className="flex items-center gap-2 font-semibold text-foreground">
-                <AlertTriangle className="h-4 w-4 text-warning" />
+                <AlertTriangle className="h-4 w-4 text-warning-text" />
                 {areaLabels[solution.painArea] || solution.painArea}
               </h4>
               <p className="mt-1 text-sm text-muted-foreground">{solution.cause}</p>
               <div className="mt-3 flex items-start gap-2 rounded-lg bg-success/10 p-3">
-                <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" />
-                <p className="text-sm text-success">{solution.solution}</p>
+                <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-success-text" />
+                <p className="text-sm text-success-text">{solution.solution}</p>
               </div>
             </div>
           ))}

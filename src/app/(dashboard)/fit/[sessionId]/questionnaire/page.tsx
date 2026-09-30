@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Button, EmptyState, LoadingState } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { FitQuestionnaireHeader } from "@/components/account/FitQuestionnaireHeader";
 
 interface QuestionnairePageProps {
   params: Promise<{ sessionId: string }>;
@@ -82,7 +83,7 @@ export default function QuestionnairePage({ params }: QuestionnairePageProps) {
         title={messages.questionnaire.sessionNotFound.title}
         description={messages.questionnaire.sessionNotFound.description}
         action={
-          <Button render={<Link href={withLocalePrefix("/fit", locale)} />}>
+          <Button nativeButton={false} role="link" render={<Link href={withLocalePrefix("/fit", locale)} />}>
             {messages.questionnaire.sessionNotFound.cta}
           </Button>
         }
@@ -104,8 +105,8 @@ export default function QuestionnairePage({ params }: QuestionnairePageProps) {
   });
 
   return (
-    <div className="max-w-2xl mx-auto">
-      {/* Questionnaire */}
+    <div className="mx-auto max-w-6xl space-y-6">
+      <FitQuestionnaireHeader locale={locale} />
       <QuestionnaireContainer
         questions={questions}
         responses={responsesRecord}
