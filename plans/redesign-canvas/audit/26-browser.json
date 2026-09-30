@@ -1,6 +1,7 @@
 [
   {
     "locale": "nl",
+    "fixture": "baseline",
     "sheets": 6,
     "measurements": [
       {
@@ -42,7 +43,51 @@
     ]
   },
   {
+    "locale": "nl",
+    "fixture": "full",
+    "sheets": 6,
+    "measurements": [
+      {
+        "board": "FitRapport1",
+        "contentBottom": 1038.796875,
+        "footerTop": 1057.515625,
+        "overflow": false
+      },
+      {
+        "board": "FitRapport6",
+        "contentBottom": 2063.53125,
+        "footerTop": 2180.03125,
+        "overflow": false
+      },
+      {
+        "board": "FitRapport2",
+        "contentBottom": 3176.40625,
+        "footerTop": 3302.546875,
+        "overflow": false
+      },
+      {
+        "board": "FitRapport5",
+        "contentBottom": 4299.203125,
+        "footerTop": 4425.0625,
+        "overflow": false
+      },
+      {
+        "board": "FitRapport3",
+        "contentBottom": 5493.515625,
+        "footerTop": 5547.578125,
+        "overflow": false
+      },
+      {
+        "board": "FitRapport4",
+        "contentBottom": 6612.390625,
+        "footerTop": 6670.09375,
+        "overflow": false
+      }
+    ]
+  },
+  {
     "locale": "en",
+    "fixture": "baseline",
     "sheets": 6,
     "measurements": [
       {
@@ -72,6 +117,49 @@
       {
         "board": "FitRapport3",
         "contentBottom": 5531.9375,
+        "footerTop": 5547.578125,
+        "overflow": false
+      },
+      {
+        "board": "FitRapport4",
+        "contentBottom": 6632.734375,
+        "footerTop": 6670.09375,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "locale": "en",
+    "fixture": "full",
+    "sheets": 6,
+    "measurements": [
+      {
+        "board": "FitRapport1",
+        "contentBottom": 1038.796875,
+        "footerTop": 1057.515625,
+        "overflow": false
+      },
+      {
+        "board": "FitRapport6",
+        "contentBottom": 2046.140625,
+        "footerTop": 2180.03125,
+        "overflow": false
+      },
+      {
+        "board": "FitRapport2",
+        "contentBottom": 3176.40625,
+        "footerTop": 3302.546875,
+        "overflow": false
+      },
+      {
+        "board": "FitRapport5",
+        "contentBottom": 4299.203125,
+        "footerTop": 4425.0625,
+        "overflow": false
+      },
+      {
+        "board": "FitRapport3",
+        "contentBottom": 5491.703125,
         "footerTop": 5547.578125,
         "overflow": false
       },
@@ -131,8 +219,7 @@
         "overflow": false
       }
     ],
-    "artifacts": "/tmp/bbf26-render-vVHNqj",
-    "pdfPageCount": 6
+    "artifacts": "/tmp/bbf26-render-LRPrcA"
   },
   {
     "locale": "nl",
@@ -169,7 +256,7 @@
       },
       {
         "board": "FitRapport3",
-        "contentBottom": 5523.203125,
+        "contentBottom": 5473.671875,
         "footerTop": 5547.578125,
         "horizontalOverflow": false,
         "overflow": false
@@ -182,8 +269,7 @@
         "overflow": false
       }
     ],
-    "artifacts": "/tmp/bbf26-render-vVHNqj",
-    "pdfPageCount": 6
+    "artifacts": "/tmp/bbf26-render-LRPrcA"
   },
   {
     "locale": "nl",
@@ -233,8 +319,7 @@
         "overflow": false
       }
     ],
-    "artifacts": "/tmp/bbf26-render-vVHNqj",
-    "pdfPageCount": 6
+    "artifacts": "/tmp/bbf26-render-LRPrcA"
   },
   {
     "locale": "en",
@@ -284,8 +369,7 @@
         "overflow": false
       }
     ],
-    "artifacts": "/tmp/bbf26-render-vVHNqj",
-    "pdfPageCount": 6
+    "artifacts": "/tmp/bbf26-render-LRPrcA"
   },
   {
     "locale": "en",
@@ -335,8 +419,7 @@
         "overflow": false
       }
     ],
-    "artifacts": "/tmp/bbf26-render-vVHNqj",
-    "pdfPageCount": 6
+    "artifacts": "/tmp/bbf26-render-LRPrcA"
   },
   {
     "locale": "en",
@@ -386,7 +469,6 @@
         "overflow": false
       }
     ],
-    "artifacts": "/tmp/bbf26-render-vVHNqj",
-    "pdfPageCount": 6
+    "artifacts": "/tmp/bbf26-render-LRPrcA"
   }
 ]

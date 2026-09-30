@@ -29,7 +29,8 @@ for (const locale of ["en", "nl"] as const) {
       expect(html).toContain(locale === "nl" ? "Vergevorderd" : "Advanced");
       expect(html).toContain(locale === "nl" ? "6-10 uur/week" : "6-10 hrs/week");
       expect(html).not.toContain("14/19");
-      expect(html).not.toContain("Voorkant knie");
+      expect(html).toContain(text.coreStability);
+      if (locale === "nl") expect(html).not.toContain("Core stability");
       expect(html).not.toContain('class="pdf-base-improve"');
     });
 
@@ -45,6 +46,7 @@ for (const locale of ["en", "nl"] as const) {
         flexibilityScore: null,
         coreStabilityScore: null,
         comfortScore: null,
+        painAreas: [],
       });
       const html = renderBaseDataPage(report, copy, assets);
       expect(html).not.toContain('class="pdf-base-rider"');
@@ -52,6 +54,34 @@ for (const locale of ["en", "nl"] as const) {
       expect(html).not.toContain('class="pdf-base-metric');
       expect(html).toContain(text.improveTitle);
       expect(html).toContain(report.bike.name);
+    });
+
+    it("renders only reported pain areas and the current frame size, with safe freeform text", () => {
+      const report = structuredClone(reportPdfFixture);
+      report.rider.painAreas = ["knee_front", "lower_back", "sit_bones", '<img src=x onerror="bad()">'];
+      report.bike.currentFrameSize = "Custom 58 & XL";
+      report.frameTargets.recommendedFrameLabel = "Recommended 999";
+      const html = renderBaseDataPage(report, copy, assets);
+      expect(html).toContain(text.painAreas);
+      expect(html).toContain(text.painAreaLabels.knee_front);
+      expect(html).toContain(text.painAreaLabels.lower_back);
+      expect(html).toContain(text.painAreaLabels.sit_bones);
+      expect(html).toContain("&lt;img src=x");
+      expect(html).not.toContain("<img src=x");
+      expect(html).toContain(`<dt>${text.currentFrameSize}</dt>`);
+      expect(html).toContain("Custom 58 &amp; XL");
+      expect(html).not.toContain("Recommended 999");
+    });
+
+    it("hides absent discomfort and frame fields without recommended-frame substitution", () => {
+      const report = structuredClone(reportPdfFixture);
+      delete report.rider.painAreas;
+      delete report.bike.currentFrameSize;
+      report.frameTargets.recommendedFrameLabel = "Recommended 999";
+      const html = renderBaseDataPage(report, copy, assets);
+      expect(html).not.toContain('class="pdf-base-pain"');
+      expect(html).not.toContain(`<dt>${text.currentFrameSize}</dt>`);
+      expect(html).not.toContain("Recommended 999");
     });
 
     it("keeps actual zero and fractional scores without inventing a category", () => {

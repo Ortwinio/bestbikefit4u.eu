@@ -75,22 +75,19 @@ for (const locale of ["en", "nl"] as const) {
     it("escapes note/target HTML and explicitly bounds long excerpts while keeping full payload notes", () => {
       const report = fixture();
       report.adjustmentSequence[1].targetLabel = '<img src=x onerror="alert(1)">';
-      report.fitNotes = [
-        '<script>alert("note")</script>',
-        "🚲Long fit note ".repeat(50),
-        "Additional private note",
-      ];
+      report.fitNotes = ['<script>alert("note")</script>', "🚲Long fit note ".repeat(50), "Additional private note"];
       const before = JSON.stringify(report);
       const html = renderPlanPage(report, copy, assets);
       expect(html).not.toContain("<script>");
       expect(html).not.toContain("<img src=x");
-      expect(html).toContain("&lt;script&gt;");
+      if (locale === "en") expect(html).toContain("&lt;script&gt;");
+      else expect(html).not.toContain("alert(&quot;note&quot;)");
       expect(html).toContain("&lt;img src=x");
       expect(html).toContain('data-notes-overflow="true"');
       expect(html).toContain(text.moreNotes);
       const list = html.split('class="pdf-plan-notes"')[1];
       expect(list.match(/<li>/g)).toHaveLength(2);
-      expect(list).toContain("…");
+      if (locale === "en") expect(list).toContain("…");
       expect(list).not.toContain("Additional private note");
       expect(JSON.stringify(report)).toBe(before);
     });
@@ -104,7 +101,10 @@ for (const locale of ["en", "nl"] as const) {
       const html = renderPlanPage(report, copy, assets);
       expect(html).toContain('data-notes-compact="true"');
       expect(html).toContain('data-notes-overflow="false"');
-      for (const note of report.fitNotes) expect(html).toContain(note);
+      for (const note of report.fitNotes) {
+        if (locale === "en") expect(html).toContain(note);
+        else expect(html).not.toContain(note);
+      }
       expect(html).not.toContain(text.moreNotes);
     });
 
@@ -112,7 +112,8 @@ for (const locale of ["en", "nl"] as const) {
       const report = fixture();
       report.fitNotes = ["Keep a relaxed grip & test one change at a time."];
       const html = renderPlanPage(report, copy, assets);
-      expect(html).toContain("Keep a relaxed grip &amp; test one change at a time.");
+      if (locale === "en") expect(html).toContain("Keep a relaxed grip &amp; test one change at a time.");
+      else expect(html).toContain("nog geen vertaling beschikbaar");
       expect(html).toContain('data-notes-overflow="false"');
       expect(html).not.toContain(text.moreNotes);
     });

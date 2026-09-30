@@ -1,5 +1,6 @@
+import { runEngineV1Seed } from "../../convex/recommendations/seedEngine";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
-export const reportPdfFixture = mapReportV2Payload({
+const reportPdfSource = {
   session: {
     _id: "session_abc",
     createdAt: Date.UTC(2026, 2, 20, 10, 0, 0),
@@ -28,7 +29,7 @@ export const reportPdfFixture = mapReportV2Payload({
       handlebarWidthMm: 420,
     },
     frameSizeRecommendations: [{ size: "56", fitScore: 92 }],
-    fitNotes: ["Confirm long-ride comfort after each adjustment."],
+    fitNotes: ["Saddle height of 754mm is optimized for your 840mm inseam."],
     recommendationItems: [],
     pressureInsights: {
       comfortBias: "balanced",
@@ -79,4 +80,67 @@ export const reportPdfFixture = mapReportV2Payload({
       ridingGoal: "balance",
     },
   },
-} as never);
+};
+
+/** Existing sparse fixture remains stable for missing-data and regression coverage. */
+export const reportPdfFixture = mapReportV2Payload(reportPdfSource as never);
+
+/** Supported ranges come from the same seed engine used to persist real recommendations. */
+export const reportPdfFullEngine = runEngineV1Seed({
+  heightCm: 180,
+  inseamCm: 84,
+  torsoLengthCm: 60.4,
+  armLengthCm: 62,
+  shoulderWidthCm: 40,
+  flexibilityScore: "good",
+  coreStabilityScore: 4,
+  bikeCategory: "road",
+  ambition: "performance",
+  experienceLevel: "intermediate",
+});
+
+export const reportPdfFullSource = {
+  ...reportPdfSource,
+  recommendation: {
+    ...reportPdfSource.recommendation,
+    calculatedFit: reportPdfFullEngine.calculatedFit,
+    recommendationItems: reportPdfFullEngine.recommendationItems,
+    confidenceScore: reportPdfFullEngine.confidenceScore,
+    algorithmVersion: reportPdfFullEngine.algorithmVersion,
+    // Exact generated-note templates from recommendations/actions.ts generateFitNotes.
+    fitNotes: [
+      `Saddle height of ${reportPdfFullEngine.fitOutputs.saddleHeightMm}mm is optimized for ` +
+        `your ${reportPdfFullEngine.fitInputs.inseamMm}mm inseam.`,
+      ...(reportPdfFullEngine.fitOutputs.barDropMm > 100
+        ? ["Your position is quite aggressive. Consider building up to this gradually."]
+        : reportPdfFullEngine.fitOutputs.barDropMm < 50
+          ? ["Your position prioritizes comfort with minimal bar drop."]
+          : []),
+      "Reach calculations are refined using your torso and arm measurements.",
+    ],
+  },
+  bike: {
+    ...reportPdfSource.bike,
+    currentGeometry: { frameSize: "56" },
+  },
+  profile: {
+    ...reportPdfSource.profile,
+    hasPain: "yes",
+    painAreas: ["knee_front"],
+    experienceLevel: "intermediate",
+    weeklyHours: "6-10",
+    typicalRideLength: "long",
+    positionPriority: "performance",
+  },
+  questionnaireResponses: [
+    { questionId: "experience_level", response: "intermediate" },
+    { questionId: "weekly_hours", response: "6-10" },
+    { questionId: "typical_ride_length", response: "long" },
+    { questionId: "position_priority", response: "performance" },
+    { questionId: "road_riding_type", response: "group" },
+    { questionId: "has_pain", response: "yes" },
+    { questionId: "pain_areas", response: ["knee_front"] },
+  ],
+};
+
+export const reportPdfFullFixture = mapReportV2Payload(reportPdfFullSource as never);

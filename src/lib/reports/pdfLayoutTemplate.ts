@@ -38,7 +38,9 @@ const documentStyles = `
   .report-content { flex:1; min-height:0; overflow-wrap:anywhere; }
   .report-footer { flex:none; display:flex; gap:12px; justify-content:space-between;
     border-top:1px solid var(--bbf-rand); padding-top:10px; font-size:10px; color:var(--bbf-gedempt); }
-  .report-footer-person { max-width:60%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+  .report-footer-person { display:flex; align-items:baseline; min-width:0; gap:4px; white-space:nowrap; }
+  .report-footer-name { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  .report-footer-fixed { flex:none; }
   .report-footer-page { font-family:'DM Mono',monospace; white-space:nowrap; }
 `;
 
@@ -69,9 +71,11 @@ export function renderPdfReportHtml({
     ["FitRapport3", renderPlanPage(report, copy, images)],
     ["FitRapport4", renderMeasurementPage(report, copy, images)],
   ];
-  const footerPerson = [report.rider.name, formatPdfDate(report.reportDate, copy)]
-    .filter(Boolean)
-    .join(" · ");
+  const date = formatPdfDate(report.reportDate, copy);
+  const footerPerson = `<span class="report-footer-fixed">${escapeHtml(text.footerLabel)}</span>
+    ${report.rider.name ? `<span>·</span><span class="report-footer-name">${escapeHtml(report.rider.name)}</span>` : ""}
+    ${date ? `<span>·</span><span class="mono report-footer-fixed">${escapeHtml(date)}</span>` : ""}
+    <span class="report-footer-fixed">· bestbikefit4u.eu</span>`;
   return `<!doctype html><html lang="${locale}"><head><meta charset="utf-8">
     <title>${escapeHtml(text.title)}</title><style>${fontCss}${documentStyles}
     ${summaryStyles}${baseDataStyles}${fitValuesStyles}${tiresStyles}${planStyles}${measurementStyles}
@@ -82,7 +86,7 @@ export function renderPdfReportHtml({
       data-board="${board}"><header class="report-header">
       <img src="${images.logo}" alt="BestBikeFit4U"><span>${escapeHtml(text.sections[index])}</span>
       </header><div class="report-content">${body}</div><footer class="report-footer">
-      <span class="report-footer-person">${escapeHtml(footerPerson)}</span><span>bestbikefit4u.eu</span>
+      <span class="report-footer-person">${footerPerson}</span>
       <span class="report-footer-page">${index + 1} / 6</span></footer></article>`,
       )
       .join("")}

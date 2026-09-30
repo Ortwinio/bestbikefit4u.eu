@@ -14,7 +14,8 @@ await symlink(resolve(root, "node_modules"), join(temp, "node_modules"), "dir");
 const bundle = join(temp, "report.mjs");
 await build({
   stdin: {
-    contents: `export { reportPdfFixture as report } from './tests/fixtures/reportPdf';
+    contents: `export { reportPdfFixture as report, reportPdfFullFixture as fullReport }
+      from './tests/fixtures/reportPdf';
       export { getReportV2Copy } from './src/lib/reports/reportV2Copy';
       export { renderPdfReportHtml } from './src/lib/reports/pdfLayoutTemplate';
       export { renderPdfFromHtml } from './src/lib/pdf/htmlPdf';
@@ -34,11 +35,15 @@ const audit = [];
 const variantsOnly = process.env.PDF_VARIANTS_ONLY === "true";
 try {
   if (!variantsOnly)
-    for (const locale of ["nl", "en"]) {
-      const html = api.renderPdfReportHtml({ report: api.report, copy: api.getReportV2Copy(locale) });
-      await writeFile(join(output, `26-report-${locale}.html`), html);
+    for (const { locale, fixture, report } of ["nl", "en"].flatMap((locale) => [
+      { locale, fixture: "baseline", report: api.report },
+      { locale, fixture: "full", report: api.fullReport },
+    ])) {
+      const prefix = fixture === "full" ? "26-full" : "26";
+      const html = api.renderPdfReportHtml({ report, copy: api.getReportV2Copy(locale) });
+      await writeFile(join(output, `${prefix}-report-${locale}.html`), html);
       const { pdf } = await api.renderPdfFromHtml({ html, pageLayout: "fixed-a4" });
-      await writeFile(join(output, `26-report-${locale}.pdf`), pdf);
+      await writeFile(join(output, `${prefix}-report-${locale}.pdf`), pdf);
       const page = await browser.newPage({ viewport: { width: 794, height: 1123 }, javaScriptEnabled: false });
       await page.route("**/*", (route) => route.abort());
       await page.setContent(html, { waitUntil: "networkidle" });
@@ -63,9 +68,9 @@ try {
         }),
       );
       for (let i = 0; i < (await sheets.count()); i++) {
-        await sheets.nth(i).screenshot({ path: join(output, `26-html-${locale}-${i + 1}.png`) });
+        await sheets.nth(i).screenshot({ path: join(output, `${prefix}-html-${locale}-${i + 1}.png`) });
       }
-      audit.push({ locale, sheets: await sheets.count(), measurements });
+      audit.push({ locale, fixture, sheets: await sheets.count(), measurements });
       await page.close();
     }
   for (const locale of ["nl", "en"]) {

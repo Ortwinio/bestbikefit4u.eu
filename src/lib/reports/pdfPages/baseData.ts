@@ -43,6 +43,11 @@ export const baseDataStyles = `
 .pdf-base-improve { margin-top: 14px; padding: 16px 20px; border-radius: 20px; background: var(--bbf-lime); }
 .pdf-base-improve h3 { font-size: 17px; }
 .pdf-base-improve p { margin: 4px 0 0; font-size: 13px; line-height: 1.45; }
+.pdf-base-pain { margin-top: 14px; }
+.pdf-base-pain h4 { margin: 0; font-size: 13px; font-weight: 700; }
+.pdf-base-pain ul { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 6px 0 0; list-style: none; }
+.pdf-base-pain li { padding: 5px 9px; border: 1px solid var(--bbf-rand); border-radius: 999px;
+  background: var(--bbf-wit); font-size: 12px; line-height: 1.35; overflow-wrap: anywhere; }
 `;
 
 /** Base-data page: payload facts only; unavailable body scores and bike fields are omitted. */
@@ -66,7 +71,10 @@ export function renderBaseDataPage(report: ReportV2Payload, copy: ReportV2Copy, 
   const enteredExtras = extras.filter((entry) => measured(entry.value));
   const scores = [
     { value: report.rider.flexibilityScore, meta: copy.scoreMeta.flexibility },
-    { value: report.rider.coreStabilityScore, meta: copy.scoreMeta.coreStability },
+    {
+      value: report.rider.coreStabilityScore,
+      meta: { ...copy.scoreMeta.coreStability, title: text.coreStability },
+    },
     { value: report.rider.comfortScore, meta: copy.scoreMeta.comfort },
   ].flatMap(({ value, meta }) => {
     if (value === null || !Number.isFinite(value) || value < 0 || value > 5) return [];
@@ -103,6 +111,7 @@ export function renderBaseDataPage(report: ReportV2Payload, copy: ReportV2Copy, 
     [copy.bike.bikeType, report.bike.bikeType, "bikeType"],
     [copy.bike.brand, report.bike.brand],
     [copy.bike.model, report.bike.model],
+    [text.currentFrameSize, report.bike.currentFrameSize],
   ]);
   const ridingRows = rows([
     [copy.bike.goal, report.bike.goal ?? report.profile.goal, "goal"],
@@ -130,14 +139,25 @@ export function renderBaseDataPage(report: ReportV2Payload, copy: ReportV2Copy, 
       </dd></div>`
       : "",
   ].join("");
+  const painAreas = (report.rider.painAreas ?? [])
+    .filter((value) => value.trim())
+    .map((value) => {
+      const key = value.trim().toLowerCase();
+      return text.painAreaLabels[key as keyof typeof text.painAreaLabels] ?? value;
+    });
+  const pain = painAreas.length
+    ? `<div class="pdf-base-pain"><h4>${escapeHtml(text.painAreas)}</h4>
+    <ul>${painAreas.map((value) => `<li>${escapeHtml(value)}</li>`).join("")}</ul></div>`
+    : "";
   const rider =
-    metrics || scores.length
+    metrics || scores.length || pain
       ? `<section class="pdf-base-rider">
     <div class="pdf-base-rider-heading"><h3>${escapeHtml(text.rider)}</h3>
       ${report.rider.name ? `<span class="pdf-base-name">${escapeHtml(report.rider.name)}</span>` : ""}
     </div>
     ${metrics ? `<dl class="pdf-base-metrics">${metrics}</dl>` : ""}
     ${scores.length ? `<div class="pdf-base-scores">${scores.join("")}</div>` : ""}
+    ${pain}
   </section>`
       : "";
   const tables = [

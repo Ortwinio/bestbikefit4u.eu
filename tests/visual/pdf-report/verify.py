@@ -16,10 +16,12 @@ AUDIT = ROOT / "plans/redesign-canvas/audit/26-pdf.json"
 FAMILIES = ("BricolageGrotesque", "Figtree", "DMMono")
 
 
-def verify(locale):
-    path = OUTPUT / f"26-report-{locale}.pdf"
+def verify(locale, fixture="baseline"):
+    prefix = "26-full" if fixture == "full" else "26"
+    path = OUTPUT / f"{prefix}-report-{locale}.pdf"
     result = {
         "locale": locale,
+        "fixture": fixture,
         "file": str(path.relative_to(ROOT)),
         "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "errors": [],
@@ -36,7 +38,7 @@ def verify(locale):
             a4 = abs(page.rect.width - 595.276) < 1 and abs(page.rect.height - 841.89) < 1
             footer = page.get_text(clip=fitz.Rect(0, page.rect.height - 65, page.rect.width, page.rect.height))
             footer_ok = bool(re.search(rf"\b{number}\s*/\s*6\b", footer))
-            image = OUTPUT / f"26-pdf-{locale}-{number}.png"
+            image = OUTPUT / f"{prefix}-pdf-{locale}-{number}.png"
             page.get_pixmap(matrix=fitz.Matrix(4 / 3, 4 / 3), alpha=False).save(image)
             result["pages"].append({
                 "number": number,
@@ -51,6 +53,13 @@ def verify(locale):
                 result["errors"].append(f"Page {number} is not portrait A4")
             if not footer_ok:
                 result["errors"].append(f"Page {number} lacks its N / 6 footer")
+            text = page.get_text()
+            if locale == "nl" and number == 2:
+                if "Core stability" in text or "Rompstabiliteit" not in text:
+                    result["errors"].append("Dutch base-data score label is not localized")
+            if locale == "nl" and number == 5:
+                if "Saddle height of" in text or "Confirm long-ride comfort" in text:
+                    result["errors"].append("Dutch fit notes leak English engine/fixture copy")
             for xref, extension, kind, name, *_ in page.get_fonts(full=True):
                 if xref in fonts:
                     continue
@@ -69,14 +78,15 @@ def verify(locale):
 def main():
     results = []
     for locale in ("nl", "en"):
-        try:
-            results.append(verify(locale))
-        except Exception as error:
-            results.append({"locale": locale, "passed": False, "errors": [str(error)]})
+        for fixture in ("baseline", "full"):
+            try:
+                results.append(verify(locale, fixture))
+            except Exception as error:
+                results.append({"locale": locale, "fixture": fixture, "passed": False, "errors": [str(error)]})
     AUDIT.parent.mkdir(parents=True, exist_ok=True)
     AUDIT.write_text(json.dumps(results, indent=2, ensure_ascii=False) + "\n")
     for result in results:
-        print(result["locale"], "PASS" if result["passed"] else "FAIL", result["errors"])
+        print(result["locale"], result["fixture"], "PASS" if result["passed"] else "FAIL", result["errors"])
     raise SystemExit(0 if all(result["passed"] for result in results) else 1)
 
 

@@ -197,6 +197,7 @@ function mapRiderSection(source: ReportV2Source): ReportRiderSection {
     flexibilityScore,
     flexibilityLabel,
     coreStabilityScore: profile?.coreStabilityScore ?? null,
+    painAreas: profile?.hasPain === "no" ? [] : (profile?.painAreas ?? []),
     comfortScore:
       !profile ||
       (profile.hasPain === undefined && profile.painSeverity === undefined)
@@ -211,6 +212,7 @@ function mapBikeSection(source: ReportV2Source): ReportBikeSection {
     bikeType: source.bike?.bikeType ?? source.session.bikeType ?? "unknown",
     brand: toRenderString(source.bike?.brand),
     model: toRenderString(source.bike?.model),
+    currentFrameSize: toRenderString(source.bike?.currentGeometry?.frameSize),
     ridingStyle: source.bike?.ridingStyle
       ? source.bike.ridingStyle
       : source.session.ridingStyle

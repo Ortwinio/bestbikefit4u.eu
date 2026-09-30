@@ -1,3 +1,4 @@
+import { localizePdfEngineNotes } from "../pdfEngineNotes";
 import { PDF_PLAN_COPY, type ReportV2Copy } from "../reportV2Copy";
 import { escapeHtml, type PdfReportAssets } from "../pdfShared";
 import type { ReportV2Payload } from "../reportV2Types";
@@ -79,7 +80,7 @@ export function renderPlanPage(report: ReportV2Payload, copy: ReportV2Copy, _ass
     </article>`;
     })
     .join("");
-  const sourceNotes = report.fitNotes.filter((note) => note.trim());
+  const sourceNotes = localizePdfEngineNotes(report.fitNotes, copy.locale);
   const noteLimit = 150;
   const notes = sourceNotes.slice(0, 2).map((note) => {
     const characters = Array.from(note);
@@ -87,8 +88,7 @@ export function renderPlanPage(report: ReportV2Payload, copy: ReportV2Copy, _ass
   });
   const notesCompact = notes.length > 1 || notes.join("").length > 80;
   const notesOverflow =
-    sourceNotes.length > notes.length ||
-    sourceNotes.slice(0, 2).some((note) => Array.from(note).length > noteLimit);
+    sourceNotes.length > notes.length || sourceNotes.slice(0, 2).some((note) => Array.from(note).length > noteLimit);
   const arrow =
     '<svg width="20" height="12" viewBox="0 0 20 12" fill="none" aria-hidden="true">' +
     '<path d="M1 6h16M12 1l5 5-5 5" stroke="currentColor" stroke-width="2" ' +

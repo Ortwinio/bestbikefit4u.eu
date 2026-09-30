@@ -208,9 +208,11 @@ describe("reportV2Mapper", () => {
       flexibilityLabel: null,
       coreStabilityScore: null,
       comfortScore: null,
+      painAreas: [],
     });
     expect(payload.bike).toEqual({
       name: "Unnamed bike",
+      currentFrameSize: null,
       bikeType: "road",
       brand: null,
       model: null,
@@ -274,5 +276,23 @@ describe("reportV2Mapper", () => {
     } as never);
 
     expect(payload.detailedFit.every((row) => row.delta === null)).toBe(true);
+  });
+
+  it("maps reported discomfort and current frame size without substituting recommended data", () => {
+    const source = {
+      ...baseSource,
+      profile: { ...baseSource.profile, hasPain: "yes", painAreas: ["knee_front"] },
+      bike: { ...baseSource.bike, currentGeometry: { frameSize: "54" } },
+    };
+    const full = mapReportV2Payload(source as never);
+    expect(full.rider.painAreas).toEqual(["knee_front"]);
+    expect(full.bike.currentFrameSize).toBe("54");
+    const absent = mapReportV2Payload({
+      ...source,
+      profile: { ...source.profile, hasPain: "no" },
+      bike: { ...source.bike, currentGeometry: undefined },
+    } as never);
+    expect(absent.rider.painAreas).toEqual([]);
+    expect(absent.bike.currentFrameSize).toBeNull();
   });
 });

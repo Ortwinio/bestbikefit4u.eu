@@ -26,6 +26,11 @@ describe("six-page PDF report", () => {
       expect(html.match(/class="report-header"/g)).toHaveLength(6);
       expect(html.match(/class="report-footer"/g)).toHaveLength(6);
       expect(html).toContain("print-color-adjust:exact");
+      const footer = html.split('<footer class="report-footer">')[1].split("</footer>")[0];
+      expect(footer).toContain(locale === "nl" ? "Fitrapport" : "Fit report");
+      expect(footer).toContain('class="mono report-footer-fixed"');
+      expect(footer).toMatch(/report-footer-person[\s\S]*Ortwin[\s\S]*bestbikefit4u.eu/);
+      expect(footer).not.toContain("</span><span>bestbikefit4u.eu");
     },
   );
 

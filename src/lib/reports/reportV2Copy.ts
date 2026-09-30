@@ -50,6 +50,14 @@ export const PDF_BASE_DATA_COPY = {
       "These are the rider and bike details available for this report. If anything is incorrect, " +
       "update your profile in your dashboard and start a new fit.",
     rider: "Rider",
+    coreStability: "Core stability",
+    painAreas: "Reported discomfort",
+    currentFrameSize: "Current frame size",
+    painAreaLabels: {
+      knee_front: "Front of knee", knee_back: "Back of knee", lower_back: "Lower back", neck: "Neck",
+      hands: "Hands", saddle: "Saddle area", feet: "Feet", knees: "Knees", shoulders: "Shoulders",
+      sit_bones: "Sit bones",
+    },
     extraMeasurements: "Extra measurements",
     notProvided: "Not entered",
     bike: "Bike",
@@ -66,6 +74,14 @@ export const PDF_BASE_DATA_COPY = {
       "Dit zijn de rijder- en fietsgegevens die voor dit rapport beschikbaar zijn. Klopt er iets niet? " +
       "Pas je profiel aan in je dashboard en start een nieuwe fit.",
     rider: "Rijder",
+    coreStability: "Rompstabiliteit",
+    painAreas: "Gemeld ongemak",
+    currentFrameSize: "Huidige framemaat",
+    painAreaLabels: {
+      knee_front: "Voorkant knie", knee_back: "Achterkant knie", lower_back: "Onderrug", neck: "Nek",
+      hands: "Handen", saddle: "Zadelgebied", feet: "Voeten", knees: "Knieën", shoulders: "Schouders",
+      sit_bones: "Zitbotten",
+    },
     extraMeasurements: "Extra maten",
     notProvided: "Niet ingevuld",
     bike: "Fiets",
@@ -144,6 +160,7 @@ export const PDF_FIT_VALUES_COPY = {
 
 export const PDF_SHELL_COPY = {
   nl: {
+    footerLabel: "Fitrapport",
     title: "Persoonlijk fitrapport",
     sections: [
       "Persoonlijk fitrapport",
@@ -155,6 +172,7 @@ export const PDF_SHELL_COPY = {
     ],
   },
   en: {
+    footerLabel: "Fit report",
     title: "Personal fit report",
     sections: [
       "Personal fit report",

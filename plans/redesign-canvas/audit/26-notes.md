@@ -1,7 +1,8 @@
 # 26 — Six-page PDF report
 
-Implemented for lead review; no commit or push. The existing report route, authorization,
-payment behavior, reportV2 mapper/types and network resource policy remain unchanged.
+Initial round 26 was approved in 89ef75c. Round 26.1 is ready for lead review; no commit or push by C.
+The existing report route, authorization, payment behavior and network resource policy remain unchanged.
+Round 26.1 adds two optional report fields mapped from already-queried profile/bike data.
 PDF-only copy is bilingual in reportV2Copy.ts; dashboard consumers retain browser-safe exports.
 
 ## Page order and field mapping
@@ -32,8 +33,8 @@ blank forms are retained when personalized data is absent. A4 page structure sta
 - **D is saddle-to-handlebar reach.** convex/recommendations/seedEngine.ts maps
   handlebarReachMm from saddleToBarReachMm. The canvas raster's BB-to-bar arrow is corrected with
   an SVG overlay, and page 6 explains the saddle/contact-point reference. No engine value changed.
-- Stored freeform notes remain in their source language. Long notes show a bounded excerpt plus
-  a dashboard reference. Excessive pressure warnings are replaced by an explicit instruction to
+- Superseded in 26.1: known engine notes are localized before excerpting; unknown note provenance
+  uses an explicit translation-unavailable notice in Dutch. Long notes retain a dashboard reference. Excessive pressure warnings are replaced by an explicit instruction to
   read all warnings in the dashboard before using the values, rather than partial safety advice.
 
 ## Rendering and deployment
@@ -46,7 +47,7 @@ avoid Chromium's unnamed Type3 output for variable fonts. See font README and bu
 Next output tracing explicitly includes the fonts, logo, bike drawing and three illustrations;
 production route.js.nft.json verified all referenced assets.
 
-## Validation
+## Validation — initial round 26
 
 - Typecheck and full lint pass, including 254 contrast pairs and CSS-module token checks.
 - Unit suite: 1,229 passed, 20 skipped; locale suite: 30 passed. 85 focused PDF/report tests cover both
@@ -59,7 +60,7 @@ production route.js.nft.json verified all referenced assets.
   tests/visual/pdf-report/verify.py. Rendering requires local Chromium; Python verifier requires
   pymupdf (QA-only dependency, not added to the app).
 
-## Long-input safeguards
+## Long-input safeguards — initial round 26
 
 The browser harness additionally checks sparse sessions, 80-character rider/bike names, 64-character
 session IDs, two long notes, and warnings both beyond and just below the display budget in NL/EN.
@@ -72,5 +73,43 @@ Canvas previews expand the repository's DC loops/bindings locally; no network ru
 
 ## Changed files
 
-Exact owned source/test/font/license/harness/notes manifest: [files-26.txt](files-26.txt).
+Current round 26.1 source/test/harness/notes manifest (round 26 is already committed): [files-26.txt](files-26.txt).
 No PNG/PDF is versioned or included in the manifest. Parallel dashboard/layout/sweep work is excluded.
+
+
+## 26.1 — Lead review fixes
+
+- Dutch page 2 uses **Rompstabiliteit**. Visible PDF copy was audited; other static English strings
+  belong to the EN branches. Technical terms (stack/reach, crank, PSI) and user-entered identifiers
+  remain unchanged.
+- **fitNotes provenance:** production `generateFromData` in `convex/recommendations/actions.ts`
+  merges `generateFitNotes` output and `bikeRoleBias` advisory notes. The mapper forwards stored
+  `recommendation.fitNotes`. This is machine-generated recommendation copy, not a user notes field.
+  The old “Confirm long-ride comfort after each adjustment.” was a fixture-only sentence, absent
+  from the engine; the fixture now uses exact engine templates with its real fixture measurements.
+- `pdfEngineNotes.ts` translates known generated templates and all 18 bike/profile advisory summaries
+  (including generated style/goal phrases and numerical mm values) before
+  truncation. Stored string arrays have no author/provenance flag; the legacy create mutation accepts
+  arbitrary strings, but no UI caller establishes user authorship. Unknown NL strings therefore get
+  an explicit translation-unavailable/dashboard notice rather than an assumed user-text exemption.
+- The full fixture calls `runEngineV1Seed`, then the real mapper. Engine `FitOutputs` and
+  `seedEngine.buildRecommendationItems` provide ranges only for **A saddle height, C handlebar drop,
+  D saddle-to-bar reach**. B setback, stem, crank and bar width have no source ranges; they stay blank.
+  Page 1 follows its board's A–D value labels; the actual range bars belong to page 3.
+- Full questionnaire context uses real valid enums: intermediate, 6–10 hours/week, long (80–150 km),
+  performance priority and group riding. Optional report fields now carry existing query data:
+  `profile.painAreas` → `rider.painAreas`, and `bike.currentGeometry.frameSize` →
+  `bike.currentFrameSize`. No backend/schema/engine change; absent values remain hidden. Reported
+  knee-front discomfort is distinct from the comfort score; current frame size is never inferred
+  from a recommended frame size.
+- Footer now keeps `Fitrapport · name · date · bestbikefit4u.eu` together on the left (localized
+  “Fit report” in EN), with a monospace date and page number at the right. Long names alone ellipsize
+  so the date/site/page number stay available.
+- Baseline and full-data fixtures render in both locales: `26-report-{nl,en}.pdf` and
+  `26-full-report-{nl,en}.pdf`; their page PNGs remain local. `verify.py` checks all four PDFs.
+  Browser audit includes the full-data cases alongside sparse and long-input stress cases.
+
+26.1 final validation: 115 focused report/PDF/route/fixture tests pass; full lint and typecheck pass.
+The four baseline/full NL/EN PDFs each have six A4 pages, named embedded fonts, correct footers and
+localized NL score/note checks in verify.py. All 10 browser cases / 60 sheets pass overflow checks.
+Actual full-data NL/EN page previews inspected. No commit by C.
