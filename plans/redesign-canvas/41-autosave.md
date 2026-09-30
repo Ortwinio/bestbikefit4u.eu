@@ -82,3 +82,49 @@ difference: values are remembered and saved, so they are correct after logging i
 - Acceptance: side-by-side screenshots public vs logged-in (NL/EN, 1440/390, light/dark), reload/relogin
   test shows the saved values, focused tests, lint, typecheck, sweep `--filter=/pressure-calculator,/bandenspanning-calculator`.
   Notes `audit/42-notes.md`, `files-42.txt`, print **DONE 42**.
+
+## 43 — Every calculator: one implementation, smart when logged in
+
+Request (Ortwin, 2026-09-30): check that each public calculator has a logged-in counterpart that looks
+the same; the logged-in version stores the data and is prefilled from the profile. Decision: **one
+calculator per tool**; when the user is logged in it runs in *account mode*. No second, diverging
+implementation.
+
+Inventory (lead): tire pressure ↔ `/pressure-calculator` (wizard; task 42) · Verzet ↔ `/gearing` (own
+form) · Zadelbreedte ↔ `/saddle-selector` (own form) · Bike fit ↔ `/fit` (full session, stays a
+session) · Zadelhoogte, Framemaat, Cranklengte, Vermogen↔snelheid, Klimplanner, FTP/W/kg,
+Voeding & drinken: no logged-in version.
+
+**Account mode contract**
+1. Same form component, same design, as the public page. The logged-in route shows it inside the
+   account shell (e.g. `/tools/<calculator>` or the existing `/gearing`, `/saddle-selector`,
+   `/pressure-calculator`), and the account sidebar gets a "Calculators" group linking to all of them.
+2. Value precedence: **saved values for this user (and bike, where relevant) > profile/bike data >
+   public defaults**. Show a small hint "Ingevuld vanuit je profiel" with a link to Mijn profiel for
+   profile-derived fields. Changing a value in a calculator saves the calculator state; it does **not**
+   silently change the profile.
+3. Autosave per the 41 contract (shared primitives from 41a). After logging in again the values are there.
+4. Public pages for logged-out visitors stay exactly as they are (same tests, same SEO).
+5. Storage: existing tables where they exist (`gearingSessions` after the 41a upsert fix,
+   `pressureCalculations`). For the others one additive table, e.g. `calculatorStates`
+   (userId, calculator, bikeId?, values, updatedAt; index by user+calculator+bike) with an
+   ownership-checked upsert mutation and query, validators per calculator, Convex tests. Additive schema
+   change only. **Release note:** this needs a Convex production deploy before the frontend; the lead
+   checks the deploy path before release.
+
+**Tasks** (all after the 41a primitives exist; the lead confirms)
+- **43a — Codex C:** the account-mode infrastructure (Convex table/mutations/tests, a
+  `useCalculatorAccountState(calculator, { bikeId })` hook with prefill + autosave, docs in the brief's
+  notes), then Zadelhoogte, Framemaat, Cranklengte in account mode. Print DONE 43a.
+- **43b — Codex D:** Vermogen↔snelheid, Klimplanner, FTP/W/kg, Voeding & drinken in account mode
+  (rider mass and FTP from the profile where available). After DONE 43a. Print DONE 43b.
+- **43c — Codex A (after 42):** Verzet and Zadelbreedte: the logged-in pages use the public calculator
+  component in account mode (bike selector for Verzet, keep saved sessions/history below). You own
+  `src/app/(dashboard)/gearing/*` and `src/app/(dashboard)/saddle-selector/*` for this task. Print DONE 43c.
+- **43d — Codex B (after 41b):** the "Calculators" group in the account sidebar and dashboard quick
+  links; public Bike fit in account mode prefilled from the profile with "Start fit met deze waarden"
+  into `/fit` (the session flow itself stays). Print DONE 43d.
+
+Acceptance per calculator: side-by-side screenshots public vs logged-in (NL 1440/390, light/dark),
+a test for precedence (saved > profile > default), relogin test showing saved values, lint,
+typecheck, focused tests, sweep on the changed routes. Notes `audit/43<x>-notes.md`, `files-43<x>.txt`.
