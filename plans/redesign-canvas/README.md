@@ -1,5 +1,11 @@
 # Redesign canvas — BestBikeFit4U
 
+2026-09-30 — Codex A completed **25a**, sweep items 7–8. Across 37 filtered routes
+(148 unique cases), undersized mobile links drop from 102 to 0 and bike-form
+label-title-only cases from 8 to 0. Remaining out-of-scope sweep findings are
+recorded in `audit/25-a-notes.md`; exact files: `audit/files-25-a.txt`.
+No commit or push by A.
+
 2026-09-30 — Codex B completed **25b**, naming the profile flexibility progressbar
 with existing localized copy. Ten regression tests and all 20 filtered profile
 sweep cases pass. Before/after: `audit/25-b-notes.md`; files: `audit/files-25-b.txt`.
@@ -147,3 +153,8 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
   shared UI/playground and seven account tools checked light/dark at 1440/390. Token-only fixes,
   124 browser cases, 20 contrast/focus regressions and 162 screenshots. Validation and A/B-owned
   follow-ups: `audit/22-notes.md`; exact files: `audit/files-dark-c.txt`. No commit by C.
+
+- 2026-09-30 — **25c in review:** shared Slider ARIA forwarding and 44px hit targets fixed;
+  focused production/browser tests pass. Item 4 traces to A-owned LanguageSwitch and awaits its
+  coordinated token fix. Evidence and exact C files: `audit/25-c-notes.md`, `audit/files-25-c.txt`.
+  No commit/push; screenshots stay local and are excluded from file lists.
