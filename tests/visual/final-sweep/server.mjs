@@ -1,5 +1,7 @@
 import http from "node:http";
 import next from "next";
+import { resolve } from "node:path";
+import { serveQaAsset } from "./assets.mjs";
 
 const [snapshot, portValue] = process.argv.slice(2);
 const port = Number(portValue);
@@ -8,7 +10,11 @@ if (!snapshot || !Number.isInteger(port) || port < 1) throw new Error("Usage: se
 // Load the snapshot's unchanged app, proxy and built configuration, including its isolated distDir.
 const app = next({ dev: false, dir: snapshot });
 await app.prepare();
-const server = http.createServer(app.getRequestHandler());
+const nextHandler = app.getRequestHandler();
+const server = http.createServer(async (request, response) => {
+  if (await serveQaAsset(request, response, { staticDir: resolve(snapshot, ".next-final-sweep/static") })) return;
+  await nextHandler(request, response);
+});
 await new Promise((done, reject) => {
   server.once("error", reject);
   server.listen(port, "127.0.0.1", done);

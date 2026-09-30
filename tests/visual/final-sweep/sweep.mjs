@@ -7,6 +7,8 @@ import { routes as inventory, resolveRoutes, discoverBlogSlug, locales, viewport
 import { prepareAccountFixtures } from "./account-fixture.mjs";
 import { checkPage, CHECK_NAMES } from "./checks.mjs";
 import { writeReports } from "./report.mjs";
+import { classifyExpectedDiagnostic, localConvexSyncOrigin } from "./diagnostics.mjs";
+import { localAnalyticsPaths } from "./assets.mjs";
 
 const root = process.cwd();
 const args = process.argv.slice(2);
@@ -27,7 +29,7 @@ const metadata = {
     "Small UI-word language detector is heuristic, not a complete translation audit.",
     "Automated axe serious/critical checks do not establish full accessibility conformance.",
     "Initial route states only; this sweep does not submit forms or exercise destructive actions.",
-    "Local preview lacks Vercel analytics endpoints; resulting console errors remain failures.",
+    "The two local Vercel analytics scripts are explicit QA no-ops; analytics delivery is not tested.",
     "Expected document-404 console diagnostics are retained separately, not treated as unexpected errors.",
     "Production uses the established custom Next server; next start caused a self-redirect loop in this preview.",
   ],
@@ -59,12 +61,17 @@ try {
     origin: production.origin, sourceHash: production.sourceHash, buildId: production.buildId,
     snapshot: production.snapshot, reused: production.reused,
   };
+  metadata.localDiagnostics = {
+    convexSyncOrigin: localConvexSyncOrigin(process.env.NEXT_PUBLIC_CONVEX_URL),
+    analyticsNoopPaths: localAnalyticsPaths,
+  };
   let blogSlug;
   try { blogSlug = await discoverBlogSlug(production.origin); }
   catch (error) { metadata.limitations.push(`CMS blog discovery failed: ${error.message}`); }
   metadata.blog = blogSlug ? { mode: "production", slug: blogSlug }
     : { mode: "fixture", reason: "No published CMS slug available; existing visual-article-1 fixture." };
-  const routes = resolveRoutes({ blogSlug }).filter((route) => !filter || route.sourceRoute.includes(filter));
+  const routes = resolveRoutes({ blogSlug }).filter((route) =>
+    !filter || filter.split(",").some((part) => route.sourceRoute.includes(part)));
   if (!routes.length) throw new Error(`No routes match filter ${filter}`);
   if (routes.some((route) => route.fixture === "account")) {
     accounts = await prepareAccountFixtures({ root: production.snapshot, origin: production.origin });
@@ -94,12 +101,21 @@ try {
     const page = await context.newPage();
     const errors = [];
     const documents = [];
+    const staticAssets = [];
     page.on("pageerror", (error) => errors.push({ type: "pageerror", message: error.message }));
     page.on("console", (message) => {
       if (message.type() === "error") errors.push({ type: "console", message: message.text(),
         location: message.location() });
     });
     page.on("response", (response) => {
+      if (new URL(response.url()).pathname.startsWith("/_next/static/")) {
+        const asset = { url: response.url(), status: response.status(), type: response.headers()["content-type"] };
+        staticAssets.push(asset);
+        if (asset.status !== 200 || (/\.js(?:\?|$)/.test(asset.url) && !/javascript/.test(asset.type ?? ""))
+          || (/\.css(?:\?|$)/.test(asset.url) && !/text\/css/.test(asset.type ?? ""))) {
+          errors.push({ type: "static-asset", message: "Missing build asset or incorrect MIME type", asset });
+        }
+      }
       if (response.request().isNavigationRequest() && response.frame() === page.mainFrame()) {
         documents.push({ url: response.url(), status: response.status(), location: response.headers().location });
       }
@@ -139,11 +155,19 @@ try {
       entry.documents = documents;
       entry.finalUrl = page.url();
       entry.fixtureQueries = fixtureQueries;
+      entry.staticAssets = staticAssets;
       entry.consoleErrors = errors;
+      entry.expectedLocalDiagnostics = errors.flatMap((error) => {
+        const diagnostic = classifyExpectedDiagnostic(error, {
+          configuredConvexUrl: process.env.NEXT_PUBLIC_CONVEX_URL, pageUrl: url,
+        });
+        return diagnostic ? [{ ...diagnostic, error }] : [];
+      });
       entry.expectedConsoleDiagnostics = errors.filter((error) => expected.status === 404
         && error.type === "console" && error.location?.url === url
         && /^Failed to load resource: the server responded with a status of 404/.test(error.message));
-      const unexpectedErrors = errors.filter((error) => !entry.expectedConsoleDiagnostics.includes(error));
+      const unexpectedErrors = errors.filter((error) => !entry.expectedConsoleDiagnostics.includes(error)
+        && !entry.expectedLocalDiagnostics.some((diagnostic) => diagnostic.error === error));
       entry.checks = await checkPage(page, {
         locale, viewportWidth, publicPage: route.kind === "public", errors: unexpectedErrors,
         requiredAlternateLocales: ["/bike-fitting", "/bikefitting"].includes(route.sourceRoute) ? [locale] : locales,

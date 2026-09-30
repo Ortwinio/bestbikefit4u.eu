@@ -69,3 +69,29 @@ node --test tests/visual/final-sweep/*.test.mjs
 ```
 
 A filtered run is labelled as partial in the report. Use a separate output directory for smoke tests.
+
+
+## 25d: local assets and diagnostics
+
+Production and fixture servers serve `/_next/static/*` from the copied build with JS/CSS/font MIME types.
+Missing chunks remain real 404 failures. The two exact local `/_vercel/*/script.js` analytics endpoints
+are explicit JavaScript no-ops, labelled `x-qa-diagnostic: local-vercel-analytics-disabled`; analytics
+collection is not under test. The first run's 404/MIME errors came from these endpoints, not Next chunks.
+
+A Convex CSP console message is an expected diagnostic only when the page origin is loopback and the
+blocked WebSocket exactly matches the configured loopback `NEXT_PUBLIC_CONVEX_URL` origin and SDK sync path.
+Remote backends, Vercel previews, changed ports, other CSP failures and page errors never qualify.
+The original error and classification remain in JSON; Markdown lists the expected local diagnostics.
+No CSP, authentication or application networking code is changed.
+
+Filters accept comma-separated route substrings, for example:
+
+```sh
+node tests/visual/final-sweep/sweep.mjs --filter=/calculators/gearing,/calculators/power-speed
+node tests/visual/final-sweep/slider-hydration-repro.mjs
+```
+
+The second command builds the actual shared Slider with development React and compares server-rendered
+and hydrated text in NL/EN browsers using the original failing route defaults (2105 mm, 8.5 kg).
+It writes `25d-slider-hydration.json`, including the full non-minified message and component stack.
+An optional positional repository/saved-snapshot path reproduces an earlier source version.

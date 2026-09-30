@@ -126,7 +126,9 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
               {displayUnit ? <span className="ml-1 text-sm text-muted-foreground">{displayUnit}</span> : null}
             </span>
           </div>
-          <PrototyperSliderValue id={valueId} className="sr-only" />
+          <PrototyperSliderValue id={valueId} className="sr-only">
+            {() => `${displayValue}${displayUnit ? ` ${displayUnit}` : ""}`}
+          </PrototyperSliderValue>
           <PrototyperSliderControl className="h-11 min-h-11">
             <PrototyperSliderTrack className="h-2 overflow-visible bg-border">
               <PrototyperSliderIndicator className="bg-primary" />
