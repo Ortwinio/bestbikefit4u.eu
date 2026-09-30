@@ -170,7 +170,14 @@ export function MeasurementWizard({
           <span className="ml-auto text-sm text-muted-foreground">
             {copy.step} <span className="font-mono">{currentStep}</span> {copy.of} <span className="font-mono">{steps.length}</span>
           </span>
-          <div className="basis-full" role="progressbar" aria-label={copy.steps[currentStep - 1]} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percentComplete}>
+          <div
+            className="basis-full"
+            role="progressbar"
+            aria-label={`${copy.step} ${currentStep} ${copy.of} ${steps.length}`}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={percentComplete}
+          >
             <div className="h-2 overflow-hidden rounded-full bg-border">
               <div
                 className="csp-fill-width h-full rounded-full bg-primary transition-[width] duration-500 ease-out"

@@ -17,12 +17,21 @@ describe("profile wizard presentation", () => {
   it.each(["nl", "en"] as const)("keeps all six steps and original submission fields in %s", async (selectedLocale) => {
     locale = selectedLocale;
     const copy = getDashboardMessages(locale);
+    const wizardCopy = profileWizardCopy[locale];
+    const progressName = (step: number) => `${wizardCopy.step} ${step} ${wizardCopy.of} 6`;
     const onComplete = vi.fn();
     render(<MeasurementWizard onComplete={onComplete} defaultValues={{ heightCm: 175, inseamCm: 82, flexibilityScore: "good", coreStabilityScore: 4, comfortScore: 5, painAreas: [], experienceLevel: "advanced", weeklyHours: "10-15", typicalRideLength: "long", positionPriority: "performance" }} />);
     for (let step = 1; step < 6; step++) {
-      expect(screen.getByRole("progressbar", { name: profileWizardCopy[locale].steps[step - 1] }).getAttribute("aria-valuenow")).toBe(String(Math.round(step / 6 * 100)));
+      expect(screen.getByRole("progressbar", { name: progressName(step) }).getAttribute("aria-valuenow"))
+        .toBe(String(Math.round(step / 6 * 100)));
+      if (step === 3) {
+        expect(screen.getAllByRole("progressbar")).toHaveLength(2);
+        expect(screen.getByRole("progressbar", { name: copy.profile.sections.flexibility })
+          .getAttribute("aria-valuenow")).toBe("80");
+      }
       fireEvent.click(screen.getByRole("button", { name: copy.questionnaire.actions.next }));
-      await waitFor(() => expect(screen.getByRole("progressbar", { name: profileWizardCopy[locale].steps[step] }).getAttribute("aria-valuenow")).toBe(String(Math.round((step + 1) / 6 * 100))));
+      await waitFor(() => expect(screen.getByRole("progressbar", { name: progressName(step + 1) })
+        .getAttribute("aria-valuenow")).toBe(String(Math.round((step + 1) / 6 * 100))));
       expect(onComplete).not.toHaveBeenCalled();
     }
     fireEvent.click(screen.getByRole("button", { name: copy.common.save }));

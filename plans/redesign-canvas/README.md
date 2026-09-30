@@ -1,5 +1,10 @@
 # Redesign canvas — BestBikeFit4U
 
+2026-09-30 — Codex B completed **25b**, naming the profile flexibility progressbar
+with existing localized copy. Ten regression tests and all 20 filtered profile
+sweep cases pass. Before/after: `audit/25-b-notes.md`; files: `audit/files-25-b.txt`.
+No commit, push or deployment by B for this task.
+
 2026-09-29 — Codex B verified Sfora #30 account CTA routes, added NL/EN comparison-page
 regression coverage and corrected link semantics. Proof: `audit/30-cta-links.md`.
 No commit; awaiting lead review.
