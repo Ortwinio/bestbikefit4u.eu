@@ -61,3 +61,6 @@ claude/.obsidian/
 /plans/redesign-canvas/final-sweep/*.png
 /plans/redesign-canvas/drafts/_renders/
 /plans/redesign-canvas/audit/**/*.png
+/plans/redesign-canvas/**/*.log
+/plans/redesign-canvas/**/*.zip
+/plans/redesign-canvas/final-sweep/smoke/*.png
