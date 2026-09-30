@@ -1,3 +1,4 @@
+import { isStripeBillingEnabled } from "./billing";
 import type { Locale } from "@/i18n/config";
 
 export const COMMERCIAL_CURRENCY = "EUR" as const;
@@ -8,6 +9,11 @@ export const CONSUMER_CAMPAIGN_CONFIG = {
   donationUrl:
     "https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756",
 } as const;
+
+/** Report exports stay available while checkout is paused. Authentication still applies. */
+export function isReportAccessOpen(now = new Date()): boolean {
+  return isConsumerCampaignActive(now) || !isStripeBillingEnabled();
+}
 
 export function isConsumerCampaignActive(now = new Date()): boolean {
   if (!CONSUMER_CAMPAIGN_CONFIG.campaignMode) {

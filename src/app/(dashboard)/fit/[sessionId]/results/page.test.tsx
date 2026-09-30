@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { getPdfResponseError } from "@/lib/reports/pdfResponseError";
 import { Suspense } from "react";
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -9,6 +10,7 @@ import { fitResultsSource } from "./fixture.test-support";
 const state = vi.hoisted(() => ({
   values: {} as Record<string, unknown>,
   campaign: false,
+  billingPaused: false,
   generate: vi.fn(),
   send: vi.fn(),
   log: vi.fn(),
@@ -32,7 +34,7 @@ vi.mock("@/components/ui", async (original) => ({
 }));
 vi.mock("@/components/analytics/MarketingEventTracker", () => ({ useMarketingEventLogger: () => state.log }));
 vi.mock("@/components/feedback/feedback-activity", () => ({ trackFeedbackSignal: vi.fn() }));
-vi.mock("@/config/commercial", () => ({ isConsumerCampaignActive: () => state.campaign }));
+vi.mock("@/config/commercial", () => ({ isReportAccessOpen: () => state.campaign || state.billingPaused }));
 vi.mock("@/lib/telemetry", () => ({ reportClientError: (error: Error) => error.message }));
 vi.mock("@/components/features/casestudy/CaseStudyOptIn", () => ({
   CaseStudyOptIn: ({ sessionId }: { sessionId: string }) => <div data-testid="case-opt-in">{sessionId}</div>,
@@ -56,6 +58,7 @@ async function mount() {
 beforeEach(() => {
   vi.clearAllMocks();
   state.campaign = false;
+  state.billingPaused = false;
   state.search = new URLSearchParams();
   sessionStorage.clear();
   state.generate.mockResolvedValue(undefined);
@@ -77,13 +80,19 @@ describe("results route preserved behavior", () => {
     expect(screen.queryByRole("button", { name: copy.results.actions.downloadPdf })).toBeNull();
     expect(state.generate).not.toHaveBeenCalled();
   });
+  it("opens free PDF access without a paywall while billing is paused", async () => {
+    state.billingPaused = true;
+    await mount();
+    expect(screen.getByRole("button", { name: copy.results.actions.downloadPdf })).toBeTruthy();
+    expect(screen.queryByTestId("fit-pass")).toBeNull();
+  });
   it.each(["session", "pro", "premium", "campaign"])("preserves %s paid access", async (access) => {
     state.values[accessKey] = { hasAccess: access === "session" };
     state.values[userKey] = { email: "rider@example.com", tier: access };
     state.campaign = access === "campaign";
     await mount();
     expect(screen.getByRole("button", { name: copy.results.actions.downloadPdf })).toBeTruthy();
-    expect(Boolean(screen.queryByTestId("fit-pass"))).toBe(access === "campaign");
+    expect(Boolean(screen.queryByTestId("fit-pass"))).toBe(false);
   });
   it("switches the diagram to actual climbing values without mutating the source", async () => {
     const source = {
@@ -126,13 +135,13 @@ describe("results route preserved behavior", () => {
     fireEvent.click(screen.getByRole("button", { name: copy.results.emailDialog.sendCta }));
     await waitFor(() => expect(state.send).toHaveBeenCalledWith({ sessionId: "session_1", recipientEmail: "rider@example.com" }));
   });
-  it("retains the localized PDF endpoint and reports download errors", async () => {
+  it.each([403, 404, 409, 429])("localizes PDF response %s", async (status) => {
     state.values[accessKey] = { hasAccess: true };
-    const fetchMock = vi.fn().mockResolvedValue({ ok: false, json: async () => ({ error: "Report unavailable" }) });
+    const fetchMock = vi.fn().mockResolvedValue({ ok: false, status, json: async () => ({ error: "pro_required" }) });
     vi.stubGlobal("fetch", fetchMock);
     await mount();
     fireEvent.click(screen.getByRole("button", { name: copy.results.actions.downloadPdf }));
-    expect(await screen.findByText("Report unavailable")).toBeTruthy();
+    expect(await screen.findByText(getPdfResponseError(status, "en"))).toBeTruthy();
     expect(fetchMock).toHaveBeenCalledWith("/api/reports/session_1/pdf?locale=en", { method: "GET" });
   });
   it("downloads a paid PDF with the original filename and cleans up its object URL", async () => {

@@ -2,7 +2,9 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { PerformanceCalculator } from "./PerformanceCalculator";
+import { FtpRatings, FuelHeadline } from "./SourcedResults";
 import { performanceMessages } from "@/i18n/calculators/performance";
+import { carbohydrateGuidance } from "@/lib/public-calculators/performance";
 import { gearingMessages } from "@/i18n/calculators/gearing";
 
 afterEach(cleanup);
@@ -81,14 +83,85 @@ describe("performance calculator interactions", () => {
         .textContent,
     ).toContain("6 W/kg");
   });
-  it("shows only ride progress, never unsourced intake advice", () => {
+  it("shows sourced fuel bands, totals and bottle conversion without invented easy-ride values", () => {
     render(<PerformanceCalculator tool="fuel-hydration" locale="nl" />);
     fireEvent.keyDown(screen.getByRole("slider", { name: "Duur van je rit" }), { key: "End" });
     expect(screen.getByText("480 min")).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "Wedstrijd" }));
-    expect(screen.getByRole("heading", { name: "Advies volgt" })).toBeTruthy();
-    expect(document.body.textContent).not.toMatch(/\d+\s*(g\/|ml\/|bidons)/);
-    expect(screen.queryByRole("combobox")).toBeNull();
+    expect(screen.getByTestId("carbohydrate-band").textContent).toBe("Tot 90 g/h");
+    expect(screen.getAllByText(/Totaal voor je rit: tot 720 g/)).toHaveLength(2);
+    expect(screen.getAllByText(performanceMessages.nl.multipleCarbs)).toHaveLength(2);
+    expect(screen.getByText("0,4–0,8 L/h")).toBeTruthy();
+    expect(screen.getByText(performanceMessages.nl.sodiumConcentration)).toBeTruthy();
+    expect(screen.getByText("Bidons voor je rit: 6,4–12,8")).toBeTruthy();
+    expect(screen.getByText("Natrium per bidon: 230–345 mg")).toBeTruthy();
+    fireEvent.keyDown(screen.getByRole("slider", { name: "Inhoud van je bidon" }), { key: "End" });
+    expect(screen.getByText("Bidons voor je rit: 4,27–8,53")).toBeTruthy();
+    expect(screen.getByText("Natrium per bidon: 345–517,5 mg")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Rustig" }));
+    expect(screen.getByText(performanceMessages.nl.easyCarbs)).toBeTruthy();
+    expect(screen.getByTestId("carbohydrate-band").textContent).toBe("Tot 90 g/h");
+    expect(screen.getByRole("heading", { name: "Bronnen" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Jeukendrup/ }).getAttribute("rel")).toBe("noopener");
+  });
+  it.each(["nl", "en"] as const)("shows sodium concentration only above one hour in %s", (locale) => {
+    render(<PerformanceCalculator tool="fuel-hydration" locale={locale} />);
+    const copy = performanceMessages[locale];
+    const duration = screen.getByRole("slider", { name: copy.duration });
+    fireEvent.keyDown(duration, { key: "Home" });
+    fireEvent.keyDown(duration, { key: "ArrowRight" });
+    fireEvent.keyDown(duration, { key: "ArrowRight" });
+    expect(duration.getAttribute("aria-valuenow")).toBe("1");
+    expect(screen.queryByTestId("sodium-guidance")).toBeNull();
+    fireEvent.keyDown(duration, { key: "ArrowRight" });
+    expect(duration.getAttribute("aria-valuenow")).toBe("1.25");
+    expect(screen.getByText(copy.sodiumConcentration)).toBeTruthy();
+    expect(screen.getByText(copy.sodiumConversion)).toBeTruthy();
+    expect(document.body.textContent).not.toContain("mg/h");
+  });
+  it("defaults to both FTP comparisons and lets riders select a table without inference", () => {
+    render(<PerformanceCalculator tool="ftp-wkg" locale="en" />);
+    expect(screen.getAllByText("· Your band")).toHaveLength(2);
+    expect(screen.getByTestId("rating-men").textContent).toContain("Fair");
+    expect(screen.getByTestId("rating-women").textContent).toContain("Good");
+    fireEvent.click(screen.getByRole("button", { name: "Women" }));
+    expect(screen.getAllByText("· Your band")).toHaveLength(1);
+    expect(screen.getByTestId("rating-men").textContent).toBe("Men");
+    expect(screen.getByTestId("rating-women").textContent).toContain("Good");
+    expect(screen.getByText(performanceMessages.en.convention)).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Allen H, Coggan A/ })).toBeTruthy();
+  });
+  it("explains the unrounded comparison near a displayed FTP boundary", () => {
+    render(<FtpRatings locale="en" wattsPerKg={5.049} />);
+    expect(screen.getByTestId("rating-men").textContent).toContain("Excellent");
+    expect(screen.getByText(performanceMessages.en.ratingPrecision)).toBeTruthy();
+  });
+  it.each(["nl", "en"] as const)("leads with carbohydrate advice and fluid in %s", (locale) => {
+    render(<PerformanceCalculator tool="fuel-hydration" locale={locale} />);
+    const copy = performanceMessages[locale];
+    const hero = document.getElementById("fuel-hydration-result")!;
+    expect(hero.querySelector("dd")?.textContent).toBe(`${copy.upTo} 60${copy.carbsPerHour}`);
+    expect(hero.textContent).toContain(`${copy.rideTotal}: ${copy.upTo.toLowerCase()} 120 g`);
+    expect(hero.textContent).toContain(locale === "nl" ? "0,4–0,8 L/h" : "0.4–0.8 L/h");
+    expect(hero.querySelector("dd")?.textContent).not.toContain(copy.hour === "uur" ? "2 uur" : "2 hours");
+    fireEvent.keyDown(screen.getByRole("slider", { name: copy.duration }), { key: "Home" });
+    expect(hero.querySelector("dd")?.textContent).toBe(copy.smallCarbs);
+  });
+  it.each(["nl", "en"] as const)("uses the no-carbohydrate headline below 30 minutes in %s", (locale) => {
+    render(<FuelHeadline locale={locale} carbohydrate={carbohydrateGuidance(0.49)}
+      durationHours={0.49} fluid={{ min: 0.4, max: 0.8 }} />);
+    expect(document.querySelector("dd")?.textContent).toBe(performanceMessages[locale].noCarbs);
+  });
+  it("adds an FTP headline rating only after a table is chosen and updates it live", () => {
+    render(<PerformanceCalculator tool="ftp-wkg" locale="en" />);
+    const hero = document.getElementById("ftp-wkg-result")!;
+    expect(hero.textContent).not.toContain("Good");
+    expect(hero.textContent).not.toContain("Fair");
+    fireEvent.click(screen.getByRole("button", { name: "Women" }));
+    expect(hero.querySelector("dd")?.textContent).toContain("W/kg · Women · Good");
+    fireEvent.keyDown(screen.getByRole("slider", { name: "Your FTP" }), { key: "End" });
+    expect(hero.textContent).toContain("Superior");
+    fireEvent.click(screen.getByRole("button", { name: "Both" }));
+    expect(hero.textContent).not.toContain("Superior");
   });
   it("keeps matching keys in the directly loaded NL/EN calculator dictionaries", () => {
     expect(keys(performanceMessages.nl)).toEqual(keys(performanceMessages.en));

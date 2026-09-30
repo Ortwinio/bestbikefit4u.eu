@@ -191,3 +191,12 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
   targets are 44px; icon and larger overrides preserved. Owned mobile cases: 10 failures/18 small
   targets → 0. Combined B/C/D sweep: 280 cases without failures. Proof `audit/29a-notes.md`;
   manifest `audit/files-29a.txt`. No commit/push by C.
+
+- 2026-09-30 — **30 implemented by Codex D; awaiting lead review.** Approved tool ranges, sourced
+  carbohydrate bands, corrected sodium drink concentration and explicit FTP comparison tables.
+  Sources, number inventory and final validation are in `audit/30-notes.md`; manifest `audit/files-30.txt`.
+  No gender inference, hourly sodium dose, commit or push.
+
+- 2026-09-30 — **30.1 result-headline review implemented by D.** Fuel advice/total/fluid lead the
+  lime tile; FTP adds an explicitly selected reference rating. 70 focused tests, full lint/typecheck
+  and 16 theme/locale/viewport captures pass. See `audit/30-notes.md`; no commit or deployment.
