@@ -37,3 +37,31 @@ Ownership for this task: A owns `src/app/(dashboard)/bikes/*`, `src/components/b
 deletion module (D is informed). Schema change only if needed for `deletedAt` (additive; tell the lead).
 Screenshots NL/EN 1440/390 light/dark of the dialog, focused tests, lint, typecheck, Convex tests.
 Notes `audit/45-notes.md`, `files-45.txt`, no commit. Print **DONE 45**.
+
+## 46 — Remove the Marktplaats import (Codex A, right after 45)
+
+Request (Ortwin, 2026-09-30): remove the Marktplaats import functionality.
+
+Remove:
+- Route `src/app/(dashboard)/bikes/import/marktplaats/*` → permanent redirect to `/bikes/new`
+  (NL/EN locale-aware); entry points and links in `/bikes/new`, `/bikes` (garage) and anywhere else
+  (grep `marktplaats` in `src/`), incl. the account sidebar/quick links and the dashboard empty states.
+- UI + logic: `components/features/bikes/MarktplaatsBikeImportFlow*`, `marktplaatsImport*`,
+  `src/lib/marktplaats/*` (+ fixtures), `src/app/api/marktplaats/image/*` (the image proxy),
+  references in `BikePassportImportFlow.tsx` (keep the passport import itself working).
+- Backend functions: `convex/marktplaats/*`, `convex/lib/marktplaatsFetch.ts`, the Marktplaats paths in
+  `convex/bikeImports/*` and `convex/bikes/mutations.ts` (keep the passport import), with their tests.
+- Copy: Marktplaats strings in the owner dictionaries; for the frozen `src/i18n/messages/nl.ts`/`en.ts`
+  you may **only delete** now-unused Marktplaats keys (no other edits).
+- QA tooling: routes/fixtures in `tests/visual/final-sweep/*`, `tests/visual/dark-a2/*`,
+  `scripts/check-tooltip-coverage.mjs` (coordinate: D owns final-sweep; make the minimal removal).
+
+Keep (data safety): the Marktplaats-related **schema tables/fields and existing data** in `convex/schema.ts`
+stay as they are (existing imported bikes must keep validating and displaying; removing schema for tables
+with data can break the Convex deploy). Mark them `// legacy: Marktplaats import removed 2026-09-30`.
+A bike whose source was Marktplaats still shows normally (no link to the removed flow).
+
+Acceptance: `grep -ri marktplaats src convex tests scripts` only returns the legacy schema comments/fields and
+the redirect; the redirect works; passport import still works (tests); lint, typecheck, unit + Convex tests,
+`build:vercel`; sweep on `/bikes,/bikes/new,/bikes/import`. Notes `audit/46-notes.md`, `files-46.txt`.
+Print **DONE 46**.
