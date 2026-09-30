@@ -1,0 +1,8 @@
+src/components/layout/LanguageSwitch.tsx
+src/components/layout/ConfiguratorHeaderSwitch.test.tsx
+tests/visual/language-switch/check.mjs
+plans/redesign-canvas/README.md
+plans/redesign-canvas/audit/25-a2-notes.md
+plans/redesign-canvas/audit/25-a2-sweep.json
+plans/redesign-canvas/audit/25-a2-themes.json
+plans/redesign-canvas/audit/files-25-a2.txt

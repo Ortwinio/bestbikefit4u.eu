@@ -21,6 +21,17 @@ function markup() {
   );
 }
 describe("approved tool header", () => {
+  it.each(["nl", "en"])("uses the theme-aware foreground token for selected %s", (locale) => {
+    route.path = `/${locale}/calculators/bike-fit`;
+    const html = markup();
+    const label = locale === "nl" ? "Nederlands" : "Engels";
+    const anchor = html.match(new RegExp(`<a [^>]*aria-label="${label}"[^>]*>`))?.[0];
+    expect(anchor).toContain('aria-current="page"');
+    expect(anchor).toContain("bg-primary");
+    expect(anchor).toContain("text-primary-foreground");
+    expect(anchor).not.toContain("text-[color:var(--primary-foreground)]");
+  });
+
   it("gives the logo, language choices and login 44px hit areas", () => {
     route.path = "/nl/calculators/bike-fit";
     const html = markup();
