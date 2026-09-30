@@ -145,6 +145,10 @@ describe("pdf report route", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-09-30T12:00:00Z"));
+    vi.stubEnv("STRIPE_BILLING_ENABLED", "true");
+    vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "true");
     infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
     errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     process.env.NEXT_PUBLIC_CONVEX_URL = "https://example.convex.cloud";
@@ -171,6 +175,8 @@ describe("pdf report route", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.useRealTimers();
+    vi.unstubAllEnvs();
   });
 
   function mockCurrentUser(overrides?: Partial<{ tier: string }>) {
@@ -181,6 +187,31 @@ describe("pdf report route", () => {
       ...overrides,
     });
   }
+
+  it.each([
+    { billing: "false", tier: "free", status: 200 },
+    { billing: "true", tier: "free", status: 403 },
+    { billing: "true", tier: "pro", status: 200 },
+    { billing: "false", tier: "pro", status: 200 },
+  ])("billing=$billing tier=$tier returns $status", async ({ billing, tier, status }) => {
+    vi.stubEnv("STRIPE_BILLING_ENABLED", billing);
+    vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", billing);
+    mocks.token.mockResolvedValue("token-access");
+    mockCurrentUser({ tier });
+    if (status === 200) mocks.query.mockResolvedValueOnce(reportSourceFixture);
+    const response = await GET(new Request("http://localhost?locale=nl"), {
+      params: Promise.resolve({ sessionId: "session_3" }),
+    });
+    expect(response.status).toBe(status);
+    if (status === 403) {
+      expect(await response.json()).toEqual({ error: "pro_required" });
+      expect(mocks.mutation).not.toHaveBeenCalled();
+      expect(mocks.renderPdfFromHtml).not.toHaveBeenCalled();
+    } else {
+      expect(response.headers.get("Content-Type")).toBe("application/pdf");
+      expect(mocks.mutation).toHaveBeenCalledTimes(1);
+    }
+  });
 
   it("returns 401 when user is not authenticated", async () => {
     mocks.token.mockResolvedValue(undefined);

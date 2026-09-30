@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from "@/components/prototyper-ui/ui/dialog";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { getPdfResponseError } from "@/lib/reports/pdfResponseError";
 import { reportClientError } from "@/lib/telemetry";
 
 type FitReportActionGroupProps = {
@@ -36,7 +37,7 @@ export function FitReportActionGroup({
   const [isFetchingPdf, setIsFetchingPdf] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
   const [isEmailing, setIsEmailing] = useState(false);
-  const inlinePdfUrl = `/api/reports/${sessionId}/pdf?locale=${locale}&disposition=inline`;
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
   const fetchPdfObjectUrl = useCallback(async () => {
     if (objectUrlRef.current) {
@@ -52,16 +53,7 @@ export function FitReportActionGroup({
       });
 
       if (!response.ok) {
-        let errorMessage = messages.results.errors.pdfGenerateFailed;
-        try {
-          const payload = (await response.json()) as { error?: string };
-          if (payload.error) {
-            errorMessage = payload.error;
-          }
-        } catch {
-          // Keep the default localized error when the response is not JSON.
-        }
-        throw new Error(errorMessage);
+        throw new Error(getPdfResponseError(response.status, locale));
       }
 
       const pdfBytes = await response.arrayBuffer();
@@ -72,6 +64,7 @@ export function FitReportActionGroup({
       }
       const objectUrl = URL.createObjectURL(blob);
       objectUrlRef.current = objectUrl;
+      setPdfUrl(objectUrl);
       return objectUrl;
     } catch (error) {
       const message =
@@ -87,7 +80,11 @@ export function FitReportActionGroup({
 
   const handleOpenViewer = async () => {
     setViewerOpen(true);
-    setPdfError(null);
+    try {
+      await fetchPdfObjectUrl();
+    } catch {
+      // The viewer displays the localized response error.
+    }
   };
 
   const handleDownload = async () => {
@@ -99,9 +96,10 @@ export function FitReportActionGroup({
       document.body.appendChild(anchor);
       anchor.click();
       anchor.remove();
-    } catch {
-      // Error state is already handled in fetchPdfObjectUrl and shown in the viewer.
-      toast.error({ description: messages.results.errors.pdfGenerateFailed });
+    } catch (error) {
+      toast.error({
+        description: error instanceof Error ? error.message : messages.results.errors.pdfGenerateFailed,
+      });
     }
   };
 
@@ -170,7 +168,8 @@ export function FitReportActionGroup({
             <Button
               size="sm"
               variant="outline"
-              render={<a href={inlinePdfUrl} target="_blank" rel="noreferrer" />}
+              disabled={!pdfUrl || Boolean(pdfError)}
+              render={<a href={pdfUrl ?? undefined} target="_blank" rel="noreferrer" />}
             >
               <FileText className="h-4 w-4" />
               {messages.results.viewer.openFullPage}
@@ -197,7 +196,8 @@ export function FitReportActionGroup({
                     <Button
                       size="sm"
                       variant="outline"
-                      render={<a href={inlinePdfUrl} target="_blank" rel="noreferrer" />}
+                      disabled={!pdfUrl || Boolean(pdfError)}
+                      render={<a href={pdfUrl ?? undefined} target="_blank" rel="noreferrer" />}
                     >
                       <FileText className="h-4 w-4" />
                       {messages.results.viewer.openFullPage}
@@ -208,16 +208,18 @@ export function FitReportActionGroup({
                     </Button>
                   </div>
                 </div>
-              ) : (
+              ) : pdfUrl ? (
                 <iframe
                   title={messages.results.viewer.iframeTitle}
-                  src={`${inlinePdfUrl}#toolbar=1&navpanes=0&view=FitH`}
+                  src={`${pdfUrl}#toolbar=1&navpanes=0&view=FitH`}
                   className="h-full w-full bg-white"
                   onLoad={() => setPdfError(null)}
                   onError={() => {
                     setPdfError(messages.results.viewer.inlineFailed);
                   }}
                 />
+              ) : (
+                <div role="status" className="p-6">{messages.results.actions.downloadPdf}…</div>
               )}
             </CardContent>
           </Card>

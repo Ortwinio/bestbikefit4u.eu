@@ -28,7 +28,8 @@ import { getFitResultsCopy } from "@/i18n/account/fitResults";
 import { FitResultsOverview } from "@/components/account/FitResultsOverview";
 import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
-import { isConsumerCampaignActive } from "@/config/commercial";
+import { getPdfResponseError } from "@/lib/reports/pdfResponseError";
+import { isReportAccessOpen } from "@/config/commercial";
 import { trackFeedbackSignal } from "@/components/feedback/feedback-activity";
 import { RiderProfileCard } from "./components/RiderProfileCard";
 import { PriorityTable } from "./components/PriorityTable";
@@ -88,7 +89,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   const recommendation = reportSource?.recommendation ?? null;
   const hasClimbingProfile = Boolean(recommendation?.climbingCalculatedFit);
   const hasPaidReportAccess = Boolean(
-    isConsumerCampaignActive() ||
+    isReportAccessOpen() ||
       sessionAccess?.hasAccess ||
       user?.tier === "pro" ||
       user?.tier === "premium"
@@ -267,16 +268,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       });
 
       if (!response.ok) {
-        let errorMessage = messages.results.errors.pdfGenerateFailed;
-        try {
-          const payload = (await response.json()) as { error?: string };
-          if (payload.error) {
-            errorMessage = payload.error;
-          }
-        } catch {
-          // Keep default error message if payload is not JSON.
-        }
-        throw new Error(errorMessage);
+        throw new Error(getPdfResponseError(response.status, locale));
       }
 
       const blob = await response.blob();
@@ -655,7 +647,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
             userEmail={user.email ?? ""}
           />
         )}
-        {user && (!hasPaidReportAccess || isConsumerCampaignActive()) && (
+        {user && !hasPaidReportAccess && (
           <FitPassPaywall locale={locale} sessionId={sessionId} userTier={user.tier} />
         )}
       </div>
