@@ -129,6 +129,7 @@ export function BikeDescriptionEditor({
     <div className="space-y-4">
       <Textarea
         label={messages.bikes.descriptionCard.title}
+        aria-label={messages.bikes.descriptionCard.title}
         value={value}
         rows={5}
         onChange={(event) => {

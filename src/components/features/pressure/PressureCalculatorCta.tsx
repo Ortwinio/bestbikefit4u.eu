@@ -129,7 +129,10 @@ export function PressureCalculatorCta({
             pagePath={pagePath}
             section="pressure_cta_text_link"
             ctaLabel={labels.loginLink}
-            className="font-semibold text-[color:var(--foreground)] underline decoration-[color:var(--border)] underline-offset-4"
+            className={
+              "inline-flex min-h-11 min-w-11 items-center font-semibold text-[color:var(--foreground)] " +
+              "underline decoration-[color:var(--border)] underline-offset-4"
+            }
           >
             {labels.loginLink}
           </TrackedCtaLink>

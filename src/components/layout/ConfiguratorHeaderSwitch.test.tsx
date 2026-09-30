@@ -21,6 +21,17 @@ function markup() {
   );
 }
 describe("approved tool header", () => {
+  it("gives the logo, language choices and login 44px hit areas", () => {
+    route.path = "/nl/calculators/bike-fit";
+    const html = markup();
+    for (const label of ["BestBikeFit4U", "Engels", "Nederlands"]) {
+      const anchor = html.match(new RegExp(`<a [^>]*aria-label="${label}"[^>]*>`))?.[0];
+      expect(anchor).toContain("min-h-11");
+      expect(anchor).toContain("min-w-11");
+    }
+    expect(html.match(/<a [^>]*href="\/nl\/login"[^>]*>/)?.[0]).toContain("min-h-11");
+  });
+
   it.each(["saddle-height", "frame-size", "crank-length", "saddle-width", "bike-fit"])(
     "uses real navigation and a soft border for %s",
     (tool) => {

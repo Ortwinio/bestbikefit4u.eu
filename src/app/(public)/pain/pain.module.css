@@ -87,7 +87,7 @@
 .cta .primary { background: var(--bbf-inkt); }
 .cta .primary:hover { background: var(--bbf-petrol-hover); }
 .breadcrumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 24px; font-size: 14px; }
-.breadcrumbs a { min-height: 44px; display: inline-flex; align-items: center; color: var(--marketing-link); }
+.breadcrumbs a { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; color: var(--marketing-link); }
 .detail .hero { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px; padding: 32px 0 0; }
 .detail .section { margin-top: 88px; }
 .symptoms { margin-top: 32px; }

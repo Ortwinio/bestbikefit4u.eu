@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BRAND } from "@/config/brand";
+import { cn } from "@/utils/cn";
 
 export function MarketingLogo({ href, className, priority = false, ariaLabel = BRAND.name }: {
   href: string;
@@ -9,7 +10,7 @@ export function MarketingLogo({ href, className, priority = false, ariaLabel = B
   ariaLabel?: string;
 }) {
   return (
-    <Link href={href} className={className} aria-label={ariaLabel}>
+    <Link href={href} className={cn(className, "flex min-h-11 min-w-11 items-center")} aria-label={ariaLabel}>
       <Image
         src={BRAND.assets.logoPrimary}
         alt=""
