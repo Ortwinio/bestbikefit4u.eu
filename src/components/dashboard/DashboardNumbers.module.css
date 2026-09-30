@@ -1,0 +1,7 @@
+.scope :global(.font-mono),
+.scope [data-dashboard-number],
+.scope [data-dashboard-number] *,
+.scope dd:global(.font-mono) * {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}

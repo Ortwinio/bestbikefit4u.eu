@@ -5,6 +5,14 @@ const nextConfig: NextConfig = {
   // Keep the repository's maintained agent instructions unchanged by dev startup.
   agentRules: false,
   poweredByHeader: false,
+  outputFileTracingIncludes: {
+    "/api/reports/*/pdf": [
+      "./public/brand/report/**/*",
+      "./public/illustrations/04-bandenspanning.webp",
+      "./public/illustrations/06-meetset.webp",
+      "./public/illustrations/08-stack-en-reach.webp",
+    ],
+  },
   images: {
     remotePatterns: [
       {

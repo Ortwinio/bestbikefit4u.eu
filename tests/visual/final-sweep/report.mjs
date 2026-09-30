@@ -47,6 +47,13 @@ export async function writeReports({ results, outputDir, metadata = {} }) {
     lines.push(`| ${cell(item.route)} | ${cell(item.locale)} | ${cell(item.viewportWidth)} | `
       + `${CHECK_NAMES.map((name) => mark(item.checks?.[name]?.status)).join(" | ")} | ${screenshot} |`);
   }
+  lines.push("", "## Expected local diagnostics", "",
+    "These narrowly classified diagnostics remain in JSON and are not counted as unexpected application errors.", "");
+  for (const item of results) {
+    if (!item.expectedLocalDiagnostics?.length) continue;
+    lines.push(`- ${item.route} · ${item.locale} · ${item.viewportWidth}: `
+      + item.expectedLocalDiagnostics.map((diagnostic) => `${diagnostic.kind}: ${diagnostic.connection}`).join("; "));
+  }
   lines.push("", "## Findings and skipped checks", "");
   for (const item of results) {
     const findings = CHECK_NAMES.filter((name) => item.checks?.[name]?.status !== "pass");

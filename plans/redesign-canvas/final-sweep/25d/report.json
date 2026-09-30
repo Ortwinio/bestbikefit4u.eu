@@ -1,0 +1,3260 @@
+{
+  "generatedAt": "2026-09-30T10:00:59.708Z",
+  "metadata": {
+    "inventory": "plans/redesign-canvas/audit/route-map.md",
+    "inventoryRoutes": 70,
+    "scope": "70 audited non-admin routes; later /design-system excluded.",
+    "billing": "STRIPE_BILLING_ENABLED=false, NEXT_PUBLIC_STRIPE_BILLING_ENABLED=false (process env only)",
+    "browser": "Chromium; light theme; reduced motion; 1440x1000 and 390x844; viewport screenshots",
+    "filtering": "/calculators/gearing,/calculators/power-speed,/bikes/new/manual,/blog/[slug]",
+    "concurrency": 3,
+    "label": "25d-harness-fixes",
+    "limitations": [
+      "Account fixtures test actual UI with mocked auth/Convex; not backend authorization or persistence.",
+      "Small UI-word language detector is heuristic, not a complete translation audit.",
+      "Automated axe serious/critical checks do not establish full accessibility conformance.",
+      "Initial route states only; this sweep does not submit forms or exercise destructive actions.",
+      "The two local Vercel analytics scripts are explicit QA no-ops; analytics delivery is not tested.",
+      "Expected document-404 console diagnostics are retained separately, not treated as unexpected errors.",
+      "Production uses the established custom Next server; next start caused a self-redirect loop in this preview.",
+      "Account HTTP status belongs to the fixture server; authentication, middleware and server metadata are not exercised.",
+      "Actual account pages and dashboard shell use deterministic batch-20 Convex/auth fixtures; mutations are mocked.",
+      "Next Link/Image use anchor/img adapters; image optimization and Next navigation behavior are not exercised.",
+      "Production global CSS/fonts plus bundled actual CSS Modules are used; only default filled states are covered.",
+      "Feedback panel provider is mocked on account tool routes; batch-20 overlay differences remain fixture limitations.",
+      "Blog detail uses existing visual-article-1 CMS fixture; no published production article was available.",
+      "HTTP 200 is the fixture server response, not proof of production CMS lookup or routing.",
+      "Next generateMetadata is not run: canonical/hreflang and production article title remain unverified.",
+      "Existing JsonLd adapter renders actual page schema without the production server nonce wrapper.",
+      "Header, Footer, and article components use production CSS; Next Image/Link use existing visual adapters."
+    ],
+    "axe": {
+      "adapter": "@axe-core/playwright",
+      "version": "4.13.0",
+      "impacts": [
+        "serious",
+        "critical"
+      ]
+    },
+    "production": {
+      "origin": "http://127.0.0.1:4351",
+      "sourceHash": "a85233c25f07ebce5d7a423a5773e3d770f871673d2311c02e779f18b319e2ce",
+      "buildId": "niccQUvIvS6wzk7M4uQMY",
+      "snapshot": "/tmp/bbf-final-sweep-a85233c25f07ebce",
+      "reused": true
+    },
+    "localDiagnostics": {
+      "convexSyncOrigin": "ws://127.0.0.1:3210",
+      "analyticsNoopPaths": [
+        "/_vercel/insights/script.js",
+        "/_vercel/speed-insights/script.js"
+      ]
+    },
+    "blog": {
+      "mode": "fixture",
+      "reason": "No published CMS slug available; existing visual-article-1 fixture."
+    }
+  },
+  "summary": {
+    "routes": 4,
+    "cases": 16,
+    "passingCases": 10,
+    "failingCases": 6,
+    "checks": {
+      "status": {
+        "pass": 16,
+        "fail": 0,
+        "skip": 0
+      },
+      "errors": {
+        "pass": 12,
+        "fail": 4,
+        "skip": 0
+      },
+      "overflow": {
+        "pass": 16,
+        "fail": 0,
+        "skip": 0
+      },
+      "h1": {
+        "pass": 16,
+        "fail": 0,
+        "skip": 0
+      },
+      "locale": {
+        "pass": 16,
+        "fail": 0,
+        "skip": 0
+      },
+      "seo": {
+        "pass": 8,
+        "fail": 0,
+        "skip": 8
+      },
+      "language": {
+        "pass": 16,
+        "fail": 0,
+        "skip": 0
+      },
+      "touchTargets": {
+        "pass": 6,
+        "fail": 2,
+        "skip": 8
+      },
+      "images": {
+        "pass": 16,
+        "fail": 0,
+        "skip": 0
+      },
+      "axe": {
+        "pass": 16,
+        "fail": 0,
+        "skip": 0
+      }
+    }
+  },
+  "results": [
+    {
+      "route": "/calculators/gearing",
+      "locale": "nl",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:4351/nl/calculators/gearing",
+      "expected": {
+        "status": 200
+      },
+      "mode": "production",
+      "screenshot": "calculators-gearing-nl-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:4351/nl/calculators/gearing",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:4351/nl/calculators/gearing",
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/a094243a1d35beb0.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/52a7c938fb8f31db.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/webpack-59b9cdfba53de3cd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/global-error-1d0bc05e2e987a26.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/main-app-1ea7cd1088bbd8a9.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/8786-cab251a78d9f5213.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/ed06aa23-baacdf05eeade0e7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5889-352dbd3a3d2c41db.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5876-1419937e13d4092a.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7741-de32be41869e8405.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2416-56e9c6af53f21ba3.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9236-b32b2d1c82b9a4ec.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9939-51df25c221abf013.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3695-d615154dee1df730.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5762-1b9d41e9ea1bfdd0.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5703-ccdd3736236791d6.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3516-0a73f10ff08942bb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3891-ac9a7619653bdf47.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2678-9c77dd90a3437622.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5833-a0e717e2afd404ce.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9352-c2984f6b7f576dfb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1808-1bf94661b92d1839.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1575-eadf9abf5dff1e56.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7861-d18e5a6f83b9a6da.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5714-311f8291b8faa3cd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/6012-4919e62609a5850e.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/calculators/gearing/page-325b67438a86d9aa.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2812-4793e130c9181eb4.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4591-02ce362db0702ee7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/layout-3bc848ed22e5bf7e.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/error-c1b6f1e8777cb01d.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/page-2659e215ec258610.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4841-e2a21c59b40a2d70.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5354-add45ff8cda4b04f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1316-cf026780986d182f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/layout-3c12c45cc0f5a72c.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        }
+      ],
+      "consoleErrors": [
+        {
+          "type": "pageerror",
+          "message": "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+        },
+        {
+          "type": "console",
+          "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+          "location": {
+            "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+            "lineNumber": 1,
+            "columnNumber": 0
+          }
+        }
+      ],
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "fail",
+          "details": [
+            {
+              "type": "pageerror",
+              "message": "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+            }
+          ]
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/calculators/gearing",
+      "locale": "nl",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:4351/nl/calculators/gearing",
+      "expected": {
+        "status": 200
+      },
+      "mode": "production",
+      "screenshot": "calculators-gearing-nl-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:4351/nl/calculators/gearing",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:4351/nl/calculators/gearing",
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/a094243a1d35beb0.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/52a7c938fb8f31db.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/webpack-59b9cdfba53de3cd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/global-error-1d0bc05e2e987a26.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/main-app-1ea7cd1088bbd8a9.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/8786-cab251a78d9f5213.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/ed06aa23-baacdf05eeade0e7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5889-352dbd3a3d2c41db.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7741-de32be41869e8405.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5876-1419937e13d4092a.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9236-b32b2d1c82b9a4ec.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2416-56e9c6af53f21ba3.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9939-51df25c221abf013.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3695-d615154dee1df730.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5762-1b9d41e9ea1bfdd0.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5703-ccdd3736236791d6.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3516-0a73f10ff08942bb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3891-ac9a7619653bdf47.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2678-9c77dd90a3437622.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5833-a0e717e2afd404ce.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9352-c2984f6b7f576dfb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1808-1bf94661b92d1839.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1575-eadf9abf5dff1e56.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7861-d18e5a6f83b9a6da.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5714-311f8291b8faa3cd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/6012-4919e62609a5850e.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/calculators/gearing/page-325b67438a86d9aa.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2812-4793e130c9181eb4.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4591-02ce362db0702ee7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/layout-3bc848ed22e5bf7e.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/error-c1b6f1e8777cb01d.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/page-2659e215ec258610.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5354-add45ff8cda4b04f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4841-e2a21c59b40a2d70.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1316-cf026780986d182f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/layout-3c12c45cc0f5a72c.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        }
+      ],
+      "consoleErrors": [
+        {
+          "type": "pageerror",
+          "message": "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+        },
+        {
+          "type": "console",
+          "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+          "location": {
+            "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+            "lineNumber": 1,
+            "columnNumber": 0
+          }
+        }
+      ],
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "fail",
+          "details": [
+            {
+              "type": "pageerror",
+              "message": "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+            }
+          ]
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/calculators/gearing",
+      "locale": "en",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:4351/en/calculators/gearing",
+      "expected": {
+        "status": 200
+      },
+      "mode": "production",
+      "screenshot": "calculators-gearing-en-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:4351/en/calculators/gearing",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:4351/en/calculators/gearing",
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/a094243a1d35beb0.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/52a7c938fb8f31db.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/webpack-59b9cdfba53de3cd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/global-error-1d0bc05e2e987a26.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/main-app-1ea7cd1088bbd8a9.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/8786-cab251a78d9f5213.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/ed06aa23-baacdf05eeade0e7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5889-352dbd3a3d2c41db.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5876-1419937e13d4092a.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7741-de32be41869e8405.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9236-b32b2d1c82b9a4ec.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2416-56e9c6af53f21ba3.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9939-51df25c221abf013.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3695-d615154dee1df730.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5762-1b9d41e9ea1bfdd0.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5703-ccdd3736236791d6.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3891-ac9a7619653bdf47.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3516-0a73f10ff08942bb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2678-9c77dd90a3437622.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1808-1bf94661b92d1839.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9352-c2984f6b7f576dfb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5833-a0e717e2afd404ce.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1575-eadf9abf5dff1e56.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7861-d18e5a6f83b9a6da.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5714-311f8291b8faa3cd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/6012-4919e62609a5850e.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/calculators/gearing/page-325b67438a86d9aa.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2812-4793e130c9181eb4.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4591-02ce362db0702ee7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/layout-3bc848ed22e5bf7e.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/error-c1b6f1e8777cb01d.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/page-2659e215ec258610.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4841-e2a21c59b40a2d70.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5354-add45ff8cda4b04f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1316-cf026780986d182f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/layout-3c12c45cc0f5a72c.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        }
+      ],
+      "consoleErrors": [
+        {
+          "type": "console",
+          "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+          "location": {
+            "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+            "lineNumber": 1,
+            "columnNumber": 0
+          }
+        }
+      ],
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/calculators/gearing",
+      "locale": "en",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:4351/en/calculators/gearing",
+      "expected": {
+        "status": 200
+      },
+      "mode": "production",
+      "screenshot": "calculators-gearing-en-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:4351/en/calculators/gearing",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:4351/en/calculators/gearing",
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/a094243a1d35beb0.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/52a7c938fb8f31db.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/webpack-59b9cdfba53de3cd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/global-error-1d0bc05e2e987a26.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/ed06aa23-baacdf05eeade0e7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/main-app-1ea7cd1088bbd8a9.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5889-352dbd3a3d2c41db.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/8786-cab251a78d9f5213.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5876-1419937e13d4092a.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9236-b32b2d1c82b9a4ec.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7741-de32be41869e8405.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2416-56e9c6af53f21ba3.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3695-d615154dee1df730.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9939-51df25c221abf013.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5762-1b9d41e9ea1bfdd0.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5703-ccdd3736236791d6.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3516-0a73f10ff08942bb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3891-ac9a7619653bdf47.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5833-a0e717e2afd404ce.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2678-9c77dd90a3437622.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9352-c2984f6b7f576dfb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1808-1bf94661b92d1839.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1575-eadf9abf5dff1e56.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7861-d18e5a6f83b9a6da.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5714-311f8291b8faa3cd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/6012-4919e62609a5850e.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/calculators/gearing/page-325b67438a86d9aa.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2812-4793e130c9181eb4.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4591-02ce362db0702ee7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/layout-3bc848ed22e5bf7e.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/page-2659e215ec258610.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4841-e2a21c59b40a2d70.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/error-c1b6f1e8777cb01d.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5354-add45ff8cda4b04f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1316-cf026780986d182f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/layout-3c12c45cc0f5a72c.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        }
+      ],
+      "consoleErrors": [
+        {
+          "type": "console",
+          "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+          "location": {
+            "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+            "lineNumber": 1,
+            "columnNumber": 0
+          }
+        }
+      ],
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/calculators/power-speed",
+      "locale": "nl",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:4351/nl/calculators/power-speed",
+      "expected": {
+        "status": 200
+      },
+      "mode": "production",
+      "screenshot": "calculators-power-speed-nl-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:4351/nl/calculators/power-speed",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:4351/nl/calculators/power-speed",
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/52a7c938fb8f31db.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/a094243a1d35beb0.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/webpack-59b9cdfba53de3cd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/global-error-1d0bc05e2e987a26.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/ed06aa23-baacdf05eeade0e7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/8786-cab251a78d9f5213.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5889-352dbd3a3d2c41db.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/main-app-1ea7cd1088bbd8a9.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5876-1419937e13d4092a.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7741-de32be41869e8405.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2416-56e9c6af53f21ba3.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9236-b32b2d1c82b9a4ec.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3695-d615154dee1df730.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9939-51df25c221abf013.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5762-1b9d41e9ea1bfdd0.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5703-ccdd3736236791d6.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3516-0a73f10ff08942bb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3891-ac9a7619653bdf47.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2678-9c77dd90a3437622.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5833-a0e717e2afd404ce.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9352-c2984f6b7f576dfb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1808-1bf94661b92d1839.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1575-eadf9abf5dff1e56.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7861-d18e5a6f83b9a6da.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2812-4793e130c9181eb4.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4591-02ce362db0702ee7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/layout-3bc848ed22e5bf7e.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2746-03fd91b23272a649.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/calculators/power-speed/page-4430dcb6e3ce78bd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/page-2659e215ec258610.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/error-c1b6f1e8777cb01d.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4841-e2a21c59b40a2d70.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5354-add45ff8cda4b04f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1316-cf026780986d182f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/layout-3c12c45cc0f5a72c.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        }
+      ],
+      "consoleErrors": [
+        {
+          "type": "pageerror",
+          "message": "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+        },
+        {
+          "type": "console",
+          "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+          "location": {
+            "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+            "lineNumber": 1,
+            "columnNumber": 0
+          }
+        }
+      ],
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "fail",
+          "details": [
+            {
+              "type": "pageerror",
+              "message": "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+            }
+          ]
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/calculators/power-speed",
+      "locale": "nl",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:4351/nl/calculators/power-speed",
+      "expected": {
+        "status": 200
+      },
+      "mode": "production",
+      "screenshot": "calculators-power-speed-nl-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:4351/nl/calculators/power-speed",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:4351/nl/calculators/power-speed",
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/a094243a1d35beb0.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/52a7c938fb8f31db.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/webpack-59b9cdfba53de3cd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/ed06aa23-baacdf05eeade0e7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/global-error-1d0bc05e2e987a26.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/main-app-1ea7cd1088bbd8a9.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/8786-cab251a78d9f5213.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5889-352dbd3a3d2c41db.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5876-1419937e13d4092a.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7741-de32be41869e8405.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9236-b32b2d1c82b9a4ec.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2416-56e9c6af53f21ba3.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9939-51df25c221abf013.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3695-d615154dee1df730.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5762-1b9d41e9ea1bfdd0.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5703-ccdd3736236791d6.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3516-0a73f10ff08942bb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3891-ac9a7619653bdf47.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2678-9c77dd90a3437622.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5833-a0e717e2afd404ce.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9352-c2984f6b7f576dfb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1808-1bf94661b92d1839.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7861-d18e5a6f83b9a6da.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1575-eadf9abf5dff1e56.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/calculators/power-speed/page-4430dcb6e3ce78bd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2812-4793e130c9181eb4.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2746-03fd91b23272a649.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4591-02ce362db0702ee7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/page-2659e215ec258610.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/layout-3bc848ed22e5bf7e.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/error-c1b6f1e8777cb01d.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4841-e2a21c59b40a2d70.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5354-add45ff8cda4b04f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1316-cf026780986d182f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/layout-3c12c45cc0f5a72c.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        }
+      ],
+      "consoleErrors": [
+        {
+          "type": "pageerror",
+          "message": "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+        },
+        {
+          "type": "console",
+          "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+          "location": {
+            "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+            "lineNumber": 1,
+            "columnNumber": 0
+          }
+        }
+      ],
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "fail",
+          "details": [
+            {
+              "type": "pageerror",
+              "message": "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+            }
+          ]
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/calculators/power-speed",
+      "locale": "en",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:4351/en/calculators/power-speed",
+      "expected": {
+        "status": 200
+      },
+      "mode": "production",
+      "screenshot": "calculators-power-speed-en-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:4351/en/calculators/power-speed",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:4351/en/calculators/power-speed",
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/a094243a1d35beb0.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/52a7c938fb8f31db.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/webpack-59b9cdfba53de3cd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/main-app-1ea7cd1088bbd8a9.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/global-error-1d0bc05e2e987a26.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/ed06aa23-baacdf05eeade0e7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5889-352dbd3a3d2c41db.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/8786-cab251a78d9f5213.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9236-b32b2d1c82b9a4ec.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7741-de32be41869e8405.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2416-56e9c6af53f21ba3.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5876-1419937e13d4092a.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9939-51df25c221abf013.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3695-d615154dee1df730.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5762-1b9d41e9ea1bfdd0.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5703-ccdd3736236791d6.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3516-0a73f10ff08942bb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3891-ac9a7619653bdf47.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2678-9c77dd90a3437622.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5833-a0e717e2afd404ce.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9352-c2984f6b7f576dfb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1808-1bf94661b92d1839.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1575-eadf9abf5dff1e56.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2746-03fd91b23272a649.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7861-d18e5a6f83b9a6da.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/calculators/power-speed/page-4430dcb6e3ce78bd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2812-4793e130c9181eb4.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4591-02ce362db0702ee7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/layout-3bc848ed22e5bf7e.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/page-2659e215ec258610.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/error-c1b6f1e8777cb01d.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4841-e2a21c59b40a2d70.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5354-add45ff8cda4b04f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1316-cf026780986d182f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/layout-3c12c45cc0f5a72c.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        }
+      ],
+      "consoleErrors": [
+        {
+          "type": "console",
+          "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+          "location": {
+            "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+            "lineNumber": 1,
+            "columnNumber": 0
+          }
+        }
+      ],
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/calculators/power-speed",
+      "locale": "en",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:4351/en/calculators/power-speed",
+      "expected": {
+        "status": 200
+      },
+      "mode": "production",
+      "screenshot": "calculators-power-speed-en-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:4351/en/calculators/power-speed",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:4351/en/calculators/power-speed",
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/a094243a1d35beb0.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/css/52a7c938fb8f31db.css",
+          "status": 200,
+          "type": "text/css; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/webpack-59b9cdfba53de3cd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/global-error-1d0bc05e2e987a26.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/main-app-1ea7cd1088bbd8a9.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/ed06aa23-baacdf05eeade0e7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5889-352dbd3a3d2c41db.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/8786-cab251a78d9f5213.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5876-1419937e13d4092a.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7741-de32be41869e8405.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2416-56e9c6af53f21ba3.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9236-b32b2d1c82b9a4ec.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9939-51df25c221abf013.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3695-d615154dee1df730.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5762-1b9d41e9ea1bfdd0.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5703-ccdd3736236791d6.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3516-0a73f10ff08942bb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/3891-ac9a7619653bdf47.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5833-a0e717e2afd404ce.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2678-9c77dd90a3437622.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/9352-c2984f6b7f576dfb.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1808-1bf94661b92d1839.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1575-eadf9abf5dff1e56.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/calculators/power-speed/page-4430dcb6e3ce78bd.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/7861-d18e5a6f83b9a6da.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2746-03fd91b23272a649.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/2812-4793e130c9181eb4.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/error-c1b6f1e8777cb01d.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4591-02ce362db0702ee7.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/layout-3bc848ed22e5bf7e.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/(public)/page-2659e215ec258610.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/4841-e2a21c59b40a2d70.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/5354-add45ff8cda4b04f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/1316-cf026780986d182f.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        },
+        {
+          "url": "http://127.0.0.1:4351/_next/static/chunks/app/layout-3c12c45cc0f5a72c.js",
+          "status": 200,
+          "type": "text/javascript; charset=utf-8"
+        }
+      ],
+      "consoleErrors": [
+        {
+          "type": "console",
+          "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+          "location": {
+            "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+            "lineNumber": 1,
+            "columnNumber": 0
+          }
+        }
+      ],
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4351/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/blog/[slug]",
+      "locale": "nl",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:64367/nl/blog/visual-article-1",
+      "expected": {
+        "status": 200
+      },
+      "mode": "blog-fixture",
+      "screenshot": "blog-slug-nl-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:64367/nl/blog/visual-article-1",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:64367/nl/blog/visual-article-1",
+      "fixtureQueries": {
+        "queries": [],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:64367/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64367/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64367/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "CMS fixture renders actual content; production metadata injection is not exercised."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/blog/[slug]",
+      "locale": "nl",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:64367/nl/blog/visual-article-1",
+      "expected": {
+        "status": 200
+      },
+      "mode": "blog-fixture",
+      "screenshot": "blog-slug-nl-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:64367/nl/blog/visual-article-1",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:64367/nl/blog/visual-article-1",
+      "fixtureQueries": {
+        "queries": [],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:64367/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64367/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64367/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "CMS fixture renders actual content; production metadata injection is not exercised."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/blog/[slug]",
+      "locale": "en",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:64367/en/blog/visual-article-1",
+      "expected": {
+        "status": 200
+      },
+      "mode": "blog-fixture",
+      "screenshot": "blog-slug-en-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:64367/en/blog/visual-article-1",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:64367/en/blog/visual-article-1",
+      "fixtureQueries": {
+        "queries": [],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:64367/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64367/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64367/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "CMS fixture renders actual content; production metadata injection is not exercised."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/blog/[slug]",
+      "locale": "en",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:64367/en/blog/visual-article-1",
+      "expected": {
+        "status": 200
+      },
+      "mode": "blog-fixture",
+      "screenshot": "blog-slug-en-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:64367/en/blog/visual-article-1",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:64367/en/blog/visual-article-1",
+      "fixtureQueries": {
+        "queries": [],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:64367/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64367/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64367/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "CMS fixture renders actual content; production metadata injection is not exercised."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/bikes/new/manual",
+      "locale": "nl",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:64366/nl/bikes/new/manual",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "bikes-new-manual-nl-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:64366/nl/bikes/new/manual",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:64366/nl/bikes/new/manual",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "geometry/queries:listBrandsForRider"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:64366/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64366/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64366/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/bikes/new/manual",
+      "locale": "nl",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:64366/nl/bikes/new/manual",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "bikes-new-manual-nl-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:64366/nl/bikes/new/manual",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:64366/nl/bikes/new/manual",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "geometry/queries:listBrandsForRider"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:64366/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64366/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "fail",
+          "details": [
+            {
+              "tag": "input",
+              "label": "",
+              "id": "fietsnaam",
+              "width": 308,
+              "height": 36
+            },
+            {
+              "tag": "button",
+              "label": "Fitness",
+              "id": "base-ui-_r_h_",
+              "width": 308,
+              "height": 36
+            },
+            {
+              "tag": "button",
+              "label": "Gebalanceerd",
+              "id": "base-ui-_r_n_",
+              "width": 308,
+              "height": 36
+            },
+            {
+              "tag": "button",
+              "label": "2x",
+              "id": "base-ui-_r_t_",
+              "width": 274,
+              "height": 36
+            },
+            {
+              "tag": "input",
+              "label": "",
+              "id": "groupset",
+              "width": 274,
+              "height": 36
+            }
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/bikes/new/manual",
+      "locale": "en",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:64366/en/bikes/new/manual",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "bikes-new-manual-en-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:64366/en/bikes/new/manual",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:64366/en/bikes/new/manual",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "geometry/queries:listBrandsForRider"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:64366/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64366/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64366/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/bikes/new/manual",
+      "locale": "en",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:64366/en/bikes/new/manual",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "bikes-new-manual-en-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:64366/en/bikes/new/manual",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:64366/en/bikes/new/manual",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "geometry/queries:listBrandsForRider"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:64366/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:64366/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "fail",
+          "details": [
+            {
+              "tag": "input",
+              "label": "",
+              "id": "bike-name",
+              "width": 308,
+              "height": 36
+            },
+            {
+              "tag": "button",
+              "label": "Fitness",
+              "id": "base-ui-_r_h_",
+              "width": 308,
+              "height": 36
+            },
+            {
+              "tag": "button",
+              "label": "Balanced",
+              "id": "base-ui-_r_n_",
+              "width": 308,
+              "height": 36
+            },
+            {
+              "tag": "button",
+              "label": "2x",
+              "id": "base-ui-_r_t_",
+              "width": 274,
+              "height": 36
+            },
+            {
+              "tag": "input",
+              "label": "",
+              "id": "groupset",
+              "width": 274,
+              "height": 36
+            }
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    }
+  ]
+}

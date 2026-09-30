@@ -52,7 +52,7 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
           sharedClasses,
           activeLocale === "en"
             ? "border-[color:color-mix(in_oklch,var(--primary)_28%,transparent)] bg-primary " +
-                "text-[color:var(--primary-foreground)] " +
+                "text-primary-foreground " +
                 "shadow-[0_8px_18px_-12px_color-mix(in_oklch,var(--primary)_55%,transparent)]"
             : "border-transparent text-foreground/78 hover:-translate-y-px " +
                 "hover:border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] " +
@@ -70,7 +70,7 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
           sharedClasses,
           activeLocale === "nl"
             ? "border-[color:color-mix(in_oklch,var(--primary)_28%,transparent)] bg-primary " +
-                "text-[color:var(--primary-foreground)] " +
+                "text-primary-foreground " +
                 "shadow-[0_8px_18px_-12px_color-mix(in_oklch,var(--primary)_55%,transparent)]"
             : "border-transparent text-foreground/78 hover:-translate-y-px " +
                 "hover:border-[color:color-mix(in_oklch,var(--primary)_18%,var(--border))] " +

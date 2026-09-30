@@ -253,6 +253,7 @@ describe("pdf report route", () => {
     expect(mocks.renderPdfFromHtml).toHaveBeenCalledWith(
       expect.objectContaining({
         html: "<html>report</html>",
+        pageLayout: "fixed-a4",
         headerTemplate: "<div>header</div>",
         footerTemplate: "<div>footer</div>",
       })

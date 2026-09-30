@@ -1,0 +1,342 @@
+{
+  "generatedAt": "2026-09-30T16:56:33.215Z",
+  "production": {
+    "origin": "http://127.0.0.1:4338",
+    "sourceHash": "0ead00b838237112e2e98a8d5fa8ce0c1be2cbd1a65d5f97fbe857d4072fc320",
+    "buildId": "8pQUxaSExAfhO2dGdsyc0",
+    "snapshot": "/tmp/bbf-final-sweep-0ead00b838237112",
+    "reused": false
+  },
+  "summary": {
+    "routes": 2,
+    "cases": 8,
+    "passingCases": 8,
+    "failingCases": 0,
+    "checks": {
+      "status": {
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      "errors": {
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      "overflow": {
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      "h1": {
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      "locale": {
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      "seo": {
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      "language": {
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      "touchTargets": {
+        "pass": 4,
+        "fail": 0,
+        "skip": 4
+      },
+      "images": {
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      "axe": {
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      }
+    }
+  },
+  "results": [
+    {
+      "route": "/calculators/gearing",
+      "locale": "nl",
+      "width": 1440,
+      "errors": {
+        "status": "pass",
+        "details": []
+      },
+      "axe": {
+        "status": "pass",
+        "details": []
+      },
+      "touchTargets": {
+        "status": "skip",
+        "details": [
+          "Mobile-only check."
+        ]
+      },
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4338/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "route": "/calculators/gearing",
+      "locale": "nl",
+      "width": 390,
+      "errors": {
+        "status": "pass",
+        "details": []
+      },
+      "axe": {
+        "status": "pass",
+        "details": []
+      },
+      "touchTargets": {
+        "status": "pass",
+        "details": []
+      },
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4338/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "route": "/calculators/gearing",
+      "locale": "en",
+      "width": 1440,
+      "errors": {
+        "status": "pass",
+        "details": []
+      },
+      "axe": {
+        "status": "pass",
+        "details": []
+      },
+      "touchTargets": {
+        "status": "skip",
+        "details": [
+          "Mobile-only check."
+        ]
+      },
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4338/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "route": "/calculators/gearing",
+      "locale": "en",
+      "width": 390,
+      "errors": {
+        "status": "pass",
+        "details": []
+      },
+      "axe": {
+        "status": "pass",
+        "details": []
+      },
+      "touchTargets": {
+        "status": "pass",
+        "details": []
+      },
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4338/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "route": "/calculators/power-speed",
+      "locale": "nl",
+      "width": 1440,
+      "errors": {
+        "status": "pass",
+        "details": []
+      },
+      "axe": {
+        "status": "pass",
+        "details": []
+      },
+      "touchTargets": {
+        "status": "skip",
+        "details": [
+          "Mobile-only check."
+        ]
+      },
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4338/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "route": "/calculators/power-speed",
+      "locale": "nl",
+      "width": 390,
+      "errors": {
+        "status": "pass",
+        "details": []
+      },
+      "axe": {
+        "status": "pass",
+        "details": []
+      },
+      "touchTargets": {
+        "status": "pass",
+        "details": []
+      },
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4338/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "route": "/calculators/power-speed",
+      "locale": "en",
+      "width": 1440,
+      "errors": {
+        "status": "pass",
+        "details": []
+      },
+      "axe": {
+        "status": "pass",
+        "details": []
+      },
+      "touchTargets": {
+        "status": "skip",
+        "details": [
+          "Mobile-only check."
+        ]
+      },
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4338/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "route": "/calculators/power-speed",
+      "locale": "en",
+      "width": 390,
+      "errors": {
+        "status": "pass",
+        "details": []
+      },
+      "axe": {
+        "status": "pass",
+        "details": []
+      },
+      "touchTargets": {
+        "status": "pass",
+        "details": []
+      },
+      "expectedLocalDiagnostics": [
+        {
+          "kind": "local-dev-convex-csp",
+          "connection": "ws://127.0.0.1:3210/api/1.42.1/sync",
+          "reason": "The configured backend is loopback; production CSP intentionally excludes local development sync.",
+          "error": {
+            "type": "console",
+            "message": "Connecting to 'ws://127.0.0.1:3210/api/1.42.1/sync' violates the following Content Security Policy directive: \"connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://connect.facebook.net https://www.facebook.com\". The action has been blocked.",
+            "location": {
+              "url": "http://127.0.0.1:4338/_next/static/chunks/2348-205cd8da596b9c8f.js",
+              "lineNumber": 1,
+              "columnNumber": 0
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

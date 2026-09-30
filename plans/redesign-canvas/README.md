@@ -1,5 +1,22 @@
 # Redesign canvas — BestBikeFit4U
 
+2026-09-30 — Codex B completed **27.1 visual corrections**: Dutch core heading,
+numeric mono typography, padded range bands, bike pills and usage chips. Fixed
+fixture font URL resolution; 56 focused tests and 72 real-font captures pass.
+Final full lint hits a concurrent out-of-scope slider repro; see `audit/27-notes.md`.
+Manifest: `audit/files-27.txt`. No commit or deployment.
+
+2026-09-30 — Codex B implemented **27 dashboard/report alignment** using the
+PDF query, mapper and shared labels. Profile comfort/extra data, A–D ranges,
+confidence/priorities and per-bike pressure states are covered by focused tests
+and 72 light/dark browser cases. Notes: `audit/27-notes.md`; files: `audit/files-27.txt`.
+Combined unit/build/typecheck await parallel PDF integration. No commit by B.
+
+2026-09-30 — Codex A completed **25a2**: semantic selected-language foreground
+fix, zero contrast violations in the 64 requested filtered sweep cases and 24
+light/dark selected-link checks. Four unrelated hydration cases remain documented
+in `audit/25-a2-notes.md`; file list: `audit/files-25-a2.txt`. No commit or push.
+
 2026-09-30 — Codex A completed **25a**, sweep items 7–8. Across 37 filtered routes
 (148 unique cases), undersized mobile links drop from 102 to 0 and bike-form
 label-title-only cases from 8 to 0. Remaining out-of-scope sweep findings are
@@ -158,3 +175,8 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
   focused production/browser tests pass. Item 4 traces to A-owned LanguageSwitch and awaits its
   coordinated token fix. Evidence and exact C files: `audit/25-c-notes.md`, `audit/files-25-c.txt`.
   No commit/push; screenshots stay local and are excluded from file lists.
+
+- 2026-09-30 — **26 implemented by Codex C; awaiting lead review.** Six A4 report pages in
+  canvas order 1,6,2,5,3,4, existing reportV2 data, NL/EN and embedded local fonts. Missing data
+  is omitted; D measurement reference corrected to match the engine. Gates and actual PDF QA
+  recorded in `audit/26-notes.md`; exact manifest `audit/files-26.txt`. No commit or push.

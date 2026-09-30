@@ -1,3 +1,4 @@
+import { serveQaAsset } from "./assets.mjs";
 import { build } from "esbuild";
 import { createServer } from "node:http";
 import { resolve, extname } from "node:path";
@@ -67,6 +68,7 @@ export async function prepareBlogFixture({ root, origin, port = 0 }) {
     .map((file) => file.text).join("\n");
   const server = createServer(async (request, response) => {
     try {
+      if (await serveQaAsset(request, response, { staticDir: resolve(root, ".next-final-sweep/static") })) return;
       const url = new URL(request.url, "http://127.0.0.1");
       const pathname = url.pathname;
       if (pathname === "/fixture.js" || pathname === "/fixture.css") {

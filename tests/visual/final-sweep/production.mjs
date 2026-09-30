@@ -8,10 +8,10 @@ import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
-const inputs = ["src", "convex", "shared", "data", "docs", "public", "next.config.ts", "tsconfig.json",
+const inputs = ["src", "convex", "shared", "data", "docs", "public", "tests/fixtures", "next.config.ts", "tsconfig.json",
   "postcss.config.mjs", "package.json", "package-lock.json", "instrumentation.ts", "instrumentation-client.ts"];
 
-async function fingerprint(root, env) {
+export async function fingerprint(root, env) {
   const hash = createHash("sha256");
   async function visit(relative) {
     const path = resolve(root, relative);
@@ -30,6 +30,15 @@ async function fingerprint(root, env) {
   hash.update(JSON.stringify(publicEnvironment));
   hash.update("final-sweep-production-v2-billing-off");
   return hash.digest("hex");
+}
+
+// Keep copying and hashing on the same input list, including fixtures imported by source tests.
+export async function copyBuildInputs(root, snapshot) {
+  for (const input of inputs) {
+    if (await stat(resolve(root, input)).catch(() => null)) {
+      await cp(resolve(root, input), resolve(snapshot, input), { recursive: true });
+    }
+  }
 }
 
 async function run(command, args, options, logPath) {
@@ -56,11 +65,7 @@ export async function prepareProduction({ root = process.cwd(), outputDir, port 
   const reused = await stat(buildId).then(() => true, () => false);
   if (!reused) {
     console.log(`Building isolated production snapshot ${snapshot}`);
-    for (const input of inputs) {
-      if (await stat(resolve(root, input)).catch(() => null)) {
-        await cp(resolve(root, input), resolve(snapshot, input), { recursive: true });
-      }
-    }
+    await copyBuildInputs(root, snapshot);
     await symlink(resolve(root, "node_modules"), resolve(snapshot, "node_modules"), "dir")
       .catch((error) => { if (error.code !== "EEXIST") throw error; });
     const configPath = resolve(snapshot, "next.config.ts");

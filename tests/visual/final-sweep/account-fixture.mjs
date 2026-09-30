@@ -1,3 +1,4 @@
+import { serveQaAsset } from "./assets.mjs";
 import { build } from "esbuild";
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
@@ -104,6 +105,7 @@ export async function prepareAccountFixtures({ root = process.cwd(), origin, por
   }
   const server = createServer(async (request, response) => {
     try {
+      if (await serveQaAsset(request, response, { staticDir: resolve(root, ".next-final-sweep/static") })) return;
       const url = new URL(request.url, "http://127.0.0.1");
       const asset = url.pathname.match(/^\/__account-fixture\/(profile|fit|tools|bikes)\.(js|css)$/);
       if (asset) {

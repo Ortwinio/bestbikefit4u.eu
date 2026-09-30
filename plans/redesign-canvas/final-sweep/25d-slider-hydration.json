@@ -1,0 +1,44 @@
+{
+  "component": "/tmp/bbf-final-sweep-c0fe299456bc3d13/src/components/ui/Slider.tsx",
+  "mode": "actual component, development React SSR/hydration",
+  "results": [
+    {
+      "value": 2105,
+      "locale": "nl-NL",
+      "serverText": "2,105",
+      "clientText": "2.105",
+      "errors": [
+        {
+          "message": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <Slider label=\"Diagnostic\" value={2105} min={0} max={3000} onChange={function onChange}>\n      <FieldRoot2 invalid={false} className=\"contents\">\n        <LabelableProvider>\n          <FieldRootInner2 invalid={false} className=\"contents\" ref={null}>\n            <div ref={null} className=\"contents\">\n              <SliderRoot ref={null} id=\"slider-_R_0_\" min={0} max={3000} step={undefined} value={[...]} ...>\n                <SliderRoot2 ref={null} data-slot=\"slider\" className=\"relative f...\" id=\"slider-_R_0_\" min={0} max={3000} ...>\n                  <CompositeList elementsRef={{current:[...]}} onMapChange={function bound dispatchSetState}>\n                    <div data-orientation=\"horizontal\" aria-labelledby=\"slider-_R_...\" id=\"slider-_R_0_\" role=\"group\" ...>\n                      <div>\n                      <SliderValue id=\"slider-_R_...\" className=\"sr-only\">\n                        <SliderValue2 ref={null} data-slot=\"slider-value\" className=\"text-sm ta...\" id=\"slider-_R_...\">\n                          <output\n                            data-orientation=\"horizontal\"\n                            aria-live=\"off\"\n                            htmlFor={undefined}\n                            data-slot=\"slider-value\"\n                            id=\"slider-_R_0_-value\"\n                            ref={null}\n                            className=\"text-sm tabular-nums text-[color:var(--muted-foreground)] sr-only\"\n                          >\n+                           2.105\n-                           2,105\n                      ...\n",
+          "componentStack": "\n    at output (<anonymous>)\n    at SliderValue2 (<anonymous>:37330:20)\n    at SliderValue (SliderValue:38591:8)\n    at div (<anonymous>)\n    at CompositeList (<anonymous>:36806:7)\n    at SliderRoot2 (<anonymous>:37022:26)\n    at SliderRoot (SliderRoot:38569:54)\n    at div (<anonymous>)\n    at FieldRootInner2 (<anonymous>:25987:9)\n    at LabelableProvider2 (LabelableProvider:24264:23)\n    at FieldRoot2 (<anonymous>)\n    at Slider (Slider:38678:7)\n    at App (<anonymous>:38812:16)"
+        }
+      ]
+    },
+    {
+      "value": 2105,
+      "locale": "en-GB",
+      "serverText": "2,105",
+      "clientText": "2,105",
+      "errors": []
+    },
+    {
+      "value": 8.5,
+      "locale": "nl-NL",
+      "serverText": "8.5",
+      "clientText": "8,5",
+      "errors": [
+        {
+          "message": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <Slider label=\"Diagnostic\" value={8.5} min={0} max={3000} onChange={function onChange}>\n      <FieldRoot2 invalid={false} className=\"contents\">\n        <LabelableProvider>\n          <FieldRootInner2 invalid={false} className=\"contents\" ref={null}>\n            <div ref={null} className=\"contents\">\n              <SliderRoot ref={null} id=\"slider-_R_0_\" min={0} max={3000} step={undefined} value={[...]} ...>\n                <SliderRoot2 ref={null} data-slot=\"slider\" className=\"relative f...\" id=\"slider-_R_0_\" min={0} max={3000} ...>\n                  <CompositeList elementsRef={{current:[...]}} onMapChange={function bound dispatchSetState}>\n                    <div data-orientation=\"horizontal\" aria-labelledby=\"slider-_R_...\" id=\"slider-_R_0_\" role=\"group\" ...>\n                      <div>\n                      <SliderValue id=\"slider-_R_...\" className=\"sr-only\">\n                        <SliderValue2 ref={null} data-slot=\"slider-value\" className=\"text-sm ta...\" id=\"slider-_R_...\">\n                          <output\n                            data-orientation=\"horizontal\"\n                            aria-live=\"off\"\n                            htmlFor={undefined}\n                            data-slot=\"slider-value\"\n                            id=\"slider-_R_0_-value\"\n                            ref={null}\n                            className=\"text-sm tabular-nums text-[color:var(--muted-foreground)] sr-only\"\n                          >\n+                           8,5\n-                           8.5\n                      ...\n",
+          "componentStack": "\n    at output (<anonymous>)\n    at SliderValue2 (<anonymous>:37330:20)\n    at SliderValue (SliderValue:38591:8)\n    at div (<anonymous>)\n    at CompositeList (<anonymous>:36806:7)\n    at SliderRoot2 (<anonymous>:37022:26)\n    at SliderRoot (SliderRoot:38569:54)\n    at div (<anonymous>)\n    at FieldRootInner2 (<anonymous>:25987:9)\n    at LabelableProvider2 (LabelableProvider:24264:23)\n    at FieldRoot2 (<anonymous>)\n    at Slider (Slider:38678:7)\n    at App (<anonymous>:38812:16)"
+        }
+      ]
+    },
+    {
+      "value": 8.5,
+      "locale": "en-GB",
+      "serverText": "8.5",
+      "clientText": "8.5",
+      "errors": []
+    }
+  ]
+}

@@ -1,22 +1,50 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
-  route: vi.fn(), newPage: vi.fn(), close: vi.fn(), setContent: vi.fn(), pdf: vi.fn(),
+  route: vi.fn(),
+  newPage: vi.fn(),
+  close: vi.fn(),
+  setContent: vi.fn(),
+  pdf: vi.fn(),
+  evaluate: vi.fn(),
 }));
-vi.mock("playwright", () => ({ chromium: { launch: vi.fn(async () => ({
-  newPage: mocks.newPage, close: mocks.close,
-})) } }));
+vi.mock("playwright", () => ({
+  chromium: {
+    launch: vi.fn(async () => ({
+      newPage: mocks.newPage,
+      close: mocks.close,
+    })),
+  },
+}));
 import { renderPdfFromHtml } from "./htmlPdf";
 
 beforeEach(() => {
   vi.clearAllMocks();
   for (const key of ["VERCEL", "AWS_REGION", "AWS_EXECUTION_ENV", "LAMBDA_TASK_ROOT"]) vi.stubEnv(key, "");
-  mocks.newPage.mockResolvedValue({ route: mocks.route, setContent: mocks.setContent, pdf: mocks.pdf });
+  mocks.newPage.mockResolvedValue({
+    route: mocks.route,
+    setContent: mocks.setContent,
+    pdf: mocks.pdf,
+    evaluate: mocks.evaluate,
+  });
   mocks.pdf.mockResolvedValue(new Uint8Array([1]));
 });
 
 afterEach(() => vi.unstubAllEnvs());
 
 describe("PDF renderer network isolation", () => {
+  it("prints fixed A4 sheets without external header/footer or margins and waits for embedded fonts", async () => {
+    await renderPdfFromHtml({ html: "<main>report</main>", pageLayout: "fixed-a4" });
+    expect(mocks.evaluate).toHaveBeenCalled();
+    expect(mocks.pdf).toHaveBeenCalledWith(
+      expect.objectContaining({
+        preferCSSPageSize: true,
+        displayHeaderFooter: false,
+        printBackground: true,
+        margin: { top: "0", right: "0", bottom: "0", left: "0" },
+      }),
+    );
+  });
+
   it("disables JavaScript and rejects redirects without following them", async () => {
     await renderPdfFromHtml({ html: "<p>report</p>" });
     expect(mocks.newPage).toHaveBeenCalledWith({ javaScriptEnabled: false, serviceWorkers: "block" });
@@ -25,8 +53,13 @@ describe("PDF renderer network isolation", () => {
     const abort = vi.fn();
     const fulfill = vi.fn();
     await handleRoute({
-      request: () => ({ url: () => "https://dgalywyr863if.cloudfront.net/avatar.jpg", resourceType: () => "image" }),
-      fetch, abort, fulfill,
+      request: () => ({
+        url: () => "https://dgalywyr863if.cloudfront.net/avatar.jpg",
+        resourceType: () => "image",
+      }),
+      fetch,
+      abort,
+      fulfill,
     });
     expect(fetch).toHaveBeenCalledWith({ maxRedirects: 0, timeout: 5_000 });
     expect(abort).toHaveBeenCalled();
@@ -39,7 +72,11 @@ describe("PDF renderer network isolation", () => {
     const handleRoute = mocks.route.mock.calls[0][1];
     const fetch = vi.fn();
     const abort = vi.fn();
-    await handleRoute({ request: () => ({ url: () => "http://127.0.0.1:3000/", resourceType: () => "image" }), fetch, abort });
+    await handleRoute({
+      request: () => ({ url: () => "http://127.0.0.1:3000/", resourceType: () => "image" }),
+      fetch,
+      abort,
+    });
     expect(abort).toHaveBeenCalled();
     expect(fetch).not.toHaveBeenCalled();
   });
@@ -52,8 +89,13 @@ describe("PDF renderer network isolation", () => {
     const fulfill = vi.fn();
     const abort = vi.fn();
     await mocks.route.mock.calls[0][1]({
-      request: () => ({ url: () => "https://ours.convex.cloud/api/storage/file", resourceType: () => "image" }),
-      fetch, fulfill, abort,
+      request: () => ({
+        url: () => "https://ours.convex.cloud/api/storage/file",
+        resourceType: () => "image",
+      }),
+      fetch,
+      fulfill,
+      abort,
     });
     expect(fulfill).toHaveBeenCalledWith({ response });
     expect(abort).not.toHaveBeenCalled();
@@ -64,5 +106,4 @@ describe("PDF renderer network isolation", () => {
     await expect(renderPdfFromHtml({ html: "<p>report</p>" })).rejects.toThrow("print failed");
     expect(mocks.close).toHaveBeenCalled();
   });
-
 });

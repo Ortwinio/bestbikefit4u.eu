@@ -219,6 +219,7 @@ export async function GET(
         });
         const richResult = await renderPdfFromHtml({
           html,
+          pageLayout: "fixed-a4",
           headerTemplate: renderPdfHeaderTemplate({ report: mappedReport, copy }),
           footerTemplate: renderPdfFooterTemplate(),
         });

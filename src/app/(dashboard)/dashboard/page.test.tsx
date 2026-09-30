@@ -3,6 +3,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getFunctionName } from "convex/server";
 import { getDashboardMessages } from "@/i18n/dashboardMessages";
 import type { Locale } from "@/i18n/config";
+import { fitResultsSource } from "../fit/[sessionId]/results/fixture.test-support";
+import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
+import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
 
 const state = vi.hoisted(() => ({
   locale: "nl" as Locale,
@@ -40,7 +43,37 @@ function setup(overrides: Record<string, unknown> = {}) {
     "sessions/queries:getAllSessionsWithBikes": [],
     ...overrides,
   };
-  state.query.mockImplementation((reference) => values[getFunctionName(reference)]);
+  state.query.mockImplementation((reference, args) => {
+    const name = getFunctionName(reference);
+    if (args === "skip") return undefined;
+    if (name !== "recommendations/queries:getReportV2") return values[name];
+    if (name in overrides) {
+      const override = overrides[name];
+      return typeof override === "function" ? override(args) : override;
+    }
+    const entries = values["sessions/queries:getAllSessionsWithBikes"] as Array<{
+      session: { _id: string }; recommendation: typeof fitResultsSource.recommendation;
+      responses?: Record<string, unknown>;
+    }>;
+    const entry = entries.find((item) => item.session._id === args.sessionId)!;
+    const summary = (values["bikes/queries:listSummariesByUser"] as Array<{
+      advisedPressureSummary: Record<string, number> | null;
+    }>)[0];
+    return {
+      ...fitResultsSource,
+      session: { ...fitResultsSource.session, ...entry.session },
+      recommendation: {
+        ...fitResultsSource.recommendation, ...entry.recommendation, recommendationItems: [],
+        calculatedFit: { ...fitResultsSource.recommendation.calculatedFit, ...entry.recommendation.calculatedFit },
+      },
+      profile: null,
+      questionnaireResponses: Object.entries(entry.responses ?? {}).map(([questionId, response]) =>
+        ({ questionId, response })),
+      latestPressureCalculation: summary.advisedPressureSummary ? {
+        ...fitResultsSource.latestPressureCalculation, ...summary.advisedPressureSummary,
+      } : null,
+    };
+  });
   return renderToStaticMarkup(<DashboardPage />);
 }
 
@@ -55,8 +88,8 @@ describe("dashboard home presentation", () => {
       "bikes/queries:listSummariesByUser": [bike],
       "sessions/queries:getAllSessionsWithBikes": [{ bike, session: { _id: "fit" }, recommendation: { calculatedFit: { saddleHeightMm: 750 } }, responses }],
     });
-    const dutch = ["Enige ervaring", "3–6 uur/week", "Gemiddeld (30–80 km)", "Gebalanceerd", "Groepsritten", "Onderrug"];
-    const english = ["Intermediate", "3–6 hrs/week", "Medium (30–80 km)", "Balanced", "Group rides", "Lower back"];
+    const dutch = ["Gevorderd", "3-6 uur/week", "Middel (30-80 km)", "Gebalanceerd", "Groepsritten", "Onderrug"];
+    const english = ["Intermediate", "3-6 hrs/week", "Medium (30-80 km)", "Balanced", "Group rides", "Lower back"];
     for (const label of locale === "nl" ? dutch : english) expect(html).toContain(label);
     if (locale === "nl") for (const label of english) expect(html).not.toContain(label);
     expect(responses).toEqual(original);
@@ -145,9 +178,98 @@ describe("dashboard home presentation", () => {
     });
     expect(html).toContain('data-session="latest" data-path="/nl/dashboard"');
     expect(html).not.toContain('data-session="older"');
-    for (const value of ["751", "748", "530", "3.2", "3.5", "3.4", "3.7"]) expect(html).toContain(value);
+    for (const value of ["751", "748", "529.7", "3,2", "3,5", "3,4", "3,7"]) expect(html).toContain(value);
     expect(html).toContain(getDashboardMessages("nl").dashboardHome.pressureStale);
     expect(html).toContain(getDashboardMessages("nl").bikeGarage.climbingProfileIncluded);
     expect(html).toContain("bikeId=bike-1");
+  });
+
+  it.each(["nl", "en"] as const)("uses the PDF mapper's exact values, ranges and confidence in %s", (locale) => {
+    state.locale = locale;
+    const source = { ...fitResultsSource, bike: { ...fitResultsSource.bike, _id: bike._id } };
+    const report = mapReportV2Payload(source as unknown as Parameters<typeof mapReportV2Payload>[0]);
+    const html = setup({
+      "bikes/queries:listSummariesByUser": [bike],
+      "sessions/queries:getAllSessionsWithBikes": [{ bike, session: source.session,
+        recommendation: source.recommendation, responses: {} }],
+      "recommendations/queries:getReportV2": source,
+    });
+    for (const row of report.detailedFit.slice(0, 4)) {
+      expect(html).toContain(getReportV2Copy(locale).parameters[row.key].label);
+      expect(html).toContain(row.targetLabel);
+      if (row.rangeLabel) expect(html).toContain(row.rangeLabel);
+    }
+    expect(html).toContain(`${report.profile.globalConfidence}%`);
+    expect(html).not.toContain("14/19");
+  });
+
+  it.each([undefined, null])("does not fabricate values when the report source is %s", (source) => {
+    const html = setup({
+      "bikes/queries:listSummariesByUser": [bike],
+      "sessions/queries:getAllSessionsWithBikes": [{ bike, session: { _id: "fit" },
+        recommendation: { calculatedFit: { saddleHeightMm: 799 } }, responses: {} }],
+      "recommendations/queries:getReportV2": source,
+    });
+    expect(html).not.toContain("799");
+    expect(html).not.toContain(">0%</strong>");
+    expect(html).toContain(source === undefined ? getDashboardMessages("nl").layout.loading : "niet beschikbaar");
+    expect(html).not.toContain("Fitadvies beschikbaar");
+  });
+
+  it("loads each bike's own report and skips pending-data priorities like the PDF summary", () => {
+    const otherBike = { ...bike, _id: "bike-2", name: "Second bike" };
+    const entries = [bike, otherBike].map((entry, index) => ({
+      bike: entry, session: { ...fitResultsSource.session, _id: `session-${index}` },
+      recommendation: fitResultsSource.recommendation, responses: {},
+    }));
+    const reportQuery = vi.fn(({ sessionId }: { sessionId: string }) => ({
+      ...fitResultsSource,
+      session: { ...fitResultsSource.session, _id: sessionId },
+      recommendation: { ...fitResultsSource.recommendation,
+        calculatedFit: { ...fitResultsSource.recommendation.calculatedFit,
+          saddleHeightMm: sessionId === "session-0" ? 711 : 788 },
+        recommendationItems: [{ parameter: "saddleSetbackMm", feasibility: "not_yet_evaluated" }],
+      },
+    }));
+    const html = setup({
+      "bikes/queries:listSummariesByUser": [bike, otherBike],
+      "sessions/queries:getAllSessionsWithBikes": entries,
+      "recommendations/queries:getReportV2": reportQuery,
+    });
+    expect(reportQuery).toHaveBeenCalledWith({ sessionId: "session-0" });
+    expect(reportQuery).toHaveBeenCalledWith({ sessionId: "session-1" });
+    expect(html).toContain("711 mm");
+    expect(html).toContain("788 mm");
+    expect(html).not.toContain(getReportV2Copy("nl").parameters.saddleSetback.label);
+  });
+
+  it("keeps pressure advice available without a fit and displays saved bike metadata", () => {
+    const html = setup({ "bikes/queries:listSummariesByUser": [{ ...bike,
+      currentGeometry: { frameSize: "54" },
+      activeTireSetupSummary: { widthFrontMm: 28, widthRearMm: 30, tubeType: "inner_tube" },
+      activeWheelsetSummary: { rimType: "hooked" },
+      advisedPressureSummary: { recommendedFrontBar: 4.1, recommendedRearBar: 4.4,
+        recommendedFrontPsi: 59, recommendedRearPsi: 64 },
+    }] });
+    for (const value of ["54", "28/30 mm", "Binnenband", "Met haak", "4,1", "4,4"]) expect(html).toContain(value);
+    expect(html).not.toContain("report actions");
+    expect(html).not.toContain("Velgtype onbekend");
+  });
+
+  it("uses Dutch headings, report status, outlined discomfort chips and bike-action pills", () => {
+    const html = setup({
+      "bikes/queries:listSummariesByUser": [bike],
+      "sessions/queries:getAllSessionsWithBikes": [{ bike, session: { _id: "fit" },
+        recommendation: fitResultsSource.recommendation,
+        responses: { has_pain: "yes", pain_areas: ["lower_back", "knee_front"] } }],
+    });
+    expect(html).toContain("Rompstabiliteit");
+    for (const leak of ["Core stability", "Advice confidence", "Fit advice available", "Reported discomfort"])
+      expect(html).not.toContain(leak);
+    expect(html).toContain("Fitadvies beschikbaar");
+    expect(html).toContain('class="rounded-full border border-border px-3 py-1 font-semibold">Onderrug');
+    expect(html).toContain('class="rounded-full border border-border px-3 py-1 font-semibold">Voorkant knie');
+    expect(html).toMatch(/class="[^"]*border-2 border-foreground[^"]*" href="\/nl\/bikes\/bike-1"/);
+    expect(html).toMatch(/class="[^"]*bg-primary text-primary-foreground[^"]*" href="\/nl\/fit\?bikeId=bike-1"/);
   });
 });
