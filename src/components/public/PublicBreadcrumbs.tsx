@@ -28,7 +28,7 @@ export function PublicBreadcrumbs({
               {item.href && !isCurrent ? (
                 <Link
                   href={item.href}
-                  className="transition-colors hover:text-[color:var(--foreground)]"
+                  className="inline-flex min-h-11 min-w-11 items-center transition-colors hover:text-[color:var(--foreground)]"
                 >
                   {item.label}
                 </Link>

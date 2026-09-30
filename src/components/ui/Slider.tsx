@@ -14,7 +14,10 @@ import {
   SliderValue as PrototyperSliderValue,
 } from "@/components/prototyper-ui/ui/slider";
 
-export interface SliderProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "value" | "onChange"> {
+export interface SliderProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "type" | "value" | "onChange"
+> {
   label?: string;
   tooltip?: string;
   tooltipLabel?: string;
@@ -47,7 +50,8 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
       ticks,
       disabled,
       name,
-      required,
+      required: _required,
+      "aria-valuetext": ariaValueText,
       defaultValue: _defaultValue,
       ...props
     },
@@ -66,9 +70,12 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
     const tooltipDescriptionId = tooltip ? `${sliderId}-tooltip-description` : undefined;
     const normalizedMin = typeof min === "number" ? min : min === undefined ? undefined : Number(min);
     const normalizedMax = typeof max === "number" ? max : max === undefined ? undefined : Number(max);
-    const normalizedStep = typeof step === "number" ? step : step === undefined ? undefined : Number(step) || 1;
+    const normalizedStep =
+      typeof step === "number" ? step : step === undefined ? undefined : Number(step) || 1;
     const sliderProps = props as unknown as ComponentPropsWithoutRef<typeof PrototyperSliderRoot>;
-    const labelledBy = [label ? labelId : undefined, sliderProps["aria-labelledby"]].filter(Boolean).join(" ");
+    const labelledBy = [label ? labelId : undefined, sliderProps["aria-labelledby"]]
+      .filter(Boolean)
+      .join(" ");
     const describedBy = [sliderProps["aria-describedby"], valueId, tooltipDescriptionId, errorId, helperId]
       .filter(Boolean)
       .join(" ");
@@ -91,7 +98,6 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
           aria-labelledby={labelledBy || undefined}
           aria-describedby={describedBy || undefined}
           aria-invalid={error ? true : undefined}
-          aria-required={required || undefined}
           className={cn("w-full", className)}
         >
           <div className="flex items-baseline justify-between gap-3">
@@ -126,15 +132,16 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
               <PrototyperSliderIndicator className="bg-primary" />
               <PrototyperSliderThumb
                 className={
-                  "size-[30px] border-4 border-primary bg-[var(--bbf-wit)] hover:border-primary " +
+                  "size-11 border-0 bg-transparent shadow-none hover:border-transparent " +
+                  "after:pointer-events-none after:absolute after:inset-[7px] after:rounded-full " +
+                  "after:border-4 after:border-primary after:bg-[var(--bbf-wit)] after:shadow-sm " +
                   "focus-visible:focus-ring focus-within:focus-ring"
                 }
                 aria-label={sliderProps["aria-label"]}
                 aria-labelledby={labelledBy || undefined}
                 aria-describedby={describedBy || undefined}
                 aria-invalid={error ? true : undefined}
-                aria-required={required || undefined}
-                aria-valuetext={props["aria-valuetext"] ?? `${valueLabel ?? value}${unit ? ` ${unit}` : ""}`}
+                aria-valuetext={ariaValueText ?? `${valueLabel ?? value}${unit ? ` ${unit}` : ""}`}
               />
             </PrototyperSliderTrack>
           </PrototyperSliderControl>
@@ -156,7 +163,8 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(
                       0,
                       Math.min(
                         100,
-                        ((tick.value - (normalizedMin ?? 0)) / ((normalizedMax ?? 100) - (normalizedMin ?? 0) || 1)) *
+                        ((tick.value - (normalizedMin ?? 0)) /
+                          ((normalizedMax ?? 100) - (normalizedMin ?? 0) || 1)) *
                           100,
                       ),
                     ),

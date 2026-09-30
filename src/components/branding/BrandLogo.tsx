@@ -76,7 +76,11 @@ export function BrandLogo({
   }
 
   return (
-    <Link href={href} aria-label={ariaLabel ?? BRAND.name} className={className}>
+    <Link
+      href={href}
+      aria-label={ariaLabel ?? BRAND.name}
+      className={cn(className, "flex min-h-11 min-w-11 items-center")}
+    >
       {image}
     </Link>
   );

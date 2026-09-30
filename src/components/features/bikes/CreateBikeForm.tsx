@@ -467,6 +467,7 @@ export function CreateBikeForm() {
 
             <Textarea
               label={messages.bikeForm.fields.notes.label}
+              aria-label={messages.bikeForm.fields.notes.label}
               value={notes}
               onChange={(event) => setNotes(event.target.value.slice(0, 500))}
               placeholder={messages.bikeForm.fields.notes.placeholder}

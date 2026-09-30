@@ -33,7 +33,8 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
   });
 
   const sharedClasses =
-    "rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all duration-200";
+    "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border px-3 py-1.5 " +
+    "text-xs font-semibold transition-all duration-200";
 
   return (
     <nav
