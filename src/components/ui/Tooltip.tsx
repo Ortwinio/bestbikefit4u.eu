@@ -42,7 +42,10 @@ export function Tooltip({ content, label = "More information", descriptionId, cl
       <PrototyperTooltip>
         <TooltipTrigger
           type="button"
-          className={cn("inline-flex items-center rounded-full focus-visible:focus-ring", className)}
+          className={cn(
+            "inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full focus-visible:focus-ring",
+            className,
+          )}
           aria-label={label}
           aria-describedby={resolvedDescriptionId}
         >

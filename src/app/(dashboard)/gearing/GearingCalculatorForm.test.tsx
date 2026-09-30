@@ -75,6 +75,13 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("account gearing", () => {
+  it.each(["nl", "en"])("keeps disclosure targets at least 44px in %s", (locale) => {
+    state.locale = locale;
+    const { container } = render(<GearingCalculatorForm />);
+    const summaries = container.querySelectorAll("summary");
+    expect(summaries.length).toBeGreaterThanOrEqual(2);
+    for (const summary of summaries) expect(summary.classList.contains("min-h-11")).toBe(true);
+  });
   it("prefills exact saved teeth, leaves FTP missing and saves the real engine analysis", async () => {
     render(<GearingCalculatorForm />);
     expect(screen.getByRole("slider", { name: en.ftp }).getAttribute("aria-valuetext")).toBe(en.unset);

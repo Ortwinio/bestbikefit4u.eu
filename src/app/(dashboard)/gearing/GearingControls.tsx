@@ -109,7 +109,7 @@ export function CassetteEditor({
       </div>
       <p className="text-sm text-muted-foreground">{copy.cassetteNote}</p>
       <details className="rounded-2xl border border-border p-4">
-        <summary className="cursor-pointer font-medium">
+        <summary className="min-h-11 cursor-pointer py-2.5 font-medium">
           {copy.exact} · {cogs.length}
         </summary>
         <div className="mt-4 space-y-4">

@@ -8,6 +8,7 @@ const state = vi.hoisted(() => ({
   tab: "mine",
   loading: false,
   empty: false,
+  filledMine: false,
   vote: vi.fn(),
   open: vi.fn(),
   replace: vi.fn(),
@@ -26,7 +27,8 @@ vi.mock("convex/react", () => ({
   useMutation: () => state.vote,
   useQuery: (reference: Parameters<typeof getFunctionName>[0]) => {
     if (state.loading) return undefined;
-    if (getFunctionName(reference).endsWith("getFeatureBoard") && !state.empty)
+    if ((getFunctionName(reference).endsWith("getFeatureBoard") ||
+      (state.filledMine && getFunctionName(reference).endsWith("getMyFeedback"))) && !state.empty)
       return [
         {
           _id: "idea-1",
@@ -46,6 +48,7 @@ beforeEach(() => {
   state.tab = "mine";
   state.loading = false;
   state.empty = false;
+  state.filledMine = false;
   state.vote.mockReset();
   state.open.mockReset();
   state.replace.mockReset();
@@ -53,6 +56,11 @@ beforeEach(() => {
 afterEach(cleanup);
 const copy = getFeedbackCopy("nl");
 describe("account feedback presentation", () => {
+  it("keeps a single-line thread title target at least 44px", () => {
+    state.filledMine = true;
+    render(<FeedbackAccountPage />);
+    expect(screen.getByRole("button", { name: "Test idea" }).classList.contains("min-h-11")).toBe(true);
+  });
   it("shows real loading and empty states and opens the existing feedback panel", () => {
     state.loading = true;
     const { rerender } = render(<FeedbackAccountPage />);

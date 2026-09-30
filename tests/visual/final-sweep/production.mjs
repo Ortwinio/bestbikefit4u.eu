@@ -1,3 +1,4 @@
+import { createPreviewCertificate, createPreviewFetch } from "./tls.mjs";
 import { cp, mkdir, readFile, writeFile, symlink, readdir, stat } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { tmpdir } from "node:os";
@@ -8,7 +9,8 @@ import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
-const inputs = ["src", "convex", "shared", "data", "docs", "public", "tests/fixtures", "next.config.ts", "tsconfig.json",
+const inputs = ["src", "convex", "shared", "data", "docs", "public", "tests/fixtures",
+  "next.config.ts", "tsconfig.json",
   "postcss.config.mjs", "package.json", "package-lock.json", "instrumentation.ts", "instrumentation-client.ts"];
 
 export async function fingerprint(root, env) {
@@ -81,13 +83,16 @@ export async function prepareProduction({ root = process.cwd(), outputDir, port 
   await cp(resolve(root, "tests/visual"), resolve(snapshot, "tests/visual"), { recursive: true });
   // Match earlier visual batches: the same build returned repeated self-307s under CLI start,
   // but 200s with correct locale/CSP under this custom server. The internal cause is unconfirmed.
+  const certificate = await createPreviewCertificate();
+  const origin = `https://127.0.0.1:${port}`;
+  const previewFetch = createPreviewFetch(origin, certificate.cert);
   const log = createWriteStream(resolve(outputDir, "server.log"));
   const child = spawn(process.execPath,
-    [fileURLToPath(new URL("./server.mjs", import.meta.url)), snapshot, String(port)],
+    [fileURLToPath(new URL("./server.mjs", import.meta.url)), snapshot, String(port),
+      certificate.keyPath, certificate.certPath],
     { cwd: snapshot, env, stdio: ["ignore", "pipe", "pipe"] });
   child.stdout.pipe(log);
   child.stderr.pipe(log);
-  const origin = `http://127.0.0.1:${port}`;
   let stopped = false;
   const close = async () => {
     if (stopped) return;
@@ -99,6 +104,7 @@ export async function prepareProduction({ root = process.cwd(), outputDir, port 
       });
     }
     log.end();
+    await certificate.close();
   };
   try {
     let ready = false;
@@ -106,14 +112,15 @@ export async function prepareProduction({ root = process.cwd(), outputDir, port 
       if (child.exitCode !== null) throw new Error(`Production server exited; see ${outputDir}/server.log`);
       // A response from our child is required; an occupied port makes the child exit and fails below.
       if (attempt > 1) {
-        ready = await fetch(`${origin}/illustrations/06-meetset.webp`, { signal: AbortSignal.timeout(3000) })
+        ready = await previewFetch(`${origin}/illustrations/06-meetset.webp`, { signal: AbortSignal.timeout(3000) })
           .then((response) => response.status === 200, () => false);
       }
       if (ready) break;
       await new Promise((done) => setTimeout(done, 500));
     }
     if (!ready || child.exitCode !== null) throw new Error("Production server did not become ready");
-    return { origin, close, sourceHash, snapshot, reused, buildId: (await readFile(buildId, "utf8")).trim() };
+    return { origin, close, fetch: previewFetch, sourceHash, snapshot, reused,
+      buildId: (await readFile(buildId, "utf8")).trim() };
   } catch (error) {
     await close();
     throw error;

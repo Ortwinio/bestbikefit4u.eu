@@ -60,13 +60,14 @@ try {
   metadata.production = {
     origin: production.origin, sourceHash: production.sourceHash, buildId: production.buildId,
     snapshot: production.snapshot, reused: production.reused,
+    tls: "Throwaway loopback certificate; production browser contexts ignore certificate errors only.",
   };
   metadata.localDiagnostics = {
     convexSyncOrigin: localConvexSyncOrigin(process.env.NEXT_PUBLIC_CONVEX_URL),
     analyticsNoopPaths: localAnalyticsPaths,
   };
   let blogSlug;
-  try { blogSlug = await discoverBlogSlug(production.origin); }
+  try { blogSlug = await discoverBlogSlug(production.origin, production.fetch); }
   catch (error) { metadata.limitations.push(`CMS blog discovery failed: ${error.message}`); }
   metadata.blog = blogSlug ? { mode: "production", slug: blogSlug }
     : { mode: "fixture", reason: "No published CMS slug available; existing visual-article-1 fixture." };
@@ -74,12 +75,14 @@ try {
     !filter || filter.split(",").some((part) => route.sourceRoute.includes(part)));
   if (!routes.length) throw new Error(`No routes match filter ${filter}`);
   if (routes.some((route) => route.fixture === "account")) {
-    accounts = await prepareAccountFixtures({ root: production.snapshot, origin: production.origin });
+    accounts = await prepareAccountFixtures({
+      root: production.snapshot, origin: production.origin, fetch: production.fetch,
+    });
     metadata.limitations.push(...accounts.limitations);
   }
   if (routes.some((route) => route.fixture === "blog")) {
     const { prepareBlogFixture } = await import("./blog-fixture.mjs");
-    blog = await prepareBlogFixture({ root: production.snapshot, origin: production.origin });
+    blog = await prepareBlogFixture({ root: production.snapshot, origin: production.origin, fetch: production.fetch });
     metadata.limitations.push(...blog.limitations);
   }
   browser = await chromium.launch({ headless: true });
@@ -97,7 +100,7 @@ try {
       mode: fixture ? `${route.fixture}-fixture` : "production", screenshot: relative(outputDir, screenshot) };
     const context = await browser.newContext({ viewport: { width: viewportWidth,
       height: viewportWidth === 390 ? 844 : 1000 }, locale: locale === "nl" ? "nl-NL" : "en-GB",
-      colorScheme: "light", reducedMotion: "reduce", deviceScaleFactor: 1 });
+      ignoreHTTPSErrors: !fixture, colorScheme: "light", reducedMotion: "reduce", deviceScaleFactor: 1 });
     const page = await context.newPage();
     const errors = [];
     const documents = [];

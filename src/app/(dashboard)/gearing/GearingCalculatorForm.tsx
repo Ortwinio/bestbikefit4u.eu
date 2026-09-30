@@ -546,7 +546,7 @@ export function GearingCalculatorForm() {
             />
           </StepCard>
           <details className="rounded-3xl border border-border bg-card p-6">
-            <summary className="cursor-pointer text-lg font-semibold">{copy.refine}</summary>
+            <summary className="min-h-11 cursor-pointer py-2 text-lg font-semibold">{copy.refine}</summary>
             <div className="mt-6 space-y-6">
               <ValueSlider
                 label={copy.wheel}
