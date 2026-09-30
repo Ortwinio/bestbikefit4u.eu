@@ -2,6 +2,38 @@
   "v": 3,
   "attachments": {},
   "boards": {
+    "About.dc.html": {
+      "h": 3720,
+      "is_interactive": true,
+      "title": "Over ons",
+      "w": 1440,
+      "x": 19760,
+      "y": 8384
+    },
+    "AppInstall.dc.html": {
+      "h": 1144,
+      "is_interactive": true,
+      "title": "App installeren",
+      "w": 1440,
+      "x": 33440,
+      "y": 5020
+    },
+    "BikeAdd.dc.html": {
+      "h": 1000,
+      "is_interactive": true,
+      "title": "Fiets toevoegen",
+      "w": 1440,
+      "x": 15200,
+      "y": 5020
+    },
+    "BikeCompare.dc.html": {
+      "h": 1120,
+      "is_interactive": true,
+      "title": "Fietsen vergelijken",
+      "w": 1440,
+      "x": 22800,
+      "y": 5020
+    },
     "BikeFit.dc.html": {
       "h": 1400,
       "is_interactive": true,
@@ -10,13 +42,85 @@
       "x": 3040,
       "y": 0
     },
-    "BikeProfile.dc.html": {
+    "BikeFittingLanding.dc.html": {
+      "h": 3300,
       "is_interactive": true,
-      "x": 21280,
-      "y": 5020,
+      "title": "Bikefitting (landing)",
       "w": 1440,
+      "x": 9120,
+      "y": 8384
+    },
+    "BikeForm.dc.html": {
+      "h": 1744,
+      "is_interactive": true,
+      "title": "Fiets · formulier",
+      "w": 1440,
+      "x": 16720,
+      "y": 5020
+    },
+    "BikeImportMarktplaats.dc.html": {
+      "h": 2084,
+      "is_interactive": true,
+      "title": "Import · Marktplaats",
+      "w": 1440,
+      "x": 18240,
+      "y": 5020
+    },
+    "BikeImportPassport.dc.html": {
+      "h": 1724,
+      "is_interactive": true,
+      "title": "Import · fietspaspoort",
+      "w": 1440,
+      "x": 19760,
+      "y": 5020
+    },
+    "BikeProfile.dc.html": {
       "h": 2444,
-      "title": "Fietsprofiel"
+      "is_interactive": true,
+      "title": "Fietsprofiel",
+      "w": 1440,
+      "x": 21280,
+      "y": 5020
+    },
+    "BikeSetup.dc.html": {
+      "h": 6640,
+      "is_interactive": true,
+      "title": "Fiets afstellen",
+      "w": 1440,
+      "x": 10640,
+      "y": 8384
+    },
+    "Bikes.dc.html": {
+      "h": 1404,
+      "is_interactive": true,
+      "title": "Fietsgarage",
+      "w": 1440,
+      "x": 13680,
+      "y": 5020
+    },
+    "BlogArticle.dc.html": {
+      "h": 2740,
+      "is_interactive": true,
+      "title": "Blog · artikel",
+      "w": 1440,
+      "x": 16720,
+      "y": 8384
+    },
+    "BlogIndex.dc.html": {
+      "h": 2644,
+      "is_interactive": true,
+      "title": "Blog",
+      "w": 1440,
+      "x": 15200,
+      "y": 8384
+    },
+    "CaseStudy.dc.html": {
+      "h": 2784,
+      "is_interactive": true,
+      "title": "Case study",
+      "w": 1440,
+      "x": 24320,
+      "y": 8384
     },
     "ClimbPlanner.dc.html": {
       "h": 1300,
@@ -25,6 +129,14 @@
       "w": 1440,
       "x": 15200,
       "y": 0
+    },
+    "Contact.dc.html": {
+      "h": 2220,
+      "is_interactive": true,
+      "title": "Contact",
+      "w": 1440,
+      "x": 22800,
+      "y": 8384
     },
     "CrankLength.dc.html": {
       "h": 1240,
@@ -35,12 +147,126 @@
       "y": 0
     },
     "Dashboard.dc.html": {
+      "h": 1764,
       "is_interactive": true,
-      "x": 1520,
-      "y": 5020,
+      "title": "Dashboard · overzicht",
       "w": 1440,
-      "h": 1604,
-      "title": "Dashboard · overzicht"
+      "x": 1520,
+      "y": 5020
+    },
+    "FAQ.dc.html": {
+      "h": 4360,
+      "is_interactive": true,
+      "title": "FAQ",
+      "w": 1440,
+      "x": 21280,
+      "y": 8384
+    },
+    "Feedback.dc.html": {
+      "h": 1544,
+      "is_interactive": true,
+      "title": "Feedback",
+      "w": 1440,
+      "x": 31920,
+      "y": 5020
+    },
+    "FitMethod.dc.html": {
+      "h": 1940,
+      "is_interactive": true,
+      "title": "Fit · hoe het werkt",
+      "w": 1440,
+      "x": 10640,
+      "y": 5020
+    },
+    "FitPass.dc.html": {
+      "h": 3660,
+      "is_interactive": true,
+      "title": "Fit Pass",
+      "w": 1440,
+      "x": 3040,
+      "y": 8384
+    },
+    "FitQuestionnaire.dc.html": {
+      "h": 1164,
+      "is_interactive": true,
+      "title": "Fit · vragenlijst",
+      "w": 1440,
+      "x": 7600,
+      "y": 5020
+    },
+    "FitRapport1.dc.html": {
+      "h": 1123,
+      "page": "rapport",
+      "title": "Fitrapport · pagina 1 · samenvatting",
+      "w": 794,
+      "x": 0,
+      "y": 0
+    },
+    "FitRapport2.dc.html": {
+      "h": 1123,
+      "page": "rapport",
+      "title": "Fitrapport · pagina 3 · afstelwaarden",
+      "w": 794,
+      "x": 1748,
+      "y": 0
+    },
+    "FitRapport3.dc.html": {
+      "h": 1123,
+      "page": "rapport",
+      "title": "Fitrapport · pagina 5 · plan",
+      "w": 794,
+      "x": 3496,
+      "y": 0
+    },
+    "FitRapport4.dc.html": {
+      "h": 1123,
+      "page": "rapport",
+      "title": "Fitrapport · pagina 6 · meten",
+      "w": 794,
+      "x": 4370,
+      "y": 0
+    },
+    "FitRapport5.dc.html": {
+      "h": 1123,
+      "page": "rapport",
+      "title": "Fitrapport · pagina 4 · banden",
+      "w": 794,
+      "x": 2622,
+      "y": 0
+    },
+    "FitRapport6.dc.html": {
+      "h": 1123,
+      "page": "rapport",
+      "title": "Fitrapport · pagina 2 · basisgegevens",
+      "w": 794,
+      "x": 874,
+      "y": 0
+    },
+    "FitReport.dc.html": {
+      "h": 3369,
+      "is_interactive": true,
+      "paper": "a4",
+      "print": "flow",
+      "title": "Fitrapport (PDF, A4)",
+      "w": 794,
+      "x": 28880,
+      "y": 8384
+    },
+    "FitResults.dc.html": {
+      "h": 1444,
+      "is_interactive": true,
+      "title": "Fit · resultaten",
+      "w": 1440,
+      "x": 9120,
+      "y": 5020
+    },
+    "FitStart.dc.html": {
+      "h": 1444,
+      "is_interactive": true,
+      "title": "Fit · start",
+      "w": 1440,
+      "x": 6080,
+      "y": 5020
     },
     "FrameSize.dc.html": {
       "h": 1240,
@@ -74,13 +300,45 @@
       "x": 12160,
       "y": 0
     },
-    "History.dc.html": {
-      "x": 12160,
-      "y": 5020,
+    "GearingDashboard.dc.html": {
+      "h": 2444,
+      "is_interactive": true,
+      "title": "Account · verzet",
       "w": 1440,
+      "x": 25840,
+      "y": 5020
+    },
+    "GuideDetail.dc.html": {
+      "h": 4844,
+      "is_interactive": true,
+      "title": "Gids · detail",
+      "w": 1440,
+      "x": 13680,
+      "y": 8384
+    },
+    "Guides.dc.html": {
+      "h": 3844,
+      "is_interactive": true,
+      "title": "Gidsen",
+      "w": 1440,
+      "x": 12160,
+      "y": 8384
+    },
+    "History.dc.html": {
       "h": 1244,
+      "is_interactive": true,
       "title": "Sessies & rapporten",
-      "is_interactive": true
+      "w": 1440,
+      "x": 12160,
+      "y": 5020
+    },
+    "HowItWorks.dc.html": {
+      "h": 3520,
+      "is_interactive": true,
+      "title": "Hoe het werkt",
+      "w": 1440,
+      "x": 0,
+      "y": 8384
     },
     "Illustraties.dc.html": {
       "h": 2440,
@@ -89,13 +347,21 @@
       "x": 1520,
       "y": 23292
     },
-    "Login.dc.html": {
+    "Legal.dc.html": {
+      "h": 3324,
       "is_interactive": true,
-      "x": 0,
-      "y": 5020,
+      "title": "Privacy & voorwaarden",
       "w": 1440,
+      "x": 25840,
+      "y": 8384
+    },
+    "Login.dc.html": {
       "h": 900,
-      "title": "Inloggen"
+      "is_interactive": true,
+      "title": "Inloggen",
+      "w": 1440,
+      "x": 0,
+      "y": 5020
     },
     "Logo.dc.html": {
       "h": 1560,
@@ -112,6 +378,30 @@
       "x": 0,
       "y": 0
     },
+    "MeasurementGuide.dc.html": {
+      "h": 3920,
+      "is_interactive": true,
+      "title": "Meetgids",
+      "w": 1440,
+      "x": 1520,
+      "y": 8384
+    },
+    "PainDetail.dc.html": {
+      "h": 3960,
+      "is_interactive": true,
+      "title": "Klacht · detail",
+      "w": 1440,
+      "x": 6080,
+      "y": 8384
+    },
+    "PainIndex.dc.html": {
+      "h": 3060,
+      "is_interactive": true,
+      "title": "Klachten · overzicht",
+      "w": 1440,
+      "x": 4560,
+      "y": 8384
+    },
     "PowerSpeed.dc.html": {
       "h": 1240,
       "is_interactive": true,
@@ -120,12 +410,44 @@
       "x": 13680,
       "y": 0
     },
+    "PressureDashboard.dc.html": {
+      "h": 1844,
+      "is_interactive": true,
+      "title": "Account · bandenspanning",
+      "w": 1440,
+      "x": 24320,
+      "y": 5020
+    },
+    "PressureLanding.dc.html": {
+      "h": 3400,
+      "is_interactive": true,
+      "title": "Bandenspanning · SEO-pagina",
+      "w": 1440,
+      "x": 27360,
+      "y": 8384
+    },
     "Pricing.dc.html": {
       "h": 2700,
       "title": "Prijzen",
       "w": 1440,
       "x": 1520,
       "y": 0
+    },
+    "Profile.dc.html": {
+      "h": 1444,
+      "is_interactive": true,
+      "title": "Profiel",
+      "w": 1440,
+      "x": 3040,
+      "y": 5020
+    },
+    "ProfileImprove.dc.html": {
+      "h": 1444,
+      "is_interactive": true,
+      "title": "Profiel verbeteren",
+      "w": 1440,
+      "x": 4560,
+      "y": 5020
     },
     "SaddleHeight.dc.html": {
       "h": 1240,
@@ -135,6 +457,14 @@
       "x": 4560,
       "y": 0
     },
+    "SaddleSelector.dc.html": {
+      "h": 2944,
+      "is_interactive": true,
+      "title": "Zadelkiezer",
+      "w": 1440,
+      "x": 27360,
+      "y": 5020
+    },
     "SaddleWidth.dc.html": {
       "h": 1300,
       "is_interactive": true,
@@ -142,6 +472,30 @@
       "w": 1440,
       "x": 10640,
       "y": 0
+    },
+    "ScienceArticle.dc.html": {
+      "h": 2884,
+      "is_interactive": true,
+      "title": "Wetenschap",
+      "w": 1440,
+      "x": 18240,
+      "y": 8384
+    },
+    "Settings.dc.html": {
+      "h": 1644,
+      "is_interactive": true,
+      "title": "Instellingen",
+      "w": 1440,
+      "x": 30400,
+      "y": 5020
+    },
+    "ShoeCleatFit.dc.html": {
+      "h": 1320,
+      "is_interactive": true,
+      "title": "Schoen & cleat",
+      "w": 1440,
+      "x": 28880,
+      "y": 5020
     },
     "TirePressure.dc.html": {
       "h": 1300,
@@ -151,367 +505,61 @@
       "x": 7600,
       "y": 0
     },
-    "Profile.dc.html": {
-      "x": 3040,
-      "y": 5020,
-      "w": 1440,
-      "h": 1444,
-      "title": "Profiel",
-      "is_interactive": true
-    },
-    "ProfileImprove.dc.html": {
-      "x": 4560,
-      "y": 5020,
-      "w": 1440,
-      "h": 1444,
-      "title": "Profiel verbeteren",
-      "is_interactive": true
-    },
-    "FitStart.dc.html": {
-      "x": 6080,
-      "y": 5020,
-      "w": 1440,
-      "h": 1444,
-      "title": "Fit · start",
-      "is_interactive": true
-    },
-    "FitQuestionnaire.dc.html": {
-      "x": 7600,
-      "y": 5020,
-      "w": 1440,
-      "h": 1164,
-      "title": "Fit · vragenlijst",
-      "is_interactive": true
-    },
-    "FitResults.dc.html": {
-      "x": 9120,
-      "y": 5020,
-      "w": 1440,
-      "h": 1444,
-      "title": "Fit · resultaten",
-      "is_interactive": true
-    },
-    "FitMethod.dc.html": {
-      "x": 10640,
-      "y": 5020,
-      "w": 1440,
-      "h": 1940,
-      "title": "Fit · hoe het werkt",
-      "is_interactive": true
-    },
-    "Bikes.dc.html": {
-      "x": 13680,
-      "y": 5020,
-      "w": 1440,
-      "h": 1404,
-      "title": "Fietsgarage",
-      "is_interactive": true
-    },
-    "BikeAdd.dc.html": {
-      "x": 15200,
-      "y": 5020,
-      "w": 1440,
-      "h": 1000,
-      "title": "Fiets toevoegen",
-      "is_interactive": true
-    },
-    "BikeForm.dc.html": {
-      "x": 16720,
-      "y": 5020,
-      "w": 1440,
-      "h": 1744,
-      "title": "Fiets · formulier",
-      "is_interactive": true
-    },
-    "BikeImportMarktplaats.dc.html": {
-      "x": 18240,
-      "y": 5020,
-      "w": 1440,
-      "h": 2084,
-      "title": "Import · Marktplaats",
-      "is_interactive": true
-    },
-    "BikeImportPassport.dc.html": {
-      "x": 19760,
-      "y": 5020,
-      "w": 1440,
-      "h": 1724,
-      "title": "Import · fietspaspoort",
-      "is_interactive": true
-    },
-    "BikeCompare.dc.html": {
-      "x": 22800,
-      "y": 5020,
-      "w": 1440,
-      "h": 1120,
-      "title": "Fietsen vergelijken",
-      "is_interactive": true
-    },
-    "PressureDashboard.dc.html": {
-      "x": 24320,
-      "y": 5020,
-      "w": 1440,
-      "h": 1844,
-      "title": "Account · bandenspanning",
-      "is_interactive": true
-    },
-    "GearingDashboard.dc.html": {
-      "x": 25840,
-      "y": 5020,
-      "w": 1440,
-      "h": 2444,
-      "title": "Account · verzet",
-      "is_interactive": true
-    },
-    "SaddleSelector.dc.html": {
-      "x": 27360,
-      "y": 5020,
-      "w": 1440,
-      "h": 2944,
-      "title": "Zadelkiezer",
-      "is_interactive": true
-    },
-    "ShoeCleatFit.dc.html": {
-      "x": 28880,
-      "y": 5020,
-      "w": 1440,
-      "h": 1320,
-      "title": "Schoen & cleat",
-      "is_interactive": true
-    },
-    "Settings.dc.html": {
-      "x": 30400,
-      "y": 5020,
-      "w": 1440,
-      "h": 1644,
-      "title": "Instellingen",
-      "is_interactive": true
-    },
-    "Feedback.dc.html": {
-      "x": 31920,
-      "y": 5020,
-      "w": 1440,
-      "h": 1544,
-      "title": "Feedback",
-      "is_interactive": true
-    },
-    "AppInstall.dc.html": {
-      "x": 33440,
-      "y": 5020,
-      "w": 1440,
-      "h": 1144,
-      "title": "App installeren",
-      "is_interactive": true
-    },
-    "HowItWorks.dc.html": {
-      "x": 0,
-      "y": 8384,
-      "w": 1440,
-      "h": 3520,
-      "title": "Hoe het werkt",
-      "is_interactive": true
-    },
-    "MeasurementGuide.dc.html": {
-      "x": 1520,
-      "y": 8384,
-      "w": 1440,
-      "h": 3920,
-      "title": "Meetgids",
-      "is_interactive": true
-    },
-    "FitPass.dc.html": {
-      "x": 3040,
-      "y": 8384,
-      "w": 1440,
-      "h": 3660,
-      "title": "Fit Pass",
-      "is_interactive": true
-    },
-    "PainIndex.dc.html": {
-      "x": 4560,
-      "y": 8384,
-      "w": 1440,
-      "h": 3060,
-      "title": "Klachten · overzicht",
-      "is_interactive": true
-    },
-    "PainDetail.dc.html": {
-      "x": 6080,
-      "y": 8384,
-      "w": 1440,
-      "h": 3960,
-      "title": "Klacht · detail",
-      "is_interactive": true
-    },
     "WhyBikeFit.dc.html": {
-      "x": 7600,
-      "y": 8384,
-      "w": 1440,
       "h": 4240,
-      "title": "Waarom bikefit",
-      "is_interactive": true
-    },
-    "BikeFittingLanding.dc.html": {
-      "x": 9120,
-      "y": 8384,
-      "w": 1440,
-      "h": 3300,
-      "title": "Bikefitting (landing)",
-      "is_interactive": true
-    },
-    "BikeSetup.dc.html": {
-      "x": 10640,
-      "y": 8384,
-      "w": 1440,
-      "h": 6640,
-      "title": "Fiets afstellen",
-      "is_interactive": true
-    },
-    "Guides.dc.html": {
-      "x": 12160,
-      "y": 8384,
-      "w": 1440,
-      "h": 3844,
-      "title": "Gidsen",
-      "is_interactive": true
-    },
-    "GuideDetail.dc.html": {
-      "x": 13680,
-      "y": 8384,
-      "w": 1440,
-      "h": 4844,
-      "title": "Gids · detail",
-      "is_interactive": true
-    },
-    "BlogIndex.dc.html": {
-      "x": 15200,
-      "y": 8384,
-      "w": 1440,
-      "h": 2644,
-      "title": "Blog",
-      "is_interactive": true
-    },
-    "BlogArticle.dc.html": {
-      "x": 16720,
-      "y": 8384,
-      "w": 1440,
-      "h": 2740,
-      "title": "Blog · artikel",
-      "is_interactive": true
-    },
-    "ScienceArticle.dc.html": {
-      "x": 18240,
-      "y": 8384,
-      "w": 1440,
-      "h": 2884,
-      "title": "Wetenschap",
-      "is_interactive": true
-    },
-    "About.dc.html": {
-      "x": 19760,
-      "y": 8384,
-      "w": 1440,
-      "h": 3720,
-      "title": "Over ons",
-      "is_interactive": true
-    },
-    "FAQ.dc.html": {
-      "x": 21280,
-      "y": 8384,
-      "w": 1440,
-      "h": 4360,
-      "title": "FAQ",
-      "is_interactive": true
-    },
-    "Contact.dc.html": {
-      "x": 22800,
-      "y": 8384,
-      "w": 1440,
-      "h": 2220,
-      "title": "Contact",
-      "is_interactive": true
-    },
-    "CaseStudy.dc.html": {
-      "x": 24320,
-      "y": 8384,
-      "w": 1440,
-      "h": 2784,
-      "title": "Case study",
-      "is_interactive": true
-    },
-    "Legal.dc.html": {
-      "x": 25840,
-      "y": 8384,
-      "w": 1440,
-      "h": 3324,
-      "title": "Privacy & voorwaarden",
-      "is_interactive": true
-    },
-    "PressureLanding.dc.html": {
-      "x": 27360,
-      "y": 8384,
-      "w": 1440,
-      "h": 3400,
-      "title": "Bandenspanning · SEO-pagina",
-      "is_interactive": true
-    },
-    "FitReport.dc.html": {
-      "x": 28880,
-      "y": 8384,
-      "w": 794,
-      "h": 3369,
-      "title": "Fitrapport (PDF, A4)",
       "is_interactive": true,
-      "paper": "a4",
-      "print": "flow"
-    },
-    "m/Home.dc.html": {
-      "x": 0,
-      "y": 15444,
-      "w": 390,
-      "h": 7428,
-      "title": "Mobiel · Home",
-      "is_interactive": true
-    },
-    "m/SaddleHeight.dc.html": {
-      "x": 470,
-      "y": 15444,
-      "w": 390,
-      "h": 2740,
-      "title": "Mobiel · Zadelhoogte",
-      "is_interactive": true
+      "title": "Waarom bikefit",
+      "w": 1440,
+      "x": 7600,
+      "y": 8384
     },
     "m/BikeFit.dc.html": {
-      "x": 940,
-      "y": 15444,
-      "w": 390,
       "h": 2660,
+      "is_interactive": true,
       "title": "Mobiel · Bike fit",
-      "is_interactive": true
-    },
-    "m/Login.dc.html": {
-      "x": 1410,
-      "y": 15444,
       "w": 390,
-      "h": 1280,
-      "title": "Mobiel · Inloggen",
-      "is_interactive": true
+      "x": 940,
+      "y": 15444
     },
     "m/Dashboard.dc.html": {
-      "x": 1880,
-      "y": 15444,
-      "w": 390,
-      "h": 3260,
+      "h": 3920,
+      "is_interactive": true,
       "title": "Mobiel · Dashboard",
-      "is_interactive": true
+      "w": 390,
+      "x": 1880,
+      "y": 15444
     },
     "m/FitResults.dc.html": {
-      "x": 2350,
-      "y": 15444,
-      "w": 390,
       "h": 2660,
+      "is_interactive": true,
       "title": "Mobiel · Fit resultaten",
-      "is_interactive": true
+      "w": 390,
+      "x": 2350,
+      "y": 15444
+    },
+    "m/Home.dc.html": {
+      "h": 7428,
+      "is_interactive": true,
+      "title": "Mobiel · Home",
+      "w": 390,
+      "x": 0,
+      "y": 15444
+    },
+    "m/Login.dc.html": {
+      "h": 1280,
+      "is_interactive": true,
+      "title": "Mobiel · Inloggen",
+      "w": 390,
+      "x": 1410,
+      "y": 15444
+    },
+    "m/SaddleHeight.dc.html": {
+      "h": 2740,
+      "is_interactive": true,
+      "title": "Mobiel · Zadelhoogte",
+      "w": 390,
+      "x": 470,
+      "y": 15444
     }
   },
   "createdOnFiles": {
@@ -525,7 +573,7 @@
   "notes": {
     "account": {
       "kind": "title1",
-      "maxW": 34880,
+      "maxW": 8000,
       "text": "Achter de login",
       "w": 240,
       "x": 0,
@@ -547,6 +595,22 @@
       "x": 3040,
       "y": -300
     },
+    "content": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "Content & SEO",
+      "w": 240,
+      "x": 0,
+      "y": 8084
+    },
+    "mobile": {
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "Mobiel",
+      "w": 240,
+      "x": 0,
+      "y": 15144
+    },
     "pages": {
       "kind": "title1",
       "maxW": 2960,
@@ -555,21 +619,14 @@
       "x": 0,
       "y": -300
     },
-    "content": {
+    "rapport": {
       "kind": "title1",
-      "text": "Content & SEO",
-      "x": 0,
-      "y": 8084,
+      "maxW": 5164,
+      "page": "rapport",
+      "text": "Fitrapport · A4, 6 pagina's",
       "w": 240,
-      "maxW": 29674
-    },
-    "mobile": {
-      "kind": "title1",
-      "text": "Mobiel",
       "x": 0,
-      "y": 15144,
-      "w": 240,
-      "maxW": 2740
+      "y": -300
     }
   },
   "order": [
@@ -636,8 +693,23 @@
     "m/Dashboard.dc.html",
     "m/FitResults.dc.html",
     "Logo.dc.html",
-    "Illustraties.dc.html"
+    "Illustraties.dc.html",
+    "FitRapport1.dc.html",
+    "FitRapport6.dc.html",
+    "FitRapport2.dc.html",
+    "FitRapport5.dc.html",
+    "FitRapport3.dc.html",
+    "FitRapport4.dc.html"
   ],
-  "pages": [],
+  "pages": [
+    {
+      "id": "website",
+      "name": "Website"
+    },
+    {
+      "id": "rapport",
+      "name": "Fitrapport (PDF)"
+    }
+  ],
   "title": "BestBikeFit4U redesign"
 }
