@@ -14,6 +14,7 @@ import { PublicSurfaceCard } from "@/components/public/PublicSurfaceCard";
 import { trackAdConversion } from "@/lib/analytics/conversions";
 import { reportClientError } from "@/lib/telemetry";
 import type { Locale } from "@/i18n/config";
+import { getCaseStudyMessages } from "@/i18n/marketing/caseStudy";
 
 function FormField({
   id,
@@ -61,6 +62,17 @@ export function CaseStudyRecruitmentForm({
   const [painSummary, setPainSummary] = useState("");
   const [consentAccepted, setConsentAccepted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const validation = getCaseStudyMessages(locale).validation;
+  const localizeValidation = (event: React.InvalidEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const field = event.currentTarget;
+    field.setCustomValidity(
+      field.type === "checkbox"
+        ? validation.consent
+        : field.validity.typeMismatch
+          ? validation.email
+          : validation.required,
+    );
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -96,13 +108,14 @@ export function CaseStudyRecruitmentForm({
       setPainSummary("");
       setConsentAccepted(false);
     } catch (error) {
+      const description = reportClientError(error, {
+        area: "case-study",
+        action: "submitLead",
+        operationType: "mutation",
+        metadata: { sourcePath, painSlug },
+      });
       toast.error({
-        description: reportClientError(error, {
-          area: "case-study",
-          action: "submitLead",
-          operationType: "mutation",
-          metadata: { sourcePath, painSlug },
-        }),
+        description: locale === "nl" ? getCaseStudyMessages(locale).submissionError : description,
       });
     } finally {
       setIsSubmitting(false);
@@ -111,10 +124,17 @@ export function CaseStudyRecruitmentForm({
 
   return (
     <PublicSurfaceCard className="rounded-[2rem]">
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-5" onSubmit={handleSubmit}
+          onInput={locale === "nl" ? (event) => {
+            const field = event.target;
+            if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) {
+              field.setCustomValidity("");
+            }
+          } : undefined}>
           <div className="grid gap-5 md:grid-cols-2">
             <FormField id="case-study-name" label={copy.nameLabel}>
-              <Input id="case-study-name" value={name} onChange={(event) => setName(event.currentTarget.value)} required />
+              <Input id="case-study-name" value={name} onChange={(event) => setName(event.currentTarget.value)}
+                onInvalid={locale === "nl" ? localizeValidation : undefined} required />
             </FormField>
             <FormField id="case-study-email" label={copy.emailLabel}>
               <Input
@@ -122,6 +142,7 @@ export function CaseStudyRecruitmentForm({
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.currentTarget.value)}
+                onInvalid={locale === "nl" ? localizeValidation : undefined}
                 required
               />
             </FormField>
@@ -141,6 +162,7 @@ export function CaseStudyRecruitmentForm({
               id="case-study-summary"
               value={painSummary}
               onChange={(event) => setPainSummary(event.currentTarget.value)}
+              onInvalid={locale === "nl" ? localizeValidation : undefined}
               rows={6}
               required
             />
@@ -150,6 +172,7 @@ export function CaseStudyRecruitmentForm({
             <input
               type="checkbox"
               checked={consentAccepted}
+              onInvalid={locale === "nl" ? localizeValidation : undefined}
               onChange={(event) => setConsentAccepted(event.currentTarget.checked)}
               className="mt-1 h-4 w-4 rounded border-border"
               required

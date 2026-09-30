@@ -1,6 +1,16 @@
 import type { Locale } from "@/i18n/config";
 
 const nl = {
+  metadata: {
+    title: "Deel je praktijkvoorbeeld | BestBikeFit4U",
+    description: "Deel je pijn- of comfortklachten op de fiets. Help ons praktijkvoorbeelden van fietsers te verzamelen.",
+  },
+  submissionError: "Je aanmelding is niet verstuurd. Probeer het opnieuw.",
+  validation: {
+    required: "Vul dit veld in.",
+    email: "Vul een geldig e-mailadres in.",
+    consent: "Geef toestemming voordat je je aanmeldt.",
+  },
   eyebrow: "Rijders gezocht",
   title: "Deel jouw fietsverhaal.",
   intro: "Heb je terugkerende klachten of een uitdaging met je fietspositie? Deel je situatie. " +
@@ -28,13 +38,13 @@ const nl = {
     ridingGoalLabel: "Rijdoel of context",
     painSummaryLabel: "Beschrijf je klacht of uitdaging",
     consentLabel: "Ik geef toestemming om mijn inzending te gebruiken om contact op te nemen " +
-      "over een case study of validatieronde.",
-    submitLabel: "Verstuur case-study interesse",
-    success: "Bedankt. We hebben je case-study interesse ontvangen.",
+      "over een praktijkvoorbeeld of validatieronde.",
+    submitLabel: "Meld je aan voor een praktijkvoorbeeld",
+    success: "Bedankt. We hebben je aanmelding voor een praktijkvoorbeeld ontvangen.",
     helpText: "Bijvoorbeeld: gran fondo, triathlon, woon-werk, revalidatie",
   },
   helpTitle: "Wat helpt ons het meest?",
-  helpIntro: "Hoe concreter je startsituatie, hoe beter we kunnen beoordelen of je case bruikbaar is voor follow-up.",
+  helpIntro: "Beschrijf je startsituatie zo concreet mogelijk. Zo kunnen we beoordelen of je verhaal geschikt is voor vervolgvragen.",
   help: [
     "Wanneer treedt de klacht op: direct, na een tijd fietsen of alleen bij klimmen?",
     "Welke fiets en discipline gebruik je?",
@@ -55,6 +65,16 @@ const nl = {
 };
 
 const en: typeof nl = {
+  metadata: {
+    title: "Case study recruitment | BestBikeFit4U",
+    description: "Share your fit-related pain or comfort challenge and help us build real rider case studies.",
+  },
+  submissionError: "Something went wrong. Please try again.",
+  validation: {
+    required: "Please fill out this field.",
+    email: "Please enter a valid email address.",
+    consent: "Please accept before submitting.",
+  },
   eyebrow: "Riders wanted",
   title: "Share your cycling story.",
   intro: "Do you have recurring discomfort or a challenge with your riding position? Share your situation. " +

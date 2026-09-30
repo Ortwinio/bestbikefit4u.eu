@@ -6,6 +6,7 @@ import { Card } from "@/components/ui";
 import type { PublicHero, PublicSurfaceCard, PublicCtaBand } from "@/components/public";
 import type { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { getGuideLinkLabel } from "@/lib/guides/content";
 import styles from "./editorial.module.css";
 
 export function EditorialShell({ children }: { children: ReactNode; className?: string }) {
@@ -118,7 +119,9 @@ export function EditorialLinks({ title, links, locale }: ComponentProps<typeof R
         {links.map((link) => (
           <Link key={link.href} href={withLocalePrefix(link.href, locale)}>
             <span>
-              <strong>{link.label}</strong>
+              <strong>{locale === "nl" && link.href.startsWith("/guides/")
+                ? getGuideLinkLabel(link.href, locale)
+                : link.label}</strong>
               {link.description && <small>{link.description}</small>}
             </span>
             <ArrowRight size={20} aria-hidden="true" />

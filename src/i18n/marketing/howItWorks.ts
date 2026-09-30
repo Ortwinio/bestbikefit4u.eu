@@ -113,9 +113,9 @@ export const howItWorksCopy: Record<
     title: "Hoe BestBikeFit4U werkt",
     intro:
       "BestBikeFit4U combineert je lichaamsmetingen, rijdoelen en fietscontext om je te helpen duidelijkere fitbeslissingen te nemen. Het doel is een betere volgende stap op de fiets die je echt rijdt.",
-    sectionTitle: "Wat er in de fitflow gebeurt",
+    sectionTitle: "Zo verloopt je bikefit",
     sectionIntro:
-      "De flow is opgezet om van bruikbare input naar praktische aanbevelingen te gaan zonder rijders door onnodige complexiteit te trekken.",
+      "Je vult je gegevens in en krijgt praktische aanbevelingen. Zonder onnodige stappen.",
     prepTitle: "Wat je voorbereidt voordat je start",
     prepBody:
       "Zorg voor je lichaamsmetingen, een globaal beeld van je rijdoelen en de fietscontext die het belangrijkst is. Hoe beter de context, hoe duidelijker de uitkomst.",
@@ -123,7 +123,7 @@ export const howItWorksCopy: Record<
     afterBody:
       "Je krijgt fitadvies waarmee je je huidige positie kunt beoordelen, de belangrijkste afwegingen begrijpt en gerichter kunt bepalen wat je daarna wilt testen.",
     primaryCta: "Start gratis fit",
-    secondaryCta: "Open Bike Fit Calculator",
+    secondaryCta: "Bereken je bikefit",
     steps: [
       {
         title: "Stap 1: Vul je metingen in",

@@ -14,24 +14,13 @@ import styles from "./case-study.module.css";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const alternates = buildLocaleAlternates("/case-study", locale);
+  const copy = getCaseStudyMessages(locale);
   return {
-    title:
-      locale === "nl"
-        ? "Case-study deelname | BestBikeFit4U"
-        : "Case study recruitment | BestBikeFit4U",
-    description:
-      locale === "nl"
-        ? "Deel je fietsgerelateerde pijn- of comfortprobleem en help ons echte rider case studies opbouwen."
-        : "Share your fit-related pain or comfort challenge and help us build real rider case studies.",
+    title: copy.metadata.title,
+    description: copy.metadata.description,
     openGraph: {
-      title:
-        locale === "nl"
-          ? "Case-study deelname | BestBikeFit4U"
-          : "Case study recruitment | BestBikeFit4U",
-      description:
-        locale === "nl"
-          ? "Deel je fietsgerelateerde pijn- of comfortprobleem en help ons echte rider case studies opbouwen."
-          : "Share your fit-related pain or comfort challenge and help us build real rider case studies.",
+      title: copy.metadata.title,
+      description: copy.metadata.description,
       type: "website",
       url: alternates.canonical,
     },

@@ -39,10 +39,7 @@ function parsePage(value: string | undefined) {
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const alternates = buildLocaleAlternates("/blog", locale);
-  const description =
-    locale === "nl"
-      ? "Lees praktische artikelen over bikefitting, fietspositie, comfort en setup-keuzes."
-      : "Read practical articles about bike fitting, riding position, comfort, and setup decisions.";
+  const description = blogMessages[locale].metadataDescription;
 
   return {
     title: "Blog - BestBikeFit4U",

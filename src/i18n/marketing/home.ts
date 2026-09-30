@@ -20,7 +20,7 @@ export const homeMarketing: Record<Locale, HomeCopy> = {
     start: "Start gratis bike fit", reportLink: "Wat zit in het rapport?", rating: "4,8 van 380+ rijders",
     toolsEyebrow: "Gratis configurators", toolsTitle: "Kies wat je wilt afstellen", toolsDescription: "Gratis tools die je direct kunt gebruiken, zonder account.",
     tools: [
-      { title: "Complete bike fit", description: "Zadel, reach, drop en framemaat in één overzicht." },
+      { title: "Volledige bikefit", description: "Zadel, reach, drop en framemaat in één overzicht." },
       { title: "Zadelhoogte", description: "Een startwaarde in millimeters, met een aanpassingsmarge." },
       { title: "Framemaat", description: "Welke maat past bij jouw proporties?" },
       { title: "Bandenspanning", description: "Voor en achter, op basis van gewicht en ondergrond." },
@@ -34,7 +34,7 @@ export const homeMarketing: Record<Locale, HomeCopy> = {
       { title: "Knieën", description: "Lees hoe zadelpositie en cleats knieklachten beïnvloeden." },
       { title: "Onderrug", description: "Lees over reach, drop en zadelhoek bij rugklachten." },
       { title: "Handen & nek", description: "Lees over reach, stuurbreedte en druk op je handen." },
-      { title: "Zadelpijn", description: "Breedte, setback en kanteling van het zadel samen bekeken." },
+      { title: "Zadelpijn", description: "Breedte, zadelterugstand en kanteling samen bekeken." },
     ],
     testimonialsTitle: "Kleine aanpassing, groot verschil", changes: ["zadel −4 mm", "stuur +10 mm", "zadel 3 mm terug"],
     reportTitle: "Je rapport bevat de getallen die ertoe doen", crankAdvice: "Advies voor cranklengte",

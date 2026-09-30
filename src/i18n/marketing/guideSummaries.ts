@@ -1,0 +1,37 @@
+const dutchGuideSummaries: Readonly<Record<string, string>> = {
+  guides: "Vind een gids bij je klacht, rijstijl, fietsafstelling of prestatiedoel.",
+  "pain-and-discomfort": "Bekijk welke afstelling je eerst controleert bij terugkerende klachten op de fiets.",
+  "bike-fit-for-neck-and-shoulder-pain": "Lees hoe ondersteuning, reach en stuurafstelling de belasting van je nek en schouders beïnvloeden.",
+  "bike-fit-for-hand-numbness-and-wrist-pain": "Lees hoe drukverdeling, de positie van je remgrepen en je polshoek samenhangen met dove handen en polspijn.",
+  "bike-fit-for-saddle-pressure-perineal-numbness-and-saddle-sores": "Bekijk zadelondersteuning, kanteling, breedte en bekkenrotatie. Lees wanneer klachten meer vragen dan een andere fietsafstelling.",
+  "bike-fit-for-foot-pain-hot-foot-and-numb-toes": "Lees over brandende voeten, dove tenen, schoenvorm en cleatpositie. Bepaal wanneer je je voet- en cleatafstelling verder moet onderzoeken.",
+  "ride-types": "Vergelijk de afstelling voor racefietsen, gravel, mountainbiken, triatlon, lange ritten en de fietstrainer.",
+  "gravel-bike-fit-guide": "Lees hoe je stabiliteit, ontspannen ondersteuning en controle op ruwe ondergrond combineert.",
+  "triathlon-bike-fit-guide": "Bekijk zadelondersteuning, heuphoek en een aerodynamische houding die je kunt volhouden. Houd ook rekening met het lopen na de fietsrit.",
+  "endurance-bike-fit-guide": "Bekijk hoe ondersteuning en een houdbare positie je helpen op lange ritten. Het gaat om meer dan alleen rechterop zitten.",
+  "indoor-trainer-bike-fit-guide": "Lees waarom drukpunten op de fietstrainer sterker opvallen en welke afstelling je eerst controleert.",
+  "rider-profiles": "Vind gidsen voor situaties waarin je lichaamsbouw of belastbaarheid om een andere fietsafstelling vraagt.",
+  "setup-parameters": "Begrijp de aanbevolen maten van BestBikeFit4U en wat elk getal voor je fietsafstelling betekent.",
+  "saddle-fore-aft-and-tilt-guide": "Lees hoe de voor-achterpositie en kanteling van je zadel samen je bekkenstabiliteit en drukverdeling beïnvloeden.",
+  "reach-and-stem-guide": "Bekijk hoe framereach, stuurpenlengte, stuurvorm en de positie van je remgrepen samen je cockpitlengte bepalen.",
+  "handlebar-drop-guide": "Kies een stuurdrop die je kunt volhouden. Houd rekening met je flexibiliteit, rompstabiliteit en rijdoel.",
+  "handlebar-width-and-hood-position-guide": "Lees hoe stuurbreedte, de draaiing van je remgrepen en de afstand tot de remhendels je comfort en controle beïnvloeden.",
+  "shoe-foot-cleat-fit": "Begrijp je voet als contactpunt en bekijk hoe je je schoenen en cleats verder afstelt.",
+  "cleat-position-basics-guide": "Begin bij de voor-achterpositie, draaiing en bewegingsvrijheid van je cleats. Zoek eerst een neutrale afstelling.",
+  "stance-width-q-factor-and-pedal-spacer-guide": "Bekijk standbreedte, pedaalringen en Q-factor wanneer je knieën of heupen niet vrij kunnen bewegen.",
+  "insoles-arch-support-and-footbeds-guide": "Vergelijk standaardinlegzolen met extra voetondersteuning. Lees waarom je te sterke correcties beter vermijdt.",
+  "bike-size-and-geometry": "Vertaal je lichaamsmaten naar passende framematen en maak een gerichte selectie van fietsen.",
+  "road-vs-endurance-vs-race-geometry": "Vergelijk fietsgeometrie voor comfort en een sportieve houding. Begrijp welke positie bij je past.",
+  "sodium-and-electrolytes-guide": "Lees wanneer natrium belangrijk is. Werk met bruikbare bandbreedtes in plaats van schijnprecisie.",
+  "power-ftp-pacing": "Bekijk de rekentools voor vermogen, snelheid en tempoverdeling en hoe je ze samen gebruikt.",
+  "ftp-explained": "Begrijp wat FTP betekent, welke beperkingen het heeft en hoe je het gebruikt voor training en tempoverdeling.",
+  "wkg-and-power-zones-guide": "Lees hoe vermogenszones van je FTP worden afgeleid en waarom W/kg op een klim zwaarder weegt dan op vlak terrein.",
+  "power-to-speed-guide": "Lees hoe vermogen, aerodynamica, gewicht, banden, helling en weer je snelheid beïnvloeden.",
+  "climb-time-and-event-pacing-guide": "Plan je tempo voor klimmen en toertochten voorzichtig. Houd rekening met voeding en inspanning.",
+  "fit-science": "Bekijk de wetenschap en methodes achter de fietsafstelling van BestBikeFit4U.",
+  about: "Lees welke gegevens je invoert, hoe de berekening werkt en waarom de uitkomst een praktisch startpunt is.",
+};
+
+export function getDutchGuideSummary(slug: string): string | undefined {
+  return dutchGuideSummaries[slug];
+}

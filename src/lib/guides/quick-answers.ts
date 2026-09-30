@@ -1,3 +1,4 @@
+import { guideProseNl } from "@/i18n/marketing/guideProse";
 import type { Locale } from "@/i18n/config";
 
 export type GuideQuickAnswerContent = {
@@ -62,7 +63,7 @@ const GUIDE_QUICK_ANSWERS: GuideQuickAnswerRecord = {
     },
     nl: {
       keyTakeaway:
-        "Onderrugpijn is meestal een supportprobleem: te veel reach, te veel drop of een bekken dat op langere ritten niet rustig blijft.",
+        guideProseNl.quickAnswers.backSupport,
       commonMistake:
         "Agressiever gaan rekken terwijl dezelfde lange, lage cockpit die de overbelasting veroorzaakt gewoon blijft staan.",
       payAttention:
@@ -152,7 +153,7 @@ const GUIDE_QUICK_ANSWERS: GuideQuickAnswerRecord = {
     },
     nl: {
       keyTakeaway:
-        "Kies de gids die past bij hoe en waar je rijdt, want weg, gravel, MTB, triathlon, endurance en indoor vragen niet hetzelfde van een positie.",
+        guideProseNl.review.rideChoice,
       commonMistake:
         "Een fitdoel uit een andere discipline kopiëren zonder te controleren of terrein, duur en controle-eisen anders zijn.",
       payAttention:
@@ -174,7 +175,7 @@ const GUIDE_QUICK_ANSWERS: GuideQuickAnswerRecord = {
       commonMistake:
         "Een pro-achtige lage voorkant najagen voordat zadel en bekkensteun stabiel genoeg zijn om die positie te dragen.",
       payAttention:
-        "Rijders die kiezen tussen endurance- en raceprioriteiten, meer tijd in de drops willen doorbrengen of op langere ritten hand- en nekspanning krijgen.",
+        guideProseNl.review.roadAttention,
     },
   },
   "gravel-bike-fit-guide": {
@@ -260,7 +261,7 @@ const GUIDE_QUICK_ANSWERS: GuideQuickAnswerRecord = {
     },
     nl: {
       keyTakeaway:
-        "Indoor fietsen vraagt meestal om meer support en aandacht voor koeling, omdat de fiets minder beweegt en contactpunten constanter belast worden.",
+        guideProseNl.quickAnswers.indoorSupport,
       commonMistake:
         "Aannemen dat buitenshuis-fitcijfers één op één naar binnen vertalen terwijl de trainer minder fietsbeweging en meer warmteopbouw geeft.",
       payAttention:
@@ -478,7 +479,7 @@ const GUIDE_QUICK_ANSWERS: GuideQuickAnswerRecord = {
       keyTakeaway:
         "Stuurbreedte en hoodpositie bepalen samen schouderbelasting, polshoek en stuurcontrole, dus je stemt ze af als één contactpuntsysteem.",
       commonMistake:
-        "Breder of smaller stuur kopen voor comfort terwijl hoodhoek en handsteun onveranderd blijven.",
+        guideProseNl.review.widthMistake,
       payAttention:
         "Rijders met schouderspanning, polsdruk of een onrustig stuurgevoel wanneer ze lang op de hoods rijden.",
     },
@@ -638,7 +639,7 @@ const GUIDE_QUICK_ANSWERS: GuideQuickAnswerRecord = {
     },
     nl: {
       keyTakeaway:
-        "Road-, endurance- en racegeometrie verschillen vooral in stack, reach en voorkant-intentie, wat verandert hoeveel houding de fiets van de rijder vraagt.",
+        guideProseNl.review.geometryTakeaway,
       commonMistake:
         "Eén categorie automatisch 'comfortabel' of 'snel' noemen zonder naar de echte geometriecijfers en het doel van de rijder te kijken.",
       payAttention:
@@ -766,9 +767,9 @@ const GUIDE_QUICK_ANSWERS: GuideQuickAnswerRecord = {
       keyTakeaway:
         "Gebruik deze hub wanneer je fitheidsgetallen wilt koppelen aan echte pacingbeslissingen, want FTP is pas nuttig als het verandert hoe je rijdt.",
       commonMistake:
-        "Eén opvallend powergetal behandelen alsof het training, pacing en wedstrijdstrategie tegelijk oplost.",
+        guideProseNl.quickAnswers.powerNumber,
       payAttention:
-        "Rijders die zich voorbereiden op klimmen, tijdsdoelen, pacingplannen of trainingsblokken waarin powerdata praktische betekenis moet krijgen.",
+        guideProseNl.quickAnswers.powerPlanning,
     },
   },
   "ftp-explained": {
@@ -800,7 +801,7 @@ const GUIDE_QUICK_ANSWERS: GuideQuickAnswerRecord = {
     },
     nl: {
       keyTakeaway:
-        "W/kg en powerzones zijn alleen nuttig wanneer je weet wat ze moeten veranderen in je pacing, trainingen en eventverwachtingen.",
+        guideProseNl.quickAnswers.powerZones,
       commonMistake:
         "W/kg met andere rijders vergelijken zonder te kijken naar lichaamsgrootte, terrein of wat de zone-indeling voor jouw training betekent.",
       payAttention:
@@ -818,11 +819,11 @@ const GUIDE_QUICK_ANSWERS: GuideQuickAnswerRecord = {
     },
     nl: {
       keyTakeaway:
-        "Power-naar-snelheid hangt af van luchtweerstand, helling en rolweerstand, dus één wattgetal betekent iets anders op vlak terrein dan op een klim.",
+        guideProseNl.quickAnswers.powerSpeed,
       commonMistake:
         "Een directe omzetting van watt naar km/u verwachten zonder houding, terrein en omstandigheden mee te nemen.",
       payAttention:
-        "Rijders die tijdritten pacen, buitensnelheid uit indoor power schatten of willen begrijpen waarom vergelijkbare watts andere snelheden opleveren.",
+        guideProseNl.quickAnswers.powerSpeedAttention,
     },
   },
   "climb-time-and-event-pacing-guide": {

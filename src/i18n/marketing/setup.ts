@@ -1,5 +1,10 @@
 import type { Locale } from "@/i18n/config";
 
+export const setupRelatedCopy = {
+  nl: "Lees verder over kniepijn, lage rugklachten, racefietspositie en andere afstelvragen.",
+  en: "Read more about knee pain, low-back discomfort, road-bike position, and other setup topics.",
+};
+
 export type AnchorItem = {
   id: string;
   label: string;
@@ -156,7 +161,7 @@ export const setupCopy: Record<Locale, PageCopy> = {
       { id: "reach-en-stuurdrop", label: "Reach en drop" },
       { id: "schoenplaatjes-afstellen", label: "Schoenplaatjes" },
       { id: "zelf-afstellen-of-bikefitting", label: "Zelf afstellen of bikefitting" },
-      { id: "faq", label: "FAQ" },
+      { id: "faq", label: "Veelgestelde vragen" },
     ],
     primaryCta: "Open de gratis bike fit calculator",
     secondaryCta: "Bereken eerst je zadelhoogte",
@@ -165,7 +170,7 @@ export const setupCopy: Record<Locale, PageCopy> = {
         eyebrow: "Eerst structuur",
         title: "Waar begin je met fiets afstellen?",
         description:
-          "Fiets afstellen is geen verzameling losse tweaks. Eerst de grote " +
+          "Fiets afstellen is geen verzameling losse aanpassingen. Eerst de grote " +
           "biomechanische hefboompunten, daarna pas de details.",
         body: [
           "Als je je fiets wilt afstellen, begin dan niet bij het stuur en ook niet " +
@@ -213,7 +218,7 @@ export const setupCopy: Record<Locale, PageCopy> = {
           "Zadelterugstand en zadelkanteling controleren",
           "Reach racefiets beoordelen",
           "Stuurhoogte en stuurdrop afstellen",
-          "Stuur afstellen racefiets: hood-positie en rotatie",
+          "Stuur afstellen racefiets: remgreeppositie en rotatie",
           "Schoenplaatjes afstellen",
         ],
       },
@@ -274,7 +279,7 @@ export const setupCopy: Record<Locale, PageCopy> = {
           "probleem eerder in de totale cockpitbalans zit. Toch is hier veel " +
           "comfortwinst te halen, vooral op een racefiets.",
         body: [
-          "Stuurhoogte, hood-positie, stuurrotatie en breedte zijn geen onafhankelijke " +
+          "Stuurhoogte, remgreeppositie, stuurrotatie en breedte zijn geen onafhankelijke " +
             "keuzes. Comfort en controle zijn belangrijker dan optisch laag zitten.",
           "Pas nadat zadelhoogte en zadelpositie in grote lijnen kloppen, heeft het " +
             "zin om stuurdetails te verfijnen.",
@@ -282,7 +287,7 @@ export const setupCopy: Record<Locale, PageCopy> = {
         signs: [
           "veel druk op handen",
           "nek- of schouderspanning",
-          "moeite om lang op de hoods te blijven",
+          "moeite om je handen lang op de remgrepen te houden",
           "instabiel bekken",
           "het gevoel dat je jezelf naar het stuur moet trekken",
         ],
@@ -332,7 +337,7 @@ export const setupCopy: Record<Locale, PageCopy> = {
           "recreatieve positie, maar ook binnen racefietsen is er geen " +
           "standaardhouding die voor iedereen logisch is.",
         body: [
-          "Een endurance-rijder heeft vaak baat bij iets minder reach en minder drop. " +
+          "Als je lange ritten maakt, heb je vaak baat bij iets minder reach en minder drop. " +
             "Een meer prestatiegerichte rijder kan soms meer dragen, maar alleen als " +
             "belastbaarheid, mobiliteit en core-stabiliteit dat ondersteunen.",
           "De beste positie is de positie die je duurzaam kunt rijden, controleren en " +
@@ -344,7 +349,7 @@ export const setupCopy: Record<Locale, PageCopy> = {
         title: "Zelf fiets afstellen of toch bikefitting?",
         description:
           "Zelf afstellen is zinvol zolang je weet wat het doel is. Een calculator is " +
-          "slim als je richting zoekt. Een begeleide workflow is logischer als " +
+          "slim als je richting zoekt. Begeleide stappen zijn logischer als " +
           "meerdere variabelen tegelijk twijfel oproepen.",
         cards: [
           {
@@ -455,7 +460,7 @@ export const setupCopy: Record<Locale, PageCopy> = {
             q: "Kan ik mijn racefiets zelf goed afstellen?",
             a:
               "Tot op zekere hoogte wel. Voor een eerste orde van grootte is dat haalbaar. " +
-              "Voor complexe klachten of fijnere optimalisatie is een begeleide workflow " +
+              "Voor complexe klachten of fijnere optimalisatie is persoonlijke begeleiding " +
               "vaak beter.",
           },
           {
@@ -473,7 +478,7 @@ export const setupCopy: Record<Locale, PageCopy> = {
         description:
           "Gebruik eerst de gratis bike fit calculator voor een praktische eerste " +
           "richting in zadelhoogte, reach en drop. Sla daarna je resultaten op en " +
-          "verfijn je setup verder in je dashboard.",
+          "verfijn je afstelling verder in je dashboard.",
         primaryCta: "Open de gratis bike fit calculator",
         secondaryCta: "Sla je resultaten op in je dashboard",
       },

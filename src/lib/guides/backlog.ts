@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import type { Locale } from "@/i18n/config";
+import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
+import { getDutchGuideSummary } from "@/i18n/marketing/guideSummaries";
 
 export type GuideBacklogEntry = {
   order: number;
@@ -81,25 +83,29 @@ function loadGuideBacklog(locale: Locale): GuideBacklogEntry[] {
   const rows = parseCsv(readFileSync(getCsvPath(locale), "utf8"));
   const [, ...dataRows] = rows;
 
-  return dataRows.map((row) => ({
-    order: Number(row[0]),
-    cluster: row[1],
-    status: row[2],
-    path: row[3].replace(/^\/(en|nl)/, ""),
-    slug: row[4].replace(/^guides\//, ""),
-    pageTitle: row[5],
-    metaTitle: row[6],
-    h1: row[7],
-    pageBrief: row[8],
-    primaryCtaLabel: row[9],
-    primaryCtaTarget: row[10].replace(/^\/(en|nl)/, ""),
-    internalLinkTargets: row[11]
-      .split(";")
-      .map((item) => item.trim())
-      .filter(Boolean)
-      .map((item) => item.replace(/^\/(en|nl)/, "")),
-    notes: row[12] ?? "",
-  }));
+  return dataRows.map((row) => {
+    const slug = row[4].replace(/^guides\//, "");
+    const dutchTitle = locale === "nl" ? getDutchGuideTitle(slug) : undefined;
+    return {
+      order: Number(row[0]),
+      cluster: row[1],
+      status: row[2],
+      path: row[3].replace(/^\/(en|nl)/, ""),
+      slug,
+      pageTitle: dutchTitle ?? row[5],
+      metaTitle: dutchTitle ? `${dutchTitle} | BestBikeFit4U` : row[6],
+      h1: dutchTitle ?? row[7],
+      pageBrief: locale === "nl" ? getDutchGuideSummary(slug) ?? row[8] : row[8],
+      primaryCtaLabel: row[9],
+      primaryCtaTarget: row[10].replace(/^\/(en|nl)/, ""),
+      internalLinkTargets: row[11]
+        .split(";")
+        .map((item) => item.trim())
+        .filter(Boolean)
+        .map((item) => item.replace(/^\/(en|nl)/, "")),
+      notes: row[12] ?? "",
+    };
+  });
 }
 
 const CACHE: Partial<Record<Locale, GuideBacklogEntry[]>> = {};
@@ -141,4 +147,3 @@ export function getGuideLeafEntries(locale: Locale) {
     (entry) => entry.path.startsWith("/guides/") && entry.slug !== "guides"
   );
 }
-

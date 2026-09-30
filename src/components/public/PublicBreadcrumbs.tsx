@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import type { Locale } from "@/i18n/config";
+import { getMarketingLayoutMessages } from "@/i18n/marketing/layout";
 
 export type PublicBreadcrumbItem = {
   label: string;
@@ -8,8 +10,10 @@ export type PublicBreadcrumbItem = {
 
 export function PublicBreadcrumbs({
   items,
+  locale = /^\/nl(?:\/|$)/.test(items[0]?.href ?? "") ? "nl" : "en",
 }: {
   items: PublicBreadcrumbItem[];
+  locale?: Locale;
 }) {
   if (items.length === 0) {
     return null;
@@ -17,7 +21,8 @@ export function PublicBreadcrumbs({
 
   return (
     <nav
-      aria-label="Breadcrumb"
+      aria-label={getMarketingLayoutMessages(locale).breadcrumb}
+      data-breadcrumb
       className="mb-6 mt-6 text-sm text-[color:var(--muted-foreground)]"
     >
       <ol className="flex flex-wrap items-center gap-2">

@@ -1,3 +1,5 @@
+import { guideProseNl } from "@/i18n/marketing/guideProse";
+import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
 import type { GuideContentFaq, GuideContentRecord, GuideContentSection } from "../guide-content";
 import { GUIDES } from "../../../app/(public)/guides/data";
 
@@ -64,7 +66,7 @@ const REMAINING_CLUSTERS_STRUCTURAL_SECTIONS = {
         "Stap 1: kies het ene getal of de test waar de gids echt over gaat en noteer die voordat je iets verandert.",
         "Stap 2: herhaal dezelfde test twee keer onder vergelijkbare omstandigheden zodat je weet dat de waarde echt is en niet alleen een goede dag.",
         "Stap 3: noteer bij voeding en hydratatie inname, gewichtsverandering en ritduur; bij power het protocol en resultaat; bij fit de huidige positie of geometriewaarde.",
-        "Veelgemaakte fout: verschillende sessies, routes of uitrusting vergelijken en het resultaat toch als een zuivere baseline behandelen.",
+        guideProseNl.remaining.baseline,
       ],
     },
     {
@@ -92,8 +94,8 @@ const REMAINING_CLUSTERS_STRUCTURAL_SECTIONS = {
       items: [],
       tableHeaders: ["Rijder- / ritcontext", "Typische vergelijkingslens"],
       tableRows: [
-        ["Voeding / Power", "Vergelijk beginner versus ervaren rijder, korte versus lange ritten, indoor versus outdoor sessies en klimwerk versus vlak rijden."],
-        ["Fit / Geometrie", "Vergelijk road, gravel en MTB en kijk daarna naar endurance, race, lange rijder, kortere romp, beperkte flexibiliteit of terugkerende rijder wanneer dat relevant is."],
+        [guideProseNl.review.nutritionPower, guideProseNl.review.compareRides],
+        ["Fit / Geometrie", guideProseNl.review.compareBikes],
         ["Indoor", "Meer aandacht voor koeling en statische druk."],
         ["Outdoor", "Meer aandacht voor terrein, houdingswissels en handling."],
       ],
@@ -130,6 +132,7 @@ function appendStructuralSections(content: GuideContentRecord): GuideContentReco
 }
 
 function getGuideCardTitle(slug: string, locale: "en" | "nl") {
+  if (locale === "nl") return getDutchGuideTitle(slug) ?? guideProseNl.genericTitle;
   return GUIDES.find((guide) => guide.slug === slug)?.[locale].cardTitle ?? slug.replaceAll("-", " ");
 }
 
@@ -150,7 +153,7 @@ function buildCtaDescription(slug: string, locale: "en" | "nl") {
   if (locale === "en") {
     return `Use the ${cardTitle} guide to turn ${subject.toLowerCase()} into a practical next step for your riding or training plan.`;
   }
-  return `Gebruik de ${cardTitle} gids om ${subject.toLowerCase()} om te zetten in een praktische volgende stap voor je rit of trainingsplan.`;
+  return guideProseNl.cta.remaining(cardTitle);
 }
 
 function buildFaqExtras(slug: string, locale: "en" | "nl"): GuideContentFaq[] {
@@ -269,7 +272,7 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
           items: [
             "Ritten onder ongeveer 60 minuten vragen meestal geen koolhydraten tijdens de rit, tenzij de sessie erg hard is of je al met weinig energie start.",
             "Zodra een rit langer wordt dan een uur, vooral bij duur- of tempo-intensiteit, wordt regelmatige inname duidelijk nuttiger om output te behouden.",
-            "Lange ritten, opeenvolgende trainingsdagen en een nuchtere start maken een vroeg en steady voedingsplan belangrijker.",
+            guideProseNl.remaining.fuelPlan,
           ],
         },
         {
@@ -377,7 +380,7 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
         {
           title: "De basis: 60 g versus 90 g per uur",
           items: [
-            "Ongeveer 60 gram per uur is voor veel duurritten een logisch startpunt en vaak genoeg bij een steady inspanning.",
+            guideProseNl.remaining.steadyEffort,
             "Richtingen rond 90 gram per uur worden relevanter zodra de rit langer, harder of wedstrijdachtiger wordt en je meer kunt opnemen.",
             "De beste waarde hangt af van duur, intensiteit, warmte en vooral van wat je in training hebt aangeleerd.",
           ],
@@ -811,13 +814,13 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
     nl: {
       intro: [
         "W/kg is een compacte manier om klimvermogen tussen verschillende lichaamsgroottes te vergelijken. Het is vooral nuttig waar zwaartekracht veel van het werk bepaalt.",
-        "Power zones zetten die drempel vervolgens om in een praktisch trainingsinstrument, zodat je weet welke sessies duur opbouwen en welke rustig moeten blijven.",
+        guideProseNl.remaining.powerZones,
       ],
       sections: [
         {
-          title: "W/kg: waarom relatieve power telt op klimmen",
+          title: guideProseNl.remaining.relativePowerTitle,
           items: [
-            "Relatieve power telt het meest zodra zwaartekracht een groot deel van het werk uitmaakt, vooral op constante klimmen en herhaalde punchy inspanningen.",
+            guideProseNl.remaining.relativePower,
             "Een lichtere rijder met minder absolute watts kan sneller klimmen dan een zwaardere rijder met meer vermogen als de verhouding beter is.",
             "W/kg is handig om te vergelijken, maar vervangt pacing, aerodynamica of rijvaardigheid niet.",
           ],
@@ -920,7 +923,7 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
     },
     nl: {
       intro: [
-        "Power-to-speed is een fysica-vraag, geen belofte. Dezelfde watts kunnen totaal andere snelheden opleveren door luchtweerstand, helling, rolweerstand, wind en lichaamsgewicht.",
+        guideProseNl.remaining.powerSpeed,
         "Daarom is een snelheidschatting vooral nuttig als planningshulpmiddel: je ziet waar winst waarschijnlijk vandaan komt en waar extra watts maar weinig verschil maken.",
       ],
       sections: [
@@ -928,7 +931,7 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
           title: "De fysica: CdA, Crr, helling en gewicht",
           items: [
             "CdA beschrijft hoeveel lucht je aan de wind presenteert; Crr staat voor rolverliezen van banden en wegdek.",
-            "Helling verandert de balans omdat klimmen een massa-penalty toevoegt die vlak rijden niet heeft.",
+            guideProseNl.remaining.climbingMass,
             "Windrichting en windsnelheid kunnen de uitkomst sterker beïnvloeden dan veel rijders verwachten, waardoor snelheid nooit een pure watt-vergelijking is.",
           ],
         },
@@ -1030,8 +1033,8 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
     },
     nl: {
       intro: [
-        "Klimtijd en pacing gaan over effort zo verdelen dat je boven, op de finish of op het beslissende stuk nog genoeg over hebt om vermogen te blijven leveren.",
-        "Het beste pacingplan voorkomt een te harde start, houdt rekening met het profiel en laat ruimte voor voeding, warmte en vermoeidheid zonder dat de rit ontspoort.",
+        guideProseNl.review.climbIntro,
+        guideProseNl.review.climbPlan,
       ],
       sections: [
         {
@@ -1039,7 +1042,7 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
           items: [
             "Gelijkmatig pacing werkt vaak efficiënt op constante klimmen omdat je grote pieken vermijdt die extra energie kosten.",
             "Variabel pacing kan logisch zijn als het terrein verandert, draften belangrijk is of je tactisch moet reageren.",
-            "De juiste keuze hangt af van of het event steady output of strategische surges beloont.",
+            guideProseNl.remaining.eventEffort,
           ],
         },
         {
@@ -1053,7 +1056,7 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
         {
           title: "Voeding en pacing als één plan",
           items: [
-            "Pacing gaat sneller mis als voeding een bijzaak is, omdat te weinig koolhydraten het vermogen om target power vast te houden verlaagt.",
+            guideProseNl.remaining.pacingFuel,
             "Bij langere klimmen of events moeten eten en drinken rond het pacingplan ingepland worden.",
             "De beste effort-strategie is die waarin intensiteit en inname vanaf het eerste kilometerdeel op elkaar aansluiten.",
           ],
@@ -1073,8 +1076,8 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
           a: "Begin iets conservatiever dan je denkt nodig te hebben, houd de inspanning soepel en bewaar marge voor het laatste derde als de klim lang is.",
         },
         {
-          q: "Moet ik pace'en op power of op gevoel?",
-          a: "Gebruik power als je die hebt en bevestig daarna met gevoel. Power houdt het plan eerlijk, gevoel vangt warmte, hoogte en stress op.",
+          q: guideProseNl.remaining.pacingQuestion,
+          a: guideProseNl.remaining.pacingAnswer,
         },
         {
           q: "Wat doet temperatuur met pacing?",
@@ -1171,7 +1174,7 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
         {
           title: "Frames shortlistten op stack en reach",
           items: [
-            "Vergelijk eerst stack en reach en controleer daarna top tube, seat tube en cockpit-marge.",
+            guideProseNl.remaining.frameTubes,
             "Zoek frames die zowel omhoog als omlaag nog afstelruimte bieden in plaats van één exacte stand.",
             "Een bruikbare shortlist bestaat meestal uit een paar frames die je positie ondersteunen zonder maatwerk of vreemde compromissen.",
           ],
@@ -1266,8 +1269,8 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
           title: "Frame reach en stamlengte bij een kortere romp",
           items: [
             "Begin bij frame reach, omdat een stuurpen maar beperkt kan corrigeren voordat het rijgedrag merkbaar verandert.",
-            "Een normale stem op een frame met kortere reach houdt de stuurrespons meestal beter dan een extreem korte stem op een te groot frame.",
-            "Het frame moet het grootste deel van de maatvoering dragen; de stem finetunet het laatste stuk.",
+            guideProseNl.remaining.normalStem,
+            guideProseNl.remaining.frameSizing,
           ],
         },
         {
@@ -1281,7 +1284,7 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
         {
           title: "Componentkeuzes die helpen",
           items: [
-            "Kortere stems, compacte sturen en goede hood-positie kunnen het cockpitgevoel verbeteren zonder de hele fiets te veranderen.",
+            guideProseNl.remaining.shortStem,
             "Ook de zadelpositie blijft belangrijk, want een zadel te ver naar voren zetten om reach te verkorten geeft vaak andere problemen.",
             "Gebruik componenten om een goede framekeuze verfijnen, niet om een fundamenteel te lang frame te redden.",
           ],
@@ -1294,7 +1297,7 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
         },
         {
           q: "Welke stamlengte past bij een kortere romp?",
-          a: "Dat hangt af van frame, stuurgedrag en stuurvorm, maar het doel is om in een normale handlingrange te blijven in plaats van een extreem korte stem te forceren.",
+          a: guideProseNl.remaining.handling,
         },
         {
           q: "Is een women's-specific frame dan de oplossing?",
@@ -1407,7 +1410,7 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
           a: "Ja, maar meestal geleidelijk. Stretching helpt het meest als het een goede setup ondersteunt in plaats van deze te vervangen.",
         },
         {
-          q: "Is een endurance geometrie altijd de oplossing bij weinig flexibiliteit?",
+          q: guideProseNl.review.flexibilityQuestion,
           a: "Niet altijd, maar vaak wel een goed startpunt omdat je daar meer ruimte hebt om stack, reach en drop duurzaam te combineren.",
         },
       ],
@@ -1470,8 +1473,8 @@ const REMAINING_CLUSTERS_GUIDE_CONTENT_BASE = {
     },
     nl: {
       intro: [
-        "Beginners en terugkerende rijders hebben meestal eerst een conservatieve setup nodig: stabiel, simpel en vergevingsgezind genoeg om weer plezier in regelmatig fietsen te krijgen.",
-        "Het doel is niet om meteen een perfect raceprofiel te bouwen, maar om te starten met een setup waarmee comfort, conditie en vertrouwen samen kunnen groeien.",
+        guideProseNl.review.beginnersIntro,
+        guideProseNl.review.beginnersGoal,
       ],
       sections: [
         {

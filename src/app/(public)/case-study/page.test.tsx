@@ -99,7 +99,9 @@ describe("case study presentation and unchanged recruitment form", () => {
     state.submit.mockRejectedValueOnce(new Error("offline"));
     const { form, copy } = await renderForm();
     fireEvent.submit(form);
-    await waitFor(() => expect(state.error).toHaveBeenCalledWith({ description: "Submission failed" }));
+    await waitFor(() => expect(state.error).toHaveBeenCalledWith({
+      description: "Je aanmelding is niet verstuurd. Probeer het opnieuw.",
+    }));
     expect((screen.getByLabelText(copy.form.nameLabel) as HTMLInputElement).value).toBe("Test rider");
     expect(state.conversion).not.toHaveBeenCalled();
     fireEvent.submit(form);
@@ -115,6 +117,52 @@ describe("case study presentation and unchanged recruitment form", () => {
     expect(form.querySelector('button[type="submit"]')?.getAttribute("aria-disabled")).toBe("true");
     await act(async () => finish());
     await waitFor(() => expect(state.success).toHaveBeenCalled());
+  });
+
+  it("keeps English submission errors unchanged", async () => {
+    state.locale = "en";
+    state.submit.mockRejectedValueOnce(new Error("offline"));
+    const { form } = await renderForm();
+    fireEvent.submit(form);
+    await waitFor(() => expect(state.error).toHaveBeenCalledWith({ description: "Submission failed" }));
+  });
+
+  it("uses Dutch practice-story labels and metadata", async () => {
+    await renderForm();
+    expect(screen.getByRole("button", { name: "Meld je aan voor een praktijkvoorbeeld" })).toBeTruthy();
+    const metadata = await generateMetadata();
+    expect(metadata.title).toBe("Deel je praktijkvoorbeeld | BestBikeFit4U");
+    expect(metadata.description).toContain("praktijkvoorbeelden van fietsers");
+    expect(metadata.openGraph).toMatchObject({ title: metadata.title, description: metadata.description });
+    expect(JSON.stringify(getCaseStudyMessages("nl"))).not.toMatch(/case.study|follow-up|rider/);
+  });
+
+  it("localizes native validation and clears it when the rider edits", async () => {
+    const copy = getCaseStudyMessages("nl");
+    render(await CaseStudyPage({ searchParams: Promise.resolve({}) }));
+    const name = screen.getByLabelText(copy.form.nameLabel) as HTMLInputElement;
+    const email = screen.getByLabelText(copy.form.emailLabel) as HTMLInputElement;
+    const summary = screen.getByLabelText(copy.form.painSummaryLabel) as HTMLTextAreaElement;
+    const consent = screen.getByRole("checkbox") as HTMLInputElement;
+    fireEvent.invalid(name);
+    fireEvent.invalid(summary);
+    expect(name.validationMessage).toBe("Vul dit veld in.");
+    expect(summary.validationMessage).toBe("Vul dit veld in.");
+    fireEvent.input(name, { target: { value: "Fietser" } });
+    expect(name.validity.customError).toBe(false);
+    fireEvent.change(email, { target: { value: "geen-email" } });
+    fireEvent.invalid(email);
+    expect(email.validationMessage).toBe("Vul een geldig e-mailadres in.");
+    fireEvent.invalid(consent);
+    expect(consent.validationMessage).toBe("Geef toestemming voordat je je aanmeldt.");
+  });
+
+  it("leaves English native validation to the browser", async () => {
+    state.locale = "en";
+    render(await CaseStudyPage({ searchParams: Promise.resolve({}) }));
+    const name = screen.getByLabelText("Name") as HTMLInputElement;
+    fireEvent.invalid(name);
+    expect(name.validity.customError).toBe(false);
   });
 
   it.each(["nl", "en"] as const)("preserves metadata and canonical in %s", async (locale) => {

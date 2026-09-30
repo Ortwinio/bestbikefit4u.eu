@@ -11,6 +11,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { BRAND } from "@/config/brand";
 import { getGuideBacklog } from "@/lib/guides/backlog";
+import { getGuideLinkLabel } from "@/lib/guides/content";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
@@ -48,7 +49,9 @@ function getGuideLink(path: string, locale: "en" | "nl") {
 
   return {
     href: normalizedPath,
-    label: guide?.pageTitle ?? normalizedPath.replace(/^\/guides\//, "").replace(/-/g, " "),
+    label: locale === "nl"
+      ? getGuideLinkLabel(normalizedPath, locale)
+      : guide?.pageTitle ?? normalizedPath.replace(/^\/guides\//, "").replace(/-/g, " "),
     description: guide?.pageBrief,
   };
 }

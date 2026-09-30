@@ -328,15 +328,13 @@ export default async function GuidePage({
         <div className="mx-auto mt-6 max-w-5xl rounded-[var(--radius-xl)] border border-amber-500/40 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-400/30 dark:bg-amber-500/10 dark:text-amber-100">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <span>
-              {isNl
-                ? "Previewmodus: dit is een conceptversie."
-                : "Preview mode: this is a draft version."}
+              {copy.preview}
             </span>
             <Link
               href={`/api/preview-exit?slug=${encodeURIComponent(slug)}&locale=${locale}`}
               className="font-semibold underline underline-offset-4"
             >
-              {isNl ? "Preview verlaten" : "Exit preview"}
+              {copy.exitPreview}
             </Link>
           </div>
         </div>
@@ -408,13 +406,13 @@ export default async function GuidePage({
 
             {cleanedMarkdown ? (
               <PublicSection className="mt-10">
-                <GuideBodyMarkdown content={cleanedMarkdown} />
+                <GuideBodyMarkdown content={cleanedMarkdown} locale={locale} />
               </PublicSection>
             ) : null}
 
             {faqs.length > 0 ? (
               <PublicSection id="guide-faq" className="mt-10" header={{ title: copy.faq }}>
-                <GuideFaqAccordion faqs={faqs} />
+                <GuideFaqAccordion faqs={faqs} locale={locale} />
               </PublicSection>
             ) : null}
 
@@ -459,7 +457,7 @@ export default async function GuidePage({
 
             {cleanedMarkdown ? (
               <PublicSection className="mt-10">
-                <GuideBodyMarkdown content={cleanedMarkdown} />
+                <GuideBodyMarkdown content={cleanedMarkdown} locale={locale} />
               </PublicSection>
             ) : (
               <LegacyGuideSections sections={leafSections} />
@@ -480,11 +478,11 @@ export default async function GuidePage({
                 id="guide-faq"
                 className="mt-10"
                 header={{
-                  title: "FAQ",
+                  title: isNl ? copy.faq : "FAQ",
                   icon: <HelpCircle className="h-5 w-5" />,
                 }}
               >
-                <GuideFaqAccordion faqs={faqs} />
+                <GuideFaqAccordion faqs={faqs} locale={locale} />
               </PublicSection>
             ) : null}
 

@@ -175,11 +175,10 @@ export const fitPassCopy: Record<
       },
       {
         q: "Heb ik al een fiets nodig?",
-        a: "Nee. Je kunt een fit-sessie uitvoeren zonder specifieke fiets. De resultaten geven referentiewaarden voor aankoop of aanpassing van je huidige setup.",
+        a: "Nee. Je kunt een fitsessie uitvoeren zonder specifieke fiets. De resultaten geven referentiewaarden voor aankoop of aanpassing van je huidige fietsafstelling.",
       },
     ],
     finalCta: `Fit Pass activeren — ${formatEuroPriceFromCents(proPlan.priceCentsMonthly, "nl")}/maand`,
     monthlySuffix: "/ maand",
   },
 };
-

@@ -1,3 +1,5 @@
+import { guideProseNl } from "@/i18n/marketing/guideProse";
+import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
 import type { GuideContentFaq, GuideContentRecord, GuideContentSection } from "../guide-content";
 import { GUIDES } from "../../../app/(public)/guides/data";
 
@@ -64,7 +66,7 @@ const RIDE_TYPES_STRUCTURAL_SECTIONS = {
         "Stap 1: noteer de huidige waarde die in jouw discipline het belangrijkst is, zoals zadelhoogte en reach op de weg, stuurbreedte op gravel of pad stack en reach op een triathlonfiets.",
         "Stap 2: herhaal de meting twee keer op dezelfde fiets en met dezelfde schoenen zodat je zeker weet dat de basis klopt.",
         "Stap 3: test de setup op het type rit zelf, niet op een heel andere fiets of een totaal andere route.",
-        "Veelgemaakte fout: een gravel-, MTB- of triathlonsetup beoordelen op basis van een korte, vlakke road spin.",
+        guideProseNl.rideTypes.roadTest,
       ],
     },
     {
@@ -81,7 +83,7 @@ const RIDE_TYPES_STRUCTURAL_SECTIONS = {
       title: "Waarschuwingssignalen",
       items: [
         "Wegfietsers merken vaak eerst spanning in handen, nek of onderrug als de cockpit of drop te agressief is.",
-        "Gravelrijders voelen het signaal vaak in schouders, handen of front-endcontrole wanneer breedte of stabiliteit niet klopt.",
+        guideProseNl.rideTypes.gravelControl,
         "MTB-rijders merken het vaak aan een gekrompen staande houding, zware belasting op de remhanden of minder controle op technisch terrein.",
         "Scherpe pijn, gevoelloosheid, zwelling of klachten die na de rit blijven bestaan zijn opschaalsignalen voor een fitter of arts.",
       ],
@@ -93,9 +95,9 @@ const RIDE_TYPES_STRUCTURAL_SECTIONS = {
       tableHeaders: ["Rijtype", "Typische fitprioriteit"],
       tableRows: [
         ["Weg", "De meest efficiënte en compacte versie van de setup, maar alleen binnen de bandbreedte die de rijder de hele rit kan vasthouden."],
-        ["Gravel", "Meer controle en tolerantie voor beweging omdat ruwe ondergrond borderline fits sneller blootlegt."],
-        ["MTB", "Meer bewegingsruimte en front-endcontrole, vooral bij staan, afdalen of rijden met een dropper post."],
-        ["Triathlon / Endurance / Indoor", "Verschuif de prioriteit naar de echte taak van de fiets: aero-ondersteuning, houdbaarheid of warmte- en statische drukbeheersing."],
+        [guideProseNl.rideTypes.marginalFit, "Meer controle en tolerantie voor beweging omdat ruwe ondergrond borderline fits sneller blootlegt."],
+        [guideProseNl.rideTypes.mountainControl, "Meer bewegingsruimte en front-endcontrole, vooral bij staan, afdalen of rijden met een dropper post."],
+        [guideProseNl.review.mixedDisciplines, "Verschuif de prioriteit naar de echte taak van de fiets: aero-ondersteuning, houdbaarheid of warmte- en statische drukbeheersing."],
       ],
     },
     {
@@ -130,6 +132,7 @@ function appendStructuralSections(content: GuideContentRecord): GuideContentReco
 }
 
 function getGuideCardTitle(slug: string, locale: "en" | "nl") {
+  if (locale === "nl") return getDutchGuideTitle(slug) ?? guideProseNl.genericTitle;
   return GUIDES.find((guide) => guide.slug === slug)?.[locale].cardTitle ?? slug.replaceAll("-", " ");
 }
 
@@ -150,7 +153,7 @@ function buildCtaDescription(slug: string, locale: "en" | "nl") {
   if (locale === "en") {
     return `Use the ${cardTitle} to compare how ${subject.toLowerCase()} changes your fit priorities before you change the bike.`;
   }
-  return `Gebruik de ${cardTitle} om te vergelijken hoe ${subject.toLowerCase()} je fitprioriteiten verandert voordat je aan de fiets sleutelt.`;
+  return guideProseNl.cta.rideTypes(cardTitle);
 }
 
 function buildFaqExtras(slug: string, locale: "en" | "nl"): GuideContentFaq[] {
@@ -301,7 +304,7 @@ const RIDE_TYPES_GUIDE_CONTENT_BASE = {
       ],
       faqs: [
         {
-          q: "Wat is het verschil tussen een endurance- en een racefit?",
+          q: guideProseNl.review.roadQuestion,
           a: "Een endurance-fit houdt iets meer steun en ademruimte over zodat je langer fris blijft. Een racefit zet meestal de voorkant lager en de cockpit langer, maar alleen als je dat onder belasting kunt vasthouden.",
         },
         {
@@ -640,7 +643,7 @@ const RIDE_TYPES_GUIDE_CONTENT_BASE = {
       ],
       faqs: [
         {
-          q: "Welke heuphoek moet ik targeten voor een triathlon-fit?",
+          q: guideProseNl.rideTypes.hipQuestion,
           a: "Er bestaat geen universeel getal. Het doel is de meest gesloten hoek die je nog goed kunt vasthouden terwijl je blijft ademen, vermogen levert en voldoende kunt lopen na de fiets.",
         },
         {

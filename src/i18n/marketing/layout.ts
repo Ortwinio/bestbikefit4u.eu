@@ -7,6 +7,8 @@ const messages = {
     menuDescription: "Navigatie en je account.",
     tagline: "Praktische calculators, fitbegeleiding en hulp bij het afstellen.",
     language: "Taal", dutch: "Nederlands", english: "Engels",
+    breadcrumb: "Kruimelpad",
+    support: "Hulp", passportCheck: "Fietspaspoort controleren", faq: "Veelgestelde vragen",
   },
   en: {
     calculators: "Calculators", guides: "Guides", start: "Start free bike fit",
@@ -14,6 +16,8 @@ const messages = {
     menuDescription: "Site navigation and your account.",
     tagline: "Practical calculators, fit guidance and help with your setup.",
     language: "Language", dutch: "Dutch", english: "English",
+    breadcrumb: "Breadcrumb",
+    support: "Support", passportCheck: "Bike passport check", faq: "FAQ",
   },
 } as const;
 

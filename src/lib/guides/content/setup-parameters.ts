@@ -1,3 +1,5 @@
+import { guideProseNl } from "@/i18n/marketing/guideProse";
+import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
 import type { GuideContentFaq, GuideContentRecord, GuideContentSection } from "../guide-content";
 import { GUIDES } from "../../../app/(public)/guides/data";
 
@@ -73,7 +75,7 @@ const SETUP_PARAMETERS_STRUCTURAL_SECTIONS = {
       items: [
         "Verander telkens maar één variabele, zodat je kunt zien of het resultaat beter is of alleen anders.",
         "Werk in kleine stappen: 2 tot 3 mm voor hoogte of voor-achter, 1 tot 2 graden voor tilt of hood-hoek, 5 mm voor cranklengte en 5 tot 10 mm voor stem- of reachwijzigingen.",
-        "Rijd 2 tot 3 ritten met de nieuwe setup voordat je opnieuw wijzigt, en neem minstens één langere steady rit mee in de test.",
+        guideProseNl.setup.steadyRide,
         "Als een wijziging één klacht verbetert maar een andere veroorzaakt, ga dan eerst halverwege terug in plaats van verder dezelfde kant op te duwen.",
       ],
     },
@@ -81,7 +83,7 @@ const SETUP_PARAMETERS_STRUCTURAL_SECTIONS = {
       title: "Waarschuwingssignalen",
       items: [
         "Heupen wiebelen, de knieën voelen gekneld of je schuift naar voren op het zadel na een kleine wijziging.",
-        "Handen, nek of schouders spannen op na een cockpit- of front-endaanpassing die de houding juist makkelijker had moeten maken.",
+        guideProseNl.setup.frontAdjustment,
         "Voeten worden gevoelloos, hot spots ontstaan of trappen voelt ongelijk na een schoen-, cleat- of supportaanpassing.",
         "Scherpe pijn, eenzijdige klachten, zwelling of klachten die ook buiten de fiets aanwezig blijven zijn opschaalsignalen voor een fitter of arts.",
       ],
@@ -93,9 +95,9 @@ const SETUP_PARAMETERS_STRUCTURAL_SECTIONS = {
       tableHeaders: ["Rijtype", "Typische afstelrichting"],
       tableRows: [
         ["Weg", "Iets compacter en meer racegericht, maar alleen binnen de bandbreedte die de rijder de hele rit kan vasthouden."],
-        ["Gravel", "Meer vergevingsgezindheid en controle, omdat trillingen en terreinwissels borderline setups sneller blootleggen."],
+        [guideProseNl.setup.marginalFit, "Meer vergevingsgezindheid en controle, omdat trillingen en terreinwissels borderline setups sneller blootleggen."],
         ["MTB", "Meer bewegingsruimte en trailcontrole, zeker als een dropper post of ruw terrein de rijhouding verandert."],
-        ["Endurance / Triathlon", "Beoordeel de afstelling tegen de langste inspanning die de rijder echt wil volhouden, niet tegen de kortste die goed voelt."],
+        [guideProseNl.review.enduranceTriathlon, "Beoordeel de afstelling tegen de langste inspanning die de rijder echt wil volhouden, niet tegen de kortste die goed voelt."],
       ],
     },
     {
@@ -130,6 +132,7 @@ function appendStructuralSections(content: GuideContentRecord): GuideContentReco
 }
 
 function getGuideCardTitle(slug: string, locale: "en" | "nl") {
+  if (locale === "nl") return getDutchGuideTitle(slug) ?? guideProseNl.genericTitle;
   return GUIDES.find((guide) => guide.slug === slug)?.[locale].cardTitle ?? slug.replaceAll("-", " ");
 }
 
@@ -150,7 +153,7 @@ function buildCtaDescription(slug: string, locale: "en" | "nl") {
   if (locale === "en") {
     return `Use the ${cardTitle} to get a starting reference for ${subject.toLowerCase()} before you make your next change.`;
   }
-  return `Gebruik de ${cardTitle} om een startreferentie te krijgen voor ${subject.toLowerCase()} voordat je je volgende wijziging doet.`;
+  return guideProseNl.cta.setup(cardTitle);
 }
 
 function buildFaqExtras(slug: string, locale: "en" | "nl"): GuideContentFaq[] {
@@ -277,7 +280,7 @@ const SETUP_PARAMETERS_GUIDE_CONTENT_BASE = {
           items: [
             "Een zadel dat te hoog staat voelt vaak alsof de heupen naar de onderkant van de trapbeweging moeten reiken, met lichte heupzwaai, spanning achter de knie of een gevoel van overstrekte beenlengte.",
             "Een te laag zadel voelt meestal compact of gedrongen: de knie blijft te gesloten bovenaan de trap, de quadriceps verzuren sneller en vermogen kan op langere ritten vlak of inefficiënt aanvoelen.",
-            "Als de positie vooral fout voelt wanneer je vermoeid bent, check dan of het probleem uit hoogte, belasting of beide komt; vermoeidheid legt vaak een borderline afstelling bloot.",
+            guideProseNl.setup.tiredPosition,
           ],
         },
         {
@@ -292,7 +295,7 @@ const SETUP_PARAMETERS_GUIDE_CONTENT_BASE = {
           title: "Fijn afstellen in kleine stappen",
           items: [
             "Pas aan in stappen van 2 tot 3 mm; grote sprongen maken het moeilijk om te voelen of de nieuwe positie beter is of alleen anders.",
-            "Test elke wijziging op minstens 2 tot 4 ritten met zowel steady werk als wat hardere inspanningen.",
+            guideProseNl.setup.testRides,
             "Als een verandering één klacht verbetert maar een andere veroorzaakt, ga dan eerst halverwege terug voordat je een tweede correctie probeert.",
           ],
         },
@@ -480,32 +483,32 @@ const SETUP_PARAMETERS_GUIDE_CONTENT_BASE = {
     },
     nl: {
       intro: [
-        "Reach is niet alleen een stemvraag. De totale cockpitlengte is de som van frame reach, stemlengte en -hoek, bar reach, hood-positie en zelfs hoe het stuur in de klem staat.",
-        "Daarom lost een kortere stem alleen lage-rugklachten of een uitgerekt gevoel vaak niet op: het frame kan al lang zijn, het stuur kan extra reach toevoegen of de hoods staan verder naar voren dan je denkt.",
+        guideProseNl.setup.reachIntro,
+        guideProseNl.setup.shorterStem,
       ],
       sections: [
         {
           title: "Totale cockpitlengte: wat echt telt",
           items: [
-            "De rijder ervaart de hele voorkant als één systeem, dus de bruikbare reach is het gecombineerde effect van framegeometrie, stem, stuurvorm en hood-plaatsing.",
-            "Een stuur met 80 tot 90 mm reach kan duidelijk langer aanvoelen dan een compact stuur, ook als frame en stem hetzelfde blijven.",
+            guideProseNl.setup.combinedReach,
+            guideProseNl.setup.barReach,
             "Meet en beoordeel eerst de complete cockpit en bepaal daarna welk onderdeel de beste hefboom is om aan te passen.",
           ],
         },
         {
           title: "Frame reach als beperking",
           items: [
-            "Frame reach zet de harde bovengrens voor hoe kort of lang de voorkant kan worden zonder een gekunstelde stem- of stuursetup.",
-            "Als het frame te lang is, kan een heel korte stem het sturen nerveus maken of het stuur te dicht op de rijder brengen voor goede controle.",
+            guideProseNl.setup.frameLimit,
+            guideProseNl.setup.shortStemHandling,
             "Wanneer het probleem op frameniveau begint, kun je de positie verfijnen met cockpitwijzigingen, maar een fundamenteel verkeerd frame niet volledig wegwerken.",
           ],
         },
         {
-          title: "Stemlengte en -hoek: het afstelgereedschap",
+          title: guideProseNl.setup.stemTitle,
           items: [
-            "Stemlengte is de eenvoudigste manier om de cockpitlengte in kleine stappen te verschuiven, meestal in stappen van 5 tot 10 mm.",
-            "Stemhoek verandert zowel reach als stack: een stem van 6 graden of 10 graden kan de stuurhoogte genoeg verplaatsen om de steun van de romp te veranderen.",
-            "Als je de stemlengte aanpast, controleer dan ook stack en hoodhoek opnieuw, omdat een kleine reachwijziging groter kan aanvoelen zodra de handpositie verschuift.",
+            guideProseNl.setup.stemLength,
+            guideProseNl.setup.stemAngle,
+            guideProseNl.setup.stemCheck,
           ],
         },
         {
@@ -520,15 +523,15 @@ const SETUP_PARAMETERS_GUIDE_CONTENT_BASE = {
       faqs: [
         {
           q: "Hoe meet ik mijn totale cockpitlengte?",
-          a: "Tel de praktische effecten van frame reach, stemlengte en -hoek, bar reach en hood-positie samen. Het exacte getal is minder belangrijk dan dat je altijd op dezelfde manier meet.",
+          a: guideProseNl.setup.measureReach,
         },
         {
-          q: "Moet ik eerst de stemlengte of de stemhoek veranderen?",
+          q: guideProseNl.setup.stemQuestion,
           a: "Begin met de wijziging die het minst verplaatst en de handling behoudt. Is vooral reach het probleem, dan is een kleine lengte-aanpassing vaak het zuiverst; is de hoogte ook fout, dan kan hoek de betere eerste stap zijn.",
         },
         {
-          q: "Waarom lost een kortere stem mijn lage-rugklachten niet altijd op?",
-          a: "Omdat rugklachten ook kunnen komen door te veel drop, een verkeerde setback of een stuurvorm die je nog steeds laat overreiken. Een kortere stem verandert die andere belastingen niet automatisch.",
+          q: guideProseNl.setup.backQuestion,
+          a: guideProseNl.setup.backAnswer,
         },
       ],
     },
@@ -613,9 +616,9 @@ const SETUP_PARAMETERS_GUIDE_CONTENT_BASE = {
         {
           title: "Stack en drop als paar",
           items: [
-            "Als de stack te laag is, kan de rijder zich gedwongen voelen tot meer drop, zelfs wanneer stem en stuur verder goed zijn.",
+            guideProseNl.setup.lowStack,
             "Als de stack te hoog is, kan de voorkant rechtop en compact aanvoelen, ook al lijkt de numerieke drop klein.",
-            "Gebruik spacers, stemhoek en stuurkeuze om eerst de stack te tunen wanneer het hoofdprobleem ondersteuning van de voorkant is en niet puur reach.",
+            guideProseNl.setup.stackAdjustment,
           ],
         },
         {
@@ -818,7 +821,7 @@ const SETUP_PARAMETERS_GUIDE_CONTENT_BASE = {
           title: "Barbreedte: afstemmen op schouderbreedte",
           items: [
             "Een logisch startpunt is de barbreedte af te stemmen op de schouderbreedte bij de acromion en daarna te corrigeren voor discipline en voorkeur.",
-            "Wegrijders doen het vaak goed op sturen die dicht bij schouderbreedte liggen of iets smaller zijn, terwijl gravelrijders vaak iets meer breedte kiezen voor controle en leverage.",
+            guideProseNl.review.leverage,
             "De juiste breedte is de breedte waarmee de schouders ontspannen blijven zonder dat de voorkant nerveus of juist te open aanvoelt.",
           ],
         },
@@ -827,7 +830,7 @@ const SETUP_PARAMETERS_GUIDE_CONTENT_BASE = {
           items: [
             "Te smalle sturen kunnen de borst samendrukken, de ellebogen naar binnen dwingen en een strak, afwerend adempatroon veroorzaken.",
             "Te brede sturen kunnen de schouders juist te ver openen, de frontale oppervlakte vergroten en het bovenlichaam soms eerder gespannen dan ondersteund laten voelen.",
-            "De sweet spot is meestal een breedte waarbij de ribben natuurlijk kunnen uitzetten terwijl de schouderbladen stabiel en neutraal blijven.",
+            guideProseNl.setup.widthBalance,
           ],
         },
         {
@@ -841,7 +844,7 @@ const SETUP_PARAMETERS_GUIDE_CONTENT_BASE = {
         {
           title: "Brede versus smalle sturen per discipline",
           items: [
-            "Wegfietsen profiteert vaak van een compacter en minder draggy front, terwijl gravel en technisch rijden juist baat hebben bij meer leverage en controle.",
+            guideProseNl.setup.widthDiscipline,
             "Triathlonposities kiezen vaak voor een smallere frontale breedte om aerodynamisch te blijven, maar alleen als de rijder de fiets nog veilig kan controleren.",
             "Kies de breedte op basis van de taak, en verfijn daarna hood-rotatie en leverbereik zodat de handen in je meest gebruikte positie goed ondersteund aanvoelen.",
           ],

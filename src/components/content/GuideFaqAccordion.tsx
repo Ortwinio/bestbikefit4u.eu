@@ -2,15 +2,17 @@
 
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import type { Locale } from "@/i18n/config";
 import type { GuideFaqItem } from "@/lib/guides/markdown-utils";
 import { cn } from "@/utils/cn";
 import { GuideBodyMarkdown } from "./GuideBodyMarkdown";
 
 type GuideFaqAccordionProps = {
   faqs: GuideFaqItem[];
+  locale?: Locale;
 };
 
-export function GuideFaqAccordion({ faqs }: GuideFaqAccordionProps) {
+export function GuideFaqAccordion({ faqs, locale = "en" }: GuideFaqAccordionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
@@ -39,7 +41,7 @@ export function GuideFaqAccordion({ faqs }: GuideFaqAccordionProps) {
             </button>
             {isOpen ? (
               <div className="border-t border-border/60 px-5 py-4">
-                <GuideBodyMarkdown content={faq.a} />
+                <GuideBodyMarkdown content={faq.a} locale={locale} />
               </div>
             ) : null}
           </div>

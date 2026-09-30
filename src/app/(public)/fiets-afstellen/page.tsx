@@ -25,7 +25,7 @@ import {
 } from "@/components/science/EditorialLayout";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { BRAND } from "@/config/brand";
-import { setupCopy as pageCopy, type AnchorItem, type FaqItem } from "@/i18n/marketing/setup";
+import { setupCopy as pageCopy, setupRelatedCopy, type AnchorItem, type FaqItem } from "@/i18n/marketing/setup";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
@@ -580,10 +580,7 @@ export default async function BikeSetupPage() {
               {isNl ? "Verder lezen in de gidsenbibliotheek" : "Continue in the guides library"}
             </p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              {isNl
-                ? "Lees verder over kniepijn, lage rugklachten, racefietspositie en andere " + "setupvragen."
-                : "Read more about knee pain, low-back discomfort, road-bike position, and " +
-                  "other setup topics."}
+              {setupRelatedCopy[locale]}
             </p>
           </Link>
           <Link
