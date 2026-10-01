@@ -13,7 +13,7 @@
     "test:smoke:local": "node scripts/smoke-local.mjs",
     "vercel:preflight": "node scripts/check-vercel-env.mjs",
     "seo:validate-sitemaps": "node scripts/seo/validate-sitemaps.mjs",
-    "lint": "npm-run-all lint:eslint lint:runtime-boundaries lint:tooltips lint:contrast lint:css-modules",
+    "lint": "npm-run-all lint:eslint lint:runtime-boundaries lint:tooltips lint:contrast lint:css-modules lint:images",
     "lint:eslint": "eslint",
     "lint:runtime-boundaries": "node scripts/check-convex-runtime-boundaries.mjs",
     "lint:tooltips": "node scripts/check-tooltip-coverage.mjs",
@@ -27,7 +27,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint:contrast": "node scripts/check-brand-contrast.mjs",
-    "lint:css-modules": "node scripts/check-css-module-tokens.mjs"
+    "lint:css-modules": "node scripts/check-css-module-tokens.mjs",
+    "lint:images": "node scripts/check-image-weight.mjs"
   },
   "dependencies": {
     "@auth/core": "^0.41.3",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
@@ -54,24 +54,34 @@ export function SaddleWidthCalculatorForm({
   isNl = false,
   locale = isNl ? "nl" : "en",
   copy = saddleWidthMessages[locale],
+  initialValues,
+  onValuesChange,
+  accountMode = false,
+  statusSlot,
+  headerSlot,
 }: {
   isNl?: boolean;
   locale?: Locale;
   copy?: SaddleWidthCalculatorCopy;
+  initialValues?: Partial<SaddleWidthInput>;
+  onValuesChange?: (values: SaddleWidthInput) => void;
+  accountMode?: boolean;
+  statusSlot?: ReactNode;
+  headerSlot?: ReactNode;
 }) {
-  const [mode, setMode] = useState<SaddleInputMethod>("measured");
-  const [sitBone, setSitBone] = useState(125);
-  const [height, setHeight] = useState(180);
-  const [weight, setWeight] = useState(75);
-  const [hip, setHip] = useState(100);
+  const [mode, setMode] = useState<SaddleInputMethod>(initialValues?.inputMethod ?? "measured");
+  const [sitBone, setSitBone] = useState(initialValues?.sitBoneWidthMm ?? 125);
+  const [height, setHeight] = useState(initialValues?.heightCm ?? 180);
+  const [weight, setWeight] = useState(initialValues?.weightKg ?? 75);
+  const [hip, setHip] = useState(initialValues?.hipCircumferenceCm ?? 100);
   const [confirmedFields, setConfirmedFields] = useState<string[]>([]);
-  const [ridingType, setRidingType] = useState<SaddleRidingType>("endurance_road");
-  const [postureCategory, setPostureCategory] = useState<SaddlePostureCategory>("balanced");
+  const [ridingType, setRidingType] = useState<SaddleRidingType>(initialValues?.ridingType ?? "endurance_road");
+  const [postureCategory, setPostureCategory] = useState<SaddlePostureCategory>(initialValues?.postureCategory ?? "balanced");
   const [saveFailed, setSaveFailed] = useState(false);
   const saveSession = useMutation(api.saddleWidth.mutations.createPublicSaddleWidthSession);
   const savedSignature = useRef<string | null>(null);
   const fields = mode === "measured" ? ["sitBone"] : ["height", "weight", "hip"];
-  const confirmed = fields.every((field) => confirmedFields.includes(field));
+  const confirmed = accountMode || fields.every((field) => confirmedFields.includes(field));
   function confirmField(field: string) {
     setConfirmedFields((previous) => (previous.includes(field) ? previous : [...previous, field]));
   }
@@ -90,13 +100,20 @@ export function SaddleWidthCalculatorForm({
     const width = calculateSaddleWidth(input);
     return { width, suitability: classifySaddleSuitability(input, width) };
   }, [input]);
+  const previousInput = useRef(JSON.stringify(input));
+  useEffect(() => {
+    const signature = JSON.stringify(input);
+    if (signature === previousInput.current) return;
+    previousInput.current = signature;
+    onValuesChange?.(input);
+  }, [input, onValuesChange]);
   const { width, suitability } = result;
   const outside =
     width.finalRecommendedWidthMm < SUPPORTED_WIDTH_RANGE.min ||
     width.finalRecommendedWidthMm > SUPPORTED_WIDTH_RANGE.max;
 
   useEffect(() => {
-    if (!confirmed) return;
+    if (accountMode || !confirmed) return;
     const { inputMethod, ...measurements } = input;
     const payload = {
       ...measurements,
@@ -133,7 +150,7 @@ export function SaddleWidthCalculatorForm({
       active = false;
       window.clearTimeout(timeout);
     };
-  }, [confirmed, input, saveSession, suitability, width]);
+  }, [accountMode, confirmed, input, saveSession, suitability, width]);
 
   const label = confirmed ? copy.result : copy.exampleResult;
   const halfWidth = width.finalRecommendedWidthMm * 0.8;
@@ -146,8 +163,10 @@ export function SaddleWidthCalculatorForm({
       eyebrow={copy.eyebrow}
       title={copy.title}
       description={copy.description}
+      navigation={headerSlot}
       inputs={
         <>
+          {statusSlot}
           <StepCard number={1} title={copy.measurements}>
             <SegmentedControl
               aria-label={copy.method}
@@ -396,7 +415,7 @@ export function SaddleWidthCalculatorForm({
             </ul>
           </section>
           <AdjustOrder title={copy.order} steps={copy.steps.map((title) => ({ title }))} />
-          <Link
+          {!accountMode && <><Link
             href={withLocalePrefix("/login", locale)}
             className={
               "inline-flex min-h-14 items-center justify-center rounded-full bg-primary " +
@@ -405,7 +424,7 @@ export function SaddleWidthCalculatorForm({
           >
             {copy.account}
           </Link>
-          <p className="text-sm text-muted-foreground">{copy.accountNote}</p>
+          <p className="text-sm text-muted-foreground">{copy.accountNote}</p></>}
           {saveFailed && (
             <p role="status" className="text-sm text-muted-foreground">
               {copy.saveFailed}

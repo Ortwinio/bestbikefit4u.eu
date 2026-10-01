@@ -122,7 +122,7 @@ export default async function NotFound() {
           <div className="relative w-full max-w-sm">
             <div className="absolute inset-x-10 bottom-1 h-10 rounded-full bg-[color:color-mix(in_oklch,var(--primary)_22%,transparent)] blur-2xl" />
             <Image
-              src="/mascote/bestbikefit4u-mascote-on-bike-transparent.png"
+              src="/mascote/bestbikefit4u-mascote-on-bike-transparent.webp"
               alt={
                 locale === "nl"
                   ? "BestBikeFit4U-mascotte op de fiets bij een ontbrekende pagina"
@@ -130,6 +130,7 @@ export default async function NotFound() {
               }
               width={880}
               height={880}
+              sizes="(max-width: 640px) calc(100vw - 48px), 384px"
               priority
               className="relative z-10 h-auto w-full object-contain"
             />

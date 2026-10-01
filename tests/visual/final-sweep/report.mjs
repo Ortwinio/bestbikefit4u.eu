@@ -1,8 +1,9 @@
+import { escapeMarkdownCell } from "../../../scripts/lib/markdown.mjs";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { CHECK_NAMES } from "./checks.mjs";
 
-const cell = (value) => String(value ?? "").replace(/\|/g, "\\|").replace(/\r?\n/g, " ");
+const cell = escapeMarkdownCell;
 const mark = (status) => ({ pass: "✓", fail: "✗", skip: "—" })[status] ?? "?";
 
 export function summarize(results) {

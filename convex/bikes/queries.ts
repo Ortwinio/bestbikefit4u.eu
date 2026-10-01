@@ -261,7 +261,10 @@ export const get = query({
 export const getDetail = query({
   args: { bikeId: v.id("bikes") },
   handler: async (ctx, args) => {
-    const { bike } = await requireBikeOwner(ctx, args.bikeId);
+    const userId = await requireUserId(ctx);
+    const bike = await ctx.db.get(args.bikeId);
+    if (!bike) return null;
+    if (bike.userId !== userId) throw new Error("Bike not found");
 
     const [
       profile,

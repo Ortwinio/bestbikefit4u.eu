@@ -1,5 +1,6 @@
 export const reportErrors = {
   en: {
+    emailFallback: "Something went wrong. Please try again.",
     401: "Sign in to open your PDF report.",
     403: "The PDF report is part of Pro. Upgrade to Pro to view or download it.",
     404: "This fit report could not be found.",
@@ -8,6 +9,7 @@ export const reportErrors = {
     fallback: "Failed to generate the PDF report. Please try again.",
   },
   nl: {
+    emailFallback: "Versturen mislukt. Probeer het opnieuw.",
     401: "Log in om je PDF-rapport te openen.",
     403: "Het PDF-rapport is onderdeel van Pro. Upgrade naar Pro om het te bekijken of downloaden.",
     404: "Dit fitrapport is niet gevonden.",

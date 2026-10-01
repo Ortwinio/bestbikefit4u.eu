@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  startTransition,
   useContext,
   useEffect,
   useMemo,
@@ -9,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { useMutation, useQuery } from "convex/react";
+import { useAutosave } from "@/components/ui/useAutosave";
 import { api } from "../../../convex/_generated/api";
 
 type ThemePreference = "light" | "dark" | "system";
@@ -17,6 +19,7 @@ type ThemeContextValue = {
   theme: ThemePreference;
   resolvedTheme: "light" | "dark";
   setTheme: (theme: ThemePreference) => void;
+  autosave: ReturnType<typeof useAutosave<ThemePreference>>;
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -67,6 +70,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const user = useQuery(api.users.queries.getCurrentUser);
   const updateProfile = useMutation(api.users.mutations.updateProfile);
   const [theme, setThemeState] = useState<ThemePreference>(readStoredTheme);
+  const [hydratedUserId, setHydratedUserId] = useState<string | null>(null);
+  const autosave = useAutosave({
+    value: theme,
+    enabled: Boolean(user && hydratedUserId === user._id),
+    debounceMs: 500,
+    onSave: async (theme_preference) => { await updateProfile({ theme_preference }); },
+  });
   const [systemTheme, setSystemTheme] = useState<"light" | "dark">(
     readSystemTheme
   );
@@ -99,19 +109,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const setTheme = (nextTheme: ThemePreference) => {
     applyThemePreference(nextTheme, setThemeState);
-    if (user) {
-      void updateProfile({ theme_preference: nextTheme });
-    }
   };
 
   useEffect(() => {
-    if (user?.theme_preference && user.theme_preference !== theme) {
-      applyThemePreference(user.theme_preference, setThemeState);
+    if (user && hydratedUserId !== user._id) {
+      startTransition(() => {
+        if (user.theme_preference) applyThemePreference(user.theme_preference, setThemeState);
+        setHydratedUserId(user._id);
+      });
     }
-  }, [theme, user?.theme_preference]);
+  }, [user, hydratedUserId]);
 
   return (
-    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme, autosave }}>
       {children}
     </ThemeContext.Provider>
   );

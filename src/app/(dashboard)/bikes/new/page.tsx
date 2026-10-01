@@ -1,13 +1,14 @@
 import Link from "next/link";
-import { CopyPlus, PencilLine, Store } from "lucide-react";
+import { CopyPlus, PencilLine } from "lucide-react";
 import { Button, Card, CardContent, CardDescription } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getDashboardMessages } from "@/i18n/dashboardMessages";
+import { getBikeLanguageMessages } from "@/i18n/account/bikesLanguage";
 import { getRequestLocale } from "@/i18n/request";
 
 export default async function NewBikePage() {
   const locale = await getRequestLocale();
-  const messages = getDashboardMessages(locale);
+  const messages = getBikeLanguageMessages(locale, getDashboardMessages(locale));
   const t = messages.bikeForm.createChooser;
 
   const options = [
@@ -17,13 +18,6 @@ export default async function NewBikePage() {
       description: t.manual.description,
       href: "/bikes/new/manual",
       cta: t.manual.cta,
-    },
-    {
-      icon: Store,
-      title: t.marktplaats.title,
-      description: t.marktplaats.description,
-      href: "/bikes/import/marktplaats",
-      cta: t.marktplaats.cta,
     },
     {
       icon: CopyPlus,
@@ -43,7 +37,7 @@ export default async function NewBikePage() {
         <p className="mt-2 text-sm text-muted-foreground">{t.description}</p>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-2">
         {options.map((option) => {
           const Icon = option.icon;
           return (

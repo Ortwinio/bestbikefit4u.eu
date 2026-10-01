@@ -64,3 +64,6 @@ claude/.obsidian/
 /plans/redesign-canvas/**/*.log
 /plans/redesign-canvas/**/*.zip
 /plans/redesign-canvas/final-sweep/smoke/*.png
+
+# Editable illustration and image originals; generated web assets are committed
+/plans/redesign-canvas/illustration-sources/

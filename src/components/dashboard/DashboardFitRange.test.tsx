@@ -1,3 +1,4 @@
+import { htmlText } from "../../../scripts/lib/html.mjs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { DashboardFitRange } from "./DashboardFitRange";
@@ -17,7 +18,7 @@ describe("dashboard report range", () => {
     expect(html).toContain('aria-hidden="true"');
     expect(html).toContain("border-border bg-muted");
     expect(html).toContain("left-1/4 top-1 h-2 w-1/2 rounded-full bg-accent");
-    expect(html.replace(/<[^>]*>/g, "")).toBe("");
+    expect(htmlText(html)).toBe("");
   });
   it.each([null, "n/a", "740 mm - 740 mm", "754 mm - 742 mm", `${"9".repeat(309)} mm - 754 mm`])("omits missing or unusable range %s", (range) => {
     expect(renderToStaticMarkup(<DashboardFitRange target="748 mm" range={range} />)).toBe("");

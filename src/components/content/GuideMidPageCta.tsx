@@ -1,4 +1,5 @@
 import { isAuthenticatedNextjs } from "@convex-dev/auth/nextjs/server";
+import { getGuidesMessages } from "@/i18n/marketing/guides";
 import { Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
@@ -19,7 +20,7 @@ function resolveMidPageDescription(cluster: string, locale: Locale) {
 
   if (locale === "nl") {
     if (normalized.includes("pain & discomfort")) {
-      return "Je begrijpt nu waarom dit symptoom ontstaat. Gebruik de gratis fit om te controleren of jouw maten in de juiste range zitten.";
+      return getGuidesMessages(locale).midPainDescription;
     }
     if (normalized.includes("ride types")) {
       return "Je rijstijl bepaalt je fitprioriteiten. Gebruik de gratis fit om dat te vertalen naar concrete cijfers en keuzes.";
@@ -28,7 +29,7 @@ function resolveMidPageDescription(cluster: string, locale: Locale) {
       return "Parameters krijgen pas betekenis wanneer ze gekoppeld zijn aan jouw lichaam. Start je fit voor richtwaarden die bij jou passen.";
     }
     if (normalized.includes("shoe") || normalized.includes("cleat")) {
-      return "Schoen- en cleatsetup grijpen in op de rest van je fit. De dashboardflow helpt je dat stap voor stap te controleren.";
+      return getGuidesMessages(locale).midShoeDescription;
     }
 
     return "Gebruik de gratis fit om deze richtlijnen te koppelen aan jouw lichaam, fiets en volgende logische aanpassing.";
@@ -66,7 +67,7 @@ export async function GuideMidPageCta({
     ? isNl
       ? "Open je fitdashboard"
       : "Open your fit dashboard"
-    : "Start Free Fit";
+    : getGuidesMessages(locale).startFit;
   const showValueBullets = (funnel ?? "MOFU").toUpperCase() !== "TOFU";
 
   return (

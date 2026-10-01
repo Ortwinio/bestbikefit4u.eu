@@ -17,6 +17,8 @@ import { ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import type { QuestionDefinition, QuestionnaireResponseValue } from "./types";
 import { getLocalizedQuestion } from "./localization";
+import { localizeAccountError } from "@/i18n/account/clientErrors";
+import { fitAuditCopy } from "@/i18n/account/fitAudit";
 import { FitQuestionnaireGuide } from "@/components/account/FitQuestionnaireGuide";
 
 const SERVER_MISSING_REQUIRED_MARKER = "Missing required responses:";
@@ -154,13 +156,14 @@ export function QuestionnaireContainer({
         await onSaveResponse(currentQuestion.questionId, responseToSave);
       } catch (error) {
         setActionError(
-          reportClientError(error, {
+          localizeAccountError(reportClientError(error, {
             area: "questionnaire",
             action: "saveResponse",
             operationType: "mutation",
             subjectId: currentQuestion.questionId,
             metadata: { questionId: currentQuestion.questionId },
-          })
+            userMessage: fitAuditCopy[locale].error,
+          }), locale)
         );
         return;
       } finally {
@@ -204,11 +207,12 @@ export function QuestionnaireContainer({
           return;
         }
         setActionError(
-          reportClientError(error, {
+          localizeAccountError(reportClientError(error, {
             area: "questionnaire",
             action: "completeQuestionnaire",
             operationType: "mutation",
-          })
+            userMessage: fitAuditCopy[locale].error,
+          }), locale)
         );
       } finally {
         setIsCompleting(false);
@@ -267,7 +271,7 @@ export function QuestionnaireContainer({
                   className="min-h-11 max-w-full whitespace-normal text-left"
                   onClick={() => jumpToQuestion(questionId)}
                 >
-                  {question ? getLocalizedQuestion(question, messages).questionText : questionId}
+                  {question ? getLocalizedQuestion(question, messages, locale).questionText : questionId}
                 </Button>
               );
             })}

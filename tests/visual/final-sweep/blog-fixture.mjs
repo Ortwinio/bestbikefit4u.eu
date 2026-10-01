@@ -1,4 +1,7 @@
+import { sendFixtureError } from "../lib/http-errors.mjs";
+import { guideBacklogFixture } from "./guide-backlog-fixture.mjs";
 import { serveQaAsset } from "./assets.mjs";
+import { readFile } from "node:fs/promises";
 import { build } from "esbuild";
 import { createServer } from "node:http";
 import { resolve, extname } from "node:path";
@@ -32,7 +35,6 @@ export async function prepareBlogFixture({ root, origin, fetch: previewFetch = f
     "next/image": "../account-batch1/image.jsx",
     "@sentry/nextjs": "runtime.jsx",
     "@/components/seo/JsonLd": "runtime.jsx",
-    "@/lib/guides/backlog": "runtime.jsx",
   };
   const bundle = await build({
     absWorkingDir: root,
@@ -53,9 +55,15 @@ export async function prepareBlogFixture({ root, origin, fetch: previewFetch = f
       "process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED": '"true"',
       "process.env.NEXT_PUBLIC_ENABLE_LOCALHOST_DEV_LOGIN": '"false"',
     },
-    plugins: [{
+    plugins: [guideBacklogFixture(root), {
       name: "final-sweep-blog-runtime",
       setup(builder) {
+        builder.onResolve({ filter: /^@convex-dev\/auth\/nextjs\/server$/ }, () => ({
+          path: "anonymous-auth", namespace: "blog-fixture",
+        }));
+        builder.onLoad({ filter: /.*/, namespace: "blog-fixture" }, () => ({
+          contents: "export const convexAuthNextjsToken = async () => undefined;", loader: "js",
+        }));
         builder.onResolve({ filter: /.*/ }, ({ path }) => {
           if (Object.hasOwn(aliases, path)) return { path: resolve(folder, aliases[path]) };
         });
@@ -76,11 +84,19 @@ export async function prepareBlogFixture({ root, origin, fetch: previewFetch = f
         response.end(pathname.endsWith(".js") ? script : css);
         return;
       }
-      if (pathname.startsWith("/_next/") || extname(pathname)) {
-        const remote = await previewFetch(new URL(pathname + url.search, origin));
-        response.statusCode = remote.status;
-        response.setHeader("content-type", remote.headers.get("content-type") || "application/octet-stream");
-        response.end(Buffer.from(await remote.arrayBuffer()));
+      if (pathname.startsWith("/_next/")) {
+        response.statusCode = 404;
+        response.end("Unknown build asset");
+        return;
+      }
+      if (extname(pathname)) {
+        const base = resolve(root, "public");
+        const file = resolve(base, `.${decodeURIComponent(pathname)}`);
+        if (!file.startsWith(base + "/")) throw new Error("Invalid asset path");
+        const types = { ".svg": "image/svg+xml", ".png": "image/png", ".webp": "image/webp",
+          ".jpg": "image/jpeg", ".woff2": "font/woff2" };
+        response.setHeader("content-type", types[extname(file)] || "application/octet-stream");
+        response.end(await readFile(file));
         return;
       }
       if (!/^\/(nl|en)\/blog(?:\/visual-article-\d+)?\/?$/.test(pathname)) {
@@ -97,8 +113,7 @@ export async function prepareBlogFixture({ root, origin, fetch: previewFetch = f
 <body class="${bodyClass}"><div id="root"></div>
 <script type="module" src="/fixture.js"></script></body></html>`);
     } catch (error) {
-      response.statusCode = 500;
-      response.end(String(error));
+      sendFixtureError(response, error);
     }
   });
   await new Promise((done, reject) => {

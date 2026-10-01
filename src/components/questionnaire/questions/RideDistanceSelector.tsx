@@ -3,6 +3,7 @@
 import { toPercentBucket } from "@/lib/uiPercent";
 import { cn } from "@/utils/cn";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { fitAuditCopy } from "@/i18n/account/fitAudit";
 
 type RideDistanceValue = "short" | "medium" | "long" | "ultra";
 
@@ -17,7 +18,7 @@ export function RideDistanceSelector({
   value,
   onChange,
 }: RideDistanceSelectorProps) {
-  const { messages } = useDashboardMessages();
+  const { locale, messages } = useDashboardMessages();
   const t = messages.questionnaire.rideDistance;
 
   const selectedIndex = value
@@ -107,7 +108,7 @@ export function RideDistanceSelector({
             <p className="text-sm font-semibold text-foreground">
               {t.options[value as RideDistanceValue].label}
               <span className="ml-1.5 text-xs font-normal text-muted-foreground">
-                · {t.options[value as RideDistanceValue].subtitle}
+                · {locale === "nl" && value === "short" ? fitAuditCopy.nl.recreational : t.options[value as RideDistanceValue].subtitle}
               </span>
             </p>
             <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">

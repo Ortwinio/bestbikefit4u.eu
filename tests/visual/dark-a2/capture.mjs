@@ -21,7 +21,6 @@ const bikeCases = [
   ["new", "/nl/bikes/new"],
   ["manual", "/nl/bikes/new/manual"],
   ["passport", "/nl/bikes/import/passport"],
-  ["marktplaats", "/nl/bikes/import/marktplaats"],
   ["compare", "/nl/bikes/compare-fit"],
   ["detail", "/nl/bikes/visual-bike"],
   ["gallery", "/nl/bikes/visual-bike?fixture=gallery"],

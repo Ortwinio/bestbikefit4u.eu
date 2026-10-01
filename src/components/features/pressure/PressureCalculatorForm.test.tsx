@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import nl from "@/i18n/messages/nl";
 import en from "@/i18n/messages/en";
 import { calculateBasicPressure } from "@/lib/pressure-engine";
-import { PressureCalculatorForm } from "./PressureCalculatorForm";
+import { PressureCalculatorForm, type PressureCalculatorValues } from "./PressureCalculatorForm";
 
 afterEach(cleanup);
 const basic = {
@@ -96,5 +97,76 @@ describe("public pressure calculator", () => {
     expectResult({ ...basic, ridingGoal: "comfort" });
     expect(screen.queryByRole("spinbutton")).toBeNull();
     expect(screen.queryByRole("combobox")).toBeNull();
+  });
+});
+
+
+it("renders Dutch pressure controls, result ARIA labels and setup warnings", () => {
+  render(<PressureCalculatorForm locale="nl" defaultDiscipline="mtb"
+    labels={nl.pressure.form} resultLabels={nl.pressure.result} />);
+  expect(screen.getByRole("slider", { name: "Lichaamsgewicht (kg)" })).toBeTruthy();
+  expect(screen.getByRole("status", { name: "Bandenspanningsadvies" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Gelijk voor en achter" })).toBeTruthy();
+  expect(screen.getByText(nl.pressure.result.warningMessages.mtb_tire_width_unusual)).toBeTruthy();
+  expect(screen.queryByText(/Always check|Your tires|Rider weight/)).toBeNull();
+});
+
+describe("account pressure calculator reuse", () => {
+  const saved: PressureCalculatorValues = {
+    ...basic, discipline: "gravel", bodyWeightKg: 83, widthFrontMm: 40, widthRearMm: 42,
+    surface: "hardpack_gravel", tubeType: "inner_tube", ridingGoal: "comfort", bikeWeightKg: 11,
+  };
+
+  it("prefills the same form without saving on mount and replaces only the public account CTA", () => {
+    const onValuesChange = vi.fn();
+    render(<PressureCalculatorForm locale="en" accountMode initialValues={saved}
+      labels={en.pressure.form} resultLabels={en.pressure.result} onValuesChange={onValuesChange}
+      headerSlot={<p>Bike selector</p>} statusSlot={<p>Saved</p>} />);
+    expectResult(saved);
+    expect(screen.getByRole("region", { name: "Your starting pressure" })).toBeTruthy();
+    expect(screen.queryByRole("region", { name: "Example starting pressure" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Save your setup" })).toBeNull();
+    expect(screen.getByText("Bike selector")).toBeTruthy();
+    expect(screen.getByText("Saved")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Same width front and rear" }).getAttribute("aria-pressed")).toBe("false");
+    expect(screen.getByRole("slider", { name: en.pressure.form.bikeWeightLabel }).getAttribute("aria-valuenow")).toBe("11");
+    expect(onValuesChange).not.toHaveBeenCalled();
+  });
+
+  it("notifies actual input changes and flushes the latest complete snapshot on keyboard and pointer commit", () => {
+    const onValuesChange = vi.fn();
+    const onValuesCommit = vi.fn();
+    render(<PressureCalculatorForm locale="en" accountMode initialValues={saved}
+      labels={en.pressure.form} resultLabels={en.pressure.result}
+      onValuesChange={onValuesChange} onValuesCommit={onValuesCommit} />);
+    const weight = screen.getByRole("slider", { name: en.pressure.form.bodyWeightLabel });
+    fireEvent.keyDown(weight, { key: "ArrowRight" });
+    expect(onValuesChange).toHaveBeenLastCalledWith({ ...saved, bodyWeightKg: 84 });
+    expect(onValuesCommit).not.toHaveBeenCalled();
+    fireEvent.keyUp(weight, { key: "ArrowRight" });
+    expect(onValuesCommit).toHaveBeenLastCalledWith({ ...saved, bodyWeightKg: 84 });
+    const front = screen.getByRole("slider", { name: en.pressure.form.widthFrontLabel });
+    fireEvent.keyDown(front, { key: "ArrowRight" });
+    fireEvent.pointerUp(front);
+    expect(onValuesCommit).toHaveBeenLastCalledWith({ ...saved, bodyWeightKg: 84, widthFrontMm: 41 });
+    fireEvent.click(screen.getByRole("button", { name: "Same width front and rear" }));
+    expect(onValuesChange).toHaveBeenLastCalledWith({ ...saved, bodyWeightKg: 84, widthFrontMm: 41, widthRearMm: 41 });
+    fireEvent.keyDown(front, { key: "ArrowRight" });
+    expect(onValuesChange).toHaveBeenLastCalledWith({ ...saved, bodyWeightKg: 84, widthFrontMm: 42, widthRearMm: 42 });
+  });
+
+  it("sends optional advanced values and restores public defaults on a new keyed bike", () => {
+    const onValuesChange = vi.fn();
+    const { rerender } = render(<PressureCalculatorForm key="bike-1" locale="en" accountMode initialValues={saved}
+      labels={en.pressure.form} resultLabels={en.pressure.result} onValuesChange={onValuesChange} />);
+    fireEvent.click(screen.getByRole("button", { name: "Refine bike weight and riding goal" }));
+    expect(onValuesChange).toHaveBeenLastCalledWith({ ...saved, bikeWeightKg: undefined });
+    rerender(<PressureCalculatorForm key="bike-2" locale="en" accountMode
+      labels={en.pressure.form} resultLabels={en.pressure.result} onValuesChange={onValuesChange} />);
+    expectResult(basic);
+    expect(onValuesChange).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: "Refine bike weight and riding goal" }));
+    fireEvent.click(screen.getByRole("button", { name: en.pressure.form.ridingGoalSpeed }));
+    expect(onValuesChange).toHaveBeenLastCalledWith({ ...basic, bikeWeightKg: 8, ridingGoal: "speed" });
   });
 });

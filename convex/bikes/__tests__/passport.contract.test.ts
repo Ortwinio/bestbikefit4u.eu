@@ -344,7 +344,7 @@ describe("bike passport contract", () => {
     ).rejects.toThrow("bike_passport_owned_by_user");
   });
 
-  it("creates one editable copied bike and reuses it on duplicate import", async () => {
+  it.each(["manual", "marketplace_import"] as const)("copies %s bikes and reuses duplicate passport imports", async (source) => {
     const handler = (importByPassport as unknown as { _handler: TestHandler })._handler;
     const testCtx = makeCtx({
       bikes: [{
@@ -352,6 +352,7 @@ describe("bike passport contract", () => {
         userId: "user_source",
         name: "Ridley Dean",
         bikeType: "tt_triathlon",
+        source,
         bikePassportId: "BBF-AB12-CD34",
         photoUrl: "storage_clean_primary",
         brand: "Ridley",
@@ -433,6 +434,7 @@ describe("bike passport contract", () => {
       bikeId: "bike_2",
       createdBikeId: "bike_2",
     });
+    expect(testCtx.bikeState.find((bike) => bike._id === "bike_source")?.source).toBe(source);
   });
 
   it("backfills passport ids for existing bikes without one", async () => {

@@ -1,4 +1,5 @@
 import { formatMessage } from "@/i18n/dashboardMessages";
+import { fitAuditCopy, localizeFitValue } from "@/i18n/account/fitAudit";
 import type { ReportDelta } from "@/lib/reports/reportV2Types";
 import type { ReportV2Copy } from "@/lib/reports/reportV2Copy";
 
@@ -37,7 +38,7 @@ export function getSurfaceLabel(
   copy: ReportV2Copy
 ): string {
   if (!surface) {
-    return "n/a";
+    return fitAuditCopy[copy.locale === "nl" ? "nl" : "en"].unavailable;
   }
 
   switch (surface) {
@@ -54,7 +55,6 @@ export function getSurfaceLabel(
     case "trail":
       return copy.tirePressure.surfaceValues.trail;
     default:
-      return surface.replaceAll("_", " ");
+      return localizeFitValue(surface.replaceAll("_", " "), copy.locale);
   }
 }
-

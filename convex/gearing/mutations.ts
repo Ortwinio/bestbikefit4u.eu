@@ -1,3 +1,4 @@
+import { calculateGearingAnalysis } from "../../src/lib/gearing-engine";
 import { v } from "convex/values";
 import { mutation } from "../_generated/server";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
@@ -73,6 +74,9 @@ const gearingConfidenceValidator = v.object({
 });
 
 const gearingInputValidator = v.object({
+  groupsetName: v.optional(v.string()),
+  comparisonCassetteTeeth: v.optional(v.array(v.number())),
+  climbDurationMinutes: v.optional(v.number()),
   drivetrainType: v.union(v.literal("1x"), v.literal("2x")),
   chainrings: v.array(v.number()),
   cassetteTeeth: v.array(v.number()),
@@ -155,25 +159,48 @@ export const createPublicGearingSession = mutation({
 
 export const createDashboardGearingSession = mutation({
   args: {
+    expectedUserId: v.optional(v.id("users")),
     bikeId: v.optional(v.id("bikes")),
     ...gearingSessionArgs,
   },
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
+    if (args.expectedUserId !== undefined && args.expectedUserId !== userId) {
+      throw new Error("User changed before saving");
+    }
     if (args.bikeId) {
       await requireBikeOwner(ctx, args.bikeId);
     }
 
-    return await ctx.db.insert("gearingSessions", {
+    // Validate using the same engine and derive results on the server, never trust client advice.
+    const analysis = calculateGearingAnalysis(args.input);
+    if (args.input.comparisonCassetteTeeth?.length) {
+      calculateGearingAnalysis({ ...args.input, cassetteTeeth: args.input.comparisonCassetteTeeth });
+    }
+    if (args.input.climbDurationMinutes !== undefined &&
+      (!Number.isFinite(args.input.climbDurationMinutes) || args.input.climbDurationMinutes < 1 ||
+        args.input.climbDurationMinutes > 180)) {
+      throw new Error("Invalid climb duration");
+    }
+    const current = await ctx.db.query("gearingSessions")
+      .withIndex("by_user_bike_session_type", (q) =>
+        q.eq("userId", userId).eq("bikeId", args.bikeId).eq("sessionType", "dashboard"))
+      .order("desc").first();
+    const values = {
       userId,
       bikeId: args.bikeId,
-      sessionType: "dashboard",
+      sessionType: "dashboard" as const,
       algorithmVersion: DEFAULT_GEARING_ALGORITHM_VERSION,
       scenarioName: args.scenarioName,
       input: args.input,
-      math: args.math,
-      suitability: args.suitability,
+      math: analysis.math,
+      suitability: analysis.suitability,
       createdAt: Date.now(),
-    });
+    };
+    if (current) {
+      await ctx.db.patch(current._id, values);
+      return current._id;
+    }
+    return await ctx.db.insert("gearingSessions", values);
   },
 });

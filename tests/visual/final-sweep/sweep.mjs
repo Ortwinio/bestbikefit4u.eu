@@ -20,7 +20,7 @@ const concurrency = Math.max(1, Math.min(6, Number(option("workers", "3"))));
 const withoutAxe = args.includes("--without-axe");
 const metadata = {
   inventory: "plans/redesign-canvas/audit/route-map.md", inventoryRoutes: inventory.length,
-  scope: "70 audited non-admin routes; later /design-system excluded.",
+  scope: "Active audited non-admin routes and account calculators; retired import and /design-system excluded.",
   billing: "STRIPE_BILLING_ENABLED=false, NEXT_PUBLIC_STRIPE_BILLING_ENABLED=false (process env only)",
   browser: "Chromium; light theme; reduced motion; 1440x1000 and 390x844; viewport screenshots",
   filtering: filter || null, concurrency, label: option("label", null),

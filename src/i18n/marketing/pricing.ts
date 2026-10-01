@@ -77,10 +77,10 @@ export const pricingCopy: Record<
     },
     title: "Heldere prijzen voor echte rijders",
     subtitle:
-      "Begin met een gratis fit check. Kies Pro als je meerdere fietsen wilt volgen en PDF-rapporten nodig hebt.",
+      "Begin met een gratis bikefit. Kies Pro als je meerdere fietsen wilt volgen en PDF-rapporten nodig hebt.",
     eyebrow: "Prijzen",
     monthlySuffix: "/ maand",
-    faqTitle: "Prijs-FAQ",
+    faqTitle: "Veelgestelde vragen over prijzen",
     ctaTitle: "Eerst proberen? Geen account nodig.",
     ctaBody:
       "De calculators zijn gratis. Beslis daarna of Pro bij je past.",
@@ -91,7 +91,7 @@ export const pricingCopy: Record<
         body: "Aanbevelingen zijn gebaseerd op beproefde bikefitting-formules plus correcties voor jouw lichaam en rijstijl.",
       },
       {
-        title: "Concrete output",
+        title: "Concrete afstelwaarden",
         body: "Zadelhoogte, reach, drop, cranklengte en stuurpositie in millimeters, inclusief een prioriteitsvolgorde voor aanpassingen.",
       },
       {

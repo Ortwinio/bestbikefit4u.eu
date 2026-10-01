@@ -10,6 +10,10 @@ import {
 } from "react";
 import { Toast as BaseToast, type ToastManagerAddOptions, type ToastManagerUpdateOptions } from "@base-ui/react/toast";
 import { CheckCircle2, CircleAlert, Info, TriangleAlert, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { extractLocaleFromPathname } from "@/i18n/navigation";
+import { DEFAULT_LOCALE } from "@/i18n/config";
+import { sharedUiMessages } from "@/i18n/account/sharedUi";
 import { cn } from "@/utils/cn";
 
 type AppToastKind = "success" | "error" | "info" | "warning";
@@ -213,12 +217,15 @@ export const toast = Object.assign(
 ) as ToastFunction;
 
 function Toaster(props: Omit<ComponentPropsWithoutRef<typeof BaseToast.Viewport>, "children">) {
+  const pathname = usePathname();
+  const copy = sharedUiMessages[extractLocaleFromPathname(pathname ?? "") ?? DEFAULT_LOCALE];
   const { toasts } = BaseToast.useToastManager<AppToastData>();
   const { className, ...viewportProps } = props;
 
   return (
     <BaseToast.Portal>
       <BaseToast.Viewport
+        aria-label={copy.notifications}
         data-slot="toaster"
         className={cn(
           "pointer-events-none fixed inset-x-0 bottom-0 z-[110] flex max-h-screen " +
@@ -290,7 +297,7 @@ function Toaster(props: Omit<ComponentPropsWithoutRef<typeof BaseToast.Viewport>
                   ) : null}
                   <BaseToast.Close
                     data-slot="toast-close"
-                    aria-label="Dismiss notification"
+                    aria-label={copy.close}
                     className={
                       "inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground " +
                       "transition-colors hover:bg-accent hover:text-foreground"

@@ -1,3 +1,4 @@
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -45,6 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: metadata.description,
     keywords: metadata.keywords,
     openGraph: {
+      images: [DEFAULT_SOCIAL_IMAGE],
       title: metadata.openGraphTitle,
       description: metadata.openGraphDescription,
       type: "website",

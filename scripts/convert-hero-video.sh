@@ -18,7 +18,7 @@
 
 set -euo pipefail
 
-GIF="public/bestbikefit4u-home.gif"
+GIF="plans/redesign-canvas/illustration-sources/originals/bestbikefit4u-home.gif"
 
 if ! command -v ffmpeg &>/dev/null; then
   echo "ffmpeg not found. Install with: brew install ffmpeg"
@@ -40,4 +40,4 @@ ffmpeg -i "$GIF" \
   public/bestbikefit4u-home.mp4
 
 echo "Done."
-ls -lh public/bestbikefit4u-home.webm public/bestbikefit4u-home.mp4 public/bestbikefit4u-home.gif
+ls -lh public/bestbikefit4u-home.webm public/bestbikefit4u-home.mp4 plans/redesign-canvas/illustration-sources/originals/bestbikefit4u-home.gif

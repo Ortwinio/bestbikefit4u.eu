@@ -1,3 +1,4 @@
+import { profileGuideNl } from "@/i18n/account/profileLanguage";
 import type { Metadata } from "next";
 import { getDashboardMessages } from "@/i18n/dashboardMessages";
 import { getRequestLocale } from "@/i18n/request";
@@ -54,14 +55,14 @@ export default async function ImproveComfortPage() {
           ],
         },
         {
-          name: "Verkort of verhoog je cockpit",
+          name: profileGuideNl.comfort.closerHandlebar,
           detail:
-            "Lage rugpijn wordt vaak veroorzaakt door te veel reach of drop, waardoor de onderrug te veel moet overstrekken.",
+            profileGuideNl.comfort.lowerBack,
           cadence: "Pas maximaal één keer per week aan en geef jezelf 2 ritten om te wennen",
           steps: [
-            "Probeer een kortere stuurpen (10-20 mm korter) of verhoog de stack met spacers.",
+            profileGuideNl.comfort.raiseHandlebar,
             "Controleer op de fiets of je onderrug neutraal blijft - niet bol en niet overdreven hol.",
-            "Werk parallel aan je core-stability (zie de Core Stability-kaart) om de positie beter te ondersteunen.",
+            profileGuideNl.comfort.trainCore,
           ],
         },
         {
@@ -70,9 +71,9 @@ export default async function ImproveComfortPage() {
             "Nek- en schouderspanning ontstaat wanneer het stuur te laag of te ver weg staat, waardoor je langdurig je nek omhoog moet houden.",
           cadence: "Verhoog 5-10 mm per keer en test een week voordat je verder aanpast",
           steps: [
-            "Voeg een spacer toe onder de stuurpen of draai de stuurpen naar een positievere hoek.",
+            profileGuideNl.comfort.addSpacer,
             "Zorg dat je ellebogen licht gebogen zijn in je natuurlijke rijhouding.",
-            "Overweeg een kortere stuurpen als de reach te groot voelt.",
+            profileGuideNl.comfort.shorterStem,
           ],
         },
         {
@@ -82,8 +83,8 @@ export default async function ImproveComfortPage() {
           cadence: "Evalueer over 2-3 ritten na elke wijziging",
           steps: [
             "Verhoog het stuur om de vooroverhouding te verkleinen.",
-            "Verkort de stuurpen als de reach te lang aanvoelt.",
-            "Gebruik als tijdelijke maatregel handschoenen met padding en ergonomisch stuurlint.",
+            profileGuideNl.comfort.handReach,
+            profileGuideNl.comfort.padding,
           ],
         },
         {
@@ -92,7 +93,7 @@ export default async function ImproveComfortPage() {
             "Brandende voeten of gevoelloosheid in de voorvoet ontstaan vaak door schoenplaatjes die te ver naar voren staan.",
           cadence: "Verplaats 2-3 mm per keer en geef jezelf een week om te wennen",
           steps: [
-            "Draai de cleat-bouten los en schuif het plaatje richting de hak.",
+            profileGuideNl.comfort.cleatBolts,
             "De bal van je voet hoort net voor of direct boven de pedaalas te zitten.",
             "Controleer ook of je schoen breed genoeg is; smalle schoenen drukken de voorvoet extra samen.",
           ],

@@ -1,4 +1,10 @@
 "use client";
+import { localizeAccountError } from "@/i18n/account/clientErrors";
+import { fitAuditCopy } from "@/i18n/account/fitAudit";
+import { accountBikeFitCopy } from "@/i18n/account/bikeFitCalculator";
+import { bikeFitMessages } from "@/i18n/calculators/bikeFit";
+import { validCalculatorState } from "@/lib/calculators/accountState";
+import { calculatorMatchesBike, calculatorPrimaryGoal } from "../../../../convex/sessions/calculatorInputs";
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -60,6 +66,8 @@ export default function NewFitSessionPage() {
   const searchParams = useSearchParams();
   const { locale, messages } = useDashboardMessages();
   const copy = getFitStartCopy(locale);
+  const calculatorCopy = accountBikeFitCopy[locale];
+  const calculatorLabels = bikeFitMessages[locale];
   const toast = useToast();
   const pagePath = withLocalePrefix("/fit", locale);
   const logMarketingEvent = useMarketingEventLogger();
@@ -74,6 +82,12 @@ export default function NewFitSessionPage() {
   const bikes = useQuery(api.bikes.queries.listByUser);
   const createSession = useMutation(api.sessions.mutations.create);
   const requestedBikeId = searchParams?.get("bikeId") ?? null;
+  const requestedCalculator = searchParams?.get("calculator") === "bike-fit";
+  const calculatorState = useQuery(api.calculatorStates.queries.get,
+    requestedCalculator ? { calculator: "bike-fit" } : "skip");
+  const calculatorValues = calculatorState?.state.calculator === "bike-fit"
+    && validCalculatorState(calculatorState.state) && calculatorState.state.values.source !== "missing"
+    ? calculatorState.state.values : null;
 
   const hasProfile = profile !== undefined && profile !== null;
   const hasRiderProfile = isRiderProfileComplete(profile);
@@ -92,8 +106,11 @@ export default function NewFitSessionPage() {
   const effectiveBikeType = selectedBike?.bikeType ?? "";
   const effectiveRidingStyle =
     selectedBike?.ridingStyle ?? selectedBikeRoleBias?.suggestedRidingStyle ?? "";
-  const effectiveRidingGoal =
-    selectedBike?.primaryGoal ?? selectedBikeRoleBias?.suggestedPrimaryGoal ?? "";
+  const effectiveRidingGoal = calculatorValues ? calculatorPrimaryGoal(calculatorValues)
+    : selectedBike?.primaryGoal ?? selectedBikeRoleBias?.suggestedPrimaryGoal ?? "";
+  const calculatorMatches = !calculatorValues || !selectedBike
+    || calculatorMatchesBike(calculatorValues, selectedBike.bikeType);
+  const calculatorReady = !requestedCalculator || Boolean(calculatorValues && calculatorMatches);
   const bikeNeedsAttributes =
     Boolean(selectedBike) && (!effectiveRidingStyle || !effectiveRidingGoal);
   const isSelectedGoalAllowed =
@@ -107,6 +124,7 @@ export default function NewFitSessionPage() {
       isSelectedGoalAllowed &&
       hasProfile &&
       hasRiderProfile &&
+      calculatorReady &&
       !isCreating
   );
 
@@ -129,7 +147,7 @@ export default function NewFitSessionPage() {
   }, [bikes, requestedBikeId, selectedBikeId]);
 
   const handleStartSession = async () => {
-    if (!effectiveBikeType || !effectiveRidingStyle || !effectiveRidingGoal || bikeNeedsAttributes || !isSelectedGoalAllowed) return;
+    if (!canStart || !effectiveBikeType || !effectiveRidingStyle || !effectiveRidingGoal) return;
 
     setCreateError(null);
     setIsCreating(true);
@@ -139,6 +157,7 @@ export default function NewFitSessionPage() {
         ridingStyle: effectiveRidingStyle as "recreational" | "fitness" | "sportive" | "racing" | "commuting" | "touring",
         primaryGoal: effectiveRidingGoal as PrimaryGoal,
         bikeId: selectedBike?._id,
+        ...(requestedCalculator && calculatorState ? { calculatorStateId: calculatorState._id } : {}),
       });
       if (campaignActive) {
         logMarketingEvent({
@@ -153,9 +172,10 @@ export default function NewFitSessionPage() {
       router.push(withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale));
     } catch (error) {
       setCreateError(
-        reportClientError(error, {
+        localizeAccountError(reportClientError(error, {
           area: "fit",
           action: "createSession",
+          userMessage: fitAuditCopy[locale].error,
           operationType: "mutation",
           metadata: {
             bikeType: effectiveBikeType,
@@ -163,7 +183,7 @@ export default function NewFitSessionPage() {
             primaryGoal: effectiveRidingGoal,
             hasBikeId: Boolean(selectedBike?._id),
           },
-        })
+        }), locale)
       );
     } finally {
       setIsCreating(false);
@@ -172,6 +192,10 @@ export default function NewFitSessionPage() {
 
   const nextHint = isCreating
     ? copy.creating
+    : requestedCalculator && !calculatorValues
+      ? calculatorState === undefined ? messages.fit.loading : calculatorCopy.missing
+    : !calculatorMatches
+      ? calculatorCopy.mismatch
     : !hasProfile || !hasRiderProfile
       ? copy.profileHint
       : bikeNeedsAttributes || !isSelectedGoalAllowed
@@ -209,6 +233,31 @@ export default function NewFitSessionPage() {
           </div>
         ) : null}
       </header>
+      {requestedCalculator && <section className="space-y-4 rounded-3xl border border-border bg-card p-6"
+        aria-labelledby="calculator-inputs-title">
+        <h2 id="calculator-inputs-title" className="font-display text-2xl font-bold">{calculatorCopy.sessionTitle}</h2>
+        {calculatorValues ? <>
+          <p className="text-sm text-muted-foreground">{calculatorCopy.sessionHint}</p>
+          <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              [calculatorLabels.height, `${calculatorValues.heightCm.toLocaleString(locale)} cm`],
+              [calculatorLabels.inseam, `${calculatorValues.inseamCm.toLocaleString(locale)} cm`],
+              [calculatorLabels.flexibility, `${calculatorValues.flexibility}/5`],
+              [calculatorLabels.core, `${calculatorValues.core}/5`],
+              [calculatorLabels.category, calculatorLabels.categories[calculatorValues.category]],
+              [calculatorLabels.goal, calculatorLabels.goals[calculatorValues.ambition]],
+            ].map(([label, value]) => <div key={label}>
+              <dt className="text-sm text-muted-foreground">{label}</dt>
+              <dd className="mt-1 font-mono">{value}</dd>
+            </div>)}
+          </dl>
+          {calculatorValues.ambition === "aero" && ["mtb", "city"].includes(calculatorValues.category)
+            && <p className="text-sm text-muted-foreground">{calculatorLabels.aeroAdjusted}</p>}
+          {!calculatorMatches && <p role="status" className="text-sm text-warning-text">{calculatorCopy.mismatch}</p>}
+        </> : <p role="status">{calculatorState === undefined ? messages.fit.loading : calculatorCopy.missing}</p>}
+        <Link className="inline-flex min-h-11 items-center text-primary underline focus-visible:focus-ring"
+          href={withLocalePrefix("/tools/bike-fit", locale)}>{calculatorCopy.back}</Link>
+      </section>}
 
       {isLoadingProfile ? <LoadingState label={messages.fit.loading} /> : (
         <>

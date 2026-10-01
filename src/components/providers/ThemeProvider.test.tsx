@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ThemeProvider, useTheme } from "./ThemeProvider";
 
 const updateProfileMock = vi.fn();
-let mockUser: { theme_preference?: "light" | "dark" | "system" } | null = null;
+let mockUser: { _id: string; theme_preference?: "light" | "dark" | "system" } | null = null;
 let darkMode = false;
 let mediaListeners: Array<(event: MediaQueryListEvent) => void> = [];
 let storage = new Map<string, string>();
@@ -126,7 +126,7 @@ describe("ThemeProvider", () => {
   });
 
   it("persists updates and syncs the authenticated user preference", async () => {
-    mockUser = {};
+    mockUser = { _id: "user1" };
 
     render(
       <ThemeProvider>

@@ -1,0 +1,392 @@
+{
+  "sourceHash": "62bbd40f360b72a6cb136ea24ee891db3234488175aad2bbc6bd46ad6ab10849",
+  "buildId": "RXTjtfXo9SwxEpr52RlC7",
+  "snapshot": "/tmp/bbf-final-sweep-62bbd40f360b72a6",
+  "cases": [
+    {
+      "route": "/nl/guides/bike-fit-for-beginners-and-returning-riders",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/bike-fit-for-beginners-and-returning-riders",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/bike-fit-for-beginners-and-returning-riders",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/bike-fit-for-beginners-and-returning-riders",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/bike-fit-for-riders-with-a-shorter-torso",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/bike-fit-for-riders-with-a-shorter-torso",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/bike-fit-for-riders-with-a-shorter-torso",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/bike-fit-for-riders-with-a-shorter-torso",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/bike-fitting-for-knee-pain",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/bike-fitting-for-knee-pain",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/bike-fitting-for-knee-pain",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/bike-fitting-for-knee-pain",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/cleat-position-basics-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/cleat-position-basics-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/cleat-position-basics-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/cleat-position-basics-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/cycling-shoe-fit-width-and-last-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/cycling-shoe-fit-width-and-last-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/cycling-shoe-fit-width-and-last-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/cycling-shoe-fit-width-and-last-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/frame-size-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/frame-size-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/frame-size-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/frame-size-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/handlebar-width-and-hood-position-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/handlebar-width-and-hood-position-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/handlebar-width-and-hood-position-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/handlebar-width-and-hood-position-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/insoles-arch-support-and-footbeds-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/insoles-arch-support-and-footbeds-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/insoles-arch-support-and-footbeds-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/insoles-arch-support-and-footbeds-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/power-ftp-pacing",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/power-ftp-pacing",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/power-ftp-pacing",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/power-ftp-pacing",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/rider-profiles",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/rider-profiles",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/rider-profiles",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/rider-profiles",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/saddle-height-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/saddle-height-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/saddle-height-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/saddle-height-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/stance-width-q-factor-and-pedal-spacer-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/nl/guides/stance-width-q-factor-and-pedal-spacer-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/stance-width-q-factor-and-pedal-spacer-guide",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    },
+    {
+      "route": "/en/guides/stance-width-q-factor-and-pedal-spacer-guide",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "source": 1,
+      "errors": []
+    }
+  ],
+  "auditFailures": []
+}

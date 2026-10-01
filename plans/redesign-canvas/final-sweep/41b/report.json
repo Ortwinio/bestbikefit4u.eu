@@ -1,0 +1,1998 @@
+{
+  "generatedAt": "2026-09-30T22:05:35.687Z",
+  "metadata": {
+    "inventory": "plans/redesign-canvas/audit/route-map.md",
+    "inventoryRoutes": 72,
+    "scope": "Active audited non-admin routes and account calculators; retired import and /design-system excluded.",
+    "billing": "STRIPE_BILLING_ENABLED=false, NEXT_PUBLIC_STRIPE_BILLING_ENABLED=false (process env only)",
+    "browser": "Chromium; light theme; reduced motion; 1440x1000 and 390x844; viewport screenshots",
+    "filtering": "/profile",
+    "concurrency": 3,
+    "label": "41b",
+    "limitations": [
+      "Account fixtures test actual UI with mocked auth/Convex; not backend authorization or persistence.",
+      "Small UI-word language detector is heuristic, not a complete translation audit.",
+      "Automated axe serious/critical checks do not establish full accessibility conformance.",
+      "Initial route states only; this sweep does not submit forms or exercise destructive actions.",
+      "The two local Vercel analytics scripts are explicit QA no-ops; analytics delivery is not tested.",
+      "Expected document-404 console diagnostics are retained separately, not treated as unexpected errors.",
+      "Production uses the established custom Next server; next start caused a self-redirect loop in this preview.",
+      "Account HTTP status belongs to the fixture server; authentication, middleware and server metadata are not exercised.",
+      "Actual account pages and dashboard shell use deterministic batch-20 Convex/auth fixtures; mutations are mocked.",
+      "Next Link/Image use anchor/img adapters; image optimization and Next navigation behavior are not exercised.",
+      "Production global CSS/fonts plus bundled actual CSS Modules are used; only default filled states are covered.",
+      "Feedback panel provider is mocked on account tool routes; batch-20 overlay differences remain fixture limitations."
+    ],
+    "axe": {
+      "adapter": "@axe-core/playwright",
+      "version": "4.13.0",
+      "impacts": [
+        "serious",
+        "critical"
+      ]
+    },
+    "production": {
+      "origin": "https://127.0.0.1:4354",
+      "sourceHash": "0be6cecd9432a0710fa1d83c8c16d7251ad4b281a44962bb19542fe372397bf5",
+      "buildId": "5rZ_yfomhMIU21my7dQqE",
+      "snapshot": "/tmp/bbf-final-sweep-0be6cecd9432a071",
+      "reused": false,
+      "tls": "Throwaway loopback certificate; production browser contexts ignore certificate errors only."
+    },
+    "localDiagnostics": {
+      "convexSyncOrigin": "ws://127.0.0.1:3210",
+      "analyticsNoopPaths": [
+        "/_vercel/insights/script.js",
+        "/_vercel/speed-insights/script.js"
+      ]
+    },
+    "blog": {
+      "mode": "fixture",
+      "reason": "No published CMS slug available; existing visual-article-1 fixture."
+    }
+  },
+  "summary": {
+    "routes": 5,
+    "cases": 20,
+    "passingCases": 20,
+    "failingCases": 0,
+    "checks": {
+      "status": {
+        "pass": 20,
+        "fail": 0,
+        "skip": 0
+      },
+      "errors": {
+        "pass": 20,
+        "fail": 0,
+        "skip": 0
+      },
+      "overflow": {
+        "pass": 20,
+        "fail": 0,
+        "skip": 0
+      },
+      "h1": {
+        "pass": 20,
+        "fail": 0,
+        "skip": 0
+      },
+      "locale": {
+        "pass": 20,
+        "fail": 0,
+        "skip": 0
+      },
+      "seo": {
+        "pass": 0,
+        "fail": 0,
+        "skip": 20
+      },
+      "language": {
+        "pass": 20,
+        "fail": 0,
+        "skip": 0
+      },
+      "touchTargets": {
+        "pass": 10,
+        "fail": 0,
+        "skip": 10
+      },
+      "images": {
+        "pass": 20,
+        "fail": 0,
+        "skip": 0
+      },
+      "axe": {
+        "pass": 20,
+        "fail": 0,
+        "skip": 0
+      }
+    }
+  },
+  "results": [
+    {
+      "route": "/profile",
+      "locale": "nl",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:49289/nl/profile",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-nl-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/nl/profile",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/nl/profile",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile",
+          "pressureCalculations/queries:getRecalculableBikeCount"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile",
+      "locale": "nl",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:49289/nl/profile",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-nl-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/nl/profile",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/nl/profile",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile",
+          "pressureCalculations/queries:getRecalculableBikeCount"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile",
+      "locale": "en",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:49289/en/profile",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-en-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/en/profile",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/en/profile",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile",
+          "pressureCalculations/queries:getRecalculableBikeCount"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile",
+      "locale": "en",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:49289/en/profile",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-en-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/en/profile",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/en/profile",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile",
+          "pressureCalculations/queries:getRecalculableBikeCount"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/body-measurements",
+      "locale": "nl",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:49289/nl/profile/improve/body-measurements",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-body-measurements-nl-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/nl/profile/improve/body-measurements",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/nl/profile/improve/body-measurements",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/body-measurements",
+      "locale": "nl",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:49289/nl/profile/improve/body-measurements",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-body-measurements-nl-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/nl/profile/improve/body-measurements",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/nl/profile/improve/body-measurements",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/body-measurements",
+      "locale": "en",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:49289/en/profile/improve/body-measurements",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-body-measurements-en-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/en/profile/improve/body-measurements",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/en/profile/improve/body-measurements",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/body-measurements",
+      "locale": "en",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:49289/en/profile/improve/body-measurements",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-body-measurements-en-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/en/profile/improve/body-measurements",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/en/profile/improve/body-measurements",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/flexibility",
+      "locale": "nl",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:49289/nl/profile/improve/flexibility",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-flexibility-nl-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/nl/profile/improve/flexibility",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/nl/profile/improve/flexibility",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/flexibility",
+      "locale": "nl",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:49289/nl/profile/improve/flexibility",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-flexibility-nl-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/nl/profile/improve/flexibility",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/nl/profile/improve/flexibility",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/flexibility",
+      "locale": "en",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:49289/en/profile/improve/flexibility",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-flexibility-en-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/en/profile/improve/flexibility",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/en/profile/improve/flexibility",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/flexibility",
+      "locale": "en",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:49289/en/profile/improve/flexibility",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-flexibility-en-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/en/profile/improve/flexibility",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/en/profile/improve/flexibility",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/core-stability",
+      "locale": "nl",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:49289/nl/profile/improve/core-stability",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-core-stability-nl-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/nl/profile/improve/core-stability",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/nl/profile/improve/core-stability",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/core-stability",
+      "locale": "nl",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:49289/nl/profile/improve/core-stability",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-core-stability-nl-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/nl/profile/improve/core-stability",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/nl/profile/improve/core-stability",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/core-stability",
+      "locale": "en",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:49289/en/profile/improve/core-stability",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-core-stability-en-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/en/profile/improve/core-stability",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/en/profile/improve/core-stability",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/core-stability",
+      "locale": "en",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:49289/en/profile/improve/core-stability",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-core-stability-en-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/en/profile/improve/core-stability",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/en/profile/improve/core-stability",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/comfort",
+      "locale": "nl",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:49289/nl/profile/improve/comfort",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-comfort-nl-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/nl/profile/improve/comfort",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/nl/profile/improve/comfort",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/comfort",
+      "locale": "nl",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:49289/nl/profile/improve/comfort",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-comfort-nl-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/nl/profile/improve/comfort",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/nl/profile/improve/comfort",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/comfort",
+      "locale": "en",
+      "viewportWidth": 1440,
+      "url": "http://127.0.0.1:49289/en/profile/improve/comfort",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-comfort-en-1440.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/en/profile/improve/comfort",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/en/profile/improve/comfort",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "/profile/improve/comfort",
+      "locale": "en",
+      "viewportWidth": 390,
+      "url": "http://127.0.0.1:49289/en/profile/improve/comfort",
+      "expected": {
+        "status": 200
+      },
+      "mode": "account-fixture",
+      "screenshot": "profile-improve-comfort-en-390.png",
+      "axeEngineVersion": "4.13.0",
+      "documents": [
+        {
+          "url": "http://127.0.0.1:49289/en/profile/improve/comfort",
+          "status": 200
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:49289/en/profile/improve/comfort",
+      "fixtureQueries": {
+        "queries": [
+          "users/queries:getCurrentUser",
+          "sessions/queries:listByUser",
+          "integrations/queries:getStravaStatus",
+          "messages/queries:getMyMessages",
+          "profiles/queries:getMyProfile"
+        ],
+        "unknown": []
+      },
+      "staticAssets": [
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/de42cfb9a3b980ae-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/b7ea2ab4a8ad1f81-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        },
+        {
+          "url": "http://127.0.0.1:49289/_next/static/media/9d5a263311222317-s.p.woff2",
+          "status": 200,
+          "type": "font/woff2"
+        }
+      ],
+      "consoleErrors": [],
+      "expectedLocalDiagnostics": [],
+      "expectedConsoleDiagnostics": [],
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    }
+  ]
+}

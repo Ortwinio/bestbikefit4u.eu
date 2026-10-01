@@ -1,3 +1,4 @@
+import { sendFixtureError } from "../lib/http-errors.mjs";
 import { serveQaAsset } from "./assets.mjs";
 import { build } from "esbuild";
 import { createServer } from "node:http";
@@ -6,7 +7,7 @@ import { resolve, extname } from "node:path";
 
 /** Actual account components with deterministic read-only Convex/auth fixtures from batch 20. */
 export async function prepareAccountFixtures({
-  root = process.cwd(), origin, fetch: previewFetch = fetch, port = 0,
+  root = process.cwd(), origin, fetch: previewFetch = fetch, port = 0, bikeRuntime,
 } = {}) {
   if (!origin) throw new Error("Account fixtures require the running production origin");
   const loginResponse = await previewFetch(new URL("/nl/login", origin));
@@ -37,7 +38,8 @@ export async function prepareAccountFixtures({
   const link = resolve(root, "tests/visual/account-batch1/link.jsx");
   const image = resolve(root, "tests/visual/account-batch1/image.jsx");
   for (const [key, batch] of Object.entries(batches)) {
-    const runtime = resolve(batch.folder, batch.runtime || "runtime.jsx");
+    const runtime = key === "bikes" && bikeRuntime
+      ? resolve(root, bikeRuntime) : resolve(batch.folder, batch.runtime || "runtime.jsx");
     const bundle = await build({
       absWorkingDir: root,
       entryPoints: [resolve(batch.folder, batch.entry || "entry.jsx")],
@@ -63,6 +65,18 @@ export async function prepareAccountFixtures({
         {
           name: "final-account-fixture",
           setup(builder) {
+            builder.onLoad({ filter: /runtime\.jsx$/ }, async ({ path }) => {
+              if (path !== runtime) return;
+              const contents = await readFile(path, "utf8");
+              if (/export (?:function|const) usePaginatedQuery\b/.test(contents)) return;
+              // A closed deletion dialog requests "skip". Never fabricate its destructive preview data.
+              return { loader: "jsx", resolveDir: batch.folder, contents: contents + `
+export function usePaginatedQuery(_reference, args) {
+  if (args !== "skip") throw new Error("Paginated query is outside this read-only fixture coverage");
+  return { results: [], status: "LoadingFirstPage", loadMore: () => {} };
+}
+` };
+            });
             builder.onResolve(
               {
                 filter:
@@ -93,13 +107,16 @@ export async function prepareAccountFixtures({
   function batchFor(pathname) {
     const path = pathname.replace(/^\/(nl|en)(?=\/|$)/, "");
     const bikesPattern =
-      /^\/bikes(?:\/(?:new(?:\/manual)?|import\/(?:passport|marktplaats)|compare-fit|[^/]+(?:\/edit)?))?$/;
+      /^\/bikes(?:\/(?:new(?:\/manual)?|import\/passport|compare-fit|[^/]+(?:\/edit)?))?$/;
     if (bikesPattern.test(path)) {
       return "bikes";
     }
     if (/^\/(?:fit(?:\/(?:how-it-works|[^/]+\/(?:questionnaire|results)))?|fit-history)$/.test(path)) return "fit";
     if (/^\/(?:profile|dashboard|login)$/.test(path)) return "profile";
     if (/^\/profile\/improve\/(body-measurements|flexibility|core-stability|comfort)$/.test(path)) return "profile";
+    const calculatorRoutes = ["bike-fit", "saddle-height", "frame-size", "crank-length",
+      "power-speed", "climb-planner", "ftp-wkg", "fuel-hydration"];
+    if (calculatorRoutes.some((tool) => path === `/tools/${tool}`)) return "tools";
     if (/^\/(pressure-calculator|gearing|saddle-selector|shoe-cleat-fit|settings|feedback|app)$/.test(path)) {
       return "tools";
     }
@@ -117,10 +134,8 @@ export async function prepareAccountFixtures({
         return;
       }
       if (url.pathname.startsWith("/_next/")) {
-        const remote = await previewFetch(new URL(url.pathname + url.search, origin));
-        response.statusCode = remote.status;
-        response.setHeader("content-type", remote.headers.get("content-type") || "application/octet-stream");
-        response.end(Buffer.from(await remote.arrayBuffer()));
+        response.statusCode = 404;
+        response.end("Unknown build asset");
         return;
       }
       if (extname(url.pathname)) {
@@ -151,8 +166,7 @@ export async function prepareAccountFixtures({
 </head><body class="${bodyClass}"><div id="root"></div>
 <script type="module" src="/__account-fixture/${batch}.js"></script></body></html>`);
     } catch (error) {
-      response.statusCode = error.code === "ENOENT" ? 404 : 500;
-      response.end(String(error));
+      sendFixtureError(response, error);
     }
   });
   await new Promise((done, reject) => {

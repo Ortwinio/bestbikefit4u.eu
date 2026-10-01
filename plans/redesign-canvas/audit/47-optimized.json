@@ -1,0 +1,475 @@
+[
+  {
+    "original": "bestbikefit4u-beginner-intermediate-advanced.png",
+    "output": "bestbikefit4u-beginner-intermediate-advanced.webp",
+    "before": 2770791,
+    "after": 171420,
+    "width": 1400,
+    "dimensions": [
+      1000,
+      667
+    ]
+  },
+  {
+    "original": "clock.png",
+    "output": "clock.webp",
+    "before": 2375891,
+    "after": 152602,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "comfort-discomfort.png",
+    "output": "comfort-discomfort.webp",
+    "before": 1374753,
+    "after": 65662,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "riding-position.png",
+    "output": "riding-position.webp",
+    "before": 1653185,
+    "after": 135550,
+    "width": 1400,
+    "dimensions": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "original": "measure/arm-length-bbf4u.png",
+    "output": "measure/arm-length-bbf4u.webp",
+    "before": 1093606,
+    "after": 59194,
+    "width": 1000,
+    "dimensions": [
+      1000,
+      667
+    ]
+  },
+  {
+    "original": "measure/height-bbf4u.png",
+    "output": "measure/height-bbf4u.webp",
+    "before": 1512110,
+    "after": 97490,
+    "width": 1000,
+    "dimensions": [
+      1000,
+      1500
+    ]
+  },
+  {
+    "original": "measure/inseam-bbf4u.png",
+    "output": "measure/inseam-bbf4u.webp",
+    "before": 1083687,
+    "after": 60384,
+    "width": 1000,
+    "dimensions": [
+      1000,
+      1000
+    ]
+  },
+  {
+    "original": "measure/shoulder-bbf4u.png",
+    "output": "measure/shoulder-bbf4u.webp",
+    "before": 1694623,
+    "after": 112006,
+    "width": 1000,
+    "dimensions": [
+      1000,
+      1500
+    ]
+  },
+  {
+    "original": "measure/torso-bbf4u.png",
+    "output": "measure/torso-bbf4u.webp",
+    "before": 2235951,
+    "after": 139134,
+    "width": 1000,
+    "dimensions": [
+      1000,
+      1500
+    ]
+  },
+  {
+    "original": "mascote/bestbikefit4u-mascote-on-bike-transparent.png",
+    "output": "mascote/bestbikefit4u-mascote-on-bike-transparent.webp",
+    "before": 1754114,
+    "after": 75730,
+    "width": 768,
+    "dimensions": [
+      768,
+      573
+    ]
+  },
+  {
+    "original": "logo/bestbikefit4u-logo.png",
+    "output": "logo/bestbikefit4u-logo.png",
+    "before": 408795,
+    "after": 59982,
+    "width": 1400,
+    "dimensions": [
+      1115,
+      222
+    ]
+  },
+  {
+    "original": "guides/media/001--guides-hero.png",
+    "output": "guides/media/001--guides-hero.png",
+    "before": 2661005,
+    "after": 210079,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/002--guides--pain-and-discomfort-hero.png",
+    "output": "guides/media/002--guides--pain-and-discomfort-hero.png",
+    "before": 2551386,
+    "after": 246745,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/003--guides--bike-fitting-for-knee-pain-hero.png",
+    "output": "guides/media/003--guides--bike-fitting-for-knee-pain-hero.png",
+    "before": 2575860,
+    "after": 219492,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/004--guides--bike-fitting-for-lower-back-pain-hero.png",
+    "output": "guides/media/004--guides--bike-fitting-for-lower-back-pain-hero.png",
+    "before": 2432475,
+    "after": 246958,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/005--guides--bike-fit-for-neck-and-shoulder-pain-hero.png",
+    "output": "guides/media/005--guides--bike-fit-for-neck-and-shoulder-pain-hero.png",
+    "before": 2594714,
+    "after": 205707,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/006--guides--bike-fit-for-hand-numbness-and-wrist-pain-hero.png",
+    "output": "guides/media/006--guides--bike-fit-for-hand-numbness-and-wrist-pain-hero.png",
+    "before": 2521664,
+    "after": 230483,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/007--guides--bike-fit-for-saddle-pressure-perineal-numbness-and-saddle-sores-hero.png",
+    "output": "guides/media/007--guides--bike-fit-for-saddle-pressure-perineal-numbness-and-saddle-sores-hero.png",
+    "before": 2552412,
+    "after": 233049,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/008--guides--bike-fit-for-foot-pain-hot-foot-and-numb-toes-hero.png",
+    "output": "guides/media/008--guides--bike-fit-for-foot-pain-hot-foot-and-numb-toes-hero.png",
+    "before": 2538681,
+    "after": 191262,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/009--guides--ride-types-hero.png",
+    "output": "guides/media/009--guides--ride-types-hero.png",
+    "before": 2705852,
+    "after": 241244,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/010--guides--road-bike-fit-guide-hero.png",
+    "output": "guides/media/010--guides--road-bike-fit-guide-hero.png",
+    "before": 2540900,
+    "after": 215537,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/011--guides--gravel-bike-fit-guide-hero.png",
+    "output": "guides/media/011--guides--gravel-bike-fit-guide-hero.png",
+    "before": 2546350,
+    "after": 207891,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/012--guides--mountain-bike-fit-guide-hero.png",
+    "output": "guides/media/012--guides--mountain-bike-fit-guide-hero.png",
+    "before": 2488509,
+    "after": 242179,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/013--guides--triathlon-bike-fit-guide-hero.png",
+    "output": "guides/media/013--guides--triathlon-bike-fit-guide-hero.png",
+    "before": 2513492,
+    "after": 249977,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/014--guides--endurance-bike-fit-guide-hero.png",
+    "output": "guides/media/014--guides--endurance-bike-fit-guide-hero.png",
+    "before": 2525665,
+    "after": 224725,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/015--guides--indoor-trainer-bike-fit-guide-hero.png",
+    "output": "guides/media/015--guides--indoor-trainer-bike-fit-guide-hero.png",
+    "before": 2592079,
+    "after": 202273,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/016--guides--rider-profiles-hero.png",
+    "output": "guides/media/016--guides--rider-profiles-hero.png",
+    "before": 2438447,
+    "after": 201308,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/017--guides--bike-fit-for-tall-riders-hero.png",
+    "output": "guides/media/017--guides--bike-fit-for-tall-riders-hero.png",
+    "before": 2409790,
+    "after": 211757,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/018--guides--bike-fit-for-riders-with-a-shorter-torso-hero.png",
+    "output": "guides/media/018--guides--bike-fit-for-riders-with-a-shorter-torso-hero.png",
+    "before": 2452154,
+    "after": 248582,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/019--guides--bike-fit-for-riders-with-limited-flexibility-hero.png",
+    "output": "guides/media/019--guides--bike-fit-for-riders-with-limited-flexibility-hero.png",
+    "before": 2518923,
+    "after": 199149,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/020--guides--bike-fit-for-beginners-and-returning-riders-hero.png",
+    "output": "guides/media/020--guides--bike-fit-for-beginners-and-returning-riders-hero.png",
+    "before": 2420480,
+    "after": 231231,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/021--guides--setup-parameters-hero.png",
+    "output": "guides/media/021--guides--setup-parameters-hero.png",
+    "before": 2512051,
+    "after": 198659,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/022--guides--saddle-height-guide-hero.png",
+    "output": "guides/media/022--guides--saddle-height-guide-hero.png",
+    "before": 2517703,
+    "after": 230435,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/023--guides--saddle-fore-aft-and-tilt-guide-hero.png",
+    "output": "guides/media/023--guides--saddle-fore-aft-and-tilt-guide-hero.png",
+    "before": 2525367,
+    "after": 240310,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/024--guides--reach-and-stem-guide-hero.png",
+    "output": "guides/media/024--guides--reach-and-stem-guide-hero.png",
+    "before": 2503337,
+    "after": 228533,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/025--guides--handlebar-drop-guide-hero.png",
+    "output": "guides/media/025--guides--handlebar-drop-guide-hero.png",
+    "before": 2439235,
+    "after": 240228,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/026--guides--crank-length-guide-hero.png",
+    "output": "guides/media/026--guides--crank-length-guide-hero.png",
+    "before": 2502884,
+    "after": 240465,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/027--guides--handlebar-width-and-hood-position-guide-hero.png",
+    "output": "guides/media/027--guides--handlebar-width-and-hood-position-guide-hero.png",
+    "before": 2414505,
+    "after": 189796,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/028--guides--shoe-foot-cleat-fit-hero.png",
+    "output": "guides/media/028--guides--shoe-foot-cleat-fit-hero.png",
+    "before": 2518824,
+    "after": 243868,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/029--guides--foot-measurement-guide-for-cyclists-hero.png",
+    "output": "guides/media/029--guides--foot-measurement-guide-for-cyclists-hero.png",
+    "before": 2524672,
+    "after": 216992,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/030--guides--cycling-shoe-fit-width-and-last-guide-hero.png",
+    "output": "guides/media/030--guides--cycling-shoe-fit-width-and-last-guide-hero.png",
+    "before": 2512992,
+    "after": 230074,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "guides/media/031--guides--cleat-position-basics-guide-hero.png",
+    "output": "guides/media/031--guides--cleat-position-basics-guide-hero.png",
+    "before": 2562995,
+    "after": 237394,
+    "width": 1400,
+    "dimensions": [
+      1400,
+      933
+    ]
+  },
+  {
+    "original": "brand/report/bike-dimensions.png",
+    "output": "brand/report/bike-dimensions.png",
+    "before": 470350,
+    "after": 117195,
+    "width": 1400,
+    "dimensions": [
+      1300,
+      860
+    ]
+  }
+]

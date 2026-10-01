@@ -1,3 +1,5 @@
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
+import { fitPageDetails } from "@/i18n/calculators/fitPageDetails";
 import type { Metadata } from "next";
 import { Compass, Gauge, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -50,6 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? ["bike fit calculator", "gratis bikefit", "online bikefitting"]
       : ["bike fit calculator", "free bike fit", "online bike fitting tool"],
     openGraph: {
+      images: [DEFAULT_SOCIAL_IMAGE],
       title: isNl ? "Gratis bike fit calculator" : "Free Bike Fit Calculator",
       description: isNl
         ? "Krijg direct een eerste bike-fit inschatting op basis van je maten."
@@ -179,17 +182,13 @@ export default async function BikeFitCalculatorPage() {
             name: isNl
               ? "Hoe gebruik je de bike fit calculator"
               : "How to use the bike-fit calculator",
-            description: isNl
-              ? "Meet lengte en binnenbeenlengte, kies je rijdoel en beoordeel flexibiliteit en core " +
-                "als startpunt."
-              : "Measure height and inseam, choose your riding goal, and rate flexibility and core " +
-                "stability as a starting point.",
+            description: fitPageDetails[locale].bikeDescription,
             steps: isNl
               ? [
                   "Meet lengte en binnenbeenlengte zorgvuldig.",
                   "Kies je fietscategorie en rijdoel.",
-                  "Vul flexibiliteit en core-stabiliteit in.",
-                  "Gebruik de uitkomst als startpunt voor je setup.",
+                  fitPageDetails.nl.bikeCoreStep,
+                  fitPageDetails.nl.bikeResultStep,
                 ]
               : [
                   "Measure height and inseam carefully.",

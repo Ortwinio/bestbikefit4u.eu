@@ -1,3 +1,5 @@
+import { guideRewriteTitles } from "@/i18n/marketing/guideRewriteTitles";
+import { guideProseNl } from "@/i18n/marketing/guideProse";
 import "server-only";
 
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
@@ -5,6 +7,8 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../convex/_generated/api";
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
 import type { Locale } from "@/i18n/config";
+import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
+import { getGuidesMessages } from "@/i18n/marketing/guides";
 import { isProtectedAppPath } from "@/i18n/navigation";
 import {
   getGuideChildren,
@@ -345,6 +349,10 @@ export function getGuideLinkLabel(path: string, locale: Locale): string {
 
   if (normalized.startsWith("/guides/")) {
     const slug = normalized.replace("/guides/", "");
+    if (guideRewriteTitles[slug]) return guideRewriteTitles[slug][locale];
+    if (locale === "nl") {
+      return getDutchGuideTitle(slug) ?? getGuidesMessages(locale).guide;
+    }
     return slug
       .split("-")
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
@@ -381,10 +389,10 @@ function labels(locale: Locale) {
       adjustCarefully: "Wat je voorzichtig kunt aanpassen",
       avoidBlindChanges: "Wat je niet blind moet veranderen",
       getHelpWhen: "Wanneer je hulp op locatie of medisch advies nodig hebt",
-      faq: "FAQ",
+      faq: guideProseNl.fallback.faq,
       related: "Gerelateerde gidsen en tools",
-      hubIntro: "Waar deze hub voor is",
-      hubUse: "Hoe je deze hub gebruikt",
+      hubIntro: guideProseNl.fallback.hubIntroLabel,
+      hubUse: guideProseNl.fallback.hubUseLabel,
       nextStep: "Volgende stap",
       relatedDefault: "Open de volgende relevante pagina in deze gidsenbibliotheek.",
     };
@@ -410,8 +418,8 @@ function labels(locale: Locale) {
 export function buildHubIntro(entry: GuideBacklogEntry, locale: Locale): string[] {
   if (locale === "nl") {
     return [
-      `${entry.h1} groepeert de belangrijkste pagina's in dit cluster zodat rijders sneller van een vaag probleem naar een bruikbare volgende stap kunnen gaan.`,
-      `Gebruik deze hub als navigatiepagina en als inhoudelijke start: lees de samenvattingen, open de best passende child-pagina en gebruik daarna ${getGuideLinkLabel(entry.primaryCtaTarget, locale).toLowerCase()} om verder te gaan.`,
+      guideProseNl.fallback.hubIntro(entry.h1),
+      guideProseNl.fallback.hubUse(getGuideLinkLabel(entry.primaryCtaTarget, locale).toLowerCase()),
     ];
   }
 
@@ -436,10 +444,10 @@ export function buildHubQuickAnswer(
 
   if (locale === "nl") {
     return {
-      keyTakeaway: `${entry.pageBrief} Gebruik deze hub om sneller van onderwerpselectie naar een bruikbare volgende stap te gaan.`,
+      keyTakeaway: guideProseNl.fallback.hubTakeaway(entry.pageBrief),
       commonMistake:
-        "Meteen de eerste child-pagina openen zonder eerst te bepalen of je vraag vooral over klachten, discipline, setup of aankoopkeuze gaat.",
-      payAttention: `Rijders die tussen meerdere subonderwerpen twijfelen of ${childCount} gerelateerde pagina's willen terugbrengen tot de best passende startpagina en tool, zoals ${primaryTool}.`,
+        guideProseNl.fallback.hubMistake,
+      payAttention: guideProseNl.fallback.hubAttention(childCount, primaryTool),
     };
   }
 
@@ -530,23 +538,23 @@ export function buildLeafSections(entry: GuideBacklogEntry, locale: Locale): Gui
         title: t.intro,
         items: [
           `${entry.pageBrief} Deze pagina helpt je de fitlogica achter dit onderwerp te begrijpen zonder te doen alsof één wijziging altijd het hele probleem oplost.`,
-          `Gebruik de informatie hier om je checks te ordenen, conservatief te testen en daarna ${primaryTool.toLowerCase()} of het dashboard te gebruiken voor preciezere vervolgstappen.`,
+          guideProseNl.fallback.fitIntro(primaryTool.toLowerCase()),
         ],
       },
       {
         title: t.commonProblems,
         items: [
-          `Rijders merken vaak dat ${entry.pageTitle.toLowerCase()} pas een duidelijk thema wordt wanneer discomfort; vermogensverlies of instabiliteit terugkeert onder vermoeidheid.`,
-          "Klachten zijn vaak contextafhankelijk: duur; intensiteit; terrein en recente setupwijzigingen bepalen mee wat je voelt.",
-          "Wat op één rit acceptabel lijkt kan op langere of hardere sessies alsnog een duidelijke limiter worden.",
+          guideProseNl.fallback.symptoms(entry.pageTitle.toLowerCase()),
+          guideProseNl.fallback.symptomContext,
+          guideProseNl.fallback.symptomLimit,
         ],
       },
       {
         title: t.likelyCauses,
         items: [
-          "Meestal speelt niet één losse maat mee maar de combinatie van support; belasting en hoe verschillende contactpunten elkaar beïnvloeden.",
+          guideProseNl.fallback.support,
           `Bij dit onderwerp zijn de meest logische vervolgstappen meestal gekoppeld aan ${related.slice(0, 2).join(" en ")}.`,
-          "Ook trainingsbelasting; vermoeidheid en verwachtingsmanagement kunnen verklaren waarom een setup in theorie klopt maar in de praktijk niet werkt.",
+          guideProseNl.fallback.expectations,
         ],
       },
       {
@@ -569,7 +577,7 @@ export function buildLeafSections(entry: GuideBacklogEntry, locale: Locale): Gui
         title: t.avoidBlindChanges,
         items: [
           "Ga niet meerdere contactpunten tegelijk aanpassen als je nog niet weet welke factor het probleem echt drijft.",
-          "Volg geen agressievere setup alleen omdat die sneller oogt of online vaak wordt herhaald.",
+          guideProseNl.fallback.aggressivePosition,
           "Negeer geen signalen die ook buiten de fiets terugkomen of duidelijk asymmetrisch worden.",
         ],
       },
@@ -688,9 +696,9 @@ export function buildQuickAnswer(
     return locale === "nl"
       ? {
           keyTakeaway,
-          commonMistake: "Eén FTP- of W/kg-getal behandelen alsof het pacing, training en race-uitvoering volledig verklaart.",
+          commonMistake: guideProseNl.fallback.powerMistake,
           payAttention:
-            "Rijders die pacing plannen, trainingen structureren of klimdoelen realistisch willen inschatten.",
+            guideProseNl.fallback.powerAttention,
         }
       : {
           keyTakeaway,
@@ -729,7 +737,7 @@ export function buildQuickAnswer(
           commonMistake:
             "Schoenen, cleats of framematen beoordelen op gevoel alleen, zonder eerst de basismaat of referentiecijfers te controleren.",
           payAttention:
-            "Rijders met hotspots, numbness, aankoopkeuzes of vergelijkingen tussen twee fietsen.",
+            guideProseNl.fallback.shoeAttention,
         }
       : {
           keyTakeaway,
@@ -745,7 +753,7 @@ export function buildQuickAnswer(
       ? {
           keyTakeaway,
           commonMistake:
-            "Eén setupwaarde groot veranderen zonder te controleren hoe zadel, reach en houding elkaar beïnvloeden.",
+            guideProseNl.fallback.setupMistake,
           payAttention:
             "Rijders die zelf aanpassingen doen en willen weten welke volgorde en stapgrootte logisch is.",
         }
@@ -764,7 +772,7 @@ export function buildQuickAnswer(
         commonMistake:
           "Te veel tegelijk aanpassen in plaats van eerst de grootste, meest herhaalbare factor te testen.",
         payAttention:
-          "Rijders met terugkerend discomfort, prestatieverlies of een nieuwe setup die onder vermoeidheid uit elkaar valt.",
+          guideProseNl.fallback.generalAttention,
       }
     : {
         keyTakeaway,
@@ -792,7 +800,7 @@ export function buildFaqs(entry: GuideBacklogEntry, locale: Locale): GuideFaq[] 
         },
         {
           q: "Moet ik voeding oefenen in training?",
-          a: "Ja. Test je race-voedingsstrategie nooit voor het eerst tijdens een wedstrijd.",
+          a: guideProseNl.fallback.trainingNutrition,
         },
       ];
     }
@@ -817,7 +825,7 @@ export function buildFaqs(entry: GuideBacklogEntry, locale: Locale): GuideFaq[] 
         },
         {
           q: "Hoe vaak moet ik FTP hertesten?",
-          a: "Elke 4-8 weken tijdens een trainingsblok, of na een langere pauze of fitnesswisseling.",
+          a: guideProseNl.fallback.ftpRetest,
         },
       ];
     }
@@ -870,9 +878,9 @@ export function relatedLinkDescription(locale: Locale, path?: string) {
       "/calculators/frame-size":
         "Controleer eerst framelogica en reach als de hele cockpit of fietsmaat twijfelachtig voelt.",
       "/science/stack-and-reach":
-        "Bekijk stack en reach wanneer cockpitlengte of framevergelijking de echte limiter zijn.",
+        guideProseNl.fallback.relatedStack,
       "/science/bike-fit-methods":
-        "Gebruik deze science-pagina als je de methode achter de fitaanbeveling wilt begrijpen.",
+        guideProseNl.fallback.relatedScience,
       "/measurement-guide":
         "Meet eerst nauwkeuriger voordat je verdere fitconclusies trekt uit de tool- of gidsuitkomst.",
       "/guides/road-bike-fit-guide":
@@ -882,7 +890,7 @@ export function relatedLinkDescription(locale: Locale, path?: string) {
       "/guides/bike-fitting-for-lower-back-pain":
         "Gebruik deze gids wanneer reach, drop of bekkenstabiliteit rugklachten beter verklaren dan pure vermoeidheid.",
       "/pain":
-        "Gebruik de klachtenhub als je eerst wilt bepalen welke fitfactor bij jouw discomfort prioriteit verdient.",
+        guideProseNl.fallback.relatedPain,
     };
 
     return map[normalized] ?? labels(locale).relatedDefault;

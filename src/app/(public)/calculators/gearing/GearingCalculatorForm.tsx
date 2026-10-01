@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useMutation } from "convex/react";
 import Link from "next/link";
 import { api } from "../../../../../convex/_generated/api";
@@ -16,6 +16,7 @@ import {
   type GearingClimbBand,
   type GearingDrivetrainType,
   type GearingCalculationResult,
+  type GearingCalculatorInput,
   validateGearingInputs,
 } from "./gearing-engine";
 
@@ -48,9 +49,17 @@ const WHEEL_PRESET_VALUES = buildPresetValueMap();
 
 type Props = {
   isNl: boolean;
+  initialValues?: Partial<GearingCalculatorInput>;
+  onValuesChange?: (values: GearingCalculatorInput) => void;
+  accountMode?: boolean;
+  headerSlot?: ReactNode;
+  statusSlot?: ReactNode;
+  description?: string;
 };
 
-export function GearingCalculatorForm({ isNl }: Props) {
+export function GearingCalculatorForm({
+  isNl, initialValues, onValuesChange, accountMode = false, headerSlot, statusSlot, description,
+}: Props) {
   const locale = isNl ? "nl" : "en";
   const copy = gearingMessages[locale];
   const [edited, setEdited] = useState(false);
@@ -60,20 +69,38 @@ export function GearingCalculatorForm({ isNl }: Props) {
     }).format(value);
   const saveSession = useMutation(api.gearing.mutations.createPublicGearingSession);
   const savedSignatureRef = useRef<string | null>(null);
-  const [drivetrainType, setDrivetrainType] = useState<GearingDrivetrainType>("2x");
-  const [bikeType, setBikeType] = useState<GearingBikeType>("road");
-  const [climbBand, setClimbBand] = useState<GearingClimbBand>("medium");
-  const [outerChainringTeeth, setOuterChainringTeeth] = useState<number | undefined>(50);
-  const [innerChainringTeeth, setInnerChainringTeeth] = useState<number | undefined>(34);
-  const [cassettePreset, setCassettePreset] = useState<string>("road_11_34");
-  const [cassetteSmallestCogTeeth, setCassetteSmallestCogTeeth] = useState<number | undefined>(11);
-  const [cassetteLargestCogTeeth, setCassetteLargestCogTeeth] = useState<number | undefined>(34);
-  const [wheelPreset, setWheelPreset] = useState<string>("road");
-  const [wheelCircumferenceMm, setWheelCircumferenceMm] = useState<number | undefined>(
-    DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road,
+  const [drivetrainType, setDrivetrainType] = useState<GearingDrivetrainType>(initialValues?.drivetrainType ?? "2x");
+  const [bikeType, setBikeType] = useState<GearingBikeType>(initialValues?.bikeType ?? "road");
+  const [climbBand, setClimbBand] = useState<GearingClimbBand>(initialValues?.climbBand ?? "medium");
+  const [outerChainringTeeth, setOuterChainringTeeth] = useState<number | undefined>(
+    initialValues?.outerChainringTeeth ?? 50,
   );
-  const [cadenceRpm, setCadenceRpm] = useState<number | undefined>(80);
-  const [gradientPct, setGradientPct] = useState<number | undefined>(8);
+  const [innerChainringTeeth, setInnerChainringTeeth] = useState<number | undefined>(
+    initialValues?.innerChainringTeeth ?? 34,
+  );
+  const [cassettePreset, setCassettePreset] = useState<string>(() =>
+    CASSETTE_PRESET_OPTIONS.find((option) => option.smallest === (initialValues?.cassetteSmallestCogTeeth ?? 11)
+      && option.largest === (initialValues?.cassetteLargestCogTeeth ?? 34))?.value ?? "custom");
+  const [cassetteSmallestCogTeeth, setCassetteSmallestCogTeeth] = useState<number | undefined>(
+    initialValues?.cassetteSmallestCogTeeth ?? 11,
+  );
+  const [cassetteLargestCogTeeth, setCassetteLargestCogTeeth] = useState<number | undefined>(
+    initialValues?.cassetteLargestCogTeeth ?? 34,
+  );
+  const [wheelPreset, setWheelPreset] = useState<string>(() =>
+    [...WHEEL_PRESET_VALUES].find(([, value]) => value === (initialValues?.wheelCircumferenceMm ?? 2105))?.[0] ?? "custom");
+  const [wheelCircumferenceMm, setWheelCircumferenceMm] = useState<number | undefined>(
+    initialValues?.wheelCircumferenceMm ?? DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road,
+  );
+  const [cadenceRpm, setCadenceRpm] = useState<number | undefined>(initialValues?.cadenceRpm ?? 80);
+  const [gradientPct, setGradientPct] = useState<number | undefined>(initialValues?.gradientPct ?? 8);
+
+  useEffect(() => {
+    if (!edited) return;
+    onValuesChange?.({ drivetrainType, bikeType, climbBand, outerChainringTeeth, innerChainringTeeth,
+      cassetteSmallestCogTeeth, cassetteLargestCogTeeth, wheelCircumferenceMm, cadenceRpm, gradientPct });
+  }, [edited, onValuesChange, drivetrainType, bikeType, climbBand, outerChainringTeeth, innerChainringTeeth,
+    cassetteSmallestCogTeeth, cassetteLargestCogTeeth, wheelCircumferenceMm, cadenceRpm, gradientPct]);
 
   const validationIssues = useMemo(
     () =>
@@ -148,7 +175,7 @@ export function GearingCalculatorForm({ isNl }: Props) {
     .map((issue) => issue.message);
 
   useEffect(() => {
-    if (!result) {
+    if (accountMode || !result) {
       return;
     }
 
@@ -238,6 +265,7 @@ export function GearingCalculatorForm({ isNl }: Props) {
       })(),
     });
   }, [
+    accountMode,
     result,
     saveSession,
     drivetrainType,
@@ -307,11 +335,13 @@ export function GearingCalculatorForm({ isNl }: Props) {
   }
   return (
     <ConfiguratorLayout
+      navigation={headerSlot}
       eyebrow={copy.eyebrow}
       title={copy.title}
-      description={copy.intro}
+      description={description ?? copy.intro}
       inputs={
         <>
+          {statusSlot}
           <StepCard number={1} title={copy.drivetrain}>
             {choices(copy.drivetrain, { "1x": "1×", "2x": "2×" }, drivetrainType, setDrivetrainType)}
             {slider(copy.outer, outerChainringTeeth, setOuterChainringTeeth, 20, 70, "T")}
@@ -399,7 +429,7 @@ export function GearingCalculatorForm({ isNl }: Props) {
           <div id="gearing-result" className="scroll-mt-8">
             {result ? (
               <ResultHero
-                label={edited ? copy.ratio : `${copy.example} · ${copy.ratio}`}
+                label={edited || accountMode ? copy.ratio : `${copy.example} · ${copy.ratio}`}
                 value={format(result.easiest.ratio)}
                 subtext={copy.limits}
               >
@@ -472,7 +502,7 @@ export function GearingCalculatorForm({ isNl }: Props) {
             <h2 className="font-display text-2xl font-bold text-[var(--bbf-wit)]">{copy.next}</h2>
             <p className="my-4 text-[var(--bbf-op-donker)]">{copy.nextBody}</p>
             <Link
-              href={withLocalePrefix("/calculators/climb-planner", locale)}
+              href={withLocalePrefix(accountMode ? "/tools/climb-planner" : "/calculators/climb-planner", locale)}
               className={
                   "inline-flex min-h-11 items-center rounded-full bg-primary px-5 " +
                   "font-bold text-primary-foreground"

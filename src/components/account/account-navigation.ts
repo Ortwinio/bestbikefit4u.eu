@@ -1,6 +1,36 @@
-import { ArrowUpDown, Bike, ClipboardList, Gauge, LayoutDashboard, MessageSquareMore, PlusCircle, Settings, User, Armchair } from "lucide-react";
+import { ArrowUpDown, Bike, ClipboardList, Gauge, LayoutDashboard, MessageSquareMore, PlusCircle, Settings, User, Armchair, Ruler, Mountain, Zap, Utensils } from "lucide-react";
 import { DASHBOARD_PRESSURE_CALCULATOR_PATH } from "@/lib/pressureRoutes";
 import type { getDashboardMessages } from "@/i18n/dashboardMessages";
+import type { Locale } from "@/i18n/config";
+import { calculatorNavigationMessages } from "@/i18n/account/calculatorNavigation";
+
+export const accountCalculatorRegistry = [
+  { href: "/tools/bike-fit", key: "bikeFit", icon: Bike },
+  { href: "/tools/saddle-height", key: "saddleHeight", icon: Ruler },
+  { href: "/tools/frame-size", key: "frameSize", icon: Bike },
+  { href: "/tools/crank-length", key: "crankLength", icon: Ruler },
+  { href: DASHBOARD_PRESSURE_CALCULATOR_PATH, key: "pressure", icon: Gauge },
+  { href: "/gearing", key: "gearing", icon: ArrowUpDown },
+  { href: "/saddle-selector", key: "saddle", icon: Armchair },
+  { href: "/tools/power-speed", key: "powerSpeed", icon: Zap },
+  { href: "/tools/climb-planner", key: "climb", icon: Mountain },
+  { href: "/tools/ftp-wkg", key: "ftp", icon: Gauge },
+  { href: "/tools/fuel-hydration", key: "fuel", icon: Utensils },
+] as const;
+
+export function accountCalculatorNavigation(locale: Locale) {
+  return accountCalculatorRegistry.map((item) => ({
+    ...item,
+    label: calculatorNavigationMessages[locale].tools[item.key],
+  }));
+}
+
+export function accountNavigationGroups(messages: ReturnType<typeof getDashboardMessages>, locale: Locale) {
+  return [
+    { key: "account", label: messages.layout.sections.dashboard, items: accountNavigation(messages) },
+    { key: "calculators", label: calculatorNavigationMessages[locale].title, items: accountCalculatorNavigation(locale) },
+  ];
+}
 
 export function accountNavigation(messages: ReturnType<typeof getDashboardMessages>) {
   return [
@@ -10,9 +40,6 @@ export function accountNavigation(messages: ReturnType<typeof getDashboardMessag
     { href: "/bikes/new", label: messages.nav.newBike, icon: PlusCircle },
     { href: "/fit-history", label: messages.nav.bikeFitting, icon: ClipboardList },
     { href: "/fit", label: messages.nav.newFitSession, icon: PlusCircle },
-    { href: DASHBOARD_PRESSURE_CALCULATOR_PATH, label: messages.nav.tirePressure, icon: Gauge },
-    { href: "/gearing", label: messages.nav.gearing, icon: ArrowUpDown },
-    { href: "/saddle-selector", label: messages.nav.saddleSelector, icon: Armchair },
     { href: "/settings", label: messages.nav.settings, icon: Settings },
     { href: "/feedback", label: messages.nav.feedback, icon: MessageSquareMore },
   ];

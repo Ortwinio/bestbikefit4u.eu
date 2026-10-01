@@ -13,7 +13,7 @@ import { StravaAutoImportTrigger } from "@/components/integrations/StravaAutoImp
 import { AccountLanguageSwitch } from "@/components/account/AccountLanguageSwitch";
 import { AccountBottomTabs } from "@/components/account/AccountBottomTabs";
 import { AccountMenuFooter } from "@/components/account/AccountMenuFooter";
-import { accountNavigation, activeAccountPath, accountActiveClassName, accountIdleClassName, accountNavClassName } from "@/components/account/account-navigation";
+import { accountNavigationGroups, activeAccountPath, accountActiveClassName, accountIdleClassName, accountNavClassName } from "@/components/account/account-navigation";
 import { Dialog, DialogContent, DialogTitle } from "@/components/prototyper-ui/ui/dialog";
 import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -61,8 +61,8 @@ export default function DashboardLayout({
   const loginPath = toLocalizedPath("/login");
   const mobileSectionLabelClassName = "px-3 text-xs font-bold uppercase tracking-widest text-[var(--bbf-op-donker)]";
   const mobileNavItemClassName = accountNavClassName;
-  const navigation = accountNavigation(messages);
-  const activePath = activeAccountPath(internalPathname, navigation.map((item) => item.href));
+  const navigationGroups = accountNavigationGroups(messages, locale);
+  const activePath = activeAccountPath(internalPathname, navigationGroups.flatMap((group) => group.items.map((item) => item.href)));
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -132,12 +132,13 @@ export default function DashboardLayout({
           </div>
           <nav>
             <div className="space-y-5">
-              <section className="space-y-2">
+              {navigationGroups.map((group) => (
+              <section key={group.key} aria-label={group.label} className="space-y-2">
                 <p className={mobileSectionLabelClassName}>
-                  {messages.layout.sections.dashboard}
+                  {group.label}
                 </p>
                 <div className="space-y-1">
-                  {navigation.map((item) => (
+                  {group.items.map((item) => (
                     <Link
                       key={item.href}
                       href={toLocalizedPath(item.href)}
@@ -155,6 +156,7 @@ export default function DashboardLayout({
                   ))}
                 </div>
               </section>
+              ))}
 
               <section className="space-y-2">
                 <p className={mobileSectionLabelClassName}>

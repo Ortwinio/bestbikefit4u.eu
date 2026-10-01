@@ -7,6 +7,7 @@ import { getDefaultEngineVersion } from "../lib/engineVersion";
 import { mapBikeCategory, mapAmbition } from "./inputMapping";
 import type { ClimbingLevel } from "../lib/fitAlgorithm";
 import { buildBikeRoleBias } from "./bikeRoleBias";
+import { calculatorAmbition, profileWithCalculatorInputs } from "../sessions/calculatorInputs";
 
 /**
  * Generate recommendations for a completed session.
@@ -46,9 +47,10 @@ export const generate = mutation({
     }
 
     // Get the profile
-    const profile = await ctx.db.get(session.profileId);
-    if (!profile) throw new Error("Profile not found");
-    if (profile.userId !== userId) throw new Error("Profile not found");
+    const storedProfile = await ctx.db.get(session.profileId);
+    if (!storedProfile) throw new Error("Profile not found");
+    if (storedProfile.userId !== userId) throw new Error("Profile not found");
+    const profile = profileWithCalculatorInputs(storedProfile, session.calculatorInputs);
 
     // Resolve bike type (snapshot on session takes priority over linked bike)
     let bikeType: string | undefined = session.bikeType;
@@ -118,8 +120,10 @@ export const generate = mutation({
       }
     }
 
-    const bikeCategory = mapBikeCategory(session, bikeType);
-    const ambition = mapAmbition(session.primaryGoal);
+    const bikeCategory = session.calculatorInputs?.category ?? mapBikeCategory(session, bikeType);
+    const ambition = session.calculatorInputs
+      ? calculatorAmbition(session.calculatorInputs)
+      : mapAmbition(session.primaryGoal);
 
     // Fetch questionnaire responses to extract experience_level
     const questionnaireResponses = await ctx.db

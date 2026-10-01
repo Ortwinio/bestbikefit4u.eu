@@ -1,0 +1,41 @@
+[
+  {
+    "asset": "public/illustrations/guides/37-bikefit-contactpunten.webp",
+    "bytes": 109838,
+    "sha256": "0176a9f93a4b8a18fe648e2541c512ff86cc55c4201ced91230e158554cfa84c",
+    "size": [
+      1600,
+      1000
+    ],
+    "reviewWidths": [
+      1600,
+      390
+    ]
+  },
+  {
+    "asset": "public/illustrations/guides/38-gravelbike-afstellen.webp",
+    "bytes": 117426,
+    "sha256": "15c80e3c227936ff090cca6310ab8e14806a82d3e9e861ca17d3778e75cfe9a7",
+    "size": [
+      1600,
+      1000
+    ],
+    "reviewWidths": [
+      1600,
+      390
+    ]
+  },
+  {
+    "asset": "public/illustrations/guides/44-grenzen-online-bikefit.webp",
+    "bytes": 108928,
+    "sha256": "4488809a84d57ae177d3bbb12dc22d8280fe202eaad7bd36c8296e009fd9c3de",
+    "size": [
+      1600,
+      1000
+    ],
+    "reviewWidths": [
+      1600,
+      390
+    ]
+  }
+]

@@ -1,3 +1,4 @@
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import { Gauge, Ruler, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -163,6 +164,7 @@ export async function generateMetadata(): Promise<Metadata> {
           "gravel saddle selector",
         ],
     openGraph: {
+      images: [DEFAULT_SOCIAL_IMAGE],
       title: isNl ? "Zadelbreedtecalculator" : "Saddle Width Calculator",
       description: isNl
         ? "Gratis zadelbreedteaanbeveling op basis van anatomie en rijprofiel."

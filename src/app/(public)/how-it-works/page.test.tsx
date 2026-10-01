@@ -16,6 +16,14 @@ vi.mock("@/components/analytics/TrackedCtaLink", () => ({
 }));
 
 describe("how it works marketing page", () => {
+  it("renders the bikefit action in Dutch without changing English", async () => {
+    locale = "nl";
+    const dutchHtml = renderToStaticMarkup(await HowItWorksPage());
+    expect(dutchHtml).toContain("Bereken je bikefit");
+    expect(dutchHtml).not.toContain("Open Bike Fit Calculator");
+    locale = "en";
+    expect(renderToStaticMarkup(await HowItWorksPage())).toContain("Open Bike Fit Calculator");
+  });
   it.each(["nl", "en"] as const)("preserves localized content, routes and HowTo schema in %s", async (language) => {
     locale = language;
     const html = renderToStaticMarkup(await HowItWorksPage());

@@ -1,3 +1,4 @@
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import { ArrowUpDown, Gauge, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -89,6 +90,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? ["verzet calculator", "gear ratio calculator", "klimverzet calculator", "cassette calculator"]
       : ["gearing calculator", "gear ratio calculator", "climb gearing calculator", "cassette calculator"],
     openGraph: {
+      images: [DEFAULT_SOCIAL_IMAGE],
       title: isNl ? "Verzet calculator" : "Gearing Calculator",
       description: isNl
         ? "Zie direct je lichtste versnelling, zwaarste versnelling en kliminschatting."

@@ -82,3 +82,6 @@ export { AdjustOrder, type AdjustOrderProps } from "./AdjustOrder";
 export { ToolsTabBar, type ToolsTabBarProps } from "./ToolsTabBar";
 export { MoreToolsNav, type MoreToolsNavProps } from "./MoreToolsNav";
 export { ConfiguratorLayout, type ConfiguratorLayoutProps } from "./ConfiguratorLayout";
+export { useAutosave } from "./useAutosave";
+export { AutosaveStatus, AutosaveField, type AutosaveMessages } from "./AutosaveStatus";
+export type { AutosaveState, AutosaveOptions } from "./autosave";

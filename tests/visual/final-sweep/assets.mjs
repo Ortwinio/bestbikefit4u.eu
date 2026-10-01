@@ -11,7 +11,7 @@ export const localAnalyticsPaths = ["/_vercel/insights/script.js", "/_vercel/spe
 export const isLoopback = (hostname) => ["localhost", "127.0.0.1", "[::1]"].includes(hostname);
 
 /** Serve actual build assets; only Vercel-owned analytics scripts are explicit local QA no-ops. */
-export async function serveQaAsset(request, response, { staticDir }) {
+export async function serveQaAsset(request, response, { staticDir, fallbackStaticDirs = [] }) {
   const url = new URL(request.url, `http://${request.headers.host || "invalid"}`);
   if (localAnalyticsPaths.includes(url.pathname) && isLoopback(url.hostname)) {
     response.statusCode = 200;
@@ -32,13 +32,28 @@ export async function serveQaAsset(request, response, { staticDir }) {
     return true;
   }
   try {
-    const body = await readFile(file);
+    let body;
+    for (const directory of [staticDir, ...fallbackStaticDirs]) {
+      const candidateBase = resolve(directory);
+      const candidate = resolve(candidateBase, path);
+      if (!candidate.startsWith(candidateBase + sep)) throw new Error("Invalid asset path");
+      try { body = await readFile(candidate); break; }
+      catch (error) {
+        if (!["ENOENT", "ENOTDIR"].includes(error.code)) throw error;
+      }
+    }
+    if (!body) {
+      response.statusCode = 404;
+      response.end("Build asset unavailable");
+      return true;
+    }
     response.statusCode = 200;
     response.setHeader("content-type", types[extname(file)] || "application/octet-stream");
     response.setHeader("x-content-type-options", "nosniff");
     response.setHeader("content-length", String(body.length));
     response.end(request.method === "HEAD" ? undefined : body);
   } catch (error) {
+    console.error(error);
     response.statusCode = ["ENOENT", "EISDIR", "ENOTDIR"].includes(error.code) ? 404 : 500;
     response.setHeader("content-type", "text/plain; charset=utf-8");
     response.end("Build asset unavailable");

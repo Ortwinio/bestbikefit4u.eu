@@ -42,3 +42,31 @@ test("only the two exact Vercel scripts on loopback are local no-ops", async () 
   assert.equal(await serveQaAsset({ ...request, url: "/_vercel/other.js" }, response(),
     { staticDir: "/unused" }), false);
 });
+test("serves only bounded local assets across dev/build directories and never invokes fetch", async () => {
+  const root = await mkdtemp(join(tmpdir(), "qa-assets-fallback-"));
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = () => { throw new Error("Network access is forbidden in asset requests"); };
+  try {
+    const staticDir = join(root, "primary");
+    const fallback = join(root, "fallback");
+    await mkdir(staticDir); await mkdir(fallback);
+    await writeFile(join(fallback, "font.woff2"), "font-data");
+    for (const url of ["/_next/static/font.woff2", "http://attacker.invalid/_next/static/font.woff2"]) {
+      const res = response();
+      await serveQaAsset({ url, headers: { host: "localhost" } }, res,
+        { staticDir, fallbackStaticDirs: [fallback] });
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.body.toString(), "font-data");
+    }
+    const traversal = response();
+    await serveQaAsset({ url: "/_next/static/%2e%2e%2fsecret", headers: {} }, traversal,
+      { staticDir, fallbackStaticDirs: [fallback] });
+    assert.equal(traversal.statusCode, 400);
+    const optimizer = response();
+    assert.equal(await serveQaAsset({ url: "/_next/image?url=http://private.invalid", headers: {} }, optimizer,
+      { staticDir }), false);
+  } finally {
+    globalThis.fetch = originalFetch;
+    await rm(root, { recursive: true, force: true });
+  }
+});

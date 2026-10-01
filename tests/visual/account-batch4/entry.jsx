@@ -1,3 +1,6 @@
+import { AccountPerformanceCalculator } from "@/components/calculators/AccountPerformanceCalculator";
+import { AccountFitCalculator } from "@/components/calculators/AccountFitCalculator";
+import { AccountBikeFitCalculator } from "@/components/calculators/AccountBikeFitCalculator";
 import { Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { PressureDashboardClient } from "@/app/(dashboard)/pressure-calculator/PressureDashboardClient";
@@ -14,6 +17,15 @@ import { locale, fixture } from "./runtime";
 
 const route = window.location.pathname.replace(/^\/(nl|en)/, "");
 const pages = {
+  "/tools/power-speed": <AccountPerformanceCalculator calculator="power-speed" />,
+  "/tools/climb-planner": <AccountPerformanceCalculator calculator="climb-planner" />,
+  "/tools/ftp-wkg": <AccountPerformanceCalculator calculator="ftp-wkg" />,
+  "/tools/fuel-hydration": <AccountPerformanceCalculator calculator="fuel-hydration" />,
+
+  "/tools/bike-fit": <AccountBikeFitCalculator />,
+  "/tools/saddle-height": <AccountFitCalculator calculator="saddle-height" />,
+  "/tools/frame-size": <AccountFitCalculator calculator="frame-size" />,
+  "/tools/crank-length": <AccountFitCalculator calculator="crank-length" />,
   "/pressure-calculator": (
     <PressureDashboardClient initialBikeId={fixture === "filled" ? "bike1" : undefined} />
   ),

@@ -9,7 +9,7 @@ import { api } from "../../../convex/_generated/api";
 import { BrandLogo } from "@/components/branding";
 import { AccountLanguageSwitch } from "@/components/account/AccountLanguageSwitch";
 import { AccountPlan } from "@/components/account/AccountPlan";
-import { accountNavigation, activeAccountPath, accountNavClassName, accountActiveClassName, accountIdleClassName } from "@/components/account/account-navigation";
+import { accountNavigationGroups, activeAccountPath, accountNavClassName, accountActiveClassName, accountIdleClassName } from "@/components/account/account-navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
 import { cn } from "@/utils/cn";
@@ -39,8 +39,8 @@ export function DashboardSidebar() {
   const internalPathname = stripLocalePrefix(pathname ?? "/");
 
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
-  const navigation = accountNavigation(messages);
-  const activePath = activeAccountPath(internalPathname, navigation.map((item) => item.href));
+  const navigationGroups = accountNavigationGroups(messages, locale);
+  const activePath = activeAccountPath(internalPathname, navigationGroups.flatMap((group) => group.items.map((item) => item.href)));
 
   const user = useQuery(api.users.queries.getCurrentUser);
   const adminRole = isAdminRole(user?.adminRole) ? user.adminRole : null;
@@ -90,10 +90,11 @@ export function DashboardSidebar() {
 
         <div className="min-h-[88px] flex-1 overflow-y-auto px-4 py-3">
           <div className="space-y-6">
-            <section className="space-y-2">
-              <p className={sectionLabelClassName}>{messages.layout.sections.dashboard}</p>
-              <nav aria-label={locale === "nl" ? "Accountpagina’s" : "Account pages"} className="space-y-1">
-                {navigation.map((item) => {
+            {navigationGroups.map((group) => (
+            <section key={group.key} className="space-y-2">
+              <p className={sectionLabelClassName}>{group.label}</p>
+              <nav aria-label={group.label} className="space-y-1">
+                {group.items.map((item) => {
                   const isActive = activePath === item.href;
                   return (
                     <Link
@@ -114,6 +115,7 @@ export function DashboardSidebar() {
                 })}
               </nav>
             </section>
+            ))}
 
             {visibleAdminNavigationGroups.length > 0 && (
               <section className="rounded-[20px] bg-white/5 px-2 py-3">

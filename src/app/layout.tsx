@@ -8,6 +8,7 @@ import { BRAND } from "@/config/brand";
 import { ANALYTICS_CONFIG } from "@/config/analytics";
 import { getDictionary } from "@/i18n/getDictionary";
 import { getRequestLocale } from "@/i18n/request";
+import { getSiteMetadataCopy } from "@/i18n/marketing/siteMetadata";
 import { CookieConsentBanner } from "@/components/layout/CookieConsentBanner";
 import { GTMConsentLoader } from "@/components/analytics/GTMConsentLoader";
 import { FeedbackPanelProvider } from "@/components/feedback/FeedbackPanelProvider";
@@ -36,11 +37,10 @@ const monoFont = DM_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   metadataBase: new URL(BRAND.siteUrl),
   applicationName: BRAND.name,
   title: BRAND.name,
-  description: "Precision bike fitting for comfort, alignment, and performance.",
   openGraph: {
     images: [{ url: BRAND.assets.socialImage, width: 1200, height: 630, alt: BRAND.name }],
   },
@@ -89,6 +89,18 @@ export const metadata: Metadata = {
   },
 };
 
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const { description } = getSiteMetadataCopy(locale);
+  return {
+    ...baseMetadata,
+    description,
+    manifest: `/manifest.webmanifest?locale=${locale}`,
+    openGraph: { ...baseMetadata.openGraph, description, locale: locale === "nl" ? "nl_NL" : "en_US" },
+    twitter: { ...baseMetadata.twitter, description },
+  };
+}
+
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#0F2420" },
@@ -118,8 +130,7 @@ export default async function RootLayout({
   const siteSchemas = [
     buildOrganizationSchema(),
     buildWebSiteSchema({
-      description:
-        "Precision bike fitting for comfort, alignment, and performance.",
+      description: getSiteMetadataCopy(locale).description,
       inLanguage: locale,
     }),
   ];

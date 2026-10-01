@@ -58,6 +58,8 @@ export function HeroBackground({ posterSrc }: HeroBackgroundProps) {
         src={posterSrc}
         alt=""
         fetchPriority="high"
+        width={480}
+        height={324}
         className="absolute inset-0 h-full w-full object-cover object-center"
         aria-hidden
       />

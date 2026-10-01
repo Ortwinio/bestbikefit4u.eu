@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { profileText } from "@/i18n/account/profileLanguage";
 import { measurementIllustrations, type MeasurementIllustrationKey } from "./measurementIllustrations";
 
 type MeasurementIllustrationCardProps = {
@@ -10,6 +12,7 @@ type MeasurementIllustrationCardProps = {
 export function MeasurementIllustrationCard({
   measurement,
 }: MeasurementIllustrationCardProps) {
+  const { locale } = useDashboardMessages();
   const illustration = measurementIllustrations[measurement];
 
   return (
@@ -18,7 +21,8 @@ export function MeasurementIllustrationCard({
         <div className="overflow-hidden rounded-[calc(var(--radius-lg)-0.25rem)] bg-[color:var(--background)]">
           <Image
             src={illustration.src}
-            alt={illustration.alt}
+            alt={profileText(locale, illustration.alt)}
+            sizes="(max-width: 768px) calc(100vw - 72px), 500px"
             width={illustration.width}
             height={illustration.height}
             className="h-auto w-full object-contain"
@@ -26,7 +30,7 @@ export function MeasurementIllustrationCard({
         </div>
       </div>
       <div className="border-t border-[color:var(--border)] px-4 py-3">
-        <p className="text-sm text-[color:var(--muted-foreground)]">{illustration.caption}</p>
+        <p className="text-sm text-[color:var(--muted-foreground)]">{profileText(locale, illustration.caption)}</p>
       </div>
     </div>
   );

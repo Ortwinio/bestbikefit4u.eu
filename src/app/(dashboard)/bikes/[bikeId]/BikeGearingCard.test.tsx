@@ -26,7 +26,7 @@ afterEach(() => {
 });
 
 describe("BikeGearingCard", () => {
-  it("renders a validated gearing summary with calculator and edit links", () => {
+  it("renders a validated gearing summary with calculator and inline settings links", () => {
     render(
       <BikeGearingCard
         locale="en"
@@ -48,12 +48,12 @@ describe("BikeGearingCard", () => {
     expect(screen.getByText("Open gearing calculator").closest("a")?.getAttribute("href")).toBe(
       "/en/gearing?bikeId=bike_1"
     );
-    expect(screen.getByText("Edit gearing").closest("a")?.getAttribute("href")).toBe(
-      "/en/bikes/bike_1/edit"
+    expect(screen.getByText("Bike settings").closest("a")?.getAttribute("href")).toBe(
+      "#bike-settings-gearing"
     );
   });
 
-  it("renders the incomplete-state CTA when gearing is missing", () => {
+  it("links missing gearing to inline settings and the calculator", () => {
     render(<BikeGearingCard locale="en" bikeId="bike_2" gearing={null} />);
 
     expect(screen.getByText("No gearing saved yet")).toBeTruthy();
@@ -62,8 +62,8 @@ describe("BikeGearingCard", () => {
         "Add chainrings, cassette, and wheel circumference to use this bike directly in the gearing calculator."
       )
     ).toBeTruthy();
-    expect(screen.getByText("Add gearing").closest("a")?.getAttribute("href")).toBe(
-      "/en/bikes/bike_2/edit"
+    expect(screen.getByText("Bike settings").closest("a")?.getAttribute("href")).toBe(
+      "#bike-settings-gearing"
     );
     expect(screen.getByText("Open calculator").closest("a")?.getAttribute("href")).toBe(
       "/en/gearing?bikeId=bike_2"

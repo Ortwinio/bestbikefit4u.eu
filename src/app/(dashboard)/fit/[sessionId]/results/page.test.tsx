@@ -8,6 +8,7 @@ import { getDashboardMessages } from "@/i18n/dashboardMessages";
 import { fitResultsSource } from "./fixture.test-support";
 
 const state = vi.hoisted(() => ({
+  locale: "en" as "en" | "nl",
   values: {} as Record<string, unknown>,
   campaign: false,
   billingPaused: false,
@@ -33,6 +34,9 @@ vi.mock("@/components/ui", async (original) => ({
   useToast: () => state.toast,
 }));
 vi.mock("@/components/analytics/MarketingEventTracker", () => ({ useMarketingEventLogger: () => state.log }));
+vi.mock("@/i18n/useDashboardMessages", () => ({
+  useDashboardMessages: () => ({ locale: state.locale, messages: getDashboardMessages(state.locale) }),
+}));
 vi.mock("@/components/feedback/feedback-activity", () => ({ trackFeedbackSignal: vi.fn() }));
 vi.mock("@/config/commercial", () => ({ isReportAccessOpen: () => state.campaign || state.billingPaused }));
 vi.mock("@/lib/telemetry", () => ({ reportClientError: (error: Error) => error.message }));
@@ -56,6 +60,7 @@ async function mount() {
 }
 
 beforeEach(() => {
+  state.locale = "en";
   vi.clearAllMocks();
   state.campaign = false;
   state.billingPaused = false;
@@ -72,6 +77,26 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 describe("results route preserved behavior", () => {
+  it("localizes Dutch engine notes and missing bike names without changing stored notes", async () => {
+    state.locale = "nl";
+    state.values[accessKey] = { hasAccess: true };
+    const notes = ["Saddle height of 748mm is optimized for your 850mm inseam.", "Unmapped English note"];
+    state.values[reportKey] = { ...fitResultsSource, bike: null, recommendation: { ...fitResultsSource.recommendation, fitNotes: notes } };
+    await mount();
+    expect(screen.getAllByText("Fiets zonder naam").length).toBeGreaterThan(0);
+    expect(screen.getByText("De zadelhoogte van 748 mm is afgestemd op je binnenbeenlengte van 850 mm.")).toBeTruthy();
+    expect(screen.getByText("Unmapped English note")).toBeTruthy();
+    expect(notes[1]).toBe("Unmapped English note");
+  });
+  it("localizes Dutch network failures during PDF download", async () => {
+    state.locale = "nl";
+    state.values[accessKey] = { hasAccess: true };
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch")));
+    await mount();
+    fireEvent.click(screen.getByRole("button", { name: getDashboardMessages("nl").results.actions.downloadPdf }));
+    expect(await screen.findByText(getDashboardMessages("nl").results.errors.pdfGenerateFailed)).toBeTruthy();
+    expect(screen.queryByText("Failed to fetch")).toBeNull();
+  });
   it("keeps free exports gated and passes the real session to opt-in and fit pass", async () => {
     await mount();
     expect(screen.queryByText("Your current setup and target")).toBeNull();

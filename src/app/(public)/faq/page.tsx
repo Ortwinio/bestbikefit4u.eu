@@ -9,6 +9,7 @@ import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { faqPresentation } from "@/i18n/marketing/faq";
+import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
 import styles from "./faq.module.css";
 
 type RawFAQItem = { q: string; a: string };
@@ -436,7 +437,10 @@ export default async function FAQPage() {
           <div className={styles.guideGrid}>
             {page.guideLinks.map((link) => (
               <Link key={link.href} href={withLocalePrefix(link.href, locale)}>
-                {link.label}<span aria-hidden="true"> →</span>
+                {locale === "nl" && link.href.startsWith("/guides/")
+                  ? getDutchGuideTitle(link.href.slice("/guides/".length)) ?? link.label
+                  : link.label}
+                <span aria-hidden="true"> →</span>
               </Link>
             ))}
           </div>

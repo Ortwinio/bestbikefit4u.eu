@@ -514,6 +514,31 @@ export const updateRiderProfile = mutation({
   },
 });
 
+export const updatePreferences = mutation({
+  args: {
+    experienceLevel: v.optional(v.union(v.literal("beginner"), v.literal("intermediate"), v.literal("advanced"))),
+    weeklyHours: v.optional(v.union(
+      v.literal("0-3"), v.literal("3-6"), v.literal("6-10"), v.literal("10-15"), v.literal("15+"),
+    )),
+    typicalRideLength: v.optional(v.union(
+      v.literal("short"), v.literal("medium"), v.literal("long"), v.literal("ultra"),
+    )),
+    positionPriority: v.optional(v.union(v.literal("comfort"), v.literal("balanced"), v.literal("performance"))),
+  },
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+    const profile = await ctx.db.query("profiles").withIndex("by_user", (query) => query.eq("userId", userId)).unique();
+    if (!profile) throw new Error("Profile not found");
+    const patch = Object.fromEntries(Object.entries(args).filter(([, value]) => value !== undefined));
+    const changed = (Object.keys(patch) as (keyof typeof args)[]).some((key) => args[key] !== profile[key]);
+    if (changed) {
+      const updatedAt = Date.now();
+      await ctx.db.patch(profile._id, { ...patch, updatedAt, riderProfileUpdatedAt: updatedAt });
+    }
+    return profile._id;
+  },
+});
+
 export const updateComfort = mutation({
   args: {
     hasPain: v.union(v.literal("yes"), v.literal("no")),

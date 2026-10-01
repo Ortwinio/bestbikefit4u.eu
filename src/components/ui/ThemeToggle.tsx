@@ -1,5 +1,8 @@
 "use client";
 
+import type { Locale } from "@/i18n/config";
+import { autosaveMessages } from "@/i18n/account/autosave";
+import { AutosaveStatus } from "./AutosaveStatus";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import {
@@ -21,12 +24,18 @@ const themeOptions = [
   { value: "system", labelKey: "system", icon: Monitor },
 ] as const;
 
-export function ThemeToggle({ labels }: { labels: ThemeToggleLabels }) {
-  const { theme, setTheme } = useTheme();
+export function ThemeToggle({ labels, showSaveStatus = false, locale = "en", ariaLabel = "Theme selection" }: {
+  labels: ThemeToggleLabels;
+  showSaveStatus?: boolean;
+  locale?: Locale;
+  ariaLabel?: string;
+}) {
+  const { theme, setTheme, autosave } = useTheme();
 
   return (
+    <div className="space-y-2">
     <SegmentedControl
-      aria-label="Theme selection"
+      aria-label={ariaLabel}
       value={theme}
       onValueChange={(nextTheme) => {
         setTheme(nextTheme as ThemePreference);
@@ -49,5 +58,9 @@ export function ThemeToggle({ labels }: { labels: ThemeToggleLabels }) {
         );
       })}
     </SegmentedControl>
+    {showSaveStatus && autosave && (
+      <AutosaveStatus {...autosave} messages={autosaveMessages[locale]} onRetry={autosave.retry} />
+    )}
+    </div>
   );
 }

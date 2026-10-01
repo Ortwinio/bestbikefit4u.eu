@@ -11,6 +11,9 @@ import { getDefaultEngineVersion } from "../lib/engineVersion";
 import { validateNumberRange, validateShortString } from "../lib/validation";
 import { buildBikeRoleBias } from "../recommendations/bikeRoleBias";
 import { isRiderProfileComplete } from "../profiles/queries";
+import { validCalculatorState } from "../../src/lib/calculators/accountState";
+import type { CalculatorValues } from "../calculatorStates/validators";
+import { calculatorMatchesBike, calculatorPrimaryGoal } from "./calculatorInputs";
 
 const WEEKLY_HOURS_RANGE = [0, 60] as const;
 const LONGEST_RIDE_KM_RANGE = [0, 600] as const;
@@ -38,6 +41,7 @@ async function deleteBySessionIndex(
 
 export const create = mutation({
   args: {
+    calculatorStateId: v.optional(v.id("calculatorStates")),
     bikeType: v.optional(
       v.union(
         v.literal("road"),
@@ -133,6 +137,27 @@ export const create = mutation({
         (bikeRoleBias.suggestedPrimaryGoal as typeof snapshotPrimaryGoal);
     }
 
+    let calculatorInputs: CalculatorValues<"bike-fit"> | undefined;
+    if (args.calculatorStateId) {
+      const calculator = await ctx.db.get(args.calculatorStateId);
+      if (!calculator || calculator.userId !== userId) {
+        throw new Error("Calculator state not found");
+      }
+      if (
+        calculator.calculator !== "bike-fit" ||
+        calculator.state.calculator !== "bike-fit" ||
+        !validCalculatorState(calculator.state) ||
+        calculator.state.values.source === "missing"
+      ) {
+        throw new Error("INVALID_CALCULATOR_VALUES");
+      }
+      calculatorInputs = { ...calculator.state.values };
+      if (!calculatorMatchesBike(calculatorInputs, snapshotBikeType)) {
+        throw new Error("Bike category must match calculator values");
+      }
+      snapshotPrimaryGoal = calculatorPrimaryGoal(calculatorInputs);
+    }
+
     if (!snapshotBikeType || !snapshotRidingStyle || !snapshotPrimaryGoal) {
       throw new Error("Bike type, riding style, and primary goal are required");
     }
@@ -152,6 +177,7 @@ export const create = mutation({
     return await ctx.db.insert("fitSessions", {
       userId,
       profileId: profile._id,
+      ...(calculatorInputs ? { calculatorInputs } : {}),
       bikeId: resolvedBikeId,
       bikeProfileId: args.bikeProfileId,
       bikeType: snapshotBikeType,

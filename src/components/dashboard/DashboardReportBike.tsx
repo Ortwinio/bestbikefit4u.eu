@@ -102,7 +102,9 @@ export function DashboardReportBike({ bike, latestFit }: {
             text-accent-foreground">{copy.adviceAvailable}</p>}
           <dl className="divide-y divide-border">
             {fields.map(([group, value]) => <StatRow key={group} label={reportCopy.bike[group]}
-              value={typeof value === "string" ? localizePdfValue(value, reportCopy, group) : copy.missing} />)}
+              value={locale === "nl" && group === "typeOfRiding" && value === "casual"
+                ? usage.roadRiding.casual
+                : typeof value === "string" ? localizePdfValue(value, reportCopy, group) : copy.missing} />)}
           </dl>
           {responses.has_pain === "yes" && Array.isArray(responses.pain_areas) &&
             <div className="space-y-2">

@@ -1,0 +1,8 @@
+convex/guides/__tests__/mutations.contract.test.ts
+convex/guides/mutations.ts
+convex/guides/rewriteImport.ts
+plans/redesign-canvas/README.md
+plans/redesign-canvas/audit/49-import-log.json
+plans/redesign-canvas/audit/49-notes.md
+plans/redesign-canvas/audit/files-49.txt
+scripts/import-guide-rewrites.mjs

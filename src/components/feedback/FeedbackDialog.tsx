@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import { getFeedbackSubmitError } from "@/i18n/account/feedbackLanguage";
 import { usePathname } from "next/navigation";
 import { useConvexAuth, useMutation } from "convex/react";
 import { CheckCircle2 } from "lucide-react";
@@ -222,11 +223,7 @@ export function FeedbackDialog({
       setStep("success");
     } catch (error) {
       console.error("Failed to submit feedback", error);
-      setSubmitError(
-        error instanceof Error && error.message.trim()
-          ? error.message
-          : copy.dialog.errorGeneric
-      );
+      setSubmitError(getFeedbackSubmitError(error, locale, copy.dialog.errorGeneric));
     } finally {
       setIsSubmitting(false);
     }

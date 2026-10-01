@@ -1,3 +1,4 @@
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import { Compass, Ruler, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -40,6 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? ["framemaat calculator", "fietsmaat calculator", "racefiets maat estimate"]
       : ["frame size calculator", "bike size calculator", "road bike size estimate"],
     openGraph: {
+      images: [DEFAULT_SOCIAL_IMAGE],
       title: isNl ? "Framemaat calculator" : "Frame Size Calculator",
       description: isNl
         ? "Krijg een snelle framemaatinschatting op basis van je basisgegevens."

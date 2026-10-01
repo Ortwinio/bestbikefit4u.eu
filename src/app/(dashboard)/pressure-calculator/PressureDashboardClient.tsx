@@ -1,199 +1,170 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useImperativeHandle, useRef, useState, type ReactNode, type Ref } from "react";
 import Link from "next/link";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { AdjustOrder, Button, Gauge, LoadingState, OptionCard } from "@/components/ui";
+import type { Id } from "../../../../convex/_generated/dataModel";
+import { Button, LoadingState, OptionCard } from "@/components/ui";
+import { AutosaveStatus } from "@/components/ui/AutosaveStatus";
+import { useAutosave } from "@/components/ui/useAutosave";
 import { BikePressureCard } from "@/components/features/pressure/BikePressureCard";
-import { PressureWizard } from "@/components/features/pressure/PressureWizard";
+import { PressureCalculatorForm, type PressureCalculatorValues } from "@/components/features/pressure/PressureCalculatorForm";
+import { validatePressureInput } from "@/lib/pressure-engine";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
-import styles from "./PressureDashboard.module.css";
 import { toolsPressureMessages } from "@/i18n/account/toolsPressure";
+import { autosaveMessages } from "@/i18n/account/autosave";
+import { accountPressureCalculatorMessages } from "@/i18n/account/pressureCalculator";
+import { tirePressureMessages } from "@/i18n/calculators/tirePressure";
+import en from "@/i18n/messages/en";
+import nl from "@/i18n/messages/nl";
+import { buildPressurePrefill } from "./pressurePrefill";
+import styles from "./PressureDashboard.module.css";
+
+type FormHandle = { flush: () => Promise<boolean> };
+
+function SavedPressureForm({ bikeId, userId, initialValues, header, stale, profilePrefilled, onSaved, ref }: {
+  bikeId?: Id<"bikes">;
+  userId: Id<"users">;
+  initialValues: PressureCalculatorValues;
+  header: ReactNode;
+  stale: boolean;
+  profilePrefilled: boolean;
+  onSaved: (values: PressureCalculatorValues) => void;
+  ref: Ref<FormHandle>;
+}) {
+  const { locale } = useDashboardMessages();
+  const dictionary = locale === "nl" ? nl : en;
+  const saveCopy = autosaveMessages[locale];
+  const copy = accountPressureCalculatorMessages[locale];
+  const upsert = useMutation(api.pressureCalculations.mutations.upsertBasic);
+  const [values, setValues] = useState(initialValues);
+  const [formInitialValues] = useState(initialValues);
+  const [initialProfilePrefilled] = useState(profilePrefilled);
+  const failed = useRef(false);
+  const autosave = useAutosave({
+    value: values,
+    debounceMs: 500,
+    validate: (input) => validatePressureInput(input).length ? saveCopy.invalid : null,
+    onSave: async (inputSnapshot) => {
+      try {
+        await upsert({ bikeId, expectedUserId: userId, inputSnapshot });
+        failed.current = false;
+        onSaved(inputSnapshot);
+      } catch (error) {
+        failed.current = true;
+        throw error;
+      }
+    },
+  });
+  useImperativeHandle(ref, () => ({
+    flush: async () => {
+      await autosave.flush();
+      return !failed.current && validatePressureInput(values).length === 0;
+    },
+  }));
+
+  return <PressureCalculatorForm
+    locale={locale}
+    labels={dictionary.pressure.form}
+    resultLabels={dictionary.pressure.result}
+    copy={{ ...tirePressureMessages[locale], intro: copy.intro, excluded: copy.excluded }}
+    accountMode
+    initialValues={formInitialValues}
+    onValuesChange={setValues}
+    onValuesCommit={() => { setTimeout(() => { void autosave.flush(); }, 0); }}
+    headerSlot={header}
+    statusSlot={<div className="space-y-2">
+      <p className="text-sm text-muted-foreground">{copy.autosaveHint}</p>
+      {initialProfilePrefilled && <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+        <span>{copy.profilePrefill}</span>
+        <Link href={withLocalePrefix("/profile", locale)} className="inline-flex min-h-11 items-center font-semibold text-primary underline">
+          {copy.profileLink}
+        </Link>
+      </p>}
+      <AutosaveStatus state={validatePressureInput(values).length ? "invalid" : autosave.state}
+        messages={saveCopy} onRetry={autosave.retry} updated={saveCopy.updated}
+        error={validatePressureInput(values).length ? saveCopy.invalid : autosave.error} />
+      {stale && <p role="note" className="rounded-xl border border-border bg-muted p-3 text-sm">{copy.stale}</p>}
+    </div>}
+  />;
+}
 
 export function PressureDashboardClient({ initialBikeId }: { initialBikeId?: string }) {
   const { locale } = useDashboardMessages();
   const copy = toolsPressureMessages[locale];
+  const user = useQuery(api.users.queries.getCurrentUser);
   const bikes = useQuery(api.bikes.queries.listByUser);
   const latestByBike = useQuery(api.pressureCalculations.queries.getLatestByBikeForUser);
+  const latestWithoutBike = useQuery(api.pressureCalculations.queries.getLatestWithoutBikeForUser);
+  const profile = useQuery(api.profiles.queries.getMyProfile);
   const [selectedBikeId, setSelectedBikeId] = useState(initialBikeId);
-  const wizard = useRef<HTMLElement>(null);
-  const isLoading = bikes === undefined || latestByBike === undefined;
-  const saved = latestByBike?.find((entry) => entry.bikeId === selectedBikeId)?.latestCalculation;
-  const gaugeMax = Math.max(10, saved?.recommendedFrontBar ?? 0, saved?.recommendedRearBar ?? 0);
+  const [switching, setSwitching] = useState(false);
+  const [savedValues, setSavedValues] = useState<Record<string, PressureCalculatorValues>>({});
+  const form = useRef<FormHandle>(null);
+  const bike = bikes?.find((entry) => entry._id === selectedBikeId);
+  const bikeId = bike?._id;
+  const detail = useQuery(api.bikes.queries.getDetail, bikeId ? { bikeId } : "skip");
+  const stale = useQuery(api.pressureCalculations.queries.isBikePressureStale, bikeId ? { bikeId } : "skip");
+  const saved = bikeId
+    ? latestByBike?.find((entry) => entry.bikeId === bikeId)?.latestCalculation
+    : latestWithoutBike;
+  const selectionKey = `${user?._id ?? "loading"}:${bikeId ?? "no-bike"}`;
+  const isLoading = !user || bikes === undefined || latestByBike === undefined || latestWithoutBike === undefined ||
+    profile === undefined || Boolean(bikeId && (detail === undefined || stale === undefined));
 
-  function start(bikeId?: string) {
-    setSelectedBikeId(bikeId);
-    requestAnimationFrame(() => wizard.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  async function selectBike(nextBikeId?: string) {
+    if (switching || nextBikeId === bikeId) return;
+    setSwitching(true);
+    const savedSuccessfully = await form.current?.flush() ?? true;
+    if (savedSuccessfully) setSelectedBikeId(nextBikeId);
+    setSwitching(false);
   }
 
-  return (
-    <div className={`${styles.scope} mx-auto w-full max-w-[1280px] min-w-0 space-y-8`}>
-      <header className="space-y-3">
-        <p className="text-sm font-bold tracking-[0.08em] text-primary uppercase">{copy.eyebrow}</p>
-        <h1 className="font-display text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-          {copy.title}
-        </h1>
-        <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">{copy.description}</p>
-      </header>
+  if (isLoading) {
+    return <section aria-label={copy.loading} aria-busy="true" className="rounded-3xl border border-border bg-card p-6">
+      <LoadingState label={copy.loading} />
+      <p className="text-center text-sm text-muted-foreground">{copy.loadingDetail}</p>
+    </section>;
+  }
 
-      {isLoading ? (
-        <section
-          aria-label={copy.loading}
-          aria-busy="true"
-          className="rounded-3xl border border-border bg-card p-6"
-        >
-          <LoadingState label={copy.loading} />
-          <p className="text-center text-sm text-muted-foreground">{copy.loadingDetail}</p>
-        </section>
-      ) : (
-        <>
-          {bikes.length === 0 ? (
-            <section className="rounded-3xl bg-[var(--bbf-lime)] p-6 text-[var(--bbf-inkt)] sm:p-8">
-              <h2 className="font-display text-2xl font-bold text-[var(--bbf-inkt)]">{copy.emptyTitle}</h2>
-              <p className="mt-3 max-w-2xl leading-relaxed">{copy.emptyDescription}</p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <Button
-                  role="link"
-                  nativeButton={false}
-                  render={<Link href={withLocalePrefix("/bikes/new", locale)} />}
-                >
-                  {copy.addBike}
-                </Button>
-                <Button variant="outline" onClick={() => start()}>
-                  {copy.withoutBike}
-                </Button>
-              </div>
-            </section>
-          ) : (
-            <section
-              aria-labelledby="pressure-bikes"
-              className="rounded-3xl border border-border bg-card p-6"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h2 id="pressure-bikes" className="font-display text-2xl font-bold">
-                  {copy.bikes}
-                </h2>
-                <Link
-                  className="inline-flex min-h-11 items-center text-sm font-semibold text-primary underline"
-                  href={withLocalePrefix("/bikes", locale)}
-                >
-                  {copy.garage}
-                </Link>
-              </div>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {bikes.map((bike) => (
-                  <OptionCard
-                    key={bike._id}
-                    label={bike.name}
-                    description={[bike.brand, bike.model].filter(Boolean).join(" ") || undefined}
-                    selected={selectedBikeId === bike._id}
-                    onClick={() => start(bike._id)}
-                  />
-                ))}
-              </div>
-              <Button className="mt-4" variant="ghost" onClick={() => start()}>
-                {copy.withoutBike}
-              </Button>
-            </section>
-          )}
-
-          <div className="grid min-w-0 items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(300px,380px)]">
-            <section
-              id="pressure-wizard"
-              ref={wizard}
-              aria-labelledby="pressure-calculator-heading"
-              className="min-w-0 scroll-mt-24 rounded-3xl border border-border bg-card p-5 sm:p-7"
-            >
-              <h2 id="pressure-calculator-heading" className="font-display text-2xl font-bold">
-                {copy.calculator}
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {copy.calculatorDescription}
-              </p>
-              <div
-                className={
-                  "mt-6 min-w-0 [&_.border]:border-border [&_.border-dashed]:border-border " +
-                  "[&_.border-b]:border-border"
-                }
-              >
-                <PressureWizard initialBikeId={selectedBikeId} />
-              </div>
-            </section>
-            <aside className="min-w-0 space-y-4">
-              {saved && (
-                <section aria-label={copy.savedForBike} className="space-y-3">
-                  <h2 className="font-display text-xl font-bold">{copy.savedForBike}</h2>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="rounded-3xl bg-[var(--bbf-lime)] p-3 text-[var(--bbf-inkt)]">
-                      <Gauge
-                        label={copy.front}
-                        value={saved.recommendedFrontBar}
-                        max={gaugeMax}
-                        unit="bar"
-                        locale={locale}
-                        className={
-                          "text-[var(--bbf-inkt)] [--gauge-accent:var(--bbf-petrol)] " +
-                          "[&_.text-muted-foreground]:text-[var(--bbf-tekst)]"
-                        }
-                      />
-                    </div>
-                    <div className="rounded-3xl bg-[var(--bbf-inkt)] p-3 text-[var(--bbf-wit)]">
-                      <Gauge
-                        label={copy.rear}
-                        value={saved.recommendedRearBar}
-                        max={gaugeMax}
-                        unit="bar"
-                        locale={locale}
-                        className={
-                          "text-[var(--bbf-wit)] [&_.text-muted-foreground]:text-[var(--bbf-op-donker)] " +
-                          "[&_path:nth-child(2)]:stroke-[var(--bbf-lime)]"
-                        }
-                      />
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{copy.gaugeNote}</p>
-                </section>
-              )}
-
-              <section className="rounded-3xl bg-[var(--bbf-inkt)] p-6 text-[var(--bbf-wit)]">
-                <h2 className="font-display text-2xl font-bold text-[var(--bbf-wit)]">{copy.limits}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--bbf-op-donker)]">
-                  {copy.limitsDescription}
-                </p>
-              </section>
-              <AdjustOrder title={copy.next} steps={copy.steps.map((title) => ({ title }))} />
-            </aside>
-          </div>
-
-          {bikes.length > 0 && (
-            <section aria-labelledby="pressure-saved" className="space-y-4">
-              <h2 id="pressure-saved" className="font-display text-3xl font-bold">
-                {copy.saved}
-              </h2>
-              <p className="text-sm text-muted-foreground">{copy.savedDescription}</p>
-              <div
-                className={
-                  "grid min-w-0 gap-4 xl:grid-cols-2 [&_.border]:border-border " +
-                  "[&_.border-b]:border-border [&_[data-slot=card]]:bg-card"
-                }
-              >
-                {bikes.map((bike) => (
-                  <BikePressureCard
-                    key={bike._id}
-                    bike={bike}
-                    latestCalculation={
-                      latestByBike.find((entry) => entry.bikeId === bike._id)?.latestCalculation ?? null
-                    }
-                    onRecalculate={start}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
-        </>
-      )}
+  const header = <section aria-labelledby="pressure-bikes" className="rounded-3xl border border-border bg-card p-6">
+    <div className="flex flex-wrap items-center justify-between gap-3">
+      <h2 id="pressure-bikes" className="font-display text-2xl font-bold">{bikes.length ? copy.bikes : copy.emptyTitle}</h2>
+      <Link className="inline-flex min-h-11 items-center text-sm font-semibold text-primary underline"
+        href={withLocalePrefix("/bikes", locale)}>{copy.garage}</Link>
     </div>
-  );
+    {bikes.length ? <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      {bikes.map((entry) => <OptionCard key={entry._id} label={entry.name}
+        description={[entry.brand, entry.model].filter(Boolean).join(" ") || undefined}
+        selected={bikeId === entry._id} disabled={switching} onClick={() => { void selectBike(entry._id); }} />)}
+    </div> : <>
+      <p className="mt-3 text-muted-foreground">{copy.emptyDescription}</p>
+      <Button className="mt-4" role="link" nativeButton={false}
+        render={<Link href={withLocalePrefix("/bikes/new", locale)} />}>{copy.addBike}</Button>
+    </>}
+    <Button className="mt-4" variant="ghost" aria-pressed={!bikeId} disabled={switching}
+      onClick={() => { void selectBike(); }}>{copy.withoutBike}</Button>
+    {switching && <p role="status" className="mt-2 text-sm">{accountPressureCalculatorMessages[locale].switching}</p>}
+  </section>;
+
+  return <div className={`${styles.scope} min-w-0 space-y-8
+    [&_[data-slot=configurator-sticky-result]]:bottom-[calc(68px+max(8px,env(safe-area-inset-bottom)))]
+    md:[&_[data-slot=configurator-sticky-result]]:bottom-0`}>
+    <SavedPressureForm key={selectionKey} ref={form} bikeId={bikeId} userId={user._id} header={header}
+      stale={stale?.isStale === true}
+      profilePrefilled={!saved?.inputSnapshot && profile?.weightKg !== undefined}
+      initialValues={savedValues[selectionKey] ?? buildPressurePrefill({ saved, bike, profile, tires: detail?.activeTireSetup })}
+      onSaved={(values) => setSavedValues((current) => ({ ...current, [selectionKey]: values }))} />
+    {bikes.length > 0 && <section aria-labelledby="pressure-saved" className="mx-auto max-w-[1440px] space-y-4 px-4 sm:px-8 xl:px-16">
+      <h2 id="pressure-saved" className="font-display text-3xl font-bold">{copy.saved}</h2>
+      <p className="text-sm text-muted-foreground">{copy.savedDescription}</p>
+      <div className="grid min-w-0 gap-4 xl:grid-cols-2 [&_.border]:border-border [&_.border-b]:border-border [&_[data-slot=card]]:bg-card">
+        {bikes.map((entry) => <BikePressureCard key={entry._id} bike={entry}
+          latestCalculation={latestByBike.find((calculation) => calculation.bikeId === entry._id)?.latestCalculation ?? null}
+          onRecalculate={(nextBikeId) => { void selectBike(nextBikeId); }} />)}
+      </div>
+    </section>}
+  </div>;
 }

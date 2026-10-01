@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Locale } from "@/i18n/config";
 import { getDashboardMessages } from "@/i18n/dashboardMessages";
 import { getFitStartCopy } from "@/i18n/account/fitStart";
+import { accountBikeFitCopy } from "@/i18n/account/bikeFitCalculator";
 
 const state = vi.hoisted(() => ({
   locale: "en" as Locale,
@@ -73,6 +74,44 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("fit start presentation and preserved session flow", () => {
+  it.each(["nl", "en"] as const)("carries saved calculator inputs into the new %s session only", async (locale) => {
+    state.locale = locale;
+    state.search = new URLSearchParams("calculator=bike-fit");
+    state.values["calculatorStates/queries:get"] = { _id: "calculator1", state: {
+      calculator: "bike-fit", values: { heightCm: 186, inseamCm: 88.5, source: "measured",
+        flexibility: 4, core: 5, category: "road", ambition: "performance" },
+    } };
+    render(<NewFitSessionPage />);
+    expect(screen.getByRole("heading", { name: accountBikeFitCopy[locale].sessionTitle })).toBeTruthy();
+    expect(screen.getByText("186 cm")).toBeTruthy();
+    expect(screen.getByText(locale === "nl" ? "88,5 cm" : "88.5 cm")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: roadBike.name }));
+    fireEvent.click(startButton());
+    await waitFor(() => expect(state.create).toHaveBeenCalledWith({ bikeType: "road", bikeId: "road-bike",
+      ridingStyle: "touring", primaryGoal: "performance", calculatorStateId: "calculator1" }));
+    expect(state.values["profiles/queries:getMyProfile"]).toBe(completeProfile);
+  });
+  it("does not silently start a normal profile fit when the calculator handoff is missing", () => {
+    state.search = new URLSearchParams("calculator=bike-fit");
+    state.values["calculatorStates/queries:get"] = null;
+    render(<NewFitSessionPage />);
+    fireEvent.click(screen.getByRole("button", { name: roadBike.name }));
+    expect(startButton().disabled).toBe(true);
+    expect(screen.getAllByText(accountBikeFitCopy.en.missing).length).toBeGreaterThan(0);
+    expect(state.create).not.toHaveBeenCalled();
+  });
+  it("blocks a selected bike whose category differs from the calculator", () => {
+    state.search = new URLSearchParams("calculator=bike-fit");
+    state.values["calculatorStates/queries:get"] = { _id: "calculator1", state: {
+      calculator: "bike-fit", values: { heightCm: 186, inseamCm: 88, source: "measured",
+        flexibility: 4, core: 5, category: "gravel", ambition: "performance" },
+    } };
+    render(<NewFitSessionPage />);
+    fireEvent.click(screen.getByRole("button", { name: roadBike.name }));
+    expect(startButton().disabled).toBe(true);
+    expect(screen.getAllByText(accountBikeFitCopy.en.mismatch).length).toBeGreaterThan(0);
+    expect(state.create).not.toHaveBeenCalled();
+  });
   it.each(["nl", "en"] as const)("renders the approved %s structure without review or example UI", (locale) => {
     state.locale = locale;
     render(<NewFitSessionPage />);

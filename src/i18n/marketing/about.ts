@@ -169,7 +169,7 @@ export const aboutCopy: Record<Locale, AboutCopy> = {
     metadata: {
       title: "Hoe BestBikeFit4U werkt | Bikefitting methodiek",
       description:
-        "Lees hoe BestBikeFit4U bewezen bikefitting-methodes, persoonlijke input en praktische " +
+        "Lees hoe BestBikeFit4U bewezen bikefitting-methodes, persoonlijke gegevens en praktische " +
         "afstelprioriteiten vertaalt naar duidelijkere fitbegeleiding.",
       keywords: [
         "bikefitting methodiek",
@@ -192,7 +192,7 @@ export const aboutCopy: Record<Locale, AboutCopy> = {
     saddleBody2: "Daarna corrigeren we op basis van:",
     saddleBullets: [
       "Flexibiliteit en mobiliteit",
-      "Core-stabiliteit en houdingscontrole",
+      "Rompstabiliteit en houdingscontrole",
       "Fietstype en terrein",
       "Doelstelling: comfort versus prestaties",
     ],
@@ -242,13 +242,13 @@ export const aboutCopy: Record<Locale, AboutCopy> = {
       },
     ],
     considerTitle: "Wat we meenemen",
-    considerBody: "Onze aanbevelingen combineren meerdere inputs:",
+    considerBody: "Onze aanbevelingen combineren meerdere gegevens:",
     considerBullets: [
       "Lengte en binnenbeenlengte",
       "Arm- en torso-lengte",
       "Schouderbreedte",
       "Flexibiliteitstest",
-      "Core-stabiliteit",
+      "Rompstabiliteit",
       "Fietstype",
       "Rijdoelen",
       "Wekelijkse trainingsuren",
@@ -298,7 +298,7 @@ export const aboutTrustPoints = {
     {
       "title": "Meetbaar en herhaalbaar",
       "description":
-        "De uitkomst is bedoeld om setups vergelijkbaar en opnieuw opbouwbaar te maken in " +
+        "De uitkomst maakt fietsafstellingen vergelijkbaar en opnieuw instelbaar in " +
         "millimeters en graden."
     },
     {

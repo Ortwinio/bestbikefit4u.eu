@@ -2,7 +2,8 @@
 
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import BandenspanningCalculatorPage from "./page";
+import BandenspanningCalculatorPage, { generateMetadata } from "./page";
+import TirePressureCalculatorPage from "../tire-pressure-calculator/page";
 import { PressureCalculatorPageContent } from "./PressureCalculatorPageContent";
 import { tirePressureMessages } from "@/i18n/calculators/tirePressure";
 
@@ -54,15 +55,6 @@ const { permanentRedirect } = vi.hoisted(() => ({
 
 vi.mock("next/navigation", () => ({
   permanentRedirect,
-}));
-
-vi.mock("@/i18n/metadata", () => ({
-  buildLocaleAlternates: () => ({
-    canonical:
-      locale === "nl"
-        ? "https://bestbikefit4u.eu/nl/bandenspanning-calculator"
-        : "https://bestbikefit4u.eu/en/tire-pressure-calculator",
-  }),
 }));
 
 vi.mock("@/i18n/getDictionary", () => ({
@@ -137,5 +129,19 @@ describe("bandenspanning calculator page", () => {
       "REDIRECT:/en/tire-pressure-calculator",
     );
     expect(permanentRedirect).toHaveBeenCalledWith("/en/tire-pressure-calculator");
+  });
+});
+
+
+it("redirects the Dutch tire-pressure alias and publishes canonical translated alternates", async () => {
+  locale = "nl";
+  await expect(TirePressureCalculatorPage()).rejects.toThrow("REDIRECT:/nl/bandenspanning-calculator");
+  const metadata = await generateMetadata();
+  expect(metadata.title).toBe("Bandenspanning calculator");
+  expect(metadata.openGraph?.title).toBe("Bandenspanning calculator");
+  expect(metadata.alternates?.canonical).toBe("https://bestbikefit4u.eu/nl/bandenspanning-calculator");
+  expect(metadata.alternates?.languages).toMatchObject({
+    en: "https://bestbikefit4u.eu/en/tire-pressure-calculator",
+    nl: "https://bestbikefit4u.eu/nl/bandenspanning-calculator",
   });
 });

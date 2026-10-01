@@ -1,5 +1,7 @@
 "use client";
 
+import { profileText } from "@/i18n/account/profileLanguage";
+
 import { useFormContext, Controller } from "react-hook-form";
 import { InfoBox } from "@/components/ui";
 import { ProfileChoiceQuestion as SliderQuestion } from "@/components/account/ProfileChoiceQuestion";
@@ -60,13 +62,10 @@ export function StepRidingStyle() {
         icon={<HelpCircle className="h-4 w-4 text-[color:var(--primary)]" />}
       >
         <p className="font-medium text-[color:var(--foreground)]">
-          Why your riding style shapes your fit
+          {profileText(locale, "Why your riding style shapes your fit")}
         </p>
         <p className="mt-1 text-[color:var(--muted-foreground)]">
-          Your experience, training volume, typical ride length, and position goals
-          all influence how aggressive or upright your fit should be. A casual rider
-          doing 30 km twice a week needs a fundamentally different position to a
-          trained rider logging 150 km endurance rides.
+          {profileText(locale, "Your experience, training volume, typical ride length, and position goals all influence how aggressive or upright your fit should be. A casual rider doing 30 km twice a week needs a fundamentally different position to a trained rider logging 150 km endurance rides.")}
         </p>
       </InfoBox>
 
@@ -132,21 +131,19 @@ export function StepRidingStyle() {
         icon={<Bike className="h-4 w-4 text-[color:var(--primary)]" />}
       >
         <p className="font-medium text-[color:var(--foreground)]">
-          How riding style shapes your fit
+          {profileText(locale, "How riding style shapes your fit")}
         </p>
         <div className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
           <div>
-            <p className="font-medium text-[color:var(--foreground)]">Beginner / low volume</p>
+            <p className="font-medium text-[color:var(--foreground)]">{profileText(locale, "Beginner / low volume")}</p>
             <p className="text-[color:var(--muted-foreground)]">
-              More upright position, higher bars, shorter reach. Prioritises
-              comfort and ease of use over aerodynamics.
+              {profileText(locale, "More upright position, higher bars, shorter reach. Prioritises comfort and ease of use over aerodynamics.")}
             </p>
           </div>
           <div>
-            <p className="font-medium text-[color:var(--foreground)]">Advanced / high volume</p>
+            <p className="font-medium text-[color:var(--foreground)]">{profileText(locale, "Advanced / high volume")}</p>
             <p className="text-[color:var(--muted-foreground)]">
-              Lower, more aerodynamic position with greater reach. Your body is
-              conditioned to sustain the load over long distances.
+              {profileText(locale, "Lower, more aerodynamic position with greater reach. Your body is conditioned to sustain the load over long distances.")}
             </p>
           </div>
         </div>

@@ -1,6 +1,9 @@
 "use client";
 
+import type { CalculatorValues } from "../../../../../convex/calculatorStates/validators";
+
 import Link from "next/link";
+import { useCalculatorValuesChange } from "@/components/calculators/useCalculatorValuesChange";
 import { useMemo, useState } from "react";
 import {
   AdjustOrder,
@@ -103,22 +106,29 @@ function PedalIllustration({ height, copy }: { height: number; copy: SaddleHeigh
 
 export function SaddleHeightCalculatorForm({
   isNl = false,
+  initialValues,
+  onValuesChange,
   copy = saddleHeightMessages[isNl ? "nl" : "en"],
 }: {
   isNl?: boolean;
+  initialValues?: CalculatorValues<"saddle-height">;
+  onValuesChange?: (values: CalculatorValues<"saddle-height">) => void;
   copy?: SaddleHeightMessages;
 }) {
   const locale = isNl ? "nl" : "en";
   const number = new Intl.NumberFormat(isNl ? "nl-NL" : "en-GB", { maximumFractionDigits: 1 });
-  const [inseamCm, setInseamCm] = useState(84);
-  const [source, setSource] = useState<"missing" | "measured" | "estimated">("missing");
-  const [category, setCategory] = useState<BikeCategory>("road");
-  const [ambition, setAmbition] = useState<Ambition>("balanced");
-  const [flexibility, setFlexibility] = useState<PublicFitScore>(3);
-  const [core, setCore] = useState<PublicFitScore>(3);
-  const [compare, setCompare] = useState(false);
-  const [current, setCurrent] = useState(750);
-  const [currentConfirmed, setCurrentConfirmed] = useState(false);
+  const [inseamCm, setInseamCm] = useState(initialValues?.inseamCm ?? 84);
+  const [source, setSource] = useState<"missing" | "measured" | "estimated">(initialValues?.source ?? "missing");
+  const [category, setCategory] = useState<BikeCategory>(initialValues?.category ?? "road");
+  const [ambition, setAmbition] = useState<Ambition>(initialValues?.ambition ?? "balanced");
+  const [flexibility, setFlexibility] = useState<PublicFitScore>((initialValues?.flexibility ?? 3) as PublicFitScore);
+  const [core, setCore] = useState<PublicFitScore>((initialValues?.core ?? 3) as PublicFitScore);
+  const [compare, setCompare] = useState(initialValues?.compare ?? false);
+  const [current, setCurrent] = useState(initialValues?.current ?? 750);
+  const [currentConfirmed, setCurrentConfirmed] = useState(initialValues?.currentConfirmed ?? false);
+  useCalculatorValuesChange({
+    inseamCm, source, category, ambition, flexibility, core, compare, current, currentConfirmed,
+  }, onValuesChange);
   const example = source === "missing";
   const baseline = useMemo(
     () =>

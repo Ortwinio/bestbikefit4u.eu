@@ -3,6 +3,19 @@ import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
 import { isPressureStale } from "../lib/pressureStaleness";
 
+export const getLatestWithoutBikeForUser = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await requireUserId(ctx);
+    return await ctx.db
+      .query("pressureCalculations")
+      .withIndex("by_user_created", (query) => query.eq("userId", userId))
+      .filter((query) => query.eq(query.field("bikeId"), undefined))
+      .order("desc")
+      .first();
+  },
+});
+
 export const listForBike = query({
   args: {
     bikeId: v.id("bikes"),

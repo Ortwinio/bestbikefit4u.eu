@@ -2,7 +2,7 @@ import type { Id } from "../_generated/dataModel";
 import { mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import { requireUserId } from "../lib/authz";
-import { validateShortString } from "../lib/validation";
+import { validateNumberRange, validateShortString } from "../lib/validation";
 
 async function requireOwnedWheelset(
   ctx: MutationCtx,
@@ -104,12 +104,16 @@ export const update = mutation({
     widthFrontMm: v.optional(v.number()),
     widthRearMm: v.optional(v.number()),
     tubeType: v.optional(tubeTypeValidator),
-    casingType: casingTypeValidator,
-    maxPressureBar: v.optional(v.number()),
+    casingType: v.optional(v.union(v.literal("race_light"), v.literal("allround"),
+      v.literal("reinforced"), v.null())),
+    maxPressureBar: v.optional(v.union(v.number(), v.null())),
     isActive: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    if (args.name !== undefined) validateShortString(args.name, "name");
+    if (args.name !== undefined) {
+      validateShortString(args.name, "name");
+      if (!args.name.trim()) throw new Error("Name is required");
+    }
     if (args.brand !== undefined) validateShortString(args.brand, "brand");
     if (args.model !== undefined) validateShortString(args.model, "model");
     const userId = await requireUserId(ctx);
@@ -120,6 +124,13 @@ export const update = mutation({
 
     await requireOwnedWheelset(ctx, tireSetup.wheelsetId, userId);
 
+    for (const field of ["widthFrontMm", "widthRearMm"] as const) {
+      const value = args[field];
+      if (value !== undefined && value !== tireSetup[field]) validateNumberRange(value, field, 18, 80);
+    }
+    if (args.maxPressureBar != null && args.maxPressureBar !== tireSetup.maxPressureBar) {
+      validateNumberRange(args.maxPressureBar, "maxPressureBar", 3.5, 10);
+    }
     if (args.isActive) {
       await deactivateSiblingTireSetups(ctx, tireSetup.wheelsetId);
     }
@@ -131,8 +142,8 @@ export const update = mutation({
     if (args.widthFrontMm !== undefined) updates.widthFrontMm = args.widthFrontMm;
     if (args.widthRearMm !== undefined) updates.widthRearMm = args.widthRearMm;
     if (args.tubeType !== undefined) updates.tubeType = args.tubeType;
-    if (args.casingType !== undefined) updates.casingType = args.casingType;
-    if (args.maxPressureBar !== undefined) updates.maxPressureBar = args.maxPressureBar;
+    if (args.casingType !== undefined) updates.casingType = args.casingType ?? undefined;
+    if (args.maxPressureBar !== undefined) updates.maxPressureBar = args.maxPressureBar ?? undefined;
     if (args.isActive !== undefined) updates.isActive = args.isActive;
 
     await ctx.db.patch(args.tireSetupId, updates);

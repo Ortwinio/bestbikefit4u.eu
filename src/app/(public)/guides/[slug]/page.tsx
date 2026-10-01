@@ -1,3 +1,4 @@
+import { socialImage } from "@/lib/seo/social-image";
 import { isAuthenticatedNextjs } from "@convex-dev/auth/nextjs/server";
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
@@ -56,6 +57,9 @@ import {
   buildBreadcrumbListSchema,
   buildFaqPageSchema,
 } from "@/lib/seo/jsonLd";
+
+import { resolveGuideRewrite } from "@/lib/guides/rewrites";
+import { RewrittenGuide } from "@/components/guides/RewrittenGuide";
 
 interface GuidePageProps {
   params: Promise<{ slug: string }>;
@@ -184,6 +188,29 @@ export async function generateMetadata({
     locale,
     isEnabled ? draftGuideId : undefined
   );
+  const rewritten = !(isEnabled && draftGuideId) ? resolveGuideRewrite(slug, guide?.dbGuide) : undefined;
+  if (rewritten) {
+    const article = rewritten[locale];
+    const alternates = buildLocaleAlternates(`/guides/${slug}`, locale);
+    return {
+      title: { absolute: article.metaTitle },
+      description: article.metaDescription,
+      keywords: [article.keyword, ...article.relatedKeywords],
+      twitter: {
+        card: "summary_large_image", title: article.metaTitle, description: article.metaDescription,
+        images: [socialImage(`/illustrations/guides/${rewritten.illustration}.webp`, article.alt)],
+      },
+      alternates,
+      openGraph: {
+        title: article.metaTitle,
+        description: article.metaDescription,
+        type: "article",
+        url: alternates.canonical,
+        modifiedTime: rewritten.updatedAt,
+        images: [socialImage(`/illustrations/guides/${rewritten.illustration}.webp`, article.alt)],
+      },
+    };
+  }
 
   if (!guide) {
     return {
@@ -207,6 +234,11 @@ export async function generateMetadata({
 
   return {
     title: entry.metaTitle,
+    twitter: {
+      card: "summary_large_image", title: entry.metaTitle, description,
+      images: openGraphImage ? [socialImage(openGraphImage,
+        dbGuide?.ogImageAlt?.[locale] ?? dbGuide?.featuredImageAlt?.[locale] ?? entry.h1)] : undefined,
+    },
     description,
     keywords,
     openGraph: {
@@ -216,13 +248,8 @@ export async function generateMetadata({
       url: canonical,
       images: openGraphImage
         ? [
-            {
-              url: openGraphImage,
-              alt:
-                dbGuide?.ogImageAlt?.[locale] ??
-                dbGuide?.featuredImageAlt?.[locale] ??
-                entry.h1,
-            },
+            socialImage(openGraphImage,
+              dbGuide?.ogImageAlt?.[locale] ?? dbGuide?.featuredImageAlt?.[locale] ?? entry.h1),
           ]
         : undefined,
     },
@@ -250,6 +277,8 @@ export default async function GuidePage({
     locale,
     isEnabled ? draftGuideId : undefined
   );
+  const rewritten = !(isEnabled && draftGuideId) ? resolveGuideRewrite(slug, guide?.dbGuide) : undefined;
+  if (rewritten) return <RewrittenGuide guide={rewritten} locale={locale} />;
 
   if (!guide) {
     notFound();
@@ -328,15 +357,13 @@ export default async function GuidePage({
         <div className="mx-auto mt-6 max-w-5xl rounded-[var(--radius-xl)] border border-amber-500/40 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-400/30 dark:bg-amber-500/10 dark:text-amber-100">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <span>
-              {isNl
-                ? "Previewmodus: dit is een conceptversie."
-                : "Preview mode: this is a draft version."}
+              {copy.preview}
             </span>
             <Link
               href={`/api/preview-exit?slug=${encodeURIComponent(slug)}&locale=${locale}`}
               className="font-semibold underline underline-offset-4"
             >
-              {isNl ? "Preview verlaten" : "Exit preview"}
+              {copy.exitPreview}
             </Link>
           </div>
         </div>
@@ -408,13 +435,13 @@ export default async function GuidePage({
 
             {cleanedMarkdown ? (
               <PublicSection className="mt-10">
-                <GuideBodyMarkdown content={cleanedMarkdown} />
+                <GuideBodyMarkdown content={cleanedMarkdown} locale={locale} />
               </PublicSection>
             ) : null}
 
             {faqs.length > 0 ? (
               <PublicSection id="guide-faq" className="mt-10" header={{ title: copy.faq }}>
-                <GuideFaqAccordion faqs={faqs} />
+                <GuideFaqAccordion faqs={faqs} locale={locale} />
               </PublicSection>
             ) : null}
 
@@ -459,7 +486,7 @@ export default async function GuidePage({
 
             {cleanedMarkdown ? (
               <PublicSection className="mt-10">
-                <GuideBodyMarkdown content={cleanedMarkdown} />
+                <GuideBodyMarkdown content={cleanedMarkdown} locale={locale} />
               </PublicSection>
             ) : (
               <LegacyGuideSections sections={leafSections} />
@@ -480,11 +507,11 @@ export default async function GuidePage({
                 id="guide-faq"
                 className="mt-10"
                 header={{
-                  title: "FAQ",
+                  title: isNl ? copy.faq : "FAQ",
                   icon: <HelpCircle className="h-5 w-5" />,
                 }}
               >
-                <GuideFaqAccordion faqs={faqs} />
+                <GuideFaqAccordion faqs={faqs} locale={locale} />
               </PublicSection>
             ) : null}
 

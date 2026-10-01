@@ -50,3 +50,21 @@ describe.each(["nl", "en"] as const)("%s performance pages preserve SEO", (langu
     },
   );
 });
+
+
+describe("Dutch calculator prose", () => {
+  it.each(pages)("%s translates prose, FAQs and metadata", async (_route, Page, metadata) => {
+    locale = "nl";
+    const { container } = render(await Page());
+    expect(screen.getByRole("heading", { name: "Veelgestelde vragen" })).toBeTruthy();
+    const content = `${container.textContent} ${JSON.stringify(await metadata())}`;
+    expect(content).not.toMatch(/gut tolerance|sports nutrition review|steady efforts|target power|power-input|shortcuts/i);
+  });
+  it("uses Dutch power metadata and nutrition advice", async () => {
+    locale = "nl";
+    expect((await powerMetadata()).title).toBe("Vermogen- / snelheidsschatting | BestBikeFit4U");
+    render(await FuelPage());
+    expect(screen.getByText(/Wat je maag en darmen verdragen, het klimaat/)).toBeTruthy();
+    expect(screen.getByText(/Vraag bij een ingewikkelde situatie advies aan een coach of sportdiëtist/)).toBeTruthy();
+  });
+});

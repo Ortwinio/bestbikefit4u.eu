@@ -1,0 +1,121 @@
+{
+  "sourceHash": "d7fafda22beebcc469a25ef28b3994fb8096761aa3a72c6843c4757e23d9ac5b",
+  "buildId": "KOVrdEMEmJFjjSNTOXxh1",
+  "comparisons": 13,
+  "cases": [
+    {
+      "route": "/nl",
+      "status": 200,
+      "og": "https://bestbikefit4u.eu/og/brand/social/og-image-1200x630.jpg",
+      "width": "1200",
+      "height": "630",
+      "alt": "BestBikeFit4U",
+      "twitter": "https://bestbikefit4u.eu/og/brand/social/og-image-1200x630.jpg",
+      "imagePreloads": [
+        {
+          "href": "/brand/logo/logo-horizontaal.svg",
+          "sizes": null
+        },
+        {
+          "href": "/brand/logo/logo-horizontaal-negatief.svg",
+          "sizes": null
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/logo/logo-horizontaal.svg",
+          "currentSrc": "https://127.0.0.1:4374/brand/logo/logo-horizontaal.svg",
+          "sizes": "",
+          "priority": "auto",
+          "loading": "auto",
+          "width": 200
+        },
+        {
+          "src": "/brand/logo/logo-horizontaal-negatief.svg",
+          "currentSrc": "https://127.0.0.1:4374/brand/logo/logo-horizontaal-negatief.svg",
+          "sizes": "",
+          "priority": "auto",
+          "loading": "auto",
+          "width": 0
+        }
+      ],
+      "imageBytes": 31744
+    },
+    {
+      "route": "/nl/guides/crank-length-guide",
+      "status": 200,
+      "og": "https://bestbikefit4u.eu/og/illustrations/guides/36-cranklengte.jpg",
+      "width": "1200",
+      "height": "630",
+      "alt": "Twee crankarmen met verschillende lengtes, maatpijlen en de bijbehorende pedaalcirkels rond de trapas.",
+      "twitter": "https://bestbikefit4u.eu/og/illustrations/guides/36-cranklengte.jpg",
+      "imagePreloads": [
+        {
+          "href": null,
+          "sizes": "(max-width: 700px) calc(100vw - 40px), 500px"
+        },
+        {
+          "href": "/brand/logo/logo-horizontaal.svg",
+          "sizes": null
+        },
+        {
+          "href": "/brand/logo/logo-horizontaal-negatief.svg",
+          "sizes": null
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/logo/logo-horizontaal.svg",
+          "currentSrc": "https://127.0.0.1:4374/brand/logo/logo-horizontaal.svg",
+          "sizes": "",
+          "priority": "auto",
+          "loading": "auto",
+          "width": 200
+        },
+        {
+          "src": "/brand/logo/logo-horizontaal-negatief.svg",
+          "currentSrc": "https://127.0.0.1:4374/brand/logo/logo-horizontaal-negatief.svg",
+          "sizes": "",
+          "priority": "auto",
+          "loading": "auto",
+          "width": 0
+        },
+        {
+          "src": "/_next/image?url=%2Fillustrations%2Fguides%2F36-cranklengte.webp&w=3840&q=75",
+          "currentSrc": "https://127.0.0.1:4374/_next/image?url=%2Fillustrations%2Fguides%2F36-cranklengte.webp&w=640&q=75",
+          "sizes": "(max-width: 700px) calc(100vw - 40px), 500px",
+          "priority": "auto",
+          "loading": "auto",
+          "width": 500.875
+        }
+      ],
+      "imageBytes": 19515
+    },
+    {
+      "route": "/nl/calculators/saddle-height",
+      "status": 200,
+      "og": "https://bestbikefit4u.eu/og/brand/social/og-image-1200x630.jpg",
+      "width": "1200",
+      "height": "630",
+      "alt": "BestBikeFit4U",
+      "twitter": "https://bestbikefit4u.eu/og/brand/social/og-image-1200x630.jpg",
+      "imagePreloads": [
+        {
+          "href": "/brand/logo/logo-horizontaal.svg",
+          "sizes": null
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/logo/logo-horizontaal.svg",
+          "currentSrc": "https://127.0.0.1:4374/brand/logo/logo-horizontaal.svg",
+          "sizes": "",
+          "priority": "auto",
+          "loading": "auto",
+          "width": 184
+        }
+      ],
+      "imageBytes": 31744
+    }
+  ]
+}

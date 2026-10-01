@@ -1,6 +1,7 @@
 /* @vitest-environment jsdom */
 
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
+import { accountCalculatorNavigation } from "@/components/account/account-navigation";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DashboardSidebar } from "./DashboardSidebar";
 
@@ -58,7 +59,7 @@ vi.mock("@/components/layout/LanguageSwitch", () => ({
 
 vi.mock("@/i18n/useDashboardMessages", () => ({
   useDashboardMessages: () => ({
-    locale: "nl",
+    locale: usePathnameMock().startsWith("/en/") ? "en" : "nl",
     messages: {
       nav: {
         dashboard: "Dashboard",
@@ -99,6 +100,10 @@ vi.mock("@/components/profile/ProfilePhotoUpload", () => ({
   ProfilePhotoUpload: () => <div data-testid="profile-photo" />,
 }));
 
+vi.mock("@/components/account/AccountPlan", () => ({
+  AccountPlan: () => <div>Account plan</div>,
+}));
+
 vi.mock("@/lib/userIdentity", () => ({
   getEffectiveDisplayName: () => "Test Rider",
   getEffectiveProfileImageSource: () => null,
@@ -130,7 +135,20 @@ describe("DashboardSidebar", () => {
     render(<DashboardSidebar />);
 
     expect(
-      screen.getByRole("link", { name: "Saddle Selector" }).getAttribute("href")
+      screen.getByRole("link", { name: "Zadelbreedte" }).getAttribute("href")
     ).toBe("/nl/saddle-selector");
+  });
+
+  it.each(["nl", "en"] as const)("renders the shared calculator group with localized %s paths", (locale) => {
+    usePathnameMock.mockReturnValue(`/${locale}/tools/saddle-height/details`);
+    render(<DashboardSidebar />);
+    const group = screen.getByRole("navigation", { name: "Calculators" });
+    const tools = accountCalculatorNavigation(locale);
+    expect(within(group).getAllByRole("link").map((link) => link.getAttribute("href")))
+      .toEqual(tools.map(({ href }) => `/${locale}${href}`));
+    for (const tool of tools) expect(within(group).getByRole("link", { name: tool.label })).toBeTruthy();
+    expect(group.querySelectorAll('[aria-current="page"]')).toHaveLength(1);
+    expect(group.querySelector('[aria-current="page"]')?.getAttribute("href"))
+      .toBe(`/${locale}/tools/saddle-height`);
   });
 });

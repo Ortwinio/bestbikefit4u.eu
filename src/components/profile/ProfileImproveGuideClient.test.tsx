@@ -40,6 +40,9 @@ describe.each(["nl", "en"] as const)("ProfileImprove in %s", (locale) => {
     const { container } = render(page);
     const copy = getDashboardMessages(locale).profile.improve[guide.key];
     expect(screen.getByRole("heading", { level: 1, name: copy.title })).toBeTruthy();
+    if (locale === "nl") {
+      expect(container.textContent).not.toMatch(/Front plank|Dead bug|Bird dog|Side plank|Glute bridge|Pigeon pose|Hip hinge drill|Core Stability|power-to-weight|tweaks/);
+    }
     expect(screen.getByRole("link", { name: copy.backLink }).getAttribute("href")).toBe(`/${locale}/profile`);
     expect(screen.getByRole("link", { name: copy.updateScoreCta }).getAttribute("href")).toBe(`/${locale}/profile?edit=${guide.edit}`);
     const buttons = screen.getAllByRole("button");

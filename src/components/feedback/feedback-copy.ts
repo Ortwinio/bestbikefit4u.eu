@@ -1,3 +1,5 @@
+import { feedbackDutch } from "@/i18n/account/feedbackLanguage";
+
 export type FeedbackLocale = "en" | "nl";
 
 type FeedbackCopy = {
@@ -34,6 +36,7 @@ type FeedbackCopy = {
     back: string;
     changeType: string;
     errorGeneric: string;
+    requiredField: string;
     typePrompt: string;
     typeDescription: string;
     pagePathLabel: string;
@@ -147,6 +150,7 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       back: "Back",
       changeType: "Change type",
       errorGeneric: "Please fix the highlighted fields before sending.",
+      requiredField: "{field} is required.",
       typePrompt: "Select one",
       typeDescription: "You can switch later before you send it.",
       pagePathLabel: "Page path",
@@ -277,11 +281,7 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       successTitle: "Dank je wel voor je feedback.",
       successSubtitle: "We bekijken ieder bericht zorgvuldig en delen relevante updates terug in je dashboard.",
       nextStepsTitle: "Wat gebeurt er nu",
-      nextSteps: [
-        "We beoordelen je feedback en plaatsen die in de juiste workflow.",
-        "Als het team reageert, zie je dat terug in je dashboard.",
-        "Wanneer een fix of verbetering live gaat, kunnen we die aan je melding koppelen.",
-      ],
+      nextSteps: feedbackDutch.nextSteps,
       guidedPromptsTitle: "Handige denkvragen",
       submit: "Verstuur feedback",
       submitting: "Versturen...",
@@ -290,14 +290,15 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       back: "Terug",
       changeType: "Type wijzigen",
       errorGeneric: "Los de gemarkeerde velden op voordat je verstuurt.",
+      requiredField: feedbackDutch.requiredField,
       typePrompt: "Selecteer één",
       typeDescription: "Je kunt dit later nog wijzigen vóór je verstuurt.",
       pagePathLabel: "Paginapad",
       browserInfoLabel: "Browsermetadata",
-      browserInfoHelper: "Wordt automatisch vastgelegd voor bugmeldingen en supportdiagnose.",
+      browserInfoHelper: feedbackDutch.browserInfoHelper,
       technicalDetailsLabel: "Technische details",
       technicalDetailsHint:
-        "Wordt automatisch vastgelegd voor debugging en support. Je hoeft dit niet te bewerken.",
+        feedbackDutch.technicalDetailsHint,
       contactEmailLabel: "E-mailadres",
       contactNameLabel: "Naam",
       categoryHelper: "Optioneel, maar handig wanneer het probleem bij een specifiek onderdeel hoort.",
@@ -307,11 +308,11 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
         supportCaseTitle: "Hulp nodig bij Strava-koppeling",
         reviewTitle: "Dit hielp mijn fietspositie echt vooruit",
         description: "Vertel wat je probeerde te doen, wat er gebeurde en wat dit beter had gemaakt.",
-        category: "Dashboard, fit engine, data, setup...",
+        category: feedbackDutch.categoryPlaceholder,
         expectedResult: "Wat had er moeten gebeuren?",
         actualResult: "Wat gebeurde er daadwerkelijk?",
         pagePath: "Overgenomen van de huidige dashboardroute.",
-        browserInfo: "Automatisch verzameld voor bugmeldingen en supportvragen.",
+        browserInfo: feedbackDutch.browserInfoPlaceholder,
         contactEmail: "naam@voorbeeld.nl",
         contactName: "Je naam",
       },
@@ -326,7 +327,7 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
     },
     types: {
       bug: {
-        label: "Bug",
+        label: feedbackDutch.bug,
         description: "Iets werkt niet of gedraagt zich anders dan verwacht.",
       },
       feature_request: {
@@ -334,11 +335,11 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
         description: "Een nieuwe mogelijkheid of verbetering van het product.",
       },
       support_case: {
-        label: "Supportcase",
+        label: feedbackDutch.support,
         description: "Een vraag of installatieprobleem waarbij je hulp wilt.",
       },
       review: {
-        label: "Review",
+        label: feedbackDutch.review,
         description: "Deel wat goed voelde of wat jouw rijervaring beter maakte.",
       },
     },
@@ -355,13 +356,13 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
     },
     releaseStatuses: {
       rolling_out: "Uitrol bezig",
-      live: "Live",
+      live: feedbackDutch.live,
     },
     releaseTypes: {
       app: "App",
-      fit_engine: "Fit-engine",
+      fit_engine: feedbackDutch.fitEngine,
       geometry_data: "Geometriedata",
-      content: "Content",
+      content: feedbackDutch.content,
       integration: "Integratie",
       internal: "Intern",
     },
@@ -377,16 +378,16 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
     states: {
       loading: "Feedback laden...",
       emptyMineTitle: "Nog geen inzendingen",
-      emptyMineDescription: "Stuur de eerste bug, aanvraag of supportcase vanuit dit portaal.",
-      emptyBoardTitle: "Geen open feature requests",
-      emptyBoardDescription: "Er zijn op dit moment geen actieve feature requests om op te stemmen.",
-      emptyChangelogTitle: "Geen publieke releases",
-      emptyChangelogDescription: "Uitgebrachte releases verschijnen hier zodra ze live staan.",
+      emptyMineDescription: feedbackDutch.emptyMine,
+      emptyBoardTitle: feedbackDutch.emptyBoardTitle,
+      emptyBoardDescription: feedbackDutch.emptyBoardDescription,
+      emptyChangelogTitle: feedbackDutch.emptyChangelogTitle,
+      emptyChangelogDescription: feedbackDutch.emptyChangelogDescription,
       detailLoading: "Feedbackdetails laden...",
       comments: "Reacties",
       noComments: "Nog geen publieke reacties.",
-      releaseNotes: "Releasenotes",
-      linkedRelease: "Gekoppelde release",
+      releaseNotes: feedbackDutch.releaseNotes,
+      linkedRelease: feedbackDutch.linkedRelease,
       shippedItems: "Uitgebrachte items",
       detailNotFound: "Feedback niet gevonden",
       voteError: "Je stem kan nu niet worden bijgewerkt.",

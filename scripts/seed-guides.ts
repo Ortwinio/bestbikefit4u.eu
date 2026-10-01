@@ -1,3 +1,4 @@
+import { escapeMarkdownCell } from "./lib/markdown.mjs";
 import { getGuideBacklog, getGuideChildren, type GuideBacklogEntry } from "../src/lib/guides/backlog";
 import {
   buildFaqs,
@@ -50,18 +51,14 @@ function parseArgs(argv: string[]) {
   };
 }
 
-function markdownEscapeCell(value: string) {
-  return value.replace(/\|/g, "\\|");
-}
-
 function renderSectionMarkdown(section: ReturnType<typeof buildLeafSections>[number]) {
   const lines = [`## ${section.title}`];
 
   if (section.type === "table" && section.tableHeaders && section.tableRows) {
     lines.push(
-      `| ${section.tableHeaders.map(markdownEscapeCell).join(" | ")} |`,
+      `| ${section.tableHeaders.map(escapeMarkdownCell).join(" | ")} |`,
       `| ${section.tableHeaders.map(() => "---").join(" | ")} |`,
-      ...section.tableRows.map((row) => `| ${row.map(markdownEscapeCell).join(" | ")} |`)
+      ...section.tableRows.map((row) => `| ${row.map(escapeMarkdownCell).join(" | ")} |`)
     );
     return lines.join("\n");
   }

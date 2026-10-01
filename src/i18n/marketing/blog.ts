@@ -1,5 +1,11 @@
 export const blogMessages = {
   nl: {
+    categories: {
+      "bike fit": "Bikefitting", comfort: "Comfort", "saddle height": "Zadelhoogte",
+      "frame size": "Framemaat", "tire pressure": "Bandenspanning", science: "Wetenschap",
+      guides: "Gidsen", training: "Training", nutrition: "Voeding", equipment: "Materiaal",
+    },
+    metadataDescription: "Lees praktische artikelen over bikefitting, fietspositie, comfort en afstelkeuzes.",
     eyebrow: "Kennisbank", title: "Blog",
     intro: "Praktische artikelen over bikefitting, fietspositie en comfort. Van een vraag over je afstelling naar een duidelijke volgende stap.",
     imageAlt: "Meetgereedschap voor het opmeten van je fietspositie",
@@ -16,6 +22,12 @@ export const blogMessages = {
     calculator: "Open bike fit calculator", detailCalculator: "Open calculator", back: "Bekijk alle artikelen",
   },
   en: {
+    categories: {
+      "bike fit": "Bike Fit", comfort: "Comfort", "saddle height": "Saddle Height",
+      "frame size": "Frame Size", "tire pressure": "Tire Pressure", science: "Science",
+      guides: "Guides", training: "Training", nutrition: "Nutrition", equipment: "Equipment",
+    },
+    metadataDescription: "Read practical articles about bike fitting, riding position, comfort, and setup decisions.",
     eyebrow: "Knowledge base", title: "Blog",
     intro: "Practical articles about bike fitting, riding position and comfort. Turn a setup question into a clear next step.",
     imageAlt: "Measuring tools for checking your riding position",

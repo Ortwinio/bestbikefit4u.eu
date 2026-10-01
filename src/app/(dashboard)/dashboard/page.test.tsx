@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/config";
 import { fitResultsSource } from "../fit/[sessionId]/results/fixture.test-support";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
 import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
+import { accountCalculatorNavigation } from "@/components/account/account-navigation";
 
 const state = vi.hoisted(() => ({
   locale: "nl" as Locale,
@@ -80,6 +81,26 @@ function setup(overrides: Record<string, unknown> = {}) {
 beforeEach(() => { state.locale = "nl"; state.query.mockReset(); });
 
 describe("dashboard home presentation", () => {
+  it.each(["nl", "en"] as const)("includes all localized calculator quick links in %s", (locale) => {
+    state.locale = locale;
+    const html = setup();
+    expect(html).toContain('id="dashboard-calculators-title"');
+    for (const tool of accountCalculatorNavigation(locale)) {
+      expect(html).toContain(`href="/${locale}${tool.href}"`);
+      expect(html).toContain(tool.label);
+    }
+  });
+  it("translates casual riding on the Dutch dashboard", () => {
+    const html = setup({
+      "bikes/queries:listSummariesByUser": [bike],
+      "sessions/queries:getAllSessionsWithBikes": [{
+        bike, session: { _id: "fit" }, recommendation: { calculatedFit: { saddleHeightMm: 750 } },
+        responses: { road_riding_type: "casual" },
+      }],
+    });
+    expect(html).toContain("Ontspannen / conditie");
+    expect(html).not.toContain("Casual / fitness");
+  });
   it.each(["nl", "en"] as const)("localizes questionnaire values in the %s garage without changing saved enums", (locale) => {
     state.locale = locale;
     const responses = { experience_level: "intermediate", weekly_hours: "3-6", typical_ride_length: "medium", position_priority: "balanced", road_riding_type: "group", has_pain: "yes", pain_areas: ["lower_back"] };

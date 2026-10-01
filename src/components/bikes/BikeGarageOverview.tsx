@@ -12,6 +12,7 @@ import { getDashboardPressureCalculatorPath } from "@/lib/pressureRoutes";
 import { Mountain, Gauge, Bike, Activity, Ruler, AlertCircle, ArrowRight } from "lucide-react";
 import { FitReportActionGroup } from "@/components/reports";
 import { getBikeUsageCopy } from "@/i18n/account/bikeUsage";
+import { DeleteBikeAction } from "./DeleteBikeAction";
 
 type DashboardMessages = ReturnType<typeof useDashboardMessages>["messages"];
 
@@ -173,6 +174,7 @@ export function BikeGarageRow({
             >
               {messages.bikeForm.actions.startFitForBike}
             </Button>
+            <DeleteBikeAction bikeId={bike._id} bikeName={bike.name} />
           </div>
         </CardContent>
       </Card>

@@ -1,6 +1,7 @@
 "use client";
 
 export type DashboardMessageLocale = "en" | "nl";
+import { dashboardMessageTypesNl } from "@/i18n/account/dashboardMessages";
 
 const dashboardMessageCopy = {
   en: {
@@ -33,17 +34,7 @@ const dashboardMessageCopy = {
       acknowledge: "Bevestigen",
       gotIt: "Begrepen",
     },
-    types: {
-      banner: "Banner",
-      inbox_card: "Inboxkaart",
-      modal: "Modal",
-      sticky_warning: "Vaste waarschuwing",
-      release_announcement: "Release-aankondiging",
-      upgrade_prompt: "Upgradeprompt",
-      safety_alert: "Veiligheidsmelding",
-      re_fit_reminder: "Herfit-herinnering",
-      support_reply: "Supportreactie",
-    },
+    types: dashboardMessageTypesNl,
     priorities: {
       low: "Laag",
       normal: "Normaal",

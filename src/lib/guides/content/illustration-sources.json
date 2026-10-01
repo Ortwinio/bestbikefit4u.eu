@@ -1,0 +1,290 @@
+{
+  "09-beginners-fietsafstelling": {
+    "embeddedImages": 0,
+    "sourceSha256": "ec519ac26b3cf1ff471f7321ad2883bf7559769fb79c3da233d273ffa193a5cd",
+    "textElements": 0,
+    "webpSha256": "c34a47006cc118058fab0db9ea700f27560a4a0ab89ff8a651967881510e9c0e"
+  },
+  "10-korte-romp-stuurafstand": {
+    "embeddedImages": 0,
+    "sourceSha256": "a28998810a2a62ff603bee107723c5c9e6de30e5322cbe976a5dc7e3b1483f75",
+    "textElements": 0,
+    "webpSha256": "78460971d4bbddfe41c9227d83a3cdcce5897e228509ed4946f9d15648b7b949"
+  },
+  "11-knie-pedaalbeweging": {
+    "embeddedImages": 0,
+    "sourceSha256": "00270a7035f84614ffa2699daeeb0d2ef4882bc835d682215701cab50951f620",
+    "textElements": 0,
+    "webpSha256": "a31e6fa4c81c3b605cc2d6ccd0893b1c18090aa99f181557302550fcaa118c33"
+  },
+  "12-schoenplaatjes-positie": {
+    "embeddedImages": 0,
+    "sourceSha256": "e643020646c75d4a20bf11363459b05c30e55522e28ce5e99b818145feb9aa92",
+    "textElements": 0,
+    "webpSha256": "d0a0e59acfedfcfc3786ac9520c30657c3394a379bfb41b8080213188e594df4"
+  },
+  "13-fietsschoen-leestbreedte": {
+    "embeddedImages": 0,
+    "sourceSha256": "1633da61f865a0b9beb65c542d9c46ba0fe1902dff22381dc218a99e6bda4b49",
+    "textElements": 0,
+    "webpSha256": "c00075c068e058f60dfe998f5c7a6cbe7876fdfe6ec3437990d10dd11ac956e9"
+  },
+  "14-framemaat-meetpunten": {
+    "embeddedImages": 0,
+    "sourceSha256": "8ffe70ea17bcde80913d425bf046bbe4a3fe330ed038f5437ea88196a41173fc",
+    "textElements": 0,
+    "webpSha256": "c0d895a8b4d8fb5213c303c0224b335bf520b3b920edf3690b0b0f8b8df7d453"
+  },
+  "15-stuurbreedte-remgrepen": {
+    "embeddedImages": 0,
+    "sourceSha256": "e874491430527ea1ac58996777e0c61f94723052e1c176ce3203d9f903fcd7a9",
+    "textElements": 0,
+    "webpSha256": "e0bf1dc2dc71e43b4a82592e0adf7cf427f12c3ee90afb9968a94701f8933062"
+  },
+  "16-inlegzool-voetboog": {
+    "embeddedImages": 0,
+    "sourceSha256": "a074748b1275faf9090d9584252078c0afc1c34f75796415ec1ce5b55886a216",
+    "textElements": 0,
+    "webpSha256": "3789913eccb590e41c521664bddcb9335adb3efefd47f09217bacf7f24f35a0d"
+  },
+  "17-vermogen-gelijkmatig-tempo": {
+    "embeddedImages": 0,
+    "sourceSha256": "ba90e229a882133f899ada75c913118d233f667d29992732c5f07494efaaab05",
+    "textElements": 0,
+    "webpSha256": "d7c75e18db254b4e6a932bcd34e0edc27e24a583efac9da3b8ea1fb497286cfe"
+  },
+  "18-lichaamsbouw-fietshouding": {
+    "embeddedImages": 0,
+    "sourceSha256": "3b9a3631437cfa2ccfd4b27951ad93f6afd3e163b1b06a609e4299b40dcdf182",
+    "textElements": 0,
+    "webpSha256": "ec33232fee6fd484f9210689d48021fa3a18102c4984aa13a16fbaee6c50812f"
+  },
+  "19-zadelhoogte-beenhoek": {
+    "embeddedImages": 0,
+    "sourceSha256": "7f3a76a7ddcd5e18aeb51716062ab60cafaf8c8d7af27fe41d9836012e9b3dbe",
+    "textElements": 0,
+    "webpSha256": "1c4da155660df871ed847dbfb99f83d5560d9087b37d8b0fff70b1d18c2f6080"
+  },
+  "20-standbreedte-pedalen": {
+    "embeddedImages": 0,
+    "sourceSha256": "c3cdd54cab5749b6cf10f0456f16113375b06cbe34a8a39c15f6c0fc4c7ed26a",
+    "textElements": 0,
+    "webpSha256": "924c1758ef42d0005e59ad6c8b0b2cfa94f494611b6db95e3ea4729b7b4a5f4e"
+  },
+  "21-gevoelloze-tenen": {
+    "embeddedImages": 0,
+    "sourceSha256": "f2dbbb1af2735f4f2f19cf0423c5898d64a6f0007f87151de2bfc32fe3bf67e1",
+    "textElements": 0,
+    "webpSha256": "de88df6e9f92abb185f2a3db97cf4a14685ddcb333364945f8ed4fa13dd3907c"
+  },
+  "22-beperkte-flexibiliteit": {
+    "embeddedImages": 0,
+    "sourceSha256": "76fcb57903a19b9c5fa237ad939431edbcc6fff601460bd29c926b34c72ce473",
+    "textElements": 0,
+    "webpSha256": "4cbe4fbfb442cfd1ab70c98c8b7f586c3570bddc784a8c21758925a2ee63c9e6"
+  },
+  "23-lage-rugpijn": {
+    "embeddedImages": 0,
+    "sourceSha256": "402ce6cadc70b1d69c26699e808214de6f2e1589f62b781ed81b5195388870cd",
+    "textElements": 0,
+    "webpSha256": "8a4e5700ba15548772268d5f7cc007d28380d3e39004a723d7009b52ca2f3ed4"
+  },
+  "24-klimtijd": {
+    "embeddedImages": 0,
+    "sourceSha256": "c1de5284bb029e209a8c33ebaf740a95f9655b43fbf63d831e60b1154b75d024",
+    "textElements": 0,
+    "webpSha256": "f7feb7171f83bcb8c2d479e66d9d1dc91ecc3a6b272708335f72baa5b8cf621e"
+  },
+  "25-lange-ritten": {
+    "embeddedImages": 0,
+    "sourceSha256": "c9ff6ee4c4856d6fc064e6dd7086649651838301fcc4f227edb12e6d8de1eb0a",
+    "textElements": 0,
+    "webpSha256": "a16eb01b8bcc454b0b073bea16f4167bdc84fbc0a6f6e7b08a21c7c89a310e21"
+  },
+  "26-ftp-meten": {
+    "embeddedImages": 0,
+    "sourceSha256": "778e6d29fc9522bf63c531d79ad5fccd5d4daa0c2a61c4d935afe6ae69f8f112",
+    "textElements": 0,
+    "webpSha256": "b23c46f9904eb82d870108a63ce3b2bca0d0ab6db6ce17bba1c933d0dfb0e03f"
+  },
+  "27-fietsen-vergelijken": {
+    "embeddedImages": 0,
+    "sourceSha256": "b48c4fe0feaa2e2354eb0cb6321337465ea9a05e95b48661aef9a4475129e44e",
+    "textElements": 0,
+    "webpSha256": "723cad530775617c8c45c2e6a3e8b776da710d1b4cafa852f7bc180928af8848"
+  },
+  "28-mountainbike-afstellen": {
+    "embeddedImages": 0,
+    "sourceSha256": "05f7033be999e149a9d40f2364833ffef519e5296aa5163c5115b3c0870ce763",
+    "textElements": 0,
+    "webpSha256": "7e66b9e9abcd60c2fe00a14156d40ab146ec2d1ad16fc28efd207360b2dba8c5"
+  },
+  "29-vermogen-snelheid": {
+    "embeddedImages": 0,
+    "sourceSha256": "ac89d0f810fe08cbe0f6e5178cc9aa80a852c9b5af40e2027b32fc07f54fcc3b",
+    "textElements": 0,
+    "webpSha256": "314a53e3c12e05337522755cca693a41c0a8c72f78a0790d5a9a907bcbb24c45"
+  },
+  "30-racefiets-afstellen": {
+    "embeddedImages": 0,
+    "sourceSha256": "edca4a87c98526d7143be429f8233fec87fb094ed104649d379c961528a735a2",
+    "textElements": 0,
+    "webpSha256": "fd9524cc44472e9bb4b1239a3f774586463ecef43c12d7151e532f42f3feca50"
+  },
+  "31-afstelmaten": {
+    "embeddedImages": 0,
+    "sourceSha256": "7eac8a02891b14b24571fb83ae2139036662aeeb1ad37d5e7418331bbce2c1d6",
+    "textElements": 0,
+    "webpSha256": "18fe0f507c7f82841e9040df2ecb16d49f276dbbb294036321ac9d0cefefada4"
+  },
+  "32-triatlonhouding": {
+    "embeddedImages": 0,
+    "sourceSha256": "3656c8baf21bb2c2634906ee82715f772f1a270698ae5aa556227a4602c11d82",
+    "textElements": 0,
+    "webpSha256": "134267151de737e199126da6e462b54a33b6419ee6e865397013c6681bf2bce3"
+  },
+  "33-gevoelloze-handen": {
+    "embeddedImages": 0,
+    "sourceSha256": "13dc33b570d2c41622f75a7b468791a0f54662c338d9c30da6a5a112d12636d3",
+    "textElements": 0,
+    "webpSha256": "5ff82dcda8371fb5bc82761a4c0a78650410357bdc0aeaade5014c063477916d"
+  },
+  "34-zadelsteun": {
+    "embeddedImages": 0,
+    "sourceSha256": "55cf74b0812d0d0c803351ec5766543999d2a330d101e8b6dbcfda154c156e0d",
+    "textElements": 0,
+    "webpSha256": "737c758ed8294881b418fdc980c612fc670802baf3c6a6f2f337ceb1d2a06b1a"
+  },
+  "35-fietsmaat-geometrie": {
+    "embeddedImages": 0,
+    "sourceSha256": "4d50dff58e67f105e2e29924079b44327636642de7da8eedf8628d4a42de0642",
+    "textElements": 0,
+    "webpSha256": "67610df0a1e69cb0c7cefe950c58a8f0b012512da4cfa3bd6e2f7f299431c051"
+  },
+  "36-cranklengte": {
+    "embeddedImages": 0,
+    "sourceSha256": "9a0993859899b87bd154611e59d7f673bbec5b2e8200398bb71b5c05e7aae3ac",
+    "textElements": 0,
+    "webpSha256": "71fe1e7ee36731147e3c66aa81f045262f972ed259202c403bb9ad82699ae5ca"
+  },
+  "37-bikefit-contactpunten": {
+    "embeddedImages": 0,
+    "sourceSha256": "c0a494e9b778a254ebc3245fbab2a2a9dec02b69968dfce3f9fe09d2a60ed5e0",
+    "textElements": 0,
+    "webpSha256": "0176a9f93a4b8a18fe648e2541c512ff86cc55c4201ced91230e158554cfa84c"
+  },
+  "38-gravelbike-afstellen": {
+    "embeddedImages": 0,
+    "sourceSha256": "896d0383e3aee0aff23d4458138e54adbf7c5d49c7799935ad63150363337d05",
+    "textElements": 0,
+    "webpSha256": "15c80e3c227936ff090cca6310ab8e14806a82d3e9e861ca17d3778e75cfe9a7"
+  },
+  "39-zweetverlies-meten": {
+    "embeddedImages": 0,
+    "sourceSha256": "285da0c421109d5f7e218a7c30120afd587b27db54719d690cf7fd00dee6c16b",
+    "textElements": 0,
+    "webpSha256": "51cf2db6a7420f927991b8daf1e2b69c94520a2d1aeac2711f650ce7aed1c393"
+  },
+  "40-voeding-drinken": {
+    "embeddedImages": 0,
+    "sourceSha256": "e4369586737b526ae594c6a5c4d466041c7c6a23977d0cacec450d365f47e28b",
+    "textElements": 0,
+    "webpSha256": "27ca989a74f15b265b093f3acb6c2a4059ce71435ffe1826d295a7de457a470d"
+  },
+  "41-stuurpen-bereik": {
+    "embeddedImages": 0,
+    "sourceSha256": "91575fbd0a3a5cc370109a115569fb0ac63fa4dfa10af1ae1da583d56d3fd980",
+    "textElements": 0,
+    "webpSha256": "b7f25bb64c2fab6fda84ca5cf7e599af56ad056614f638fd63b501344114b067"
+  },
+  "42-race-endurance-geometrie": {
+    "embeddedImages": 0,
+    "sourceSha256": "d8fbda80665d2f72240691a7500e2ee0ead465ceb4ea910443ef3234813d483a",
+    "textElements": 0,
+    "webpSha256": "41f3cc5793d804a66a81316d02c1562de1758aff4b66b461905953824b292e52"
+  },
+  "43-schoen-cleat": {
+    "embeddedImages": 0,
+    "sourceSha256": "eef9978c3cfc105b0ad21931b0a6a4cf307e70d2880051297557680bd9c4a50c",
+    "textElements": 0,
+    "webpSha256": "39b08d8f5d09660e72661b74aa8bf8acd3d9226ca2de5fd9f6cd3d6b38230356"
+  },
+  "44-grenzen-online-bikefit": {
+    "embeddedImages": 0,
+    "sourceSha256": "eda2cba76275d5239b3b97bdbc7c8d0005e86c6759e92f684c9afe96d47b0ed3",
+    "textElements": 0,
+    "webpSha256": "4488809a84d57ae177d3bbb12dc22d8280fe202eaad7bd36c8296e009fd9c3de"
+  },
+  "45-nek-en-schouders": {
+    "embeddedImages": 0,
+    "sourceSha256": "fe0e876294367cd0d46d44cc70a439654928923a92d414b36975377cbef4ca2c",
+    "textElements": 0,
+    "webpSha256": "cf80a7cd4ca9560628bd09288d74955f8612ae145babe48ce0399330cbc937d6"
+  },
+  "46-lange-fietser": {
+    "embeddedImages": 0,
+    "sourceSha256": "76094f868809b4986a3578a7124f9b60c96426e62a0de4c15d52e924c43fd08b",
+    "textElements": 0,
+    "webpSha256": "61e8e3602730a8a311b46b6766559a9b24cd8ceaff31be840044bd7ac5418e6c"
+  },
+  "47-koolhydraten-onderweg": {
+    "embeddedImages": 0,
+    "sourceSha256": "274ef2b344e93a4f0b1510885141ff33cf5ea38f8a7122109b21c03e9ad2c2c4",
+    "textElements": 0,
+    "webpSha256": "926ac44f55d55214833258b29efbe50f18cd962160dacd3718c0d1859552a223"
+  },
+  "48-eten-tijdens-fietsen": {
+    "embeddedImages": 0,
+    "sourceSha256": "a49513d367a9084129a1a5d89ad64d843ea9ae6b1a3e9d1447e235dae451e987",
+    "textElements": 0,
+    "webpSha256": "a8c4e122d2240d7c3f780e4b48b066ee31cec584a7302dc9d6569d140d8a9d61"
+  },
+  "49-voet-opmeten": {
+    "embeddedImages": 0,
+    "sourceSha256": "eb96787beeaa209a2de1a549d1b8a47319d3c1b98f987af002435c8c978ea609",
+    "textElements": 0,
+    "webpSha256": "f200c982fcf99c0b4d9448b6593bbeaa4fa0a3e506636ab7000cdae8a1a07acf"
+  },
+  "50-stuurhoogte-en-drop": {
+    "embeddedImages": 0,
+    "sourceSha256": "43180439b7898603eb3f57d8c3e2d0423045bc497a7248e74d5bad9c0f876d3a",
+    "textElements": 0,
+    "webpSha256": "32de4c05cc8ad322c673f384d991287fb21bf8b614a9322949fffa4841e81636"
+  },
+  "51-fiets-op-trainer": {
+    "embeddedImages": 0,
+    "sourceSha256": "ebf4a55d21ebeeb05814bef2f7900808d4080bfcdf0d03b2795ca863809c6fcf",
+    "textElements": 0,
+    "webpSha256": "9f647dfa67c7ec509434f8c92dee3fb01954a7bcc7f26291b527c14c093d3609"
+  },
+  "52-pijn-en-contactpunten": {
+    "embeddedImages": 0,
+    "sourceSha256": "9f9ecdd5de1eee654a7a205e685ef505cf8cf7d41f2d7b80f909346f7d5fd124",
+    "textElements": 0,
+    "webpSha256": "317a72ff668d08f278995f5673a78722c800f8ff84f566057ee95b83d815b20e"
+  },
+  "53-fietstype-en-houding": {
+    "embeddedImages": 0,
+    "sourceSha256": "c30b0292a543c6f9f6680b52532bc6b40ae4776cfb9c8baa97cdd77046ac91ac",
+    "textElements": 0,
+    "webpSha256": "9070e6b91f8d4d429cf152a13c44c6d50a12e03e5c84353a3f51f5a009307dc7"
+  },
+  "54-zadel-terugstand-kanteling": {
+    "embeddedImages": 0,
+    "sourceSha256": "aa1664cbacf552950a493f3843843b6fa0421f09d76e866c7131c56f6417f8c1",
+    "textElements": 0,
+    "webpSha256": "49060e9abb44c70523bba838317cff9c87aabbf404a2bc003348378f6cbcceae"
+  },
+  "55-natriumconcentratie": {
+    "embeddedImages": 0,
+    "sourceSha256": "f035ac01515a16c81f3368bc9edb01cf2b0778f366d9c32c9f25cabb362d6419",
+    "textElements": 0,
+    "webpSha256": "e058ad870ba73779ccd59b7d094c4b3cf4dc22f09d8577f52936bb30a1612eba"
+  },
+  "56-gewicht-en-vermogen": {
+    "embeddedImages": 0,
+    "sourceSha256": "a38f4e0a9092d971484c5427bbe6f80feaa56cbb558358234661e6735a843455",
+    "textElements": 0,
+    "webpSha256": "85896cfebb75f77acec69844dc483837523545feba39b97c483cac1fd6bc05e4"
+  }
+}

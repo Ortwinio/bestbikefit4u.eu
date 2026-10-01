@@ -1,4 +1,4 @@
-/** Exact 70 source routes from audit/route-map.md, one entry per page.tsx.
+/** Active source routes from audit/route-map.md plus the new account tools, one entry per page.tsx.
  * /design-system was added later and is deliberately outside this requested inventory.
  * Paths preserve source routes (including wrong-locale variants); do not canonicalize them away.
  */
@@ -61,7 +61,6 @@ const accountRoutes = [
   "/bikes",
   "/bikes/new",
   "/bikes/new/manual",
-  "/bikes/import/marktplaats",
   "/bikes/import/passport",
   "/bikes/[bikeId]",
   "/bikes/[bikeId]/edit",
@@ -74,6 +73,15 @@ const accountRoutes = [
   "/pressure-calculator",
   "/gearing",
   "/saddle-selector",
+  "/tools/saddle-height",
+  "/tools/bike-fit",
+  "/tools/frame-size",
+  "/tools/crank-length",
+  "/tools/power-speed",
+  "/tools/climb-planner",
+  "/tools/ftp-wkg",
+  "/tools/fuel-hydration",
+
   "/shoe-cleat-fit",
   "/settings",
   "/feedback"

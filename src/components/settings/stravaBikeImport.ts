@@ -1,3 +1,5 @@
+import { settingsDutch } from "@/i18n/account/settingsLanguage";
+
 export type BikeType =
   | "road"
   | "gravel"
@@ -369,7 +371,7 @@ export function formatBikeSpeedKph(
   return `${new Intl.NumberFormat(locale, {
     maximumFractionDigits: 1,
     minimumFractionDigits: 1,
-  }).format(speedKph)} kph`;
+  }).format(speedKph)} ${locale.startsWith("nl") ? "km/u" : "kph"}`;
 }
 
 export function formatBikeDate(
@@ -377,7 +379,7 @@ export function formatBikeDate(
   locale = "en-US"
 ): string {
   if (dateMs === undefined) {
-    return "No recent rides";
+    return locale.startsWith("nl") ? settingsDutch.noRecentRides : "No recent rides";
   }
 
   return new Intl.DateTimeFormat(locale, {

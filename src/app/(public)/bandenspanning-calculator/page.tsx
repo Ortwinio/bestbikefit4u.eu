@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
 import { getDictionary } from "@/i18n/getDictionary";
-import { buildLocaleAlternates } from "@/i18n/metadata";
+import { buildLocalizedAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { getPublicCalculatorRouteEntry } from "@/lib/public-calculators";
@@ -16,8 +16,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const dictionary = await getDictionary(locale);
   const routeEntry = getPublicCalculatorRouteEntry("tire-pressure");
-  const localizedPath = routeEntry.localizedPaths[locale];
-  const alternates = buildLocaleAlternates(localizedPath, locale);
+  const alternates = buildLocalizedAlternates(
+    {
+      en: withLocalePrefix(routeEntry.localizedPaths.en, "en"),
+      nl: withLocalePrefix(routeEntry.localizedPaths.nl, "nl"),
+    },
+    locale,
+  );
 
   return {
     title: dictionary.pressure.publicPage.title,

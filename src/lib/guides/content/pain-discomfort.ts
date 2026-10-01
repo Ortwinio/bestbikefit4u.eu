@@ -1,3 +1,5 @@
+import { guideProseNl } from "@/i18n/marketing/guideProse";
+import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
 import type { GuideContentFaq, GuideContentRecord, GuideContentSection } from "../guide-content";
 import { GUIDES } from "../../../app/(public)/guides/data";
 
@@ -94,8 +96,8 @@ const PAIN_DISCOMFORT_STRUCTURAL_SECTIONS = {
       tableRows: [
         ["Weg", "Fitfouten voelen vaak als herhaalde belasting, waardoor kleine veranderingen in hoogte of reach over veel omwentelingen groot kunnen uitpakken."],
         ["Gravel / MTB", "Trillingen en beweging leggen problemen sneller bloot, waardoor een positie die op papier klopt op ruw terrein toch verkeerd kan voelen."],
-        ["Triathlon / Endurance / Indoor", "Statische druk, gesloten heuphoeken of veel tijd in één houding kunnen een probleem eerst verbergen en daarna zichtbaar maken."],
-        ["Race / Klim / Pendel / Lange steady ritten", "Hetzelfde symptoom kan een andere oorzaak hebben afhankelijk van de echte taak van de rit."],
+        [guideProseNl.review.mixedDisciplines, "Statische druk, gesloten heuphoeken of veel tijd in één houding kunnen een probleem eerst verbergen en daarna zichtbaar maken."],
+        [guideProseNl.pain.rideTypes, "Hetzelfde symptoom kan een andere oorzaak hebben afhankelijk van de echte taak van de rit."],
       ],
     },
     {
@@ -130,6 +132,7 @@ function appendStructuralSections(content: GuideContentRecord): GuideContentReco
 }
 
 function getGuideCardTitle(slug: string, locale: "en" | "nl") {
+  if (locale === "nl") return getDutchGuideTitle(slug) ?? guideProseNl.genericTitle;
   return GUIDES.find((guide) => guide.slug === slug)?.[locale].cardTitle ?? slug.replaceAll("-", " ");
 }
 
@@ -150,7 +153,7 @@ function buildCtaDescription(slug: string, locale: "en" | "nl") {
   if (locale === "en") {
     return `Start the free fit flow to check whether ${subject.toLowerCase()} is being driven by saddle, reach, or contact-point setup.`;
   }
-  return `Start de gratis fit flow om te checken of ${subject.toLowerCase()} wordt veroorzaakt door zadel, reach of contactpuntafstelling.`;
+  return guideProseNl.cta.pain(cardTitle);
 }
 
 function buildFaqExtras(slug: string, locale: "en" | "nl"): GuideContentFaq[] {
@@ -322,7 +325,7 @@ const PAIN_DISCOMFORT_GUIDE_CONTENT_BASE = {
     },
     nl: {
       heroIntro: "Kniepijn op de fiets is bijna altijd een probleem van belasting en uitlijning in plaats van een mysterieuze blessure. Het ontwikkelt zich doorgaans geleidelijk omdat een iets verkeerde positie zich duizenden keren per uur herhaalt. Deze gids is voor rijders die willen begrijpen welk deel van de knie pijn doet, waarom dat is en welke fitvariabelen je als eerste moet controleren.",
-      ctaDescription: "Start de gratis fit flow voor een volledige positiecheck die zadelhoogte, setback en cockpitlengte in één begeleide sessie doorloopt.",
+      ctaDescription: guideProseNl.pain.fitCta,
       intro: [
         "Kniepijn op de fiets is meestal een probleem van belasting en uitlijning, niet zomaar een willekeurige klacht. De eerste fitvraag is of de knie te ver moet strekken, te veel wordt samengedrukt of te ver uit zijn lijn beweegt.",
         "Zadelhoogte is de eerste variabele om te controleren, omdat die de kniehoek bij elke omwenteling verandert. Daarna laten zadelterugstand en cockpitlengte zien of de rijder stabiel zit, reikt of op het zadel schuift.",
@@ -462,7 +465,7 @@ const PAIN_DISCOMFORT_GUIDE_CONTENT_BASE = {
     },
     nl: {
       heroIntro: "Lage rugpijn op de fiets is een van de meest voorkomende klachten op alle fitheidsniveaus en hangt bijna altijd samen met de manier waarop de cockpit en bekkencontrole onder belasting samenwerken. Het probleem verergert vaak in de loop van de tijd omdat vermoeidheid een marginale afstelling versterkt. Deze gids is voor rijders die na langere ritten rugpijn ervaren en willen weten welke fitvariabelen ze als eerste moeten aanpakken.",
-      ctaDescription: "Start de gratis fit flow voor een begeleide check van cockpitlengte, zadelhoogte en reach in één sessie.",
+      ctaDescription: guideProseNl.pain.backCta,
       intro: [
         "Lage rugpijn op de fiets is vaak een probleem van cockpit en bekkencontrole. Als reach of drop groter is dan de rijder kan dragen, gaat het bekken kantelen of instorten en krijgt de onderrug de rekening.",
         "Bekkenkanteling is het mechanisme om op te letten. Als iemand de houding 20 minuten volhoudt maar niet 2 uur, legt vermoeidheid een positie bloot die eigenlijk maar net haalbaar is.",
@@ -742,7 +745,7 @@ const PAIN_DISCOMFORT_GUIDE_CONTENT_BASE = {
     },
     nl: {
       heroIntro: "Gevoelloze handen en polspijn op de fiets zijn bijna altijd een druk- en polshoekkwestie, geen willekeurig doorbloedingsprobleem. Wanneer te veel lichaamsgewicht op de handen rust of de pols lang in een gebogen stand wordt gehouden, worden zenuwen en weke delen op het contactpunt samengedrukt. Deze gids is voor rijders die tinteling, gevoelloosheid of polspijn op de fiets ervaren en willen weten welke variabelen ze als eerste moeten controleren.",
-      ctaDescription: "Start de gratis fit flow voor een begeleide check van reach, stuurhoogte en hoodpositie in één sessie.",
+      ctaDescription: guideProseNl.pain.handsCta,
       intro: [
         "Gevoelloze handen zijn bijna altijd een drukprobleem of een probleem met de polshoek. Als te veel lichaamsgewicht op de handen rust, komen zenuwen en weke delen op het contactpunt onder druk te staan.",
         "De zenuwbanen van de nervus ulnaris en medianus zijn meestal betrokken. Daarom zit tinteling vaak aan de pinkzijde, duimzijde of aan beide kanten, afhankelijk van het drukpatroon.",
@@ -1045,7 +1048,7 @@ const PAIN_DISCOMFORT_GUIDE_CONTENT_BASE = {
         },
         {
           q: "Waarom wordt voetpijn erger naarmate de rit langer duurt?",
-          a: "Zwelling, warmte en herhaalde druk laten een borderline schoen- of cleatafstelling steeds verder falen. Wat aan het begin nog acceptabel voelt, kan later pijnlijk worden zodra de voet opzet en de weefsels vermoeien.",
+          a: guideProseNl.pain.marginalFit,
         },
       ],
     },

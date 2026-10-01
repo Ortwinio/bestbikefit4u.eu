@@ -195,7 +195,7 @@ export const whyCopy: Record<
       "Een bike fit is geen magie. Het is biomechanica en basisfysica toegepast op " + "drie contactpunten:",
     contactPoints: [
       "Voeten (schoenplaatjes, schoenen, pedalen)",
-      "Bekken (zadelhoogte, setback, tilt, zadelkeuze)",
+      "Bekken (zadelhoogte, zadelterugstand, zadelhoek, zadelkeuze)",
       "Handen en bovenlichaam (reach, drop, stuurvorm, remgreeppositie)",
     ],
     whyParagraphs: [
@@ -253,11 +253,11 @@ export const whyCopy: Record<
       {
         title: "Een positie die past bij je terrein",
         paragraphs: [
-          "Een goede fit is geen vaste setup voor alles. De positie moet veranderen " + "met je rijstijl:",
+          "Een goede fit is geen vaste afstelling voor alles. De positie moet veranderen " + "met je rijstijl:",
         ],
         bullets: [
           "Mountainbike of technisch terrein: meer stabiliteit en bewegingsruimte",
-          "Endurance: comfort eerst en duurzame reach",
+          "Lange ritten: comfort eerst en een reach die je volhoudt",
           "Prestatie of koers: aerodynamischer terwijl de heuphoek werkbaar blijft",
           "TT of triathlon: zeer aero, maar gevoelig voor zadelpositie en cockpitlengte",
         ],
@@ -268,14 +268,14 @@ export const whyCopy: Record<
         bullets: [
           "Je positie opnieuw kunt opbouwen na onderhoud of reizen",
           "Die op een nieuw frame kunt reproduceren",
-          "Kunt finetunen voor verschillende fietsen zoals race, gravel of indoor",
+          "Verder kunt afstellen voor verschillende fietsen zoals race, gravel of een fietstrainer",
         ],
       },
     ],
     fitAdjustmentItems: [
       "Zadelhoogte (mm)",
       "Zadelterugstand (mm)",
-      "Zadeltilt (graden)",
+      "Zadelhoek (graden)",
       "Stuurreach (mm)",
       "Stuurdrop (mm)",
       "Advies voor stuurpenlengte",

@@ -2,7 +2,7 @@ import type { Id } from "../_generated/dataModel";
 import { mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
-import { validateShortString } from "../lib/validation";
+import { validateNumberRange, validateShortString } from "../lib/validation";
 
 async function deactivateSiblingWheelsets(
   ctx: MutationCtx,
@@ -57,18 +57,26 @@ export const update = mutation({
     wheelsetId: v.id("wheelsets"),
     name: v.optional(v.string()),
     rimType: v.optional(v.union(v.literal("hooked"), v.literal("hookless"))),
-    internalRimWidthFrontMm: v.optional(v.number()),
-    internalRimWidthRearMm: v.optional(v.number()),
+    internalRimWidthFrontMm: v.optional(v.union(v.number(), v.null())),
+    internalRimWidthRearMm: v.optional(v.union(v.number(), v.null())),
     isActive: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    if (args.name !== undefined) validateShortString(args.name, "name");
+    if (args.name !== undefined) {
+      validateShortString(args.name, "name");
+      if (!args.name.trim()) throw new Error("Name is required");
+    }
     const userId = await requireUserId(ctx);
     const wheelset = await ctx.db.get(args.wheelsetId);
     if (!wheelset || wheelset.userId !== userId) {
       throw new Error("Wheelset not found");
     }
 
+    await requireBikeOwner(ctx, wheelset.bikeId);
+    for (const field of ["internalRimWidthFrontMm", "internalRimWidthRearMm"] as const) {
+      const value = args[field];
+      if (value != null && value !== wheelset[field]) validateNumberRange(value, field, 10, 60);
+    }
     if (args.isActive) {
       await deactivateSiblingWheelsets(ctx, wheelset.bikeId);
     }
@@ -77,10 +85,10 @@ export const update = mutation({
     if (args.name !== undefined) updates.name = args.name;
     if (args.rimType !== undefined) updates.rimType = args.rimType;
     if (args.internalRimWidthFrontMm !== undefined) {
-      updates.internalRimWidthFrontMm = args.internalRimWidthFrontMm;
+      updates.internalRimWidthFrontMm = args.internalRimWidthFrontMm ?? undefined;
     }
     if (args.internalRimWidthRearMm !== undefined) {
-      updates.internalRimWidthRearMm = args.internalRimWidthRearMm;
+      updates.internalRimWidthRearMm = args.internalRimWidthRearMm ?? undefined;
     }
     if (args.isActive !== undefined) updates.isActive = args.isActive;
 

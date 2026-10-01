@@ -14,8 +14,9 @@ export function BikeNumberField({
   max = 100,
   step = 1,
   disabled,
+  allowClear = true,
   ...props
-}: NumberInputProps) {
+}: NumberInputProps & { allowClear?: boolean }) {
   const { locale } = useDashboardMessages();
   const copy = getBikesCopy(locale);
   const id = useId();
@@ -39,19 +40,21 @@ export function BikeNumberField({
         unit={known ? props.unit : undefined}
         onChange={onChange}
         disabled={disabled || !known}
-        aria-describedby={id}
+        aria-describedby={allowClear ? id : undefined}
       />
-      <Button
-        id={id}
-        type="button"
-        variant="outline"
-        size="sm"
-        disabled={disabled}
-        aria-label={`${known ? copy.clear : copy.enter}: ${props.label ?? ""}`}
-        onClick={() => onChange(known ? null : min)}
-      >
-        {known ? copy.clear : copy.enter}
-      </Button>
+      {allowClear && (
+        <Button
+          id={id}
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={disabled}
+          aria-label={`${known ? copy.clear : copy.enter}: ${props.label ?? ""}`}
+          onClick={() => onChange(known ? null : min)}
+        >
+          {known ? copy.clear : copy.enter}
+        </Button>
+      )}
     </div>
   );
 }

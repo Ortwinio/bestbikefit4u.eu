@@ -19,6 +19,8 @@ import {
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { formatMessage } from "@/i18n/dashboardMessages";
 import { reportClientError } from "@/lib/telemetry";
+import { localizeAccountError } from "@/i18n/account/clientErrors";
+import { getSettingsLanguage, localizeStravaUsage, settingsDutch } from "@/i18n/account/settingsLanguage";
 import {
   formatBikeDate,
   formatBikeDistanceKm,
@@ -222,7 +224,8 @@ function RowSummary({
     [candidate.brandName, candidate.modelName].filter(Boolean).join(" · ") ||
     messages.settings.integrations.bikeImport.noBrandModel;
 
-  const usageNote = candidate.explanation ?? messages.settings.integrations.bikeImport.noUsageData;
+  const usageNote = candidate.explanation
+    ? localizeStravaUsage(candidate.explanation, locale) : messages.settings.integrations.bikeImport.noUsageData;
   const lastRideValue =
     candidate.lastRideAt !== undefined && candidate.lastRideAt !== null
       ? formatBikeDate(candidate.lastRideAt, locale)
@@ -307,7 +310,8 @@ export function StravaBikeImportSection({
   id,
   strava,
 }: StravaBikeImportSectionProps) {
-  const { locale, messages } = useDashboardMessages();
+  const { locale, messages: baseMessages } = useDashboardMessages();
+  const messages = useMemo(() => getSettingsLanguage(baseMessages, locale), [baseMessages, locale]);
   const toast = useToast();
   const bikeOverviewRaw = useQuery(api.integrations.queries.getStravaBikeOverview) as unknown;
   const importBikes = useAction(api.integrations.actions.importBikesFromStrava);
@@ -451,12 +455,12 @@ export function StravaBikeImportSection({
       void syncStravaActivities({ windowDays: 90 });
     } catch (error) {
       toast.error({
-        description: reportClientError(error, {
+        description: localizeAccountError(reportClientError(error, {
           area: "dashboard-settings",
           action: "stravaBikeImport",
           operationType: "mutation",
           userMessage: messages.settings.integrations.bikeImport.failed,
-        }),
+        }), locale),
       });
     } finally {
       setIsImporting(false);
@@ -500,12 +504,12 @@ export function StravaBikeImportSection({
       void syncStravaActivities({ windowDays: 90 });
     } catch (error) {
       toast.error({
-        description: reportClientError(error, {
+        description: localizeAccountError(reportClientError(error, {
           area: "dashboard-settings",
           action: "stravaBikeTypeConfirm",
           operationType: "mutation",
           userMessage: messages.settings.integrations.bikeImport.failed,
-        }),
+        }), locale),
       });
     } finally {
       setIsSavingCorrection(false);
@@ -559,7 +563,7 @@ export function StravaBikeImportSection({
       {strava?.syncErrorMessage ? (
         <ErrorState
           title={messages.settings.integrations.bikeImport.syncWarningTitle}
-          description={strava.syncErrorMessage}
+          description={locale === "nl" ? settingsDutch.syncError : strava.syncErrorMessage}
         />
       ) : null}
 

@@ -25,3 +25,4 @@ it("keeps measurement units and their values on one line in narrow garage tiles"
     expect(unit.parentElement?.classList.contains("whitespace-nowrap")).toBe(true);
   }
 });
+vi.mock("./DeleteBikeAction", () => ({ DeleteBikeAction: () => null }));

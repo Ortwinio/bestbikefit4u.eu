@@ -1,6 +1,9 @@
 "use client";
 
-import { use, useEffect, useRef } from "react";
+import { DeleteBikeAction } from "@/components/bikes/DeleteBikeAction";
+
+import { use, useEffect, useRef, useState } from "react";
+import type { FunctionReturnType } from "convex/server";
 import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
 import { ArrowRight, Copy, Gauge, Route, Ruler, Target } from "lucide-react";
@@ -11,7 +14,7 @@ import { BikeFitPreview } from "@/components/bikes/BikeFitPreview";
 import { getBikesCopy } from "@/i18n/account/bikes";
 import { BikeDescriptionEditor } from "@/components/bikes/BikeDescriptionEditor";
 import { BikeFitHistorySection } from "@/components/bikes/BikeFitHistorySection";
-import { BikeNotesEditor } from "@/components/bikes/BikeNotesEditor";
+import { BikeSettingsEditor } from "@/components/bikes/BikeSettingsEditor";
 import { BikePhotoGallery } from "@/components/bikes/BikePhotoGallery";
 import { BikeWheelsetManager } from "@/components/bikes/BikeWheelsetManager";
 import { BikePressureSection } from "@/components/features/pressure/BikePressureSection";
@@ -31,18 +34,24 @@ import {
 } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { getBikeLanguageMessages } from "@/i18n/account/bikesLanguage";
 import { getBikeTypeLabel } from "@/lib/bikes";
 
 export default function BikeDetailPage({ params }: { params: Promise<{ bikeId: string }> }) {
   const { bikeId } = use(params);
-  const { locale, messages } = useDashboardMessages();
+  const { locale, messages: baseMessages } = useDashboardMessages();
+  const messages = getBikeLanguageMessages(locale, baseMessages);
   const toast = useToast();
   const logMarketingEvent = useMarketingEventLogger();
   const geometryViewTrackedRef = useRef<string | null>(null);
 
-  const bikeDetail = useQuery(api.bikes.queries.getDetail, {
-    bikeId: bikeId as Id<"bikes">,
-  });
+  const [deletion, setDeletion] = useState<{
+    pending: boolean;
+    detail: FunctionReturnType<typeof api.bikes.queries.getDetail>;
+  } | null>(null);
+  const liveBikeDetail = useQuery(api.bikes.queries.getDetail,
+    deletion?.pending ? "skip" : { bikeId: bikeId as Id<"bikes"> });
+  const bikeDetail = liveBikeDetail ?? deletion?.detail;
   const ensureDefaultBikeProfile = useMutation(api.bikeProfiles.mutations.ensureDefaultForBike);
   const ensurePassportIdForBike = useMutation(api.bikes.mutations.ensurePassportIdForBike);
   const bike = bikeDetail?.bike ?? null;
@@ -65,7 +74,7 @@ export default function BikeDetailPage({ params }: { params: Promise<{ bikeId: s
   ].includes(bike?.bikeType ?? "");
 
   useEffect(() => {
-    if (!bike || bikeProfiles === undefined) {
+    if (deletion?.pending || !bike || bikeProfiles === undefined) {
       return;
     }
 
@@ -81,7 +90,7 @@ export default function BikeDetailPage({ params }: { params: Promise<{ bikeId: s
     if (!ensuredBikePassportId) {
       void ensurePassportIdForBike({ bikeId: bike._id });
     }
-  }, [bike, bikeProfiles, ensureDefaultBikeProfile, ensurePassportIdForBike, shouldHaveClimbingProfile]);
+  }, [bike, bikeProfiles, deletion?.pending, ensureDefaultBikeProfile, ensurePassportIdForBike, shouldHaveClimbingProfile]);
 
   useEffect(() => {
     if (!bike) {
@@ -109,7 +118,7 @@ export default function BikeDetailPage({ params }: { params: Promise<{ bikeId: s
     return <LoadingState label={messages.bikeForm.edit.loading} />;
   }
 
-  if (bike === null) {
+  if (bike === null || !bikeDetail) {
     return (
       <EmptyState
         title={messages.bikeForm.edit.notFound.title}
@@ -169,12 +178,12 @@ export default function BikeDetailPage({ params }: { params: Promise<{ bikeId: s
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">{bikeSubtitle}</p>
         </div>
-        <Button
-          variant="outline"
-          render={<Link href={withLocalePrefix(`/bikes/${bike._id}/edit`, locale)} />}
-        >
-          {messages.common.edit}
-        </Button>
+
+        <DeleteBikeAction
+          bikeId={bike._id}
+          bikeName={bike.name}
+          onPendingChange={(pending) => setDeletion({ pending, detail: bikeDetail })}
+        />
       </div>
 
       <Card variant="bordered" className="bg-card overflow-hidden">
@@ -425,7 +434,7 @@ export default function BikeDetailPage({ params }: { params: Promise<{ bikeId: s
               bikeWeightKg: bike.bikeWeightKg,
               currentGeometry: bike.currentGeometry,
             }}
-            editHref={withLocalePrefix(`/bikes/${bike._id}/edit`, locale)}
+            editHref="#bike-settings-details"
             messages={messages}
           />
 
@@ -456,6 +465,7 @@ export default function BikeDetailPage({ params }: { params: Promise<{ bikeId: s
             </CardHeader>
             <CardContent>
               <BikeDescriptionEditor
+                key={bike._id}
                 bikeId={bike._id}
                 initialDescription={bike.description}
                 initialSource={bike.descriptionSource}
@@ -465,28 +475,21 @@ export default function BikeDetailPage({ params }: { params: Promise<{ bikeId: s
 
           <Card variant="bordered" className="bg-card">
             <CardHeader>
-              <CardTitle>{messages.bikes.sections.notes}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BikeNotesEditor bikeId={bike._id} initialNotes={bike.notes} />
-            </CardContent>
-          </Card>
-
-          <Card variant="bordered" className="bg-card">
-            <CardHeader>
               <CardTitle>{messages.bikes.wheelsetManager.title}</CardTitle>
               <CardDescription>{messages.bikes.wheelsetManager.description}</CardDescription>
             </CardHeader>
             <CardContent>
-              <BikeWheelsetManager bikeId={bike._id} wheelsets={bikeDetail.wheelsets} />
+              <BikeWheelsetManager key={bike._id} bikeId={bike._id} wheelsets={bikeDetail.wheelsets} />
             </CardContent>
           </Card>
         </div>
       </div>
 
-      <BikeFitHistorySection bikeId={bike._id} />
+      {!deletion?.pending && <BikeSettingsEditor key={bike._id} bike={bike} embedded />}
 
-      <BikePressureSection bikeId={bike._id} />
+      {!deletion?.pending && <BikeFitHistorySection bikeId={bike._id} />}
+
+      {!deletion?.pending && <BikePressureSection bikeId={bike._id} />}
     </div>
   );
 }

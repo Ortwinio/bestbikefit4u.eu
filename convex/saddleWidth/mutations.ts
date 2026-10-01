@@ -166,6 +166,7 @@ export const createPublicSaddleWidthSession = mutation({
 
 export const createDashboardSaddleWidthSession = mutation({
   args: {
+    expectedUserId: v.optional(v.id("users")),
     bikeId: v.optional(v.id("bikes")),
     measurementMethod: v.union(v.literal("measured"), v.literal("estimated")),
     sitBoneWidthMm: v.optional(v.number()),
@@ -200,16 +201,29 @@ export const createDashboardSaddleWidthSession = mutation({
   },
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
+    const { expectedUserId, ...sessionArgs } = args;
+    if (expectedUserId !== undefined && expectedUserId !== userId) {
+      throw new Error("User changed before saving");
+    }
     if (args.bikeId) {
       await requireBikeOwner(ctx, args.bikeId);
     }
-    validateSupportedWidthRecommendation(args);
+    validateSupportedWidthRecommendation(sessionArgs);
 
-    return await ctx.db.insert("saddleWidthSessions", {
+    const sessions = await ctx.db.query("saddleWidthSessions")
+      .withIndex("by_user_session_type", (q) => q.eq("userId", userId).eq("sessionType", "dashboard"))
+      .order("desc").collect();
+    const current = sessions.find((row) => row.bikeId === args.bikeId);
+    const values = {
       userId,
-      sessionType: "dashboard",
-      ...args,
+      sessionType: "dashboard" as const,
+      ...sessionArgs,
       createdAt: Date.now(),
-    });
+    };
+    if (current) {
+      await ctx.db.patch(current._id, values);
+      return current._id;
+    }
+    return await ctx.db.insert("saddleWidthSessions", values);
   },
 });

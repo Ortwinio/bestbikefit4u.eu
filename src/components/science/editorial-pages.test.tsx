@@ -17,6 +17,8 @@ import * as Stack from "@/app/(public)/science/stack-and-reach/page";
 import { StackReachFigure } from "./StackReachFigure";
 
 let locale: Locale = "nl";
+vi.mock("server-only", () => ({}));
+vi.mock("@convex-dev/auth/nextjs/server", () => ({ convexAuthNextjsToken: vi.fn() }));
 vi.mock("next/headers", () => ({ headers: async () => new Headers() }));
 vi.mock("@/i18n/request", () => ({ getRequestLocale: async () => locale }));
 vi.mock("next/navigation", () => ({
@@ -40,6 +42,29 @@ const pages = [
 ] as const;
 
 describe("editorial page SEO and localized content", () => {
+  it("uses Dutch science headings, metadata and setup terminology", async () => {
+    locale = "nl";
+    const metadata = await Engine.generateMetadata();
+    expect(metadata.title).toBe("Bikefit-rekenmodel | BestBikeFit4U Wetenschap");
+    expect(metadata.openGraph?.title).toBe(metadata.title);
+    const engine = await renderHtml(await Engine.default());
+    expect(engine).toContain("Hoe het bikefit-rekenmodel werkt");
+    expect(engine).toContain("Gerelateerde calculators en wetenschappelijke uitleg");
+    expect(engine).not.toMatch(/berekeningsengine|science-pagina|statische output/);
+    const setup = await renderHtml(await Setup.default());
+    expect(setup).toContain("remgreeppositie en rotatie");
+    expect(setup).toContain("Fiets afstellen is geen verzameling losse aanpassingen.");
+    expect(setup).not.toContain("tweaks");
+    expect(setup).toMatch(/href="#faq"[^>]*>Veelgestelde vragen<\/a>/);
+    expect(setup).not.toMatch(/>FAQ</);
+    expect(setup).not.toMatch(/hood-positie|op de hoods|begeleide workflow/);
+    const landing = await renderHtml(await DutchLanding.default());
+    expect(landing).toContain("Gratis of Pro");
+    expect(landing).not.toMatch(/Free vs Pro|trade-offs|live observatie/);
+    locale = "en";
+    expect((await Engine.generateMetadata()).title).toBe("Bike Fit Calculation Engine | BestBikeFit4U Science");
+  });
+
   it("uses theme tokens for the stack/reach drawing and measurement labels", async () => {
     const html = await renderHtml(<StackReachFigure locale="nl" />);
     expect(html).toContain('stroke="var(--marketing-foreground)"');

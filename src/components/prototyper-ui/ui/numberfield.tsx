@@ -1,5 +1,7 @@
 "use client";
 
+import { useSharedUiMessages } from "@/i18n/useSharedUiMessages";
+
 import { forwardRef, type ReactNode } from "react";
 import { NumberField as BaseNumberField } from "@base-ui/react/number-field";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -98,8 +100,9 @@ export function NumberFieldSteppers({
   label?: string;
   className?: string;
 }) {
-  const incrementLabel = label ? `Increase ${label}` : "Increase value";
-  const decrementLabel = label ? `Decrease ${label}` : "Decrease value";
+  const copy = useSharedUiMessages();
+  const incrementLabel = label ? `${copy.increase} ${label}` : copy.increaseValue;
+  const decrementLabel = label ? `${copy.decrease} ${label}` : copy.decreaseValue;
 
   return (
     <div

@@ -1,5 +1,8 @@
 "use client";
 
+import { profileGuideNl } from "@/i18n/account/profileLanguage";
+
+
 import Link from "next/link";
 import { useId, useState } from "react";
 import { ArrowLeft, Minus, Plus } from "lucide-react";
@@ -119,8 +122,8 @@ export function ProfileImproveGuideClient({
 
   const flexibilityImplications = locale === "nl"
     ? [
-        "Een vrij rechte positie is het meest realistisch; veel drop is nu nog niet haalbaar.",
-        "Een matige drop is mogelijk met een voorzichtige reach.",
+        profileGuideNl.levels.limitedFlexibility,
+        profileGuideNl.levels.moderateFlexibility,
         "Een normale sportieve positie past goed bij een standaard racefietsgeometrie.",
         "Een agressievere fit wordt haalbaar voor gran fondo- of wedstrijdfietsen.",
         "Je kunt een volledige racehouding met weinig beperkingen volhouden.",
@@ -135,11 +138,11 @@ export function ProfileImproveGuideClient({
 
   const coreImplications = locale === "nl"
     ? [
-        "Een zeer rechte fit met voorzichtige reach en stack is het meest geschikt.",
-        "Een gematigd rechte positie met beperkte duurzame drop past beter.",
-        "Een standaard racepositie met gebalanceerde reach en drop is haalbaar.",
+        profileGuideNl.levels.lowCore,
+        profileGuideNl.levels.limitedCore,
+        profileGuideNl.levels.averageCore,
         "Een agressievere positie wordt ook op langere ritten realistischer.",
-        "Een volledige performance-houding is haalbaar met minimale core-beperkingen.",
+        profileGuideNl.levels.excellentCore,
       ]
     : [
         "Very upright fit with conservative reach and stack.",
@@ -152,8 +155,8 @@ export function ProfileImproveGuideClient({
   const bmiImplications = locale === "nl"
     ? [
         "Ondergewicht kan vermogen en herstel beperken. Te weinig eten op lange ritten is een veelvoorkomende oorzaak. Je fit houdt rekening met een lagere belasting op het frame.",
-        "Een gunstig bereik voor de meeste fietsers. Deze BMI ondersteunt een sterke power-to-weight, uithoudingsvermogen en comfortabele zadelbelasting.",
-        "Verhoogt de belasting op zadel en gewrichten. Je fit legt dan meer nadruk op drukverdeling en gewrichtsvriendelijke posities. Afvallen in dit bereik verbetert de power-to-weight merkbaar.",
+        profileGuideNl.levels.normalBmi,
+        profileGuideNl.levels.overweightBmi,
         "Een hoger lichaamsgewicht verhoogt de druk op knieën en onderrug, vooral op lange ritten. Je fit prioriteert gewrichtsbescherming, zadelcomfort en een minder agressieve houding.",
       ]
     : [
@@ -168,7 +171,7 @@ export function ProfileImproveGuideClient({
         "Er is duidelijke pijn op vrijwel elke rit. Fit-aanpassingen hebben hier de grootste impact.",
         "Terugkerende pijn beïnvloedt je rijplezier. Gerichte fit-wijzigingen zijn aan te raden.",
         "Merkbaar ongemak beperkt vooral langere of zwaardere ritten. Matige fit-aanpassingen helpen meestal goed.",
-        "Licht en beheersbaar. Kleine tweaks kunnen dit vaak volledig oplossen.",
+        profileGuideNl.levels.mildDiscomfort,
         "Geen pijn of ongemak. Je fit werkt goed voor jouw lichaam.",
       ]
     : [

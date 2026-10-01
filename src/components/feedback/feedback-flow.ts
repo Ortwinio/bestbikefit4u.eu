@@ -1,4 +1,5 @@
 import type { FeedbackLocale } from "./feedback-copy";
+import { feedbackDutch } from "@/i18n/account/feedbackLanguage";
 import type { FeedbackStatus, FeedbackType, SubmitFeedbackArgs } from "./feedback-api";
 import type { FeedbackActivityEntry } from "./feedback-activity";
 
@@ -21,6 +22,7 @@ type FlowCopy = {
     typePrompt: string;
     typeDescription: string;
     errorGeneric: string;
+    requiredField: string;
     titleLabel: string;
     descriptionLabel: string;
     expectedResultLabel: string;
@@ -74,13 +76,13 @@ export function validationMessageForField(field: string, copy: FlowCopy) {
     case "type":
       return copy.dialog.typeDescription;
     case "title":
-      return `${copy.dialog.titleLabel} is required.`;
+      return copy.dialog.requiredField.replace("{field}", copy.dialog.titleLabel);
     case "description":
-      return `${copy.dialog.descriptionLabel} is required.`;
+      return copy.dialog.requiredField.replace("{field}", copy.dialog.descriptionLabel);
     case "expectedResult":
-      return `${copy.dialog.expectedResultLabel} is required.`;
+      return copy.dialog.requiredField.replace("{field}", copy.dialog.expectedResultLabel);
     case "actualResult":
-      return `${copy.dialog.actualResultLabel} is required.`;
+      return copy.dialog.requiredField.replace("{field}", copy.dialog.actualResultLabel);
     default:
       return copy.dialog.errorGeneric;
   }
@@ -118,10 +120,10 @@ export function getFeedbackStatusDescription(status: FeedbackStatus, locale: Fee
           new: "We hebben je feedback ontvangen.",
           triaged: "We hebben je feedback beoordeeld en in de juiste stroom geplaatst.",
           needs_info: "We hebben waarschijnlijk extra context nodig voordat we verder kunnen.",
-          planned: "Dit staat op de planning voor een volgende stap of release.",
+          planned: feedbackDutch.planned,
           in_progress: "We werken hier actief aan.",
           in_qa: "De oplossing wordt gecontroleerd voordat deze wordt vrijgegeven.",
-          released: "Dit is verwerkt in een live of uitrollende release.",
+          released: feedbackDutch.released,
           closed: "Dit onderwerp is afgerond.",
           declined: "We pakken dit nu niet op, maar je feedback blijft waardevol.",
         }

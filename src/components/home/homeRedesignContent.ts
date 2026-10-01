@@ -370,6 +370,6 @@ export const HOME_CLOSING_CTA_CONTENT: Localized<{
   nl: {
     eyebrow: "Klaar voor de volgende stap?",
     cardEyebrow: "Probeer het vrijblijvend",
-    pricingLabel: "Vergelijk Free vs Pro",
+    pricingLabel: "Vergelijk Free en Pro",
   },
 };

@@ -1,5 +1,14 @@
 export const pressureLandingMessages = {
   en: {
+    notFound: "Not found",
+    description: (weight: number, bike: string) =>
+      `Recommended front and rear tire pressure for a ${weight} kg ${bike} rider, ` +
+      "with bar and PSI values plus a quick tube-type comparison.",
+    keywords: (weight: number, bike: string) => [
+      `tire pressure ${weight}kg ${bike}`,
+      `${bike} tire pressure ${weight}kg`,
+      `${bike} cyclist tire pressure`,
+    ],
     breadcrumb: "Breadcrumb",
     home: "Home",
     calculator: "Tire Pressure Calculator",
@@ -63,15 +72,23 @@ export const pressureLandingMessages = {
       `Static tire-pressure recommendation page for a ${weight} kg ${bike} rider.`,
   },
   nl: {
+    notFound: "Niet gevonden",
+    description: (weight: number, bike: string) =>
+      `Aanbevolen voor- en achterdruk voor een rijder van ${weight} kg op een ${bike}, ` +
+      "inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+    keywords: (weight: number, bike: string) => [
+      `bandenspanning ${weight}kg ${bike}`,
+      `${bike} bandenspanning ${weight}kg`,
+      `${bike} bandendruk advies`,
+    ],
     breadcrumb: "Broodkruimelpad",
     home: "Home",
-    calculator: "Bandenspanning calculator",
-    eyebrow: "BestBikeFit4U bandenspanning gids",
+    calculator: "Bandenspanningscalculator",
+    eyebrow: "BestBikeFit4U bandenspanningsgids",
     title: (weight: number, bike: string) => `Bandenspanning voor ${weight}kg ${bike}`,
     intro: (weight: number, bike: string) =>
-      `Deze pagina geeft een statisch startadvies voor een rijder van ${weight} kg op een ${bike} ` +
-      "met gangbare bandbreedtes. Gebruik het als snelle referentie en ga daarna verder naar de volledige calculator " +
-      "voor jouw exacte setup.",
+      `Weeg je ${weight} kg en rijd je op een ${bike}? Hier vind je een startadvies met gangbare bandbreedtes. ` +
+      "Gebruik de volledige calculator voor advies op basis van je eigen banden en fiets.",
     example: "Startadvies",
     illustration: "Pentekening van een fietsband en bandenspanningsmeter",
     assumptions: "Hier is het advies op gebaseerd.",
@@ -81,16 +98,16 @@ export const pressureLandingMessages = {
     goal: "Voorkeur",
     balance: "Balans",
     surfaces: { average_asphalt: "Gemiddeld asfalt", hardpack_gravel: "Hard gravel", trail: "Bospad" },
-    bikeAssumption: "Het fietsgewicht is een vaste aanname; er is geen persoonlijk fietsprofiel ingevuld.",
+    bikeAssumption: "Het fietsgewicht is een vaste aanname. Je eigen fietsprofiel is niet ingevuld.",
     resultsEyebrow: "Voor- en achterband",
-    results: "Je startdruk, naast elkaar.",
+    results: "Je startdruk voor en achter.",
     tubeType: "Bandtype",
     front: "Voorband",
     rear: "Achterband",
     tubeless: "Tubeless",
     innerTube: "Binnenband",
     explanation: (width: number, surface: string) =>
-      `Aanbevolen spanning voor een tubeless setup van ${width} mm op ${surface.toLowerCase()}.`,
+      `Aanbevolen spanning voor een tubeless band van ${width} mm op ${surface.toLowerCase()}.`,
     innerTubeNote: "Binnenband vraagt meestal iets meer druk om stootlekken te beperken.",
     baselineEyebrow: "Zo gebruik je de waarden",
     baseline: "Een referentie, geen eindpunt.",
@@ -100,7 +117,7 @@ export const pressureLandingMessages = {
         title: "Bekijk je eigen banden",
         body: "Bandbreedte, ondergrond en bandtype kunnen je echte ideale druk nog verschuiven.",
       },
-      { title: "Verfijn de berekening", body: "Ga voor je exacte setup daarna naar de volledige calculator." },
+      { title: "Verfijn de berekening", body: "Gebruik de volledige calculator voor je eigen banden en fiets." },
     ],
     faq: "Veelgestelde vragen",
     faqTitle: "Past dit advies altijd?",
@@ -108,17 +125,17 @@ export const pressureLandingMessages = {
       `Is ${front}/${rear} bar altijd juist voor elke rijder van ${weight} kg?`,
     faqFixedAnswer:
       "Nee. Dit is een sterk startpunt op basis van gewicht, standaard bandbreedte, ondergrond en fietstype. " +
-      "Je precieze setup kan het eindadvies nog verschuiven.",
-    faqTubes: "Waarom vergelijken jullie tubeless met binnenband?",
+      "Je eigen banden en fiets kunnen het eindadvies nog veranderen.",
+    faqTubes: "Waarom vergelijk je tubeless met een binnenband?",
     faqTubesAnswer:
       "Het bandtype verandert het veilige en comfortabele drukbereik. " +
       "Tubeless kan meestal iets lager gereden worden bij dezelfde rijder en bandbreedte.",
-    next: "Maak het advies passend voor jouw fiets.",
+    next: "Maak het advies passend voor je fiets.",
     nextBody:
-      "Wil je een advies op basis van jouw precieze bandbreedte, ondergrond en bandtype, " +
-      "gebruik dan daarna de volledige calculator.",
-    cta: "Open bandenspanning calculator",
-    guideCta: (bike: string) => `Lees ${bike} fit gids`,
+      "Wil je advies op basis van je eigen bandbreedte, ondergrond en bandtype? " +
+      "Gebruik dan de volledige calculator.",
+    cta: "Open bandenspanningscalculator",
+    guideCta: (bike: string) => `Lees de afstelgids voor je ${bike}`,
     related: "Gerelateerde tools en gidsen",
     schemaDescription: (weight: number, bike: string) =>
       `Statische bandenspanningspagina voor een rijder van ${weight} kg op een ${bike}.`,

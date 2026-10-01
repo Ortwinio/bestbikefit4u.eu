@@ -1,3 +1,4 @@
+import { bikeFitValues, calculatorId, calculatorState } from "./calculatorStates/validators";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { authTables } from "@convex-dev/auth/server";
@@ -99,6 +100,9 @@ const gearingMathValidator = v.object({
 });
 
 const gearingInputValidator = v.object({
+  groupsetName: v.optional(v.string()),
+  comparisonCassetteTeeth: v.optional(v.array(v.number())),
+  climbDurationMinutes: v.optional(v.number()),
   drivetrainType: v.union(v.literal("1x"), v.literal("2x")),
   chainrings: v.array(v.number()),
   cassetteTeeth: v.array(v.number()),
@@ -274,6 +278,14 @@ export default defineSchema({
     .index("by_profile_image", ["profile_image_url"])
     .index("by_stripe_subscription", ["stripeSubscriptionId"])
     .index("by_suspended_at", ["suspendedAt"]),
+
+  calculatorStates: defineTable({
+    userId: v.id("users"),
+    calculator: calculatorId,
+    bikeId: v.optional(v.id("bikes")),
+    state: calculatorState,
+    updatedAt: v.number(),
+  }).index("by_user_calculator_bike", ["userId", "calculator", "bikeId"]),
 
   // User profiles - body measurements for bike fitting
   profiles: defineTable({
@@ -479,6 +491,7 @@ export default defineSchema({
         v.literal("manual"),
         v.literal("strava"),
         v.literal("admin_import"),
+        // legacy: Marktplaats import removed 2026-09-30
         v.literal("marketplace_import"),
         v.literal("passport_import")
       )
@@ -589,10 +602,12 @@ export default defineSchema({
         v.literal("manual"),
         v.literal("generated"),
         v.literal("template"),
+        // legacy: Marktplaats import removed 2026-09-30
         v.literal("marketplace_import")
       )
     ),
     descriptionUpdatedAt: v.optional(v.number()),
+    // legacy: Marktplaats import removed 2026-09-30
     importSourceName: v.optional(v.literal("marktplaats")),
     importSourceUrl: v.optional(v.string()),
     importCanonicalUrl: v.optional(v.string()),
@@ -703,6 +718,7 @@ export default defineSchema({
     .index("by_bike_primary", ["bikeId", "isPrimary"])
     .index("by_storage", ["storageId"]),
 
+  // legacy: Marktplaats import removed 2026-09-30
   bikeImports: defineTable({
     userId: v.id("users"),
     sourceName: v.literal("marktplaats"),
@@ -1048,6 +1064,7 @@ export default defineSchema({
   // Fit sessions - each time user goes through fitting process
   fitSessions: defineTable({
     userId: v.id("users"),
+    calculatorInputs: v.optional(bikeFitValues),
     bikeId: v.optional(v.id("bikes")),
     bikeProfileId: v.optional(v.id("bikeProfiles")),
     bikeType: v.optional(

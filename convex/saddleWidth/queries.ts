@@ -1,11 +1,12 @@
 import { v } from "convex/values";
 import { query } from "../_generated/server";
-import { requireUserId } from "../lib/authz";
+import { requireBikeOwner, requireUserId } from "../lib/authz";
 
 export const getLatestSaddleWidthSession = query({
   args: { bikeId: v.optional(v.id("bikes")) },
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
+    if (args.bikeId) await requireBikeOwner(ctx, args.bikeId);
     const sessions = await ctx.db
       .query("saddleWidthSessions")
       .withIndex("by_user_session_type", (q) =>
@@ -15,7 +16,7 @@ export const getLatestSaddleWidthSession = query({
       .collect();
 
     return (
-      sessions.find((session) => !args.bikeId || session.bikeId === args.bikeId) ?? null
+      sessions.find((session) => session.bikeId === args.bikeId) ?? null
     );
   },
 });

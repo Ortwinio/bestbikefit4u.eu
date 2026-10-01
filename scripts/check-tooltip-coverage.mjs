@@ -33,6 +33,8 @@ const EXEMPT_FILES = new Set([
   // Search suggestions explain this single homepage control inline.
   "src/components/home/BikeSearchBar.tsx",
   "src/app/(dashboard)/settings/page.tsx",
+  // Same labeled name/units fields extracted from the exempt settings page.
+  "src/app/(dashboard)/settings/SettingsAutosaveFields.tsx",
   "src/app/(dashboard)/admin/bikes/[bikeId]/page.tsx",
   "src/app/(dashboard)/admin/bikes/page.tsx",
   "src/app/(dashboard)/admin/fit-runs/page.tsx",
@@ -56,10 +58,12 @@ const EXEMPT_FILES = new Set([
   "src/components/bikes/BikePhotoUpload.tsx",
   "src/components/bikes/BikeGeometryLibraryFields.tsx",
   "src/components/bikes/BikePhotoGallery.tsx",
+  "src/components/bikes/DeleteBikeAction.tsx",
   "src/components/bikes/BikeWheelsetManager.tsx",
+  // Extracted labeled wheel/tire controls retain visible units and range helpers.
+  "src/components/bikes/BikeWheelsetEditor.tsx",
   "src/components/features/bikes/CreateBikeForm.tsx",
   "src/components/features/bikes/BikePassportImportFlow.tsx",
-  "src/components/features/bikes/MarktplaatsBikeImportFlow.tsx",
   "src/components/features/casestudy/CaseStudyOptIn.tsx",
   "src/components/features/pressure/PressureCalculatorForm.tsx",
   "src/components/features/pressure/wizard/StepResult.tsx",

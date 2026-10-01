@@ -1,0 +1,1943 @@
+{
+  "sourceRoot": "/Users/ortwinverreck/Developer/bestbikefit4u",
+  "sourceHash": "b815d07fdb334bb0a06b28757240e0a8eef1acc5e1fa3ae2f7ef270029ce24c0",
+  "buildId": "tjDPLXUHPTUSyV9uJRwQI",
+  "results": [
+    {
+      "tool": "power-speed",
+      "account": false,
+      "width": 1440,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "power-speed",
+      "account": true,
+      "width": 1440,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "power-speed",
+      "account": false,
+      "width": 1440,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "power-speed",
+      "account": true,
+      "width": 1440,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "power-speed",
+      "account": false,
+      "width": 390,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "power-speed",
+      "account": true,
+      "width": 390,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "power-speed",
+      "account": false,
+      "width": 390,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "power-speed",
+      "account": true,
+      "width": 390,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "climb-planner",
+      "account": false,
+      "width": 1440,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "climb-planner",
+      "account": true,
+      "width": 1440,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "climb-planner",
+      "account": false,
+      "width": 1440,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "climb-planner",
+      "account": true,
+      "width": 1440,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "climb-planner",
+      "account": false,
+      "width": 390,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "climb-planner",
+      "account": true,
+      "width": 390,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "climb-planner",
+      "account": false,
+      "width": 390,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "climb-planner",
+      "account": true,
+      "width": 390,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "ftp-wkg",
+      "account": false,
+      "width": 1440,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Allen H, Coggan A. Training and Racing with a Power Meter. 2e editie. VeloPress, 2010. FTP-niveaus zoals gepubliceerd door Garmin.",
+              "selector": "body > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "and",
+                "racing",
+                "with",
+                "power"
+              ],
+              "ratio": 0.267,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "ftp-wkg",
+      "account": true,
+      "width": 1440,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Allen H, Coggan A. Training and Racing with a Power Meter. 2e editie. VeloPress, 2010. FTP-niveaus zoals gepubliceerd door Garmin.",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "and",
+                "racing",
+                "with",
+                "power"
+              ],
+              "ratio": 0.267,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "ftp-wkg",
+      "account": false,
+      "width": 1440,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Allen H, Coggan A. Training and Racing with a Power Meter. 2e editie. VeloPress, 2010. FTP-niveaus zoals gepubliceerd door Garmin.",
+              "selector": "body > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "and",
+                "racing",
+                "with",
+                "power"
+              ],
+              "ratio": 0.267,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "ftp-wkg",
+      "account": true,
+      "width": 1440,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Allen H, Coggan A. Training and Racing with a Power Meter. 2e editie. VeloPress, 2010. FTP-niveaus zoals gepubliceerd door Garmin.",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "and",
+                "racing",
+                "with",
+                "power"
+              ],
+              "ratio": 0.267,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "ftp-wkg",
+      "account": false,
+      "width": 390,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Allen H, Coggan A. Training and Racing with a Power Meter. 2e editie. VeloPress, 2010. FTP-niveaus zoals gepubliceerd door Garmin.",
+              "selector": "body > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "and",
+                "racing",
+                "with",
+                "power"
+              ],
+              "ratio": 0.267,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "ftp-wkg",
+      "account": true,
+      "width": 390,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Allen H, Coggan A. Training and Racing with a Power Meter. 2e editie. VeloPress, 2010. FTP-niveaus zoals gepubliceerd door Garmin.",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "and",
+                "racing",
+                "with",
+                "power"
+              ],
+              "ratio": 0.267,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "ftp-wkg",
+      "account": false,
+      "width": 390,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Allen H, Coggan A. Training and Racing with a Power Meter. 2e editie. VeloPress, 2010. FTP-niveaus zoals gepubliceerd door Garmin.",
+              "selector": "body > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "and",
+                "racing",
+                "with",
+                "power"
+              ],
+              "ratio": 0.267,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "ftp-wkg",
+      "account": true,
+      "width": 390,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Allen H, Coggan A. Training and Racing with a Power Meter. 2e editie. VeloPress, 2010. FTP-niveaus zoals gepubliceerd door Garmin.",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "and",
+                "racing",
+                "with",
+                "power"
+              ],
+              "ratio": 0.267,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "fuel-hydration",
+      "account": false,
+      "width": 1440,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Jeukendrup A. A Step Towards Personalized Sports Nutrition: Carbohydrate Intake During Exercise. Sports Med. 2014;44(Suppl 1):25–33, figuur 1. doi:10.1007/s40279-014-0148-z.",
+              "selector": "body > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "step",
+                "nutrition",
+                "carbohydrate"
+              ],
+              "ratio": 0.167,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Sawka MN et al. American College of Sports Medicine position stand. Exercise and fluid replacement. Med Sci Sports Exerc. 2007;39(2):377–390. Pagina 384: vocht als startpunt voor marathonlopers. Pagina 385: 20–30 mEq/L natrium in sportdrank bij langdurige inspanning. Deze tool toont de concentratie voor ritten langer dan een uur.",
+              "selector": "body > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(2) > a:nth-of-type(1)",
+              "englishWords": [
+                "position",
+                "and",
+                "fluid"
+              ],
+              "ratio": 0.07,
+              "wordCount": 45,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "fuel-hydration",
+      "account": true,
+      "width": 1440,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Jeukendrup A. A Step Towards Personalized Sports Nutrition: Carbohydrate Intake During Exercise. Sports Med. 2014;44(Suppl 1):25–33, figuur 1. doi:10.1007/s40279-014-0148-z.",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "step",
+                "nutrition",
+                "carbohydrate"
+              ],
+              "ratio": 0.167,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Sawka MN et al. American College of Sports Medicine position stand. Exercise and fluid replacement. Med Sci Sports Exerc. 2007;39(2):377–390. Pagina 384: vocht als startpunt voor marathonlopers. Pagina 385: 20–30 mEq/L natrium in sportdrank bij langdurige inspanning. Deze tool toont de concentratie voor ritten langer dan een uur.",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(2) > a:nth-of-type(1)",
+              "englishWords": [
+                "position",
+                "and",
+                "fluid"
+              ],
+              "ratio": 0.07,
+              "wordCount": 45,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "fuel-hydration",
+      "account": false,
+      "width": 1440,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Jeukendrup A. A Step Towards Personalized Sports Nutrition: Carbohydrate Intake During Exercise. Sports Med. 2014;44(Suppl 1):25–33, figuur 1. doi:10.1007/s40279-014-0148-z.",
+              "selector": "body > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "step",
+                "nutrition",
+                "carbohydrate"
+              ],
+              "ratio": 0.167,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Sawka MN et al. American College of Sports Medicine position stand. Exercise and fluid replacement. Med Sci Sports Exerc. 2007;39(2):377–390. Pagina 384: vocht als startpunt voor marathonlopers. Pagina 385: 20–30 mEq/L natrium in sportdrank bij langdurige inspanning. Deze tool toont de concentratie voor ritten langer dan een uur.",
+              "selector": "body > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(2) > a:nth-of-type(1)",
+              "englishWords": [
+                "position",
+                "and",
+                "fluid"
+              ],
+              "ratio": 0.07,
+              "wordCount": 45,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "fuel-hydration",
+      "account": true,
+      "width": 1440,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Jeukendrup A. A Step Towards Personalized Sports Nutrition: Carbohydrate Intake During Exercise. Sports Med. 2014;44(Suppl 1):25–33, figuur 1. doi:10.1007/s40279-014-0148-z.",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "step",
+                "nutrition",
+                "carbohydrate"
+              ],
+              "ratio": 0.167,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Sawka MN et al. American College of Sports Medicine position stand. Exercise and fluid replacement. Med Sci Sports Exerc. 2007;39(2):377–390. Pagina 384: vocht als startpunt voor marathonlopers. Pagina 385: 20–30 mEq/L natrium in sportdrank bij langdurige inspanning. Deze tool toont de concentratie voor ritten langer dan een uur.",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(2) > a:nth-of-type(1)",
+              "englishWords": [
+                "position",
+                "and",
+                "fluid"
+              ],
+              "ratio": 0.07,
+              "wordCount": 45,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "fuel-hydration",
+      "account": false,
+      "width": 390,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Jeukendrup A. A Step Towards Personalized Sports Nutrition: Carbohydrate Intake During Exercise. Sports Med. 2014;44(Suppl 1):25–33, figuur 1. doi:10.1007/s40279-014-0148-z.",
+              "selector": "body > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "step",
+                "nutrition",
+                "carbohydrate"
+              ],
+              "ratio": 0.167,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Sawka MN et al. American College of Sports Medicine position stand. Exercise and fluid replacement. Med Sci Sports Exerc. 2007;39(2):377–390. Pagina 384: vocht als startpunt voor marathonlopers. Pagina 385: 20–30 mEq/L natrium in sportdrank bij langdurige inspanning. Deze tool toont de concentratie voor ritten langer dan een uur.",
+              "selector": "body > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(2) > a:nth-of-type(1)",
+              "englishWords": [
+                "position",
+                "and",
+                "fluid"
+              ],
+              "ratio": 0.07,
+              "wordCount": 45,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "fuel-hydration",
+      "account": true,
+      "width": 390,
+      "theme": "light",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Jeukendrup A. A Step Towards Personalized Sports Nutrition: Carbohydrate Intake During Exercise. Sports Med. 2014;44(Suppl 1):25–33, figuur 1. doi:10.1007/s40279-014-0148-z.",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "step",
+                "nutrition",
+                "carbohydrate"
+              ],
+              "ratio": 0.167,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Sawka MN et al. American College of Sports Medicine position stand. Exercise and fluid replacement. Med Sci Sports Exerc. 2007;39(2):377–390. Pagina 384: vocht als startpunt voor marathonlopers. Pagina 385: 20–30 mEq/L natrium in sportdrank bij langdurige inspanning. Deze tool toont de concentratie voor ritten langer dan een uur.",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(2) > a:nth-of-type(1)",
+              "englishWords": [
+                "position",
+                "and",
+                "fluid"
+              ],
+              "ratio": 0.07,
+              "wordCount": 45,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "fuel-hydration",
+      "account": false,
+      "width": 390,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "pass",
+          "details": []
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Jeukendrup A. A Step Towards Personalized Sports Nutrition: Carbohydrate Intake During Exercise. Sports Med. 2014;44(Suppl 1):25–33, figuur 1. doi:10.1007/s40279-014-0148-z.",
+              "selector": "body > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "step",
+                "nutrition",
+                "carbohydrate"
+              ],
+              "ratio": 0.167,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Sawka MN et al. American College of Sports Medicine position stand. Exercise and fluid replacement. Med Sci Sports Exerc. 2007;39(2):377–390. Pagina 384: vocht als startpunt voor marathonlopers. Pagina 385: 20–30 mEq/L natrium in sportdrank bij langdurige inspanning. Deze tool toont de concentratie voor ritten langer dan een uur.",
+              "selector": "body > div:nth-of-type(2) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(2) > a:nth-of-type(1)",
+              "englishWords": [
+                "position",
+                "and",
+                "fluid"
+              ],
+              "ratio": 0.07,
+              "wordCount": 45,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "tool": "fuel-hydration",
+      "account": true,
+      "width": 390,
+      "theme": "dark",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Jeukendrup A. A Step Towards Personalized Sports Nutrition: Carbohydrate Intake During Exercise. Sports Med. 2014;44(Suppl 1):25–33, figuur 1. doi:10.1007/s40279-014-0148-z.",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(1) > a:nth-of-type(1)",
+              "englishWords": [
+                "step",
+                "nutrition",
+                "carbohydrate"
+              ],
+              "ratio": 0.167,
+              "wordCount": 19,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Sawka MN et al. American College of Sports Medicine position stand. Exercise and fluid replacement. Med Sci Sports Exerc. 2007;39(2):377–390. Pagina 384: vocht als startpunt voor marathonlopers. Pagina 385: 20–30 mEq/L natrium in sportdrank bij langdurige inspanning. Deze tool toont de concentratie voor ritten langer dan een uur.",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(2) > a:nth-of-type(1)",
+              "englishWords": [
+                "position",
+                "and",
+                "fluid"
+              ],
+              "ratio": 0.07,
+              "wordCount": 45,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    }
+  ]
+}

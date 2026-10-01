@@ -1,3 +1,4 @@
+import { socialImage } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -11,6 +12,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { BRAND } from "@/config/brand";
 import { getGuideBacklog } from "@/lib/guides/backlog";
+import { getGuideLinkLabel } from "@/lib/guides/content";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
@@ -48,7 +50,9 @@ function getGuideLink(path: string, locale: "en" | "nl") {
 
   return {
     href: normalizedPath,
-    label: guide?.pageTitle ?? normalizedPath.replace(/^\/guides\//, "").replace(/-/g, " "),
+    label: locale === "nl"
+      ? getGuideLinkLabel(normalizedPath, locale)
+      : guide?.pageTitle ?? normalizedPath.replace(/^\/guides\//, "").replace(/-/g, " "),
     description: guide?.pageBrief,
   };
 }
@@ -79,6 +83,11 @@ export async function generateMetadata({ params }: BlogArticleProps): Promise<Me
   return {
     title,
     description,
+    twitter: {
+      card: "summary_large_image", title, description,
+      images: ogImage ? [socialImage(ogImage,
+        localizeBlogText(post.ogImageAlt ?? post.featuredImageAlt, locale, title))] : undefined,
+    },
     alternates: {
       ...alternates,
       canonical,
@@ -90,10 +99,7 @@ export async function generateMetadata({ params }: BlogArticleProps): Promise<Me
       url: canonical,
       images: ogImage
         ? [
-            {
-              url: ogImage,
-              alt: localizeBlogText(post.ogImageAlt ?? post.featuredImageAlt, locale, title),
-            },
+            socialImage(ogImage, localizeBlogText(post.ogImageAlt ?? post.featuredImageAlt, locale, title)),
           ]
         : undefined,
       publishedTime: post.publishedAt

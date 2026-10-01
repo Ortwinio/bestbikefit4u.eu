@@ -1,5 +1,6 @@
 export const toolsSettings = {
   nl: {
+    errorTitle: "Er ging iets mis.",
     error: "Je instellingen konden niet worden geladen.",
     retry: "Probeer opnieuw",
     eyebrow: "Je account",
@@ -16,6 +17,7 @@ export const toolsSettings = {
     subscription: "Je abonnement",
   },
   en: {
+    errorTitle: "Something went wrong",
     error: "Your settings could not be loaded.",
     retry: "Try again",
     eyebrow: "Your account",
