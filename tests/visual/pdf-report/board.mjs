@@ -1,10 +1,9 @@
+import { boardMarkup } from "../../../scripts/lib/html.mjs";
 /** Render trusted, repository-owned DC report boards without the absent support.js runtime. */
 export async function renderBoard(page, html) {
-  const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
-    .filter((match) => /\bdata-dc-script\b/.test(match[1]))
-    .map((match) => match[2]);
+  const { scripts, markup } = boardMarkup(html);
   if (scripts.length !== 1) throw new Error(`Expected one DC component script, found ${scripts.length}`);
-  await page.setContent(html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ""), { waitUntil: "networkidle" });
+  await page.setContent(markup, { waitUntil: "networkidle" });
   const result = await page.evaluate((source) => {
     // The input is reviewed local board code, never application data or user-supplied HTML.
     const Component = new Function("DCLogic", `${source}\nreturn Component;`)(class DCLogic {});

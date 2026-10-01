@@ -4,6 +4,7 @@ import type { Doc } from "../_generated/dataModel";
 import { writeAuditLog } from "../admin/audit";
 import { buildGuideFieldChanges, writeGuideAuditLog } from "./audit";
 import { BRAND } from "../lib/brand";
+import { assertRewriteIdentity, guideRewriteImportFields } from "./rewriteImport";
 import {
   assertGuideSlugAvailable,
   buildGuidePath,
@@ -971,6 +972,54 @@ const guideImportFields = {
   overwrite: v.optional(v.boolean()),
 };
 type GuideImportArgs = ObjectType<typeof guideImportFields>;
+
+export const importGuideRewrite = internalMutation({
+  args: {
+    ...guideRewriteImportFields,
+    overwrite: v.optional(v.boolean()),
+    actorId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    assertRewriteIdentity(args);
+    assertGuideReadyForReviewOrPublish(args);
+    const actor = await ctx.db.get(args.actorId);
+    if (!actor?.adminRole
+      || !["super_admin", "ops_admin", "fit_specialist", "qa_manager"].includes(actor.adminRole)) {
+      throw new Error("Import actor must be a CMS administrator");
+    }
+    const existing = await ctx.db.query("guidePages")
+      .withIndex("by_slug", (query) => query.eq("slug", args.slug)).unique();
+    if (existing && !args.overwrite) {
+      throw new Error("Existing guide requires overwrite");
+    }
+    const now = Date.now();
+    const record = {
+      ...buildGuideRecordFromArgs({ ...existing, ...args, status: "published", importStatus: "44b",
+        publishedAt: existing?.publishedAt ?? now, lastUpdatedAt: now }),
+      updatedAt: now,
+      updatedBy: args.actorId,
+      version: (existing?.version ?? 0) + 1,
+    };
+    if (existing) {
+      await saveGuideRevision(ctx, existing, args.actorId);
+      await ctx.db.patch(existing._id, record);
+    }
+    const id = existing?._id ?? await ctx.db.insert("guidePages", {
+      ...record, createdAt: now, createdBy: args.actorId,
+    });
+    const imported = await ctx.db.get(id);
+    if (!imported) throw new Error("Guide rewrite import failed");
+    await saveGuideRevision(ctx, imported, args.actorId);
+    await writeGuideAuditLog(ctx, {
+      guideId: id, action: existing ? "update" : "create", resourceType: "guide",
+      resourceId: String(id), userId: args.actorId,
+      fieldChanges: existing ? buildGuideFieldChanges(existing, record) : undefined,
+      metadata: { source: "44b-import", beforeVersion: existing?.version ?? 0,
+        afterVersion: imported.version },
+    });
+    return { id, slug: args.slug, outcome: existing ? "updated" : "created", version: imported.version };
+  },
+});
 
 export const importGuide = internalMutation({
   args: guideImportFields,

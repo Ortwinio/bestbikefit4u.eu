@@ -1,3 +1,5 @@
+import { sendFixtureError } from "../lib/http-errors.mjs";
+import { serveQaAsset } from "../final-sweep/assets.mjs";
 import { build } from "esbuild";
 import { createServer } from "node:http";
 import { readFile, mkdir, copyFile, writeFile } from "node:fs/promises";
@@ -61,10 +63,13 @@ const server = createServer(async (request, response) => {
       response.setHeader("content-type", "text/css"); response.end(styles + "\n" + moduleCss); return;
     }
     if (pathname.startsWith("/_next/")) {
-      const remote = await fetch(new URL(pathname, origin));
-      response.statusCode = remote.status;
-      response.setHeader("content-type", remote.headers.get("content-type") || "application/octet-stream");
-      response.end(Buffer.from(await remote.arrayBuffer())); return;
+      if (await serveQaAsset(request, response, {
+        staticDir: resolve(root, ".next/static"),
+        fallbackStaticDirs: [resolve(root, ".next/dev/static"), resolve(root, ".next-final-sweep/static")],
+      })) return;
+      response.statusCode = 404;
+      response.end("Unknown build asset");
+      return;
     }
     if (extname(pathname)) {
       const asset = resolve(root, "public", `.${decodeURIComponent(pathname)}`);
@@ -75,7 +80,7 @@ const server = createServer(async (request, response) => {
     }
     response.setHeader("content-type", "text/html");
     response.end(`<!doctype html><html lang="nl" class="${htmlClass}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Batch 2 isolated visual fixture</title><link rel="stylesheet" href="/fixture.css"></head><body class="${bodyClass}"><div id="root"></div><script type="module" src="/fixture.js"></script></body></html>`);
-  } catch (error) { response.statusCode = 500; response.end(String(error)); }
+  } catch (error) { sendFixtureError(response, error); }
 });
 await new Promise((done) => server.listen(port, "127.0.0.1", done));
 port = server.address().port;

@@ -1,3 +1,4 @@
+import { sendFixtureError } from "../lib/http-errors.mjs";
 import { serveQaAsset } from "./assets.mjs";
 import { build } from "esbuild";
 import { createServer } from "node:http";
@@ -133,10 +134,8 @@ export function usePaginatedQuery(_reference, args) {
         return;
       }
       if (url.pathname.startsWith("/_next/")) {
-        const remote = await previewFetch(new URL(url.pathname + url.search, origin));
-        response.statusCode = remote.status;
-        response.setHeader("content-type", remote.headers.get("content-type") || "application/octet-stream");
-        response.end(Buffer.from(await remote.arrayBuffer()));
+        response.statusCode = 404;
+        response.end("Unknown build asset");
         return;
       }
       if (extname(url.pathname)) {
@@ -167,8 +166,7 @@ export function usePaginatedQuery(_reference, args) {
 </head><body class="${bodyClass}"><div id="root"></div>
 <script type="module" src="/__account-fixture/${batch}.js"></script></body></html>`);
     } catch (error) {
-      response.statusCode = error.code === "ENOENT" ? 404 : 500;
-      response.end(String(error));
+      sendFixtureError(response, error);
     }
   });
   await new Promise((done, reject) => {

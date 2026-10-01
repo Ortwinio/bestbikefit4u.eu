@@ -1,3 +1,5 @@
+import { sendFixtureError } from "../lib/http-errors.mjs";
+import { serveQaAsset } from "../final-sweep/assets.mjs";
 import { build } from "esbuild";
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
@@ -110,10 +112,12 @@ export async function prepareAccountFixtures({ root = process.cwd(), origin, por
         return;
       }
       if (url.pathname.startsWith("/_next/")) {
-        const remote = await fetch(new URL(url.pathname + url.search, origin));
-        response.statusCode = remote.status;
-        response.setHeader("content-type", remote.headers.get("content-type") || "application/octet-stream");
-        response.end(Buffer.from(await remote.arrayBuffer()));
+        if (await serveQaAsset(request, response, {
+          staticDir: resolve(root, ".next/static"),
+          fallbackStaticDirs: [resolve(root, ".next/dev/static"), resolve(root, ".next-final-sweep/static")],
+        })) return;
+        response.statusCode = 404;
+        response.end("Unknown build asset");
         return;
       }
       if (extname(url.pathname)) {
@@ -144,8 +148,7 @@ export async function prepareAccountFixtures({ root = process.cwd(), origin, por
 </head><body class="${bodyClass}"><div id="root"></div>
 <script type="module" src="/__account-fixture/${batch}.js"></script></body></html>`);
     } catch (error) {
-      response.statusCode = error.code === "ENOENT" ? 404 : 500;
-      response.end(String(error));
+      sendFixtureError(response, error);
     }
   });
   await new Promise((done, reject) => {

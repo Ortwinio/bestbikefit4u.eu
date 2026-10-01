@@ -1,5 +1,7 @@
+import { sendFixtureError } from "../lib/http-errors.mjs";
 import { guideBacklogFixture } from "./guide-backlog-fixture.mjs";
 import { serveQaAsset } from "./assets.mjs";
+import { readFile } from "node:fs/promises";
 import { build } from "esbuild";
 import { createServer } from "node:http";
 import { resolve, extname } from "node:path";
@@ -82,11 +84,19 @@ export async function prepareBlogFixture({ root, origin, fetch: previewFetch = f
         response.end(pathname.endsWith(".js") ? script : css);
         return;
       }
-      if (pathname.startsWith("/_next/") || extname(pathname)) {
-        const remote = await previewFetch(new URL(pathname + url.search, origin));
-        response.statusCode = remote.status;
-        response.setHeader("content-type", remote.headers.get("content-type") || "application/octet-stream");
-        response.end(Buffer.from(await remote.arrayBuffer()));
+      if (pathname.startsWith("/_next/")) {
+        response.statusCode = 404;
+        response.end("Unknown build asset");
+        return;
+      }
+      if (extname(pathname)) {
+        const base = resolve(root, "public");
+        const file = resolve(base, `.${decodeURIComponent(pathname)}`);
+        if (!file.startsWith(base + "/")) throw new Error("Invalid asset path");
+        const types = { ".svg": "image/svg+xml", ".png": "image/png", ".webp": "image/webp",
+          ".jpg": "image/jpeg", ".woff2": "font/woff2" };
+        response.setHeader("content-type", types[extname(file)] || "application/octet-stream");
+        response.end(await readFile(file));
         return;
       }
       if (!/^\/(nl|en)\/blog(?:\/visual-article-\d+)?\/?$/.test(pathname)) {
@@ -103,8 +113,7 @@ export async function prepareBlogFixture({ root, origin, fetch: previewFetch = f
 <body class="${bodyClass}"><div id="root"></div>
 <script type="module" src="/fixture.js"></script></body></html>`);
     } catch (error) {
-      response.statusCode = 500;
-      response.end(String(error));
+      sendFixtureError(response, error);
     }
   });
   await new Promise((done, reject) => {

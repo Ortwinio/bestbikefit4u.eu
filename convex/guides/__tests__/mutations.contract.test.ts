@@ -1,4 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { readFileSync, readdirSync } from "node:fs";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { RewrittenGuide } from "../../../src/components/guides/RewrittenGuide";
+import { resolveGuideRewrite } from "../../../src/lib/guides/rewrites";
+import type { Doc } from "../../_generated/dataModel";
+import { guideRewriteDocumentValidator } from "../rewriteImport";
+import { validateDocument, changedFields, importDocuments } from "../../../scripts/import-guide-rewrites.mjs";
 
 type FakeDoc = Record<string, unknown> & { _id: string };
 type TestHandler = (ctx: unknown, args: unknown) => Promise<unknown>;
@@ -11,6 +19,8 @@ vi.mock("@convex-dev/auth/server", () => ({
   getAuthUserId: getAuthUserIdMock,
 }));
 
+vi.mock("@/components/seo/JsonLd", () => ({ JsonLd: () => null }));
+
 import {
   changeSlug,
   createGuide,
@@ -18,6 +28,7 @@ import {
   publishGuide,
   restoreGuideRevision,
   updateGuide,
+  importGuideRewrite,
 } from "../mutations";
 import { getGuideAuditLog, getPublishedGuide } from "../queries";
 
@@ -157,6 +168,108 @@ function makeCtx(options?: {
     },
   };
 }
+
+describe("guide rewrite import", () => {
+  const document = JSON.parse(readFileSync(
+    "plans/redesign-canvas/guides-import/bike-fit-for-tall-riders.json", "utf8"));
+  const invoke = (operation: unknown, ctx: unknown, args: unknown) =>
+    (operation as { _handler: TestHandler })._handler(ctx, args);
+
+  it("validates all review documents and rejects malformed fields", () => {
+    const schema = (guideRewriteDocumentValidator as unknown as {
+      json: { type: string; value: Record<string, unknown> };
+    }).json;
+    for (const file of readdirSync("plans/redesign-canvas/guides-import").filter((name) => name.endsWith(".json"))) {
+      const input = JSON.parse(readFileSync(`plans/redesign-canvas/guides-import/${file}`, "utf8"));
+      expect(() => validateDocument(input, schema)).not.toThrow();
+    }
+    for (const patch of [{ robotsIndex: "true" }, { featuredImageAlt: { nl: "Only Dutch" } },
+      { version: "one" }, { surprise: true }, { body: { nl: [], en: [{ type: "invalid" }] } }]) {
+      expect(() => validateDocument({ ...document, ...patch }, schema)).toThrow();
+    }
+    const registered = importGuideRewrite as unknown as { exportArgs: () => string };
+    expect(JSON.parse(registered.exportArgs()).value.featuredImageAlt).toEqual(
+      schema.value.featuredImageAlt);
+  });
+
+  it("creates a published CMS rewrite and ignores file provenance/version", async () => {
+    const ctx = makeCtx();
+    await invoke(importGuideRewrite, ctx, { ...document, version: 999, actorId: "admin_1" });
+    const imported = [...ctx.tables.guidePages.values()][0];
+    expect(imported).toMatchObject({ status: "published", importStatus: "44b", version: 1,
+      createdBy: "admin_1", featuredImageAlt: document.featuredImageAlt, ogImageAlt: document.ogImageAlt });
+    expect(imported.createdAt).not.toBe(document.createdAt);
+    expect(imported.lastUpdatedAt).toBe(imported.updatedAt);
+    expect(ctx.tables.revisions.size).toBe(1);
+  });
+
+  it("previews without mutation and stops a real run at the first failed import", async () => {
+    const log = { dryRun: true, production: true, overwrite: true,
+      entries: [] as Array<{ outcome: string; action: string }> };
+    const run = vi.fn().mockReturnValueOnce(document).mockReturnValueOnce(null);
+    const save = vi.fn();
+    await importDocuments([document, document], run, log, save, undefined);
+    expect(run.mock.calls.map(([name]) => name)).toEqual([
+      "guides/queries:getGuideImportRecord", "guides/queries:getGuideImportRecord",
+    ]);
+    expect(log.entries.map(({ action }) => action)).toEqual(["update", "create"]);
+    const failingRun = vi.fn().mockReturnValueOnce(null).mockImplementationOnce(() => {
+      throw new Error("Import failed");
+    });
+    const realLog = { dryRun: false, overwrite: true, entries: [] as Array<{ outcome: string }> };
+    await expect(importDocuments([document, document], failingRun, realLog, save, "admin_1"))
+      .rejects.toThrow("Import failed");
+    expect(failingRun).toHaveBeenCalledTimes(2);
+    expect(realLog.entries[0].outcome).toBe("failed");
+  });
+
+  it("preserves identity, provenance, publication and history; restores the pre-import text", async () => {
+    const ctx = makeCtx();
+    const id = await invoke(createGuide, ctx, { ...createGuideArgs(), slug: document.slug });
+    await invoke(publishGuide, ctx, { id });
+    const before = ctx.tables.guidePages.get(String(id))!;
+    await invoke(importGuideRewrite, ctx, { ...document, overwrite: true, actorId: "admin_1" });
+    const imported = ctx.tables.guidePages.get(String(id))!;
+    expect(imported).toMatchObject({ _id: id, createdAt: before.createdAt, createdBy: before.createdBy,
+      publishedAt: before.publishedAt, version: Number(before.version) + 1, importStatus: "44b" });
+    expect(ctx.tables.revisions.size).toBe(3);
+    const revision = [...ctx.tables.revisions.values()][1];
+    await invoke(restoreGuideRevision, ctx, { guideId: id, revisionId: revision._id });
+    expect(ctx.tables.guidePages.get(String(id))?.h1).toEqual(before.h1);
+  });
+
+  it("protects existing records and rejects invalid actors and paths", async () => {
+    const ctx = makeCtx();
+    await expect(invoke(importGuideRewrite, ctx, { ...document, actorId: "user_1" })).rejects.toThrow(
+      "CMS administrator");
+    await expect(invoke(importGuideRewrite, ctx, { ...document, path: "/wrong", actorId: "admin_1" }))
+      .rejects.toThrow("canonical");
+    await invoke(importGuideRewrite, ctx, { ...document, actorId: "admin_1" });
+    await expect(invoke(importGuideRewrite, ctx, { ...document, actorId: "admin_1" }))
+      .rejects.toThrow("overwrite");
+    expect(ctx.tables.revisions.size).toBe(1);
+  });
+
+  it("renders the imported CMS content and subsequent CMS edits instead of the code fallback", async () => {
+    const ctx = makeCtx();
+    const input = { ...document, libraryBody: { nl: "## Invoer\n\nUnieke geïmporteerde tekst.",
+      en: "## Imported\n\nUnique imported copy." }, actorId: "admin_1" };
+    await invoke(importGuideRewrite, ctx, input);
+    const id = [...ctx.tables.guidePages.keys()][0];
+    const render = () => {
+      const record = ctx.tables.guidePages.get(id) as unknown as Doc<"guidePages">;
+      const guide = resolveGuideRewrite(document.slug, record)!;
+      return renderToStaticMarkup(createElement(RewrittenGuide, { guide, locale: "nl" }));
+    };
+    expect(render()).toContain("Unieke geïmporteerde tekst.");
+    expect(render()).toContain('data-guide-source="cms-rewrite"');
+    await invoke(updateGuide, ctx, { id,
+      libraryBody: { nl: "## Bewerkt\n\nNieuwe tekst uit de CMS-editor.", en: "Edited in CMS." } });
+    expect(render()).toContain("Nieuwe tekst uit de CMS-editor.");
+    expect(render()).not.toContain("Unieke geïmporteerde tekst.");
+    expect(changedFields(document, document)).toEqual(["status"]);
+  });
+});
 
 describe("guide mutations and queries", () => {
   beforeEach(() => {

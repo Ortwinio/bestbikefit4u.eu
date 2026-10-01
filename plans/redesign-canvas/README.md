@@ -1,5 +1,11 @@
 # Redesign canvas — BestBikeFit4U
 
+2026-10-02 — **B: DONE 49.** Revision-preserving, actor-attributed CMS rewrite importer and
+CLI preview/import script implemented. All 48 documents validate offline; 313 Convex tests,
+lint and typecheck pass. Lead waived deployment preview because no dev deployment exists.
+Production dry-run remains query-only and release-owned. No database writes or deployment.
+Evidence: `audit/49-notes.md`, `audit/49-import-log.json`, `audit/files-49.txt`.
+
 2026-09-30 — Codex D completed **44a read-only production guides audit**: 96 live pages
 (48 slugs × NL/EN), including 36 real pages missing from the guide sitemap. All pages have
 writing-guide gaps; 60 bodies are positively identified as CMS libraryBody, while the other
@@ -332,3 +338,8 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
   Ten WebP conversions, legacy source compression, unused-asset cleanup and lint:images guard. 2,015tests pass
   (25skipped), full lint/typecheck and production build pass;13before/after comparisons and3route checks pass.
   Notes: `audit/47-notes.md`; files: `audit/files-47.txt` (no PNGs). No commit/database writes by C.
+
+- 2026-10-02 — **C: DONE 48.** Fixed the code paths behind all 33 PR-4 CodeQL alerts, without suppressions.
+  Generic fixture errors, local asset serving, parser-based HTML helpers, Markdown escaping and avatar URL guard.
+  62 focused tests, 20 sweep-helper tests, six Chromium board renders, lint and typecheck pass.
+  GitHub alert closure awaits the next PR scan. Notes: `audit/48-notes.md`; files: `audit/files-48.txt`. No commit.

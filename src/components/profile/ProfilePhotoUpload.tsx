@@ -31,7 +31,8 @@ export function ProfilePhotoUpload({
       await updateProfile({ profile_image_url: nextStorageId });
     }
   );
-  const displayUrl = resolvedUrl ?? optimisticUrl;
+  const candidateUrl = resolvedUrl ?? optimisticUrl;
+  const displayUrl = candidateUrl && /^(https:\/\/|blob:)/.test(candidateUrl) ? candidateUrl : null;
 
   const sizeClasses = useMemo(() => {
     switch (size) {

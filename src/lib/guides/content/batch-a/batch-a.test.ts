@@ -1,3 +1,4 @@
+import { parseHtml } from "../../../../../scripts/lib/html.mjs";
 import { createHash } from "node:crypto";
 import { readFileSync, statSync } from "node:fs";
 import { describe, expect, it } from "vitest";
@@ -48,8 +49,9 @@ describe("Batch A bilingual editorial content", () => {
       expect(sections[2]).toMatch(/^1\. /m);
       expect([...sections[2].matchAll(/^\d+\. \*\*[^*\n]+\*\*/gm)]).toHaveLength(6);
       const html = renderToStaticMarkup(createElement(ReactMarkdown, null, content.markdown));
-      const paragraphs = [...html.matchAll(/<p(?:\s[^>]*)?>([\s\S]*?)<\/p>/g)]
-        .map(([, text]) => text.replace(/<[^>]*>/g, "").replace(/&[^;]+;/g, " "));
+      const dom = parseHtml(html);
+      const paragraphs: string[] = [...dom.window.document.querySelectorAll("p")].map((node) => node.textContent ?? "");
+      dom.window.close();
       const sentences = paragraphs.flatMap((paragraph) => paragraph.split(/[.!?]+/).filter((text) => words(text)));
       for (const paragraph of paragraphs) {
         expect(paragraph.split(/[.!?]+/).filter((text) => words(text)).length, paragraph).toBeLessThanOrEqual(4);

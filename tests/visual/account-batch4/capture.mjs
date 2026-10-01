@@ -1,3 +1,5 @@
+import { sendFixtureError } from "../lib/http-errors.mjs";
+import { serveQaAsset } from "../final-sweep/assets.mjs";
 import { build } from "esbuild";
 import { createServer } from "node:http";
 import { readFile, mkdir } from "node:fs/promises";
@@ -87,10 +89,12 @@ const server = createServer(async (request, response) => {
       return;
     }
     if (pathname.startsWith("/_next/")) {
-      const remote = await fetch(new URL(pathname, origin));
-      response.statusCode = remote.status;
-      response.setHeader("content-type", remote.headers.get("content-type") || "application/octet-stream");
-      response.end(Buffer.from(await remote.arrayBuffer()));
+      if (await serveQaAsset(request, response, {
+        staticDir: resolve(root, ".next/static"),
+        fallbackStaticDirs: [resolve(root, ".next/dev/static"), resolve(root, ".next-final-sweep/static")],
+      })) return;
+      response.statusCode = 404;
+      response.end("Unknown build asset");
       return;
     }
     if (extname(pathname)) {
@@ -115,8 +119,7 @@ const server = createServer(async (request, response) => {
         '<script type="module" src="/fixture.js"></script></body></html>',
     );
   } catch (error) {
-    response.statusCode = 500;
-    response.end(String(error));
+    sendFixtureError(response, error);
   }
 });
 await new Promise((done) => server.listen(port, "127.0.0.1", done));

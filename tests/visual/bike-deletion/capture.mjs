@@ -1,3 +1,4 @@
+import { sendFixtureError } from "../lib/http-errors.mjs";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
@@ -34,7 +35,7 @@ const server = createServer(async (request, response) => {
     }
     response.setHeader("Content-Type", "text/html");
     response.end('<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/fixture.css"><title>Bike deletion dialog</title></head><body><div id="root"></div><script type="module" src="/fixture.js"></script></body></html>');
-  } catch (error) { response.statusCode = 500; response.end(String(error)); }
+  } catch (error) { sendFixtureError(response, error); }
 });
 await new Promise((done) => server.listen(0, "127.0.0.1", done));
 const browser = await chromium.launch({ headless: true });

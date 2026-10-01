@@ -3,6 +3,7 @@
 // Usage: node plans/redesign-canvas/check-board.mjs <file.dc.html> [...]
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
+import { htmlText, withoutElements } from "../../scripts/lib/html.mjs";
 
 const PALETTE = new Set([
   "#CFF26A", "#E6F8A8", "#0A7263", "#075A4E", "#E1F2EE", "#0F2420", "#3B4F4A",
@@ -71,7 +72,7 @@ for (const file of process.argv.slice(2)) {
   if (/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(src)) err("emoji found");
   if (/role="button"|<(div|span)[^>]*onClick=/.test(body)) err("onClick/role on div/span (use <button>)");
   for (const m of body.matchAll(/<button\b[^>]*>([\s\S]*?)<\/button>/g)) {
-    const text = m[1].replace(/<[^>]+>/g, "").trim();
+    const text = htmlText(m[1]).trim();
     if (!text && !/aria-label=/.test(m[0])) err("icon-only <button> without aria-label");
   }
   for (const m of body.matchAll(/<input\b[^>]*>/g)) {
@@ -80,7 +81,7 @@ for (const file of process.argv.slice(2)) {
   }
   // rider-facing copy must not contain developer/mockup language (BOARD-RULES → Copy)
   const JARGON = /engine|contract|voorlopig|demo\b|canvas|placeholder|adapter|guardrail|\bboard\b|integratie|rekenvoorbeeld/i;
-  const visible = body.replace(/<helmet>[\s\S]*?<\/helmet>/, "").replace(/<script[\s\S]*?<\/script>/g, "").replace(/<[^>]+>/g, "\n").split("\n");
+  const visible = htmlText(withoutElements(body, "helmet, script, style")).split("\n");
   const logic = script ? script[1].replace(/\/\/[^\n]*/g, "") : "";
   const literals = [...logic.matchAll(/(['"`])((?:(?!\1)[^\\\n]|\\.){6,})\1/g)].map((m) => m[2]).filter((t) => /\s/.test(t));
   for (const t of [...visible, ...literals]) if (JARGON.test(t)) err(`jargon in rider-facing copy: "${t.trim().slice(0, 80)}"`);
@@ -92,7 +93,7 @@ for (const file of process.argv.slice(2)) {
   }
 
   // tag balance (outside <script>/<style>)
-  const markup = body.replace(/<style[\s\S]*?<\/style>/g, "").replace(/<script[\s\S]*?<\/script>/g, "");
+  const markup = withoutElements(body, "style, script");
   const stack = [];
   for (const m of markup.matchAll(/<(\/?)([a-zA-Z][\w-]*)((?:"[^"]*"|'[^']*'|[^'">])*)>/g)) {
     const [, close, tagRaw, attrs] = m;
