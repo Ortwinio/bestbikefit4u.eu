@@ -80,10 +80,16 @@ function readFixture(reference, args) {
   return values[name];
 }
 export const useQuery = (reference, args) => readFixture(reference, args);
+export const usePaginatedQuery = (reference, args) => ({
+  results: args === "skip" ? [] : readFixture(reference, args),
+  status: "Exhausted",
+  loadMore: () => {},
+});
 
 const action = async (...args) => {
   window.__visualActions.push(args);
   if (fixture === "save-error") throw new Error("Visual fixture save failure");
+  if (fixture === "saving") await new Promise((resolve) => setTimeout(resolve, 3000));
   return null;
 };
 export const useMutation = () => action;

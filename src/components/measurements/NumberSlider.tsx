@@ -3,6 +3,8 @@
 import { toPercentBucket } from "@/lib/uiPercent";
 import { cn } from "@/utils/cn";
 import { Slider } from "@/components/ui";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { measurementValidationText } from "@/i18n/account/profileLanguage";
 
 /**
  * Compact read-only slider — same visual language as NumberSlider but non-interactive.
@@ -93,6 +95,7 @@ export function NumberSlider({
   unit?: string;
   error?: string;
 }) {
+  const { locale } = useDashboardMessages();
   const hasValue = typeof value === "number" && !Number.isNaN(value);
   return (
     <Slider
@@ -103,7 +106,7 @@ export function NumberSlider({
       value={hasValue ? value : min}
       valueLabel={hasValue ? String(value) : "—"}
       unit={unit}
-      error={error}
+      error={measurementValidationText(locale, error, min, max, unit)}
       onPointerDown={onUserInteract}
       onChange={(nextValue) => {
         onUserInteract?.();

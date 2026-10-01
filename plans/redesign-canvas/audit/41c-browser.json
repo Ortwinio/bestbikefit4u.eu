@@ -1,0 +1,1006 @@
+{
+  "sourceHash": "eab17252a0cf5e49bf99dc8a6cd4ae8e302e95cb6a7091e9a9e7fb21a603f8c1",
+  "buildId": "TfCQV17O5jkU9e56TSN4J",
+  "results": [
+    {
+      "route": "bikes/visual-bike",
+      "width": 1440,
+      "theme": "light",
+      "fixture": "saving",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > h2:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike",
+      "width": 1440,
+      "theme": "light",
+      "fixture": "save-error",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > h2:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike",
+      "width": 1440,
+      "theme": "dark",
+      "fixture": "saving",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > h2:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike",
+      "width": 1440,
+      "theme": "dark",
+      "fixture": "save-error",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > h2:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike",
+      "width": 390,
+      "theme": "light",
+      "fixture": "saving",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > h2:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike",
+      "width": 390,
+      "theme": "light",
+      "fixture": "save-error",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > h2:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike",
+      "width": 390,
+      "theme": "dark",
+      "fixture": "saving",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > h2:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike",
+      "width": 390,
+      "theme": "dark",
+      "fixture": "save-error",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "fail",
+          "details": [
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            },
+            {
+              "kind": "visible-text",
+              "text": "Endurance racefiets",
+              "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > main:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > h2:nth-of-type(1)",
+              "englishWords": [
+                "endurance"
+              ],
+              "ratio": 0.5,
+              "wordCount": 2,
+              "reason": "unambiguous-english-word"
+            }
+          ]
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike/edit",
+      "width": 1440,
+      "theme": "light",
+      "fixture": "saving",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike/edit",
+      "width": 1440,
+      "theme": "light",
+      "fixture": "save-error",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike/edit",
+      "width": 1440,
+      "theme": "dark",
+      "fixture": "saving",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike/edit",
+      "width": 1440,
+      "theme": "dark",
+      "fixture": "save-error",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike/edit",
+      "width": 390,
+      "theme": "light",
+      "fixture": "saving",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike/edit",
+      "width": 390,
+      "theme": "light",
+      "fixture": "save-error",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike/edit",
+      "width": 390,
+      "theme": "dark",
+      "fixture": "saving",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "bikes/visual-bike/edit",
+      "width": 390,
+      "theme": "dark",
+      "fixture": "save-error",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    }
+  ]
+}

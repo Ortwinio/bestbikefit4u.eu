@@ -74,6 +74,7 @@ export function isProtectedAppPath(pathname: string): boolean {
   const internalPathname = stripLocalePrefix(pathname);
   const protectedRoots = [
     "/dashboard",
+    "/tools",
     "/fit",
     "/bikes",
     "/profile",

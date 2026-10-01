@@ -3,6 +3,7 @@ import "server-only";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import type { Locale } from "@/i18n/config";
+import { blogMessages } from "@/i18n/marketing/blog";
 
 export type BlogPost = {
   _id?: string;
@@ -109,6 +110,12 @@ export function getBlogCategoryLabel(category: string, locale: Locale) {
   const normalized = category.trim().replace(/[-_]+/g, " ");
   if (!normalized) {
     return locale === "nl" ? "Bikefitting" : "Bike fitting";
+  }
+
+  if (locale === "nl") {
+    const categories = blogMessages.nl.categories;
+    const translated = categories[normalized.toLowerCase() as keyof typeof categories];
+    if (translated) return translated;
   }
 
   return normalized.replace(/\b\w/g, (letter) => letter.toUpperCase());

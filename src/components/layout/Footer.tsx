@@ -16,6 +16,7 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import type { Messages } from "@/i18n/getDictionary";
 import { getMarketingLayoutMessages } from "@/i18n/marketing/layout";
+import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
 import { MarketingLanguageSwitch } from "./MarketingNavigation";
 
 type FooterProps = {
@@ -24,8 +25,10 @@ type FooterProps = {
 };
 
 export function Footer({ locale, labels }: FooterProps) {
-  const footer = labels.footer;
   const copy = getMarketingLayoutMessages(locale);
+  const footer = locale === "nl"
+    ? { ...labels.footer, support: copy.support, passportCheck: copy.passportCheck, faq: copy.faq }
+    : labels.footer;
   const calculators = [
     { path: "/calculators/bike-fit", label: footer.bikeFit, icon: Bike },
     { path: "/calculators/saddle-height", label: footer.saddleHeight, icon: Ruler },
@@ -120,7 +123,11 @@ export function Footer({ locale, labels }: FooterProps) {
                         {Icon ? (
                           <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden="true" />
                         ) : null}
-                        <span className="min-w-0 break-words">{item.label}</span>
+                        <span className="min-w-0 break-words">
+                          {locale === "nl" && item.path.startsWith("/guides/")
+                            ? getDutchGuideTitle(item.path.slice("/guides/".length)) ?? item.label
+                            : item.label}
+                        </span>
                       </Link>
                     </li>
                   );

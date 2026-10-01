@@ -1,3 +1,4 @@
+import { profileGuideNl } from "@/i18n/account/profileLanguage";
 import type { Metadata } from "next";
 import { getDashboardMessages } from "@/i18n/dashboardMessages";
 import { getRequestLocale } from "@/i18n/request";
@@ -21,13 +22,13 @@ export default async function ImproveFlexibilityPage() {
       variant="flexibility"
       exercises={isNl ? [
         {
-          name: "Zittende hamstring stretch",
-          detail: "Verbetert direct de hamstringmobiliteit die bar drop en bekkenkanteling op de fiets beperkt.",
+          name: profileGuideNl.flexibility.seatedStretch,
+          detail: profileGuideNl.flexibility.seatedStretchDetail,
           cadence: "3 sets van 30 seconden, dagelijks",
           steps: [
             "Ga rechtop zitten met beide benen gestrekt voor je.",
             "Beweeg vanuit de heupen naar voren in plaats van direct je rug rond te maken.",
-            "Houd de stretch vast op spanning, niet op pijn.",
+            profileGuideNl.flexibility.holdStretch,
           ],
         },
         {
@@ -41,17 +42,17 @@ export default async function ImproveFlexibilityPage() {
           ],
         },
         {
-          name: "Hamstring stretch liggend met band",
+          name: profileGuideNl.flexibility.strapStretch,
           detail: "Laat je elk been apart trainen zonder je onderrug te belasten.",
           cadence: "3 sets per kant, 3x per week",
           steps: [
-            "Ga op je rug liggen en leg een band of strap om één voet.",
+            profileGuideNl.flexibility.strapStep,
             "Strek het been richting plafond terwijl het andere been ontspannen blijft.",
             "Trek rustig tot je rek voelt aan de achterkant van het bovenbeen.",
           ],
         },
         {
-          name: "Pigeon pose",
+          name: profileGuideNl.flexibility.pigeon,
           detail: "Opent de heupen zodat je je bekken vrijer kunt kantelen in een agressieve rijpositie.",
           cadence: "60 seconden per kant, 3x per week",
           steps: [
@@ -61,7 +62,7 @@ export default async function ImproveFlexibilityPage() {
           ],
         },
         {
-          name: "Hip hinge drill",
+          name: profileGuideNl.flexibility.hipHinge,
           detail: "Leert het bewegingspatroon dat je nodig hebt om je romp te verlagen zonder door de rug in te zakken.",
           cadence: "3 sets van 10 herhalingen, 2x per week",
           steps: [
@@ -123,7 +124,7 @@ export default async function ImproveFlexibilityPage() {
         },
       ]}
       progressTips={isNl ? [
-        "Stretch de meeste dagen gedurende 6-8 weken voordat je beoordeelt of je score echt is veranderd.",
+        profileGuideNl.flexibility.progress,
         "Test jezelf elke 4 weken opnieuw met dezelfde zit-en-reiktest uit je profiel.",
         "Verhoog je score pas wanneer het volgende niveau duidelijk en duurzaam haalbaar voelt, niet na één goede dag.",
       ] : [

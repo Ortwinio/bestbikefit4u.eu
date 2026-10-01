@@ -1,7 +1,8 @@
 /* @vitest-environment jsdom */
 
 import type { ReactNode } from "react";
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within, waitFor } from "@testing-library/react";
+import { accountCalculatorNavigation } from "@/components/account/account-navigation";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import DashboardLayout, {
@@ -80,7 +81,7 @@ vi.mock("@/components/integrations/StravaAutoImportTrigger", () => ({
 
 vi.mock("@/i18n/useDashboardMessages", () => ({
   useDashboardMessages: () => ({
-    locale: "nl",
+    locale: usePathnameMock()?.startsWith("/en/") ? "en" : "nl",
     messages: {
       nav: {
         dashboard: "Dashboard",
@@ -165,7 +166,7 @@ describe("DashboardLayout feedback context integration", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Open dashboard menu" }));
 
-    expect(screen.getByRole("link", { name: "Saddle Selector" }).getAttribute("href")).toBe(
+    expect(screen.getByRole("link", { name: "Zadelbreedte" }).getAttribute("href")).toBe(
       "/nl/saddle-selector"
     );
   });
@@ -182,8 +183,29 @@ describe("DashboardLayout feedback context integration", () => {
     render(<DashboardLayout><div>Content</div></DashboardLayout>);
     fireEvent.click(screen.getByRole("button", { name: "Meer" }));
     expect(screen.getByRole("dialog", { name: "Meer in je account" })).toBeTruthy();
-    fireEvent.click(screen.getByRole("link", { name: "Saddle Selector" }));
+    fireEvent.click(screen.getByRole("link", { name: "Zadelbreedte" }));
     expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it.each(["nl", "en"] as const)("matches desktop calculator destinations in the %s mobile menu", async (locale) => {
+    usePathnameMock.mockReturnValue(`/${locale}/tools/frame-size/details`);
+    render(<DashboardLayout><button>Outside dialog</button></DashboardLayout>);
+    fireEvent.click(screen.getByRole("button", { name: "Open dashboard menu" }));
+    const dialog = screen.getByRole("dialog");
+    const group = within(dialog).getByRole("region", { name: "Calculators" });
+    const tools = accountCalculatorNavigation(locale);
+    expect(within(group).getAllByRole("link").map((link) => link.getAttribute("href")))
+      .toEqual(tools.map(({ href }) => `/${locale}${href}`));
+    for (const tool of tools) expect(within(group).getByRole("link", { name: tool.label })).toBeTruthy();
+    const allHrefs = within(dialog).getAllByRole("link").map((link) => link.getAttribute("href"));
+    for (const tool of tools) expect(allHrefs.filter((href) => href === `/${locale}${tool.href}`)).toHaveLength(1);
+    expect(dialog.querySelectorAll('[aria-current="page"]')).toHaveLength(1);
+    expect(dialog.querySelector('[aria-current="page"]')?.getAttribute("href"))
+      .toBe(`/${locale}/tools/frame-size`);
+    await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
+    expect(screen.queryByRole("button", { name: "Outside dialog" })).toBeNull();
+    fireEvent.keyDown(document.activeElement!, { key: "Escape" });
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
   });
 
   it("does not expose account children before authentication", () => {

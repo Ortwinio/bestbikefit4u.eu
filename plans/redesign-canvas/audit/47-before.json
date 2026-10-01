@@ -1,0 +1,906 @@
+[
+  {
+    "path": "public/bestbikefit4u-home-poster.jpg",
+    "bytes": 67539
+  },
+  {
+    "path": "public/bestbikefit4u-home.gif",
+    "bytes": 9351820
+  },
+  {
+    "path": "public/llms.txt",
+    "bytes": 5868
+  },
+  {
+    "path": "public/default-profile.svg",
+    "bytes": 394
+  },
+  {
+    "path": "public/profile-complete.png",
+    "bytes": 2400319
+  },
+  {
+    "path": "public/file.svg",
+    "bytes": 391
+  },
+  {
+    "path": "public/riding-position.png",
+    "bytes": 1653185
+  },
+  {
+    "path": "public/climbing-cyclist.png",
+    "bytes": 3611349
+  },
+  {
+    "path": "public/bestbikefit4u-home.mp4",
+    "bytes": 615698
+  },
+  {
+    "path": "public/cyclist.png",
+    "bytes": 1581350
+  },
+  {
+    "path": "public/bestbikefit4u-beginner-intermediate-advanced.png",
+    "bytes": 2770791
+  },
+  {
+    "path": "public/default-bike.svg",
+    "bytes": 940
+  },
+  {
+    "path": "public/bike-terrain.png",
+    "bytes": 2607470
+  },
+  {
+    "path": "public/bestbikefit4u-home.webm",
+    "bytes": 1166896
+  },
+  {
+    "path": "public/comfort-discomfort.png",
+    "bytes": 1374753
+  },
+  {
+    "path": "public/vercel.svg",
+    "bytes": 128
+  },
+  {
+    "path": "public/next.svg",
+    "bytes": 1375
+  },
+  {
+    "path": "public/clock.png",
+    "bytes": 2375891
+  },
+  {
+    "path": "public/globe.svg",
+    "bytes": 1035
+  },
+  {
+    "path": "public/window.svg",
+    "bytes": 385
+  },
+  {
+    "path": "public/type-of-riding.png",
+    "bytes": 3872448
+  },
+  {
+    "path": "public/illustrations/08-stack-en-reach.webp",
+    "bytes": 159518
+  },
+  {
+    "path": "public/illustrations/07-cranklengte.webp",
+    "bytes": 47222
+  },
+  {
+    "path": "public/illustrations/01-racefiets.webp",
+    "bytes": 157868
+  },
+  {
+    "path": "public/illustrations/03-cockpit-afstellen.webp",
+    "bytes": 79076
+  },
+  {
+    "path": "public/illustrations/05-gravel.webp",
+    "bytes": 183382
+  },
+  {
+    "path": "public/illustrations/04-bandenspanning.webp",
+    "bytes": 99562
+  },
+  {
+    "path": "public/illustrations/02-zadelhoogte-meten.webp",
+    "bytes": 177394
+  },
+  {
+    "path": "public/illustrations/06-meetset.webp",
+    "bytes": 89398
+  },
+  {
+    "path": "public/illustrations/guides/52-pijn-en-contactpunten.svg",
+    "bytes": 2353855
+  },
+  {
+    "path": "public/illustrations/guides/37-bikefit-contactpunten.webp",
+    "bytes": 109838
+  },
+  {
+    "path": "public/illustrations/guides/32-triatlonhouding.svg",
+    "bytes": 1650124
+  },
+  {
+    "path": "public/illustrations/guides/44-grenzen-online-bikefit.svg",
+    "bytes": 1969372
+  },
+  {
+    "path": "public/illustrations/guides/54-zadel-terugstand-kanteling.svg",
+    "bytes": 722930
+  },
+  {
+    "path": "public/illustrations/guides/35-fietsmaat-geometrie.webp",
+    "bytes": 119660
+  },
+  {
+    "path": "public/illustrations/guides/33-gevoelloze-handen.svg",
+    "bytes": 82271
+  },
+  {
+    "path": "public/illustrations/guides/15-stuurbreedte-remgrepen.webp",
+    "bytes": 26232
+  },
+  {
+    "path": "public/illustrations/guides/28-mountainbike-afstellen.svg",
+    "bytes": 1808490
+  },
+  {
+    "path": "public/illustrations/guides/36-cranklengte.webp",
+    "bytes": 34150
+  },
+  {
+    "path": "public/illustrations/guides/41-stuurpen-bereik.svg",
+    "bytes": 49426
+  },
+  {
+    "path": "public/illustrations/guides/16-inlegzool-voetboog.svg",
+    "bytes": 1026871
+  },
+  {
+    "path": "public/illustrations/guides/55-natriumconcentratie.svg",
+    "bytes": 791513
+  },
+  {
+    "path": "public/illustrations/guides/42-race-endurance-geometrie.webp",
+    "bytes": 120276
+  },
+  {
+    "path": "public/illustrations/guides/25-lange-ritten.svg",
+    "bytes": 1655113
+  },
+  {
+    "path": "public/illustrations/guides/18-lichaamsbouw-fietshouding.svg",
+    "bytes": 2055804
+  },
+  {
+    "path": "public/illustrations/guides/19-zadelhoogte-beenhoek.svg",
+    "bytes": 2394788
+  },
+  {
+    "path": "public/illustrations/guides/12-schoenplaatjes-positie.webp",
+    "bytes": 27308
+  },
+  {
+    "path": "public/illustrations/guides/44-grenzen-online-bikefit.webp",
+    "bytes": 108928
+  },
+  {
+    "path": "public/illustrations/guides/35-fietsmaat-geometrie.svg",
+    "bytes": 2362545
+  },
+  {
+    "path": "public/illustrations/guides/13-fietsschoen-leestbreedte.webp",
+    "bytes": 24492
+  },
+  {
+    "path": "public/illustrations/guides/23-lage-rugpijn.webp",
+    "bytes": 90444
+  },
+  {
+    "path": "public/illustrations/guides/25-lange-ritten.webp",
+    "bytes": 92094
+  },
+  {
+    "path": "public/illustrations/guides/16-inlegzool-voetboog.webp",
+    "bytes": 30726
+  },
+  {
+    "path": "public/illustrations/guides/27-fietsen-vergelijken.webp",
+    "bytes": 124452
+  },
+  {
+    "path": "public/illustrations/guides/43-schoen-cleat.webp",
+    "bytes": 17716
+  },
+  {
+    "path": "public/illustrations/guides/23-lage-rugpijn.svg",
+    "bytes": 1645541
+  },
+  {
+    "path": "public/illustrations/guides/38-gravelbike-afstellen.webp",
+    "bytes": 117426
+  },
+  {
+    "path": "public/illustrations/guides/29-vermogen-snelheid.svg",
+    "bytes": 1655534
+  },
+  {
+    "path": "public/illustrations/guides/22-beperkte-flexibiliteit.svg",
+    "bytes": 1645405
+  },
+  {
+    "path": "public/illustrations/guides/54-zadel-terugstand-kanteling.webp",
+    "bytes": 21316
+  },
+  {
+    "path": "public/illustrations/guides/17-vermogen-gelijkmatig-tempo.svg",
+    "bytes": 2397193
+  },
+  {
+    "path": "public/illustrations/guides/51-fiets-op-trainer.webp",
+    "bytes": 98974
+  },
+  {
+    "path": "public/illustrations/guides/10-korte-romp-stuurafstand.webp",
+    "bytes": 118138
+  },
+  {
+    "path": "public/illustrations/guides/21-gevoelloze-tenen.webp",
+    "bytes": 28492
+  },
+  {
+    "path": "public/illustrations/guides/24-klimtijd.webp",
+    "bytes": 90722
+  },
+  {
+    "path": "public/illustrations/guides/48-eten-tijdens-fietsen.webp",
+    "bytes": 38188
+  },
+  {
+    "path": "public/illustrations/guides/52-pijn-en-contactpunten.webp",
+    "bytes": 115004
+  },
+  {
+    "path": "public/illustrations/guides/39-zweetverlies-meten.webp",
+    "bytes": 22128
+  },
+  {
+    "path": "public/illustrations/guides/09-beginners-fietsafstelling.webp",
+    "bytes": 121956
+  },
+  {
+    "path": "public/illustrations/guides/26-ftp-meten.svg",
+    "bytes": 2164368
+  },
+  {
+    "path": "public/illustrations/guides/46-lange-fietser.webp",
+    "bytes": 117082
+  },
+  {
+    "path": "public/illustrations/guides/41-stuurpen-bereik.webp",
+    "bytes": 28782
+  },
+  {
+    "path": "public/illustrations/guides/43-schoen-cleat.svg",
+    "bytes": 58551
+  },
+  {
+    "path": "public/illustrations/guides/14-framemaat-meetpunten.webp",
+    "bytes": 128174
+  },
+  {
+    "path": "public/illustrations/guides/40-voeding-drinken.svg",
+    "bytes": 662123
+  },
+  {
+    "path": "public/illustrations/guides/11-knie-pedaalbeweging.svg",
+    "bytes": 2395601
+  },
+  {
+    "path": "public/illustrations/guides/47-koolhydraten-onderweg.webp",
+    "bytes": 30482
+  },
+  {
+    "path": "public/illustrations/guides/53-fietstype-en-houding.webp",
+    "bytes": 114720
+  },
+  {
+    "path": "public/illustrations/guides/46-lange-fietser.svg",
+    "bytes": 2348543
+  },
+  {
+    "path": "public/illustrations/guides/34-zadelsteun.webp",
+    "bytes": 26588
+  },
+  {
+    "path": "public/illustrations/guides/20-standbreedte-pedalen.svg",
+    "bytes": 753358
+  },
+  {
+    "path": "public/illustrations/guides/11-knie-pedaalbeweging.webp",
+    "bytes": 117492
+  },
+  {
+    "path": "public/illustrations/guides/30-racefiets-afstellen.svg",
+    "bytes": 1649026
+  },
+  {
+    "path": "public/illustrations/guides/34-zadelsteun.svg",
+    "bytes": 60173
+  },
+  {
+    "path": "public/illustrations/guides/45-nek-en-schouders.webp",
+    "bytes": 114144
+  },
+  {
+    "path": "public/illustrations/guides/27-fietsen-vergelijken.svg",
+    "bytes": 2730585
+  },
+  {
+    "path": "public/illustrations/guides/31-afstelmaten.svg",
+    "bytes": 2665862
+  },
+  {
+    "path": "public/illustrations/guides/47-koolhydraten-onderweg.svg",
+    "bytes": 710314
+  },
+  {
+    "path": "public/illustrations/guides/39-zweetverlies-meten.svg",
+    "bytes": 77908
+  },
+  {
+    "path": "public/illustrations/guides/21-gevoelloze-tenen.svg",
+    "bytes": 702368
+  },
+  {
+    "path": "public/illustrations/guides/56-gewicht-en-vermogen.svg",
+    "bytes": 736735
+  },
+  {
+    "path": "public/illustrations/guides/55-natriumconcentratie.webp",
+    "bytes": 25004
+  },
+  {
+    "path": "public/illustrations/guides/31-afstelmaten.webp",
+    "bytes": 123386
+  },
+  {
+    "path": "public/illustrations/guides/29-vermogen-snelheid.webp",
+    "bytes": 91402
+  },
+  {
+    "path": "public/illustrations/guides/20-standbreedte-pedalen.webp",
+    "bytes": 30392
+  },
+  {
+    "path": "public/illustrations/guides/49-voet-opmeten.webp",
+    "bytes": 21848
+  },
+  {
+    "path": "public/illustrations/guides/15-stuurbreedte-remgrepen.svg",
+    "bytes": 692431
+  },
+  {
+    "path": "public/illustrations/guides/33-gevoelloze-handen.webp",
+    "bytes": 26634
+  },
+  {
+    "path": "public/illustrations/guides/48-eten-tijdens-fietsen.svg",
+    "bytes": 798873
+  },
+  {
+    "path": "public/illustrations/guides/40-voeding-drinken.webp",
+    "bytes": 27518
+  },
+  {
+    "path": "public/illustrations/guides/14-framemaat-meetpunten.svg",
+    "bytes": 2851839
+  },
+  {
+    "path": "public/illustrations/guides/30-racefiets-afstellen.webp",
+    "bytes": 89668
+  },
+  {
+    "path": "public/illustrations/guides/13-fietsschoen-leestbreedte.svg",
+    "bytes": 593996
+  },
+  {
+    "path": "public/illustrations/guides/26-ftp-meten.webp",
+    "bytes": 100728
+  },
+  {
+    "path": "public/illustrations/guides/42-race-endurance-geometrie.svg",
+    "bytes": 2362927
+  },
+  {
+    "path": "public/illustrations/guides/56-gewicht-en-vermogen.webp",
+    "bytes": 29346
+  },
+  {
+    "path": "public/illustrations/guides/32-triatlonhouding.webp",
+    "bytes": 89154
+  },
+  {
+    "path": "public/illustrations/guides/19-zadelhoogte-beenhoek.webp",
+    "bytes": 117926
+  },
+  {
+    "path": "public/illustrations/guides/37-bikefit-contactpunten.svg",
+    "bytes": 2329820
+  },
+  {
+    "path": "public/illustrations/guides/22-beperkte-flexibiliteit.webp",
+    "bytes": 89668
+  },
+  {
+    "path": "public/illustrations/guides/50-stuurhoogte-en-drop.svg",
+    "bytes": 1903166
+  },
+  {
+    "path": "public/illustrations/guides/09-beginners-fietsafstelling.svg",
+    "bytes": 2385219
+  },
+  {
+    "path": "public/illustrations/guides/53-fietstype-en-houding.svg",
+    "bytes": 2200912
+  },
+  {
+    "path": "public/illustrations/guides/51-fiets-op-trainer.svg",
+    "bytes": 2125697
+  },
+  {
+    "path": "public/illustrations/guides/10-korte-romp-stuurafstand.svg",
+    "bytes": 2386792
+  },
+  {
+    "path": "public/illustrations/guides/12-schoenplaatjes-positie.svg",
+    "bytes": 426065
+  },
+  {
+    "path": "public/illustrations/guides/45-nek-en-schouders.svg",
+    "bytes": 2338024
+  },
+  {
+    "path": "public/illustrations/guides/50-stuurhoogte-en-drop.webp",
+    "bytes": 50904
+  },
+  {
+    "path": "public/illustrations/guides/36-cranklengte.svg",
+    "bytes": 194727
+  },
+  {
+    "path": "public/illustrations/guides/24-klimtijd.svg",
+    "bytes": 1251286
+  },
+  {
+    "path": "public/illustrations/guides/49-voet-opmeten.svg",
+    "bytes": 280962
+  },
+  {
+    "path": "public/illustrations/guides/38-gravelbike-afstellen.svg",
+    "bytes": 1623276
+  },
+  {
+    "path": "public/illustrations/guides/17-vermogen-gelijkmatig-tempo.webp",
+    "bytes": 117640
+  },
+  {
+    "path": "public/illustrations/guides/18-lichaamsbouw-fietshouding.webp",
+    "bytes": 124778
+  },
+  {
+    "path": "public/illustrations/guides/28-mountainbike-afstellen.webp",
+    "bytes": 108274
+  },
+  {
+    "path": "public/brand/README.md",
+    "bytes": 1305
+  },
+  {
+    "path": "public/brand/favicon/favicon.ico",
+    "bytes": 4420
+  },
+  {
+    "path": "public/brand/favicon/apple-touch-icon.png",
+    "bytes": 4757
+  },
+  {
+    "path": "public/brand/favicon/favicon-16.png",
+    "bytes": 723
+  },
+  {
+    "path": "public/brand/favicon/android-chrome-192.png",
+    "bytes": 5006
+  },
+  {
+    "path": "public/brand/favicon/site.webmanifest",
+    "bytes": 501
+  },
+  {
+    "path": "public/brand/favicon/maskable-512.png",
+    "bytes": 11701
+  },
+  {
+    "path": "public/brand/favicon/favicon-32.png",
+    "bytes": 1492
+  },
+  {
+    "path": "public/brand/favicon/android-chrome-512.png",
+    "bytes": 13935
+  },
+  {
+    "path": "public/brand/favicon/favicon.svg",
+    "bytes": 457
+  },
+  {
+    "path": "public/brand/social/og-image.svg",
+    "bytes": 48216
+  },
+  {
+    "path": "public/brand/social/og-image-1200x630.png",
+    "bytes": 54095
+  },
+  {
+    "path": "public/brand/logo/beeldmerk-512.png",
+    "bytes": 25511
+  },
+  {
+    "path": "public/brand/logo/logo-horizontaal.svg",
+    "bytes": 13221
+  },
+  {
+    "path": "public/brand/logo/beeldmerk-zwart.svg",
+    "bytes": 534
+  },
+  {
+    "path": "public/brand/logo/logo-horizontaal-zwart.svg",
+    "bytes": 13221
+  },
+  {
+    "path": "public/brand/logo/logo-horizontaal-wit.svg",
+    "bytes": 13221
+  },
+  {
+    "path": "public/brand/logo/beeldmerk-donker.svg",
+    "bytes": 534
+  },
+  {
+    "path": "public/brand/logo/logo-horizontaal-960.png",
+    "bytes": 25014
+  },
+  {
+    "path": "public/brand/logo/logo-gestapeld-negatief-480.png",
+    "bytes": 16548
+  },
+  {
+    "path": "public/brand/logo/logo-gestapeld-960.png",
+    "bytes": 38159
+  },
+  {
+    "path": "public/brand/logo/logo-horizontaal-negatief-960.png",
+    "bytes": 21734
+  },
+  {
+    "path": "public/brand/logo/logo-gestapeld.svg",
+    "bytes": 13054
+  },
+  {
+    "path": "public/brand/logo/logo-horizontaal-negatief-480.png",
+    "bytes": 10808
+  },
+  {
+    "path": "public/brand/logo/beeldmerk-1024.png",
+    "bytes": 55627
+  },
+  {
+    "path": "public/brand/logo/logo-gestapeld-negatief.svg",
+    "bytes": 13054
+  },
+  {
+    "path": "public/brand/logo/logo-horizontaal-negatief.svg",
+    "bytes": 13221
+  },
+  {
+    "path": "public/brand/logo/logo-gestapeld-negatief-960.png",
+    "bytes": 33944
+  },
+  {
+    "path": "public/brand/logo/logo-gestapeld-480.png",
+    "bytes": 18669
+  },
+  {
+    "path": "public/brand/logo/beeldmerk.svg",
+    "bytes": 534
+  },
+  {
+    "path": "public/brand/logo/beeldmerk-256.png",
+    "bytes": 12178
+  },
+  {
+    "path": "public/brand/logo/logo-horizontaal-480.png",
+    "bytes": 12543
+  },
+  {
+    "path": "public/brand/report/report-logo.svg",
+    "bytes": 13269
+  },
+  {
+    "path": "public/brand/report/bike-dimensions.png",
+    "bytes": 470350
+  },
+  {
+    "path": "public/brand/report/fonts/OFL-dm-mono.txt",
+    "bytes": 4484
+  },
+  {
+    "path": "public/brand/report/fonts/figtree-500-latin.woff2",
+    "bytes": 11496
+  },
+  {
+    "path": "public/brand/report/fonts/figtree-600-latin.woff2",
+    "bytes": 11440
+  },
+  {
+    "path": "public/brand/report/fonts/bricolage-grotesque-600-latin.woff2",
+    "bytes": 22420
+  },
+  {
+    "path": "public/brand/report/fonts/dm-mono-latin.woff2",
+    "bytes": 8724
+  },
+  {
+    "path": "public/brand/report/fonts/bricolage-grotesque-latin.woff2",
+    "bytes": 41236
+  },
+  {
+    "path": "public/brand/report/fonts/figtree-800-latin.woff2",
+    "bytes": 11380
+  },
+  {
+    "path": "public/brand/report/fonts/bricolage-grotesque-800-latin.woff2",
+    "bytes": 21768
+  },
+  {
+    "path": "public/brand/report/fonts/README.md",
+    "bytes": 1819
+  },
+  {
+    "path": "public/brand/report/fonts/figtree-latin.woff2",
+    "bytes": 20184
+  },
+  {
+    "path": "public/brand/report/fonts/bricolage-grotesque-700-latin.woff2",
+    "bytes": 22236
+  },
+  {
+    "path": "public/brand/report/fonts/OFL-bricolage-grotesque.txt",
+    "bytes": 4403
+  },
+  {
+    "path": "public/brand/report/fonts/figtree-700-latin.woff2",
+    "bytes": 11416
+  },
+  {
+    "path": "public/brand/report/fonts/OFL-figtree.txt",
+    "bytes": 4388
+  },
+  {
+    "path": "public/brand/report/fonts/figtree-400-latin.woff2",
+    "bytes": 11408
+  },
+  {
+    "path": "public/logo/logo-bestbikefit4u-v2.png",
+    "bytes": 67078
+  },
+  {
+    "path": "public/logo/bestbikefit4u_logo_primary.svg",
+    "bytes": 3727
+  },
+  {
+    "path": "public/logo/bestbikefit4u_icon_app.svg",
+    "bytes": 3873
+  },
+  {
+    "path": "public/logo/bestbikefit4u-logo-cropped.png",
+    "bytes": 742669
+  },
+  {
+    "path": "public/logo/bestbikefit4u_icon_app.png",
+    "bytes": 93635
+  },
+  {
+    "path": "public/logo/bestbikefit4u_logo_primary.png",
+    "bytes": 55253
+  },
+  {
+    "path": "public/logo/bestbikefit4u-logo.png",
+    "bytes": 408795
+  },
+  {
+    "path": "public/logo/logo-bestbikefit4u-v2.svg",
+    "bytes": 24659
+  },
+  {
+    "path": "public/logo/bestbikefit4u_mark.png",
+    "bytes": 21769
+  },
+  {
+    "path": "public/logo/bestbikefit4u_logo_dark.png",
+    "bytes": 54131
+  },
+  {
+    "path": "public/logo/bestbikefit4u_logo_dark.svg",
+    "bytes": 3537
+  },
+  {
+    "path": "public/logo/bestbikefit4u_mark.svg",
+    "bytes": 3581
+  },
+  {
+    "path": "public/guides/media/012--guides--mountain-bike-fit-guide-hero.png",
+    "bytes": 2488509
+  },
+  {
+    "path": "public/guides/media/031--guides--cleat-position-basics-guide-hero.png",
+    "bytes": 2562995
+  },
+  {
+    "path": "public/guides/media/026--guides--crank-length-guide-hero.png",
+    "bytes": 2502884
+  },
+  {
+    "path": "public/guides/media/005--guides--bike-fit-for-neck-and-shoulder-pain-hero.png",
+    "bytes": 2594714
+  },
+  {
+    "path": "public/guides/media/016--guides--rider-profiles-hero.png",
+    "bytes": 2438447
+  },
+  {
+    "path": "public/guides/media/007--guides--bike-fit-for-saddle-pressure-perineal-numbness-and-saddle-sores-hero.png",
+    "bytes": 2552412
+  },
+  {
+    "path": "public/guides/media/030--guides--cycling-shoe-fit-width-and-last-guide-hero.png",
+    "bytes": 2512992
+  },
+  {
+    "path": "public/guides/media/001--guides-hero.png",
+    "bytes": 2661005
+  },
+  {
+    "path": "public/guides/media/023--guides--saddle-fore-aft-and-tilt-guide-hero.png",
+    "bytes": 2525367
+  },
+  {
+    "path": "public/guides/media/009--guides--ride-types-hero.png",
+    "bytes": 2705852
+  },
+  {
+    "path": "public/guides/media/027--guides--handlebar-width-and-hood-position-guide-hero.png",
+    "bytes": 2414505
+  },
+  {
+    "path": "public/guides/media/008--guides--bike-fit-for-foot-pain-hot-foot-and-numb-toes-hero.png",
+    "bytes": 2538681
+  },
+  {
+    "path": "public/guides/media/017--guides--bike-fit-for-tall-riders-hero.png",
+    "bytes": 2409790
+  },
+  {
+    "path": "public/guides/media/022--guides--saddle-height-guide-hero.png",
+    "bytes": 2517703
+  },
+  {
+    "path": "public/guides/media/014--guides--endurance-bike-fit-guide-hero.png",
+    "bytes": 2525665
+  },
+  {
+    "path": "public/guides/media/004--guides--bike-fitting-for-lower-back-pain-hero.png",
+    "bytes": 2432475
+  },
+  {
+    "path": "public/guides/media/011--guides--gravel-bike-fit-guide-hero.png",
+    "bytes": 2546350
+  },
+  {
+    "path": "public/guides/media/010--guides--road-bike-fit-guide-hero.png",
+    "bytes": 2540900
+  },
+  {
+    "path": "public/guides/media/025--guides--handlebar-drop-guide-hero.png",
+    "bytes": 2439235
+  },
+  {
+    "path": "public/guides/media/021--guides--setup-parameters-hero.png",
+    "bytes": 2512051
+  },
+  {
+    "path": "public/guides/media/002--guides--pain-and-discomfort-hero.png",
+    "bytes": 2551386
+  },
+  {
+    "path": "public/guides/media/003--guides--bike-fitting-for-knee-pain-hero.png",
+    "bytes": 2575860
+  },
+  {
+    "path": "public/guides/media/029--guides--foot-measurement-guide-for-cyclists-hero.png",
+    "bytes": 2524672
+  },
+  {
+    "path": "public/guides/media/028--guides--shoe-foot-cleat-fit-hero.png",
+    "bytes": 2518824
+  },
+  {
+    "path": "public/guides/media/015--guides--indoor-trainer-bike-fit-guide-hero.png",
+    "bytes": 2592079
+  },
+  {
+    "path": "public/guides/media/013--guides--triathlon-bike-fit-guide-hero.png",
+    "bytes": 2513492
+  },
+  {
+    "path": "public/guides/media/018--guides--bike-fit-for-riders-with-a-shorter-torso-hero.png",
+    "bytes": 2452154
+  },
+  {
+    "path": "public/guides/media/020--guides--bike-fit-for-beginners-and-returning-riders-hero.png",
+    "bytes": 2420480
+  },
+  {
+    "path": "public/guides/media/006--guides--bike-fit-for-hand-numbness-and-wrist-pain-hero.png",
+    "bytes": 2521664
+  },
+  {
+    "path": "public/guides/media/019--guides--bike-fit-for-riders-with-limited-flexibility-hero.png",
+    "bytes": 2518923
+  },
+  {
+    "path": "public/guides/media/024--guides--reach-and-stem-guide-hero.png",
+    "bytes": 2503337
+  },
+  {
+    "path": "public/measure/inseam-bbf4u.png",
+    "bytes": 1083687
+  },
+  {
+    "path": "public/measure/arm-length-bbf4u.png",
+    "bytes": 1093606
+  },
+  {
+    "path": "public/measure/shoulder-bbf4u.png",
+    "bytes": 1694623
+  },
+  {
+    "path": "public/measure/height-bbf4u.png",
+    "bytes": 1512110
+  },
+  {
+    "path": "public/measure/torso-bbf4u.png",
+    "bytes": 2235951
+  },
+  {
+    "path": "public/mascote/bestbikefit4u-mascote.png",
+    "bytes": 979729
+  },
+  {
+    "path": "public/mascote/bestbikefit4u-mascote-on-bike.png",
+    "bytes": 1754114
+  },
+  {
+    "path": "public/mascote/bestbikefit4u-mascote-on-bike-transparent.png",
+    "bytes": 1754114
+  },
+  {
+    "path": "public/templates/geometry-import-template.csv",
+    "bytes": 776
+  }
+]

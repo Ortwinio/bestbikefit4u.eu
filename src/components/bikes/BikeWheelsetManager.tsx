@@ -4,11 +4,15 @@ import { useMemo, useState } from "react";
 import { useMutation } from "convex/react";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { api } from "../../../convex/_generated/api";
-import { Button, Input, useToast } from "@/components/ui";
+import { AutosaveStatus, Button, Input, useAutosave, useToast } from "@/components/ui";
 import { BikeNumberField, BikeChoiceField } from "./BikeFormControls";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
-type WheelsetWithSummary = {
+import { getBikesAutosaveCopy } from "@/i18n/account/bikesAutosave";
+import { autosaveMessages } from "@/i18n/account/autosave";
+import { BikeWheelsetEditor, type EditableWheelset } from "./BikeWheelsetEditor";
+
+type WheelsetWithSummary = EditableWheelset & {
   _id: Id<"wheelsets">;
   name: string;
   rimType: "hooked" | "hookless";
@@ -28,8 +32,9 @@ interface BikeWheelsetManagerProps {
 }
 
 export function BikeWheelsetManager({ bikeId, wheelsets }: BikeWheelsetManagerProps) {
-  const { messages } = useDashboardMessages();
+  const { locale, messages } = useDashboardMessages();
   const toast = useToast();
+  const copy = getBikesAutosaveCopy(locale);
   const createWheelset = useMutation(api.wheelsets.mutations.create);
   const updateWheelset = useMutation(api.wheelsets.mutations.update);
   const removeWheelset = useMutation(api.wheelsets.mutations.remove);
@@ -81,21 +86,14 @@ export function BikeWheelsetManager({ bikeId, wheelsets }: BikeWheelsetManagerPr
     }
   }
 
-  async function handleSetActive(wheelsetId: Id<"wheelsets">) {
-    setIsMutatingId(String(wheelsetId));
-    setError(null);
-    try {
-      await updateWheelset({ wheelsetId, isActive: true });
-      toast.success({
-        description: messages.common.toasts.bikeWheelsetActivated,
-      });
-    } catch (updateError) {
-      console.error("Failed to activate wheelset:", updateError);
-      setError(messages.bikeForm.errors.saveFailed);
-    } finally {
-      setIsMutatingId(null);
-    }
-  }
+  const [activeId, setActiveId] = useState(wheelsets.find((item) => item.isActive)?._id ?? "");
+  const activation = useAutosave({
+    value: activeId,
+    debounceMs: 500,
+    onSave: async (wheelsetId) => {
+      if (wheelsetId) await updateWheelset({ wheelsetId: wheelsetId as Id<"wheelsets">, isActive: true });
+    },
+  });
 
   async function handleRemove(wheelsetId: Id<"wheelsets">) {
     setIsMutatingId(String(wheelsetId));
@@ -126,8 +124,11 @@ export function BikeWheelsetManager({ bikeId, wheelsets }: BikeWheelsetManagerPr
                     <p className="font-semibold text-foreground">{wheelset.name}</p>
                     {wheelset.isActive ? (
                       <span
-                        className={"rounded-full bg-secondary px-2.5 py-1 " +
-                        "text-xs font-semibold text-secondary-foreground"}>
+                        className={
+                          "rounded-full bg-secondary px-2.5 py-1 " +
+                          "text-xs font-semibold text-secondary-foreground"
+                        }
+                      >
                         {messages.bikes.wheelsetManager.activeBadge}
                       </span>
                     ) : null}
@@ -153,7 +154,8 @@ export function BikeWheelsetManager({ bikeId, wheelsets }: BikeWheelsetManagerPr
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => void handleSetActive(wheelset._id)}
+                      onClick={() => setActiveId(wheelset._id)}
+                      aria-pressed={activeId === wheelset._id}
                       isLoading={isMutatingId === String(wheelset._id)}
                     >
                       {messages.bikes.wheelsetManager.activeAction}
@@ -169,6 +171,7 @@ export function BikeWheelsetManager({ bikeId, wheelsets }: BikeWheelsetManagerPr
                   </Button>
                 </div>
               </div>
+              <BikeWheelsetEditor key={wheelset._id} wheelset={wheelset} />
             </div>
           ))}
         </div>
@@ -181,6 +184,12 @@ export function BikeWheelsetManager({ bikeId, wheelsets }: BikeWheelsetManagerPr
         </div>
       )}
 
+      {activeId && (
+        <p className="text-sm">
+          {copy.active}: {wheelsets.find((item) => item._id === activeId)?.name}
+        </p>
+      )}
+      <AutosaveStatus {...activation} messages={autosaveMessages[locale]} onRetry={activation.retry} />
       {isAdding ? (
         <div className="rounded-[var(--radius-lg)] border border-border bg-secondary/15 p-4">
           <div className="grid gap-4 md:grid-cols-2">

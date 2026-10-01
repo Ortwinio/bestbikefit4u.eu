@@ -1,4 +1,5 @@
 "use client";
+import { fitAuditCopy, localizeFitValue } from "@/i18n/account/fitAudit";
 
 import type { ReportTirePressureSection as ReportTirePressurePayload } from "@/lib/reports/reportV2Types";
 import type { ReportV2Copy } from "@/lib/reports/reportV2Copy";
@@ -44,7 +45,7 @@ export function TirePressureSection({
               <div className="grid gap-3 sm:grid-cols-2">
                 <MetricTile
                   label={copy.tirePressure.confidence}
-                  value={tirePressure.confidence ? `${tirePressure.confidence}%` : "n/a"}
+                  value={tirePressure.confidence ? `${tirePressure.confidence}%` : fitAuditCopy[copy.locale === "nl" ? "nl" : "en"].unavailable}
                 />
                 <MetricTile
                   label={copy.tirePressure.inputLabels.surface}
@@ -64,7 +65,7 @@ export function TirePressureSection({
                     {copy.tirePressure.inputLabels[
                       input.label as keyof typeof copy.tirePressure.inputLabels
                     ] ?? input.label}
-                    : {input.value}
+                    : {input.label === "surface" || input.label === "goal" ? localizeFitValue(input.value, copy.locale) : input.value}
                   </span>
                 ))}
               </div>

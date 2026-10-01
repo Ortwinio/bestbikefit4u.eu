@@ -17,6 +17,7 @@ import Image from "next/image";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getLocalizedQuestion } from "./localization";
 import { getFitQuestionnaireCopy } from "@/i18n/account/fitQuestionnaire";
+import { fitAuditCopy } from "@/i18n/account/fitAudit";
 
 interface QuestionRendererProps {
   question: QuestionDefinition;
@@ -33,7 +34,7 @@ export function QuestionRenderer({
 }: QuestionRendererProps) {
   const { locale, messages } = useDashboardMessages();
   const copy = getFitQuestionnaireCopy(locale);
-  const localizedQuestion = getLocalizedQuestion(question, messages);
+  const localizedQuestion = getLocalizedQuestion(question, messages, locale);
   const isExperienceLevel = question.questionId === "experience_level";
   const isWeeklyHours = question.questionId === "weekly_hours";
   const isRideDistance = question.questionId === "typical_ride_length";
@@ -119,11 +120,12 @@ export function QuestionRenderer({
         {question.questionId === "position_priority" && (
           <div className="mb-4 overflow-hidden rounded-[var(--radius-lg)] border border-border">
             <Image
-              src="/riding-position.png"
-              alt="Riding position illustration"
+              src="/riding-position.webp"
+              alt={fitAuditCopy[locale].positionAlt}
               width={1024}
               height={1024}
               className="h-auto max-h-56 w-full object-cover"
+              sizes="(max-width: 768px) calc(100vw - 48px), 700px"
               priority
             />
           </div>
@@ -242,7 +244,7 @@ export function QuestionRenderer({
 
         {question.responseType === "scale" && question.scaleConfig && (
           <ScaleQuestion
-            config={question.scaleConfig}
+            config={localizedQuestion.scaleConfig!}
             value={value as number | null}
             onChange={onChange}
           />

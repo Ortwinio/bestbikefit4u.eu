@@ -1,3 +1,5 @@
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
+import { fitPageDetails } from "@/i18n/calculators/fitPageDetails";
 import type { Metadata } from "next";
 import { Gauge, Ruler, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -39,15 +41,12 @@ export async function generateMetadata(): Promise<Metadata> {
     title: isNl
       ? "Zadelhoogte calculator | BestBikeFit4U"
       : "Saddle Height Calculator | BestBikeFit4U",
-    description: isNl
-      ? "Bereken een conservatieve zadelhoogte als startpunt op basis van categorie, doel, " +
-        "flexibiliteit en core."
-      : "Calculate a conservative saddle-height starting point using category, goal, " +
-        "flexibility, and core inputs.",
+    description: fitPageDetails[locale].saddleDescription,
     keywords: isNl
       ? ["zadelhoogte calculator", "bike fit zadelhoogte", "fiets zadelpositie"]
       : ["saddle height calculator", "bike fit saddle height", "cycling saddle position"],
     openGraph: {
+      images: [DEFAULT_SOCIAL_IMAGE],
       title: isNl ? "Zadelhoogte calculator" : "Saddle Height Calculator",
       description: isNl
         ? "Krijg een eerste zadelhoogte-inschatting en een veilige afstelmarge."
@@ -79,9 +78,7 @@ export default async function SaddleHeightCalculatorPage() {
         },
         {
           q: "Waarom beïnvloedt flexibiliteit het advies?",
-          a:
-            "De calculator combineert je binnenbeenlengte met je rijcontext. Flexibiliteit en core " +
-            "beïnvloeden hoe houdbaar de positie rond het zadel voelt.",
+          a: fitPageDetails.nl.saddleFlexibilityAnswer,
         },
       ]
     : [
@@ -151,10 +148,8 @@ export default async function SaddleHeightCalculatorPage() {
       <JsonLd
         schema={[
           buildWebApplicationSchema({
-            name: "BestBikeFit4U Saddle Height Calculator",
-            description:
-              "Calculate a conservative saddle-height starting point using category, goal, " +
-              "flexibility, and core inputs.",
+            name: fitPageDetails[locale].saddleSchemaName,
+            description: fitPageDetails[locale].saddleDescription,
             url: pageUrl,
             aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
@@ -166,9 +161,7 @@ export default async function SaddleHeightCalculatorPage() {
             steps: [
               isNl ? "Meet je binnenbeenlengte zorgvuldig." : "Measure your inseam carefully.",
               isNl ? "Kies je fietscategorie en rijdoel." : "Choose bike category and riding goal.",
-              isNl
-                ? "Beoordeel flexibiliteit en core-stabiliteit."
-                : "Rate flexibility and core stability.",
+              fitPageDetails[locale].saddleCoreStep,
               isNl
                 ? "Gebruik de uitkomst als startpunt en test het rustig."
                 : "Use the result as a starting point and test it conservatively.",

@@ -10,9 +10,25 @@ afterEach(() => {
 });
 
 describe("gearing sliders and live result", () => {
+  it("restores account values without anonymous writes and reports only edits", () => {
+    const changed = vi.fn();
+    render(<GearingCalculatorForm isNl accountMode initialValues={{ outerChainringTeeth: 48, cadenceRpm: 92 }}
+      onValuesChange={changed} headerSlot={<p>Fiets kiezen</p>} statusSlot={<p>Opgeslagen</p>} />);
+    expect(screen.getByRole("slider", { name: "Buitenblad" }).getAttribute("aria-valuenow")).toBe("48");
+    expect(screen.getByText("Fiets kiezen")).toBeTruthy();
+    expect(screen.getByText("Opgeslagen")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Open de klimplanner" }).getAttribute("href")).toBe("/nl/tools/climb-planner");
+    expect(screen.getByRole("region", { name: "Lichtste verhouding" })).toBeTruthy();
+    expect(changed).not.toHaveBeenCalled();
+    expect(save).not.toHaveBeenCalled();
+    fireEvent.keyDown(screen.getByRole("slider", { name: "Buitenblad" }), { key: "ArrowRight" });
+    expect(changed).toHaveBeenLastCalledWith(expect.objectContaining({ outerChainringTeeth: 49, cadenceRpm: 92 }));
+    expect(save).not.toHaveBeenCalled();
+  });
   it("uses the real public gear calculation and native keyboard limits", () => {
     render(<GearingCalculatorForm isNl />);
     expect(screen.getByRole("region", { name: "Voorbeeldfiets · Lichtste verhouding" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Open de klimplanner" }).getAttribute("href")).toBe("/nl/calculators/climb-planner");
     const ring = screen.getByRole("slider", { name: "Buitenblad" });
     fireEvent.keyDown(ring, { key: "End" });
     expect(ring.getAttribute("aria-valuetext")).toBe("70 T");

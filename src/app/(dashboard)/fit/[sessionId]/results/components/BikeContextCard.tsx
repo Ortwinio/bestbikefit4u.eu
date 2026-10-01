@@ -1,4 +1,5 @@
 "use client";
+import { fitAuditCopy } from "@/i18n/account/fitAudit";
 
 import { Bike, Gauge, Route, Target } from "lucide-react";
 import { MetricTile, ResultsSection, StatusPill } from "./ResultsPrimitives";
@@ -151,6 +152,8 @@ function localizeValue(
     Record<string, Record<string, string>>
   >;
   const labels = labelsByLocale[locale][group];
+  if (locale === "nl" && group === "goal" && value === "aerodynamics") return fitAuditCopy.nl.aerodynamics;
+  if (locale === "nl" && group === "typeOfRiding" && value === "casual") return fitAuditCopy.nl.casual;
   return labels[value] ?? value;
 }
 
@@ -166,12 +169,12 @@ export function BikeContextCard({ bike, copy }: BikeContextCardProps) {
       value:
         localizeValue(copy.locale, "ridingStyle", bike.ridingStyle) ??
         bike.ridingStyle ??
-        "n/a",
+        fitAuditCopy[copy.locale === "nl" ? "nl" : "en"].unavailable,
       icon: Route,
     },
     {
       label: copy.bike.goal,
-      value: localizeValue(copy.locale, "goal", bike.goal) ?? bike.goal ?? "n/a",
+      value: localizeValue(copy.locale, "goal", bike.goal) ?? bike.goal ?? fitAuditCopy[copy.locale === "nl" ? "nl" : "en"].unavailable,
       icon: Target,
     },
     {
@@ -179,7 +182,7 @@ export function BikeContextCard({ bike, copy }: BikeContextCardProps) {
       value:
         localizeValue(copy.locale, "typeOfRiding", bike.questionnaire.typeOfRiding) ??
         bike.questionnaire.typeOfRiding ??
-        "n/a",
+        fitAuditCopy[copy.locale === "nl" ? "nl" : "en"].unavailable,
       icon: Gauge,
     },
   ];

@@ -1,4 +1,6 @@
 "use client";
+import { localizeAccountError } from "@/i18n/account/clientErrors";
+import { fitAuditCopy, getFitReportCopy, localizeFitNotes } from "@/i18n/account/fitAudit";
 
 import { use, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -26,7 +28,6 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getFitResultsCopy } from "@/i18n/account/fitResults";
 import { FitResultsOverview } from "@/components/account/FitResultsOverview";
-import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
 import { getPdfResponseError } from "@/lib/reports/pdfResponseError";
 import { isReportAccessOpen } from "@/config/commercial";
@@ -61,7 +62,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   const searchParams = useSearchParams();
   const pagePath = withLocalePrefix(`/fit/${sessionId}/results`, locale);
   const logMarketingEvent = useMarketingEventLogger();
-  const reportCopy = getReportV2Copy(locale);
+  const reportCopy = getFitReportCopy(locale);
   const pageCopy = getFitResultsCopy(locale);
 
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -111,6 +112,9 @@ export default function ResultsPage({ params }: ResultsPageProps) {
     activeReportSource && activeReportSource.recommendation
       ? mapReportV2Payload(activeReportSource)
       : null;
+  if (reportPayload && locale === "nl" && !activeReportSource?.bike?.name?.trim()) {
+    reportPayload.bike.name = fitAuditCopy.nl.unnamedBike;
+  }
   const reportDateLabel = reportPayload
     ? new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-US", {
         year: "numeric",
@@ -134,18 +138,19 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       await generateRecommendation({ sessionId: sessionId as Id<"fitSessions"> });
     } catch (error) {
       setGenerationError(
-        reportClientError(error, {
+        localizeAccountError(reportClientError(error, {
           area: "results",
           action: "generateRecommendation",
+          userMessage: fitAuditCopy[locale].error,
           operationType: "mutation",
           subjectId: sessionId,
           metadata: { sessionId },
-        })
+        }), locale)
       );
     } finally {
       setIsGenerating(false);
     }
-  }, [generateRecommendation, isGenerating, sessionId]);
+  }, [generateRecommendation, isGenerating, sessionId, locale]);
 
   // Generate recommendation if session is complete but no recommendation exists
   useEffect(() => {
@@ -245,13 +250,14 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         section: "results_email_report",
       });
       setEmailError(
-        reportClientError(error, {
+        localizeAccountError(reportClientError(error, {
           area: "results",
           action: "sendFitReport",
+          userMessage: fitAuditCopy[locale].error,
           operationType: "action",
           subjectId: sessionId,
           metadata: { sessionId, recipientEmail: email },
-        })
+        }), locale)
       );
     } finally {
       setIsSending(false);
@@ -268,7 +274,8 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       });
 
       if (!response.ok) {
-        throw new Error(getPdfResponseError(response.status, locale));
+        setDownloadError(getPdfResponseError(response.status, locale));
+        return;
       }
 
       const blob = await response.blob();
@@ -287,7 +294,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       );
     } catch (error) {
       setDownloadError(
-        error instanceof Error
+        locale !== "nl" && error instanceof Error
           ? error.message
           : messages.results.errors.pdfGenerateFailed
       );
@@ -353,7 +360,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           {messages.results.processing.description}
         </p>
         {generationError ? (
-          <ErrorState className="mt-4 text-left" description={generationError} />
+          <ErrorState className="mt-4 text-left" title={locale === "nl" ? fitAuditCopy.nl.error : undefined} description={generationError} />
         ) : null}
         <div className="mt-6">
           <Button
@@ -624,8 +631,8 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2 text-sm text-muted-foreground">
-                        {reportPayload.fitNotes.map((note) => (
-                          <li key={note}>{note}</li>
+                        {localizeFitNotes(reportPayload.fitNotes, locale).map((note, index) => (
+                          <li key={index}>{note}</li>
                         ))}
                       </ul>
                     </CardContent>

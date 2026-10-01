@@ -31,11 +31,12 @@ export function WeeklyHoursSelector({
       {/* Reference image */}
       <div className="relative w-full">
         <Image
-          src="/clock.png"
+          src="/clock.webp"
           alt={t.imageAlt}
           width={900}
           height={400}
           className="h-auto max-h-56 w-full object-cover"
+          sizes="(max-width: 768px) calc(100vw - 48px), 700px"
           priority
         />
       </div>

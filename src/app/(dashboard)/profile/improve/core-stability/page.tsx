@@ -1,3 +1,4 @@
+import { profileGuideNl } from "@/i18n/account/profileLanguage";
 import type { Metadata } from "next";
 import { getDashboardMessages } from "@/i18n/dashboardMessages";
 import { getRequestLocale } from "@/i18n/request";
@@ -21,7 +22,7 @@ export default async function ImproveCoreStabilityPage() {
       variant="coreStability"
       exercises={isNl ? [
         {
-          name: "Front plank",
+          name: profileGuideNl.core.plank,
           detail: "Je referentie-oefening om stabiel te blijven onder belasting in een agressieve fietshouding.",
           cadence: "3 sets, 3x per week",
           steps: [
@@ -31,7 +32,7 @@ export default async function ImproveCoreStabilityPage() {
           ],
         },
         {
-          name: "Dead bug",
+          name: profileGuideNl.core.deadBug,
           detail: "Bouwt anti-extensiecontrole op zodat je onderrug rustig blijft tijdens langere ritten.",
           cadence: "3 sets van 10 herhalingen per kant, 3x per week",
           steps: [
@@ -41,7 +42,7 @@ export default async function ImproveCoreStabilityPage() {
           ],
         },
         {
-          name: "Bird dog",
+          name: profileGuideNl.core.birdDog,
           detail: "Verbetert kruislingse stabiliteit, wat helpt wanneer je hard trapt of beweegt op ruwer terrein.",
           cadence: "3 sets van 10 herhalingen per kant, 3x per week",
           steps: [
@@ -51,8 +52,8 @@ export default async function ImproveCoreStabilityPage() {
           ],
         },
         {
-          name: "Side plank",
-          detail: "Richt zich op de laterale core zodat je minder door je romp gaat wiebelen wanneer je vermogen levert.",
+          name: profileGuideNl.core.sidePlank,
+          detail: profileGuideNl.core.sidePlankDetail,
           cadence: "30 seconden per kant, 2x per week",
           steps: [
             "Houd schouders en heupen in één lijn.",
@@ -61,7 +62,7 @@ export default async function ImproveCoreStabilityPage() {
           ],
         },
         {
-          name: "Glute bridge",
+          name: profileGuideNl.core.bridge,
           detail: "Versterkt de achterste keten die je bekken en onderrug op de fiets ondersteunt.",
           cadence: "3 sets van 15 herhalingen, 3x per week",
           steps: [
@@ -123,8 +124,8 @@ export default async function ImproveCoreStabilityPage() {
         },
       ]}
       progressTips={isNl ? [
-        "Train je core 3 keer per week op niet-opeenvolgende dagen voor gestage vooruitgang.",
-        "Test je front plank elke 4 weken opnieuw met strakke vorm, niet op maximale tijd met compensaties.",
+        profileGuideNl.core.training,
+        profileGuideNl.core.retest,
         "Werk je score in je profiel bij zodra je de volgende categorie consistent haalt.",
       ] : [
         "Train core strength 3 times per week on non-consecutive days for steady progress.",

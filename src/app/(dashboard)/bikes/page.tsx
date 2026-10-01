@@ -9,7 +9,7 @@ import { Button, Card, CardContent, EmptyState, LoadingState } from "@/component
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getBikesCopy } from "@/i18n/account/bikes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { CopyPlus, Plus, Store } from "lucide-react";
+import { CopyPlus, Plus } from "lucide-react";
 
 function linkButtonProps(href: string) {
   return {
@@ -67,14 +67,6 @@ export default function BikesPage() {
             </Button>
             <Button
               variant="outline"
-              {...linkButtonProps(withLocalePrefix("/bikes/import/marktplaats", locale))}
-              className="w-full justify-center sm:w-auto"
-            >
-              <Store className="h-4 w-4" />
-              {messages.bikeForm.marktplaatsImport.entryCta}
-            </Button>
-            <Button
-              variant="outline"
               {...linkButtonProps(withLocalePrefix("/bikes/import/passport", locale))}
               className="w-full justify-center sm:w-auto"
             >
@@ -109,13 +101,6 @@ export default function BikesPage() {
                     className="w-full justify-center sm:w-auto"
                   >
                     {messages.bikes.empty.cta}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    {...linkButtonProps(withLocalePrefix("/bikes/import/marktplaats", locale))}
-                    className="w-full justify-center sm:w-auto"
-                  >
-                    {messages.bikeForm.marktplaatsImport.entryCta}
                   </Button>
                   <Button
                     variant="outline"

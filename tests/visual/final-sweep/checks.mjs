@@ -1,3 +1,5 @@
+import { analyzeDutchText, collectDutchLanguage } from "./nl-language.mjs";
+
 /** Browser checks shared by live public pages and rendered account fixtures. */
 export const CHECK_NAMES = [
   "status", "errors", "overflow", "h1", "locale", "seo", "language", "touchTargets", "images", "axe",
@@ -113,6 +115,10 @@ export async function checkPage(page, options) {
       id, impact, description, helpUrl,
       nodes: nodes.map(({ target, failureSummary }) => ({ target, failureSummary })),
     }));
+  const dutchFindings = locale === "nl" ? (await collectDutchLanguage(page)).flatMap((chunk) => {
+    const evidence = analyzeDutchText(chunk.text);
+    return evidence ? [{ ...chunk, ...evidence }] : [];
+  }) : null;
   const checks = {
     status: result(statusDetails),
     errors: result(errors),
@@ -123,13 +129,14 @@ export async function checkPage(page, options) {
     seo: seoUnavailableReason ? skip(seoUnavailableReason)
       : !publicPage || expected404 ? skip("Canonical/hreflang not required on account or expected 404 pages.")
       : result(seoDetails),
-    language: result(findLanguageLeaks(measured.text, locale)),
+    language: result(dutchFindings ?? findLanguageLeaks(measured.text, locale)),
     touchTargets: viewportWidth === 390 ? result(measured.touchTargets) : skip("Mobile-only check."),
     images: result(measured.images),
     axe: axeDetails ? result(axeDetails) : skip(axeUnavailableReason),
   };
   if (expected404) {
     for (const name of ["h1", "locale", "language", "touchTargets", "images", "axe"]) {
+      if (name === "language" && locale === "nl") continue;
       checks[name] = skip("Expected locale-specific 404; content checks do not apply.");
     }
   }

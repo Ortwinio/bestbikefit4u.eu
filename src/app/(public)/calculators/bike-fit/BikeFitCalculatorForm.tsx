@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
+import type { CalculatorValues } from "../../../../../convex/calculatorStates/validators";
+import { useCalculatorValuesChange } from "@/components/calculators/useCalculatorValuesChange";
 import {
   AdjustOrder,
   Button,
@@ -35,18 +37,24 @@ const SOURCES = ["missing", "measured", "estimated"] as const;
 interface Props {
   isNl: boolean;
   copy?: BikeFitMessages;
+  initialValues?: CalculatorValues<"bike-fit">;
+  onValuesChange?: (values: CalculatorValues<"bike-fit">) => void;
+  continueAction?: ReactNode;
 }
 
-export function BikeFitCalculatorForm({ isNl, copy = bikeFitMessages[isNl ? "nl" : "en"] }: Props) {
+export function BikeFitCalculatorForm({
+  isNl, copy = bikeFitMessages[isNl ? "nl" : "en"], initialValues, onValuesChange, continueAction,
+}: Props) {
   const locale = isNl ? "nl" : "en";
   const number = new Intl.NumberFormat(isNl ? "nl-NL" : "en-GB", { maximumFractionDigits: 1 });
-  const [heightCm, setHeightCm] = useState(180);
-  const [inseamCm, setInseamCm] = useState(84);
-  const [source, setSource] = useState<(typeof SOURCES)[number]>("missing");
-  const [category, setCategory] = useState<BikeCategory>("road");
-  const [ambition, setAmbition] = useState<Ambition>("balanced");
-  const [flexibility, setFlexibility] = useState<PublicFitScore>(3);
-  const [core, setCore] = useState<PublicFitScore>(3);
+  const [heightCm, setHeightCm] = useState(initialValues?.heightCm ?? 180);
+  const [inseamCm, setInseamCm] = useState(initialValues?.inseamCm ?? 84);
+  const [source, setSource] = useState<(typeof SOURCES)[number]>(initialValues?.source ?? "missing");
+  const [category, setCategory] = useState<BikeCategory>(initialValues?.category ?? "road");
+  const [ambition, setAmbition] = useState<Ambition>(initialValues?.ambition ?? "balanced");
+  const [flexibility, setFlexibility] = useState<PublicFitScore>((initialValues?.flexibility ?? 3) as PublicFitScore);
+  const [core, setCore] = useState<PublicFitScore>((initialValues?.core ?? 3) as PublicFitScore);
+  useCalculatorValuesChange({ heightCm, inseamCm, source, category, ambition, flexibility, core }, onValuesChange);
   const example = source === "missing";
   const baseline = useMemo(
     () =>
@@ -324,14 +332,14 @@ export function BikeFitCalculatorForm({ isNl, copy = bikeFitMessages[isNl ? "nl"
           <section className="rounded-3xl bg-[var(--bbf-inkt)] p-6 text-[var(--bbf-wit)]">
             <h2 className="font-display text-2xl font-bold text-inherit">{copy.limitsTitle}</h2>
             <p className="mt-3 text-sm text-[var(--bbf-op-donker)]">{copy.limits}</p>
-            <Button
+            {continueAction ?? <Button
               role="link"
               className="mt-5 w-full whitespace-normal"
               render={<Link href={withLocalePrefix("/login", locale)} />}
             >
               {copy.accountCta}
-            </Button>
-            <p className="mt-3 text-sm text-[var(--bbf-op-donker)]">{copy.accountHint}</p>
+            </Button>}
+            {!continueAction && <p className="mt-3 text-sm text-[var(--bbf-op-donker)]">{copy.accountHint}</p>}
           </section>
         </>
       }

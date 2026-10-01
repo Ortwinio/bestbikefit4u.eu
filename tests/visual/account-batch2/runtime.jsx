@@ -68,6 +68,9 @@ function readFixture(reference, args) {
   if (args === "skip") return undefined;
   const name = getFunctionName(reference);
   if (!window.__visualQueries.includes(name)) window.__visualQueries.push(name);
+  if (name === "calculatorStates/queries:get") {
+    return JSON.parse(localStorage.getItem(`calculator-${args.calculator}-${args.bikeId ?? "rider"}`) ?? "null");
+  }
   if (!(name in values)) {
     if (!window.__visualUnknownQueries.includes(name)) window.__visualUnknownQueries.push(name);
     throw new Error(`Missing visual fixture for ${name}`);
@@ -75,6 +78,11 @@ function readFixture(reference, args) {
   return values[name];
 }
 export const useQuery = (reference, args) => readFixture(reference, args);
+export const usePaginatedQuery = (reference, args) => ({
+  results: args === "skip" ? [] : readFixture(reference, args),
+  status: "Exhausted",
+  loadMore: () => {},
+});
 
 const action = async (...args) => {
   window.__visualActions.push(args);

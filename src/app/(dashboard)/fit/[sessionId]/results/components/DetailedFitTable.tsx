@@ -1,4 +1,5 @@
 "use client";
+import { fitAuditCopy } from "@/i18n/account/fitAudit";
 
 import type { ReportDetailedRow } from "@/lib/reports/reportV2Types";
 import type { ReportV2Copy } from "@/lib/reports/reportV2Copy";
@@ -44,10 +45,10 @@ export function DetailedFitTable({ rows, copy }: DetailedFitTableProps) {
 
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <MetricTile label={copy.table.target} value={row.targetLabel} emphasis="primary" />
-                <MetricTile label={copy.table.range} value={row.rangeLabel ?? "n/a"} />
+                <MetricTile label={copy.table.range} value={row.rangeLabel ?? fitAuditCopy[copy.locale === "nl" ? "nl" : "en"].unavailable} />
                 <MetricTile label={copy.table.confidence} value={`${row.confidence}%`} />
                 {showDeltaColumn ? (
-                  <MetricTile label={copy.table.delta} value={deltaLabel ?? row.currentLabel ?? "n/a"} />
+                  <MetricTile label={copy.table.delta} value={deltaLabel ?? row.currentLabel ?? fitAuditCopy[copy.locale === "nl" ? "nl" : "en"].unavailable} />
                 ) : null}
               </div>
 

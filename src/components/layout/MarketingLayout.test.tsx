@@ -3,6 +3,8 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import nl from "@/i18n/messages/nl";
+import en from "@/i18n/messages/en";
+import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { MarketingAccountLink, MarketingLanguageSwitch } from "./MarketingNavigation";
@@ -69,5 +71,24 @@ describe("marketing layout", () => {
     expect(within(dialog).getByRole("link", { name: "Gidsen" }).getAttribute("href")).toBe("/nl/guides");
     expect(within(dialog).getByRole("link", { name: "Start gratis bike fit" }).getAttribute("href")).toBe("/nl/calculators/bike-fit");
     fireEvent.click(within(dialog).getByRole("button", { name: "Sluit navigatiemenu" }));
+  });
+
+  it("uses Dutch support labels and canonical guide titles in the footer", () => {
+    render(<Footer locale="nl" labels={{ howItWorks: nl.nav.howItWorks, pricing: nl.nav.pricing, footer: nl.nav.footer }} />);
+    expect(screen.getByRole("heading", { name: "Hulp" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Fietspaspoort controleren" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Veelgestelde vragen" })).toBeTruthy();
+    const title = getDutchGuideTitle("saddle-height-guide");
+    expect(title).toBeTruthy();
+    expect(screen.getByRole("link", { name: title! }).getAttribute("href"))
+      .toBe("/nl/guides/saddle-height-guide");
+    expect(screen.queryByText("Support")).toBeNull();
+  });
+
+  it("keeps English footer copy unchanged", () => {
+    render(<Footer locale="en" labels={{ howItWorks: en.nav.howItWorks, pricing: en.nav.pricing, footer: en.nav.footer }} />);
+    expect(screen.getByRole("heading", { name: en.nav.footer.support })).toBeTruthy();
+    expect(screen.getByRole("link", { name: en.nav.footer.passportCheck })).toBeTruthy();
+    expect(screen.getByRole("link", { name: en.nav.footer.saddleHeightGuide })).toBeTruthy();
   });
 });

@@ -83,7 +83,7 @@ export const frameSizeMessages = {
     geometry: "Stack en reach uitgelegd",
     resultLink: "Bekijk resultaat",
     categories: {
-      road: { label: "Race", description: "Wegfiets, endurance" },
+      road: { label: "Race", description: "Wegfiets, lange ritten" },
       gravel: { label: "Gravel", description: "Allroad, bikepacking" },
       mtb: { label: "MTB", description: "Trail, XC" },
       city: { label: "Stad / tour", description: "Trekking, hybride" },

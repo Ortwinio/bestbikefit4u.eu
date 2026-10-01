@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/config";
+import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
 
 type GuideLink = {
   href: string;
@@ -14,25 +15,25 @@ export const HOME_GUIDE_LINKS: Localized<GuideLink[]> = {
     {
       href: "/guides/bike-fitting-for-knee-pain",
       icon: "heart-pulse",
-      title: "Bikefitting bij kniepijn",
+      title: getDutchGuideTitle("bike-fitting-for-knee-pain")!,
       subtitle: "Hoe zadelpositie en cleats knieklachten beïnvloeden.",
     },
     {
       href: "/guides/bike-fitting-for-lower-back-pain",
       icon: "activity",
-      title: "Bikefitting bij lage rugklachten",
+      title: getDutchGuideTitle("bike-fitting-for-lower-back-pain")!,
       subtitle: "Reach, drop en zadelhoek als oorzaak van rugpijn.",
     },
     {
       href: "/guides/road-bike-fit-guide",
       icon: "gauge",
-      title: "Racefiets fit gids",
+      title: getDutchGuideTitle("road-bike-fit-guide")!,
       subtitle: "Volledige fit van zadel tot stuur voor racefietsen.",
     },
     {
       href: "/guides/gravel-bike-fit-guide",
       icon: "mountain",
-      title: "Gravel fit gids",
+      title: getDutchGuideTitle("gravel-bike-fit-guide")!,
       subtitle: "Comfortabele positie voor lange gravelritten.",
     },
   ],
@@ -69,25 +70,25 @@ export const HOME_SCENARIO_LINKS: Localized<GuideLink[]> = {
     {
       href: "/guides/bike-fitting-for-lower-back-pain",
       icon: "person-standing",
-      title: "Bikefit bij lage rugklachten",
+      title: getDutchGuideTitle("bike-fitting-for-lower-back-pain")!,
       subtitle: "Veelgebruikte aanpassingen bij rugpijnklachten.",
     },
     {
       href: "/guides/gravel-bike-fit-guide",
       icon: "tree-pine",
-      title: "Bikefit voor gravelrijden",
+      title: getDutchGuideTitle("gravel-bike-fit-guide")!,
       subtitle: "Balans tussen comfort en controle op gravel.",
     },
     {
       href: "/guides/triathlon-bike-fit-guide",
       icon: "timer",
-      title: "Bikefit voor triathlon",
+      title: getDutchGuideTitle("triathlon-bike-fit-guide")!,
       subtitle: "Aerodynamische positie die hardlopen niet blokkeert.",
     },
     {
       href: "/guides/bike-fit-for-tall-riders",
       icon: "arrow-up",
-      title: "Bikefit voor lange rijders",
+      title: getDutchGuideTitle("bike-fit-for-tall-riders")!,
       subtitle: "Reach, staplengte en framekeuze voor boven 1m90.",
     },
   ],

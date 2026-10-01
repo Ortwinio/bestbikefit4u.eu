@@ -235,6 +235,8 @@ export const storeShadowComparison = internalMutation({
     errorMessage: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const session = await ctx.db.get(args.sessionId);
+    if (!session || session.userId !== args.userId) return null;
     const existing = await ctx.db
       .query("recommendationShadowComparisons")
       .withIndex("by_session", (q) => q.eq("sessionId", args.sessionId))

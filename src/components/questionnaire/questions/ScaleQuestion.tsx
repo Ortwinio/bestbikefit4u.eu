@@ -3,6 +3,8 @@
 import { useId } from "react";
 import { RadioGroup } from "@base-ui/react/radio-group";
 import { Selectable } from "@/components/ui";
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { fitAuditCopy } from "@/i18n/account/fitAudit";
 
 interface ScaleConfig {
   min: number;
@@ -18,6 +20,7 @@ interface ScaleQuestionProps {
 }
 
 export function ScaleQuestion({ config, value, onChange }: ScaleQuestionProps) {
+  const { locale } = useDashboardMessages();
   const { min, max, minLabel, maxLabel } = config;
   const steps = Array.from({ length: max - min + 1 }, (_, i) => min + i);
   const legendId = useId();
@@ -25,7 +28,7 @@ export function ScaleQuestion({ config, value, onChange }: ScaleQuestionProps) {
   return (
     <fieldset className="space-y-4">
       <legend id={legendId} className="sr-only">
-        Select a scale value
+        {fitAuditCopy[locale].scaleLegend}
       </legend>
       <RadioGroup<number>
         aria-labelledby={legendId}

@@ -1,3 +1,5 @@
+import { guideProseNl } from "@/i18n/marketing/guideProse";
+import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
 import type { GuideContentFaq, GuideContentRecord, GuideContentSection } from "../guide-content";
 import { GUIDES } from "../../../app/(public)/guides/data";
 
@@ -62,7 +64,7 @@ const SHOE_FOOT_GEOMETRY_STRUCTURAL_SECTIONS = {
       items: [
         "Je hebt nodig: een meetlint of liniaal, een vel papier, een stift, je fietssokken en voor geometriegidsen ook een geometrietabel of calculator.",
         "Stap 1: meet de lengte en breedte van beide voeten en noteer meteen eventuele links-rechtsverschillen of volumeproblemen.",
-        "Stap 2: als de gids over cleats of standbreedte gaat, noteer dan ook eerst de huidige cleatpositie, Q-factor of supportopstelling voordat je iets wijzigt.",
+        guideProseNl.review.recordSupport,
         "Stap 3: vergelijk de uitkomst met de schoenmaat- of geometrietabel die je gebruikt en herhaal de belangrijkste meting nog eens ter controle.",
         "Veelgemaakte fout: maar één voet of alleen de lengte meten en dan denken dat het hele fitprobleem opgelost is.",
       ],
@@ -71,8 +73,8 @@ const SHOE_FOOT_GEOMETRY_STRUCTURAL_SECTIONS = {
       title: "Hoe je het afstelt",
       type: "steps",
       items: [
-        "Begin bij het deel van het systeem dat het meest beperkt is: eerst schoenlengte en -breedte, dan cleatpositie, dan standbreedte of support en pas daarna geometriecompromissen.",
-        "Werk in kleine stappen: 1 tot 2 mm voor cleat-voor-achter of rotatie, 2 tot 5 mm voor standbreedte of support en steeds maar één maat- of geometriesprong tegelijk.",
+        guideProseNl.review.supportOrder,
+        guideProseNl.review.supportSteps,
         "Test elke wijziging 2 tot 3 ritten zodat voet, knie en contactpunten kunnen settelen voordat je beslist dat het werkt.",
         "Als een wijziging druk op één plek oplost maar haklift, gevoelloosheid of knietrackingproblemen geeft, ga dan eerst halverwege terug en vergelijk opnieuw.",
       ],
@@ -80,7 +82,7 @@ const SHOE_FOOT_GEOMETRY_STRUCTURAL_SECTIONS = {
     {
       title: "Waarschuwingssignalen",
       items: [
-        "Tintelende tenen, hot spots of druk over de hele voorvoet betekenen meestal dat de schoen of support nog steeds te strak of te vlak is.",
+        guideProseNl.review.supportWarning,
         "Haklift, ingezakte boog of een knie die na een wijziging anders gaat lopen zijn signalen dat de setup nog niet klopt.",
         "Eenzijdige gevoelloosheid, pijn die ook in rust aanwezig is of klachten die na de rit blijven bestaan, zijn opschaalsignalen, zeker na een val of een grote aanpassing.",
         "Keert hetzelfde probleem terug na 2 of 3 logische aanpassingen, schakel dan een fitter, podoloog of arts in in plaats van de volgende gok te proberen.",
@@ -95,7 +97,7 @@ const SHOE_FOOT_GEOMETRY_STRUCTURAL_SECTIONS = {
         ["Weg", "De meest precieze schoenfit en de schoonste cleatlijn, omdat elke kleine mismatch zich door herhaald trappen laat voelen."],
         ["Gravel", "Meer volume, bescherming en tolerantie voor zwelling omdat trillingen en langere dagen het fitgevoel veranderen."],
         ["MTB", "Meer bewegingsruimte, meer bescherming en een setup die stabiel blijft als het terrein ruw is of je staat te rijden."],
-        ["Endurance / Triathlon", "Kijk hoe de fit aanvoelt na uren in de schoen of in aero, niet alleen in een snelle shopsessie."],
+        [guideProseNl.review.enduranceTriathlon, "Kijk hoe de fit aanvoelt na uren in de schoen of in aero, niet alleen in een snelle shopsessie."],
       ],
     },
     {
@@ -130,6 +132,7 @@ function appendStructuralSections(content: GuideContentRecord): GuideContentReco
 }
 
 function getGuideCardTitle(slug: string, locale: "en" | "nl") {
+  if (locale === "nl") return getDutchGuideTitle(slug) ?? guideProseNl.genericTitle;
   return GUIDES.find((guide) => guide.slug === slug)?.[locale].cardTitle ?? slug.replaceAll("-", " ");
 }
 
@@ -150,7 +153,7 @@ function buildCtaDescription(slug: string, locale: "en" | "nl") {
   if (locale === "en") {
     return `Use the ${cardTitle} guide to narrow down the next shoe or geometry adjustment for ${subject.toLowerCase()}.`;
   }
-  return `Gebruik de ${cardTitle} gids om de volgende schoen- of geometrieaanpassing voor ${subject.toLowerCase()} te bepalen.`;
+  return guideProseNl.cta.shoeGeometry(cardTitle);
 }
 
 function buildFaqExtras(slug: string, locale: "en" | "nl"): GuideContentFaq[] {
@@ -700,8 +703,8 @@ const SHOE_FOOT_GEOMETRY_GUIDE_CONTENT_BASE = {
     },
     nl: {
       intro: [
-        "Inlegzolen kunnen nuttig zijn, maar ze zijn geen tovermiddel. Hun belangrijkste taak is volume beheren, de manier waarop de voet in de schoen ligt vormgeven en precies genoeg boogsupport geven zodat de voet stabiel blijft zonder in een overcorrectie te worden geduwd.",
-        "Voor veel rijders is de standaardinlegzool voldoende. De fout is om elk voetprobleem als een supportprobleem te zien terwijl de echte oorzaak misschien schoenvorm, cleatpositie of simpelweg te veel correctie is.",
+        guideProseNl.review.insoleIntro,
+        guideProseNl.review.insoleCause,
       ],
       sections: [
         {
@@ -713,19 +716,19 @@ const SHOE_FOOT_GEOMETRY_GUIDE_CONTENT_BASE = {
           ],
         },
         {
-          title: "Standaard vs aftermarket: wanneer upgraden",
+          title: guideProseNl.review.insoleChoiceTitle,
           items: [
             "Begin met de standaardinlegzool als de schoen je voet al stevig vasthoudt en je geen duidelijke booginzinking of drukplekken hebt.",
-            "Stap over op aftermarket-opties wanneer de standaardzool te vlak, te dun of te los aanvoelt voor het schoenvolume dat je nodig hebt.",
-            "Upgrade niet alleen omdat een product 'beter' klinkt; upgrade omdat je huidige setup een duidelijk tekort heeft.",
+            guideProseNl.review.insoleChoice,
+            guideProseNl.review.insoleUpgrade,
           ],
         },
         {
           title: "Booghoogte en krachtoverbrenging",
           items: [
-            "Boogsupport moet de voet stabieler maken, niet in een starre vorm duwen.",
-            "Een matig supportprofiel verbetert vaak comfort en contact, terwijl te veel support juist druk naar de verkeerde plek kan verplaatsen.",
-            "De beste footbed is degene waarmee je langer kunt rijden zonder dat de voet geplet of ingezakt aanvoelt.",
+            guideProseNl.review.archSupport,
+            guideProseNl.review.supportBalance,
+            guideProseNl.review.footbed,
           ],
         },
         {
@@ -744,11 +747,11 @@ const SHOE_FOOT_GEOMETRY_GUIDE_CONTENT_BASE = {
         },
         {
           q: "Kunnen inlegzolen mijn cleatbehoefte veranderen?",
-          a: "Ze kunnen wel veranderen hoe de voet in de schoen ligt, waardoor het gevoel iets verschuift, maar ze vervangen geen cleatpositionering. Zie ze als support- en volumetool, niet als cleatoplossing.",
+          a: guideProseNl.review.insoleCleatAnswer,
         },
         {
-          q: "Zijn custom orthesen de moeite waard voor fietsen?",
-          a: "Soms wel, vooral bij duidelijke structurele problemen of hardnekkige pijn. Ze zijn het meest waardevol als ze een specifiek probleem oplossen dat standaard- of heat-mouldable opties niet aankunnen.",
+          q: guideProseNl.review.orthosesQuestion,
+          a: guideProseNl.review.orthosesAnswer,
         },
       ],
     },
@@ -952,7 +955,7 @@ const SHOE_FOOT_GEOMETRY_GUIDE_CONTENT_BASE = {
           title: "Een geometriecategorie kiezen op basis van doel en flexibiliteit",
           items: [
             "Kies racegeometrie als je een lagere voorkant wilt en die houding ook echt kunt vasthouden.",
-            "Kies endurancegeometrie als je meer ruimte wilt voor een comfortabele opbouw, meer stuurhoogte of een rustiger all-day positie.",
+            guideProseNl.shoeGeometry.allDay,
             "Als je twijfelt, laat je flexibiliteit, ritduur en eventtype zwaarder wegen dan labels als snel of relaxed.",
           ],
         },

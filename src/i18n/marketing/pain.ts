@@ -1,3 +1,15 @@
+export const painDetailDutchCopy = {
+  faqTitle: "Veelgestelde vragen",
+  caseStudy: "Deel je praktijkvoorbeeld",
+  kneeDescription: "Beoordeel kniepijn op de fiets door zadelhoogte, zadelterugstand, schoenplaatjes en belasting te controleren.",
+  kneeCleatAnswer: "Begin meestal met zadelhoogte en zadelterugstand. Controleer je schoenplaatjes als je klachten blijven.",
+  backIntro: "Lage rugklachten ontstaan vaak door een positie die je mobiliteit en rompstabiliteit niet lang genoeg toelaten. Reach, stuurdrop en bekkenstabiliteit zijn meestal bepalender dan gedacht.",
+  saddleDescription: "Beoordeel zadelongemak door hoogte, zadelterugstand, ondersteuning en gewichtsverdeling samen te controleren.",
+  saddleIntro: "Zadelongemak los je zelden alleen met een ander zadel op. Hoogte, zadelterugstand en gewichtsverdeling bepalen meestal of een zadel werkt.",
+  saddleCheck: "Bekijk de zadelterugstand voordat je onderdelen vervangt",
+  saddleAnswer: "Soms wel, maar bekijk eerst ook de zadelterugstand en totale ondersteuning.",
+};
+
 export const painPresentation = {
   nl: {
     metadataTitle: "Bikefit bij veelvoorkomende klachten | BestBikeFit4U",
@@ -9,7 +21,7 @@ export const painPresentation = {
       "en wanneer extra hulp nodig is.",
     choose: "Kies je klacht",
     calculator: "Open bike fit calculator",
-    caseStudy: "Doe mee aan de case study",
+    caseStudy: "Deel je praktijkvoorbeeld",
     indexImage: "Racefiets met zadel en stuur als afstelpunten",
     detailImage: "Pentekening van het meten van de zadelhoogte",
     disclaimerTitle: "Een eerste check. Geen diagnose.",
@@ -47,7 +59,7 @@ export const painPresentation = {
     ],
     ctaTitle: "Beoordeel je klachten stap voor stap",
     ctaIntro: "Open de bike fit calculator voor een eerste beoordeling van je afstelling. " +
-      "Wil je meer context delen? Doe mee aan de case study.",
+      "Wil je meer context delen? Deel je praktijkvoorbeeld.",
     home: "Home",
     painIndex: "Pijnklachten",
     breadcrumbs: "Kruimelpad",
@@ -61,7 +73,7 @@ export const painPresentation = {
     support: "Positieaanpassingen lossen veel voorkomende rijklachten op. Ze diagnosticeren of behandelen geen blessures. " +
       "Bij acute, verergerende of aanhoudende pijn na aanpassing, raadpleeg een fysiotherapeut of sportarts.",
     detailCtaTitle: "Vertaal de checks naar jouw fiets.",
-    detailCtaIntro: "Start met een gratis fit of stuur je situatie in als case-study kandidaat.",
+    detailCtaIntro: "Start met een gratis fit of meld je aan om je praktijkvoorbeeld te delen.",
   },
   en: {
     metadataTitle: "Bike Fit for Common Pain Points | BestBikeFit4U",

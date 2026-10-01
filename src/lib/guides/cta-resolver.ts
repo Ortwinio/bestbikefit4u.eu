@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/config";
+import { getGuidesMessages } from "@/i18n/marketing/guides";
 import { withLocalePrefix } from "@/i18n/navigation";
 
 export type GuideSoftTool = {
@@ -85,13 +86,14 @@ export function resolveClosingCtaCopy(
   const clusterLower = normalizeCluster(cluster);
 
   if (locale === "nl") {
+    const copy = getGuidesMessages(locale);
     if (normalizedFunnel === "TOFU") {
       return {
         title: "Start met een gratis fit voor je iets groots verandert",
         description: clusterLower.includes("ride")
-          ? "Je rijstijl bepaalt wat belangrijk is. Start een gratis fit om die context te vertalen naar concrete setupkeuzes."
+          ? copy.closingRideDescription
           : "Gebruik de gratis fit om je positie eerst te begrijpen voordat je onderdelen of houding verandert.",
-        ctaLabel: "Start Free Fit",
+        ctaLabel: copy.startFit,
         ctaHref: buildGuideLoginHref(slug, locale),
       };
     }
@@ -101,16 +103,15 @@ export function resolveClosingCtaCopy(
         title: "Pas dit toe op je eigen fiets en maten",
         description:
           "Voer je metingen in en verbind deze principes aan jouw fiets, zodat je werkt vanuit een volledig fitbeeld in plaats van losse regels.",
-        ctaLabel: "Start Free Fit",
+        ctaLabel: copy.startFit,
         ctaHref: buildGuideLoginHref(slug, locale),
       };
     }
 
     return {
-      title: "Controleer je persoonlijke setup gratis",
-      description:
-        "Je begrijpt nu waarom dit probleem ontstaat. Gebruik de gratis fit om te controleren of jouw cijfers en contactpunten in de juiste range zitten.",
-      ctaLabel: "Start Free Fit",
+      title: copy.closingTitle,
+      description: copy.closingDescription,
+      ctaLabel: copy.startFit,
       ctaHref: buildGuideLoginHref(slug, locale),
     };
   }

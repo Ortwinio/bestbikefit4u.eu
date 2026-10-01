@@ -1,7 +1,10 @@
 "use client";
 
+import type { CalculatorValues } from "../../../../../convex/calculatorStates/validators";
+
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useCalculatorValuesChange } from "@/components/calculators/useCalculatorValuesChange";
 import {
   Button,
   ConfiguratorLayout,
@@ -31,18 +34,23 @@ const INSEAM = { min: 55, max: 105, step: 0.5 };
 
 export function FrameSizeCalculatorForm({
   isNl = false,
+  initialValues,
+  onValuesChange,
   locale = isNl ? "nl" : "en",
   copy = frameSizeMessages[locale],
 }: {
   isNl?: boolean;
+  initialValues?: CalculatorValues<"frame-size">;
+  onValuesChange?: (values: CalculatorValues<"frame-size">) => void;
   locale?: Locale;
   copy?: FrameSizeCalculatorCopy;
 }) {
-  const [heightCm, setHeightCm] = useState(180);
-  const [inseamCm, setInseamCm] = useState(84);
-  const [heightConfirmed, confirmHeight] = useState(false);
-  const [inseamConfirmed, confirmInseam] = useState(false);
-  const [category, setCategory] = useState<BikeCategory>("road");
+  const [heightCm, setHeightCm] = useState(initialValues?.heightCm ?? 180);
+  const [inseamCm, setInseamCm] = useState(initialValues?.inseamCm ?? 84);
+  const [heightConfirmed, confirmHeight] = useState(initialValues?.heightConfirmed ?? false);
+  const [inseamConfirmed, confirmInseam] = useState(initialValues?.inseamConfirmed ?? false);
+  const [category, setCategory] = useState<BikeCategory>(initialValues?.category ?? "road");
+  useCalculatorValuesChange({ heightCm, inseamCm, heightConfirmed, inseamConfirmed, category }, onValuesChange);
   const confirmed = heightConfirmed && inseamConfirmed;
   const format = new Intl.NumberFormat(locale === "nl" ? "nl-NL" : "en-GB", {
     maximumFractionDigits: 3,

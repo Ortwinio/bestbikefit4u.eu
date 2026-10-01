@@ -14,6 +14,23 @@ afterEach(() => {
 });
 
 describe("SaddleWidthCalculatorForm", () => {
+  it("accepts account prefill without anonymous saves or mount callbacks", async () => {
+    vi.useFakeTimers();
+    const changed = vi.fn();
+    render(<SaddleWidthCalculatorForm locale="nl" accountMode onValuesChange={changed}
+      initialValues={{ inputMethod: "measured", sitBoneWidthMm: 132 }}
+      statusSlot={<p>Opgeslagen</p>} headerSlot={<p>Mijn fietsen</p>} />);
+    expect(screen.getByText("Mijn fietsen")).toBeTruthy();
+    expect(screen.getByText("Opgeslagen")).toBeTruthy();
+    expect(screen.getByRole("region", { name: saddleWidthMessages.nl.result })).toBeTruthy();
+    expect(screen.queryByText(saddleWidthMessages.nl.example)).toBeNull();
+    expect(changed).not.toHaveBeenCalled();
+    fireEvent.keyDown(screen.getByRole("slider", { name: saddleWidthMessages.nl.sitBone }), { key: "ArrowRight" });
+    expect(changed).toHaveBeenCalledWith(expect.objectContaining({ sitBoneWidthMm: 133 }));
+    await act(async () => { vi.advanceTimersByTime(600); });
+    expect(saveSession).not.toHaveBeenCalled();
+  });
+
   it.each(["en", "nl"] as const)(
     "labels example data, real measured result, and input provenance in %s",
     (locale) => {

@@ -1,0 +1,6 @@
+tests/visual/guides-audit/audit.mjs
+tests/visual/guides-audit/review.mjs
+plans/redesign-canvas/audit/44a-guides-audit.md
+plans/redesign-canvas/audit/44a-guides-audit.json
+plans/redesign-canvas/audit/files-44a.txt
+plans/redesign-canvas/README.md

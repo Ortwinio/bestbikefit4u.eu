@@ -1,5 +1,7 @@
 "use client"
 
+import { useSharedUiMessages } from "@/i18n/useSharedUiMessages";
+
 import * as React from "react"
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -78,6 +80,7 @@ function DialogContent({
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
 } & VariantProps<typeof sheetVariants>) {
+  const copy = useSharedUiMessages();
   return (
     <DialogPortal>
       <DialogOverlay />
@@ -107,7 +110,7 @@ function DialogContent({
             }
           >
             <XIcon />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{copy.dialogClose}</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>
@@ -133,6 +136,7 @@ function DialogFooter({
 }: React.ComponentProps<"div"> & {
   showCloseButton?: boolean
 }) {
+  const copy = useSharedUiMessages();
   return (
     <div
       data-slot="dialog-footer"
@@ -145,7 +149,7 @@ function DialogFooter({
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close render={<Button variant="outline" />}>
-          Close
+          {copy.dialogClose}
         </DialogPrimitive.Close>
       )}
     </div>

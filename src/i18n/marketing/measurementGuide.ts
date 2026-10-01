@@ -215,7 +215,7 @@ export const measurementGuideCopy: Record<Locale, MeasurementGuideCopy> = {
     requiredLabel: "Verplicht",
     optionalLabel: "Optioneel",
     unitLabel: "Eenheid",
-    rangeLabel: "Gebruikelijke range",
+    rangeLabel: "Gebruikelijk bereik",
     toolsLabel: "Benodigdheden",
     measureLabel: "Zo meet je",
     mistakesLabel: "Veelgemaakte fouten",
@@ -227,7 +227,7 @@ export const measurementGuideCopy: Record<Locale, MeasurementGuideCopy> = {
     ],
     ctaTitle: "Klaar om je metingen te gebruiken?",
     ctaBody:
-      "Sla je profiel op en start een fit-sessie voor een persoonlijke setup.",
+      "Sla je profiel op en start een fitsessie voor je persoonlijke afstelling.",
     ctaProfile: "Ga naar profiel",
     ctaFit: "Start fit-sessie",
     items: [

@@ -19,6 +19,7 @@ import { getBikeTypeOptions, type BikeType } from "@/lib/bikes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getDashboardPressureCalculatorPath } from "@/lib/pressureRoutes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { getBikeLanguageMessages, getBikesLanguageCopy } from "@/i18n/account/bikesLanguage";
 
 type Step = "bike" | "saved" | "wheelset" | "done";
 type RidingStyle =
@@ -53,7 +54,9 @@ function deriveDiscipline(bikeType: BikeType) {
 }
 
 export function CreateBikeForm() {
-  const { locale, messages } = useDashboardMessages();
+  const { locale, messages: baseMessages } = useDashboardMessages();
+  const messages = getBikeLanguageMessages(locale, baseMessages);
+  const language = getBikesLanguageCopy(locale);
   const createBike = useMutation(api.bikes.mutations.create);
   const createWheelset = useMutation(api.wheelsets.mutations.create);
   const createTireSetup = useMutation(api.tireSetups.mutations.create);
@@ -409,7 +412,7 @@ export function CreateBikeForm() {
 
             <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)] p-4">
               <div className="mb-4">
-                <h2 className="text-lg font-semibold text-[color:var(--foreground)]">Gearing</h2>
+                <h2 className="text-lg font-semibold text-[color:var(--foreground)]">{language.gearing}</h2>
                 <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
                   {locale === "nl"
                     ? "Vul deze gegevens in zodat de calculator direct bruikbaar is voor deze fiets."
@@ -418,7 +421,7 @@ export function CreateBikeForm() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <Select
-                  label="Drivetrain"
+                  label={language.drivetrain}
                   value={drivetrainType}
                   onChange={(event) => setDrivetrainType(event.target.value as "1x" | "2x")}
                   options={[
@@ -427,37 +430,37 @@ export function CreateBikeForm() {
                   ]}
                 />
                 <NumberInput
-                  label="Front chainring"
+                  label={language.frontChainring}
                   value={frontChainring ? Number(frontChainring) : null}
                   onChange={(value) => setFrontChainring(value === null ? "" : String(value))}
                   unit="t"
                 />
                 <NumberInput
-                  label="Inner chainring"
+                  label={language.innerChainring}
                   value={innerChainring ? Number(innerChainring) : null}
                   onChange={(value) => setInnerChainring(value === null ? "" : String(value))}
                   unit="t"
                 />
                 <NumberInput
-                  label="Wheel circumference"
+                  label={language.wheelCircumference}
                   value={wheelCircumferenceMm ? Number(wheelCircumferenceMm) : null}
                   onChange={(value) => setWheelCircumferenceMm(value === null ? "" : String(value))}
                   unit="mm"
                 />
                 <Textarea
-                  label="Cassette teeth"
+                  label={language.cassetteTeeth}
                   value={cassetteTeethCsv}
                   onChange={(event) => setCassetteTeethCsv(event.target.value)}
                   placeholder="11, 12, 13, 15, 17, 19, 21, 24, 28, 32"
                 />
                 <Input
-                  label="Groupset"
+                  label={language.groupset}
                   value={groupsetName}
                   onChange={(event) => setGroupsetName(event.target.value)}
                   placeholder="Ultegra / GRX / GX"
                 />
                 <NumberInput
-                  label="Rear derailleur max cog"
+                  label={language.rearDerailleurMaxCog}
                   value={derailleurMaxCog ? Number(derailleurMaxCog) : null}
                   onChange={(value) => setDerailleurMaxCog(value === null ? "" : String(value))}
                   unit="t"

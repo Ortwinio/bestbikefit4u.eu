@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/config";
+import { painDetailDutchCopy } from "@/i18n/marketing/pain";
 
 export type PainPageCopy = {
   seoTitle: string;
@@ -73,7 +74,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
     },
     nl: {
       seoTitle: "Bikefit bij kniepijn tijdens fietsen | BestBikeFit4U",
-      seoDescription: "Beoordeel kniepijn op de fiets door zadelhoogte, setback, schoenplaatjes en belasting slim te controleren.",
+      seoDescription: painDetailDutchCopy.kneeDescription,
       keywords: ["bikefit kniepijn", "kniepijn fietsen afstelling", "zadelhoogte kniepijn"],
       categoryLabel: "Klacht",
       title: "Bikefit bij kniepijn tijdens fietsen",
@@ -99,17 +100,17 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       faqTitle: "FAQ",
       faqs: [
         { q: "Kan zadelhoogte echt kniepijn veroorzaken?", a: "Ja. Zelfs een kleine fout in zadelhoogte kan de knie elke pedaalomwenteling opnieuw belasten." },
-        { q: "Moet ik eerst mijn schoenplaatjes veranderen?", a: "Begin meestal met zadelhoogte en setback en controleer schoenplaatjes als klachten blijven." },
+        { q: "Moet ik eerst mijn schoenplaatjes veranderen?", a: painDetailDutchCopy.kneeCleatAnswer },
       ],
       relatedTitle: "Gerelateerde vervolgstappen",
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
         { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
         { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
-        { href: "/case-study", label: "Doe mee aan een pijn-case-study" },
+        { href: "/case-study", label: painDetailDutchCopy.caseStudy },
       ],
       primaryCta: "Start gratis fit",
-      secondaryCta: "Doe mee aan case study",
+      secondaryCta: painDetailDutchCopy.caseStudy,
     },
   },
   {
@@ -160,7 +161,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       keywords: ["bikefit lage rugklachten", "rugpijn fietsen positie", "reach drop rugpijn"],
       categoryLabel: "Klacht",
       title: "Bikefit bij lage rugklachten",
-      intro: "Lage rugklachten ontstaan vaak door een positie die je mobiliteit en core-ondersteuning niet lang genoeg kunnen vasthouden. Reach, stuurdrop en bekkenstabiliteit zijn meestal bepalender dan gedacht.",
+      intro: painDetailDutchCopy.backIntro,
       symptomTitle: "Wat rijders meestal merken",
       symptomBullets: [
         "Strakke of vermoeide rug na 30 tot 90 minuten",
@@ -189,10 +190,10 @@ export const PAIN_PAGES: PainPageDefinition[] = [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
         { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
         { href: "/how-it-works", label: "Hoe BestBikeFit4U werkt" },
-        { href: "/case-study", label: "Doe mee aan een pijn-case-study" },
+        { href: "/case-study", label: painDetailDutchCopy.caseStudy },
       ],
       primaryCta: "Start gratis fit",
-      secondaryCta: "Doe mee aan case study",
+      secondaryCta: painDetailDutchCopy.caseStudy,
     },
   },
   {
@@ -272,10 +273,10 @@ export const PAIN_PAGES: PainPageDefinition[] = [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
         { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
         { href: "/pain/hand-numbness-cycling", label: "Dove handen op de fiets" },
-        { href: "/case-study", label: "Doe mee aan een pijn-case-study" },
+        { href: "/case-study", label: painDetailDutchCopy.caseStudy },
       ],
       primaryCta: "Start gratis fit",
-      secondaryCta: "Doe mee aan case study",
+      secondaryCta: painDetailDutchCopy.caseStudy,
     },
   },
   {
@@ -355,10 +356,10 @@ export const PAIN_PAGES: PainPageDefinition[] = [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
         { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
         { href: "/pain/neck-pain-cycling", label: "Nekpijn tijdens fietsen" },
-        { href: "/case-study", label: "Doe mee aan een pijn-case-study" },
+        { href: "/case-study", label: painDetailDutchCopy.caseStudy },
       ],
       primaryCta: "Start gratis fit",
-      secondaryCta: "Doe mee aan case study",
+      secondaryCta: painDetailDutchCopy.caseStudy,
     },
   },
   {
@@ -406,11 +407,11 @@ export const PAIN_PAGES: PainPageDefinition[] = [
     },
     nl: {
       seoTitle: "Bikefit bij zadelongemak | BestBikeFit4U",
-      seoDescription: "Beoordeel zadelongemak door hoogte, setback, ondersteuning en gewichtsverdeling samen te controleren.",
+      seoDescription: painDetailDutchCopy.saddleDescription,
       keywords: ["bikefit zadelongemak", "zadelpijn fietsen", "zadelondersteuning bikefit"],
       categoryLabel: "Klacht",
       title: "Bikefit bij zadelongemak",
-      intro: "Zadelongemak los je zelden alleen met een ander zadel op. Hoogte, setback en gewichtsverdeling bepalen meestal of een zadel werkt.",
+      intro: painDetailDutchCopy.saddleIntro,
       symptomTitle: "Wat rijders meestal merken",
       symptomBullets: [
         "Druk die toeneemt op langere rustige ritten",
@@ -420,7 +421,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       fitTitle: "Wat je eerst controleert",
       fitBullets: [
         "Controleer of zadelhoogte de bekkenondersteuning instabiel maakt",
-        "Bekijk setback voordat je onderdelen vervangt",
+        painDetailDutchCopy.saddleCheck,
         "Verdeel belasting over zadel, voeten en handen in plaats van één contactpunt te fixeren",
       ],
       riderChecklistTitle: "Voordat je gaat aanpassen",
@@ -432,7 +433,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       faqTitle: "FAQ",
       faqs: [
         { q: "Betekent zadelongemak altijd dat ik een ander zadel nodig heb?", a: "Nee. Veel zadelproblemen verbeteren eerst door fit en gewichtsverdeling te corrigeren." },
-        { q: "Moet ik het zadel lager zetten als het instabiel voelt?", a: "Soms wel, maar pas nadat je ook setback en totale ondersteuning hebt bekeken." },
+        { q: "Moet ik het zadel lager zetten als het instabiel voelt?", a: painDetailDutchCopy.saddleAnswer },
       ],
       relatedTitle: "Gerelateerde vervolgstappen",
       relatedLinks: [
@@ -440,10 +441,10 @@ export const PAIN_PAGES: PainPageDefinition[] = [
         { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
         { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
         { href: "/pain/hand-numbness-cycling", label: "Dove handen op de fiets" },
-        { href: "/case-study", label: "Doe mee aan een pijn-case-study" },
+        { href: "/case-study", label: painDetailDutchCopy.caseStudy },
       ],
       primaryCta: "Start gratis fit",
-      secondaryCta: "Doe mee aan case study",
+      secondaryCta: painDetailDutchCopy.caseStudy,
     },
   },
 ] as const;
@@ -455,5 +456,5 @@ export function getPainPageBySlug(slug: string) {
 }
 
 export function getPainPageCopy(page: PainPageDefinition, locale: Locale) {
-  return locale === "nl" ? page.nl : page.en;
+  return locale === "nl" ? { ...page.nl, faqTitle: painDetailDutchCopy.faqTitle } : page.en;
 }

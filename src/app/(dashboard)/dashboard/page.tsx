@@ -21,6 +21,7 @@ import {
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { DashboardHomeProfileIndicators } from "@/components/dashboard/DashboardHomeProfileIndicators";
 import { DashboardReportBike } from "@/components/dashboard/DashboardReportBike";
+import { DashboardCalculatorQuickLinks } from "@/components/dashboard/DashboardCalculatorQuickLinks";
 import { getDashboardReportCopy } from "@/i18n/account/dashboardReport";
 import garageStyles from "@/components/dashboard/DashboardBikeGarage.module.css";
 import numberStyles from "@/components/dashboard/DashboardNumbers.module.css";
@@ -96,6 +97,8 @@ export default function DashboardPage() {
           <ProfilePhotoUpload source={profileImageSource} size="settings" />
         </div>
       </header>
+
+      <DashboardCalculatorQuickLinks locale={locale} />
 
       {/* Rider profile card */}
       <Card variant="bordered" className="gap-5 rounded-3xl p-5 shadow-none sm:p-7">

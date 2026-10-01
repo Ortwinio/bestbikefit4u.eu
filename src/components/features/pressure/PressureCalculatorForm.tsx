@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import {
   AdjustOrder,
@@ -23,10 +23,27 @@ import { tirePressureMessages, type TirePressureCopy } from "@/i18n/calculators/
 import { withLocalePrefix } from "@/i18n/navigation";
 import type { PressureResultLabels } from "./shared";
 
-interface PressureCalculatorFormProps {
+export type PressureCalculatorValues = {
+  discipline: "road" | "gravel" | "mtb";
+  bodyWeightKg: number;
+  widthFrontMm: number;
+  widthRearMm: number;
+  tubeType: TubeType;
+  surface: Surface;
+  ridingGoal?: RidingGoal;
+  bikeWeightKg?: number;
+};
+
+export interface PressureCalculatorFormProps {
   locale: "en" | "nl";
   copy?: TirePressureCopy;
   defaultDiscipline?: "road" | "gravel" | "mtb";
+  initialValues?: Partial<PressureCalculatorValues>;
+  onValuesChange?: (values: PressureCalculatorValues) => void;
+  onValuesCommit?: (values: PressureCalculatorValues) => void;
+  accountMode?: boolean;
+  headerSlot?: ReactNode;
+  statusSlot?: ReactNode;
   labels: {
     disciplineLabel: string;
     disciplineRoad: string;
@@ -106,20 +123,28 @@ export function PressureCalculatorForm({
   labels,
   resultLabels,
   copy = tirePressureMessages[locale],
+  initialValues,
+  onValuesChange,
+  onValuesCommit,
+  accountMode = false,
+  headerSlot,
+  statusSlot,
 }: PressureCalculatorFormProps) {
-  const [discipline, setDiscipline] = useState<"road" | "gravel" | "mtb">(defaultDiscipline ?? "road");
-  const [bodyWeightKg, setBodyWeightKg] = useState(75);
-  const [widthFrontMm, setWidthFrontMm] = useState(28);
-  const [manualWidthRearMm, setManualWidthRearMm] = useState(28);
-  const [linked, setLinked] = useState(true);
-  const [tubeType, setTubeType] = useState<TubeType>("tubeless");
-  const [surface, setSurface] = useState<Surface>("average_asphalt");
-  const [ridingGoal, setRidingGoal] = useState<RidingGoal | undefined>();
-  const [bikeWeightKg, setBikeWeightKg] = useState(8);
-  const [advanced, setAdvanced] = useState(false);
+  const [discipline, setDiscipline] = useState<PressureCalculatorValues["discipline"]>(
+    initialValues?.discipline ?? defaultDiscipline ?? "road",
+  );
+  const [bodyWeightKg, setBodyWeightKg] = useState(initialValues?.bodyWeightKg ?? 75);
+  const [widthFrontMm, setWidthFrontMm] = useState(initialValues?.widthFrontMm ?? 28);
+  const [manualWidthRearMm, setManualWidthRearMm] = useState(initialValues?.widthRearMm ?? initialValues?.widthFrontMm ?? 28);
+  const [linked, setLinked] = useState(widthFrontMm === manualWidthRearMm);
+  const [tubeType, setTubeType] = useState<TubeType>(initialValues?.tubeType ?? "tubeless");
+  const [surface, setSurface] = useState<Surface>(initialValues?.surface ?? "average_asphalt");
+  const [ridingGoal, setRidingGoal] = useState<RidingGoal | undefined>(initialValues?.ridingGoal);
+  const [bikeWeightKg, setBikeWeightKg] = useState(initialValues?.bikeWeightKg ?? 8);
+  const [advanced, setAdvanced] = useState(initialValues?.bikeWeightKg !== undefined);
   const [edited, setEdited] = useState(false);
   const widthRearMm = linked ? widthFrontMm : manualWidthRearMm;
-  const input = {
+  const input: PressureCalculatorValues = {
     discipline,
     bodyWeightKg,
     widthFrontMm,
@@ -129,6 +154,7 @@ export function PressureCalculatorForm({
     ridingGoal,
     bikeWeightKg: advanced ? bikeWeightKg : undefined,
   };
+  const latestValues = useRef(input);
   const errors = validatePressureInput(input);
   const result = errors.length ? null : calculateBasicPressure(input);
   const number = new Intl.NumberFormat(locale, {
@@ -136,10 +162,22 @@ export function PressureCalculatorForm({
     minimumFractionDigits: 1,
   });
   const weightNumber = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
-  function update<T>(setter: (value: T) => void) {
-    return (value: T) => {
+  function notifyChange(changes: Partial<PressureCalculatorValues>) {
+    const nextValues = { ...latestValues.current, ...changes };
+    latestValues.current = nextValues;
+    onValuesChange?.(nextValues);
+  }
+  function commitValues() {
+    onValuesCommit?.(latestValues.current);
+  }
+  function update<Key extends keyof PressureCalculatorValues>(
+    key: Key,
+    setter: (value: NonNullable<PressureCalculatorValues[Key]>) => void,
+  ) {
+    return (value: NonNullable<PressureCalculatorValues[Key]>) => {
       setter(value);
       setEdited(true);
+      notifyChange({ [key]: value });
     };
   }
   const surfaceLabels = [
@@ -152,20 +190,22 @@ export function PressureCalculatorForm({
   ];
   const tubeLabels = [labels.tubeTypeInnerTube, labels.tubeTypeLatex, labels.tubeTypeTubeless];
   const goalLabels = [labels.ridingGoalSpeed, labels.ridingGoalBalance, labels.ridingGoalComfort];
-  const resultTitle = edited ? copy.result : copy.example;
+  const resultTitle = accountMode || edited ? copy.result : copy.example;
   return (
     <ConfiguratorLayout
       eyebrow={copy.eyebrow}
       title={defaultDiscipline ? copy.preset[defaultDiscipline] : copy.title}
       description={copy.intro}
+      navigation={headerSlot}
       inputs={
         <>
+          {statusSlot}
           <StepCard number={1} title={copy.body}>
             <div className="space-y-6">
               <Choices
                 label={labels.disciplineLabel}
                 value={discipline}
-                onChange={update(setDiscipline)}
+                onChange={update("discipline", setDiscipline)}
                 options={[
                   { value: "road", label: labels.disciplineRoad },
                   { value: "gravel", label: labels.disciplineGravel },
@@ -175,7 +215,9 @@ export function PressureCalculatorForm({
               <Slider
                 label={labels.bodyWeightLabel}
                 value={bodyWeightKg}
-                onChange={update(setBodyWeightKg)}
+                onChange={update("bodyWeightKg", setBodyWeightKg)}
+                onPointerUp={commitValues}
+                onKeyUp={commitValues}
                 min={35}
                 max={160}
                 step={1}
@@ -190,7 +232,13 @@ export function PressureCalculatorForm({
               <Slider
                 label={labels.widthFrontLabel}
                 value={widthFrontMm}
-                onChange={update(setWidthFrontMm)}
+                onChange={(value) => {
+                  setWidthFrontMm(value);
+                  setEdited(true);
+                  notifyChange({ widthFrontMm: value, ...(linked ? { widthRearMm: value } : {}) });
+                }}
+                onPointerUp={commitValues}
+                onKeyUp={commitValues}
                 min={18}
                 max={80}
                 step={1}
@@ -202,6 +250,10 @@ export function PressureCalculatorForm({
                 onClick={() => {
                   if (linked) setManualWidthRearMm(widthFrontMm);
                   setLinked(!linked);
+                  if (!linked) {
+                    setEdited(true);
+                    notifyChange({ widthRearMm: widthFrontMm });
+                  }
                 }}
                 className="w-full whitespace-normal"
               >
@@ -214,7 +266,10 @@ export function PressureCalculatorForm({
                   setLinked(false);
                   setManualWidthRearMm(value);
                   setEdited(true);
+                  notifyChange({ widthRearMm: value });
                 }}
+                onPointerUp={commitValues}
+                onKeyUp={commitValues}
                 min={18}
                 max={80}
                 step={1}
@@ -224,7 +279,7 @@ export function PressureCalculatorForm({
                 label={labels.tubeTypeLabel}
                 options={TUBES.map((value, index) => ({ value, label: tubeLabels[index] }))}
                 value={tubeType}
-                onChange={update(setTubeType)}
+                onChange={update("tubeType", setTubeType)}
               />
             </div>
           </StepCard>
@@ -233,14 +288,17 @@ export function PressureCalculatorForm({
               label={labels.surfaceLabel}
               options={SURFACES.map((value, index) => ({ value, label: surfaceLabels[index] }))}
               value={surface}
-              onChange={update(setSurface)}
+              onChange={update("surface", setSurface)}
             />
             <Button
               variant="ghost"
               className="mt-5 h-auto min-h-11 w-full whitespace-normal text-left"
               aria-expanded={advanced}
               aria-controls="pressure-advanced"
-              onClick={() => setAdvanced(!advanced)}
+              onClick={() => {
+                setAdvanced(!advanced);
+                notifyChange({ bikeWeightKg: advanced ? undefined : bikeWeightKg });
+              }}
             >
               {copy.advanced}
               <span aria-hidden="true">{advanced ? "−" : "+"}</span>
@@ -257,13 +315,16 @@ export function PressureCalculatorForm({
                   onChange={(value) => {
                     setRidingGoal(value === "unset" ? undefined : (value as RidingGoal));
                     setEdited(true);
+                    notifyChange({ ridingGoal: value === "unset" ? undefined : (value as RidingGoal) });
                   }}
                 />
                 <Slider
                   label={labels.bikeWeightLabel}
                   value={bikeWeightKg}
                   valueLabel={weightNumber.format(bikeWeightKg)}
-                  onChange={update(setBikeWeightKg)}
+                  onChange={update("bikeWeightKg", setBikeWeightKg)}
+                  onPointerUp={commitValues}
+                  onKeyUp={commitValues}
                   min={3}
                   max={20}
                   step={0.1}
@@ -340,13 +401,13 @@ export function PressureCalculatorForm({
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{copy.excluded}</p>
           </section>
           <AdjustOrder title={copy.adjustment} steps={copy.steps.map((title) => ({ title }))} />
-          <section className="rounded-3xl bg-[var(--bbf-inkt)] p-6 text-[var(--bbf-wit)]">
+          {!accountMode && <section className="rounded-3xl bg-[var(--bbf-inkt)] p-6 text-[var(--bbf-wit)]">
             <h2 className="font-display text-2xl font-bold text-[var(--bbf-wit)]">{copy.save}</h2>
             <p className="mt-3 text-sm text-[var(--bbf-op-donker)]">{copy.saveText}</p>
             <Button className="mt-4" render={<Link href={withLocalePrefix("/login", locale)} />}>
               {copy.save}
             </Button>
-          </section>
+          </section>}
         </>
       }
       stickyResult={

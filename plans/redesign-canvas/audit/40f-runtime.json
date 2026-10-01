@@ -1,0 +1,83 @@
+{
+  "origin": "http://localhost:3000",
+  "results": [
+    {
+      "locale": "nl",
+      "pageStatus": 200,
+      "manifestStatus": 200,
+      "titleDescriptionSocial": true,
+      "schemaDescription": true,
+      "singleLocalizedManifest": true,
+      "manifest": {
+        "id": "/",
+        "name": "BestBikeFit4U",
+        "short_name": "BestBikeFit4U",
+        "description": "Nauwkeurige fietsafstelling voor comfort, een goede houding en prestaties.",
+        "lang": "nl",
+        "start_url": "/nl",
+        "scope": "/",
+        "display": "standalone",
+        "orientation": "portrait",
+        "background_color": "#F5F8F3",
+        "theme_color": "#0F2420",
+        "icons": [
+          {
+            "src": "/brand/favicon/android-chrome-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+          },
+          {
+            "src": "/brand/favicon/android-chrome-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+          },
+          {
+            "src": "/brand/favicon/maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+          }
+        ]
+      }
+    },
+    {
+      "locale": "en",
+      "pageStatus": 200,
+      "manifestStatus": 200,
+      "titleDescriptionSocial": true,
+      "schemaDescription": true,
+      "singleLocalizedManifest": true,
+      "manifest": {
+        "id": "/",
+        "name": "BestBikeFit4U",
+        "short_name": "BestBikeFit4U",
+        "description": "Precision bike fitting for comfort, alignment, and performance.",
+        "lang": "en",
+        "start_url": "/en",
+        "scope": "/",
+        "display": "standalone",
+        "orientation": "portrait",
+        "background_color": "#F5F8F3",
+        "theme_color": "#0F2420",
+        "icons": [
+          {
+            "src": "/brand/favicon/android-chrome-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+          },
+          {
+            "src": "/brand/favicon/android-chrome-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+          },
+          {
+            "src": "/brand/favicon/maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { guideBacklogFixture } from "./guide-backlog-fixture.mjs";
 import { serveQaAsset } from "./assets.mjs";
 import { build } from "esbuild";
 import { createServer } from "node:http";
@@ -32,7 +33,6 @@ export async function prepareBlogFixture({ root, origin, fetch: previewFetch = f
     "next/image": "../account-batch1/image.jsx",
     "@sentry/nextjs": "runtime.jsx",
     "@/components/seo/JsonLd": "runtime.jsx",
-    "@/lib/guides/backlog": "runtime.jsx",
   };
   const bundle = await build({
     absWorkingDir: root,
@@ -53,9 +53,15 @@ export async function prepareBlogFixture({ root, origin, fetch: previewFetch = f
       "process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED": '"true"',
       "process.env.NEXT_PUBLIC_ENABLE_LOCALHOST_DEV_LOGIN": '"false"',
     },
-    plugins: [{
+    plugins: [guideBacklogFixture(root), {
       name: "final-sweep-blog-runtime",
       setup(builder) {
+        builder.onResolve({ filter: /^@convex-dev\/auth\/nextjs\/server$/ }, () => ({
+          path: "anonymous-auth", namespace: "blog-fixture",
+        }));
+        builder.onLoad({ filter: /.*/, namespace: "blog-fixture" }, () => ({
+          contents: "export const convexAuthNextjsToken = async () => undefined;", loader: "js",
+        }));
         builder.onResolve({ filter: /.*/ }, ({ path }) => {
           if (Object.hasOwn(aliases, path)) return { path: resolve(folder, aliases[path]) };
         });

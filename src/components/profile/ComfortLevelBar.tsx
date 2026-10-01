@@ -1,5 +1,8 @@
 "use client";
 
+import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { profileText } from "@/i18n/account/profileLanguage";
+
 import { cn } from "@/utils/cn";
 import { comfortLevels } from "@/lib/validations/profile";
 
@@ -28,13 +31,14 @@ export function ComfortLevelBar({
   score: number;
   className?: string;
 }) {
+  const { locale } = useDashboardMessages();
   const meta = getComfortMeta(score);
 
   return (
     <div className={cn("space-y-3", className)}>
       <div className="flex items-center justify-between gap-3">
         <p className="text-lg font-semibold text-[color:var(--color-foreground)]">
-          {meta.label}
+          {profileText(locale, meta.label)}
         </p>
         <span className="rounded-full bg-[color:var(--color-secondary)] px-3 py-1 text-xs font-semibold text-[color:var(--color-secondary-foreground)]">
           {meta.score}/5
@@ -52,7 +56,7 @@ export function ComfortLevelBar({
         ))}
       </div>
       <p className="text-sm text-[color:var(--color-muted-foreground)]">
-        {meta.description}
+        {profileText(locale, meta.description)}
       </p>
     </div>
   );

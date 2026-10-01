@@ -120,14 +120,14 @@ export const nlLandingFaq = [
     q: "Voor wie is online bikefitting geschikt?",
     a:
       "Voor rijders die thuis beter willen starten, een bestaande positie willen " +
-      "controleren of een nieuwe fiets/logische setup willen beoordelen zonder " +
+      "controleren of een nieuwe fiets of afstelling willen beoordelen zonder " +
       "meteen naar een fysieke fitter te gaan.",
   },
   {
     q: "Wanneer kies je beter voor een fysieke bikefitter?",
     a:
       "Bij terugkerende zware pijn, een blessure, duidelijke asymmetrie of een " +
-      "situatie waarin live observatie en directe feedback nodig zijn.",
+      "situatie waarin iemand je beweging moet bekijken en direct advies moet geven.",
   },
 ] as const;
 
@@ -144,7 +144,7 @@ export const nlLandingLinks: RelatedLink[] = [
   },
   {
     href: "/pricing",
-    label: "Free vs Pro",
+    label: "Gratis of Pro",
     description: "Zie wat je gratis krijgt en wanneer een uitgebreider rapport zinvol is.",
   },
   {
@@ -161,7 +161,7 @@ export const nlLandingCopy = {
     "Online bikefitting werkt het best als je snel duidelijkheid wilt over je " +
     "huidige positie, je belangrijkste afstellingen en de vraag of je thuis al " +
     "voldoende verder kunt. Het resultaat moet concreet zijn: millimeters, " +
-    "prioriteiten en trade-offs.",
+    "prioriteiten en afwegingen.",
   text4: "Start online bikefitting",
   text5: "Start online bikefitting",
   text6: "Maak account voor rapport",
@@ -191,17 +191,17 @@ export const nlLandingCopy = {
   text22:
     "De beste gebruikers zijn niet per se professionals, maar rijders die thuis " +
     "een goede eerste structuur willen voordat ze verder investeren.",
-  text23: "Goede match voor online",
+  text23: "Geschikt voor online bikefitting",
   text24: "Je wilt je huidige positie beter begrijpen zonder direct een afspraak te " + "plannen.",
   text25: "Je bent net begonnen met serieuzer fietsen en wilt een logisch startpunt.",
-  text26: "Je wilt een nieuwe fiets of setup eerst thuis beoordelen.",
+  text26: "Je wilt een nieuwe fiets of afstelling eerst thuis beoordelen.",
   text27: "Je wilt voorbereid een eventuele fysieke fit ingaan.",
   text28: "Minder geschikt als enige stap",
   text29: "Je hebt terugkerende kniepijn, rugklachten of gevoelloosheid ondanks " + "eerdere aanpassingen.",
   text30: "Je herstelt van een blessure of hebt duidelijke links-rechtsverschillen.",
-  text31: "Je hebt een complexe prestatiedoelstelling waarbij live observatie " + "belangrijk is.",
+  text31: "Je hebt een complexe prestatiedoelstelling waarbij iemand je beweging " + "moet bekijken.",
   text32: "Verdiep je online bikefitting-route",
-  text33: "FAQ",
+  text33: "Veelgestelde vragen",
   text34: "Veelgestelde vragen over bikefitting",
   text35: "Start je eerste rapport",
   text36: "Wil je jouw bikefitting omzetten naar een praktisch afstelplan?",

@@ -16,6 +16,8 @@ import {
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { getPdfResponseError } from "@/lib/reports/pdfResponseError";
 import { reportClientError } from "@/lib/telemetry";
+import { localizeAccountError } from "@/i18n/account/clientErrors";
+import { reportErrors } from "@/i18n/account/reportErrors";
 
 type FitReportActionGroupProps = {
   sessionId: Id<"fitSessions">;
@@ -46,6 +48,7 @@ export function FitReportActionGroup({
 
     setIsFetchingPdf(true);
     setPdfError(null);
+    let localizedFailure = messages.results.errors.pdfGenerateFailed;
 
     try {
       const response = await fetch(`/api/reports/${sessionId}/pdf?locale=${locale}`, {
@@ -53,7 +56,8 @@ export function FitReportActionGroup({
       });
 
       if (!response.ok) {
-        throw new Error(getPdfResponseError(response.status, locale));
+        localizedFailure = getPdfResponseError(response.status, locale);
+        throw new Error(localizedFailure);
       }
 
       const pdfBytes = await response.arrayBuffer();
@@ -68,11 +72,11 @@ export function FitReportActionGroup({
       return objectUrl;
     } catch (error) {
       const message =
-        error instanceof Error
+        locale !== "nl" && error instanceof Error
           ? error.message
-          : messages.results.errors.pdfGenerateFailed;
+          : localizedFailure;
       setPdfError(message);
-      throw error;
+      throw new Error(message);
     } finally {
       setIsFetchingPdf(false);
     }
@@ -120,13 +124,14 @@ export function FitReportActionGroup({
     } catch (error) {
       toast.error({
         title: messages.results.emailDialog.errors.sendTitle,
-        description: reportClientError(error, {
+        description: localizeAccountError(reportClientError(error, {
           area: "report-actions",
           action: "sendFitReport",
           operationType: "action",
           subjectId: sessionId,
           metadata: { pagePath, recipientEmail: email },
-        }),
+          userMessage: reportErrors[locale].emailFallback,
+        }), locale),
       });
     } finally {
       setIsEmailing(false);
@@ -191,7 +196,7 @@ export function FitReportActionGroup({
             <CardContent className="flex h-full min-h-0 flex-col p-0">
               {pdfError ? (
                 <div className="flex h-full flex-col items-center justify-center gap-4 p-6 text-center">
-                  <ErrorState description={pdfError} />
+                  <ErrorState title={locale === "nl" ? messages.results.errors.pdfGenerateFailed : undefined} description={pdfError} />
                   <div className="flex flex-wrap justify-center gap-2">
                     <Button
                       size="sm"

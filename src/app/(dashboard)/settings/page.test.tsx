@@ -63,6 +63,20 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 describe("account settings", () => {
+  it("shows Dutch validation errors returned by the shared error reporter", async () => {
+    const logged = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    state.update.mockRejectedValueOnce(new Error("Invalid display name"));
+    render(<SettingsPage />);
+    const field = screen.getByRole("textbox", { name: nl.dashboard.settings.account.displayNameLabel });
+    fireEvent.change(field, { target: { value: "New name" } });
+    fireEvent.blur(field);
+    expect(await screen.findByText("Niet opgeslagen")).toBeTruthy();
+    expect(field).toHaveProperty("value", "New name");
+    fireEvent.click(screen.getByRole("button", { name: "Opnieuw proberen" }));
+    expect(await screen.findByText("Opgeslagen")).toBeTruthy();
+    expect(screen.queryByText("Please check your input and try again.")).toBeNull();
+    logged.mockRestore();
+  });
   it("uses a real loading state instead of showing a free account", () => {
     state.loading = true;
     render(<SettingsPage />);
@@ -77,9 +91,8 @@ describe("account settings", () => {
         target: { value: "New rider name" },
       },
     );
-    fireEvent.click(
-      screen.getByRole("button", { name: nl.dashboard.settings.account.saveDisplayName }),
-    );
+    expect(screen.queryByRole("button", { name: nl.dashboard.settings.account.saveDisplayName })).toBeNull();
+    fireEvent.blur(screen.getByRole("textbox", { name: nl.dashboard.settings.account.displayNameLabel }));
     await waitFor(() =>
       expect(state.update).toHaveBeenCalledWith({ displayName: "New rider name" }),
     );

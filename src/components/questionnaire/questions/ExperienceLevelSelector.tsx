@@ -31,11 +31,12 @@ export function ExperienceLevelSelector({
       {/* Reference image */}
       <div className="relative w-full">
         <Image
-          src="/bestbikefit4u-beginner-intermediate-advanced.png"
+          src="/bestbikefit4u-beginner-intermediate-advanced.webp"
           alt={t.imageAlt}
           width={900}
           height={400}
           className="h-auto w-full object-cover"
+          sizes="(max-width: 768px) calc(100vw - 48px), 700px"
           priority
         />
       </div>

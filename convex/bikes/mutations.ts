@@ -1,3 +1,4 @@
+import { bikeEditError } from "../../shared/bikeEditValidation";
 import type { Id } from "../_generated/dataModel";
 import { mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
@@ -21,7 +22,7 @@ import {
   assignOrReusePublicFitCode,
   resolvePublicFitSnapshot,
 } from "./publicFit";
-import { findUnreferencedStorageIdsForBikes } from "../lib/storageReferences";
+import { internal } from "../_generated/api";
 import {
   buildBikeGearingRecord,
   type BikeGearingRecord,
@@ -131,11 +132,6 @@ type CreateBikeInput = {
   stravaPrimary?: boolean;
   lifetimeDistanceMeters?: number;
   lastStravaSync?: number;
-  importSourceName?: "marktplaats";
-  importSourceUrl?: string;
-  importCanonicalUrl?: string;
-  importedAdvertTitle?: string;
-  bikeImportId?: Id<"bikeImports">;
   geometryRecordId?: Id<"geometry_records"> | null;
   bikePassportId?: string;
   importedFromBikePassportId?: string;
@@ -152,12 +148,6 @@ export async function createBikeWithProfiles(
   if (args.model !== undefined) validateShortString(args.model, "model");
   if (args.description !== undefined) validateLongTextString(args.description, "description");
   if (args.notes !== undefined) validateTextString(args.notes, "notes");
-  if (args.importSourceUrl !== undefined)
-    validateTextString(args.importSourceUrl, "importSourceUrl");
-  if (args.importCanonicalUrl !== undefined)
-    validateTextString(args.importCanonicalUrl, "importCanonicalUrl");
-  if (args.importedAdvertTitle !== undefined)
-    validateTextString(args.importedAdvertTitle, "importedAdvertTitle");
 
   const now = args.createdAt ?? Date.now();
   const updatedAt = args.updatedAt ?? now;
@@ -195,11 +185,6 @@ export async function createBikeWithProfiles(
     stravaPrimary: args.stravaPrimary,
     lifetimeDistanceMeters: args.lifetimeDistanceMeters,
     lastStravaSync: args.lastStravaSync,
-    importSourceName: args.importSourceName,
-    importSourceUrl: args.importSourceUrl,
-    importCanonicalUrl: args.importCanonicalUrl,
-    importedAdvertTitle: args.importedAdvertTitle,
-    bikeImportId: args.bikeImportId,
     geometryRecordId: args.geometryRecordId ?? undefined,
     bikePassportId,
     importedFromBikePassportId: args.importedFromBikePassportId,
@@ -427,6 +412,8 @@ export const update = mutation({
     ),
     needsTypeConfirmation: v.optional(v.boolean()),
     notes: v.optional(v.string()),
+    clearFields: v.optional(v.array(v.union(v.literal("ridingStyle"), v.literal("primaryGoal"),
+      v.literal("bikeWeightKg")))),
   },
   handler: async (ctx, args) => {
     if (args.name !== undefined) validateShortString(args.name, "name");
@@ -435,6 +422,8 @@ export const update = mutation({
     if (args.description !== undefined) validateLongTextString(args.description, "description");
     if (args.notes !== undefined) validateTextString(args.notes, "notes");
     const { bike } = await requireBikeOwner(ctx, args.bikeId);
+    const validationError = bikeEditError(args, bike);
+    if (validationError) throw new Error(`Invalid bike values: ${validationError}`);
     const updates: Record<string, unknown> = { updatedAt: Date.now() };
     if (args.name !== undefined) updates.name = args.name;
     if (args.bikeType !== undefined) updates.bikeType = args.bikeType;
@@ -473,6 +462,7 @@ export const update = mutation({
       updates.needsTypeConfirmation = args.needsTypeConfirmation;
     if (args.notes !== undefined) updates.notes = args.notes;
 
+    for (const field of args.clearFields ?? []) updates[field] = undefined;
     await ctx.db.patch(args.bikeId, updates);
     if (
       args.bikeType !== undefined ||
@@ -482,10 +472,10 @@ export const update = mutation({
       await maybeRefreshPublicFitSnapshot(ctx, args.bikeId, bike);
     }
 
-    if (args.ridingStyle !== undefined || args.bikeType !== undefined) {
+    if (args.ridingStyle !== undefined || args.bikeType !== undefined || args.clearFields?.includes("ridingStyle")) {
       const nextBike = {
         bikeType: args.bikeType ?? bike.bikeType,
-        ridingStyle: args.ridingStyle ?? bike.ridingStyle,
+        ridingStyle: args.clearFields?.includes("ridingStyle") ? undefined : args.ridingStyle ?? bike.ridingStyle,
       };
       const defaults = getSystemDefaultBikeProfile(nextBike);
       const defaultProfile = await ctx.db
@@ -553,87 +543,14 @@ export const revokePublicFitCode = mutation({
 });
 
 export const remove = mutation({
-  args: { bikeId: v.id("bikes") },
+  args: { bikeId: v.id("bikes"), confirmName: v.string() },
   handler: async (ctx, args) => {
     const { bike, userId } = await requireBikeOwner(ctx, args.bikeId);
-
-    const fitSessions = await ctx.db
-      .query("fitSessions")
-      .withIndex("by_user_bike", (q) =>
-        q.eq("userId", userId).eq("bikeId", args.bikeId)
-      )
-      .collect();
-
-    if (fitSessions.length > 0) {
-      throw new Error(
-        "This bike cannot be deleted yet because it has fitting history."
-      );
-    }
-
-    const pressureCalculations = await ctx.db
-      .query("pressureCalculations")
-      .withIndex("by_bike", (q) => q.eq("bikeId", args.bikeId))
-      .collect();
-    for (const calculation of pressureCalculations) {
-      await ctx.db.delete(calculation._id);
-    }
-
-    const pressureProfiles = await ctx.db
-      .query("pressureProfiles")
-      .withIndex("by_bike", (q) => q.eq("bikeId", args.bikeId))
-      .collect();
-    for (const profile of pressureProfiles) {
-      await ctx.db.delete(profile._id);
-    }
-
-    const bikeProfiles = await ctx.db
-      .query("bikeProfiles")
-      .withIndex("by_bike", (q) => q.eq("bikeId", args.bikeId))
-      .collect();
-    for (const bikeProfile of bikeProfiles) {
-      await ctx.db.delete(bikeProfile._id);
-    }
-
-    const wheelsets = await ctx.db
-      .query("wheelsets")
-      .withIndex("by_bike", (q) => q.eq("bikeId", args.bikeId))
-      .collect();
-    for (const wheelset of wheelsets) {
-      const tireSetups = await ctx.db
-        .query("tireSetups")
-        .withIndex("by_wheelset", (q) => q.eq("wheelsetId", wheelset._id))
-        .collect();
-      for (const tireSetup of tireSetups) {
-        await ctx.db.delete(tireSetup._id);
-      }
-      await ctx.db.delete(wheelset._id);
-    }
-
-    const bikePhotos = await ctx.db
-      .query("bikePhotos")
-      .withIndex("by_bike", (q) => q.eq("bikeId", args.bikeId))
-      .collect();
-    const storageIdsToDelete = new Set<string>();
-    for (const bikePhoto of bikePhotos) {
-      storageIdsToDelete.add(bikePhoto.storageId);
-      await ctx.db.delete(bikePhoto._id);
-    }
-
-    if (isManagedBikeStorageId(bike.photoUrl)) {
-      storageIdsToDelete.add(bike.photoUrl);
-    }
-
-    const deletableStorageIds = await findUnreferencedStorageIdsForBikes({
-      ctx,
-      candidateStorageIds: [...storageIdsToDelete],
-      ignoredBikeIds: [args.bikeId],
-    });
-
-    for (const storageId of deletableStorageIds) {
-      await ctx.storage.delete(storageId as Id<"_storage">);
-    }
-
+    if (args.confirmName !== bike.name) throw new Error("Bike name confirmation does not match");
     await ctx.db.delete(args.bikeId);
+    await ctx.scheduler.runAfter(0, internal.bikes.deletion.cascade, {
+      bikeId: args.bikeId, userId, photoUrl: bike.photoUrl, stage: 0,
+    });
   },
 });
 

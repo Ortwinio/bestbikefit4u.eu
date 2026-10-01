@@ -1,0 +1,171 @@
+export const setup = {
+  slug: "setup-parameters",
+  updatedAt: "2026-10-01",
+  illustration: "31-afstelmaten",
+  nl: {
+    title: "Fiets afstellen: maten vastleggen",
+    metaTitle: "Fiets afstellen: maten vastleggen | BestBikeFit4U",
+    metaDescription: "Je fiets afstellen zonder je uitgangspositie kwijt te raken? Leer zadelhoogte, bereik en stuurdrop vastleggen en test daarna één kleine wijziging.",
+    keyword: "fiets afstellen",
+    relatedKeywords: ["afstelmaten fiets", "zadelhoogte meten", "stuurdrop meten", "zadelterugstand"],
+    alt: "Fiets van opzij met afzonderlijke maatlijnen voor zadelhoogte, bereik tot het stuur, stuurdrop en cranklengte.",
+    quickAnswer: "Je fiets afstellen begint met maten die je later op dezelfde manier kunt terugvinden. Noteer zadelhoogte, zadelterugstand, zadelhelling en handpositie met duidelijke meetpunten, plus de gebruikte onderdelen. Controleer daarna welke maat bij je vraag hoort; een verschil op papier is op zichzelf geen reden om een prettige positie te veranderen.",
+    markdown: `## Het probleem: je fiets afstellen zonder meetverwarring
+
+Je wilt je zadel terugzetten na onderhoud, maar je oude notitie zegt alleen een getal. Je weet niet meer waar het meetlint begon. Misschien mat je langs de zadelbuis, terwijl je nu rechtstreeks naar de zadelpunt meet. Het verschil lijkt een afstelprobleem, maar kan ook uit je meetwijze komen.
+
+Hetzelfde gebeurt wanneer je twee fietsen vergelijkt. De afstand tussen zadel en stuur lijkt gelijk, terwijl je handen verder weg staan. Of een nieuw zadel staat op dezelfde hoogte, maar ondersteunt je op een andere plek. Alleen een lijst getallen verklaart dat niet.
+
+Deze gids helpt je een volledig, herhaalbaar overzicht maken. Je leert welke maten verschillende vragen beantwoorden en welke onderdelen je erbij moet noteren. Daarmee kun je een verandering volgen, terugdraaien of met een fitter bespreken. Een meetblad is geen bewijs dat iedere maat ook bij jouw lichaam past.
+
+## Achtergrond: meetpunten geven getallen betekenis
+
+Zadelhoogte beschrijft de afstand tussen trapasmidden en een gekozen punt bovenop het zadel. Leg vast welk punt je gebruikt en hoe je het meetlint houdt. Een andere zadelvorm kan dat punt veranderen. Vergelijk daarom niet alleen de uitkomst, maar ook de meetwijze en het onderdeel.
+
+Zadelterugstand, ook setback genoemd, is een horizontale afstand ten opzichte van de trapas. Kies bijvoorbeeld de zadelpunt als herkenbare referentie en schrijf dat erbij. Een kortere zadelneus verandert deze maat zonder noodzakelijk dezelfde verandering van je zitplek. Zadelhelling beschrijft weer iets anders: de hoek van het gekozen meetvlak.
+
+Voor het stuur zijn hoogte en afstand afzonderlijke vragen. Drop beschrijft het verticale verschil tussen zadel en stuur. Bereik tot de remgreep beschrijft waar je hand terechtkomt. Een afstand tot het stuurmidden legt die handpositie niet volledig vast, omdat stuurvorm en remgrepen meetellen.
+
+Framereach en stack horen bij de geometrie van het frame. Ze beschrijven niet rechtstreeks de afstand vanaf jouw zadel tot jouw handen. Stuurpen, tussenringen en stuur voegen hun eigen afmetingen toe. Houd framegegevens daarom apart van je gemeten contactpunten.
+
+Cranklengte loopt van het midden van de trapas tot het midden van de pedaalas. Noteer ook schoenen, pedalen en schoenplaatjes. Die gegevens maken duidelijk welke onderdelen bij je meting hoorden. Een onderdelenwissel kan aanleiding zijn om opnieuw te meten en te vergelijken.
+
+Een calculator kan richting geven, maar controleert je meetpunten niet. Een klein verschil tussen twee metingen kan meetvariatie zijn. Zoek eerst uit of het verschil herhaalbaar is voordat je onderdelen verplaatst.
+
+## Zo pak je het aan met fietsafstelling
+
+1. **Maak een vaste meetopstelling:** Zet de fiets recht op een vlakke ondergrond. Gebruik een meetlint, waterpas en schietlood; vraag hulp om de fiets stabiel te houden. Noteer datum, fiets, zadelmodel en gebruikte schoenen en pedalen.
+
+   Maak een zijfoto met zichtbare meetpunten. Meet dezelfde afstand opnieuw zonder je eerste getal over te nemen. Verschillen de uitkomsten duidelijk, verbeter dan eerst je opstelling.
+
+2. **Leg het zadel vast:** Meet vanaf het trapasmidden naar je gekozen punt op het zadel. Noteer de afstand in millimeters. Meet daarnaast horizontaal tussen de verticale lijnen door trapasmidden en zadelreferentie voor de terugstand.
+
+   Leg voor de helling een rechte lat op een beschreven deel van het zadel. Noteer de gemeten hoek en het gebruikte meetvlak. Een hol of gebogen zadel vraagt extra zorg bij die keuze.
+
+3. **Beschrijf waar je handen zitten:** Meet zadelhoogte en stuurhoogte vanaf dezelfde vloer. Het verschil geeft de drop, mits je duidelijke referentiepunten gebruikt. Noteer ook de afstand naar een herkenbaar punt op de remgreep.
+
+   Schrijf erbij of die afstand schuin of horizontaal gemeten is. Bewaar stuurpenlengte, stuurmodel en remgreepstand bij de meting. Zo blijft de notitie bruikbaar wanneer je later onderdelen vergelijkt.
+
+4. **Koppel één vraag aan één verandering:** Gebruik de [fietsafstellingscalculator](/nl/calculators/bike-fit) om lichaamsmaten naast je huidige positie te leggen. Verplaats niets alleen omdat een advies afwijkt. Beschrijf eerst welk praktisch probleem je wilt onderzoeken.
+
+   Wil je een mogelijk te hoge zadelstand onderzoeken, dan kan 2–5 mm lager een voorzichtige proef zijn. Dit voorbeeld is geen behandeling voor pijn. Noteer oud en nieuw; laat helling en terugstand verder ongemoeid.
+
+5. **Controleer montage en vergelijk ritten:** Respecteer klemzones, minimale insteek en aanhaalmomenten van de fabrikant. Laat onzekere montage door een fietsenmaker controleren. Test vervolgens twee tot drie rustige ritten zolang je klachtenvrij blijft, met vergelijkbare route en inspanning.
+
+   Noteer naast maten ook bediening en comfort. Stop bij nieuwe klachten of minder controle en herstel de veilige uitgangsstand. Een kleiner getal is geen verbetering als je slechter fietst.
+
+6. **Stop wanneer meten niet genoeg is:** Pijn in rust, nachtelijke pijn, zwelling of uitstralende tintelingen vragen medische beoordeling. Blijf dan niet verder afstellen. Laat pijn die na drie tot vier zorgvuldige aanpassingen blijft door een fitter en zo nodig arts beoordelen.
+
+## Verder lezen
+
+- [Racefiets afstellen: je drie contactpunten](/nl/guides/road-bike-fit-guide) verbindt je losse maten met steun en bediening op de fiets.
+- [Fietsen vergelijken zithouding](/nl/guides/how-to-compare-two-bikes-for-fit) helpt je dezelfde meetwijze op twee verschillende fietsen toepassen.
+- [Fiets afstellen beperkte flexibiliteit](/nl/guides/bike-fit-for-riders-with-limited-flexibility) bespreekt waarom een gemeten positie ook bewegingsruimte moet bieden.
+- [Triatlonfiets afstellen](/nl/guides/triathlon-bike-fit-guide) helpt je begrijpen welke extra steunpunten een ligstuur toevoegt.
+- De [fietsafstellingscalculator](/nl/calculators/bike-fit) geeft je een vertrekpunt om lichaamsmaten en bestaande afstelling gericht naast elkaar te bekijken.
+
+## Veelgestelde vragen
+
+### Welke eenheid gebruik ik voor mijn meetblad?
+
+Gebruik millimeters voor afstanden en graden voor hoeken, met de eenheid achter ieder getal. Noteer liever ook het meetpunt dan alleen extra decimalen. Herhaalbaarheid maakt je notities bruikbaar. Een nauwkeurig ogend getal helpt weinig wanneer je later niet weet tussen welke punten je mat.
+
+### Moet ik de linker- en rechterkant apart noteren?
+
+Noteer onderdelen die links en rechts afzonderlijk staan, zoals schoenplaatjes en remgrepen. Beschrijf een zichtbaar verschil voordat je het probeert weg te werken. Een afwijking bewijst geen lichamelijk probleem. Vraag hulp als je niet kunt bepalen of het verschil uit montage, meetwijze of houding komt.
+
+### Kan een foto mijn meetblad vervangen?
+
+Een foto helpt bij het terugvinden van onderdelen en referentiepunten, maar perspectief beïnvloedt afstanden in beeld. Gebruik echte metingen voor je getallen. Bewaar de foto als toelichting en maak herhaalde foto's vanuit dezelfde richting. Een foto alleen controleert ook niet of bouten goed vastzitten.
+
+### Wanneer maak ik een nieuwe versie van mijn maten?
+
+Maak een nieuwe versie na een bewuste wijziging of onderdelenwissel en bewaar de vorige. Zet je reden en ervaringen erbij. Zo kun je later onderscheid maken tussen een onderhoudsmoment en een afstelproef. Bij onverwachte verschuiving controleer je eerst de bevestiging voordat je ermee doorrijdt.`,
+    cta: "Maak je meetblad en vergelijk je huidige positie met een berekend vertrekpunt.",
+    ctaLabel: "Bereken je fietsafstelling",
+    ctaTarget: "/calculators/bike-fit",
+  },
+  en: {
+    title: "Bike setup measurements: record your position",
+    metaTitle: "Bike setup measurements | BestBikeFit4U",
+    metaDescription: "Unsure about your bike setup measurements? Learn to record saddle height, reach and bar drop with clear reference points, then test one small change.",
+    keyword: "bike setup measurements",
+    relatedKeywords: ["record bike position", "measure saddle height", "measure bar drop", "saddle setback"],
+    alt: "Side view of a bike with separate dimension lines for saddle height, handlebar reach, bar drop and crank length.",
+    quickAnswer: "Your bike setup measurements need reference points you can find again using the same method. Record saddle height, setback, tilt and hand position with clearly described measuring points, alongside the fitted components. Then check which measurement relates to your question; a difference on paper alone is no reason to change a comfortable position.",
+    markdown: `## The problem: confusing bike setup measurements
+
+You want to restore your saddle after maintenance, but your old note contains only a number. You cannot remember where the tape started. Perhaps you measured along the seat tube, while now measuring directly to the saddle nose. The difference looks like a fitting problem, but could come from your method.
+
+The same thing happens when comparing two bikes. Saddle to bar distance looks equal, yet your hands sit further away. Or a new saddle has the same height but supports you in a different place. A list of numbers alone cannot explain that.
+
+This guide helps you build a complete, repeatable record. You learn which measurements answer different questions and which components to record alongside them. You can then track a change, reverse it or discuss it with a fitter. A measurement sheet does not prove that every number suits your body.
+
+## Background: reference points give numbers meaning
+
+Saddle height describes the distance between the bottom bracket centre and a chosen point on the saddle surface. Record which point you use and how you hold the tape. A different saddle shape can change that point. Compare the measuring method and component as well as the result.
+
+Saddle setback is a horizontal distance relative to the bottom bracket. You might choose the saddle nose as an identifiable reference and record that choice. A shorter saddle nose changes this measurement without necessarily making the same change to your seating location. Saddle tilt describes something else: the angle of your chosen measuring surface.
+
+For the handlebars, height and distance are separate questions. Drop describes the vertical difference between saddle and bars. Reach to the hood describes where your hand rests. A distance to the bar centre does not fully record hand position because bar shape and hoods also matter.
+
+Frame reach and stack belong to frame geometry. They do not directly describe the distance from your saddle to your hands. The stem, spacers and bar add their own dimensions. Keep frame specifications separate from your measured contact points.
+
+Crank length runs from the bottom bracket centre to the pedal axle centre. Record shoes, pedals and cleats too. These details identify which components were present during measurement. A component change can be a reason to measure and compare again.
+
+A calculator can offer direction, but cannot check your reference points. A small difference between measurements may be measuring variation. First establish whether the difference is repeatable before moving components.
+
+## How to approach it with bike fitting
+
+1. **Create a consistent measuring setup:** Stand the bike upright on a level surface. Use a tape measure, spirit level and plumb line; ask someone to keep the bike steady. Record the date, bike, saddle model and shoes and pedals used.
+
+   Take a side photograph with visible measuring points. Repeat a measurement without copying your first number. If the results differ noticeably, improve your setup first.
+
+2. **Record the saddle:** Measure from the bottom bracket centre to your chosen point on the saddle. Record the distance in millimetres. For setback, measure horizontally between vertical lines through the bottom bracket centre and saddle reference.
+
+   For tilt, place a straight edge on a described part of the saddle. Record the measured angle and the surface used. A curved or dished saddle needs extra care when choosing that surface.
+
+3. **Describe where your hands rest:** Measure saddle height and bar height from the same floor. Their difference gives drop, provided you use clear reference points. Also record the distance to an identifiable point on the hood.
+
+   State whether you measured that distance diagonally or horizontally. Keep stem length, bar model and hood position with the measurement. Your notes then remain useful when comparing components later.
+
+4. **Connect one question to one change:** Use the [bike fit calculator](/en/calculators/bike-fit) to compare body measurements with your current position. Do not move anything simply because a recommendation differs. First describe the practical issue you want to investigate.
+
+   If investigating a potentially high saddle, lowering it by 2–5 mm could be a cautious trial. This example is not a treatment for pain. Record old and new measurements; leave tilt and setback otherwise unchanged.
+
+5. **Check installation and compare rides:** Respect manufacturer clamping zones, minimum insertion and torque settings. Have uncertain installation checked by a mechanic. Then test two to three easy rides while symptom-free, with comparable routes and effort.
+
+   Record control access and comfort alongside measurements. Stop for new symptoms or reduced control and restore the safe baseline. A smaller number is not an improvement if riding becomes worse.
+
+6. **Stop when measuring is not enough:** Pain at rest, night pain, swelling or radiating tingling need medical assessment. Do not keep adjusting then. Have pain persisting after three to four careful adjustments assessed by a fitter and, where appropriate, a clinician.
+
+## Further reading
+
+- [Road bike fit: your three contact points](/en/guides/road-bike-fit-guide) connects individual measurements with support and control on the bike.
+- [Compare bikes for fit: contact points first](/en/guides/how-to-compare-two-bikes-for-fit) helps you apply the same measuring method to two different bikes.
+- [Bike fit limited flexibility](/en/guides/bike-fit-for-riders-with-limited-flexibility) explains why a measured position also needs room for movement.
+- [Triathlon bike fit: support in aero](/en/guides/triathlon-bike-fit-guide) helps explain the additional support points provided by aerobars.
+- The [bike fit calculator](/en/calculators/bike-fit) provides a starting point for comparing body measurements with your existing setup.
+
+## Frequently asked questions
+
+### Which units should I use on my measurement sheet?
+
+Use millimetres for distances and degrees for angles, with the unit beside each number. Record the reference point rather than just adding decimal places. Repeatability makes your notes useful. A precise-looking number offers little help if you later forget which points you measured between.
+
+### Should I record the left and right sides separately?
+
+Record components positioned separately on each side, such as cleats and hoods. Describe a visible difference before trying to remove it. A difference does not prove a physical problem. Seek help if you cannot establish whether it comes from installation, measuring method or posture.
+
+### Can a photograph replace my measurement sheet?
+
+A photograph helps identify components and reference points, but perspective affects distances in the image. Use actual measurements for your numbers. Keep the photograph as an explanation and take repeat photographs from the same direction. A photograph alone cannot check whether bolts are secure either.
+
+### When should I create a new version of my measurements?
+
+Create a new version after a deliberate adjustment or component change and keep the previous one. Add your reason and observations. You can then distinguish maintenance from an adjustment trial later. For unexpected movement, check the attachment first before continuing to ride the bike.`,
+    cta: "Create your measurement sheet and compare your current position with a calculated starting point.",
+    ctaLabel: "Calculate your bike fit",
+    ctaTarget: "/calculators/bike-fit",
+  },
+} as const;

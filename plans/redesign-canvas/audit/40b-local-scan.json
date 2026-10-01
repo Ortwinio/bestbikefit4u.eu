@@ -1,0 +1,1784 @@
+{
+  "base_url": "https://127.0.0.1:4340",
+  "summary": {
+    "pages": 72,
+    "fetch_errors": 0,
+    "pages_with_errors": 0,
+    "pages_with_english_findings": 0,
+    "english_findings": 0,
+    "english_baseline_compared": false
+  },
+  "pages": [
+    {
+      "path": "/nl/tire-pressure/55kg-road-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/55kg-road-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 55kg racefiets | BestBikeFit4U",
+      "h1": "Bandenspanning voor 55kg racefiets",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 55 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 55kg racefiets | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 55 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/55kg-racefiets"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/55kg-racefiets",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/55kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/55kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/55kg-road-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/55kg-gravel-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/55kg-gravel-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 55kg gravelbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 55kg gravelbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 55 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 55kg gravelbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 55 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/55kg-gravelbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/55kg-gravelbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/55kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/55kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/55kg-gravel-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/55kg-mountain-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/55kg-mountain-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 55kg mountainbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 55kg mountainbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 55 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 55kg mountainbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 55 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/55kg-mountainbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/55kg-mountainbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/55kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/55kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/55kg-mountain-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/60kg-road-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/60kg-road-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 60kg racefiets | BestBikeFit4U",
+      "h1": "Bandenspanning voor 60kg racefiets",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 60 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 60kg racefiets | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 60 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/60kg-racefiets"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/60kg-racefiets",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/60kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/60kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/60kg-road-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/60kg-gravel-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/60kg-gravel-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 60kg gravelbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 60kg gravelbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 60 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 60kg gravelbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 60 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/60kg-gravelbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/60kg-gravelbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/60kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/60kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/60kg-gravel-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/60kg-mountain-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/60kg-mountain-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 60kg mountainbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 60kg mountainbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 60 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 60kg mountainbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 60 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/60kg-mountainbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/60kg-mountainbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/60kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/60kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/60kg-mountain-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/65kg-road-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/65kg-road-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 65kg racefiets | BestBikeFit4U",
+      "h1": "Bandenspanning voor 65kg racefiets",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 65 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 65kg racefiets | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 65 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/65kg-racefiets"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/65kg-racefiets",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/65kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/65kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/65kg-road-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/65kg-gravel-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/65kg-gravel-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 65kg gravelbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 65kg gravelbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 65 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 65kg gravelbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 65 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/65kg-gravelbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/65kg-gravelbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/65kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/65kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/65kg-gravel-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/65kg-mountain-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/65kg-mountain-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 65kg mountainbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 65kg mountainbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 65 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 65kg mountainbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 65 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/65kg-mountainbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/65kg-mountainbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/65kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/65kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/65kg-mountain-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/70kg-road-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/70kg-road-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 70kg racefiets | BestBikeFit4U",
+      "h1": "Bandenspanning voor 70kg racefiets",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 70 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 70kg racefiets | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 70 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/70kg-racefiets"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/70kg-racefiets",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/70kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/70kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/70kg-road-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/70kg-gravel-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/70kg-gravel-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 70kg gravelbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 70kg gravelbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 70 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 70kg gravelbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 70 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/70kg-gravelbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/70kg-gravelbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/70kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/70kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/70kg-gravel-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/70kg-mountain-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/70kg-mountain-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 70kg mountainbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 70kg mountainbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 70 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 70kg mountainbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 70 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/70kg-mountainbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/70kg-mountainbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/70kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/70kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/70kg-mountain-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/75kg-road-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/75kg-road-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 75kg racefiets | BestBikeFit4U",
+      "h1": "Bandenspanning voor 75kg racefiets",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 75 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 75kg racefiets | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 75 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/75kg-gravel-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/75kg-gravel-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 75kg gravelbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 75kg gravelbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 75 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 75kg gravelbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 75 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-gravelbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-gravelbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/75kg-mountain-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/75kg-mountain-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 75kg mountainbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 75kg mountainbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 75 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 75kg mountainbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 75 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-mountainbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-mountainbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/80kg-road-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/80kg-road-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 80kg racefiets | BestBikeFit4U",
+      "h1": "Bandenspanning voor 80kg racefiets",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 80 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 80kg racefiets | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 80 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/80kg-racefiets"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/80kg-racefiets",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/80kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/80kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/80kg-road-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/80kg-gravel-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/80kg-gravel-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 80kg gravelbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 80kg gravelbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 80 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 80kg gravelbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 80 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/80kg-gravelbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/80kg-gravelbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/80kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/80kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/80kg-gravel-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/80kg-mountain-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/80kg-mountain-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 80kg mountainbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 80kg mountainbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 80 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 80kg mountainbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 80 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/80kg-mountainbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/80kg-mountainbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/80kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/80kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/80kg-mountain-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/85kg-road-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/85kg-road-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 85kg racefiets | BestBikeFit4U",
+      "h1": "Bandenspanning voor 85kg racefiets",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 85 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 85kg racefiets | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 85 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/85kg-racefiets"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/85kg-racefiets",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/85kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/85kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/85kg-road-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/85kg-gravel-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/85kg-gravel-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 85kg gravelbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 85kg gravelbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 85 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 85kg gravelbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 85 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/85kg-gravelbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/85kg-gravelbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/85kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/85kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/85kg-gravel-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/85kg-mountain-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/85kg-mountain-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 85kg mountainbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 85kg mountainbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 85 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 85kg mountainbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 85 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/85kg-mountainbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/85kg-mountainbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/85kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/85kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/85kg-mountain-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/90kg-road-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/90kg-road-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 90kg racefiets | BestBikeFit4U",
+      "h1": "Bandenspanning voor 90kg racefiets",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 90 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 90kg racefiets | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 90 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/90kg-racefiets"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/90kg-racefiets",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/90kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/90kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/90kg-road-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/90kg-gravel-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/90kg-gravel-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 90kg gravelbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 90kg gravelbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 90 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 90kg gravelbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 90 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/90kg-gravelbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/90kg-gravelbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/90kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/90kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/90kg-gravel-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/90kg-mountain-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/90kg-mountain-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 90kg mountainbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 90kg mountainbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 90 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 90kg mountainbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 90 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/90kg-mountainbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/90kg-mountainbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/90kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/90kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/90kg-mountain-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/95kg-road-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/95kg-road-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 95kg racefiets | BestBikeFit4U",
+      "h1": "Bandenspanning voor 95kg racefiets",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 95 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 95kg racefiets | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 95 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/95kg-racefiets"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/95kg-racefiets",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/95kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/95kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/95kg-road-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/95kg-gravel-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/95kg-gravel-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 95kg gravelbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 95kg gravelbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 95 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 95kg gravelbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 95 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/95kg-gravelbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/95kg-gravelbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/95kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/95kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/95kg-gravel-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/95kg-mountain-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/95kg-mountain-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 95kg mountainbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 95kg mountainbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 95 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 95kg mountainbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 95 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/95kg-mountainbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/95kg-mountainbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/95kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/95kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/95kg-mountain-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/100kg-road-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/100kg-road-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 100kg racefiets | BestBikeFit4U",
+      "h1": "Bandenspanning voor 100kg racefiets",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 100 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 100kg racefiets | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 100 kg op een racefiets, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/100kg-racefiets"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/100kg-racefiets",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/100kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/100kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/100kg-road-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/100kg-gravel-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/100kg-gravel-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 100kg gravelbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 100kg gravelbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 100 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 100kg gravelbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 100 kg op een gravelbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/100kg-gravelbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/100kg-gravelbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/100kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/100kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/100kg-gravel-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure/100kg-mountain-bike",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/tire-pressure/100kg-mountain-bike",
+      "redirects": [],
+      "title": "Bandenspanning voor 100kg mountainbike | BestBikeFit4U",
+      "h1": "Bandenspanning voor 100kg mountainbike",
+      "metadata": {
+        "description": "Aanbevolen voor- en achterdruk voor een rijder van 100 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:title": "Bandenspanning voor 100kg mountainbike | BestBikeFit4U",
+        "og:description": "Aanbevolen voor- en achterdruk voor een rijder van 100 kg op een mountainbike, inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning/100kg-mountainbike"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning/100kg-mountainbike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/100kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/100kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/100kg-mountain-bike"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/en/tire-pressure/55kg-road-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/55kg-road-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 55kg road bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 55kg road bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 55 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 55kg road bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 55 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/55kg-road-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/55kg-road-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/55kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/55kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/55kg-road-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "b43f7ba35d86800003ffe5abaf4b7a718a1e192ebd438ac9c56a410cd397ff5d"
+    },
+    {
+      "path": "/en/tire-pressure/55kg-gravel-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/55kg-gravel-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 55kg gravel bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 55kg gravel bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 55 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 55kg gravel bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 55 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/55kg-gravel-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/55kg-gravel-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/55kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/55kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/55kg-gravel-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "cd8544fe9ef50eab7af230ed83b8963155b52a51831814c4022ce712041e458c"
+    },
+    {
+      "path": "/en/tire-pressure/55kg-mountain-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/55kg-mountain-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 55kg mountain bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 55kg mountain bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 55 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 55kg mountain bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 55 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/55kg-mountain-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/55kg-mountain-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/55kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/55kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/55kg-mountain-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "dc8767b674620bdeb5e6b18b345e18a124f62b36861ad6b9bb06119e745e90a4"
+    },
+    {
+      "path": "/en/tire-pressure/60kg-road-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/60kg-road-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 60kg road bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 60kg road bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 60 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 60kg road bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 60 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/60kg-road-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/60kg-road-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/60kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/60kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/60kg-road-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "3dc753a35ebe554adc77c5f9a691c022cbd6980b32013e76d23099df0aa47816"
+    },
+    {
+      "path": "/en/tire-pressure/60kg-gravel-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/60kg-gravel-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 60kg gravel bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 60kg gravel bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 60 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 60kg gravel bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 60 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/60kg-gravel-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/60kg-gravel-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/60kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/60kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/60kg-gravel-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "8b15248e145b45cb72dec7361101af0a4fd3f368ca8f0f0223279c960c0c7f3d"
+    },
+    {
+      "path": "/en/tire-pressure/60kg-mountain-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/60kg-mountain-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 60kg mountain bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 60kg mountain bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 60 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 60kg mountain bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 60 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/60kg-mountain-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/60kg-mountain-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/60kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/60kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/60kg-mountain-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "a8426b34356f4cfcc3cce2a068ed989705c7eba8cd43f0d98e2a174628b20c60"
+    },
+    {
+      "path": "/en/tire-pressure/65kg-road-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/65kg-road-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 65kg road bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 65kg road bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 65 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 65kg road bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 65 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/65kg-road-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/65kg-road-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/65kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/65kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/65kg-road-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "712ab2b7fa5e1293af07a5dd33bfec263ba920fedc557c91178372afa0a4d6cd"
+    },
+    {
+      "path": "/en/tire-pressure/65kg-gravel-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/65kg-gravel-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 65kg gravel bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 65kg gravel bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 65 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 65kg gravel bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 65 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/65kg-gravel-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/65kg-gravel-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/65kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/65kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/65kg-gravel-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "59c2ba1eaa3319f14005d55461c13cb5bcc3d7ce1863aaceb6e5b5b6b460d957"
+    },
+    {
+      "path": "/en/tire-pressure/65kg-mountain-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/65kg-mountain-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 65kg mountain bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 65kg mountain bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 65 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 65kg mountain bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 65 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/65kg-mountain-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/65kg-mountain-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/65kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/65kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/65kg-mountain-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "72bcb5a6621cf3795490e4e6da85ef755db12ad18ac64d9db18503e9f0ba199b"
+    },
+    {
+      "path": "/en/tire-pressure/70kg-road-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/70kg-road-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 70kg road bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 70kg road bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 70 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 70kg road bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 70 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/70kg-road-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/70kg-road-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/70kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/70kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/70kg-road-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "13abc745fd44d3f372e49e22c05f895777cac2685fcf253e7b55e7cbf2b7f1b0"
+    },
+    {
+      "path": "/en/tire-pressure/70kg-gravel-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/70kg-gravel-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 70kg gravel bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 70kg gravel bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 70 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 70kg gravel bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 70 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/70kg-gravel-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/70kg-gravel-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/70kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/70kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/70kg-gravel-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "c5179973c8d349a36dbbaadfb94984a7352c500e3398fea453da9a68a147d9ce"
+    },
+    {
+      "path": "/en/tire-pressure/70kg-mountain-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/70kg-mountain-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 70kg mountain bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 70kg mountain bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 70 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 70kg mountain bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 70 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/70kg-mountain-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/70kg-mountain-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/70kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/70kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/70kg-mountain-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "b70b73dae04464057009f65f6ed48f2be44df6c693bee11fa3e81d7ee45883f1"
+    },
+    {
+      "path": "/en/tire-pressure/75kg-road-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/75kg-road-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 75kg road bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 75kg road bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 75 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 75kg road bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 75 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "cbd60d54e8c6e8e41117f1cd83890e7a8dafc799264b0574412315a9d6ec0857"
+    },
+    {
+      "path": "/en/tire-pressure/75kg-gravel-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/75kg-gravel-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 75kg gravel bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 75kg gravel bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 75 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 75kg gravel bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 75 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/75kg-gravel-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "47a464b907ea664d69c950506930b53e5ed9dad9cc93ceffcdb4e99175950ad1"
+    },
+    {
+      "path": "/en/tire-pressure/75kg-mountain-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/75kg-mountain-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 75kg mountain bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 75kg mountain bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 75 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 75kg mountain bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 75 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/75kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/75kg-mountain-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "b0ff305e3ac7b2dcca7678c84e06dc769bd54bd43de8d15aab682a0df06ce338"
+    },
+    {
+      "path": "/en/tire-pressure/80kg-road-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/80kg-road-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 80kg road bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 80kg road bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 80 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 80kg road bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 80 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/80kg-road-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/80kg-road-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/80kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/80kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/80kg-road-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "c85449636e1013195f6be66dbf0499660340aea47f6a0591d58afe27f29a6b89"
+    },
+    {
+      "path": "/en/tire-pressure/80kg-gravel-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/80kg-gravel-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 80kg gravel bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 80kg gravel bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 80 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 80kg gravel bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 80 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/80kg-gravel-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/80kg-gravel-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/80kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/80kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/80kg-gravel-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "bcbbeda6391d868623ef8322509b1882784a78acef3960a7e1bbf99567d58d28"
+    },
+    {
+      "path": "/en/tire-pressure/80kg-mountain-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/80kg-mountain-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 80kg mountain bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 80kg mountain bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 80 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 80kg mountain bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 80 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/80kg-mountain-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/80kg-mountain-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/80kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/80kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/80kg-mountain-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "c82548a16d9fb4133ef0e21dd2cec77fb6a8f55241f198a1e5f6f21b7dc62fdd"
+    },
+    {
+      "path": "/en/tire-pressure/85kg-road-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/85kg-road-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 85kg road bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 85kg road bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 85 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 85kg road bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 85 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/85kg-road-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/85kg-road-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/85kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/85kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/85kg-road-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "f0b24547db6f9c91401b4156fac742d4988f50a83b6ae9f055c463d062a68661"
+    },
+    {
+      "path": "/en/tire-pressure/85kg-gravel-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/85kg-gravel-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 85kg gravel bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 85kg gravel bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 85 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 85kg gravel bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 85 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/85kg-gravel-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/85kg-gravel-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/85kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/85kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/85kg-gravel-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "021ddc3f6ac448daf44ae01b9c0545fb17be47892fbef8a61d6327f38d735d40"
+    },
+    {
+      "path": "/en/tire-pressure/85kg-mountain-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/85kg-mountain-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 85kg mountain bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 85kg mountain bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 85 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 85kg mountain bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 85 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/85kg-mountain-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/85kg-mountain-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/85kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/85kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/85kg-mountain-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "78c3379dc794a8723710cd43dcc6e4f41027053fe8ecd67c44a1645899d6dfec"
+    },
+    {
+      "path": "/en/tire-pressure/90kg-road-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/90kg-road-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 90kg road bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 90kg road bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 90 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 90kg road bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 90 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/90kg-road-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/90kg-road-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/90kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/90kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/90kg-road-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "bf06f521396a2dfcd91c7fd22d18d98f620f64b2d9f7dda0027217385295ae5c"
+    },
+    {
+      "path": "/en/tire-pressure/90kg-gravel-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/90kg-gravel-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 90kg gravel bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 90kg gravel bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 90 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 90kg gravel bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 90 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/90kg-gravel-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/90kg-gravel-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/90kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/90kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/90kg-gravel-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "579cb30a4ef4e117518d0b14af8a07a32a7bdcb8bfc428b2beda6b37de30b8e9"
+    },
+    {
+      "path": "/en/tire-pressure/90kg-mountain-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/90kg-mountain-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 90kg mountain bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 90kg mountain bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 90 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 90kg mountain bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 90 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/90kg-mountain-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/90kg-mountain-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/90kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/90kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/90kg-mountain-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "7bc926674bfc754ef55d9835134b12ed4feaeacb24298a54f1ce315002bdea7f"
+    },
+    {
+      "path": "/en/tire-pressure/95kg-road-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/95kg-road-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 95kg road bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 95kg road bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 95 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 95kg road bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 95 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/95kg-road-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/95kg-road-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/95kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/95kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/95kg-road-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "f40013065386d85b7c47eb63f009bc7a3001ab4e9bbeaf8761be1fe955e829d1"
+    },
+    {
+      "path": "/en/tire-pressure/95kg-gravel-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/95kg-gravel-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 95kg gravel bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 95kg gravel bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 95 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 95kg gravel bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 95 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/95kg-gravel-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/95kg-gravel-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/95kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/95kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/95kg-gravel-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "69b4b86767e04fd614caa1dfb625d9c988f4ac0ea80823b31cab3f2c0a84c7af"
+    },
+    {
+      "path": "/en/tire-pressure/95kg-mountain-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/95kg-mountain-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 95kg mountain bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 95kg mountain bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 95 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 95kg mountain bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 95 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/95kg-mountain-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/95kg-mountain-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/95kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/95kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/95kg-mountain-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "d97c3a82f7298d358f63fa58e66f453aacac5733f6188d15b6a3f1d402fdf426"
+    },
+    {
+      "path": "/en/tire-pressure/100kg-road-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/100kg-road-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 100kg road bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 100kg road bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 100 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 100kg road bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 100 kg road bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/100kg-road-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/100kg-road-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/100kg-road-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/100kg-racefiets",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/100kg-road-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "81c589e273e116f668f1a9cd06db8f1cfae334deed19685c8bbb6b34423e8711"
+    },
+    {
+      "path": "/en/tire-pressure/100kg-gravel-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/100kg-gravel-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 100kg gravel bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 100kg gravel bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 100 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 100kg gravel bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 100 kg gravel bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/100kg-gravel-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/100kg-gravel-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/100kg-gravel-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/100kg-gravelbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/100kg-gravel-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "110a396ff7b5b9bbefa6ab584a16d2198aa0bbec8e4d919cff5887eb8991f104"
+    },
+    {
+      "path": "/en/tire-pressure/100kg-mountain-bike",
+      "locale": "en",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/en/tire-pressure/100kg-mountain-bike",
+      "redirects": [],
+      "title": "Tire Pressure for 100kg mountain bike Rider | BestBikeFit4U",
+      "h1": "Tire Pressure for 100kg mountain bike Rider",
+      "metadata": {
+        "description": "Recommended front and rear tire pressure for a 100 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:title": "Tire Pressure for 100kg mountain bike Rider | BestBikeFit4U",
+        "og:description": "Recommended front and rear tire pressure for a 100 kg mountain bike rider, with bar and PSI values plus a quick tube-type comparison.",
+        "og:url": "https://bestbikefit4u.eu/en/tire-pressure/100kg-mountain-bike"
+      },
+      "canonical": "https://bestbikefit4u.eu/en/tire-pressure/100kg-mountain-bike",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure/100kg-mountain-bike",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning/100kg-mountainbike",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure/100kg-mountain-bike"
+      },
+      "html_language": "en",
+      "english_content_sha256": "5c4d9169e7093e2d1ddfec1e7fbd04b706a212efe7243e5b6b0a427e7522ca21"
+    },
+    {
+      "path": "/nl/calculators/bike-fit",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/calculators/bike-fit",
+      "redirects": [],
+      "title": "Gratis bike fit calculator | BestBikeFit4U",
+      "h1": "Bouw je eerste fitprofiel",
+      "metadata": {
+        "description": "Bereken een gratis eerste inschatting voor zadelhoogte, reach, drop en framedoelen op basis van je lichaamsmaten en rijdoel.",
+        "og:title": "Gratis bike fit calculator",
+        "og:description": "Krijg direct een eerste bike-fit inschatting op basis van je maten.",
+        "og:url": "https://bestbikefit4u.eu/nl/calculators/bike-fit"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/calculators/bike-fit",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/calculators/bike-fit",
+        "nl": "https://bestbikefit4u.eu/nl/calculators/bike-fit",
+        "x-default": "https://bestbikefit4u.eu/en/calculators/bike-fit"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/calculators/climb-planner",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/calculators/climb-planner",
+      "redirects": [],
+      "title": "Klimplanner | BestBikeFit4U",
+      "h1": "Hoe pak je jouw klim aan?",
+      "metadata": {
+        "description": "Plan kliminspanning, tempo en voedingscontext vóór een route of wedstrijd zodat de eerste echte klim geen gok wordt.",
+        "og:title": "Klimplanner | BestBikeFit4U",
+        "og:description": "Plan kliminspanning, tempo en voedingscontext vóór een route of wedstrijd zodat de eerste echte klim geen gok wordt.",
+        "og:url": "https://bestbikefit4u.eu/nl/calculators/climb-planner"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/calculators/climb-planner",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/calculators/climb-planner",
+        "nl": "https://bestbikefit4u.eu/nl/calculators/climb-planner",
+        "x-default": "https://bestbikefit4u.eu/en/calculators/climb-planner"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/calculators/crank-length",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/calculators/crank-length",
+      "redirects": [],
+      "title": "Cranklengte calculator | BestBikeFit4U",
+      "h1": "Welke cranklengte past bij jou?",
+      "metadata": {
+        "description": "Bereken een praktisch startpunt voor cranklengte op basis van binnenbeenlengte en fietsdiscipline.",
+        "og:title": "Cranklengte calculator",
+        "og:description": "Vind een eerste cranklengte-aanbeveling op basis van binnenbeenlengte en categorie.",
+        "og:url": "https://bestbikefit4u.eu/nl/calculators/crank-length"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/calculators/crank-length",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/calculators/crank-length",
+        "nl": "https://bestbikefit4u.eu/nl/calculators/crank-length",
+        "x-default": "https://bestbikefit4u.eu/en/calculators/crank-length"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/calculators/frame-size",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/calculators/frame-size",
+      "redirects": [],
+      "title": "Framemaat calculator | BestBikeFit4U",
+      "h1": "Welke maat past bij jou?",
+      "metadata": {
+        "description": "Schat een realistische framemaat op basis van lengte, binnenbeenlengte en fietsdiscipline.",
+        "og:title": "Framemaat calculator",
+        "og:description": "Krijg een snelle framemaatinschatting op basis van je basisgegevens.",
+        "og:url": "https://bestbikefit4u.eu/nl/calculators/frame-size"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/calculators/frame-size",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/calculators/frame-size",
+        "nl": "https://bestbikefit4u.eu/nl/calculators/frame-size",
+        "x-default": "https://bestbikefit4u.eu/en/calculators/frame-size"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/calculators/ftp-wkg",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/calculators/ftp-wkg",
+      "redirects": [],
+      "title": "FTP- / W/kg-calculator | BestBikeFit4U",
+      "h1": "Wat betekent jouw FTP op de fiets?",
+      "metadata": {
+        "description": "Vertaal drempelvermogen naar W/kg en gebruik het om klimcontext, tempo en prestatiedoelen beter te vergelijken.",
+        "og:title": "FTP- / W/kg-calculator | BestBikeFit4U",
+        "og:description": "Vertaal drempelvermogen naar W/kg en gebruik het om klimcontext, tempo en prestatiedoelen beter te vergelijken.",
+        "og:url": "https://bestbikefit4u.eu/nl/calculators/ftp-wkg"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/calculators/ftp-wkg",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/calculators/ftp-wkg",
+        "nl": "https://bestbikefit4u.eu/nl/calculators/ftp-wkg",
+        "x-default": "https://bestbikefit4u.eu/en/calculators/ftp-wkg"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/calculators/fuel-hydration",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/calculators/fuel-hydration",
+      "redirects": [],
+      "title": "Brandstof- en hydratatieplanner | BestBikeFit4U",
+      "h1": "Wat neem je mee voor je rit?",
+      "metadata": {
+        "description": "Plan koolhydraten, vocht en natrium voor lange ritten met een praktische eerste richting voor voeding en hydratatie.",
+        "og:title": "Brandstof- en hydratatieplanner | BestBikeFit4U",
+        "og:description": "Plan koolhydraten, vocht en natrium voor lange ritten met een praktische eerste richting voor voeding en hydratatie.",
+        "og:url": "https://bestbikefit4u.eu/nl/calculators/fuel-hydration"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/calculators/fuel-hydration",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/calculators/fuel-hydration",
+        "nl": "https://bestbikefit4u.eu/nl/calculators/fuel-hydration",
+        "x-default": "https://bestbikefit4u.eu/en/calculators/fuel-hydration"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/calculators/gearing",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/calculators/gearing",
+      "redirects": [],
+      "title": "Verzet calculator | BestBikeFit4U",
+      "h1": "Past je verzet bij jouw rit?",
+      "metadata": {
+        "description": "Bereken je lichtste en zwaarste versnelling, snelheid bij cadans en een snelle kliminschatting op basis van kettingring, cassette en wielmaat.",
+        "og:title": "Verzet calculator",
+        "og:description": "Zie direct je lichtste versnelling, zwaarste versnelling en kliminschatting.",
+        "og:url": "https://bestbikefit4u.eu/nl/calculators/gearing"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/calculators/gearing",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/calculators/gearing",
+        "nl": "https://bestbikefit4u.eu/nl/calculators/gearing",
+        "x-default": "https://bestbikefit4u.eu/en/calculators/gearing"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/calculators/power-speed",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/calculators/power-speed",
+      "redirects": [],
+      "title": "Vermogen- / snelheidsschatting | BestBikeFit4U",
+      "h1": "Hoe snel ga je met jouw vermogen?",
+      "metadata": {
+        "description": "Schat snelheid op basis van vermogen met terrein, luchtweerstand en je houding meegewogen. Vermogen alleen bepaalt je snelheid niet.",
+        "og:title": "Vermogen- / snelheidsschatting | BestBikeFit4U",
+        "og:description": "Schat snelheid op basis van vermogen met terrein, luchtweerstand en je houding meegewogen. Vermogen alleen bepaalt je snelheid niet.",
+        "og:url": "https://bestbikefit4u.eu/nl/calculators/power-speed"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/calculators/power-speed",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/calculators/power-speed",
+        "nl": "https://bestbikefit4u.eu/nl/calculators/power-speed",
+        "x-default": "https://bestbikefit4u.eu/en/calculators/power-speed"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/calculators/saddle-height",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/calculators/saddle-height",
+      "redirects": [],
+      "title": "Zadelhoogte calculator | BestBikeFit4U",
+      "h1": "Hoe hoog moet je zadel?",
+      "metadata": {
+        "description": "Bereken een conservatieve zadelhoogte als startpunt op basis van je fietscategorie, rijdoel, lenigheid en rompstabiliteit.",
+        "og:title": "Zadelhoogte calculator",
+        "og:description": "Krijg een eerste zadelhoogte-inschatting en een veilige afstelmarge.",
+        "og:url": "https://bestbikefit4u.eu/nl/calculators/saddle-height"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/calculators/saddle-height",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/calculators/saddle-height",
+        "nl": "https://bestbikefit4u.eu/nl/calculators/saddle-height",
+        "x-default": "https://bestbikefit4u.eu/en/calculators/saddle-height"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/calculators/saddle-width",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/calculators/saddle-width",
+      "redirects": [],
+      "title": "Zadelbreedtecalculator | BestBikeFit4U",
+      "h1": "Hoe breed moet je zadel zijn?",
+      "metadata": {
+        "description": "Bereken je ideale zadelbreedteaanbeveling op basis van zitbeenmeting of lichaamsgegevens. Inclusief zadelcategorie en betrouwbaarheidsscore.",
+        "og:title": "Zadelbreedtecalculator",
+        "og:description": "Gratis zadelbreedteaanbeveling op basis van anatomie en rijprofiel.",
+        "og:url": "https://bestbikefit4u.eu/nl/calculators/saddle-width"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/calculators/saddle-width",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/calculators/saddle-width",
+        "nl": "https://bestbikefit4u.eu/nl/calculators/saddle-width",
+        "x-default": "https://bestbikefit4u.eu/en/calculators/saddle-width"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/tire-pressure-calculator",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/bandenspanning-calculator",
+      "redirects": [
+        {
+          "status": 308,
+          "from": "https://127.0.0.1:4340/nl/tire-pressure-calculator",
+          "to": "https://127.0.0.1:4340/nl/bandenspanning-calculator"
+        }
+      ],
+      "title": "Bandenspanningscalculator | BestBikeFit4U",
+      "h1": "Meer grip, minder weerstand",
+      "metadata": {
+        "description": "Bereken de ideale bandenspanning voor race, gravel of MTB. Gratis, zonder account.",
+        "og:title": "Bandenspanningscalculator | BestBikeFit4U",
+        "og:description": "Bereken de ideale bandenspanning voor race, gravel of MTB. Gratis, zonder account.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning-calculator"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning-calculator",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure-calculator",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning-calculator",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure-calculator"
+      },
+      "html_language": "nl"
+    },
+    {
+      "path": "/nl/bandenspanning-calculator",
+      "locale": "nl",
+      "errors": [],
+      "english_findings": [],
+      "status": 200,
+      "final_url": "https://127.0.0.1:4340/nl/bandenspanning-calculator",
+      "redirects": [],
+      "title": "Bandenspanningscalculator | BestBikeFit4U",
+      "h1": "Meer grip, minder weerstand",
+      "metadata": {
+        "description": "Bereken de ideale bandenspanning voor race, gravel of MTB. Gratis, zonder account.",
+        "og:title": "Bandenspanningscalculator | BestBikeFit4U",
+        "og:description": "Bereken de ideale bandenspanning voor race, gravel of MTB. Gratis, zonder account.",
+        "og:url": "https://bestbikefit4u.eu/nl/bandenspanning-calculator"
+      },
+      "canonical": "https://bestbikefit4u.eu/nl/bandenspanning-calculator",
+      "hreflang": {
+        "en": "https://bestbikefit4u.eu/en/tire-pressure-calculator",
+        "nl": "https://bestbikefit4u.eu/nl/bandenspanning-calculator",
+        "x-default": "https://bestbikefit4u.eu/en/tire-pressure-calculator"
+      },
+      "html_language": "nl"
+    }
+  ],
+  "production": {
+    "origin": "https://127.0.0.1:4340",
+    "sourceHash": "1c32649026b38e5942d9545e49da292b6682dd8a0178433769e03474e8597e80",
+    "buildId": "7YR8h-dFu0xlO4afBcsnc",
+    "snapshot": "/tmp/bbf-final-sweep-1c32649026b38e59",
+    "reused": false
+  }
+}

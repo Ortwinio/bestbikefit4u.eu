@@ -72,6 +72,7 @@ describe("AccountPlan truthfulness", () => {
   it.each(["en", "nl"] as const)("shows a real zero count and localized %s account link", (language) => {
     locale = language;
     render(<AccountPlan />);
+    expect(screen.getByText(language === "nl" ? "Gratis" : "Free")).toBeTruthy();
     expect(screen.getByText("0").parentElement?.textContent).toBe(language === "nl" ? "0 fit-sessies" : "0 fit sessions");
     expect(screen.getByRole("link").getAttribute("href")).toBe(`/${language}/settings`);
     expect(screen.getByRole("region", { name: language === "nl" ? "Je account" : "Your account" })).toBeTruthy();

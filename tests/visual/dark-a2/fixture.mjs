@@ -87,7 +87,7 @@ export async function prepareAccountFixtures({ root = process.cwd(), origin, por
   function batchFor(pathname) {
     const path = pathname.replace(/^\/(nl|en)(?=\/|$)/, "");
     const bikesPattern =
-      /^\/bikes(?:\/(?:new(?:\/manual)?|import\/(?:passport|marktplaats)|compare-fit|[^/]+(?:\/edit)?))?$/;
+      /^\/bikes(?:\/(?:new(?:\/manual)?|import\/passport|compare-fit|[^/]+(?:\/edit)?))?$/;
     if (bikesPattern.test(path)) {
       return "bikes";
     }

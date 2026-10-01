@@ -1,3 +1,4 @@
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
@@ -42,6 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? ["cranklengte calculator", "fiets crankmaat", "cranklengte fit"]
       : ["crank length calculator", "bike crank size", "cycling crank length fit"],
     openGraph: {
+      images: [DEFAULT_SOCIAL_IMAGE],
       title: isNl ? "Cranklengte calculator" : "Crank Length Calculator",
       description: isNl
         ? "Vind een eerste cranklengte-aanbeveling op basis van binnenbeenlengte en categorie."

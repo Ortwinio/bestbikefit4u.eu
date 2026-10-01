@@ -1,5 +1,6 @@
 "use client";
 
+import { SettingsNameField, SettingsUnitsField } from "./SettingsAutosaveFields";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -13,8 +14,6 @@ import {
   AccessibleDialog,
   ErrorState,
   Input,
-  RadioGroup,
-  Selectable,
   useToast,
   SectionHeader,
   InfoBox,
@@ -28,6 +27,8 @@ import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { reportClientError } from "@/lib/telemetry";
+import { localizeAccountError } from "@/i18n/account/clientErrors";
+import { getSettingsLanguage } from "@/i18n/account/settingsLanguage";
 import { getEffectiveDisplayName, getEffectiveProfileImageSource } from "@/lib/userIdentity";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -78,12 +79,12 @@ function StravaCallbackToast() {
 export default function SettingsPage() {
   const { signOut } = useAuthActions();
   const router = useRouter();
-  const { locale, messages, languageSwitchLabels } = useDashboardMessages();
+  const { locale, messages: baseMessages, languageSwitchLabels } = useDashboardMessages();
+  const messages = useMemo(() => getSettingsLanguage(baseMessages, locale), [baseMessages, locale]);
   const toast = useToast();
   const copy = toolsSettings[locale];
   const user = useQuery(api.users.queries.getCurrentUser);
   const strava = useQuery(api.integrations.queries.getStravaStatus);
-  const updateProfile = useMutation(api.users.mutations.updateProfile);
   const initiateStravaConnect = useAction(api.integrations.actions.initiateStravaConnect);
   const disconnectStravaAction = useAction(api.integrations.actions.disconnectStravaAction);
   const deleteAccount = useMutation(api.users.mutations.deleteAccount);
@@ -95,9 +96,6 @@ export default function SettingsPage() {
   const [showStravaDisconnect, setShowStravaDisconnect] = useState(false);
   const [isConnectingStrava, setIsConnectingStrava] = useState(false);
   const [isDisconnectingStrava, setIsDisconnectingStrava] = useState(false);
-  const [displayName, setDisplayName] = useState("");
-  const [isSavingDisplayName, setIsSavingDisplayName] = useState(false);
-  const [displayNameError, setDisplayNameError] = useState<string | null>(null);
   const [billingPortalError, setBillingPortalError] = useState<string | null>(null);
   const [isOpeningBillingPortal, setIsOpeningBillingPortal] = useState(false);
 
@@ -116,9 +114,6 @@ export default function SettingsPage() {
     (effectiveDisplayName === messages.userMenu.fallbackUserName ? "" : effectiveDisplayName);
   const isPaidUser = user?.tier === "pro" || user?.tier === "premium";
 
-  useEffect(() => {
-    setDisplayName(editableDisplayName);
-  }, [editableDisplayName]);
 
   const handleDeleteAccount = async () => {
     setDeleteError(null);
@@ -128,35 +123,15 @@ export default function SettingsPage() {
       router.push(withLocalePrefix("/", locale));
     } catch (error) {
       setDeleteError(
-        reportClientError(error, {
+        localizeAccountError(reportClientError(error, {
           area: "settings",
           action: "deleteAccount",
           operationType: "mutation",
           userMessage: messages.profile.dangerZone.deleteFailed,
-        }),
+        }), locale),
       );
     } finally {
       setIsDeleting(false);
-    }
-  };
-
-  const handleSaveDisplayName = async () => {
-    setDisplayNameError(null);
-    setIsSavingDisplayName(true);
-    try {
-      await updateProfile({ displayName });
-      toast.success({ description: messages.common.toasts.displayNameSaved });
-    } catch (error) {
-      setDisplayNameError(
-        reportClientError(error, {
-          area: "settings",
-          action: "updateDisplayName",
-          operationType: "mutation",
-          userMessage: messages.settings.account.displayNameSaveFailed,
-        }),
-      );
-    } finally {
-      setIsSavingDisplayName(false);
     }
   };
 
@@ -201,7 +176,7 @@ export default function SettingsPage() {
       window.location.href = payload.url;
     } catch (error) {
       const description =
-        error instanceof Error ? error.message : messages.settings.billing.portalUnavailable;
+        locale === "en" && error instanceof Error ? error.message : messages.settings.billing.portalUnavailable;
       setBillingPortalError(description);
       toast.error({ description });
     } finally {
@@ -252,21 +227,7 @@ export default function SettingsPage() {
                   <p className="text-sm text-muted-foreground">{user?.email}</p>
                 </div>
               </div>
-              <div className="space-y-3">
-                <Input
-                  label={messages.settings.account.displayNameLabel}
-                  placeholder={messages.settings.account.displayNamePlaceholder}
-                  value={displayName}
-                  onChange={(event) => setDisplayName(event.target.value)}
-                />
-                {displayNameError ? <ErrorState description={displayNameError} /> : null}
-                <Button
-                  onClick={() => void handleSaveDisplayName()}
-                  isLoading={isSavingDisplayName}
-                >
-                  {messages.settings.account.saveDisplayName}
-                </Button>
-              </div>
+              <SettingsNameField key={user?._id} initialValue={editableDisplayName} />
               <dl className="divide-y divide-[color:var(--border)]">
                 <StatRow label={messages.settings.account.type} value={accountType} />
               </dl>
@@ -320,7 +281,8 @@ export default function SettingsPage() {
                       ? messages.settings.billing.description
                       : messages.settings.billing.missingCustomer}
                   </p>
-                  {billingPortalError ? <ErrorState description={billingPortalError} /> : null}
+                  {billingPortalError ? <ErrorState title={locale === "nl" ? copy.errorTitle : undefined}
+                    description={billingPortalError} /> : null}
                   {user?.stripeCustomerId ? (
                     <Button
                       type="button"
@@ -365,6 +327,9 @@ export default function SettingsPage() {
                 </p>
                 <div className="[&_[data-slot=segmented-control]]:flex [&_[data-slot=segmented-control]]:flex-wrap">
                   <ThemeToggle
+                    showSaveStatus
+                    locale={locale}
+                    ariaLabel={messages.settings.preferences.appearance}
                     labels={{
                       light: messages.settings.preferences.light,
                       dark: messages.settings.preferences.dark,
@@ -377,31 +342,7 @@ export default function SettingsPage() {
                 <p className="mb-2 text-sm font-medium text-foreground">
                   {messages.settings.preferences.units}
                 </p>
-                <RadioGroup
-                  aria-label={messages.settings.preferences.units}
-                  className="flex flex-wrap gap-2"
-                  value={user?.unit_preference ?? "metric"}
-                  onValueChange={(nextValue) =>
-                    void updateProfile({
-                      unit_preference: nextValue as "metric" | "imperial",
-                    }).catch(() => toast.error({ description: copy.preferenceError }))
-                  }
-                >
-                  {[
-                    ["metric", messages.settings.preferences.metric],
-                    ["imperial", messages.settings.preferences.imperial],
-                  ].map(([value, label]) => (
-                    <Selectable
-                      key={value}
-                      mode="radio"
-                      value={value}
-                      variant="segment"
-                      fullWidth={false}
-                    >
-                      {label}
-                    </Selectable>
-                  ))}
-                </RadioGroup>
+                <SettingsUnitsField key={user?._id} initialValue={user?.unit_preference ?? "metric"} />
               </div>
             </CardContent>
           </Card>
@@ -587,7 +528,8 @@ export default function SettingsPage() {
               title={messages.profile.dangerZone.title}
             />
             <CardContent className="space-y-4">
-              {deleteError ? <ErrorState description={deleteError} /> : null}
+              {deleteError ? <ErrorState title={locale === "nl" ? copy.errorTitle : undefined}
+                description={deleteError} /> : null}
               <p className="text-sm text-muted-foreground">
                 {messages.profile.dangerZone.deleteConfirmDescription}
               </p>

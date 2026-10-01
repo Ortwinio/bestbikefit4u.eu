@@ -1,4 +1,6 @@
 "use client";
+
+import { profileText } from "@/i18n/account/profileLanguage";
 import { Progress } from "@/components/ui";
 import { cn } from "@/utils/cn";
 import { flexibilityTests } from "@/lib/validations/profile";
@@ -32,14 +34,14 @@ export function FlexibilityScale({
   score: FlexibilityScore;
   className?: string;
 }) {
-  const { messages } = useDashboardMessages();
+  const { locale, messages } = useDashboardMessages();
   const meta = getFlexibilityMeta(score);
 
   return (
     <div className={cn("space-y-3", className)}>
       <div className="flex items-center justify-between gap-3">
         <p className="text-lg font-semibold text-[color:var(--color-foreground)]">
-          {meta.label}
+          {profileText(locale, meta.label)}
         </p>
         <span className="rounded-full bg-[color:var(--color-secondary)] px-3 py-1 text-xs font-semibold text-[color:var(--color-secondary-foreground)]">
           {meta.index}/5
@@ -51,7 +53,7 @@ export function FlexibilityScale({
         indicatorClassName={meta.indicatorClassName}
       />
       <p className="text-sm text-[color:var(--color-muted-foreground)]">
-        {meta.description}
+        {profileText(locale, meta.description)}
       </p>
     </div>
   );

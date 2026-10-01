@@ -15,6 +15,7 @@ export const generateDescription = action({
     const detail = await ctx.runQuery(api.bikes.queries.getDetail, {
       bikeId: args.bikeId,
     });
+    if (!detail) throw new Error("Bike not found");
 
     const result = await generateBikeDescription({
       locale: args.locale,

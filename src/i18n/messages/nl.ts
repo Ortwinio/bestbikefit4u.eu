@@ -536,7 +536,7 @@ const nl = {
         "Maak een gratis account aan om je fietsen toe te voegen, persoonlijk " +
         "bandenspanningsadvies te berekenen en toekomstige aanpassingen bij te houden.",
       primaryButton: "Maak een gratis account aan",
-      secondaryButton: "Vergelijk Free vs Pro",
+      secondaryButton: "Vergelijk Free en Pro",
       loginPrompt: "Heb je al een account?",
       loginLink: "Log in",
     },
@@ -2618,134 +2618,6 @@ const nl = {
         saveFailed: "Kon fiets niet opslaan. Probeer opnieuw.",
         deleteFailed: "Kon fiets niet verwijderen. Probeer opnieuw.",
       },
-      marktplaatsImport: {
-        entryCta: "Importeer vanuit Marktplaats",
-        title: "Importeer een fiets vanuit Marktplaats",
-        description:
-          "Plak één Marktplaats-advertentie-URL, controleer het geparste concept en sla de fiets " +
-          "pas op nadat je de gegevens hebt bevestigd.",
-        entryTitle: "Plak een Marktplaats-advertentie-URL",
-        entryDescription:
-          "De advertentie wordt server-side geparsed. Je controleert en bewerkt eerst het " +
-          "fietsconcept voordat er iets in je garage wordt aangemaakt.",
-        previewTitle: "Controleer het geïmporteerde concept",
-        previewDescription:
-          "Controleer de geparste velden, pas onzekere waarden aan en kies welke foto's je wilt " +
-          "bewaren voordat je opslaat.",
-        findingsTitle: "Wat we in deze advertentie hebben gevonden",
-        findingsDescription:
-          "Dit is het gestructureerde concept dat we uit de advertentie konden halen. Controleer " +
-          "onzekere onderdelen voordat je opslaat.",
-        findingsCount: "{count} bevindingen",
-        findingDescriptionSummary: "Geïmporteerde beschrijving beschikbaar ({characters} tekens).",
-        findingPhotoSummary: "{count} advertentiefoto's gevonden.",
-        findingLabels: {
-          name: "Fietsnaam",
-          brand: "Merk",
-          model: "Model",
-          bikeType: "Fietstype",
-          size: "Maatvermelding",
-          components: "Onderdelen",
-          condition: "Conditie",
-          maintenance: "Onderhoud",
-        },
-        photosTitle: "Geïmporteerde foto's",
-        photosDescription:
-          "Selecteer de advertentiefoto's die je bij deze fiets wilt bewaren. Opslaan zonder " +
-          "foto's blijft toegestaan.",
-        photoVerificationTitle: "Fotoverificatie",
-        photoCountSummary: "{selected} van {total} geselecteerd",
-        primaryPhotoTitle: "Primaire voorbeeldfoto",
-        primaryPhotoDescription:
-          "Gebruik de thumbnailstrook om de advertentiefoto's te controleren. De gekozen " +
-          "primaire foto wordt als eerste opgeslagen.",
-        photoActiveBadge: "Actief voorbeeld",
-        photoPreviewBadge: "Bekijk foto",
-        photosEmptyTitle: "Geen importeerbare foto's gevonden",
-        photosEmptyDescription:
-          "Deze advertentie gaf geen bruikbare foto's terug. Je kunt het fietsconcept alsnog " +
-          "opslaan en later foto's toevoegen.",
-        photoFallbackLabel: "Advertentiefoto",
-        photoSelected: "Geselecteerd voor import",
-        photoDeselected: "Niet geselecteerd",
-        photoBadgeSelected: "Geselecteerd",
-        photoBadgeOptional: "Optioneel",
-        nameHint:
-          "De fietsnaam is volledig bewerkbaar. Die hoeft niet gelijk te zijn aan de advertentietitel.",
-        warningsTitle: "Controle nodig",
-        confidenceBadge: "{level} vertrouwen",
-        warningMessages: {
-          limited_description:
-            "De advertentiebeschrijving is kort, waardoor details kunnen ontbreken.",
-          no_images_found: "Er zijn geen herbruikbare advertentiefoto's gevonden.",
-          missing_advert_title: "De advertentietitel kon niet volledig worden herkend.",
-          brand_needs_review: "Merk moet gecontroleerd worden.",
-          model_needs_review: "Model moet gecontroleerd worden.",
-          bike_type_needs_review: "Fietstype moet gecontroleerd worden.",
-          no_size_mention_found:
-            "Er is geen duidelijke framemaatvermelding in de advertentietekst gevonden.",
-          already_imported: "Deze advertentie is eerder al voor deze rider geïmporteerd.",
-          one_photo_only:
-            "Er is maar één advertentiefoto beschikbaar, controleer dus extra goed of dit de " +
-            "juiste fiets is.",
-          no_photos_selected:
-            "Er zijn momenteel geen foto's geselecteerd. Opslaan zonder foto's blijft toegestaan.",
-          partial_photo_selection:
-            "Alleen de geselecteerde foto's worden met deze fiets geïmporteerd.",
-        },
-        success: "Fietsconcept aangemaakt vanuit Marktplaats.",
-        loading: {
-          preview: "Marktplaats-advertentie wordt geparsed...",
-        },
-        actions: {
-          preview: "Importvoorbeeld laden",
-          previewLoading: "Voorbeeld laden...",
-          save: "Fietsconcept opslaan",
-          saveLoading: "Fiets opslaan...",
-          cancel: "Terug naar garage",
-          startOver: "Opnieuw beginnen",
-        },
-        fields: {
-          url: {
-            label: "Marktplaats-URL",
-            placeholder: "https://www.marktplaats.nl/...",
-          },
-          name: {
-            label: "Fietsnaam",
-            placeholder: "Kies de rijdergerichte fietsnaam",
-          },
-          brand: {
-            label: "Merk",
-            placeholder: "Controleer het merk",
-          },
-          model: {
-            label: "Model",
-            placeholder: "Controleer het model",
-          },
-          bikeType: {
-            label: "Fietstype",
-          },
-          description: {
-            label: "Beschrijving",
-            placeholder: "Geïmporteerde advertentietekst verschijnt hier en blijft bewerkbaar.",
-          },
-        },
-        errors: {
-          title: "Import heeft aandacht nodig",
-          unsupportedUrl:
-            "Gebruik een geldige Marktplaats-advertentie-URL. Links van niet-ondersteunde " +
-            "marktplaatsen worden geweigerd.",
-          previewFailed:
-            "Het importvoorbeeld kon niet worden geladen. Controleer de URL of probeer het zo opnieuw.",
-          saveFailed: "Het fietsconcept kon niet worden opgeslagen. Probeer opnieuw.",
-          saveInProgress:
-            "Deze fietsimport wordt nog afgerond. Wacht even en probeer het daarna opnieuw.",
-          backendUnavailable:
-            "De Marktplaats-importbackend is nog niet beschikbaar in deze workspace. De rider-flow " +
-            "staat klaar, maar preview en opslaan kunnen pas afronden zodra het backendcontract er " +
-            "is.",
-        },
-      },
       createChooser: {
         title: "Hoe wil je deze fiets toevoegen?",
         description:
@@ -2755,13 +2627,6 @@ const nl = {
           title: "Fiets handmatig aanmaken",
           description: "Begin vanaf nul en voer zelf de fietsgegevens, geometrie en setup in.",
           cta: "Start handmatige invoer",
-        },
-        marktplaats: {
-          title: "Importeren vanuit Marktplaats",
-          description:
-            "Plak één advertentie-URL, controleer wat we hebben gevonden en sla pas op nadat je " +
-            "het concept hebt bevestigd.",
-          cta: "Open Marktplaats-import",
         },
         passport: {
           title: "Gebruik bike-passport ID",

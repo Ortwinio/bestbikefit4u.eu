@@ -149,6 +149,10 @@ export const logEmailSent = internalMutation({
     sessionId: v.optional(v.id("fitSessions")),
   },
   handler: async (ctx, args) => {
+    if (args.sessionId) {
+      const session = await ctx.db.get(args.sessionId);
+      if (!session || session.userId !== args.userId) return;
+    }
     await ctx.db.insert("lifecycleEmailLog", {
       userId: args.userId,
       emailType: args.emailType,

@@ -1,3 +1,4 @@
+import { pressureLandingMessages } from "@/i18n/marketing/pressureLanding";
 import { PressureLanding } from "../../tire-pressure/[slug]/PressureLanding";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -24,33 +25,25 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: ProgrammaticBandenspanningPageProps): Promise<Metadata> {
   const { slug } = await params;
+  const locale = "nl";
+  const copy = pressureLandingMessages[locale];
   const parsed = parseDutchPressureSlug(slug);
 
   if (!parsed) {
-    return { title: "Niet gevonden", robots: { index: false, follow: false } };
+    return { title: copy.notFound, robots: { index: false, follow: false } };
   }
 
-  const label = BIKE_TYPE_LABELS[parsed.bikeType];
+  const label = BIKE_TYPE_LABELS[parsed.bikeType][locale];
+  const title = `${copy.title(parsed.weight, label)} | BestBikeFit4U`;
+  const description = copy.description(parsed.weight, label);
+  const alternates = buildPressureAlternates(parsed.weight, parsed.bikeType, locale);
 
   return {
-    title: `Bandenspanning voor ${parsed.weight}kg ${label.nl} | BestBikeFit4U`,
-    description:
-      `Aanbevolen voor- en achterdruk voor een rijder van ${parsed.weight} kg op een ${label.nl}, ` +
-      "inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
-    keywords: [
-      `bandenspanning ${parsed.weight}kg ${label.nl}`,
-      `${label.nl} bandenspanning ${parsed.weight}kg`,
-      `${label.nl} bandendruk advies`,
-    ],
-    alternates: buildPressureAlternates(parsed.weight, parsed.bikeType, "nl"),
-    openGraph: {
-      title: `Bandenspanning voor ${parsed.weight}kg ${label.nl} | BestBikeFit4U`,
-      description:
-        `Aanbevolen voor- en achterdruk voor een rijder van ${parsed.weight} kg op een ${label.nl}, ` +
-        "inclusief bar, PSI en vergelijking tussen tubeless en binnenband.",
-      type: "website",
-      url: buildPressureAlternates(parsed.weight, parsed.bikeType, "nl").canonical,
-    },
+    title,
+    description,
+    keywords: copy.keywords(parsed.weight, label),
+    alternates,
+    openGraph: { title, description, type: "website", url: alternates.canonical },
   };
 }
 

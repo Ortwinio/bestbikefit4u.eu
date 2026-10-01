@@ -10,7 +10,12 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { calculateBasicPressure } from "@/lib/pressure-engine";
 import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import { buildBreadcrumbListSchema, buildFaqPageSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
-import { BIKE_TYPE_LABELS, buildPressureInput, type EnBikeType } from "@/lib/seo/programmatic/tirePressure";
+import {
+  BIKE_TYPE_LABELS,
+  buildPressureAlternates,
+  buildPressureInput,
+  type EnBikeType,
+} from "@/lib/seo/programmatic/tirePressure";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import styles from "./PressureLanding.module.css";
 
@@ -19,19 +24,24 @@ export function PressureLanding({
   slug,
   weight,
   bikeType,
+  pathname,
 }: {
   locale: Locale;
   slug: string;
   weight: number;
   bikeType: EnBikeType;
+  pathname?: string;
 }) {
   const copy = pressureLandingMessages[locale];
   const label = BIKE_TYPE_LABELS[bikeType];
   const input = buildPressureInput(weight, bikeType, "tubeless");
   const tubeless = calculateBasicPressure(input);
   const innerTube = calculateBasicPressure(buildPressureInput(weight, bikeType, "inner_tube"));
-  const pagePath = withLocalePrefix(`/${locale === "en" ? "tire-pressure" : "bandenspanning"}/${slug}`, locale);
-  const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
+  const pagePath = withLocalePrefix(
+    pathname ?? `/${locale === "en" ? "tire-pressure" : "bandenspanning"}/${slug}`,
+    locale,
+  );
+  const pageUrl = buildPressureAlternates(weight, bikeType, locale).canonical;
   const title = copy.title(weight, label[locale]);
   const calculatorPath = withLocalePrefix(getLocalizedPublicCalculatorPath("tire-pressure", locale), locale);
   const homePath = withLocalePrefix("/", locale);

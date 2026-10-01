@@ -41,6 +41,11 @@ export const deleteAccount = mutation({
   handler: async (ctx) => {
     const userId = await requireUserId(ctx);
 
+    // Calculator drafts include personal measurements and belong to account deletion too.
+    const calculatorStates = await ctx.db.query("calculatorStates")
+      .withIndex("by_user_calculator_bike", (q) => q.eq("userId", userId)).collect();
+    for (const state of calculatorStates) await ctx.db.delete(state._id);
+
     // Delete questionnaire responses (via fitSessions)
     const sessions = await ctx.db
       .query("fitSessions")

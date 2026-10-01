@@ -1,4 +1,5 @@
 "use client";
+import { fitAuditCopy, localizeFitValue } from "@/i18n/account/fitAudit";
 
 import type { ReportV2Payload } from "@/lib/reports/reportV2Types";
 import type { ReportV2Copy } from "@/lib/reports/reportV2Copy";
@@ -19,9 +20,9 @@ export function RiderProfileCard({
 }: RiderProfileCardProps) {
   const overview = [
     [copy.profileFields.sessionId, profile.sessionId],
-    [copy.profileFields.bikeType, profile.bikeType],
-    [copy.profileFields.ridingStyle, profile.ridingStyle],
-    [copy.profileFields.goal, profile.goal],
+    [copy.profileFields.bikeType, localizeFitValue(profile.bikeType, copy.locale)],
+    [copy.profileFields.ridingStyle, localizeFitValue(profile.ridingStyle, copy.locale)],
+    [copy.profileFields.goal, localizeFitValue(profile.goal, copy.locale)],
     [copy.profileFields.algorithmVersion, profile.algorithmVersion],
     [copy.profileFields.engineVersion, profile.engineVersion],
   ] as const;
@@ -87,12 +88,12 @@ export function RiderProfileCard({
               <MetricTile
                 label={copy.sections.flexibility}
                 value={`${rider.flexibilityScore}/5`}
-                detail={rider.flexibilityLabel ?? undefined}
+                detail={rider.flexibilityLabel ? localizeFitValue(rider.flexibilityLabel, copy.locale) : undefined}
               />
             ) : null}
             {rider.coreStabilityScore !== null ? (
               <MetricTile
-                label={copy.sections.coreStability}
+                label={copy.locale === "nl" ? fitAuditCopy.nl.coreStability : copy.sections.coreStability}
                 value={`${rider.coreStabilityScore}/5`}
               />
             ) : null}

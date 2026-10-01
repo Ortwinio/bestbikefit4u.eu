@@ -1,0 +1,414 @@
+{
+  "sourceHash": "be36035a2453918fcd4b33d2c1f087f498dd8faed02bc2ffe1170fa11212d25d",
+  "buildId": "KpIlTqm-VXlEibT26LHjX",
+  "results": [
+    {
+      "route": "profile",
+      "width": 1440,
+      "theme": "light",
+      "fixture": "saving",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "profile",
+      "width": 1440,
+      "theme": "light",
+      "fixture": "save-error",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "profile",
+      "width": 1440,
+      "theme": "dark",
+      "fixture": "saving",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "profile",
+      "width": 1440,
+      "theme": "dark",
+      "fixture": "save-error",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "skip",
+          "details": [
+            "Mobile-only check."
+          ]
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "profile",
+      "width": 390,
+      "theme": "light",
+      "fixture": "saving",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "profile",
+      "width": 390,
+      "theme": "light",
+      "fixture": "save-error",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "profile",
+      "width": 390,
+      "theme": "dark",
+      "fixture": "saving",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    },
+    {
+      "route": "profile",
+      "width": 390,
+      "theme": "dark",
+      "fixture": "save-error",
+      "checks": {
+        "status": {
+          "status": "pass",
+          "details": []
+        },
+        "errors": {
+          "status": "pass",
+          "details": []
+        },
+        "overflow": {
+          "status": "pass",
+          "details": []
+        },
+        "h1": {
+          "status": "pass",
+          "details": []
+        },
+        "locale": {
+          "status": "pass",
+          "details": []
+        },
+        "seo": {
+          "status": "skip",
+          "details": [
+            "Canonical/hreflang not required on account or expected 404 pages."
+          ]
+        },
+        "language": {
+          "status": "pass",
+          "details": []
+        },
+        "touchTargets": {
+          "status": "pass",
+          "details": []
+        },
+        "images": {
+          "status": "pass",
+          "details": []
+        },
+        "axe": {
+          "status": "pass",
+          "details": []
+        }
+      }
+    }
+  ]
+}

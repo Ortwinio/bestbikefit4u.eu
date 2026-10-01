@@ -12,6 +12,7 @@ const copy = {
     typePrompt: "Select one",
     typeDescription: "Pick a type first",
     errorGeneric: "Please fix the highlighted fields before sending.",
+    requiredField: "{field} is required.",
     titleLabel: "Title",
     descriptionLabel: "Description",
     expectedResultLabel: "Expected result",
@@ -86,7 +87,8 @@ describe("feedback-flow", () => {
 
   it("returns user-facing lifecycle guidance for feedback statuses", () => {
     expect(getFeedbackStatusDescription("planned", "en")).toContain("planned");
-    expect(getFeedbackStatusDescription("released", "nl")).toContain("release");
+    expect(getFeedbackStatusDescription("released", "nl"))
+      .toBe("Dit is verwerkt in een update die beschikbaar is of wordt uitgerold.");
   });
 
   it("builds the rich submission payload for anonymous feedback", () => {

@@ -1,0 +1,767 @@
+{
+  "fixture": "Actual public shared forms and account pages/shell; current globals compiled. Auth/Convex/router mocked. Fixture localStorage represents server records; reload/fresh-client checks prove UI restoration, not live authentication.",
+  "results": [
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "theme": "light",
+      "width": 1440,
+      "account": false,
+      "screenshot": "43c-gearing-public-nl-light-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "theme": "light",
+      "width": 1440,
+      "account": true,
+      "screenshot": "43c-gearing-account-nl-light-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "theme": "light",
+      "width": 390,
+      "account": false,
+      "screenshot": "43c-gearing-public-nl-light-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "theme": "light",
+      "width": 390,
+      "account": true,
+      "screenshot": "43c-gearing-account-nl-light-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            {
+              "target": [
+                ".w-\\[140px\\]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "theme": "dark",
+      "width": 1440,
+      "account": false,
+      "screenshot": "43c-gearing-public-nl-dark-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "theme": "dark",
+      "width": 1440,
+      "account": true,
+      "screenshot": "43c-gearing-account-nl-dark-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "theme": "dark",
+      "width": 390,
+      "account": false,
+      "screenshot": "43c-gearing-public-nl-dark-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "theme": "dark",
+      "width": 390,
+      "account": true,
+      "screenshot": "43c-gearing-account-nl-dark-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            {
+              "target": [
+                ".w-\\[140px\\]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "theme": "light",
+      "width": 1440,
+      "account": false,
+      "screenshot": "43c-gearing-public-en-light-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "theme": "light",
+      "width": 1440,
+      "account": true,
+      "screenshot": "43c-gearing-account-en-light-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "theme": "light",
+      "width": 390,
+      "account": false,
+      "screenshot": "43c-gearing-public-en-light-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "theme": "light",
+      "width": 390,
+      "account": true,
+      "screenshot": "43c-gearing-account-en-light-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            {
+              "target": [
+                ".w-\\[140px\\]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "theme": "dark",
+      "width": 1440,
+      "account": false,
+      "screenshot": "43c-gearing-public-en-dark-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "theme": "dark",
+      "width": 1440,
+      "account": true,
+      "screenshot": "43c-gearing-account-en-dark-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "theme": "dark",
+      "width": 390,
+      "account": false,
+      "screenshot": "43c-gearing-public-en-dark-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "theme": "dark",
+      "width": 390,
+      "account": true,
+      "screenshot": "43c-gearing-account-en-dark-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            {
+              "target": [
+                ".w-\\[140px\\]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "theme": "light",
+      "width": 1440,
+      "account": false,
+      "screenshot": "43c-saddle-width-public-nl-light-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "theme": "light",
+      "width": 1440,
+      "account": true,
+      "screenshot": "43c-saddle-width-account-nl-light-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "theme": "light",
+      "width": 390,
+      "account": false,
+      "screenshot": "43c-saddle-width-public-nl-light-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "theme": "light",
+      "width": 390,
+      "account": true,
+      "screenshot": "43c-saddle-width-account-nl-light-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            {
+              "target": [
+                ".w-\\[140px\\]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "theme": "dark",
+      "width": 1440,
+      "account": false,
+      "screenshot": "43c-saddle-width-public-nl-dark-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "theme": "dark",
+      "width": 1440,
+      "account": true,
+      "screenshot": "43c-saddle-width-account-nl-dark-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "theme": "dark",
+      "width": 390,
+      "account": false,
+      "screenshot": "43c-saddle-width-public-nl-dark-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "theme": "dark",
+      "width": 390,
+      "account": true,
+      "screenshot": "43c-saddle-width-account-nl-dark-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            {
+              "target": [
+                ".w-\\[140px\\]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "theme": "light",
+      "width": 1440,
+      "account": false,
+      "screenshot": "43c-saddle-width-public-en-light-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "theme": "light",
+      "width": 1440,
+      "account": true,
+      "screenshot": "43c-saddle-width-account-en-light-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "theme": "light",
+      "width": 390,
+      "account": false,
+      "screenshot": "43c-saddle-width-public-en-light-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "theme": "light",
+      "width": 390,
+      "account": true,
+      "screenshot": "43c-saddle-width-account-en-light-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            {
+              "target": [
+                ".w-\\[140px\\]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "theme": "dark",
+      "width": 1440,
+      "account": false,
+      "screenshot": "43c-saddle-width-public-en-dark-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "theme": "dark",
+      "width": 1440,
+      "account": true,
+      "screenshot": "43c-saddle-width-account-en-dark-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "theme": "dark",
+      "width": 390,
+      "account": false,
+      "screenshot": "43c-saddle-width-public-en-dark-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [],
+      "errors": []
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "theme": "dark",
+      "width": 390,
+      "account": true,
+      "screenshot": "43c-saddle-width-account-en-dark-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "axe": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            {
+              "target": [
+                ".w-\\[140px\\]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ],
+      "errors": []
+    }
+  ],
+  "persistence": [
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "theme": "light",
+      "width": 1440,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "theme": "light",
+      "width": 390,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "theme": "dark",
+      "width": 1440,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "theme": "dark",
+      "width": 390,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "theme": "light",
+      "width": 1440,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "theme": "light",
+      "width": 390,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "theme": "dark",
+      "width": 1440,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "theme": "dark",
+      "width": 390,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "theme": "light",
+      "width": 1440,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "theme": "light",
+      "width": 390,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "theme": "dark",
+      "width": 1440,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "theme": "dark",
+      "width": 390,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "theme": "light",
+      "width": 1440,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "theme": "light",
+      "width": 390,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "theme": "dark",
+      "width": 1440,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "theme": "dark",
+      "width": 390,
+      "reload": true,
+      "freshAuthenticatedFixtureClient": true,
+      "noInitialWrites": true,
+      "saving": true,
+      "retryRetainsValue": true
+    },
+    {
+      "tool": "gearing",
+      "locale": "nl",
+      "noBike": true,
+      "reload": true,
+      "noInitialWrites": true,
+      "profileUnchanged": true
+    },
+    {
+      "tool": "gearing",
+      "locale": "en",
+      "noBike": true,
+      "reload": true,
+      "noInitialWrites": true,
+      "profileUnchanged": true
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "nl",
+      "noBike": true,
+      "reload": true,
+      "noInitialWrites": true,
+      "profileUnchanged": true
+    },
+    {
+      "tool": "saddle-width",
+      "locale": "en",
+      "noBike": true,
+      "reload": true,
+      "noInitialWrites": true,
+      "profileUnchanged": true
+    }
+  ]
+}

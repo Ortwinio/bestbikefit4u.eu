@@ -1,19 +1,29 @@
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import type { Locale } from "@/i18n/config";
+import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
 
 type GuideBodyMarkdownProps = {
   content: string;
+  locale?: Locale;
+  preserveLinkLabels?: boolean;
 };
 
 function MarkdownAnchor({
   href,
   children,
+  locale,
+  preserveLinkLabels,
 }: {
   href?: string;
   children?: React.ReactNode;
+  locale: Locale;
+  preserveLinkLabels: boolean;
 }) {
   const resolvedHref = href ?? "#";
+  const guideSlug = resolvedHref.match(/^\/(?:nl\/)?guides\/([^?#/]+)\/?(?:[?#].*)?$/)?.[1];
+  const label = !preserveLinkLabels && locale === "nl" && guideSlug ? getDutchGuideTitle(guideSlug) ?? children : children;
 
   if (resolvedHref.startsWith("/")) {
     return (
@@ -21,7 +31,7 @@ function MarkdownAnchor({
         href={resolvedHref}
         className="font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
       >
-        {children}
+        {label}
       </Link>
     );
   }
@@ -38,7 +48,9 @@ function MarkdownAnchor({
   );
 }
 
-export function GuideBodyMarkdown({ content }: GuideBodyMarkdownProps) {
+export function GuideBodyMarkdown({
+  content, locale = "en", preserveLinkLabels = false,
+}: GuideBodyMarkdownProps) {
   return (
     <div className="space-y-6 text-base leading-8 text-muted-foreground">
       <ReactMarkdown
@@ -70,7 +82,7 @@ export function GuideBodyMarkdown({ content }: GuideBodyMarkdownProps) {
             <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">{children}</th>
           ),
           td: ({ children }) => <td className="px-4 py-3 text-sm leading-6 text-muted-foreground">{children}</td>,
-          a: ({ href, children }) => <MarkdownAnchor href={href}>{children}</MarkdownAnchor>,
+          a: ({ href, children }) => <MarkdownAnchor href={href} locale={locale} preserveLinkLabels={preserveLinkLabels}>{children}</MarkdownAnchor>,
           blockquote: ({ children }) => (
             <blockquote className="border-l-4 border-primary/50 bg-muted/40 px-4 py-3 text-sm text-foreground">
               {children}

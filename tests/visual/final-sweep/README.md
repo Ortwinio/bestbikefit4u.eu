@@ -6,8 +6,9 @@ Run from the repository root:
 node tests/visual/final-sweep/sweep.mjs
 ```
 
-The default matrix contains the exact 70 non-admin source routes from
-`plans/redesign-canvas/audit/route-map.md`, each in NL and EN at 1440×1000 and 390×844: 280 captures.
+The default matrix contains the 69 still-active non-admin source routes from
+`plans/redesign-canvas/audit/route-map.md`, plus new account calculator routes, each in NL and EN at
+1440×1000 and 390×844. The retired listing-import flow is excluded; its redirect has separate tests.
 The later `/design-system` route is outside that audited inventory. Dynamic examples and their sources
 are declared in `routes.mjs`. Both locale-specific landing 404s and legacy redirects are checked.
 
@@ -59,7 +60,7 @@ Build/server logs and build identity are included beside the report. No deployme
 ## Output and exit codes
 
 `plans/redesign-canvas/final-sweep/report.md` and `report.json` contain per-case check results, details,
-pass/fail/skip totals, rendering provenance and links to each of the 280 PNGs. Skips never count as passes.
+pass/fail/skip totals, rendering provenance and links to each PNG. Skips never count as passes.
 Expected locale 404s skip inapplicable content checks. Desktop touch targets are not evaluated.
 Exit code 0 means no failed checks, 1 means findings, and 2 means infrastructure/setup failure.
 App findings belong in the report; this tooling never repairs app code.
@@ -116,3 +117,46 @@ prefetch requests now have a real HTTPS endpoint. SSL/protocol errors are not cl
 suppressed: ordinary console/page error checks still fail on them. Do not set
 `NODE_TLS_REJECT_UNAUTHORIZED=0`. Fixture servers continue to serve their own pages over loopback HTTP
 and retrieve production assets with the scoped certificate-aware GET adapter.
+
+## 40a: strict Dutch language audit
+
+Run `node tests/visual/final-sweep/nl-sweep.mjs` for all audited NL routes at 1440/390,
+including account/CMS fixtures and both PDF HTML fixtures. It reuses one isolated HTTPS production
+server, closes its servers on completion, and writes `40a-nl/report.json`, `cases.jsonl`, and
+`audit/40a-nl-findings.md`. The route inventory is resolved at run time; retiring routes disappear
+when their inventory entries are removed. The listing-import flow was removed under task 46.
+
+The collector retains visible text, document title, description/OG fields, accessible labels,
+image alternatives, placeholders, select options, alerts and native validation messages. It repeats
+collection after bounded menu, option, safe main-button and empty-form interactions. Every attempted,
+completed and skipped action is recorded. Non-GET/HEAD browser requests are blocked against writes.
+This samples reachable states; it does not certify all conditional toasts or backend failures.
+
+Detection uses a whole-word English lexicon, distinctive English tokens and a 35% ratio for at least
+two English matches. Accepted cycling/brand terms and Dutch homographs are allow-listed. Candidates
+retain matched words and ratio; citations, names and user data still require human review. Source
+mapping indexes the frozen snapshot and ranks literals using route imports and locale. Uncertain
+route fallbacks are explicitly labelled, not presented as proven provenance. Owners A/B/C/D are
+assigned from source ownership first. Fixture metadata and browser-native messages are labelled.
+Account fixtures do not execute Next metadata or real backend mutations; those are coverage gaps.
+
+The ordinary sweep also uses this detector for initial NL text/metadata/attributes, including expected
+locale 404 pages. EN detection is unchanged. Exit 1 means language candidates, 2 means infrastructure
+or capture failures. Run `node --test tests/visual/final-sweep/nl-*.test.mjs` for detector, interaction
+safety and source-mapping regressions. The blog adapter embeds the real bilingual guide CSV and
+replaces only server file access and anonymous authentication, preserving application copy.
+
+After refining the lexicon or source mapper, `node tests/visual/final-sweep/nl-reanalyze.mjs`
+rebuilds the owner report from retained chunks and the same frozen source snapshot. It does not
+represent a new capture of current application code. Both capture and reanalysis timestamps remain
+in the run context. Original publication titles and fixture data stay visible with classifications.
+
+A follow-up can select routes while preserving the full report:
+
+```sh
+node tests/visual/final-sweep/nl-sweep.mjs --filter=/bikes \
+  --output=plans/redesign-canvas/final-sweep/40a.2-bikes --label=40a.2
+```
+
+Filtered runs require a separate output path, are marked partial, and omit PDF HTML captures.
+The label names the owner report in `audit/<label>-nl-findings.md`; the default remains `40a`.

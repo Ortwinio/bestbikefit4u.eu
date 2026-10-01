@@ -5,7 +5,6 @@ import Bikes from "@/app/(dashboard)/bikes/page";
 import NewBike from "@/app/(dashboard)/bikes/new/page";
 import Manual from "@/app/(dashboard)/bikes/new/manual/page";
 import Passport from "@/app/(dashboard)/bikes/import/passport/page";
-import Marktplaats from "@/app/(dashboard)/bikes/import/marktplaats/page";
 import Compare from "@/app/(dashboard)/bikes/compare-fit/page";
 import Detail from "@/app/(dashboard)/bikes/[bikeId]/page";
 import Edit from "@/app/(dashboard)/bikes/[bikeId]/edit/page";
@@ -19,7 +18,6 @@ const routes = {
   "/bikes": Bikes,
   "/bikes/new/manual": Manual,
   "/bikes/import/passport": Passport,
-  "/bikes/import/marktplaats": Marktplaats,
   "/bikes/compare-fit": Compare,
 };
 const params = Promise.resolve({ bikeId: "visual-bike" });

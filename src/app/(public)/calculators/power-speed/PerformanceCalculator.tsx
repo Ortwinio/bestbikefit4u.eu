@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
+import type { PerformanceValues } from "../../../../../convex/calculatorStates/validators";
+import { performanceDefaults } from "@/lib/calculators/accountState";
+import { useCalculatorValuesChange } from "@/components/calculators/useCalculatorValuesChange";
 import Link from "next/link";
 import {
   AdjustOrder,
@@ -36,22 +39,22 @@ import {
 
 import { FtpRatings, FuelHeadline, FuelResults, Sources } from "./SourcedResults";
 
-// Shared only by these four public routes; all calculations live in performance.ts.
-export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale: Locale }) {
+// Both public and account routes use this same form and engine.
+export function PerformanceCalculator({ tool, locale, initialValues, onValuesChange, navigation, account = false }: {
+  tool: MoreTool; locale: Locale; initialValues?: PerformanceValues;
+  onValuesChange?: (values: PerformanceValues) => void; navigation?: ReactNode; account?: boolean;
+}) {
   const copy = performanceMessages[locale];
-  const [values, setValues] = useState<Record<keyof typeof TOOL_RANGES, number>>(
-    () =>
-      Object.fromEntries(
-        Object.entries(TOOL_RANGES).map(([key, range]) => [key, range.initial]),
-      ) as Record<keyof typeof TOOL_RANGES, number>,
-  );
-  const [bike, setBike] = useState<PerformanceBike>("road");
-  const [surface, setSurface] = useState<PerformanceSurface>("road");
-  const [mode, setMode] = useState<"power" | "speed">("power");
-  const [comparison, setComparison] = useState<"both" | "men" | "women">("both");
-  const [method, setMethod] = useState<FtpMethod>("known");
-  const [intensity, setIntensity] = useState("endurance");
-  const [sweat, setSweat] = useState<SweatLevel>("medium");
+  const initial = initialValues ?? performanceDefaults;
+  const [values, setValues] = useState(initial.values);
+  const [bike, setBike] = useState<PerformanceBike>(initial.bike);
+  const [surface, setSurface] = useState<PerformanceSurface>(initial.surface);
+  const [mode, setMode] = useState<"power" | "speed">(initial.mode);
+  const [comparison, setComparison] = useState<"both" | "men" | "women">(initial.comparison);
+  const [method, setMethod] = useState<FtpMethod>(initial.method);
+  const [intensity, setIntensity] = useState<PerformanceValues["intensity"]>(initial.intensity);
+  const [sweat, setSweat] = useState<SweatLevel>(initial.sweat);
+  useCalculatorValuesChange({ values, bike, surface, mode, comparison, method, intensity, sweat }, onValuesChange);
   const [edited, setEdited] = useState(false);
   const format = (value: number, digits = 1) =>
     new Intl.NumberFormat(locale, {
@@ -179,7 +182,7 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
       eyebrow={copy.eyebrow}
       title={copy.titles[tool]}
       description={copy.intro}
-      navigation={<MoreToolsNav activeTool={tool} locale={locale} />}
+      navigation={navigation ?? <MoreToolsNav activeTool={tool} locale={locale} />}
       inputs={
         <>
           <StepCard number={1} title={copy.effort}>
@@ -379,7 +382,7 @@ export function PerformanceCalculator({ tool, locale }: { tool: MoreTool; locale
               <h2 className="font-display text-2xl font-bold text-[var(--bbf-wit)]">{copy.next}</h2>
               <p className="my-4 text-[var(--bbf-op-donker)]">{copy.nextBody}</p>
               <Link
-                href={withLocalePrefix("/calculators/gearing", locale)}
+                href={withLocalePrefix(account ? "/gearing" : "/calculators/gearing", locale)}
                 className={
                   "inline-flex min-h-11 items-center rounded-full bg-primary px-5 " +
                   "font-bold text-primary-foreground"

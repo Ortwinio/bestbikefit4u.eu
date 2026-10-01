@@ -1,0 +1,285 @@
+{
+  "slug": "wkg-and-power-zones-guide",
+  "path": "/guides/wkg-and-power-zones-guide",
+  "cluster": "Power / FTP / Pacing",
+  "backlogOrder": 46,
+  "status": "in_review",
+  "importStatus": "44b",
+  "importNotes": "Batch D 44b: editorial review artifact only; production publishing requires separate approval.",
+  "pageTitle": {
+    "nl": "Watt per kilo fietsen: begrijp je getal",
+    "en": "Cycling watts per kilogram: understand the number"
+  },
+  "h1": {
+    "nl": "Watt per kilo fietsen: begrijp je getal",
+    "en": "Cycling watts per kilogram: understand the number"
+  },
+  "metaTitle": {
+    "nl": "Watt per kilo fietsen | BestBikeFit4U",
+    "en": "Cycling watts per kilogram | BestBikeFit4U"
+  },
+  "metaDescription": {
+    "nl": "Wat zegt watt per kilo over je fietsen? Begrijp FTP, testkeuze en vergelijkingstabellen. Bereken je verhouding en gebruik het getal met de juiste context.",
+    "en": "What do cycling watts per kilogram mean? Understand FTP, test methods and comparison tables. Calculate your ratio and keep the result in context."
+  },
+  "pageBrief": {
+    "nl": "Watt per kilo fietsen bereken je door je FTP in watt te delen door je lichaamsgewicht in kilogram. Controleer eerst hoe je FTP is bepaald; een vergelijkingstabel geeft daarna context, geen persoonlijk trainingsadvies. Gebruik dezelfde testmethode bij een vergelijking en kies zelf welke tabel je wilt bekijken.",
+    "en": "Cycling watts per kilogram is your FTP in watts divided by your body weight in kilograms. First check how your FTP was determined; a comparison table then provides context, rather than personal training advice. Use the same test method when comparing results and choose which table you want to view."
+  },
+  "libraryBody": {
+    "nl": "## Het probleem: watt per kilo fietsen\n\nJe ziet een getal na een fietstest en wilt weten of het goed is. Een trainingsmaat noemt zijn beste\nminuutvermogen, terwijl jouw app een FTP toont. Beide staan in watt, maar beschrijven niet dezelfde\ninspanning. Delen door lichaamsgewicht maakt die verschillende metingen niet ineens vergelijkbaar.\n\nOok twee FTP-uitkomsten vragen context. Misschien deed je de ene test binnen en de andere buiten. Of je\ngebruikte een andere vermogensmeter, testopzet of manier van uitrekenen.\n\nNoteer die verschillen voordat je een kleine verandering uitlegt als vooruitgang of achteruitgang. Alleen het\neindgetal vertelt niet hoe het tot stand kwam.\n\nBegin daarom bij de vraag die je wilt beantwoorden. Wil je je eigen ontwikkeling volgen, een tabel bekijken of\neen klim plannen? W/kg helpt bij de verhouding tussen vermogen en lichaamsgewicht.\n\nHet beschrijft niet je stuurvaardigheid, je comfort of de waarde van een fijne rit. Voor elke vraag heb je\nandere aanvullende informatie nodig.\n\n## Achtergrond\n\nFTP is een schatting van je functionele drempelvermogen. De calculator accepteert een bekende FTP of rekent\neen testuitkomst om. Bij een twintigminutentest gebruikt hij gemiddeld vermogen maal 0,95.\n\nBij een ramptest gebruikt hij het vermogen van de laatste minuut maal 0,75. Die factoren zijn testconventies,\ngeen garantie dat iedere fietser dezelfde verhouding heeft.\n\nDe berekening van W/kg is eenvoudiger: FTP gedeeld door lichaamsgewicht. Bij 240 watt en 80 kilogram komt daar\n3,0 W/kg uit. Dit is een rekenvoorbeeld, geen streefwaarde.\n\nFietsgewicht zit niet in deze verhouding. Voor een berekening van klimsnelheid zijn fietsgewicht en andere\nomstandigheden juist wel van belang.\n\nDe vergelijking in de tool volgt [Allen en Coggan, 2010, zoals gepubliceerd door\nGarmin](https://www8.garmin.com/manuals-apac/webhelp/fenixe/EN-SG/GUID-BCF7F912-F80A-4951-81C1-F5A3635731FB-849.html).\nJe kiest zelf de mannen- of vrouwentabel, of bekijkt beide. De tool leidt die keuze niet af uit je naam,\nlichaamsmaten of profiel. Het tabelniveau is een beschrijving binnen die gekozen tabel.\n\nEen tabelniveau schrijft geen training voor. Trainingszones hangen af van het gekozen systeem en een bruikbare\nuitgangswaarde. Deze calculator geeft geen volledige zoneverdeling en beoordeelt niet of een intensieve\ntraining vandaag verstandig is. Vermoeidheid, gezondheid, omstandigheden en ervaring blijven relevant naast\nhet vermogen op je scherm.\n\nGebruik het getal daarom als één onderdeel van je verhaal. Een hogere uitkomst bewijst niet dat een andere\nzithouding beter is. Een lagere uitkomst vraagt evenmin automatisch om gewichtsverlies. Kijk eerst naar\ninvoer, testomstandigheden en wat je op de fiets daadwerkelijk wilt kunnen doen.\n\n## Zo pak je het aan\n\n1. Kies eerst een bekende FTP of het juiste testtype in de calculator. Lees terug wat je testapparaat\n   werkelijk rapporteert: een al berekende FTP, een twintigminutengemiddelde of het vermogen in de laatste\n   minuut van een ramptest. Pas een factor niet nogmaals toe op een getal dat al als FTP is omgerekend. Bewaar\n   de oorspronkelijke uitslag.\n\n2. Vul je lichaamsgewicht in kilogram in en controleer het vermogen in watt. Gebruik voor herhaalde\n   vergelijkingen een consistente meetwijze. Noteer de datum, het apparaat en de testmethode naast de\n   uitkomst.\n\n   Verander geen invoer om een mooiere categorie te krijgen. Een berekening helpt alleen wanneer de gegevens\n   overeenkomen met wat je werkelijk hebt gemeten.\n\n3. Bekijk eerst de berekende FTP en W/kg voordat je een vergelijkingstabel kiest. Lees de naam van de gekozen\n   tabel naast het niveau. Je mag beide tabellen bekijken zonder dat de calculator een persoonlijke keuze voor\n   je maakt. Behandel een grens tussen categorieën niet als een plotselinge verandering in je mogelijkheden of\n   gezondheid.\n\n4. Vergelijk vervolgens met je eigen eerdere meting onder zoveel mogelijk gelijke omstandigheden. Een andere\n   vermogensmeter of testopzet maakt de vergelijking minder rechtstreeks. Bewaar die context in je\n   trainingsnotities. Vraag een trainer om uitleg wanneer je testuitkomst sterk afwijkt van wat je tijdens\n   gewone ritten volhoudt, voordat je intensieve trainingsdoelen op het nieuwe getal baseert.\n\n5. Scheid een afstelproef van een maximale test. Verander één onderdeel van je houding en beoordeel dat\n   gedurende twee tot drie rustige ritten. Noteer comfort, bereikbaarheid van de remmen en controle over de\n   fiets.\n\n   Ga terug als klachten toenemen. Een korte vermogenspiek is geen bewijs dat een nieuwe positie langdurig\n   prettig of veilig is.\n\n6. Stop een zware inspanning bij pijn op de borst, duizeligheid of ernstig onwel worden en zoek medische hulp.\n   Bespreek pijn in rust, nachtelijke pijn, zwelling of uitstralende tintelingen met een arts. Een fitter kan\n   je houding beoordelen, maar een calculator stelt geen diagnose. Doe geen nieuwe maximale test om zulke\n   signalen te proberen te verklaren.\n\n## Verder lezen\n\n[Fiets afstellen per fietstype](/nl/guides/ride-types) helpt je een houding te beoordelen vanuit je echte\nritten, in plaats van één vermogensgetal.\n\n[Eten tijdens fietsen: maak een werkbaar plan](/nl/guides/cycling-fueling-basics) geeft je een praktische\nvolgorde voor het voorbereiden en testen van je voeding.\n\n[Koolhydraten per uur fietsen: maak je plan](/nl/guides/carbs-per-hour-guide) legt uit waarom duur en inname\nafzonderlijke onderdelen van je voorbereiding zijn.\n\nMet de [FTP- en W/kg-calculator](/nl/calculators/ftp-wkg) controleer je de formule, je testkeuze en de tabel\ndie je zelf wilt bekijken.\n\n## Veelgestelde vragen\n\n### Waarom verschilt mijn getal van dat van een trainingsmaat?\n\nControleer eerst of jullie dezelfde grootheid vergelijken. Een minuutvermogen is geen FTP en totaalgewicht is\ngeen lichaamsgewicht. Ook testmethode en apparaat kunnen verschillen.\n\nBespreek die gegevens voordat je conclusies trekt uit een verschil. De uitkomst zegt bovendien niets over\nstuurvaardigheid of rijervaring.\n\n### Moet ik een tabel kiezen die bij mijn profiel past?\n\nDe keuze is aan jou. De calculator kan beide tabellen tonen en leidt geen keuze af uit je profiel. Gebruik de\ntabelnaam als context bij het getoonde niveau. Het label is geen diagnose en vertelt niet welke training voor\njou persoonlijk passend is.\n\n### Kan ik mijn trainingszones rechtstreeks uit deze uitkomst halen?\n\nDeze tool toont FTP, W/kg en een optionele tabelvergelijking, geen volledig trainingsschema. Voor zones heb je\neen gekozen zonesysteem en een bruikbare FTP nodig. Volg de instructies van dat systeem. Laat een trainer\nmeekijken wanneer de voorgeschreven inspanning niet aansluit bij wat je ervaart.\n\n### Betekent hoger W/kg dat ik mijn fiets beter heb afgesteld?\n\nDat kun je niet uit dit getal alleen afleiden. Beoordeel een afstelling ook op comfort, controle en de duur\ndie je prettig kunt fietsen. Houd een afstelproef en een maximale test apart. Zo voorkom je dat vermoeidheid\nof een andere testopzet je beoordeling van de houding vertroebelt.",
+    "en": "## The problem: cycling watts per kilogram\n\nYou see a number after a cycling test and want to know whether it is good. A training partner quotes their\nbest minute of power, while your app shows FTP. Both use watts, but they describe different efforts. Dividing\nby body weight does not suddenly make those measurements comparable.\n\nEven two FTP results need context. Perhaps one test was indoors and the other outdoors. Or you used a\ndifferent power meter, protocol or calculation method.\n\nRecord those differences before interpreting a small change as progress or decline. The final number alone\ndoes not explain how it was produced.\n\nStart with the question you want to answer. Are you tracking your own progress, looking at a table or planning\na climb? W/kg describes the relationship between power and body weight.\n\nIt does not describe bike handling, comfort or the value of an enjoyable ride. Each question needs different\nsupporting information before a number becomes useful.\n\n## Background\n\nFTP is an estimate of functional threshold power. The calculator accepts a known FTP or converts a test\nresult. For a twenty-minute test, it multiplies average power by 0.95.\n\nFor a ramp test, it multiplies final-minute power by 0.75. These are testing conventions, rather than a\nguarantee that every rider has the same relationship between those efforts.\n\nCalculating W/kg is simpler: divide FTP by body weight. At 240 watts and 80 kilograms, the result is 3.0 W/kg.\nThis is an arithmetic example, not a target.\n\nBike weight is not included in this ratio. When estimating climbing speed, bike weight and other conditions do\nmatter and belong in a separate calculation.\n\nThe tool's comparison follows [Allen and Coggan, 2010, as published by\nGarmin](https://www8.garmin.com/manuals-apac/webhelp/fenixe/EN-SG/GUID-BCF7F912-F80A-4951-81C1-F5A3635731FB-849.html).\nYou choose the men's or women's table, or view both. The tool does not infer that choice from your name,\nmeasurements or profile. The rating describes a category within the table you selected.\n\nA table rating does not prescribe training. Training zones depend on the chosen system and a useful reference\nvalue. This calculator does not provide a complete set of zones or assess whether hard training is sensible\ntoday. Fatigue, health, conditions and experience remain relevant alongside the power displayed on your\nscreen.\n\nTreat the result as one part of your situation. A higher number does not prove that a different riding\nposition is better. A lower number does not automatically call for weight loss. First review the inputs,\ntesting conditions and what you actually want to do on your bike.\n\n## How to approach it\n\n1. Choose a known FTP or the correct test type in the calculator first. Check what your testing device\n   actually reports: an already calculated FTP, a twenty-minute average or final-minute ramp power. Do not\n   apply a conversion factor again to a number already converted into FTP. Keep the original result so you can\n   check the choice later.\n\n2. Enter body weight in kilograms and check that power is in watts. Use a consistent measuring approach for\n   repeated comparisons. Record the date, device and test method alongside the result.\n\n   Do not change inputs to obtain a more flattering category. A calculation is useful only when the\n   information matches what you actually measured, rather than what you hoped to see.\n\n3. Review calculated FTP and W/kg before choosing a comparison table. Read the selected table's name alongside\n   its rating. You can view both tables without the calculator making a personal selection for you.\n\n   Do not treat a boundary between categories as a sudden change in your abilities or health. Keep the label\n   with the result when recording it.\n\n4. Compare the result with your own earlier measurement under conditions that are as similar as possible. A\n   different power meter or testing protocol makes that comparison less direct. Keep the context in your\n   training notes. Ask a coach for help if the result differs greatly from what you sustain on ordinary rides,\n   before basing hard training targets on it.\n\n5. Separate a position trial from a maximal test. Change one part of your setup and assess it over two or\n   three easy rides. Record comfort, access to the brakes and control of the bike.\n\n   Return to the previous position if symptoms increase. A brief power peak does not prove that a new position\n   remains comfortable or safe over time.\n\n6. Stop hard exercise if you develop chest pain, dizziness or feel seriously unwell, and seek medical help.\n   Discuss pain at rest, night pain, swelling or spreading tingling with a clinician. A fitter can assess your\n   position, but a calculator cannot diagnose symptoms. Do not attempt another maximal test as a way of\n   explaining those warning signs.\n\n## Further reading\n\n[Bike fit riding styles](/en/guides/ride-types) helps you judge a position against the rides you actually do,\nrather than one power number.\n\n[Cycling fueling basics: build a practical plan](/en/guides/cycling-fueling-basics) gives you a practical\nsequence for preparing and testing your food plan.\n\n[Carbs per hour cycling: make your plan](/en/guides/carbs-per-hour-guide) explains why ride duration and\nintake are separate parts of your preparation.\n\nUse the [FTP and W/kg calculator](/en/calculators/ftp-wkg) to check the formula, your test selection and the\ncomparison table you choose to view.\n\n## Frequently asked questions\n\n### Why does my number differ from a training partner's?\n\nFirst check that you are comparing the same measurement. Minute power is not FTP, and total weight is not body\nweight. Test methods and devices can also differ.\n\nDiscuss those details before drawing conclusions from a gap. The result says nothing about bike handling or\nriding experience either.\n\n### Must I select a table that matches my profile?\n\nThe choice is yours. The calculator can show both tables and does not infer a selection from your profile. Use\nthe table name as context for the displayed rating. Its label is not a diagnosis and does not tell you which\ntraining is personally appropriate.\n\n### Can I get my training zones directly from this result?\n\nThis tool shows FTP, W/kg and an optional table comparison, rather than a complete training plan. Zones\nrequire a selected zone system and a useful FTP estimate. Follow that system's instructions. Ask a coach for\nguidance when the prescribed effort does not match what you experience.\n\n### Does higher W/kg mean my bike is better fitted?\n\nYou cannot establish that from this number alone. Judge a position through comfort, control and how long you\ncan ride comfortably too. Keep a position trial separate from a maximal test. That prevents fatigue or a\ndifferent testing protocol from confusing your assessment of the setup."
+  },
+  "body": {
+    "nl": [
+      {
+        "title": "Het probleem: watt per kilo fietsen",
+        "type": "prose",
+        "items": [
+          "Je ziet een getal na een fietstest en wilt weten of het goed is. Een trainingsmaat noemt zijn beste\nminuutvermogen, terwijl jouw app een FTP toont. Beide staan in watt, maar beschrijven niet dezelfde\ninspanning. Delen door lichaamsgewicht maakt die verschillende metingen niet ineens vergelijkbaar.",
+          "Ook twee FTP-uitkomsten vragen context. Misschien deed je de ene test binnen en de andere buiten. Of je\ngebruikte een andere vermogensmeter, testopzet of manier van uitrekenen.",
+          "Noteer die verschillen voordat je een kleine verandering uitlegt als vooruitgang of achteruitgang. Alleen het\neindgetal vertelt niet hoe het tot stand kwam.",
+          "Begin daarom bij de vraag die je wilt beantwoorden. Wil je je eigen ontwikkeling volgen, een tabel bekijken of\neen klim plannen? W/kg helpt bij de verhouding tussen vermogen en lichaamsgewicht.",
+          "Het beschrijft niet je stuurvaardigheid, je comfort of de waarde van een fijne rit. Voor elke vraag heb je\nandere aanvullende informatie nodig."
+        ]
+      },
+      {
+        "title": "Achtergrond",
+        "type": "prose",
+        "items": [
+          "FTP is een schatting van je functionele drempelvermogen. De calculator accepteert een bekende FTP of rekent\neen testuitkomst om. Bij een twintigminutentest gebruikt hij gemiddeld vermogen maal 0,95.",
+          "Bij een ramptest gebruikt hij het vermogen van de laatste minuut maal 0,75. Die factoren zijn testconventies,\ngeen garantie dat iedere fietser dezelfde verhouding heeft.",
+          "De berekening van W/kg is eenvoudiger: FTP gedeeld door lichaamsgewicht. Bij 240 watt en 80 kilogram komt daar\n3,0 W/kg uit. Dit is een rekenvoorbeeld, geen streefwaarde.",
+          "Fietsgewicht zit niet in deze verhouding. Voor een berekening van klimsnelheid zijn fietsgewicht en andere\nomstandigheden juist wel van belang.",
+          "De vergelijking in de tool volgt [Allen en Coggan, 2010, zoals gepubliceerd door\nGarmin](https://www8.garmin.com/manuals-apac/webhelp/fenixe/EN-SG/GUID-BCF7F912-F80A-4951-81C1-F5A3635731FB-849.html).\nJe kiest zelf de mannen- of vrouwentabel, of bekijkt beide. De tool leidt die keuze niet af uit je naam,\nlichaamsmaten of profiel. Het tabelniveau is een beschrijving binnen die gekozen tabel.",
+          "Een tabelniveau schrijft geen training voor. Trainingszones hangen af van het gekozen systeem en een bruikbare\nuitgangswaarde. Deze calculator geeft geen volledige zoneverdeling en beoordeelt niet of een intensieve\ntraining vandaag verstandig is. Vermoeidheid, gezondheid, omstandigheden en ervaring blijven relevant naast\nhet vermogen op je scherm.",
+          "Gebruik het getal daarom als één onderdeel van je verhaal. Een hogere uitkomst bewijst niet dat een andere\nzithouding beter is. Een lagere uitkomst vraagt evenmin automatisch om gewichtsverlies. Kijk eerst naar\ninvoer, testomstandigheden en wat je op de fiets daadwerkelijk wilt kunnen doen."
+        ]
+      },
+      {
+        "title": "Zo pak je het aan",
+        "type": "prose",
+        "items": [
+          "1. Kies eerst een bekende FTP of het juiste testtype in de calculator. Lees terug wat je testapparaat\n   werkelijk rapporteert: een al berekende FTP, een twintigminutengemiddelde of het vermogen in de laatste\n   minuut van een ramptest. Pas een factor niet nogmaals toe op een getal dat al als FTP is omgerekend. Bewaar\n   de oorspronkelijke uitslag.",
+          "2. Vul je lichaamsgewicht in kilogram in en controleer het vermogen in watt. Gebruik voor herhaalde\n   vergelijkingen een consistente meetwijze. Noteer de datum, het apparaat en de testmethode naast de\n   uitkomst.",
+          "   Verander geen invoer om een mooiere categorie te krijgen. Een berekening helpt alleen wanneer de gegevens\n   overeenkomen met wat je werkelijk hebt gemeten.",
+          "3. Bekijk eerst de berekende FTP en W/kg voordat je een vergelijkingstabel kiest. Lees de naam van de gekozen\n   tabel naast het niveau. Je mag beide tabellen bekijken zonder dat de calculator een persoonlijke keuze voor\n   je maakt. Behandel een grens tussen categorieën niet als een plotselinge verandering in je mogelijkheden of\n   gezondheid.",
+          "4. Vergelijk vervolgens met je eigen eerdere meting onder zoveel mogelijk gelijke omstandigheden. Een andere\n   vermogensmeter of testopzet maakt de vergelijking minder rechtstreeks. Bewaar die context in je\n   trainingsnotities. Vraag een trainer om uitleg wanneer je testuitkomst sterk afwijkt van wat je tijdens\n   gewone ritten volhoudt, voordat je intensieve trainingsdoelen op het nieuwe getal baseert.",
+          "5. Scheid een afstelproef van een maximale test. Verander één onderdeel van je houding en beoordeel dat\n   gedurende twee tot drie rustige ritten. Noteer comfort, bereikbaarheid van de remmen en controle over de\n   fiets.",
+          "   Ga terug als klachten toenemen. Een korte vermogenspiek is geen bewijs dat een nieuwe positie langdurig\n   prettig of veilig is.",
+          "6. Stop een zware inspanning bij pijn op de borst, duizeligheid of ernstig onwel worden en zoek medische hulp.\n   Bespreek pijn in rust, nachtelijke pijn, zwelling of uitstralende tintelingen met een arts. Een fitter kan\n   je houding beoordelen, maar een calculator stelt geen diagnose. Doe geen nieuwe maximale test om zulke\n   signalen te proberen te verklaren."
+        ]
+      },
+      {
+        "title": "Verder lezen",
+        "type": "prose",
+        "items": [
+          "[Fiets afstellen per fietstype](/nl/guides/ride-types) helpt je een houding te beoordelen vanuit je echte\nritten, in plaats van één vermogensgetal.",
+          "[Eten tijdens fietsen: maak een werkbaar plan](/nl/guides/cycling-fueling-basics) geeft je een praktische\nvolgorde voor het voorbereiden en testen van je voeding.",
+          "[Koolhydraten per uur fietsen: maak je plan](/nl/guides/carbs-per-hour-guide) legt uit waarom duur en inname\nafzonderlijke onderdelen van je voorbereiding zijn.",
+          "Met de [FTP- en W/kg-calculator](/nl/calculators/ftp-wkg) controleer je de formule, je testkeuze en de tabel\ndie je zelf wilt bekijken."
+        ]
+      },
+      {
+        "title": "Veelgestelde vragen",
+        "type": "prose",
+        "items": [
+          "### Waarom verschilt mijn getal van dat van een trainingsmaat?",
+          "Controleer eerst of jullie dezelfde grootheid vergelijken. Een minuutvermogen is geen FTP en totaalgewicht is\ngeen lichaamsgewicht. Ook testmethode en apparaat kunnen verschillen.",
+          "Bespreek die gegevens voordat je conclusies trekt uit een verschil. De uitkomst zegt bovendien niets over\nstuurvaardigheid of rijervaring.",
+          "### Moet ik een tabel kiezen die bij mijn profiel past?",
+          "De keuze is aan jou. De calculator kan beide tabellen tonen en leidt geen keuze af uit je profiel. Gebruik de\ntabelnaam als context bij het getoonde niveau. Het label is geen diagnose en vertelt niet welke training voor\njou persoonlijk passend is.",
+          "### Kan ik mijn trainingszones rechtstreeks uit deze uitkomst halen?",
+          "Deze tool toont FTP, W/kg en een optionele tabelvergelijking, geen volledig trainingsschema. Voor zones heb je\neen gekozen zonesysteem en een bruikbare FTP nodig. Volg de instructies van dat systeem. Laat een trainer\nmeekijken wanneer de voorgeschreven inspanning niet aansluit bij wat je ervaart.",
+          "### Betekent hoger W/kg dat ik mijn fiets beter heb afgesteld?",
+          "Dat kun je niet uit dit getal alleen afleiden. Beoordeel een afstelling ook op comfort, controle en de duur\ndie je prettig kunt fietsen. Houd een afstelproef en een maximale test apart. Zo voorkom je dat vermoeidheid\nof een andere testopzet je beoordeling van de houding vertroebelt."
+        ]
+      },
+      {
+        "title": "Afsluiter",
+        "type": "prose",
+        "items": [
+          "Bereken je W/kg en bekijk duidelijk welke invoer achter je uitkomst staat."
+        ]
+      }
+    ],
+    "en": [
+      {
+        "title": "The problem: cycling watts per kilogram",
+        "type": "prose",
+        "items": [
+          "You see a number after a cycling test and want to know whether it is good. A training partner quotes their\nbest minute of power, while your app shows FTP. Both use watts, but they describe different efforts. Dividing\nby body weight does not suddenly make those measurements comparable.",
+          "Even two FTP results need context. Perhaps one test was indoors and the other outdoors. Or you used a\ndifferent power meter, protocol or calculation method.",
+          "Record those differences before interpreting a small change as progress or decline. The final number alone\ndoes not explain how it was produced.",
+          "Start with the question you want to answer. Are you tracking your own progress, looking at a table or planning\na climb? W/kg describes the relationship between power and body weight.",
+          "It does not describe bike handling, comfort or the value of an enjoyable ride. Each question needs different\nsupporting information before a number becomes useful."
+        ]
+      },
+      {
+        "title": "Background",
+        "type": "prose",
+        "items": [
+          "FTP is an estimate of functional threshold power. The calculator accepts a known FTP or converts a test\nresult. For a twenty-minute test, it multiplies average power by 0.95.",
+          "For a ramp test, it multiplies final-minute power by 0.75. These are testing conventions, rather than a\nguarantee that every rider has the same relationship between those efforts.",
+          "Calculating W/kg is simpler: divide FTP by body weight. At 240 watts and 80 kilograms, the result is 3.0 W/kg.\nThis is an arithmetic example, not a target.",
+          "Bike weight is not included in this ratio. When estimating climbing speed, bike weight and other conditions do\nmatter and belong in a separate calculation.",
+          "The tool's comparison follows [Allen and Coggan, 2010, as published by\nGarmin](https://www8.garmin.com/manuals-apac/webhelp/fenixe/EN-SG/GUID-BCF7F912-F80A-4951-81C1-F5A3635731FB-849.html).\nYou choose the men's or women's table, or view both. The tool does not infer that choice from your name,\nmeasurements or profile. The rating describes a category within the table you selected.",
+          "A table rating does not prescribe training. Training zones depend on the chosen system and a useful reference\nvalue. This calculator does not provide a complete set of zones or assess whether hard training is sensible\ntoday. Fatigue, health, conditions and experience remain relevant alongside the power displayed on your\nscreen.",
+          "Treat the result as one part of your situation. A higher number does not prove that a different riding\nposition is better. A lower number does not automatically call for weight loss. First review the inputs,\ntesting conditions and what you actually want to do on your bike."
+        ]
+      },
+      {
+        "title": "How to approach it",
+        "type": "prose",
+        "items": [
+          "1. Choose a known FTP or the correct test type in the calculator first. Check what your testing device\n   actually reports: an already calculated FTP, a twenty-minute average or final-minute ramp power. Do not\n   apply a conversion factor again to a number already converted into FTP. Keep the original result so you can\n   check the choice later.",
+          "2. Enter body weight in kilograms and check that power is in watts. Use a consistent measuring approach for\n   repeated comparisons. Record the date, device and test method alongside the result.",
+          "   Do not change inputs to obtain a more flattering category. A calculation is useful only when the\n   information matches what you actually measured, rather than what you hoped to see.",
+          "3. Review calculated FTP and W/kg before choosing a comparison table. Read the selected table's name alongside\n   its rating. You can view both tables without the calculator making a personal selection for you.",
+          "   Do not treat a boundary between categories as a sudden change in your abilities or health. Keep the label\n   with the result when recording it.",
+          "4. Compare the result with your own earlier measurement under conditions that are as similar as possible. A\n   different power meter or testing protocol makes that comparison less direct. Keep the context in your\n   training notes. Ask a coach for help if the result differs greatly from what you sustain on ordinary rides,\n   before basing hard training targets on it.",
+          "5. Separate a position trial from a maximal test. Change one part of your setup and assess it over two or\n   three easy rides. Record comfort, access to the brakes and control of the bike.",
+          "   Return to the previous position if symptoms increase. A brief power peak does not prove that a new position\n   remains comfortable or safe over time.",
+          "6. Stop hard exercise if you develop chest pain, dizziness or feel seriously unwell, and seek medical help.\n   Discuss pain at rest, night pain, swelling or spreading tingling with a clinician. A fitter can assess your\n   position, but a calculator cannot diagnose symptoms. Do not attempt another maximal test as a way of\n   explaining those warning signs."
+        ]
+      },
+      {
+        "title": "Further reading",
+        "type": "prose",
+        "items": [
+          "[Bike fit riding styles](/en/guides/ride-types) helps you judge a position against the rides you actually do,\nrather than one power number.",
+          "[Cycling fueling basics: build a practical plan](/en/guides/cycling-fueling-basics) gives you a practical\nsequence for preparing and testing your food plan.",
+          "[Carbs per hour cycling: make your plan](/en/guides/carbs-per-hour-guide) explains why ride duration and\nintake are separate parts of your preparation.",
+          "Use the [FTP and W/kg calculator](/en/calculators/ftp-wkg) to check the formula, your test selection and the\ncomparison table you choose to view."
+        ]
+      },
+      {
+        "title": "Frequently asked questions",
+        "type": "prose",
+        "items": [
+          "### Why does my number differ from a training partner's?",
+          "First check that you are comparing the same measurement. Minute power is not FTP, and total weight is not body\nweight. Test methods and devices can also differ.",
+          "Discuss those details before drawing conclusions from a gap. The result says nothing about bike handling or\nriding experience either.",
+          "### Must I select a table that matches my profile?",
+          "The choice is yours. The calculator can show both tables and does not infer a selection from your profile. Use\nthe table name as context for the displayed rating. Its label is not a diagnosis and does not tell you which\ntraining is personally appropriate.",
+          "### Can I get my training zones directly from this result?",
+          "This tool shows FTP, W/kg and an optional table comparison, rather than a complete training plan. Zones\nrequire a selected zone system and a useful FTP estimate. Follow that system's instructions. Ask a coach for\nguidance when the prescribed effort does not match what you experience.",
+          "### Does higher W/kg mean my bike is better fitted?",
+          "You cannot establish that from this number alone. Judge a position through comfort, control and how long you\ncan ride comfortably too. Keep a position trial separate from a maximal test. That prevents fatigue or a\ndifferent testing protocol from confusing your assessment of the setup."
+        ]
+      },
+      {
+        "title": "Closing CTA",
+        "type": "prose",
+        "items": [
+          "Calculate your W/kg and see clearly which inputs produced the result."
+        ]
+      }
+    ]
+  },
+  "faqs": {
+    "nl": [
+      {
+        "q": "Waarom verschilt mijn getal van dat van een trainingsmaat?",
+        "a": "Controleer eerst of jullie dezelfde grootheid vergelijken. Een minuutvermogen is geen FTP en totaalgewicht is geen lichaamsgewicht. Ook testmethode en apparaat kunnen verschillen. Bespreek die gegevens voordat je conclusies trekt uit een verschil. De uitkomst zegt bovendien niets over stuurvaardigheid of rijervaring."
+      },
+      {
+        "q": "Moet ik een tabel kiezen die bij mijn profiel past?",
+        "a": "De keuze is aan jou. De calculator kan beide tabellen tonen en leidt geen keuze af uit je profiel. Gebruik de tabelnaam als context bij het getoonde niveau. Het label is geen diagnose en vertelt niet welke training voor jou persoonlijk passend is."
+      },
+      {
+        "q": "Kan ik mijn trainingszones rechtstreeks uit deze uitkomst halen?",
+        "a": "Deze tool toont FTP, W/kg en een optionele tabelvergelijking, geen volledig trainingsschema. Voor zones heb je een gekozen zonesysteem en een bruikbare FTP nodig. Volg de instructies van dat systeem. Laat een trainer meekijken wanneer de voorgeschreven inspanning niet aansluit bij wat je ervaart."
+      },
+      {
+        "q": "Betekent hoger W/kg dat ik mijn fiets beter heb afgesteld?",
+        "a": "Dat kun je niet uit dit getal alleen afleiden. Beoordeel een afstelling ook op comfort, controle en de duur die je prettig kunt fietsen. Houd een afstelproef en een maximale test apart. Zo voorkom je dat vermoeidheid of een andere testopzet je beoordeling van de houding vertroebelt."
+      }
+    ],
+    "en": [
+      {
+        "q": "Why does my number differ from a training partner's?",
+        "a": "First check that you are comparing the same measurement. Minute power is not FTP, and total weight is not body weight. Test methods and devices can also differ. Discuss those details before drawing conclusions from a gap. The result says nothing about bike handling or riding experience either."
+      },
+      {
+        "q": "Must I select a table that matches my profile?",
+        "a": "The choice is yours. The calculator can show both tables and does not infer a selection from your profile. Use the table name as context for the displayed rating. Its label is not a diagnosis and does not tell you which training is personally appropriate."
+      },
+      {
+        "q": "Can I get my training zones directly from this result?",
+        "a": "This tool shows FTP, W/kg and an optional table comparison, rather than a complete training plan. Zones require a selected zone system and a useful FTP estimate. Follow that system's instructions. Ask a coach for guidance when the prescribed effort does not match what you experience."
+      },
+      {
+        "q": "Does higher W/kg mean my bike is better fitted?",
+        "a": "You cannot establish that from this number alone. Judge a position through comfort, control and how long you can ride comfortably too. Keep a position trial separate from a maximal test. That prevents fatigue or a different testing protocol from confusing your assessment of the setup."
+      }
+    ]
+  },
+  "quickAnswer": {
+    "keyTakeaway": {
+      "nl": "Watt per kilo fietsen bereken je door je FTP in watt te delen door je lichaamsgewicht in kilogram. Controleer eerst hoe je FTP is bepaald; een vergelijkingstabel geeft daarna context, geen persoonlijk trainingsadvies. Gebruik dezelfde testmethode bij een vergelijking en kies zelf welke tabel je wilt bekijken.",
+      "en": "Cycling watts per kilogram is your FTP in watts divided by your body weight in kilograms. First check how your FTP was determined; a comparison table then provides context, rather than personal training advice. Use the same test method when comparing results and choose which table you want to view."
+    },
+    "commonMistake": {
+      "nl": "",
+      "en": ""
+    },
+    "payAttention": {
+      "nl": "",
+      "en": ""
+    }
+  },
+  "heroImageFileName": "56-gewicht-en-vermogen.webp",
+  "heroImagePublicPath": "/illustrations/guides/56-gewicht-en-vermogen.webp",
+  "featuredImageUrl": "/illustrations/guides/56-gewicht-en-vermogen.webp",
+  "featuredImageAlt": {
+    "nl": "Vermogenmeter naast een weegschaal: watt per kilo verbindt fietsvermogen met lichaamsgewicht.",
+    "en": "A power meter beside a weighing scale: watts per kilogram connects cycling power with body weight."
+  },
+  "ogTitle": {
+    "nl": "Watt per kilo fietsen | BestBikeFit4U",
+    "en": "Cycling watts per kilogram | BestBikeFit4U"
+  },
+  "ogDescription": {
+    "nl": "Wat zegt watt per kilo over je fietsen? Begrijp FTP, testkeuze en vergelijkingstabellen. Bereken je verhouding en gebruik het getal met de juiste context.",
+    "en": "What do cycling watts per kilogram mean? Understand FTP, test methods and comparison tables. Calculate your ratio and keep the result in context."
+  },
+  "ogImageUrl": "https://bestbikefit4u.eu/og/illustrations/guides/56-gewicht-en-vermogen.jpg",
+  "ogImageAlt": {
+    "nl": "Vermogenmeter naast een weegschaal: watt per kilo verbindt fietsvermogen met lichaamsgewicht.",
+    "en": "A power meter beside a weighing scale: watts per kilogram connects cycling power with body weight."
+  },
+  "relatedGuidePaths": [
+    "/guides/ride-types",
+    "/guides/cycling-fueling-basics",
+    "/guides/carbs-per-hour-guide"
+  ],
+  "relatedGuides": [
+    "ride-types",
+    "cycling-fueling-basics",
+    "carbs-per-hour-guide"
+  ],
+  "relatedKeywords": [
+    "watt per kilo fietsen",
+    "FTP berekenen",
+    "vermogen lichaamsgewicht",
+    "FTP vergelijkingstabel",
+    "cycling watts per kilogram",
+    "FTP calculation",
+    "power body weight",
+    "FTP comparison table"
+  ],
+  "primaryCtaTarget": "/calculators/ftp-wkg",
+  "primaryCtaLabel": {
+    "nl": "Bereken mijn W/kg",
+    "en": "Calculate my W/kg"
+  },
+  "robotsIndex": true,
+  "tableOfContents": false,
+  "lastUpdatedAt": 1790812800000,
+  "createdAt": 1790812800000,
+  "updatedAt": 1790812800000,
+  "createdBy": "import-json",
+  "updatedBy": "import-json",
+  "version": 1
+}

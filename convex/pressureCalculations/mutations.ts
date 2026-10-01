@@ -2,7 +2,11 @@ import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
 import { validateStringLength } from "../lib/validation";
-import { calculateAdvancedPressure } from "../../src/lib/pressure-engine";
+import {
+  calculateAdvancedPressure,
+  calculateBasicPressure,
+  validatePressureInput,
+} from "../../src/lib/pressure-engine";
 
 const MAX_JSON_BLOB = 10000;
 const MAX_USER_NOTES = 300;
@@ -56,6 +60,77 @@ const surfaceValidator = v.union(
   v.literal("loose_gravel"),
   v.literal("trail")
 );
+
+export const upsertBasic = mutation({
+  args: {
+    expectedUserId: v.id("users"),
+    bikeId: v.optional(v.id("bikes")),
+    inputSnapshot: v.object({
+      bodyWeightKg: v.number(),
+      bikeWeightKg: v.optional(v.number()),
+      discipline: disciplineValidator,
+      widthFrontMm: v.number(),
+      widthRearMm: v.number(),
+      tubeType: tubeTypeValidator,
+      surface: surfaceValidator,
+      ridingGoal: v.optional(v.union(v.literal("speed"), v.literal("balance"), v.literal("comfort"))),
+    }),
+  },
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+    if (args.expectedUserId !== userId) throw new Error("ACCOUNT_CHANGED");
+    if (args.bikeId) await requireBikeOwner(ctx, args.bikeId);
+
+    if (
+      validatePressureInput(args.inputSnapshot).length > 0 ||
+      Object.values(args.inputSnapshot).some((value) => typeof value === "number" && !Number.isFinite(value))
+    ) {
+      throw new Error("INVALID_PRESSURE_INPUT");
+    }
+
+    const current = await ctx.db
+      .query("pressureCalculations")
+      .withIndex("by_user_created", (query) => query.eq("userId", userId))
+      .filter((query) => query.and(
+        query.eq(query.field("bikeId"), args.bikeId),
+        query.eq(query.field("sourceType"), "dashboard_basic"),
+        query.eq(query.field("autoNoteSource"), "account_basic_autosave")
+      ))
+      .order("desc")
+      .first();
+
+    if (current && Object.keys({ ...current.inputSnapshot, ...args.inputSnapshot }).every(
+      (key) => current.inputSnapshot[key as keyof typeof current.inputSnapshot] ===
+        args.inputSnapshot[key as keyof typeof args.inputSnapshot]
+    )) {
+      return current._id;
+    }
+
+    const result = calculateBasicPressure(args.inputSnapshot);
+    const record = {
+      userId,
+      bikeId: args.bikeId,
+      sourceType: "dashboard_basic" as const,
+      inputSnapshot: args.inputSnapshot,
+      recommendedFrontBar: result.frontBar,
+      recommendedRearBar: result.rearBar,
+      recommendedFrontPsi: result.frontPsi,
+      recommendedRearPsi: result.rearPsi,
+      comfortScore: result.comfortScore,
+      gripScore: result.gripScore,
+      efficiencyScore: result.efficiencyScore,
+      warningsJson: JSON.stringify(result.warnings),
+      autoNoteSource: "account_basic_autosave",
+      createdAt: Date.now(),
+    };
+
+    if (current) {
+      await ctx.db.patch(current._id, record);
+      return current._id;
+    }
+    return await ctx.db.insert("pressureCalculations", record);
+  },
+});
 
 export const save = mutation({
   args: {

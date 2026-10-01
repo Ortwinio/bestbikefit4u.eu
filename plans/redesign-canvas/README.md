@@ -1,5 +1,60 @@
 # Redesign canvas — BestBikeFit4U
 
+2026-09-30 — Codex D completed **44a read-only production guides audit**: 96 live pages
+(48 slugs × NL/EN), including 36 real pages missing from the guide sitemap. All pages have
+writing-guide gaps; 60 bodies are positively identified as CMS libraryBody, while the other
+36 cannot be distinguished conclusively between CMS body and fallback through public HTML.
+Per-page checks, source limits and 48 Dutch keyword/illustration proposals are in
+`audit/44a-guides-audit.md` and `.json`; exact files: `audit/files-44a.txt`.
+Scripts pass lint/syntax checks. No guide content, app code, database or production change.
+41c is complete after the lead’s confirmation. 43b is confirmed and next; 44b batch D follows last.
+
+2026-09-30 — Codex D completed **40a.2 bike Dutch copy**: gearing labels, passport copy,
+road description and passport feedback/errors use the bikes dictionary; English unchanged.
+10 focused tests, scoped lint and fresh snapshot build/TypeScript pass. Seven retained bike routes
+at NL 1440/390 yielded 14 captures, no capture errors and no D-owned app-copy finding.
+C's ten Increase/Decrease ARIA prefixes remain reported; fixture bike names are unchanged.
+Evidence: `audit/40a.2-notes.md`, `audit/40a.2-nl-findings.md`, `audit/files-40a.2.txt`.
+No commit; Marktplaats excluded. Continuing the read-only 44a guide audit.
+
+2026-09-30 — Codex D completed **40a strict Dutch audit harness and owner report**:
+70 audited NL routes at 1440/390 plus two PDF HTML variants, 142 captures, no capture errors.
+20,042 text/attribute entries and 362 completed interactions; 29 English-copy candidates plus
+16 explicitly classified citations, plan names, fixture values and browser validation messages.
+Frozen-snapshot source/owner evidence and coverage gaps: `audit/40a-nl-findings.md`.
+12 focused tests and scoped harness lint pass; no commit. Bike follow-up 40a.2 and read-only
+44a guide audit are in progress. 41c has audit notes and awaits the lead's DONE 41a confirmation;
+43b awaits DONE 43a. Marktplaats import is retiring under A's task 46.
+
+2026-10-01 — Codex B **DONE 41b**, awaiting lead review after confirmation of 41a:
+six always-editable profile blocks use shared autosave, with isolated preferences/pain
+writes, serialized assessments and retry statuses. Audit: `audit/41b-notes.md`;
+manifest: `audit/files-41b.txt`. 88 tests, lint/typecheck, production build and 28 browser cases pass.
+New Convex preferences mutation deploys before frontend. No commit/deploy; 43a subsequently confirmed by lead.
+
+2026-10-01 — Codex B **DONE 43d**, awaiting lead review:
+one 11-calculator registry for sidebar/mobile/dashboard; public bike-fit form reused
+in account mode with autosave and the approved session-local input snapshot.
+157 focused tests plus 35 existing contracts, lint and production snapshot build pass.
+Typecheck passed before D's new test landed; its unsupported getByRole exact option
+is the final whole-tree blocker, reported to D (see audit notes).
+Capture evidence retains only fixture bike-name language flags after the hover contrast fix.
+Notes: `audit/43d-notes.md`; exact manifest: `audit/files-43d.txt`.
+Release requires C's Convex infrastructure and D's four confirmed 43b routes; no commit/deploy.
+
+2026-09-30 — Codex A completed **40c Dutch marketing/guide copy**. Canonical Dutch
+guide titles, metadata, related links, mixed prose and marketing form copy are
+localized in marketing dictionaries; EN preserved. 68 Dutch routes checked at
+1440/390 with no named guide-link mismatches. Shared toast aria-label follow-up
+and validation details: `audit/40c-notes.md`; exact files: `audit/files-40c.txt`.
+No commit, push or deployment.
+
+2026-09-30 — Codex B completed **40d Dutch account audit**: profile/wizard,
+questionnaire/results, settings/feedback, safe errors, account labels and metadata.
+336 focused tests, typecheck and lint pass. The 56-case sweep retains shared-UI
+English ARIA findings and heuristic false positives. PDF/email/bike owner follow-ups
+are listed in `audit/40d-notes.md`; exact files in `audit/files-40d.txt`. No commit.
+
 2026-09-30 — Codex B completed **29b account mobile targets**: gearing summaries
 and feedback titles now have 44px minimum targets. Settings verified against C's
 shared Input fix without a local change. 15 tests, full lint and 16 filtered sweep
@@ -154,6 +209,17 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
   in `audit/18-notes.md`; no commit by C, and C has not started batch3.
 
 ## Code phase: ownership & commits (from checkpoint b40d638)
+
+- 2026-10-01 — **43c complete; awaiting lead review.** Gearing and saddle-width account routes reuse their public forms, restore saved inputs, autosave per user/bike and retain history. Approved backend identity guards, 50 tests, lint/typecheck, 32 comparison captures and 20 persistence scenarios pass. Final production sweep: 16/16 cases pass. Notes `audit/43c-notes.md`, manifest `audit/files-43c.txt`; no commit/deploy.
+
+- 2026-10-01 — **42 implemented; awaiting lead review.** Shared public/account pressure form, per-bike or unbound autosave, prefill precedence and queued-save identity guard. 37 focused tests, lint/typecheck, isolated production build, 16 comparison captures and 10 browser persistence scenarios pass. All account sweep cases pass; public-only plan-name language flags and the existing moderate mobile-shell finding are recorded in `audit/42-notes.md`. Manifest `audit/files-42.txt`; no commit/deploy.
+
+- 2026-09-30 — **40f implemented.** Request-localized root/social/JSON-LD/app metadata and explicit-locale manifests preserve English copy. Ten tests and both live local NL/EN metadata checks pass; shared gates remain blocked by D's in-progress wheelset editor. Notes `audit/40f-notes.md`, manifest `audit/files-40f.txt`; no commit/deploy.
+
+- 2026-09-30 — **46 implemented; combined sweep deferred by lead.** Retired listing import removed; locale-aware permanent redirect and passport/legacy-bike behavior tested. 115 contracts, 10 focused frontend tests, lint/typecheck and build pass. Full-unit/sweep blockers come from concurrent B/D work and are recorded in `audit/46-notes.md`; lead will run the combined sweep after 41c. Manifest `audit/files-46.txt`; no commit/deploy.
+
+- 2026-09-30 — **45 implemented; awaiting lead review.** Exact-name bike deletion from garage/detail/edit, immediate removal and bounded full-data cascade, shared-data preservation and late-write guards. 69 focused tests, 123 contracts, typecheck/lint and eight NL/EN theme/viewport browser cases pass. Notes `audit/45-notes.md`, manifest `audit/files-45.txt`. Includes concurrently added `calculatorStates`; integrate its owner’s schema addition before deployment. No commit or deploy.
+
 - Every agent writes **only** in its own files. New copy goes in its own dictionary module: `src/i18n/calculators/*` (C/D), `src/i18n/marketing/*` (A), `src/i18n/account/*` (B). **`src/i18n/messages/nl.ts` and `en.ts` are frozen**; only the lead changes them, on request (add a line to your notes).
 - `src/components/ui/*` and `globals.css`: Codex C. `src/components/layout/*` (Header, Footer, mobile menu): Codex A. Account shell and `src/components/{dashboard,account,profile}/*`: Codex B. Calculator pages: C (batch 2) / D (batch 3).
 - At DONE, the agent gives a **file list** in its notes; the lead commits exactly that list per batch.
@@ -200,3 +266,69 @@ Gate: the tokens are in Tailwind, there are shared components, and there is one 
 - 2026-09-30 — **30.1 result-headline review implemented by D.** Fuel advice/total/fluid lead the
   lime tile; FTP adds an explicitly selected reference rating. 70 focused tests, full lint/typecheck
   and 16 theme/locale/viewport captures pass. See `audit/30-notes.md`; no commit or deployment.
+
+- 2026-09-30 — **C: DONE 41a and DONE 43a; awaiting lead review.**
+  Shared autosave, gearing/saddle persistence, settings, Dutch toast labels; then one shared public
+  form per account fit tool with authenticated calculatorStates storage. Notes and exact manifests:
+  `audit/41a-notes.md`, `audit/files-41a.txt`, `audit/43a-notes.md`, `audit/files-43a.txt`. No commit/deploy.
+
+  C verification: 40 + 33 focused tests, 24 autosave states, 24 public/account comparisons and
+  36 filtered sweep cases pass. Final C production build/typecheck use an isolated passing baseline
+  while B/D integration continues; exact shared-tree gate limitations are in `audit/43a-notes.md`.
+
+- 2026-09-30 — **C: DONE40e**, shared NL number-field/dialog labels and the authorized home
+  comparison text. English preserved;28 focused tests, scoped lint and full typecheck pass.
+  See `audit/40e-notes.md`, `audit/files-40e.txt`. No commit. Continuing queued44b-C.
+
+- 2026-10-01 — **D: DONE 41c.** Inline bike/geometry/gearing/notes/description/wheel/tire autosave,
+  shared primitives, scoped ownership-checked updates and explicit optional clearing. 17 tests,
+  lint/typecheck and production build pass. 16 stateful browser cases plus 28 route cases pass technical
+  gates; remaining language findings are the documented rider fixture name. Evidence: `audit/41c-notes.md`,
+  `audit/41c-browser.json`, `final-sweep/41c/report.md`, `audit/files-41c.txt`. Deploy Convex first; no commit.
+
+- 2026-10-01 — **D: DONE 43b.** Four performance tools now reuse the public form in account mode,
+  with saved/profile/default precedence and C’s scoped storage/autosave. 67 focused tests plus two harness
+  registry tests, lint/typecheck and production build pass. 32 public/account comparisons and 32 NL/EN
+  route cases pass technical checks; source-title language flags are retained and classified.
+  See `audit/43b-notes.md`, `audit/files-43b.txt`. No commit/deploy. D continues with 44b batch D last.
+
+- 2026-10-01 — **C: DONE 44b-C.** Twelve bilingual guide rewrites, twelve route-B SVG/WebP heroes,
+  CMS review JSON and authorized shared guide renderer/audit integration. 46 tests, lint, typecheck, production
+  build, 24 localized audit pages and 48 desktop/mobile browser cases pass. Sitemap validator passes; local
+  CMS sitemap coverage and publishing limitations are recorded in `audit/44b-C-notes.md`.
+  Files: `audit/files-44b-C.txt`. No commit or database writes.
+
+- 2026-10-01 — **C: shared guide registration checkpoint.** A/B exports and A/B/C title maps connected.
+  Snapshot covers A4+B1+C12 guides; 34 localized pages audited. 17 integration tests, lint, typecheck and
+  production build pass. Editorial/link findings and pending D title export are in
+  `audit/44b-registration-notes.md`; full-batch sign-off remains pending. No commit/database writes.
+
+- 2026-10-01 — **D: 44b-D content ready; shared registration pending.** Twelve bilingual rewrites,
+  twelve route-B SVG/WebP heroes and CMS review JSON are ready. 62 tests, full lint and typecheck pass.
+  C must register batchDGuides and guideRewriteTitlesD before the real-route 24-page audit/48 browser captures.
+  Request: `messages/20261001-d-to-c-info-44b-registration.md`; evidence: `audit/44b-D-notes.md`.
+  No commit or database writes. Not yet DONE 44b-D.
+
+- 2026-10-01 — **A: DONE 44b-A; awaiting lead review.** Twelve bilingual guides,
+  twelve new route-B SVG/WebP heroes and CMS review JSON. 37 content/export/image tests, lint,
+  typecheck and production build pass; 24/24 localized audits and 48/48 browser captures pass.
+  Lead anatomy follow-up: seven figures corrected; anchored IK and native/390px review pass.
+  C's shared regression corrections verified: 30/30 tests pass across the three affected suites.
+  Notes `audit/44b-A-notes.md`, manifest `audit/files-44b-A.txt`. No commit/CMS writes.
+
+- 2026-10-01 — **C: all four guide batches registered (48 guides).** Combined audit covers96localizedpages;
+  94 pass all checks. Two D NL tips sections are under300words; handed to D. 62 shared regression tests pass.
+  C rider figures37/38/44 rebuilt with anchored IK and checked at1600/390px;25 content and2geometry tests pass.
+  Evidence: `audit/44b-registration-notes.md`, `audit/44b-C-rider-review.json`, `audit/44b-C-notes.md`. No commit.
+
+- 2026-10-01 — **C: shared 44b integration complete.** All A/B/C/D guides and title maps registered.
+  Final combined audit: **96/96 localized pages pass every check**. Fresh production build/TypeScript,
+  124 shared and D tests, scoped lint and diff checks pass. Two short D NL sections received one practical
+  sentence each; CMS review JSON regenerated. See `audit/44b-registration-notes.md` and
+  `audit/files-44b-registration.txt`. Supersedes the earlier 94/96 checkpoint. No commit/database writes.
+
+- 2026-10-01 — **C: DONE 47.** All six image-weight steps complete. Public assets reduced from201.72MB
+  to18.97MB (90.6%); guide SVGs archived outside public/git. 80 dedicated1200×630 social JPEGs, all≤62,087bytes.
+  Ten WebP conversions, legacy source compression, unused-asset cleanup and lint:images guard. 2,015tests pass
+  (25skipped), full lint/typecheck and production build pass;13before/after comparisons and3route checks pass.
+  Notes: `audit/47-notes.md`; files: `audit/files-47.txt` (no PNGs). No commit/database writes by C.

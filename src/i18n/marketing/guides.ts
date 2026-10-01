@@ -3,6 +3,14 @@ import type { Locale } from "@/i18n/config";
 const messages = {
   nl: {
     library: "Gidsenbibliotheek",
+    startFit: "Start gratis bikefit",
+    midPainDescription: "Je begrijpt nu waarom deze klacht ontstaat. Controleer met de gratis fit of je maten binnen de aanbevolen bandbreedtes vallen.",
+    midShoeDescription: "Je schoen- en cleatafstelling hangt samen met de rest van je fit. Controleer dit stap voor stap in je dashboard.",
+    closingRideDescription: "Je rijstijl bepaalt wat belangrijk is. Start een gratis fit en vertaal dat naar concrete afstelkeuzes.",
+    closingTitle: "Controleer gratis je persoonlijke afstelling",
+    closingDescription: "Je begrijpt nu waarom dit probleem ontstaat. Controleer met de gratis fit of je maten en contactpunten binnen de aanbevolen bandbreedtes vallen.",
+    preview: "Voorbeeldmodus: dit is een conceptversie.",
+    exitPreview: "Voorbeeld sluiten",
     guide: "Gids",
     hub: "Gidsen per onderwerp",
     explore: "Verken de onderwerpen",
@@ -42,6 +50,9 @@ const messages = {
   },
   en: {
     library: "Guide library",
+    startFit: "Start Free Fit",
+    preview: "Preview mode: this is a draft version.",
+    exitPreview: "Exit preview",
     guide: "Guide",
     hub: "Guides by topic",
     explore: "Explore the topics",
@@ -81,6 +92,6 @@ const messages = {
   },
 } as const;
 
-export function getGuidesMessages(locale: Locale) {
+export function getGuidesMessages<ActiveLocale extends Locale>(locale: ActiveLocale) {
   return messages[locale];
 }

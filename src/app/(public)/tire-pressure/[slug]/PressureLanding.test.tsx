@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 import type { ReactNode } from "react";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import EnglishPage, { generateMetadata as englishMetadata, generateStaticParams as englishParams } from "./page";
 import DutchPage, {
   generateMetadata as dutchMetadata,
@@ -21,6 +21,10 @@ import {
   buildPressureInput,
 } from "@/lib/seo/programmatic/tirePressure";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
+
+const request = vi.hoisted(() => ({ locale: "en" as "en" | "nl" }));
+vi.mock("@/i18n/request", () => ({ getRequestLocale: async () => request.locale }));
+beforeEach(() => { request.locale = "en"; });
 
 vi.mock("next/navigation", () => ({
   notFound: () => {
@@ -200,3 +204,59 @@ for (const locale of ["en", "nl"] as const) {
     }
   });
 }
+
+describe("Dutch locale on the English-slug pressure route", () => {
+  for (const weight of WEIGHT_STEPS) {
+    for (const bikeType of EN_BIKE_TYPES) {
+      it(`translates ${weight}kg ${bikeType} including metadata and schema`, async () => {
+        request.locale = "nl";
+        const slug = buildEnglishPressureSlug(weight, bikeType);
+        const params = Promise.resolve({ slug });
+        const bike = BIKE_TYPE_LABELS[bikeType].nl;
+        const canonical = `https://bestbikefit4u.eu/nl/bandenspanning/${buildDutchPressureSlug(weight, bikeType)}`;
+        const result = await englishMetadata({ params });
+        expect(result.title).toBe(`Bandenspanning voor ${weight}kg ${bike} | BestBikeFit4U`);
+        expect(result.description).toContain(`voor een rijder van ${weight} kg op een ${bike}`);
+        expect(result.openGraph).toMatchObject({
+          title: result.title, description: result.description, url: canonical,
+        });
+        expect(result.alternates).toEqual({
+          canonical,
+          languages: {
+            nl: canonical,
+            en: `https://bestbikefit4u.eu/en/tire-pressure/${slug}`,
+            "x-default": `https://bestbikefit4u.eu/en/tire-pressure/${slug}`,
+          },
+        });
+        const { container } = render(await EnglishPage({ params }));
+        expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(`Bandenspanning voor ${weight}kg ${bike}`);
+        expect(screen.getByText(`Weeg je ${weight} kg en rijd je op een ${bike}? Hier vind je een startadvies ` +
+          "met gangbare bandbreedtes. Gebruik de volledige calculator voor advies op basis " +
+          "van je eigen banden en fiets."
+        )).toBeTruthy();
+        for (const text of ["Rijder en fiets", "Bandbreedte voor en achter", "Bandtype", "Voorband", "Achterband",
+          "Binnenband", "Veelgestelde vragen", "Waarom vergelijk je tubeless met een binnenband?"]) {
+          expect(screen.getByText(text)).toBeTruthy();
+        }
+        expect(screen.getByRole("navigation", { name: "Broodkruimelpad" })).toBeTruthy();
+        expect(screen.getByAltText("Pentekening van een fietsband en bandenspanningsmeter")).toBeTruthy();
+        expect(container.textContent).not.toMatch(/This landing page|Rider and bike|Front and rear tire|Inner tube/);
+        const cta = screen.getByRole("link", { name: "Open bandenspanningscalculator" });
+        expect(cta.getAttribute("href")).toBe("/nl/bandenspanning-calculator");
+        expect(cta.getAttribute("data-page")).toBe(`/nl/tire-pressure/${slug}`);
+        const schema = JSON.parse(container.querySelector('script[type="application/ld+json"]')!.textContent!);
+        expect(schema[0].itemListElement[2].item).toBe(canonical);
+        expect(schema[1].mainEntity[1].name).toBe("Waarom vergelijk je tubeless met een binnenband?");
+        expect(schema[2].url).toBe(canonical);
+      });
+    }
+  }
+  it("localizes the missing-page metadata and retains 404 behavior", async () => {
+    request.locale = "nl";
+    const params = Promise.resolve({ slug: "not-a-pressure-page" });
+    expect(await englishMetadata({ params })).toEqual({
+      title: "Niet gevonden", robots: { index: false, follow: false },
+    });
+    await expect(EnglishPage({ params })).rejects.toThrow("NEXT_NOT_FOUND");
+  });
+});

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { getBikesAutosaveCopy } from "@/i18n/account/bikesAutosave";
 import { ArrowUpDown } from "lucide-react";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -77,9 +78,9 @@ export function BikeGearingCard({
               </Button>
               <Button
                 variant="outline"
-                render={<Link href={withLocalePrefix(`/bikes/${bikeId}/edit`, locale)} />}
+                render={<Link href={"#bike-settings-gearing"} />}
               >
-                {isNl ? "Bewerk gearing" : "Edit gearing"}
+                {getBikesAutosaveCopy(locale).title}
               </Button>
             </div>
           </>
@@ -109,8 +110,8 @@ export function BikeGearingCard({
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button render={<Link href={withLocalePrefix(`/bikes/${bikeId}/edit`, locale)} />}>
-                {isNl ? "Voeg gearing toe" : "Add gearing"}
+              <Button render={<Link href={"#bike-settings-gearing"} />}>
+                {getBikesAutosaveCopy(locale).title}
               </Button>
               <Button
                 variant="outline"

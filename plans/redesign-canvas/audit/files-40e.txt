@@ -1,0 +1,14 @@
+plans/redesign-canvas/README.md
+plans/redesign-canvas/audit/40e-notes.md
+plans/redesign-canvas/audit/files-40e.txt
+src/components/home/homeRedesignContent.ts
+src/components/prototyper-ui/ui/accessible-dialog.tsx
+src/components/prototyper-ui/ui/dialog.tsx
+src/components/prototyper-ui/ui/localization-ssr.test.tsx
+src/components/prototyper-ui/ui/localization.test.tsx
+src/components/prototyper-ui/ui/numberfield.tsx
+src/components/ui/NumberInput.test.tsx
+src/components/ui/primitives.test.tsx
+src/i18n/account/sharedUi.ts
+src/i18n/messages/nl.ts
+src/i18n/useSharedUiMessages.ts

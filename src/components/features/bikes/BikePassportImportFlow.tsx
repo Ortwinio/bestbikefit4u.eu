@@ -20,6 +20,8 @@ import {
 import { formatMessage } from "@/i18n/dashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
+import { getBikeLanguageMessages } from "@/i18n/account/bikesLanguage";
+import { getBikePassportCopy } from "@/i18n/account/bikePassport";
 import { getBikeTypeOptions } from "@/lib/bikes";
 import { getErrorMessage, reportClientError } from "@/lib/telemetry";
 import {
@@ -56,7 +58,8 @@ function summaryCard(
 function translatePassportError(
   error: unknown,
   fallback: string,
-  t: ReturnType<typeof useDashboardMessages>["messages"]["bikeForm"]["passportImport"]["errors"]
+  t: ReturnType<typeof useDashboardMessages>["messages"]["bikeForm"]["passportImport"]["errors"],
+  locale: "en" | "nl"
 ) {
   const safeMessage = reportClientError(error, {
     area: "bikes",
@@ -79,13 +82,14 @@ function translatePassportError(
     return t.alreadyOwned;
   }
 
-  return raw || fallback;
+  return locale === "nl" ? fallback : raw || fallback;
 }
 
 export function BikePassportImportFlow() {
   const router = useRouter();
   const toast = useToast();
-  const { locale, messages } = useDashboardMessages();
+  const { locale, messages: baseMessages } = useDashboardMessages();
+  const messages = getBikeLanguageMessages(locale, baseMessages);
   const t = messages.bikeForm.passportImport;
   const bikeTypeOptions = getBikeTypeOptions(messages);
 
@@ -138,7 +142,7 @@ export function BikePassportImportFlow() {
       setPreviewState("ready");
     } catch (error) {
       setPreviewState("error");
-      setErrorMessage(translatePassportError(error, t.errors.notFound, t.errors));
+      setErrorMessage(translatePassportError(error, t.errors.notFound, t.errors, locale));
     }
   }
 
@@ -169,7 +173,7 @@ export function BikePassportImportFlow() {
       });
       router.push(withLocalePrefix(`/bikes/${bikeId}`, locale));
     } catch (error) {
-      setErrorMessage(translatePassportError(error, t.errors.saveFailed, t.errors));
+      setErrorMessage(translatePassportError(error, t.errors.saveFailed, t.errors, locale));
     } finally {
       setSaveState("idle");
     }
@@ -382,14 +386,15 @@ export function BikePassportImportFlow() {
                     }))}
                   />
                   <Textarea
-                    label={messages.bikeForm.marktplaatsImport.fields.description.label}
+                    label={getBikePassportCopy(locale).descriptionLabel}
+                    aria-label={getBikePassportCopy(locale).descriptionLabel}
                     value={draft.description}
                     onChange={(event) =>
                       setDraft((current) =>
                         current ? { ...current, description: event.target.value } : current
                       )
                     }
-                    placeholder={messages.bikeForm.marktplaatsImport.fields.description.placeholder}
+                    placeholder={getBikePassportCopy(locale).descriptionPlaceholder}
                   />
                 </div>
 

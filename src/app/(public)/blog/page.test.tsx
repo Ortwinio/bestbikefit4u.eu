@@ -5,10 +5,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fetchQuery } from "convex/nextjs";
 import BlogIndexPage, { generateMetadata as indexMetadata, revalidate as indexRevalidate } from "./page";
 import BlogArticlePage, { generateMetadata as articleMetadata, generateStaticParams, revalidate as articleRevalidate } from "./[slug]/page";
-import { formatBlogDate, type BlogPost } from "./data";
+import { formatBlogDate, getBlogCategoryLabel, type BlogPost } from "./data";
 import { blogMessages } from "@/i18n/marketing/blog";
 
 vi.mock("server-only", () => ({}));
+vi.mock("@convex-dev/auth/nextjs/server", () => ({ convexAuthNextjsToken: vi.fn() }));
 vi.mock("convex/nextjs", () => ({ fetchQuery: vi.fn() }));
 vi.mock("../../../../convex/_generated/api", () => ({ api: { blog: { queries: {
   listPublishedPosts: "list", getPublishedPost: "post", listPublishedSlugs: "slugs",
@@ -56,6 +57,15 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("blog index presentation and CMS contract", () => {
+  it("translates Dutch category labels and metadata without changing English labels", async () => {
+    expect(getBlogCategoryLabel("saddle-height", "nl")).toBe("Zadelhoogte");
+    expect(getBlogCategoryLabel("science", "nl")).toBe("Wetenschap");
+    expect(getBlogCategoryLabel("saddle-height", "en")).toBe("Saddle Height");
+    const metadata = await indexMetadata();
+    expect(metadata.description).toBe("Lees praktische artikelen over bikefitting, fietspositie, comfort en afstelkeuzes.");
+    expect(metadata.openGraph?.description).toBe(metadata.description);
+  });
+
   it.each(["nl", "en"] as const)("renders the real empty state and localized links in %s", async (language) => {
     locale = language;
     const { container } = render(await BlogIndexPage({}));
@@ -94,7 +104,7 @@ describe("blog index presentation and CMS contract", () => {
     expect(screen.getByRole("link", { name: "Pagina 2" }).getAttribute("aria-current")).toBe("page");
     expect(screen.getByRole("link", { name: "Pagina 1" }).getAttribute("href")).toBe("/nl/blog?category=bike-fit");
     const filters = within(screen.getByRole("navigation", { name: "Filter op onderwerp" }));
-    expect(filters.getByRole("link", { name: "Bike Fit" }).getAttribute("aria-current")).toBe("page");
+    expect(filters.getByRole("link", { name: "Bikefitting" }).getAttribute("aria-current")).toBe("page");
     expect(filters.getByRole("link", { name: "Comfort" }).getAttribute("href")).toBe("/nl/blog?category=comfort");
     expect(filters.getByRole("link", { name: "Alles" }).getAttribute("href")).toBe("/nl/blog");
   });
@@ -117,6 +127,14 @@ describe("blog index presentation and CMS contract", () => {
 });
 
 describe("blog detail content and SEO contract", () => {
+  it("uses Dutch guide titles instead of slug text in related links", async () => {
+    post = { ...fixture(), relatedGuidePaths: ["/en/guides/bike-fitting-for-lower-back-pain"] };
+    render(await BlogArticlePage({ params: Promise.resolve({ slug: post.slug }) }));
+    expect(screen.getByRole("link", { name: /Lage rugpijn fietsen: rustig je positie controleren/i }).getAttribute("href"))
+      .toBe("/nl/guides/bike-fitting-for-lower-back-pain");
+    expect(screen.queryByText(/Bike Fitting For Lower Back Pain/)).toBeNull();
+  });
+
   it.each(["nl", "en"] as const)("preserves published content, TOC IDs, related links and schemas in %s", async (language) => {
     locale = language;
     posts = [fixture(), fixture(1), fixture(2)];

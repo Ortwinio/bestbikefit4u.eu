@@ -1,5 +1,7 @@
-import { MarktplaatsBikeImportFlow } from "@/components/features/bikes/MarktplaatsBikeImportFlow";
+import { permanentRedirect } from "next/navigation";
+import { getRequestLocale } from "@/i18n/request";
+import { withLocalePrefix } from "@/i18n/navigation";
 
-export default function DashboardMarktplaatsBikeImportPage() {
-  return <MarktplaatsBikeImportFlow />;
+export default async function RetiredBikeImportPage() {
+  permanentRedirect(withLocalePrefix("/bikes/new", await getRequestLocale()));
 }

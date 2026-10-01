@@ -1,4 +1,5 @@
 import { getFunctionName } from "convex/server";
+import { calculateBasicPressure } from "../../../src/lib/pressure-engine";
 
 const params = new URLSearchParams(window.location.search);
 export const fixture = params.get("fixture") || "filled";
@@ -43,8 +44,12 @@ const bike = {
 };
 const pressure = {
   _id: "calc1",
-  recommendedFrontBar: 5.2,
-  recommendedRearBar: 5.6,
+  inputSnapshot: {
+    discipline: "road", bodyWeightKg: 75, widthFrontMm: 30, widthRearMm: 30,
+    tubeType: "tubeless", surface: "average_asphalt", bikeWeightKg: 8.5,
+  },
+  recommendedFrontBar: 4.9,
+  recommendedRearBar: 5.2,
   createdAt: 1780000000000,
   userNotes:
     locale === "nl"
@@ -65,20 +70,29 @@ const feedback = {
   createdAt: 1780000000000,
 };
 const values = {
+  "calculatorStates/queries:get": loading ? undefined : null,
   "sessions/queries:listByUser": [],
   "users/queries:getCurrentUser": user,
   "profiles/queries:getMyProfile": loading ? undefined : empty ? null : profile,
   "bikes/queries:list": loading ? undefined : empty ? [] : [bike],
   "bikes/queries:listByUser": loading ? undefined : empty ? [] : [bike],
   "bikes/queries:get": empty ? null : bike,
+  "bikes/queries:getDetail": loading ? undefined : empty ? null : {
+    bike,
+    activeTireSetup: { widthFrontMm: 30, widthRearMm: 30, tubeType: "tubeless" },
+  },
+  "pressureCalculations/queries:isBikePressureStale": { isStale: false },
   "pressureCalculations/queries:getLatestByBikeForUser": loading
     ? undefined
     : empty
       ? []
       : [{ bikeId: "bike1", latestCalculation: pressure }],
+  "pressureCalculations/queries:getLatestWithoutBikeForUser": loading ? undefined : null,
   "wheelsets/queries:listForBike": [],
   "tireSetups/queries:listForWheelset": [],
   "tireSetups/queries:get": null,
+  "gearing/queries:getLatestGearingSession": loading ? undefined : null,
+  "saddleWidth/queries:getLatestSaddleWidthSession": loading ? undefined : null,
   "gearing/queries:listGearingSessions": loading ? undefined : [],
   "saddleWidth/queries:listSaddleWidthSessions": loading
     ? undefined
@@ -126,13 +140,38 @@ function readFixture(reference, args) {
   if (args === "skip") return undefined;
   const name = getFunctionName(reference);
   if (!window.__visualQueries.includes(name)) window.__visualQueries.push(name);
+  if (name === "calculatorStates/queries:get" && !loading) {
+    return JSON.parse(localStorage.getItem(`calculator-${args.calculator}-${args.bikeId ?? "rider"}`) ?? "null");
+  }
+  if (name === "pressureCalculations/queries:getLatestByBikeForUser" && !loading && !empty) {
+    const stored = localStorage.getItem("pressure-account-bike1");
+    return stored ? [{ bikeId: "bike1", latestCalculation: JSON.parse(stored) }] : values[name];
+  }
+  if (name === "pressureCalculations/queries:getLatestWithoutBikeForUser" && !loading) {
+    return JSON.parse(localStorage.getItem("pressure-account-manual") ?? "null");
+  }
   if (!(name in values)) {
     if (!window.__visualUnknownQueries.includes(name)) window.__visualUnknownQueries.push(name);
     throw new Error(`Missing visual fixture for ${name}`);
   }
+  if (name === "gearing/queries:getLatestGearingSession" || name === "saddleWidth/queries:getLatestSaddleWidthSession") {
+    const key = name.startsWith("gearing/") ? "gearing" : "saddle";
+    const stored = localStorage.getItem(`autosave-${key}-${args?.bikeId ?? "manual"}`);
+    if (stored) return JSON.parse(stored);
+  }
+  if (!loading && (name === "gearing/queries:listGearingSessions" || name === "saddleWidth/queries:listSaddleWidthSessions")) {
+    const prefix = name.startsWith("gearing/") ? "autosave-gearing-" : "autosave-saddle-";
+    return [...Object.keys(localStorage).filter((key) => key.startsWith(prefix))
+      .map((key) => JSON.parse(localStorage.getItem(key))), ...values[name]];
+  }
   return values[name];
 }
 export const useQuery = (reference, args) => readFixture(reference, args);
+export const usePaginatedQuery = (reference, args) => ({
+  results: args === "skip" ? [] : readFixture(reference, args),
+  status: "Exhausted",
+  loadMore: () => {},
+});
 
 const action = async (...args) => {
   window.__visualActions.push(args);
@@ -144,7 +183,36 @@ export const useMutation =
   async (...args) => {
     const name = getFunctionName(reference);
     window.__visualActions.push({ name, args });
-    if (name.includes("createDashboardGearingSession")) return "session1";
+    if (name === "pressureCalculations/mutations:upsertBasic") {
+      if (window.__pressureSaveDelay) await new Promise((done) => setTimeout(done, window.__pressureSaveDelay));
+      if (window.__pressureSaveError) throw new Error("Pressure fixture save failure");
+      const { bikeId, inputSnapshot } = args[0];
+      const result = calculateBasicPressure(inputSnapshot);
+      localStorage.setItem(`pressure-account-${bikeId ?? "manual"}`, JSON.stringify({
+        _id: `pressure-${bikeId ?? "manual"}`, bikeId, inputSnapshot, createdAt: Date.now(),
+        recommendedFrontBar: result.frontBar, recommendedRearBar: result.rearBar,
+        recommendedFrontPsi: result.frontPsi, recommendedRearPsi: result.rearPsi,
+      }));
+      return `pressure-${bikeId ?? "manual"}`;
+    }
+    if (fixture === "save-error") throw new Error("Visual fixture save failure");
+    if (fixture === "saving") await new Promise((done) => setTimeout(done, 1600));
+    if (name === "calculatorStates/mutations:upsert") {
+      const { state, bikeId } = args[0];
+      localStorage.setItem(`calculator-${state.calculator}-${bikeId ?? "rider"}`,
+        JSON.stringify({ _id: "calculator1", state }));
+      return "calculator1";
+    }
+    if (name.includes("createDashboardGearingSession") || name.includes("createDashboardSaddleWidthSession")) {
+      if (window.__calculatorSaveDelay) await new Promise((done) => setTimeout(done, window.__calculatorSaveDelay));
+      if (window.__calculatorSaveError) throw new Error("Calculator fixture save failure");
+      const { expectedUserId, ...payload } = args[0];
+      if (expectedUserId !== undefined && expectedUserId !== user._id) throw new Error("ACCOUNT_CHANGED");
+      const key = name.includes("Gearing") ? "gearing" : "saddle";
+      localStorage.setItem(`autosave-${key}-${args[0]?.bikeId ?? "manual"}`,
+        JSON.stringify({ _id: `session-${key}-${payload.bikeId ?? "manual"}`, createdAt: Date.now(), ...payload }));
+      return "session1";
+    }
     return { hasUpvoted: true, upvoteCount: 13 };
   };
 export const useFeedbackPanel = () => ({ openPanel: action, closePanel: action });

@@ -11,6 +11,18 @@ import { getGuideLeafEntries } from "@/lib/guides/backlog";
 let locale: "en" | "nl" = "en";
 let isPreview = false;
 let isAuthenticated = false;
+let useRegisteredGuides = false;
+
+// Keep legacy CMS/fallback coverage independent of which slugs have been rewritten.
+// The separate registered-route cases below use the real resolver and renderer.
+vi.mock("@/lib/guides/rewrites", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/guides/rewrites")>();
+  return {
+    ...actual,
+    resolveGuideRewrite: (...args: Parameters<typeof actual.resolveGuideRewrite>) =>
+      useRegisteredGuides ? actual.resolveGuideRewrite(...args) : undefined,
+  };
+});
 
 vi.mock("../../blog/data", () => ({
   listPublishedBlogPostsForGuidePath: () => Promise.resolve([]),
@@ -504,6 +516,7 @@ beforeEach(() => {
   locale = "en";
   isPreview = false;
   isAuthenticated = false;
+  useRegisteredGuides = false;
 });
 
 afterEach(() => {
@@ -573,7 +586,7 @@ describe("guide page template redesign", () => {
     expect(metadata.openGraph).toMatchObject({
       type: "article",
       url: metadata.alternates?.canonical,
-      images: [{ url: "https://bestbikefit4u.eu/guides/media/003--guides--bike-fitting-for-knee-pain-hero.png", alt: "Kniepijn hero" }],
+      images: [{ url: "https://bestbikefit4u.eu/og/guides/media/003--guides--bike-fitting-for-knee-pain-hero.jpg", alt: "Kniepijn hero", width: 1200, height: 630 }],
     });
     render(await GuidePage(props));
     expect(buildArticleSchema).toHaveBeenCalledWith(expect.objectContaining({ inLanguage: "nl", description: "Kniepijn desc", url: metadata.alternates?.canonical }));
@@ -704,5 +717,42 @@ describe("guide page template redesign", () => {
     expect(screen.getByText("Fallback inhoud.")).toBeTruthy();
     expect(screen.getByText("Fallback vraag?")).toBeTruthy();
     expect(screen.getByText("Fallback CTA description nl")).toBeTruthy();
+  });
+});
+
+
+describe("registered rewrite routes", () => {
+  it.each([
+    ["nl", "ride-types"], ["en", "ride-types"],
+    ["nl", "bike-fitting-for-knee-pain"], ["en", "bike-fitting-for-knee-pain"],
+  ] as const)("renders the full rewritten %s/%s article instead of legacy CMS copy", async (activeLocale, slug) => {
+    useRegisteredGuides = true;
+    locale = activeLocale;
+    const { getGuideRewrite } = await import("@/lib/guides/rewrites");
+    const guide = getGuideRewrite(slug)!;
+    const article = guide[activeLocale];
+    const props = { params: Promise.resolve({ slug }) };
+    const metadata = await generateMetadata(props);
+    expect(metadata.title).toEqual({ absolute: article.metaTitle });
+    expect(metadata.description).toBe(article.metaDescription);
+    expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}/guides/${slug}`);
+    const { container } = render(await GuidePage(props));
+    expect(container.querySelector('[data-guide-source="code-rewrite"]')).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1, name: article.title })).toBeTruthy();
+    expect(screen.getByText(article.quickAnswer)).toBeTruthy();
+    expect(screen.getByAltText(article.alt).getAttribute("src"))
+      .toBe(`/illustrations/guides/${guide.illustration}.webp`);
+    expect(container.querySelector('time')?.getAttribute('datetime')).toBe(guide.updatedAt);
+    expect(container.querySelectorAll('#guide-content h2')).toHaveLength(5);
+    expect(screen.getByRole("link", { name: article.ctaLabel }).getAttribute("href"))
+      .toBe(`/${locale}${article.ctaTarget}`);
+    expect(buildArticleSchema).toHaveBeenCalledWith(expect.objectContaining({
+      headline: article.title, description: article.metaDescription, inLanguage: locale,
+    }));
+    expect(buildFaqPageSchema).toHaveBeenCalledWith(expect.arrayContaining([
+      expect.objectContaining({ q: expect.any(String), a: expect.any(String) }),
+    ]));
+    expect(screen.queryByText("Hub markdown")).toBeNull();
+    expect(screen.queryByText("Knee pain intro.")).toBeNull();
   });
 });

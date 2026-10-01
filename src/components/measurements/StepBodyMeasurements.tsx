@@ -1,5 +1,7 @@
 "use client";
 
+import { profileText, measurementWarningNl } from "@/i18n/account/profileLanguage";
+
 import { useRef, useEffect, useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { InfoBox } from "@/components/ui";
@@ -27,7 +29,7 @@ export function StepBodyMeasurements() {
     setValue,
     formState: { errors },
   } = useFormContext();
-  const { messages } = useDashboardMessages();
+  const { locale, messages } = useDashboardMessages();
 
   const heightCm = watch("heightCm") as number | undefined;
   const inseamCm = watch("inseamCm") as number | undefined;
@@ -55,20 +57,22 @@ export function StepBodyMeasurements() {
     const pred = predictedInseam(heightCm);
     if (deviation(inseamCm, pred) > 0.2) {
       const dir = inseamCm > pred ? "longer" : "shorter";
+      if (locale === "nl") return measurementWarningNl("inseam", inseamCm, pred, "cm");
       return `Your inseam (${inseamCm} cm) is more than 20% ${dir} than expected for your height. Expected around ${pred} cm — please double-check your measurement.`;
     }
     return null;
-  }, [heightCm, inseamCm]);
+  }, [locale, heightCm, inseamCm]);
 
   const weightWarning = useMemo(() => {
     if (!heightCm || !weightKg) return null;
     const pred = predictedWeight(heightCm);
     if (deviation(weightKg, pred) > 0.2) {
       const dir = weightKg > pred ? "heavier" : "lighter";
+      if (locale === "nl") return measurementWarningNl("weight", weightKg, pred, "kg");
       return `Your weight (${weightKg} kg) is more than 20% ${dir} than expected for your height. Expected around ${pred} kg — please verify the value is correct.`;
     }
     return null;
-  }, [heightCm, weightKg]);
+  }, [locale, heightCm, weightKg]);
 
   return (
     <div className="space-y-6">
@@ -76,12 +80,9 @@ export function StepBodyMeasurements() {
         variant="primary"
         icon={<HelpCircle className="h-4 w-4 text-[color:var(--primary)]" />}
       >
-        <p className="font-medium text-[color:var(--foreground)]">Why we need your measurements</p>
+        <p className="font-medium text-[color:var(--foreground)]">{profileText(locale, "Why we need your measurements")}</p>
         <p className="mt-1 text-[color:var(--muted-foreground)]">
-          Your height and inseam are the two most important inputs for a bike fit.
-          Height sets the overall frame size and reach, while inseam is the primary driver
-          for saddle height — the single most impactful adjustment for comfort and power.
-          Without accurate measurements, every recommendation is just an estimate.
+          {profileText(locale, "Your height and inseam are the two most important inputs for a bike fit. Height sets the overall frame size and reach, while inseam is the primary driver for saddle height — the single most impactful adjustment for comfort and power. Without accurate measurements, every recommendation is just an estimate.")}
         </p>
       </InfoBox>
 
@@ -91,7 +92,7 @@ export function StepBodyMeasurements() {
           name="heightCm"
           render={({ field }) => (
             <NumberSlider
-              label="Height"
+              label={profileText(locale, "Height")}
               min={130}
               max={210}
               step={1}
@@ -114,11 +115,11 @@ export function StepBodyMeasurements() {
             variant="secondary"
             icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
           >
-            <p className="font-medium text-[color:var(--foreground)]">How to measure your height</p>
+            <p className="font-medium text-[color:var(--foreground)]">{profileText(locale, "How to measure your height")}</p>
             <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
-              <li>Stand barefoot against a wall</li>
-              <li>Place a book flat on top of your head, touching the wall</li>
-              <li>Mark the wall and measure from the floor to the mark</li>
+              <li>{profileText(locale, "Stand barefoot against a wall")}</li>
+              <li>{profileText(locale, "Place a book flat on top of your head, touching the wall")}</li>
+              <li>{profileText(locale, "Mark the wall and measure from the floor to the mark")}</li>
             </ul>
           </InfoBox>
         </IllustratedMeasurementHelp>
@@ -130,7 +131,7 @@ export function StepBodyMeasurements() {
           name="inseamCm"
           render={({ field }) => (
             <NumberSlider
-              label="Inseam"
+              label={profileText(locale, "Inseam")}
               min={55}
               max={105}
               step={1}
@@ -156,11 +157,11 @@ export function StepBodyMeasurements() {
             variant="secondary"
             icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}
           >
-            <p className="font-medium text-[color:var(--foreground)]">How to measure your inseam</p>
+            <p className="font-medium text-[color:var(--foreground)]">{profileText(locale, "How to measure your inseam")}</p>
             <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">
-              <li>Stand barefoot with feet 10–15 cm apart</li>
-              <li>Press a hardcover book firmly up between your legs, simulating a saddle</li>
-              <li>Measure from the floor to the top of the book spine</li>
+              <li>{profileText(locale, "Stand barefoot with feet 10–15 cm apart")}</li>
+              <li>{profileText(locale, "Press a hardcover book firmly up between your legs, simulating a saddle")}</li>
+              <li>{profileText(locale, "Measure from the floor to the top of the book spine")}</li>
             </ul>
           </InfoBox>
         </IllustratedMeasurementHelp>
@@ -169,7 +170,7 @@ export function StepBodyMeasurements() {
             variant="warning"
             icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
           >
-            <p className="font-medium">Check your inseam</p>
+            <p className="font-medium">{profileText(locale, "Check your inseam")}</p>
             <p className="mt-1 text-[color:var(--muted-foreground)]">{inseamWarning}</p>
           </InfoBox>
         )}
@@ -181,7 +182,7 @@ export function StepBodyMeasurements() {
           name="weightKg"
           render={({ field }) => (
             <NumberSlider
-              label={`${messages.profile.measurements.weight} (optional)`}
+              label={`${messages.profile.measurements.weight} (${profileText(locale, "optional")})`}
               min={30}
               max={200}
               step={1}
@@ -208,7 +209,7 @@ export function StepBodyMeasurements() {
             variant="warning"
             icon={<AlertCircle className="h-4 w-4 text-[color:var(--warning)]" />}
           >
-            <p className="font-medium">Check your weight</p>
+            <p className="font-medium">{profileText(locale, "Check your weight")}</p>
             <p className="mt-1 text-[color:var(--muted-foreground)]">{weightWarning}</p>
           </InfoBox>
         )}
@@ -218,27 +219,24 @@ export function StepBodyMeasurements() {
         variant="primary"
         icon={<Ruler className="h-4 w-4 text-[color:var(--primary)]" />}
       >
-        <p className="font-medium text-[color:var(--foreground)]">How these measurements shape your fit</p>
+        <p className="font-medium text-[color:var(--foreground)]">{profileText(locale, "How these measurements shape your fit")}</p>
         <div className="mt-2 grid gap-3 text-sm sm:grid-cols-2">
           <div>
-            <p className="font-medium text-[color:var(--foreground)]">Height</p>
+            <p className="font-medium text-[color:var(--foreground)]">{profileText(locale, "Height")}</p>
             <p className="text-[color:var(--muted-foreground)]">
-              Sets the overall frame size range and forms the baseline for reach,
-              stack, and handlebar position calculations.
+              {profileText(locale, "Sets the overall frame size range and forms the baseline for reach, stack, and handlebar position calculations.")}
             </p>
           </div>
           <div>
-            <p className="font-medium text-[color:var(--foreground)]">Inseam</p>
+            <p className="font-medium text-[color:var(--foreground)]">{profileText(locale, "Inseam")}</p>
             <p className="text-[color:var(--muted-foreground)]">
-              The primary driver for saddle height — the most critical fit variable.
-              Also informs crank length and cleat position.
+              {profileText(locale, "The primary driver for saddle height — the most critical fit variable. Also informs crank length and cleat position.")}
             </p>
           </div>
           <div>
-            <p className="font-medium text-[color:var(--foreground)]">Weight (optional)</p>
+            <p className="font-medium text-[color:var(--foreground)]">{profileText(locale, "Weight (optional)")}</p>
             <p className="text-[color:var(--muted-foreground)]">
-              Used to calculate BMI and refine tyre pressure recommendations.
-              Does not affect saddle height or reach calculations.
+              {profileText(locale, "Used to calculate BMI and refine tyre pressure recommendations. Does not affect saddle height or reach calculations.")}
             </p>
           </div>
         </div>

@@ -1,97 +1,43 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "convex/react";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { api } from "../../../convex/_generated/api";
-import { Button, Textarea, useToast } from "@/components/ui";
+import { AutosaveField, AutosaveStatus, Textarea, useAutosave } from "@/components/ui";
+import { autosaveMessages } from "@/i18n/account/autosave";
+import { getBikesAutosaveCopy } from "@/i18n/account/bikesAutosave";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 
-interface BikeNotesEditorProps {
-  bikeId: Id<"bikes">;
-  initialNotes?: string;
+type Props = { bikeId: Id<"bikes">; initialNotes?: string };
+export function BikeNotesEditor(props: Props) {
+  return <Notes key={props.bikeId} {...props} />;
 }
-
-export function BikeNotesEditor({ bikeId, initialNotes }: BikeNotesEditorProps) {
-  const { messages } = useDashboardMessages();
-  const toast = useToast();
-  const updateBike = useMutation(api.bikes.mutations.update);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+function Notes({ bikeId, initialNotes }: Props) {
+  const { locale, messages } = useDashboardMessages();
+  const copy = getBikesAutosaveCopy(locale);
+  const update = useMutation(api.bikes.mutations.update);
   const [value, setValue] = useState(initialNotes ?? "");
-  const [savedValue, setSavedValue] = useState(initialNotes ?? "");
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const nextValue = initialNotes ?? "";
-    setValue(nextValue);
-    setSavedValue(nextValue);
-  }, [initialNotes]);
-
-  const handleSave = async () => {
-    setError(null);
-    setIsSaving(true);
-    try {
-      const nextValue = value.trim();
-      await updateBike({
-        bikeId,
-        notes: nextValue || undefined,
-      });
-      setSavedValue(nextValue);
-      setValue(nextValue);
-      setIsEditing(false);
-      toast.success({ description: messages.common.toasts.bikeNotesSaved });
-    } catch (saveError) {
-      console.error("Failed to save bike notes:", saveError);
-      setError(messages.bikeForm.errors.saveFailed);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  if (!isEditing) {
-    return (
-      <div className="space-y-3">
-        <p className="whitespace-pre-wrap text-sm text-foreground">
-          {savedValue || messages.bikeForm.fields.notes.placeholder}
-        </p>
-        <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
-          {messages.bikeForm.actions.editNotes}
-        </Button>
-      </div>
-    );
-  }
-
+  const autosave = useAutosave({
+    value,
+    debounceMs: 800,
+    validate: (next) => (next.length > 500 ? copy.length : null),
+    onSave: async (next) => {
+      await update({ bikeId, notes: next.trim() });
+    },
+  });
   return (
-    <div className="space-y-3">
+    <AutosaveField flush={autosave.flush} className="space-y-3">
       <Textarea
         label={messages.bikeForm.fields.notes.label}
+        aria-label={messages.bikeForm.fields.notes.label}
         value={value}
-        onChange={(event) => {
-          setError(null);
-          setValue(event.target.value.slice(0, 500));
-        }}
+        onChange={(event) => setValue(event.target.value)}
+        maxLength={500}
         placeholder={messages.bikeForm.fields.notes.placeholder}
         helperText={`${messages.bikeForm.fields.notes.helper} ${value.length}/500`}
-        error={error ?? undefined}
       />
-      <div className="flex flex-wrap gap-3">
-        <Button size="sm" onClick={() => void handleSave()} isLoading={isSaving}>
-          {messages.bikeForm.actions.saveNotes}
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            setValue(savedValue);
-            setIsEditing(false);
-            setError(null);
-          }}
-          disabled={isSaving}
-        >
-          {messages.common.cancel}
-        </Button>
-      </div>
-    </div>
+      <AutosaveStatus {...autosave} messages={autosaveMessages[locale]} onRetry={autosave.retry} />
+    </AutosaveField>
   );
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { useSharedUiMessages } from "@/i18n/useSharedUiMessages";
+
 import { type ReactNode } from "react";
 import { XIcon } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -27,6 +29,7 @@ export function AccessibleDialog({
   onClose,
   children,
 }: AccessibleDialogProps) {
+  const copy = useSharedUiMessages();
   if (typeof window === "undefined") {
     if (!open) {
       return null;
@@ -45,12 +48,12 @@ export function AccessibleDialog({
           <DialogHeader className="relative pr-10">
             <button
               type="button"
-              aria-label="Close dialog"
+              aria-label={copy.closeDialog}
               onClick={onClose}
               className="absolute right-0 top-0 inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-md)] text-[color:var(--muted-foreground)] transition-colors hover:bg-[color:var(--accent)] hover:text-[color:var(--foreground)]"
             >
               <XIcon className="h-4 w-4" />
-              <span className="sr-only">Close dialog</span>
+              <span className="sr-only">{copy.closeDialog}</span>
             </button>
             <h2
               className="text-lg font-semibold tracking-tight text-[color:var(--foreground)]"
@@ -97,7 +100,7 @@ export function AccessibleDialog({
             }
           >
             <XIcon className="h-4 w-4" />
-            <span className="sr-only">Close dialog</span>
+            <span className="sr-only">{copy.closeDialog}</span>
           </DialogClose>
           <DialogTitle className="text-lg font-semibold tracking-tight text-[color:var(--foreground)]">
             {title}

@@ -84,7 +84,7 @@ export const methodsCopy: Record<
   },
   nl: {
     metadata: {
-      title: "Bikefit-methodes uitgelegd | BestBikeFit4U Science",
+      title: "Bikefit-methodes uitgelegd | BestBikeFit4U Wetenschap",
       description:
         "Leer hoe veelgebruikte bikefit-methodes zoals LeMond, KOPS en dynamische " +
         "fitsystemen werken, waar elke methode helpt en wanneer je beter een gids " +
@@ -99,7 +99,7 @@ export const methodsCopy: Record<
         "context. Geen enkele methode lost alles op zichzelf op, en daarom is de " +
         "gidsenbibliotheek belangrijk.",
       chips: ["LeMond / Hamley", "KOPS", "Dynamische fit"],
-      caption: "Verschillende methodes beantwoorden verschillende vragen binnen dezelfde " + "fitflow.",
+      caption: "Verschillende methodes beantwoorden verschillende vragen binnen hetzelfde " + "afstelproces.",
       labels: ["Basisgeometrie", "Referentie voor zadelpositie", "Dynamische bewegingscontrole"],
     },
     section: {
@@ -125,13 +125,13 @@ export const methodsCopy: Record<
         limit: "Geen compleet prestatiemodel",
       },
       {
-        name: "Dynamische / motion-capture fit",
+        name: "Dynamische fit met bewegingsregistratie",
         focus: "Gewrichtshoeken onder pedaalbelasting",
         strength: "Rijke bewegingsdata",
         limit: "Vraagt apparatuur en specialistische tijd",
       },
     ],
-    linksTitle: "Gerelateerde gidsen en tools",
+    linksTitle: "Gerelateerde gidsen en hulpmiddelen",
     links: [
       { href: "/calculators/bike-fit", label: "Bike fit calculator" },
       { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
@@ -260,7 +260,7 @@ export const engineCopy: Record<
   },
   nl: {
     metadata: {
-      title: "Bikefit berekeningsengine | BestBikeFit4U Science",
+      title: "Bikefit-rekenmodel | BestBikeFit4U Wetenschap",
       description:
         "Bekijk hoe BestBikeFit4U lichaamsmaten, fitmethodes en rijcontext " +
         "combineert om zadelhoogte, reach en praktische vervolgstappen te berekenen.",
@@ -273,20 +273,20 @@ export const engineCopy: Record<
     },
     hero: {
       eyebrow: "Wetenschap",
-      title: "Hoe de bikefit berekeningsengine werkt",
+      title: "Hoe het bikefit-rekenmodel werkt",
       description:
-        "De berekeningsengine vertaalt lichaamsmaten, fietstype en fitprioriteiten " +
+        "Het rekenmodel vertaalt lichaamsmaten, fietstype en fitprioriteiten " +
         "naar praktische afstelbegeleiding. Het doel is niet één perfecte formule, " +
         "maar een betrouwbare beslisroute naar betere zadelhoogte, reach en " +
         "cockpitbalans.",
-      chips: ["Lichaamsmaten", "Fitmethodes", "Contextafhankelijke output"],
-      caption: "Metingen worden pas waardevol wanneer de engine ze omzet in echte " + "afstelprioriteiten.",
+      chips: ["Lichaamsmaten", "Fitmethodes", "Persoonlijke uitkomsten"],
+      caption: "Metingen worden pas waardevol wanneer het rekenmodel ze omzet in echte " + "afstelprioriteiten.",
       labels: ["Zadelbasis", "Reach-logica", "Praktische vervolgstap"],
     },
     sections: [
       {
-        eyebrow: "Input",
-        title: "Waar de engine eerst naar kijkt",
+        eyebrow: "Invoer",
+        title: "Waar het rekenmodel eerst naar kijkt",
         description:
           "De calculator start met meetbare lichaamsmaten en voegt daarna fitcontext " +
           "toe, zodat de uitkomst praktisch blijft in plaats van puur theoretisch.",
@@ -315,7 +315,7 @@ export const engineCopy: Record<
         eyebrow: "Uitkomstlogica",
         title: "Waarom de uitkomst meer is dan één getal",
         description:
-          "Zadelhoogte is alleen het begin. De engine verbindt die basis met reach, " +
+          "Zadelhoogte is alleen het begin. Het rekenmodel verbindt die basis met reach, " +
           "ondersteuning en de meest nuttige volgende aanpassing.",
         cards: [
           {
@@ -333,13 +333,13 @@ export const engineCopy: Record<
           {
             title: "Prioriteit voor de volgende stap",
             description:
-              "De engine stuurt je door naar de volgende relevante pagina, calculator of " +
-              "gids in plaats van je met alleen een statische output achter te laten.",
+              "Het rekenmodel stuurt je door naar de volgende relevante pagina, calculator of " +
+              "gids. Zo weet je wat je met de uitkomsten kunt doen.",
           },
         ],
       },
     ],
-    linksTitle: "Gerelateerde calculators en science-pagina's",
+    linksTitle: "Gerelateerde calculators en wetenschappelijke uitleg",
     links: [
       { href: "/calculators/bike-fit", label: "Bike fit calculator" },
       { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
@@ -432,7 +432,7 @@ export const stackCopy: Record<
   },
   nl: {
     metadata: {
-      title: "Stack en reach uitgelegd | BestBikeFit4U Science",
+      title: "Stack en reach uitgelegd | BestBikeFit4U Wetenschap",
       description:
         "Leer hoe stack en reach werken, waarom ze beter zijn dan framematen op " +
         "basis van zitbuislabels en hoe je ze gebruikt voor framevergelijking.",

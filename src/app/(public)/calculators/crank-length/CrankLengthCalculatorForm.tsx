@@ -1,7 +1,10 @@
 "use client";
 
+import type { CalculatorValues } from "../../../../../convex/calculatorStates/validators";
+
 import { useState } from "react";
 import Link from "next/link";
+import { useCalculatorValuesChange } from "@/components/calculators/useCalculatorValuesChange";
 import {
   AdjustOrder,
   Button,
@@ -24,7 +27,10 @@ interface CrankLengthCalculatorFormProps {
   locale: Locale;
   copy: CrankLengthCopy;
   initialInseamCm?: number;
+  initialValues?: CalculatorValues<"crank-length">;
+  onValuesChange?: (values: CalculatorValues<"crank-length">) => void;
   initialCategory: BikeCategory;
+  continueHref?: string;
 }
 
 export function CrankLengthCalculatorForm({
@@ -32,6 +38,9 @@ export function CrankLengthCalculatorForm({
   copy,
   initialInseamCm,
   initialCategory,
+  continueHref = "/login",
+  initialValues,
+  onValuesChange,
 }: CrankLengthCalculatorFormProps) {
   const validInitial =
     initialInseamCm !== undefined &&
@@ -39,11 +48,12 @@ export function CrankLengthCalculatorForm({
     initialInseamCm >= 55 &&
     initialInseamCm <= 105;
   const [inseamCm, setInseamCm] = useState(
-    validInitial ? Math.round(initialInseamCm * 10) / 10 : 84,
+    initialValues?.inseamCm ?? (validInitial ? Math.round(initialInseamCm * 10) / 10 : 84),
   );
-  const [category, setCategory] = useState(initialCategory);
-  const [edited, setEdited] = useState(false);
+  const [category, setCategory] = useState(initialValues?.category ?? initialCategory);
+  const [edited, setEdited] = useState(initialValues?.confirmed ?? false);
   const hasPersonalInput = validInitial || edited;
+  useCalculatorValuesChange({ inseamCm, category, confirmed: hasPersonalInput }, onValuesChange);
   const resultLabel = hasPersonalInput ? copy.result : copy.exampleResult;
   const result = runCrankLengthCalculation({
     inseamCm,
@@ -213,7 +223,7 @@ export function CrankLengthCalculatorForm({
             <p className="mt-3 text-sm text-[var(--bbf-op-donker)]">{copy.saveHint}</p>
             <Button
               className="mt-5 bg-[var(--bbf-lime)] text-[var(--bbf-inkt)] hover:bg-[var(--bbf-lime-zacht)]"
-              render={<Link href={withLocalePrefix("/login", locale)} />}
+              render={<Link href={withLocalePrefix(continueHref, locale)} />}
             >
               {copy.save}
             </Button>

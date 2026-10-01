@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { query } from "../_generated/server";
-import { requireUserId } from "../lib/authz";
+import { requireBikeOwner, requireUserId } from "../lib/authz";
 
 export const listGearingSessions = query({
   args: { limit: v.optional(v.number()), bikeId: v.optional(v.id("bikes")) },
@@ -33,25 +33,10 @@ export const getLatestGearingSession = query({
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
 
-    if (args.bikeId) {
-      const sessions = await ctx.db
-        .query("gearingSessions")
-        .withIndex("by_user_bike_session_type", (q) =>
-          q.eq("userId", userId).eq("bikeId", args.bikeId).eq("sessionType", "dashboard")
-        )
-        .order("desc")
-        .take(1);
-      return sessions[0] ?? null;
-    }
-
-    const sessions = await ctx.db
-      .query("gearingSessions")
-      .withIndex("by_user_session_type", (q) =>
-        q.eq("userId", userId).eq("sessionType", "dashboard")
-      )
-      .order("desc")
-      .take(1);
-
-    return sessions[0] ?? null;
+    if (args.bikeId) await requireBikeOwner(ctx, args.bikeId);
+    return await ctx.db.query("gearingSessions")
+      .withIndex("by_user_bike_session_type", (q) =>
+        q.eq("userId", userId).eq("bikeId", args.bikeId).eq("sessionType", "dashboard"))
+      .order("desc").first();
   },
 });

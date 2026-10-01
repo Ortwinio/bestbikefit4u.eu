@@ -16,7 +16,7 @@ export const BRAND = {
     appIcon192: "/brand/favicon/android-chrome-192.png",
     appIconMaskable: "/brand/favicon/maskable-512.png",
     favicon: "/brand/favicon/favicon.ico",
-    socialImage: "/brand/social/og-image-1200x630.png",
+    socialImage: "/og/brand/social/og-image-1200x630.jpg",
     appIconPng: "/brand/favicon/android-chrome-512.png",
   },
 } as const;
