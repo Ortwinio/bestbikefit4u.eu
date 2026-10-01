@@ -9,6 +9,17 @@ import { useImageUpload } from "@/hooks/useImageUpload";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { cn } from "@/utils/cn";
 
+/** Only show stored (https) or just-picked (blob) images; anything else falls back to the default avatar. */
+function toSafeImageUrl(candidate: string | null | undefined): string | null {
+  if (!candidate) return null;
+  try {
+    const parsed = new URL(candidate);
+    return parsed.protocol === "https:" || parsed.protocol === "blob:" ? parsed.href : null;
+  } catch {
+    return null;
+  }
+}
+
 type ProfilePhotoUploadProps = {
   source?: string;
   size?: "sidebar" | "settings" | "hero";
@@ -32,7 +43,7 @@ export function ProfilePhotoUpload({
     }
   );
   const candidateUrl = resolvedUrl ?? optimisticUrl;
-  const displayUrl = candidateUrl && /^(https:\/\/|blob:)/.test(candidateUrl) ? candidateUrl : null;
+  const displayUrl = toSafeImageUrl(candidateUrl);
 
   const sizeClasses = useMemo(() => {
     switch (size) {
