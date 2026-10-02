@@ -39,7 +39,10 @@ export function changedFields(document, existing) {
     "lastUpdatedAt", "status", "importStatus"]);
   const next = { ...Object.fromEntries(Object.entries(document).filter(([key]) => !ignored.has(key))),
     status: "published", importStatus: "44b" };
-  return Object.keys(next).filter((key) => JSON.stringify(next[key]) !== JSON.stringify(existing?.[key])).sort();
+  // Convex returns object keys sorted, so compare independent of key order.
+  const stable = (value) => JSON.stringify(value, (_key, item) => (item && typeof item === "object" && !Array.isArray(item)
+    ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => a.localeCompare(b))) : item));
+  return Object.keys(next).filter((key) => stable(next[key]) !== stable(existing?.[key])).sort();
 }
 
 export async function importDocuments(documents, run, log, save, actorId) {
@@ -107,12 +110,22 @@ async function main() {
     if (offline || (dryRun && name !== "guides/queries:getGuideImportRecord")) {
       throw new Error("Read-only guard rejected the Convex call");
     }
-    try {
-      return JSON.parse(execFileSync("npx", ["convex", "run", name, JSON.stringify(payload),
-        ...targetArgs, "--codegen", "disable"], { encoding: "utf8", maxBuffer: 8 * 1024 * 1024,
-        stdio: ["ignore", "pipe", "pipe"], timeout: 120000 }));
-    } catch {
-      throw new Error(`Convex CLI call failed: ${name}; stopped without logging credentials or document text`);
+    // The CLI occasionally hangs; only the read-only query is safe to retry.
+    const attempts = name === "guides/queries:getGuideImportRecord" ? 3 : 1;
+    for (let attempt = 1; ; attempt++) {
+      try {
+        const output = execFileSync("node_modules/.bin/convex", ["run", name, JSON.stringify(payload),
+          ...targetArgs, "--codegen", "disable"], { encoding: "utf8", maxBuffer: 8 * 1024 * 1024,
+          stdio: ["ignore", "pipe", "pipe"], timeout: 60000, killSignal: "SIGKILL" });
+        // `convex run` prints nothing when a function returns null (e.g. a guide not yet in the CMS).
+        return output.trim() === "" ? null : JSON.parse(output);
+      } catch (error) {
+        if (attempt < attempts && error?.code === "ETIMEDOUT") continue;
+        // Only process metadata, never the CLI's output or the document text.
+        const reason = error instanceof SyntaxError ? "unparseable output"
+          : `status ${error?.status ?? "?"}, signal ${error?.signal ?? "none"}, ${error?.code ?? ""}`;
+        throw new Error(`Convex CLI call failed: ${name} (${reason}); stopped without logging credentials or document text`);
+      }
     }
   };
   const logPath = "plans/redesign-canvas/audit/49-import-log.json";
