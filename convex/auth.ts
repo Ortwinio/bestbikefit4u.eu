@@ -4,6 +4,8 @@ import { ConvexCredentials } from "@convex-dev/auth/providers/ConvexCredentials"
 import Google from "@auth/core/providers/google";
 import { Resend } from "resend";
 import { BRAND } from "./lib/brand";
+import { renderLoginCode } from "./emails/templates";
+import { loginEmailLocale } from "./emails/locale";
 import type { Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 import {
@@ -116,7 +118,8 @@ const EmailProvider = Email({
     {
       identifier: email,
       token,
-    }: { identifier: string; token: string; expires: Date },
+      url,
+    }: { identifier: string; token: string; expires: Date; url?: string },
     ctx?: unknown
   ) {
     // Validate email format
@@ -138,23 +141,14 @@ const EmailProvider = Email({
 
     // Production: Send via Resend
     const resend = new Resend(process.env.AUTH_RESEND_KEY);
+    const rendered = renderLoginCode({ code: token }, loginEmailLocale(url ?? ""));
 
     const { error } = await resend.emails.send({
       from: process.env.AUTH_EMAIL_FROM || BRAND.authEmailFrom,
       to: [email],
-      subject: `Your ${BRAND.name} Login Code`,
-      html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">${BRAND.name}</h2>
-          <p>Your login code is:</p>
-          <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
-            <span style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #1f2937;">${token}</span>
-          </div>
-          <p style="color: #6b7280; font-size: 14px;">
-            This code expires in 15 minutes. If you didn't request this code, you can safely ignore this email.
-          </p>
-        </div>
-      `,
+      subject: rendered.subject,
+      html: rendered.html,
+      text: rendered.text,
     });
 
     if (error) {

@@ -1,0 +1,46 @@
+import type {
+  ResultsSummaryData, FitReportData, WinbackData, ProExplainerData, Day1TipsData, EmailLocale,
+} from "./index";
+
+/** Fixed, fictional preview values from SPEC §7. No sender or real recipient is involved. */
+export const sampleFit = {
+  firstName: "Lisa",
+  bikeName: "Canyon Endurace",
+  saddleHeightMm: 754,
+  testRange: { min: 731, max: 774 },
+  saddleSetbackMm: 49,
+  handlebarDropMm: 98,
+  stemLengthMm: 100,
+  stemAngleRecommendation: "−6°",
+  crankLengthMm: 172.5,
+  handlebarWidthMm: 420,
+  frameSize: "XL",
+  confidenceScore: 90,
+};
+export function sampleData(locale: EmailLocale) {
+  const actionUrl = `https://bestbikefit4u.eu/${locale}/fit`;
+  const preferences = {
+    unsubscribeUrl: `https://bestbikefit4u.eu/${locale}/email-preferences?token=preview-only`,
+    preferencesUrl: `https://bestbikefit4u.eu/${locale}/settings`,
+  };
+  const personal = { firstName: "Lisa", actionUrl };
+  return {
+    loginCode: { code: "482915" },
+    resultsSummary: { ...sampleFit, actionUrl } satisfies ResultsSummaryData,
+    fitReport: { ...sampleFit, actionUrl } satisfies FitReportData,
+    fitPassWelcome: personal,
+    caseStudyLead: {
+      name: "Lisa Jansen", email: "lisa@example.test", ridingGoal: "Comfortabel langere ritten fietsen",
+      painSummary: "Na een lange rit voel ik mijn onderrug.", sourcePath: "/nl/over-ons",
+      createdAt: Date.UTC(2026, 1, 15, 12),
+    },
+    caseStudyConfirmation: { name: "Lisa Jansen", actionUrl },
+    fitReminder: { ...personal, ...preferences },
+    upgradeNudge: { ...personal, ...preferences },
+    winback: {
+      ...sampleFit, ...preferences, actionUrl, recordedAt: Date.UTC(2026, 1, 15, 12),
+    } satisfies WinbackData,
+    proExplainer: { ...sampleFit, ...preferences, actionUrl } satisfies ProExplainerData,
+    day1Tips: { ...personal, ...preferences, hasFit: false } satisfies Day1TipsData,
+  };
+}

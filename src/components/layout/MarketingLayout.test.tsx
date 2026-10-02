@@ -16,7 +16,7 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));
 const auth = vi.hoisted(() => ({ isAuthenticated: false }));
-vi.mock("convex/react", () => ({ useConvexAuth: () => auth }));
+vi.mock("convex/react", () => ({ useConvexAuth: () => auth, useMutation: () => vi.fn() }));
 vi.mock("@convex-dev/auth/react", () => ({ useAuthActions: () => ({ signOut: vi.fn() }) }));
 vi.mock("@/components/branding", () => ({
   BrandLogo: ({ href }: { href: string }) => <a href={href}>BestBikeFit4U</a>,

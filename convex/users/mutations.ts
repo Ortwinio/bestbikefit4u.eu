@@ -2,6 +2,32 @@ import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 import { requireUserId } from "../lib/authz";
 
+export const setLocale = mutation({
+  args: { locale: v.union(v.literal("nl"), v.literal("en")) },
+  returns: v.null(),
+  handler: async (ctx, { locale }) => {
+    const userId = await requireUserId(ctx);
+    await ctx.db.patch(userId, { locale });
+    return null;
+  },
+});
+
+export const setLocaleIfMissing = mutation({
+  args: { locale: v.union(v.literal("nl"), v.literal("en")) },
+  returns: v.null(),
+  handler: async (ctx, { locale }) => {
+    const userId = await requireUserId(ctx);
+    const user = await ctx.db.get(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    if (user.locale === undefined) {
+      await ctx.db.patch(userId, { locale });
+    }
+    return null;
+  },
+});
+
 export const updateProfile = mutation({
   args: {
     profile_image_url: v.optional(v.string()),

@@ -4,9 +4,14 @@ const route = vi.hoisted(() => ({ path: "/nl/calculators/saddle-height" }));
 vi.mock("next/navigation", () => ({
   usePathname: () => route.path,
   useSearchParams: () => new URLSearchParams(),
+  useRouter: () => ({ push: vi.fn() }),
 }));
 vi.mock("@/components/providers/ThemeProvider", () => ({
   useTheme: () => ({ resolvedTheme: "light" }),
+}));
+vi.mock("convex/react", () => ({
+  useConvexAuth: () => ({ isAuthenticated: false, isLoading: false }),
+  useMutation: () => vi.fn(),
 }));
 import { ConfiguratorHeaderSwitch } from "./ConfiguratorHeaderSwitch";
 function markup() {

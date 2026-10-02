@@ -17,7 +17,7 @@ vi.mock("resend", () => ({
 type EmailOptions = {
   generateVerificationToken: () => Promise<string>;
   sendVerificationRequest: (
-    request: { identifier: string; token: string; expires: Date },
+    request: { identifier: string; token: string; expires: Date; url?: string },
     ctx: { runMutation: ReturnType<typeof vi.fn> }
   ) => Promise<void>;
   authorize: (params: Record<string, string>, account: { providerAccountId: string }) => Promise<void>;
@@ -54,6 +54,20 @@ afterEach(() => {
 const request = { identifier: "rider@example.com", token: "ABCDEFG", expires: new Date() };
 
 describe("email registration and delivery", () => {
+  it.each([
+    ["https://bestbikefit4u.eu/nl/login?code=ABCDEFG", "nl", "inlogcode"],
+    ["https://bestbikefit4u.eu/en/login?code=ABCDEFG", "en", "login code"],
+    ["https://bestbikefit4u.eu/?redirectTo=%2Fnl%2Fdashboard", "nl", "inlogcode"],
+  ])("renders the requested login language from %s", async (url, locale, subjectWord) => {
+    const email = (await config()).providers[0].options;
+    await email.sendVerificationRequest({ ...request, url }, { runMutation: vi.fn() });
+    expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({
+      subject: expect.stringContaining(subjectWord), html: expect.stringContaining(`lang="${locale}"`),
+      text: expect.stringContaining(request.token),
+    }));
+    expect(sendEmail.mock.calls[0][0]).not.toHaveProperty("headers");
+  });
+
   it("fails closed without a Resend key, without logging a code or claiming delivery", async () => {
     vi.stubEnv("AUTH_RESEND_KEY", "");
     const log = vi.spyOn(console, "log");

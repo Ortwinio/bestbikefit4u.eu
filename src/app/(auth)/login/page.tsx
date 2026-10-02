@@ -357,7 +357,7 @@ export default function LoginPage() {
     try {
       // Preserve case for existing case-sensitive Convex account identifiers.
       const submittedEmail = email.trim();
-      await signIn("resend", { email: submittedEmail });
+      await signIn("resend", { email: submittedEmail, locale, redirectTo: withLocalePrefix("/dashboard", locale) });
       setEmail(submittedEmail);
       void logMarketingEvent({
         eventType: "login_code_requested",
@@ -393,7 +393,7 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const result = await signIn("resend", { email, code });
+      const result = await signIn("resend", { email, code, locale, redirectTo: withLocalePrefix("/dashboard", locale) });
       if (!result.signingIn) {
         throw new Error("Verification did not establish a session.");
       }
@@ -429,7 +429,7 @@ export default function LoginPage() {
     setResendSuccess(false);
 
     try {
-      await signIn("resend", { email });
+      await signIn("resend", { email, locale, redirectTo: withLocalePrefix("/dashboard", locale) });
       void logMarketingEvent({
         eventType: "login_code_resent",
         locale,
