@@ -228,6 +228,11 @@ export default defineSchema({
     name: v.optional(v.string()),
     isAnonymous: v.optional(v.boolean()),
     // App-specific fields
+    locale: v.optional(v.union(v.literal("nl"), v.literal("en"))),
+    emailPreferences: v.optional(v.object({
+      service: v.boolean(),
+      marketing: v.boolean(),
+    })),
     tokenIdentifier: v.optional(v.string()),
     createdAt: v.optional(v.number()),
     lastLoginAt: v.optional(v.number()),
@@ -2300,6 +2305,7 @@ export default defineSchema({
 
   lifecycleEmailLog: defineTable({
     userId: v.id("users"),
+    locale: v.optional(v.union(v.literal("nl"), v.literal("en"))),
     emailType: v.string(), // e.g. "fit_reminder", "results_recap", "upgrade_nudge", "winback"
     sentAt: v.number(),    // Date.now()
     sessionId: v.optional(v.id("fitSessions")),

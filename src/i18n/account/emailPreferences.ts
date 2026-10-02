@@ -1,0 +1,41 @@
+const en = {
+  title: "Email preferences",
+  description: "Choose which emails you receive from BestBikeFit4U.",
+  service: "Fit tips and reminders",
+  serviceDescription: "Measuring tips, fit reminders and help using your fit numbers.",
+  marketing: "News and offers",
+  marketingDescription: "Product updates, Pro offers and reminders to revisit your fit.",
+  transactional: "You will still receive login codes, requested fit reports and essential account emails.",
+  save: "Save preferences",
+  saved: "Your email preferences have been saved.",
+  loading: "Loading email preferences…",
+  error: "This link is invalid or expired, or preferences are temporarily unavailable. Sign in to manage your preferences, or try again later.",
+  login: "Sign in",
+  loginRequired: "Sign in to manage your email preferences.",
+  unsubscribe: "Unsubscribe",
+  confirm: "Confirm that you no longer want to receive this category of email:",
+  unsubscribed: "You have been unsubscribed from this category of email.",
+  settings: "Account settings",
+};
+
+const nl: Record<keyof typeof en, string> = {
+  title: "E-mailvoorkeuren",
+  description: "Kies welke e-mails je van BestBikeFit4U ontvangt.",
+  service: "Fittips en herinneringen",
+  serviceDescription: "Meettips, fitherinneringen en hulp bij het gebruiken van je fitwaarden.",
+  marketing: "Nieuws en aanbiedingen",
+  marketingDescription: "Productnieuws, Pro-aanbiedingen en herinneringen om je fit opnieuw te bekijken.",
+  transactional: "Je blijft inlogcodes, aangevraagde fitrapporten en noodzakelijke accountmails ontvangen.",
+  save: "Voorkeuren opslaan",
+  saved: "Je e-mailvoorkeuren zijn opgeslagen.",
+  loading: "E-mailvoorkeuren laden…",
+  error: "Deze link is ongeldig of verlopen, of je voorkeuren zijn tijdelijk niet beschikbaar. Log in om je voorkeuren te beheren of probeer het later opnieuw.",
+  login: "Inloggen",
+  loginRequired: "Log in om je e-mailvoorkeuren te beheren.",
+  unsubscribe: "Afmelden",
+  confirm: "Bevestig dat je deze categorie e-mails niet meer wilt ontvangen:",
+  unsubscribed: "Je bent afgemeld voor deze categorie e-mails.",
+  settings: "Accountinstellingen",
+};
+
+export const emailPreferencesCopy = { en, nl };

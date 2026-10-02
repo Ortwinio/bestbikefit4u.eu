@@ -21,6 +21,7 @@ import {
   LoadingState,
 } from "@/components/ui";
 import { toolsSettings } from "@/i18n/account/toolsSettings";
+import { emailPreferencesCopy } from "@/i18n/account/emailPreferences";
 import { StravaBikeImportSection } from "@/components/settings/StravaBikeImportSection";
 import { IPhoneAppInstallCard } from "@/components/settings/IPhoneAppInstallCard";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
@@ -228,6 +229,9 @@ export default function SettingsPage() {
                 </div>
               </div>
               <SettingsNameField key={user?._id} initialValue={editableDisplayName} />
+              <Button variant="link" {...linkButtonProps(withLocalePrefix("/email-preferences", locale))}>
+                {emailPreferencesCopy[locale].title}
+              </Button>
               <dl className="divide-y divide-[color:var(--border)]">
                 <StatRow label={messages.settings.account.type} value={accountType} />
               </dl>

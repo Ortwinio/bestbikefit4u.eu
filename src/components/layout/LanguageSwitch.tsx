@@ -5,6 +5,7 @@ import type { Locale } from "@/i18n/config";
 import { extractLocaleFromPathname } from "@/i18n/navigation";
 import { buildLocaleSwitchHref } from "@/i18n/switchHref";
 import { cn } from "@/utils/cn";
+import { useLocaleSwitch } from "./useLocaleSwitch";
 
 type LanguageSwitchProps = {
   locale: Locale;
@@ -16,6 +17,7 @@ type LanguageSwitchProps = {
 };
 
 export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
+  const switchLocale = useLocaleSwitch();
   const pathname = usePathname() ?? "/";
   const activeLocale = extractLocaleFromPathname(pathname) ?? locale;
   const searchParams = useSearchParams();
@@ -46,6 +48,7 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
     >
       <a
         href={enHref}
+        onClick={(event) => switchLocale(event, "en")}
         aria-label={labels.english}
         aria-current={activeLocale === "en" ? "page" : undefined}
         className={cn(
@@ -64,6 +67,7 @@ export function LanguageSwitch({ locale, labels }: LanguageSwitchProps) {
       </a>
       <a
         href={nlHref}
+        onClick={(event) => switchLocale(event, "nl")}
         aria-label={labels.dutch}
         aria-current={activeLocale === "nl" ? "page" : undefined}
         className={cn(

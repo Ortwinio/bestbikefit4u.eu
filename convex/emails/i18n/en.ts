@@ -1,0 +1,230 @@
+import type { EmailCopy } from "./nl";
+
+/** Literal customer copy from plans/emails-bilingual/SPEC.md, section 5. */
+export const en = {
+  common: {
+    greeting: "Hi {firstName},",
+    genericGreeting: "Hi,",
+    signoff: "Enjoy the ride,",
+    team: "Team BestBikeFit4U",
+    unsubscribe: "Unsubscribe",
+    preferences: "Email preferences",
+    labels: {
+      saddleHeight: "Saddle height",
+      setback: "Saddle setback",
+      drop: "Drop",
+      stemShort: "Stem",
+      stem: "Stem (length · angle)",
+      crankLength: "Crank length",
+      handlebarWidth: "Handlebar width",
+      stack: "Stack",
+      reach: "Reach",
+      topTube: "Effective top tube",
+    },
+    footer: {
+      transactional: "You receive this email because of your request at BestBikeFit4U.",
+      service: "You receive this email because you have a BestBikeFit4U account.",
+      internal: "Internal notification about a new rider story.",
+    },
+    reply: "Questions? Just reply, a real person reads every email.",
+  },
+  loginCode: {
+    subject: "{code} is your BestBikeFit4U login code",
+    preheader: "Valid for 15 minutes. Your bikes are waiting.",
+    heading: "Your login code",
+    body: "It's valid for 15 minutes. Your bikes and fit numbers are ready for you.",
+    small: "Didn't request this? Ignore this email, nothing will happen.",
+  },
+  resultsSummary: {
+    subject: "Your fit is ready: saddle at {saddleHeight} mm",
+    preheader: "Plus what to adjust first.",
+    eyebrow: "YOUR FIT IS READY",
+    heading: "Your starting point is ready",
+    caption: "saddle height",
+    range: "test range {min}–{max} mm",
+    intro: "here are your key numbers for your {bike}:",
+    introWithoutBike: "here are your key numbers:",
+    body: "Your report has the rest, plus your step-by-step plan: what to adjust first and how to " +
+      "test it. One change at a time, and you'll feel the difference within a few rides.",
+    button: "See my step-by-step plan",
+  },
+  fitReport: {
+    subject: "Your fit report: frame size {frameSize}",
+    preheader: "All your numbers in one place, handy for your bike shop.",
+    eyebrow: "YOUR FIT REPORT",
+    heading: "Frame size {frameSize}",
+    confidence: "We're {confidence}% confident in this size",
+    intro: "here's your fit report. Keep it, or forward it to your bike shop.",
+    valuesHeading: "Your fit numbers",
+    geometryHeading: "Frame geometry",
+    tipsHeading: "Tips for you",
+    button: "Open my step-by-step plan",
+    version: "Calculated with version {version}",
+    subjectWithoutFrame: "Your fit report",
+    headingWithoutFrame: "Your fit report",
+  },
+  fitPassWelcome: {
+    subject: "Your Fit Pass is active. Here's what you can do now",
+    preheader: "Your PDF, your plan and all your bikes.",
+    eyebrow: "THANK YOU, {firstName}",
+    eyebrowWithoutName: "THANK YOU",
+    heading: "Your Fit Pass is active",
+    benefits: [
+      {
+        title: "Your report as a PDF:",
+        text: "print it or take it to your bike shop.",
+      },
+      {
+        title: "Your complete plan:",
+        text: "every adjustment in the right order, with how to test it.",
+      },
+      {
+        title: "Unlimited bikes and fit sessions:",
+        text: "including a setup for your second bike.",
+      },
+    ],
+    button: "Download my PDF",
+  },
+  caseStudyLead: {
+    subject: "Nieuwe aanmelding voor een praktijkverhaal: {name}",
+    preheader: "Nieuwe aanmelding voor een praktijkverhaal",
+    heading: "Nieuwe aanmelding voor een praktijkverhaal",
+    labels: {
+      name: "Naam",
+      email: "E-mail",
+      ridingGoal: "Ervaring",
+      painSummary: "Samenvatting",
+      sourcePath: "Bron",
+      createdAt: "Ingediend",
+    },
+  },
+  caseStudyConfirmation: {
+    subject: "Thanks! We'll email you about your story",
+    preheader: "3 to 5 short questions within a few days.",
+    heading: "Thanks for sharing your story",
+    intro: "great that you want to share your story. Here's how it works:",
+    benefits: [
+      "Within a few days we'll email you 3 to 5 short questions.",
+      "Everything happens by email: no calls, no video.",
+      "We publish nothing without your separate consent.",
+    ],
+    tip: "Tip: add your current setup in the app, so your before and after numbers are ready.",
+    button: "View my setup",
+    small: "We only use your details for this. You can stop at any time: just reply to this email.",
+  },
+  fitReminder: {
+    subject: "Your fit in 10 minutes, with just a tape measure",
+    preheader: "Your saddle height and frame size in millimetres.",
+    eyebrow: "YOUR ACCOUNT IS READY",
+    heading: "Your fit isn't yet. It takes 10 minutes",
+    intro: "this is all you need:",
+    requirements: [
+      "Your height (in centimetres, no shoes)",
+      "Your inseam (a tape measure and a book will do).",
+    ],
+    benefitsHeading: "What you get back:",
+    benefits: [
+      "Your saddle height, with a test range",
+      "Your handlebar position: reach and drop",
+      "The right stem length",
+      "Your frame size",
+    ],
+    button: "Start my fit",
+  },
+  upgradeNudge: {
+    subject: "Your fit on paper, and for all your bikes",
+    preheader: "Pro: €9 per month, cancel any month.",
+    heading: "Get more from your fit",
+    intro: "your fit numbers are ready. Pro adds:",
+    benefits: [
+      {
+        title: "A PDF of your report",
+        text: "(to take to your bike shop)",
+      },
+      {
+        title: "All your bikes",
+        text: "(a separate setup for your road bike and your gravel bike)",
+      },
+      {
+        title: "Your report in your inbox",
+        text: "(whenever you like).",
+      },
+    ],
+    cancel: "cancel any time",
+    button: "See what Pro gives you",
+  },
+  winback: {
+    subject: "Is your fit still right?",
+    preheader: "New bike or a few kilos difference? Check in 5 minutes.",
+    eyebrow: "QUICK CHECK",
+    heading: "Is your fit still right?",
+    intro: "a new bike, new shoes or a few kilos difference often changes your ideal position more " +
+      "than you'd think.",
+    valuesHeading: "Your previous numbers",
+    recorded: "Recorded on {date} for your {bike}.",
+    recordedWithoutBike: "Recorded on {date}.",
+    body: "A new session shows in 5 minutes whether they still fit.",
+    button: "Check my numbers",
+    recordedWithoutDate: "For your {bike}.",
+  },
+  proExplainer: {
+    subject: "How to get the most from your fit numbers",
+    preheader: "Three numbers, three tips. A two-minute read.",
+    heading: "How to get the most from your fit numbers",
+    intro: "three tips for your key numbers:",
+    tips: [
+      "Saddle height is your starting point. Ride a few times before adjusting further.",
+      "Setback sets where your knee sits over the pedal, matched to your riding style.",
+      "Drop makes you faster (more) or more comfortable (less), matched to your goal.",
+    ],
+    body: "Still something off after a few rides? Your plan tells you what to try next.",
+    button: "View my fit numbers",
+    illustrationAlt: "Pen drawing of stack and reach on a bicycle",
+  },
+  day1Tips: {
+    subject: "3 tips for a fit that's spot on",
+    preheader: "Measure more accurately in 5 minutes, and keep your fit in your pocket.",
+    heading: "3 tips for a fit that's spot on",
+    intro: "the more precisely you measure, the better your advice. These three tips help you get " +
+      "the most out of BestBikeFit4U:",
+    tips: [
+      {
+        title: "Measure barefoot.",
+        text: "Hold a book between your legs, flat against the wall, and measure from the floor to the " +
+          "top. Measure twice: a few millimetres already changes your saddle height.",
+      },
+      {
+        title: "Be honest about your flexibility.",
+        text: "Can't reach your toes? Just say so. You'll get a position that still feels good after " +
+          "100 km.",
+      },
+      {
+        title: "Change one thing at a time.",
+        text: "Steps of 2 to 5 mm, and test each change for a few rides. That way you know exactly what " +
+          "works.",
+      },
+    ],
+    button: "Start my fit",
+    buttonExisting: "View my fit",
+    appEyebrow: "TIP",
+    appHeading: "Put BestBikeFit4U on your phone.",
+    appBody: "Your numbers always at hand: in the shed with the Allen key in your hand, or at the pump " +
+      "before your ride. No App Store needed, and it takes up almost no space.",
+    chips: [
+      "Your fit numbers",
+      "Your tyre pressure",
+      "Your plan",
+    ],
+    iphone: [
+      "Open bestbikefit4u.eu in Safari",
+      "Tap the share icon",
+      "Choose Add to Home Screen",
+    ],
+    android: [
+      "Open bestbikefit4u.eu in Chrome",
+      "Tap the three dots",
+      "Choose Install app",
+    ],
+    illustrationAlt: "Pen drawing of a tape measure and a book",
+  },
+} as const satisfies EmailCopy;

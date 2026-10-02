@@ -14,6 +14,18 @@ let search = new URLSearchParams("src=pricing_free_cta");
 let authState = { isAuthenticated: false, isLoading: false };
 let campaignActive = true;
 
+it("requests the Dutch login email with a Dutch redirect", async () => {
+  pathname = "/nl/login";
+  signInMock.mockResolvedValue({ signingIn: false });
+  render(<LoginPage />);
+  const input = screen.getAllByPlaceholderText("jij@example.com")[0];
+  fireEvent.change(input, { target: { value: "rider@example.com" } });
+  fireEvent.submit(input.closest("form")!);
+  await waitFor(() => expect(signInMock).toHaveBeenCalledWith("resend", {
+    email: "rider@example.com", locale: "nl", redirectTo: "/nl/dashboard",
+  }));
+});
+
 vi.mock("@/i18n/request", () => ({
   getRequestLocale: async () => pathname.startsWith("/nl") ? "nl" : "en",
 }));
@@ -196,6 +208,7 @@ describe("login page", () => {
     await waitFor(() => {
       expect(signInMock).toHaveBeenCalledWith("resend", {
         email: "rider@example.com",
+        locale: "en", redirectTo: "/en/dashboard",
       });
     });
 
@@ -267,7 +280,9 @@ it("normalizes pasted codes and requires an authenticated sign-in result", async
   expect(code.getAttribute("autocomplete")).toBe("one-time-code");
   fireEvent.submit(code.closest("form")!);
   await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("Invalid or expired"));
-  expect(signInMock).toHaveBeenLastCalledWith("resend", { email: "Rider@example.com", code: "ABCDEFG" });
+  expect(signInMock).toHaveBeenLastCalledWith("resend", {
+    email: "Rider@example.com", code: "ABCDEFG", locale: "en", redirectTo: "/en/dashboard",
+  });
   expect(screen.queryByText("Welcome to BestBikeFit4U")).toBeNull();
   expect(logMarketingEventMock).not.toHaveBeenCalledWith(expect.objectContaining({ eventType: "login_verified" }));
 });
@@ -293,7 +308,9 @@ it("keeps the resend cooldown, retry feedback and email reset", async () => {
   const emailInput = screen.getByLabelText("Email address");
   fireEvent.change(emailInput, { target: { value: " Rider@example.com " } });
   await act(async () => { fireEvent.submit(emailInput.closest("form")!); });
-  expect(signInMock).toHaveBeenLastCalledWith("resend", { email: "Rider@example.com" });
+  expect(signInMock).toHaveBeenLastCalledWith("resend", {
+    email: "Rider@example.com", locale: "en", redirectTo: "/en/dashboard",
+  });
   expect(screen.getByRole("button", { name: "Resend available in 30s" })).toHaveProperty("disabled", true);
   for (let seconds = 0; seconds < 30; seconds += 1) {
     await act(async () => { vi.advanceTimersByTime(1000); });

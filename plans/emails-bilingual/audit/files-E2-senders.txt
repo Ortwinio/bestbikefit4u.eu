@@ -1,0 +1,8 @@
+convex/emails/fitpass.ts
+convex/emails/actions.ts
+convex/caseStudyLeads/emails.ts
+convex/emails/__tests__/sendFitReport.contract.test.ts
+convex/emails/__tests__/fitpass-case-study-senders.contract.test.ts
+plans/emails-bilingual/messages/E2-senders-to-B-handoff.md
+plans/emails-bilingual/audit/files-E2-senders.txt
+plans/emails-bilingual/audit/E2-senders-notes.md

@@ -21,7 +21,7 @@ export const getUsersNeeding24hNudge = internalQuery({
 
     const result = [];
     for (const user of users) {
-      if (!user.email) continue;
+      if (!user.email || user.emailPreferences?.service === false) continue;
       const alreadySent = await ctx.db
         .query("lifecycleEmailLog")
         .withIndex("by_user_type", (q) =>

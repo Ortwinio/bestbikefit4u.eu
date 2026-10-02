@@ -7,6 +7,7 @@ import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { buildLocaleSwitchHref } from "@/i18n/switchHref";
 import { getMarketingLayoutMessages } from "@/i18n/marketing/layout";
+import { useLocaleSwitch } from "./useLocaleSwitch";
 
 export function MarketingAccountLink({ locale, loginLabel, dashboardLabel }: {
   locale: Locale;
@@ -52,10 +53,12 @@ export function MarketingLanguageSwitch({ locale, inverse = false }: {
   const pathname = usePathname() ?? "/";
   const searchParams = useSearchParams();
   const copy = getMarketingLayoutMessages(locale);
+  const switchLocale = useLocaleSwitch();
   return (
     <nav aria-label={copy.language} className={`inline-flex shrink-0 rounded-full border p-0.5 ${inverse ? "border-[var(--bbf-gedempt)]" : "border-border"}`}>
       {(["nl", "en"] as const).map((target) => (
         <a key={target}
+          onClick={(event) => switchLocale(event, target)}
           href={buildLocaleSwitchHref({ pathname, queryString: searchParams?.toString() ?? "", locale: target })}
           aria-label={target === "nl" ? copy.dutch : copy.english}
           aria-current={locale === target ? "page" : undefined}

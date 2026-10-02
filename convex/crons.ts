@@ -19,7 +19,13 @@ crons.interval(
   internal.integrations.actions.scanStravaAutoImportCandidates
 );
 
-// Daily: fit reminder for users who signed up but haven't started a fit (48h+ ago)
+crons.daily(
+  "day 1 measuring tips emails",
+  { hourUTC: 6, minuteUTC: 30 },
+  internal.emails.lifecycle.runDay1TipsBatch
+);
+
+// Daily: fit reminder for users who signed up but haven't started a fit (72h+ ago)
 crons.daily(
   "fit reminder emails",
   { hourUTC: 7, minuteUTC: 0 },
