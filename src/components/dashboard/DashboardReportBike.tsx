@@ -6,6 +6,8 @@ import type { FunctionReturnType } from "convex/server";
 import { api } from "../../../convex/_generated/api";
 import { Button, Card, CardContent, SectionHeader, StatRow, LoadingState, InfoBox } from "@/components/ui";
 import { FitReportActionGroup } from "@/components/reports";
+import { LegacyReportBadge } from "@/components/bikes/LegacyReportBadge";
+import { isPaidAccessEnforced } from "../../../shared/pricing/flags";
 import type { BikeSessionEntry } from "@/components/bikes/BikeGarageOverview";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -117,6 +119,7 @@ export function DashboardReportBike({ bike, latestFit }: {
               </ul>
             </div>}
           <FitReportActionGroup sessionId={latestFit.session._id} pagePath={withLocalePrefix("/dashboard", locale)} />
+          {isPaidAccessEnforced() && <LegacyReportBadge sessionId={latestFit.session._id} locale={locale} />}
           <Link className={linkClass} href={fitHref}>{messages.bikeGarage.recalculateFit}</Link>
         </> : noFit}
       </CardContent>

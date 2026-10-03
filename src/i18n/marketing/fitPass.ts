@@ -1,7 +1,7 @@
 import type { Locale } from "@/i18n/config";
-import { PUBLIC_PLANS, formatEuroPriceFromCents } from "@/config/commercial";
+import { FIT_PASS_PRODUCT, formatEuroPriceFromCents } from "@/config/commercial";
 
-const proPlan = PUBLIC_PLANS.find((plan) => plan.id === "pro")!;
+const singlePrice = (locale: Locale) => formatEuroPriceFromCents(FIT_PASS_PRODUCT.priceCents, locale);
 
 export const fitPassPresentation = {
   nl: {
@@ -16,12 +16,12 @@ export const fitPassPresentation = {
     visualBody: "Bewaar je rapport als referentie. Of neem het mee naar je fietsenwinkel of fitter.",
     featuresTitle: "Je aanbevelingen. Bij elkaar, voor later.",
     processTitle: "Van je maten naar je rapport.",
-    processIntro: "Begin met een gratis fit. Activeer daarna Fit Pass om je volledige rapport te bewaren.",
+    processIntro: "Begin met een gratis fit. Kies daarna een losse meting voor één fiets of een jaarabonnement voor al je fietsen.",
     processPaused: "Begin met een gratis fit. Nieuwe betaalde abonnementen zijn tijdelijk niet beschikbaar.",
     processLink: "Bekijk hoe een fit werkt",
     unavailable: "Tijdelijk niet beschikbaar",
     pausedStep: "Je kunt nu geen nieuw betaald abonnement afsluiten. De gratis functies blijven beschikbaar.",
-    reportStep: "Heb je al een actieve Fit Pass? Je volledige rapport bevat dezelfde waarden als op je scherm.",
+    reportStep: "Heb je al volledige toegang voor je fiets? Je volledige rapport bevat dezelfde waarden als op je scherm.",
     faqTitle: "Voor je verdergaat.",
     pricingLink: "Vergelijk de mogelijkheden",
     finalEyebrow: "Begin met je gratis fit",
@@ -40,12 +40,12 @@ export const fitPassPresentation = {
     visualBody: "Keep your report for reference. Or take it to your bike shop or fitter.",
     featuresTitle: "Your recommendations. Together, for later.",
     processTitle: "From your measurements to your report.",
-    processIntro: "Start with a free fit. Then activate Fit Pass to keep your complete report.",
+    processIntro: "Start with a free fit. Then choose a single measurement for one bike or an annual subscription for all your bikes.",
     processPaused: "Start with a free fit. New paid subscriptions are temporarily unavailable.",
     processLink: "See how a fit works",
     unavailable: "Temporarily unavailable",
     pausedStep: "You cannot start a new paid subscription right now. The free features remain available.",
-    reportStep: "Already have an active Fit Pass? Your full report contains the same values you see on screen.",
+    reportStep: "Already have full access for your bike? Your full report contains the same values you see on screen.",
     faqTitle: "Before you continue.",
     pricingLink: "Compare your options",
     finalEyebrow: "Start with your free fit",
@@ -70,21 +70,20 @@ export const fitPassCopy: Record<
     faqTitle: string;
     faqs: { q: string; a: string }[];
     finalCta: string;
-    monthlySuffix: string;
   }
 > = {
   en: {
     metadata: {
-      title: "Fit Pass — Full report, unlimited sessions | BikeFitBoost",
+      title: "Single measurement — One bike, three months | BikeFitBoost",
       description:
-        "Fit Pass gives you a downloadable PDF with all your bike fit values, unlimited sessions, and multiple bike profiles. EUR9/month.",
+        `A single measurement gives you a complete setup plan for one bike and three months of access. ${singlePrice("en")} one-off, including VAT.`,
     },
-    eyebrow: "Fit Pass",
+    eyebrow: "Single measurement",
     hero: "Your full bike fit report, ready to download.",
     subhero:
-      "Fit Pass gives you a PDF with every adjustment value and priority, based on your measurements, your bike, and your riding style.",
-    cta: `Get Fit Pass — ${formatEuroPriceFromCents(proPlan.priceCentsMonthly, "en")}/month`,
-    alreadyActive: "Fit Pass is active",
+      "A single measurement gives you a PDF with every adjustment value and priority, based on your measurements, your bike, and your riding style.",
+    cta: `Choose a single measurement — ${singlePrice("en")} incl. VAT`,
+    alreadyActive: "Your single measurement is active",
     whatYouGet: "What you get",
     features: [
       {
@@ -99,46 +98,45 @@ export const fitPassCopy: Record<
       },
       {
         icon: "sessions",
-        title: "Unlimited sessions and bike profiles",
-        body: "Re-run your fit after a new bike, a weight change, or a position experiment. Each bike gets its own profile.",
+        title: "One bike, three months",
+        body: "Use the full setup plan for your selected bike for three months. Choose an annual subscription for all your bikes.",
       },
     ],
     howItWorksTitle: "How it works",
     steps: [
       { label: "Complete a fit session", body: "Enter your measurements and answer the questionnaire. It takes about 10 minutes." },
-      { label: "Upgrade to Fit Pass", body: "One click. EUR9/month, and you can cancel any time from account settings." },
-      { label: "Download your PDF", body: "Your full report is available immediately, with the same values you see on screen." },
+      { label: "Choose a single measurement", body: `Choose one bike for three months. ${singlePrice("en")} one-off, including VAT. Checkout through Stripe is not yet implemented.` },
+      { label: "Download your PDF", body: "After activation, your report contains the same values as the screen. No purchase is activated while Stripe checkout is unavailable." },
     ],
     faqTitle: "Questions",
     faqs: [
       {
-        q: "What is Fit Pass?",
-        a: "Fit Pass is the paid tier for BikeFitBoost, also called Pro. It unlocks PDF reports, unlimited fit sessions, and unlimited bike profiles.",
+        q: "What is a single measurement?",
+        a: `A single measurement opens the complete setup plan for one bike for three months. It costs ${singlePrice("en")} once, including VAT.`,
       },
       {
-        q: "Can I cancel?",
-        a: "Yes. You can cancel any time from your account settings. Access continues until the end of the billing period.",
+        q: "Does a single measurement renew?",
+        a: "No. A single measurement ends after three months. An annual subscription is a separate choice.",
       },
       {
         q: "Do I need a bike already?",
         a: "No. You can run a fit session without a specific bike. The results give you reference values for what to buy or what to adjust on your current setup.",
       },
     ],
-    finalCta: `Get Fit Pass — ${formatEuroPriceFromCents(proPlan.priceCentsMonthly, "en")}/month`,
-    monthlySuffix: "/ month",
+    finalCta: `Choose a single measurement — ${singlePrice("en")} incl. VAT`,
   },
   nl: {
     metadata: {
-      title: "Fit Pass — Volledig rapport, onbeperkte sessies | BikeFitBoost",
+      title: "Losse meting — Eén fiets, drie maanden | BikeFitBoost",
       description:
-        "Met Fit Pass krijg je een downloadbaar PDF met alle bikefitting-waarden, onbeperkte sessies en meerdere fietsprofielen. EUR9/maand.",
+        `Met een losse meting krijg je een volledig stappenplan voor één fiets en drie maanden toegang. Eenmalig ${singlePrice("nl")}, inclusief btw.`,
     },
-    eyebrow: "Fit Pass",
+    eyebrow: "Losse meting",
     hero: "Jouw complete bikefitting-rapport, klaar om te downloaden.",
     subhero:
-      "Met Fit Pass ontvang je een PDF met alle aanpassingswaarden en prioriteiten, gebaseerd op jouw lichaamsmetingen, fiets en rijstijl.",
-    cta: `Fit Pass activeren — ${formatEuroPriceFromCents(proPlan.priceCentsMonthly, "nl")}/maand`,
-    alreadyActive: "Fit Pass is actief",
+      "Met een losse meting ontvang je een PDF met alle aanpassingswaarden en prioriteiten, gebaseerd op jouw lichaamsmetingen, fiets en rijstijl.",
+    cta: `Kies een losse meting — ${singlePrice("nl")} incl. btw`,
+    alreadyActive: "Je losse meting is actief",
     whatYouGet: "Wat je krijgt",
     features: [
       {
@@ -153,32 +151,31 @@ export const fitPassCopy: Record<
       },
       {
         icon: "sessions",
-        title: "Onbeperkte sessies en fietsprofielen",
-        body: "Voer je fit opnieuw uit na een nieuwe fiets, gewichtsverandering of positie-experiment. Elke fiets krijgt een eigen profiel.",
+        title: "Eén fiets, drie maanden",
+        body: "Gebruik drie maanden het volledige stappenplan voor je gekozen fiets. Kies een jaarabonnement voor al je fietsen.",
       },
     ],
     howItWorksTitle: "Hoe het werkt",
     steps: [
       { label: "Voltooi een fit-sessie", body: "Voer je metingen in en beantwoord de vragenlijst. Dit duurt ongeveer 10 minuten." },
-      { label: "Activeer Fit Pass", body: "Eén klik. EUR9/maand, op elk moment opzegbaar via je accountinstellingen." },
-      { label: "Download je PDF", body: "Je volledige rapport is direct beschikbaar, met dezelfde waarden als op je scherm." },
+      { label: "Kies een losse meting", body: `Kies één fiets voor drie maanden. Eenmalig ${singlePrice("nl")}, inclusief btw. Betalen via Stripe is nog niet geïmplementeerd.` },
+      { label: "Download je PDF", body: "Na activering bevat je rapport dezelfde waarden als op je scherm. Zolang betalen via Stripe niet beschikbaar is, wordt geen aankoop geactiveerd." },
     ],
     faqTitle: "Vragen",
     faqs: [
       {
-        q: "Wat is Fit Pass?",
-        a: "Fit Pass is het betaalde abonnement van BikeFitBoost, ook wel Pro genoemd. Het geeft toegang tot PDF-rapporten, onbeperkte fit-sessies en onbeperkte fietsprofielen.",
+        q: "Wat is een losse meting?",
+        a: `Een losse meting opent het volledige stappenplan voor één fiets, drie maanden lang. Je betaalt eenmalig ${singlePrice("nl")}, inclusief btw.`,
       },
       {
-        q: "Kan ik opzeggen?",
-        a: "Ja. Je kunt op elk moment opzeggen via je accountinstellingen. Toegang blijft actief tot het einde van de factureringsperiode.",
+        q: "Wordt een losse meting verlengd?",
+        a: "Nee. Een losse meting eindigt na drie maanden. Een jaarabonnement is een aparte keuze.",
       },
       {
         q: "Heb ik al een fiets nodig?",
         a: "Nee. Je kunt een fitsessie uitvoeren zonder specifieke fiets. De resultaten geven referentiewaarden voor aankoop of aanpassing van je huidige fietsafstelling.",
       },
     ],
-    finalCta: `Fit Pass activeren — ${formatEuroPriceFromCents(proPlan.priceCentsMonthly, "nl")}/maand`,
-    monthlySuffix: "/ maand",
+    finalCta: `Kies een losse meting — ${singlePrice("nl")} incl. btw`,
   },
 };

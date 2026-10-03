@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation, query, type MutationCtx, type QueryCtx } from "../_generated/server";
 import type { Doc, Id } from "../_generated/dataModel";
 import { requireUserId } from "../lib/authz";
+import { assertPaidProfileWrite } from "./paidAccess";
 import { legacyRiderObservations } from "../../shared/profileObservationMigration";
 import {
   equalProfileObservationValues, PROFILE_OBSERVATION_FIELDS, validateProfileObservationValue,
@@ -17,6 +18,7 @@ export async function recordProfileObservations(
   previous: Doc<"profiles"> | null,
   options: { kinds?: Record<string, ProfileObservationKind>; method?: string; confirm?: boolean } = {},
 ) {
+  await assertPaidProfileWrite(ctx, userId, updates, previous, options.confirm);
   for (const [field, value] of Object.entries(updates)) {
     if (value === undefined || !Object.hasOwn(PROFILE_OBSERVATION_FIELDS, field)) continue;
     const validated = validateProfileObservationValue(field, value);

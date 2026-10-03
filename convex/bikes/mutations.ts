@@ -1,4 +1,5 @@
 import { BIKE_PROFILE_FIELDS, validateBikeProfileField } from "../../shared/bikeProfileFields";
+import { assertCanCreateBike, bikeRefinementsAvailable } from "./access";
 import { geometryValues, recordBikeProfileChanges } from "./profile";
 import { bikeEditError } from "../../shared/bikeEditValidation";
 import type { Doc, Id } from "../_generated/dataModel";
@@ -140,6 +141,15 @@ export async function createBikeWithProfiles(
   ctx: MutationCtx,
   args: CreateBikeInput
 ) {
+  await assertCanCreateBike(ctx, args.userId);
+  const fullRefinements = await bikeRefinementsAvailable(ctx, args.userId);
+  if (!fullRefinements && args.source === "passport_import") {
+    args = { ...args,
+      currentSetup: args.currentSetup ? { ...args.currentSetup, handlebarReachMm: undefined, handlebarDropMm: undefined } : undefined,
+      currentGeometry: args.currentGeometry ? { ...args.currentGeometry, seatTubeAngle: undefined, headTubeAngle: undefined } : undefined,
+      gearing: args.gearing ? { ...args.gearing, chainrings: undefined, cassetteTeeth: undefined } : undefined,
+    };
+  }
   validateShortString(args.name, "name");
   if (args.brand !== undefined) validateShortString(args.brand, "brand");
   if (args.model !== undefined) validateShortString(args.model, "model");
@@ -160,6 +170,10 @@ export async function createBikeWithProfiles(
     ? undefined : args.geometryRecordId;
   const geometryRecord = geometryRecordId ? linkedGeometry : null;
   const currentGeometry = geometryRecordId ? geometryValues(geometryRecord) : args.currentGeometry;
+  if (geometryRecordId && currentGeometry && !fullRefinements) {
+    delete currentGeometry.seatTubeAngle;
+    delete currentGeometry.headTubeAngle;
+  }
   const additions = Object.fromEntries(["saddleModel", "saddleWidthMm", "pedalModel", "cleatSystem",
     "maxSeatpostMm", "maxSpacerStackMm"].flatMap(field => {
       const value = args[field as keyof CreateBikeInput];
@@ -202,7 +216,8 @@ export async function createBikeWithProfiles(
     updatedAt,
   });
 
-  const supplied = { ...additions, ...(currentSetup ? { currentSetup } : {}),
+  const supplied = { ...additions, ...(args.gearing ? { gearing: buildBikeGearingRecord(args.gearing) } : {}),
+    ...(currentSetup ? { currentSetup } : {}),
     ...(currentGeometry ? { currentGeometry } : {}), ...(args.primaryGoal ? { primaryGoal: args.primaryGoal } : {}) };
   if (Object.keys(supplied).length) {
     const trustedGeometry = geometryRecord && ["manufacturer", "admin_import", "admin_manual"].includes(geometryRecord.source);
@@ -520,6 +535,10 @@ export const update = mutation({
     }
     const geometryRecord = args.geometryRecordId ? await ctx.db.get(args.geometryRecordId) : null;
     const databaseEvidence = args.geometryRecordId ? geometryValues(geometryRecord) : undefined;
+    if (databaseEvidence && !(await bikeRefinementsAvailable(ctx, bike.userId, bike._id))) {
+      delete databaseEvidence.seatTubeAngle;
+      delete databaseEvidence.headTubeAngle;
+    }
     if (databaseEvidence) updates.currentGeometry = databaseEvidence;
     if ((updates.currentSetup as Doc<"bikes">["currentSetup"])?.saddleHeightMm !== bike.currentSetup?.saddleHeightMm
       && updates.currentSetup !== undefined) {
@@ -616,6 +635,13 @@ export const remove = mutation({
   handler: async (ctx, args) => {
     const { bike, userId } = await requireBikeOwner(ctx, args.bikeId);
     if (args.confirmName !== bike.name) throw new Error("Bike name confirmation does not match");
+    const entitlements = await ctx.db.query("pricingEntitlements")
+      .withIndex("by_bike", range => range.eq("bikeId", args.bikeId)).collect();
+    for (const entitlement of entitlements) {
+      if (entitlement.userId === userId && entitlement.status === "active") {
+        await ctx.db.patch(entitlement._id, { status: "revoked", revokedReason: "bike_deleted" });
+      }
+    }
     await ctx.db.delete(args.bikeId);
     await ctx.scheduler.runAfter(0, internal.bikes.deletion.cascade, {
       bikeId: args.bikeId, userId, photoUrl: bike.photoUrl, stage: 0,

@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { isPaidAccessEnforced } from "../../../../shared/pricing/flags";
+import { fitPassAccessCopy } from "@/i18n/marketing/fitPassAccess";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
-import { isStripeBillingEnabled } from "@/config/billing";
 import {
   CONSUMER_CAMPAIGN_CONFIG,
   getConsumerCampaignCopy,
@@ -26,19 +26,21 @@ export function FitPassLandingCta({
   locale,
   label,
   loadingLabel,
-  alreadyActiveLabel,
   loginHref,
   dashboardHref,
 }: FitPassLandingCtaProps) {
   const user = useQuery(api.users.queries.getCurrentUser);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const enforced = isPaidAccessEnforced();
+  const access = useQuery(api.pricing.queries.getAccess, enforced && user ? {} : "skip");
   const isNl = locale === "nl";
-  const campaignActive = isConsumerCampaignActive();
+  const copy = fitPassAccessCopy[isNl ? "nl" : "en"];
+  const campaignActive = !enforced && isConsumerCampaignActive();
   const campaign = getConsumerCampaignCopy(isNl ? "nl" : "en");
+  const annualActive = enforced && Boolean(user) && access?.fullReport === true && access.maxBikes === null
+    && (access.productId === "annual" || access.productId === "annual_entry" || access.productId === "annual_personal");
+  const legacyActive = !enforced && (user?.tier === "pro" || user?.tier === "premium");
 
-  // Still loading auth state
-  if (user === undefined) {
+  if (user === undefined || (enforced && user && access === undefined)) {
     return (
       <Button disabled className="min-w-[200px]">
         {loadingLabel ?? label}
@@ -46,30 +48,15 @@ export function FitPassLandingCta({
     );
   }
 
-  // Already on Pro
-  if (user?.tier === "pro" || user?.tier === "premium") {
+  if (annualActive || legacyActive) {
     return (
       <div className="flex flex-col items-center gap-2">
         <div className="rounded-full bg-[color:var(--success)]/15 px-4 py-1.5 text-sm font-medium text-[color:var(--success)]">
-          {alreadyActiveLabel}
+          {annualActive ? copy.annualActive : copy.legacyActive}
         </div>
-        <Button render={<Link href={dashboardHref} />} nativeButton={false} variant="outline">
-          {isNl ? "Ga naar mijn dashboard" : "Go to my dashboard"}
-        </Button>
-      </div>
-    );
-  }
-
-  if (!isStripeBillingEnabled()) {
-    return (
-      <div className="flex flex-col items-center gap-2">
-        <p className="text-sm text-[color:var(--muted-foreground)]">
-          {isNl ? "Betalingen zijn tijdelijk niet beschikbaar." : "Payments are temporarily unavailable."}
-        </p>
-        <Button render={<Link href={user ? dashboardHref : loginHref} />} nativeButton={false}>
-          {user
-            ? isNl ? "Ga naar mijn dashboard" : "Go to my dashboard"
-            : isNl ? "Maak een gratis account" : "Create a free account"}
+        {annualActive && <p className="text-center">{copy.annualDescription}</p>}
+        <Button render={<Link href={dashboardHref} />} nativeButton={false} role="link" variant="outline">
+          {copy.dashboard}
         </Button>
       </div>
     );
@@ -91,7 +78,8 @@ export function FitPassLandingCta({
       );
     }
     return (
-      <Button render={<Link href={loginHref} />}>
+      <Button render={<Link href={`/${isNl ? "nl" : "en"}/checkout?product=single`} />}
+        nativeButton={false} role="link">
         {label}
       </Button>
     );
@@ -111,33 +99,11 @@ export function FitPassLandingCta({
     );
   }
 
-  // Authenticated, not Pro — trigger checkout
-  const handleCheckout = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale, productKey: "fit_pass" }),
-      });
-      const data = await res.json() as { url?: string; error?: string };
-      if (!res.ok || !data.url) throw new Error(data.error ?? "Checkout failed");
-      window.location.href = data.url;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
-      setIsLoading(false);
-    }
-  };
-
+  // Choices and withdrawal consent are collected by the shared checkout flow.
   return (
-    <div className="flex flex-col items-center gap-2">
-      <Button onClick={handleCheckout} isPending={isLoading} className="min-w-[200px]">
-        {label}
-      </Button>
-      {error && (
-        <p className="text-sm text-[color:var(--destructive)]">{error}</p>
-      )}
-    </div>
+    <Button render={<Link href={`/${isNl ? "nl" : "en"}/checkout?product=single`} />}
+      nativeButton={false} role="link" className="min-w-[200px]">
+      {label}
+    </Button>
   );
 }

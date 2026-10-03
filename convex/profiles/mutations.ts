@@ -3,6 +3,7 @@ import type { Doc } from "../_generated/dataModel";
 import { v } from "convex/values";
 import { requireUserId } from "../lib/authz";
 import { recordProfileObservations } from "./provenance";
+import { PAID_PROFILE_FIELDS } from "./paidAccess";
 import { validateProfileObservationValue } from "../../shared/profileObservationFields";
 import {
   validateNumberRange,
@@ -173,6 +174,8 @@ export const upsert = mutation({
     footLengthCm: v.optional(v.number()),
     handSpanCm: v.optional(v.number()),
     sitBoneWidthMm: v.optional(v.number()),
+    flexibilityTestCm: v.optional(v.number()),
+    coreTestSeconds: v.optional(v.number()),
 
     // Optional injury history
     injuryHistory: v.optional(
@@ -236,6 +239,8 @@ export const upsert = mutation({
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
 
+    if (args.flexibilityTestCm !== undefined) validateProfileObservationValue("flexibilityTestCm", args.flexibilityTestCm);
+    if (args.coreTestSeconds !== undefined) validateProfileObservationValue("coreTestSeconds", args.coreTestSeconds);
     if (args.sex !== undefined) validateProfileObservationValue("sex", args.sex);
     if (args.birthDate !== undefined) validateProfileObservationValue("birthDate", args.birthDate);
     validateProfileMeasurements({
@@ -314,6 +319,8 @@ export const upsert = mutation({
       handSpanCm: args.handSpanCm,
       sitBoneWidthMm: args.sitBoneWidthMm,
       flexibilityScore: args.flexibilityScore,
+      flexibilityTestCm: args.flexibilityTestCm,
+      coreTestSeconds: args.coreTestSeconds,
       coreStabilityScore: args.coreStabilityScore,
       injuryHistory: args.injuryHistory,
       age: args.age,
@@ -348,6 +355,23 @@ export const upsert = mutation({
 });
 
 // Update specific profile fields
+export const removePaidField = mutation({
+  args: { field: v.string(), expectedCurrentValue: v.number() },
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+    if (!PAID_PROFILE_FIELDS.some(field => field === args.field)) throw new Error("Invalid profile field");
+    const profile = await ctx.db.query("profiles").withIndex("by_user", range => range.eq("userId", userId)).unique();
+    if (!profile) throw new Error("Profile not found");
+    if (profile[args.field as keyof Doc<"profiles">] !== args.expectedCurrentValue) throw new Error("PROFILE_VALUE_CHANGED");
+    const observations = await ctx.db.query("profileObservations")
+      .withIndex("by_user_field_bike_status", range => range.eq("userId", userId).eq("field", args.field)
+        .eq("bikeId", undefined).eq("status", "current")).collect();
+    for (const observation of observations) await ctx.db.patch(observation._id, { status: "superseded" });
+    await ctx.db.patch(profile._id, { [args.field]: undefined, updatedAt: Date.now(), riderProfileUpdatedAt: Date.now() });
+    return profile._id;
+  },
+});
+
 export const updateMeasurements = mutation({
   args: {
     heightCm: v.optional(v.number()),

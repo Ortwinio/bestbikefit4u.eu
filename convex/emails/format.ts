@@ -24,12 +24,12 @@ export function formatPrice(amount: number, locale: EmailLocale): string {
   const parts = new Intl.NumberFormat(intlLocale[locale], {
     style: "currency",
     currency: "EUR",
-    minimumFractionDigits: 0,
+    minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
     maximumFractionDigits: 2,
   }).formatToParts(amount);
   // The fixed email copy uses a compact euro prefix in both languages.
   const currency = parts.find((part) => part.type === "currency")?.value ?? "€";
   const value = parts.filter((part) => part.type !== "currency" && part.type !== "literal")
     .map((part) => part.value).join("");
-  return `${currency}${value} per ${locale === "nl" ? "maand" : "month"}`;
+  return `${currency}${value}`;
 }

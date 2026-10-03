@@ -34,6 +34,17 @@ export function heading(text: string): string {
     + `font-weight:800;color:${colors.ink};">${escapeHtml(text)}</h1>`;
 }
 
+export function subheading(text: string): string {
+  return `<h2 style="margin:28px 0 16px;font-family:${displayFont};font-size:20px;line-height:1.2;`
+    + `font-weight:700;color:${colors.ink};">${escapeHtml(text)}</h2>`;
+}
+
+/** content is produced by the escaped email building blocks, never raw user HTML. */
+export function paperBlock(content: string): string {
+  return `<table ${table} width="100%" style="margin:24px 0;"><tr>`
+    + `<td style="padding:16px 18px;border-radius:16px;background:${colors.paper};">${content}</td></tr></table>`;
+}
+
 export function paragraph(text: string, options: { small?: boolean; bold?: boolean } = {}): string {
   return `<p style="margin:0 0 20px;font-family:${font};font-size:${options.small ? 13 : 16}px;`
     + `line-height:1.55;color:${options.small ? colors.muted : colors.body};`
@@ -64,25 +75,32 @@ function measurement(item: EmailValue, size: number): string {
     + (item.unit ? ` <span style="font-size:13px;color:${colors.muted};">${escapeHtml(item.unit)}</span>` : "");
 }
 
-export function valueTiles(values: readonly EmailValue[]): string {
+export function valueTiles(values: readonly EmailValue[], options: { columns?: 2 | 3; valueFirst?: boolean } = {}): string {
+  const columns = options.columns ?? 2;
+  const width = `${100 / columns}%`;
   const rows: string[] = [];
-  for (let index = 0; index < values.length; index += 2) {
-    rows.push("<tr>" + values.slice(index, index + 2).map((item) =>
-      `<td width="50%" valign="top" style="padding:4px;"><table ${table} width="100%"><tr>`
+  for (let index = 0; index < values.length; index += columns) {
+    rows.push("<tr>" + values.slice(index, index + columns).map((item) =>
+      `<td width="${width}" valign="top" style="padding:4px;"><table ${table} width="100%"><tr>`
       + `<td style="padding:16px 12px;background:${colors.paper};border:1px solid ${colors.border};`
-      + `border-radius:16px;overflow-wrap:anywhere;"><p style="margin:0 0 8px;font-size:13px;`
-      + `color:${colors.body};">${escapeHtml(item.label)}</p>${measurement(item, 28)}</td></tr></table></td>`
-    ).join("") + (index + 1 === values.length ? '<td width="50%"></td>' : "") + "</tr>");
+      + `border-radius:16px;overflow-wrap:anywhere;">`
+      + (options.valueFirst ? measurement(item, 28) : "")
+      + `<p style="margin:${options.valueFirst ? "4px 0 0" : "0 0 8px"};font-size:13px;color:${colors.body};">`
+      + `${escapeHtml(item.label)}</p>${options.valueFirst ? "" : measurement(item, 28)}</td></tr></table></td>`
+    ).join("") + (values.slice(index, index + columns).length < columns ? `<td colspan="${columns - values.slice(index, index + columns).length}"></td>` : "") + "</tr>");
   }
   return `<table ${table} width="100%" style="table-layout:fixed;margin:0 0 24px;">${rows.join("")}</table>`;
 }
 
-export function valueRows(values: readonly EmailValue[]): string {
-  return `<table ${table} width="100%" style="margin:0 0 24px;">`
-    + values.map((item) => `<tr><td style="padding:13px 8px 13px 0;font-size:14px;`
+export function valueRows(values: readonly EmailValue[], options: { boxed?: boolean; highlight?: string } = {}): string {
+  return `<table ${table} width="100%" style="margin:0 0 24px;`
+    + `${options.boxed ? `border:1px solid ${colors.border};border-radius:16px;overflow:hidden;` : ""}">`
+    + values.map((item) => `<tr><td style="padding:${options.boxed ? "13px 12px" : "13px 8px 13px 0"};font-size:14px;`
       + `border-bottom:1px solid ${colors.border};color:${colors.body};">${escapeHtml(item.label)}</td>`
-      + `<td align="right" style="padding:13px 0 13px 8px;border-bottom:1px solid ${colors.border};">`
-      + measurement(item, 18) + "</td></tr>").join("") + "</table>";
+      + `<td align="right" style="padding:${options.boxed ? "13px 12px" : "13px 0 13px 8px"};border-bottom:1px solid ${colors.border};">`
+      + measurement(item, 18) + "</td></tr>").join("")
+    + (options.highlight ? `<tr><td colspan="2" style="padding:13px 16px;background:${colors.lime};color:${colors.ink};">`
+      + `${escapeHtml(options.highlight)}</td></tr>` : "") + "</table>";
 }
 
 export function benefits(items: readonly { title?: string; text: string; icon?: string }[],

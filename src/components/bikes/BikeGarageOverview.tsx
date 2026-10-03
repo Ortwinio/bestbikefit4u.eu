@@ -11,6 +11,8 @@ import { getBikeTypeLabel } from "@/lib/bikes";
 import { getDashboardPressureCalculatorPath } from "@/lib/pressureRoutes";
 import { Mountain, Gauge, Bike, Activity, Ruler, AlertCircle, ArrowRight } from "lucide-react";
 import { FitReportActionGroup } from "@/components/reports";
+import { LegacyReportBadge } from "./LegacyReportBadge";
+import { isPaidAccessEnforced } from "../../../shared/pricing/flags";
 import { getBikeUsageCopy } from "@/i18n/account/bikeUsage";
 import type { ProfileScore } from "../../../shared/profileScore/types";
 import { ProfileStrengthRings } from "@/components/profile/ProfileStrengthRings";
@@ -278,6 +280,7 @@ export function BikeGarageRow({
                   )}
 
                   <div className="flex flex-wrap gap-3 pt-1">
+                    {isPaidAccessEnforced() && <LegacyReportBadge sessionId={latestFit.session._id} locale={locale} />}
                     <FitReportActionGroup
                       sessionId={latestFit.session._id}
                       pagePath={withLocalePrefix("/dashboard", locale)}

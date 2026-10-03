@@ -1,7 +1,8 @@
+import { PRODUCTS } from "../../shared/pricing/products";
 import { isStripeBillingEnabled } from "./billing";
 import type { Locale } from "@/i18n/config";
 
-export const COMMERCIAL_CURRENCY = "EUR" as const;
+export const COMMERCIAL_CURRENCY = PRODUCTS.single.currency;
 
 export const CONSUMER_CAMPAIGN_CONFIG = {
   campaignMode: true,
@@ -99,280 +100,26 @@ export const PRODUCT_LIVE_FLAGS = {
   moneyBackGuarantee: false,
 } as const;
 
-export type PublicPlanId = "free" | "pro";
-
-export type PublicPlanFeatureKey =
-  | "monthlyFitSession"
-  | "unlimitedFitSessions"
-  | "basicRecommendations"
-  | "advancedRecommendations"
-  | "multipleBikeProfiles"
-  | "sessionHistoryLimited"
-  | "sessionHistoryUnlimited"
-  | "emailReport"
-  | "pdfReport"
-  | "prioritySupport";
-
-type CommercialFeatureCopy = Record<
-  Locale,
-  {
-    title: string;
-    valueFree: string;
-    valuePro: string;
-  }
->;
-
-export const COMMERCIAL_FEATURE_COPY: Record<
-  PublicPlanFeatureKey,
-  CommercialFeatureCopy
-> = {
-  monthlyFitSession: {
-    en: {
-      title: "Fit sessions",
-      valueFree: "1 / month",
-      valuePro: "Unlimited",
-    },
-    nl: {
-      title: "Fit-sessies",
-      valueFree: "1 / maand",
-      valuePro: "Onbeperkt",
-    },
-  },
-  unlimitedFitSessions: {
-    en: {
-      title: "Fit sessions",
-      valueFree: "1 / month",
-      valuePro: "Unlimited",
-    },
-    nl: {
-      title: "Fit-sessies",
-      valueFree: "1 / maand",
-      valuePro: "Onbeperkt",
-    },
-  },
-  basicRecommendations: {
-    en: {
-      title: "Recommendation depth",
-      valueFree: "Core fit outputs",
-      valuePro: "Advanced fit outputs",
-    },
-    nl: {
-      title: "Diepgang aanbevelingen",
-      valueFree: "Kern van fit-output",
-      valuePro: "Geavanceerde fit-output",
-    },
-  },
-  advancedRecommendations: {
-    en: {
-      title: "Recommendation depth",
-      valueFree: "Core fit outputs",
-      valuePro: "Advanced fit outputs",
-    },
-    nl: {
-      title: "Diepgang aanbevelingen",
-      valueFree: "Kern van fit-output",
-      valuePro: "Geavanceerde fit-output",
-    },
-  },
-  multipleBikeProfiles: {
-    en: {
-      title: "Bike profiles",
-      valueFree: "1",
-      valuePro: "Unlimited",
-    },
-    nl: {
-      title: "Fietsprofielen",
-      valueFree: "1",
-      valuePro: "Onbeperkt",
-    },
-  },
-  sessionHistoryLimited: {
-    en: {
-      title: "Session history",
-      valueFree: "7 days",
-      valuePro: "Unlimited",
-    },
-    nl: {
-      title: "Sessiegeschiedenis",
-      valueFree: "7 dagen",
-      valuePro: "Onbeperkt",
-    },
-  },
-  sessionHistoryUnlimited: {
-    en: {
-      title: "Session history",
-      valueFree: "7 days",
-      valuePro: "Unlimited",
-    },
-    nl: {
-      title: "Sessiegeschiedenis",
-      valueFree: "7 dagen",
-      valuePro: "Onbeperkt",
-    },
-  },
-  emailReport: {
-    en: {
-      title: "Email report",
-      valueFree: "Yes",
-      valuePro: "Yes",
-    },
-    nl: {
-      title: "Rapport per e-mail",
-      valueFree: "Ja",
-      valuePro: "Ja",
-    },
-  },
-  pdfReport: {
-    en: {
-      title: "PDF report",
-      valueFree: "No",
-      valuePro: "Yes",
-    },
-    nl: {
-      title: "PDF-rapport",
-      valueFree: "Nee",
-      valuePro: "Ja",
-    },
-  },
-  prioritySupport: {
-    en: {
-      title: "Support",
-      valueFree: "Email queue",
-      valuePro: "Priority email",
-    },
-    nl: {
-      title: "Support",
-      valueFree: "E-mailwachtrij",
-      valuePro: "Prioriteit per e-mail",
-    },
-  },
-};
-
-type PlanCopy = Record<
-  Locale,
-  {
-    name: string;
-    description: string;
-    cta: string;
-    badge?: string;
-    features: string[];
-  }
->;
-
-export const PUBLIC_PLANS: ReadonlyArray<{
-  id: PublicPlanId;
-  priceCentsMonthly: number;
-  highlighted: boolean;
-  featureKeys: readonly PublicPlanFeatureKey[];
-  copy: PlanCopy;
-}> = [
-  {
-    id: "free",
-    priceCentsMonthly: 0,
-    highlighted: false,
-    featureKeys: [
-      "monthlyFitSession",
-      "basicRecommendations",
-      "sessionHistoryLimited",
-      "emailReport",
-    ],
-    copy: {
-      en: {
-        name: "Free",
-        description:
-          "Try the bike fit tools and see your setup targets. Perfect for a first check on saddle height, reach, and cockpit balance.",
-        cta: "Start free",
-        features: [
-          "1 guided fit session each month",
-          "Core fit outputs for saddle, cockpit, and setup priorities",
-          "Email report to yourself",
-          "7-day dashboard history",
-        ],
-      },
-      nl: {
-        name: "Free",
-        description:
-          "Probeer de bikefit-tools en bekijk je afstelwaarden. Ideaal voor een eerste check op zadelhoogte, reach en cockpitbalans.",
-        cta: "Start gratis",
-        features: [
-          "1 begeleide fit-sessie per maand",
-          "Kernoutput voor zadel, cockpit en prioriteiten",
-          "Mail je rapport naar jezelf",
-          "7 dagen dashboardgeschiedenis",
-        ],
-      },
-    },
-  },
-  {
-    id: "pro",
-    priceCentsMonthly: 900,
-    highlighted: true,
-    featureKeys: [
-      "unlimitedFitSessions",
-      "advancedRecommendations",
-      "multipleBikeProfiles",
-      "sessionHistoryUnlimited",
-      "emailReport",
-      "pdfReport",
-      "prioritySupport",
-    ],
-    copy: {
-      en: {
-        name: "Pro",
-        description:
-          "Track fit changes across multiple bikes, refine your position over time, and download detailed PDF reports.",
-        cta: "Start Pro - EUR 9/month",
-        badge: "Most popular",
-        features: [
-          "Unlimited fit sessions",
-          "Advanced recommendations and follow-up adjustments",
-          "Unlimited bike profiles",
-          "Unlimited session history",
-          "PDF and email reports",
-          "Priority support",
-        ],
-      },
-      nl: {
-        name: "Pro",
-        description:
-          "Volg fitveranderingen over meerdere fietsen, verfijn je positie over tijd en download gedetailleerde PDF-rapporten.",
-        cta: "Start Pro - EUR 9/maand",
-        badge: "Meest gekozen",
-        features: [
-          "Onbeperkte fit-sessies",
-          "Geavanceerde aanbevelingen en vervolg-aanpassingen",
-          "Onbeperkte fietsprofielen",
-          "Onbeperkte sessiegeschiedenis",
-          "PDF- en e-mailrapporten",
-          "Prioriteit bij support",
-        ],
-      },
-    },
-  },
-] as const;
-
-// FIT_PASS_PRODUCT is the marketing wrapper for the Pro subscription tier.
-// priceCents must stay in sync with PUBLIC_PLANS[pro].priceCentsMonthly and the Stripe price.
+// Compatibility for the legacy Fit Pass UI while it moves to the new checkout flow.
+// This represents a single-bike purchase, never an automatically renewing subscription.
 export const FIT_PASS_PRODUCT = {
   key: "fit_pass",
-  priceCents: 900, // €9/month — must match Pro plan and STRIPE_PRO_PRICE_ID
+  priceCents: PRODUCTS.single.priceCents,
   currency: COMMERCIAL_CURRENCY,
   copy: {
     en: {
-      name: "Fit Pass",
-      title: "Your full report is one step away.",
-      description:
-        "Fit Pass gives you a downloadable PDF, the full adjustment sequence, unlimited sessions, and multiple bike profiles.",
-      cta: "Unlock Fit Pass",
-      priceSuffix: "/ month",
+      name: "Single measurement",
+      title: "Your complete setup plan for one bike.",
+      description: "A complete setup plan for one bike, with three months of access.",
+      cta: "Choose a single measurement",
+      priceSuffix: "one-off · 3 months · VAT included",
     },
     nl: {
-      name: "Fit Pass",
-      title: "Je volledige rapport is één stap verwijderd.",
-      description:
-        "Met Fit Pass krijg je een downloadbaar PDF, de volledige aanpassingsvolgorde, onbeperkte sessies en meerdere fietsprofielen.",
-      cta: "Fit Pass activeren",
-      priceSuffix: "/ maand",
+      name: "Losse meting",
+      title: "Je volledige stappenplan voor één fiets.",
+      description: "Een volledig stappenplan voor één fiets, met drie maanden toegang.",
+      cta: "Kies een losse meting",
+      priceSuffix: "eenmalig · 3 maanden · inclusief btw",
     },
   },
 } as const;
@@ -389,16 +136,18 @@ export function formatEuroPriceFromCents(
   }).format(valueCents / 100);
 }
 
-export function getVisiblePublicPlans() {
-  return PUBLIC_PLANS.filter((plan) => {
-    if (plan.id === "pro") {
-      return true;
-    }
-    return true;
-  });
+function commercialPrices(locale: Locale) {
+  return {
+    single: formatEuroPriceFromCents(PRODUCTS.single.priceCents, locale),
+    annual: formatEuroPriceFromCents(PRODUCTS.annual.priceCents, locale),
+    renewal: formatEuroPriceFromCents(PRODUCTS.annual.renewalPriceCents, locale),
+    entry: formatEuroPriceFromCents(PRODUCTS.annual_entry.priceCents, locale),
+    personal: formatEuroPriceFromCents(PRODUCTS.annual_personal.priceCents, locale),
+  };
 }
 
 export function getCommercialFaqCopy(locale: Locale) {
+  const price = commercialPrices(locale);
   if (isConsumerCampaignActive()) {
     const campaign = getConsumerCampaignCopy(locale);
 
@@ -418,16 +167,16 @@ export function getCommercialFaqCopy(locale: Locale) {
   return {
     multipleBikeProfiles:
       locale === "nl"
-        ? "Ja. Met Pro kun je onbeperkt fietsprofielen toevoegen en per fiets een aparte fit-sessie uitvoeren."
-        : "Yes. With Pro, you can create unlimited bike profiles and run a separate fit session for each bike.",
+        ? "Een losse meting geldt voor één fiets, drie maanden lang. Het jaarabonnement geldt voor al je fietsen, twaalf maanden lang."
+        : "A single measurement covers one bike for three months. An annual subscription covers all your bikes for twelve months.",
     pdfReport:
       locale === "nl"
-        ? "Ja. PDF-rapporten zijn live voor Pro. E-mailrapporten zijn beschikbaar in zowel Free als Pro."
-        : "Yes. PDF reports are live in Pro. Email reports are available in both Free and Pro.",
+        ? "Met een gratis account kun je de PDF van je laatste rapport downloaden. Een losse meting opent het volledige stappenplan voor één fiets; een jaarabonnement geldt voor al je fietsen."
+        : "A free account can download the PDF of its latest report. A single measurement opens the full setup plan for one bike; an annual subscription covers all your bikes.",
     pricing:
       locale === "nl"
-        ? "BikeFitBoost toont publiek alleen Free en Pro. Alle prijzen zijn per maand in euro."
-        : "BikeFitBoost currently sells Free and Pro publicly. All prices are monthly and listed in EUR.",
+        ? `Een losse meting kost ${price.single}. Het jaarabonnement kost ${price.annual} in het eerste jaar, daarna ${price.renewal}. Met een persoonlijke bikefit kost het eerste jaar ${price.personal}. Alle prijzen zijn inclusief btw.`
+        : `A single measurement costs ${price.single}. An annual subscription costs ${price.annual} in the first year, then ${price.renewal}. With a personal bike fit, the first year costs ${price.personal}. All prices include VAT.`,
   };
 }
 
@@ -444,6 +193,7 @@ export function getSupportResponseItems(locale: Locale): string[] {
 }
 
 export function getSubscriptionTermsCopy(locale: Locale): string {
+  const price = commercialPrices(locale);
   if (isConsumerCampaignActive()) {
     const campaign = getConsumerCampaignCopy(locale);
 
@@ -453,6 +203,6 @@ export function getSubscriptionTermsCopy(locale: Locale): string {
   }
 
   return locale === "nl"
-    ? "BikeFitBoost toont publiek Free en Pro. Betaalde Pro-plannen worden maandelijks in euro gefactureerd en kunnen op elk moment worden opgezegd."
-    : "BikeFitBoost publicly offers Free and Pro. Paid Pro plans are billed monthly in EUR and can be cancelled at any time.";
+    ? `Een losse meting kost ${price.single} en geeft drie maanden toegang voor één fiets. Het jaarabonnement kost ${price.annual} in het eerste jaar, daarna ${price.renewal} per jaar. Na een losse meting kost het eerste jaar ${price.entry}. Het jaarabonnement met een persoonlijke bikefit kost ${price.personal} in het eerste jaar en verlengt daarna voor ${price.renewal} zonder nieuwe afspraak. Alle prijzen zijn inclusief btw. Betalen via Stripe is nog niet geïmplementeerd.`
+    : `A single measurement costs ${price.single} and gives three months of access for one bike. An annual subscription costs ${price.annual} in the first year, then ${price.renewal} per year. After a single measurement, the first year costs ${price.entry}. An annual subscription with a personal bike fit costs ${price.personal} in the first year and renews for ${price.renewal} without another appointment. All prices include VAT. Payment through Stripe has not been implemented yet.`;
 }

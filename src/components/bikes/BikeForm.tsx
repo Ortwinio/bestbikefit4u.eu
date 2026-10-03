@@ -17,6 +17,8 @@ import {
 } from "@/components/ui";
 import { BikeNumberField, BikeChoiceField, BikeCassetteField } from "./BikeFormControls";
 import { getBikesCopy } from "@/i18n/account/bikes";
+import { getPricingAccessCopy } from "@/i18n/account/pricingAccess";
+import { withLocalePrefix } from "@/i18n/navigation";
 import { SegmentedControl, SegmentedControlItem } from "@/components/ui";
 import { BikeGeometryLibraryFields } from "./BikeGeometryLibraryFields";
 import { BikePublicFitControls, type PublicFitGeometryQuality } from "./BikePublicFitControls";
@@ -111,6 +113,7 @@ export type BikeAutosavePayload = Partial<BikeFormPayload> & {
   clearFields?: string[];
 };
 interface BikeFormProps {
+  refinementsLocked?: boolean;
   bikeId?: string;
   title: string;
   description: string;
@@ -156,6 +159,7 @@ function parseCommaSeparatedNumbers(value: string) {
 }
 
 export function BikeForm({
+  refinementsLocked = false,
   bikeId,
   title,
   description,
@@ -446,6 +450,12 @@ export function BikeForm({
       </SegmentedControl>
       <AutosaveField flush={autosave.flush} commitOn="release">
         <form onSubmit={handleSubmit} className="space-y-6">
+          {refinementsLocked && <p className="rounded-2xl border border-border bg-secondary p-4 text-sm text-secondary-foreground">
+            {getPricingAccessCopy(locale).locked}{" "}
+            <Link className="inline-flex min-h-11 items-center font-semibold underline" href={withLocalePrefix("/pricing", locale)}>
+              {getPricingAccessCopy(locale).options}
+            </Link>
+          </p>}
           {section === "details" &&
           bikeId &&
           publicFitState &&
@@ -600,6 +610,7 @@ export function BikeForm({
               />
               <BikeNumberField
                 label={messages.bikeForm.fields.geometry.seatTubeAngle.label}
+                disabled={refinementsLocked}
                 tooltip={messages.bikeForm.fields.geometry.seatTubeAngle.tooltip}
                 step={0.1}
                 min={50}
@@ -610,6 +621,7 @@ export function BikeForm({
               />
               <BikeNumberField
                 label={messages.bikeForm.fields.geometry.headTubeAngle.label}
+                disabled={refinementsLocked}
                 tooltip={messages.bikeForm.fields.geometry.headTubeAngle.tooltip}
                 step={0.1}
                 min={50}
@@ -650,6 +662,7 @@ export function BikeForm({
                   onChange={(value) => setEquipment({ ...equipment, [field]: value })} />)}
               {(["spacersMm", "handlebarReachMm", "handlebarDropMm"] as const).map((field) =>
                 <BikeNumberField key={field} label={profileCopy[field]} value={extraSetup[field]} unit="mm"
+                  disabled={refinementsLocked && field !== "spacersMm"}
                   tooltip={field === "spacersMm" ? profileCopy.measureSpacers
                     : field === "handlebarReachMm" ? profileCopy.measureReach : profileCopy.measureDrop}
                   min={field === "handlebarDropMm" ? -200 : field === "handlebarReachMm" ? 200 : 0}
@@ -723,6 +736,8 @@ export function BikeForm({
               <CardTitle>{locale === "nl" ? "Versnelling" : "Gearing"}</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-2">
+              {refinementsLocked && <p className="text-sm text-muted-foreground sm:col-span-2">{getPricingAccessCopy(locale).locked}</p>}
+              <fieldset disabled={refinementsLocked} className="contents">
               <BikeChoiceField
                 label={locale === "nl" ? "Aandrijving" : "Drivetrain"}
                 tooltip={
@@ -754,6 +769,7 @@ export function BikeForm({
                 disabled={drivetrainType !== "2x"}
                 unit="t"
               />
+              </fieldset>
               <BikeNumberField
                 label={locale === "nl" ? "Wielomtrek" : "Wheel circumference"}
                 min={1000}
@@ -762,11 +778,13 @@ export function BikeForm({
                 onChange={(value) => setWheelCircumferenceMm(value === null ? "" : String(value))}
                 unit="mm"
               />
+              <fieldset disabled={refinementsLocked} className="contents">
               <BikeCassetteField
                 label={locale === "nl" ? "Cassette-tanden" : "Cassette teeth"}
                 value={cassetteTeethCsv}
                 onChange={setCassetteTeethCsv}
               />
+              </fieldset>
               <Input
                 className="min-h-11"
                 label={locale === "nl" ? "Groepset" : "Groupset"}

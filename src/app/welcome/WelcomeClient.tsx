@@ -7,6 +7,7 @@ import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { BrandLogo } from "@/components/branding/BrandLogo";
 import { Button, Input, Select, Slider } from "@/components/ui";
 import { ProfileStrengthRings } from "@/components/profile/ProfileStrengthRings";
+import { useProfileAccess } from "@/hooks/useProfileAccess";
 import { getWelcomeCopy } from "@/i18n/account/welcome";
 import { getProfileScoreCopy } from "@/i18n/account/profileScore";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
@@ -36,6 +37,7 @@ export default function WelcomeClient() {
 }
 
 function WelcomeReview({ locale, context }: { locale: Locale; context: Context }) {
+  const access = useProfileAccess();
   const text = getWelcomeCopy(locale);
   const router = useRouter();
   const save = useMutation(importHandoff);
@@ -80,7 +82,7 @@ function WelcomeReview({ locale, context }: { locale: Locale; context: Context }
     observations = observations.filter(observation => observation.field !== field);
     observations.push({ field, value: profileValue(entry), kind: entry.method === "bike" ? "declared" : entry.method, method: entry.method, recordedAt: entry.touchedAt, status: "current" });
   }
-  const score = scoreRiderProfile({ profile: preview as RiderValues, observations }, scoreTime);
+  const score = scoreRiderProfile({ profile: preview as RiderValues, observations }, scoreTime, access);
   const bikePreview: BikeValues = { ...(bikeType ? { bikeType } : {}), currentSetup: {} };
   const bikeObservations: ScoreObservation[] = [];
   for (const entry of selected.filter(entry => !riderFields.has(entry.field))) {
@@ -94,7 +96,8 @@ function WelcomeReview({ locale, context }: { locale: Locale; context: Context }
       ...(setting === "saddleHeightMm" ? { measurePoint: "bb_center_to_saddle_top" } : {}),
     });
   }
-  const bikeScore = scoreBike({ bike: bikeKeep ? bikePreview : null, observations: bikeObservations }, scoreTime);
+  const bikeAccess = { enforced: access.enforced, fullReport: !access.enforced || access.access?.fullReport === true };
+  const bikeScore = scoreBike({ bike: bikeKeep ? bikePreview : null, observations: bikeObservations }, scoreTime, bikeAccess);
   const labelValue = (value: number | string) => typeof value === "number" ? value.toLocaleString(locale) : text.values[value as keyof typeof text.values] ?? text.extraValues[value as keyof typeof text.extraValues] ?? value;
   const unitLabel = (unit: string) => unit === "none" || unit === "score" ? "" : unit === "teeth" ? "T" : unit;
   const resetResolution = (field: string) => {
@@ -195,8 +198,11 @@ function WelcomeReview({ locale, context }: { locale: Locale; context: Context }
         <aside className={styles.aside}>
           <section className={styles.scores} aria-label={text.start}>
             <h2>{text.start}</h2>
-            <ProfileStrengthRings score={score} locale={locale} size="lg" title={text.riderScore} />
-            {bikeKeep && <ProfileStrengthRings score={bikeScore} locale={locale} size="sm" title={bikeName.trim() ? `${text.bikeScore} · ${bikeName.trim()}` : text.bikeScore} />}
+            {access.isLoading ? <p role="status">{text.loading}</p> :
+              <ProfileStrengthRings score={score} locale={locale} size="lg" title={text.riderScore}
+                capped={access.enforced && !access.fullProfile} />}
+            {bikeKeep && !access.isLoading && <ProfileStrengthRings score={bikeScore} locale={locale} size="sm"
+              capped={bikeAccess.enforced && !bikeAccess.fullReport} title={bikeName.trim() ? `${text.bikeScore} · ${bikeName.trim()}` : text.bikeScore} />}
             <p>{text.scoreHint}</p>
             <p><Link className={styles.scoreExplanation} href={withLocalePrefix("/profile/score", locale)}>{getProfileScoreCopy(locale).explanationLink}</Link></p>
           </section>

@@ -292,7 +292,8 @@ describe("home page", () => {
     expect(
       screen.getByText("Create free account").closest("a")?.getAttribute("href")
     ).toBe("/en/login");
-    expect(screen.getByText("Compare Free and Pro").closest("a")?.getAttribute("href")).toBe("/en/pricing");
+    expect(screen.getByText("View pricing").closest("a")?.getAttribute("href")).toBe("/en/pricing");
+    expect(screen.getByText(/Single fit €13.50 or annual plan €24.50/)).toBeTruthy();
 
     const pageText = container.textContent ?? "";
     expect(pageText.indexOf("your own dimensions")).toBeGreaterThan(-1);

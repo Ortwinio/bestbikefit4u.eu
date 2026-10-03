@@ -38,6 +38,29 @@ describe("emails.sendFitReport contract", () => {
   });
   afterEach(() => vi.unstubAllEnvs());
 
+  it("refuses a free historical report before delivery", async () => {
+    vi.stubEnv("PAID_ACCESS_ENFORCED", "true");
+    const runQuery = vi.fn().mockResolvedValueOnce({ email: "owner@example.com", tier: "pro" })
+      .mockResolvedValueOnce({ recommendation: makeRecommendation(), access: { canEmailReport: false } });
+    const handler = (sendFitReport as unknown as { _handler: TestHandler })._handler;
+    await expect(handler({ runQuery }, { sessionId: "session_1", recipientEmail: "owner@example.com" }))
+      .rejects.toThrow("REPORT_ACCESS_REQUIRED");
+    expect(runQuery).toHaveBeenCalledTimes(2);
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("accepts an authoritative latest core report without paid notes", async () => {
+    vi.stubEnv("PAID_ACCESS_ENFORCED", "true");
+    vi.stubEnv("AUTH_RESEND_KEY", "test-only-key");
+    const recommendation = { ...makeRecommendation(), fitNotes: [] };
+    const runQuery = vi.fn().mockResolvedValueOnce({ email: "owner@example.com" })
+      .mockResolvedValueOnce({ recommendation, access: { canEmailReport: true, fullReport: false } });
+    const handler = (sendFitReport as unknown as { _handler: TestHandler })._handler;
+    await expect(handler({ runQuery }, { sessionId: "session_1", recipientEmail: "owner@example.com" }))
+      .resolves.toMatchObject({ success: true });
+    expect(send.mock.calls[0][0].text).not.toContain("Test note");
+  });
+
   it.each([
     { saved: "nl", request: "en", expected: "nl" },
     { saved: "en", request: "nl", expected: "en" },
@@ -48,7 +71,7 @@ describe("emails.sendFitReport contract", () => {
     const recommendation = makeRecommendation();
     recommendation.fitNotes = ["Your position is quite aggressive. Consider building up to this gradually."];
     const runQuery = vi.fn().mockResolvedValueOnce({ email: "rider@example.com", locale: saved })
-      .mockResolvedValueOnce(recommendation);
+      .mockResolvedValueOnce({ recommendation, access: { canEmailReport: true } });
     const handler = (sendFitReport as unknown as { _handler: TestHandler })._handler;
     await expect(handler({ runQuery }, { sessionId: "session_1", recipientEmail: "RIDER@example.com", locale: request })).resolves.toEqual({ success: true, emailId: "email_1" });
     const delivered = send.mock.calls[0][0];
@@ -70,7 +93,8 @@ describe("emails.sendFitReport contract", () => {
   it("propagates provider errors", async () => {
     vi.stubEnv("AUTH_RESEND_KEY", "test-only-key");
     send.mockResolvedValue({ data: null, error: { message: "provider failure" } });
-    const runQuery = vi.fn().mockResolvedValueOnce({ email: "rider@example.com" }).mockResolvedValueOnce(makeRecommendation());
+    const runQuery = vi.fn().mockResolvedValueOnce({ email: "rider@example.com" })
+      .mockResolvedValueOnce({ recommendation: makeRecommendation(), access: { canEmailReport: true } });
     const handler = (sendFitReport as unknown as { _handler: TestHandler })._handler;
     await expect(handler({ runQuery }, { sessionId: "session_1", recipientEmail: "rider@example.com" })).rejects.toThrow("provider failure");
   });
@@ -79,7 +103,7 @@ describe("emails.sendFitReport contract", () => {
     const runQuery = vi
       .fn()
       .mockResolvedValueOnce({ email: "rider@example.com" })
-      .mockResolvedValueOnce(makeRecommendation());
+      .mockResolvedValueOnce({ recommendation: makeRecommendation(), access: { canEmailReport: true } });
     const handler = (sendFitReport as unknown as { _handler: TestHandler })._handler;
 
     const result = await handler(

@@ -52,13 +52,15 @@ export type ProfileScore = {
 export type RiderValues = Partial<Record<
   "heightCm" | "inseamCm" | "torsoLengthCm" | "armLengthCm" | "shoulderWidthCm" |
   "femurLengthCm" | "sitBoneWidthMm" | "weightKg" | "ftpWatts" | "coreStabilityScore" |
-  "shoeSizeEu" | "age" | "weightUpdatedAt" | "ftpMeasuredAt", number
+  "shoeSizeEu" | "age" | "weightUpdatedAt" | "ftpMeasuredAt" | "footLengthCm" | "handSpanCm" |
+  "flexibilityTestCm" | "coreTestSeconds", number
 >> & Partial<Record<
   "flexibilityScore" | "experienceLevel" | "weeklyHours" | "typicalRideLength" |
   "hasPain" | "positionPriority" | "cleatSystem", string
 >> & { painAreas?: string[] };
 
 export type BikeValues = {
+  activitySummary?: { source: string; rideCount: number };
   _id?: string;
   bikeType?: string;
   brand?: string;

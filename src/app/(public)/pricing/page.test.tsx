@@ -1,148 +1,88 @@
 /* @vitest-environment jsdom */
 
 import type { ReactNode } from "react";
-import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen, within } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import PricingPage, { generateMetadata } from "./page";
+import { pricingCopy } from "@/i18n/marketing/pricing";
+import { SITE_ORIGIN } from "../../../../shared/brand";
+import { fitPassCopy } from "@/i18n/marketing/fitPass";
+import { PRODUCTS } from "../../../../shared/pricing/products";
 
-let locale: "en" | "nl" = "nl";
+let locale: "nl" | "en" = "nl";
 
-vi.mock("@/i18n/request", () => ({
-  getRequestLocale: () => Promise.resolve(locale),
-}));
-
-vi.mock("@/components/analytics/MarketingEventTracker", () => ({
-  TrackMarketingEventOnView: () => null,
-}));
-
-vi.mock("@/components/seo/JsonLd", () => ({
-  JsonLd: ({ schema }: { schema: unknown }) => <script type="application/ld+json">{JSON.stringify(schema)}</script>,
-}));
-
+vi.mock("@/i18n/request", () => ({ getRequestLocale: async () => locale }));
+vi.mock("@/components/analytics/MarketingEventTracker", () => ({ TrackMarketingEventOnView: () => null }));
 vi.mock("@/components/analytics/TrackedCtaLink", () => ({
-  TrackedCtaLink: ({ href, children }: { href: string; children: ReactNode }) => <a href={href}>{children}</a>,
+  TrackedCtaLink: ({ href, children, className }: { href: string; children: ReactNode; className: string }) => <a href={href} className={className}>{children}</a>,
+}));
+vi.mock("@/components/seo/JsonLd", () => ({
+  JsonLd: ({ schema }: { schema: object }) => <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />,
 }));
 
-beforeEach(() => {
-  locale = "nl";
-  vi.useFakeTimers();
-  vi.setSystemTime(new Date("2026-09-29T12:00:00Z"));
-  vi.stubEnv("STRIPE_BILLING_ENABLED", "false");
-  vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "false");
-});
+afterEach(cleanup);
 
-afterEach(() => {
-  cleanup();
-  vi.useRealTimers();
-  vi.unstubAllEnvs();
-});
-
-describe("pricing campaign regression", () => {
-  beforeEach(() => {
-    locale = "en";
-    vi.setSystemTime(new Date("2026-05-01T12:00:00Z"));
-  });
-  it.each(["en", "nl"] as const)("keeps free signup available with a payment notice in %s", async (language) => {
-    locale = language;
-    vi.setSystemTime(new Date("2026-09-27T12:00:00Z"));
-    vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "false");
+describe.each(["nl", "en"] as const)("%s release 2.0 pricing", (currentLocale) => {
+  it("shows canonical VAT-inclusive offers with localized checkout links, annual first in reading order", async () => {
+    locale = currentLocale;
     render(await PricingPage());
-    expect(screen.getByRole("status").textContent).toContain(
-      language === "nl" ? "Betalingen zijn tijdelijk niet beschikbaar" : "Payments are temporarily unavailable"
-    );
-    expect(screen.getByText(language === "nl" ? "Start gratis" : "Start free").closest("a")?.getAttribute("href"))
-      .toMatch(new RegExp(`^/${language}/login(?:\\?|$)`));
-  });
-  it("shows the campaign replacement card in English", async () => {
-    const ui = await PricingPage();
-    render(ui);
-
-    expect(screen.getByText("Clear pricing for real riders")).toBeTruthy();
-    expect(screen.getByText("Temporary free campaign")).toBeTruthy();
-    expect(screen.getByText("Use BikeFitBoost for free until June 4, 2026")).toBeTruthy();
-    expect(screen.getAllByText("Start free bike fit")[0].closest("a")?.getAttribute("href")).toBe(
-      "/en/calculators/bike-fit"
-    );
-    expect(screen.getByText("Make a donation").closest("a")?.getAttribute("href")).toBe(
-      "https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756"
-    );
-    expect(screen.getByText("Donating is entirely optional.")).toBeTruthy();
-    expect(screen.queryByText("Start Pro - EUR 9/month")).toBeNull();
-  });
-
-  it("keeps the campaign start CTA pointed at the calculator", async () => {
-    const ui = await PricingPage();
-    render(ui);
-
-    for (const cta of screen.getAllByText("Start free bike fit")) {
-      expect(cta.closest("a")?.getAttribute("href")).toBe("/en/calculators/bike-fit");
+    const page = pricingCopy[locale];
+    const cards = screen.getAllByRole("article");
+    expect(cards.map((card) => card.getAttribute("data-product"))).toEqual(["annual", "single", "annual_personal"]);
+    for (const productId of ["single", "annual", "annual_personal"] as const) {
+      const card = cards.find((entry) => entry.getAttribute("data-product") === productId)!;
+      const product = page.products[productId];
+      expect(within(card).getByRole("link").getAttribute("href")).toBe(`/${locale}/checkout?product=${productId}`);
+      expect(within(card).getByText(product.price)).toBeTruthy();
+      expect(card.textContent).toContain(page.vatShort);
+      expect(Number(product.price.slice(1).replace(",", ".")) * 100).toBe(PRODUCTS[productId].priceCents);
     }
-    expect(screen.queryByText("Start free")).toBeNull();
+    expect(within(cards[0]).getByText(page.products.annual.badge!)).toBeTruthy();
+    expect(cards[0].textContent).toContain(locale === "nl" ? "€19,50" : "€19.50");
+    expect(cards[2].textContent).toContain("[LOCATIE]");
+    expect(cards[2].textContent).toContain("[DUUR AFSPRAAK]");
+    expect(screen.queryByRole("button")).toBeNull();
   });
 
-  it("keeps the Dutch campaign copy aligned", async () => {
-    locale = "nl";
-
-    const ui = await PricingPage();
-    render(ui);
-
-    expect(screen.getByText("Heldere prijzen voor echte rijders")).toBeTruthy();
-    expect(screen.getByText("Tijdelijke gratis campagne")).toBeTruthy();
-    expect(screen.getByText("Gebruik BikeFitBoost gratis tot 4 juni 2026")).toBeTruthy();
-    for (const cta of screen.getAllByText("Start gratis bike fit")) {
-      expect(cta.closest("a")?.getAttribute("href")).toBe("/nl/calculators/bike-fit");
-    }
-    expect(screen.getByText("Doneer voor Alpe d'HuZes")).toBeTruthy();
-    expect(screen.getByText("Doneren is volledig optioneel.")).toBeTruthy();
-  });
-
-  it("restores public plan signup after the campaign ends", async () => {
-    vi.setSystemTime(new Date("2026-09-27T12:00:00Z"));
-    render(await PricingPage());
-
-    expect(screen.queryByText("Temporary free campaign")).toBeNull();
-    expect(screen.getByText("Start free").closest("a")?.getAttribute("href"))
-      .toMatch(/^\/en\/login(?:\?|$)/);
-    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href"))
-      .toBe("/en/calculators/bike-fit");
-  });
-});
-
-describe("pricing redesign", () => {
-  it("keeps paused Pro unavailable and the free signup and calculator usable", async () => {
-    render(await PricingPage());
-    const unavailable = screen.getByRole("button", { name: "Tijdelijk niet beschikbaar" }) as HTMLButtonElement;
-    expect(unavailable.disabled).toBe(true);
-    expect(unavailable.getAttribute("aria-describedby")).toBe(screen.getByRole("status").id);
-    expect(screen.queryByText(/Meest gekozen|Most popular/i)).toBeNull();
-    expect(screen.getByRole("link", { name: "Start gratis" }).getAttribute("href")).toBe("/nl/login");
-    expect(screen.getByRole("link", { name: "Start gratis bike fit" }).getAttribute("href")).toBe("/nl/calculators/bike-fit");
-    expect(screen.queryByRole("link", { name: /Start Pro/ })).toBeNull();
-    expect(screen.queryByText(/Doneer voor/)).toBeNull();
-    expect(screen.getAllByRole("columnheader")).toHaveLength(3);
-  });
-
-  it("localizes the pause, headings, navigation and FAQ schema in English", async () => {
-    locale = "en";
+  it("keeps free/latest-PDF comparison, appointment placeholders and only the permitted gift feature", async () => {
+    locale = currentLocale;
     const { container } = render(await PricingPage());
-    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Clear pricing for real riders");
-    expect(screen.getByRole("button", { name: "Temporarily unavailable" })).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Start free" }).getAttribute("href")).toBe("/en/login");
-    const schema = container.querySelector('script[type="application/ld+json"]')?.textContent ?? "";
-    expect(schema).toContain("Can I manage multiple bikes?");
-    const metadata = await generateMetadata();
-    expect(metadata.title).toBe("Pricing | BikeFitBoost");
-    expect(metadata.alternates?.canonical).toBe("https://bikefitboost.com/en/pricing");
+    const page = pricingCopy[locale];
+    const table = screen.getByRole("table");
+    expect(within(table).getAllByRole("columnheader")).toHaveLength(5);
+    expect(table.textContent).toContain("80%");
+    const pdfRow = within(table).getByRole("row", { name: new RegExp(locale === "nl" ? "PDF laatste rapport" : "PDF of latest report") });
+    expect(within(pdfRow).getAllByRole("img", { name: page.included })).toHaveLength(4);
+    expect(container.textContent).toContain("[VOORWAARDEN AFSPRAAK — juridisch toetsen]");
+    const visible = container.cloneNode(true) as HTMLElement;
+    visible.querySelectorAll("script").forEach((script) => script.remove());
+    expect(visible.textContent).not.toMatch(/€9\b|€12[,.]50|\/\s*(?:maand|month)|Trustpilot|Ontwerpstaat|redeem|verzilver/i);
+    expect(visible.textContent?.match(/om weg te geven|to give away/g)).toHaveLength(1);
   });
 
-  it("honors either billing kill switch and restores only the existing login route when enabled", async () => {
-    vi.stubEnv("STRIPE_BILLING_ENABLED", "true");
-    render(await PricingPage());
-    expect((screen.getByRole("button", { name: "Tijdelijk niet beschikbaar" }) as HTMLButtonElement).disabled).toBe(true);
-    cleanup();
-    vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "true");
-    render(await PricingPage());
-    expect(screen.queryByRole("status")).toBeNull();
-    expect(screen.getByRole("link", { name: "Start Pro - EUR 9/maand" }).getAttribute("href")).toBe("/nl/login");
+  it("emits matching offer/FAQ schemas without ratings and localized canonical metadata", async () => {
+    locale = currentLocale;
+    const { container } = render(await PricingPage());
+    const serialized = container.querySelector('script[type="application/ld+json"]')!.textContent!;
+    const [service, faq] = JSON.parse(serialized);
+    expect(serialized).not.toMatch(/aggregateRating|AggregateRating/);
+    expect(service["@type"]).toBe("Service");
+    expect(service.offers.map((offer: { price: string }) => offer.price)).toEqual(["13.50", "24.50", "234.50"]);
+    for (const offer of service.offers) {
+      expect(offer.priceCurrency).toBe("EUR");
+      expect(offer.priceSpecification.valueAddedTaxIncluded).toBe(true);
+      expect(offer.url).toContain(`/${locale}/checkout?product=`);
+    }
+    expect(faq.mainEntity.map((entry: { name: string }) => entry.name)).toEqual(pricingCopy[locale].faqs.map((entry) => entry.q));
+    const metadata = await generateMetadata();
+    expect(metadata.alternates?.canonical).toBe(`${SITE_ORIGIN}/${locale}/pricing`);
+    expect(metadata.description).toBe(pricingCopy[locale].metadata.description);
+    expect(metadata.title).toBe(`${locale === "nl" ? "Prijzen" : "Pricing"} | BikeFitBoost`);
+    expect(fitPassCopy[locale].metadata.title).toContain("BikeFitBoost");
+    expect(JSON.stringify({ metadata, pricing: pricingCopy[locale], fitPass: fitPassCopy[locale] }))
+      .not.toMatch(/BestBikeFit4U/i);
+    expect(service.url).toBe(`${SITE_ORIGIN}/${locale}/pricing`);
+    expect(service.provider["@id"]).toBe(`${SITE_ORIGIN}/#organization`);
+    for (const offer of service.offers) expect(new URL(offer.url).origin).toBe(SITE_ORIGIN);
   });
 });

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="nl">
+<head><meta charset="utf-8"><title>Controleer en betaal · mobiel</title><script src="./support.js"></script></head>
+<body><x-dc><helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#F5F8F3;color:#0F2420;font-family:Figtree,sans-serif}a{color:#0A7263;text-decoration:none}button{cursor:pointer;font-family:inherit}h1,h2{font-family:'Bricolage Grotesque',sans-serif;margin:0}p{margin:0;line-height:1.5}.num{font-family:'DM Mono',monospace;font-weight:500}
+button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid #0A7263;outline-offset:3px}
+.review-strip{height:44px;min-height:44px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#EEF3EF;border-bottom:1px dashed #B9CCC6;box-sizing:border-box;font-family:Figtree,sans-serif;flex-shrink:0}.review-label{font-size:12px;font-weight:700;text-transform:uppercase;color:#4A5F5A;flex-shrink:0}.review-scroll{display:flex;align-items:center;gap:4px;overflow-x:auto;min-width:0;height:44px}.review-pill{display:inline-flex;align-items:center;justify-content:center;height:44px;min-height:44px;min-width:44px;flex-shrink:0;padding:0 2px;border:0;background:transparent;font-family:Figtree,sans-serif;font-size:13px;color:#4A5F5A;cursor:pointer}.review-pill span{display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;white-space:nowrap}.review-pill[aria-pressed="true"] span{background:#0F2420;color:#FFFFFF}
+.co-header{height:56px;min-height:56px;display:grid;grid-template-columns:96px minmax(0,1fr) 96px;align-items:center;padding:0 8px;background:#FFFFFF;border-bottom:1px solid #DCE6E1;flex-shrink:0}.co-back{display:inline-flex;align-items:center;gap:6px;min-height:44px;min-width:44px;padding:0 8px;color:#0F2420;font-weight:600;font-size:15px}.co-step{text-align:center;font-size:14px;font-weight:700;color:#0F2420}.co-lock{justify-self:end;display:flex;align-items:center;justify-content:center;width:44px;height:44px;color:#4A5F5A}
+.co-main{flex:1;min-height:0;overflow-y:auto;padding:20px 16px 0;display:flex;flex-direction:column}
+.co-sum{background:#FFFFFF;border:1px solid #DCE6E1;border-radius:20px}.co-sum summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;padding:10px 18px;cursor:pointer;font-weight:700;font-size:16px}.co-sum summary::-webkit-details-marker{display:none}.co-sum[open] .co-chev{transform:rotate(180deg)}.co-sum-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px;border-top:1px solid #DCE6E1}.co-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}.co-list li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.45}.co-small{font-size:14px;line-height:1.5;color:#4A5F5A}
+.co-main h1{font-weight:800;font-size:36px;line-height:1.05;letter-spacing:-.03em;margin-top:24px}
+.co-rows{margin-top:20px;background:#FFFFFF;border:1px solid #DCE6E1;border-radius:20px;padding:4px 18px}.co-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;padding:10px 0;border-top:1px solid #DCE6E1;font-size:15px}.co-row:first-child{border-top:0}.co-row dt{color:#4A5F5A}.co-row dd{margin:0;text-align:right;font-weight:600;display:flex;align-items:center;gap:8px}.co-row a{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;font-weight:700;text-decoration:underline}.co-total dt{color:#0F2420;font-weight:700}.co-total .num{font-size:24px}
+.co-consent{display:flex;gap:12px;align-items:flex-start;margin-top:16px;padding:16px;border-radius:16px;background:#FFFFFF;border:1px solid #DCE6E1;font-size:15px;line-height:1.5;cursor:pointer}.co-consent input{width:24px;height:24px;margin:0;flex-shrink:0;accent-color:#0A7263}
+.co-legal{margin-top:auto;padding:24px 0 16px;text-align:center;font-size:13px;color:#4A5F5A}.co-legal a{color:#4A5F5A;text-decoration:underline;display:inline-block;min-height:24px}
+.co-foot{position:sticky;bottom:0;height:88px;min-height:88px;padding:16px;background:#FFFFFF;border-top:1px solid #DCE6E1;flex-shrink:0}.co-primary{display:flex;align-items:center;justify-content:center;width:100%;height:56px;border:0;border-radius:999px;background:#0A7263;color:#FFFFFF;font-weight:700;font-size:17px}.co-primary:hover{background:#075A4E}.co-primary:disabled{background:#E1F2EE;color:#4A5F5A;cursor:not-allowed}
+</style></helmet>
+<div style="width:390px;height:1080px;display:flex;flex-direction:column;background:#F5F8F3;overflow:hidden">
+<div class="review-strip" aria-label="Ontwerpstaat"><span class="review-label">Ontwerpstaat</span><div class="review-scroll" data-review-scroll="true"><sc-for list="{{states}}" as="item" hint-placeholder-count="3"><button type="button" class="review-pill" aria-pressed="{{item.selected}}" onClick="{{item.pick}}"><span>{{item.label}}</span></button></sc-for></div></div>
+<header class="co-header">
+<a class="co-back" href="../Account.dc.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>Terug</a>
+<div class="co-step">Stap <span class="num">3</span> van <span class="num">3</span></div>
+<span class="co-lock" role="img" aria-label="Veilig betalen via Stripe"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></span>
+</header>
+<main class="co-main">
+<details class="co-sum">
+<summary><span>{{sumName}} · <span class="num">{{price}}</span></span><svg class="co-chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2420" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary>
+<div class="co-sum-body">
+<sc-if value="{{isSingle}}" hint-placeholder-val="{{false}}"><p class="co-small">voor Canyon Endurace</p></sc-if>
+<p><span class="num" style="font-size:36px">{{price}}</span> <span class="co-small">incl. btw</span></p>
+<ul class="co-list"><sc-for list="{{benefits}}" as="b" hint-placeholder-count="3"><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A7263" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M5 12l5 5 9-10"></path></svg><span>{{b.text}}</span></li></sc-for></ul>
+<sc-if value="{{isYear}}" hint-placeholder-val="{{true}}"><p class="co-small">Daarna <span class="num">€19,50</span> per jaar. <span class="num">30</span> dagen vooraf een herinnering, altijd online opzegbaar.</p></sc-if>
+<sc-if value="{{isFit}}" hint-placeholder-val="{{false}}"><p class="co-small">De afspraak is eenmalig. Daarna <span class="num">€19,50</span> per jaar als gewoon jaarabonnement.</p></sc-if>
+<p class="co-small" style="font-size:13px">Je gegevens blijven van jou, ook als je stopt.</p>
+</div>
+</details>
+<h1>Controleer en betaal</h1>
+<dl class="co-rows" style="margin-bottom:0">
+<div class="co-row"><dt>Product</dt><dd>{{productLabel}}</dd></div>
+<sc-if value="{{isSingle}}" hint-placeholder-val="{{false}}"><div class="co-row"><dt>Fiets</dt><dd>Canyon Endurace <a href="Kies.dc.html" aria-label="Wijzig fiets">Wijzig</a></dd></div></sc-if>
+<div class="co-row"><dt>Looptijd</dt><dd>{{term}}</dd></div>
+<sc-if value="{{isFit}}" hint-placeholder-val="{{false}}"><div class="co-row"><dt>Afspraak</dt><dd>Persoonlijke bikefit, [DUUR AFSPRAAK], [LOCATIE]</dd></div></sc-if>
+<div class="co-row co-total"><dt>Totaal incl. <span class="num">21%</span> btw</dt><dd><span class="num">{{price}}</span></dd></div>
+</dl>
+<sc-if value="{{isYear}}" hint-placeholder-val="{{true}}"><p class="co-small" style="margin-top:12px">Daarna <span class="num">€19,50</span> per jaar. <span class="num">30</span> dagen vooraf een herinnering, altijd online opzegbaar.</p></sc-if>
+<sc-if value="{{isFit}}" hint-placeholder-val="{{false}}"><p class="co-small" style="margin-top:12px">Na betaling plan je je afspraak zelf in de agenda. De afspraak is eenmalig; daarna verlengt je abonnement als gewoon jaarabonnement voor <span class="num">€19,50</span> per jaar, <span class="num">30</span> dagen vooraf een herinnering, altijd online opzegbaar.</p></sc-if>
+<label class="co-consent" for="co-consent"><input type="checkbox" id="co-consent" checked="{{consent}}" onChange="{{toggleConsent}}"><span>Ik wil direct toegang en weet dat ik daarmee afzie van mijn herroepingsrecht.</span></label>
+<sc-if value="{{isFit}}" hint-placeholder-val="{{false}}"><p class="co-small" style="margin-top:12px">Voor de afspraak gelden aparte annuleringsvoorwaarden: [VOORWAARDEN AFSPRAAK — juridisch toetsen]</p></sc-if>
+<p class="co-small" id="co-redirect" style="margin-top:12px;text-align:center">Je gaat naar Stripe om te betalen met iDEAL, Bancontact of kaart.</p>
+<p class="co-legal"><a href="../../Legal.dc.html">Voorwaarden</a> · <a href="../../Legal.dc.html">Privacy</a> · Hulp nodig? <a href="../../Contact.dc.html">info@bestbikefit4u.eu</a></p>
+</main>
+<div class="co-foot">
+<sc-if value="{{consent}}" hint-placeholder-val="{{false}}"><a class="co-primary" href="Gelukt.dc.html" aria-describedby="co-redirect">{{payLabel}}</a></sc-if>
+<sc-if value="{{noConsent}}" hint-placeholder-val="{{true}}"><button type="button" class="co-primary" disabled="{{true}}" aria-describedby="co-redirect">{{payLabel}}</button></sc-if>
+</div>
+</div></x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1080}}'>
+class Component extends DCLogic {
+constructor(props){super(props);this.state={view:'annual',consent:false};}
+renderVals(){
+const view=this.state.view;
+const single=view==='single';
+const instap=view==='instap';
+const fit=view==='fit';
+const price=fit?'€234,50':(single?'€13,50':(instap?'€13,50':'€24,50'));
+const fitBenefits=['Alles van het jaarabonnement','Persoonlijke bikefit-afspraak bij een fitter in [LOCATIE]','Je fitter start met jouw profiel en metingen'];
+const yearBenefits=['12 maanden optimaliseren','Al je fietsen afgesteld en vergeleken',instap?'1 losse meting om weg te geven':'2 losse metingen om weg te geven'];
+const singleBenefits=['Volledig stappenplan in de juiste volgorde','Controleplan en bandenspanning voor deze fiets','3 maanden opnieuw berekenen na elke aanpassing'];
+const consent=!!this.state.consent;
+return {
+states:[['single','Losse meting'],['annual','Jaarabonnement'],['instap','Instap'],['fit','Persoonlijke bikefit']].map(([id,label])=>({id,label,selected:id===view,pick:()=>this.setState({view:id,consent:false})})),
+isSingle:single,isYear:!single&&!fit,isFit:fit,
+sumName:fit?'Jaarabonnement + persoonlijke bikefit':(single?'Losse meting':'Jaarabonnement'),
+productLabel:fit?'Jaarabonnement + persoonlijke bikefit':(single?'Losse meting':(instap?'Jaarabonnement, eerste jaar':'Jaarabonnement')),
+term:single?'3 maanden':(fit?'12 maanden, daarna gewoon jaarabonnement':'12 maanden, verlengt automatisch'),
+price,
+benefits:(fit?fitBenefits:(single?singleBenefits:yearBenefits)).map(text=>({text})),
+consent,noConsent:!consent,
+toggleConsent:()=>this.setState({consent:!this.state.consent}),
+payLabel:'Betaal '+price
+};
+}
+}
+</script></body></html>

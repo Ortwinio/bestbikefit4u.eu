@@ -1,0 +1,15 @@
+convex/advice/queries.ts
+convex/bikes/queries.ts
+convex/emails/actions.ts
+convex/emails/__tests__/sendFitReport.contract.test.ts
+convex/recommendations/access.ts
+convex/recommendations/queries.ts
+convex/recommendations/__tests__/access.test.ts
+convex/sessions/queries.ts
+src/app/api/reports/[sessionId]/pdf/route.ts
+src/app/api/reports/[sessionId]/pdf/route.test.ts
+src/lib/reports/recommendationPdf.ts
+src/lib/reports/recommendationPdf.test.ts
+plans/pricing-v3/messages/A-report-payload.md
+plans/pricing-v3/audit/P1-reports-notes.md
+plans/pricing-v3/audit/files-P1-reports.txt

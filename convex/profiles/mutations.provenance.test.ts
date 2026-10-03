@@ -69,7 +69,37 @@ beforeEach(() => {
   auth.userId = "owner";
   vi.spyOn(Date, "now").mockReturnValue(1791000010000);
 });
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
+
+describe("enforced paid profile mutations", () => {
+  it("refuses changed full-form/measurement writes and same-value provenance upgrades", async () => {
+    vi.stubEnv("PAID_ACCESS_ENFORCED", "true");
+    const ctx = context();
+    const profileId = await ctx.db.insert("profiles", { userId: "owner", ...measurements, femurLengthCm: 40 });
+    await expect(invoke("upsert", ctx, { ...measurements, femurLengthCm: 41 })).rejects.toThrow("PAID_PROFILE_ACCESS_REQUIRED");
+    await expect(invoke("updateMeasurements", ctx, { femurLengthCm: 41 })).rejects.toThrow("PAID_PROFILE_ACCESS_REQUIRED");
+    await expect(invoke("upsert", ctx, { ...measurements, femurLengthCm: 40 })).resolves.toBe(profileId);
+    await expect((provenance.saveObservation as unknown as Handler)._handler(ctx, { field: "femurLengthCm", value: 40,
+      expectedCurrentValue: 40, kind: "measured", method: "single_measurement" })).rejects.toThrow("PAID_PROFILE_ACCESS_REQUIRED");
+    expect(await ctx.db.get(profileId)).toMatchObject({ femurLengthCm: 40 });
+  });
+
+  it("allows expired-value removal with a current-value guard and supersedes evidence", async () => {
+    vi.stubEnv("PAID_ACCESS_ENFORCED", "true");
+    const ctx = context();
+    const profileId = await ctx.db.insert("profiles", { userId: "owner", femurLengthCm: 40 });
+    const observationId = await ctx.db.insert("profileObservations", { userId: "owner", field: "femurLengthCm",
+      value: 40, status: "current" });
+    const remove = (mutations.removePaidField as unknown as Handler)._handler;
+    await expect(remove(ctx, { field: "femurLengthCm", expectedCurrentValue: 41 })).rejects.toThrow("PROFILE_VALUE_CHANGED");
+    await expect(remove(ctx, { field: "heightCm", expectedCurrentValue: 180 })).rejects.toThrow("Invalid profile field");
+    await expect(remove(ctx, { field: "femurLengthCm", expectedCurrentValue: 40 })).resolves.toBe(profileId);
+    expect(await ctx.db.get(profileId)).not.toHaveProperty("femurLengthCm");
+    expect(await ctx.db.get(observationId)).toMatchObject({ status: "superseded" });
+    auth.userId = "other";
+    await expect(remove(ctx, { field: "femurLengthCm", expectedCurrentValue: 40 })).rejects.toThrow("Profile not found");
+  });
+});
 
 describe("profile saves keep provenance current", () => {
   it.each(cases)("%s records changed values and supersedes prior observations", async (name, args, field, value, kind) => {

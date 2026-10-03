@@ -27,7 +27,8 @@ describe("marketing home", () => {
     expect(document.body.textContent).not.toMatch(/CLAIM|bron\?|Meest populair|Meetduur:|Voorbeeldgegevens/);
     expect(screen.getByText("Begin met je maten. Verfijn op de fiets.")).toBeTruthy();
     expect(screen.getByText("Schuif naar jouw maat")).toBeTruthy();
-    expect(document.body.textContent).toContain("Betalingen zijn tijdelijk niet beschikbaar");
+    expect(document.body.textContent).toContain("Losse meting €13,50 of jaarabonnement €24,50 voor het eerste jaar");
+    expect(screen.getByRole("link", { name: "Bekijk prijzen" }).getAttribute("href")).toBe("/nl/pricing");
     expect(document.querySelector('a[href="/nl/pain/hand-numbness-cycling"]')).toBeTruthy();
   });
 

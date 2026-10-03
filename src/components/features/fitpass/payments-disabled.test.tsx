@@ -33,40 +33,33 @@ function landing(locale: "en" | "nl") {
     loginHref={`/${locale}/login`} dashboardHref={`/${locale}/dashboard`} />;
 }
 
-describe("Fit Pass while payments are disabled", () => {
-  it.each([
-    ["en", "Payments are temporarily unavailable.", "Create a free account"],
-    ["nl", "Betalingen zijn tijdelijk niet beschikbaar.", "Maak een gratis account"],
-  ] as const)("keeps free signup available in %s", (locale, notice, signup) => {
+describe("Fit Pass uses the release 2.0 checkout", () => {
+  it.each(["en", "nl"] as const)("lets new riders create their account within checkout in %s", locale => {
     render(landing(locale));
-    expect(screen.getByText(notice)).toBeTruthy();
-    expect(screen.getByText(signup).closest("a")?.getAttribute("href")).toBe(`/${locale}/login`);
-    expect(screen.queryByText("Buy Fit Pass")).toBeNull();
+    expect(screen.getByRole("link", { name: "Buy Fit Pass" }).getAttribute("href")).toBe(`/${locale}/checkout?product=single`);
   });
 
-  it("lets a free member continue to their dashboard without a checkout action", () => {
+  it.each(["en", "nl"] as const)("sends members to checkout while billing is paused in %s", locale => {
     mocks.user = { tier: "free" };
-    render(landing("en"));
-    expect(screen.getByText("Go to my dashboard").closest("a")?.getAttribute("href")).toBe("/en/dashboard");
-    expect(screen.queryByText("Buy Fit Pass")).toBeNull();
+    render(landing(locale));
+    expect(screen.getByRole("link", { name: "Buy Fit Pass" }).getAttribute("href"))
+      .toBe(`/${locale}/checkout?product=single`);
   });
 
-  it.each(["pro", "premium"])("preserves %s access without an upgrade prompt", (tier) => {
+  it.each(["pro", "premium"])("preserves %s access without an upgrade prompt", tier => {
     mocks.user = { tier };
     render(landing("en"));
-    expect(screen.getByText("Already active")).toBeTruthy();
-    expect(screen.queryByText("Payments are temporarily unavailable.")).toBeNull();
+    expect(screen.getByText("Your full access is available")).toBeTruthy();
     cleanup();
     const { container } = render(<FitPassPaywall locale="en" sessionId="test" userTier={tier} />);
     expect(container.innerHTML).toBe("");
   });
 
-  it.each([
-    ["en", "Payments are temporarily unavailable."],
-    ["nl", "Betalingen zijn tijdelijk niet beschikbaar."],
-  ] as const)("removes paid report purchase actions in %s", (locale, notice) => {
+  it.each(["en", "nl"] as const)("routes report purchases through withdrawal consent in %s", locale => {
     render(<FitPassPaywall locale={locale} sessionId="test" userTier="free" />);
-    expect(screen.getByText(notice)).toBeTruthy();
-    expect(screen.queryByRole("button")).toBeNull();
+    const purchaseLink = screen.getAllByRole("link")
+      .find(link => link.getAttribute("href") === `/${locale}/checkout?product=single`);
+    expect(purchaseLink).toBeTruthy();
+    expect(screen.queryByText(/Cancel any time|Opzegbaar via/)).toBeNull();
   });
 });

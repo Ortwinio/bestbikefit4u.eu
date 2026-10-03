@@ -1,0 +1,21 @@
+.card { display: flex; flex-direction: column; gap: 20px; min-width: 0; padding: 32px; border: 1px solid var(--marketing-border, var(--bbf-rand)); border-radius: 28px; background: var(--marketing-card, var(--bbf-wit)); color: var(--marketing-foreground, var(--bbf-inkt)); font-family: var(--bbf-font-body); }
+.card h2 { font-family: var(--bbf-font-display); font-size: 28px; font-weight: 800; letter-spacing: -.025em; line-height: 1.15; }
+.description, .period, .renewal { color: var(--marketing-text, var(--bbf-tekst)); font-size: 15px; line-height: 1.5; }
+.price { font-family: var(--bbf-font-cijfers); font-size: clamp(38px, 3.6vw, 52px); line-height: 1.2; white-space: nowrap; }
+.period { margin-top: 6px; }
+.badge { align-self: flex-start; border-radius: 999px; padding: 7px 12px; background: var(--bbf-petrol-zacht); color: var(--bbf-petrol); font-size: 13px; font-weight: 700; }
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-block: 16px; border-block: 1px solid var(--marketing-border, var(--bbf-rand)); }
+.facts dt { color: var(--marketing-muted, var(--bbf-gedempt)); font-size: 13px; }
+.facts dd { font-weight: 700; font-size: 14px; overflow-wrap: anywhere; margin-top: 4px; }
+.features { display: flex; flex-direction: column; gap: 12px; list-style: none; padding: 0; font-size: 15px; line-height: 1.5; }
+.features li { display: flex; align-items: flex-start; gap: 10px; }
+.features svg { flex-shrink: 0; margin-top: 2px; color: var(--marketing-link, var(--bbf-petrol)); }
+.cta { display: flex; align-items: center; justify-content: center; margin-top: auto; min-height: 56px; padding: 12px 16px; border: 2px solid var(--marketing-foreground, var(--bbf-inkt)); border-radius: 999px; color: inherit; font-weight: 700; font-size: 15px; text-align: center; text-decoration: none; line-height: 1.35; }
+.cta:hover { background: var(--marketing-soft, var(--bbf-petrol-zacht)); }
+.cta:focus-visible { outline: 3px solid var(--marketing-link, var(--bbf-petrol)); outline-offset: 4px; }
+.featured { --marketing-foreground: var(--bbf-wit); --marketing-text: var(--bbf-op-donker); --marketing-muted: var(--bbf-op-donker); --marketing-border: var(--bbf-gedempt); --marketing-link: var(--bbf-lime); background: var(--bbf-inkt); border-color: var(--bbf-inkt); padding-block: 40px; }
+.featured .price, .featured .features svg { color: var(--bbf-lime); }
+.featured .badge, .featured .cta { background: var(--bbf-lime); color: var(--bbf-inkt); border-color: var(--bbf-lime); }
+.featured .cta:hover { background: var(--bbf-wit); border-color: var(--bbf-wit); }
+@media (max-width: 1000px) { .card { padding: 24px; } .card h2 { font-size: 25px; } }
+@media (max-width: 767px) { .card { padding: 28px 24px; } .price { font-size: 44px; } }

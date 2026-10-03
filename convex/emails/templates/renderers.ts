@@ -1,6 +1,7 @@
 import { BRAND } from "../../lib/brand";
+import { renderPurchaseConfirmation, renderExpiredOffer, renderRenewalReminder } from "./pricing";
 import { emailCopy } from "../i18n";
-import { formatDate, formatNumber, formatPrice } from "../format";
+import { formatDate, formatNumber } from "../format";
 import {
   renderLayout, heading, paragraph, hero, valueTiles, valueRows, benefits, numberedTips,
   tipBlock, illustration, primaryButton, codeBlock, chips, escapeHtml, safeHref,
@@ -221,17 +222,7 @@ export function renderFitReport(data: FitReportData, locale: EmailLocale): Rende
 }
 
 export function renderFitPassWelcome(data: FitPassWelcomeData, locale: EmailLocale): RenderedEmail {
-  const copy = emailCopy[locale].fitPassWelcome;
-  const eyebrow = data.firstName?.trim()
-    ? fill(copy.eyebrow, { firstName: data.firstName.trim().toLocaleUpperCase(locale) }) : copy.eyebrowWithoutName;
-  const mail = createEmail(locale, copy.subject, copy.preheader);
-  mail.add(hero({ eyebrow, heading: copy.heading }), `${eyebrow}\n${copy.heading}`);
-  mail.add(benefits(copy.benefits.map((item, index) => ({
-    ...item, icon: ["icon-report.png", "icon-plan.png", "icon-bike.png"][index],
-  }))), plainBenefits(copy.benefits));
-  mail.button(data.actionUrl, copy.button);
-  mail.paragraph(emailCopy[locale].common.reply, true);
-  return mail.finish();
+  return renderPurchaseConfirmation(data, locale);
 }
 
 export function renderCaseStudyLead(data: CaseStudyLeadData, _locale: EmailLocale): RenderedEmail {
@@ -277,18 +268,7 @@ export function renderFitReminder(data: FitReminderData, locale: EmailLocale): R
 }
 
 export function renderUpgradeNudge(data: UpgradeNudgeData, locale: EmailLocale): RenderedEmail {
-  const copy = emailCopy[locale].upgradeNudge;
-  const mail = createEmail(locale, copy.subject, copy.preheader, data);
-  mail.heading(copy.heading);
-  mail.paragraph(`${greeting(data.firstName, locale)} ${copy.intro}`);
-  mail.add(benefits(copy.benefits.map((item, index) => ({
-    ...item, icon: ["icon-report.png", "icon-bike.png", "icon-plan.png"][index],
-  }))), plainBenefits(copy.benefits));
-  const price = `${formatPrice(9, locale)} · ${copy.cancel}`;
-  mail.add(tipBlock({ text: price }), price);
-  mail.button(data.actionUrl, copy.button);
-  mail.paragraph(emailCopy[locale].common.reply, true);
-  return mail.finish();
+  return renderExpiredOffer(data, locale);
 }
 
 export function renderWinback(data: WinbackData, locale: EmailLocale): RenderedEmail {
@@ -314,17 +294,7 @@ export function renderWinback(data: WinbackData, locale: EmailLocale): RenderedE
 }
 
 export function renderProExplainer(data: ProExplainerData, locale: EmailLocale): RenderedEmail {
-  const copy = emailCopy[locale].proExplainer;
-  const mail = createEmail(locale, copy.subject, copy.preheader, data);
-  mail.heading(copy.heading);
-  mail.paragraph(`${greeting(data.firstName, locale)} ${copy.intro}`);
-  const rows = fitRows(data, locale, ["saddleHeightMm", "saddleSetbackMm", "handlebarDropMm"]);
-  if (rows.length) mail.add(valueRows(rows), plainRows(rows));
-  mail.add(illustration("stack-reach.png", copy.illustrationAlt), "");
-  mail.add(benefits(checkItems(copy.tips)), copy.tips.join("\n"));
-  mail.paragraph(copy.body);
-  mail.button(data.actionUrl, copy.button);
-  return mail.finish();
+  return renderRenewalReminder(data, locale);
 }
 
 export function renderDay1Tips(data: Day1TipsData, locale: EmailLocale): RenderedEmail {
@@ -348,5 +318,50 @@ export function renderDay1Tips(data: Day1TipsData, locale: EmailLocale): Rendere
     "iPhone:", ...install(copy.iphone), "Android:", ...install(copy.android),
   ].join("\n");
   mail.add(tipBlock({ title: `${copy.appEyebrow} · ${copy.appHeading}`, text: "", content: appHtml }), appText);
+  return mail.finish();
+}
+
+export function renderAccessWelcome(data: { firstName?: string; actionUrl: string }, locale: EmailLocale): RenderedEmail {
+  const copy = emailCopy[locale].fitPassWelcome;
+  const eyebrow = data.firstName?.trim()
+    ? fill(copy.eyebrow, { firstName: data.firstName.trim().toLocaleUpperCase(locale) }) : copy.eyebrowWithoutName;
+  const mail = createEmail(locale, copy.subject, copy.preheader);
+  mail.add(hero({ eyebrow, heading: copy.heading }), `${eyebrow}\n${copy.heading}`);
+  mail.add(benefits(copy.benefits.map((item, index) => ({
+    ...item, icon: ["icon-report.png", "icon-plan.png", "icon-bike.png"][index],
+  }))), plainBenefits(copy.benefits));
+  mail.button(data.actionUrl, copy.button);
+  mail.paragraph(emailCopy[locale].common.reply, true);
+  return mail.finish();
+}
+
+
+export function renderAccessOptions(data: UpgradeNudgeData, locale: EmailLocale): RenderedEmail {
+  const copy = emailCopy[locale].upgradeNudge;
+  const mail = createEmail(locale, copy.subject, copy.preheader, data);
+  mail.heading(copy.heading);
+  mail.paragraph(`${greeting(data.firstName, locale)} ${copy.intro}`);
+  mail.add(benefits(copy.benefits.map((item, index) => ({
+    ...item, icon: ["icon-report.png", "icon-bike.png", "icon-plan.png"][index],
+  }))), plainBenefits(copy.benefits));
+  const price = copy.price;
+  mail.add(tipBlock({ text: price }), price);
+  mail.button(data.actionUrl, copy.button);
+  mail.paragraph(emailCopy[locale].common.reply, true);
+  return mail.finish();
+}
+
+
+export function renderFitTips(data: ProExplainerData, locale: EmailLocale): RenderedEmail {
+  const copy = emailCopy[locale].proExplainer;
+  const mail = createEmail(locale, copy.subject, copy.preheader, data);
+  mail.heading(copy.heading);
+  mail.paragraph(`${greeting(data.firstName, locale)} ${copy.intro}`);
+  const rows = fitRows(data, locale, ["saddleHeightMm", "saddleSetbackMm", "handlebarDropMm"]);
+  if (rows.length) mail.add(valueRows(rows), plainRows(rows));
+  mail.add(illustration("stack-reach.png", copy.illustrationAlt), "");
+  mail.add(benefits(checkItems(copy.tips)), copy.tips.join("\n"));
+  mail.paragraph(copy.body);
+  mail.button(data.actionUrl, copy.button);
   return mail.finish();
 }

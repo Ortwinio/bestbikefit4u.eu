@@ -14,7 +14,7 @@ export const PROFILE_OBSERVATION_FIELDS: Record<string, FieldDefinition> = {
   ...Object.fromEntries(Object.entries(PROFILE_RANGES).map(([field, range]) => [field, {
     range,
     unit: field.endsWith("Cm") ? "cm" : field.endsWith("Mm") ? "mm"
-      : field === "weightKg" ? "kg" : field === "ftpWatts" ? "W"
+      : field === "weightKg" ? "kg" : field === "ftpWatts" ? "W" : field === "coreTestSeconds" ? "s"
         : ["coreStabilityScore", "painSeverity"].includes(field) ? "score" : "none",
     kind: ["coreStabilityScore", "painSeverity"].includes(field) ? "estimated"
       : ["age", "shoeSizeEu"].includes(field) ? "declared" : "measured",

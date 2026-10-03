@@ -1,0 +1,13 @@
+{
+  "buildId": "6KW82hm49ljNYI1ddtwmm",
+  "captureSource": "same-build-disk-manifest",
+  "initialProxy": "http://127.0.0.1:62855",
+  "initialFailure": "Login returned 500 because the local preview lacked NEXT_PUBLIC_CONVEX_URL",
+  "repairedProxy": "http://127.0.0.1:49975",
+  "offlineConvexUrl": "http://127.0.0.1:9",
+  "loginStatus": 200,
+  "servedCssSha256": "899fc0bc9c857075af6679c65c5fd83b36ecc689e89213584af9910e00de66ac",
+  "diskCssSha256": "899fc0bc9c857075af6679c65c5fd83b36ecc689e89213584af9910e00de66ac",
+  "byteIdentical": true,
+  "usesDevCss": false
+}

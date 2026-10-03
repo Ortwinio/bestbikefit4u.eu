@@ -17,6 +17,7 @@ import {
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { FitReportActionGroup } from "@/components/reports";
+import { LegacyReportBadge } from "./LegacyReportBadge";
 
 interface BikeFitHistorySectionProps {
   bikeId: Id<"bikes">;
@@ -88,6 +89,7 @@ export function BikeFitHistorySection({ bikeId }: BikeFitHistorySectionProps) {
                         )}
                       </p>
                       <p className="mt-1 text-sm text-muted-foreground">{getStatusLabel(session.status)}</p>
+                      {recommendation && <LegacyReportBadge sessionId={session._id} locale={locale} />}
                     </div>
 
                     {recommendation ? (

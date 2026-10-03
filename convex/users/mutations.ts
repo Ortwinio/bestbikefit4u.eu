@@ -67,6 +67,15 @@ export const deleteAccount = mutation({
   handler: async (ctx) => {
     const userId = await requireUserId(ctx);
 
+    for (const table of ["pricingEntitlements", "pricingTransitionOffers", "pricingAppointmentNotifications"] as const) {
+      const rows = await ctx.db.query(table)
+        .withIndex("by_user", range => range.eq("userId", userId)).collect();
+      for (const row of rows) await ctx.db.delete(row._id);
+    }
+    const pricingRuns = await ctx.db.query("pricingTransitionRuns")
+      .withIndex("by_admin", range => range.eq("adminUserId", userId)).collect();
+    for (const run of pricingRuns) await ctx.db.delete(run._id);
+
     const observations = await ctx.db.query("profileObservations")
       .withIndex("by_user_field", range => range.eq("userId", userId)).collect();
     for (const observation of observations) await ctx.db.delete(observation._id);

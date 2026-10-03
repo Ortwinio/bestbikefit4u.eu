@@ -7,7 +7,7 @@ import { v } from "convex/values";
 import { resolveEmailLocale } from "./locale";
 import { deliverEmail, emailActionUrl } from "./delivery";
 import { buildEmailPreferenceLinks, canSendPreferenceEmails } from "./unsubscribeTokens";
-import { renderResultsSummary, renderFitReminder, renderUpgradeNudge, renderWinback, renderDay1Tips } from "./templates";
+import { renderResultsSummary, renderFitReminder, renderAccessOptions, renderWinback, renderDay1Tips } from "./templates";
 
 export const sendResultsRecap = internalAction({
   args: { userId: v.id("users"), sessionId: v.id("fitSessions"),
@@ -64,7 +64,7 @@ async function sendBatchEmail(ctx: ActionCtx, userId: Id<"users">, kind: BatchKi
     : kind === "fit_reminder"
       ? renderFitReminder({ ...common, actionUrl: emailActionUrl(locale, "/fit") }, locale)
       : kind === "upgrade_nudge"
-        ? renderUpgradeNudge({ ...common, actionUrl: emailActionUrl(locale, "/pricing") }, locale)
+        ? renderAccessOptions({ ...common, actionUrl: emailActionUrl(locale, "/pricing") }, locale)
         : renderWinback({ ...common, ...recommendation?.calculatedFit,
           recordedAt: recommendation?.createdAt, bikeName, actionUrl: emailActionUrl(locale, "/fit") }, locale);
   const period = kind === "winback" ? `/${new Date().toISOString().slice(0, 10)}` : "";

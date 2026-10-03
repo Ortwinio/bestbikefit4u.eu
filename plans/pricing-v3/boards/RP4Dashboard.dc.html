@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Dashboard met profielscores en vragenkaart</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#F5F8F3;color:#0F2420;font-family:Figtree,system-ui,sans-serif}h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;margin:0;letter-spacing:-.025em}h1{font-size:44px;line-height:1.05}h2{font-size:28px;line-height:1.15}h3{font-size:20px;line-height:1.2}p{margin:0;line-height:1.5}a{color:#0A7263}a:hover{color:#075A4E}button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #0A7263;outline-offset:3px}.muted{color:#4A5F5A}.mono{font-family:'DM Mono',monospace}.card{padding:28px;background:#FFFFFF;border:1px solid #DCE6E1;border-radius:24px}.stack{display:flex;flex-direction:column;gap:16px}.row{display:flex;align-items:center;justify-content:space-between;gap:16px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;border:2px solid #0F2420;background:#FFFFFF;color:#0F2420;text-decoration:none;font-weight:700;white-space:nowrap}.btn.primary{background:#0A7263;border-color:#0A7263;color:#FFFFFF}.btn.primary:hover{background:#075A4E;border-color:#075A4E;color:#FFFFFF}.btn.ink{background:#0F2420;border-color:#0F2420;color:#FFFFFF}.btn.sm{min-height:44px;padding:0 16px;font-size:14px}.ghost{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;border:0;background:transparent;color:#0A7263;font-weight:700;text-decoration:underline;text-underline-offset:3px}.eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:13px;font-weight:700;color:#0A7263}.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}.k-meas{background:#E1F2EE;color:#075A4E}.k-self{background:#FFF1C2;color:#5C4500}.k-given{background:#EEF3EF;color:#3B4F4A}.k-miss{background:#FFFFFF;color:#4A5F5A;border:1px dashed #9DB3AC}.k-ok{background:#CFF26A;color:#0F2420}.k-warn{background:#FFD66B;color:#0F2420}.seg{display:grid;gap:6px;padding:5px;border-radius:16px;background:#EEF3EF}.seg button{min-height:44px;border:0;border-radius:12px;background:transparent;color:#3B4F4A;font-weight:700;padding:0 10px}.seg button[aria-pressed="true"]{background:#FFFFFF;color:#0F2420;box-shadow:0 1px 4px rgba(15,36,32,.18)}.range{position:relative;height:44px}.track{position:absolute;left:0;right:0;top:18px;height:8px;border-radius:99px;background:#DCE6E1}.fill{position:absolute;left:0;top:18px;height:8px;border-radius:99px;background:#0A7263}.rng{-webkit-appearance:none;appearance:none;position:absolute;left:0;top:0;width:100%;height:44px;background:transparent;margin:0;cursor:pointer}.rng::-webkit-slider-runnable-track{height:44px;background:transparent}.rng::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:7px;border-radius:50%;background:#FFFFFF;border:4px solid #0A7263;box-shadow:0 2px 8px rgba(15,36,32,.25)}.rng::-moz-range-track{height:44px;background:transparent}.rng::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#FFFFFF;border:4px solid #0A7263}
+.review-strip{height:44px;min-height:44px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#EEF3EF;border-bottom:1px dashed #B9CCC6}.review-label{font-size:12px;font-weight:700;text-transform:uppercase;color:#4A5F5A;flex-shrink:0}.review-pill{display:inline-flex;align-items:center;justify-content:center;height:44px;min-width:44px;padding:0 2px;border:0;background:transparent;font-size:13px;color:#4A5F5A}.review-pill span{display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;white-space:nowrap}.review-pill[aria-pressed="true"] span{background:#0F2420;color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1704px; display: flex; flex-direction: column; background: #F5F8F3">
+<div class="review-strip" aria-label="Ontwerpstaat"><span class="review-label">Ontwerpstaat</span><div style="display: flex; gap: 4px"><sc-for list="{{views}}" as="view" hint-placeholder-count="6"><button type="button" class="review-pill" aria-pressed="{{view.selected}}" onClick="{{view.pick}}"><span>{{view.label}}</span></button></sc-for></div></div>
+<div style="flex-grow: 1; display: grid; grid-template-columns: 264px minmax(0, 1fr)">
+<div style="background: #0F2420"><dc-import name="RPSidebar" active="dashboard" vol="{{vol}}" betr="{{betr}}" next-step="{{nextShort}}" plan="{{plan}}" hint-size="264px,1400px"></dc-import></div>
+<main style="padding: 36px 48px 56px; display: flex; flex-direction: column; gap: 28px">
+
+<header class="row">
+<div>
+<div style="display: flex; align-items: center; gap: 12px"><span class="eyebrow">Zaterdag 3 oktober</span><span class="chip k-given">Voorbeeldgegevens</span></div>
+<h1 style="margin-top: 6px">Goedemorgen, Sanne</h1>
+</div>
+<a href="RP6SaddleAccount.dc.html" class="btn primary">Nieuwe berekening</a>
+</header>
+
+<section aria-label="Sterkte van je riderprofiel" style="display: grid; grid-template-columns: auto minmax(0, 1fr) 340px; gap: 36px; align-items: center; padding: 32px 36px; border-radius: 32px; background: #0F2420; color: #FFFFFF">
+<div style="display: flex; gap: 24px">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+<div role="meter" aria-label="Volledigheid riderprofiel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{vol}}" style="position: relative; width: 140px; height: 140px">
+<svg width="140" height="140" viewBox="0 0 140 140" aria-hidden="true"><circle cx="70" cy="70" r="58" fill="none" stroke="#2E4C45" stroke-width="14"></circle><circle cx="70" cy="70" r="58" fill="none" stroke="#7FD3C2" stroke-width="14" stroke-linecap="round" stroke-dasharray="{{volDash}}" transform="rotate(-90 70 70)"></circle></svg>
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 36px">{{vol}}<span style="font-size: 16px; color: #B9CCC6">%</span></div>
+</div>
+<strong>Volledig</strong>
+<span style="font-size: 13px; color: #B9CCC6; text-align: center; max-width: 150px">wat we van je weten</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+<div role="meter" aria-label="Betrouwbaarheid riderprofiel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{betr}}" style="position: relative; width: 140px; height: 140px">
+<svg width="140" height="140" viewBox="0 0 140 140" aria-hidden="true"><circle cx="70" cy="70" r="58" fill="none" stroke="#2E4C45" stroke-width="14"></circle><circle cx="70" cy="70" r="58" fill="none" stroke="#CFF26A" stroke-width="14" stroke-linecap="round" stroke-dasharray="{{betrDash}}" transform="rotate(-90 70 70)"></circle></svg>
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 36px">{{betr}}<span style="font-size: 16px; color: #B9CCC6">%</span></div>
+</div>
+<strong>Betrouwbaar</strong>
+<span style="font-size: 13px; color: #B9CCC6; text-align: center; max-width: 150px">hoe zeker die gegevens zijn</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #CFF26A">Je riderprofiel</span>
+<h2 style="font-size: 40px; color: #FFFFFF">{{level}}</h2>
+<p style="color: #B9CCC6; max-width: 460px">Hoe vollediger en nauwkeuriger je profiel, hoe smaller de marge van je advies. Gemeten waarden tellen zwaarder dan geschatte.</p>
+<div aria-hidden="true" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; max-width: 460px">
+<sc-for list="{{levels}}" as="l" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 8px; border-radius: 99px; background: {{l.bg}}"></div><span style="font-size: 12px; color: {{l.fg}}">{{l.label}}</span></div>
+</sc-for>
+</div>
+<sc-if value="{{levelUp}}" hint-placeholder-val="{{false}}"><p role="status" style="display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700">Je profiel is nu Sterk. Je advies rekent met je eigen maten.</p></sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 22px; border-radius: 24px; background: #CFF26A; color: #0F2420">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase">Grootste winst nu</span>
+<h3 style="font-size: 22px">{{bestTitle}}</h3>
+<p style="font-size: 15px">{{bestBody}}</p>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><span class="chip" style="background: #0F2420; color: #FFFFFF">{{bestGain}}</span><span class="chip" style="background: #FFFFFF; color: #0F2420">{{bestTime}}</span></div>
+<a href="RP5Profile.dc.html" class="btn ink sm" style="align-self: flex-start">Bekijk alle gegevens</a>
+</div>
+</section>
+
+<sc-if value="{{showPrompts}}" hint-placeholder-val="{{true}}">
+<section class="card" aria-labelledby="prompt-title" style="display: flex; flex-direction: column; gap: 22px; padding: 32px">
+<div class="row" style="align-items: flex-start">
+<div>
+<span class="eyebrow">Twee vragen, één minuut</span>
+<h2 id="prompt-title" style="margin-top: 6px">Maak je profiel vandaag iets sterker</h2>
+<p class="muted" style="margin-top: 6px">We kiezen de vragen die je advies het meest verbeteren. Overslaan mag altijd.</p>
+</div>
+<button type="button" class="ghost" onClick="{{hidePrompts}}">Niet nu</button>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+
+<div style="display: flex; flex-direction: column; gap: 14px; padding: 24px; border-radius: 20px; border: 1px solid #DCE6E1; background: {{armBg}}">
+<div class="row"><div style="display: flex; align-items: center; gap: 10px"><span style="width: 32px; height: 32px; border-radius: 50%; background: #CFF26A; display: inline-flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace">1</span><h3>Wat is je armlengte?</h3></div><span class="chip k-ok">+8 volledig</span></div>
+<p class="muted" style="font-size: 15px">Verbetert: <strong style="color: #0F2420">reach en stuurpen</strong>. Nu schatten we je reach uit je lengte.</p>
+<sc-if value="{{armOpen}}" hint-placeholder-val="{{true}}">
+<div class="row"><label for="dash-arm" style="font-weight: 700">Armlengte</label><span class="mono" style="font-size: 28px">{{arm}}<span class="muted" style="font-size: 14px"> cm</span></span></div>
+<div class="range"><div class="track"></div><div class="fill" style="width: {{armPct}}%"></div><input id="dash-arm" class="rng" type="range" min="50" max="75" step="0.5" value="{{arm}}" onChange="{{setArm}}"></div>
+<p class="muted" style="font-size: 13px">Meet van je schouderpunt tot je vuist, arm gestrekt opzij. <a href="MeasurementGuide.dc.html">Bekijk de meetinstructie</a></p>
+<div style="display: flex; gap: 10px"><button type="button" class="btn primary sm" onClick="{{saveArm}}">Bewaar als gemeten</button><button type="button" class="ghost" onClick="{{skipArm}}">Sla over</button></div>
+</sc-if>
+<sc-if value="{{armDone}}" hint-placeholder-val="{{false}}">
+<div role="status" style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<div style="display: flex; gap: 8px; align-items: center"><span class="chip k-meas">Gemeten · vandaag</span><span class="mono">{{arm}} cm</span></div>
+<p style="font-size: 15px">Je reach-advies is nu berekend met je eigen armlengte. Betrouwbaarheid van reach: <strong>laag → middel</strong>.</p>
+</div>
+</sc-if>
+<sc-if value="{{armSkipped}}" hint-placeholder-val="{{false}}"><p role="status" class="muted" style="font-size: 15px">Overgeslagen. We vragen dit over 14 dagen opnieuw, of vul het zelf in bij Mijn profiel.</p></sc-if>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 14px; padding: 24px; border-radius: 20px; border: 1px solid #DCE6E1; background: {{ftpBg}}">
+<div class="row"><div style="display: flex; align-items: center; gap: 10px"><span style="width: 32px; height: 32px; border-radius: 50%; background: #CFF26A; display: inline-flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace">2</span><h3>Wat is je FTP?</h3></div><span class="chip k-ok">+5 volledig</span></div>
+<p class="muted" style="font-size: 15px">Verbetert: <strong style="color: #0F2420">verzet, klimplanner en voeding</strong>. Daar typ je hem nu steeds opnieuw in.</p>
+<sc-if value="{{ftpOpen}}" hint-placeholder-val="{{true}}">
+<div class="seg" role="group" aria-label="Hoe ken je je FTP?" style="grid-template-columns: repeat(3, minmax(0, 1fr))"><sc-for list="{{ftpMethods}}" as="m" hint-placeholder-count="3"><button type="button" aria-pressed="{{m.pressed}}" onClick="{{m.pick}}">{{m.label}}</button></sc-for></div>
+<sc-if value="{{ftpKnown}}" hint-placeholder-val="{{true}}">
+<div class="row"><label for="dash-ftp" style="font-weight: 700">FTP</label><span class="mono" style="font-size: 28px">{{ftp}}<span class="muted" style="font-size: 14px"> W</span></span></div>
+<div class="range"><div class="track"></div><div class="fill" style="width: {{ftpPct}}%"></div><input id="dash-ftp" class="rng" type="range" min="100" max="400" step="5" value="{{ftp}}" onChange="{{setFtp}}"></div>
+<div style="display: flex; gap: 10px"><button type="button" class="btn primary sm" onClick="{{saveFtp}}">Bewaar</button><button type="button" class="ghost" onClick="{{skipFtp}}">Sla over</button></div>
+</sc-if>
+<sc-if value="{{ftpUnknown}}" hint-placeholder-val="{{false}}"><p style="font-size: 15px; padding: 14px; border-radius: 14px; background: #E1F2EE">Geen probleem. Met de <a href="FtpWkg.dc.html">FTP-calculator</a> schat je hem uit een 20-minutentest. Tot die tijd rekenen we met je gewicht en een voorzichtige aanname.</p></sc-if>
+</sc-if>
+<sc-if value="{{ftpDone}}" hint-placeholder-val="{{false}}">
+<div role="status" style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #DCE6E1">
+<div style="display: flex; gap: 8px; align-items: center"><span class="chip k-meas">{{ftpChip}}</span><span class="mono">{{ftp}} W</span></div>
+<p style="font-size: 15px">Je verzet- en klimadvies gebruiken voortaan deze FTP. We vragen over 6 maanden of hij nog klopt.</p>
+</div>
+</sc-if>
+<sc-if value="{{ftpSkipped}}" hint-placeholder-val="{{false}}"><p role="status" class="muted" style="font-size: 15px">Overgeslagen. Je ziet deze vraag over 14 dagen weer.</p></sc-if>
+</div>
+
+</div>
+<p class="muted" style="font-size: 13px">Je ziet hooguit twee vragen per bezoek. Vragen over klachten stellen we alleen in de fit, met uitleg waarom.</p>
+</section>
+</sc-if>
+<sc-if value="{{promptsHidden}}" hint-placeholder-val="{{false}}">
+<div class="row" style="padding: 18px 24px; border-radius: 20px; border: 1px dashed #B9CCC6"><p class="muted">De vragenkaart is verborgen tot 10 oktober. Je kunt je profiel altijd zelf aanvullen.</p><a href="RP5Profile.dc.html" class="btn sm">Naar Mijn profiel</a></div>
+</sc-if>
+
+<div style="display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 24px; align-items: start">
+<section class="card stack" style="padding: 28px">
+<div class="row"><div><span class="eyebrow">Aanbevolen volgende stap</span><h2 style="margin-top: 6px">Zadelhoogte op je Canyon Endurace</h2></div><span class="chip k-ok">bijna klaar</span></div>
+<p class="muted">Je binnenbeen, crank en flexibiliteit staan klaar. Alleen je huidige zadelhoogte ontbreekt, dan zie je precies hoeveel millimeter je verstelt.</p>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{ready}}" as="r" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; background: {{r.bg}}; border: {{r.border}}"><span style="font-size: 13px; color: #4A5F5A">{{r.label}}</span><span class="mono" style="font-size: 18px">{{r.value}}</span></div></sc-for>
+</div>
+<a href="RP6SaddleAccount.dc.html" class="btn primary" style="align-self: flex-start">Start zadelhoogte</a>
+</section>
+<section class="card stack" style="padding: 28px">
+<div class="row"><h2>Je adviezen</h2><a href="RP7Advice.dc.html" class="ghost">Alle adviezen</a></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+<div style="padding: 16px; border-radius: 16px; background: #E1F2EE"><div class="mono" style="font-size: 34px">5</div><span style="font-size: 14px">actueel</span></div>
+<div style="padding: 16px; border-radius: 16px; background: #FFF1C2"><div class="mono" style="font-size: 34px">1</div><span style="font-size: 14px">verouderd</span></div>
+<div style="padding: 16px; border-radius: 16px; background: #CFF26A"><div class="mono" style="font-size: 34px">{{newCount}}</div><span style="font-size: 14px">nieuw</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; border: 1px solid #DCE6E1"><div style="display: flex; gap: 8px; align-items: center"><span class="chip k-warn">Verouderd</span><strong>Bandenspanning</strong></div><p class="muted" style="font-size: 15px">Rekent nog met 70 kg; je profiel zegt 68 kg.</p><a href="RP7Advice.dc.html" class="ghost" style="align-self: flex-start">Herbereken</a></div>
+</section>
+</div>
+
+<section class="card" style="display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 24px; align-items: center; padding: 24px 28px">
+<div role="meter" aria-label="Volledigheid fietsprofiel Canyon Endurace" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70" style="position: relative; width: 84px; height: 84px">
+<svg width="84" height="84" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="34" fill="none" stroke="#E3EAE6" stroke-width="10"></circle><circle cx="42" cy="42" r="34" fill="none" stroke="#0A7263" stroke-width="10" stroke-linecap="round" stroke-dasharray="149.5 999" transform="rotate(-90 42 42)"></circle></svg>
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 20px">70<span style="font-size: 11px; color: #4A5F5A">%</span></div>
+</div>
+<div><span class="eyebrow">Mijn fiets</span><h3 style="margin-top: 4px">Canyon Endurace · racefiets · maat M</h3><p class="muted" style="margin-top: 4px">Fietsprofiel 70 % volledig. Meet je zadelterugstand om reach-advies te kunnen checken.</p></div>
+<a href="RP8Bike.dc.html" class="btn sm">Open fietsprofiel</a>
+</section>
+
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1704}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'open', arm: 61, armStatus: 'open', ftp: 235, ftpMethod: 0, ftpStatus: 'open', plan: 'free' };
+  }
+  renderVals() {
+    const s = this.state;
+    const ftpQuality = s.ftpMethod === 1 ? 0.85 : 0.85;
+    const vol = 68 + (s.armStatus === 'done' ? 8 : 0) + (s.ftpStatus === 'done' ? 5 : 0);
+    const betr = Math.round(57.05 + (s.armStatus === 'done' ? 8 * 0.85 : 0) + (s.ftpStatus === 'done' ? 5 * ftpQuality : 0));
+    const big = 2 * Math.PI * 58;
+    const level = vol >= 90 ? 'Compleet' : vol >= 70 ? 'Sterk' : vol >= 40 ? 'Goed op weg' : 'Basis';
+    const idx = vol >= 90 ? 3 : vol >= 70 ? 2 : vol >= 40 ? 1 : 0;
+    const armDone = s.armStatus === 'done';
+    const best = armDone
+      ? { t: 'Meet je torsolengte', b: 'Samen met je armlengte rekent de engine je reach volledig uit je eigen maten.', g: '+8 volledig', time: 'ca. 2 min', short: 'meet je torsolengte' }
+      : { t: 'Meet je armlengte', b: 'Je reach-advies wordt nu geschat uit je lengte. Met je eigen armlengte wordt het nauwkeuriger.', g: '+8 volledig', time: 'ca. 2 min', short: 'meet je armlengte' };
+    const pick = (view) => () => {
+      if (view === 'open') this.setState({ view, armStatus: 'open', ftpStatus: 'open' });
+      if (view === 'done') this.setState({ view, armStatus: 'done', ftpStatus: 'done', ftpMethod: 0 });
+      if (view === 'hidden') this.setState({ view, armStatus: 'open', ftpStatus: 'open' });
+    };
+    return {
+      vol, betr, level, levelUp: vol >= 70,
+      nextShort: best.short,
+      volDash: (vol / 100 * big).toFixed(1) + ' 999',
+      betrDash: (betr / 100 * big).toFixed(1) + ' 999',
+      levels: ['Basis', 'Goed op weg', 'Sterk', 'Compleet'].map((label, i) => ({
+        label, bg: i <= idx ? '#CFF26A' : '#2E4C45', fg: i === idx ? '#FFFFFF' : '#B9CCC6'
+      })),
+      bestTitle: best.t, bestBody: best.b, bestGain: best.g, bestTime: best.time,
+      showPrompts: s.view !== 'hidden', promptsHidden: s.view === 'hidden',
+      hidePrompts: () => this.setState({ view: 'hidden' }),
+      arm: s.arm, armPct: (s.arm - 50) / 25 * 100,
+      setArm: (e) => this.setState({ arm: Number(e.target.value) }),
+      saveArm: () => this.setState({ armStatus: 'done' }),
+      skipArm: () => this.setState({ armStatus: 'skipped' }),
+      armOpen: s.armStatus === 'open', armDone, armSkipped: s.armStatus === 'skipped',
+      armBg: armDone ? '#F3FBDD' : '#FFFFFF',
+      ftp: s.ftp, ftpPct: (s.ftp - 100) / 300 * 100,
+      setFtp: (e) => this.setState({ ftp: Number(e.target.value) }),
+      saveFtp: () => this.setState({ ftpStatus: 'done' }),
+      skipFtp: () => this.setState({ ftpStatus: 'skipped' }),
+      ftpOpen: s.ftpStatus === 'open', ftpDone: s.ftpStatus === 'done', ftpSkipped: s.ftpStatus === 'skipped',
+      ftpKnown: s.ftpMethod !== 2, ftpUnknown: s.ftpMethod === 2,
+      ftpChip: s.ftpMethod === 1 ? 'Gemeten · 20-min test' : 'Uit je trainingsapp · vandaag',
+      ftpBg: s.ftpStatus === 'done' ? '#F3FBDD' : '#FFFFFF',
+      ftpMethods: ['Uit mijn app', '20-min test', 'Weet ik niet'].map((label, i) => ({
+        label, pressed: String(s.ftpMethod === i), pick: () => this.setState({ ftpMethod: i })
+      })),
+      newCount: armDone ? '2' : '1',
+      ready: [
+        { label: 'Binnenbeen', value: '81 cm', bg: '#E1F2EE', border: '0' },
+        { label: 'Crank', value: '170 mm', bg: '#E1F2EE', border: '0' },
+        { label: 'Flexibiliteit', value: 'gemiddeld', bg: '#E1F2EE', border: '0' },
+        { label: 'Huidige hoogte', value: 'ontbreekt', bg: '#FFFFFF', border: '1px dashed #9DB3AC' }
+      ],
+      views: [['open', 'Vragen open'], ['done', 'Na beantwoorden'], ['hidden', 'Niet nu']].map(([key, label]) => ({
+        label, selected: String(s.view === key), pick: pick(key)
+      })).concat([['free', 'Gratis account'], ['single', 'Losse meting actief'], ['year', 'Jaarabonnement']].map(([key, label]) => ({
+        label, selected: String(s.plan === key), pick: () => this.setState({ plan: key })
+      }))),
+      plan: s.plan
+    };
+  }
+}
+</script>
+</body>
+</html>

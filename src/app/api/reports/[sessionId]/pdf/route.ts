@@ -5,6 +5,7 @@ import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
 import { BRAND } from "@/config/brand";
 import { isReportAccessOpen } from "@/config/commercial";
+import { isPaidAccessEnforced } from "../../../../../../shared/pricing/flags";
 import { createSimplePdfFromLines } from "@/lib/pdf/simplePdf";
 import { renderPdfFromHtml } from "@/lib/pdf/htmlPdf";
 import {
@@ -146,7 +147,7 @@ async function generateReportResponse(
     const hasPaidAccess =
       currentUser?.tier === "pro" || currentUser?.tier === "premium";
 
-    if (!currentUser || (!hasOpenReportAccess && !hasPaidAccess)) {
+    if (!currentUser || (!isPaidAccessEnforced() && !hasOpenReportAccess && !hasPaidAccess)) {
       return NextResponse.json({ error: "pro_required" }, { status: 403 });
     }
 
@@ -188,6 +189,10 @@ async function generateReportResponse(
         { status: 409 }
       );
     }
+    const reportAccess = reportSource.access;
+    if (!reportAccess?.canDownloadPdf) {
+      return NextResponse.json({ error: "REPORT_ACCESS_REQUIRED" }, { status: 403 });
+    }
 
     let pdfBytes: Uint8Array;
     let responseMetadata: PdfResponseMetadata = {
@@ -196,7 +201,7 @@ async function generateReportResponse(
     };
 
     const richRenderingEnabled =
-      process.env.PDF_RICH_RENDER_ENABLED?.toLowerCase() !== "false";
+      reportAccess.fullReport && process.env.PDF_RICH_RENDER_ENABLED?.toLowerCase() !== "false";
 
     if (richRenderingEnabled) {
       try {
@@ -268,7 +273,8 @@ async function generateReportResponse(
         locale,
       });
       pdfBytes = createSimplePdfFromLines(
-        buildRecommendationPdfLines({ session, recommendation, locale })
+        buildRecommendationPdfLines({ session, recommendation, locale,
+          ...(!reportAccess.fullReport ? { coreOnly: true } : {}) })
       );
       responseMetadata = {
         mode: "simple",

@@ -138,6 +138,7 @@ export function buildRecommendationPdfLines(params: {
   session: FitSessionForPdf;
   recommendation: RecommendationForPdf;
   locale?: Locale;
+  coreOnly?: boolean;
 }): string[] {
   const { session, recommendation, locale = "en" } = params;
   const fit = recommendation.calculatedFit;
@@ -146,6 +147,21 @@ export function buildRecommendationPdfLines(params: {
     (a, b) => a.priority - b.priority
   );
   const isDutch = locale === "nl";
+  if (params.coreOnly) {
+    return [
+      BRAND.reportTitle,
+      `${isDutch ? "Aangemaakt" : "Created"}: ${formatDate(session.createdAt)}`,
+      `${isDutch ? "Zadelhoogte" : "Saddle height"}: ${fit.saddleHeightMm} mm`,
+      `${isDutch ? "Zadelterugstand" : "Saddle setback"}: ${fit.saddleSetbackMm} mm`,
+      `${isDutch ? "Stuurdrop" : "Handlebar drop"}: ${fit.handlebarDropMm} mm`,
+      `${isDutch ? "Stuur-reach" : "Handlebar reach"}: ${fit.handlebarReachMm} mm`,
+      `${isDutch ? "Stuurpenlengte" : "Stem length"}: ${fit.stemLengthMm} mm`,
+      `${isDutch ? "Cranklengte" : "Crank length"}: ${fit.crankLengthMm} mm`,
+      `${isDutch ? "Stuurbreedte" : "Handlebar width"}: ${fit.handlebarWidthMm} mm`,
+      `Stack: ${fit.recommendedStackMm} mm`,
+      `Reach: ${fit.recommendedReachMm} mm`,
+    ];
+  }
 
   const executiveSummaryLines = sortedAdjustments
     .slice(0, 3)

@@ -19,6 +19,7 @@ const PRIMITIVE_FILES = new Set([
 ]);
 
 const EXEMPT_FILES = new Set([
+  "src/components/checkout/CheckoutFlow.tsx",
   // Handoff review uses permanent labels and inline measurement-point guidance.
   "src/app/welcome/WelcomeClient.tsx",
   // Administrative search/content controls use visible labels and helper copy,
@@ -82,6 +83,7 @@ const EXEMPT_FILES = new Set([
 ]);
 
 const INPUT_SELECT_ENFORCED_FILES = new Set([
+  "src/components/profile/ProfileRefinements.tsx",
   "src/components/calculators/AccountCalculatorBike.tsx",
   "src/components/calculators/CalculatorChainPanel.tsx",
   "src/app/(public)/calculators/crank-length/CrankLengthCalculatorForm.tsx",

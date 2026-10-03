@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation } from "../_generated/server";
 import type { Doc, Id } from "../_generated/dataModel";
 import { requireUserId } from "../lib/authz";
+import { assertPaidProfileWrite } from "./paidAccess";
 import { validateNumberRange, validateShortString } from "../lib/validation";
 import { bikeTypeValidator, createBikeWithProfiles } from "../bikes/mutations";
 import { PROFILE_RANGES } from "../../shared/profileBounds";
@@ -144,6 +145,7 @@ export const importHandoff = mutation({
     }
     const weight = accepted.find((record) => record.field === "weightKg");
     if (weight) updates.weightUpdatedAt = weight.touchedAt;
+    await assertPaidProfileWrite(ctx, userId, updates, profile, true);
     let profileId = profile?._id ?? null;
     if (Object.keys(updates).length) {
       if (profileId) await ctx.db.patch(profileId, { ...updates, updatedAt: now, riderProfileUpdatedAt: now });

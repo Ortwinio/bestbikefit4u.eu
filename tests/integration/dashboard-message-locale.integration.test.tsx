@@ -124,6 +124,10 @@ describe("dashboard message locale integration", () => {
   it("renders a locale-targeted dashboard banner in the shell", () => {
     usePathnameMock.mockReturnValue("/nl/dashboard");
     useQueryMock.mockImplementation((reference: FunctionReference<"query">, args?: unknown) => {
+      if (getFunctionName(reference) === "pricing/queries:getAccess") {
+        expect(args).toBe("skip");
+        return undefined;
+      }
       if (getFunctionName(reference) === "profiles/queries:getMyProvenance") {
         expect(args).toEqual({});
         return { profile: null, observations: [], bikes: [] };

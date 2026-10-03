@@ -4,6 +4,7 @@ import { getFitResultsCopy } from "@/i18n/account/fitResults";
 import type { ReportV2Copy } from "@/lib/reports/reportV2Copy";
 import type { ReportV2Payload } from "@/lib/reports/reportV2Types";
 import { FitResultsValue, formatFitResultsNumber } from "./FitResultsValue";
+import { reportAccessCopy } from "@/i18n/account/reportAccess";
 
 type FitResultsOverviewProps = {
   locale: Locale;
@@ -12,9 +13,12 @@ type FitResultsOverviewProps = {
   fit: { saddleHeightMm: number; handlebarReachMm: number; handlebarDropMm: number };
   profileLabel: string;
   hasPaidAccess: boolean;
+  showAccessLabel?: boolean;
 };
 
-export function FitResultsOverview({ locale, copy, report, fit, profileLabel, hasPaidAccess }: FitResultsOverviewProps) {
+export function FitResultsOverview({
+  locale, copy, report, fit, profileLabel, hasPaidAccess, showAccessLabel = false,
+}: FitResultsOverviewProps) {
   const text = getFitResultsCopy(locale);
   const saddleLength = fit.saddleHeightMm * 0.26;
   const saddleX = 250 - 0.292 * saddleLength;
@@ -54,9 +58,17 @@ export function FitResultsOverview({ locale, copy, report, fit, profileLabel, ha
       </Card>
       <Card className="gap-3 rounded-3xl p-5 sm:p-6">
         <h2 className="font-display text-2xl font-bold">{text.prioritiesTitle}</h2>
+        {showAccessLabel && <div>
+          <span className="inline-flex rounded-full bg-primary-soft px-3 py-1 text-sm font-bold text-primary">
+            {hasPaidAccess ? reportAccessCopy[locale].refined : reportAccessCopy[locale].basic}
+          </span>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {hasPaidAccess ? reportAccessCopy[locale].refinedNote : reportAccessCopy[locale].basicNote}
+          </p>
+        </div>}
         <p className="text-sm leading-relaxed text-muted-foreground">{text.prioritiesDescription}</p>
         <ol className="divide-y divide-border">
-          {report.prioritySummary.slice(0, 3).map((row, index) => <li key={row.key} className="flex flex-wrap items-center gap-3 py-4">
+          {report.prioritySummary.slice(0, 4).map((row, index) => <li key={row.key} className="flex flex-wrap items-center gap-3 py-4">
             <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--bbf-lime)] font-mono text-[var(--bbf-inkt)]">{formatFitResultsNumber(index + 1, locale)}</span>
             <div className="min-w-0 flex-1 basis-36"><h3 className="font-bold">{copy.parameters[row.key].label}</h3><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{copy.parameters[row.key].measurementReference}</p></div>
             <p className="text-xl font-semibold"><FitResultsValue value={row.targetLabel} locale={locale} /></p>

@@ -1,0 +1,12 @@
+src/app/(public)/pricing/page.tsx
+src/app/(public)/pricing/pricing.module.css
+src/app/(public)/pricing/page.test.tsx
+src/components/pricing/PricingCard.tsx
+src/components/pricing/PricingCard.module.css
+src/i18n/marketing/pricing.ts
+plans/pricing-v3/audit/P2-pricing-visual.mjs
+plans/pricing-v3/audit/P2-pricing-notes.md
+plans/pricing-v3/audit/files-P2-pricing.txt
+plans/pricing-v3/messages/B-pricing-contract.md
+plans/pricing-v3/messages/B-pricing-validation.md
+plans/pricing-v3/README.md

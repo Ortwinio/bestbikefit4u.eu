@@ -1,8 +1,8 @@
-import { BIKE_RULES, RIDER_RULES } from "./rules";
+import { BASE_BIKE_RULES, BASE_RIDER_RULES, BIKE_REFINEMENT_RULES, BIKE_RULES, REFINEMENT_RULES, RIDER_RULES } from "./rules";
 import type { BikeValues, ProfileScore, RiderValues, ScoreItem, ScoreLevel, ScoreObservation, ScoreRule } from "./types";
 
 export * from "./types";
-export { BIKE_RULES, RIDER_RULES } from "./rules";
+export { BASE_BIKE_RULES, BASE_RIDER_RULES, BIKE_REFINEMENT_RULES, BIKE_RULES, REFINEMENT_RULES, RIDER_RULES } from "./rules";
 
 const round = (value: number) => Math.round(value * 10) / 10;
 
@@ -111,17 +111,27 @@ function calculate(values: object, observations: readonly ScoreObservation[], ru
       completenessGain: next.complete ? 0 : next.weight } : null };
 }
 
-export function scoreRiderProfile(input: { profile: RiderValues | null; observations?: readonly ScoreObservation[] }, now: number): ProfileScore {
-  return calculate(input.profile ?? {}, input.observations ?? [], RIDER_RULES, now, false);
+export function scoreRiderProfile(input: { profile: RiderValues | null; observations?: readonly ScoreObservation[] }, now: number,
+  access?: { enforced: boolean; fullProfile: boolean }): ProfileScore {
+  const rules = access?.enforced ? [...BASE_RIDER_RULES, ...(access.fullProfile ? REFINEMENT_RULES : [])] : RIDER_RULES;
+  const score = calculate(input.profile ?? {}, input.observations ?? [], rules, now, false);
+  if (!access?.enforced) return score;
+  const completeness = round(score.completeness);
+  return { ...score, completeness, level: profileScoreLevel(completeness) };
 }
 
-export function scoreBike(input: { bike: BikeValues | null; observations?: readonly ScoreObservation[] }, now: number): ProfileScore {
+export function scoreBike(input: { bike: BikeValues | null; observations?: readonly ScoreObservation[] }, now: number,
+  access?: { enforced: boolean; fullReport: boolean }): ProfileScore {
   const measurement = input.bike?.currentSetup?.saddleHeightMeasurement;
   const observations = (input.observations ?? []).map(observation =>
     observation.field === "currentSetup.saddleHeightMm" && measurement
       ? { ...observation, measurePoint: observation.measurePoint ?? measurement.measurePoint }
       : observation);
-  return calculate(input.bike ?? {}, observations, BIKE_RULES, now, true);
+  if (!access?.enforced) return calculate(input.bike ?? {}, observations, BIKE_RULES, now, true);
+  const score = calculate(input.bike ?? {}, observations,
+    [...BASE_BIKE_RULES, ...(access.fullReport ? BIKE_REFINEMENT_RULES : [])], now, true);
+  const completeness = round(score.completeness);
+  return { ...score, completeness, level: profileScoreLevel(completeness) };
 }
 
 function sameValue(first: unknown, second: unknown): boolean {

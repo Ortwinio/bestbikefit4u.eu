@@ -3,6 +3,8 @@ import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { requireRecommendationOwner } from "../lib/authz";
 import { sessionProfile } from "../sessions/profileSnapshot";
+import { visibleRecommendation, reportAccess, hasFullReportAccess } from "./access";
+import { isPaidAccessEnforced } from "../../shared/pricing/flags";
 
 /**
  * Internal: get the oldest recommendation for a session (used by lifecycle email actions)
@@ -40,7 +42,7 @@ export const getBySession = query({
     const [oldestRecommendation] = [...recommendations].sort(
       (a, b) => a.createdAt - b.createdAt
     );
-    return oldestRecommendation ?? null;
+    return visibleRecommendation(ctx, oldestRecommendation ?? null);
   },
 });
 
@@ -48,7 +50,7 @@ export const getById = query({
   args: { id: v.id("recommendations") },
   handler: async (ctx, args) => {
     const { recommendation } = await requireRecommendationOwner(ctx, args.id);
-    return recommendation;
+    return visibleRecommendation(ctx, recommendation);
   },
 });
 
@@ -58,11 +60,12 @@ export const listByUser = query({
     const userId = await getAuthUserId(ctx);
     if (!userId) return [];
 
-    return await ctx.db
+    const recommendations = await ctx.db
       .query("recommendations")
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .order("desc")
       .collect();
+    return Promise.all(recommendations.map(recommendation => visibleRecommendation(ctx, recommendation)));
   },
 });
 
@@ -82,7 +85,7 @@ export const getLatestByBike = query({
       .withIndex("by_bike", (q) => q.eq("bikeId", args.bikeId))
       .collect();
 
-    return recommendations.sort((a, b) => b.createdAt - a.createdAt)[0] ?? null;
+    return visibleRecommendation(ctx, recommendations.sort((a, b) => b.createdAt - a.createdAt)[0] ?? null);
   },
 });
 
@@ -94,6 +97,12 @@ export const getShadowComparisonBySession = query({
 
     const session = await ctx.db.get(args.sessionId);
     if (!session || session.userId !== userId) return null;
+
+    if (isPaidAccessEnforced()) {
+      const recommendations = await ctx.db.query("recommendations")
+        .withIndex("by_session", index => index.eq("sessionId", args.sessionId)).collect();
+      if (!recommendations[0] || !await hasFullReportAccess(ctx, recommendations[0])) return null;
+    }
 
     const comparisons = await ctx.db
       .query("recommendationShadowComparisons")
@@ -147,7 +156,8 @@ export const getReportV2 = query({
 
     return {
       session,
-      recommendation,
+      recommendation: await visibleRecommendation(ctx, recommendation),
+      access: recommendation ? await reportAccess(ctx, recommendation) : null,
       bike,
       bikeProfile,
       profile: profile ? sessionProfile(profile, session, true) : null,
@@ -155,7 +165,22 @@ export const getReportV2 = query({
       questionnaireResponses: questionnaireResponses.sort(
         (a, b) => a.questionOrder - b.questionOrder
       ),
-      latestPressureCalculation,
+      latestPressureCalculation: !isPaidAccessEnforced() || (recommendation && await hasFullReportAccess(ctx, recommendation))
+        ? latestPressureCalculation : null,
     };
+  },
+});
+
+export const getReportAccess = query({
+  args: { sessionId: v.id("fitSessions") },
+  handler: async (ctx, { sessionId }) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return null;
+    const session = await ctx.db.get(sessionId);
+    if (!session || session.userId !== userId) return null;
+    const recommendations = await ctx.db.query("recommendations")
+      .withIndex("by_session", index => index.eq("sessionId", sessionId)).collect();
+    const recommendation = recommendations.sort((first, second) => first.createdAt - second.createdAt)[0];
+    return recommendation ? reportAccess(ctx, recommendation) : null;
   },
 });

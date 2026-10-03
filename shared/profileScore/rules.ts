@@ -18,6 +18,19 @@ export const RIDER_RULES = [
   { key: "footwear", group: "comfort", weight: 3, fields: ["shoeSizeEu", "cleatSystem"] },
 ] as const satisfies readonly ScoreRule[];
 
+export const REFINEMENT_RULES = [
+  { key: "femur", group: "measurements", weight: 5, fields: ["femurLengthCm"], body: true },
+  { key: "foot", group: "measurements", weight: 4, fields: ["footLengthCm"], body: true },
+  { key: "sitBones", group: "measurements", weight: 4, fields: ["sitBoneWidthMm"], body: true },
+  { key: "hand", group: "measurements", weight: 2, fields: ["handSpanCm"], body: true },
+  { key: "flexibilityTest", group: "mobility", weight: 3, fields: ["flexibilityTestCm"], body: true, zeroAllowed: true },
+  { key: "coreTest", group: "mobility", weight: 2, fields: ["coreTestSeconds"], body: true, zeroAllowed: true },
+] as const satisfies readonly ScoreRule[];
+
+const baseRules = RIDER_RULES.filter(rule => !REFINEMENT_RULES.some(refinement => refinement.key === rule.key));
+const baseTotal = baseRules.reduce((total, rule) => total + rule.weight, 0);
+export const BASE_RIDER_RULES: readonly ScoreRule[] = baseRules.map(rule => ({ ...rule, weight: rule.weight * 80 / baseTotal }));
+
 export const BIKE_RULES = [
   { key: "saddleHeight", group: "setup", weight: 10, fields: ["currentSetup.saddleHeightMm"] },
   { key: "saddleSetback", group: "setup", weight: 6, fields: ["currentSetup.saddleSetbackMm"], zeroAllowed: true },
@@ -42,3 +55,14 @@ export const BIKE_RULES = [
   { key: "pedals", group: "contact", weight: 2, fields: ["pedalModel", "cleatSystem"] },
   { key: "tires", group: "tires", weight: 4, fields: ["tires.widthFrontMm", "tires.widthRearMm", "tires.tubeType"] },
 ] as const satisfies readonly ScoreRule[];
+
+export const BIKE_REFINEMENT_RULES = [
+  { key: "barReach", group: "setup", weight: 6, fields: ["currentSetup.handlebarReachMm"] },
+  { key: "barDrop", group: "setup", weight: 6, fields: ["currentSetup.handlebarDropMm"], zeroAllowed: true },
+  { key: "seatAngle", group: "geometry", weight: 2, fields: ["currentGeometry.seatTubeAngle"] },
+  { key: "headAngle", group: "geometry", weight: 2, fields: ["currentGeometry.headTubeAngle"] },
+  { key: "gears", group: "drivetrain", weight: 4, fields: ["gearing.chainrings", "gearing.cassetteTeeth"] },
+] as const satisfies readonly ScoreRule[];
+const bikeBaseRules = BIKE_RULES.filter(rule => !BIKE_REFINEMENT_RULES.some(refinement => refinement.key === rule.key));
+const bikeBaseTotal = bikeBaseRules.reduce((total, rule) => total + rule.weight, 0);
+export const BASE_BIKE_RULES: readonly ScoreRule[] = bikeBaseRules.map(rule => ({ ...rule, weight: rule.weight * 80 / bikeBaseTotal }));

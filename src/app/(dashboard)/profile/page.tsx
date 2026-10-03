@@ -2,6 +2,7 @@
 
 import { profileText } from "@/i18n/account/profileLanguage";
 import { hasFitMeasurements } from "../../../../shared/profileFitReadiness";
+import { isPaidAccessEnforced } from "../../../../shared/pricing/flags";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -178,6 +179,7 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [showDirectEditor, setShowDirectEditor] = useState(() => Boolean(searchParams?.get("edit")));
   const provenanceCopy = getProfileProvenanceCopy(locale);
+  const access = useQuery(api.pricing.queries.getAccess, isPaidAccessEnforced() ? {} : "skip");
   const [showRefreshDialog, setShowRefreshDialog] = useState(false);
   const [pendingRefreshWeight, setPendingRefreshWeight] = useState<number | null>(null);
   const [isRecalculating, setIsRecalculating] = useState(false);
@@ -334,6 +336,7 @@ export default function ProfilePage() {
           />
         ) : null}
         <MeasurementWizard
+          refinementsLocked={isPaidAccessEnforced() && !access?.fullProfile}
           onComplete={handleSaveProfile}
           defaultValues={profileData ? getDefaultValues(profileData) : undefined}
         />
@@ -388,6 +391,7 @@ export default function ProfilePage() {
           <p className="text-sm text-muted-foreground">{provenanceCopy.directHint}</p>
           <div id="profile-direct-editor" hidden={!showDirectEditor}>
             <ProfileAutosaveEditor key={profileData._id} profile={profileData} onWeightSaved={openRefreshDialog}
+              refinementsLocked={isPaidAccessEnforced() && !access?.fullProfile}
               target={searchParams?.get("edit")}
               bodySummary={(values) => <BMISlider heightCm={values.heightCm ?? null} weightKg={values.weightKg ?? null}
                 messages={messages} />} />

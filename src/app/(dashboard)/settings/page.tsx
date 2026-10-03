@@ -17,10 +17,7 @@ import {
   AccessibleDialog,
   ErrorState,
   Input,
-  useToast,
   SectionHeader,
-  InfoBox,
-  StatRow,
   LoadingState,
 } from "@/components/ui";
 import { toolsSettings } from "@/i18n/account/toolsSettings";
@@ -35,15 +32,12 @@ import { getSettingsLanguage } from "@/i18n/account/settingsLanguage";
 import { getEffectiveDisplayName, getEffectiveProfileImageSource } from "@/lib/userIdentity";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { isStripeBillingEnabled } from "@/config/billing";
+import { SubscriptionOverviewConnected } from "@/components/account/SubscriptionOverviewConnected";
 import {
   Trash2,
   User,
   Palette,
   Shield,
-  AlertCircle,
-  Info,
-  CreditCard,
 } from "lucide-react";
 
 function linkButtonProps(href: string) {
@@ -58,7 +52,6 @@ export default function SettingsPage() {
   const router = useRouter();
   const { locale, messages: baseMessages, languageSwitchLabels } = useDashboardMessages();
   const messages = useMemo(() => getSettingsLanguage(baseMessages, locale), [baseMessages, locale]);
-  const toast = useToast();
   const copy = toolsSettings[locale];
   const user = useQuery(api.users.queries.getCurrentUser);
   const deleteAccount = useMutation(api.users.mutations.deleteAccount);
@@ -66,15 +59,6 @@ export default function SettingsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
-  const [billingPortalError, setBillingPortalError] = useState<string | null>(null);
-  const [isOpeningBillingPortal, setIsOpeningBillingPortal] = useState(false);
-
-  const accountType = useMemo(() => {
-    if (user?.tier === "pro" || user?.tier === "premium") {
-      return messages.settings.account.pro;
-    }
-    return messages.settings.account.free;
-  }, [messages.settings.account.free, messages.settings.account.pro, user?.tier]);
   const effectiveDisplayName = getEffectiveDisplayName(user, messages.userMenu.fallbackUserName);
   const profileImageSource = getEffectiveProfileImageSource(user);
   const storedDisplayName =
@@ -82,7 +66,6 @@ export default function SettingsPage() {
   const editableDisplayName =
     storedDisplayName ||
     (effectiveDisplayName === messages.userMenu.fallbackUserName ? "" : effectiveDisplayName);
-  const isPaidUser = user?.tier === "pro" || user?.tier === "premium";
 
 
   const handleDeleteAccount = async () => {
@@ -102,32 +85,6 @@ export default function SettingsPage() {
       );
     } finally {
       setIsDeleting(false);
-    }
-  };
-
-  const handleOpenBillingPortal = async () => {
-    setBillingPortalError(null);
-    setIsOpeningBillingPortal(true);
-    try {
-      const response = await fetch("/api/stripe/portal", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale }),
-      });
-      const payload = (await response.json().catch(() => ({}))) as { url?: string; error?: string };
-
-      if (!response.ok || !payload.url) {
-        throw new Error(payload.error ?? messages.settings.billing.portalUnavailable);
-      }
-
-      window.location.href = payload.url;
-    } catch (error) {
-      const description =
-        locale === "en" && error instanceof Error ? error.message : messages.settings.billing.portalUnavailable;
-      setBillingPortalError(description);
-      toast.error({ description });
-    } finally {
-      setIsOpeningBillingPortal(false);
     }
   };
 
@@ -175,9 +132,6 @@ export default function SettingsPage() {
               <Button variant="link" {...linkButtonProps(withLocalePrefix("/email-preferences", locale))}>
                 {emailPreferencesCopy[locale].title}
               </Button>
-              <dl className="divide-y divide-[color:var(--border)]">
-                <StatRow label={messages.settings.account.type} value={accountType} />
-              </dl>
               <Button
                 variant="link"
                 onClick={async () => {
@@ -192,69 +146,7 @@ export default function SettingsPage() {
               </Button>
             </CardContent>
           </Card>
-          <Card variant="bordered" className="rounded-3xl border-border bg-card shadow-none">
-            <SectionHeader title={copy.subscription} />
-            <CardContent className="space-y-4">
-              {!isPaidUser && !isStripeBillingEnabled() ? (
-                <InfoBox
-                  variant="secondary"
-                  icon={<Info className="h-4 w-4 text-primary" />}
-                >
-                  <p className="font-medium">{copy.paused}</p>
-                  <p className="mt-1">{copy.pausedDescription}</p>
-                </InfoBox>
-              ) : !isPaidUser ? (
-                <InfoBox
-                  variant="warning"
-                  icon={<AlertCircle className="h-4 w-4 text-warning" />}
-                >
-                  <p className="font-medium">{messages.settings.account.upgrade}</p>
-                  <p className="mt-1">{messages.settings.account.upgradeDescription}</p>
-                  <Button
-                    variant="outline"
-                    {...linkButtonProps(withLocalePrefix("/pricing", locale))}
-                    className="mt-3 w-full justify-center sm:w-auto"
-                  >
-                    {messages.settings.account.upgradeCta}
-                  </Button>
-                </InfoBox>
-              ) : null}
-              {isPaidUser ? (
-                <InfoBox
-                  variant={user?.stripeCustomerId ? "secondary" : "warning"}
-                  icon={<CreditCard className="h-4 w-4 text-primary" />}
-                >
-                  <p className="font-medium">{messages.settings.billing.title}</p>
-                  <p className="mt-1">
-                    {user?.stripeCustomerId
-                      ? messages.settings.billing.description
-                      : messages.settings.billing.missingCustomer}
-                  </p>
-                  {billingPortalError ? <ErrorState title={locale === "nl" ? copy.errorTitle : undefined}
-                    description={billingPortalError} /> : null}
-                  {user?.stripeCustomerId ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => void handleOpenBillingPortal()}
-                      isLoading={isOpeningBillingPortal}
-                      className="mt-3 w-full justify-center sm:w-auto"
-                    >
-                      {messages.settings.billing.manageCta}
-                    </Button>
-                  ) : null}
-                </InfoBox>
-              ) : (
-                <InfoBox
-                  variant="secondary"
-                  icon={<CreditCard className="h-4 w-4 text-primary" />}
-                >
-                  <p className="font-medium">{messages.settings.billing.title}</p>
-                  <p className="mt-1">{messages.settings.billing.noPaidSubscription}</p>
-                </InfoBox>
-              )}
-            </CardContent>
-          </Card>
+          <SubscriptionOverviewConnected locale={locale} />
           <IPhoneAppInstallCard />
         </div>
         <div className="min-w-0 space-y-6">

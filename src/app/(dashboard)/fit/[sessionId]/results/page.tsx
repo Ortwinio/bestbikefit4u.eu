@@ -4,7 +4,6 @@ import { fitAuditCopy, getFitReportCopy, localizeFitNotes } from "@/i18n/account
 
 import { use, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
@@ -30,7 +29,9 @@ import { getFitResultsCopy } from "@/i18n/account/fitResults";
 import { FitResultsOverview } from "@/components/account/FitResultsOverview";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
 import { getPdfResponseError } from "@/lib/reports/pdfResponseError";
-import { isReportAccessOpen } from "@/config/commercial";
+import { isPaidAccessEnforced } from "../../../../../../shared/pricing/flags";
+import { reportAccessCopy } from "@/i18n/account/reportAccess";
+import { ReportAccessPanel, ReportSafetyNote } from "@/components/reports/ReportAccessPanel";
 import { trackFeedbackSignal } from "@/components/feedback/feedback-activity";
 import { RiderProfileCard } from "./components/RiderProfileCard";
 import { PriorityTable } from "./components/PriorityTable";
@@ -40,7 +41,6 @@ import { BikeContextCard } from "./components/BikeContextCard";
 import { TirePressureSection } from "./components/TirePressureSection";
 import { ValidationPlan } from "./components/ValidationPlan";
 import { CaseStudyOptIn } from "@/components/features/casestudy/CaseStudyOptIn";
-import { FitPassPaywall } from "@/components/features/fitpass/FitPassPaywall";
 import {
   ArrowLeft,
   CheckCircle,
@@ -58,12 +58,11 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   const { sessionId } = use(params);
   const { locale, messages } = useDashboardMessages();
   const toast = useToast();
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const pagePath = withLocalePrefix(`/fit/${sessionId}/results`, locale);
   const logMarketingEvent = useMarketingEventLogger();
   const reportCopy = getFitReportCopy(locale);
   const pageCopy = getFitResultsCopy(locale);
+  const accessCopy = reportAccessCopy[locale];
 
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [email, setEmail] = useState("");
@@ -83,18 +82,18 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   });
 
   const user = useQuery(api.users.queries.getCurrentUser);
-  const sessionAccess = useQuery(api.fitPass.queries.getSessionAccess, {
+  const queriedAccess = useQuery(api.recommendations.queries.getReportAccess, {
     sessionId: sessionId as Id<"fitSessions">,
   });
   const session = reportSource?.session ?? null;
+  const sessionAccess = reportSource?.access ?? queriedAccess;
   const recommendation = reportSource?.recommendation ?? null;
   const hasClimbingProfile = Boolean(recommendation?.climbingCalculatedFit);
-  const hasPaidReportAccess = Boolean(
-    isReportAccessOpen() ||
-      sessionAccess?.hasAccess ||
-      user?.tier === "pro" ||
-      user?.tier === "premium"
-  );
+  const enforcementOff = !isPaidAccessEnforced() && sessionAccess?.enforced !== true &&
+    reportSource?.access?.enforced !== true;
+  const hasPaidReportAccess = enforcementOff || sessionAccess?.fullReport === true;
+  const canDownloadPdf = enforcementOff || sessionAccess?.canDownloadPdf === true;
+  const canEmailReport = enforcementOff || sessionAccess?.canEmailReport === true;
 
   // Build the active report source — swap calculatedFit for climbingCalculatedFit when climbing tab is active
   const activeReportSource =
@@ -191,37 +190,8 @@ export default function ResultsPage({ params }: ResultsPageProps) {
     }
   }, [user, email]);
 
-  // Handle checkout success redirect
-  useEffect(() => {
-    if (!searchParams) return;
-    const checkoutParam = searchParams.get("checkout");
-    if (checkoutParam !== "success") return;
-
-    const storageKey = `fitpass_success_shown_${sessionId}`;
-    if (sessionStorage.getItem(storageKey)) return;
-
-    sessionStorage.setItem(storageKey, "1");
-    toast.success({
-      description: reportCopy.shell.fitPassActivated,
-    });
-    // Clean checkout params from URL
-    const cleanParams = new URLSearchParams(searchParams.toString());
-    cleanParams.delete("checkout");
-    cleanParams.delete("checkout_session_id");
-    const cleanPath = cleanParams.toString()
-      ? `${window.location.pathname}?${cleanParams.toString()}`
-      : window.location.pathname;
-    router.replace(cleanPath);
-  }, [
-    searchParams,
-    sessionId,
-    toast,
-    reportCopy.shell.fitPassActivated,
-    router,
-  ]);
-
   const handleSendEmail = async () => {
-    if (!email || !recommendation) return;
+    if (!email || !recommendation || !canEmailReport) return;
 
     setIsSending(true);
     setEmailError(null);
@@ -265,6 +235,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
   };
 
   const handleDownloadPdf = async () => {
+    if (!canDownloadPdf) return;
     setIsDownloading(true);
     setDownloadError(null);
 
@@ -464,6 +435,10 @@ export default function ResultsPage({ params }: ResultsPageProps) {
         </Button>
       </header>
 
+      {sessionAccess?.legacyFullAccess && (
+        <p className="rounded-2xl border border-border bg-primary-soft p-4 text-sm">{accessCopy.legacy}</p>
+      )}
+
       {hasClimbingProfile && (
         <div className="flex flex-wrap gap-2" role="group" aria-label={pageCopy.profileChoice}>
           {(["main", "climbing"] as const).map((tab) => (
@@ -483,22 +458,25 @@ export default function ResultsPage({ params }: ResultsPageProps) {
           fit={activeReportSource.recommendation.calculatedFit}
           profileLabel={activeTab === "main" ? messages.results.mainProfileTab : messages.results.climbingProfileTab}
           hasPaidAccess={hasPaidReportAccess}
+          showAccessLabel={!enforcementOff}
         />
       )}
 
       <section className="flex flex-col gap-5 rounded-3xl bg-[var(--bbf-inkt)] p-6 text-white xl:flex-row xl:items-center xl:justify-between">
         <div className="max-w-xl">
           <h2 className="font-display text-2xl font-bold text-white">{pageCopy.reportTitle}</h2>
-          <p className="mt-2 text-sm leading-relaxed text-[var(--bbf-op-donker)]">{pageCopy.reportBody}</p>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--bbf-op-donker)]">
+            {hasPaidReportAccess ? pageCopy.reportBody : accessCopy.coreReport}
+          </p>
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex min-w-0 flex-wrap gap-3">
                     <Button
                       variant="outline"
                       className="min-h-12 whitespace-normal border-white/40 bg-transparent text-white hover-only:hover:bg-white/10"
                       onClick={() => {
-                        if (!hasPaidReportAccess) {
+                        if (!canEmailReport) {
                           toast.info({
-                            description: reportCopy.paywall.emailUpgradeToast,
+                            description: accessCopy.latestOnly,
                           });
                           return;
                         }
@@ -511,11 +489,9 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                       }}
                     >
                       <Mail className="mr-2 h-4 w-4" />
-                      {hasPaidReportAccess
-                        ? messages.results.actions.emailReport
-                        : reportCopy.paywall.emailUpgradeButton}
+                      {messages.results.actions.emailReport}
                     </Button>
-                    {hasPaidReportAccess ? (
+                    {canDownloadPdf ? (
                       <Button
                         variant="outline"
                       className="min-h-12 whitespace-normal border-white/40 bg-transparent text-white hover-only:hover:bg-white/10"
@@ -523,50 +499,30 @@ export default function ResultsPage({ params }: ResultsPageProps) {
                         isLoading={isDownloading}
                       >
                         <Download className="mr-2 h-4 w-4" />
-                        {messages.results.actions.downloadPdf}
+                        {hasPaidReportAccess ? messages.results.actions.downloadPdf : accessCopy.corePdf}
                       </Button>
                     ) : (
                       <Button
                         variant="outline"
                       className="min-h-12 whitespace-normal border-white/40 bg-transparent text-white hover-only:hover:bg-white/10"
                         disabled
-                        onClick={() => {
-                          toast.info({
-                            description: reportCopy.paywall.pdfUpgradeToast,
-                          });
-                        }}
+                        aria-describedby="report-pdf-access-note"
                       >
                         <Download className="mr-2 h-4 w-4" />
-                        {reportCopy.paywall.pdfUpgradeButton}
+                        {messages.results.actions.downloadPdf}
                       </Button>
                     )}
-
+          {!canDownloadPdf && (
+            <p id="report-pdf-access-note" className="w-full text-sm leading-relaxed text-[var(--bbf-op-donker)]">
+              {accessCopy.latestOnly}
+            </p>
+          )}
         </div>
       </section>
       {downloadError && <ErrorState title={messages.results.errors.downloadTitle} description={downloadError} />}
 
-      {!hasPaidReportAccess && (
-              <Card variant="bordered">
-                <CardHeader>
-                  <CardTitle>
-                    {reportCopy.shell.unlockTitle}
-                  </CardTitle>
-                  <CardDescription>
-                    {reportCopy.shell.unlockDescription}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-3 sm:grid-cols-2">
-                  {reportCopy.shell.unlockItems.map((item) => (
-                    <div
-                      key={item}
-                      className="dashboard-card-surface-muted rounded-[var(--radius-lg)] border border-dashed px-4 py-4 text-sm text-muted-foreground"
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-      )}
+      {!hasPaidReportAccess && <ReportAccessPanel locale={locale} bikeId={session?.bikeId} />}
+      <ReportSafetyNote locale={locale} />
 
       <details className="group rounded-3xl border border-border bg-card p-5 sm:p-6">
         <summary className="min-h-11 cursor-pointer rounded-lg py-3 font-display text-xl font-bold focus-visible:outline-2 focus-visible:outline-primary">{pageCopy.detailsTitle}</summary>
@@ -653,9 +609,6 @@ export default function ResultsPage({ params }: ResultsPageProps) {
             sessionId={sessionId}
             userEmail={user.email ?? ""}
           />
-        )}
-        {user && !hasPaidReportAccess && (
-          <FitPassPaywall locale={locale} sessionId={sessionId} userTier={user.tier} />
         )}
       </div>
 

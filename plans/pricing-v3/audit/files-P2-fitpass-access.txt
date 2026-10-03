@@ -1,0 +1,6 @@
+src/components/features/fitpass/FitPassLandingCta.tsx
+src/components/features/fitpass/landing-access.test.tsx
+src/components/features/fitpass/payments-disabled.test.tsx
+src/i18n/marketing/fitPassAccess.ts
+plans/pricing-v3/messages/B-fitpass-access-handoff.md
+plans/pricing-v3/audit/files-P2-fitpass-access.txt

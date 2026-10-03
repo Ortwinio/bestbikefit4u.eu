@@ -4,11 +4,19 @@ import type { InputHTMLAttributes, SelectHTMLAttributes } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { scoreBike } from "../../../shared/profileScore";
+import { getAccess } from "../../../shared/pricing/access";
+import { getPricingAccessCopy } from "@/i18n/account/pricingAccess";
 import { bikeProfileMessages } from "@/i18n/account/bikeProfile";
 import { BikeProfilePanel, type BikeProfileDetail } from "./BikeProfilePanel";
+import { BikeRefinements } from "./BikeRefinements";
 
 const update = vi.hoisted(() => vi.fn());
-vi.mock("convex/react", () => ({ useMutation: () => update }));
+const pricing = vi.hoisted(() => ({ enforced: false, access: undefined as ReturnType<typeof getAccess> | undefined, query: vi.fn() }));
+vi.mock("../../../shared/pricing/flags", () => ({ isPaidAccessEnforced: () => pricing.enforced }));
+vi.mock("convex/react", () => ({ useMutation: () => update, useQuery: (_reference: unknown, args: unknown) => {
+  pricing.query(args);
+  return args === "skip" ? undefined : pricing.access;
+} }));
 // Native controls isolate the panel's explicit-save contract; real controls are covered by the browser capture.
 vi.mock("@/components/ui", () => ({
   Button: ({ variant: _variant, size: _size, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>
@@ -32,10 +40,57 @@ function detail(): BikeProfileDetail {
   }], riderProfile: { inseamCm: 83 }, adjustmentRoom: { status: "unknown" },
   } as unknown as BikeProfileDetail;
 }
-beforeEach(() => { update.mockReset(); update.mockResolvedValue({ status: "saved" }); });
+beforeEach(() => { update.mockReset(); update.mockResolvedValue({ status: "saved" }); pricing.enforced = false; pricing.access = undefined; pricing.query.mockReset(); });
 afterEach(cleanup);
 
 describe("bike profile explicit changes", () => {
+  it.each([
+    ["nl", true], ["nl", false], ["en", true], ["en", false],
+  ] as const)("keeps removed integrations out of %s bike refinements when locked=%s", (locale, locked) => {
+    const value = detail()!;
+    const { container } = render(<BikeRefinements bike={value.bike} locale={locale} locked={locked} />);
+    expect(container.textContent).not.toMatch(/strava/i);
+    expect(container.querySelector(`a[href="/${locale}/settings"]`)).toBeNull();
+    expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(5);
+    expect(screen.getByText(getPricingAccessCopy(locale).bikeFields.gears)).toBeTruthy();
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it.each(["nl", "en"] as const)("retains locked bike values and removes the exact saved value in %s", async locale => {
+    pricing.enforced = true;
+    pricing.access = getAccess(null, bikeId, { enforced: true });
+    const value = detail()!;
+    value.bike.currentSetup = { ...value.bike.currentSetup, handlebarReachMm: 510 };
+    value.profileScore = scoreBike({ bike: value.bike }, Date.now(), pricing.access);
+    const copy = getPricingAccessCopy(locale);
+    render(<BikeProfilePanel bikeId={bikeId} locale={locale} detail={value} />);
+    expect(screen.getByText(copy.basicAccuracy)).toBeTruthy();
+    expect(screen.getByText(copy.bikeReasons.barReach)).toBeTruthy();
+    expect(screen.queryByRole("button", { name: new RegExp(`^${bikeProfileMessages[locale].edit}:.*${copy.bikeFields.barReach}$`) })).toBeNull();
+    expect(pricing.query).toHaveBeenCalledWith({ bikeId });
+    fireEvent.click(screen.getByRole("button", { name: `${copy.remove}: ${copy.bikeFields.barReach}` }));
+    await waitFor(() => expect(update).toHaveBeenCalledWith({ bikeId, field: "currentSetup.handlebarReachMm", expectedCurrentValue: 510 }));
+  });
+
+  it("does not unlock another bike with a rider-wide single-fit right", () => {
+    pricing.enforced = true;
+    const entitlements = [{ productId: "single" as const, bikeId: "other-bike", status: "active" as const,
+      startsAt: 1, expiresAt: 1000, source: "purchase" as const, appointmentGranted: false }];
+    pricing.access = getAccess({ entitlements }, bikeId, { enforced: true, now: 100 });
+    expect(pricing.access.fullProfile).toBe(true);
+    const value = detail()!;
+    value.profileScore = scoreBike({ bike: value.bike }, Date.now(), pricing.access);
+    const view = render(<BikeProfilePanel bikeId={bikeId} locale="en" detail={value} />);
+    expect(screen.getByText("Basic accuracy")).toBeTruthy();
+    expect(screen.queryByRole("link", { name: "Edit your bike: Measured saddle-to-bar reach" })).toBeNull();
+    pricing.access = getAccess({ entitlements: [{ ...entitlements[0], bikeId }] }, bikeId, { enforced: true, now: 100 });
+    value.profileScore = scoreBike({ bike: value.bike }, Date.now(), pricing.access);
+    view.rerender(<BikeProfilePanel bikeId={bikeId} locale="en" detail={value} />);
+    expect(screen.getByText("Refined accuracy")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Edit your bike: Measured saddle-to-bar reach" })).toBeTruthy();
+    expect(update).not.toHaveBeenCalled();
+  });
+
   it.each(["nl", "en"] as const)("renders factual %s rows and links without saving", locale => {
     const copy = bikeProfileMessages[locale];
     render(<BikeProfilePanel bikeId={bikeId} locale={locale} detail={detail()} />);

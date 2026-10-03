@@ -5,7 +5,7 @@ import { internal } from "../_generated/api";
 import { v } from "convex/values";
 import { deliverEmail, emailActionUrl } from "./delivery";
 import { resolveEmailLocale } from "./locale";
-import { renderFitPassWelcome, renderProExplainer } from "./templates";
+import { renderAccessWelcome, renderFitTips } from "./templates";
 import { buildEmailPreferenceLinks, canSendPreferenceEmails } from "./unsubscribeTokens";
 
 export const sendProWelcome = internalAction({
@@ -21,7 +21,7 @@ export const sendProWelcome = internalAction({
     if (alreadySent) return;
 
     const locale = resolveEmailLocale(user);
-    const email = renderFitPassWelcome({
+    const email = renderAccessWelcome({
       firstName: (user.displayName ?? user.name)?.trim().split(/\s+/)[0],
       actionUrl: emailActionUrl(locale, recommendation ? `/fit/${recommendation.sessionId}/results` : "/dashboard"),
     }, locale);
@@ -53,7 +53,7 @@ export const run24hProNudgeBatch = internalAction({
 
       const locale = resolveEmailLocale(user);
       const links = await buildEmailPreferenceLinks(userId, locale, "service");
-      const email = renderProExplainer({
+      const email = renderFitTips({
         ...recommendation?.calculatedFit,
         firstName: (user.displayName ?? user.name)?.trim().split(/\s+/)[0],
         unsubscribeUrl: links.unsubscribeUrl,

@@ -39,6 +39,7 @@ function database() {
       const query = {
         withIndex: (_name: string, apply: (range: typeof builder) => unknown) => { apply(builder); return query; },
         first: async () => rows()[0] ?? null,
+        collect: async () => rows(),
         take: async (count: number) => { reads.push(count); return rows().slice(0, count); },
         paginate: async ({ cursor, numItems }: { cursor: string | null; numItems: number }) => {
           reads.push(numItems);
@@ -74,6 +75,18 @@ function database() {
 
 describe("confirmed bike deletion", () => {
   beforeEach(() => { auth.mockResolvedValue("owner"); });
+
+  it("revokes only the deleted bike's owned single access and retains its eligibility history", async () => {
+    const store = database();
+    const bike = store.add("bikes", { name: "My bike", userId: "owner" });
+    const grant = store.add("pricingEntitlements", { userId: "owner", bikeId: bike._id, productId: "single", status: "active" });
+    const other = store.add("pricingEntitlements", { userId: "owner", bikeId: "other", productId: "single", status: "active" });
+    const annual = store.add("pricingEntitlements", { userId: "owner", productId: "annual", status: "active" });
+    const foreign = store.add("pricingEntitlements", { userId: "other", bikeId: bike._id, productId: "single", status: "active" });
+    await invoke(remove, store.ctx, { bikeId: bike._id, confirmName: "My bike" });
+    expect(store.find(grant._id)).toMatchObject({ status: "revoked", revokedReason: "bike_deleted" });
+    for (const row of [other, annual, foreign]) expect(store.find(row._id)?.status).toBe("active");
+  });
 
   it("rejects another owner and an inexact/missing name without deleting or scheduling", async () => {
     const store = database();

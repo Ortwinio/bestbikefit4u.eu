@@ -2,12 +2,17 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { BIKE_MEASURE_POINTS, BIKE_PROFILE_FIELDS } from "../../../shared/bikeProfileFields";
 import { ProfileStrengthRings } from "@/components/profile/ProfileStrengthRings";
+import { ProfileAccessNotice } from "@/components/profile/ProfileAccessNotice";
+import { BikeRefinements } from "./BikeRefinements";
+import { BIKE_REFINEMENT_RULES } from "../../../shared/profileScore";
+import { isPaidAccessEnforced } from "../../../shared/pricing/flags";
+import { getPricingAccessCopy } from "@/i18n/account/pricingAccess";
 import { Button, Input, Select } from "@/components/ui";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -29,12 +34,16 @@ export function BikeProfilePanel({ bikeId, locale, detail }: {
   bikeId: Id<"bikes">; locale: Locale; detail: BikeProfileDetail;
 }) {
   const copy = bikeProfileMessages[locale];
+  const pricing = getPricingAccessCopy(locale);
+  const access = useQuery(api.pricing.queries.getAccess, isPaidAccessEnforced() ? { bikeId } : "skip");
+  const locked = isPaidAccessEnforced() && !access?.fullReport;
   const scoreCopy = getProfileScoreCopy(locale);
   const update = useMutation(api.bikes.profile.updateFields);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<"saved" | "failed" | "conflict" | "invalid" | "goalChanged" | null>(null);
   if (!detail) return null;
+  if (isPaidAccessEnforced() && !access) return <p role="status">{pricing.loading}</p>;
   const { bike, profileScore: score, bikeObservations, riderProfile, adjustmentRoom } = detail;
   const current = { ...bike, tires: detail.activeTireSetup ?? undefined };
   const editHref = withLocalePrefix(`/bikes/${bikeId}/edit`, locale);
@@ -49,7 +58,7 @@ export function BikeProfilePanel({ bikeId, locale, detail }: {
     return displayBikeProfileValue(value, bikeFieldUnit(field), locale, copy);
   };
   const next = score.nextStep;
-  const nextTitle = next ? scoreCopy.fields[next.key as keyof typeof scoreCopy.fields] : copy.complete;
+  const nextTitle = next ? pricing.bikeFields[next.key as keyof typeof pricing.bikeFields] ?? scoreCopy.fields[next.key as keyof typeof scoreCopy.fields] : copy.complete;
   const evidence = (field: string) => bikeObservations.find((observation) => observation.field === field
     && JSON.stringify(observation.value) === JSON.stringify(bikeProfileValue(current, field)));
   function open(field: string) {
@@ -95,15 +104,16 @@ export function BikeProfilePanel({ bikeId, locale, detail }: {
   }
   return <div className="space-y-6" data-slot="bike-profile-panel">
     <section className={`${card} grid items-center gap-6 xl:grid-cols-[280px_minmax(0,1fr)_250px]`}>
-      <ProfileStrengthRings score={score} locale={locale} title={copy.title} size="lg" />
+      <ProfileStrengthRings score={score} locale={locale} title={copy.title} size="lg" capped={locked} />
       <div className="min-w-0">
         <h2 className="font-display text-2xl font-bold">{copy.title}</h2>
         <p className="mt-2 text-sm text-muted-foreground">{copy.intro}</p>
+        {access?.enforced && <ProfileAccessNotice locale={locale} capped={locked} bike />}
         <div className="mt-5 space-y-3">
           {score.groups.map((group) => {
             const complete = group.weight ? group.completeness / group.weight * 100 : 0;
             const reliable = group.weight ? group.reliability / group.weight * 100 : 0;
-            const label = copy.groups[group.key as keyof typeof copy.groups] ?? group.key;
+            const label = copy.groups[group.key as keyof typeof copy.groups] ?? (group.key === "riding" ? pricing.riding : group.key);
             return <div key={group.key} className="grid grid-cols-[minmax(110px,1fr)_1fr_42px] items-center gap-3 text-xs">
               <span className="font-semibold">{label}</span>
               <div className="space-y-1">
@@ -130,6 +140,7 @@ export function BikeProfilePanel({ bikeId, locale, detail }: {
         </a>}
       </div>
     </section>
+    {access?.enforced && <BikeRefinements bike={bike} locale={locale} locked={locked} />}
     <Link href={`${editHref}#bike-geometry-library`}
       className="flex min-h-14 flex-wrap items-center justify-between gap-2 rounded-2xl bg-primary px-5 py-4 text-primary-foreground focus-visible:focus-ring">
       <strong>{copy.lookup}</strong><span className="text-sm">{copy.lookupHint}</span>
@@ -146,7 +157,8 @@ export function BikeProfilePanel({ bikeId, locale, detail }: {
           {[copy.part, copy.current, copy.provenance, copy.advice, ""].map((label, index) => <span key={index}>{label}</span>)}
         </div>
         {bikeProfileRows.map((row) => {
-          const editing = draft && row.fields.includes(draft.field as never);
+          const rowLocked = locked && BIKE_REFINEMENT_RULES.some(rule => rule.key === row.key);
+          const editing = !rowLocked && draft && row.fields.includes(draft.field as never);
           const missingField = row.editable.find((field) => bikeProfileValue(current, field) === undefined);
           return <div id={`bike-profile-${row.key}`} key={row.key} className="scroll-mt-24 border-t border-border px-5 py-4">
             <div className={rowGrid}>
@@ -192,12 +204,12 @@ export function BikeProfilePanel({ bikeId, locale, detail }: {
                 })}
               </div>
               <div className="flex justify-end">
-                {row.editable.length > 0 && <Button size="sm" variant="outline" disabled={saving}
+                {rowLocked ? <p className="text-sm text-muted-foreground">{pricing.locked}</p> : row.editable.length > 0 && <Button size="sm" variant="outline" disabled={saving}
                   aria-label={`${missingField ? copy.measure : copy.edit}: ${scoreCopy.fields[row.key]}`}
                   onClick={() => open(missingField ?? row.editable[0])}>
                   {missingField ? copy.measure : copy.edit}
                 </Button>}
-                {!row.editable.length && <Link href={`${editHref}${row.group === "drivetrain"
+                {!rowLocked && !row.editable.length && <Link href={`${editHref}${row.group === "drivetrain"
                   ? "#bike-settings-gearing" : row.group === "identity" ? "#bike-settings-details" : ""}`}
                   aria-label={`${copy.edit}: ${scoreCopy.fields[row.key]}`}
                   className="inline-flex min-h-11 min-w-11 items-center text-sm font-semibold text-primary underline focus-visible:focus-ring">

@@ -7,6 +7,8 @@ import type { Context, ImportArgs } from "./handoff";
 import WelcomeClient from "./WelcomeClient";
 
 const runtime = vi.hoisted(() => ({ auth: { isAuthenticated: true, isLoading: false }, locale: "en" as "en" | "nl", context: { profile: null, observations: [] } as Context | undefined, save: vi.fn(), replace: vi.fn(), query: vi.fn() }));
+const pricing = vi.hoisted(() => ({ enforced: false, fullProfile: true, isLoading: false, access: undefined }));
+vi.mock("@/hooks/useProfileAccess", () => ({ useProfileAccess: () => pricing }));
 vi.mock("convex/react", () => ({ useConvexAuth: () => runtime.auth, useQuery: (...args: unknown[]) => { runtime.query(...args); return runtime.context; }, useMutation: () => runtime.save }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: runtime.replace }) }));
 vi.mock("@/i18n/useDashboardMessages", () => ({ useDashboardMessages: () => ({ locale: runtime.locale }) }));
@@ -21,12 +23,27 @@ beforeEach(() => {
   sessionStorage.clear();
   runtime.auth = { isAuthenticated: true, isLoading: false };
   runtime.locale = "en";
+  pricing.enforced = false; pricing.fullProfile = true; pricing.isLoading = false;
   runtime.context = { profile: null, observations: [] };
   runtime.save.mockResolvedValue({ status: "imported", importedFields: ["inseamCm"], conflicts: [], profileId: null, bikeId: null });
 });
 afterEach(cleanup);
 
 describe("welcome handoff review", () => {
+  it("scores the real handoff with authoritative free/paid access and leaves OFF unchanged", () => {
+    runtime.context = { profile: { inseamCm: 83, femurLengthCm: 47 } as NonNullable<Context["profile"]>, observations: [] };
+    const view = render(<WelcomeClient />);
+    expect(screen.getAllByRole("meter")[0].getAttribute("aria-valuenow")).toBe("23");
+    pricing.enforced = true; pricing.fullProfile = false;
+    view.rerender(<WelcomeClient />);
+    expect(screen.getAllByRole("meter")[0].getAttribute("aria-valuenow")).toBe("17");
+    expect(screen.getAllByRole("meter")[0].getAttribute("aria-valuetext")).toContain("up to 80 percent");
+    pricing.fullProfile = true;
+    view.rerender(<WelcomeClient />);
+    expect(screen.getAllByRole("meter")[0].getAttribute("aria-valuenow")).toBe("22");
+    expect(runtime.save).not.toHaveBeenCalled();
+  });
+
   it("gates unauthenticated access without importing or clearing", async () => {
     writeHandoffEntry(entry());
     runtime.auth.isAuthenticated = false;

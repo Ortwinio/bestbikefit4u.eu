@@ -10,6 +10,8 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { getBikesCopy } from "@/i18n/account/bikes";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { CopyPlus, Plus } from "lucide-react";
+import { isPaidAccessEnforced } from "../../../../shared/pricing/flags";
+import { BikeAccessNotice } from "@/components/bikes/BikeAccessNotice";
 
 function linkButtonProps(href: string) {
   return {
@@ -21,6 +23,8 @@ function linkButtonProps(href: string) {
 export default function BikesPage() {
   const { locale, messages } = useDashboardMessages();
   const bikes = useQuery(api.bikes.queries.listSummariesByUser);
+  const access = useQuery(api.pricing.queries.getAccess, isPaidAccessEnforced() ? {} : "skip");
+  const atLimit = Boolean(access?.enforced && access.maxBikes !== null && bikes && bikes.length >= access.maxBikes);
   const sessionsWithBikes = useQuery(api.sessions.queries.getAllSessionsWithBikes);
   const ensurePassportIdsForOwnedBikes = useMutation(api.bikes.mutations.ensurePassportIdsForOwnedBikes);
 
@@ -59,7 +63,7 @@ export default function BikesPage() {
           </div>
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap lg:justify-end">
             <Button
-              {...linkButtonProps(withLocalePrefix("/bikes/new", locale))}
+              {...linkButtonProps(withLocalePrefix(atLimit ? "/checkout?product=annual" : "/bikes/new", locale))}
               className="w-full justify-center sm:w-auto"
             >
               <Plus className="h-4 w-4" />
@@ -67,7 +71,7 @@ export default function BikesPage() {
             </Button>
             <Button
               variant="outline"
-              {...linkButtonProps(withLocalePrefix("/bikes/import/passport", locale))}
+              {...linkButtonProps(withLocalePrefix(atLimit ? "/checkout?product=annual" : "/bikes/import/passport", locale))}
               className="w-full justify-center sm:w-auto"
             >
               <CopyPlus className="h-4 w-4" />
@@ -76,6 +80,8 @@ export default function BikesPage() {
           </div>
         </CardContent>
       </Card>
+
+      {access?.enforced && access.maxBikes === 1 && <BikeAccessNotice locale={locale} />}
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="font-semibold text-foreground">

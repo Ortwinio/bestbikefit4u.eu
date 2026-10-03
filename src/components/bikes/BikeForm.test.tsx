@@ -13,6 +13,28 @@ vi.mock("./BikeGeometryLibraryFields", () => ({ BikeGeometryLibraryFields: () =>
 afterEach(() => { cleanup(); state.locale = "en"; });
 
 describe("bike editing presentation", () => {
+  it("keeps retained refinements unchanged when saving a free bike from another section", async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined);
+    render(<BikeForm refinementsLocked title="Edit bike" description="Bike" submitLabel="Save bike" onSubmit={onSubmit}
+      initialData={{ name: "My bike", bikeType: "road", currentGeometry: { seatTubeAngle: 73, headTubeAngle: 72 },
+        currentSetup: { handlebarReachMm: 510, handlebarDropMm: 45 },
+        gearing: { drivetrainType: "2x", chainrings: [50, 34], cassetteTeeth: [11, 13, 28] } }} />);
+    fireEvent.click(screen.getByRole("radio", { name: "Measurements" }));
+    const label = getDashboardMessages("en").bikeForm.fields.geometry.seatTubeAngle.label;
+    const angle = screen.getByRole("slider", { name: label });
+    fireEvent.keyDown(angle, { key: "ArrowRight" });
+    expect(angle.getAttribute("aria-valuenow")).toBe("73");
+    expect((screen.getByRole("button", { name: `Clear measurement: ${label}` }) as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.click(screen.getByRole("radio", { name: "Notes" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save bike" }));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce());
+    expect(onSubmit.mock.calls[0][0]).toMatchObject({
+      currentGeometry: { seatTubeAngle: 73, headTubeAngle: 72 },
+      currentSetup: { handlebarReachMm: 510, handlebarDropMm: 45 },
+      gearing: { chainrings: [50, 34], cassetteTeeth: [11, 13, 28] },
+    });
+  });
+
   it("preserves saved and missing values when saving from another section", async () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined);
     render(<BikeForm title="Edit bike" description="Bike" submitLabel="Save bike" onSubmit={onSubmit}

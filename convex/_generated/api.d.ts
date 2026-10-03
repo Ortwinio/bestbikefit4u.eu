@@ -91,6 +91,11 @@ import type * as pressureProfiles_mutations from "../pressureProfiles/mutations.
 import type * as pressureProfiles_queries from "../pressureProfiles/queries.js";
 import type * as profiles_index from "../profiles/index.js";
 import type * as profiles_mutations from "../profiles/mutations.js";
+import type * as pricing_internal from "../pricing/internal.js";
+import type * as pricing_appointmentNotifications from "../pricing/appointmentNotifications.js";
+import type * as pricingAppointments_internal from "../pricingAppointments/internal.js";
+import type * as pricing_mutations from "../pricing/mutations.js";
+import type * as pricing_queries from "../pricing/queries.js";
 import type * as profiles_queries from "../profiles/queries.js";
 import type * as questionnaire_mutations from "../questionnaire/mutations.js";
 import type * as questionnaire_queries from "../questionnaire/queries.js";
@@ -216,6 +221,11 @@ declare const fullApi: ApiFromModules<{
   "pressureProfiles/queries": typeof pressureProfiles_queries;
   "profiles/index": typeof profiles_index;
   "profiles/mutations": typeof profiles_mutations;
+  "pricing/internal": typeof pricing_internal;
+  "pricing/appointmentNotifications": typeof pricing_appointmentNotifications;
+  "pricingAppointments/internal": typeof pricingAppointments_internal;
+  "pricing/mutations": typeof pricing_mutations;
+  "pricing/queries": typeof pricing_queries;
   "profiles/queries": typeof profiles_queries;
   "questionnaire/mutations": typeof questionnaire_mutations;
   "questionnaire/queries": typeof questionnaire_queries;

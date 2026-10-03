@@ -25,6 +25,7 @@ vi.mock("convex/react", () => ({
     const name = getFunctionName(reference);
     state.query(name, args);
     if (args === "skip" && !state.retainDataWhenSkipped) return undefined;
+    if (name === "pricing/queries:getAccess") return undefined;
     if (name === "advice/queries:listAdviceGroups") return state.groups;
     if (name === "bikes/queries:listSummariesByUser") return state.bikes;
     if (name === "users/queries:getCurrentUser") return { _id: state.userId };
@@ -123,6 +124,7 @@ describe("advice route queries and loading", () => {
     state.authenticated = false;
     render(<AdvicePageClient locale="en" />);
     expect(state.query.mock.calls).toEqual([
+      ["pricing/queries:getAccess", "skip"],
       ["advice/queries:listAdviceGroups", "skip"], ["bikes/queries:listSummariesByUser", "skip"],
       ["users/queries:getCurrentUser", "skip"],
     ]);

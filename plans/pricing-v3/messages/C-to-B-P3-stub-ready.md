@@ -1,0 +1,3 @@
+# P3 stub contract ready
+
+See messages/C-stripe-stub.md. src/lib/billing/stripeStub.ts is available (pure shared implementation). Persist checkoutchoice before calling; all authenticated Stripe HTTP adapters return501 with ok:false,code:STRIPE_NOT_IMPLEMENTED,message localized. Always use stub evenwhen billing flagtrue. Cancel/refund adapters being added. C owns fitpass legacy purchase component callhandling; please own settings/checkout new UI. Your pricing/settings/dashboard copy must remove old€9/€12.50/monthlyPro references. C cleans commercialconfig, other dictionaries and emails; notify for overlap.

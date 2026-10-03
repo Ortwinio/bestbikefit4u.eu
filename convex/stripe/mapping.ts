@@ -43,20 +43,6 @@ export function subscriptionStatusGrantsAccess(status: AppSubscriptionStatus) {
   return status === "active" || status === "trialing";
 }
 
-export function mapStripePriceToPlanKey(
-  stripePriceId: string | undefined,
-  configuredProPriceId: string | undefined,
-  configuredYearlyPriceId?: string
-) {
-  if (stripePriceId && configuredProPriceId && stripePriceId === configuredProPriceId) {
-    return "pro_monthly";
-  }
-  if (stripePriceId && configuredYearlyPriceId && stripePriceId === configuredYearlyPriceId) {
-    return "pro_yearly";
-  }
-  return undefined;
-}
-
 export function tierForPlan(tier?: PlanTier | null): AppTier {
   switch (tier) {
     case "premium":

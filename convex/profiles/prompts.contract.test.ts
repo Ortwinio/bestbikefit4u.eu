@@ -156,7 +156,7 @@ beforeEach(() => {
   now = NOW;
   vi.spyOn(Date, "now").mockImplementation(() => now);
 });
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
 type Question = { key: string; field: string; bikeId?: string; value: number | string | null;
   status: "pending" | "answered" | "skipped"; kind: string; stale: boolean; effort: string };
@@ -174,6 +174,19 @@ function answerArgs(view: View, field: string, value: number | string, method = 
 }
 
 describe("profile prompt card reservations", () => {
+  it("refuses a paid-field prompt answer after entitlement expires", async () => {
+    const ctx = await fixture({ femurLengthCm: undefined });
+    for (const field of ["armLengthCm", "ftpWatts", "sex", "birthDate"]) {
+      await ctx.db.insert("profilePrompts", { userId: "owner", key: `rider:${field}`, skipCount: 3, profileOnly: true });
+    }
+    const card = await open(ctx);
+    const args = answerArgs(card, "femurLengthCm", 44);
+    vi.stubEnv("PAID_ACCESS_ENFORCED", "true");
+    ctx.clearWrites();
+    await expect(invoke(answerProfilePrompt, ctx, args)).rejects.toThrow("PAID_PROFILE_ACCESS_REQUIRED");
+    ctx.expectNoWrites();
+  });
+
   it("queries are read-only and opening reserves at most two questions without saving default profile facts", async () => {
     const ctx = await fixture();
     const profile = await ctx.db.get(ctx.profileId);

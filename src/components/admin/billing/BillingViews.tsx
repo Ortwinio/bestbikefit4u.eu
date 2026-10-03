@@ -448,7 +448,7 @@ function PlanFormContent({ mode, planId }: { mode: "new" | "edit"; planId?: stri
               value={key}
               onChange={(event) => setKey(event.currentTarget.value)}
               disabled={mode === "edit"}
-              placeholder="pro-monthly"
+              placeholder="annual"
             />
           </BillingField>
           <BillingField label="Name">

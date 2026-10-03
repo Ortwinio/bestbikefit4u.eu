@@ -1,10 +1,9 @@
 /* @vitest-environment jsdom */
 
-import { createHash } from "node:crypto";
 import type { ReactNode } from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { faqPresentation } from "@/i18n/marketing/faq";
+import { faqPresentation, pricingFaq } from "@/i18n/marketing/faq";
 import FAQPage, { generateMetadata } from "./page";
 
 let locale: "nl" | "en" = "nl";
@@ -43,11 +42,6 @@ vi.mock("@/components/analytics/TrackedCtaLink", () => ({
   ),
 }));
 
-const schemaHashes = {
-  nl: "9f2229e32d15c0b458a0750f524912ef5cd230cc86251738c369c52fbf072710",
-  en: "1be46b196f422982ed727079171113c7b7c5a18a54cd7cdca33247f0f8991d8c",
-};
-
 const metadataCopy = {
   nl: {
     title: "Veelgestelde vragen over bikefit | BikeFitBoost",
@@ -68,15 +62,18 @@ const metadataCopy = {
 afterEach(cleanup);
 
 describe.each(["nl", "en"] as const)("FAQ in %s", (language) => {
-  it("preserves the complete pre-redesign schema and displays every exact question and answer", async () => {
+  it("keeps the complete schema in parity with visible release 2.0 questions and answers", async () => {
     locale = language;
     const { container } = render(await FAQPage());
     const serialized = container.querySelector('script[type="application/ld+json"]')!.textContent!;
-    const originalBrandSchema = serialized.replaceAll("BikeFitBoost", "BestBikeFit4U");
-    expect(createHash("sha256").update(originalBrandSchema).digest("hex")).toBe(schemaHashes[language]);
     const schema = JSON.parse(serialized);
     const disclosures = Array.from(container.querySelectorAll("details"));
-    expect(disclosures).toHaveLength(12);
+    expect(disclosures).toHaveLength(13);
+    expect(schema["@type"]).toBe("FAQPage");
+    expect(screen.getByText(pricingFaq[language].personal.a)).toBeTruthy();
+    expect(screen.getByText(pricingFaq[language].pdf)).toBeTruthy();
+    expect(screen.getByText(pricingFaq[language].change)).toBeTruthy();
+    expect(serialized).not.toMatch(/€9\b|€12[,.]50|\/ maand|Free vs Pro/);
     schema.mainEntity.forEach((question: { name: string; acceptedAnswer: { text: string } }, index: number) => {
       expect(disclosures[index].querySelector("summary")?.textContent).toBe(question.name);
       expect(disclosures[index].querySelector("p")?.textContent).toBe(question.acceptedAnswer.text);

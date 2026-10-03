@@ -16,6 +16,16 @@ const values: ProfileDirectValues = {
 };
 
 describe("direct profile layout staging", () => {
+  it("locks only the paid measurement while keeping self-assessments and complaints editable", () => {
+    state.locale = "en";
+    render(<ProfileDirectFields values={{ ...values, femurLengthCm: 43 }} onChange={vi.fn()} refinementsLocked />);
+    const copy = getDashboardMessages("en");
+    expect(screen.queryByRole("slider", { name: copy.profile.measurements.femurLength })).toBeNull();
+    expect(screen.getByRole("slider", { name: copy.profile.measurements.height })).toBeTruthy();
+    expect(screen.getByRole("slider", { name: copy.profile.sections.flexibility })).toBeTruthy();
+    expect(screen.getByRole("slider", { name: copy.profile.sections.coreStability })).toBeTruthy();
+    expect(screen.getByRole("slider", { name: copy.questionnaire.painAreas.areas.lower_back.label })).toBeTruthy();
+  });
   it.each(["nl", "en"] as const)("shows all six editable groups without save/edit buttons in %s", (locale) => {
     state.locale = locale;
     const changed = vi.fn();

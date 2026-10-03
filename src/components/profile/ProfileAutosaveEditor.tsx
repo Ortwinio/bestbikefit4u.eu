@@ -19,11 +19,12 @@ function changedValues<Value extends object>(next: Value, previous: Partial<Valu
 }
 
 
-export function ProfileAutosaveEditor({ profile, onWeightSaved, target, bodySummary }: {
+export function ProfileAutosaveEditor({ profile, onWeightSaved, target, bodySummary, refinementsLocked = false }: {
   profile: Doc<"profiles">;
   onWeightSaved: (weight: number) => void;
   target?: string | null;
   bodySummary?: (values: ProfileDirectValues) => ReactNode;
+  refinementsLocked?: boolean;
 }) {
   const { locale } = useDashboardMessages();
   const copy = autosaveMessages[locale];
@@ -121,5 +122,5 @@ export function ProfileAutosaveEditor({ profile, onWeightSaved, target, bodySumm
     setValues((current) => ({ ...current, ...patch }));
   };
   return <ProfileDirectFields values={values} onChange={change} status={status} commit={commit}
-    bodySummary={bodySummary?.(values)} />;
+    bodySummary={bodySummary?.(values)} refinementsLocked={refinementsLocked} />;
 }

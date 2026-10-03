@@ -112,6 +112,7 @@ describe("pdf report route", () => {
   };
 
   const reportSourceFixture = {
+    access: { enforced: false, fullReport: true, canDownloadPdf: true },
     session: sessionFixture,
     recommendation: recommendationFixture,
     bike: {
@@ -187,6 +188,36 @@ describe("pdf report route", () => {
       ...overrides,
     });
   }
+
+  it("exports only core PDF for the latest free report when enforcement is on", async () => {
+    vi.stubEnv("PAID_ACCESS_ENFORCED", "true");
+    mocks.token.mockResolvedValue("token-access");
+    mockCurrentUser({ tier: "free" });
+    mocks.query.mockResolvedValueOnce({ ...reportSourceFixture,
+      access: { enforced: true, fullReport: false, canDownloadPdf: true } });
+    const response = await GET(new Request("http://localhost?locale=nl"), {
+      params: Promise.resolve({ sessionId: "session_3" }),
+    });
+    expect(response.status).toBe(200);
+    expect(mocks.renderPdfFromHtml).not.toHaveBeenCalled();
+    expect(mocks.buildRecommendationPdfLines).toHaveBeenCalledWith({
+      session: sessionFixture, recommendation: recommendationFixture, locale: "nl", coreOnly: true,
+    });
+  });
+
+  it("rejects an old free PDF even if the user has an obsolete pro tier", async () => {
+    vi.stubEnv("PAID_ACCESS_ENFORCED", "false");
+    mocks.token.mockResolvedValue("token-access");
+    mockCurrentUser({ tier: "pro" });
+    mocks.query.mockResolvedValueOnce({ ...reportSourceFixture,
+      access: { enforced: true, fullReport: false, canDownloadPdf: false } });
+    const response = await GET(new Request("http://localhost"), {
+      params: Promise.resolve({ sessionId: "session_3" }),
+    });
+    expect(response.status).toBe(403);
+    expect(mocks.mutation).toHaveBeenCalledTimes(1);
+    expect(mocks.renderPdfFromHtml).not.toHaveBeenCalled();
+  });
 
   it.each([
     { billing: "false", tier: "free", status: 200 },

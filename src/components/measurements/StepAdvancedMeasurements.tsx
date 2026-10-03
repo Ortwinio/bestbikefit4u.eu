@@ -9,6 +9,9 @@ import { InfoBox } from "@/components/ui";
 import { AlertCircle, Info, HelpCircle, Sparkles } from "lucide-react";
 import { IllustratedMeasurementHelp } from "./IllustratedMeasurementHelp";
 import { NumberSlider } from "./NumberSlider";
+import Link from "next/link";
+import { getPricingAccessCopy } from "@/i18n/account/pricingAccess";
+import { withLocalePrefix } from "@/i18n/navigation";
 
 // Anthropometric predictions based on height
 // Sources: standard biomechanics ratios used in bike fitting literature
@@ -40,7 +43,7 @@ function deviation(actual: number, predicted: number) {
   return Math.abs(actual - predicted) / predicted;
 }
 
-export function StepAdvancedMeasurements() {
+export function StepAdvancedMeasurements({ refinementsLocked = false }: { refinementsLocked?: boolean }) {
   const { locale } = useDashboardMessages();
   const {
     watch,
@@ -69,10 +72,10 @@ export function StepAdvancedMeasurements() {
       setValue("armLengthCm", predictedArm(heightCm), { shouldValidate: true });
     if (!userEditedShoulder.current)
       setValue("shoulderWidthCm", predictedShoulder(heightCm), { shouldValidate: true });
-    if (!userEditedFemur.current)
+    if (!refinementsLocked && !userEditedFemur.current)
       setValue("femurLengthCm", predictedFemur(heightCm), { shouldValidate: true });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [heightCm]);
+  }, [heightCm, refinementsLocked]);
 
   // Warnings: >20% deviation from height-based prediction
   const torsoWarning = useMemo(() => {
@@ -259,7 +262,15 @@ export function StepAdvancedMeasurements() {
 
       {/* Femur Length */}
       <div className="space-y-2">
-        <Controller
+        {refinementsLocked ? <div className="space-y-2 rounded-2xl border border-border p-4">
+          <h3 className="font-semibold">{getPricingAccessCopy(locale).fields.femurLengthCm}</h3>
+          <p className="font-mono">{femurLengthCm === undefined ? "—" : `${femurLengthCm.toLocaleString(locale)} cm`}</p>
+          <p>{getPricingAccessCopy(locale).reasons.femurLengthCm}</p>
+          <p className="text-sm text-muted-foreground">{femurLengthCm === undefined
+            ? getPricingAccessCopy(locale).locked : getPricingAccessCopy(locale).retained}</p>
+          <Link className="inline-flex min-h-11 items-center text-primary underline"
+            href={withLocalePrefix("/pricing", locale)}>{getPricingAccessCopy(locale).options}</Link>
+        </div> : <Controller
           name="femurLengthCm"
           render={({ field }) => (
             <NumberSlider
@@ -278,7 +289,7 @@ export function StepAdvancedMeasurements() {
               error={errors.femurLengthCm?.message as string}
             />
           )}
-        />
+        />}
         <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
           <p className="font-medium text-[color:var(--foreground)]">{profileText(locale, "How to measure femur length")}</p>
           <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">

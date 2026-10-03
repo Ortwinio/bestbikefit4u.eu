@@ -12,6 +12,9 @@ import { Button } from "@/components/ui";
 import { advicePageCopy } from "@/i18n/account/advicePage";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { api } from "../../../../../convex/_generated/api";
+import { isPaidAccessEnforced } from "../../../../../shared/pricing/flags";
+import { getPricingAccessCopy } from "@/i18n/account/pricingAccess";
 
 export type RecalculationResult = { items: Array<{ source: string; id: string;
   status: "updated" | "pending" | "skipped" | "failed"; reason?: string; replacementId?: string }> };
@@ -44,6 +47,8 @@ const calculatorKeys = ["saddle-height", "bike-fit", "frame-size", "crank-length
 export function AdvicePageClient({ locale }: { locale: Locale }) {
   const copy = advicePageCopy[locale];
   const { isAuthenticated } = useConvexAuth();
+  const access = useQuery(api.pricing.queries.getAccess, isAuthenticated && isPaidAccessEnforced() ? {} : "skip");
+  const pricing = getPricingAccessCopy(locale);
   const groups = useQuery(listAdviceGroups, isAuthenticated ? {} : "skip");
   const bikes = useQuery(listBikes, isAuthenticated ? {} : "skip");
   const user = useQuery(currentUser, isAuthenticated ? {} : "skip");
@@ -127,5 +132,10 @@ export function AdvicePageClient({ locale }: { locale: Locale }) {
         onMarkPerformed={(item, input) => perform({ ...progressIdentity(item), ...input })}
         onSubmitFeedback={(item, input) => feedback({ ...progressIdentity(item), ...input })} />
     </>}
+    {access?.enforced && !access.fullProfile && <section className="space-y-3 rounded-3xl bg-primary p-6 text-primary-foreground">
+      <h2 className="font-display text-2xl font-bold">{pricing.adviceTitle}</h2><p>{pricing.adviceDetail}</p>
+      <Link className="inline-flex min-h-11 items-center font-semibold underline focus-visible:focus-ring"
+        href={withLocalePrefix("/pricing", locale)}>{pricing.options}</Link>
+    </section>}
   </div>;
 }

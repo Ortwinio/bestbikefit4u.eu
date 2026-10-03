@@ -21,6 +21,8 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { fitHistoryCopy } from "@/i18n/account/fitHistory";
 import { FitReportActionGroup } from "@/components/reports";
 import { ArrowRight, Trash2, AlertTriangle, Clock } from "lucide-react";
+import { LegacyReportBadge } from "./LegacyReportBadge";
+import { isPaidAccessEnforced } from "../../../shared/pricing/flags";
 
 function formatConfidence(score: number) {
   return Math.max(0, Math.min(100, Math.round(score)));
@@ -132,6 +134,7 @@ export function BikeWithFitHistory({ bike, sessions }: BikeWithFitHistoryProps) 
           <div className="divide-y divide-border border-t border-border">
             {sessions.map(({ session, recommendation }) => (
               <article key={session._id} className="min-w-0 py-5">
+                {isPaidAccessEnforced() && recommendation && <LegacyReportBadge sessionId={session._id} locale={locale} />}
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex flex-wrap items-center gap-2">
                     <h3 className="font-semibold text-foreground">{sessionStyle(session)}</h3>

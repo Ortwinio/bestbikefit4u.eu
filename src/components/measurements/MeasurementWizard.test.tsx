@@ -14,6 +14,30 @@ vi.mock("@/i18n/useDashboardMessages", () => ({
 afterEach(cleanup);
 
 describe("profile wizard presentation", () => {
+  it.each([undefined, 47])("completes a locked free profile without predicting or changing femur %s", async femurLengthCm => {
+    locale = "en";
+    const copy = getDashboardMessages(locale);
+    const onComplete = vi.fn();
+    render(<MeasurementWizard refinementsLocked onComplete={onComplete} defaultValues={{
+      heightCm: 175, inseamCm: 82, femurLengthCm, flexibilityScore: "good", coreStabilityScore: 4,
+      comfortScore: 5, painAreas: [], experienceLevel: "advanced", weeklyHours: "10-15",
+      typicalRideLength: "long", positionPriority: "performance",
+    }} />);
+    for (let step = 2; step <= 6; step++) {
+      fireEvent.click(screen.getByRole("button", { name: copy.questionnaire.actions.next }));
+      await waitFor(() => expect(screen.getAllByRole("progressbar")[0].getAttribute("aria-valuenow"))
+        .toBe(String(Math.round(step / 6 * 100))));
+      if (step === 2) {
+        expect(screen.queryByRole("slider", { name: "Femur Length" })).toBeNull();
+        if (femurLengthCm !== undefined) expect(screen.getByText("47 cm")).toBeTruthy();
+      }
+    }
+    fireEvent.click(screen.getByRole("button", { name: copy.common.save }));
+    await waitFor(() => expect(onComplete).toHaveBeenCalledTimes(1));
+    expect(onComplete.mock.calls[0][0].femurLengthCm).toBe(femurLengthCm);
+    expect(onComplete.mock.calls[0][0]).toMatchObject({ flexibilityScore: "good", coreStabilityScore: 4, comfortScore: 5 });
+  });
+
   it("preserves partial prefill and requires an explicit flexibility answer", async () => {
     locale = "en";
     const copy = getDashboardMessages(locale);

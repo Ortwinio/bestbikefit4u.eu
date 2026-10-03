@@ -62,11 +62,11 @@ export const nl = {
     headingWithoutFrame: "Je fitrapport",
   },
   fitPassWelcome: {
-    subject: "Je Fit Pass is actief. Dit kun je nu",
+    subject: "Je volledige toegang is actief. Dit kun je nu",
     preheader: "Je PDF, je stappenplan en al je fietsen.",
     eyebrow: "BEDANKT, {firstName}",
     eyebrowWithoutName: "BEDANKT",
-    heading: "Je Fit Pass is actief",
+    heading: "Je volledige toegang is actief",
     benefits: [
       {
         title: "Je rapport als PDF:",
@@ -132,9 +132,9 @@ export const nl = {
   },
   upgradeNudge: {
     subject: "Je fit op papier, en voor al je fietsen",
-    preheader: "Pro: €9 per maand, maandelijks opzegbaar.",
+    preheader: "Jaarabonnement: €24,50 in je eerste jaar, daarna €19,50 per jaar.",
     heading: "Haal meer uit je fit",
-    intro: "je fitwaarden staan klaar. Met Pro krijg je er dit bij:",
+    intro: "je fitwaarden staan klaar. Met een jaarabonnement krijg je er dit bij:",
     benefits: [
       {
         title: "Een PDF van je rapport",
@@ -150,7 +150,8 @@ export const nl = {
       },
     ],
     cancel: "opzeggen kan altijd",
-    button: "Bekijk wat Pro je geeft",
+    price: "€24,50 in je eerste jaar · daarna €19,50 per jaar · opzeggen kan altijd",
+    button: "Bekijk het jaarabonnement",
   },
   winback: {
     subject: "Klopt je fit nog?",

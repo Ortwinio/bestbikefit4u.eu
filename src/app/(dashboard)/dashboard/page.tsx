@@ -34,6 +34,8 @@ import {
   getEffectiveProfileImageSource,
 } from "@/lib/userIdentity";
 import { ArrowRight, Plus, User, Bike } from "lucide-react";
+import { isPaidAccessEnforced } from "../../../../shared/pricing/flags";
+import { BikeAccessNotice } from "@/components/bikes/BikeAccessNotice";
 
 export default function DashboardPage() {
   const { locale, messages } = useDashboardMessages();
@@ -41,6 +43,8 @@ export default function DashboardPage() {
   const profile = useQuery(api.profiles.queries.getMyProfile);
   const user = useQuery(api.users.queries.getCurrentUser);
   const bikes = useQuery(api.bikes.queries.listSummariesByUser);
+  const access = useQuery(api.pricing.queries.getAccess, isPaidAccessEnforced() ? {} : "skip");
+  const atLimit = Boolean(access?.enforced && access.maxBikes !== null && bikes && bikes.length >= access.maxBikes);
   const sessionsWithBikes = useQuery(api.sessions.queries.getAllSessionsWithBikes);
 
   const isLoading =
@@ -91,7 +95,7 @@ export default function DashboardPage() {
           <Button
             variant="outline"
             nativeButton={false}
-            render={<Link href={withLocalePrefix("/bikes/new", locale)} />}
+            render={<Link href={withLocalePrefix(atLimit ? "/checkout?product=annual" : "/bikes/new", locale)} />}
           >
             <Plus className="h-4 w-4" />
             {messages.nav.newBike}
@@ -101,6 +105,7 @@ export default function DashboardPage() {
       </header>
 
       <DashboardProfileStrength locale={locale} />
+      {access?.enforced && access.maxBikes === 1 && <BikeAccessNotice locale={locale} />}
       <DashboardProfilePrompts locale={locale} />
       <DashboardCalculatorQuickLinks locale={locale} />
 

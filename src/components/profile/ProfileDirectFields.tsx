@@ -13,6 +13,7 @@ import {
 } from "@/i18n/account/profileAutosave";
 import { flexibilityTests, coreStabilityTests } from "@/lib/validations/profile";
 import type { RiderProfileData } from "./RidingStyleCard";
+import { getPricingAccessCopy } from "@/i18n/account/pricingAccess";
 
 export type ProfileFieldGroup = "body" | "extra" | "flexibility" | "core" | "comfort" | "riding";
 
@@ -36,6 +37,7 @@ type Props = {
   errors?: Partial<Record<keyof ProfileDirectValues, string>>;
   commit?: Partial<Record<ProfileFieldGroup, () => unknown>>;
   bodySummary?: ReactNode;
+  refinementsLocked?: boolean;
 };
 
 const bodyFields = [
@@ -50,7 +52,7 @@ const extraFields = [
   { key: "femurLengthCm", label: "femurLength", min: 35, max: 60, unit: "cm" },
 ] as const;
 
-export function ProfileDirectFields({ values, onChange, status = {}, errors = {}, commit = {}, bodySummary }: Props) {
+export function ProfileDirectFields({ values, onChange, status = {}, errors = {}, commit = {}, bodySummary, refinementsLocked = false }: Props) {
   const { locale, messages } = useDashboardMessages();
   const copy = profileAutosaveCopy[locale];
   const profile = messages.profile;
@@ -75,9 +77,15 @@ export function ProfileDirectFields({ values, onChange, status = {}, errors = {}
 
   const measurements = (group: "body" | "extra") => (group === "body" ? bodyFields : extraFields).map((field) => (
     <div key={field.key} className="min-w-0 [&_[data-range-pct]]:whitespace-nowrap">
-      <NumberSlider label={profile.measurements[field.label]}
+      {refinementsLocked && field.key === "femurLengthCm" ? <div className="space-y-2">
+        <p className="font-medium">{profile.measurements[field.label]}</p>
+        <p className="font-mono">{values[field.key] ?? "—"} {field.unit}</p>
+        <p className="text-sm text-muted-foreground">{getPricingAccessCopy(locale).locked}</p>
+        <Link className="inline-flex min-h-11 items-center text-primary underline"
+          href={withLocalePrefix("/pricing", locale)}>{getPricingAccessCopy(locale).options}</Link>
+      </div> : <NumberSlider label={profile.measurements[field.label]}
         value={values[field.key]} min={field.min} max={field.max} unit={field.unit}
-        error={errors[field.key]} onChange={(value) => onChange(group, { [field.key]: value })} />
+        error={errors[field.key]} onChange={(value) => onChange(group, { [field.key]: value })} />}
       {field.key !== "weightKg" && <details className="mt-2 rounded-xl border border-border px-3">
         <summary className="flex min-h-11 cursor-pointer items-center text-sm text-primary focus-visible:focus-ring">
           {profile.measurements.howToMeasure}

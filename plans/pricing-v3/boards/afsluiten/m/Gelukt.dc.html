@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="nl">
+<head><meta charset="utf-8"><title>Betaling gelukt · mobiel</title><script src="./support.js"></script></head>
+<body><x-dc><helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#F5F8F3;color:#0F2420;font-family:Figtree,sans-serif}a{color:#0A7263;text-decoration:none}button{cursor:pointer;font-family:inherit}h1,h2{font-family:'Bricolage Grotesque',sans-serif;margin:0}p{margin:0;line-height:1.5}.num{font-family:'DM Mono',monospace;font-weight:500}
+button:focus-visible,a:focus-visible{outline:3px solid #0A7263;outline-offset:3px}
+.review-strip{height:44px;min-height:44px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#EEF3EF;border-bottom:1px dashed #B9CCC6;box-sizing:border-box;font-family:Figtree,sans-serif;flex-shrink:0}.review-label{font-size:12px;font-weight:700;text-transform:uppercase;color:#4A5F5A;flex-shrink:0}.review-scroll{display:flex;align-items:center;gap:4px;overflow-x:auto;min-width:0;height:44px}.review-pill{display:inline-flex;align-items:center;justify-content:center;height:44px;min-height:44px;min-width:44px;flex-shrink:0;padding:0 2px;border:0;background:transparent;font-family:Figtree,sans-serif;font-size:13px;color:#4A5F5A;cursor:pointer}.review-pill span{display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;white-space:nowrap}.review-pill[aria-pressed="true"] span{background:#0F2420;color:#FFFFFF}
+.co-header{height:56px;min-height:56px;display:flex;align-items:center;justify-content:center;padding:0 16px;background:#FFFFFF;border-bottom:1px solid #DCE6E1;flex-shrink:0}.co-logo{display:flex;align-items:center;gap:8px;color:#0F2420;font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:800;white-space:nowrap}.co-accent{color:#0A7263}
+.co-main{flex:1;min-height:0;overflow-y:auto;padding:20px 16px 0;display:flex;flex-direction:column}
+.co-done{background:#CFF26A;border-radius:32px;padding:28px 24px;display:flex;flex-direction:column;gap:14px;color:#0F2420}.co-done h1{font-weight:800;font-size:34px;line-height:1.06;letter-spacing:-.03em}.co-done p{font-size:16px}.co-check{width:56px;height:56px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center}.co-textlink{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:#0F2420;font-weight:700;text-decoration:underline;text-underline-offset:4px}
+.co-receipt{margin-top:16px;background:#FFFFFF;border:1px solid #DCE6E1;border-radius:20px;padding:4px 18px 14px}.co-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:8px 0;border-bottom:1px solid #DCE6E1;font-size:14px}.co-row dt{color:#4A5F5A}.co-row dd{margin:0;text-align:right;font-weight:600}.co-small{font-size:14px;line-height:1.5;color:#4A5F5A}
+.co-legal{margin-top:auto;padding:24px 0 16px;text-align:center;font-size:13px;color:#4A5F5A}.co-legal a{color:#4A5F5A;text-decoration:underline;display:inline-block;min-height:24px}
+.co-foot{position:sticky;bottom:0;height:88px;min-height:88px;padding:16px;background:#FFFFFF;border-top:1px solid #DCE6E1;flex-shrink:0}.co-primary{display:flex;align-items:center;justify-content:center;width:100%;height:56px;border:0;border-radius:999px;background:#0A7263;color:#FFFFFF;font-weight:700;font-size:17px}.co-primary:hover{background:#075A4E}.co-note{margin-top:6px;font-size:12px;line-height:1.4;color:#4A5F5A;text-align:center}.co-foot-fit{height:108px;min-height:108px;padding:12px 16px 10px}
+</style></helmet>
+<div style="width:390px;height:940px;display:flex;flex-direction:column;background:#F5F8F3;overflow:hidden">
+<div class="review-strip" aria-label="Ontwerpstaat"><span class="review-label">Ontwerpstaat</span><div class="review-scroll" data-review-scroll="true"><sc-for list="{{states}}" as="item" hint-placeholder-count="3"><button type="button" class="review-pill" aria-pressed="{{item.selected}}" onClick="{{item.pick}}"><span>{{item.label}}</span></button></sc-for></div></div>
+<header class="co-header"><span class="co-logo"><svg width="30" height="30" viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#CFF26A"></circle><circle cx="11" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><circle cx="23" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><path d="M11 20l4-8h6l2 8M15 12l4 8" stroke="#0F2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>BestBikeFit<span class="co-accent">4U</span></span></span></header>
+<main class="co-main">
+<section class="co-done" aria-labelledby="done-title">
+<div class="co-check"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0F2420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></div>
+<h1 id="done-title">{{title}}</h1>
+<p>{{lead}}</p>
+<sc-if value="{{isFit}}" hint-placeholder-val="{{false}}"><p style="font-size:14px">Verzetten of annuleren kan volgens de voorwaarden: [VOORWAARDEN AFSPRAAK — juridisch toetsen]</p><a class="co-textlink" href="../../FitResults.dc.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>Open je stappenplan</a></sc-if>
+<sc-if value="{{isAnnual}}" hint-placeholder-val="{{true}}"><a class="co-textlink" href="../../Cadeau.dc.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="2"></rect><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s6 1 6 1c2-4 6-4 6-1s-6 1-6 1"></path></svg>Geef een meting cadeau</a></sc-if>
+</section>
+<dl class="co-receipt" aria-label="Bonnetje">
+<div class="co-row"><dt>Product</dt><dd>{{product}}</dd></div>
+<div class="co-row"><dt>Bedrag</dt><dd><span class="num">{{price}}</span></dd></div>
+<div class="co-row"><dt>Datum</dt><dd><span class="num">3</span> okt <span class="num">2026</span></dd></div>
+<p class="co-small" style="margin-top:12px">Bevestiging verstuurd naar thomas@voorbeeld.nl</p>
+</dl>
+<p class="co-legal"><a href="../../Legal.dc.html">Voorwaarden</a> · <a href="../../Legal.dc.html">Privacy</a> · Hulp nodig? <a href="../../Contact.dc.html">info@bestbikefit4u.eu</a></p>
+</main>
+<sc-if value="{{notFit}}" hint-placeholder-val="{{true}}"><div class="co-foot"><a class="co-primary" href="../../FitResults.dc.html">Open je stappenplan</a></div></sc-if>
+<sc-if value="{{isFit}}" hint-placeholder-val="{{false}}"><div class="co-foot co-foot-fit"><a class="co-primary" href="#agenda" aria-describedby="co-agenda-note">Plan je afspraak</a><p class="co-note" id="co-agenda-note">Link naar de agenda volgt: [AGENDA-LINK]</p></div></sc-if>
+</div></x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":940}}'>
+class Component extends DCLogic {
+constructor(props){super(props);this.state={view:'annual'};}
+renderVals(){
+const view=this.state.view;
+const copy={
+single:{title:'Je stappenplan staat klaar',lead:'Je volledige stappenplan voor je Canyon Endurace is 3 maanden beschikbaar.',product:'Losse meting · Canyon Endurace',price:'€13,50'},
+annual:{title:'Je jaarabonnement is actief',lead:'Voeg al je fietsen toe en vergelijk ze. Je 2 losse metingen om weg te geven staan klaar.',product:'Jaarabonnement',price:'€24,50'},
+instap:{title:'Welkom bij je jaarabonnement',lead:'Al je fietsen staan nu open, en je hebt 1 losse meting om weg te geven.',product:'Jaarabonnement, eerste jaar',price:'€13,50'},
+fit:{title:'Je jaarabonnement met persoonlijke bikefit is actief',lead:'Plan nu je afspraak bij een fitter in [LOCATIE]. Je fitter start met jouw profiel en metingen.',product:'Jaarabonnement + persoonlijke bikefit',price:'€234,50'}
+};
+const c=copy[view]||copy.annual;
+return {
+states:[['single','Losse meting'],['annual','Jaarabonnement'],['instap','Instap'],['fit','Persoonlijke bikefit']].map(([id,label])=>({id,label,selected:id===view,pick:()=>this.setState({view:id})})),
+title:c.title,lead:c.lead,product:c.product,price:c.price,
+isAnnual:view==='annual',isFit:view==='fit',notFit:view!=='fit'
+};
+}
+}
+</script></body></html>
