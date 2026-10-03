@@ -1,5 +1,6 @@
 import { type Locale, SUPPORTED_LOCALES, isLocale } from "./config";
 import { DASHBOARD_PRESSURE_CALCULATOR_PATH } from "@/lib/pressureRoutes";
+import { getLocaleRoutePair } from "./localeRoutes";
 
 const localePrefixRegex = new RegExp(
   `^/(${SUPPORTED_LOCALES.join("|")})(?=/|$)`,
@@ -45,7 +46,7 @@ export function withLocalePrefix(pathname: string, locale: Locale): string {
 }
 
 export function switchLocalePathname(pathname: string, locale: Locale): string {
-  return withLocalePrefix(pathname, locale);
+  return withLocalePrefix(getLocaleRoutePair(pathname)?.[locale] ?? pathname, locale);
 }
 
 export function isBypassedPathname(pathname: string): boolean {

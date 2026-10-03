@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from "./config";
-import { withLocalePrefix } from "./navigation";
+import { switchLocalePathname } from "./navigation";
 import { BRAND } from "@/config/brand";
 
 function toAbsoluteUrl(pathname: string): string {
@@ -11,7 +11,7 @@ export function buildLocaleAlternates(pathname: string, locale: Locale) {
   const localizedPaths = Object.fromEntries(
     SUPPORTED_LOCALES.map((supportedLocale) => [
       supportedLocale,
-      withLocalePrefix(pathname, supportedLocale),
+      switchLocalePathname(pathname, supportedLocale),
     ])
   ) as Record<Locale, string>;
 
@@ -23,8 +23,8 @@ export function buildLocalizedAlternates(
   locale: Locale,
   defaultLocale: Locale = DEFAULT_LOCALE
 ) {
-  const canonicalPath = localizedPaths[locale];
-  const defaultPath = localizedPaths[defaultLocale] ?? canonicalPath;
+  const canonicalPath = switchLocalePathname(localizedPaths[locale], locale);
+  const defaultPath = switchLocalePathname(localizedPaths[defaultLocale] ?? canonicalPath, defaultLocale);
 
   return {
     canonical: toAbsoluteUrl(canonicalPath),
@@ -32,7 +32,7 @@ export function buildLocalizedAlternates(
       [
         ...SUPPORTED_LOCALES.map((supportedLocale) => [
           supportedLocale,
-          toAbsoluteUrl(localizedPaths[supportedLocale]),
+          toAbsoluteUrl(switchLocalePathname(localizedPaths[supportedLocale], supportedLocale)),
         ]),
         ["x-default", toAbsoluteUrl(defaultPath)],
       ]

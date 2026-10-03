@@ -3,6 +3,7 @@ import { api } from "../../../../convex/_generated/api";
 import { PAIN_PAGE_SLUGS } from "@/content/painPages";
 import { SUPPORTED_LOCALES, type Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { getLocaleRoutePair } from "@/i18n/localeRoutes";
 import { getProgrammaticCalculatorEntries } from "@/lib/seo/programmatic/tirePressure";
 import {
   DEFAULT_LOCALE_FOR_X_DEFAULT,
@@ -65,9 +66,11 @@ function buildLocalizedPaths(
 }
 
 function toEntry(seed: RouteSeed): SitemapContentEntry {
+  const pair = seed.path ? getLocaleRoutePair(seed.path) : undefined;
   const localizedPaths =
     seed.localizedPaths ??
-    (seed.path ? buildLocalizedPaths(seed.path, seed.locales) : {});
+    (pair ? Object.fromEntries(SUPPORTED_LOCALES.map((locale) => [locale, withLocalePrefix(pair[locale], locale)]))
+      : seed.path ? buildLocalizedPaths(seed.path, seed.locales) : {});
 
   return {
     id: seed.id,
@@ -89,20 +92,11 @@ const PAGE_ROUTE_SEEDS: readonly RouteSeed[] = [
     locales: ["nl"],
   },
   {
-    id: "bikefitting-nl",
+    id: "bike-fitting",
     path: "/bikefitting",
     lastmod: "2026-05-05",
     changefreq: "weekly",
     priority: 0.9,
-    locales: ["nl"],
-  },
-  {
-    id: "bike-fitting-en",
-    path: "/bike-fitting",
-    lastmod: "2026-05-05",
-    changefreq: "weekly",
-    priority: 0.9,
-    locales: ["en"],
   },
   { id: "about", path: "/about", lastmod: "2026-02-19", changefreq: "monthly", priority: 0.8 },
   {

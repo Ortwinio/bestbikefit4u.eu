@@ -1,0 +1,903 @@
+{
+  "phase": "after",
+  "sourceHash": "a9d2c813774cc7c63cb08b309fe0511ff5db32e2b9c30ce142065b4f81611b18",
+  "measurement": "fetch response-header latency, local HTTPS; first request per UA/path excluded from warm statistics",
+  "rows": [
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Googlebot",
+      "iteration": 0,
+      "warmup": true,
+      "status": 200,
+      "headersMs": 601.3823749999865,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Googlebot",
+      "iteration": 1,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 124.9703329999902,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Googlebot",
+      "iteration": 2,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 131.38312499999302,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Googlebot",
+      "iteration": 3,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 132.35741599999892,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Googlebot",
+      "iteration": 4,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 117.8234999999986,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Googlebot",
+      "iteration": 5,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 136.35933300000033,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Screaming Frog SEO Spider",
+      "iteration": 0,
+      "warmup": true,
+      "status": 200,
+      "headersMs": 124.40087499999208,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Screaming Frog SEO Spider",
+      "iteration": 1,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 136.57441699999617,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Screaming Frog SEO Spider",
+      "iteration": 2,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 139.81991700000071,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Screaming Frog SEO Spider",
+      "iteration": 3,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 123.71662500000093,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Screaming Frog SEO Spider",
+      "iteration": 4,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 124.38487500000338,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Screaming Frog SEO Spider",
+      "iteration": 5,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 135.16679200000362,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "GPTBot",
+      "iteration": 0,
+      "warmup": true,
+      "status": 200,
+      "headersMs": 131.2536250000121,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "GPTBot",
+      "iteration": 1,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 125.4696249999979,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "GPTBot",
+      "iteration": 2,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 123.93299999998999,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "GPTBot",
+      "iteration": 3,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 112.82529100000102,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "GPTBot",
+      "iteration": 4,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 137.15029199999117,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "GPTBot",
+      "iteration": 5,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 148.4778329999972,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "ClaudeBot",
+      "iteration": 0,
+      "warmup": true,
+      "status": 200,
+      "headersMs": 131.85845800000243,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "ClaudeBot",
+      "iteration": 1,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 130.28466599999228,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "ClaudeBot",
+      "iteration": 2,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 121.14895799999067,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "ClaudeBot",
+      "iteration": 3,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 143.5322090000118,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "ClaudeBot",
+      "iteration": 4,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 113.5809159999917,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "ClaudeBot",
+      "iteration": 5,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 116.91112499999872,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Mozilla/5.0 Chrome/130.0.0.0",
+      "iteration": 0,
+      "warmup": true,
+      "status": 200,
+      "headersMs": 127.70095800000126,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Mozilla/5.0 Chrome/130.0.0.0",
+      "iteration": 1,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 160.2953750000015,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Mozilla/5.0 Chrome/130.0.0.0",
+      "iteration": 2,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 129.75708399999712,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Mozilla/5.0 Chrome/130.0.0.0",
+      "iteration": 3,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 136.72858299998916,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Mozilla/5.0 Chrome/130.0.0.0",
+      "iteration": 4,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 256.882792000004,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/en/guides/fit-science",
+      "userAgent": "Mozilla/5.0 Chrome/130.0.0.0",
+      "iteration": 5,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 123.36229099999764,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Googlebot",
+      "iteration": 0,
+      "warmup": true,
+      "status": 200,
+      "headersMs": 144.49000000000524,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Googlebot",
+      "iteration": 1,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 156.91045900000609,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Googlebot",
+      "iteration": 2,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 217.67900000000373,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Googlebot",
+      "iteration": 3,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 118.25220799999079,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Googlebot",
+      "iteration": 4,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 139.9697920000035,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Googlebot",
+      "iteration": 5,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 144.68945900000108,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Screaming Frog SEO Spider",
+      "iteration": 0,
+      "warmup": true,
+      "status": 200,
+      "headersMs": 117.23391700000502,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Screaming Frog SEO Spider",
+      "iteration": 1,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 112.69587500000489,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Screaming Frog SEO Spider",
+      "iteration": 2,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 116.36529200000223,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Screaming Frog SEO Spider",
+      "iteration": 3,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 178.9053750000021,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Screaming Frog SEO Spider",
+      "iteration": 4,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 126.69800000000396,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Screaming Frog SEO Spider",
+      "iteration": 5,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 127.43754199999967,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "GPTBot",
+      "iteration": 0,
+      "warmup": true,
+      "status": 200,
+      "headersMs": 116.64441699998861,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "GPTBot",
+      "iteration": 1,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 149.03933299999335,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "GPTBot",
+      "iteration": 2,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 125.52908300000126,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "GPTBot",
+      "iteration": 3,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 135.0007920000062,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "GPTBot",
+      "iteration": 4,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 120.85204100000556,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "GPTBot",
+      "iteration": 5,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 142.16795899999852,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "ClaudeBot",
+      "iteration": 0,
+      "warmup": true,
+      "status": 200,
+      "headersMs": 118.25300000001153,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "ClaudeBot",
+      "iteration": 1,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 124.5058330000029,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "ClaudeBot",
+      "iteration": 2,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 155.97379199998977,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "ClaudeBot",
+      "iteration": 3,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 143.2912079999951,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "ClaudeBot",
+      "iteration": 4,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 138.6964580000058,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "ClaudeBot",
+      "iteration": 5,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 144.41254199999094,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Mozilla/5.0 Chrome/130.0.0.0",
+      "iteration": 0,
+      "warmup": true,
+      "status": 200,
+      "headersMs": 127.14154199999757,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Mozilla/5.0 Chrome/130.0.0.0",
+      "iteration": 1,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 215.75470799999312,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Mozilla/5.0 Chrome/130.0.0.0",
+      "iteration": 2,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 141.75483400000667,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Mozilla/5.0 Chrome/130.0.0.0",
+      "iteration": 3,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 145.33958299999358,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Mozilla/5.0 Chrome/130.0.0.0",
+      "iteration": 4,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 154.86445799999638,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    },
+    {
+      "path": "/nl/guides/saddle-height-guide",
+      "userAgent": "Mozilla/5.0 Chrome/130.0.0.0",
+      "iteration": 5,
+      "warmup": false,
+      "status": 200,
+      "headersMs": 144.9222080000036,
+      "tags": {
+        "title": 1,
+        "description": 1,
+        "canonical": 1,
+        "hreflang": 3
+      }
+    }
+  ],
+  "routes": [
+    {
+      "path": "/en/bikefitting?src=header",
+      "status": 308,
+      "location": "/en/bike-fitting?src=header"
+    },
+    {
+      "path": "/nl/bike-fitting?src=header",
+      "status": 308,
+      "location": "/nl/bikefitting?src=header"
+    },
+    {
+      "path": "/en/bike-fitting",
+      "status": 200,
+      "alternates": [
+        "<link rel=\"canonical\" href=\"https://bestbikefit4u.eu/en/bike-fitting\"/>",
+        "<link rel=\"alternate\" hrefLang=\"en\" href=\"https://bestbikefit4u.eu/en/bike-fitting\"/>",
+        "<link rel=\"alternate\" hrefLang=\"nl\" href=\"https://bestbikefit4u.eu/nl/bikefitting\"/>",
+        "<link rel=\"alternate\" hrefLang=\"x-default\" href=\"https://bestbikefit4u.eu/en/bike-fitting\"/>"
+      ],
+      "brokenSwitchLinks": false
+    },
+    {
+      "path": "/nl/bikefitting",
+      "status": 200,
+      "alternates": [
+        "<link rel=\"canonical\" href=\"https://bestbikefit4u.eu/nl/bikefitting\"/>",
+        "<link rel=\"alternate\" hrefLang=\"en\" href=\"https://bestbikefit4u.eu/en/bike-fitting\"/>",
+        "<link rel=\"alternate\" hrefLang=\"nl\" href=\"https://bestbikefit4u.eu/nl/bikefitting\"/>",
+        "<link rel=\"alternate\" hrefLang=\"x-default\" href=\"https://bestbikefit4u.eu/en/bike-fitting\"/>"
+      ],
+      "brokenSwitchLinks": false
+    },
+    {
+      "path": "/en/tire-pressure/75kg-road-bike",
+      "status": 200,
+      "alternates": [
+        "<link rel=\"canonical\" href=\"https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike\"/>",
+        "<link rel=\"alternate\" hrefLang=\"en\" href=\"https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike\"/>",
+        "<link rel=\"alternate\" hrefLang=\"nl\" href=\"https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets\"/>",
+        "<link rel=\"alternate\" hrefLang=\"x-default\" href=\"https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike\"/>"
+      ],
+      "brokenSwitchLinks": false
+    },
+    {
+      "path": "/nl/bandenspanning/75kg-racefiets",
+      "status": 200,
+      "alternates": [
+        "<link rel=\"canonical\" href=\"https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets\"/>",
+        "<link rel=\"alternate\" hrefLang=\"en\" href=\"https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike\"/>",
+        "<link rel=\"alternate\" hrefLang=\"nl\" href=\"https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets\"/>",
+        "<link rel=\"alternate\" hrefLang=\"x-default\" href=\"https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike\"/>"
+      ],
+      "brokenSwitchLinks": false
+    }
+  ]
+}
