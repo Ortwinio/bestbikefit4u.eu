@@ -1,0 +1,9 @@
+convex/emails/preferences.ts
+convex/emails/preferencesData.ts
+convex/emails/preferenceActions.ts
+convex/emails/unsubscribeTokens.ts
+convex/emails/newsletterConsent.ts
+shared/newsletterConsent.ts
+plans/riderprofile/messages/R11-backend-to-Boyle-tests.md
+plans/riderprofile/audit/R11-backend-notes.md
+plans/riderprofile/audit/files-R11-backend.txt

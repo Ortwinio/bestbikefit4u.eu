@@ -1,28 +1,25 @@
 import { mutation } from "../_generated/server";
+import type { Doc } from "../_generated/dataModel";
 import { v } from "convex/values";
-import { getAuthUserId } from "@convex-dev/auth/server";
 import { requireUserId } from "../lib/authz";
+import { recordProfileObservations } from "./provenance";
+import { validateProfileObservationValue } from "../../shared/profileObservationFields";
 import {
   validateNumberRange,
   validateShortString,
   validateTextString,
 } from "../lib/validation";
 
-const PROFILE_RANGES = {
-  heightCm: [120, 230],
-  inseamCm: [50, 120],
-  armLengthCm: [35, 110],
-  torsoLengthCm: [30, 90],
-  femurLengthCm: [20, 80],
-  shoulderWidthCm: [25, 70],
-  footLengthCm: [15, 40],
-  handSpanCm: [10, 35],
-  sitBoneWidthMm: [60, 200],
-  coreStabilityScore: [1, 5],
-  age: [10, 100],
-  weightKg: [30, 250],
-  painSeverity: [1, 5],
-} as const;
+import { PROFILE_RANGES } from "../../shared/profileBounds";
+export { importHandoff } from "./handoff";
+export { saveObservation } from "./provenance";
+export { openPromptCard, dismissPromptCard, skipProfilePrompt, answerProfilePrompt, recordPromptInterest } from "./prompts";
+
+function changedProfileValues(updates: Record<string, unknown>, previous: Doc<"profiles"> | null) {
+  return Object.fromEntries(Object.entries(updates).filter(([field, value]) =>
+    value !== undefined && JSON.stringify(value) !== JSON.stringify(previous?.[field as keyof Doc<"profiles">])
+  ));
+}
 
 function validateProfileMeasurements(args: {
   heightCm?: number;
@@ -195,6 +192,8 @@ export const upsert = mutation({
 
     // Additional info
     age: v.optional(v.number()),
+    sex: v.optional(v.union(v.literal("female"), v.literal("male"), v.literal("prefer_not_to_say"))),
+    birthDate: v.optional(v.string()),
     weightKg: v.optional(v.number()),
 
     // Rider profile questions (all optional for upsert compatibility)
@@ -235,11 +234,10 @@ export const upsert = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    const userId = await requireUserId(ctx);
 
+    if (args.sex !== undefined) validateProfileObservationValue("sex", args.sex);
+    if (args.birthDate !== undefined) validateProfileObservationValue("birthDate", args.birthDate);
     validateProfileMeasurements({
       heightCm: args.heightCm,
       inseamCm: args.inseamCm,
@@ -278,6 +276,8 @@ export const upsert = mutation({
 
     // Detect if any rider profile field changed to track staleness
     const riderProfileFields = [
+      "sex",
+      "birthDate",
       "experienceLevel",
       "weeklyHours",
       "typicalRideLength",
@@ -292,6 +292,7 @@ export const upsert = mutation({
       riderProfileFields.some((field) => {
         const newVal = args[field];
         const oldVal = existingProfile[field];
+        if (newVal === undefined) return false;
         if (Array.isArray(newVal) || Array.isArray(oldVal)) {
           return JSON.stringify(newVal) !== JSON.stringify(oldVal);
         }
@@ -305,10 +306,10 @@ export const upsert = mutation({
       userId,
       heightCm: args.heightCm,
       inseamCm: args.inseamCm,
-      armLengthCm: args.armLengthCm || args.heightCm * 0.44, // Fallback estimate
-      torsoLengthCm: args.torsoLengthCm || args.heightCm * 0.32, // Fallback estimate
+      ...(args.armLengthCm !== undefined ? { armLengthCm: args.armLengthCm } : {}),
+      ...(args.torsoLengthCm !== undefined ? { torsoLengthCm: args.torsoLengthCm } : {}),
       femurLengthCm: args.femurLengthCm,
-      shoulderWidthCm: args.shoulderWidthCm || 42, // Default
+      ...(args.shoulderWidthCm !== undefined ? { shoulderWidthCm: args.shoulderWidthCm } : {}),
       footLengthCm: args.footLengthCm,
       handSpanCm: args.handSpanCm,
       sitBoneWidthMm: args.sitBoneWidthMm,
@@ -316,6 +317,8 @@ export const upsert = mutation({
       coreStabilityScore: args.coreStabilityScore,
       injuryHistory: args.injuryHistory,
       age: args.age,
+      ...(args.sex !== undefined ? { sex: args.sex } : {}),
+      ...(args.birthDate !== undefined ? { birthDate: args.birthDate } : {}),
       weightKg: args.weightKg,
       weightUpdatedAt,
       experienceLevel: args.experienceLevel,
@@ -330,13 +333,16 @@ export const upsert = mutation({
       updatedAt: Date.now(),
     };
 
+    const updates = Object.fromEntries(Object.entries(profileData).filter(([, value]) => value !== undefined));
+    await recordProfileObservations(ctx, userId, changedProfileValues(updates, existingProfile), existingProfile);
+
     if (existingProfile) {
       // Update existing profile
-      await ctx.db.patch(existingProfile._id, profileData);
+      await ctx.db.patch(existingProfile._id, updates);
       return existingProfile._id;
     } else {
       // Create new profile
-      return await ctx.db.insert("profiles", profileData);
+      return await ctx.db.insert("profiles", { ...updates, userId, updatedAt: profileData.updatedAt });
     }
   },
 });
@@ -354,10 +360,7 @@ export const updateMeasurements = mutation({
     weightKg: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    const userId = await requireUserId(ctx);
 
     validateProfileMeasurements({
       heightCm: args.heightCm,
@@ -399,6 +402,7 @@ export const updateMeasurements = mutation({
       }
     }
 
+    await recordProfileObservations(ctx, userId, changedProfileValues(updates, profile), profile);
     await ctx.db.patch(profile._id, updates);
     return profile._id;
   },
@@ -417,10 +421,7 @@ export const updateAssessment = mutation({
     coreStabilityScore: v.number(),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    const userId = await requireUserId(ctx);
 
     validateProfileMeasurements({
       coreStabilityScore: args.coreStabilityScore,
@@ -435,6 +436,7 @@ export const updateAssessment = mutation({
       throw new Error("Profile not found");
     }
 
+    await recordProfileObservations(ctx, userId, changedProfileValues(args, profile), profile);
     await ctx.db.patch(profile._id, {
       flexibilityScore: args.flexibilityScore,
       coreStabilityScore: args.coreStabilityScore,
@@ -500,12 +502,14 @@ export const updateRiderProfile = mutation({
       profile.typicalRideLength !== args.typicalRideLength ||
       profile.hasPain !== args.hasPain ||
       painAreasChanged ||
-      profile.kneePainTiming !== args.kneePainTiming ||
-      profile.painSeverity !== args.painSeverity ||
+      (args.kneePainTiming !== undefined && profile.kneePainTiming !== args.kneePainTiming) ||
+      (args.painSeverity !== undefined && profile.painSeverity !== args.painSeverity) ||
       profile.positionPriority !== args.positionPriority;
 
+    const updates = Object.fromEntries(Object.entries(args).filter(([, value]) => value !== undefined));
+    await recordProfileObservations(ctx, userId, changedProfileValues(updates, profile), profile);
     await ctx.db.patch(profile._id, {
-      ...args,
+      ...updates,
       updatedAt: Date.now(),
       ...(hasChange ? { riderProfileUpdatedAt: Date.now() } : {}),
     });
@@ -533,6 +537,7 @@ export const updatePreferences = mutation({
     const changed = (Object.keys(patch) as (keyof typeof args)[]).some((key) => args[key] !== profile[key]);
     if (changed) {
       const updatedAt = Date.now();
+      await recordProfileObservations(ctx, userId, changedProfileValues(patch, profile), profile);
       await ctx.db.patch(profile._id, { ...patch, updatedAt, riderProfileUpdatedAt: updatedAt });
     }
     return profile._id;
@@ -565,13 +570,12 @@ export const updateComfort = mutation({
     const hasChange =
       profile.hasPain !== args.hasPain ||
       painAreasChanged ||
-      profile.painSeverity !== args.painSeverity;
+      (args.painSeverity !== undefined && profile.painSeverity !== args.painSeverity);
 
+    const updates = Object.fromEntries(Object.entries(args).filter(([, value]) => value !== undefined));
+    await recordProfileObservations(ctx, userId, changedProfileValues(updates, profile), profile);
     await ctx.db.patch(profile._id, {
-      hasPain: args.hasPain,
-      painAreas: args.painAreas,
-      painSeverity: args.painSeverity,
-      painAreaSeverities: args.painAreaSeverities,
+      ...updates,
       updatedAt: Date.now(),
       ...(hasChange ? { riderProfileUpdatedAt: Date.now() } : {}),
     });

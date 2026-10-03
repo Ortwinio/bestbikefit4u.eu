@@ -67,6 +67,21 @@ export const deleteAccount = mutation({
   handler: async (ctx) => {
     const userId = await requireUserId(ctx);
 
+    const observations = await ctx.db.query("profileObservations")
+      .withIndex("by_user_field", range => range.eq("userId", userId)).collect();
+    for (const observation of observations) await ctx.db.delete(observation._id);
+
+    const prompts = await ctx.db.query("profilePrompts")
+      .withIndex("by_user_key", range => range.eq("userId", userId)).collect();
+    const promptCards = await ctx.db.query("profilePromptCards")
+      .withIndex("by_user_shown", range => range.eq("userId", userId)).collect();
+    const promptActivity = await ctx.db.query("profilePromptActivity")
+      .withIndex("by_user_calculator", range => range.eq("userId", userId)).collect();
+    for (const record of [...prompts, ...promptCards, ...promptActivity]) await ctx.db.delete(record._id);
+    const newsletterEvents = await ctx.db.query("newsletterConsentEvents")
+      .withIndex("by_user_request", range => range.eq("userId", userId)).collect();
+    for (const event of newsletterEvents) await ctx.db.delete(event._id);
+
     // Calculator drafts include personal measurements and belong to account deletion too.
     const calculatorStates = await ctx.db.query("calculatorStates")
       .withIndex("by_user_calculator_bike", (q) => q.eq("userId", userId)).collect();

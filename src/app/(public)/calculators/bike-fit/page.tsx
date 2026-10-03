@@ -2,19 +2,10 @@ import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import { fitPageDetails } from "@/i18n/calculators/fitPageDetails";
 import type { Metadata } from "next";
 import { Compass, Gauge, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/prototyper-ui/ui/button";
-import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
-import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
-import {
-  CONSUMER_CAMPAIGN_CONFIG,
-  getConsumerCampaignCopy,
-  isConsumerCampaignActive,
-} from "@/config/commercial";
 import {
   FeatureIconCard,
   type FeatureIconCardColor,
   PublicBreadcrumbs,
-  PublicCtaBand,
   PublicPageShell,
   PublicSection,
 } from "@/components/public";
@@ -105,8 +96,6 @@ export default async function BikeFitCalculatorPage() {
   const dictionary = await getDictionary(locale);
   const isNl = locale === "nl";
   const pagePath = withLocalePrefix("/calculators/bike-fit", locale);
-  const campaignActive = isConsumerCampaignActive();
-  const campaign = getConsumerCampaignCopy(locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
   const faqs = buildFaqs(isNl);
   const trustPoints = isNl
@@ -234,70 +223,6 @@ export default async function BikeFitCalculatorPage() {
             ))}
           </div>
         </PublicSection>
-
-        <PublicCtaBand
-          className="mt-10"
-          eyebrow={isNl ? "Hoe verder?" : "What's next?"}
-          title={isNl ? "Start je persoonlijke bikefit" : "Start your personalized fit"}
-          description={
-            isNl
-              ? "Maak een gratis account aan om je rijdersprofiel op te bouwen, een persoonlijke " +
-                "bikefit te starten en toekomstige aanpassingen bij te houden."
-              : "Create a free account to build your rider profile, start a personalized fit, and " +
-                "track future adjustments."
-          }
-          actions={
-            campaignActive ? (
-              <CampaignCtaGroup
-                locale={locale}
-                pagePath={pagePath}
-                startHref={withLocalePrefix("/login?src=bike-fit", locale)}
-                startSection="bike_fit_result"
-                donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-                donateSection="bike_fit_campaign_donate"
-                startLabel={isNl ? "Maak een gratis account aan" : "Create a free account"}
-                donateLabel={campaign.donateCta}
-              />
-            ) : (
-              <>
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/login?src=bike-fit", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="bike_fit_result"
-                      ctaLabel={isNl ? "Maak een gratis account aan" : "Create a free account"}
-                    />
-                  }
-                >
-                  {isNl ? "Maak een gratis account aan" : "Create a free account"}
-                </Button>
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/pricing", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="bike_fit_pricing_cta"
-                      ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
-                    />
-                  }
-                  variant="outline"
-                >
-                  {isNl ? "Bekijk prijzen" : "Compare plans"}
-                </Button>
-              </>
-            )
-          }
-          aside={
-            isNl
-              ? "De calculator geeft een praktisch startpunt. Een persoonlijke fitter kan toegevoegde " +
-                "waarde bieden bij complexe biomechanische kwesties."
-              : "The calculator gives a practical starting point. An in-person fitter can add value " +
-                "for complex biomechanical issues."
-          }
-        />
 
         <PublicSection
           className="mt-10"

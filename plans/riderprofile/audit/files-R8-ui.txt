@@ -1,0 +1,8 @@
+src/components/profile/AdviceGroupsView.tsx
+src/components/profile/AdviceGroupsView.module.css
+src/components/profile/AdviceGroupsView.test.tsx
+src/i18n/account/advice.ts
+plans/riderprofile/messages/R8-view-contract.md
+plans/riderprofile/messages/R8-ui-completion.md
+plans/riderprofile/audit/R8-ui-notes.md
+plans/riderprofile/audit/files-R8-ui.txt

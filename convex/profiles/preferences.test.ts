@@ -14,13 +14,22 @@ const save = (updatePreferences as unknown as {
 function database() {
   const row = { _id: "profile1", userId: "user1", experienceLevel: "beginner", hasPain: "yes",
     painAreas: [], painSeverity: 4, kneePainTiming: "after_ride", painAreaSeverities: {} };
-  const equal = vi.fn();
+  const equal = vi.fn().mockReturnThis();
   const db = {
+    insert: vi.fn(async () => "observation1"),
     patch: vi.fn(async (_id: string, value: object) => { Object.assign(row, value); }),
-    query: vi.fn(() => ({ withIndex: (_name: string, apply: (query: { eq: typeof equal }) => unknown) => {
-      apply({ eq: equal });
-      return { unique: async () => auth.userId === row.userId ? row : null };
-    } })),
+    query: vi.fn((table: string) => {
+      const cursor = {
+        withIndex: (_name: string, apply: (query: { eq: typeof equal }) => unknown) => {
+          apply({ eq: equal });
+          return cursor;
+        },
+        filter: () => cursor,
+        unique: async () => auth.userId === row.userId ? { ...row } : null,
+        collect: async () => table === "profileObservations" ? [] : [{ ...row }],
+      };
+      return cursor;
+    }),
   };
   return { row, db, equal, ctx: { db } as unknown as MutationCtx };
 }

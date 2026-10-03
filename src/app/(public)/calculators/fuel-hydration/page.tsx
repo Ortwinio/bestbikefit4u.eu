@@ -3,10 +3,7 @@ import { fuelHydrationPageMessages } from "@/i18n/calculators/fuelHydrationPage"
 import { PerformanceCalculator } from "../power-speed/PerformanceCalculator";
 import type { Metadata } from "next";
 import { Droplets, FlameKindling, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/prototyper-ui/ui/button";
-import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
-  PublicCtaBand,
   PublicFeatureCard,
   PublicSection,
   PublicSurfaceCard,
@@ -109,27 +106,6 @@ export default async function FuelHydrationPlannerPage() {
 
         <RelatedLinksSection title={page.relatedTitle} links={[...page.relatedLinks]} locale={locale} />
 
-        <PublicCtaBand
-          className="mt-10"
-          eyebrow={page.cta.eyebrow}
-          title={page.cta.title}
-          description={page.cta.description}
-          actions={
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/login?src=fuel-hydration", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="fuel_hydration_primary_cta"
-                  ctaLabel={page.cta.label}
-                />
-              }
-            >
-              {page.cta.label}
-            </Button>
-          }
-        />
       </div>
     </div>
   );

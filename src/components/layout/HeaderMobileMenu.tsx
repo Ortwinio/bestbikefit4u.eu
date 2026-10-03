@@ -1,5 +1,8 @@
 "use client";
 
+import { clearHandoff } from "@/lib/handoff/store";
+import { clearNewsletterSignupIntent } from "@/lib/newsletter/signupIntent";
+
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -59,6 +62,8 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
     { path: "/profile", label: labels.profile },
   ];
   async function handleSignOut() {
+    clearHandoff();
+    clearNewsletterSignupIntent();
     await signOut();
     close();
     router.push(withLocalePrefix("/", locale));

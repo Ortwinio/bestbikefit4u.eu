@@ -94,7 +94,7 @@ try {
           if (old) { if (!old.stages.includes(stage)) old.stages.push(stage); continue; }
           const entry = { ...chunk, stages: [stage] };
           seen.set(key, entry);
-          const detection = analyzeDutchText(chunk.text);
+          const detection = analyzeDutchText(chunk.text, chunk);
           if (!detection) continue;
           const location = locateFinding(sourceIndex, { text: chunk.text, route, sourceFile, kind: chunk.kind });
           const classification = classifyDutchFinding({ chunk, mode, location, detection });

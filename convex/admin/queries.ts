@@ -518,7 +518,7 @@ export const getAdminRiderData = query({
       : [];
 
     const measurementFlags = [
-      profile.heightCm && profile.inseamCm > profile.heightCm * 0.55
+      profile.heightCm !== undefined && profile.inseamCm !== undefined && profile.inseamCm > profile.heightCm * 0.55
         ? "inseam_outlier"
         : null,
       profile.heightCm === 0 || profile.inseamCm === 0 ? "zero_measurement" : null,
@@ -1273,7 +1273,7 @@ export const listAdminRiderQueue = query({
       .map((profile) => {
         const user = userById.get(String(profile.userId)) ?? null;
         const measurementFlags = [
-          profile.heightCm && profile.inseamCm > profile.heightCm * 0.55 ? "inseam_outlier" : null,
+          profile.heightCm !== undefined && profile.inseamCm !== undefined && profile.inseamCm > profile.heightCm * 0.55 ? "inseam_outlier" : null,
           profile.heightCm === 0 || profile.inseamCm === 0 ? "zero_measurement" : null,
           profile.injuryHistory?.some((entry) => entry.isOngoing) ? "ongoing_injury" : null,
         ].filter(Boolean);

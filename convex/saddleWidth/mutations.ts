@@ -1,7 +1,9 @@
 import { v } from "convex/values";
+import { resetAdviceProgress } from "../advice/revision";
 import { mutation } from "../_generated/server";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
 import { validateNumberRange, validateShortString } from "../lib/validation";
+import { captureInputProvenance, directInputs } from "../advice/provenance";
 
 function validateSupportedWidthRecommendation(args: {
   measurementMethod: "measured" | "estimated";
@@ -218,10 +220,18 @@ export const createDashboardSaddleWidthSession = mutation({
       userId,
       sessionType: "dashboard" as const,
       ...sessionArgs,
+      inputProvenance: await captureInputProvenance(ctx, userId, [
+        ...directInputs(sessionArgs, args.measurementMethod === "measured"
+          ? ["sitBoneWidthMm", "coreStabilityScore", "typicalRideLength"]
+          : ["heightCm", "weightKg", "hipCircumferenceCm", "coreStabilityScore", "typicalRideLength"]),
+        { field: "flexibilityScore", value: args.flexibilityScore === undefined ? undefined :
+          ["very_limited", "limited", "average", "good", "excellent"][args.flexibilityScore - 1] },
+        { field: "saddleWidthMm", value: args.currentSaddleWidthMm, bikeId: args.bikeId },
+      ], args.bikeId),
       createdAt: Date.now(),
     };
     if (current) {
-      await ctx.db.patch(current._id, values);
+      await ctx.db.patch(current._id, { ...values, ...resetAdviceProgress(current) });
       return current._id;
     }
     return await ctx.db.insert("saddleWidthSessions", values);

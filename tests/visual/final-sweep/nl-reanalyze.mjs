@@ -15,7 +15,7 @@ const index = await buildSourceIndex(previous.metadata.production.snapshot);
 const findings = new Map();
 for (const row of cases) {
   for (const chunk of row.chunks) {
-    const detection = analyzeDutchText(chunk.text);
+    const detection = analyzeDutchText(chunk.text, chunk);
     if (!detection) continue;
     const location = locateFinding(index, { ...chunk, route: row.route, sourceFile: row.sourceFile });
     const key = `${chunk.kind}|${chunk.text}|${location.owner}`;

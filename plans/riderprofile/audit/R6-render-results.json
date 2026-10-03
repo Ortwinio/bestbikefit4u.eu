@@ -1,0 +1,1074 @@
+[
+  {
+    "locale": "nl",
+    "width": 1440,
+    "theme": "light",
+    "route": "dashboard",
+    "state": "filled",
+    "file": "R6-dashboard-nl-filled-1440-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "79",
+        "text": "79 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "57",
+        "text": "57 van 100"
+      },
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "79",
+        "text": "79 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "57",
+        "text": "57 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 1440,
+    "theme": "light",
+    "route": "dashboard",
+    "state": "empty",
+    "file": "R6-dashboard-nl-empty-1440-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "0",
+        "text": "0 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 1440,
+    "theme": "light",
+    "route": "dashboard",
+    "state": "loading",
+    "file": "R6-dashboard-nl-loading-1440-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 1440,
+    "theme": "light",
+    "route": "advice-fixture",
+    "state": "filled",
+    "file": "R6-advice-fixture-nl-filled-1440-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "79",
+        "text": "79 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "57",
+        "text": "57 van 100"
+      },
+      {
+        "label": "Betrouwbaarheid van dit advies",
+        "value": "61",
+        "text": "61 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 1440,
+    "theme": "light",
+    "route": "advice-fixture",
+    "state": "empty",
+    "file": "R6-advice-fixture-nl-empty-1440-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Betrouwbaarheid van dit advies",
+        "value": "0",
+        "text": "0 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 1440,
+    "theme": "dark",
+    "route": "dashboard",
+    "state": "filled",
+    "file": "R6-dashboard-nl-filled-1440-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "79",
+        "text": "79 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "57",
+        "text": "57 van 100"
+      },
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "79",
+        "text": "79 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "57",
+        "text": "57 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 1440,
+    "theme": "dark",
+    "route": "dashboard",
+    "state": "empty",
+    "file": "R6-dashboard-nl-empty-1440-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "0",
+        "text": "0 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 1440,
+    "theme": "dark",
+    "route": "dashboard",
+    "state": "loading",
+    "file": "R6-dashboard-nl-loading-1440-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 1440,
+    "theme": "dark",
+    "route": "advice-fixture",
+    "state": "filled",
+    "file": "R6-advice-fixture-nl-filled-1440-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "79",
+        "text": "79 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "57",
+        "text": "57 van 100"
+      },
+      {
+        "label": "Betrouwbaarheid van dit advies",
+        "value": "61",
+        "text": "61 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 1440,
+    "theme": "dark",
+    "route": "advice-fixture",
+    "state": "empty",
+    "file": "R6-advice-fixture-nl-empty-1440-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Betrouwbaarheid van dit advies",
+        "value": "0",
+        "text": "0 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "theme": "light",
+    "route": "dashboard",
+    "state": "filled",
+    "file": "R6-dashboard-nl-filled-390-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "79",
+        "text": "79 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "57",
+        "text": "57 van 100"
+      },
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "79",
+        "text": "79 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "57",
+        "text": "57 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "theme": "light",
+    "route": "dashboard",
+    "state": "empty",
+    "file": "R6-dashboard-nl-empty-390-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "0",
+        "text": "0 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "theme": "light",
+    "route": "dashboard",
+    "state": "loading",
+    "file": "R6-dashboard-nl-loading-390-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "theme": "light",
+    "route": "advice-fixture",
+    "state": "filled",
+    "file": "R6-advice-fixture-nl-filled-390-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "79",
+        "text": "79 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "57",
+        "text": "57 van 100"
+      },
+      {
+        "label": "Betrouwbaarheid van dit advies",
+        "value": "61",
+        "text": "61 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "theme": "light",
+    "route": "advice-fixture",
+    "state": "empty",
+    "file": "R6-advice-fixture-nl-empty-390-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Betrouwbaarheid van dit advies",
+        "value": "0",
+        "text": "0 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "theme": "dark",
+    "route": "dashboard",
+    "state": "filled",
+    "file": "R6-dashboard-nl-filled-390-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "79",
+        "text": "79 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "57",
+        "text": "57 van 100"
+      },
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "79",
+        "text": "79 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "57",
+        "text": "57 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "theme": "dark",
+    "route": "dashboard",
+    "state": "empty",
+    "file": "R6-dashboard-nl-empty-390-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "0",
+        "text": "0 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "theme": "dark",
+    "route": "dashboard",
+    "state": "loading",
+    "file": "R6-dashboard-nl-loading-390-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "theme": "dark",
+    "route": "advice-fixture",
+    "state": "filled",
+    "file": "R6-advice-fixture-nl-filled-390-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "79",
+        "text": "79 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "57",
+        "text": "57 van 100"
+      },
+      {
+        "label": "Betrouwbaarheid van dit advies",
+        "value": "61",
+        "text": "61 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "theme": "dark",
+    "route": "advice-fixture",
+    "state": "empty",
+    "file": "R6-advice-fixture-nl-empty-390-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Riderprofiel: Volledig",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Riderprofiel: Betrouwbaar",
+        "value": "0",
+        "text": "0 van 100"
+      },
+      {
+        "label": "Betrouwbaarheid van dit advies",
+        "value": "0",
+        "text": "0 van 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "theme": "light",
+    "route": "dashboard",
+    "state": "filled",
+    "file": "R6-dashboard-en-filled-1440-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "79",
+        "text": "79 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "57",
+        "text": "57 out of 100"
+      },
+      {
+        "label": "Rider profile: Complete",
+        "value": "79",
+        "text": "79 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "57",
+        "text": "57 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "theme": "light",
+    "route": "dashboard",
+    "state": "empty",
+    "file": "R6-dashboard-en-empty-1440-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Complete",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "0",
+        "text": "0 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "theme": "light",
+    "route": "dashboard",
+    "state": "loading",
+    "file": "R6-dashboard-en-loading-1440-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "theme": "light",
+    "route": "advice-fixture",
+    "state": "filled",
+    "file": "R6-advice-fixture-en-filled-1440-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "79",
+        "text": "79 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "57",
+        "text": "57 out of 100"
+      },
+      {
+        "label": "Reliability of this advice",
+        "value": "61",
+        "text": "61 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "theme": "light",
+    "route": "advice-fixture",
+    "state": "empty",
+    "file": "R6-advice-fixture-en-empty-1440-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Reliability of this advice",
+        "value": "0",
+        "text": "0 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "theme": "dark",
+    "route": "dashboard",
+    "state": "filled",
+    "file": "R6-dashboard-en-filled-1440-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "79",
+        "text": "79 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "57",
+        "text": "57 out of 100"
+      },
+      {
+        "label": "Rider profile: Complete",
+        "value": "79",
+        "text": "79 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "57",
+        "text": "57 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "theme": "dark",
+    "route": "dashboard",
+    "state": "empty",
+    "file": "R6-dashboard-en-empty-1440-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Complete",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "0",
+        "text": "0 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "theme": "dark",
+    "route": "dashboard",
+    "state": "loading",
+    "file": "R6-dashboard-en-loading-1440-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "theme": "dark",
+    "route": "advice-fixture",
+    "state": "filled",
+    "file": "R6-advice-fixture-en-filled-1440-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "79",
+        "text": "79 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "57",
+        "text": "57 out of 100"
+      },
+      {
+        "label": "Reliability of this advice",
+        "value": "61",
+        "text": "61 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "theme": "dark",
+    "route": "advice-fixture",
+    "state": "empty",
+    "file": "R6-advice-fixture-en-empty-1440-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Reliability of this advice",
+        "value": "0",
+        "text": "0 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "dashboard",
+    "state": "filled",
+    "file": "R6-dashboard-en-filled-390-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "79",
+        "text": "79 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "57",
+        "text": "57 out of 100"
+      },
+      {
+        "label": "Rider profile: Complete",
+        "value": "79",
+        "text": "79 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "57",
+        "text": "57 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "dashboard",
+    "state": "empty",
+    "file": "R6-dashboard-en-empty-390-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Complete",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "0",
+        "text": "0 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "dashboard",
+    "state": "loading",
+    "file": "R6-dashboard-en-loading-390-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "advice-fixture",
+    "state": "filled",
+    "file": "R6-advice-fixture-en-filled-390-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "79",
+        "text": "79 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "57",
+        "text": "57 out of 100"
+      },
+      {
+        "label": "Reliability of this advice",
+        "value": "61",
+        "text": "61 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "theme": "light",
+    "route": "advice-fixture",
+    "state": "empty",
+    "file": "R6-advice-fixture-en-empty-390-light.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Reliability of this advice",
+        "value": "0",
+        "text": "0 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "dashboard",
+    "state": "filled",
+    "file": "R6-dashboard-en-filled-390-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "79",
+        "text": "79 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "57",
+        "text": "57 out of 100"
+      },
+      {
+        "label": "Rider profile: Complete",
+        "value": "79",
+        "text": "79 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "57",
+        "text": "57 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "dashboard",
+    "state": "empty",
+    "file": "R6-dashboard-en-empty-390-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Complete",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "0",
+        "text": "0 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "dashboard",
+    "state": "loading",
+    "file": "R6-dashboard-en-loading-390-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "advice-fixture",
+    "state": "filled",
+    "file": "R6-advice-fixture-en-filled-390-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "79",
+        "text": "79 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "57",
+        "text": "57 out of 100"
+      },
+      {
+        "label": "Reliability of this advice",
+        "value": "61",
+        "text": "61 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "theme": "dark",
+    "route": "advice-fixture",
+    "state": "empty",
+    "file": "R6-advice-fixture-en-empty-390-dark.png",
+    "overflow": false,
+    "errors": [],
+    "meters": [
+      {
+        "label": "Rider profile: Complete",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Rider profile: Reliable",
+        "value": "0",
+        "text": "0 out of 100"
+      },
+      {
+        "label": "Reliability of this advice",
+        "value": "0",
+        "text": "0 out of 100"
+      }
+    ],
+    "dashboardMounted": true
+  }
+]

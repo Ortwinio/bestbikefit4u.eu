@@ -12,6 +12,9 @@ import { performanceMessages } from "@/i18n/calculators/performance";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useCalculatorAccountState } from "./useCalculatorAccountState";
+import { RiderFtpPrefill } from "./RiderFtpPrefill";
+import { CalculatorChainLayout } from "./CalculatorChainPanel";
+import { AccountCalculatorBike, useAccountCalculatorBike } from "./AccountCalculatorBike";
 
 export function AccountPerformanceCalculator({ calculator }: { calculator: MoreTool }) {
   const user = useQuery(api.users.queries.getCurrentUser);
@@ -26,10 +29,11 @@ export function AccountPerformanceCalculator({ calculator }: { calculator: MoreT
 }
 
 function Editor({ calculator }: { calculator: MoreTool }) {
-  const state = useCalculatorAccountState(calculator);
+  const selection = useAccountCalculatorBike();
+  const state = useCalculatorAccountState(calculator, { bikeId: selection.bikeId });
   const { locale } = useDashboardMessages();
   const copy = accountCalculatorMessages[locale];
-  if (!state.ready)
+  if (!state.ready || !selection.ready)
     return (
       <p role="status" className="p-8">
         {copy.loading}
@@ -65,33 +69,35 @@ function Editor({ calculator }: { calculator: MoreTool }) {
       }
     >
       <div className="mx-auto max-w-[1440px] px-4 pt-6 sm:px-8 xl:px-16">
-        {state.fromProfile && (
-          <p className="text-sm text-muted-foreground">
-            {copy.fromProfile}
-            {" · "}
-            <Link
-              href={withLocalePrefix("/profile", locale)}
-              className="inline-flex min-h-11 items-center underline focus-visible:focus-ring"
-            >
-              {copy.profile}
-            </Link>
-          </p>
-        )}
-        <p className="text-sm text-muted-foreground">{copy.savedSeparately}</p>
+        {state.profileFtp && <RiderFtpPrefill ftp={state.profileFtp} locale={locale} />}
         <AutosaveStatus
           {...state.autosave}
           messages={autosaveMessages[locale]}
           onRetry={state.autosave.retry}
         />
       </div>
-      <PerformanceCalculator
-        tool={calculator}
+      <AccountCalculatorBike selection={selection} locale={locale} />
+      <CalculatorChainLayout
+        calculator={calculator}
         locale={locale}
-        initialValues={state.values}
-        onValuesChange={state.setValues}
-        navigation={navigation}
-        account
-      />
+        chain={state.chain}
+        context={state.context}
+        bikeId={selection.bikeId}
+      >
+        <PerformanceCalculator
+          key={state.formKey}
+          tool={calculator}
+          locale={locale}
+          initialValues={state.values}
+          riderProfile={state.context?.profile ?? undefined}
+          ftpKnown={Boolean(state.context?.profile?.ftpWatts && state.context.profile.ftpWatts > 0)
+            || [...state.chain.pendingChanges, ...state.chain.trialChanges, ...state.chain.savedChanges]
+            .some((change) => change.field === "ftpWatts")}
+          onValuesChange={state.setValues}
+          navigation={navigation}
+          account
+        />
+      </CalculatorChainLayout>
     </AutosaveField>
   );
 }

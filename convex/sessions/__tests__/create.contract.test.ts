@@ -27,7 +27,12 @@ type BikeProfileDoc = {
 } | null;
 type ProfileDoc = {
   _id: string;
+  _creationTime?: number;
   userId: string;
+  heightCm?: number;
+  inseamCm?: number;
+  flexibilityScore?: "very_limited" | "limited" | "average" | "good" | "excellent";
+  coreStabilityScore?: number;
   experienceLevel: "beginner" | "intermediate" | "advanced";
   weeklyHours: "0-3" | "3-6" | "6-10" | "10-15" | "15+";
   typicalRideLength: "short" | "medium" | "long" | "ultra";
@@ -53,6 +58,7 @@ function makeCtx(params: {
       return null;
     }),
     query: vi.fn((table: string) => {
+      if (table === "profileObservations") return { withIndex: () => ({ collect: async () => [] }) };
       if (table !== "profiles") {
         throw new Error(`Unexpected table query: ${table}`);
       }
@@ -71,7 +77,12 @@ function makeCtx(params: {
 describe("sessions.create contract", () => {
   const completeProfile: Exclude<ProfileDoc, null> = {
     _id: "profile_1",
+    _creationTime: 1,
     userId: "user_1",
+    heightCm: 178,
+    inseamCm: 83,
+    flexibilityScore: "good",
+    coreStabilityScore: 4,
     experienceLevel: "intermediate",
     weeklyHours: "3-6",
     typicalRideLength: "medium",
@@ -83,6 +94,25 @@ describe("sessions.create contract", () => {
     vi.clearAllMocks();
     delete process.env.ENGINE_VERSION_DEFAULT;
   });
+
+  it.each(["heightCm", "inseamCm", "flexibilityScore", "coreStabilityScore"] as const)(
+    "rejects a partial profile missing %s without inserting a session", async (field) => {
+      getAuthUserIdMock.mockResolvedValue("user_1");
+      const ctx = makeCtx({
+        profile: { ...completeProfile, [field]: undefined },
+        bike: null,
+      });
+      const handler = (create as unknown as { _handler: TestHandler })._handler;
+
+      await expect(handler(ctx, {
+        bikeType: "gravel",
+        ridingStyle: "touring",
+        primaryGoal: "balanced",
+      })).rejects.toThrow("Rider profile is incomplete");
+
+      expect(ctx.db.insert).not.toHaveBeenCalled();
+    },
+  );
 
   it("persists explicit bikeType in fit session", async () => {
     getAuthUserIdMock.mockResolvedValue("user_1");

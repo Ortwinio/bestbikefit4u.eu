@@ -1,5 +1,7 @@
+import { BIKE_PROFILE_FIELDS, validateBikeProfileField } from "../../shared/bikeProfileFields";
+import { geometryValues, recordBikeProfileChanges } from "./profile";
 import { bikeEditError } from "../../shared/bikeEditValidation";
-import type { Id } from "../_generated/dataModel";
+import type { Doc, Id } from "../_generated/dataModel";
 import { mutation, type MutationCtx } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
@@ -107,7 +109,16 @@ type CreateBikeInput = {
     stemAngle?: number;
     handlebarWidthMm?: number;
     crankLengthMm?: number;
+    handlebarReachMm?: number;
+    handlebarDropMm?: number;
+    spacersMm?: number;
   };
+  saddleModel?: string;
+  saddleWidthMm?: number;
+  pedalModel?: string;
+  cleatSystem?: string;
+  maxSeatpostMm?: number;
+  maxSpacerStackMm?: number;
   gearing?: BikeGearingRecord;
   discipline?: "road" | "gravel" | "mtb" | "tt";
   ridingStyle?: "recreational" | "fitness" | "sportive" | "racing" | "commuting" | "touring";
@@ -157,13 +168,30 @@ export async function createBikeWithProfiles(
     ridingStyle: args.ridingStyle,
   });
 
+  const linkedGeometry = args.geometryRecordId ? await ctx.db.get(args.geometryRecordId) : null;
+  // A copied passport may outlive its catalogue entry. Retain copied dimensions, not an invalid trusted link.
+  const geometryRecordId = args.source === "passport_import" && linkedGeometry?.status !== "active"
+    ? undefined : args.geometryRecordId;
+  const geometryRecord = geometryRecordId ? linkedGeometry : null;
+  const currentGeometry = geometryRecordId ? geometryValues(geometryRecord) : args.currentGeometry;
+  const additions = Object.fromEntries(["saddleModel", "saddleWidthMm", "pedalModel", "cleatSystem",
+    "maxSeatpostMm", "maxSpacerStackMm"].flatMap(field => {
+      const value = args[field as keyof CreateBikeInput];
+      return value === undefined ? [] : [[field, validateBikeProfileField(field, value)]];
+    }));
+  // Internal passport/import callers can pass a full setup document. Keep values, never another owner's evidence.
+  const currentSetup: CreateBikeInput["currentSetup"] = args.currentSetup ? Object.fromEntries(Object.entries(args.currentSetup)
+    .filter(([field]) => Object.hasOwn(BIKE_PROFILE_FIELDS, `currentSetup.${field}`))
+    .filter(([, value]) => value !== undefined)
+    .map(([field, value]) => [field, validateBikeProfileField(`currentSetup.${field}`, value)])) : undefined;
   const bikeId = await ctx.db.insert("bikes", {
+    ...additions,
     userId: args.userId,
     name: args.name,
     bikeType: args.bikeType,
     source: args.source,
-    currentGeometry: args.currentGeometry,
-    currentSetup: args.currentSetup,
+    currentGeometry,
+    currentSetup,
     gearing: buildBikeGearingRecord(args.gearing),
     discipline: args.discipline,
     ridingStyle: args.ridingStyle,
@@ -185,12 +213,35 @@ export async function createBikeWithProfiles(
     stravaPrimary: args.stravaPrimary,
     lifetimeDistanceMeters: args.lifetimeDistanceMeters,
     lastStravaSync: args.lastStravaSync,
-    geometryRecordId: args.geometryRecordId ?? undefined,
+    geometryRecordId: geometryRecordId ?? undefined,
     bikePassportId,
     importedFromBikePassportId: args.importedFromBikePassportId,
     createdAt: now,
     updatedAt,
   });
+
+  const supplied = { ...additions, ...(currentSetup ? { currentSetup } : {}),
+    ...(currentGeometry ? { currentGeometry } : {}), ...(args.primaryGoal ? { primaryGoal: args.primaryGoal } : {}) };
+  if (Object.keys(supplied).length) {
+    const trustedGeometry = geometryRecord && ["manufacturer", "admin_import", "admin_manual"].includes(geometryRecord.source);
+    const evidence: Record<string, { kind: "declared" | "estimated"; measuredAt: number;
+      source: "profile_edit" | "geometry_database"; method?: string }> = geometryRecordId && currentGeometry ? Object.fromEntries(Object.keys(currentGeometry)
+      .map(field => [`currentGeometry.${field}`, { kind: "declared" as const, measuredAt: now,
+        source: trustedGeometry ? "geometry_database" as const : "profile_edit" as const }])) : {};
+    if (args.source !== "manual") {
+      for (const field of Object.keys(BIKE_PROFILE_FIELDS)) {
+        const [group, key] = field.split(".");
+        const value = key ? (supplied[group as keyof typeof supplied] as Record<string, unknown> | undefined)?.[key]
+          : supplied[field as keyof typeof supplied];
+        if (value !== undefined && !evidence[field]) evidence[field] = {
+          kind: "estimated", measuredAt: now, source: "profile_edit", method: args.source,
+        };
+      }
+    }
+    const initial = { _id: bikeId, _creationTime: now, userId: args.userId } as Doc<"bikes">;
+    const fieldMeasurements = await recordBikeProfileChanges(ctx, initial, supplied, evidence);
+    await ctx.db.patch(bikeId, { fieldMeasurements });
+  }
 
   await ctx.db.insert("bikeProfiles", {
     userId: args.userId,
@@ -274,6 +325,8 @@ export const create = mutation({
         stemAngle: v.optional(v.number()),
         handlebarWidthMm: v.optional(v.number()),
         crankLengthMm: v.optional(v.number()),
+        handlebarReachMm: v.optional(v.number()), handlebarDropMm: v.optional(v.number()),
+        spacersMm: v.optional(v.number()),
       })
     ),
     gearing: v.optional(
@@ -308,6 +361,9 @@ export const create = mutation({
     ridingStyle: v.optional(ridingStyleValidator),
     primaryGoal: v.optional(primaryGoalValidator),
     bikeWeightKg: v.optional(v.number()),
+    saddleModel: v.optional(v.string()), saddleWidthMm: v.optional(v.number()),
+    pedalModel: v.optional(v.string()), cleatSystem: v.optional(v.string()),
+    maxSeatpostMm: v.optional(v.number()), maxSpacerStackMm: v.optional(v.number()),
     photoUrl: v.optional(v.string()),
     fitProfileId: v.optional(v.id("profiles")),
     geometryRecordId: v.optional(v.union(v.id("geometry_records"), v.null())),
@@ -360,6 +416,8 @@ export const update = mutation({
         stemAngle: v.optional(v.number()),
         handlebarWidthMm: v.optional(v.number()),
         crankLengthMm: v.optional(v.number()),
+        handlebarReachMm: v.optional(v.number()), handlebarDropMm: v.optional(v.number()),
+        spacersMm: v.optional(v.number()),
       })
     ),
     gearing: v.optional(
@@ -394,6 +452,9 @@ export const update = mutation({
     ridingStyle: v.optional(ridingStyleValidator),
     primaryGoal: v.optional(primaryGoalValidator),
     bikeWeightKg: v.optional(v.number()),
+    saddleModel: v.optional(v.string()), saddleWidthMm: v.optional(v.number()),
+    pedalModel: v.optional(v.string()), cleatSystem: v.optional(v.string()),
+    maxSeatpostMm: v.optional(v.number()), maxSpacerStackMm: v.optional(v.number()),
     photoUrl: v.optional(v.string()),
     fitProfileId: v.optional(v.id("profiles")),
     geometryRecordId: v.optional(v.union(v.id("geometry_records"), v.null())),
@@ -413,9 +474,13 @@ export const update = mutation({
     needsTypeConfirmation: v.optional(v.boolean()),
     notes: v.optional(v.string()),
     clearFields: v.optional(v.array(v.union(v.literal("ridingStyle"), v.literal("primaryGoal"),
-      v.literal("bikeWeightKg")))),
+      v.literal("bikeWeightKg"), ...Object.keys(BIKE_PROFILE_FIELDS).map(field => v.literal(field))))),
   },
   handler: async (ctx, args) => {
+    if (args.clearFields && (args.clearFields.length > 32
+      || new Set(args.clearFields).size !== args.clearFields.length
+      || args.clearFields.some(field => !["ridingStyle", "bikeWeightKg"].includes(field)
+        && !Object.hasOwn(BIKE_PROFILE_FIELDS, field)))) throw new Error("Invalid clear fields");
     if (args.name !== undefined) validateShortString(args.name, "name");
     if (args.brand !== undefined) validateShortString(args.brand, "brand");
     if (args.model !== undefined) validateShortString(args.model, "model");
@@ -428,12 +493,12 @@ export const update = mutation({
     if (args.name !== undefined) updates.name = args.name;
     if (args.bikeType !== undefined) updates.bikeType = args.bikeType;
     if (args.currentGeometry !== undefined)
-      updates.currentGeometry = args.currentGeometry;
+      updates.currentGeometry = { ...bike.currentGeometry, ...args.currentGeometry };
     if (args.currentSetup !== undefined)
-      updates.currentSetup = args.currentSetup;
+      updates.currentSetup = { ...bike.currentSetup, ...args.currentSetup };
     if (args.gearing !== undefined) {
       updates.gearing = buildBikeGearingRecord({
-        ...args.gearing,
+        ...bike.gearing, ...args.gearing,
         updatedAt: Date.now(),
       });
     }
@@ -461,8 +526,30 @@ export const update = mutation({
     if (args.needsTypeConfirmation !== undefined)
       updates.needsTypeConfirmation = args.needsTypeConfirmation;
     if (args.notes !== undefined) updates.notes = args.notes;
+    for (const field of ["saddleModel", "saddleWidthMm", "pedalModel", "cleatSystem", "maxSeatpostMm", "maxSpacerStackMm"] as const) {
+      if (args[field] !== undefined) updates[field] = validateBikeProfileField(field, args[field]);
+    }
 
-    for (const field of args.clearFields ?? []) updates[field] = undefined;
+    for (const field of args.clearFields ?? []) {
+      const [group, key] = field.split(".");
+      if (key) updates[group] = { ...(bike[group as keyof Doc<"bikes">] as object),
+        ...(updates[group] as object), [key]: undefined };
+      else updates[field] = undefined;
+    }
+    const geometryRecord = args.geometryRecordId ? await ctx.db.get(args.geometryRecordId) : null;
+    const databaseEvidence = args.geometryRecordId ? geometryValues(geometryRecord) : undefined;
+    if (databaseEvidence) updates.currentGeometry = databaseEvidence;
+    if ((updates.currentSetup as Doc<"bikes">["currentSetup"])?.saddleHeightMm !== bike.currentSetup?.saddleHeightMm
+      && updates.currentSetup !== undefined) {
+      updates.currentSetup = { ...(updates.currentSetup as object), saddleHeightMeasurement: undefined };
+    }
+    const trustedGeometry = geometryRecord && ["manufacturer", "admin_import", "admin_manual"].includes(geometryRecord.source);
+    const evidence = databaseEvidence ? Object.fromEntries(Object.keys(databaseEvidence).filter(field =>
+      args.geometryRecordId !== bike.geometryRecordId ||
+      databaseEvidence[field as keyof typeof databaseEvidence] !== bike.currentGeometry?.[field as keyof typeof databaseEvidence])
+      .map(field => [`currentGeometry.${field}`, { kind: "declared" as const, measuredAt: Date.now(),
+        source: trustedGeometry ? "geometry_database" as const : "profile_edit" as const }])) : {};
+    updates.fieldMeasurements = await recordBikeProfileChanges(ctx, bike, updates, evidence);
     await ctx.db.patch(args.bikeId, updates);
     if (
       args.bikeType !== undefined ||

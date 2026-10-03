@@ -1,19 +1,117 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { PerformanceCalculator } from "./PerformanceCalculator";
 import { FtpRatings, FuelHeadline } from "./SourcedResults";
 import { performanceMessages } from "@/i18n/calculators/performance";
 import { carbohydrateGuidance } from "@/lib/public-calculators/performance";
 import { gearingMessages } from "@/i18n/calculators/gearing";
+import { performanceDefaults } from "@/lib/calculators/accountState";
+import { ftpSliderStartCopy } from "@/i18n/calculators/ftpSliderStart";
+import { readHandoff, writeHandoffEntry } from "@/lib/handoff/store";
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); sessionStorage.clear(); });
 function keys(value: object, prefix = ""): string[] {
   return Object.entries(value).flatMap(([key, item]) =>
     typeof item === "object" ? keys(item, `${prefix}${key}.`) : `${prefix}${key}`,
   );
 }
 describe("performance calculator interactions", () => {
+  it.each(["en", "nl"] as const)("keeps the %s starter UI-only until confirmation", (locale) => {
+    const onValuesChange = vi.fn();
+    render(<PerformanceCalculator tool="ftp-wkg" locale={locale} account
+      riderProfile={{ sex: "female", weightKg: 70 }} ftpKnown={false}
+      onValuesChange={onValuesChange} />);
+    const copy = ftpSliderStartCopy[locale];
+    expect(screen.getByRole("slider", { name: performanceMessages[locale].ftp })
+      .getAttribute("aria-valuenow")).toBe("135");
+    expect(screen.getByText(copy.hint)).toBeTruthy();
+    expect(screen.getByText(copy.pending)).toBeTruthy();
+    expect(screen.queryByTestId("rating-men")).toBeNull();
+    expect(document.getElementById("ftp-wkg-result")?.querySelector("dd")).toBeNull();
+    expect(onValuesChange).not.toHaveBeenCalled();
+    expect(readHandoff().entries).toEqual([]);
+    fireEvent.click(screen.getByRole("button", { name: copy.confirm }));
+    expect(onValuesChange).toHaveBeenCalledOnce();
+    expect(onValuesChange.mock.calls[0][0].values.ftp).toBe(135);
+    expect(screen.queryByText(copy.pending)).toBeNull();
+    expect(screen.getByTestId("rating-men")).toBeTruthy();
+    expect(readHandoff().entries).toEqual([]);
+  });
+
+  it("keeps a pending climb starter out of unrelated edits and accepts slider movement", () => {
+    const onValuesChange = vi.fn();
+    render(<PerformanceCalculator tool="climb-planner" locale="en" account
+      riderProfile={{ sex: "male", weightKg: 70 }} ftpKnown={false}
+      onValuesChange={onValuesChange} />);
+    const slider = screen.getByRole("slider", { name: "Your FTP" });
+    expect(slider.getAttribute("aria-valuenow")).toBe("155");
+    expect(screen.queryByTestId("climb-profile")).toBeNull();
+    fireEvent.keyDown(screen.getByRole("slider", { name: "Climb length" }), { key: "ArrowRight" });
+    expect(onValuesChange).not.toHaveBeenCalled();
+    expect(screen.getByText(ftpSliderStartCopy.en.pending)).toBeTruthy();
+    onValuesChange.mockClear();
+    fireEvent.keyDown(slider, { key: "ArrowRight" });
+    expect(onValuesChange.mock.lastCall?.[0].values.ftp).toBe(160);
+    expect(onValuesChange.mock.lastCall?.[0].values.distance).toBeGreaterThan(performanceDefaults.values.distance);
+    expect(screen.getByTestId("climb-profile")).toBeTruthy();
+  });
+
+  it.each([false, true])("notifies unchanged-default confirmation once (other edits: %s)", (otherEdits) => {
+    const onValuesChange = vi.fn();
+    render(<PerformanceCalculator tool="climb-planner" locale="en" account
+      initialValues={{ ...performanceDefaults, values: { ...performanceDefaults.values, riderMass: 90 } }}
+      riderProfile={{ sex: "male", weightKg: 90 }}
+      ftpKnown={false} onValuesChange={onValuesChange} />);
+    expect(screen.getByRole("slider", { name: "Your FTP" }).getAttribute("aria-valuenow")).toBe("200");
+    if (otherEdits) {
+      fireEvent.keyDown(screen.getByRole("slider", { name: "Climb length" }), { key: "ArrowRight" });
+    }
+    expect(onValuesChange).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: ftpSliderStartCopy.en.confirm }));
+    expect(onValuesChange).toHaveBeenCalledOnce();
+    expect(onValuesChange.mock.lastCall?.[0].values.ftp).toBe(200);
+    expect(onValuesChange.mock.lastCall?.[1]).toEqual(["ftpWatts"]);
+    expect(onValuesChange.mock.lastCall?.[0].values.distance).toBe(
+      performanceDefaults.values.distance + (otherEdits ? 0.5 : 0),
+    );
+    expect(screen.queryByText(ftpSliderStartCopy.en.pending)).toBeNull();
+  });
+
+  it("preserves explicit initial FTP even when it equals the old default", () => {
+    const onValuesChange = vi.fn();
+    render(<PerformanceCalculator tool="ftp-wkg" locale="en"
+      initialValues={performanceDefaults} riderProfile={{ sex: "male", weightKg: 70 }}
+      onValuesChange={onValuesChange} />);
+    expect(screen.getByRole("slider", { name: "Your FTP" }).getAttribute("aria-valuenow")).toBe("200");
+    expect(screen.queryByText(ftpSliderStartCopy.en.hint)).toBeNull();
+    expect(onValuesChange).not.toHaveBeenCalled();
+  });
+
+  it("preserves remembered FTP without inferring sex from comparison tables", () => {
+    writeHandoffEntry({ calculator: "climb-planner", field: "ftpWatts", value: 275,
+      unit: "W", method: "declared", touchedAt: Date.now() });
+    const before = readHandoff();
+    render(<PerformanceCalculator tool="ftp-wkg" locale="en" />);
+    expect(screen.getByRole("slider", { name: "Your FTP" }).getAttribute("aria-valuenow")).toBe("275");
+    fireEvent.click(screen.getByRole("button", { name: "Women" }));
+    expect(screen.queryByText(ftpSliderStartCopy.en.hint)).toBeNull();
+    expect(readHandoff()).toEqual(before);
+  });
+
+  it.each(["power-speed", "fuel-hydration"] as const)("does not add FTP controls or starter inputs to %s", (tool) => {
+    const onValuesChange = vi.fn();
+    render(<PerformanceCalculator tool={tool} locale="en" account
+      riderProfile={{ sex: "male", weightKg: 70 }} ftpKnown={false}
+      onValuesChange={onValuesChange} />);
+    expect(screen.queryByRole("slider", { name: "Your FTP" })).toBeNull();
+    expect(screen.queryByText(ftpSliderStartCopy.en.hint)).toBeNull();
+    expect(screen.queryByText(ftpSliderStartCopy.en.pending)).toBeNull();
+    expect(onValuesChange).not.toHaveBeenCalled();
+    fireEvent.keyDown(screen.getAllByRole("slider")[0], { key: "ArrowRight" });
+    expect(onValuesChange.mock.lastCall?.[0].values.ftp).toBe(performanceDefaults.values.ftp);
+  });
+
   it("updates power/speed live using accessible keyboard sliders in both modes", () => {
     render(<PerformanceCalculator tool="power-speed" locale="nl" />);
     expect(

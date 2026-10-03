@@ -19,14 +19,14 @@ const values: CalculatorValues<"bike-fit"> = {
   ambition: "aero", flexibility: 5, core: 4,
 };
 const profile = Object.freeze({
-  _id: "profile_1", userId: "user_1", heightCm: 175, inseamCm: 80,
+  _id: "profile_1", _creationTime: 1, userId: "user_1", heightCm: 175, inseamCm: 80,
   flexibilityScore: "limited", coreStabilityScore: 2, torsoLengthCm: 60,
   armLengthCm: 65, shoulderWidthCm: 42, footLengthCm: 26,
   experienceLevel: "intermediate", weeklyHours: "3-6", typicalRideLength: "medium",
   hasPain: "no", positionPriority: "comfort",
 });
 const args = {
-  calculatorStateId: "calculator_1", bikeType: "road",
+  calculatorStateId: "calculator_1", calculatorTrial: true, bikeType: "road",
   ridingStyle: "fitness", primaryGoal: "comfort",
 };
 
@@ -143,6 +143,13 @@ describe("calculator session creation", () => {
     expect(ctx.db.delete).not.toHaveBeenCalled();
   });
 
+  it("rejects divergent saved calculator inputs unless trial use was explicit", async () => {
+    const ctx = makeCtx();
+    await expect(createSession(ctx, { ...args, calculatorTrial: false }))
+      .rejects.toThrow("CALCULATOR_PROFILE_CONFLICT");
+    expect(ctx.db.insert).not.toHaveBeenCalled();
+  });
+
   it("keeps ordinary sessions free of calculator snapshots", async () => {
     const ctx = makeCtx();
     await createSession(ctx, { bikeType: "road", ridingStyle: "fitness", primaryGoal: "comfort" });
@@ -151,15 +158,19 @@ describe("calculator session creation", () => {
 });
 
 describe("session-local engine and report inputs", () => {
-  it.each(["road", "gravel", "mtb", "city"] as const)("schedules snapshot measurements and %s ambition despite profile priority", async (category) => {
+  it.each(["road", "gravel", "mtb", "city"] as const)("does not silently overlay legacy measurements for %s generation", async (category) => {
     const ctx = makeCtx({ calculatorInputs: { ...values, category } });
     await generateRecommendation(ctx, { sessionId: "session_1" });
     expect(ctx.scheduler.runAfter).toHaveBeenCalledExactlyOnceWith(0, expect.anything(), expect.objectContaining({
-      heightCm: 191, inseamCm: 91, flexibilityScore: "excellent", coreStabilityScore: 4,
+      heightCm: 175, inseamCm: 80, flexibilityScore: "limited", coreStabilityScore: 2,
       torsoLengthCm: 60, armLengthCm: 65, shoulderWidthCm: 42, footLengthCm: 26,
       bikeCategory: category, ambition: category === "mtb" || category === "city" ? "performance" : "aero",
     }));
-    expect(ctx.db.patch).toHaveBeenCalledExactlyOnceWith("session_1", { status: "processing" });
+    expect(ctx.db.patch).toHaveBeenCalledWith("session_1", { status: "processing" });
+    expect(ctx.db.patch).toHaveBeenCalledWith("session_1", {
+      inputProvenance: expect.objectContaining({ version: 1, dependencies: expect.any(Array) }),
+    });
+    expect(ctx.db.patch).toHaveBeenCalledTimes(3);
     expect(ctx.db.insert).not.toHaveBeenCalled();
     expect(ctx.db.replace).not.toHaveBeenCalled();
     expect(profile.heightCm).toBe(175);

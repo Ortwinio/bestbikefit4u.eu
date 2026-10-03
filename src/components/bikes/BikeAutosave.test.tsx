@@ -122,7 +122,7 @@ describe("bike autosave integration", () => {
     const save = vi.fn().mockResolvedValue(undefined);
     render(form(save));
     fireEvent.click(screen.getByRole("radio", { name: "Measurements" }));
-    fireEvent.change(screen.getByRole("textbox", { name: /Stack/i }), { target: { value: "" } });
+    fireEvent.change(screen.getByRole("textbox", { name: /^Stack(?:\s|$)/i }), { target: { value: "" } });
     await tick();
     const payload = save.mock.calls[0][0];
     expect(payload.currentGeometry).toMatchObject({ stackMm: undefined, reachMm: 385 });

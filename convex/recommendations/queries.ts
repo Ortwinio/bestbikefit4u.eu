@@ -2,7 +2,7 @@ import { query, internalQuery } from "../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { requireRecommendationOwner } from "../lib/authz";
-import { profileWithCalculatorInputs } from "../sessions/calculatorInputs";
+import { sessionProfile } from "../sessions/profileSnapshot";
 
 /**
  * Internal: get the oldest recommendation for a session (used by lifecycle email actions)
@@ -150,7 +150,7 @@ export const getReportV2 = query({
       recommendation,
       bike,
       bikeProfile,
-      profile: profile ? profileWithCalculatorInputs(profile, session.calculatorInputs) : null,
+      profile: profile ? sessionProfile(profile, session, true) : null,
       user,
       questionnaireResponses: questionnaireResponses.sort(
         (a, b) => a.questionOrder - b.questionOrder

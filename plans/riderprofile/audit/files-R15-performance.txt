@@ -1,0 +1,8 @@
+src/app/(public)/calculators/power-speed/PerformanceCalculator.tsx
+src/app/(public)/calculators/power-speed/PerformanceCalculator.test.tsx
+src/components/calculators/AccountPerformanceCalculator.tsx
+src/components/calculators/AccountPerformanceCalculator.test.tsx
+plans/riderprofile/audit/R15-performance-notes.md
+plans/riderprofile/audit/files-R15-performance.txt
+messages/20261003-1600-R15-performance-to-parent-props.md
+messages/20261003-1605-R15-performance-to-parent-equal-confirm.md

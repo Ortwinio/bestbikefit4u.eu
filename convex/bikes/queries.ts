@@ -1,3 +1,4 @@
+import { bikeProfileSummary } from "./profile";
 import { query } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
@@ -326,12 +327,12 @@ export const getDetail = query({
     });
 
     const wheelsetsWithTireSetups = await Promise.all(
-      sortNewestFirst(wheelsets).map(async (wheelset) => {
+      sortNewestFirst(wheelsets.filter(item => item.userId === userId)).map(async (wheelset) => {
         const tireSetups = await ctx.db
           .query("tireSetups")
           .withIndex("by_wheelset", (q) => q.eq("wheelsetId", wheelset._id))
           .collect();
-        const orderedTireSetups = sortNewestFirst(tireSetups);
+        const orderedTireSetups = sortNewestFirst(tireSetups.filter(item => item.userId === userId));
         const activeTireSetup =
           orderedTireSetups.find((tireSetup) => tireSetup.isActive) ??
           orderedTireSetups[0] ??
@@ -357,8 +358,13 @@ export const getDetail = query({
         ? "missing_record"
         : "unlinked";
 
+    const observations = await ctx.db.query("profileObservations")
+      .withIndex("by_bike", q => q.eq("bikeId", bike._id)).collect();
     return {
       bike,
+      riderProfile: profile,
+      ...bikeProfileSummary(bike, observations.filter(item => item.userId === userId),
+        activeWheelset?.activeTireSetup, Date.now(), linkedGeometryRecord),
       bikeProfiles: sortNewestFirst(bikeProfiles),
       photos: photoState.detailPhotos,
       activePhotoStorageId: photoState.activePhotoStorageId,
@@ -450,6 +456,9 @@ export const listSummariesByUser = query({
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .unique();
 
+    const observations = await ctx.db.query("profileObservations")
+      .withIndex("by_user_field", q => q.eq("userId", userId)).collect();
+
     return await Promise.all(
       bikes.map(async (bike) => {
         const [
@@ -472,9 +481,10 @@ export const listSummariesByUser = query({
             .collect(),
           bike.geometryRecordId ? ctx.db.get(bike.geometryRecordId) : null,
         ]);
+        const ownedWheelsets = wheelsets.filter(item => item.userId === userId);
         const activeWheelset =
-          wheelsets.find((wheelset) => wheelset.isActive) ??
-          [...wheelsets].sort((a, b) => b.createdAt - a.createdAt)[0] ??
+          ownedWheelsets.find((wheelset) => wheelset.isActive) ??
+          [...ownedWheelsets].sort((a, b) => b.createdAt - a.createdAt)[0] ??
           null;
 
         const [tireSetups, linkedGeometryBrand, linkedGeometryModel] = await Promise.all([
@@ -487,9 +497,10 @@ export const listSummariesByUser = query({
           linkedGeometryRecord ? ctx.db.get(linkedGeometryRecord.brandId) : Promise.resolve(null),
           linkedGeometryRecord ? ctx.db.get(linkedGeometryRecord.modelId) : Promise.resolve(null),
         ]);
+        const ownedTireSetups = tireSetups.filter(item => item.userId === userId);
         const activeTireSetup =
-          tireSetups.find((tireSetup) => tireSetup.isActive) ??
-          [...tireSetups].sort((a, b) => b.createdAt - a.createdAt)[0] ??
+          ownedTireSetups.find((tireSetup) => tireSetup.isActive) ??
+          [...ownedTireSetups].sort((a, b) => b.createdAt - a.createdAt)[0] ??
           null;
 
         const latestCalculation =
@@ -500,6 +511,7 @@ export const listSummariesByUser = query({
 
         return {
           ...bike,
+          ...bikeProfileSummary(bike, observations, activeTireSetup, Date.now(), linkedGeometryRecord),
           linkedGeometrySummary: linkedGeometryRecord
             ? buildGarageLinkedGeometrySummary({
                 record: {

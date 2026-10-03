@@ -1,19 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useAction, useMutation, useQuery } from "convex/react";
 import { makeFunctionReference } from "convex/server";
 import { Button, CheckboxGroup, Selectable } from "@/components/ui";
 import type { Locale } from "@/i18n/config";
 import { emailPreferencesCopy } from "@/i18n/account/emailPreferences";
+import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
+import { NEWSLETTER_WORDING_VERSION, type NewsletterConsent } from "../../../shared/newsletterConsent";
 
-type Preferences = { service: boolean; marketing: boolean };
+type Preferences = { service: boolean; marketing: boolean; newsletter: boolean };
+type PreferencesInput = Pick<Preferences, "service" | "marketing"> & { newsletter?: boolean; consent?: NewsletterConsent };
+type PreferencesResult = Preferences & { newsletterGranted: boolean };
 type TokenView = { purpose: "preferences"; preferences: Preferences } | { purpose: "unsubscribe"; category: keyof Preferences };
 const getReference = makeFunctionReference<"query", Record<string, never>, Preferences | null>("emails/preferences:get");
-const setReference = makeFunctionReference<"mutation", Preferences, Preferences>("emails/preferences:set");
+const setReference = makeFunctionReference<"mutation", PreferencesInput, PreferencesResult>("emails/preferences:set");
 const viewReference = makeFunctionReference<"action", { token: string }, TokenView>("emails/preferenceActions:view");
-const saveReference = makeFunctionReference<"action", Preferences & { token: string }, Preferences>("emails/preferenceActions:save");
+const saveReference = makeFunctionReference<"action", PreferencesInput & { token: string }, PreferencesResult>("emails/preferenceActions:save");
 const unsubscribeReference = makeFunctionReference<"action", { token: string }, null>("emails/preferenceActions:unsubscribe");
 
 export function EmailPreferencesClient({ locale }: { locale: Locale }) {
@@ -24,6 +28,10 @@ export function EmailPreferencesClient({ locale }: { locale: Locale }) {
   const [error, setError] = useState(false);
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
+  const saving = useRef(false);
+  const consent = useRef<NewsletterConsent | null>(null);
+  const [newsletterTouched, setNewsletterTouched] = useState(false);
+  const logEvent = useMarketingEventLogger();
   const getTokenView = useAction(viewReference);
   const saveToken = useAction(saveReference);
   const unsubscribe = useAction(unsubscribeReference);
@@ -50,19 +58,31 @@ export function EmailPreferencesClient({ locale }: { locale: Locale }) {
   const preferences = draft ?? (view?.purpose === "preferences" ? view.preferences : account);
   const category = view?.purpose === "unsubscribe" ? view.category : null;
   const submit = async () => {
+    if (saving.current) return;
+    saving.current = true;
     setBusy(true);
     setError(false);
     setSaved(false);
     try {
       if (token && category) await unsubscribe({ token });
       else if (preferences) {
-        if (token) await saveToken({ token, ...preferences });
-        else await saveAccount(preferences);
+        const args: PreferencesInput = { service: preferences.service, marketing: preferences.marketing };
+        if (newsletterTouched) {
+          consent.current ??= { requestId: crypto.randomUUID(), locale, wordingVersion: NEWSLETTER_WORDING_VERSION };
+          args.newsletter = preferences.newsletter ?? false;
+          args.consent = consent.current;
+        }
+        const result = token ? await saveToken({ token, ...args }) : await saveAccount(args);
+        setDraft({ service: result.service, marketing: result.marketing, newsletter: result.newsletter });
+        consent.current = null;
+        setNewsletterTouched(false);
+        if (result.newsletterGranted) logEvent({ eventType: "newsletter_opt_in", locale, pagePath: `/${locale}/email-preferences` });
       } else return;
       setSaved(true);
     } catch {
       setError(true);
     } finally {
+      saving.current = false;
       setBusy(false);
     }
   };
@@ -87,13 +107,18 @@ export function EmailPreferencesClient({ locale }: { locale: Locale }) {
             <CheckboxGroup
               aria-label={copy.title}
               disabled={busy}
-              value={(["service", "marketing"] as const).filter((key) => preferences[key])}
+              value={(["service", "marketing", "newsletter"] as const).filter((key) => preferences[key])}
               onValueChange={(selected) => {
-                setDraft({ service: selected.includes("service"), marketing: selected.includes("marketing") });
+                const newsletter = selected.includes("newsletter");
+                if (newsletter !== (preferences.newsletter ?? false)) {
+                  setNewsletterTouched(true);
+                  consent.current = null;
+                }
+                setDraft({ service: selected.includes("service"), marketing: selected.includes("marketing"), newsletter });
                 setSaved(false);
               }}
             >
-              {(["service", "marketing"] as const).map((key) => (
+              {(["service", "marketing", "newsletter"] as const).map((key) => (
                 <Selectable
                   key={key}
                   mode="checkbox"

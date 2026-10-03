@@ -1,9 +1,19 @@
 /* @vitest-environment jsdom */
 
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { accountCalculatorNavigation } from "@/components/account/account-navigation";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DashboardSidebar } from "./DashboardSidebar";
+
+vi.mock("@/components/profile/AccountProfileStrength", () => ({
+  AccountProfileStrength: ({ locale, placement }: { locale: string; placement: string }) =>
+    <div data-testid="profile-strength" data-locale={locale} data-placement={placement} />,
+}));
+
+it("mounts live profile strength in the sidebar", () => {
+  render(<DashboardSidebar />);
+  expect(screen.getByTestId("profile-strength").getAttribute("data-placement")).toBe("sidebar");
+});
 
 const { usePathnameMock, useRouterMock, signOutMock } = vi.hoisted(() => ({
   usePathnameMock: vi.fn(() => "/nl/dashboard"),
@@ -124,6 +134,18 @@ afterEach(() => {
 });
 
 describe("DashboardSidebar", () => {
+  it("clears remembered rider data and signup intent before logout", () => {
+    localStorage.setItem("bbf.handoff", "remembered");
+    sessionStorage.setItem("bbf.handoff", "session");
+    sessionStorage.setItem("bbf.newsletter-signup", "pending");
+    render(<DashboardSidebar />);
+    fireEvent.click(screen.getByRole("button", { name: "Sign out" }));
+    expect(localStorage.getItem("bbf.handoff")).toBeNull();
+    expect(sessionStorage.getItem("bbf.handoff")).toBeNull();
+    expect(sessionStorage.getItem("bbf.newsletter-signup")).toBeNull();
+    expect(signOutMock).toHaveBeenCalled();
+  });
+
   it("keeps navigation sticky inside the full-height account column", () => {
     render(<DashboardSidebar />);
     const sidebar = screen.getByRole("complementary");

@@ -1,0 +1,23 @@
+export type InputValue = number | string | boolean | string[] | number[] | null;
+export type InputRecord = { table: "tireSetups" | "wheelsets"; id: string };
+export type InputDependency = { field: string; bikeId?: string; record?: InputRecord; value: InputValue; observationId?: string };
+export type InputProvenance = { version: 1; capturedAt: number; dependencies: InputDependency[] };
+export type StaleReason = { field?: string; bikeId?: string; record?: InputRecord;
+  reason: "value_changed" | "observation_changed" | "missing_input" | "legacy_provenance" };
+export type Staleness = { stale: boolean; status: "current" | "stale" | "unknown"; reasons: StaleReason[] };
+export const ADVICE_GROUPS = ["seating", "contact", "cockpit", "drivetrain", "tires", "performance", "frame"] as const;
+export type AdviceGroupKey = typeof ADVICE_GROUPS[number];
+export type AdviceSource = "recommendations" | "saddleWidthSessions" | "gearingSessions" | "pressureCalculations" | "calculatorStates";
+export type AdviceProgress = { key: string; performedAt: number; note?: string;
+  feedback?: { result: "better" | "same" | "worse"; note?: string; recordedAt: number; rideFeedbackId?: string } };
+export type AdviceItem = {
+  id: string; recordId: string; key: string; bikeId: string | null; value: number | string | null; unit: string | null;
+  range: { min: number; max: number } | null; current: number | null; difference: number | null;
+  reliability: { value: number | null; reason: "engine_confidence" | "unknown" | "saved_inputs_only" };
+  status: "new" | "stale" | "needs_calculation" | "waiting_feedback" | "performed";
+  source?: AdviceSource; adviceRevision?: number; progress?: AdviceProgress;
+  eligibleRideFeedback?: Array<{ id: string; date: number; note?: string }>;
+  date: number; staleness: Staleness; sourceLink: string; changeOrder: number;
+};
+export type AdviceGroup = { key: AdviceGroupKey; titleKey: AdviceGroupKey; items: AdviceItem[];
+  improvements: Array<{ key: string; field: string; gain: number; sourceLink: string }> };

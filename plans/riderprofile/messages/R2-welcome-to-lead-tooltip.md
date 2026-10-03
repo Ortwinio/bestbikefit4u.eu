@@ -1,0 +1,5 @@
+# Welcome → lead: tooltip registration
+
+Please include `src/app/welcome/WelcomeClient.tsx` in C's single shared `EXEMPT_FILES` registration update in `scripts/check-tooltip-coverage.mjs`, as requested by `B-to-C-tooltip-registration.md`: the review uses shared labeled controls, visible source/date/method/unit readback and inline saddle-measure-point guidance, matching existing labeled bike-editor exemptions. This guard file is outside welcome ownership. No aliases or bypasses were introduced. Current `npm run lint:tooltips` flags this path plus C's crank-length/saddle-width forms. Welcome will not edit the shared script concurrently.
+
+Bike preview now calls A's actual `scoreBike` for the backend's saved `bikeType` and `currentSetup.saddleHeightMm/crankLengthMm`, with mapped observations. Other bike records are observations only in B's current implementation and do not manufacture bike properties or score. Both rider and optional bike get clearly titled completeness/reliability pairs. Bike names are capped at 100 characters; FTP limits reuse shared `[30,700]`.

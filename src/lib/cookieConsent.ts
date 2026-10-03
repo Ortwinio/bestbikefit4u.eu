@@ -1,3 +1,5 @@
+import { syncHandoffConsent } from "./handoff/store";
+
 export const COOKIE_CONSENT_KEY = "bf_cookie_consent";
 export const COOKIE_CONSENT_EVENT = "bf-cookie-consent-change";
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
@@ -49,10 +51,11 @@ export function readCookieConsent(): CookieConsentChoice | null {
     return null;
   }
 
-  const fromStorage = parseCookieConsent(
-    window.localStorage.getItem(COOKIE_CONSENT_KEY)
-  );
-  return fromStorage;
+  try {
+    return parseCookieConsent(window.localStorage.getItem(COOKIE_CONSENT_KEY));
+  } catch {
+    return null;
+  }
 }
 
 export function writeCookieConsent(choice: CookieConsentChoice): void {
@@ -60,9 +63,14 @@ export function writeCookieConsent(choice: CookieConsentChoice): void {
     return;
   }
 
-  window.localStorage.setItem(COOKIE_CONSENT_KEY, choice);
+  try {
+    window.localStorage.setItem(COOKIE_CONSENT_KEY, choice);
+  } catch {
+    // Cookie consent still works when browser storage is unavailable.
+  }
   document.cookie =
     `${COOKIE_CONSENT_KEY}=${choice}; Path=/; Max-Age=${ONE_YEAR_IN_SECONDS}; SameSite=Lax`;
+  syncHandoffConsent(choice);
   window.dispatchEvent(new Event(COOKIE_CONSENT_EVENT));
 }
 

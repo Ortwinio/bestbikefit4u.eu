@@ -2,7 +2,7 @@
 
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-export type EmailCategory = "service" | "marketing";
+export type EmailCategory = "service" | "marketing" | "newsletter";
 type TokenPayload = {
   version: 1;
   userId: string;
@@ -48,7 +48,7 @@ export function verifyEmailPreferenceToken(token: string): TokenPayload {
     payload.version !== 1 || typeof payload.userId !== "string" || !payload.userId ||
     !["nl", "en"].includes(payload.locale) ||
     !["unsubscribe", "preferences"].includes(payload.purpose) ||
-    !["service", "marketing"].includes(payload.category) ||
+    !["service", "marketing", "newsletter"].includes(payload.category) ||
     !Number.isSafeInteger(payload.expiresAt) || payload.expiresAt <= Date.now()
   ) throw new Error("Invalid or expired email link");
   return payload;
@@ -70,7 +70,7 @@ export function emailPreferencePageUrl(token: string, locale: "nl" | "en") {
 }
 
 export async function buildEmailPreferenceLinks(userId: string, locale: "nl" | "en", category: EmailCategory) {
-  if (!userId || !["nl", "en"].includes(locale) || !["service", "marketing"].includes(category)) {
+  if (!userId || !["nl", "en"].includes(locale) || !["service", "marketing", "newsletter"].includes(category)) {
     throw new Error("Invalid email preference link arguments");
   }
   const sign = (purpose: TokenPayload["purpose"]) => {

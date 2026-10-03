@@ -1,0 +1,5 @@
+src/app/(dashboard)/profile/advice/AdvicePageClient.test.tsx
+src/app/(dashboard)/profile/advice/page.test.tsx
+src/components/profile/ProfileSectionTabs.test.tsx
+plans/riderprofile/audit/R8-tests-notes.md
+plans/riderprofile/audit/files-R8-tests.txt

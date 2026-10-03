@@ -7,7 +7,10 @@ import { getDefaultEngineVersion } from "../lib/engineVersion";
 import { mapBikeCategory, mapAmbition } from "./inputMapping";
 import type { ClimbingLevel } from "../lib/fitAlgorithm";
 import { buildBikeRoleBias } from "./bikeRoleBias";
-import { calculatorAmbition, profileWithCalculatorInputs } from "../sessions/calculatorInputs";
+import { calculatorAmbition } from "../sessions/calculatorInputs";
+import { captureSessionProfile, sessionProfile } from "../sessions/profileSnapshot";
+import { hasFitMeasurements } from "../../shared/profileFitReadiness";
+import { captureInputProvenance, directInputs } from "../advice/provenance";
 
 /**
  * Generate recommendations for a completed session.
@@ -20,7 +23,13 @@ export const generate = mutation({
   args: {
     sessionId: v.id("fitSessions"),
   },
-  handler: async (ctx, args) => {
+  handler: generateRecommendation,
+});
+
+export async function generateRecommendation(
+  ctx: MutationCtx,
+  args: { sessionId: Id<"fitSessions">; suppressEmail?: boolean },
+) {
     const { userId, session } = await requireSessionOwner(ctx, args.sessionId);
     const baselineEngineVersion = session.engineVersion ?? getDefaultEngineVersion();
 
@@ -41,16 +50,21 @@ export const generate = mutation({
       return;
     }
 
-    // Transition to "processing" to signal work is in progress
-    if (session.status === "questionnaire_complete") {
-      await ctx.db.patch(args.sessionId, { status: "processing" });
-    }
-
     // Get the profile
     const storedProfile = await ctx.db.get(session.profileId);
     if (!storedProfile) throw new Error("Profile not found");
     if (storedProfile.userId !== userId) throw new Error("Profile not found");
-    const profile = profileWithCalculatorInputs(storedProfile, session.calculatorInputs);
+    const profile = sessionProfile(storedProfile, session);
+    if (!hasFitMeasurements(profile)) {
+      throw new Error("Complete your rider profile before calculating a bike fit.");
+    }
+    if (!session.profileSnapshot) {
+      const snapshot = await captureSessionProfile(ctx, storedProfile);
+      await ctx.db.patch(args.sessionId, snapshot);
+    }
+    if (session.status === "questionnaire_complete") {
+      await ctx.db.patch(args.sessionId, { status: "processing" });
+    }
 
     // Resolve bike type (snapshot on session takes priority over linked bike)
     let bikeType: string | undefined = session.bikeType;
@@ -159,6 +173,22 @@ export const generate = mutation({
     );
     const wantsClimbingProfile = wantsClimbingProfileResponse?.response === "yes";
 
+    const usedRiderInputs = directInputs(profile, ["heightCm", "inseamCm", "torsoLengthCm", "armLengthCm",
+      "shoulderWidthCm", "footLengthCm", "flexibilityScore", "coreStabilityScore"]);
+    const inputProvenance = await captureInputProvenance(ctx, userId, [
+      ...(session.profileSnapshot && session.inputProvenance ? [] : usedRiderInputs),
+      { field: "currentGeometry.stackMm", value: frameStackMm, bikeId: session.bikeId },
+      { field: "currentGeometry.reachMm", value: frameReachMm, bikeId: session.bikeId },
+      ...(!session.bikeType && !session.calculatorInputs && bike && bike.userId === userId
+        ? directInputs(bike, ["bikeType"], session.bikeId) : []),
+    ], session.bikeId);
+    if (session.profileSnapshot && session.inputProvenance) {
+      inputProvenance.dependencies.push(...session.inputProvenance.dependencies.filter((dependency) =>
+        !dependency.bikeId && !dependency.record && usedRiderInputs.some((input) =>
+          input.field === dependency.field && JSON.stringify(input.value) === JSON.stringify(dependency.value))));
+    }
+    await ctx.db.patch(args.sessionId, { inputProvenance });
+
     // Schedule the action — computation happens outside the mutation transaction
     await ctx.scheduler.runAfter(
       0,
@@ -166,6 +196,8 @@ export const generate = mutation({
       {
         sessionId: args.sessionId,
         userId,
+        inputProvenance,
+        suppressEmail: args.suppressEmail,
         heightCm: profile.heightCm,
         inseamCm: profile.inseamCm,
         torsoLengthCm: profile.torsoLengthCm,
@@ -186,8 +218,7 @@ export const generate = mutation({
         wantsClimbingProfile,
       }
     );
-  },
-});
+}
 
 async function getExistingRecommendationId(
   ctx: MutationCtx,

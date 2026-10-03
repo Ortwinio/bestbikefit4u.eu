@@ -1,5 +1,11 @@
 "use client";
 
+import { handoffInputMessages } from "@/i18n/calculators/handoffInputs";
+import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
+import type { HandoffField } from "@/lib/handoff/store";
+import { PersonalizeAdviceBlock } from "@/components/calculators/PersonalizeAdviceBlock";
+import { HandoffPrefillNotice } from "@/components/calculators/HandoffPrefillNotice";
+
 import type { CalculatorValues } from "../../../../../convex/calculatorStates/validators";
 
 import { useState } from "react";
@@ -31,6 +37,7 @@ interface CrankLengthCalculatorFormProps {
   onValuesChange?: (values: CalculatorValues<"crank-length">) => void;
   initialCategory: BikeCategory;
   continueHref?: string;
+  showContinue?: boolean;
 }
 
 export function CrankLengthCalculatorForm({
@@ -39,26 +46,52 @@ export function CrankLengthCalculatorForm({
   initialInseamCm,
   initialCategory,
   continueHref = "/login?src=crank-length",
+  showContinue = true,
   initialValues,
   onValuesChange,
 }: CrankLengthCalculatorFormProps) {
+  const [currentCrank, setCurrentCrank] = useState("");
+  const inputCopy = handoffInputMessages[locale];
   const validInitial =
     initialInseamCm !== undefined &&
     Number.isFinite(initialInseamCm) &&
     initialInseamCm >= 55 &&
     initialInseamCm <= 105;
+  const [inseamMeasured, setInseamMeasured] = useState(Boolean(initialValues));
   const [inseamCm, setInseamCm] = useState(
     initialValues?.inseamCm ?? (validInitial ? Math.round(initialInseamCm * 10) / 10 : 84),
   );
   const [category, setCategory] = useState(initialValues?.category ?? initialCategory);
   const [edited, setEdited] = useState(initialValues?.confirmed ?? false);
   const hasPersonalInput = validInitial || edited;
+  const publicMode = !initialValues && !onValuesChange;
+  const handoff = usePublicHandoff("crank-length", publicMode);
+  const [prefilled, setPrefilled] = useState(false);
+  const [prefilledFields, setPrefilledFields] = useState<HandoffField[]>([]);
+  // Adopt the first client session snapshot once; edits and account state remain authoritative.
+  if (publicMode && handoff.ready && !prefilled) {
+    setPrefilled(true);
+    const used: HandoffField[] = [];
+    const inseamCmEntry = handoff.getPrefill("inseamCm");
+    if (typeof inseamCmEntry?.value === "number" && inseamCmEntry.value >= 55 && inseamCmEntry.value <= 105) {
+      setInseamCm(inseamCmEntry.value);
+      setInseamMeasured(inseamCmEntry.method === "measured");
+      setEdited(true);
+      used.push("inseamCm");
+    }
+    const categoryEntry = handoff.getPrefill("bikeCategory");
+    if (typeof categoryEntry?.value === "string" && ["road", "gravel", "mtb", "city"].includes(categoryEntry.value)) {
+      setCategory(categoryEntry.value as BikeCategory);
+      used.push("bikeCategory");
+    }
+    setPrefilledFields(used);
+  }
   useCalculatorValuesChange({ inseamCm, category, confirmed: hasPersonalInput }, onValuesChange);
   const resultLabel = hasPersonalInput ? copy.result : copy.exampleResult;
   const result = runCrankLengthCalculation({
     inseamCm,
     category,
-    inseamSource: hasPersonalInput ? "measured" : "estimated",
+    inseamSource: inseamMeasured ? "measured" : "estimated",
   });
   const warning = validateCrankLengthRecommendation(category, result, locale === "nl").length > 0;
   const format = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
@@ -66,6 +99,8 @@ export function CrankLengthCalculatorForm({
   const pedalY = 85 + result * 0.6;
   return (
     <ConfiguratorLayout
+      notice={publicMode && <HandoffPrefillNotice calculator="crank-length" locale={locale} fields={prefilledFields} />}
+      afterResults={publicMode && <PersonalizeAdviceBlock calculator="crank-length" locale={locale} />}
       eyebrow={copy.eyebrow}
       title={copy.title}
       description={validInitial ? copy.personalIntro : copy.intro}
@@ -82,6 +117,8 @@ export function CrankLengthCalculatorForm({
               unit="cm"
               onChange={(value) => {
                 setInseamCm(value);
+                setInseamMeasured(false);
+                handoff.touch("inseamCm", value, "cm");
                 setEdited(true);
               }}
               ticks={[
@@ -96,6 +133,22 @@ export function CrankLengthCalculatorForm({
               </p>
             )}
           </StepCard>
+          {publicMode && <div className="rounded-3xl border border-border bg-card p-5">
+            <label htmlFor="handoff-current-crank" className="mb-2 block text-sm font-semibold">
+              {inputCopy.currentCrank}
+            </label>
+            <input id="handoff-current-crank" type="number" min={100} max={220} step={0.5}
+              value={currentCrank}
+              className="min-h-11 w-full rounded-xl border border-input bg-background px-3 focus-visible:focus-ring"
+              onChange={(event) => {
+                setCurrentCrank(event.target.value);
+                const value = event.target.valueAsNumber;
+                if (Number.isFinite(value) && value >= 100 && value <= 220) {
+                  handoff.touch("currentCrankLengthMm", value, "mm", "bike");
+                } else handoff.remove("currentCrankLengthMm");
+              }} />
+            <p className="mt-2 text-sm text-muted-foreground">{inputCopy.optional}</p>
+          </div>}
           <StepCard number={2} title={copy.choose}>
             <div
               role="group"
@@ -107,7 +160,7 @@ export function CrankLengthCalculatorForm({
                   key={option}
                   label={copy.categories[option]}
                   selected={category === option}
-                  onClick={() => setCategory(option)}
+                  onClick={() => { setCategory(option); handoff.touch("bikeCategory", option, "none", "bike"); }}
                   showCheck={false}
                   className="justify-center px-2 text-center text-sm"
                 />
@@ -218,7 +271,7 @@ export function CrankLengthCalculatorForm({
             </p>
           )}
           <AdjustOrder title={copy.adjustment} steps={copy.steps.map((title) => ({ title }))} />
-          <section className="rounded-3xl bg-[var(--bbf-inkt)] p-6 text-[var(--bbf-wit)]">
+          {!publicMode && showContinue && <section className="rounded-3xl bg-[var(--bbf-inkt)] p-6 text-[var(--bbf-wit)]">
             <h2 className="font-display text-2xl font-bold text-[var(--bbf-wit)]">{copy.save}</h2>
             <p className="mt-3 text-sm text-[var(--bbf-op-donker)]">{copy.saveHint}</p>
             <Button
@@ -227,7 +280,7 @@ export function CrankLengthCalculatorForm({
             >
               {copy.save}
             </Button>
-          </section>
+          </section>}
         </>
       }
       stickyResult={

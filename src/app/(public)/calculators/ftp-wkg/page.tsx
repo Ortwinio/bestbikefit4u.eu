@@ -3,10 +3,7 @@ import { ftpWkgPageMessages } from "@/i18n/calculators/ftpWkgPage";
 import { PerformanceCalculator } from "../power-speed/PerformanceCalculator";
 import type { Metadata } from "next";
 import { Activity, Gauge, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/prototyper-ui/ui/button";
-import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
-  PublicCtaBand,
   PublicFeatureCard,
   PublicSection,
   PublicSurfaceCard,
@@ -109,27 +106,6 @@ export default async function FtpWkgCalculatorPage() {
 
         <RelatedLinksSection title={page.relatedTitle} links={[...page.relatedLinks]} locale={locale} />
 
-        <PublicCtaBand
-          className="mt-10"
-          eyebrow={page.cta.eyebrow}
-          title={page.cta.title}
-          description={page.cta.description}
-          actions={
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/login?src=ftp-wkg", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="ftp_wkg_primary_cta"
-                  ctaLabel={page.cta.label}
-                />
-              }
-            >
-              {page.cta.label}
-            </Button>
-          }
-        />
       </div>
     </div>
   );

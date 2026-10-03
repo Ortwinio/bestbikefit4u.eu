@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 const inputs = ["src", "convex", "shared", "data", "docs", "public", "tests/fixtures",
+  "scripts/lib", "scripts/import-guide-rewrites.mjs",
   "next.config.ts", "tsconfig.json",
   "postcss.config.mjs", "package.json", "package-lock.json", "instrumentation.ts", "instrumentation-client.ts"];
 

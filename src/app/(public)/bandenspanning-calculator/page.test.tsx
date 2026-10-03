@@ -105,21 +105,13 @@ afterEach(() => {
 });
 
 describe("bandenspanning calculator page", () => {
-  it("keeps the calculator form and next-step CTAs visible in English content", async () => {
+  it("keeps the form and FAQ without a duplicate signup band", async () => {
     const ui = await PressureCalculatorPageContent({ locale });
     render(ui);
 
     expect(screen.getByText("Tire pressure form")).toBeTruthy();
     expect(screen.getByText("Pressure FAQ")).toBeTruthy();
-    expect(screen.getByText("Create account or sign in").closest("a")?.getAttribute("href")).toBe(
-      "/en/login",
-    );
-    expect(screen.getByText("Compare Free vs Pro").closest("a")?.getAttribute("href")).toBe(
-      "/en/pricing",
-    );
-    expect(screen.getByText("Open bike-fit calculator").closest("a")?.getAttribute("href")).toBe(
-      "/en/calculators/bike-fit",
-    );
+    expect(screen.queryByText("Create account or sign in")).toBeNull();
   });
 
   it("redirects the English alias route to the canonical tire-pressure path", async () => {

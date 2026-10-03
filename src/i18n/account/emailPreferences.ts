@@ -1,4 +1,8 @@
+import { newsletterCopy } from "./newsletter";
+
 const en = {
+  newsletter: newsletterCopy.en.signupLabel,
+  newsletterDescription: newsletterCopy.en.description,
   title: "Email preferences",
   description: "Choose which emails you receive from BestBikeFit4U.",
   service: "Fit tips and reminders",
@@ -19,6 +23,8 @@ const en = {
 };
 
 const nl: Record<keyof typeof en, string> = {
+  newsletter: newsletterCopy.nl.signupLabel,
+  newsletterDescription: newsletterCopy.nl.description,
   title: "E-mailvoorkeuren",
   description: "Kies welke e-mails je van BestBikeFit4U ontvangt.",
   service: "Fittips en herinneringen",

@@ -1,7 +1,9 @@
 import { mutation } from "../_generated/server";
+import { resetAdviceProgress } from "../advice/revision";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
 import { validateStringLength } from "../lib/validation";
+import { capturePressureInputProvenance } from "../advice/provenance";
 import {
   calculateAdvancedPressure,
   calculateBasicPressure,
@@ -99,19 +101,13 @@ export const upsertBasic = mutation({
       .order("desc")
       .first();
 
-    if (current && Object.keys({ ...current.inputSnapshot, ...args.inputSnapshot }).every(
-      (key) => current.inputSnapshot[key as keyof typeof current.inputSnapshot] ===
-        args.inputSnapshot[key as keyof typeof args.inputSnapshot]
-    )) {
-      return current._id;
-    }
-
     const result = calculateBasicPressure(args.inputSnapshot);
     const record = {
       userId,
       bikeId: args.bikeId,
       sourceType: "dashboard_basic" as const,
       inputSnapshot: args.inputSnapshot,
+      inputProvenance: await capturePressureInputProvenance(ctx, userId, args.inputSnapshot, args.bikeId),
       recommendedFrontBar: result.frontBar,
       recommendedRearBar: result.rearBar,
       recommendedFrontPsi: result.frontPsi,
@@ -124,8 +120,12 @@ export const upsertBasic = mutation({
       createdAt: Date.now(),
     };
 
+    if (current && JSON.stringify(current.inputSnapshot) === JSON.stringify(record.inputSnapshot) &&
+      JSON.stringify(current.inputProvenance?.dependencies) === JSON.stringify(record.inputProvenance.dependencies)) {
+      return current._id;
+    }
     if (current) {
-      await ctx.db.patch(current._id, record);
+      await ctx.db.patch(current._id, { ...record, ...resetAdviceProgress(current) });
       return current._id;
     }
     return await ctx.db.insert("pressureCalculations", record);
@@ -326,6 +326,14 @@ export const recalculatePressureForAllBikes = mutation({
         bikeId: bike._id,
         tireSetupId: activeTireSetup._id,
         sourceType: "dashboard_advanced",
+        inputProvenance: await capturePressureInputProvenance(ctx, userId, {
+          bodyWeightKg: args.newWeightKg, bikeWeightKg: bike.bikeWeightKg,
+          widthFrontMm: activeTireSetup.widthFrontMm, widthRearMm: activeTireSetup.widthRearMm,
+          tubeType: activeTireSetup.tubeType, casingType: activeTireSetup.casingType,
+          maxPressureBar: activeTireSetup.maxPressureBar, rimType: activeWheelset.rimType,
+          internalRimWidthFrontMm: activeWheelset.internalRimWidthFrontMm,
+          internalRimWidthRearMm: activeWheelset.internalRimWidthRearMm,
+        }, bike._id, activeTireSetup._id),
         inputSnapshot: {
           bodyWeightKg: args.newWeightKg,
           bikeWeightKg: bike.bikeWeightKg,

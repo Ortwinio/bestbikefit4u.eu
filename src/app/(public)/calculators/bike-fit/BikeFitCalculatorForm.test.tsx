@@ -12,7 +12,7 @@ import {
 import { bikeFitMessages } from "@/i18n/calculators/bikeFit";
 import { BikeFitCalculatorForm } from "./BikeFitCalculatorForm";
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); sessionStorage.clear(); });
 const en = bikeFitMessages.en;
 const defaults = {
   heightCm: 180,
@@ -144,9 +144,9 @@ describe("BikeFitCalculatorForm", () => {
     fireEvent.keyDown(screen.getByRole("slider", { name: nl.height }), { key: "Home" });
     expect(screen.getByText(nl.warnings.measurement_warning)).toBeTruthy();
     expect(screen.queryByText(en.warnings.measurement_warning)).toBeNull();
-    expect(screen.getByRole("link", { name: nl.accountCta }).getAttribute("href")).toBe(
-      "/nl/login?src=bike-fit",
+    expect(screen.getByRole("link", { name: "Bewaar mijn gegevens · gratis account" }).getAttribute("href")).toBe(
+      "/nl/login?src=bike-fit&handoff=1",
     );
-    expect(screen.getByText(nl.accountHint)).toBeTruthy();
+
   });
 });

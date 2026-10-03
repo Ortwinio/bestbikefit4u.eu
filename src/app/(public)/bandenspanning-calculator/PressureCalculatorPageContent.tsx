@@ -1,6 +1,5 @@
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
-import { PressureCalculatorCta } from "@/components/features/pressure/PressureCalculatorCta";
 import { PressureCalculatorFaq } from "@/components/features/pressure/PressureCalculatorFaq";
 import { PressureCalculatorForm } from "@/components/features/pressure/PressureCalculatorForm";
 import { BRAND } from "@/config/brand";
@@ -49,11 +48,7 @@ export async function PressureCalculatorPageContent({ locale }: { locale: Locale
             locale={locale}
           />
         </div>
-        <PressureCalculatorCta
-          locale={locale}
-          pagePath={pagePath}
-          labels={dictionary.pressure.cta}
-        />
+
       </div>
     </div>
   );

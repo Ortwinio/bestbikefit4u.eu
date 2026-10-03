@@ -115,8 +115,12 @@ export async function checkPage(page, options) {
       id, impact, description, helpUrl,
       nodes: nodes.map(({ target, failureSummary }) => ({ target, failureSummary })),
     }));
-  const dutchFindings = locale === "nl" ? (await collectDutchLanguage(page)).flatMap((chunk) => {
-    const evidence = analyzeDutchText(chunk.text);
+  const languageChunks = locale === "nl" ? await collectDutchLanguage(page) : [];
+  const browserLanguageDiagnostics = languageChunks.filter(chunk =>
+    chunk.kind === "validation-message" && chunk.browserGenerated === true).map(chunk => ({ ...chunk,
+    reason: "Browser-generated validation language is controlled by the browser installation, not app copy." }));
+  const dutchFindings = locale === "nl" ? languageChunks.flatMap((chunk) => {
+    const evidence = analyzeDutchText(chunk.text, chunk);
     return evidence ? [{ ...chunk, ...evidence }] : [];
   }) : null;
   const checks = {
@@ -129,7 +133,8 @@ export async function checkPage(page, options) {
     seo: seoUnavailableReason ? skip(seoUnavailableReason)
       : !publicPage || expected404 ? skip("Canonical/hreflang not required on account or expected 404 pages.")
       : result(seoDetails),
-    language: result(dutchFindings ?? findLanguageLeaks(measured.text, locale)),
+    language: { ...result(dutchFindings ?? findLanguageLeaks(measured.text, locale)),
+      environmentDiagnostics: browserLanguageDiagnostics },
     touchTargets: viewportWidth === 390 ? result(measured.touchTargets) : skip("Mobile-only check."),
     images: result(measured.images),
     axe: axeDetails ? result(axeDetails) : skip(axeUnavailableReason),

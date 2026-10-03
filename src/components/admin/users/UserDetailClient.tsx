@@ -528,13 +528,13 @@ export function UserDetailClient({ userId }: { userId: string }) {
           {profile ? (
             <div className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <Field label="Height" value={`${profile.heightCm} cm`} />
-                <Field label="Inseam" value={`${profile.inseamCm} cm`} />
-                <Field label="Arm length" value={`${profile.armLengthCm} cm`} />
-                <Field label="Torso length" value={`${profile.torsoLengthCm} cm`} />
-                <Field label="Shoulder width" value={`${profile.shoulderWidthCm} cm`} />
-                <Field label="Flexibility" value={profile.flexibilityScore} />
-                <Field label="Core stability" value={`${profile.coreStabilityScore}/5`} />
+                <Field label="Height" value={profile.heightCm === undefined ? "—" : `${profile.heightCm} cm`} />
+                <Field label="Inseam" value={profile.inseamCm === undefined ? "—" : `${profile.inseamCm} cm`} />
+                <Field label="Arm length" value={profile.armLengthCm === undefined ? "—" : `${profile.armLengthCm} cm`} />
+                <Field label="Torso length" value={profile.torsoLengthCm === undefined ? "—" : `${profile.torsoLengthCm} cm`} />
+                <Field label="Shoulder width" value={profile.shoulderWidthCm === undefined ? "—" : `${profile.shoulderWidthCm} cm`} />
+                <Field label="Flexibility" value={profile.flexibilityScore ?? "—"} />
+                <Field label="Core stability" value={profile.coreStabilityScore === undefined ? "—" : `${profile.coreStabilityScore}/5`} />
                 <Field label="Updated" value={formatAdminDate(profile.updatedAt)} />
                 <Field label="Age" value={profile.age ? `${profile.age}` : "—"} />
               </div>

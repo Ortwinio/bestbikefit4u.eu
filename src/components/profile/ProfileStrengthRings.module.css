@@ -1,0 +1,43 @@
+.card {
+  color: var(--bbf-wit);
+  background: var(--bbf-inkt);
+  border-radius: 28px;
+  padding: 28px;
+  min-width: 0;
+}
+.small { border-radius: 20px; padding: 18px; }
+.header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline; margin-bottom: 16px; }
+.title { color: var(--bbf-op-donker); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.level { color: var(--bbf-lime); font-family: var(--bbf-font-display); font-size: 18px; font-weight: 700; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.item { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; }
+.meter { position: relative; width: 120px; max-width: 100%; aspect-ratio: 1; }
+.small .meter { width: 76px; }
+.svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.track { stroke: color-mix(in srgb, var(--bbf-inkt) 75%, var(--bbf-op-donker)); }
+.complete { stroke: color-mix(in srgb, var(--bbf-petrol) 40%, var(--bbf-petrol-zacht)); }
+.reliable { stroke: var(--bbf-lime); }
+.arc { transition: stroke-dashoffset 450ms ease-out; }
+.value { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--bbf-font-cijfers); font-size: 30px; }
+.small .value { font-size: 18px; }
+.percent { font-size: 13px; color: var(--bbf-op-donker); }
+.small .percent { font-size: 11px; }
+.label { font-size: 13px; color: var(--bbf-op-donker); text-align: center; overflow-wrap: anywhere; }
+.next { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--bbf-gedempt); font-size: 14px; line-height: 1.5; }
+.next a { color: var(--bbf-wit); display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 3px; }
+.next a:focus-visible { outline: 2px solid var(--bbf-lime); outline-offset: 4px; }
+.gain { color: var(--bbf-lime); font-family: var(--bbf-font-cijfers); }
+.compact { padding: 10px 12px; border-radius: 16px; }
+.compact .header { margin-bottom: 6px; }
+.compact .title { font-size: 10px; }
+.compact .level { font-size: 14px; }
+.compact .grid { gap: 12px; }
+.compact .item { flex-direction: row; gap: 6px; }
+.compact .meter { width: 44px; flex-shrink: 0; }
+.compact .value { font-size: 11px; }
+.compact .percent { font-size: 8px; }
+.compact .label { font-size: 11px; }
+.compact .next { margin-top: 6px; padding-top: 6px; font-size: 12px; }
+@media (prefers-reduced-motion: reduce) {
+  .arc { transition: none; }
+}

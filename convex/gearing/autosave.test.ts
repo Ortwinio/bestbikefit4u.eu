@@ -28,13 +28,15 @@ function database() {
     patch: vi.fn(async (id: string, value: Record<string, unknown>) => {
       Object.assign(rows.find((row) => row._id === id)!, value);
     }),
-    query: () => ({
+    query: (table: string) => ({
       withIndex: (_index: string, apply: (q: { eq: (key: string, value: unknown) => unknown }) => unknown) => {
         const filters: [string, unknown][] = [];
         const q = { eq: (key: string, value: unknown) => { filters.push([key, value]); return q; } };
         apply(q);
-        return { order: () => ({ first: async () =>
-          [...rows].reverse().find((row) => filters.every(([key, value]) => row[key] === value)) ?? null }) };
+        const results = () => (table === "gearingSessions" ? [...rows].reverse() : [])
+          .filter((row) => filters.every(([key, value]) => row[key] === value));
+        return { unique: async () => results()[0] ?? null, collect: async () => results(),
+          order: () => ({ first: async () => results()[0] ?? null }) };
       },
     }),
   };

@@ -11,10 +11,10 @@ const saved = {
   wheelCircumferenceMm: 2150, cadenceRpm: 95, riderWeightKg: 68, ftpWatts: 250, groupsetName: "Saved",
 } as Doc<"gearingSessions">["input"];
 describe("gearing account adapters", () => {
-  it("prefers saved values over bike data and maps unordered rings/cogs", () => {
+  it("prefers live bike data over saved values and maps unordered rings/cogs", () => {
     expect(buildGearingPrefill(saved, bike)).toMatchObject({
-      outerChainringTeeth: 52, innerChainringTeeth: 34, cadenceRpm: 95,
-      cassetteSmallestCogTeeth: 11, cassetteLargestCogTeeth: 34, wheelCircumferenceMm: 2150,
+      outerChainringTeeth: 48, innerChainringTeeth: 31, cadenceRpm: 95,
+      cassetteSmallestCogTeeth: 11, cassetteLargestCogTeeth: 36, wheelCircumferenceMm: 2200,
     });
   });
   it("uses bike values before public defaults", () => {
@@ -25,7 +25,7 @@ describe("gearing account adapters", () => {
   });
   it("keeps optional saved fields and unchanged complete cassette", () => {
     expect(buildGearingPersistence(buildGearingPrefill(saved, bike), saved, bike))
-      .toMatchObject({ cassetteTeeth: saved.cassetteTeeth, ftpWatts: 250, riderWeightKg: 68, groupsetName: "Saved" });
+      .toMatchObject({ cassetteTeeth: bike.gearing?.cassetteTeeth, ftpWatts: 250, riderWeightKg: 68, groupsetName: "GRX" });
   });
   it("does not inject hidden profile values and replaces changed cassette endpoints", () => {
     const values = { ...buildGearingPrefill(undefined, bike), cassetteLargestCogTeeth: 40 };

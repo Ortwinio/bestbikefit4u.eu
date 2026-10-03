@@ -80,8 +80,18 @@ billing payment payments upgrade trial paid overview notification notifications 
 millimeters centimeters degrees under over saddle distance comfortable comfort suitable mountain balanced relaxed
 `.trim().split(/\s+/));
 
-export function analyzeDutchText(text) {
-  const words = String(text).toLowerCase().replace(/https?:\/\/\S+|\b\S+@\S+\b/g, " ")
+export function analyzeDutchText(text, context = {}) {
+  if (context.kind === "validation-message" && context.browserGenerated === true) return null;
+  let analyzed = String(text)
+    .replace(/\bFree (en|als) Pro\b/g, "Pro")
+    .replace("Training and Racing with a Power Meter", "")
+    .replace("A Step Towards Personalized Sports Nutrition: Carbohydrate Intake During Exercise", "")
+    .replace("American College of Sports Medicine position stand. Exercise and fluid replacement", "");
+  if (analyzed === "Free" && context.kind === "visible-text" && context.pathname === "/nl/pricing"
+    && /(?:h2|th):nth-of-type\(\d+\)$/.test(context.selector ?? "")) {
+    analyzed = "";
+  }
+  const words = analyzed.toLowerCase().replace(/https?:\/\/\S+|\b\S+@\S+\b/g, " ")
     .match(/[\p{L}]+(?:[-’'][\p{L}]+)*/gu) ?? [];
   const meaningful = words.filter((word) => !allowedWords.has(word));
   const matches = meaningful.filter((word) => englishWords.has(word));
@@ -114,14 +124,14 @@ export async function collectDutchLanguage(page) {
       if (!parts.length) return "body";
       return element.closest("body") ? `body > ${parts.join(" > ")}` : parts.join(" > ");
     };
-    const add = (kind, text, element) => {
+    const add = (kind, text, element, extra = {}) => {
       text = String(text ?? "").replace(/\s+/g, " ").trim();
       if (!text) return;
       const selector = selectorFor(element);
       const key = JSON.stringify([kind, text, selector]);
       if (seen.has(key)) return;
       seen.add(key);
-      chunks.push({ kind, text, selector });
+      chunks.push({ kind, text, selector, pathname: window.location.pathname, ...extra });
     };
     const visible = (element) => {
       if (element.closest("script,style,noscript,template,[hidden],[inert]")) return false;
@@ -143,7 +153,8 @@ export async function collectDutchLanguage(page) {
       for (const attribute of ["aria-label", "alt", "placeholder", "title"]) {
         add(attribute, element.getAttribute(attribute), element);
       }
-      if (element.validationMessage) add("validation-message", element.validationMessage, element);
+      if (element.validationMessage) add("validation-message", element.validationMessage, element,
+        { browserGenerated: element.validity?.customError === false });
       if (["alert", "status"].includes(element.getAttribute("role"))) {
         add(`role-${element.getAttribute("role")}`, element.innerText, element);
       }

@@ -49,3 +49,32 @@ test("English ratio catches common words even without a strong UI token", () => 
   assert.equal(result.ratio, 1);
   assert.equal(analyzeDutchText("Je activity staat tussen alle andere gegevens"), null);
 });
+
+test("exact Dutch tier comparisons and pricing plan headings do not erase generic English free", () => {
+  assert.equal(analyzeDutchText("Vergelijk Free en Pro"), null);
+  assert.equal(analyzeDutchText("E-mailrapporten zijn beschikbaar in zowel Free als Pro."), null);
+  const heading = { kind: "visible-text", pathname: "/nl/pricing", selector: "body > article:nth-of-type(1) > h2:nth-of-type(1)" };
+  assert.equal(analyzeDutchText("Free", heading), null);
+  assert.ok(analyzeDutchText("Free"));
+  assert.ok(analyzeDutchText("Free", { ...heading, pathname: "/nl/contact" }));
+  assert.ok(analyzeDutchText("Get free advice"));
+  assert.ok(analyzeDutchText("Vergelijk Free en Pro. Save your results."));
+});
+
+test("original bibliography titles are preserved while surrounding English remains detectable", () => {
+  for (const title of ["Training and Racing with a Power Meter",
+    "A Step Towards Personalized Sports Nutrition: Carbohydrate Intake During Exercise",
+    "American College of Sports Medicine position stand. Exercise and fluid replacement"]) {
+    assert.equal(analyzeDutchText(`${title}. Zie pagina 20.`), null);
+    assert.ok(analyzeDutchText(`${title}. Save your results.`));
+  }
+  assert.ok(analyzeDutchText("Exercise and Fluid Replacement"));
+});
+
+test("only confirmed browser-generated validation is classified as an environment diagnostic", () => {
+  const text = "Please fill out this field.";
+  assert.equal(analyzeDutchText(text, { kind: "validation-message", browserGenerated: true }), null);
+  assert.ok(analyzeDutchText(text, { kind: "validation-message", browserGenerated: false }));
+  assert.ok(analyzeDutchText(text, { kind: "validation-message" }));
+  assert.ok(analyzeDutchText(text, { kind: "visible-text", browserGenerated: true }));
+});

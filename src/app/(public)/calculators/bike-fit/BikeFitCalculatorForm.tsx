@@ -1,12 +1,16 @@
 "use client";
 
+import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
+import type { HandoffField } from "@/lib/handoff/store";
+import { PersonalizeAdviceBlock } from "@/components/calculators/PersonalizeAdviceBlock";
+import { HandoffPrefillNotice } from "@/components/calculators/HandoffPrefillNotice";
+
 import Link from "next/link";
 import { useMemo, useState, type ReactNode } from "react";
 import type { CalculatorValues } from "../../../../../convex/calculatorStates/validators";
 import { useCalculatorValuesChange } from "@/components/calculators/useCalculatorValuesChange";
 import {
   AdjustOrder,
-  Button,
   ConfiguratorLayout,
   OptionCard,
   RadioGroup,
@@ -54,6 +58,52 @@ export function BikeFitCalculatorForm({
   const [ambition, setAmbition] = useState<Ambition>(initialValues?.ambition ?? "balanced");
   const [flexibility, setFlexibility] = useState<PublicFitScore>((initialValues?.flexibility ?? 3) as PublicFitScore);
   const [core, setCore] = useState<PublicFitScore>((initialValues?.core ?? 3) as PublicFitScore);
+  const publicMode = !initialValues && !onValuesChange;
+  const handoff = usePublicHandoff("bike-fit", publicMode);
+  const [prefilled, setPrefilled] = useState(false);
+  const [prefilledFields, setPrefilledFields] = useState<HandoffField[]>([]);
+  // Adopt the first client session snapshot once; edits and account state remain authoritative.
+  if (publicMode && handoff.ready && !prefilled) {
+    setPrefilled(true);
+    const used: HandoffField[] = [];
+    const heightCmEntry = handoff.getPrefill("heightCm");
+    if (typeof heightCmEntry?.value === "number" && heightCmEntry.value >= 130 && heightCmEntry.value <= 210) {
+      setHeightCm(heightCmEntry.value);
+      used.push("heightCm");
+    }
+    const inseamCmEntry = handoff.getPrefill("inseamCm");
+    if (typeof inseamCmEntry?.value === "number" && inseamCmEntry.value >= 55 && inseamCmEntry.value <= 105) {
+      setInseamCm(inseamCmEntry.value);
+      setSource(inseamCmEntry.method === "measured" ? "measured"
+        : inseamCmEntry.method === "estimated" ? "estimated" : "missing");
+      used.push("inseamCm");
+    }
+    const flexibilityScoreEntry = handoff.getPrefill("flexibilityScore");
+    if (typeof flexibilityScoreEntry?.value === "number"
+      && flexibilityScoreEntry.value >= 1
+      && flexibilityScoreEntry.value <= 5) {
+      setFlexibility(flexibilityScoreEntry.value as PublicFitScore);
+      used.push("flexibilityScore");
+    }
+    const coreStabilityScoreEntry = handoff.getPrefill("coreStabilityScore");
+    if (typeof coreStabilityScoreEntry?.value === "number"
+      && coreStabilityScoreEntry.value >= 1
+      && coreStabilityScoreEntry.value <= 5) {
+      setCore(coreStabilityScoreEntry.value as PublicFitScore);
+      used.push("coreStabilityScore");
+    }
+    const categoryEntry = handoff.getPrefill("bikeCategory");
+    if (typeof categoryEntry?.value === "string" && ["road", "gravel", "mtb", "city"].includes(categoryEntry.value)) {
+      setCategory(categoryEntry.value as BikeCategory);
+      used.push("bikeCategory");
+    }
+    const goalEntry = handoff.getPrefill("ridingGoal");
+    if (typeof goalEntry?.value === "string" && GOALS.includes(goalEntry.value as Ambition)) {
+      setAmbition(goalEntry.value as Ambition);
+      used.push("ridingGoal");
+    }
+    setPrefilledFields(used);
+  }
   useCalculatorValuesChange({ heightCm, inseamCm, source, category, ambition, flexibility, core }, onValuesChange);
   const example = source === "missing";
   const baseline = useMemo(
@@ -105,6 +155,8 @@ export function BikeFitCalculatorForm({
 
   return (
     <ConfiguratorLayout
+      notice={publicMode && <HandoffPrefillNotice calculator="bike-fit" locale={locale} fields={prefilledFields} />}
+      afterResults={publicMode && <PersonalizeAdviceBlock calculator="bike-fit" locale={locale} />}
       eyebrow={copy.eyebrow}
       title={copy.title}
       description={copy.description}
@@ -125,7 +177,10 @@ export function BikeFitCalculatorForm({
               min={130}
               max={210}
               step={1}
-              onChange={setHeightCm}
+              onChange={(value) => {
+                  setHeightCm(value);
+                  handoff.touch("heightCm", value, "cm", "declared");
+                }}
               helperText={copy.heightHint}
               ticks={[{ value: 130 }, { value: 170 }, { value: 210 }]}
             />
@@ -137,14 +192,22 @@ export function BikeFitCalculatorForm({
               min={55}
               max={105}
               step={0.5}
-              onChange={setInseamCm}
+              onChange={(value) => {
+                  setInseamCm(value);
+                  handoff.touch("inseamCm", value, "cm", source === "missing" ? "declared" : source);
+                }}
               helperText={copy.inseamHint}
               ticks={[{ value: 55 }, { value: 80 }, { value: 105 }]}
             />
             <SegmentedControl
               aria-label={copy.source}
               value={source}
-              onValueChange={(value) => setSource(value as typeof source)}
+              onValueChange={(value) => {
+                setSource(value as typeof source);
+                if (value === "measured" || value === "estimated") {
+                  handoff.touch("inseamCm", inseamCm, "cm", value);
+                }
+              }}
               className="grid w-full grid-cols-3"
             >
               {SOURCES.map((value) => (
@@ -169,7 +232,10 @@ export function BikeFitCalculatorForm({
               <SegmentedControl
                 aria-labelledby="bike-category-label"
                 value={category}
-                onValueChange={(value) => setCategory(value as BikeCategory)}
+                onValueChange={(value) => {
+                  setCategory(value as BikeCategory);
+                  handoff.touch("bikeCategory", value as BikeCategory, "none", "bike");
+                  }}
                 className="grid w-full grid-cols-2 sm:grid-cols-4"
               >
                 {CATEGORIES.map((value) => (
@@ -186,7 +252,11 @@ export function BikeFitCalculatorForm({
               <RadioGroup
                 aria-labelledby="bike-goal-label"
                 value={ambition}
-                onValueChange={(value) => setAmbition(value as Ambition)}
+                onValueChange={(value) => {
+                  setAmbition(value as Ambition);
+                  // The rider profile groups aerodynamic goals under performance.
+                  handoff.touch("ridingGoal", value === "aero" ? "performance" : value as Ambition, "none");
+                  }}
                 className="grid-cols-2"
               >
                 {GOALS.map((value) => (
@@ -213,7 +283,10 @@ export function BikeFitCalculatorForm({
               step={1}
               valueLabel={copy.flexibilityLevels[flexibility - 1]}
               aria-valuetext={`${flexibility}: ${copy.flexibilityLevels[flexibility - 1]}`}
-              onChange={(value) => setFlexibility(value as PublicFitScore)}
+              onChange={(value) => {
+                setFlexibility(value as PublicFitScore);
+                handoff.touch("flexibilityScore", value, "score");
+                }}
               helperText={copy.flexibilityHint}
             />
             <Slider
@@ -224,7 +297,10 @@ export function BikeFitCalculatorForm({
               step={1}
               valueLabel={copy.coreLevels[core - 1]}
               aria-valuetext={`${core}: ${copy.coreLevels[core - 1]}`}
-              onChange={(value) => setCore(value as PublicFitScore)}
+              onChange={(value) => {
+                setCore(value as PublicFitScore);
+                handoff.touch("coreStabilityScore", value, "score");
+                }}
               helperText={copy.coreHint}
             />
           </StepCard>
@@ -233,12 +309,12 @@ export function BikeFitCalculatorForm({
       results={
         <>
           <div id="bike-fit-result" tabIndex={-1} className="scroll-mt-28 focus-visible:focus-ring">
-            <div className="mb-4 flex flex-wrap items-center gap-3">
+            {publicMode && <div className="mb-4 flex flex-wrap items-center gap-3">
               <p className="text-sm font-semibold">{copy.confidenceLabel}</p>
               <StatusChip status={example || confidence.level !== "high" ? "warn" : "ok"}>
                 {example ? copy.example : copy.confidence[confidence.level]}
               </StatusChip>
-            </div>
+            </div>}
             <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
               {example ? copy.example : copy.saddle}: {number.format(fit.saddleHeightMm)} mm
             </p>
@@ -332,14 +408,7 @@ export function BikeFitCalculatorForm({
           <section className="rounded-3xl bg-[var(--bbf-inkt)] p-6 text-[var(--bbf-wit)]">
             <h2 className="font-display text-2xl font-bold text-inherit">{copy.limitsTitle}</h2>
             <p className="mt-3 text-sm text-[var(--bbf-op-donker)]">{copy.limits}</p>
-            {continueAction ?? <Button
-              role="link"
-              className="mt-5 w-full whitespace-normal"
-              render={<Link href={withLocalePrefix("/login?src=bike-fit", locale)} />}
-            >
-              {copy.accountCta}
-            </Button>}
-            {!continueAction && <p className="mt-3 text-sm text-[var(--bbf-op-donker)]">{copy.accountHint}</p>}
+            {continueAction}
           </section>
         </>
       }

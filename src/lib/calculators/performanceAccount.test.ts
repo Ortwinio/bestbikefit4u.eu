@@ -5,7 +5,7 @@ const tools = ["power-speed", "climb-planner", "ftp-wkg", "fuel-hydration"] as c
 const profile = { weightKg: 68, ftpWatts: 245, sex: "female" };
 describe("performance account values", () => {
   it.each(tools)(
-    "restores %s before profile and defaults without inferring comparison table",
+    "uses live profile for %s and retains only saved preferences",
     (calculator) => {
       const defaults = calculatorDefaults[calculator];
       const saved = {
@@ -14,14 +14,14 @@ describe("performance account values", () => {
         comparison: "men" as const,
       };
       expect(resolveCalculatorValues(calculator, saved, profile)).toEqual({
-        values: saved,
-        fromProfile: false,
+        values: { ...saved, values: { ...saved.values, riderMass: 68, ftp: 245 } },
+        fromProfile: true,
       });
       const prefilled = resolveCalculatorValues(calculator, null, profile);
       expect(prefilled.values.comparison).toBe("both");
-      expect(prefilled.values.values.riderMass).toBe(calculator === "fuel-hydration" ? 75 : 68);
-      expect(prefilled.values.values.ftp).toBe(calculator === "fuel-hydration" ? 200 : 245);
-      expect(prefilled.fromProfile).toBe(calculator !== "fuel-hydration");
+      expect(prefilled.values.values.riderMass).toBe(68);
+      expect(prefilled.values.values.ftp).toBe(245);
+      expect(prefilled.fromProfile).toBe(true);
       expect(resolveCalculatorValues(calculator, null, null).values).toEqual(defaults);
       expect(resolveCalculatorValues(calculator, null, { weightKg: 500, ftpWatts: NaN }).fromProfile).toBe(
         false,

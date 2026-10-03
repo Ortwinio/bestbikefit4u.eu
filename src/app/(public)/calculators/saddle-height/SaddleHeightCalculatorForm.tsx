@@ -1,5 +1,10 @@
 "use client";
 
+import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
+import type { HandoffField } from "@/lib/handoff/store";
+import { PersonalizeAdviceBlock } from "@/components/calculators/PersonalizeAdviceBlock";
+import { HandoffPrefillNotice } from "@/components/calculators/HandoffPrefillNotice";
+
 import type { CalculatorValues } from "../../../../../convex/calculatorStates/validators";
 
 import Link from "next/link";
@@ -126,6 +131,42 @@ export function SaddleHeightCalculatorForm({
   const [compare, setCompare] = useState(initialValues?.compare ?? false);
   const [current, setCurrent] = useState(initialValues?.current ?? 750);
   const [currentConfirmed, setCurrentConfirmed] = useState(initialValues?.currentConfirmed ?? false);
+  const publicMode = !initialValues && !onValuesChange;
+  const handoff = usePublicHandoff("saddle-height", publicMode);
+  const [prefilled, setPrefilled] = useState(false);
+  const [prefilledFields, setPrefilledFields] = useState<HandoffField[]>([]);
+  // Adopt the first client session snapshot once; edits and account state remain authoritative.
+  if (publicMode && handoff.ready && !prefilled) {
+    setPrefilled(true);
+    const used: HandoffField[] = [];
+    const inseamCmEntry = handoff.getPrefill("inseamCm");
+    if (typeof inseamCmEntry?.value === "number" && inseamCmEntry.value >= 55 && inseamCmEntry.value <= 105) {
+      setInseamCm(inseamCmEntry.value);
+      setSource(inseamCmEntry.method === "measured" ? "measured"
+        : inseamCmEntry.method === "estimated" ? "estimated" : "missing");
+      used.push("inseamCm");
+    }
+    const currentSaddleHeightMmEntry = handoff.getPrefill("currentSaddleHeightMm");
+    if (typeof currentSaddleHeightMmEntry?.value === "number"
+      && currentSaddleHeightMmEntry.value >= 400
+      && currentSaddleHeightMmEntry.value <= 1100) {
+      setCurrent(currentSaddleHeightMmEntry.value);
+      setCompare(true);
+      setCurrentConfirmed(true);
+      used.push("currentSaddleHeightMm");
+    }
+    const categoryEntry = handoff.getPrefill("bikeCategory");
+    if (typeof categoryEntry?.value === "string" && ["road", "gravel", "mtb", "city"].includes(categoryEntry.value)) {
+      setCategory(categoryEntry.value as BikeCategory);
+      used.push("bikeCategory");
+    }
+    const goalEntry = handoff.getPrefill("ridingGoal");
+    if (typeof goalEntry?.value === "string" && GOALS.includes(goalEntry.value as Ambition)) {
+      setAmbition(goalEntry.value as Ambition);
+      used.push("ridingGoal");
+    }
+    setPrefilledFields(used);
+  }
   useCalculatorValuesChange({
     inseamCm, source, category, ambition, flexibility, core, compare, current, currentConfirmed,
   }, onValuesChange);
@@ -175,6 +216,10 @@ export function SaddleHeightCalculatorForm({
 
   return (
     <ConfiguratorLayout
+      notice={
+        publicMode && <HandoffPrefillNotice calculator="saddle-height" locale={locale} fields={prefilledFields} />
+      }
+      afterResults={publicMode && <PersonalizeAdviceBlock calculator="saddle-height" locale={locale} />}
       eyebrow={copy.eyebrow}
       title={copy.title}
       description={copy.description}
@@ -190,7 +235,10 @@ export function SaddleHeightCalculatorForm({
                 value={inseamCm}
                 valueLabel={number.format(inseamCm)}
                 unit="cm"
-                onChange={setInseamCm}
+                onChange={(value) => {
+                  setInseamCm(value);
+                  handoff.touch("inseamCm", value, "cm", source === "missing" ? "declared" : source);
+                }}
                 helperText={copy.inseamHint}
                 ticks={[{ value: 55 }, { value: 75 }, { value: 90 }, { value: 105 }]}
               />
@@ -201,13 +249,13 @@ export function SaddleHeightCalculatorForm({
                     label={copy.measured}
                     description={copy.measuredHint}
                     selected={source === "measured"}
-                    onClick={() => setSource("measured")}
+                    onClick={() => { setSource("measured"); handoff.touch("inseamCm", inseamCm, "cm", "measured"); }}
                   />
                   <OptionCard
                     label={copy.estimated}
                     description={copy.estimatedHint}
                     selected={source === "estimated"}
-                    onClick={() => setSource("estimated")}
+                    onClick={() => { setSource("estimated"); handoff.touch("inseamCm", inseamCm, "cm", "estimated"); }}
                   />
                 </div>
               </fieldset>
@@ -229,7 +277,10 @@ export function SaddleHeightCalculatorForm({
                 <SegmentedControl
                   aria-labelledby="saddle-category-label"
                   value={category}
-                  onValueChange={(value) => setCategory(value as BikeCategory)}
+                  onValueChange={(value) => {
+                    setCategory(value as BikeCategory);
+                    handoff.touch("bikeCategory", value as BikeCategory, "none", "bike");
+                    }}
                   className="grid w-full grid-cols-2 sm:grid-cols-4"
                 >
                   {CATEGORIES.map((value) => (
@@ -246,7 +297,11 @@ export function SaddleHeightCalculatorForm({
                 <SegmentedControl
                   aria-labelledby="saddle-goal-label"
                   value={ambition}
-                  onValueChange={(value) => setAmbition(value as Ambition)}
+                  onValueChange={(value) => {
+                    setAmbition(value as Ambition);
+                    // The rider profile groups aerodynamic goals under performance.
+                  handoff.touch("ridingGoal", value === "aero" ? "performance" : value as Ambition, "none");
+                    }}
                   className="grid w-full grid-cols-2 sm:grid-cols-4"
                 >
                   {GOALS.map((value) => (
@@ -264,7 +319,10 @@ export function SaddleHeightCalculatorForm({
                 step={1}
                 valueLabel={copy.flexibilityLevels[flexibility - 1]}
                 aria-valuetext={`${flexibility}: ${copy.flexibilityLevels[flexibility - 1]}`}
-                onChange={(value) => setFlexibility(value as PublicFitScore)}
+                onChange={(value) => {
+                  setFlexibility(value as PublicFitScore);
+                  handoff.touch("flexibilityScore", value, "score");
+                  }}
                 helperText={copy.flexibilityHint}
               />
               <Slider
@@ -275,7 +333,10 @@ export function SaddleHeightCalculatorForm({
                 step={1}
                 valueLabel={copy.coreLevels[core - 1]}
                 aria-valuetext={`${core}: ${copy.coreLevels[core - 1]}`}
-                onChange={(value) => setCore(value as PublicFitScore)}
+                onChange={(value) => {
+                  setCore(value as PublicFitScore);
+                  handoff.touch("coreStabilityScore", value, "score");
+                  }}
                 helperText={copy.coreHint}
               />
             </div>
@@ -297,11 +358,11 @@ export function SaddleHeightCalculatorForm({
             tabIndex={-1}
             className="rounded-[2rem] bg-[var(--bbf-inkt)] p-5 text-[var(--bbf-wit)] focus-visible:focus-ring sm:p-7"
           >
-            <div className="mb-5">
+            {publicMode && <div className="mb-5">
               <StatusChip status={example || source === "estimated" ? "warn" : "ok"}>
                 {example ? copy.example : copy.confidenceLevels[confidence.level]}
               </StatusChip>
-            </div>
+            </div>}
             <div
               className={
                 "grid items-start gap-5 sm:grid-cols-[minmax(0,1fr)_minmax(180px,0.8fr)] " +
@@ -351,7 +412,10 @@ export function SaddleHeightCalculatorForm({
                   {...CURRENT_HEIGHT_RANGE}
                   value={current}
                   unit="mm"
-                  onChange={setCurrent}
+                  onChange={(value) => {
+                  setCurrent(value);
+                  handoff.touch("currentSaddleHeightMm", value, "mm", "bike");
+                }}
                   helperText={copy.currentHint}
                 />
                 {!currentConfirmed ? (
@@ -360,7 +424,10 @@ export function SaddleHeightCalculatorForm({
                     <Button
                       variant="secondary"
                       className="w-full whitespace-normal"
-                      onClick={() => setCurrentConfirmed(true)}
+                      onClick={() => {
+                        setCurrentConfirmed(true);
+                        handoff.touch("currentSaddleHeightMm", current, "mm", "bike");
+                      }}
                     >
                       {copy.currentConfirm}
                     </Button>
@@ -391,17 +458,17 @@ export function SaddleHeightCalculatorForm({
             <h2 className="font-display text-xl font-bold">{copy.limitsTitle}</h2>
             <p className="mt-3 text-sm text-muted-foreground">{copy.drivers}</p>
             <p className="mt-2 text-sm text-muted-foreground">{copy.limits}</p>
-            {!example && (
+            {publicMode && !example && (
               <p className="mt-2 text-sm text-muted-foreground">{copy.confidenceHint}</p>
             )}
-            <Button
+            {publicMode && <><Button
               role="link"
               className="mt-5 w-full whitespace-normal"
               render={<Link href={ctaHref} />}
             >
               {copy.accountCta}
             </Button>
-            <p className="mt-3 text-sm text-muted-foreground">{copy.accountHint}</p>
+            <p className="mt-3 text-sm text-muted-foreground">{copy.accountHint}</p></>}
           </section>
         </>
       }

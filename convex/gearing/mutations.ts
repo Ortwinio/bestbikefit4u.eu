@@ -1,7 +1,9 @@
 import { calculateGearingAnalysis } from "../../src/lib/gearing-engine";
+import { resetAdviceProgress } from "../advice/revision";
 import { v } from "convex/values";
 import { mutation } from "../_generated/server";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
+import { captureInputProvenance, gearingUsedInputs } from "../advice/provenance";
 
 const DEFAULT_GEARING_ALGORITHM_VERSION = "gearing-v1";
 
@@ -193,12 +195,13 @@ export const createDashboardGearingSession = mutation({
       algorithmVersion: DEFAULT_GEARING_ALGORITHM_VERSION,
       scenarioName: args.scenarioName,
       input: args.input,
+      inputProvenance: await captureInputProvenance(ctx, userId, gearingUsedInputs(args.input, args.bikeId), args.bikeId),
       math: analysis.math,
       suitability: analysis.suitability,
       createdAt: Date.now(),
     };
     if (current) {
-      await ctx.db.patch(current._id, values);
+      await ctx.db.patch(current._id, { ...values, ...resetAdviceProgress(current) });
       return current._id;
     }
     return await ctx.db.insert("gearingSessions", values);

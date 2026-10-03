@@ -1,4 +1,7 @@
+import { bikeFieldMeasurement } from "./bikes/profileValidators";
+import { sessionProfileSnapshot, sessionObservationSnapshot } from "./sessions/profileSnapshot";
 import { bikeFitValues, calculatorId, calculatorState } from "./calculatorStates/validators";
+import { inputProvenanceValidator, adviceProgressValidator } from "./advice/validators";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { authTables } from "@convex-dev/auth/server";
@@ -232,7 +235,13 @@ export default defineSchema({
     emailPreferences: v.optional(v.object({
       service: v.boolean(),
       marketing: v.boolean(),
+      newsletter: v.optional(v.boolean()),
     })),
+    newsletterConsentAt: v.optional(v.number()),
+    newsletterConsentSource: v.optional(v.union(v.literal("signup"), v.literal("profile"), v.literal("preferences"))),
+    newsletterConsentLocale: v.optional(v.union(v.literal("nl"), v.literal("en"))),
+    newsletterConsentWordingVersion: v.optional(v.string()),
+    newsletterUnsubscribedAt: v.optional(v.number()),
     tokenIdentifier: v.optional(v.string()),
     createdAt: v.optional(v.number()),
     lastLoginAt: v.optional(v.number()),
@@ -284,24 +293,39 @@ export default defineSchema({
     .index("by_stripe_subscription", ["stripeSubscriptionId"])
     .index("by_suspended_at", ["suspendedAt"]),
 
+  newsletterConsentEvents: defineTable({
+    userId: v.id("users"),
+    requestId: v.string(),
+    subscribed: v.boolean(),
+    source: v.union(v.literal("signup"), v.literal("profile"), v.literal("preferences")),
+    locale: v.union(v.literal("nl"), v.literal("en")),
+    wordingVersion: v.string(),
+    createdAt: v.number(),
+  }).index("by_user_request", ["userId", "requestId"]),
+
   calculatorStates: defineTable({
+    adviceProgress: v.optional(adviceProgressValidator),
+    adviceRevision: v.optional(v.number()),
+    inputProvenance: v.optional(inputProvenanceValidator),
+    adviceOutput: v.optional(v.array(v.object({ key: v.string(), value: v.union(v.number(), v.string()), unit: v.string() }))),
     userId: v.id("users"),
     calculator: calculatorId,
     bikeId: v.optional(v.id("bikes")),
     state: calculatorState,
     updatedAt: v.number(),
-  }).index("by_user_calculator_bike", ["userId", "calculator", "bikeId"]),
+  }).index("by_user_calculator_bike", ["userId", "calculator", "bikeId"])
+    .index("by_user_updated", ["userId", "updatedAt"]),
 
   // User profiles - body measurements for bike fitting
   profiles: defineTable({
     userId: v.id("users"),
 
     // Required body measurements (in cm)
-    heightCm: v.number(),
-    inseamCm: v.number(),
-    armLengthCm: v.number(),
-    torsoLengthCm: v.number(),
-    shoulderWidthCm: v.number(),
+    heightCm: v.optional(v.number()),
+    inseamCm: v.optional(v.number()),
+    armLengthCm: v.optional(v.number()),
+    torsoLengthCm: v.optional(v.number()),
+    shoulderWidthCm: v.optional(v.number()),
 
     // Optional measurements
     femurLengthCm: v.optional(v.number()),
@@ -311,16 +335,22 @@ export default defineSchema({
     hipCircumferenceCm: v.optional(v.number()),
 
     // Flexibility assessment
-    flexibilityScore: v.union(
+    flexibilityScore: v.optional(v.union(
       v.literal("very_limited"),
       v.literal("limited"),
       v.literal("average"),
       v.literal("good"),
       v.literal("excellent")
-    ),
+    )),
 
     // Core stability (1-5 scale)
-    coreStabilityScore: v.number(),
+    coreStabilityScore: v.optional(v.number()),
+    ftpWatts: v.optional(v.number()),
+    ftpMethod: v.optional(v.string()),
+    ftpMeasuredAt: v.optional(v.number()),
+    shoeSizeEu: v.optional(v.number()),
+    cleatSystem: v.optional(v.string()),
+    sweatProfile: v.optional(v.string()),
 
     // Injury history
     injuryHistory: v.optional(
@@ -340,6 +370,8 @@ export default defineSchema({
 
     // Additional profile data
     age: v.optional(v.number()),
+    sex: v.optional(v.union(v.literal("female"), v.literal("male"), v.literal("prefer_not_to_say"))),
+    birthDate: v.optional(v.string()),
     weightKg: v.optional(v.number()),
     weightUpdatedAt: v.optional(v.number()),
 
@@ -388,6 +420,49 @@ export default defineSchema({
     updatedAt: v.number(),
     adminNotes: v.optional(v.string()),
   }).index("by_user", ["userId"]),
+
+  profileObservations: defineTable({
+    userId: v.id("users"),
+    bikeId: v.optional(v.id("bikes")),
+    field: v.string(),
+    value: v.union(v.number(), v.string(), v.array(v.string()), v.array(v.number())),
+    unit: v.string(),
+    kind: v.union(v.literal("measured"), v.literal("estimated"), v.literal("derived"), v.literal("declared")),
+    method: v.string(),
+    source: v.union(v.literal("public_handoff"), v.literal("legacy_migration"), v.literal("profile_edit")),
+    recordedAt: v.number(),
+    status: v.union(v.literal("current"), v.literal("superseded")),
+  }).index("by_user_field", ["userId", "field"])
+    .index("by_user_field_bike_status", ["userId", "field", "bikeId", "status"])
+    .index("by_bike", ["bikeId"]),
+
+  profilePrompts: defineTable({
+    userId: v.id("users"),
+    key: v.string(),
+    skipCount: v.number(),
+    skippedUntil: v.optional(v.number()),
+    profileOnly: v.boolean(),
+  }).index("by_user_key", ["userId", "key"]),
+
+  profilePromptCards: defineTable({
+    userId: v.id("users"),
+    sessionKey: v.string(),
+    shownAt: v.number(),
+    hiddenUntil: v.optional(v.number()),
+    questions: v.array(v.object({
+      key: v.string(),
+      field: v.string(),
+      bikeId: v.optional(v.id("bikes")),
+      status: v.union(v.literal("pending"), v.literal("answered"), v.literal("skipped")),
+    })),
+  }).index("by_user_session", ["userId", "sessionKey"])
+    .index("by_user_shown", ["userId", "shownAt"]),
+
+  profilePromptActivity: defineTable({
+    userId: v.id("users"),
+    calculator: v.string(),
+    viewedAt: v.number(),
+  }).index("by_user_calculator", ["userId", "calculator"]),
 
   // Bike catalogue - brands and models
   bikeBrands: defineTable({
@@ -440,6 +515,14 @@ export default defineSchema({
       v.literal("city")
     ),
 
+    saddleWidthMm: v.optional(v.number()),
+    saddleModel: v.optional(v.string()),
+    pedalModel: v.optional(v.string()),
+    cleatSystem: v.optional(v.string()),
+    maxSeatpostMm: v.optional(v.number()),
+    maxSpacerStackMm: v.optional(v.number()),
+    fieldMeasurements: v.optional(v.record(v.string(), bikeFieldMeasurement)),
+
     // Current geometry (optional - for existing bikes)
     currentGeometry: v.optional(
       v.object({
@@ -455,11 +538,19 @@ export default defineSchema({
     currentSetup: v.optional(
       v.object({
         saddleHeightMm: v.optional(v.number()),
+        saddleHeightMeasurement: v.optional(v.object({
+          measurePoint: v.literal("bb_center_to_saddle_top"),
+          measuredAt: v.number(),
+          source: v.union(v.literal("public_handoff"), v.literal("profile_edit")),
+        })),
         saddleSetbackMm: v.optional(v.number()),
         stemLengthMm: v.optional(v.number()),
         stemAngle: v.optional(v.number()),
         handlebarWidthMm: v.optional(v.number()),
         crankLengthMm: v.optional(v.number()),
+        handlebarReachMm: v.optional(v.number()),
+        handlebarDropMm: v.optional(v.number()),
+        spacersMm: v.optional(v.number()),
       })
     ),
     gearing: v.optional(bikeGearingValidator),
@@ -888,6 +979,9 @@ export default defineSchema({
     .index("by_user", ["userId"]),
 
   saddleWidthSessions: defineTable({
+    adviceProgress: v.optional(adviceProgressValidator),
+    adviceRevision: v.optional(v.number()),
+    inputProvenance: v.optional(inputProvenanceValidator),
     userId: v.optional(v.id("users")),
     bikeId: v.optional(v.id("bikes")),
     sessionType: v.union(v.literal("public"), v.literal("dashboard")),
@@ -929,6 +1023,9 @@ export default defineSchema({
     .index("by_created_at", ["createdAt"]),
 
   gearingSessions: defineTable({
+    adviceProgress: v.optional(adviceProgressValidator),
+    adviceRevision: v.optional(v.number()),
+    inputProvenance: v.optional(inputProvenanceValidator),
     userId: v.optional(v.id("users")),
     bikeId: v.optional(v.id("bikes")),
     sessionType: v.union(v.literal("public"), v.literal("dashboard")),
@@ -998,6 +1095,9 @@ export default defineSchema({
     .index("by_user", ["userId"]),
 
   pressureCalculations: defineTable({
+    adviceProgress: v.optional(adviceProgressValidator),
+    adviceRevision: v.optional(v.number()),
+    inputProvenance: v.optional(inputProvenanceValidator),
     userId: v.id("users"),
     bikeId: v.optional(v.id("bikes")),
     tireSetupId: v.optional(v.id("tireSetups")),
@@ -1068,6 +1168,9 @@ export default defineSchema({
 
   // Fit sessions - each time user goes through fitting process
   fitSessions: defineTable({
+    profileSnapshot: v.optional(sessionProfileSnapshot),
+    profileObservationSnapshot: v.optional(sessionObservationSnapshot),
+    inputProvenance: v.optional(inputProvenanceValidator),
     userId: v.id("users"),
     calculatorInputs: v.optional(bikeFitValues),
     bikeId: v.optional(v.id("bikes")),
@@ -1202,6 +1305,9 @@ export default defineSchema({
 
   // Fit recommendations - generated results
   recommendations: defineTable({
+    adviceProgress: v.optional(adviceProgressValidator),
+    adviceRevision: v.optional(v.number()),
+    inputProvenance: v.optional(inputProvenanceValidator),
     sessionId: v.id("fitSessions"),
     userId: v.id("users"),
     bikeId: v.optional(v.id("bikes")),

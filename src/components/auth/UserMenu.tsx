@@ -1,5 +1,8 @@
 "use client";
 
+import { clearHandoff } from "@/lib/handoff/store";
+import { clearNewsletterSignupIntent } from "@/lib/newsletter/signupIntent";
+
 import { useState, useRef, useEffect } from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useQuery } from "convex/react";
@@ -43,6 +46,8 @@ export function UserMenu() {
   };
 
   const handleSignOut = async () => {
+    clearHandoff();
+    clearNewsletterSignupIntent();
     await signOut();
     router.push(withLocalePrefix("/", locale));
   };

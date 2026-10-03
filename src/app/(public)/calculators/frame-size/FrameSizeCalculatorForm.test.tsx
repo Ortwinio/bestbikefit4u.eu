@@ -5,7 +5,7 @@ import { FrameSizeCalculatorForm } from "./FrameSizeCalculatorForm";
 import { runFrameSizeCalculation } from "@/lib/public-calculators/fitAdapters";
 import { frameSizeMessages } from "@/i18n/calculators/frameSize";
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); sessionStorage.clear(); });
 
 describe("FrameSizeCalculatorForm", () => {
   it.each(["en", "nl"] as const)(

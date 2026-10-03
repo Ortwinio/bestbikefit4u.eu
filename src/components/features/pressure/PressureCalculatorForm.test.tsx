@@ -6,7 +6,7 @@ import en from "@/i18n/messages/en";
 import { calculateBasicPressure } from "@/lib/pressure-engine";
 import { PressureCalculatorForm, type PressureCalculatorValues } from "./PressureCalculatorForm";
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); sessionStorage.clear(); });
 const basic = {
   discipline: "road",
   bodyWeightKg: 75,

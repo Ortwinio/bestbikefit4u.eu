@@ -3,6 +3,7 @@ import { BRAND } from "../../config/brand";
 export const MARKETING_EVENT_TYPES = [
   "calculator_result_view",
   "calculator_login_cta_click",
+  "newsletter_opt_in",
   "cta_click",
   "login_code_requested",
   "login_code_resent",

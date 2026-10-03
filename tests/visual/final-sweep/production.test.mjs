@@ -28,3 +28,25 @@ test("source test fixtures are copied and fixture edits invalidate the productio
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+test("script modules imported by source tests are copied and invalidate the cache", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "qa-production-scripts-"));
+  const root = join(directory, "repo");
+  const snapshot = join(directory, "snapshot");
+  try {
+    await mkdir(join(root, "scripts/lib"), { recursive: true });
+    const paths = ["scripts/lib/html.mjs", "scripts/import-guide-rewrites.mjs"];
+    for (const path of paths) await writeFile(join(root, path), "export const fixture = 1;\n");
+    const original = await fingerprint(root, {});
+    await copyBuildInputs(root, snapshot);
+    for (const path of paths) assert.equal(await readFile(join(snapshot, path), "utf8"), "export const fixture = 1;\n");
+    assert.equal(await fingerprint(snapshot, {}), original);
+    for (const path of paths) {
+      await writeFile(join(root, path), "export const fixture = 2;\n");
+      assert.notEqual(await fingerprint(root, {}), original);
+      await writeFile(join(root, path), "export const fixture = 1;\n");
+    }
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});

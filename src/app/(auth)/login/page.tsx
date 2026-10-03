@@ -11,8 +11,16 @@ import {
 } from "@/components/prototyper-ui/ui/card";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { Label } from "@/components/prototyper-ui/ui/label";
-import { Input } from "@/components/ui";
+import { CheckboxGroup, Input, Selectable } from "@/components/ui";
 import { LoginPresentation } from "@/components/account/LoginPresentation";
+import { LoginHandoffPanel } from "@/components/account/LoginHandoffPanel";
+import { NewsletterSignupCompletion } from "@/components/account/NewsletterSignupCompletion";
+import { newsletterCopy } from "@/i18n/account/newsletter";
+import {
+  clearNewsletterSignupIntent, createNewsletterSignupIntent, readNewsletterSignupIntent,
+  type NewsletterSignupIntent,
+} from "@/lib/newsletter/signupIntent";
+import { loginHandoffCopy } from "@/i18n/account/loginHandoff";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
@@ -264,6 +272,16 @@ export default function LoginPage() {
   const campaignActive = isConsumerCampaignActive();
   const campaign = getConsumerCampaignCopy(locale);
   const sourceTag = searchParams?.get("src") ?? undefined;
+  const isHandoff = searchParams?.get("handoff") === "1";
+  const redirectTo = withLocalePrefix(isHandoff ? "/welcome" : "/dashboard", locale);
+  const Presentation = isHandoff ? LoginHandoffPanel : LoginPresentation;
+  const newsletterText = newsletterCopy[locale];
+  const newsletterReturnTo = `${withLocalePrefix("/login", locale)}${isHandoff ? "?handoff=1" : ""}`;
+  const [newsletterChecked, setNewsletterChecked] = useState(false);
+  const [newsletterIntent, setNewsletterIntent] = useState<NewsletterSignupIntent | null>(null);
+  const [newsletterLoaded, setNewsletterLoaded] = useState(false);
+  const [newsletterStorageFailed, setNewsletterStorageFailed] = useState(false);
+  const [verifiedNewsletterEmail, setVerifiedNewsletterEmail] = useState<string | null>(null);
 
   const [step, setStep] = useState<AuthStep>("email");
   const [email, setEmail] = useState("");
@@ -317,10 +335,55 @@ export default function LoginPage() {
   );
 
   useEffect(() => {
-    if (!isAuthLoading && isAuthenticated) {
-      router.push(withLocalePrefix("/dashboard", locale));
+    if (!isAuthLoading && isAuthenticated && newsletterLoaded && !newsletterIntent) {
+      router.push(redirectTo);
     }
-  }, [isAuthenticated, isAuthLoading, locale, router]);
+  }, [isAuthenticated, isAuthLoading, redirectTo, router, newsletterLoaded, newsletterIntent]);
+
+  useEffect(() => {
+    let active = true;
+    Promise.resolve().then(() => {
+      if (!active) return;
+      setNewsletterIntent(readNewsletterSignupIntent());
+      setNewsletterLoaded(true);
+    });
+    return () => { active = false; };
+  }, []);
+
+  function clearNewsletterChoice() {
+    clearNewsletterSignupIntent();
+    setNewsletterIntent(null);
+    setVerifiedNewsletterEmail(null);
+  }
+
+  function stageNewsletter(provider: NewsletterSignupIntent["provider"]) {
+    clearNewsletterChoice();
+    if (!newsletterChecked) return null;
+    try {
+      const { intent, persisted } = createNewsletterSignupIntent(locale, provider);
+      setNewsletterIntent(intent);
+      setNewsletterStorageFailed(!persisted);
+      return intent;
+    } catch {
+      setNewsletterStorageFailed(true);
+      return null;
+    }
+  }
+
+  const newsletterChoice = <div className="mb-4 space-y-2">
+    <CheckboxGroup aria-label={newsletterText.title} value={newsletterChecked ? ["newsletter"] : []}
+      onValueChange={values => {
+        const checked = values.includes("newsletter");
+        setNewsletterChecked(checked);
+        if (!checked) clearNewsletterChoice();
+      }}>
+      <Selectable mode="checkbox" value="newsletter" label={newsletterText.signupLabel}
+        description={newsletterText.description} disabled={isLoading} />
+    </CheckboxGroup>
+    {newsletterStorageFailed && <p role="status" className="text-sm text-muted-foreground">
+      {newsletterText.storageNotice}
+    </p>}
+  </div>;
 
   useEffect(() => {
     if (hasTrackedLoginViewRef.current) return;
@@ -357,7 +420,9 @@ export default function LoginPage() {
     try {
       // Preserve case for existing case-sensitive Convex account identifiers.
       const submittedEmail = email.trim();
-      await signIn("resend", { email: submittedEmail, locale, redirectTo: withLocalePrefix("/dashboard", locale) });
+      const intent = stageNewsletter("email");
+      await signIn("resend", { email: submittedEmail, locale,
+        redirectTo: intent ? newsletterReturnTo : redirectTo });
       setEmail(submittedEmail);
       void logMarketingEvent({
         eventType: "login_code_requested",
@@ -393,10 +458,13 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const result = await signIn("resend", { email, code, locale, redirectTo: withLocalePrefix("/dashboard", locale) });
+      const intent = newsletterIntent ?? (newsletterChecked ? stageNewsletter("email") : null);
+      const result = await signIn("resend", { email, code, locale,
+        redirectTo: intent ? newsletterReturnTo : redirectTo });
       if (!result.signingIn) {
         throw new Error("Verification did not establish a session.");
       }
+      if (intent?.provider === "email") setVerifiedNewsletterEmail(email);
       void logMarketingEvent({
         eventType: "login_verified",
         locale,
@@ -429,7 +497,7 @@ export default function LoginPage() {
     setResendSuccess(false);
 
     try {
-      await signIn("resend", { email, locale, redirectTo: withLocalePrefix("/dashboard", locale) });
+      await signIn("resend", { email, locale, redirectTo: newsletterIntent ? newsletterReturnTo : redirectTo });
       void logMarketingEvent({
         eventType: "login_code_resent",
         locale,
@@ -456,6 +524,8 @@ export default function LoginPage() {
   };
 
   const handleChangeEmail = () => {
+    clearNewsletterChoice();
+    setNewsletterChecked(false);
     setStep("email");
     setCode("");
     setError(null);
@@ -476,8 +546,9 @@ export default function LoginPage() {
     let didRedirect = false;
 
     try {
+      const intent = stageNewsletter("google");
       const result = await signIn("google", {
-        redirectTo: withLocalePrefix("/dashboard", locale),
+        redirectTo: intent ? newsletterReturnTo : redirectTo,
       });
       void logMarketingEvent({
         eventType: "login_google_started",
@@ -494,10 +565,12 @@ export default function LoginPage() {
       }
       oauthRedirectingRef.current = false;
       setOAuthBeforeUnloadSuppression(false);
+      clearNewsletterChoice();
       setError(text.googleSignInError);
     } catch (err) {
       oauthRedirectingRef.current = false;
       setOAuthBeforeUnloadSuppression(false);
+      clearNewsletterChoice();
       console.error("Failed to start Google sign-in:", err);
       void logMarketingEvent({
         eventType: "login_google_error",
@@ -535,7 +608,7 @@ export default function LoginPage() {
         throw new Error("localhost_dev_login_failed");
       }
 
-      window.location.href = withLocalePrefix("/dashboard", locale);
+      window.location.href = redirectTo;
     } catch (err) {
       console.error("Failed to start localhost dev login:", err);
       setError(text.localhostDevLoginError);
@@ -543,25 +616,32 @@ export default function LoginPage() {
     }
   };
 
+  if (isAuthenticated && newsletterIntent) {
+    return <Presentation locale={locale}>
+      <NewsletterSignupCompletion intent={newsletterIntent} locale={locale}
+        verifiedEmail={verifiedNewsletterEmail} onComplete={clearNewsletterChoice} />
+    </Presentation>;
+  }
+
   if (step === "success") {
     return (
-      <LoginPresentation locale={locale}>
+      <Presentation locale={locale}>
         <Card className="gap-0 overflow-visible border-0 bg-transparent p-0 shadow-none" role="status" aria-live="polite">
           <CardContent className="px-0 pt-8 pb-8 text-center">
             <CheckCircle className="mx-auto mb-4 h-16 w-16 text-success-text" />
             <h1 className="mb-2 font-display text-[40px] font-extrabold leading-[1.05] tracking-tight text-foreground">
               {text.successTitle}
             </h1>
-            <p className="text-muted-foreground">{text.successSubtitle}</p>
+            <p className="text-muted-foreground">{isHandoff ? loginHandoffCopy[locale].success : text.successSubtitle}</p>
           </CardContent>
         </Card>
-      </LoginPresentation>
+      </Presentation>
     );
   }
 
   if (step === "code") {
     return (
-      <LoginPresentation locale={locale} benefits={uspPanel}>
+      <Presentation locale={locale} benefits={uspPanel}>
         <Card className="gap-0 overflow-visible border-0 bg-transparent p-0 shadow-none">
           <CardHeader className="space-y-4 px-0 pb-6">
             <Button
@@ -598,6 +678,7 @@ export default function LoginPage() {
             </div>
 
             <form onSubmit={handleVerifyCode} className="space-y-4">
+              {newsletterChoice}
               <AuthField
                 id="verification-code"
                 label={text.verificationCodeLabel}
@@ -628,7 +709,7 @@ export default function LoginPage() {
               )}
 
               <Button type="submit" className="min-h-14 w-full whitespace-normal" isPending={isLoading}>
-                {text.verifyCode}
+                {isHandoff ? loginHandoffCopy[locale].verify : text.verifyCode}
               </Button>
             </form>
 
@@ -652,18 +733,19 @@ export default function LoginPage() {
             </div>
           </CardContent>
         </Card>
-      </LoginPresentation>
+      </Presentation>
     );
   }
 
   return (
-    <LoginPresentation locale={locale} benefits={uspPanel}>
+    <Presentation locale={locale} benefits={uspPanel}>
       <Card className="gap-0 overflow-visible border-0 bg-transparent p-0 shadow-none">
         <CardHeader className="space-y-3 px-0 pb-6">
-          <h1 className="font-display text-[44px] font-extrabold leading-[1.05] tracking-tight lg:text-[40px]">{text.signInTitle}</h1>
-          <p className="text-base text-muted-foreground">{text.noPasswordHint}</p>
+          <h1 className={`font-display font-extrabold leading-[1.05] tracking-tight ${isHandoff ? "text-[36px]" : "text-[44px] lg:text-[40px]"}`}>{isHandoff ? searchParams?.get("mode") === "signin" ? loginHandoffCopy[locale].signIn : loginHandoffCopy[locale].accountHeading : text.signInTitle}</h1>
+          <p className="text-base text-muted-foreground">{isHandoff ? loginHandoffCopy[locale].passwordless : text.noPasswordHint}</p>
         </CardHeader>
         <CardContent className="px-0">
+          {newsletterChoice}
           {googleAuthEnabled ? (
             <>
               <Button
@@ -717,7 +799,7 @@ export default function LoginPage() {
               disabled={authActionDisabled}
             >
               <Mail className="h-4 w-4 mr-2" />
-              {text.sendCode}
+              {isHandoff ? loginHandoffCopy[locale].sendCode : text.sendCode}
             </Button>
           </form>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{text.accountCreationHint}</p>
@@ -749,7 +831,7 @@ export default function LoginPage() {
           </div>
         </CardContent>
       </Card>
-      {campaignActive ? (
+      {campaignActive && !isHandoff ? (
         <Card className="gap-0 rounded-3xl border border-border bg-card shadow-none">
           <CardContent className="space-y-4 px-6 py-6">
             <div>
@@ -773,6 +855,6 @@ export default function LoginPage() {
           </CardContent>
         </Card>
       ) : null}
-    </LoginPresentation>
+    </Presentation>
   );
 }

@@ -3,11 +3,30 @@ import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { requireUserId } from "../lib/authz";
 import type { Doc } from "../_generated/dataModel";
+import { hasFitMeasurements } from "../../shared/profileFitReadiness";
+export { getMyProvenance } from "./provenance";
+export { nextPrompts } from "./prompts";
+
+export const getHandoffContext = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await requireUserId(ctx);
+    const profile = await ctx.db.query("profiles").withIndex("by_user", (range) => range.eq("userId", userId)).unique();
+    const observations = await ctx.db.query("profileObservations")
+      .withIndex("by_user_field", (range) => range.eq("userId", userId))
+      .filter((filter) => filter.and(
+        filter.eq(filter.field("status"), "current"),
+        filter.eq(filter.field("bikeId"), undefined),
+      )).collect();
+    return { profile, observations };
+  },
+});
 
 // Returns true when all required rider profile questions have been answered.
 // painAreas must be non-empty when hasPain === "yes".
 export function isRiderProfileComplete(profile: Doc<"profiles">): boolean {
   return (
+    hasFitMeasurements(profile) &&
     profile.experienceLevel !== undefined &&
     profile.weeklyHours !== undefined &&
     profile.typicalRideLength !== undefined &&
@@ -65,7 +84,7 @@ export const hasCompletedProfile = query({
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .unique();
 
-    return profile !== null;
+    return hasFitMeasurements(profile);
   },
 });
 

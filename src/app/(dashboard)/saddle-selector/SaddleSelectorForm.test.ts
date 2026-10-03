@@ -7,17 +7,17 @@ import {
 import { getSaddleInitialValues } from "./saddleAccountState";
 
 describe("SaddleSelectorForm helpers", () => {
-  it("resolves saved measurements before profile values before public defaults", () => {
+  it("resolves live profile measurements before saved values and public defaults", () => {
     const initial = getSaddleInitialValues(
       { measurementMethod: "estimated", heightCm: 190 },
       { heightCm: 180, weightKg: 82, hipCircumferenceCm: 999 },
       { bikeType: "gravel", primaryGoal: "comfort" },
     );
     expect(initial.values).toMatchObject({
-      inputMethod: "estimated", heightCm: 190, weightKg: 82, hipCircumferenceCm: 100,
+      inputMethod: "estimated", heightCm: 180, weightKg: 82, hipCircumferenceCm: 100,
       ridingType: "gravel", postureCategory: "upright",
     });
-    expect(initial.profileFields).toEqual(["weightKg"]);
+    expect(initial.profileFields).toEqual(["heightCm", "weightKg"]);
     expect(getSaddleInitialValues(null, null).values).toMatchObject({
       inputMethod: "measured", sitBoneWidthMm: 125, ridingType: "endurance_road", postureCategory: "balanced",
     });

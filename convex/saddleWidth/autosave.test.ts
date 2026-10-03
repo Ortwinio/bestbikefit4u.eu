@@ -18,7 +18,9 @@ it("updates the exact user's unlinked saddle setup, reloads it, and rejects a fo
   const rows: Record<string, unknown>[] = [];
   const db = {
     get: async () => ({ userId: "other" }),
-    query: () => ({ withIndex: () => ({ order: () => ({ collect: async () => [...rows].reverse() }) }) }),
+    query: (table: string) => ({ withIndex: () => ({ unique: async () => null,
+      collect: async () => [],
+      order: () => ({ collect: async () => table === "saddleWidthSessions" ? [...rows].reverse() : [] }) }) }),
     insert: vi.fn(async (_table: string, values: Record<string, unknown>) => {
       rows.push({ _id: "saddle1", ...values }); return "saddle1";
     }),

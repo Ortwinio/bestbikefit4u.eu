@@ -1,5 +1,7 @@
 "use client";
 
+import { BikeProfilePanel } from "@/components/bikes/BikeProfilePanel";
+import { bikeProfileMessages } from "@/i18n/account/bikeProfile";
 import { DeleteBikeAction } from "@/components/bikes/DeleteBikeAction";
 
 import { use, useEffect, useRef, useState } from "react";
@@ -41,6 +43,7 @@ export default function BikeDetailPage({ params }: { params: Promise<{ bikeId: s
   const { bikeId } = use(params);
   const { locale, messages: baseMessages } = useDashboardMessages();
   const messages = getBikeLanguageMessages(locale, baseMessages);
+  const profileCopy = bikeProfileMessages[locale];
   const toast = useToast();
   const logMarketingEvent = useMarketingEventLogger();
   const geometryViewTrackedRef = useRef<string | null>(null);
@@ -51,7 +54,7 @@ export default function BikeDetailPage({ params }: { params: Promise<{ bikeId: s
   } | null>(null);
   const liveBikeDetail = useQuery(api.bikes.queries.getDetail,
     deletion?.pending ? "skip" : { bikeId: bikeId as Id<"bikes"> });
-  const bikeDetail = liveBikeDetail ?? deletion?.detail;
+  const bikeDetail = liveBikeDetail === undefined ? deletion?.detail : liveBikeDetail;
   const ensureDefaultBikeProfile = useMutation(api.bikeProfiles.mutations.ensureDefaultForBike);
   const ensurePassportIdForBike = useMutation(api.bikes.mutations.ensurePassportIdForBike);
   const bike = bikeDetail?.bike ?? null;
@@ -186,310 +189,332 @@ export default function BikeDetailPage({ params }: { params: Promise<{ bikeId: s
         />
       </div>
 
-      <Card variant="bordered" className="bg-card overflow-hidden">
-        <CardContent className="grid gap-6 p-0 lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.9fr)]">
-          <div className="space-y-5 bg-primary-soft px-6 py-6">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-                {getBikeTypeLabel(bike.bikeType, messages)}
-              </span>
-              {hasFit ? (
-                <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-foreground">
-                  {messages.bikes.identity.fitBadge}
-                </span>
-              ) : null}
-              {hasPressureSetup ? (
-                <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-foreground">
-                  {messages.bikes.identity.pressureBadge}
-                </span>
-              ) : null}
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                {messages.bikes.title}
-              </p>
-              <h2 className="text-3xl font-bold tracking-tight text-foreground">{bike.name}</h2>
-              <p className="text-base text-muted-foreground">{bikeSubtitle}</p>
-              <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-                {messages.bikes.cards.bikeSummary.replace(
-                  "{bikeType}",
-                  getBikeTypeLabel(bike.bikeType, messages),
-                )}
-              </p>
-            </div>
+      <nav aria-label={profileCopy.profileNav}
+        className="flex flex-wrap gap-2 rounded-3xl border border-border bg-card p-2">
+        {[
+          { href: "/profile", label: profileCopy.profileLink },
+          { href: "/profile/advice", label: profileCopy.adviceLink },
+          { href: "/bikes", label: profileCopy.bikesLink, current: true },
+        ].map((item) => <Link key={item.href} href={withLocalePrefix(item.href, locale)}
+          aria-current={item.current ? "page" : undefined}
+          className={"inline-flex min-h-11 items-center rounded-full px-4 py-2 font-semibold focus-visible:focus-ring "
+            + (item.current ? "bg-foreground text-background" : "text-foreground")}>
+          {item.label}
+        </Link>)}
+      </nav>
+      <BikeProfilePanel key={bike._id} bikeId={bike._id} locale={locale} detail={bikeDetail} />
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="sm:col-span-2 rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                      {messages.bikes.identity.passportLabel}
-                    </p>
-                    <p className="mt-2 font-mono text-lg font-semibold text-foreground">
-                      {bikePassportId ?? messages.bikes.identity.passportMissing}
-                    </p>
-                    <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-                      {messages.bikes.identity.passportDescription}
-                    </p>
-                  </div>
-                  {bikePassportId ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={async () => {
-                        try {
-                          await navigator.clipboard.writeText(bikePassportId);
-                          toast.success({
-                            description: messages.bikes.identity.passportCopied,
-                          });
-                        } catch {
-                          toast.error({
-                            description: messages.bikes.identity.passportCopyFailed,
-                          });
-                        }
-                      }}
-                    >
-                      <Copy className="h-4 w-4" />
-                      {messages.bikes.identity.passportCopyAction}
-                    </Button>
+      <details className="rounded-3xl border border-border bg-card p-4 sm:p-6">
+        <summary className="min-h-11 cursor-pointer font-display text-xl font-bold focus-visible:focus-ring">
+          {profileCopy.detailExtrasLabel}
+        </summary>
+        <div className="mt-4 space-y-6">
+          <Card variant="bordered" className="bg-card overflow-hidden">
+            <CardContent className="grid gap-6 p-0 lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.9fr)]">
+              <div className="space-y-5 bg-primary-soft px-6 py-6">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
+                    {getBikeTypeLabel(bike.bikeType, messages)}
+                  </span>
+                  {hasFit ? (
+                    <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-foreground">
+                      {messages.bikes.identity.fitBadge}
+                    </span>
+                  ) : null}
+                  {hasPressureSetup ? (
+                    <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-foreground">
+                      {messages.bikes.identity.pressureBadge}
+                    </span>
                   ) : null}
                 </div>
-              </div>
-              <div className="rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
-                <p
-                  className={
-                    "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] " +
-                    "text-muted-foreground"
-                  }
-                >
-                  <Route className="h-4 w-4" />
-                  {messages.fit.sections.ridingStyle}
-                </p>
-                <p className="mt-2 text-lg font-semibold text-foreground">{ridingStyleLabel}</p>
-              </div>
-              <div className="rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
-                <p
-                  className={
-                    "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] " +
-                    "text-muted-foreground"
-                  }
-                >
-                  <Target className="h-4 w-4" />
-                  {messages.fit.sections.primaryGoal}
-                </p>
-                <p className="mt-2 text-lg font-semibold text-foreground">{primaryGoalLabel}</p>
-              </div>
-              <div className="rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
-                <p
-                  className={
-                    "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] " +
-                    "text-muted-foreground"
-                  }
-                >
-                  <Gauge className="h-4 w-4" />
-                  {messages.pressure.bikeDetail.activeWheelset}
-                </p>
-                <p className="mt-2 text-lg font-semibold text-foreground">
-                  {activeWheelset?.name ?? messages.pressure.bikeDetail.noWheelset}
-                </p>
-              </div>
-              <div className="rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
-                <p
-                  className={
-                    "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] " +
-                    "text-muted-foreground"
-                  }
-                >
-                  <Ruler className="h-4 w-4" />
-                  {messages.pressure.bikeDetail.activeTireSetup}
-                </p>
-                <p className="mt-2 text-lg font-semibold text-foreground">
-                  {activeTireSetup?.name ?? messages.pressure.bikeDetail.noTireSetup}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4 px-6 py-6">
-            <div className="rounded-[var(--radius-lg)] border border-border bg-secondary/25 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                {messages.results.title}
-              </p>
-              {recommendation ? (
-                <div className="mt-3 space-y-3">
-                  <p className="text-sm text-muted-foreground">
-                    {messages.results.algorithmVersionLabel}:{" "}
-                    <span className="font-semibold text-foreground">{recommendation.algorithmVersion}</span>
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                    {messages.bikes.title}
                   </p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    render={
-                      <Link href={withLocalePrefix(`/fit/${recommendation.sessionId}/results`, locale)} />
-                    }
-                  >
-                    {messages.home.recentSessions.actions.viewResults}
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
+                  <h2 className="text-3xl font-bold tracking-tight text-foreground">{bike.name}</h2>
+                  <p className="text-base text-muted-foreground">{bikeSubtitle}</p>
+                  <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+                    {messages.bikes.cards.bikeSummary.replace(
+                      "{bikeType}",
+                      getBikeTypeLabel(bike.bikeType, messages),
+                    )}
+                  </p>
                 </div>
-              ) : (
-                <p className="mt-3 text-sm text-muted-foreground">{messages.dashboardFit.noResultsYet}</p>
-              )}
-            </div>
 
-            <div className="rounded-[var(--radius-lg)] border border-border bg-secondary/25 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                {messages.bikes.defaultProfile.title}
-              </p>
-              <div className="mt-3 space-y-3 text-sm text-foreground">
-                {bikeProfiles && bikeProfiles.length > 0 ? (
-                  bikeProfiles.map((profile) => (
-                    <div
-                      key={profile._id}
-                      className="rounded-[var(--radius-md)] border border-border bg-background/80 p-3"
-                    >
-                      <p className="font-medium text-foreground">
-                        {bikeProfileName(profile)}
-                        {profile.isDefault ? (
-                          <span
-                            className={"ml-2 rounded-full bg-secondary px-2 py-1 " +
-                            "text-xs font-semibold text-secondary-foreground"}>
-                            {messages.fit.savedBikes.defaultBadge}
-                          </span>
-                        ) : null}
-                      </p>
-                      <p className="mt-1 text-muted-foreground">
-                        {messages.bikes.defaultProfile.profileType}:{" "}
-                        {messages.bikeProfileTypes[profile.profileType]}
-                      </p>
-                      {bikeProfileDescription(profile.profileType) ? (
-                        <p className="mt-1 text-muted-foreground">
-                          {bikeProfileDescription(profile.profileType)}
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="sm:col-span-2 rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                          {messages.bikes.identity.passportLabel}
                         </p>
+                        <p className="mt-2 font-mono text-lg font-semibold text-foreground">
+                          {bikePassportId ?? messages.bikes.identity.passportMissing}
+                        </p>
+                        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                          {messages.bikes.identity.passportDescription}
+                        </p>
+                      </div>
+                      {bikePassportId ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={async () => {
+                            try {
+                              await navigator.clipboard.writeText(bikePassportId);
+                              toast.success({
+                                description: messages.bikes.identity.passportCopied,
+                              });
+                            } catch {
+                              toast.error({
+                                description: messages.bikes.identity.passportCopyFailed,
+                              });
+                            }
+                          }}
+                        >
+                          <Copy className="h-4 w-4" />
+                          {messages.bikes.identity.passportCopyAction}
+                        </Button>
                       ) : null}
                     </div>
-                  ))
-                ) : (
-                  <p className="text-muted-foreground">{messages.bikes.defaultProfile.empty}</p>
-                )}
+                  </div>
+                  <div className="rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
+                    <p
+                      className={
+                        "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] " +
+                        "text-muted-foreground"
+                      }
+                    >
+                      <Route className="h-4 w-4" />
+                      {messages.fit.sections.ridingStyle}
+                    </p>
+                    <p className="mt-2 text-lg font-semibold text-foreground">{ridingStyleLabel}</p>
+                  </div>
+                  <div className="rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
+                    <p
+                      className={
+                        "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] " +
+                        "text-muted-foreground"
+                      }
+                    >
+                      <Target className="h-4 w-4" />
+                      {messages.fit.sections.primaryGoal}
+                    </p>
+                    <p className="mt-2 text-lg font-semibold text-foreground">{primaryGoalLabel}</p>
+                  </div>
+                  <div className="rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
+                    <p
+                      className={
+                        "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] " +
+                        "text-muted-foreground"
+                      }
+                    >
+                      <Gauge className="h-4 w-4" />
+                      {messages.pressure.bikeDetail.activeWheelset}
+                    </p>
+                    <p className="mt-2 text-lg font-semibold text-foreground">
+                      {activeWheelset?.name ?? messages.pressure.bikeDetail.noWheelset}
+                    </p>
+                  </div>
+                  <div className="rounded-[var(--radius-lg)] border border-border bg-background/80 p-4">
+                    <p
+                      className={
+                        "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] " +
+                        "text-muted-foreground"
+                      }
+                    >
+                      <Ruler className="h-4 w-4" />
+                      {messages.pressure.bikeDetail.activeTireSetup}
+                    </p>
+                    <p className="mt-2 text-lg font-semibold text-foreground">
+                      {activeTireSetup?.name ?? messages.pressure.bikeDetail.noTireSetup}
+                    </p>
+                  </div>
+                </div>
               </div>
+
+              <div className="space-y-4 px-6 py-6">
+                <div className="rounded-[var(--radius-lg)] border border-border bg-secondary/25 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                    {messages.results.title}
+                  </p>
+                  {recommendation ? (
+                    <div className="mt-3 space-y-3">
+                      <p className="text-sm text-muted-foreground">
+                        {messages.results.algorithmVersionLabel}:{" "}
+                        <span className="font-semibold text-foreground">{recommendation.algorithmVersion}</span>
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        render={
+                          <Link href={withLocalePrefix(`/fit/${recommendation.sessionId}/results`, locale)} />
+                        }
+                      >
+                        {messages.home.recentSessions.actions.viewResults}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <p className="mt-3 text-sm text-muted-foreground">{messages.dashboardFit.noResultsYet}</p>
+                  )}
+                </div>
+
+                <div className="rounded-[var(--radius-lg)] border border-border bg-secondary/25 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                    {messages.bikes.defaultProfile.title}
+                  </p>
+                  <div className="mt-3 space-y-3 text-sm text-foreground">
+                    {bikeProfiles && bikeProfiles.length > 0 ? (
+                      bikeProfiles.map((profile) => (
+                        <div
+                          key={profile._id}
+                          className="rounded-[var(--radius-md)] border border-border bg-background/80 p-3"
+                        >
+                          <p className="font-medium text-foreground">
+                            {bikeProfileName(profile)}
+                            {profile.isDefault ? (
+                              <span
+                                className={"ml-2 rounded-full bg-secondary px-2 py-1 " +
+                                "text-xs font-semibold text-secondary-foreground"}>
+                                {messages.fit.savedBikes.defaultBadge}
+                              </span>
+                            ) : null}
+                          </p>
+                          <p className="mt-1 text-muted-foreground">
+                            {messages.bikes.defaultProfile.profileType}:{" "}
+                            {messages.bikeProfileTypes[profile.profileType]}
+                          </p>
+                          {bikeProfileDescription(profile.profileType) ? (
+                            <p className="mt-1 text-muted-foreground">
+                              {bikeProfileDescription(profile.profileType)}
+                            </p>
+                          ) : null}
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-muted-foreground">{messages.bikes.defaultProfile.empty}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {recommendation?.calculatedFit ? (
+            <BikeFitPreview
+              key={recommendation._id}
+              saddleHeightMm={bike.currentSetup?.saddleHeightMm}
+              target={recommendation.calculatedFit}
+            />
+          ) : null}
+
+          {publicFitEnabled ? (
+            <SignedInFitFollowUpCard
+              locale={locale}
+              copy={{
+                title: messages.bikes.publicFit.followUpTitle,
+                description: messages.bikes.publicFit.followUpDescription,
+                profileCta: messages.bikes.publicFit.followUpProfileCta,
+                fitCta: messages.bikes.publicFit.followUpFitCta,
+              }}
+              onCtaClick={(targetPath, ctaLabel) => {
+                logMarketingEvent({
+                  eventType: "bike_public_fit_signup_cta_clicked",
+                  locale,
+                  pagePath: withLocalePrefix(`/bikes/${bike._id}`, locale),
+                  section: "bike_public_fit_signed_in_follow_up",
+                  ctaLabel,
+                  ctaTargetPath: targetPath,
+                  sourceTag: bike.publicFitSnapshot?.geometryQuality ?? "none",
+                });
+              }}
+            />
+          ) : null}
+
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+            <Card variant="bordered" className="bg-card">
+              <CardHeader>
+                <CardTitle>{messages.bikes.gallery.title}</CardTitle>
+                <CardDescription>{messages.bikes.gallery.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <BikePhotoGallery bikeId={bike._id} bikeName={bike.name} photos={bikeDetail.photos} />
+              </CardContent>
+            </Card>
+
+            <div className="grid gap-6">
+              <GeometryLinkCard
+                locale={locale}
+                state={geometryLinkState}
+                linkedGeometry={linkedGeometry}
+                bike={{
+                  bikeType: bike.bikeType,
+                  ridingStyle: bike.ridingStyle,
+                  primaryGoal: bike.primaryGoal,
+                  brand: bike.brand,
+                  model: bike.model,
+                  bikeWeightKg: bike.bikeWeightKg,
+                  currentGeometry: bike.currentGeometry,
+                }}
+                editHref={withLocalePrefix(`/bikes/${bike._id}/edit#bike-geometry-library`, locale)}
+                messages={messages}
+              />
+
+              <BikeGearingCard
+                bikeId={String(bike._id)}
+                gearing={
+                  (bike as { gearing?: unknown }).gearing as
+                    | {
+                        drivetrainType?: "1x" | "2x";
+                        chainrings?: number[];
+                        cassetteTeeth?: number[];
+                        wheelCircumferenceMm?: number;
+                        crankLengthMm?: number;
+                        groupsetName?: string;
+                        derailleurMaxCog?: number;
+                        completeness?: "missing" | "partial" | "complete" | "validated";
+                      }
+                    | null
+                    | undefined
+                }
+                locale={locale}
+              />
+
+              <Card variant="bordered" className="bg-card">
+                <CardHeader>
+                  <CardTitle>{messages.bikes.descriptionCard.title}</CardTitle>
+                  <CardDescription>{messages.bikes.descriptionCard.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <BikeDescriptionEditor
+                    key={bike._id}
+                    bikeId={bike._id}
+                    initialDescription={bike.description}
+                    initialSource={bike.descriptionSource}
+                  />
+                </CardContent>
+              </Card>
+
+              <Card variant="bordered" className="bg-card">
+                <CardHeader>
+                  <CardTitle>{messages.bikes.wheelsetManager.title}</CardTitle>
+                  <CardDescription>{messages.bikes.wheelsetManager.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <BikeWheelsetManager key={bike._id} bikeId={bike._id} wheelsets={bikeDetail.wheelsets} />
+                </CardContent>
+              </Card>
             </div>
           </div>
-        </CardContent>
-      </Card>
 
-      {recommendation?.calculatedFit ? (
-        <BikeFitPreview
-          key={recommendation._id}
-          saddleHeightMm={bike.currentSetup?.saddleHeightMm}
-          target={recommendation.calculatedFit}
-        />
-      ) : null}
+          {!deletion?.pending && <BikeSettingsEditor key={bike._id} bike={bike} embedded />}
 
-      {publicFitEnabled ? (
-        <SignedInFitFollowUpCard
-          locale={locale}
-          copy={{
-            title: messages.bikes.publicFit.followUpTitle,
-            description: messages.bikes.publicFit.followUpDescription,
-            profileCta: messages.bikes.publicFit.followUpProfileCta,
-            fitCta: messages.bikes.publicFit.followUpFitCta,
-          }}
-          onCtaClick={(targetPath, ctaLabel) => {
-            logMarketingEvent({
-              eventType: "bike_public_fit_signup_cta_clicked",
-              locale,
-              pagePath: withLocalePrefix(`/bikes/${bike._id}`, locale),
-              section: "bike_public_fit_signed_in_follow_up",
-              ctaLabel,
-              ctaTargetPath: targetPath,
-              sourceTag: bike.publicFitSnapshot?.geometryQuality ?? "none",
-            });
-          }}
-        />
-      ) : null}
+          {!deletion?.pending && <BikeFitHistorySection bikeId={bike._id} />}
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-        <Card variant="bordered" className="bg-card">
-          <CardHeader>
-            <CardTitle>{messages.bikes.gallery.title}</CardTitle>
-            <CardDescription>{messages.bikes.gallery.description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <BikePhotoGallery bikeId={bike._id} bikeName={bike.name} photos={bikeDetail.photos} />
-          </CardContent>
-        </Card>
-
-        <div className="grid gap-6">
-          <GeometryLinkCard
-            locale={locale}
-            state={geometryLinkState}
-            linkedGeometry={linkedGeometry}
-            bike={{
-              bikeType: bike.bikeType,
-              ridingStyle: bike.ridingStyle,
-              primaryGoal: bike.primaryGoal,
-              brand: bike.brand,
-              model: bike.model,
-              bikeWeightKg: bike.bikeWeightKg,
-              currentGeometry: bike.currentGeometry,
-            }}
-            editHref="#bike-settings-details"
-            messages={messages}
-          />
-
-          <BikeGearingCard
-            bikeId={String(bike._id)}
-            gearing={
-              (bike as { gearing?: unknown }).gearing as
-                | {
-                    drivetrainType?: "1x" | "2x";
-                    chainrings?: number[];
-                    cassetteTeeth?: number[];
-                    wheelCircumferenceMm?: number;
-                    crankLengthMm?: number;
-                    groupsetName?: string;
-                    derailleurMaxCog?: number;
-                    completeness?: "missing" | "partial" | "complete" | "validated";
-                  }
-                | null
-                | undefined
-            }
-            locale={locale}
-          />
-
-          <Card variant="bordered" className="bg-card">
-            <CardHeader>
-              <CardTitle>{messages.bikes.descriptionCard.title}</CardTitle>
-              <CardDescription>{messages.bikes.descriptionCard.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <BikeDescriptionEditor
-                key={bike._id}
-                bikeId={bike._id}
-                initialDescription={bike.description}
-                initialSource={bike.descriptionSource}
-              />
-            </CardContent>
-          </Card>
-
-          <Card variant="bordered" className="bg-card">
-            <CardHeader>
-              <CardTitle>{messages.bikes.wheelsetManager.title}</CardTitle>
-              <CardDescription>{messages.bikes.wheelsetManager.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <BikeWheelsetManager key={bike._id} bikeId={bike._id} wheelsets={bikeDetail.wheelsets} />
-            </CardContent>
-          </Card>
+          {!deletion?.pending && <BikePressureSection bikeId={bike._id} />}
         </div>
-      </div>
-
-      {!deletion?.pending && <BikeSettingsEditor key={bike._id} bike={bike} embedded />}
-
-      {!deletion?.pending && <BikeFitHistorySection bikeId={bike._id} />}
-
-      {!deletion?.pending && <BikePressureSection bikeId={bike._id} />}
+      </details>
     </div>
   );
 }
