@@ -96,7 +96,7 @@ describe("PressureCalculatorCta", () => {
 
     expect(screen.getByText("What is next?")).toBeTruthy();
     expect(screen.getByText("Create a free account").closest("a")?.getAttribute("href")).toBe(
-      "/en/login"
+      "/en/login?src=tire-pressure"
     );
     expect(
       screen
@@ -107,7 +107,7 @@ describe("PressureCalculatorCta", () => {
     expect(
       screen.getByText("Open bike-fit calculator").closest("a")?.getAttribute("href")
     ).toBe("/en/calculators/bike-fit");
-    expect(screen.getByText("Log in").closest("a")?.getAttribute("href")).toBe("/en/login");
+    expect(screen.getByText("Log in").closest("a")?.getAttribute("href")).toBe("/en/login?src=tire-pressure");
     expect(screen.queryByText("Compare Free vs Pro")).toBeNull();
   });
 });

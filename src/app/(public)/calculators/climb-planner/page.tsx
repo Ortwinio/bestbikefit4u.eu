@@ -118,7 +118,7 @@ export default async function ClimbPlannerPage() {
             <Button
               render={
                 <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
+                  href={withLocalePrefix("/login?src=climb-planner", locale)}
                   locale={locale}
                   pagePath={pagePath}
                   section="climb_planner_primary_cta"

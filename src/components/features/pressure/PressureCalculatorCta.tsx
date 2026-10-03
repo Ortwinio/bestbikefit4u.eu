@@ -51,7 +51,7 @@ export function PressureCalculatorCta({
             <CampaignCtaGroup
               locale={locale}
               pagePath={pagePath}
-              startHref={withLocalePrefix("/login", locale)}
+              startHref={withLocalePrefix("/login?src=tire-pressure", locale)}
               startSection="pressure_cta_primary"
               donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
               donateSection="pressure_campaign_donate"
@@ -78,7 +78,7 @@ export function PressureCalculatorCta({
             <Button
               render={
                 <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
+                  href={withLocalePrefix("/login?src=tire-pressure", locale)}
                   locale={locale}
                   pagePath={pagePath}
                   section="pressure_cta_primary"
@@ -124,7 +124,7 @@ export function PressureCalculatorCta({
         <>
           {labels.loginPrompt}{" "}
           <TrackedCtaLink
-            href={withLocalePrefix("/login", locale)}
+            href={withLocalePrefix("/login?src=tire-pressure", locale)}
             locale={locale}
             pagePath={pagePath}
             section="pressure_cta_text_link"

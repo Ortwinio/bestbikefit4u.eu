@@ -5,6 +5,7 @@ import { forwardRef, type ComponentPropsWithoutRef, type MouseEvent } from "reac
 import { useMutation } from "convex/react";
 import { makeFunctionReference } from "convex/server";
 import type { Locale } from "@/i18n/config";
+import { calculatorFromPath, calculatorLoginHref } from "@/lib/analytics/calculatorBaseline";
 import { canTrackMarketing } from "@/lib/cookieConsent";
 import {
   trackAdConversion,
@@ -71,8 +72,11 @@ export const TrackedCtaLink = forwardRef<HTMLAnchorElement, TrackedCtaLinkProps>
   ...props
 }, ref) {
   const logMarketingEvent = useMutation(logMarketingEventRef) as LogMarketingEventFn;
-  const sourceTag = `${pagePath}:${section}`;
-  const trackedHref = withSourceTagForLogin(href, sourceTag);
+  const calculator = calculatorFromPath(pagePath);
+  const sourceTag = calculator ?? `${pagePath}:${section}`;
+  const trackedHref = calculator
+    ? calculatorLoginHref(href, calculator)
+    : withSourceTagForLogin(href, sourceTag);
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     onClick?.(event);

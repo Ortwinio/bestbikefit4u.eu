@@ -251,7 +251,7 @@ export default async function BikeFitCalculatorPage() {
               <CampaignCtaGroup
                 locale={locale}
                 pagePath={pagePath}
-                startHref={withLocalePrefix("/login", locale)}
+                startHref={withLocalePrefix("/login?src=bike-fit", locale)}
                 startSection="bike_fit_result"
                 donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
                 donateSection="bike_fit_campaign_donate"
@@ -263,7 +263,7 @@ export default async function BikeFitCalculatorPage() {
                 <Button
                   render={
                     <TrackedCtaLink
-                      href={withLocalePrefix("/login", locale)}
+                      href={withLocalePrefix("/login?src=bike-fit", locale)}
                       locale={locale}
                       pagePath={pagePath}
                       section="bike_fit_result"

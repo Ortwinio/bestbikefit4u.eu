@@ -118,7 +118,7 @@ export default async function FuelHydrationPlannerPage() {
             <Button
               render={
                 <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
+                  href={withLocalePrefix("/login?src=fuel-hydration", locale)}
                   locale={locale}
                   pagePath={pagePath}
                   section="fuel_hydration_primary_cta"

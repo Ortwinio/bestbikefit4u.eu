@@ -93,7 +93,7 @@ describe("account bike-fit calculator", () => {
     const changed = vi.fn();
     render(<BikeFitCalculatorForm isNl onValuesChange={changed} />);
     expect(screen.getByRole("slider", { name: bikeFitMessages.nl.height }).getAttribute("aria-valuenow")).toBe("180");
-    expect(screen.getByRole("link", { name: bikeFitMessages.nl.accountCta }).getAttribute("href")).toBe("/nl/login");
+    expect(screen.getByRole("link", { name: bikeFitMessages.nl.accountCta }).getAttribute("href")).toBe("/nl/login?src=bike-fit");
     expect(changed).not.toHaveBeenCalled();
     expect(screen.queryByText(accountBikeFitCopy.nl.start)).toBeNull();
   });

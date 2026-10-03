@@ -118,7 +118,7 @@ export default async function FtpWkgCalculatorPage() {
             <Button
               render={
                 <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
+                  href={withLocalePrefix("/login?src=ftp-wkg", locale)}
                   locale={locale}
                   pagePath={pagePath}
                   section="ftp_wkg_primary_cta"

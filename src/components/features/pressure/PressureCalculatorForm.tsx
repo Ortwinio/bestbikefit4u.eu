@@ -404,7 +404,7 @@ export function PressureCalculatorForm({
           {!accountMode && <section className="rounded-3xl bg-[var(--bbf-inkt)] p-6 text-[var(--bbf-wit)]">
             <h2 className="font-display text-2xl font-bold text-[var(--bbf-wit)]">{copy.save}</h2>
             <p className="mt-3 text-sm text-[var(--bbf-op-donker)]">{copy.saveText}</p>
-            <Button className="mt-4" render={<Link href={withLocalePrefix("/login", locale)} />}>
+            <Button className="mt-4" render={<Link href={withLocalePrefix("/login?src=tire-pressure", locale)} />}>
               {copy.save}
             </Button>
           </section>}
