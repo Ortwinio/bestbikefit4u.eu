@@ -1,17 +1,17 @@
 {
   "phase": "after",
-  "capturedAt": "2026-10-03T11:52:30.833Z",
+  "capturedAt": "2026-10-03T18:07:00.072Z",
   "source": "/Users/ortwinverreck/Developer/bestbikefit4u-semrush",
   "sourceHashes": {
     "src/app/(public)/page.tsx": "60136dd360a97274c420722f105e4fb04aa279e5b8a16c5c3eb342dca57ff0be",
     "src/components/home/MarketingHome.module.css": "ae2d895c650378556a68b43474f93ef1ad4d357970db1a7a326f4350f6c61860",
     "src/components/home/homeRedesignContent.ts": "2c2bb39f37a6dc9b71cee4fdf7142b611beb4240d88eaff20f9a6e23d0b0079d",
-    "src/i18n/marketing/home.ts": "7e40072752e30a84d4341933d69ef8376c6a6316172ea39525859c5e2e746aa8",
+    "src/i18n/marketing/home.ts": "8f7c2cb96de26693e2758cc800ce2e4fee939c6b230f111927beed5a75128f96",
     "src/i18n/marketing/homeTrust.ts": "e3324c013f199f214566c39906d673ac9f0a65a6aea13fa7f914a44d63843de1",
     "src/app/globals.css": "934a50dd4b656bcf488c41f83e28057d7c75af43508c283a266d36b39e1b0293"
   },
-  "bundleSha256": "7dc7131e12fc1f52b8da8e2bb098a1874a6115d6a72cd090baf0a8538dbe29b2",
-  "cssSha256": "3ab5a62e9c90132bb4f08265d44ff725dd0077e519c531405a24a899afa519d3",
+  "bundleSha256": "6ce1201a9806e09dededff6a0faa4e909cc967adf892e340683bef23160c3f1b",
+  "cssSha256": "a44e47d976fa16fcb4f8bd84e91c83275210b6bc9b8a35aec205b28cb834fec4",
   "limitations": [
     "Offline real-source React fixture, not Next SSR/hydration.",
     "Synthetic signed-out auth, mutations disabled, empty CMS blog, no production data.",

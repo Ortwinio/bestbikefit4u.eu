@@ -118,3 +118,7 @@ standalone Convex tsc. Local crawl (875 checks), Semrush and discovery checks pa
 1440/390 sweep cases are clean; 45 changed images reviewed and 39 identical S15 images retained.
 Six S10 LCP follow-ups remain OPEN. See `audit/S17-notes.md`, `audit/S17-gates.md`,
 `audit/S17-visual-notes.md` and `audit/files-S17.txt`. No push, deployment or separate fix commit.
+
+## C completed — S18, 3 October 2026
+
+Fixed audit-tooling URL checks with parsed origin/pathname comparisons and fixture exception responses with the shared generic-error helper. Both affected runtime scripts, shared error-handler tests and full lint pass. No suppressions, commits or deployment. See `audit/S18-notes.md` and `audit/files-S18.txt`; hosted CodeQL confirmation awaits the next PR run.

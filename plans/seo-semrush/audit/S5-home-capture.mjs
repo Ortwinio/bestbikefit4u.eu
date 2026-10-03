@@ -1,4 +1,5 @@
 import { build } from "esbuild";
+import { sendFixtureError } from "../../../tests/visual/lib/http-errors.mjs";
 import postcss from "postcss";
 import tailwind from "@tailwindcss/postcss";
 import { chromium } from "playwright";
@@ -80,7 +81,7 @@ const server = createServer(async(request,response)=>{
     }
     response.setHeader("content-type","text/html");
     response.end(`<!doctype html><html lang="${pathname.startsWith("/en")?"en":"nl"}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/fixture.css"></head><body class="relative bg-background font-sans text-foreground antialiased"><div id="root"></div><script type="module" src="/fixture.js"></script></body></html>`);
-  } catch(error) {response.statusCode=500;response.end(String(error));}
+  } catch(error) { sendFixtureError(response, error); }
 });
 await new Promise(done=>server.listen(0,"127.0.0.1",done));
 const origin = `http://127.0.0.1:${server.address().port}`;
