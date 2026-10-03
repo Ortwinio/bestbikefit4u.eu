@@ -25,7 +25,7 @@ import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getDictionary } from "@/i18n/getDictionary";
 import { getRequestLocale } from "@/i18n/request";
-import { buildFaqPageSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { buildFaqPageSchema, buildCalculatorPageSchemas } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { FrameSizeCalculatorForm } from "./FrameSizeCalculatorForm";
 
@@ -145,7 +145,7 @@ export default async function FrameSizeCalculatorPage() {
       <JsonLd
         schema={[
           buildFaqPageSchema(faqs),
-          buildWebApplicationSchema({
+          ...buildCalculatorPageSchemas({
             name: isNl
               ? "BestBikeFit4U Framemaat calculator"
               : "BestBikeFit4U Frame Size Calculator",
@@ -153,6 +153,7 @@ export default async function FrameSizeCalculatorPage() {
               ? "Schat een realistische framemaat op basis van lengte, binnenbeenlengte en fietsdiscipline."
               : "Estimate a realistic frame size based on height, inseam, and bike category.",
             url: pageUrl,
+            locale,
           }),
         ]}
       />

@@ -26,7 +26,7 @@ import { getRequestLocale } from "@/i18n/request";
 import {
   buildFaqPageSchema,
   buildHowToSchema,
-  buildWebApplicationSchema,
+  buildCalculatorPageSchemas,
 } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { GearingCalculatorForm } from "./GearingCalculatorForm";
@@ -158,12 +158,13 @@ export default async function GearingCalculatorPage() {
     <div className="text-foreground">
       <JsonLd
         schema={[
-          buildWebApplicationSchema({
+          ...buildCalculatorPageSchemas({
             name: isNl ? "BestBikeFit4U Verzet calculator" : "BestBikeFit4U Gearing Calculator",
             description: isNl
               ? "Bereken je lichtste en zwaarste versnelling, snelheid bij cadans en een snelle kliminschatting."
               : "Calculate your easiest and hardest gear, speed at cadence, and a quick climb verdict.",
             url: pageUrl,
+            locale,
           }),
           buildHowToSchema({
             name: isNl ? "Hoe gebruik je de verzet calculator" : "How to use the gearing calculator",

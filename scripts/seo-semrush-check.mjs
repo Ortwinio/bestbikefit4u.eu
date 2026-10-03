@@ -42,6 +42,21 @@ export function inspectHtml(html) {
   return result;
 }
 
+export function calculatorSchemaFailures(schemas) {
+  const types = schemas.flatMap(schema => schema["@type"] ?? []);
+  const failures = [];
+  for (const type of ["WebApplication", "SoftwareApplication"]) {
+    if (types.includes(type)) failures.push(`forbidden ${type}`);
+  }
+  if (types.includes("AggregateRating") || schemas.some(schema => Object.hasOwn(schema, "aggregateRating"))) {
+    failures.push("forbidden aggregateRating");
+  }
+  for (const type of ["WebPage", "BreadcrumbList", "FAQPage"]) {
+    if (!types.includes(type)) failures.push(`missing ${type}`);
+  }
+  return failures;
+}
+
 async function startLocal() {
   const certificate = await createPreviewCertificate();
   const probe = createServer(); probe.listen(0, "127.0.0.1"); await once(probe, "listening");
@@ -66,7 +81,7 @@ export async function runCheck() {
   const renders = resolve("plans/seo-semrush/renders");
   await mkdir(audit, { recursive: true }); await mkdir(renders, { recursive: true });
   const report = { startedAt: new Date().toISOString(), buildId: (await readFile(".next/BUILD_ID", "utf8")).trim(),
-    pressure: [], redirects: [], pages: [], guides: [], legacyWithoutDate: [], screenshots: [], failures: [] };
+    calculators: [], pressure: [], redirects: [], pages: [], guides: [], legacyWithoutDate: [], screenshots: [], failures: [] };
   const check = (condition, message) => { if (!condition) report.failures.push(message); };
   const request = path => new Promise((done, reject) => {
     const req = get(new URL(path, local.base), { ca: local.certificate.cert, servername: "localhost",
@@ -95,6 +110,17 @@ export async function runCheck() {
   };
   let browser;
   try {
+    const { getSitemapNodes } = importTs("../src/lib/seo/sitemap/sources.ts", import.meta.url);
+    const calculatorPaths = getSitemapNodes("calculators").map(node => new URL(node.loc).pathname)
+      .filter(path => /^\/(?:en|nl)\/(?:calculators\/|(?:tire-pressure|bandenspanning)-calculator$)/.test(path));
+    check(calculatorPaths.length === 22, "expected eleven calculators in both locales");
+    for (const path of calculatorPaths) {
+      const page = await inspectPage(path);
+      for (const failure of calculatorSchemaFailures(page.schemas)) check(false, `${path}: ${failure}`);
+      report.calculators.push({ path, status: page.status,
+        schemaTypes: page.schemas.flatMap(schema => schema["@type"] ?? []) });
+    }
+    console.log(`Calculator schema checks: ${report.calculators.length}`);
     const { WEIGHT_STEPS, EN_BIKE_TYPES, NL_TO_EN } = importTs(
       "../src/lib/seo/programmatic/tirePressure.ts", import.meta.url);
     const { listGuideRewrites } = importTs("../src/lib/guides/rewrites.ts", import.meta.url);
@@ -176,6 +202,7 @@ export async function runCheck() {
     await writeFile(resolve(audit, "S12-S13-raw-html.json"), JSON.stringify(report, null, 2) + "\n");
     await writeFile(resolve(audit, "S12-S13-check-notes.md"),
       `# S12/S13 production-build checks\n\nBuild: ${report.buildId}\n\n`
+      + `Calculator locales: ${report.calculators.length}.\n`
       + `Pressure pages: ${report.pressure.length}; redirects: ${report.redirects.length}; guide locales: ${report.guides.length}.\n`
       + `Legacy guide locales without a dated static rewrite: ${report.legacyWithoutDate.length}. No date is invented.\n`
       + `Screenshots: ${report.screenshots.length}. Failures: ${report.failures.length}.\n\n`

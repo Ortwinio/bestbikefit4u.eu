@@ -8,7 +8,7 @@ import { BRAND } from "@/config/brand";
 import { getDictionary } from "@/i18n/getDictionary";
 import type { Locale } from "@/i18n/config";
 import { getPublicCalculatorRouteEntry } from "@/lib/public-calculators";
-import { buildFaqPageSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { buildFaqPageSchema, buildCalculatorPageSchemas } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { withLocalePrefix } from "@/i18n/navigation";
 
@@ -25,14 +25,18 @@ export async function PressureCalculatorPageContent({ locale }: { locale: Locale
   return (
     <div className="bg-background text-foreground">
       <JsonLd
-        schema={[buildWebApplicationSchema({
-          name: locale === "nl" ? "Bandenspanning calculator" : "Tire Pressure Calculator",
-          description:
-            locale === "nl"
-              ? "Gratis calculator voor racefiets, gravelbike en MTB bandenspanning."
-              : "Free calculator for road, gravel, and MTB tire pressure.",
-          url: pageUrl,
-        }), buildFaqPageSchema(getPressureCalculatorFaqContent(locale).items)]}
+        schema={[
+          ...buildCalculatorPageSchemas({
+            name: locale === "nl" ? "Bandenspanning calculator" : "Tire Pressure Calculator",
+            description:
+              locale === "nl"
+                ? "Gratis calculator voor racefiets, gravelbike en MTB bandenspanning."
+                : "Free calculator for road, gravel, and MTB tire pressure.",
+            url: pageUrl,
+            locale,
+          }),
+          buildFaqPageSchema(getPressureCalculatorFaqContent(locale).items),
+        ]}
       />
       <PressureCalculatorForm
         locale={locale}

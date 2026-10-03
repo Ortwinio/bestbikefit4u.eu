@@ -89,20 +89,16 @@ afterEach(() => {
 
 describe("saddle width calculator page", () => {
   it.each(["en", "nl"] as const)(
-    "publishes a free WebApplication without ratings in %s",
+    "preserves page, breadcrumb and FAQ schemas without application or rating markup in %s",
     async (language) => {
       locale = language;
       const { container } = render(await SaddleWidthCalculatorPage());
       const scripts = Array.from(container.querySelectorAll('script[type="application/ld+json"]'));
       const schemas = scripts.flatMap((script) => JSON.parse(script.textContent ?? "null"));
-      const application = schemas.find((schema) => schema["@type"] === "WebApplication");
-
-      expect(application).toMatchObject({
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        operatingSystem: "Any",
-        offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
-      });
+      expect(schemas.map((schema) => schema["@type"])).toEqual(
+        expect.arrayContaining(["WebPage", "BreadcrumbList", "FAQPage"]),
+      );
+      expect(JSON.stringify(schemas)).not.toMatch(/WebApplication|SoftwareApplication/);
       expect(JSON.stringify(schemas)).not.toContain('"aggregateRating"');
       expect(JSON.stringify(schemas)).not.toContain('"AggregateRating"');
     },

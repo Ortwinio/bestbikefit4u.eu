@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { inspectHtml } from "./seo-semrush-check.mjs";
+import { inspectHtml, calculatorSchemaFailures } from "./seo-semrush-check.mjs";
 
 test("parses only head metadata, visible dates and real table body rows", () => {
   const result = inspectHtml(`<html><head><title>Title</title><meta name="description" content="Description">
@@ -24,4 +24,21 @@ test("finds nested person and organization schemas and ignores invalid JSON safe
   assert.deepEqual(result.schemas.filter(schema => ["Person", "Organization"].includes(schema["@type"]))
     .map(schema => schema["@type"]), ["Person", "Organization"]);
   assert.equal(result.titleCount, 0);
+});
+
+
+test("calculator checks preserve page, breadcrumb and FAQ schema without application markup", () => {
+  const schemas = ["WebPage", "BreadcrumbList", "FAQPage"].map(type => ({ "@type": type }));
+  assert.deepEqual(calculatorSchemaFailures(schemas), []);
+  for (const type of ["WebApplication", "SoftwareApplication"]) {
+    assert(calculatorSchemaFailures([...schemas, { "@type": ["Thing", type] }]).includes(`forbidden ${type}`));
+  }
+  for (const type of ["WebPage", "BreadcrumbList", "FAQPage"]) {
+    assert(calculatorSchemaFailures(schemas.filter(schema => schema["@type"] !== type)).includes(`missing ${type}`));
+  }
+  const parsed = inspectHtml(`<script type="application/ld+json">{"@graph":[
+    {"@type":"WebPage","mainEntity":{"@type":"SoftwareApplication","aggregateRating":{}}}
+  ]}</script>`);
+  assert(calculatorSchemaFailures(parsed.schemas).includes("forbidden SoftwareApplication"));
+  assert(calculatorSchemaFailures(parsed.schemas).includes("forbidden aggregateRating"));
 });

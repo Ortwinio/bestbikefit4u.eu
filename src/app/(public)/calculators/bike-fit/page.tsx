@@ -22,7 +22,7 @@ import {
   buildBreadcrumbListSchema,
   buildHowToSchema,
   buildFaqPageSchema,
-  buildWebApplicationSchema,
+  buildCalculatorPageSchemas,
 } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { BikeFitCalculatorForm } from "./BikeFitCalculatorForm";
@@ -160,7 +160,7 @@ export default async function BikeFitCalculatorPage() {
             },
             { name: isNl ? "Bike fit calculator" : "Bike Fit Calculator", item: pageUrl },
           ]),
-          buildWebApplicationSchema({
+          ...buildCalculatorPageSchemas({
             name: isNl ? "BestBikeFit4U bike fit calculator" : "BestBikeFit4U Bike Fit Calculator",
             description: isNl
               ? "Gratis bike fit calculator voor een eerste inschatting van zadelhoogte, reach, drop " +
@@ -168,6 +168,8 @@ export default async function BikeFitCalculatorPage() {
               : "Free bike-fit calculator for a practical first-pass estimate of saddle height, reach, " +
                 "drop, and frame targets.",
             url: pageUrl,
+            locale,
+            breadcrumb: false,
           }),
           buildHowToSchema({
             name: isNl
