@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 
+import { validOptionalLastmod } from "./sitemap-lastmod.mjs";
+
 const baseUrl = process.env.SITEMAP_BASE_URL ?? process.env.BASE_URL ?? "http://127.0.0.1:3000";
 const sitemapIndexPath = "/sitemap.xml";
 const expectedSitemapPaths = [
   "/sitemap-pages.xml",
   "/sitemap-calculators.xml",
   "/sitemap-guides.xml",
+  "/sitemap-blog.xml",
 ];
 
 const disallowedUrlPathPrefixes = [
@@ -222,13 +225,13 @@ function validateUrlSet(pathname, payload) {
     blockByLoc.set(loc, {
       loc,
       alternates,
-      hasLastmod: block.includes("<lastmod>"),
+      lastmod: block.match(/<lastmod>(.*?)<\/lastmod>/)?.[1],
     });
   }
 
-  for (const { loc, alternates, hasLastmod } of blockByLoc.values()) {
-    if (!hasLastmod) {
-      fail(`${pathname} URL is missing <lastmod>: ${loc}`);
+  for (const { loc, alternates, lastmod } of blockByLoc.values()) {
+    if (!validOptionalLastmod(lastmod)) {
+      fail(`${pathname} URL has invalid <lastmod>: ${loc}`);
     }
 
     for (const alternate of alternates) {

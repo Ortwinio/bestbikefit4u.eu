@@ -50,14 +50,14 @@ const schemaHashes = {
 
 const metadataCopy = {
   nl: {
-    title: "BestBikeFit4U FAQ | Online bikefitting, zadelhoogte, framemaat & klachten oplossen",
+    title: "Veelgestelde vragen over bikefit | BestBikeFit4U",
     description:
       "Antwoorden over BestBikeFit4U online bikefitting: metingen, zadelhoogte, zadelterugstand, " +
       "reach & drop, stack & reach, MTB/gravel/TT, klachten, abonnementen, exports en veiligheidsregels.",
     keywords: ["online bikefitting FAQ", "zadelhoogte", "framemaat", "reach en drop", "stack en reach"],
   },
   en: {
-    title: "BestBikeFit4U FAQ | Online Bike Fitting, Saddle Height, Frame Size & Pain Fixes",
+    title: "Bike Fitting FAQ | BestBikeFit4U",
     description:
       "Answers about BestBikeFit4U online bike fitting: measurements, saddle height, setback, " +
       "reach & drop, stack & reach, MTB/gravel/TT setups, pain troubleshooting, plans, exports, and safety guardrails.",
@@ -112,6 +112,7 @@ describe.each(["nl", "en"] as const)("FAQ in %s", (language) => {
     const metadata = await generateMetadata();
     expect(metadata).toEqual({
       ...metadataCopy[language],
+      title: { absolute: metadataCopy[language].title },
       openGraph: {
         title: metadataCopy[language].title,
         description: metadataCopy[language].description,
@@ -127,6 +128,16 @@ describe.each(["nl", "en"] as const)("FAQ in %s", (language) => {
         },
       },
     });
+  });
+
+  it("sets a complete title of at most 60 characters without an inherited suffix", async () => {
+    locale = language;
+    const metadata = await generateMetadata();
+    expect(metadata.title).toEqual({ absolute: faqPresentation[language].metadataTitle });
+    const resolvedTitle = (metadata.title as { absolute: string }).absolute;
+    expect(resolvedTitle.length).toBeLessThanOrEqual(60);
+    expect(resolvedTitle.match(/BestBikeFit4U/g)).toHaveLength(1);
+    expect(metadata.openGraph?.title).toBe(resolvedTitle);
   });
 
   it("keeps all guide and CTA routes localized with the original tracking sections", async () => {

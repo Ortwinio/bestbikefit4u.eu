@@ -44,6 +44,7 @@ export default async function WhyBikeFitMattersPage() {
           eyebrow={page.hero.eyebrow}
           title={page.hero.title}
           image="/illustrations/01-racefiets.webp"
+          imageAlt=""
           description={page.hero.paragraphs.join(" ")}
           actions={
             <Button

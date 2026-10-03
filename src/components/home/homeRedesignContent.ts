@@ -1,3 +1,4 @@
+import { homeTrust } from "@/i18n/marketing/homeTrust";
 import type { Locale } from "@/i18n/config";
 import type { PublicCalculatorId } from "@/lib/public-calculators";
 
@@ -17,29 +18,21 @@ export const HOME_PROOF_BAR_CONTENT: Localized<{
 }> = {
   en: {
     quote: {
-      name: "Thomas V.",
-      bikeContext: "Canyon Endurace 2022 · Comfort rider",
-      quote: "Saddle 4 mm lower. Knee pain gone after two rides.",
-      initials: "TV",
+      name: homeTrust.en.principle.title,
+      bikeContext: homeTrust.en.principle.context,
+      quote: homeTrust.en.principle.text,
+      initials: "BB",
     },
-    stats: [
-      { value: "2,400+", label: "fits completed" },
-      { value: "180+", label: "bike brands covered" },
-      { value: "Free", label: "to start" },
-    ],
+    stats: homeTrust.en.stats,
   },
   nl: {
     quote: {
-      name: "Thomas V.",
-      bikeContext: "Canyon Endurace 2022 · Comfort-rijder",
-      quote: "Zadel 4 mm lager. Kniepijn weg na twee ritten.",
-      initials: "TV",
+      name: homeTrust.nl.principle.title,
+      bikeContext: homeTrust.nl.principle.context,
+      quote: homeTrust.nl.principle.text,
+      initials: "BB",
     },
-    stats: [
-      { value: "2.400+", label: "fits uitgevoerd" },
-      { value: "180+", label: "fietsmerken gedekt" },
-      { value: "Gratis", label: "om te starten" },
-    ],
+    stats: homeTrust.nl.stats,
   },
 };
 
@@ -91,11 +84,11 @@ export const HOME_HERO_MICROCOPY: Localized<{
   ctaNote: string;
 }> = {
   en: {
-    trustLine: "Trusted by 2,400+ riders across 180+ bike brands.",
+    trustLine: homeTrust.en.note,
     ctaNote: "No credit card required. Start free and upgrade only if you want the full report.",
   },
   nl: {
-    trustLine: "Vertrouwd door 2.400+ rijders verdeeld over 180+ fietsmerken.",
+    trustLine: homeTrust.nl.note,
     ctaNote: "Geen creditcard nodig. Start gratis en upgrade alleen als je het volledige rapport wilt.",
   },
 };
@@ -106,8 +99,6 @@ export const HOME_STEPPER_CONTENT: Localized<{
   description: string;
   cta: string;
   socialProof: string;
-  ratingValue: string;
-  ratingCount: string;
   steps: Array<{
     number: string;
     title: string;
@@ -120,9 +111,7 @@ export const HOME_STEPPER_CONTENT: Localized<{
     title: "A clear fit flow in three steps",
     description: "Measure what matters, connect your bike, and get the next setup changes in a usable order.",
     cta: "Get my fit plan",
-    socialProof: "Join 2,400+ riders who started with the same baseline flow.",
-    ratingValue: "4.8",
-    ratingCount: "380+ riders",
+    socialProof: homeTrust.en.note,
     steps: [
       {
         number: "01",
@@ -149,9 +138,7 @@ export const HOME_STEPPER_CONTENT: Localized<{
     title: "Een duidelijke fitflow in drie stappen",
     description: "Meet wat telt, koppel je fiets en ontvang de volgende afstelstappen in een bruikbare volgorde.",
     cta: "Ontvang mijn afstelplan",
-    socialProof: "Sluit je aan bij 2.400+ rijders die met deze basisflow zijn gestart.",
-    ratingValue: "4.8",
-    ratingCount: "380+ rijders",
+    socialProof: homeTrust.nl.note,
     steps: [
       {
         number: "01",
@@ -249,58 +236,14 @@ export const HOME_TESTIMONIALS: Localized<{
     title: "What riders changed after the fit",
     description: "Concrete setup changes are more credible than anonymous praise.",
     badgeLabel: "Verified rider story",
-    items: [
-      {
-        name: "Thomas V.",
-        initials: "TV",
-        bikeContext: "Canyon Endurace 2022 · Comfort rider",
-        result: "Saddle 4 mm lower. Knee pain gone after two rides.",
-        quote: "I had knee pain for years. The fit finally told me what to change first.",
-      },
-      {
-        name: "Laura M.",
-        initials: "LM",
-        bikeContext: "Trek Domane 2023 · Recreational rider",
-        result: "Handlebar 10 mm higher. No back pain on long rides.",
-        quote: "It was fast and practical. I had usable numbers within minutes.",
-      },
-      {
-        name: "Pieter J.",
-        initials: "PJ",
-        bikeContext: "Specialized Tarmac 2021 · Performance rider",
-        result: "Saddle 3 mm rearward. Better balance through harder efforts.",
-        quote: "The database gave me a realistic starting point for the bike I already ride.",
-      },
-    ],
+    items: [],
   },
   nl: {
     eyebrow: "Resultaten van rijders",
     title: "Wat rijders na de fit hebben aangepast",
     description: "Concrete afstelwijzigingen zijn geloofwaardiger dan anonieme complimenten.",
     badgeLabel: "Geverifieerd rijderverhaal",
-    items: [
-      {
-        name: "Thomas V.",
-        initials: "TV",
-        bikeContext: "Canyon Endurace 2022 · Comfort-rijder",
-        result: "Zadel 4 mm lager. Kniepijn weg na twee ritten.",
-        quote: "Ik had al jaren knieklachten. De fit liet eindelijk zien wat ik eerst moest aanpassen.",
-      },
-      {
-        name: "Laura M.",
-        initials: "LM",
-        bikeContext: "Trek Domane 2023 · Recreatieve rijder",
-        result: "Stuur 10 mm hoger. Geen rugpijn meer op lange ritten.",
-        quote: "Het was snel en praktisch. Binnen een paar minuten had ik bruikbare waarden.",
-      },
-      {
-        name: "Pieter J.",
-        initials: "PJ",
-        bikeContext: "Specialized Tarmac 2021 · Sportieve rijder",
-        result: "Zadel 3 mm verder naar achter. Betere balans bij zwaardere inspanningen.",
-        quote: "De database gaf meteen een realistisch startpunt voor de fiets die ik al rijd.",
-      },
-    ],
+    items: [],
   },
 };
 

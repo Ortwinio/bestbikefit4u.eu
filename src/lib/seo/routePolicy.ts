@@ -29,7 +29,6 @@ export const SEO_ROUTE_FAMILIES: readonly RouteFamily[] = [
       "/contact",
       "/faq",
       "/fit-pass",
-      "/fiets-afstellen",
       "/guides",
       "/how-it-works",
       "/measurement-guide",
@@ -46,7 +45,7 @@ export const SEO_ROUTE_FAMILIES: readonly RouteFamily[] = [
   },
   {
     classification: "non_indexable_public_utility",
-    prefixes: ["/email-preferences", "/science/calculation-engine", "/use-cases"],
+    prefixes: ["/fiets-afstellen", "/email-preferences", "/science/calculation-engine", "/use-cases"],
   },
   {
     classification: "private_app",

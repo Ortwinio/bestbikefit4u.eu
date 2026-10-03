@@ -16,7 +16,7 @@ export type LocalizedPathMap = Partial<Record<Locale, string>>;
 export type SitemapContentEntry = {
   id: string;
   localizedPaths: LocalizedPathMap;
-  lastmod: string;
+  lastmod?: string;
   changefreq?: SitemapChangeFrequency;
   priority?: number;
 };
@@ -28,7 +28,7 @@ export type SitemapAlternateLink = {
 
 export type SitemapUrlNode = {
   loc: string;
-  lastmod: string;
+  lastmod?: string;
   changefreq?: SitemapChangeFrequency;
   priority?: number;
   alternates: SitemapAlternateLink[];
@@ -36,5 +36,5 @@ export type SitemapUrlNode = {
 
 export type SitemapIndexNode = {
   loc: string;
-  lastmod: string;
+  lastmod?: string;
 };

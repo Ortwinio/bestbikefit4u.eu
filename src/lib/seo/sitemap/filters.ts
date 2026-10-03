@@ -45,7 +45,7 @@ export function dedupeAndSortNodes(nodes: SitemapUrlNode[]): SitemapUrlNode[] {
       continue;
     }
 
-    if (node.lastmod > previous.lastmod) {
+    if (node.lastmod && (!previous.lastmod || node.lastmod > previous.lastmod)) {
       byLoc.set(node.loc, node);
     }
   }

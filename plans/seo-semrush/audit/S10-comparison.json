@@ -1,0 +1,144 @@
+{
+  "before": "2026-10-03T12:08:22.527Z",
+  "after": "2026-10-03T12:20:26.977Z",
+  "rows": [
+    {
+      "path": "/en",
+      "metrics": {
+        "largest-contentful-paint": {
+          "before": 5328.265000000001,
+          "after": 5468.3589999999995,
+          "delta": 140.09399999999823,
+          "pass": false
+        },
+        "cumulative-layout-shift": {
+          "before": 0,
+          "after": 0,
+          "delta": 0,
+          "pass": true
+        },
+        "total-blocking-time": {
+          "before": 45,
+          "after": 48.5,
+          "delta": 3.5,
+          "pass": true
+        }
+      }
+    },
+    {
+      "path": "/en/calculators/saddle-height",
+      "metrics": {
+        "largest-contentful-paint": {
+          "before": 5774.859999999999,
+          "after": 5292.737,
+          "delta": -482.1229999999987,
+          "pass": false
+        },
+        "cumulative-layout-shift": {
+          "before": 0,
+          "after": 0,
+          "delta": 0,
+          "pass": true
+        },
+        "total-blocking-time": {
+          "before": 87.18999999999915,
+          "after": 32,
+          "delta": -55.189999999999145,
+          "pass": true
+        }
+      }
+    },
+    {
+      "path": "/en/guides/how-to-compare-two-bikes-for-fit",
+      "metrics": {
+        "largest-contentful-paint": {
+          "before": 4994.364499999999,
+          "after": 5486.032,
+          "delta": 491.6675000000014,
+          "pass": false
+        },
+        "cumulative-layout-shift": {
+          "before": 0,
+          "after": 0,
+          "delta": 0,
+          "pass": true
+        },
+        "total-blocking-time": {
+          "before": 31.5,
+          "after": 50,
+          "delta": 18.5,
+          "pass": true
+        }
+      }
+    },
+    {
+      "path": "/en/pain/knee-pain-cycling",
+      "metrics": {
+        "largest-contentful-paint": {
+          "before": 5546.5650000000005,
+          "after": 5042.009000000002,
+          "delta": -504.5559999999987,
+          "pass": false
+        },
+        "cumulative-layout-shift": {
+          "before": 0,
+          "after": 0,
+          "delta": 0,
+          "pass": true
+        },
+        "total-blocking-time": {
+          "before": 42,
+          "after": 41,
+          "delta": -1,
+          "pass": true
+        }
+      }
+    },
+    {
+      "path": "/en/pricing",
+      "metrics": {
+        "largest-contentful-paint": {
+          "before": 5471.1965,
+          "after": 5470.237999999999,
+          "delta": -0.9585000000006403,
+          "pass": false
+        },
+        "cumulative-layout-shift": {
+          "before": 0,
+          "after": 0,
+          "delta": 0,
+          "pass": true
+        },
+        "total-blocking-time": {
+          "before": 42.5,
+          "after": 41,
+          "delta": -1.5,
+          "pass": true
+        }
+      }
+    },
+    {
+      "path": "/en/login",
+      "metrics": {
+        "largest-contentful-paint": {
+          "before": 5451.8745,
+          "after": 5518.7785,
+          "delta": 66.90400000000045,
+          "pass": false
+        },
+        "cumulative-layout-shift": {
+          "before": 0,
+          "after": 0,
+          "delta": 0,
+          "pass": true
+        },
+        "total-blocking-time": {
+          "before": 29.5,
+          "after": 28,
+          "delta": -1.5,
+          "pass": true
+        }
+      }
+    }
+  ]
+}

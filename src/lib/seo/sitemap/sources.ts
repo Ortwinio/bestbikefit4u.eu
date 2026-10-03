@@ -1,14 +1,16 @@
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import { PAIN_PAGE_SLUGS } from "@/content/painPages";
+import { listGuideRewrites } from "@/lib/guides/rewrites";
+import { getGuideUpdatedDate } from "@/config/authorship";
+import { withSitemapTimeout } from "./timeout";
 import { SUPPORTED_LOCALES, type Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getLocaleRoutePair } from "@/i18n/localeRoutes";
-import { getProgrammaticCalculatorEntries } from "@/lib/seo/programmatic/tirePressure";
+import { getPressureBikeEntries } from "@/lib/seo/programmatic/tirePressure";
 import {
   DEFAULT_LOCALE_FOR_X_DEFAULT,
   SITEMAP_SECTION_PATHS,
-  SITEMAP_SYSTEM_LASTMOD,
 } from "./config";
 import { dedupeAndSortNodes, isCanonicalSitemapPath, isExcludedFromSitemap } from "./filters";
 import { normalizeLastmod, normalizePathname, toAbsoluteUrl } from "./normalize";
@@ -23,7 +25,7 @@ import type {
 type RouteSeed = {
   id: string;
   path?: string;
-  lastmod: string;
+  lastmod?: string;
   changefreq?: SitemapContentEntry["changefreq"];
   priority?: number;
   locales?: readonly Locale[];
@@ -32,8 +34,19 @@ type RouteSeed = {
 
 type BlogSitemapRow = {
   slug: string;
-  updatedAt: number;
+  updatedAt?: number;
   publishedAt?: number;
+};
+
+type GuideSitemapRow = {
+  slug: string;
+  path: string;
+  lastUpdatedAt?: number;
+  publishedAt?: number;
+  updatedAt?: number;
+  createdAt?: number;
+  importStatus?: string;
+  libraryBody?: { nl?: string; en?: string };
 };
 
 type BlogQueryApi = {
@@ -82,74 +95,61 @@ function toEntry(seed: RouteSeed): SitemapContentEntry {
 }
 
 const PAGE_ROUTE_SEEDS: readonly RouteSeed[] = [
-  { id: "home", path: "/", lastmod: "2026-02-23", changefreq: "weekly", priority: 1 },
-  {
-    id: "fiets-afstellen",
-    path: "/fiets-afstellen",
-    lastmod: "2026-05-05",
-    changefreq: "weekly",
-    priority: 0.9,
-    locales: ["nl"],
-  },
+  { id: "author-ortwin-verreck", path: "/authors/ortwin-verreck", lastmod: "2026-10-03",
+    changefreq: "monthly", priority: 0.6 },
+  { id: "methods", path: "/methods", lastmod: "2026-10-03", changefreq: "monthly", priority: 0.7 },
+  { id: "home", path: "/", changefreq: "weekly", priority: 1 },
   {
     id: "bike-fitting",
     path: "/bikefitting",
-    lastmod: "2026-05-05",
     changefreq: "weekly",
     priority: 0.9,
   },
-  { id: "about", path: "/about", lastmod: "2026-02-19", changefreq: "monthly", priority: 0.8 },
+  { id: "about", path: "/about", changefreq: "monthly", priority: 0.8 },
   {
     id: "how-it-works",
     path: "/how-it-works",
-    lastmod: "2026-03-31",
     changefreq: "weekly",
     priority: 0.85,
   },
-  { id: "pricing", path: "/pricing", lastmod: "2026-02-19", changefreq: "weekly", priority: 0.9 },
-  { id: "faq", path: "/faq", lastmod: "2026-02-23", changefreq: "weekly", priority: 0.8 },
-  { id: "contact", path: "/contact", lastmod: "2026-02-19", changefreq: "monthly", priority: 0.7 },
+  { id: "pricing", path: "/pricing", changefreq: "weekly", priority: 0.9 },
+  { id: "faq", path: "/faq", changefreq: "weekly", priority: 0.8 },
+  { id: "contact", path: "/contact", changefreq: "monthly", priority: 0.7 },
   {
     id: "pain-index",
     path: "/pain",
-    lastmod: "2026-03-31",
     changefreq: "weekly",
     priority: 0.8,
   },
   ...PAIN_PAGE_SLUGS.map<RouteSeed>((slug) => ({
     id: `pain-${slug}`,
     path: `/pain/${slug}`,
-    lastmod: "2026-03-31",
     changefreq: "weekly",
     priority: 0.8,
   })),
   {
     id: "case-study",
     path: "/case-study",
-    lastmod: "2026-03-31",
     changefreq: "weekly",
     priority: 0.75,
   },
   {
     id: "measurement-guide",
     path: "/measurement-guide",
-    lastmod: "2026-02-19",
     changefreq: "monthly",
     priority: 0.7,
   },
-  { id: "privacy", path: "/privacy", lastmod: "2026-02-22", changefreq: "yearly", priority: 0.3 },
-  { id: "terms", path: "/terms", lastmod: "2026-02-19", changefreq: "yearly", priority: 0.3 },
+  { id: "privacy", path: "/privacy", changefreq: "yearly", priority: 0.3 },
+  { id: "terms", path: "/terms", changefreq: "yearly", priority: 0.3 },
   {
     id: "science-bike-fit-methods",
     path: "/science/bike-fit-methods",
-    lastmod: "2026-02-19",
     changefreq: "monthly",
     priority: 0.7,
   },
   {
     id: "science-stack-reach",
     path: "/science/stack-and-reach",
-    lastmod: "2026-02-19",
     changefreq: "monthly",
     priority: 0.7,
   },
@@ -159,70 +159,60 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
   {
     id: "calculator-saddle-height",
     path: "/calculators/saddle-height",
-    lastmod: "2026-02-19",
     changefreq: "weekly",
     priority: 0.8,
   },
   {
     id: "calculator-saddle-width",
     path: "/calculators/saddle-width",
-    lastmod: "2026-04-10",
     changefreq: "monthly",
     priority: 0.8,
   },
   {
     id: "calculator-crank-length",
     path: "/calculators/crank-length",
-    lastmod: "2026-02-19",
     changefreq: "weekly",
     priority: 0.8,
   },
   {
     id: "calculator-frame-size",
     path: "/calculators/frame-size",
-    lastmod: "2026-02-19",
     changefreq: "weekly",
     priority: 0.8,
   },
   {
     id: "calculator-fuel-hydration",
     path: "/calculators/fuel-hydration",
-    lastmod: "2026-04-11",
     changefreq: "monthly",
     priority: 0.75,
   },
   {
     id: "calculator-ftp-wkg",
     path: "/calculators/ftp-wkg",
-    lastmod: "2026-04-11",
     changefreq: "monthly",
     priority: 0.75,
   },
   {
     id: "calculator-power-speed",
     path: "/calculators/power-speed",
-    lastmod: "2026-04-11",
     changefreq: "monthly",
     priority: 0.75,
   },
   {
     id: "calculator-climb-planner",
     path: "/calculators/climb-planner",
-    lastmod: "2026-04-11",
     changefreq: "monthly",
     priority: 0.75,
   },
   {
     id: "calculator-gearing",
     path: "/calculators/gearing",
-    lastmod: "2026-04-10",
     changefreq: "weekly",
     priority: 0.85,
   },
   {
     id: "calculator-bike-fit",
     path: "/calculators/bike-fit",
-    lastmod: "2026-03-18",
     changefreq: "weekly",
     priority: 0.95,
   },
@@ -232,35 +222,10 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
       en: "/en/tire-pressure-calculator",
       nl: "/nl/bandenspanning-calculator",
     },
-    lastmod: "2026-03-17",
     changefreq: "weekly",
     priority: 0.9,
   },
-  {
-    id: "calculator-tire-pressure-road",
-    path: "/bandenspanning/racefiets",
-    lastmod: "2026-03-17",
-    changefreq: "weekly",
-    priority: 0.9,
-    locales: ["nl"],
-  },
-  {
-    id: "calculator-tire-pressure-gravel",
-    path: "/bandenspanning/gravelbike",
-    lastmod: "2026-03-17",
-    changefreq: "weekly",
-    priority: 0.9,
-    locales: ["nl"],
-  },
-  {
-    id: "calculator-tire-pressure-mtb",
-    path: "/bandenspanning/mtb",
-    lastmod: "2026-03-17",
-    changefreq: "weekly",
-    priority: 0.9,
-    locales: ["nl"],
-  },
-  ...getProgrammaticCalculatorEntries().map<RouteSeed>((entry) => ({
+  ...getPressureBikeEntries().map<RouteSeed>((entry) => ({
     ...entry,
     localizedPaths: {
       en: withLocalePrefix(entry.localizedPaths.en, "en"),
@@ -269,23 +234,26 @@ const CALCULATOR_ROUTE_SEEDS: readonly RouteSeed[] = [
   })),
 ] as const;
 
-// Only statically-known pages that exist regardless of Convex publish state.
-// Published guide articles are merged in dynamically by sitemap-guides.xml/route.ts.
 const GUIDE_ROUTE_SEEDS: readonly RouteSeed[] = [
   {
     id: "guide-why-bikefit-matters",
     path: "/why-bikefit-matters",
-    lastmod: "2026-02-23",
     changefreq: "monthly",
     priority: 0.7,
   },
   {
     id: "guides-index",
     path: "/guides",
-    lastmod: "2026-04-11",
     changefreq: "weekly",
     priority: 0.8,
   },
+  ...listGuideRewrites().map<RouteSeed>((guide) => ({
+    id: `guide-${guide.slug}`,
+    path: `/guides/${guide.slug}`,
+    lastmod: guide.updatedAt,
+    changefreq: "monthly",
+    priority: 0.7,
+  })),
 ] as const;
 
 const BLOG_ROUTE_SEEDS: readonly RouteSeed[] = [];
@@ -311,15 +279,15 @@ export async function getBlogSitemapEntries(): Promise<SitemapContentEntry[]> {
   }
 
   try {
-    const rows = (await fetchSitemapQuery(listPublishedSlugs, {})) as BlogSitemapRow[];
+    const rows = (await withSitemapTimeout(
+      () => fetchSitemapQuery(listPublishedSlugs, {}), []
+    )) as BlogSitemapRow[];
 
     return rows.map((row) =>
       toEntry({
         id: `blog-${row.slug}`,
         path: `/blog/${row.slug}`,
-        lastmod: new Date(row.updatedAt ?? row.publishedAt ?? Date.now())
-          .toISOString()
-          .split("T")[0],
+        lastmod: normalizeLastmod(row.updatedAt) ?? normalizeLastmod(row.publishedAt),
         changefreq: "weekly",
         priority: 0.6,
       })
@@ -399,7 +367,7 @@ export function getSitemapNodesForEntries(
     for (const [, path] of localizedPaths) {
       nodes.push({
         loc: toAbsoluteUrl(path),
-        lastmod: entry.lastmod,
+        lastmod: normalizeLastmod(entry.lastmod),
         changefreq: entry.changefreq,
         priority: entry.priority,
         alternates,
@@ -414,15 +382,43 @@ export async function getBlogSitemapNodes(): Promise<SitemapUrlNode[]> {
   return getSitemapNodesForEntries(await getBlogSitemapEntries());
 }
 
-export function getSitemapSectionLastmod(section: SitemapSection): string {
-  const entries = getSitemapEntries(section);
-  if (entries.length === 0) {
-    return SITEMAP_SYSTEM_LASTMOD;
+export async function getGuideSitemapNodes(): Promise<SitemapUrlNode[]> {
+  const staticNodes = getSitemapNodes("guides");
+  const rows = await withSitemapTimeout(
+    async () => await fetchSitemapQuery(api.guides.queries.listPublishedGuides, {}) as GuideSitemapRow[],
+    [],
+  );
+  const merged = new Map(staticNodes.map((node) => [node.loc, node]));
+  if (!Array.isArray(rows)) return staticNodes;
+  for (const row of rows) {
+    if (!row || typeof row.slug !== "string" || typeof row.path !== "string") continue;
+    const local = listGuideRewrites().find((guide) => guide.slug === row.slug);
+    const usesCmsRewrite = row.importStatus === "44b" && row.libraryBody?.nl && row.libraryBody.en;
+    const lastmod = local
+      ? normalizeLastmod(usesCmsRewrite ? getGuideUpdatedDate(row.lastUpdatedAt) : local.updatedAt)
+      : normalizeLastmod(row.lastUpdatedAt) ?? normalizeLastmod(row.publishedAt)
+        ?? normalizeLastmod(row.updatedAt) ?? normalizeLastmod(row.createdAt);
+    const nodes = getSitemapNodesForEntries([toEntry({
+      id: `guide-${row.slug}`,
+      path: local ? `/guides/${local.slug}` : row.path,
+      lastmod,
+      changefreq: "monthly",
+      priority: row.path === "/guides" ? 0.8 : 0.7,
+    })]);
+    for (const node of nodes) merged.set(node.loc, node);
   }
+  return [...merged.values()].sort((first, second) => first.loc.localeCompare(second.loc));
+}
 
-  return entries
-    .map((entry) => normalizeLastmod(entry.lastmod))
+function latestLastmod(nodes: Array<{ lastmod?: string }>): string | undefined {
+  return nodes
+    .map((node) => normalizeLastmod(node.lastmod))
+    .filter((date): date is string => date !== undefined)
     .sort((a, b) => b.localeCompare(a))[0];
+}
+
+export function getSitemapSectionLastmod(section: SitemapSection): string | undefined {
+  return latestLastmod(getSitemapNodes(section));
 }
 
 const SITEMAP_SECTION_ORDER: readonly SitemapSection[] = [
@@ -433,37 +429,17 @@ const SITEMAP_SECTION_ORDER: readonly SitemapSection[] = [
 ];
 
 export function getSitemapIndexNodes(): SitemapIndexNode[] {
-  return SITEMAP_SECTION_ORDER.flatMap((section) => {
-    if (getSitemapEntries(section).length === 0) {
-      return [];
-    }
-
-    return [
-      {
-        loc: toAbsoluteUrl(SITEMAP_SECTION_PATHS[section]),
-        lastmod: getSitemapSectionLastmod(section),
-      },
-    ];
-  });
+  return SITEMAP_SECTION_ORDER.map((section) => ({
+    loc: toAbsoluteUrl(SITEMAP_SECTION_PATHS[section]),
+    lastmod: getSitemapSectionLastmod(section),
+  }));
 }
 
 export async function getSitemapIndexNodesWithDynamicBlog(): Promise<SitemapIndexNode[]> {
-  const staticNodes = getSitemapIndexNodes();
-  const blogEntries = await getBlogSitemapEntries();
-
-  if (blogEntries.length === 0) {
-    return staticNodes;
-  }
-
-  const blogLastmod = blogEntries
-    .map((entry) => normalizeLastmod(entry.lastmod))
-    .sort((a, b) => b.localeCompare(a))[0];
-
-  return [
-    ...staticNodes.filter((node) => node.loc !== toAbsoluteUrl(SITEMAP_SECTION_PATHS.blog)),
-    {
-      loc: toAbsoluteUrl(SITEMAP_SECTION_PATHS.blog),
-      lastmod: blogLastmod,
-    },
-  ].sort((a, b) => a.loc.localeCompare(b.loc));
+  const [guides, blog] = await Promise.all([getGuideSitemapNodes(), getBlogSitemapNodes()]);
+  return getSitemapIndexNodes().map((node) => {
+    const nodes = node.loc === toAbsoluteUrl(SITEMAP_SECTION_PATHS.guides) ? guides
+      : node.loc === toAbsoluteUrl(SITEMAP_SECTION_PATHS.blog) ? blog : undefined;
+    return nodes ? { ...node, lastmod: latestLastmod(nodes) } : node;
+  });
 }

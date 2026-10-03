@@ -25,7 +25,8 @@ export function EditorialHero({
   illustration,
   className,
   image = "/illustrations/03-cockpit-afstellen.webp",
-}: ComponentProps<typeof PublicHero> & { image?: string }) {
+  imageAlt,
+}: ComponentProps<typeof PublicHero> & { image?: string; imageAlt: string }) {
   return (
     <header className={`${styles.hero} ${className ?? ""}`}>
       <div>
@@ -35,7 +36,7 @@ export function EditorialHero({
         {actions && <div className={styles.actions}>{actions}</div>}
       </div>
       <div className={styles.heroArt}>
-        <Image src={image} alt="" width={720} height={540} priority sizes="(max-width: 760px) 100vw, 40vw" />
+        <Image src={image} alt={imageAlt} width={720} height={540} priority sizes="(max-width: 760px) 100vw, 40vw" />
         {illustration && <div className={styles.heroCaption}>{illustration}</div>}
       </div>
     </header>

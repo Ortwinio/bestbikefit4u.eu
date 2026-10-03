@@ -49,7 +49,12 @@ vi.mock("@/config/commercial", async () => {
 });
 
 vi.mock("@/components/seo/JsonLd", () => ({
-  JsonLd: () => null,
+  JsonLd: ({ schema }: { schema: object | object[] }) => (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  ),
 }));
 
 vi.mock("@/components/seo/RelatedLinksSection", () => ({
@@ -64,17 +69,6 @@ vi.mock("@/i18n/metadata", () => ({
   buildLocaleAlternates: () => ({
     canonical: `https://bestbikefit4u.eu/${locale}/calculators/saddle-width`,
   }),
-}));
-
-vi.mock("@/lib/seo/jsonLd", () => ({
-  CALCULATOR_AGGREGATE_RATING: {
-    ratingValue: "4.8",
-    ratingCount: 380,
-    bestRating: "5",
-    worstRating: "1",
-  },
-  buildHowToSchema: () => ({}),
-  buildWebApplicationSchema: () => ({}),
 }));
 
 vi.mock("./SaddleWidthCalculatorForm", () => ({
@@ -94,6 +88,26 @@ afterEach(() => {
 });
 
 describe("saddle width calculator page", () => {
+  it.each(["en", "nl"] as const)(
+    "publishes a free WebApplication without ratings in %s",
+    async (language) => {
+      locale = language;
+      const { container } = render(await SaddleWidthCalculatorPage());
+      const scripts = Array.from(container.querySelectorAll('script[type="application/ld+json"]'));
+      const schemas = scripts.flatMap((script) => JSON.parse(script.textContent ?? "null"));
+      const application = schemas.find((schema) => schema["@type"] === "WebApplication");
+
+      expect(application).toMatchObject({
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        operatingSystem: "Any",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+      });
+      expect(JSON.stringify(schemas)).not.toContain('"aggregateRating"');
+      expect(JSON.stringify(schemas)).not.toContain('"AggregateRating"');
+    },
+  );
+
   it.each(["en", "nl"] as const)("preserves metadata in %s", async (language) => {
     locale = language;
     const metadata = await generateMetadata();
@@ -115,4 +129,18 @@ describe("saddle width calculator page", () => {
     );
     expect(screen.queryByText("Donate via our Alpe d'HuZes page")).toBeNull();
   });
+});
+
+it.each(["nl", "en"] as const)("renders the answer and one visible FAQ schema in %s", async language => {
+  locale = language;
+  const { container } = render(await SaddleWidthCalculatorPage());
+  expect(container.querySelector('[data-calculator-answer="saddle-width"]')).not.toBeNull();
+  const schemas = Array.from(container.querySelectorAll('script[type="application/ld+json"]'))
+    .flatMap(script => JSON.parse(script.textContent ?? "[]"));
+  const faqs = schemas.filter(schema => schema["@type"] === "FAQPage");
+  expect(faqs).toHaveLength(1);
+  for (const question of faqs[0].mainEntity) {
+    expect(screen.getByText(question.name)).toBeTruthy();
+    expect(screen.getByText(question.acceptedAnswer.text)).toBeTruthy();
+  }
 });

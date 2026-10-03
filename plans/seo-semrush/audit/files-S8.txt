@@ -1,0 +1,15 @@
+plans/seo-crawl-fixes/audit/crawl-s8-s9.md
+plans/seo-semrush/README.md
+plans/seo-semrush/audit/S8-S9-runtime.json
+plans/seo-semrush/audit/S8-notes.md
+plans/seo-semrush/audit/files-S8.txt
+public/llms.txt
+scripts/seo-discovery-check.mjs
+src/app/llms-full.txt/route.ts
+src/app/llms.txt/route.ts
+src/i18n/marketing/llms.ts
+src/lib/seo/llms.test.ts
+src/lib/seo/llms.ts
+src/lib/seo/llmsContent.test.ts
+src/lib/seo/llmsContent.ts
+tests/integration/llms.integration.test.ts

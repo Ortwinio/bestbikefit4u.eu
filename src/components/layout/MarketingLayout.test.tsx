@@ -49,7 +49,7 @@ describe("marketing layout", () => {
   });
 
   it("preserves the current page and query when changing language, NL first", () => {
-    render(<MarketingLanguageSwitch locale="nl" />);
+    render(<MarketingLanguageSwitch locale="nl" placement="menu" />);
     const links = screen.getAllByRole("link");
     expect(links.map((link) => link.textContent)).toEqual(["NL", "EN"]);
     expect(links[1].getAttribute("href")).toBe("/en/how-it-works?source=test");
@@ -91,4 +91,36 @@ describe("marketing layout", () => {
     expect(screen.getByRole("link", { name: en.nav.footer.passportCheck })).toBeTruthy();
     expect(screen.getByRole("link", { name: en.nav.footer.saddleHeightGuide })).toBeTruthy();
   });
+});
+
+
+it.each(["nl", "en"] as const)("links the footer directly to the bike-fitting owner in %s", locale => {
+  const dictionary = locale === "nl" ? nl : en;
+  render(<Footer locale={locale} labels={{howItWorks:dictionary.nav.howItWorks,
+    pricing:dictionary.nav.pricing,footer:dictionary.nav.footer}} />);
+  expect(screen.getByRole("link",{name:locale==="nl"?"Wat is bikefitting?":"What is bike fitting?"})
+    .getAttribute("href")).toBe(locale==="nl"?"/nl/bikefitting":"/en/bike-fitting");
+});
+
+
+it.each(["nl", "en"] as const)("gives header and footer language landmarks distinct names in %s", locale => {
+  const dictionary = locale === "nl" ? nl : en;
+  render(<>
+    <Header locale={locale} labels={{
+      common: dictionary.common, nav: dictionary.nav, dashboardNav: dictionary.dashboard.nav,
+      dashboardSignOut: dictionary.dashboard.common.signOut,
+    }} />
+    <Footer locale={locale} labels={{
+      howItWorks: dictionary.nav.howItWorks, pricing: dictionary.nav.pricing, footer: dictionary.nav.footer,
+    }} />
+  </>);
+  const names = locale === "nl"
+    ? ["Taal (menu)", "Taal (voettekst)"]
+    : ["Language (menu)", "Language (footer)"];
+  for (const name of names) {
+    const landmark = screen.getByRole("navigation", { name });
+    expect(within(landmark).getAllByRole("link").map(link => link.textContent)).toEqual(["NL", "EN"]);
+  }
+  expect(screen.queryByRole("navigation", { name: locale === "nl" ? "Taal" : "Language" }))
+    .toBeNull();
 });

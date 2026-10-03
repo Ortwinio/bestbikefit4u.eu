@@ -1,14 +1,17 @@
+import { getGuideUpdatedDate } from "@/config/authorship";
+import { GuideAttribution } from "./GuideAttribution";
 import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
+import { bikeFittingLinks } from "@/i18n/marketing/bikeFittingLinks";
 import { guideRewriteMessages } from "@/i18n/marketing/guideRewrite";
-import { withLocalePrefix } from "@/i18n/navigation";
+import { withLocalePrefix, switchLocalePathname } from "@/i18n/navigation";
 import { BRAND } from "@/config/brand";
 import { GuideBodyMarkdown } from "@/components/content/GuideBodyMarkdown";
 import { PublicBreadcrumbs } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { buildArticleSchema, buildBreadcrumbListSchema, buildFaqPageSchema } from "@/lib/seo/jsonLd";
+import { buildArticleSchema, buildBreadcrumbListSchema, buildFaqPageSchema, buildPersonSchema } from "@/lib/seo/jsonLd";
 import { getRewriteFaqs, type GuideRewrite } from "@/lib/guides/rewrite-types";
 import styles from "./Guides.module.css";
 
@@ -18,9 +21,6 @@ export function RewrittenGuide({ guide, locale }: { guide: GuideRewrite; locale:
   const pagePath = withLocalePrefix(`/guides/${guide.slug}`, locale);
   const url = new URL(pagePath, BRAND.siteUrl).href;
   const hero = `/illustrations/guides/${guide.illustration}.webp`;
-  const date = new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-GB", {
-    day: "numeric", month: "long", year: "numeric", timeZone: "UTC",
-  }).format(new Date(`${guide.updatedAt}T00:00:00Z`));
   const breadcrumbs = [
     { label: copy.home, href: withLocalePrefix("/", locale) },
     { label: copy.guides, href: withLocalePrefix("/guides", locale) },
@@ -36,9 +36,11 @@ export function RewrittenGuide({ guide, locale }: { guide: GuideRewrite; locale:
             description: article.metaDescription,
             url,
             inLanguage: locale,
+            author: buildPersonSchema(locale),
+            dateModified: getGuideUpdatedDate(guide.updatedAt),
             image: new URL(hero, BRAND.siteUrl).href,
           }),
-          dateModified: guide.updatedAt,
+
         },
         buildFaqPageSchema(getRewriteFaqs(article.markdown)),
         buildBreadcrumbListSchema(breadcrumbs.map(({ label, href }) => ({
@@ -59,9 +61,7 @@ export function RewrittenGuide({ guide, locale }: { guide: GuideRewrite; locale:
               <h2 id="guide-quick-title" className="text-lg font-semibold">{copy.quick}</h2>
               <p>{article.quickAnswer}</p>
             </section>
-            <div className="text-sm text-muted-foreground">
-              {copy.updated}: <time dateTime={guide.updatedAt}>{date}</time>
-            </div>
+            <GuideAttribution locale={locale} updatedAt={guide.updatedAt} />
           </div>
           <Image
             src={hero} alt={article.alt} width={1600} height={1000}
@@ -70,6 +70,14 @@ export function RewrittenGuide({ guide, locale }: { guide: GuideRewrite; locale:
         </header>
         <article id="guide-content" className="mx-auto max-w-3xl pb-12">
           <GuideBodyMarkdown content={article.markdown} locale={locale} preserveLinkLabels />
+          <p className="mt-8 leading-relaxed text-muted-foreground">
+            {bikeFittingLinks[locale].context}{" "}
+            <Link href={switchLocalePathname("/bike-fitting", locale)}
+              className="font-semibold text-primary underline underline-offset-4 focus-visible:outline-2
+                focus-visible:outline-offset-4 focus-visible:outline-ring">
+              {bikeFittingLinks[locale].guideLink}
+            </Link>
+          </p>
           <div className="mt-12 rounded-3xl border border-border bg-card p-6 sm:p-8">
             <p className="text-lg text-foreground">{article.cta}</p>
             <Link

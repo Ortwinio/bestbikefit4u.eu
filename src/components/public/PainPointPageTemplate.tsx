@@ -1,3 +1,4 @@
+import { bikeFittingOwnershipMessages } from "@/i18n/marketing/bikeFittingOwnership";
 import Link from "next/link";
 import { Activity, HelpCircle, Target } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -172,14 +173,14 @@ export function PainPointPageTemplate({
           </div>
           {locale === "nl" ? (
             <p className="mt-5 text-sm leading-7 text-muted-foreground">
-              Wil je eerst breder zien hoe je{" "}
+              {bikeFittingOwnershipMessages[locale].before}
               <Link
-                href={withLocalePrefix("/fiets-afstellen", locale)}
+                href={withLocalePrefix("/bikefitting", locale)}
                 className="font-medium text-primary underline underline-offset-4"
               >
-                fiets afstellen stap voor stap
+                {bikeFittingOwnershipMessages[locale].link}
               </Link>{" "}
-              aanpakt voordat je deze klacht verder uitsplitst? Gebruik die pagina als extra contextlaag en kom daarna terug naar de klachtgerichte checks.
+              {bikeFittingOwnershipMessages[locale].after}
             </p>
           ) : null}
         </PublicSection>

@@ -1,44 +1,4 @@
-import type { Metadata } from "next";
-import { PressureCalculatorFaq } from "@/components/features/pressure/PressureCalculatorFaq";
-import { PressureCalculatorForm } from "@/components/features/pressure/PressureCalculatorForm";
-import { getDictionary } from "@/i18n/getDictionary";
-import { buildLocaleAlternates } from "@/i18n/metadata";
-import { getRequestLocale } from "@/i18n/request";
+import { notFound } from "next/navigation";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const locale = await getRequestLocale();
-  const dictionary = await getDictionary(locale);
-  const alternates = buildLocaleAlternates("/bandenspanning/mtb", locale);
-
-  return {
-    title: dictionary.pressure.mtbPage.title,
-    description: dictionary.pressure.mtbPage.description,
-    openGraph: {
-      title: dictionary.pressure.mtbPage.title,
-      description: dictionary.pressure.mtbPage.description,
-      type: "website",
-      url: alternates.canonical,
-    },
-    alternates,
-  };
-}
-
-export default async function BandenspanningMtbPage() {
-  const locale = await getRequestLocale();
-  const dictionary = await getDictionary(locale);
-
-  return (
-    <div className="bg-background text-foreground">
-      <PressureCalculatorForm
-        locale={locale}
-        defaultDiscipline="mtb"
-        copy={dictionary.tirePressureCalculator}
-        labels={dictionary.pressure.form}
-        resultLabels={dictionary.pressure.result}
-      />
-      <div className="mx-auto max-w-[1440px] px-4 pb-12 sm:px-8 xl:px-16">
-        <PressureCalculatorFaq locale={locale} />
-      </div>
-    </div>
-  );
-}
+// The proxy returns a direct 301 to the localized mountain-bike page before rendering.
+export default function RetiredMtbAlias() { notFound(); }

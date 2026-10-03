@@ -3,17 +3,16 @@ import Link from "next/link";
 import { BRAND } from "@/config/brand";
 import { cn } from "@/utils/cn";
 
-export function MarketingLogo({ href, className, priority = false, ariaLabel = BRAND.name }: {
+export function MarketingLogo({ href, className, priority = false }: {
   href: string;
   className?: string;
   priority?: boolean;
-  ariaLabel?: string;
 }) {
   return (
-    <Link href={href} className={cn(className, "flex min-h-11 min-w-11 items-center")} aria-label={ariaLabel}>
+    <Link href={href} className={cn(className, "flex min-h-11 min-w-11 items-center")}>
       <Image
         src={BRAND.assets.logoPrimary}
-        alt=""
+        alt={BRAND.name}
         width={381}
         height={64}
         priority={priority}
@@ -21,7 +20,7 @@ export function MarketingLogo({ href, className, priority = false, ariaLabel = B
       />
       <Image
         src={BRAND.assets.logoDark}
-        alt=""
+        alt={BRAND.name}
         width={381}
         height={64}
         priority={priority}

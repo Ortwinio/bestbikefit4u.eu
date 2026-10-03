@@ -1,3 +1,5 @@
+import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { getFitAnswer } from "@/lib/seo/calculatorAnswers/fit";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import { fitPageDetails } from "@/i18n/calculators/fitPageDetails";
 import type { Metadata } from "next";
@@ -17,9 +19,9 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { getDictionary } from "@/i18n/getDictionary";
 import {
-  CALCULATOR_AGGREGATE_RATING,
   buildBreadcrumbListSchema,
   buildHowToSchema,
+  buildFaqPageSchema,
   buildWebApplicationSchema,
 } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
@@ -150,6 +152,7 @@ export default async function BikeFitCalculatorPage() {
     <div className="text-foreground">
       <JsonLd
         schema={[
+          buildFaqPageSchema(faqs),
           buildBreadcrumbListSchema([
             {
               name: isNl ? "Home" : "Home",
@@ -165,7 +168,6 @@ export default async function BikeFitCalculatorPage() {
               : "Free bike-fit calculator for a practical first-pass estimate of saddle height, reach, " +
                 "drop, and frame targets.",
             url: pageUrl,
-            aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
           buildHowToSchema({
             name: isNl
@@ -198,6 +200,7 @@ export default async function BikeFitCalculatorPage() {
         />
       </div>
       <BikeFitCalculatorForm isNl={isNl} copy={dictionary.bikeFitCalculator} />
+      <CalculatorAnswerSection id="bike-fit" locale={locale} content={getFitAnswer("bike-fit", locale)} />
       <PublicPageShell className="pt-0 md:pt-0">
         <PublicSection
           className="mt-10"

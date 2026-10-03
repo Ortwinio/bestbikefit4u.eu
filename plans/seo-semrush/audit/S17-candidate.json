@@ -1,0 +1,11 @@
+{
+  "recordedAt": "2026-10-03T15:04:12.140Z",
+  "branch": "fix/seo-semrush",
+  "rebasedHead": "da723fbf21c8fae41f2191427b04d851ee73d42d",
+  "main": "4b22da007d7aba290174c789a600d144595993b7",
+  "originalSeoCheckpoint": "ea5e37ce71a0262ce532ea44b9d2e27a14afb086",
+  "buildId": "F-yLf373Lqu2IKKHBS4al",
+  "files": 1719,
+  "sourceSha256": "54396e83a2f2d3571771d5a1d3b338b92a0530bdc782da5fbb49b103629d73e8",
+  "algorithm": "Sorted git ls-files cached+untracked existing files in src/convex/shared/scripts/tests plus package.json/package-lock.json/next.config.ts/tsconfig.json/convex.json; SHA256(path + NUL + fileSHA256 + newline). Plans/renders excluded. Integration tests are uncommitted."
+}

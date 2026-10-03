@@ -1,0 +1,8 @@
+src/app/(public)/faq/page.tsx
+src/app/(public)/faq/page.test.tsx
+src/app/(public)/contact/page.tsx
+src/app/(public)/contact/page.test.tsx
+src/i18n/marketing/faq.ts
+src/i18n/marketing/contact.ts
+plans/seo-semrush/audit/S6-copy-notes.md
+plans/seo-semrush/audit/files-S6-copy.txt

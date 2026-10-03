@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildXmlHeadResponse, buildXmlResponse } from "./xml";
+import { buildXmlHeadResponse, buildXmlResponse, latestSitemapLastmod, renderSitemapIndexXml, renderUrlSetXml } from "./xml";
 
 describe("sitemap xml responses", () => {
   it("returns crawler-friendly XML headers", async () => {
@@ -43,7 +43,25 @@ describe("sitemap xml responses", () => {
     });
 
     expect(response.status).toBe(200);
-    expect(response.headers.get("content-length")).toBeDefined();
+    expect(response.headers.has("content-length")).toBe(false);
     expect(await response.text()).toBe("");
+  });
+
+  it("omits unsupported dates without inventing a current date", () => {
+    expect(renderSitemapIndexXml([{ loc: "https://bestbikefit4u.eu/sitemap-blog.xml" }])).not.toContain("lastmod");
+    expect(renderUrlSetXml([{ loc: "https://bestbikefit4u.eu/en", alternates: [] }])).not.toContain("lastmod");
+    expect(latestSitemapLastmod([{}, { lastmod: "invalid" }])).toBeUndefined();
+    expect(latestSitemapLastmod([{}, { lastmod: "2026-10-01" }, { lastmod: "2026-09-30" }])).toBe("2026-10-01");
+  });
+
+  it("keeps GET and conditional responses free of manual content length", async () => {
+    const url = "https://bestbikefit4u.eu/sitemap-blog.xml";
+    const response = buildXmlResponse(new Request(url), renderUrlSetXml([]));
+    expect(response.headers.has("content-length")).toBe(false);
+    const cached = buildXmlResponse(new Request(url, { headers: { "if-none-match": response.headers.get("etag")! } }),
+      renderUrlSetXml([]));
+    expect(cached.status).toBe(304);
+    expect(cached.headers.has("content-length")).toBe(false);
+    expect(await cached.text()).toBe("");
   });
 });

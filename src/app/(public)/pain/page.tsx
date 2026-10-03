@@ -63,7 +63,13 @@ export default async function PainIndexPage() {
               {calculator("pain_index_primary_cta")}
             </div>
           </div>
-          <Image src="/illustrations/01-racefiets.webp" width={568} height={370} alt={copy.indexImage} priority />
+          <Image
+            src="/illustrations/01-racefiets.webp" width={568} height={370} alt={copy.indexImage} priority
+            sizes={
+              "(max-width: 600px) calc(100vw - 40px), (max-width: 900px) calc(100vw - 48px), "
+              + "(max-width: 1248px) calc(46.52vw - 44.66px), 536px"
+            }
+          />
         </section>
         <aside className={styles.disclaimer}>
           <h2>{copy.disclaimerTitle}</h2><p>{copy.disclaimer}</p>

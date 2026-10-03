@@ -28,7 +28,8 @@
     "test:coverage": "vitest run --coverage",
     "lint:contrast": "node scripts/check-brand-contrast.mjs",
     "lint:css-modules": "node scripts/check-css-module-tokens.mjs",
-    "lint:images": "node scripts/check-image-weight.mjs"
+    "lint:images": "node scripts/check-image-weight.mjs",
+    "perf:baseline": "node scripts/performance/local.mjs"
   },
   "dependencies": {
     "@auth/core": "^0.41.3",
@@ -58,6 +59,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
+    "@lhci/cli": "^0.15.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",

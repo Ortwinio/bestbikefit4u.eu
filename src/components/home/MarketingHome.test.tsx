@@ -25,9 +25,7 @@ describe("marketing home", () => {
     expect(screen.getByRole("link", { name: "Maak gratis account" }).getAttribute("href")).toBe("/nl/login");
     expect(screen.getByRole("link", { name: "Wat zit in het rapport?" }).getAttribute("href")).toBe("#fit-report");
     expect(document.body.textContent).not.toMatch(/CLAIM|bron\?|Meest populair|Meetduur:|Voorbeeldgegevens/);
-    const rating = screen.getByText(/van.*rijders/).closest("div");
-    expect(rating?.textContent).toContain("4,8 van 380+ rijders");
-    expect([...rating!.querySelectorAll("span span")].map((part) => part.textContent)).toEqual(["4,8", "380+"]);
+    expect(screen.getByText("Begin met je maten. Verfijn op de fiets.")).toBeTruthy();
     expect(screen.getByText("Schuif naar jouw maat")).toBeTruthy();
     expect(document.body.textContent).toContain("Betalingen zijn tijdelijk niet beschikbaar");
     expect(document.querySelector('a[href="/nl/pain/hand-numbness-cycling"]')).toBeTruthy();
@@ -42,5 +40,16 @@ describe("marketing home", () => {
     expect(metadata.alternates?.canonical).toBe("https://bestbikefit4u.eu/en");
     expect(metadata.openGraph).toMatchObject({ type: "website" });
     expect(metadata.description).toBeTruthy();
+  });
+
+  it.each(["nl", "en"])("removes unsupported trust claims without removing the %s layout", async (locale) => {
+    requestLocale.mockReturnValue(locale);
+    const { container } = render(await HomePage());
+    expect(container.textContent).not.toMatch(/4[.,]8|380\+|2[.,]400\+|180\+|Thomas V\.|Laura M\.|Pieter J\./);
+    expect(container.querySelectorAll("blockquote, cite")).toHaveLength(0);
+    expect(container.querySelectorAll("article")).toHaveLength(7);
+    expect(container.querySelectorAll("section")).toHaveLength(11);
+    expect(container.querySelector("#fit-report")).toBeTruthy();
+    expect(container.textContent).not.toMatch(/CLAIM|bron\?|verified rider|geverifieerd rijder/i);
   });
 });

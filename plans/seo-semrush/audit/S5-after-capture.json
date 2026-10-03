@@ -1,0 +1,658 @@
+{
+  "phase": "after",
+  "capturedAt": "2026-10-03T11:52:30.833Z",
+  "source": "/Users/ortwinverreck/Developer/bestbikefit4u-semrush",
+  "sourceHashes": {
+    "src/app/(public)/page.tsx": "60136dd360a97274c420722f105e4fb04aa279e5b8a16c5c3eb342dca57ff0be",
+    "src/components/home/MarketingHome.module.css": "ae2d895c650378556a68b43474f93ef1ad4d357970db1a7a326f4350f6c61860",
+    "src/components/home/homeRedesignContent.ts": "2c2bb39f37a6dc9b71cee4fdf7142b611beb4240d88eaff20f9a6e23d0b0079d",
+    "src/i18n/marketing/home.ts": "7e40072752e30a84d4341933d69ef8376c6a6316172ea39525859c5e2e746aa8",
+    "src/i18n/marketing/homeTrust.ts": "e3324c013f199f214566c39906d673ac9f0a65a6aea13fa7f914a44d63843de1",
+    "src/app/globals.css": "934a50dd4b656bcf488c41f83e28057d7c75af43508c283a266d36b39e1b0293"
+  },
+  "bundleSha256": "7dc7131e12fc1f52b8da8e2bb098a1874a6115d6a72cd090baf0a8538dbe29b2",
+  "cssSha256": "3ab5a62e9c90132bb4f08265d44ff725dd0077e519c531405a24a899afa519d3",
+  "limitations": [
+    "Offline real-source React fixture, not Next SSR/hydration.",
+    "Synthetic signed-out auth, mutations disabled, empty CMS blog, no production data.",
+    "Repository font files; real global Tailwind and CSS modules. Cookie consent dismissed state."
+  ],
+  "cases": [
+    {
+      "locale": "nl",
+      "width": 1440,
+      "file": "S5-after-nl-1440.png",
+      "errors": [],
+      "externalRequests": [],
+      "overflow": false,
+      "scrollWidth": 1440,
+      "height": 5013,
+      "h1": "Haal meer uit elke rit.",
+      "font": "S5Figtree, system-ui, sans-serif",
+      "fonts": [
+        {
+          "family": "S5Figtree",
+          "status": "loaded"
+        },
+        {
+          "family": "S5Display",
+          "status": "loaded"
+        },
+        {
+          "family": "S5Mono",
+          "status": "loaded"
+        }
+      ],
+      "brokenImages": [],
+      "sections": [
+        {
+          "className": "MarketingHome_container MarketingHome_hero",
+          "x": 120,
+          "y": 89,
+          "width": 1200,
+          "height": 779
+        },
+        {
+          "className": "MarketingHome_proof",
+          "x": 0,
+          "y": 868,
+          "width": 1440,
+          "height": 154.5
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section",
+          "x": 120,
+          "y": 1022.5,
+          "width": 1200,
+          "height": 771.296875
+        },
+        {
+          "className": "MarketingHome_stepsBand",
+          "x": 0,
+          "y": 1793.796875,
+          "width": 1440,
+          "height": 571.546875
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section",
+          "x": 120,
+          "y": 2365.34375,
+          "width": 1200,
+          "height": 496.546875
+        },
+        {
+          "className": "MarketingHome_testimonials",
+          "x": 0,
+          "y": 2861.890625,
+          "width": 1440,
+          "height": 558.796875
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section MarketingHome_report",
+          "x": 120,
+          "y": 3420.6875,
+          "width": 1200,
+          "height": 413
+        },
+        {
+          "className": "MarketingHome_closing",
+          "x": 120,
+          "y": 3833.6875,
+          "width": 1200,
+          "height": 286.59375
+        },
+        {
+          "className": "",
+          "x": 120,
+          "y": 4273.28125,
+          "width": 381.328125,
+          "height": 340.75
+        },
+        {
+          "className": "",
+          "x": 529.328125,
+          "y": 4273.28125,
+          "width": 381.328125,
+          "height": 340.75
+        },
+        {
+          "className": "",
+          "x": 938.65625,
+          "y": 4273.28125,
+          "width": 381.34375,
+          "height": 340.75
+        }
+      ],
+      "grids": [
+        {
+          "className": "MarketingHome_container MarketingHome_hero",
+          "columns": "585.938px 558.047px",
+          "count": 2
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_proofInner",
+          "columns": "237.438px 237.453px 237.438px 403.672px",
+          "count": 4
+        },
+        {
+          "className": "MarketingHome_toolGrid",
+          "columns": "285px 285px 285px 285px",
+          "count": 8
+        },
+        {
+          "className": "MarketingHome_steps",
+          "columns": "362.656px 362.672px 362.656px",
+          "count": 3
+        },
+        {
+          "className": "MarketingHome_painGrid",
+          "columns": "285px 285px 285px 285px",
+          "count": 4
+        },
+        {
+          "className": "MarketingHome_quotes",
+          "columns": "384px 384px 384px",
+          "count": 3
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section MarketingHome_report",
+          "columns": "568px 568px",
+          "count": 2
+        },
+        {
+          "className": "",
+          "columns": "274px 274px",
+          "count": 8
+        },
+        {
+          "className": "MarketingHome_closing",
+          "columns": "571.625px 476.359px",
+          "count": 2
+        },
+        {
+          "className": "MarketingHome_discoveryGrid",
+          "columns": "381.328px 381.328px 381.344px",
+          "count": 3
+        }
+      ],
+      "text": "Online bikefit · gratis starten, geen account nodig\nHaal meer uit elke rit.\n\nStel je fiets af op jouw lichaam en rijstijl. Vul je maten in en krijg concrete millimeters voor zadel, reach en stuur.\n\nStart gratis bike fit\nWat zit in het rapport?\nBegin met je maten. Verfijn op de fiets.\n\nSchuif naar jouw maat\n\nPROBEER HET NU\n\nStartpunt voor je zadel\n742 mm\n\ntrapas → bovenkant zadel\n\nBinnenbeenlengte\nMeet op blote voeten met een boek tegen de muur.\n84cm\n84 cm\n\nRacefiets · gebalanceerd · gemiddelde lenigheid en rompstabiliteit. Aanpassingsmarge: 722–764 mm.\n\nVerfijn je zadelhoogte\nMeet\nje eigen maten\nTest\nje afstelling\nGratis\nom te starten\nVerander één instelling tegelijk. Controleer hoe je zit en beweegt tijdens het fietsen.\nEen startpunt, geen garantie · Van meten naar uitproberen\n\nGRATIS CONFIGURATORS\n\nKies wat je wilt afstellen\n\nGratis tools die je direct kunt gebruiken, zonder account.\n\nVolledige bikefit\n\nZadel, reach, drop en framemaat in één overzicht.\n\nZadelhoogte\n\nEen startwaarde in millimeters, met een aanpassingsmarge.\n\nFramemaat\n\nWelke maat past bij jouw proporties?\n\nBandenspanning\n\nVoor en achter, op basis van gewicht en ondergrond.\n\nZadelbreedte\n\nSchatting vanuit je zitbeenderen.\n\nCranklengte\n\nDe cranklengte die past bij jouw rijpositie.\n\nVerzet\n\nOntwikkeling per pedaalslag, per versnelling.\n\nMeetgids\n\nMeet op blote voeten met een boek tegen de muur.\n\nHOE HET WERKT\n\nVan meten naar rijden in drie stappen\n01\nMeet je lichaam\n\nVul lengte, binnenbeen, armlengte en de lichaamsdata in die echte setupkeuzes sturen.\n\n02\nKoppel je fiets\n\nKies je fiets uit de database of ga verder via de handmatige geometrie-route wanneer dat nodig is.\n\n03\nOntvang je fitplan\n\nBekijk zadel, reach, cockpit en de volgende afstelstappen in een praktische volgorde.\n\nHoe het werkt\n\nSTART BIJ JE KLACHT\n\nWaar knelt het?\nKnieën\n\nLees hoe zadelpositie en cleats knieklachten beïnvloeden.\n\nLees de gids\nOnderrug\n\nLees over reach, drop en zadelhoek bij rugklachten.\n\nLees de gids\nHanden & nek\n\nLees over reach, stuurbreedte en druk op je handen.\n\nLees de gids\nZadelpijn\n\nBreedte, zadelterugstand en kanteling samen bekeken.\n\nLees de gids\nMaak je volgende aanpassing bewust\nZadelpositie\n\nNoteer je huidige zadelstand voordat je iets verandert. Zo kun je een aanpassing terugdraaien.\n\nBewaar je uitgangspunt\nHoogte, terugstand en kanteling\nStuurpositie\n\nControleer of je ontspannen bij het stuur kunt. Verander niet tegelijk je zadel en je cockpit.\n\nBeoordeel het geheel\nReach en drop samen bekeken\nProefrit\n\nProbeer je afstelling op een vertrouwde route. Laat aanhoudende klachten beoordelen door een professional.\n\nEvalueer onderweg\nOnline advies is een startpunt\nJe rapport bevat de getallen die ertoe doen\nZadelhoogte met aanpassingsmarge\nZadelterugstand (voor/achter positie)\nStuurdrop en reach\nStuurpenlengte en -hoek\nAdvies voor cranklengte\nStuurbreedte\nDoelwaarden voor frame stack en reach\nAanbevolen framemaat\nBegin met een gratis account.\n\nBetalingen zijn tijdelijk niet beschikbaar. Je kunt wel gratis een account aanmaken.\n\nMaak gratis account\nVergelijk Free en Pro\nVerdiep je verder"
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "file": "S5-after-nl-390.png",
+      "errors": [],
+      "externalRequests": [],
+      "overflow": false,
+      "scrollWidth": 390,
+      "height": 9142,
+      "h1": "Haal meer uit elke rit.",
+      "font": "S5Figtree, system-ui, sans-serif",
+      "fonts": [
+        {
+          "family": "S5Figtree",
+          "status": "loaded"
+        },
+        {
+          "family": "S5Display",
+          "status": "loaded"
+        },
+        {
+          "family": "S5Mono",
+          "status": "loaded"
+        }
+      ],
+      "brokenImages": [],
+      "sections": [
+        {
+          "className": "MarketingHome_container MarketingHome_hero",
+          "x": 20,
+          "y": 89,
+          "width": 350,
+          "height": 1260.375
+        },
+        {
+          "className": "MarketingHome_proof",
+          "x": 0,
+          "y": 1349.375,
+          "width": 390,
+          "height": 243.09375
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section",
+          "x": 20,
+          "y": 1592.46875,
+          "width": 350,
+          "height": 1964.375
+        },
+        {
+          "className": "MarketingHome_stepsBand",
+          "x": 0,
+          "y": 3556.84375,
+          "width": 390,
+          "height": 892.625
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section",
+          "x": 20,
+          "y": 4449.46875,
+          "width": 350,
+          "height": 977.6875
+        },
+        {
+          "className": "MarketingHome_testimonials",
+          "x": 0,
+          "y": 5427.15625,
+          "width": 390,
+          "height": 1086.875
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section MarketingHome_report",
+          "x": 20,
+          "y": 6514.03125,
+          "width": 350,
+          "height": 579.0625
+        },
+        {
+          "className": "MarketingHome_closing",
+          "x": 20,
+          "y": 7093.09375,
+          "width": 350,
+          "height": 352.875
+        },
+        {
+          "className": "",
+          "x": 20,
+          "y": 7566.96875,
+          "width": 350,
+          "height": 340.75
+        },
+        {
+          "className": "",
+          "x": 20,
+          "y": 7935.71875,
+          "width": 350,
+          "height": 288.75
+        },
+        {
+          "className": "",
+          "x": 20,
+          "y": 8252.46875,
+          "width": 350,
+          "height": 288.75
+        }
+      ],
+      "grids": [
+        {
+          "className": "MarketingHome_container MarketingHome_hero",
+          "columns": "350px",
+          "count": 2
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_proofInner",
+          "columns": "106px 106px 106px",
+          "count": 4
+        },
+        {
+          "className": "MarketingHome_toolGrid",
+          "columns": "350px",
+          "count": 8
+        },
+        {
+          "className": "MarketingHome_steps",
+          "columns": "350px",
+          "count": 3
+        },
+        {
+          "className": "MarketingHome_painGrid",
+          "columns": "350px",
+          "count": 4
+        },
+        {
+          "className": "MarketingHome_quotes",
+          "columns": "350px",
+          "count": 3
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section MarketingHome_report",
+          "columns": "350px",
+          "count": 2
+        },
+        {
+          "className": "",
+          "columns": "350px",
+          "count": 8
+        },
+        {
+          "className": "MarketingHome_closing",
+          "columns": "294px",
+          "count": 2
+        },
+        {
+          "className": "MarketingHome_discoveryGrid",
+          "columns": "350px",
+          "count": 3
+        }
+      ],
+      "text": "Online bikefit · gratis starten, geen account nodig\nHaal meer uit elke rit.\n\nStel je fiets af op jouw lichaam en rijstijl. Vul je maten in en krijg concrete millimeters voor zadel, reach en stuur.\n\nStart gratis bike fit\nWat zit in het rapport?\nBegin met je maten. Verfijn op de fiets.\n\nSchuif naar jouw maat\n\nPROBEER HET NU\n\nStartpunt voor je zadel\n742 mm\n\ntrapas → bovenkant zadel\n\nBinnenbeenlengte\nMeet op blote voeten met een boek tegen de muur.\n84cm\n84 cm\n\nRacefiets · gebalanceerd · gemiddelde lenigheid en rompstabiliteit. Aanpassingsmarge: 722–764 mm.\n\nVerfijn je zadelhoogte\nMeet\nje eigen maten\nTest\nje afstelling\nGratis\nom te starten\nVerander één instelling tegelijk. Controleer hoe je zit en beweegt tijdens het fietsen.\nEen startpunt, geen garantie · Van meten naar uitproberen\n\nGRATIS CONFIGURATORS\n\nKies wat je wilt afstellen\n\nGratis tools die je direct kunt gebruiken, zonder account.\n\nVolledige bikefit\n\nZadel, reach, drop en framemaat in één overzicht.\n\nZadelhoogte\n\nEen startwaarde in millimeters, met een aanpassingsmarge.\n\nFramemaat\n\nWelke maat past bij jouw proporties?\n\nBandenspanning\n\nVoor en achter, op basis van gewicht en ondergrond.\n\nZadelbreedte\n\nSchatting vanuit je zitbeenderen.\n\nCranklengte\n\nDe cranklengte die past bij jouw rijpositie.\n\nVerzet\n\nOntwikkeling per pedaalslag, per versnelling.\n\nMeetgids\n\nMeet op blote voeten met een boek tegen de muur.\n\nHOE HET WERKT\n\nVan meten naar rijden in drie stappen\n01\nMeet je lichaam\n\nVul lengte, binnenbeen, armlengte en de lichaamsdata in die echte setupkeuzes sturen.\n\n02\nKoppel je fiets\n\nKies je fiets uit de database of ga verder via de handmatige geometrie-route wanneer dat nodig is.\n\n03\nOntvang je fitplan\n\nBekijk zadel, reach, cockpit en de volgende afstelstappen in een praktische volgorde.\n\nHoe het werkt\n\nSTART BIJ JE KLACHT\n\nWaar knelt het?\nKnieën\n\nLees hoe zadelpositie en cleats knieklachten beïnvloeden.\n\nLees de gids\nOnderrug\n\nLees over reach, drop en zadelhoek bij rugklachten.\n\nLees de gids\nHanden & nek\n\nLees over reach, stuurbreedte en druk op je handen.\n\nLees de gids\nZadelpijn\n\nBreedte, zadelterugstand en kanteling samen bekeken.\n\nLees de gids\nMaak je volgende aanpassing bewust\nZadelpositie\n\nNoteer je huidige zadelstand voordat je iets verandert. Zo kun je een aanpassing terugdraaien.\n\nBewaar je uitgangspunt\nHoogte, terugstand en kanteling\nStuurpositie\n\nControleer of je ontspannen bij het stuur kunt. Verander niet tegelijk je zadel en je cockpit.\n\nBeoordeel het geheel\nReach en drop samen bekeken\nProefrit\n\nProbeer je afstelling op een vertrouwde route. Laat aanhoudende klachten beoordelen door een professional.\n\nEvalueer onderweg\nOnline advies is een startpunt\nJe rapport bevat de getallen die ertoe doen\nZadelhoogte met aanpassingsmarge\nZadelterugstand (voor/achter positie)\nStuurdrop en reach\nStuurpenlengte en -hoek\nAdvies voor cranklengte\nStuurbreedte\nDoelwaarden voor frame stack en reach\nAanbevolen framemaat\nBegin met een gratis account.\n\nBetalingen zijn tijdelijk niet beschikbaar. Je kunt wel gratis een account aanmaken.\n\nMaak gratis account\nVergelijk Free en Pro\nVerdiep je verder"
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "file": "S5-after-en-1440.png",
+      "errors": [],
+      "externalRequests": [],
+      "overflow": false,
+      "scrollWidth": 1440,
+      "height": 4956,
+      "h1": "Get more from every ride.",
+      "font": "S5Figtree, system-ui, sans-serif",
+      "fonts": [
+        {
+          "family": "S5Figtree",
+          "status": "loaded"
+        },
+        {
+          "family": "S5Display",
+          "status": "loaded"
+        },
+        {
+          "family": "S5Mono",
+          "status": "loaded"
+        }
+      ],
+      "brokenImages": [],
+      "sections": [
+        {
+          "className": "MarketingHome_container MarketingHome_hero",
+          "x": 120,
+          "y": 89,
+          "width": 1200,
+          "height": 806.5
+        },
+        {
+          "className": "MarketingHome_proof",
+          "x": 0,
+          "y": 895.5,
+          "width": 1440,
+          "height": 154.5
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section",
+          "x": 120,
+          "y": 1050,
+          "width": 1200,
+          "height": 771.296875
+        },
+        {
+          "className": "MarketingHome_stepsBand",
+          "x": 0,
+          "y": 1821.296875,
+          "width": 1440,
+          "height": 544.546875
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section",
+          "x": 120,
+          "y": 2365.84375,
+          "width": 1200,
+          "height": 496.546875
+        },
+        {
+          "className": "MarketingHome_testimonials",
+          "x": 0,
+          "y": 2862.390625,
+          "width": 1440,
+          "height": 527.296875
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section MarketingHome_report",
+          "x": 120,
+          "y": 3389.6875,
+          "width": 1200,
+          "height": 387.5
+        },
+        {
+          "className": "MarketingHome_closing",
+          "x": 120,
+          "y": 3777.1875,
+          "width": 1200,
+          "height": 286.59375
+        },
+        {
+          "className": "",
+          "x": 120,
+          "y": 4216.78125,
+          "width": 381.328125,
+          "height": 340.75
+        },
+        {
+          "className": "",
+          "x": 529.328125,
+          "y": 4216.78125,
+          "width": 381.328125,
+          "height": 340.75
+        },
+        {
+          "className": "",
+          "x": 938.65625,
+          "y": 4216.78125,
+          "width": 381.34375,
+          "height": 340.75
+        }
+      ],
+      "grids": [
+        {
+          "className": "MarketingHome_container MarketingHome_hero",
+          "columns": "585.938px 558.047px",
+          "count": 2
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_proofInner",
+          "columns": "237.438px 237.453px 237.438px 403.672px",
+          "count": 4
+        },
+        {
+          "className": "MarketingHome_toolGrid",
+          "columns": "285px 285px 285px 285px",
+          "count": 8
+        },
+        {
+          "className": "MarketingHome_steps",
+          "columns": "362.656px 362.672px 362.656px",
+          "count": 3
+        },
+        {
+          "className": "MarketingHome_painGrid",
+          "columns": "285px 285px 285px 285px",
+          "count": 4
+        },
+        {
+          "className": "MarketingHome_quotes",
+          "columns": "384px 384px 384px",
+          "count": 3
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section MarketingHome_report",
+          "columns": "568px 568px",
+          "count": 2
+        },
+        {
+          "className": "",
+          "columns": "274px 274px",
+          "count": 8
+        },
+        {
+          "className": "MarketingHome_closing",
+          "columns": "571.625px 476.359px",
+          "count": 2
+        },
+        {
+          "className": "MarketingHome_discoveryGrid",
+          "columns": "381.328px 381.328px 381.344px",
+          "count": 3
+        }
+      ],
+      "text": "Online bike fit · start free, no account needed\nGet more from every ride.\n\nSet up your bike for your body and riding style. Enter your measurements and get concrete millimeters for saddle, reach, and handlebars.\n\nStart free bike fit\nWhat's in the report?\nStart with your measurements. Refine on the bike.\n\nSlide to your measurement\n\nTRY IT NOW\n\nA starting point for your saddle\n742 mm\n\nbottom bracket → saddle top\n\nInseam\nMeasure barefoot with a book against the wall.\n84cm\n84 cm\n\nRoad bike · balanced · average flexibility and core stability. Adjustment range: 722–764 mm.\n\nRefine your saddle height\nMeasure\nyour own dimensions\nTest\nyour setup\nFree\nto start\nChange one setting at a time. Check how you sit and move while riding.\nA starting point, not a guarantee · From measuring to testing\n\nFREE CALCULATORS\n\nChoose what to adjust\n\nFree tools you can use right away, without an account.\n\nComplete bike fit\n\nSaddle, reach, drop, and frame size in one overview.\n\nSaddle height\n\nA starting point in millimeters, with an adjustment range.\n\nFrame size\n\nWhich size suits your proportions?\n\nTire pressure\n\nFront and rear, based on weight and surface.\n\nSaddle width\n\nAn estimate based on your sit bones.\n\nCrank length\n\nCrank length to suit your riding position.\n\nGearing\n\nDistance per pedal stroke, in each gear.\n\nMeasurement guide\n\nMeasure barefoot with a book against the wall.\n\nHOW IT WORKS\n\nFrom measuring to riding in three steps\n01\nMeasure your body\n\nEnter height, inseam, arm length, and the body inputs that drive real setup decisions.\n\n02\nConnect your bike\n\nPick your bike from the database or continue with a manual geometry path when needed.\n\n03\nGet your fit plan\n\nReview saddle, reach, cockpit, and next-step priorities in a practical order.\n\nHow it works\n\nSTART WITH YOUR DISCOMFORT\n\nWhere does it hurt?\nKnees\n\nRead how saddle position and cleats affect knee discomfort.\n\nRead the guide\nLower back\n\nLearn about reach, drop, and saddle angle for back discomfort.\n\nRead the guide\nHands & neck\n\nRead about reach, bar width, and pressure on your hands.\n\nRead the guide\nSaddle discomfort\n\nConsider saddle width, setback, and tilt together.\n\nRead the guide\nMake your next adjustment deliberately\nSaddle position\n\nRecord your current saddle position before changing it. That lets you undo an adjustment.\n\nKeep your starting point\nHeight, setback and tilt\nHandlebar position\n\nCheck whether you can reach the bars comfortably. Avoid changing your saddle and cockpit together.\n\nConsider the whole position\nReach and drop together\nTest ride\n\nTry your setup on a familiar route. Have persistent discomfort assessed by a professional.\n\nReview while riding\nOnline advice is a starting point\nYour report has the numbers that matter\nSaddle height with adjustment range\nSaddle setback (fore/aft position)\nHandlebar drop and reach\nStem length and angle\nCrank length advice\nHandlebar width\nFrame stack and reach targets\nRecommended frame size\nStart with a free account.\n\nPayments are temporarily unavailable. You can still create a free account.\n\nCreate free account\nCompare Free and Pro\nExplore further"
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "file": "S5-after-en-390.png",
+      "errors": [],
+      "externalRequests": [],
+      "overflow": false,
+      "scrollWidth": 390,
+      "height": 9123,
+      "h1": "Get more from every ride.",
+      "font": "S5Figtree, system-ui, sans-serif",
+      "fonts": [
+        {
+          "family": "S5Figtree",
+          "status": "loaded"
+        },
+        {
+          "family": "S5Display",
+          "status": "loaded"
+        },
+        {
+          "family": "S5Mono",
+          "status": "loaded"
+        }
+      ],
+      "brokenImages": [],
+      "sections": [
+        {
+          "className": "MarketingHome_container MarketingHome_hero",
+          "x": 20,
+          "y": 89,
+          "width": 350,
+          "height": 1341.859375
+        },
+        {
+          "className": "MarketingHome_proof",
+          "x": 0,
+          "y": 1430.859375,
+          "width": 390,
+          "height": 286.59375
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section",
+          "x": 20,
+          "y": 1717.453125,
+          "width": 350,
+          "height": 1940.375
+        },
+        {
+          "className": "MarketingHome_stepsBand",
+          "x": 0,
+          "y": 3657.828125,
+          "width": 390,
+          "height": 865.625
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section",
+          "x": 20,
+          "y": 4523.453125,
+          "width": 350,
+          "height": 977.6875
+        },
+        {
+          "className": "MarketingHome_testimonials",
+          "x": 0,
+          "y": 5501.140625,
+          "width": 390,
+          "height": 1091.0625
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section MarketingHome_report",
+          "x": 20,
+          "y": 6592.203125,
+          "width": 350,
+          "height": 543.375
+        },
+        {
+          "className": "MarketingHome_closing",
+          "x": 20,
+          "y": 7135.578125,
+          "width": 350,
+          "height": 352.875
+        },
+        {
+          "className": "",
+          "x": 20,
+          "y": 7609.453125,
+          "width": 350,
+          "height": 340.75
+        },
+        {
+          "className": "",
+          "x": 20,
+          "y": 7978.203125,
+          "width": 350,
+          "height": 288.75
+        },
+        {
+          "className": "",
+          "x": 20,
+          "y": 8294.953125,
+          "width": 350,
+          "height": 317.5
+        }
+      ],
+      "grids": [
+        {
+          "className": "MarketingHome_container MarketingHome_hero",
+          "columns": "350px",
+          "count": 2
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_proofInner",
+          "columns": "106px 106px 106px",
+          "count": 4
+        },
+        {
+          "className": "MarketingHome_toolGrid",
+          "columns": "350px",
+          "count": 8
+        },
+        {
+          "className": "MarketingHome_steps",
+          "columns": "350px",
+          "count": 3
+        },
+        {
+          "className": "MarketingHome_painGrid",
+          "columns": "350px",
+          "count": 4
+        },
+        {
+          "className": "MarketingHome_quotes",
+          "columns": "350px",
+          "count": 3
+        },
+        {
+          "className": "MarketingHome_container MarketingHome_section MarketingHome_report",
+          "columns": "350px",
+          "count": 2
+        },
+        {
+          "className": "",
+          "columns": "350px",
+          "count": 8
+        },
+        {
+          "className": "MarketingHome_closing",
+          "columns": "294px",
+          "count": 2
+        },
+        {
+          "className": "MarketingHome_discoveryGrid",
+          "columns": "350px",
+          "count": 3
+        }
+      ],
+      "text": "Online bike fit · start free, no account needed\nGet more from every ride.\n\nSet up your bike for your body and riding style. Enter your measurements and get concrete millimeters for saddle, reach, and handlebars.\n\nStart free bike fit\nWhat's in the report?\nStart with your measurements. Refine on the bike.\n\nSlide to your measurement\n\nTRY IT NOW\n\nA starting point for your saddle\n742 mm\n\nbottom bracket → saddle top\n\nInseam\nMeasure barefoot with a book against the wall.\n84cm\n84 cm\n\nRoad bike · balanced · average flexibility and core stability. Adjustment range: 722–764 mm.\n\nRefine your saddle height\nMeasure\nyour own dimensions\nTest\nyour setup\nFree\nto start\nChange one setting at a time. Check how you sit and move while riding.\nA starting point, not a guarantee · From measuring to testing\n\nFREE CALCULATORS\n\nChoose what to adjust\n\nFree tools you can use right away, without an account.\n\nComplete bike fit\n\nSaddle, reach, drop, and frame size in one overview.\n\nSaddle height\n\nA starting point in millimeters, with an adjustment range.\n\nFrame size\n\nWhich size suits your proportions?\n\nTire pressure\n\nFront and rear, based on weight and surface.\n\nSaddle width\n\nAn estimate based on your sit bones.\n\nCrank length\n\nCrank length to suit your riding position.\n\nGearing\n\nDistance per pedal stroke, in each gear.\n\nMeasurement guide\n\nMeasure barefoot with a book against the wall.\n\nHOW IT WORKS\n\nFrom measuring to riding in three steps\n01\nMeasure your body\n\nEnter height, inseam, arm length, and the body inputs that drive real setup decisions.\n\n02\nConnect your bike\n\nPick your bike from the database or continue with a manual geometry path when needed.\n\n03\nGet your fit plan\n\nReview saddle, reach, cockpit, and next-step priorities in a practical order.\n\nHow it works\n\nSTART WITH YOUR DISCOMFORT\n\nWhere does it hurt?\nKnees\n\nRead how saddle position and cleats affect knee discomfort.\n\nRead the guide\nLower back\n\nLearn about reach, drop, and saddle angle for back discomfort.\n\nRead the guide\nHands & neck\n\nRead about reach, bar width, and pressure on your hands.\n\nRead the guide\nSaddle discomfort\n\nConsider saddle width, setback, and tilt together.\n\nRead the guide\nMake your next adjustment deliberately\nSaddle position\n\nRecord your current saddle position before changing it. That lets you undo an adjustment.\n\nKeep your starting point\nHeight, setback and tilt\nHandlebar position\n\nCheck whether you can reach the bars comfortably. Avoid changing your saddle and cockpit together.\n\nConsider the whole position\nReach and drop together\nTest ride\n\nTry your setup on a familiar route. Have persistent discomfort assessed by a professional.\n\nReview while riding\nOnline advice is a starting point\nYour report has the numbers that matter\nSaddle height with adjustment range\nSaddle setback (fore/aft position)\nHandlebar drop and reach\nStem length and angle\nCrank length advice\nHandlebar width\nFrame stack and reach targets\nRecommended frame size\nStart with a free account.\n\nPayments are temporarily unavailable. You can still create a free account.\n\nCreate free account\nCompare Free and Pro\nExplore further"
+    }
+  ]
+}

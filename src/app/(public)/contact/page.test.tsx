@@ -44,14 +44,29 @@ describe("Contact marketing page", () => {
       "mailto:support@bestbikefit4u.eu",
       "mailto:support@bestbikefit4u.eu",
       `/${locale}/faq`,
+      `/${locale}/measurement-guide`,
     ]);
     expect(screen.getByRole("link", { name: "support@bestbikefit4u.eu" })).toBeTruthy();
     expect(container.querySelector("form, input, textarea, select")).toBeNull();
     expect(container.querySelector("header, footer, main")).toBeNull();
     expect(container.textContent).not.toMatch(/Ontwerpstaat|Voorbeeldgegevens|\[PLACEHOLDER\]/);
-    expect(container.textContent).toContain(locale === "nl"
-      ? "Vermeld je fietstype, doel en waar je vastloopt voor sneller antwoord."
-      : "Include your bike type, goal, and where you are stuck so we can help quickly.");
+    expect(container.textContent).toContain(copy.directContactBody);
+    expect(screen.getByText(copy.responseNote)).toBeTruthy();
+    expect(screen.getByText(copy.measurementText)).toBeTruthy();
+    expect(screen.getByRole("link", { name: copy.measurementLink }).getAttribute("href"))
+      .toBe(`/${locale}/measurement-guide`);
+  });
+
+  it.each(["nl", "en"] as const)("provides at least 150 words of useful contact guidance in %s", async (locale) => {
+    mocks.locale = locale;
+    const { container } = render(await ContactPage());
+    const paragraphs = Array.from(container.querySelectorAll("p")).map((node) => node.textContent).join(" ");
+    expect(paragraphs.trim().split(/\s+/).length).toBeGreaterThanOrEqual(150);
+    expect(paragraphs).toContain(locale === "nl"
+      ? "geen gegarandeerde reactietijden" : "not guaranteed response times");
+    expect(paragraphs).toContain(locale === "nl" ? "foutmelding" : "error message");
+    expect(paragraphs).toContain(locale === "nl" ? "eenheden" : "units");
+    expect(paragraphs).not.toMatch(/24\s*(uur|hours)|48\s*(uur|hours)|within one hour/i);
   });
 
   it.each(["nl", "en"] as const)("preserves email and FAQ CTA analytics in %s", async (locale) => {

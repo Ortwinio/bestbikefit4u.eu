@@ -20,7 +20,7 @@ export type GuideRewrite = {
   slug: string;
   source?: "code-rewrite" | "cms-rewrite";
   /** ISO calendar date, shared by the visible date and Article.dateModified. */
-  updatedAt: string;
+  updatedAt?: string;
   /** Basename in /illustrations/guides, without the .webp extension. */
   illustration: string;
 } & Record<Locale, GuideRewriteLocale>;

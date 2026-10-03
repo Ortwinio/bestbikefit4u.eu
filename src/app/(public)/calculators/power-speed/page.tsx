@@ -1,3 +1,5 @@
+import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { getPerformanceAnswer } from "@/lib/seo/calculatorAnswers/performance";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import { powerSpeedPageMessages } from "@/i18n/calculators/powerSpeedPage";
 import { PerformanceCalculator } from "./PerformanceCalculator";
@@ -64,6 +66,9 @@ export default async function PowerSpeedEstimatorPage() {
       />
 
       <PerformanceCalculator tool="power-speed" locale={locale} />
+      <CalculatorAnswerSection
+        id="power-speed" locale={locale} content={getPerformanceAnswer("power-speed", locale)}
+      />
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <PublicSection

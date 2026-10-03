@@ -1,0 +1,29 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://127.0.0.1:4100/en",
+        "http://127.0.0.1:4100/en/calculators/saddle-height",
+        "http://127.0.0.1:4100/en/guides/how-to-compare-two-bikes-for-fit",
+        "http://127.0.0.1:4100/en/pain/knee-pain-cycling",
+        "http://127.0.0.1:4100/en/pricing",
+        "http://127.0.0.1:4100/en/login"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "formFactor": "mobile",
+        "screenEmulation": { "mobile": true, "width": 390, "height": 844, "deviceScaleFactor": 1, "disabled": false },
+        "throttlingMethod": "simulate",
+        "onlyCategories": ["performance"],
+        "chromeFlags": "--headless --no-sandbox --disable-dev-shm-usage"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "largest-contentful-paint": ["error", { "maxNumericValue": 2499, "aggregationMethod": "median" }],
+        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.0999, "aggregationMethod": "median" }],
+        "total-blocking-time": ["error", { "maxNumericValue": 199.99, "aggregationMethod": "median" }]
+      }
+    }
+  }
+}

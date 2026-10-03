@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui";
 import { EditorialCta } from "@/components/science/EditorialLayout";
 import { scienceExtras } from "@/i18n/marketing/science";
+import { editorialImageAlt } from "@/i18n/marketing/editorialImageAlt";
 import type { Metadata } from "next";
 import { ArrowUpDown, Bike, MoveHorizontal } from "lucide-react";
 import {
@@ -64,6 +65,7 @@ export default async function StackAndReachPage() {
         description={page.hero.description}
         chips={page.hero.chips}
         image="/illustrations/08-stack-en-reach.webp"
+        imageAlt={editorialImageAlt[locale].stackReach}
         illustration={<p>{page.hero.caption}</p>}
       />
 

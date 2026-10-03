@@ -46,8 +46,9 @@ export function MarketingNavigation({ items, label }: {
   );
 }
 
-export function MarketingLanguageSwitch({ locale, inverse = false }: {
+export function MarketingLanguageSwitch({ locale, placement, inverse = false }: {
   locale: Locale;
+  placement: "menu" | "footer";
   inverse?: boolean;
 }) {
   const pathname = usePathname() ?? "/";
@@ -55,7 +56,9 @@ export function MarketingLanguageSwitch({ locale, inverse = false }: {
   const copy = getMarketingLayoutMessages(locale);
   const switchLocale = useLocaleSwitch();
   return (
-    <nav aria-label={copy.language} className={`inline-flex shrink-0 rounded-full border p-0.5 ${inverse ? "border-[var(--bbf-gedempt)]" : "border-border"}`}>
+    <nav
+      aria-label={placement === "footer" ? copy.languageFooter : copy.languageMenu}
+      className={`inline-flex shrink-0 rounded-full border p-0.5 ${inverse ? "border-[var(--bbf-gedempt)]" : "border-border"}`}>
       {(["nl", "en"] as const).map((target) => (
         <a key={target}
           onClick={(event) => switchLocale(event, target)}

@@ -70,3 +70,13 @@ claude/.obsidian/
 
 # Rider-profile review screenshots stay local (not versioned)
 plans/riderprofile/renders/
+
+# SEO review evidence stays local (not versioned)
+plans/seo-semrush/renders/
+plans/seo-semrush/audit/**/*.png
+plans/seo-semrush/audit/**/*.log
+plans/seo-semrush/audit/*-raw-html.json
+plans/seo-semrush/audit/S15-visual-*.json
+plans/seo-semrush/audit/S17-visual-*.json
+plans/seo-semrush/audit/S10-before/
+plans/seo-semrush/audit/S10-after/

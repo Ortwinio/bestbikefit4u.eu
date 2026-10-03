@@ -1,0 +1,371 @@
+{
+  "buildId": "F-yLf373Lqu2IKKHBS4al",
+  "checkedAt": "2026-10-03T15:00:35.177Z",
+  "sitemapUrls": [
+    "https://bestbikefit4u.eu/en",
+    "https://bestbikefit4u.eu/en/about",
+    "https://bestbikefit4u.eu/en/authors/ortwin-verreck",
+    "https://bestbikefit4u.eu/en/bike-fitting",
+    "https://bestbikefit4u.eu/en/calculators/bike-fit",
+    "https://bestbikefit4u.eu/en/calculators/climb-planner",
+    "https://bestbikefit4u.eu/en/calculators/crank-length",
+    "https://bestbikefit4u.eu/en/calculators/frame-size",
+    "https://bestbikefit4u.eu/en/calculators/ftp-wkg",
+    "https://bestbikefit4u.eu/en/calculators/fuel-hydration",
+    "https://bestbikefit4u.eu/en/calculators/gearing",
+    "https://bestbikefit4u.eu/en/calculators/power-speed",
+    "https://bestbikefit4u.eu/en/calculators/saddle-height",
+    "https://bestbikefit4u.eu/en/calculators/saddle-width",
+    "https://bestbikefit4u.eu/en/case-study",
+    "https://bestbikefit4u.eu/en/contact",
+    "https://bestbikefit4u.eu/en/faq",
+    "https://bestbikefit4u.eu/en/guides",
+    "https://bestbikefit4u.eu/en/guides/bike-fit-for-beginners-and-returning-riders",
+    "https://bestbikefit4u.eu/en/guides/bike-fit-for-foot-pain-hot-foot-and-numb-toes",
+    "https://bestbikefit4u.eu/en/guides/bike-fit-for-hand-numbness-and-wrist-pain",
+    "https://bestbikefit4u.eu/en/guides/bike-fit-for-neck-and-shoulder-pain",
+    "https://bestbikefit4u.eu/en/guides/bike-fit-for-riders-with-a-shorter-torso",
+    "https://bestbikefit4u.eu/en/guides/bike-fit-for-riders-with-limited-flexibility",
+    "https://bestbikefit4u.eu/en/guides/bike-fit-for-saddle-pressure-perineal-numbness-and-saddle-sores",
+    "https://bestbikefit4u.eu/en/guides/bike-fit-for-tall-riders",
+    "https://bestbikefit4u.eu/en/guides/bike-fitting-for-knee-pain",
+    "https://bestbikefit4u.eu/en/guides/bike-fitting-for-lower-back-pain",
+    "https://bestbikefit4u.eu/en/guides/bike-size-and-geometry",
+    "https://bestbikefit4u.eu/en/guides/carbs-per-hour-guide",
+    "https://bestbikefit4u.eu/en/guides/cleat-position-basics-guide",
+    "https://bestbikefit4u.eu/en/guides/climb-time-and-event-pacing-guide",
+    "https://bestbikefit4u.eu/en/guides/crank-length-guide",
+    "https://bestbikefit4u.eu/en/guides/cycling-fueling-basics",
+    "https://bestbikefit4u.eu/en/guides/cycling-shoe-fit-width-and-last-guide",
+    "https://bestbikefit4u.eu/en/guides/endurance-bike-fit-guide",
+    "https://bestbikefit4u.eu/en/guides/fit-science",
+    "https://bestbikefit4u.eu/en/guides/foot-measurement-guide-for-cyclists",
+    "https://bestbikefit4u.eu/en/guides/frame-size-guide",
+    "https://bestbikefit4u.eu/en/guides/ftp-explained",
+    "https://bestbikefit4u.eu/en/guides/gravel-bike-fit-guide",
+    "https://bestbikefit4u.eu/en/guides/handlebar-drop-guide",
+    "https://bestbikefit4u.eu/en/guides/handlebar-width-and-hood-position-guide",
+    "https://bestbikefit4u.eu/en/guides/how-to-compare-two-bikes-for-fit",
+    "https://bestbikefit4u.eu/en/guides/hydration-and-sweat-rate-guide",
+    "https://bestbikefit4u.eu/en/guides/indoor-trainer-bike-fit-guide",
+    "https://bestbikefit4u.eu/en/guides/insoles-arch-support-and-footbeds-guide",
+    "https://bestbikefit4u.eu/en/guides/mountain-bike-fit-guide",
+    "https://bestbikefit4u.eu/en/guides/nutrition-and-hydration",
+    "https://bestbikefit4u.eu/en/guides/pain-and-discomfort",
+    "https://bestbikefit4u.eu/en/guides/power-ftp-pacing",
+    "https://bestbikefit4u.eu/en/guides/power-to-speed-guide",
+    "https://bestbikefit4u.eu/en/guides/reach-and-stem-guide",
+    "https://bestbikefit4u.eu/en/guides/ride-types",
+    "https://bestbikefit4u.eu/en/guides/rider-profiles",
+    "https://bestbikefit4u.eu/en/guides/road-bike-fit-guide",
+    "https://bestbikefit4u.eu/en/guides/road-vs-endurance-vs-race-geometry",
+    "https://bestbikefit4u.eu/en/guides/saddle-fore-aft-and-tilt-guide",
+    "https://bestbikefit4u.eu/en/guides/saddle-height-guide",
+    "https://bestbikefit4u.eu/en/guides/setup-parameters",
+    "https://bestbikefit4u.eu/en/guides/shoe-foot-cleat-fit",
+    "https://bestbikefit4u.eu/en/guides/sodium-and-electrolytes-guide",
+    "https://bestbikefit4u.eu/en/guides/stance-width-q-factor-and-pedal-spacer-guide",
+    "https://bestbikefit4u.eu/en/guides/triathlon-bike-fit-guide",
+    "https://bestbikefit4u.eu/en/guides/when-online-bike-fit-has-limits",
+    "https://bestbikefit4u.eu/en/guides/wkg-and-power-zones-guide",
+    "https://bestbikefit4u.eu/en/how-it-works",
+    "https://bestbikefit4u.eu/en/measurement-guide",
+    "https://bestbikefit4u.eu/en/methods",
+    "https://bestbikefit4u.eu/en/pain",
+    "https://bestbikefit4u.eu/en/pain/hand-numbness-cycling",
+    "https://bestbikefit4u.eu/en/pain/knee-pain-cycling",
+    "https://bestbikefit4u.eu/en/pain/lower-back-pain-cycling",
+    "https://bestbikefit4u.eu/en/pain/neck-pain-cycling",
+    "https://bestbikefit4u.eu/en/pain/saddle-discomfort-cycling",
+    "https://bestbikefit4u.eu/en/pricing",
+    "https://bestbikefit4u.eu/en/privacy",
+    "https://bestbikefit4u.eu/en/science/bike-fit-methods",
+    "https://bestbikefit4u.eu/en/science/stack-and-reach",
+    "https://bestbikefit4u.eu/en/terms",
+    "https://bestbikefit4u.eu/en/tire-pressure-calculator",
+    "https://bestbikefit4u.eu/en/tire-pressure/gravel-bike",
+    "https://bestbikefit4u.eu/en/tire-pressure/mountain-bike",
+    "https://bestbikefit4u.eu/en/tire-pressure/road-bike",
+    "https://bestbikefit4u.eu/en/why-bikefit-matters",
+    "https://bestbikefit4u.eu/nl",
+    "https://bestbikefit4u.eu/nl/about",
+    "https://bestbikefit4u.eu/nl/authors/ortwin-verreck",
+    "https://bestbikefit4u.eu/nl/bandenspanning-calculator",
+    "https://bestbikefit4u.eu/nl/bandenspanning/gravelbike",
+    "https://bestbikefit4u.eu/nl/bandenspanning/mountainbike",
+    "https://bestbikefit4u.eu/nl/bandenspanning/racefiets",
+    "https://bestbikefit4u.eu/nl/bikefitting",
+    "https://bestbikefit4u.eu/nl/calculators/bike-fit",
+    "https://bestbikefit4u.eu/nl/calculators/climb-planner",
+    "https://bestbikefit4u.eu/nl/calculators/crank-length",
+    "https://bestbikefit4u.eu/nl/calculators/frame-size",
+    "https://bestbikefit4u.eu/nl/calculators/ftp-wkg",
+    "https://bestbikefit4u.eu/nl/calculators/fuel-hydration",
+    "https://bestbikefit4u.eu/nl/calculators/gearing",
+    "https://bestbikefit4u.eu/nl/calculators/power-speed",
+    "https://bestbikefit4u.eu/nl/calculators/saddle-height",
+    "https://bestbikefit4u.eu/nl/calculators/saddle-width",
+    "https://bestbikefit4u.eu/nl/case-study",
+    "https://bestbikefit4u.eu/nl/contact",
+    "https://bestbikefit4u.eu/nl/faq",
+    "https://bestbikefit4u.eu/nl/guides",
+    "https://bestbikefit4u.eu/nl/guides/bike-fit-for-beginners-and-returning-riders",
+    "https://bestbikefit4u.eu/nl/guides/bike-fit-for-foot-pain-hot-foot-and-numb-toes",
+    "https://bestbikefit4u.eu/nl/guides/bike-fit-for-hand-numbness-and-wrist-pain",
+    "https://bestbikefit4u.eu/nl/guides/bike-fit-for-neck-and-shoulder-pain",
+    "https://bestbikefit4u.eu/nl/guides/bike-fit-for-riders-with-a-shorter-torso",
+    "https://bestbikefit4u.eu/nl/guides/bike-fit-for-riders-with-limited-flexibility",
+    "https://bestbikefit4u.eu/nl/guides/bike-fit-for-saddle-pressure-perineal-numbness-and-saddle-sores",
+    "https://bestbikefit4u.eu/nl/guides/bike-fit-for-tall-riders",
+    "https://bestbikefit4u.eu/nl/guides/bike-fitting-for-knee-pain",
+    "https://bestbikefit4u.eu/nl/guides/bike-fitting-for-lower-back-pain",
+    "https://bestbikefit4u.eu/nl/guides/bike-size-and-geometry",
+    "https://bestbikefit4u.eu/nl/guides/carbs-per-hour-guide",
+    "https://bestbikefit4u.eu/nl/guides/cleat-position-basics-guide",
+    "https://bestbikefit4u.eu/nl/guides/climb-time-and-event-pacing-guide",
+    "https://bestbikefit4u.eu/nl/guides/crank-length-guide",
+    "https://bestbikefit4u.eu/nl/guides/cycling-fueling-basics",
+    "https://bestbikefit4u.eu/nl/guides/cycling-shoe-fit-width-and-last-guide",
+    "https://bestbikefit4u.eu/nl/guides/endurance-bike-fit-guide",
+    "https://bestbikefit4u.eu/nl/guides/fit-science",
+    "https://bestbikefit4u.eu/nl/guides/foot-measurement-guide-for-cyclists",
+    "https://bestbikefit4u.eu/nl/guides/frame-size-guide",
+    "https://bestbikefit4u.eu/nl/guides/ftp-explained",
+    "https://bestbikefit4u.eu/nl/guides/gravel-bike-fit-guide",
+    "https://bestbikefit4u.eu/nl/guides/handlebar-drop-guide",
+    "https://bestbikefit4u.eu/nl/guides/handlebar-width-and-hood-position-guide",
+    "https://bestbikefit4u.eu/nl/guides/how-to-compare-two-bikes-for-fit",
+    "https://bestbikefit4u.eu/nl/guides/hydration-and-sweat-rate-guide",
+    "https://bestbikefit4u.eu/nl/guides/indoor-trainer-bike-fit-guide",
+    "https://bestbikefit4u.eu/nl/guides/insoles-arch-support-and-footbeds-guide",
+    "https://bestbikefit4u.eu/nl/guides/mountain-bike-fit-guide",
+    "https://bestbikefit4u.eu/nl/guides/nutrition-and-hydration",
+    "https://bestbikefit4u.eu/nl/guides/pain-and-discomfort",
+    "https://bestbikefit4u.eu/nl/guides/power-ftp-pacing",
+    "https://bestbikefit4u.eu/nl/guides/power-to-speed-guide",
+    "https://bestbikefit4u.eu/nl/guides/reach-and-stem-guide",
+    "https://bestbikefit4u.eu/nl/guides/ride-types",
+    "https://bestbikefit4u.eu/nl/guides/rider-profiles",
+    "https://bestbikefit4u.eu/nl/guides/road-bike-fit-guide",
+    "https://bestbikefit4u.eu/nl/guides/road-vs-endurance-vs-race-geometry",
+    "https://bestbikefit4u.eu/nl/guides/saddle-fore-aft-and-tilt-guide",
+    "https://bestbikefit4u.eu/nl/guides/saddle-height-guide",
+    "https://bestbikefit4u.eu/nl/guides/setup-parameters",
+    "https://bestbikefit4u.eu/nl/guides/shoe-foot-cleat-fit",
+    "https://bestbikefit4u.eu/nl/guides/sodium-and-electrolytes-guide",
+    "https://bestbikefit4u.eu/nl/guides/stance-width-q-factor-and-pedal-spacer-guide",
+    "https://bestbikefit4u.eu/nl/guides/triathlon-bike-fit-guide",
+    "https://bestbikefit4u.eu/nl/guides/when-online-bike-fit-has-limits",
+    "https://bestbikefit4u.eu/nl/guides/wkg-and-power-zones-guide",
+    "https://bestbikefit4u.eu/nl/how-it-works",
+    "https://bestbikefit4u.eu/nl/measurement-guide",
+    "https://bestbikefit4u.eu/nl/methods",
+    "https://bestbikefit4u.eu/nl/pain",
+    "https://bestbikefit4u.eu/nl/pain/hand-numbness-cycling",
+    "https://bestbikefit4u.eu/nl/pain/knee-pain-cycling",
+    "https://bestbikefit4u.eu/nl/pain/lower-back-pain-cycling",
+    "https://bestbikefit4u.eu/nl/pain/neck-pain-cycling",
+    "https://bestbikefit4u.eu/nl/pain/saddle-discomfort-cycling",
+    "https://bestbikefit4u.eu/nl/pricing",
+    "https://bestbikefit4u.eu/nl/privacy",
+    "https://bestbikefit4u.eu/nl/science/bike-fit-methods",
+    "https://bestbikefit4u.eu/nl/science/stack-and-reach",
+    "https://bestbikefit4u.eu/nl/terms",
+    "https://bestbikefit4u.eu/nl/why-bikefit-matters"
+  ],
+  "documents": [
+    {
+      "path": "/llms.txt",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "characters": 15520,
+      "urlCount": 170,
+      "stalePublicFile": false,
+      "missing": [],
+      "extra": []
+    },
+    {
+      "path": "/llms-full.txt",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "characters": 74186,
+      "urlCount": 170,
+      "stalePublicFile": false,
+      "missing": [],
+      "extra": []
+    }
+  ],
+  "redirects": [
+    {
+      "path": "/nl/fiets-afstellen",
+      "status": 301,
+      "destination": "/nl/bikefitting",
+      "destinationStatus": 200
+    },
+    {
+      "path": "/en/fiets-afstellen",
+      "status": 301,
+      "destination": "/en/bike-fitting",
+      "destinationStatus": 200
+    },
+    {
+      "path": "/nl/bike-fitting",
+      "status": 301,
+      "destination": "/nl/bikefitting",
+      "destinationStatus": 200
+    },
+    {
+      "path": "/en/bikefitting",
+      "status": 301,
+      "destination": "/en/bike-fitting",
+      "destinationStatus": 200
+    }
+  ],
+  "canonicalPages": [
+    {
+      "locale": "nl",
+      "path": "/nl/bikefitting",
+      "status": 200,
+      "issues": [],
+      "canonical": "https://bestbikefit4u.eu/nl/bikefitting",
+      "alternates": [
+        {
+          "value": "https://bestbikefit4u.eu/en/bike-fitting",
+          "offset": 6441,
+          "inHead": true,
+          "lang": "en"
+        },
+        {
+          "value": "https://bestbikefit4u.eu/nl/bikefitting",
+          "offset": 6526,
+          "inHead": true,
+          "lang": "nl"
+        },
+        {
+          "value": "https://bestbikefit4u.eu/en/bike-fitting",
+          "offset": 6610,
+          "inHead": true,
+          "lang": "x-default"
+        }
+      ]
+    },
+    {
+      "locale": "en",
+      "path": "/en/bike-fitting",
+      "status": 200,
+      "issues": [],
+      "canonical": "https://bestbikefit4u.eu/en/bike-fitting",
+      "alternates": [
+        {
+          "value": "https://bestbikefit4u.eu/en/bike-fitting",
+          "offset": 6433,
+          "inHead": true,
+          "lang": "en"
+        },
+        {
+          "value": "https://bestbikefit4u.eu/nl/bikefitting",
+          "offset": 6518,
+          "inHead": true,
+          "lang": "nl"
+        },
+        {
+          "value": "https://bestbikefit4u.eu/en/bike-fitting",
+          "offset": 6602,
+          "inHead": true,
+          "lang": "x-default"
+        }
+      ]
+    }
+  ],
+  "internalSources": {
+    "nl": [
+      {
+        "path": "/nl/guides/bike-fit-for-beginners-and-returning-riders",
+        "destination": "/nl/bikefitting",
+        "links": [
+          "/nl/bikefitting"
+        ]
+      },
+      {
+        "path": "/nl/guides/bike-fit-for-riders-with-a-shorter-torso",
+        "destination": "/nl/bikefitting",
+        "links": [
+          "/nl/bikefitting"
+        ]
+      },
+      {
+        "path": "/nl/guides/bike-fitting-for-knee-pain",
+        "destination": "/nl/bikefitting",
+        "links": [
+          "/nl/bikefitting"
+        ]
+      },
+      {
+        "path": "/nl/guides/cleat-position-basics-guide",
+        "destination": "/nl/bikefitting",
+        "links": [
+          "/nl/bikefitting"
+        ]
+      },
+      {
+        "path": "/nl/guides/cycling-shoe-fit-width-and-last-guide",
+        "destination": "/nl/bikefitting",
+        "links": [
+          "/nl/bikefitting"
+        ]
+      },
+      {
+        "path": "/nl/guides/frame-size-guide",
+        "destination": "/nl/bikefitting",
+        "links": [
+          "/nl/bikefitting"
+        ]
+      }
+    ],
+    "en": [
+      {
+        "path": "/en/guides/bike-fit-for-beginners-and-returning-riders",
+        "destination": "/en/bike-fitting",
+        "links": [
+          "/en/bike-fitting"
+        ]
+      },
+      {
+        "path": "/en/guides/bike-fit-for-riders-with-a-shorter-torso",
+        "destination": "/en/bike-fitting",
+        "links": [
+          "/en/bike-fitting"
+        ]
+      },
+      {
+        "path": "/en/guides/bike-fitting-for-knee-pain",
+        "destination": "/en/bike-fitting",
+        "links": [
+          "/en/bike-fitting"
+        ]
+      },
+      {
+        "path": "/en/guides/cleat-position-basics-guide",
+        "destination": "/en/bike-fitting",
+        "links": [
+          "/en/bike-fitting"
+        ]
+      },
+      {
+        "path": "/en/guides/cycling-shoe-fit-width-and-last-guide",
+        "destination": "/en/bike-fitting",
+        "links": [
+          "/en/bike-fitting"
+        ]
+      },
+      {
+        "path": "/en/guides/frame-size-guide",
+        "destination": "/en/bike-fitting",
+        "links": [
+          "/en/bike-fitting"
+        ]
+      }
+    ]
+  },
+  "failures": []
+}

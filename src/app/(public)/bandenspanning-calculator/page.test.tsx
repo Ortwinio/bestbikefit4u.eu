@@ -10,7 +10,12 @@ import { tirePressureMessages } from "@/i18n/calculators/tirePressure";
 let locale: "en" | "nl" = "en";
 
 vi.mock("@/components/seo/JsonLd", () => ({
-  JsonLd: () => null,
+  JsonLd: ({ schema }: { schema: object | object[] }) => (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  ),
 }));
 
 vi.mock("@/components/seo/RelatedLinksSection", () => ({
@@ -25,9 +30,7 @@ vi.mock("@/components/features/pressure/PressureCalculatorForm", () => ({
   PressureCalculatorForm: () => <div>Tire pressure form</div>,
 }));
 
-vi.mock("@/components/features/pressure/PressureCalculatorFaq", () => ({
-  PressureCalculatorFaq: () => <section>Pressure FAQ</section>,
-}));
+
 
 vi.mock("@/components/features/pressure/PressureCalculatorCta", () => ({
   PressureCalculatorCta: ({
@@ -81,16 +84,6 @@ vi.mock("@/i18n/getDictionary", () => ({
     }),
 }));
 
-vi.mock("@/lib/seo/jsonLd", () => ({
-  CALCULATOR_AGGREGATE_RATING: {
-    ratingValue: "4.8",
-    ratingCount: 380,
-    bestRating: "5",
-    worstRating: "1",
-  },
-  buildWebApplicationSchema: () => ({}),
-}));
-
 vi.mock("@/lib/seo/relatedLinks", () => ({
   getRelatedLinks: () => [],
 }));
@@ -105,12 +98,32 @@ afterEach(() => {
 });
 
 describe("bandenspanning calculator page", () => {
+  it.each(["en", "nl"] as const)(
+    "publishes a free WebApplication without ratings in %s",
+    async (language) => {
+      locale = language;
+      const { container } = render(await PressureCalculatorPageContent({ locale }));
+      const scripts = Array.from(container.querySelectorAll('script[type="application/ld+json"]'));
+      const schemas = scripts.flatMap((script) => JSON.parse(script.textContent ?? "null"));
+      const application = schemas.find((schema) => schema["@type"] === "WebApplication");
+
+      expect(application).toMatchObject({
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        operatingSystem: "Any",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+      });
+      expect(JSON.stringify(schemas)).not.toContain('"aggregateRating"');
+      expect(JSON.stringify(schemas)).not.toContain('"AggregateRating"');
+    },
+  );
+
   it("keeps the form and FAQ without a duplicate signup band", async () => {
     const ui = await PressureCalculatorPageContent({ locale });
     render(ui);
 
     expect(screen.getByText("Tire pressure form")).toBeTruthy();
-    expect(screen.getByText("Pressure FAQ")).toBeTruthy();
+    expect(screen.getByText("Frequently asked questions")).toBeTruthy();
     expect(screen.queryByText("Create account or sign in")).toBeNull();
   });
 
@@ -136,4 +149,18 @@ it("redirects the Dutch tire-pressure alias and publishes canonical translated a
     en: "https://bestbikefit4u.eu/en/tire-pressure-calculator",
     nl: "https://bestbikefit4u.eu/nl/bandenspanning-calculator",
   });
+});
+
+it.each(["nl", "en"] as const)("renders pressure answers and matching visible FAQs in %s", async language => {
+  locale = language;
+  const { container } = render(await PressureCalculatorPageContent({ locale }));
+  expect(container.querySelector('[data-calculator-answer="tire-pressure"]')).not.toBeNull();
+  const schemas = Array.from(container.querySelectorAll('script[type="application/ld+json"]'))
+    .flatMap(script => JSON.parse(script.textContent ?? "[]"));
+  const faqs = schemas.filter(schema => schema["@type"] === "FAQPage");
+  expect(faqs).toHaveLength(1);
+  for (const question of faqs[0].mainEntity) {
+    expect(screen.getByText(question.name)).toBeTruthy();
+    expect(screen.getByText(question.acceptedAnswer.text)).toBeTruthy();
+  }
 });

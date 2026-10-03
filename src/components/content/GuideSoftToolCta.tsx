@@ -1,6 +1,7 @@
 import { Calculator } from "lucide-react";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import type { Locale } from "@/i18n/config";
+import { getGuideToolAnchor } from "@/i18n/marketing/toolAnchors";
 
 type GuideSoftToolCtaProps = {
   toolLabel: string;
@@ -16,7 +17,7 @@ export function GuideSoftToolCta({
   pagePath,
 }: GuideSoftToolCtaProps) {
   const isNl = locale === "nl";
-  const ctaLabel = isNl ? "Open calculator" : "Open calculator";
+  const ctaLabel = getGuideToolAnchor(locale, toolLabel);
 
   return (
     <aside className="rounded-xl border border-border/50 bg-muted/50 p-4">
@@ -41,7 +42,7 @@ export function GuideSoftToolCta({
             ctaLabel={ctaLabel}
             className="inline-flex text-sm font-semibold text-primary"
           >
-            {isNl ? "Open calculator →" : "Open calculator →"}
+            {ctaLabel} <span aria-hidden="true">→</span>
           </TrackedCtaLink>
         </div>
       </div>

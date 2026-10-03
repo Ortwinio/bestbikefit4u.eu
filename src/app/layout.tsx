@@ -14,7 +14,7 @@ import { GTMConsentLoader } from "@/components/analytics/GTMConsentLoader";
 import { FeedbackPanelProvider } from "@/components/feedback/FeedbackPanelProvider";
 import { ToastProvider } from "@/components/prototyper-ui/ui/toast";
 import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { TemplateSpeedInsights } from "@/components/analytics/TemplateSpeedInsights";
 import { NONCE_HEADER_NAME } from "@/lib/csp";
 import { buildOrganizationSchema, buildWebSiteSchema } from "@/lib/seo/jsonLd";
 
@@ -174,7 +174,7 @@ export default async function RootLayout({
             <CookieConsentBanner locale={locale} />
           </ToastProvider>
           <Analytics />
-          <SpeedInsights />
+          <TemplateSpeedInsights />
         </body>
       </html>
     </ConvexAuthNextjsServerProvider>

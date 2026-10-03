@@ -1,262 +1,129 @@
 /* @vitest-environment jsdom */
-import type { ReactNode } from "react";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import EnglishPage, { generateMetadata as englishMetadata, generateStaticParams as englishParams } from "./page";
 import DutchPage, {
-  generateMetadata as dutchMetadata,
-  generateStaticParams as dutchParams,
+  generateMetadata as dutchMetadata, generateStaticParams as dutchParams,
 } from "../../bandenspanning/[slug]/page";
-import { BRAND } from "@/config/brand";
-import { pressureLandingMessages } from "@/i18n/marketing/pressureLanding";
+import DutchRoadPage, { generateMetadata as roadMetadata } from "../../bandenspanning/racefiets/page";
+import DutchGravelPage, { generateMetadata as gravelMetadata } from "../../bandenspanning/gravelbike/page";
+import RetiredMtbAlias from "../../bandenspanning/mtb/page";
+import { pressureBikeLandingMessages } from "@/i18n/marketing/pressureBikeLanding";
 import { calculateBasicPressure } from "@/lib/pressure-engine";
 import {
-  BIKE_TYPE_LABELS,
-  BIKE_TYPE_DEFAULTS,
-  EN_BIKE_TYPES,
-  WEIGHT_STEPS,
-  buildDutchPressureSlug,
-  buildEnglishPressureSlug,
-  buildPressureAlternates,
-  buildPressureInput,
+  BIKE_TYPE_LABELS, EN_BIKE_TYPES, NL_TO_EN, WEIGHT_STEPS,
+  buildPressureBikeAlternates, buildPressureInput,
 } from "@/lib/seo/programmatic/tirePressure";
-import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 
 const request = vi.hoisted(() => ({ locale: "en" as "en" | "nl" }));
 vi.mock("@/i18n/request", () => ({ getRequestLocale: async () => request.locale }));
-beforeEach(() => { request.locale = "en"; });
-
-vi.mock("next/navigation", () => ({
-  notFound: () => {
-    throw new Error("NEXT_NOT_FOUND");
-  },
-}));
+vi.mock("next/navigation", () => ({ notFound: () => { throw new Error("NEXT_NOT_FOUND"); } }));
 vi.mock("@/components/seo/JsonLd", () => ({
   JsonLd: ({ schema }: { schema: object }) => <script type="application/ld+json">{JSON.stringify(schema)}</script>,
 }));
-vi.mock("@/components/analytics/TrackedCtaLink", () => ({
-  TrackedCtaLink: ({
-    href,
-    children,
-    section,
-    ctaLabel,
-    pagePath,
-    locale,
-    className,
-  }: {
-    href: string;
-    children: ReactNode;
-    section: string;
-    ctaLabel: string;
-    pagePath: string;
-    locale: string;
-    className: string;
-  }) => (
-    <a
-      href={href}
-      data-section={section}
-      data-label={ctaLabel}
-      data-page={pagePath}
-      data-locale={locale}
-      className={className}
-    >
-      {children}
-    </a>
-  ),
-}));
 vi.mock("next/image", () => ({
   default: ({ src, alt }: { src: string; alt: string }) => (
-    // Native image isolates content testing from Next's optimizer.
+    // The optimizer is checked by the browser audit.
     // eslint-disable-next-line @next/next/no-img-element
     <img src={src} alt={alt} />
   ),
 }));
+beforeEach(() => { request.locale = "en"; });
 afterEach(cleanup);
+
+it("generates only three English bike slugs and the one Dutch dynamic slug", () => {
+  expect(englishParams()).toEqual(EN_BIKE_TYPES.map(slug => ({ slug })));
+  expect(englishParams()).toHaveLength(3);
+  expect(dutchParams()).toEqual([{ slug: "mountainbike" }]);
+});
 
 for (const locale of ["en", "nl"] as const) {
   const Page = locale === "en" ? EnglishPage : DutchPage;
   const metadata = locale === "en" ? englishMetadata : dutchMetadata;
-  const staticParams = locale === "en" ? englishParams : dutchParams;
-  const buildSlug = locale === "en" ? buildEnglishPressureSlug : buildDutchPressureSlug;
-  const route = locale === "en" ? "tire-pressure" : "bandenspanning";
-  const calculator = locale === "en" ? "tire-pressure-calculator" : "bandenspanning-calculator";
-  const copy = pressureLandingMessages[locale];
-  describe(`${locale} pressure landing routes`, () => {
-    it("retains the 30 exact generated paths and ordering", () => {
-      expect(staticParams()).toEqual(
-        WEIGHT_STEPS.flatMap((weight) => EN_BIKE_TYPES.map((bikeType) => ({ slug: buildSlug(weight, bikeType) }))),
-      );
-      expect(staticParams()).toHaveLength(30);
-      expect(staticParams()[0].slug).toBe(locale === "en" ? "55kg-road-bike" : "55kg-racefiets");
-      expect(staticParams().at(-1)?.slug).toBe(locale === "en" ? "100kg-mountain-bike" : "100kg-mountainbike");
-    });
-
-    for (const weight of WEIGHT_STEPS)
-      for (const bikeType of EN_BIKE_TYPES) {
-        const slug = buildSlug(weight, bikeType);
-        it(`${slug} keeps actual engine values, metadata, schema and entrypoints`, async () => {
-          const label = BIKE_TYPE_LABELS[bikeType][locale];
-          const params = Promise.resolve({ slug });
-          const result = await metadata({ params });
-          const pagePath = `/${locale}/${route}/${slug}`;
-          const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
-          const description =
-            locale === "en"
-              ? `Recommended front and rear tire pressure for a ${weight} kg ${label} rider, ` +
-                "with bar and PSI values plus a quick tube-type comparison."
-              : `Aanbevolen voor- en achterdruk voor een rijder van ${weight} kg op een ${label}, ` +
-                "inclusief bar, PSI en vergelijking tussen tubeless en binnenband.";
-          expect(result.title).toBe(`${copy.title(weight, label)} | BestBikeFit4U`);
-          expect(result.description).toBe(description);
-          expect(result.alternates).toEqual(buildPressureAlternates(weight, bikeType, locale));
-          expect(result.alternates?.canonical).toBe(pageUrl);
-          expect(result.openGraph).toEqual({ title: result.title, description, type: "website", url: pageUrl });
-          expect(result.keywords).toEqual(
-            locale === "en"
-              ? [
-                  `tire pressure ${weight}kg ${label}`,
-                  `${label} tire pressure ${weight}kg`,
-                  `${label} cyclist tire pressure`,
-                ]
-              : [
-                  `bandenspanning ${weight}kg ${label}`,
-                  `${label} bandenspanning ${weight}kg`,
-                  `${label} bandendruk advies`,
-                ],
-          );
-          const { container } = render(await Page({ params }));
-          expect(screen.getByRole("heading", { level: 1, name: copy.title(weight, label) })).toBeTruthy();
-          expect(screen.getByText(copy.intro(weight, label))).toBeTruthy();
-          expect(screen.getByText(copy.bikeAssumption)).toBeTruthy();
-          expect(screen.getByText(copy.width).closest("div")?.textContent).toContain(
-            String(BIKE_TYPE_DEFAULTS[bikeType].widthFrontMm),
-          );
-          const table = screen.getByRole("table", { name: copy.results });
-          const rows = within(table).getAllByRole("row").slice(1);
-          for (const [index, tubeType] of (["tubeless", "inner_tube"] as const).entries()) {
-            const output = calculateBasicPressure(buildPressureInput(weight, bikeType, tubeType));
-            const cells = within(rows[index]).getAllByRole("cell");
-            const format = (value: number) => new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value);
-            expect(cells[0].textContent).toBe(`${format(output.frontBar)}bar${format(output.frontPsi)} PSI`);
-            expect(cells[1].textContent).toBe(`${format(output.rearBar)}bar${format(output.rearPsi)} PSI`);
-          }
-          const schema = JSON.parse(container.querySelector('script[type="application/ld+json"]')!.textContent!);
-          expect(schema.map((entry: { "@type": string }) => entry["@type"])).toEqual([
-            "BreadcrumbList",
-            "FAQPage",
-            "WebApplication",
-          ]);
-          expect(schema[0].itemListElement.map((entry: { item: string }) => entry.item)).toEqual([
-            new URL(`/${locale}`, BRAND.siteUrl).toString(),
-            new URL(`/${locale}/${calculator}`, BRAND.siteUrl).toString(),
-            pageUrl,
-          ]);
-          expect(schema[2]).toMatchObject({
-            name: copy.title(weight, label),
-            url: pageUrl,
-            description: copy.schemaDescription(weight, label),
-            applicationCategory: "SportsApplication",
-          });
-          expect(schema[1].mainEntity).toHaveLength(2);
-          for (const faq of schema[1].mainEntity) {
-            expect(screen.getByText(faq.name).tagName).toBe("SUMMARY");
-            expect(screen.getByText(faq.acceptedAnswer.text)).toBeTruthy();
-          }
-          const cta = screen.getByRole("link", { name: copy.cta });
-          expect(cta.getAttribute("href")).toBe(`/${locale}/${calculator}`);
-          expect(cta.getAttribute("data-section")).toBe("programmatic_pressure_primary_cta");
-          expect(cta.getAttribute("data-page")).toBe(pagePath);
-          expect(screen.getByRole("link", { name: copy.guideCta(label) }).getAttribute("href")).toBe(
-            `/${locale}${BIKE_TYPE_LABELS[bikeType].guideHref}`,
-          );
-          for (const link of getRelatedLinks("tire-pressure", locale)) {
-            expect(screen.getByRole("link", { name: link.label }).getAttribute("href")).toBe(`/${locale}${link.href}`);
-          }
-        });
-      }
-
-    it("keeps valid numeric slugs outside the static list and accessible FAQ disclosure", async () => {
-      const slug = buildSlug(72, "road-bike");
-      const params = Promise.resolve({ slug });
-      expect((await metadata({ params })).title).toContain("72kg");
-      render(await Page({ params }));
-      const summary = screen.getByText(copy.faqTubes);
-      expect(summary.closest("details")?.open).toBe(false);
-      fireEvent.click(summary);
-      expect(summary.closest("details")?.open).toBe(true);
-    });
-
-    for (const slug of [
-      "not-a-pressure-page",
-      "75-road-bike",
-      "75kg-unknown",
-      "-75kg-road-bike",
-      locale === "en" ? "75kg-racefiets" : "75kg-road-bike",
-    ]) {
-      it(`preserves invalid slug ${slug} noindex and notFound`, async () => {
+  const copy = pressureBikeLandingMessages[locale];
+  describe(`${locale} canonical pressure bike pages`, () => {
+    for (const bikeType of EN_BIKE_TYPES) {
+      it(`${bikeType} renders every weight with actual engine results and reciprocal metadata`, async () => {
+        request.locale = locale;
+        const slug = locale === "en" ? bikeType : Object.keys(NL_TO_EN)
+          .find(key => NL_TO_EN[key as keyof typeof NL_TO_EN] === bikeType)!;
         const params = Promise.resolve({ slug });
-        expect(await metadata({ params })).toEqual({
-          title: locale === "en" ? "Not found" : "Niet gevonden",
-          robots: { index: false, follow: false },
-        });
-        await expect(Page({ params })).rejects.toThrow("NEXT_NOT_FOUND");
+        const result = await metadata({ params });
+        const alternates = buildPressureBikeAlternates(bikeType, locale);
+        expect(result.alternates).toEqual(alternates);
+        expect(result.title).toBe(copy.title(BIKE_TYPE_LABELS[bikeType][locale]));
+        expect(result.description).toBe(copy.description(BIKE_TYPE_LABELS[bikeType][locale]));
+        expect(result.openGraph).toMatchObject({ title: result.title, description: result.description,
+          url: alternates.canonical });
+        const otherLocale = locale === "nl" ? "en" : "nl";
+        request.locale = otherLocale;
+        const paired = await englishMetadata({ params: Promise.resolve({ slug: bikeType }) });
+        expect(paired.alternates?.languages).toEqual(alternates.languages);
+        expect(paired.alternates?.canonical).toBe(alternates.languages[otherLocale]);
+        request.locale = locale;
+        const { container } = render(await Page({ params }));
+        expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(result.title);
+        expect(screen.getByText(copy.intro)).toBeTruthy();
+        expect(screen.getByText(copy.limits)).toBeTruthy();
+        expect(screen.getByAltText(copy.illustration)).toBeTruthy();
+        for (const [setup, tubeType] of [["tubeless", "tubeless"], ["innerTube", "inner_tube"]] as const) {
+          const table = screen.getByRole("table", { name: copy[setup] });
+          const rows = within(table).getAllByRole("row").slice(1);
+          expect(rows).toHaveLength(WEIGHT_STEPS.length);
+          for (const [index, weight] of WEIGHT_STEPS.entries()) {
+            const output = calculateBasicPressure(buildPressureInput(weight, bikeType, tubeType));
+            const number = (value: number) => new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value);
+            expect(within(rows[index]).getByRole("rowheader").textContent).toBe(`${weight} kg`);
+            const cells = within(rows[index]).getAllByRole("cell");
+            expect(cells[0].textContent).toBe(`${number(output.frontBar)} / ${number(output.frontPsi)}`);
+            expect(cells[1].textContent).toBe(`${number(output.rearBar)} / ${number(output.rearPsi)}`);
+          }
+        }
+        const scripts = [...container.querySelectorAll('script[type="application/ld+json"]')];
+        const schemas = scripts.flatMap(script => JSON.parse(script.textContent ?? "[]"));
+        scripts.forEach(script => script.remove());
+        const faqSchemas = schemas.filter(schema => schema["@type"] === "FAQPage");
+        expect(faqSchemas).toHaveLength(1);
+        expect(faqSchemas[0].mainEntity).toHaveLength(3);
+        for (const faq of faqSchemas[0].mainEntity) {
+          expect(screen.getByText(faq.name).tagName).toBe("SUMMARY");
+          expect(screen.getByText(faq.acceptedAnswer.text)).toBeTruthy();
+        }
+        const summary = screen.getByText(copy.faqWeight);
+        expect(summary.closest("details")?.open).toBe(false);
+        fireEvent.click(summary);
+        expect(summary.closest("details")?.open).toBe(true);
+        for (const cta of screen.getAllByRole("link", { name: copy.calculator })) {
+          expect(cta.getAttribute("href")).toBe(locale === "nl"
+            ? "/nl/bandenspanning-calculator" : "/en/tire-pressure-calculator");
+        }
+        expect(screen.getByRole("link", { name: copy.guide }).getAttribute("href"))
+          .toBe(`/${locale}${BIKE_TYPE_LABELS[bikeType].guideHref}`);
+        expect(container.textContent).not.toContain(locale === "nl" ? "Our assumptions" : "Dit nemen we aan");
       });
     }
+    it.each(["unknown", "75kg-road-bike", "75kg-racefiets", "72kg-gravel-bike", "75-road-bike"])(
+      "rejects invalid or retired direct-render slug %s (redirects are tested at the proxy)", async slug => {
+        request.locale = locale;
+        const params = Promise.resolve({ slug });
+        expect((await metadata({ params })).robots).toEqual({ index: false, follow: false });
+        await expect(Page({ params })).rejects.toThrow("NEXT_NOT_FOUND");
+      },
+    );
   });
 }
 
-describe("Dutch locale on the English-slug pressure route", () => {
-  for (const weight of WEIGHT_STEPS) {
-    for (const bikeType of EN_BIKE_TYPES) {
-      it(`translates ${weight}kg ${bikeType} including metadata and schema`, async () => {
-        request.locale = "nl";
-        const slug = buildEnglishPressureSlug(weight, bikeType);
-        const params = Promise.resolve({ slug });
-        const bike = BIKE_TYPE_LABELS[bikeType].nl;
-        const canonical = `https://bestbikefit4u.eu/nl/bandenspanning/${buildDutchPressureSlug(weight, bikeType)}`;
-        const result = await englishMetadata({ params });
-        expect(result.title).toBe(`Bandenspanning voor ${weight}kg ${bike} | BestBikeFit4U`);
-        expect(result.description).toContain(`voor een rijder van ${weight} kg op een ${bike}`);
-        expect(result.openGraph).toMatchObject({
-          title: result.title, description: result.description, url: canonical,
-        });
-        expect(result.alternates).toEqual({
-          canonical,
-          languages: {
-            nl: canonical,
-            en: `https://bestbikefit4u.eu/en/tire-pressure/${slug}`,
-            "x-default": `https://bestbikefit4u.eu/en/tire-pressure/${slug}`,
-          },
-        });
-        const { container } = render(await EnglishPage({ params }));
-        expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(`Bandenspanning voor ${weight}kg ${bike}`);
-        expect(screen.getByText(`Weeg je ${weight} kg en rijd je op een ${bike}? Hier vind je een startadvies ` +
-          "met gangbare bandbreedtes. Gebruik de volledige calculator voor advies op basis " +
-          "van je eigen banden en fiets."
-        )).toBeTruthy();
-        for (const text of ["Rijder en fiets", "Bandbreedte voor en achter", "Bandtype", "Voorband", "Achterband",
-          "Binnenband", "Veelgestelde vragen", "Waarom vergelijk je tubeless met een binnenband?"]) {
-          expect(screen.getByText(text)).toBeTruthy();
-        }
-        expect(screen.getByRole("navigation", { name: "Broodkruimelpad" })).toBeTruthy();
-        expect(screen.getByAltText("Pentekening van een fietsband en bandenspanningsmeter")).toBeTruthy();
-        expect(container.textContent).not.toMatch(/This landing page|Rider and bike|Front and rear tire|Inner tube/);
-        const cta = screen.getByRole("link", { name: "Open bandenspanningscalculator" });
-        expect(cta.getAttribute("href")).toBe("/nl/bandenspanning-calculator");
-        expect(cta.getAttribute("data-page")).toBe(`/nl/tire-pressure/${slug}`);
-        const schema = JSON.parse(container.querySelector('script[type="application/ld+json"]')!.textContent!);
-        expect(schema[0].itemListElement[2].item).toBe(canonical);
-        expect(schema[1].mainEntity[1].name).toBe("Waarom vergelijk je tubeless met een binnenband?");
-        expect(schema[2].url).toBe(canonical);
-      });
-    }
-  }
-  it("localizes the missing-page metadata and retains 404 behavior", async () => {
-    request.locale = "nl";
-    const params = Promise.resolve({ slug: "not-a-pressure-page" });
-    expect(await englishMetadata({ params })).toEqual({
-      title: "Niet gevonden", robots: { index: false, follow: false },
-    });
-    await expect(EnglishPage({ params })).rejects.toThrow("NEXT_NOT_FOUND");
-  });
+it.each([
+  ["road-bike", DutchRoadPage, roadMetadata], ["gravel-bike", DutchGravelPage, gravelMetadata],
+] as const)("keeps the dedicated Dutch %s wrapper canonical and localized", async (bike, Page, metadata) => {
+  request.locale = "nl";
+  const result = await metadata();
+  expect(result.alternates).toEqual(buildPressureBikeAlternates(bike, "nl"));
+  render(await Page());
+  expect(screen.getByRole("heading", { level: 1 }).textContent)
+    .toBe(pressureBikeLandingMessages.nl.title(BIKE_TYPE_LABELS[bike].nl));
+});
+
+it("does not render the retired MTB alias if the proxy is bypassed", () => {
+  expect(() => RetiredMtbAlias()).toThrow("NEXT_NOT_FOUND");
 });

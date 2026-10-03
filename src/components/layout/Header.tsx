@@ -42,11 +42,10 @@ export function Header({ locale, labels }: HeaderProps) {
           href={withLocalePrefix("/", locale)}
           priority
           className="flex min-h-11 w-[164px] shrink-0 items-center sm:w-[200px]"
-          ariaLabel={labels.nav.brand}
         />
         <MarketingNavigation items={items} label={copy.navigation} />
         <div className="flex items-center gap-2 xl:gap-4">
-          <MarketingLanguageSwitch locale={locale} />
+          <MarketingLanguageSwitch locale={locale} placement="menu" />
           <MarketingAccountLink
             locale={locale}
             loginLabel={labels.nav.login}

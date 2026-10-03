@@ -1,3 +1,5 @@
+import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { getFitAnswer } from "@/lib/seo/calculatorAnswers/fit";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
@@ -12,7 +14,7 @@ import { PublicCtaBand, PublicSection } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { BRAND } from "@/config/brand";
-import { CALCULATOR_AGGREGATE_RATING, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { buildFaqPageSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { getDictionary } from "@/i18n/getDictionary";
@@ -73,6 +75,7 @@ export default async function CrankLengthCalculatorPage({
     <div className="bg-background text-foreground">
       <JsonLd
         schema={[
+          buildFaqPageSchema([...copy.faqs]),
           buildWebApplicationSchema({
             name:
               locale === "nl"
@@ -83,7 +86,6 @@ export default async function CrankLengthCalculatorPage({
                 ? "Bereken een praktisch startpunt voor cranklengte op basis van binnenbeenlengte en categorie."
                 : "Calculate a practical crank-length starting point based on inseam and category.",
             url: pageUrl,
-            aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
         ]}
       />
@@ -93,6 +95,7 @@ export default async function CrankLengthCalculatorPage({
         initialInseamCm={inseamCm}
         initialCategory={category}
       />
+      <CalculatorAnswerSection id="crank-length" locale={locale} content={getFitAnswer("crank-length", locale)} />
       <div className="mx-auto max-w-[1440px] space-y-10 px-4 pb-16 sm:px-8 xl:px-16">
         <PublicSection header={{ title: copy.trustTitle, description: copy.trustText }}>
           <div className="grid gap-4 md:grid-cols-3">

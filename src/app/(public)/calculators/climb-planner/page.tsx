@@ -1,3 +1,5 @@
+import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { getPerformanceAnswer } from "@/lib/seo/calculatorAnswers/performance";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import { climbPlannerPageMessages } from "@/i18n/calculators/climbPlannerPage";
 import { PerformanceCalculator } from "../power-speed/PerformanceCalculator";
@@ -64,6 +66,9 @@ export default async function ClimbPlannerPage() {
       />
 
       <PerformanceCalculator tool="climb-planner" locale={locale} />
+      <CalculatorAnswerSection
+        id="climb-planner" locale={locale} content={getPerformanceAnswer("climb-planner", locale)}
+      />
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <PublicSection

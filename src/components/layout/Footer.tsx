@@ -12,11 +12,12 @@ import {
 import { BrandLogo } from "@/components/branding";
 import { BRAND } from "@/config/brand";
 import type { Locale } from "@/i18n/config";
-import { withLocalePrefix } from "@/i18n/navigation";
+import { withLocalePrefix, switchLocalePathname } from "@/i18n/navigation";
 import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators";
 import type { Messages } from "@/i18n/getDictionary";
 import { getMarketingLayoutMessages } from "@/i18n/marketing/layout";
 import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
+import { bikeFittingLinks } from "@/i18n/marketing/bikeFittingLinks";
 import { MarketingLanguageSwitch } from "./MarketingNavigation";
 
 type FooterProps = {
@@ -47,6 +48,7 @@ export function Footer({ locale, labels }: FooterProps) {
     {
       label: footer.product,
       links: [
+        { path: switchLocalePathname("/bike-fitting", locale), label: bikeFittingLinks[locale].label },
         { path: "/how-it-works", label: labels.howItWorks },
         { path: "/pricing", label: labels.pricing },
       ],
@@ -93,7 +95,7 @@ export function Footer({ locale, labels }: FooterProps) {
           <p className="min-w-0 flex-1 basis-[260px] text-sm leading-relaxed text-[var(--bbf-op-donker)]">
             {copy.tagline}
           </p>
-          <MarketingLanguageSwitch locale={locale} inverse />
+          <MarketingLanguageSwitch locale={locale} placement="footer" inverse />
         </div>
         <div
           className={

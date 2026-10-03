@@ -4,9 +4,8 @@ interface PressureCalculatorFaqProps {
   locale: "en" | "nl";
 }
 
-export function PressureCalculatorFaq({ locale }: PressureCalculatorFaqProps) {
-  const content =
-    locale === "nl"
+export function getPressureCalculatorFaqContent(locale: "en" | "nl") {
+  return locale === "nl"
       ? {
           title: "Veelgestelde vragen",
           description: "Korte antwoorden op de belangrijkste vragen over publieke drukadviezen.",
@@ -44,6 +43,10 @@ export function PressureCalculatorFaq({ locale }: PressureCalculatorFaqProps) {
           ],
         };
 
+}
+
+export function PressureCalculatorFaq({ locale }: PressureCalculatorFaqProps) {
+  const content = getPressureCalculatorFaqContent(locale);
   return (
     <PublicSection className="mt-10" header={{ title: content.title, description: content.description }}>
       <div className="space-y-4">

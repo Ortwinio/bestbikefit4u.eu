@@ -22,7 +22,7 @@ describe("seo route policy", () => {
     expect(classifySeoPath("/guides")).toBe("indexable_public");
     expect(classifySeoPath("/nl/guides")).toBe("indexable_public");
     expect(classifySeoPath("/bike-fitting")).toBe("indexable_public");
-    expect(classifySeoPath("/nl/fiets-afstellen")).toBe("indexable_public");
+    expect(classifySeoPath("/nl/fiets-afstellen")).toBe("non_indexable_public_utility");
     expect(classifySeoPath("/dashboard")).toBe("private_app");
     expect(classifySeoPath("/en/dashboard")).toBe("private_app");
     expect(classifySeoPath("/en/saddle-selector")).toBe("private_app");

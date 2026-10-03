@@ -46,3 +46,13 @@ describe("guide rewrite source and CMS review documents", () => {
     expect(getGuideRewrite("missing-guide")).toBeUndefined();
   });
 });
+
+
+it("does not borrow a static revision date for undated CMS content", () => {
+  const original = batchCGuides[0];
+  const cms = JSON.parse(readFileSync(`plans/redesign-canvas/guides-import/${original.slug}.json`, "utf8"));
+  delete cms.lastUpdatedAt;
+  cms.libraryBody.nl = "Bijgewerkte tekst zonder vastgelegde datum.";
+  expect(resolveGuideRewrite(original.slug, cms)?.updatedAt).toBeUndefined();
+  expect(resolveGuideRewrite(original.slug)?.updatedAt).toBe(original.updatedAt);
+});

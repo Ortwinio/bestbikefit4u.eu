@@ -1,3 +1,5 @@
+import { calculateBasicPressure } from "@/lib/pressure-engine";
+import { BRAND } from "@/config/brand";
 import type {
   BasicPressureInput,
   Discipline,
@@ -145,4 +147,36 @@ export function buildPressureAlternates(
   locale: "en" | "nl"
 ) {
   return buildLocaleAlternates(`/tire-pressure/${buildEnglishPressureSlug(weight, bikeType)}`, locale);
+}
+
+/** Canonical bike-type pages replace the old per-weight pages; parsers above remain for redirects. */
+export function parsePressureBikeSlug(slug: string, locale: "en" | "nl"): EnBikeType | null {
+  if (locale === "en") return EN_BIKE_TYPES.includes(slug as EnBikeType) ? slug as EnBikeType : null;
+  return Object.hasOwn(NL_TO_EN, slug) ? NL_TO_EN[slug as NlBikeType] : null;
+}
+
+export function getPressureBikePath(bikeType: EnBikeType, locale: "en" | "nl") {
+  const dutch = NL_BIKE_TYPES.find(slug => NL_TO_EN[slug] === bikeType);
+  return locale === "en" ? `/tire-pressure/${bikeType}` : `/bandenspanning/${dutch}`;
+}
+
+export function buildPressureBikeTable(bikeType: EnBikeType) {
+  return WEIGHT_STEPS.map(weightKg => ({
+    weightKg,
+    tubeless: calculateBasicPressure(buildPressureInput(weightKg, bikeType, "tubeless")),
+    innerTube: calculateBasicPressure(buildPressureInput(weightKg, bikeType, "inner_tube")),
+  }));
+}
+
+export function getPressureBikeEntries() {
+  return EN_BIKE_TYPES.map(bikeType => ({
+    id: `pressure-bike-${bikeType}`,
+    localizedPaths: { en: getPressureBikePath(bikeType, "en"), nl: getPressureBikePath(bikeType, "nl") },
+    lastmod: "2026-10-03", changefreq: "monthly" as const, priority: 0.7,
+  }));
+}
+
+export function buildPressureBikeAlternates(bikeType: EnBikeType, locale: "en" | "nl") {
+  const absolute = (language: "en" | "nl") => new URL(`/${language}${getPressureBikePath(bikeType, language)}`, BRAND.siteUrl).href;
+  return { canonical: absolute(locale), languages: { en: absolute("en"), nl: absolute("nl"), "x-default": absolute("en") } };
 }

@@ -104,7 +104,6 @@ export default function DashboardLayoutClient({
           asset="dark"
           className="flex min-h-11 w-[140px] shrink-0 items-center sm:w-[170px]"
           imageClassName="block"
-          ariaLabel={messages.layout.website.home}
         />
         <div className="flex items-center gap-2">
           <AccountLanguageSwitch />

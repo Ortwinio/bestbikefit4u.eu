@@ -1,20 +1,9 @@
+import { AUTHORSHIP, getAuthorUrl } from "@/config/authorship";
+import type { Locale } from "@/i18n/config";
 import { BRAND } from "@/config/brand";
 
 type FaqItem = { q: string; a: string };
 type BreadcrumbItem = { name: string; item: string };
-type AggregateRatingInput = {
-  ratingValue: string;
-  ratingCount: number;
-  bestRating?: string;
-  worstRating?: string;
-};
-
-export const CALCULATOR_AGGREGATE_RATING: Required<AggregateRatingInput> = {
-  ratingValue: "4.8",
-  ratingCount: 380,
-  bestRating: "5",
-  worstRating: "1",
-};
 
 export function buildOrganizationSchema() {
   return {
@@ -24,6 +13,19 @@ export function buildOrganizationSchema() {
     name: BRAND.name,
     url: BRAND.siteUrl,
     email: BRAND.supportEmail,
+    logo: new URL(BRAND.assets.logoPrimary, BRAND.siteUrl).href,
+    sameAs: AUTHORSHIP.sameAs.organization,
+  };
+}
+
+export function buildPersonSchema(locale: Locale) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": `${BRAND.siteUrl}/#ortwin-verreck`,
+    name: AUTHORSHIP.name,
+    url: getAuthorUrl(locale),
+    sameAs: AUTHORSHIP.sameAs.person,
   };
 }
 
@@ -55,15 +57,13 @@ export function buildWebApplicationSchema({
   description,
   url,
   applicationCategory = "SportsApplication",
-  aggregateRating,
 }: {
   name: string;
   description: string;
   url: string;
   applicationCategory?: string;
-  aggregateRating?: AggregateRatingInput;
 }) {
-  const schema: Record<string, unknown> = {
+  return {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name,
@@ -80,18 +80,6 @@ export function buildWebApplicationSchema({
       "@id": `${BRAND.siteUrl}/#organization`,
     },
   };
-
-  if (aggregateRating) {
-    schema.aggregateRating = {
-      "@type": "AggregateRating",
-      ratingValue: aggregateRating.ratingValue,
-      ratingCount: aggregateRating.ratingCount,
-      bestRating: aggregateRating.bestRating ?? "5",
-      worstRating: aggregateRating.worstRating ?? "1",
-    };
-  }
-
-  return schema;
 }
 
 export function buildFaqPageSchema(faqs: FaqItem[]) {
@@ -128,12 +116,16 @@ export function buildArticleSchema({
   url,
   inLanguage,
   image,
+  author,
+  dateModified,
 }: {
   headline: string;
   description: string;
   url: string;
   inLanguage?: string;
   image?: string;
+  author?: ReturnType<typeof buildPersonSchema>;
+  dateModified?: string;
 }) {
   return {
     "@context": "https://schema.org",
@@ -143,7 +135,8 @@ export function buildArticleSchema({
     inLanguage,
     mainEntityOfPage: url,
     image,
-    author: {
+    ...(dateModified ? { dateModified } : {}),
+    author: author ?? {
       "@id": `${BRAND.siteUrl}/#organization`,
     },
     publisher: {

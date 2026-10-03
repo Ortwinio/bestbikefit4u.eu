@@ -1,0 +1,286 @@
+[
+  {
+    "locale": "nl",
+    "width": 1440,
+    "beforeHeight": 4964,
+    "afterHeight": 5013,
+    "heightDelta": 49,
+    "sectionCountUnchanged": true,
+    "sectionWidthsUnchanged": true,
+    "gridsUnchanged": true,
+    "sectionDeltas": [
+      {
+        "className": "MarketingHome_container MarketingHome_hero",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_proof",
+        "yDelta": 0,
+        "heightDelta": 17.703125
+      },
+      {
+        "className": "MarketingHome_container MarketingHome_section",
+        "yDelta": 17.703125,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_stepsBand",
+        "yDelta": 17.703125,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_container MarketingHome_section",
+        "yDelta": 17.703125,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_testimonials",
+        "yDelta": 17.703125,
+        "heightDelta": 31.5
+      },
+      {
+        "className": "MarketingHome_container MarketingHome_section MarketingHome_report",
+        "yDelta": 49.203125,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_closing",
+        "yDelta": 49.203125,
+        "heightDelta": 0
+      },
+      {
+        "className": "",
+        "yDelta": 49.203125,
+        "heightDelta": 0
+      },
+      {
+        "className": "",
+        "yDelta": 49.203125,
+        "heightDelta": 0
+      },
+      {
+        "className": "",
+        "yDelta": 49.203125,
+        "heightDelta": 0
+      }
+    ],
+    "overflow": false,
+    "errors": [],
+    "brokenImages": [],
+    "externalRequests": []
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "beforeHeight": 9016,
+    "afterHeight": 9142,
+    "heightDelta": 126,
+    "sectionCountUnchanged": true,
+    "sectionWidthsUnchanged": true,
+    "gridsUnchanged": true,
+    "sectionDeltas": [
+      {
+        "className": "MarketingHome_container MarketingHome_hero",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_proof",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_container MarketingHome_section",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_stepsBand",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_container MarketingHome_section",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_testimonials",
+        "yDelta": 0,
+        "heightDelta": 126
+      },
+      {
+        "className": "MarketingHome_container MarketingHome_section MarketingHome_report",
+        "yDelta": 126,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_closing",
+        "yDelta": 126,
+        "heightDelta": 0
+      },
+      {
+        "className": "",
+        "yDelta": 126,
+        "heightDelta": 0
+      },
+      {
+        "className": "",
+        "yDelta": 126,
+        "heightDelta": 0
+      },
+      {
+        "className": "",
+        "yDelta": 126,
+        "heightDelta": 0
+      }
+    ],
+    "overflow": false,
+    "errors": [],
+    "brokenImages": [],
+    "externalRequests": []
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "beforeHeight": 4956,
+    "afterHeight": 4956,
+    "heightDelta": 0,
+    "sectionCountUnchanged": true,
+    "sectionWidthsUnchanged": true,
+    "gridsUnchanged": true,
+    "sectionDeltas": [
+      {
+        "className": "MarketingHome_container MarketingHome_hero",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_proof",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_container MarketingHome_section",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_stepsBand",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_container MarketingHome_section",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_testimonials",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_container MarketingHome_section MarketingHome_report",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_closing",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "",
+        "yDelta": 0,
+        "heightDelta": 0
+      }
+    ],
+    "overflow": false,
+    "errors": [],
+    "brokenImages": [],
+    "externalRequests": []
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "beforeHeight": 8973,
+    "afterHeight": 9123,
+    "heightDelta": 150,
+    "sectionCountUnchanged": true,
+    "sectionWidthsUnchanged": true,
+    "gridsUnchanged": true,
+    "sectionDeltas": [
+      {
+        "className": "MarketingHome_container MarketingHome_hero",
+        "yDelta": 0,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_proof",
+        "yDelta": 0,
+        "heightDelta": 19.5
+      },
+      {
+        "className": "MarketingHome_container MarketingHome_section",
+        "yDelta": 19.5,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_stepsBand",
+        "yDelta": 19.5,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_container MarketingHome_section",
+        "yDelta": 19.5,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_testimonials",
+        "yDelta": 19.5,
+        "heightDelta": 130.1875
+      },
+      {
+        "className": "MarketingHome_container MarketingHome_section MarketingHome_report",
+        "yDelta": 149.6875,
+        "heightDelta": 0
+      },
+      {
+        "className": "MarketingHome_closing",
+        "yDelta": 149.6875,
+        "heightDelta": 0
+      },
+      {
+        "className": "",
+        "yDelta": 149.6875,
+        "heightDelta": 0
+      },
+      {
+        "className": "",
+        "yDelta": 149.6875,
+        "heightDelta": 0
+      },
+      {
+        "className": "",
+        "yDelta": 149.6875,
+        "heightDelta": 0
+      }
+    ],
+    "overflow": false,
+    "errors": [],
+    "brokenImages": [],
+    "externalRequests": []
+  }
+]

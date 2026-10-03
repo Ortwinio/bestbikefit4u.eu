@@ -1,0 +1,14 @@
+plans/seo-semrush/audit/S5-home-capture.mjs
+plans/seo-semrush/audit/S5-before-capture.json
+plans/seo-semrush/audit/S5-after-capture.json
+plans/seo-semrush/audit/S5-visual-comparison.json
+plans/seo-semrush/audit/S5-visual-notes.md
+plans/seo-semrush/audit/files-S5-visual.txt
+plans/seo-semrush/renders/S5-before-nl-1440.png
+plans/seo-semrush/renders/S5-before-nl-390.png
+plans/seo-semrush/renders/S5-before-en-1440.png
+plans/seo-semrush/renders/S5-before-en-390.png
+plans/seo-semrush/renders/S5-after-nl-1440.png
+plans/seo-semrush/renders/S5-after-nl-390.png
+plans/seo-semrush/renders/S5-after-en-1440.png
+plans/seo-semrush/renders/S5-after-en-390.png

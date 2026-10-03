@@ -1,3 +1,5 @@
+import { getGuideUpdatedDate } from "@/config/authorship";
+import { GuideAttribution } from "@/components/guides/GuideAttribution";
 import { socialImage } from "@/lib/seo/social-image";
 import { isAuthenticatedNextjs } from "@convex-dev/auth/nextjs/server";
 import type { Metadata } from "next";
@@ -54,6 +56,7 @@ import {
 } from "@/lib/guides/markdown-utils";
 import {
   buildArticleSchema,
+  buildPersonSchema,
   buildBreadcrumbListSchema,
   buildFaqPageSchema,
 } from "@/lib/seo/jsonLd";
@@ -340,6 +343,8 @@ export default async function GuidePage({
             description: dbGuide?.metaDescription?.[locale] ?? entry.pageBrief,
             url: pageUrl,
             inLanguage: locale,
+            author: buildPersonSchema(locale),
+            dateModified: getGuideUpdatedDate(dbGuide?.lastUpdatedAt),
             image: dbGuide?.heroImagePublicPath
               ? new URL(dbGuide.heroImagePublicPath, BRAND.siteUrl).toString()
               : dbGuide?.ogImageUrl,
@@ -391,6 +396,7 @@ export default async function GuidePage({
             {copy.back}
           </Button>
         </GuideHero>
+        <GuideAttribution locale={locale} updatedAt={dbGuide?.lastUpdatedAt} />
 
         <GuideQuickAnswer answer={isHub ? guide.hubQuickAnswer : quickAnswer} locale={locale} />
 

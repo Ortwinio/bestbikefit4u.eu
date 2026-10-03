@@ -1,0 +1,20 @@
+{
+  "sourceReport": "plans/seo-semrush/audit/S12-S13-raw-html.json",
+  "buildId": "rejwcKGnhSNUclqs6ffwl",
+  "checkedAt": "2026-10-03T14:22:25.891Z",
+  "failures": [],
+  "pressurePages": 6,
+  "redirects": 65,
+  "guideLocales": 96,
+  "authorMethodsPages": 4,
+  "screenshots": [
+    "S12-S13-pressure-nl-1440.png",
+    "S12-S13-guide-nl-1440.png",
+    "S12-S13-pressure-nl-390.png",
+    "S12-S13-guide-nl-390.png",
+    "S12-S13-pressure-en-1440.png",
+    "S12-S13-guide-en-1440.png",
+    "S12-S13-pressure-en-390.png",
+    "S12-S13-guide-en-390.png"
+  ]
+}

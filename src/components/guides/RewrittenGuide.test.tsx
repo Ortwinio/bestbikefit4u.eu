@@ -35,6 +35,11 @@ describe("rewritten guide rendering", () => {
     const article = schemas.find((schema: { "@type": string }) => schema["@type"] === "Article");
     expect(article.dateModified).toBe("2026-10-01");
     expect(article.inLanguage).toBe(locale);
+    expect(article.author).toMatchObject({ "@type": "Person", name: "Ortwin Verreck",
+      url: `https://bestbikefit4u.eu/${locale}/authors/ortwin-verreck`, sameAs: [] });
+    expect(html).toContain(locale === "nl" ? "Auteur:" : "Author:");
+    expect(html).toContain(`href="/${locale}/authors/ortwin-verreck"`);
+    expect(article).not.toHaveProperty("reviewedBy");
     expect(article.image).toContain("/illustrations/guides/33-gevoelloze-handen.webp");
     const faq = schemas.find((schema: { "@type": string }) => schema["@type"] === "FAQPage");
     expect(faq.mainEntity).toHaveLength(4);
@@ -50,4 +55,13 @@ describe("rewritten guide rendering", () => {
     const html = renderToStaticMarkup(<RewrittenGuide guide={handNumbness} locale="nl" />);
     expect(html).toMatch(/href="\/nl\/guides\/reach-and-stem-guide"[^>]*>Stuurpenlengte bepalen<\/a>/);
   });
+});
+
+
+it("shows an honest missing date instead of inventing a date for CMS text", () => {
+  const html = renderToStaticMarkup(<RewrittenGuide guide={{ ...handNumbness, updatedAt: undefined }} locale="nl" />);
+  expect(html).toContain("Bijwerkdatum niet beschikbaar.");
+  expect(html).not.toContain("<time");
+  expect(html).not.toContain('"dateModified"');
+  expect(html).toContain("Ortwin Verreck");
 });
