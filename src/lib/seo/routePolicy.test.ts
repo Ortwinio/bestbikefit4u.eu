@@ -6,6 +6,18 @@ import {
 } from "./routePolicy";
 
 describe("seo route policy", () => {
+  it.each(["", "/en", "/nl"])("registers tools and email preferences for %s", (localePrefix) => {
+    const toolsPath = `${localePrefix}/tools`;
+    const preferencesPath = `${localePrefix}/email-preferences`;
+    expect(classifySeoPath(toolsPath)).toBe("private_app");
+    expect(classifySeoPath(`${toolsPath}/ftp-wkg`)).toBe("private_app");
+    expect(SEO_ROBOTS_DISALLOW_PATHS).toContain(toolsPath);
+    expect(SEO_SITEMAP_EXCLUDED_PATHS).toContain(toolsPath);
+    expect(classifySeoPath(preferencesPath)).toBe("non_indexable_public_utility");
+    expect(SEO_ROBOTS_DISALLOW_PATHS).not.toContain(preferencesPath);
+    expect(classifySeoPath(`${localePrefix}/toolshed`)).toBeNull();
+  });
+
   it("classifies public and private route families", () => {
     expect(classifySeoPath("/guides")).toBe("indexable_public");
     expect(classifySeoPath("/nl/guides")).toBe("indexable_public");

@@ -5,11 +5,12 @@ import { act, cleanup, fireEvent, render, screen, within, waitFor } from "@testi
 import { accountCalculatorNavigation } from "@/components/account/account-navigation";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
-import DashboardLayout, {
+import DashboardLayout, { metadata } from "./layout";
+import {
   DASHBOARD_MOBILE_HEADER_CLASSNAME,
   DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME,
   DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME,
-} from "./layout";
+} from "./DashboardLayoutClient";
 
 const { usePathnameMock, useRouterMock, useConvexAuthMock, useQueryMock } = vi.hoisted(() => ({
   usePathnameMock: vi.fn(),
@@ -136,6 +137,10 @@ function renderLayout(pathname: string) {
 }
 
 describe("DashboardLayout feedback context integration", () => {
+  it("sets shared server noindex metadata for every account descendant", () => {
+    expect(metadata).toEqual({ robots: { index: false, follow: false } });
+  });
+
   it("renders the dashboard shell without legacy local feedback mounting", () => {
     const html = renderLayout("/nl/dashboard");
 
