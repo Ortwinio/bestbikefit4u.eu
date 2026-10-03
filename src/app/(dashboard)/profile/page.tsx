@@ -1,6 +1,7 @@
 "use client";
 
 import { profileText } from "@/i18n/account/profileLanguage";
+import { hasFitMeasurements } from "../../../../shared/profileFitReadiness";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -20,6 +21,9 @@ import {
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { ProfileAutosaveEditor } from "@/components/profile/ProfileAutosaveEditor";
+import { ProfileProvenance } from "@/components/profile/ProfileProvenance";
+import { ProfileSectionTabs } from "@/components/profile/ProfileSectionTabs";
+import { getProfileProvenanceCopy } from "@/i18n/account/profileProvenance";
 import { localizeAccountError } from "@/i18n/account/clientErrors";
 import { reportClientError } from "@/lib/telemetry";
 import { toPercentBucket } from "@/lib/uiPercent";
@@ -38,15 +42,15 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 type FlexibilityScore = (typeof flexibilityTests)[number]["score"];
 
 interface ProfileData {
-  heightCm: number;
-  inseamCm: number;
+  heightCm?: number;
+  inseamCm?: number;
   weightKg?: number;
   torsoLengthCm?: number;
   armLengthCm?: number;
   femurLengthCm?: number;
   shoulderWidthCm?: number;
-  flexibilityScore: FlexibilityScore;
-  coreStabilityScore: number;
+  flexibilityScore?: FlexibilityScore;
+  coreStabilityScore?: number;
   hasPain?: string;
   painSeverity?: number;
   painAreas?: string[];
@@ -74,7 +78,7 @@ function getDefaultValues(profile: ProfileData): Partial<WizardFormData> {
     shoulderWidthCm: profile.shoulderWidthCm,
     flexibilityScore: profile.flexibilityScore,
     coreStabilityScore: profile.coreStabilityScore,
-    comfortScore: deriveComfortScore(profile.hasPain, profile.painSeverity),
+    comfortScore: profile.hasPain === undefined ? undefined : deriveComfortScore(profile.hasPain, profile.painSeverity),
     painAreas: profile.painAreas ?? [],
     experienceLevel: profile.experienceLevel as WizardFormData["experienceLevel"],
     weeklyHours: profile.weeklyHours as WizardFormData["weeklyHours"],
@@ -172,6 +176,8 @@ export default function ProfilePage() {
   const toast = useToast();
 
   const [isEditing, setIsEditing] = useState(false);
+  const [showDirectEditor, setShowDirectEditor] = useState(() => Boolean(searchParams?.get("edit")));
+  const provenanceCopy = getProfileProvenanceCopy(locale);
   const [showRefreshDialog, setShowRefreshDialog] = useState(false);
   const [pendingRefreshWeight, setPendingRefreshWeight] = useState<number | null>(null);
   const [isRecalculating, setIsRecalculating] = useState(false);
@@ -359,21 +365,34 @@ export default function ProfilePage() {
             <p className="mt-1 text-sm text-muted-foreground">{displayName}</p>
           </div>
         </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <ProfileSectionTabs locale={locale} active="data" />
+          <Button variant="outline" onClick={() => setIsEditing(true)}>{provenanceCopy.wizard}</Button>
+        </div>
+        <ProfileProvenance profile={profileData} locale={locale} onWeightSaved={openRefreshDialog} onEditDetails={() => setShowDirectEditor(true)} />
         <Card variant="bordered" className="rounded-3xl bg-[var(--bbf-lime)] text-[var(--bbf-inkt)]">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="font-display text-2xl font-bold text-[var(--bbf-inkt)]">{messages.profile.status.title}</h2>
-              <p className="mt-2">{messages.profile.status.description}</p>
+              <h2 className="font-display text-2xl font-bold text-[var(--bbf-inkt)]">{hasFitMeasurements(profileData) ? messages.profile.status.title : messages.fit.riderProfileWarning.title}</h2>
+              <p className="mt-2">{hasFitMeasurements(profileData) ? messages.profile.status.description : messages.fit.riderProfileWarning.description}</p>
             </div>
-            <Button variant="primary" {...linkButtonProps(withLocalePrefix("/fit", locale))}>
+            {hasFitMeasurements(profileData) ? <Button variant="primary" {...linkButtonProps(withLocalePrefix("/fit", locale))}>
               {messages.profile.status.startFitCta}<ArrowRight className="ml-1.5 h-4 w-4" />
-            </Button>
+            </Button> : <Button variant="primary" onClick={() => setIsEditing(true)}>
+              {messages.fit.riderProfileWarning.cta}<ArrowRight className="ml-1.5 h-4 w-4" />
+            </Button>}
           </div>
         </Card>
-        <ProfileAutosaveEditor key={profileData._id} profile={profileData} onWeightSaved={openRefreshDialog}
-          target={searchParams?.get("edit")}
-          bodySummary={(values) => <BMISlider heightCm={values.heightCm ?? 0} weightKg={values.weightKg ?? null}
-            messages={messages} />} />
+        <section className="space-y-4">
+          <Button variant="outline" aria-expanded={showDirectEditor} aria-controls="profile-direct-editor" onClick={() => setShowDirectEditor(!showDirectEditor)}>{showDirectEditor ? provenanceCopy.hideEditor : provenanceCopy.directEdit}</Button>
+          <p className="text-sm text-muted-foreground">{provenanceCopy.directHint}</p>
+          <div id="profile-direct-editor" hidden={!showDirectEditor}>
+            <ProfileAutosaveEditor key={profileData._id} profile={profileData} onWeightSaved={openRefreshDialog}
+              target={searchParams?.get("edit")}
+              bodySummary={(values) => <BMISlider heightCm={values.heightCm ?? null} weightKg={values.weightKg ?? null}
+                messages={messages} />} />
+          </div>
+        </section>
       </div>
       <AccessibleDialog
         open={showRefreshDialog}

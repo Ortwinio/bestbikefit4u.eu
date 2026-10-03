@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { useMutation } from "convex/react";
 import Link from "next/link";
-import { api } from "../../../../../convex/_generated/api";
+import { useCalculatorValuesChange } from "@/components/calculators/useCalculatorValuesChange";
 import { PublicCalculatorResultSummary } from "@/components/public";
 import { ConfiguratorLayout, OptionCard, ResultHero, ResultTile, Slider, StepCard } from "@/components/ui";
 import { gearingMessages } from "@/i18n/calculators/gearing";
 import { withLocalePrefix } from "@/i18n/navigation";
-import { calculateGearingAnalysis } from "@/lib/gearing-engine";
+import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
+import { PersonalizeAdviceBlock } from "@/components/calculators/PersonalizeAdviceBlock";
+import { HandoffPrefillNotice } from "@/components/calculators/HandoffPrefillNotice";
+import type { HandoffField } from "@/lib/handoff/store";
 import {
   calculateGearing,
   DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE,
@@ -67,8 +69,9 @@ export function GearingCalculatorForm({
     new Intl.NumberFormat(locale, {
       maximumFractionDigits: digits,
     }).format(value);
-  const saveSession = useMutation(api.gearing.mutations.createPublicGearingSession);
-  const savedSignatureRef = useRef<string | null>(null);
+  const handoff = usePublicHandoff("gearing", !accountMode);
+  const prefilled = useRef(false);
+  const [prefilledFields, setPrefilledFields] = useState<HandoffField[]>([]);
   const [drivetrainType, setDrivetrainType] = useState<GearingDrivetrainType>(initialValues?.drivetrainType ?? "2x");
   const [bikeType, setBikeType] = useState<GearingBikeType>(initialValues?.bikeType ?? "road");
   const [climbBand, setClimbBand] = useState<GearingClimbBand>(initialValues?.climbBand ?? "medium");
@@ -95,12 +98,9 @@ export function GearingCalculatorForm({
   const [cadenceRpm, setCadenceRpm] = useState<number | undefined>(initialValues?.cadenceRpm ?? 80);
   const [gradientPct, setGradientPct] = useState<number | undefined>(initialValues?.gradientPct ?? 8);
 
-  useEffect(() => {
-    if (!edited) return;
-    onValuesChange?.({ drivetrainType, bikeType, climbBand, outerChainringTeeth, innerChainringTeeth,
-      cassetteSmallestCogTeeth, cassetteLargestCogTeeth, wheelCircumferenceMm, cadenceRpm, gradientPct });
-  }, [edited, onValuesChange, drivetrainType, bikeType, climbBand, outerChainringTeeth, innerChainringTeeth,
-    cassetteSmallestCogTeeth, cassetteLargestCogTeeth, wheelCircumferenceMm, cadenceRpm, gradientPct]);
+  useCalculatorValuesChange({ drivetrainType, bikeType, climbBand, outerChainringTeeth, innerChainringTeeth,
+    cassetteSmallestCogTeeth, cassetteLargestCogTeeth, wheelCircumferenceMm, cadenceRpm, gradientPct },
+  edited ? onValuesChange : undefined);
 
   const validationIssues = useMemo(
     () =>
@@ -174,111 +174,28 @@ export function GearingCalculatorForm({
     .filter((issue) => issue.severity === "error")
     .map((issue) => issue.message);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- Hydrate the once-only client session snapshot. */
   useEffect(() => {
-    if (accountMode || !result) {
-      return;
+    if (!handoff.ready || prefilled.current || accountMode) return;
+    prefilled.current = true;
+    const fields: HandoffField[] = [];
+    const mappings = [
+      ["outerChainringTeeth", setOuterChainringTeeth, 20, 70],
+      ["innerChainringTeeth", setInnerChainringTeeth, 20, 70],
+      ["cassetteSmallestCogTeeth", setCassetteSmallestCogTeeth, 9, 54],
+      ["cassetteLargestCogTeeth", setCassetteLargestCogTeeth, 9, 54],
+    ] as const;
+    for (const [field, setter, min, max] of mappings) {
+      const entry = handoff.getPrefill(field);
+      if (typeof entry?.value !== "number" || entry.value < min || entry.value > max) continue;
+      setter(entry.value);
+      if (field.startsWith("cassette")) setCassettePreset("custom");
+      fields.push(field);
     }
-
-    const signature = JSON.stringify({
-      drivetrainType,
-      outerChainringTeeth,
-      innerChainringTeeth,
-      cassetteSmallestCogTeeth,
-      cassetteLargestCogTeeth,
-      wheelCircumferenceMm,
-      cadenceRpm,
-      gradientPct,
-      bikeType,
-      climbBand,
-      easiest: result.easiest.ratio,
-      hardest: result.hardest.ratio,
-      verdict: result.recommendation.label,
-    });
-
-    if (savedSignatureRef.current === signature) {
-      return;
-    }
-    savedSignatureRef.current = signature;
-
-    void saveSession({
-      input: (() => {
-        const chainrings =
-          drivetrainType === "2x"
-            ? [outerChainringTeeth, innerChainringTeeth].filter(
-                (value): value is number => typeof value === "number",
-              )
-            : [outerChainringTeeth].filter((value): value is number => typeof value === "number");
-        const cassetteTeeth = [cassetteSmallestCogTeeth, cassetteLargestCogTeeth].filter(
-          (value): value is number => typeof value === "number",
-        );
-        const input = {
-          drivetrainType,
-          chainrings,
-          cassetteTeeth,
-          wheelCircumferenceMm: wheelCircumferenceMm ?? DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road,
-          cadenceRpm: cadenceRpm ?? 80,
-          bikeType: bikeType === "mtb" ? "mountain" : bikeType === "commuter" ? "city" : bikeType,
-          climbGradientPct: gradientPct,
-          climbLengthBand: climbBand,
-        } as const;
-        return input;
-      })(),
-      math: (() => {
-        const input = {
-          drivetrainType,
-          chainrings:
-            drivetrainType === "2x"
-              ? [outerChainringTeeth, innerChainringTeeth].filter(
-                  (value): value is number => typeof value === "number",
-                )
-              : [outerChainringTeeth].filter((value): value is number => typeof value === "number"),
-          cassetteTeeth: [cassetteSmallestCogTeeth, cassetteLargestCogTeeth].filter(
-            (value): value is number => typeof value === "number",
-          ),
-          wheelCircumferenceMm: wheelCircumferenceMm ?? DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road,
-          cadenceRpm: cadenceRpm ?? 80,
-          bikeType: bikeType === "mtb" ? "mountain" : bikeType === "commuter" ? "city" : bikeType,
-          climbGradientPct: gradientPct,
-          climbLengthBand: climbBand,
-        } as const;
-        return calculateGearingAnalysis(input).math;
-      })(),
-      suitability: (() => {
-        const input = {
-          drivetrainType,
-          chainrings:
-            drivetrainType === "2x"
-              ? [outerChainringTeeth, innerChainringTeeth].filter(
-                  (value): value is number => typeof value === "number",
-                )
-              : [outerChainringTeeth].filter((value): value is number => typeof value === "number"),
-          cassetteTeeth: [cassetteSmallestCogTeeth, cassetteLargestCogTeeth].filter(
-            (value): value is number => typeof value === "number",
-          ),
-          wheelCircumferenceMm: wheelCircumferenceMm ?? DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE.road,
-          cadenceRpm: cadenceRpm ?? 80,
-          bikeType: bikeType === "mtb" ? "mountain" : bikeType === "commuter" ? "city" : bikeType,
-          climbGradientPct: gradientPct,
-          climbLengthBand: climbBand,
-        } as const;
-        return calculateGearingAnalysis(input).suitability;
-      })(),
-    });
-  }, [
-    accountMode,
-    result,
-    saveSession,
-    drivetrainType,
-    outerChainringTeeth,
-    innerChainringTeeth,
-    cassetteSmallestCogTeeth,
-    cassetteLargestCogTeeth,
-    wheelCircumferenceMm,
-    cadenceRpm,
-    gradientPct,
-    bikeType,
-    climbBand,
-  ]);
+    setPrefilledFields(fields);
+    if (fields.length) setEdited(true);
+  }, [handoff, accountMode]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   function slider(
     label: string,
@@ -335,6 +252,8 @@ export function GearingCalculatorForm({
   }
   return (
     <ConfiguratorLayout
+      notice={!accountMode && <HandoffPrefillNotice calculator="gearing" locale={locale} fields={prefilledFields} />}
+      afterResults={!accountMode && <PersonalizeAdviceBlock calculator="gearing" locale={locale} />}
       navigation={headerSlot}
       eyebrow={copy.eyebrow}
       title={copy.title}
@@ -343,10 +262,19 @@ export function GearingCalculatorForm({
         <>
           {statusSlot}
           <StepCard number={1} title={copy.drivetrain}>
-            {choices(copy.drivetrain, { "1x": "1×", "2x": "2×" }, drivetrainType, setDrivetrainType)}
-            {slider(copy.outer, outerChainringTeeth, setOuterChainringTeeth, 20, 70, "T")}
+            {choices(copy.drivetrain, { "1x": "1×", "2x": "2×" }, drivetrainType, (value) => {
+              setDrivetrainType(value);
+              if (value === "1x") handoff.remove("innerChainringTeeth");
+            })}
+            {slider(copy.outer, outerChainringTeeth, (value) => {
+              setOuterChainringTeeth(value);
+              handoff.touch("outerChainringTeeth", value, "teeth", "bike");
+            }, 20, 70, "T")}
             {drivetrainType === "2x" &&
-              slider(copy.inner, innerChainringTeeth, setInnerChainringTeeth, 20, 70, "T")}
+              slider(copy.inner, innerChainringTeeth, (value) => {
+                setInnerChainringTeeth(value);
+                handoff.touch("innerChainringTeeth", value, "teeth", "bike");
+              }, 20, 70, "T")}
             {choices(
               copy.cassette,
               Object.fromEntries(
@@ -361,6 +289,8 @@ export function GearingCalculatorForm({
                 const preset = CASSETTE_PRESET_OPTIONS.find((option) => option.value === value);
                 if (preset && value !== "custom") {
                   setCassetteSmallestCogTeeth(preset.smallest);
+                  handoff.touch("cassetteSmallestCogTeeth", preset.smallest, "teeth", "bike");
+                  handoff.touch("cassetteLargestCogTeeth", preset.largest, "teeth", "bike");
                   setCassetteLargestCogTeeth(preset.largest);
                 }
               },
@@ -371,6 +301,7 @@ export function GearingCalculatorForm({
               (value) => {
                 setCassettePreset("custom");
                 setCassetteSmallestCogTeeth(value);
+                handoff.touch("cassetteSmallestCogTeeth", value, "teeth", "bike");
               },
               9,
               54,
@@ -382,6 +313,7 @@ export function GearingCalculatorForm({
               (value) => {
                 setCassettePreset("custom");
                 setCassetteLargestCogTeeth(value);
+                handoff.touch("cassetteLargestCogTeeth", value, "teeth", "bike");
               },
               9,
               54,

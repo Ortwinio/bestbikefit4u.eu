@@ -1,7 +1,11 @@
 import { v } from "convex/values";
 import { internalMutation, internalQuery } from "../_generated/server";
+import { newsletterConsentValidator, normalizedEmailPreferences, updateEmailPreferences } from "./newsletterConsent";
 
-export const preferenceFields = { service: v.boolean(), marketing: v.boolean() };
+export const preferenceFields = {
+  service: v.boolean(), marketing: v.boolean(), newsletter: v.optional(v.boolean()),
+  consent: v.optional(newsletterConsentValidator),
+};
 
 export const read = internalQuery({
   args: { userId: v.string() },
@@ -9,21 +13,30 @@ export const read = internalQuery({
     const id = ctx.db.normalizeId("users", userId);
     const user = id ? await ctx.db.get(id) : null;
     if (!user) throw new Error("Invalid or expired email link");
-    return user.emailPreferences ?? { service: true, marketing: true };
+    return normalizedEmailPreferences(user);
   },
 });
 
 export const update = internalMutation({
-  args: { userId: v.string(), service: v.optional(v.boolean()), marketing: v.optional(v.boolean()) },
-  handler: async (ctx, { userId, service, marketing }) => {
+  args: { userId: v.string(), service: v.optional(v.boolean()), marketing: v.optional(v.boolean()),
+    newsletter: v.optional(v.boolean()), consent: v.optional(newsletterConsentValidator) },
+  handler: async (ctx, { userId, consent, ...changes }) => {
     const id = ctx.db.normalizeId("users", userId);
     const user = id ? await ctx.db.get(id) : null;
     if (!user) throw new Error("Invalid or expired email link");
-    const emailPreferences = {
-      service: service ?? user.emailPreferences?.service ?? true,
-      marketing: marketing ?? user.emailPreferences?.marketing ?? true,
-    };
-    await ctx.db.patch(user._id, { emailPreferences });
-    return emailPreferences;
+    return updateEmailPreferences(ctx, user, changes, { source: "preferences", consent });
+  },
+});
+
+export const unsubscribe = internalMutation({
+  args: { userId: v.string(), category: v.union(v.literal("service"), v.literal("marketing"), v.literal("newsletter")) },
+  handler: async (ctx, { userId, category }) => {
+    const id = ctx.db.normalizeId("users", userId);
+    const user = id ? await ctx.db.get(id) : null;
+    if (!user) throw new Error("Invalid or expired email link");
+    if (!["service", "marketing", "newsletter"].includes(category)) throw new Error("Invalid email category");
+    return updateEmailPreferences(ctx, user, { [category]: false }, {
+      source: "preferences", unsubscribe: category === "newsletter",
+    });
   },
 });

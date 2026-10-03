@@ -6,7 +6,7 @@ import { runSaddleHeightCalculation } from "@/lib/public-calculators/fitAdapters
 import { saddleHeightMessages } from "@/i18n/calculators/saddleHeight";
 import { SaddleHeightCalculatorForm } from "./SaddleHeightCalculatorForm";
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); sessionStorage.clear(); });
 const en = saddleHeightMessages.en;
 
 function expected(inseamCm = 84, category: "road" | "city" = "road", flexibility: 1 | 3 = 3) {

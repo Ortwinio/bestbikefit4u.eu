@@ -14,6 +14,21 @@ vi.mock("@/i18n/useDashboardMessages", () => ({
 afterEach(cleanup);
 
 describe("profile wizard presentation", () => {
+  it("preserves partial prefill and requires an explicit flexibility answer", async () => {
+    locale = "en";
+    const copy = getDashboardMessages(locale);
+    const onComplete = vi.fn();
+    render(<MeasurementWizard onComplete={onComplete} defaultValues={{ heightCm: 178, inseamCm: 83 }} />);
+    for (const step of [2, 3]) {
+      fireEvent.click(screen.getByRole("button", { name: copy.questionnaire.actions.next }));
+      await waitFor(() => expect(screen.getByRole("progressbar").getAttribute("aria-valuenow"))
+        .toBe(String(Math.round(step / 6 * 100))));
+    }
+    expect(screen.queryByRole("progressbar", { name: copy.profile.sections.flexibility })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: copy.questionnaire.actions.next }));
+    await waitFor(() => expect(screen.getByRole("progressbar").getAttribute("aria-valuenow")).toBe("50"));
+    expect(onComplete).not.toHaveBeenCalled();
+  });
   it.each(["nl", "en"] as const)("keeps all six steps and original submission fields in %s", async (selectedLocale) => {
     locale = selectedLocale;
     const copy = getDashboardMessages(locale);

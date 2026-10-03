@@ -15,6 +15,8 @@ import { validCalculatorState } from "../../src/lib/calculators/accountState";
 import type { CalculatorValues } from "../calculatorStates/validators";
 import { calculatorMatchesBike, calculatorPrimaryGoal } from "./calculatorInputs";
 
+import { captureSessionProfile } from "./profileSnapshot";
+
 const WEEKLY_HOURS_RANGE = [0, 60] as const;
 const LONGEST_RIDE_KM_RANGE = [0, 600] as const;
 
@@ -42,6 +44,7 @@ async function deleteBySessionIndex(
 export const create = mutation({
   args: {
     calculatorStateId: v.optional(v.id("calculatorStates")),
+    calculatorTrial: v.optional(v.boolean()),
     bikeType: v.optional(
       v.union(
         v.literal("road"),
@@ -78,6 +81,7 @@ export const create = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
+    if (args.calculatorTrial && !args.calculatorStateId) throw new Error("Calculator trial requires saved inputs");
     const defaultEngineVersion = getDefaultEngineVersion();
 
     let resolvedBikeId = args.bikeId;
@@ -174,7 +178,10 @@ export const create = mutation({
       throw new Error("Rider profile is incomplete. Complete your riding style questions first.");
     }
 
+    const snapshot = await captureSessionProfile(ctx, profile, calculatorInputs, args.calculatorTrial ?? false);
+
     return await ctx.db.insert("fitSessions", {
+      ...snapshot,
       userId,
       profileId: profile._id,
       ...(calculatorInputs ? { calculatorInputs } : {}),

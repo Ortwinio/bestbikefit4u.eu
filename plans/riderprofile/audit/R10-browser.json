@@ -1,0 +1,94 @@
+[
+  {
+    "locale": "nl",
+    "width": 1440,
+    "errors": [],
+    "writes": [
+      {
+        "name": "bikes/profile:updateFields",
+        "args": {
+          "bikeId": "bike1",
+          "changes": [
+            {
+              "field": "currentSetup.saddleSetbackMm",
+              "value": 60,
+              "expectedCurrentValue": null,
+              "kind": "measured",
+              "measuredAt": 1790546400000,
+              "measurePoint": "saddle_nose_behind_bb"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "errors": [],
+    "writes": [
+      {
+        "name": "bikes/profile:updateFields",
+        "args": {
+          "bikeId": "bike1",
+          "changes": [
+            {
+              "field": "currentSetup.saddleSetbackMm",
+              "value": 60,
+              "expectedCurrentValue": null,
+              "kind": "measured",
+              "measuredAt": 1790546400000,
+              "measurePoint": "saddle_nose_behind_bb"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "errors": [],
+    "writes": [
+      {
+        "name": "bikes/profile:updateFields",
+        "args": {
+          "bikeId": "bike1",
+          "changes": [
+            {
+              "field": "currentSetup.saddleSetbackMm",
+              "value": 60,
+              "expectedCurrentValue": null,
+              "kind": "measured",
+              "measuredAt": 1790546400000,
+              "measurePoint": "saddle_nose_behind_bb"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "errors": [],
+    "writes": [
+      {
+        "name": "bikes/profile:updateFields",
+        "args": {
+          "bikeId": "bike1",
+          "changes": [
+            {
+              "field": "currentSetup.saddleSetbackMm",
+              "value": 60,
+              "expectedCurrentValue": null,
+              "kind": "measured",
+              "measuredAt": 1790546400000,
+              "measurePoint": "saddle_nose_behind_bb"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

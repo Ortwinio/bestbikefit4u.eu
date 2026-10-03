@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { Doc, Id } from "../../_generated/dataModel";
+import { isStale } from "../../../shared/advice/staleness";
 
 type TestHandler = (ctx: unknown, args: unknown) => Promise<unknown>;
 
@@ -53,21 +55,24 @@ function makeCtx(params: {
     bikeId?: string;
     ridingStyle: string;
     primaryGoal: string;
+    profileSnapshot?: Doc<"fitSessions">["profileSnapshot"];
+    inputProvenance?: Doc<"fitSessions">["inputProvenance"];
   };
   profile: {
     _id: string;
     userId: string;
-    heightCm: number;
-    inseamCm: number;
-    flexibilityScore: "very_limited" | "limited" | "average" | "good" | "excellent";
-    coreStabilityScore: number;
+    heightCm?: number;
+    inseamCm?: number;
+    flexibilityScore?: "very_limited" | "limited" | "average" | "good" | "excellent";
+    coreStabilityScore?: number;
     torsoLengthCm?: number;
     armLengthCm?: number;
   };
   bike?: { _id: string; userId: string; bikeType: string };
   existingRecommendation?: { _id: string; createdAt: number } | null;
 }) {
-  const { session, profile, bike, existingRecommendation = null } = params;
+  const { session, profile: profileInput, bike, existingRecommendation = null } = params;
+  const profile = { _creationTime: 1000, updatedAt: 2000, ...profileInput };
   const sessionId = session._id;
   const schedulerRunAfter = vi.fn(async () => undefined);
 
@@ -79,6 +84,8 @@ function makeCtx(params: {
       return null;
     }),
     query: vi.fn((table: string) => {
+      if (table === "profiles") return { withIndex: () => ({ unique: async () => profile }) };
+      if (table === "profileObservations") return { withIndex: () => ({ collect: async () => [] }) };
       if (table === "recommendations") {
         return {
           withIndex: vi.fn(() => ({
@@ -117,6 +124,23 @@ describe("recommendations.generate contract", () => {
     getAuthUserIdMock.mockResolvedValue("user_1");
     calculateBikeFitMock.mockReturnValue(makeCalculatedResult());
   });
+
+  it.each(["heightCm", "inseamCm", "flexibilityScore", "coreStabilityScore"] as const)(
+    "rejects missing %s before scheduling or changing status", async (field) => {
+      const ctx = makeCtx({
+        session: { _id: "session_1", userId: "user_1", profileId: "profile_1",
+          status: "questionnaire_complete", ridingStyle: "fitness", primaryGoal: "comfort" },
+        profile: { _id: "profile_1", userId: "user_1", heightCm: 178, inseamCm: 83,
+          flexibilityScore: "good", coreStabilityScore: 4, [field]: undefined },
+      });
+      const handler = (generate as unknown as { _handler: TestHandler })._handler;
+      await expect(handler(ctx, { sessionId: ctx.sessionId })).rejects.toThrow(
+        "Complete your rider profile before calculating a bike fit.",
+      );
+      expect(ctx.schedulerRunAfter).not.toHaveBeenCalled();
+      expect(ctx.db.patch).not.toHaveBeenCalled();
+    },
+  );
 
   it("uses session bikeType snapshot over linked bike type", async () => {
     const ctx = makeCtx({
@@ -158,6 +182,29 @@ describe("recommendations.generate contract", () => {
       expect.objectContaining({ bikeCategory: "mtb" })
     );
     expect(ctx.db.get).toHaveBeenCalledWith("bike_1");
+  });
+
+  it("preserves used observation IDs and values when the profile changes after session creation", async () => {
+    const dependency = { field: "heightCm", value: 178, observationId: "observation_old" as Id<"profileObservations"> };
+    const ctx = makeCtx({
+      session: { _id: "session_1", userId: "user_1", profileId: "profile_1",
+        status: "questionnaire_complete", ridingStyle: "fitness", primaryGoal: "comfort",
+        profileSnapshot: { capturedAt: 1000, trial: false, heightCm: 178, inseamCm: 83,
+          flexibilityScore: "good", coreStabilityScore: 4 },
+        inputProvenance: { version: 1, capturedAt: 1000, dependencies: [dependency] } },
+      profile: { _id: "profile_1", userId: "user_1", heightCm: 181, inseamCm: 83,
+        flexibilityScore: "good", coreStabilityScore: 4 },
+    });
+    const handler = (generate as unknown as { _handler: TestHandler })._handler;
+    await handler(ctx, { sessionId: ctx.sessionId });
+    const scheduled = (ctx.schedulerRunAfter.mock.calls as unknown[][])[0]?.[2] as {
+      heightCm: number; inputProvenance: NonNullable<Doc<"fitSessions">["inputProvenance"]>;
+    };
+    expect(scheduled.heightCm).toBe(178);
+    expect(scheduled.inputProvenance.dependencies).toContainEqual(dependency);
+    expect(scheduled.inputProvenance.dependencies).not.toContainEqual(expect.objectContaining({ value: 181 }));
+    expect(isStale(scheduled.inputProvenance, [{ field: "heightCm", value: 181,
+      observationId: "observation_new" }])).toEqual(expect.objectContaining({ stale: true, status: "stale" }));
   });
 
   it("falls back to linked bike type when session bikeType is missing", async () => {

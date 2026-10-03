@@ -129,6 +129,19 @@ describe("confirmed bike deletion", () => {
     await expect(invoke(preview, store.ctx, { bikeId: bike._id })).rejects.toThrow("Bike not found");
   });
 
+  it("deletes only the deleted bike's observations, retaining rider and other-bike evidence", async () => {
+    const store = database();
+    const bike = store.add("bikes", { name: "My bike", userId: "owner" });
+    const removed = store.add("profileObservations", { bikeId: bike._id, userId: "owner", field: "currentSetup.saddleHeightMm" });
+    const rider = store.add("profileObservations", { userId: "owner", field: "inseamCm" });
+    const other = store.add("profileObservations", { userId: "owner", bikeId: "other-bike", field: "currentSetup.saddleHeightMm" });
+    await invoke(remove, store.ctx, { bikeId: bike._id, confirmName: "My bike" });
+    await store.drain();
+    expect(store.find(removed._id)).toBeNull();
+    expect(store.find(rider._id)).not.toBeNull();
+    expect(store.find(other._id)).not.toBeNull();
+  });
+
   it("immediately revokes the bike/passport, then deletes the complete graph in bounded batches", async () => {
     const store = database();
     const bike = store.add("bikes", {

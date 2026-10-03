@@ -32,6 +32,7 @@ import { getBikeLanguageMessages } from "@/i18n/account/bikesLanguage";
 
 import { autosaveMessages } from "@/i18n/account/autosave";
 import { getBikesAutosaveCopy } from "@/i18n/account/bikesAutosave";
+import { bikeProfileFormMessages } from "@/i18n/account/bikeProfileForm";
 import { bikeEditError } from "../../../shared/bikeEditValidation";
 
 type RidingStyle = "recreational" | "fitness" | "sportive" | "racing" | "commuting" | "touring";
@@ -51,6 +52,12 @@ export type BikeGearingPayload = {
 export type BikeFormPayload = {
   name: string;
   bikeWeightKg?: number;
+  saddleModel?: string;
+  saddleWidthMm?: number;
+  pedalModel?: string;
+  cleatSystem?: string;
+  maxSeatpostMm?: number;
+  maxSpacerStackMm?: number;
   bikeType: BikeType;
   brand?: string;
   model?: string;
@@ -67,6 +74,9 @@ export type BikeFormPayload = {
   };
   currentSetup?: {
     saddleHeightMm?: number;
+    spacersMm?: number;
+    handlebarReachMm?: number;
+    handlebarDropMm?: number;
     saddleSetbackMm?: number;
     stemLengthMm?: number;
     stemAngle?: number;
@@ -79,6 +89,12 @@ export type BikeFormPayload = {
 export interface BikeFormInitialData {
   name: string;
   bikeWeightKg?: number;
+  saddleModel?: string;
+  saddleWidthMm?: number;
+  pedalModel?: string;
+  cleatSystem?: string;
+  maxSeatpostMm?: number;
+  maxSpacerStackMm?: number;
   bikeType: BikeType;
   brand?: string;
   model?: string;
@@ -92,7 +108,7 @@ export interface BikeFormInitialData {
 }
 
 export type BikeAutosavePayload = Partial<BikeFormPayload> & {
-  clearFields?: ("ridingStyle" | "primaryGoal" | "bikeWeightKg")[];
+  clearFields?: string[];
 };
 interface BikeFormProps {
   bikeId?: string;
@@ -158,11 +174,22 @@ export function BikeForm({
   const { locale, messages: baseMessages } = useDashboardMessages();
   const messages = getBikeLanguageMessages(locale, baseMessages);
   const copy = getBikesCopy(locale);
+  const profileCopy = bikeProfileFormMessages[locale];
   const saveCopy = getBikesAutosaveCopy(locale);
   const [initialData] = useState(incomingInitialData);
   const [section, setSection] = useState("details");
   const [name, setName] = useState(initialData?.name ?? "");
   const [bikeWeightKg, setBikeWeightKg] = useState(initialData?.bikeWeightKg ?? null);
+  const [equipment, setEquipment] = useState({
+    saddleModel: initialData?.saddleModel ?? "", pedalModel: initialData?.pedalModel ?? "",
+    cleatSystem: initialData?.cleatSystem ?? "", saddleWidthMm: initialData?.saddleWidthMm ?? null,
+    maxSeatpostMm: initialData?.maxSeatpostMm ?? null, maxSpacerStackMm: initialData?.maxSpacerStackMm ?? null,
+  });
+  const [extraSetup, setExtraSetup] = useState({
+    spacersMm: initialData?.currentSetup?.spacersMm ?? null,
+    handlebarReachMm: initialData?.currentSetup?.handlebarReachMm ?? null,
+    handlebarDropMm: initialData?.currentSetup?.handlebarDropMm ?? null,
+  });
   const [notes, setNotes] = useState(initialData?.notes ?? "");
   const [bikeType, setBikeType] = useState<BikeType | "">(initialData?.bikeType ?? "");
   const [geometryFallbackState, setGeometryFallbackState] = useState<BikeGeometryFallbackState>(() =>
@@ -198,9 +225,9 @@ export function BikeForm({
   const [crankLengthMm, setCrankLengthMm] = useState(
     initialData?.currentSetup?.crankLengthMm?.toString() ?? "",
   );
-  const [drivetrainType, setDrivetrainType] = useState<"1x" | "2x">(
+  const [drivetrainType, setDrivetrainType] = useState<"1x" | "2x" | "">(
     initialData?.gearing?.drivetrainType ??
-      (initialData?.bikeType === "gravel" || initialData?.bikeType === "mountain" ? "1x" : "2x"),
+      (initialData?.gearing?.chainrings?.length === 1 ? "1x" : initialData?.gearing?.chainrings?.length === 2 ? "2x" : ""),
   );
   const [frontChainring, setFrontChainring] = useState(
     initialData?.gearing?.chainrings?.[0]?.toString() ?? "",
@@ -212,7 +239,7 @@ export function BikeForm({
     initialData?.gearing?.cassetteTeeth?.length ? initialData.gearing.cassetteTeeth.join(", ") : "",
   );
   const [wheelCircumferenceMm, setWheelCircumferenceMm] = useState(
-    initialData?.gearing?.wheelCircumferenceMm?.toString() ?? "2105",
+    initialData?.gearing?.wheelCircumferenceMm?.toString() ?? "",
   );
   const [groupsetName, setGroupsetName] = useState(initialData?.gearing?.groupsetName ?? "");
   const [derailleurMaxCog, setDerailleurMaxCog] = useState(
@@ -232,7 +259,8 @@ export function BikeForm({
 
   useEffect(() => {
     const selectHash = () => {
-      const tab = window.location.hash.replace("#bike-settings-", "");
+      const tab = window.location.hash === "#bike-geometry-library" ? "details"
+        : window.location.hash.replace("#bike-settings-", "");
       if (["details", "measurements", "gearing", "notes"].includes(tab)) setSection(tab);
     };
     selectHash();
@@ -242,7 +270,6 @@ export function BikeForm({
 
   function makePayload(): BikeFormPayload {
     const geometry = {
-      ...initialData?.currentGeometry,
       stackMm: numberFromInput(stackMm),
       reachMm: numberFromInput(reachMm),
       seatTubeAngle: numberFromInput(seatTubeAngle),
@@ -250,7 +277,9 @@ export function BikeForm({
       frameSize: frameSize.trim() || undefined,
     };
     const setup = {
-      ...initialData?.currentSetup,
+      spacersMm: extraSetup.spacersMm ?? undefined,
+      handlebarReachMm: extraSetup.handlebarReachMm ?? undefined,
+      handlebarDropMm: extraSetup.handlebarDropMm ?? undefined,
       saddleHeightMm: numberFromInput(saddleHeightMm),
       saddleSetbackMm: numberFromInput(saddleSetbackMm),
       stemLengthMm: numberFromInput(stemLengthMm),
@@ -292,6 +321,12 @@ export function BikeForm({
     return {
       name: name.trim(),
       bikeWeightKg: bikeWeightKg ?? undefined,
+      saddleModel: equipment.saddleModel.trim() || undefined,
+      saddleWidthMm: equipment.saddleWidthMm ?? undefined,
+      pedalModel: equipment.pedalModel.trim() || undefined,
+      cleatSystem: equipment.cleatSystem.trim() || undefined,
+      maxSeatpostMm: equipment.maxSeatpostMm ?? undefined,
+      maxSpacerStackMm: equipment.maxSpacerStackMm ?? undefined,
       bikeType: bikeType as BikeType,
       brand: (existingLink ? initialData.brand : normalizedIdentity.brand) ?? "",
       model: (existingLink ? initialData.model : normalizedIdentity.model) ?? "",
@@ -321,9 +356,19 @@ export function BikeForm({
             JSON.stringify(value) !== JSON.stringify(acknowledged.current[key as keyof BikeFormPayload]),
         ),
       ) as BikeAutosavePayload;
-      changed.clearFields = (["ridingStyle", "primaryGoal", "bikeWeightKg"] as const).filter(
+      changed.clearFields = (["ridingStyle", "primaryGoal", "bikeWeightKg", "saddleModel", "saddleWidthMm",
+        "pedalModel", "cleatSystem", "maxSeatpostMm", "maxSpacerStackMm"] as const).filter(
         (key) => acknowledged.current[key] !== undefined && next[key] === undefined,
       );
+      for (const group of ["currentSetup", "currentGeometry"] as const) {
+        const previous = acknowledged.current[group] as Record<string, unknown> | undefined;
+        const current = next[group] as Record<string, unknown> | undefined;
+        for (const field of Object.keys(previous ?? {})) {
+          if (previous?.[field] !== undefined && current?.[field] === undefined) {
+            changed.clearFields.push(`${group}.${field}`);
+          }
+        }
+      }
       await onAutosave?.(changed);
       acknowledged.current = next;
     },
@@ -379,6 +424,14 @@ export function BikeForm({
         <p className="mt-2 text-muted-foreground">{description}</p>
       </div>
 
+      <div className="mb-6 rounded-xl bg-[var(--bbf-petrol-zacht)] p-4">
+        <Button type="button" onClick={() => {
+          setSection("details");
+          window.location.hash = "bike-geometry-library";
+          requestAnimationFrame(() => document.getElementById("bike-geometry-library")?.scrollIntoView());
+        }}>{profileCopy.lookup}</Button>
+        <p className="mt-2 text-sm">{profileCopy.lookupHint}</p>
+      </div>
       <SegmentedControl
         aria-label={title}
         value={section}
@@ -443,11 +496,13 @@ export function BikeForm({
                 onChange={setBikeWeightKg}
               />
 
+              <div id="bike-geometry-library" className="scroll-mt-6">
               <BikeGeometryLibraryFields
                 state={geometryFallbackState}
                 onChange={setGeometryFallbackState}
                 messages={messages}
               />
+              </div>
 
               {showBikeTypeSelect ? (
                 <Field.Root className="space-y-3">
@@ -583,6 +638,23 @@ export function BikeForm({
               <CardTitle>{messages.bikeForm.sections.setup}</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-2">
+              <p className="text-sm text-muted-foreground sm:col-span-2">{profileCopy.optional}</p>
+              {(["saddleModel", "pedalModel", "cleatSystem"] as const).map((field) =>
+                <Input key={field} label={profileCopy[field]} tooltip={profileCopy.equipmentHint} maxLength={100} value={equipment[field]}
+                  onChange={(event) => setEquipment({ ...equipment, [field]: event.target.value })} />)}
+              {(["saddleWidthMm", "maxSeatpostMm", "maxSpacerStackMm"] as const).map((field) =>
+                <BikeNumberField key={field} label={profileCopy[field]} value={equipment[field]} unit="mm"
+                  min={field === "saddleWidthMm" ? 90 : 0}
+                  max={field === "saddleWidthMm" ? 260 : field === "maxSeatpostMm" ? 500 : 100}
+                  tooltip={field !== "saddleWidthMm" ? profileCopy.limitsHint : profileCopy.optional}
+                  onChange={(value) => setEquipment({ ...equipment, [field]: value })} />)}
+              {(["spacersMm", "handlebarReachMm", "handlebarDropMm"] as const).map((field) =>
+                <BikeNumberField key={field} label={profileCopy[field]} value={extraSetup[field]} unit="mm"
+                  tooltip={field === "spacersMm" ? profileCopy.measureSpacers
+                    : field === "handlebarReachMm" ? profileCopy.measureReach : profileCopy.measureDrop}
+                  min={field === "handlebarDropMm" ? -200 : field === "handlebarReachMm" ? 200 : 0}
+                  max={field === "handlebarReachMm" ? 1000 : field === "handlebarDropMm" ? 300 : 100}
+                  onChange={(value) => setExtraSetup({ ...extraSetup, [field]: value })} />)}
               <BikeNumberField
                 label={messages.bikeForm.fields.setup.saddleHeight.label}
                 tooltip={messages.bikeForm.fields.setup.saddleHeight.tooltip}

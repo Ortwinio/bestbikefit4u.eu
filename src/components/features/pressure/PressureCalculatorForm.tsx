@@ -1,7 +1,11 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
-import Link from "next/link";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
+import { PersonalizeAdviceBlock } from "@/components/calculators/PersonalizeAdviceBlock";
+import { HandoffPrefillNotice } from "@/components/calculators/HandoffPrefillNotice";
+import { pressureHandoffMessages } from "@/i18n/calculators/pressureHandoff";
+import type { HandoffField } from "@/lib/handoff/store";
 import {
   AdjustOrder,
   Button,
@@ -20,7 +24,6 @@ import {
   type TubeType,
 } from "@/lib/pressure-engine";
 import { tirePressureMessages, type TirePressureCopy } from "@/i18n/calculators/tirePressure";
-import { withLocalePrefix } from "@/i18n/navigation";
 import type { PressureResultLabels } from "./shared";
 
 export type PressureCalculatorValues = {
@@ -143,6 +146,47 @@ export function PressureCalculatorForm({
   const [bikeWeightKg, setBikeWeightKg] = useState(initialValues?.bikeWeightKg ?? 8);
   const [advanced, setAdvanced] = useState(initialValues?.bikeWeightKg !== undefined);
   const [edited, setEdited] = useState(false);
+  const handoff = usePublicHandoff("tire-pressure", !accountMode);
+  const rimCopy = pressureHandoffMessages[locale];
+  const [rimType, setRimType] = useState<"hooked" | "hookless" | "">("");
+  const prefilled = useRef(false);
+  const [prefilledFields, setPrefilledFields] = useState<HandoffField[]>([]);
+  /* eslint-disable react-hooks/set-state-in-effect -- Hydrate the once-only client session snapshot. */
+  useEffect(() => {
+    if (!handoff.ready || prefilled.current || accountMode) return;
+    prefilled.current = true;
+    const fields: HandoffField[] = [];
+    const weight = handoff.getPrefill("weightKg");
+    if (typeof weight?.value === "number" && weight.value >= 35 && weight.value <= 160) {
+      setBodyWeightKg(weight.value);
+      fields.push("weightKg");
+    }
+    const front = handoff.getPrefill("tireWidthFrontMm");
+    const rear = handoff.getPrefill("tireWidthRearMm");
+    if (typeof front?.value === "number" && front.value >= 18 && front.value <= 80) {
+      setWidthFrontMm(front.value);
+      setLinked(false);
+      fields.push("tireWidthFrontMm");
+    }
+    if (typeof rear?.value === "number" && rear.value >= 18 && rear.value <= 80) {
+      setManualWidthRearMm(rear.value);
+      setLinked(false);
+      fields.push("tireWidthRearMm");
+    }
+    const storedSurface = handoff.getPrefill("surface");
+    if (SURFACES.includes(storedSurface?.value as Surface)) {
+      setSurface(storedSurface!.value as Surface);
+      fields.push("surface");
+    }
+    const rim = handoff.getPrefill("rimType");
+    if (rim?.value === "hooked" || rim?.value === "hookless") {
+      setRimType(rim.value);
+      fields.push("rimType");
+    }
+    setPrefilledFields(fields);
+    if (fields.length) setEdited(true);
+  }, [handoff, accountMode]);
+  /* eslint-enable react-hooks/set-state-in-effect */
   const widthRearMm = linked ? widthFrontMm : manualWidthRearMm;
   const input: PressureCalculatorValues = {
     discipline,
@@ -176,6 +220,8 @@ export function PressureCalculatorForm({
   ) {
     return (value: NonNullable<PressureCalculatorValues[Key]>) => {
       setter(value);
+      if (key === "bodyWeightKg") handoff.touch("weightKg", value, "kg");
+      if (key === "surface") handoff.touch("surface", value, "none", "bike");
       setEdited(true);
       notifyChange({ [key]: value });
     };
@@ -193,6 +239,10 @@ export function PressureCalculatorForm({
   const resultTitle = accountMode || edited ? copy.result : copy.example;
   return (
     <ConfiguratorLayout
+      notice={!accountMode && <HandoffPrefillNotice
+        calculator="tire-pressure" locale={locale} fields={prefilledFields}
+      />}
+      afterResults={!accountMode && <PersonalizeAdviceBlock calculator="tire-pressure" locale={locale} />}
       eyebrow={copy.eyebrow}
       title={defaultDiscipline ? copy.preset[defaultDiscipline] : copy.title}
       description={copy.intro}
@@ -234,6 +284,8 @@ export function PressureCalculatorForm({
                 value={widthFrontMm}
                 onChange={(value) => {
                   setWidthFrontMm(value);
+                  handoff.touch("tireWidthFrontMm", value, "mm", "bike");
+                  if (linked) handoff.touch("tireWidthRearMm", value, "mm", "bike");
                   setEdited(true);
                   notifyChange({ widthFrontMm: value, ...(linked ? { widthRearMm: value } : {}) });
                 }}
@@ -251,6 +303,7 @@ export function PressureCalculatorForm({
                   if (linked) setManualWidthRearMm(widthFrontMm);
                   setLinked(!linked);
                   if (!linked) {
+                    handoff.touch("tireWidthRearMm", widthFrontMm, "mm", "bike");
                     setEdited(true);
                     notifyChange({ widthRearMm: widthFrontMm });
                   }
@@ -265,6 +318,7 @@ export function PressureCalculatorForm({
                 onChange={(value) => {
                   setLinked(false);
                   setManualWidthRearMm(value);
+                  handoff.touch("tireWidthRearMm", value, "mm", "bike");
                   setEdited(true);
                   notifyChange({ widthRearMm: value });
                 }}
@@ -275,6 +329,21 @@ export function PressureCalculatorForm({
                 step={1}
                 unit="mm"
               />
+              {!accountMode && (
+                <div className="space-y-2">
+                  <Choices
+                    label={rimCopy.rim}
+                    value={rimType}
+                    options={[{ value: "hooked", label: rimCopy.hooked }, { value: "hookless", label: rimCopy.hookless }]}
+                    onChange={(value) => {
+                      if (value !== "hooked" && value !== "hookless") return;
+                      setRimType(value);
+                      handoff.touch("rimType", value, "none", "bike");
+                    }}
+                  />
+                  <p className="text-sm text-muted-foreground">{rimCopy.hint}</p>
+                </div>
+              )}
               <Choices
                 label={labels.tubeTypeLabel}
                 options={TUBES.map((value, index) => ({ value, label: tubeLabels[index] }))}
@@ -401,13 +470,6 @@ export function PressureCalculatorForm({
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{copy.excluded}</p>
           </section>
           <AdjustOrder title={copy.adjustment} steps={copy.steps.map((title) => ({ title }))} />
-          {!accountMode && <section className="rounded-3xl bg-[var(--bbf-inkt)] p-6 text-[var(--bbf-wit)]">
-            <h2 className="font-display text-2xl font-bold text-[var(--bbf-wit)]">{copy.save}</h2>
-            <p className="mt-3 text-sm text-[var(--bbf-op-donker)]">{copy.saveText}</p>
-            <Button className="mt-4" render={<Link href={withLocalePrefix("/login?src=tire-pressure", locale)} />}>
-              {copy.save}
-            </Button>
-          </section>}
         </>
       }
       stickyResult={

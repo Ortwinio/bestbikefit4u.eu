@@ -1,0 +1,8 @@
+src/app/(dashboard)/gearing/GearingCalculatorForm.tsx
+src/app/(dashboard)/gearing/GearingCalculatorForm.test.tsx
+src/components/calculators/AccountPerformanceCalculator.tsx
+src/components/calculators/AccountPerformanceCalculator.test.tsx
+src/components/calculators/useCalculatorAccountState.ts
+src/components/calculators/RiderFtpPrefill.tsx
+src/components/calculators/RiderFtpPrefill.test.tsx
+src/i18n/account/riderFtp.ts

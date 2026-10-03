@@ -4,9 +4,9 @@ import { calculatorDefaults, resolveCalculatorValues, validCalculatorState } fro
 describe("bike-fit account precedence", () => {
   const profile = { heightCm: 178, inseamCm: 83, flexibilityScore: "good", coreStabilityScore: 4,
     positionPriority: "comfort" };
-  it("uses saved edits before profile measurements and defaults", () => {
+  it("uses live profile measurements before stale saved edits", () => {
     const saved = { ...calculatorDefaults["bike-fit"], heightCm: 186, inseamCm: 88, source: "measured" as const };
-    expect(resolveCalculatorValues("bike-fit", saved, profile)).toEqual({ values: saved, fromProfile: false });
+    expect(resolveCalculatorValues("bike-fit", saved, profile)).toEqual(resolveCalculatorValues("bike-fit", null, profile));
     expect(resolveCalculatorValues("bike-fit", null, profile)).toEqual({
       values: { heightCm: 178, inseamCm: 83, source: "estimated", flexibility: 4,
         core: 4, category: "road", ambition: "comfort" }, fromProfile: true,

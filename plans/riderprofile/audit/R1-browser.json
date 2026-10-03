@@ -1,0 +1,58 @@
+{
+  "fixture": "Actual React public forms, current Tailwind CSS and local fonts; no backend network or database writes.",
+  "board": "RP1PublicSaddle.dc.html, review-only Ontwerpstaat strip hidden; fixed desktop board scaled in mobile comparison.",
+  "results": [
+    {
+      "locale": "nl",
+      "width": 1440,
+      "initial": "R1-saddle-nl-1440-initial.png",
+      "filled": "R1-saddle-nl-1440-filled.png",
+      "overflow": false,
+      "pageErrors": [],
+      "carriedFields": [
+        "inseamCm",
+        "ridingGoal",
+        "currentSaddleHeightMm"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "initial": "R1-saddle-nl-390-initial.png",
+      "filled": "R1-saddle-nl-390-filled.png",
+      "overflow": false,
+      "pageErrors": [],
+      "carriedFields": [
+        "inseamCm",
+        "ridingGoal",
+        "currentSaddleHeightMm"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "initial": "R1-saddle-en-1440-initial.png",
+      "filled": "R1-saddle-en-1440-filled.png",
+      "overflow": false,
+      "pageErrors": [],
+      "carriedFields": [
+        "inseamCm",
+        "ridingGoal",
+        "currentSaddleHeightMm"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "initial": "R1-saddle-en-390-initial.png",
+      "filled": "R1-saddle-en-390-filled.png",
+      "overflow": false,
+      "pageErrors": [],
+      "carriedFields": [
+        "inseamCm",
+        "ridingGoal",
+        "currentSaddleHeightMm"
+      ]
+    }
+  ]
+}

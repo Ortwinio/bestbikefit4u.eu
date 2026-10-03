@@ -6,6 +6,7 @@ import { useMutation } from "convex/react";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { api } from "../../../../convex/_generated/api";
 import { Button, Input, NumberInput, Select, Selectable, Textarea } from "@/components/ui";
+import { bikeProfileFormMessages } from "@/i18n/account/bikeProfileForm";
 import { Field } from "@/components/ui/Field";
 import {
   BikeGeometryLibraryFields,
@@ -57,6 +58,7 @@ export function CreateBikeForm() {
   const { locale, messages: baseMessages } = useDashboardMessages();
   const messages = getBikeLanguageMessages(locale, baseMessages);
   const language = getBikesLanguageCopy(locale);
+  const profileCopy = bikeProfileFormMessages[locale];
   const createBike = useMutation(api.bikes.mutations.create);
   const createWheelset = useMutation(api.wheelsets.mutations.create);
   const createTireSetup = useMutation(api.tireSetups.mutations.create);
@@ -67,18 +69,21 @@ export function CreateBikeForm() {
   const [newBikeId, setNewBikeId] = useState<Id<"bikes"> | null>(null);
 
   const [name, setName] = useState("");
-  const [bikeType, setBikeType] = useState<BikeType>("road");
+  const [bikeType, setBikeType] = useState<BikeType | "">("");
   const [geometryFallbackState, setGeometryFallbackState] =
     useState<BikeGeometryFallbackState>(() => createBikeGeometryFallbackState({}));
-  const [ridingStyle, setRidingStyle] = useState<RidingStyle>("fitness");
-  const [primaryGoal, setPrimaryGoal] = useState<PrimaryGoal>("balanced");
+  const [ridingStyle, setRidingStyle] = useState<RidingStyle | "">("");
+  const [primaryGoal, setPrimaryGoal] = useState<PrimaryGoal | "">("");
+  const [equipment, setEquipment] = useState({ saddleModel: "", pedalModel: "", cleatSystem: "",
+    saddleWidthMm: null as number | null, maxSeatpostMm: null as number | null,
+    maxSpacerStackMm: null as number | null, spacersMm: null as number | null });
   const [notes, setNotes] = useState("");
   const [bikeWeightKg, setBikeWeightKg] = useState("");
-  const [drivetrainType, setDrivetrainType] = useState<"1x" | "2x">("2x");
+  const [drivetrainType, setDrivetrainType] = useState<"1x" | "2x" | "">("");
   const [frontChainring, setFrontChainring] = useState("");
   const [innerChainring, setInnerChainring] = useState("");
   const [cassetteTeethCsv, setCassetteTeethCsv] = useState("");
-  const [wheelCircumferenceMm, setWheelCircumferenceMm] = useState("2105");
+  const [wheelCircumferenceMm, setWheelCircumferenceMm] = useState("");
   const [groupsetName, setGroupsetName] = useState("");
   const [derailleurMaxCog, setDerailleurMaxCog] = useState("");
 
@@ -131,9 +136,11 @@ export function CreateBikeForm() {
       if (!name.trim()) {
         return messages.bikeForm.errors.nameRequired;
       }
+      if (!bikeType) return messages.bikeForm.errors.typeRequired;
       if (bikeWeightError) {
         return messages.pressure.wizard.bikeWeightRange;
       }
+      if (drivetrainType || frontChainring || innerChainring || cassetteTeethCsv || wheelCircumferenceMm) {
       if (!drivetrainType) {
         return locale === "nl" ? "Kies een type aandrijving." : "Choose a drivetrain type.";
       }
@@ -150,6 +157,7 @@ export function CreateBikeForm() {
       }
       if (!wheelCircumferenceMm.trim()) {
         return locale === "nl" ? "Vul de wielomtrek in." : "Enter the wheel circumference.";
+      }
       }
     }
 
@@ -173,6 +181,7 @@ export function CreateBikeForm() {
 
     return null;
   }, [
+    bikeType,
     bikeWeightError,
     cassetteTeethCsv,
     drivetrainType,
@@ -180,6 +189,7 @@ export function CreateBikeForm() {
     innerChainring,
     locale,
     messages.bikeForm.errors.nameRequired,
+    messages.bikeForm.errors.typeRequired,
     messages.pressure.wizard.bikeWeightRange,
     messages.pressure.wizard.maxPressureRange,
     messages.pressure.wizard.tireNameRequired,
@@ -196,8 +206,8 @@ export function CreateBikeForm() {
   ]);
 
   const handleCreateBike = async () => {
-    if (validationError) {
-      setError(validationError);
+    if (validationError || !bikeType) {
+      setError(validationError ?? messages.bikeForm.errors.typeRequired);
       return;
     }
 
@@ -211,8 +221,15 @@ export function CreateBikeForm() {
         name: name.trim(),
         bikeType,
         discipline: deriveDiscipline(bikeType),
-        ridingStyle,
-        primaryGoal,
+        ridingStyle: ridingStyle || undefined,
+        primaryGoal: primaryGoal || undefined,
+        saddleModel: equipment.saddleModel.trim() || undefined,
+        saddleWidthMm: equipment.saddleWidthMm ?? undefined,
+        pedalModel: equipment.pedalModel.trim() || undefined,
+        cleatSystem: equipment.cleatSystem.trim() || undefined,
+        maxSeatpostMm: equipment.maxSeatpostMm ?? undefined,
+        maxSpacerStackMm: equipment.maxSpacerStackMm ?? undefined,
+        currentSetup: equipment.spacersMm === null ? undefined : {spacersMm:equipment.spacersMm},
         brand: normalizedIdentity.brand,
         model: normalizedIdentity.model,
         geometryRecordId: geometryFallbackState.geometryRecordId
@@ -223,8 +240,9 @@ export function CreateBikeForm() {
           : undefined,
         notes: notes.trim() || undefined,
         bikeWeightKg: bikeWeightKg ? Number(bikeWeightKg) : undefined,
-        // New bikes should carry enough gear data to make the calculator useful immediately.
+        // Unknown gearing stays unknown until explicitly supplied.
         gearing: (() => {
+          if (!drivetrainType) return undefined;
           const chainrings = [Number(frontChainring)];
           if (drivetrainType === "2x") {
             chainrings.push(Number(innerChainring));
@@ -334,14 +352,37 @@ export function CreateBikeForm() {
               </div>
             </Field.Root>
 
-            <div className="space-y-4">
+            <div className="space-y-4 rounded-xl bg-[var(--bbf-petrol-zacht)] p-4">
+              <Button type="button" onClick={() => document.getElementById("bike-geometry-library")?.scrollIntoView()}>
+                {profileCopy.lookup}
+              </Button>
+              <p className="text-sm">{profileCopy.lookupHint}</p>
+              <div id="bike-geometry-library">
               <BikeGeometryLibraryFields
                 state={geometryFallbackState}
                 onChange={setGeometryFallbackState}
                 messages={messages}
               />
+              </div>
             </div>
 
+            <details className="rounded-xl border border-border p-4">
+              <summary className="min-h-11 cursor-pointer font-semibold">{profileCopy.title}</summary>
+              <p className="mb-4 text-sm text-muted-foreground">{profileCopy.optional}</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {(["saddleModel", "pedalModel", "cleatSystem"] as const).map(field =>
+                  <Input key={field} label={profileCopy[field]} tooltip={profileCopy.equipmentHint} maxLength={100} value={equipment[field]}
+                    onChange={event=>setEquipment({...equipment,[field]:event.target.value})} />)}
+                {(["saddleWidthMm", "maxSeatpostMm", "maxSpacerStackMm", "spacersMm"] as const).map(field =>
+                  <NumberInput key={field} label={profileCopy[field]} value={equipment[field]} unit="mm"
+                    tooltip={field === "spacersMm" ? profileCopy.measureSpacers
+                      : field === "saddleWidthMm" ? profileCopy.optional : profileCopy.limitsHint}
+                    min={field === "saddleWidthMm" ? 90 : 0}
+                    max={field === "saddleWidthMm" ? 260 : field === "maxSeatpostMm" ? 500 : 100}
+                    onChange={value=>setEquipment({...equipment,[field]:value})} />)}
+              </div>
+              <p className="mt-3 text-sm text-muted-foreground">{profileCopy.limitsHint}</p>
+            </details>
             <div className="grid gap-4 sm:grid-cols-2">
               <NumberInput
                 label={messages.bikeForm.fields.bikeWeightKg.label}

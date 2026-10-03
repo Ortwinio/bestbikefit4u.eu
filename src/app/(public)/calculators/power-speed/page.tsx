@@ -3,10 +3,7 @@ import { powerSpeedPageMessages } from "@/i18n/calculators/powerSpeedPage";
 import { PerformanceCalculator } from "./PerformanceCalculator";
 import type { Metadata } from "next";
 import { Gauge, Route, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/prototyper-ui/ui/button";
-import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
-  PublicCtaBand,
   PublicFeatureCard,
   PublicSection,
   PublicSurfaceCard,
@@ -109,27 +106,6 @@ export default async function PowerSpeedEstimatorPage() {
 
         <RelatedLinksSection title={page.relatedTitle} links={[...page.relatedLinks]} locale={locale} />
 
-        <PublicCtaBand
-          className="mt-10"
-          eyebrow={page.cta.eyebrow}
-          title={page.cta.title}
-          description={page.cta.description}
-          actions={
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/login?src=power-speed", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="power_speed_primary_cta"
-                  ctaLabel={page.cta.label}
-                />
-              }
-            >
-              {page.cta.label}
-            </Button>
-          }
-        />
       </div>
     </div>
   );

@@ -63,8 +63,10 @@ function makeArgs() {
 }
 
 describe("recommendations.internalMutations.storeResult contract", () => {
-  it("persists comparison snapshot and recommendation items with the recommendation", async () => {
-    const args = makeArgs();
+  it.each([false, true])("preserves the captured inputs and suppresses bulk email when requested (%s)", async suppressEmail => {
+    const inputProvenance = { version: 1, capturedAt: 100,
+      dependencies: [{ field: "inseamCm", value: 82, observationId: "observation_1" }] };
+    const args = { ...makeArgs(), inputProvenance, suppressEmail };
     const db = {
       query: vi
         .fn()
@@ -87,6 +89,7 @@ describe("recommendations.internalMutations.storeResult contract", () => {
         if (id === "session_1") {
           return {
             _id: "session_1",
+            userId: "user_1",
             bikeId: "bike_1",
             bikeProfileId: "bike_profile_1",
             engineVersion: "v1",
@@ -113,8 +116,20 @@ describe("recommendations.internalMutations.storeResult contract", () => {
         engineVersion: "v1",
         comparisonSnapshot: args.comparisonSnapshot,
         recommendationItems: args.recommendationItems,
+        inputProvenance,
       })
     );
-    expect(scheduler.runAfter).toHaveBeenCalledTimes(1);
+    expect(scheduler.runAfter).toHaveBeenCalledTimes(suppressEmail ? 0 : 1);
+  });
+
+  it("does not recreate advice for a deleted session", async () => {
+    const db = { query: () => ({ withIndex: () => ({ collect: async () => [] }) }),
+      get: async () => null, insert: vi.fn(), patch: vi.fn() };
+    const scheduler = { runAfter: vi.fn() };
+    const handler = (storeResult as unknown as { _handler: TestHandler })._handler;
+    expect(await handler({ db, scheduler }, makeArgs())).toBeNull();
+    expect(db.insert).not.toHaveBeenCalled();
+    expect(db.patch).not.toHaveBeenCalled();
+    expect(scheduler.runAfter).not.toHaveBeenCalled();
   });
 });

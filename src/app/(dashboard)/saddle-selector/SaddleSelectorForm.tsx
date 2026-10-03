@@ -16,11 +16,15 @@ import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { SaddleWidthCalculatorForm } from "@/app/(public)/calculators/saddle-width/SaddleWidthCalculatorForm";
 import { calculateSaddleWidth, classifySaddleSuitability, type SaddleWidthInput } from "@/lib/saddle-width-engine";
+import { useCalculatorChain } from "@/components/calculators/useCalculatorChain";
+import { CalculatorChainLayout } from "@/components/calculators/CalculatorChainPanel";
+import { withChainEvidence } from "@/lib/calculators/standaloneChain";
+import type { ChainBinding } from "@/lib/calculators/chain";
 import { getSaddleInitialValues } from "./saddleAccountState";
 
 export { mapBikeToRidingTypeFromBike, mapGoalToPosture, normalizeProfileSitBoneWidth } from "./saddleAccountState";
 
-type Profile = FunctionReturnType<typeof api.profiles.queries.getMyProfile>;
+type ChainContext = FunctionReturnType<typeof api.calculatorChain.queries.getContext>;
 type Bikes = FunctionReturnType<typeof api.bikes.queries.list>;
 type Saved = FunctionReturnType<typeof api.saddleWidth.queries.getLatestSaddleWidthSession>;
 
@@ -30,21 +34,21 @@ export function SaddleSelectorForm() {
   const [override, setOverride] = useState<string | null>(null);
   const requestedBikeId = override ?? params.get("bikeId") ?? "";
   const user = useQuery(api.users.queries.getCurrentUser);
-  const profile = useQuery(api.profiles.queries.getMyProfile);
   const bikes = useQuery(api.bikes.queries.list, {});
   const bikeId = bikes?.find((item) => item._id === requestedBikeId)?._id;
   const saved = useQuery(api.saddleWidth.queries.getLatestSaddleWidthSession,
     bikes === undefined ? "skip" : { bikeId });
-  if (!user || profile === undefined || bikes === undefined || saved === undefined) {
+  const context = useQuery(api.calculatorChain.queries.getContext, user && bikes !== undefined ? { bikeId } : "skip");
+  if (!user || context === undefined || bikes === undefined || saved === undefined) {
     return <LoadingState label={toolsSaddleMessages[locale].loading} />;
   }
   return <SaddleEditor key={`${user._id}:${bikeId ?? "no-bike"}`}
-    userId={user._id} profile={profile} bikes={bikes} bikeId={bikeId} saved={saved} onSelectBike={setOverride} />;
+    userId={user._id} context={context} bikes={bikes} bikeId={bikeId} saved={saved} onSelectBike={setOverride} />;
 }
 
-function SaddleEditor({ userId, profile, bikes, bikeId, saved, onSelectBike }: {
+function SaddleEditor({ userId, context, bikes, bikeId, saved, onSelectBike }: {
   userId: Id<"users">;
-  profile: Profile;
+  context: ChainContext;
   bikes: Bikes;
   bikeId?: Id<"bikes">;
   saved: Saved;
@@ -55,25 +59,55 @@ function SaddleEditor({ userId, profile, bikes, bikeId, saved, onSelectBike }: {
   const accountCopy = saddleCalculatorMessages[locale];
   const sessions = useQuery(api.saddleWidth.queries.listSaddleWidthSessions, { limit: 5 });
   const saveSession = useMutation(api.saddleWidth.mutations.createDashboardSaddleWidthSession);
-  const [initial] = useState(() => getSaddleInitialValues(saved, profile, bikes.find((bike) => bike._id === bikeId)));
-  const [values, setValues] = useState<SaddleWidthInput>(() => ({
-    inputMethod: initial.values.inputMethod,
-    ridingType: initial.values.ridingType,
-    postureCategory: initial.values.postureCategory,
-    ...(initial.values.inputMethod === "measured"
-      ? { sitBoneWidthMm: initial.values.sitBoneWidthMm }
-      : { heightCm: initial.values.heightCm, weightKg: initial.values.weightKg,
-          hipCircumferenceCm: initial.values.hipCircumferenceCm }),
-  }));
+  const profile = context.profile;
+  const bike = bikes.find((item) => item._id === bikeId);
+  const initial = getSaddleInitialValues(saved, profile, bike);
+  const apply = useMutation(api.calculatorChain.mutations.applyChanges);
+  const profileFields = ["sitBoneWidthMm", "heightCm", "weightKg", "hipCircumferenceCm"] as const;
+  const bindings: ChainBinding<SaddleWidthInput>[] = withChainEvidence([
+    ...profileFields.map((field): ChainBinding<SaddleWidthInput> => ({
+      field, source: "profile", value: profile?.[field],
+      unit: field === "sitBoneWidthMm" ? "mm" : field === "weightKg" ? "kg" : "cm",
+      read: (input) => (input.inputMethod === "measured") === (field === "sitBoneWidthMm") ? input[field] : undefined,
+      write: (input, value) => ({ ...input, [field]: typeof value === "number" ? value : undefined }),
+    })),
+    ...(bike ? [{ field: "primaryGoal", source: "bike" as const, value: bike.primaryGoal,
+      read: (input: SaddleWidthInput) => input.postureCategory === "upright" ? "comfort"
+        : input.postureCategory === "aggressive" ? "performance" : "balanced",
+      write: (input: SaddleWidthInput, value: unknown) => ({ ...input,
+        postureCategory: value === "comfort" ? "upright" as const
+          : value === "performance" || value === "aerodynamics" ? "aggressive" as const : "balanced" as const }) },
+      { field: "saddleWidthMm", source: "bike" as const, value: bike.saddleWidthMm, unit: "mm",
+      read: (input: SaddleWidthInput) => input.currentSaddleWidthMm,
+      write: (input: SaddleWidthInput, value: unknown) => ({ ...input,
+        currentSaddleWidthMm: typeof value === "number" ? value : undefined }) }] : []),
+  ], context.observations, context.bikeObservations.filter((item) => item.bikeId === bikeId));
+  const chain = useCalculatorChain({ scopeKey: `saddle-width:${bikeId ?? ""}`,
+    initialValues: { ...initial.values, currentSaddleWidthMm: bike?.saddleWidthMm ?? saved?.currentSaddleWidthMm },
+    bindings,
+    externalKey: JSON.stringify({ bindings: bindings.map(({ field, value, kind, recordedAt }) =>
+      ({ field, value, kind, recordedAt })), bikeType: bike?.bikeType, goal: bike?.primaryGoal }),
+    applyChanges: (changes) => apply({ calculator: "saddle-width", bikeId,
+      changes: changes.map(({ source: _source, ...change }) => {
+        if (change.value === null) throw new Error(autosaveMessages[locale].invalid);
+        return { ...change, value: change.value,
+          measurePoint: change.measurePoint === "bb_center_to_saddle_top" ? "bb_center_to_saddle_top" as const : undefined };
+      }) }),
+  });
+  const values = chain.values;
   const failed = useRef(false);
+  const persistedRevision = useRef(0);
   const autosave = useAutosave({
     value: values,
+    enabled: chain.canAutosave,
     debounceMs: 500,
     validate: (next) => {
       try { calculateSaddleWidth(next); return null; } catch { return autosaveMessages[locale].invalid; }
     },
     onSave: async (next) => {
-      const width = calculateSaddleWidth({ ...next, currentSaddleWidthMm: saved?.currentSaddleWidthMm });
+      if (!chain.canAutosave || chain.revision === persistedRevision.current) return;
+      const revision = chain.revision;
+      const width = calculateSaddleWidth(next);
       const suitability = classifySaddleSuitability(next, width);
       const { inputMethod, symptoms: unusedSymptoms, ...measurements } = next;
       void unusedSymptoms;
@@ -98,6 +132,7 @@ function SaddleEditor({ userId, profile, bikes, bikeId, saved, onSelectBike }: {
         fitInteractionWarnings: suitability.fitInteractionWarnings.map((warning) => warning.message),
         explanationKey: width.explanationKey,
         });
+        persistedRevision.current = revision;
         failed.current = false;
       } catch (error) {
         failed.current = true;
@@ -107,7 +142,7 @@ function SaddleEditor({ userId, profile, bikes, bikeId, saved, onSelectBike }: {
   });
   async function selectBike(nextBikeId: string) {
     await autosave.flush();
-    if (failed.current) return;
+    if (failed.current || chain.pendingChanges.length) return;
     try { calculateSaddleWidth(values); } catch { return; }
     onSelectBike(nextBikeId);
   }
@@ -115,10 +150,11 @@ function SaddleEditor({ userId, profile, bikes, bikeId, saved, onSelectBike }: {
     <div className="min-w-0 pb-16
       [&_[data-slot=configurator-sticky-result]]:bottom-[calc(68px+max(8px,env(safe-area-inset-bottom)))]
       md:[&_[data-slot=configurator-sticky-result]]:bottom-0">
+      <CalculatorChainLayout calculator="saddle-width" locale={locale} chain={chain} context={context} bikeId={bikeId}>
       <AutosaveField flush={autosave.flush} commitOn="release">
-        <SaddleWidthCalculatorForm locale={locale} accountMode initialValues={initial.values}
+        <SaddleWidthCalculatorForm key={chain.formKey} locale={locale} accountMode initialValues={values}
           copy={{ ...saddleWidthMessages[locale], confirmed: accountCopy.measurements }}
-          onValuesChange={setValues}
+          onValuesChange={chain.setValues}
           headerSlot={
             <section aria-label={copy.chooseBike} className="space-y-3">
               <h2 className="font-display text-xl font-bold">{copy.chooseBike}</h2>
@@ -145,6 +181,7 @@ function SaddleEditor({ userId, profile, bikes, bikeId, saved, onSelectBike }: {
           }
         />
       </AutosaveField>
+      </CalculatorChainLayout>
       <section className="mx-4 mb-24 rounded-3xl border border-border bg-card p-6 sm:mx-8 xl:mx-16">
         <h2 className="font-display text-2xl font-bold">{copy.history}</h2>
         {sessions === undefined ? <p className="mt-4" role="status">{copy.historyLoading}</p>

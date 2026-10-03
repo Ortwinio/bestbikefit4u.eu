@@ -19,6 +19,8 @@ import type * as admin_queries from "../admin/queries.js";
 import type * as analytics_mutations from "../analytics/mutations.js";
 import type * as analytics_queries from "../analytics/queries.js";
 import type * as auth from "../auth.js";
+import type * as calculatorChain_mutations from "../calculatorChain/mutations.js";
+import type * as calculatorChain_queries from "../calculatorChain/queries.js";
 import type * as calculatorStates_mutations from "../calculatorStates/mutations.js";
 import type * as calculatorStates_queries from "../calculatorStates/queries.js";
 import type * as authLocalDev from "../authLocalDev.js";
@@ -36,6 +38,7 @@ import type * as bikes_mutations from "../bikes/mutations.js";
 import type * as bikes_passport from "../bikes/passport.js";
 import type * as bikes_publicFit from "../bikes/publicFit.js";
 import type * as bikes_publicQueries from "../bikes/publicQueries.js";
+import type * as bikes_profile from "../bikes/profile.js";
 import type * as bikes_queries from "../bikes/queries.js";
 import type * as blog_index from "../blog/index.js";
 import type * as blog_mutations from "../blog/mutations.js";
@@ -134,6 +137,8 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "calculatorChain/mutations": typeof calculatorChain_mutations;
+  "calculatorChain/queries": typeof calculatorChain_queries;
   "calculatorStates/mutations": typeof calculatorStates_mutations;
   "calculatorStates/queries": typeof calculatorStates_queries;
   "admin/actions": typeof admin_actions;
@@ -162,6 +167,7 @@ declare const fullApi: ApiFromModules<{
   "bikes/passport": typeof bikes_passport;
   "bikes/publicFit": typeof bikes_publicFit;
   "bikes/publicQueries": typeof bikes_publicQueries;
+  "bikes/profile": typeof bikes_profile;
   "bikes/queries": typeof bikes_queries;
   "blog/index": typeof blog_index;
   "blog/mutations": typeof blog_mutations;

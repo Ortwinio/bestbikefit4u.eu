@@ -1,4 +1,5 @@
 import type { Doc } from "../../convex/_generated/dataModel";
+import { hasFitMeasurements } from "../../shared/profileFitReadiness";
 
 /**
  * Returns true when all required rider profile questions have been answered.
@@ -7,7 +8,7 @@ import type { Doc } from "../../convex/_generated/dataModel";
 export function isRiderProfileComplete(
   profile: Doc<"profiles"> | null | undefined
 ): boolean {
-  if (!profile) return false;
+  if (!hasFitMeasurements(profile)) return false;
   return (
     !!profile.experienceLevel &&
     !!profile.weeklyHours &&

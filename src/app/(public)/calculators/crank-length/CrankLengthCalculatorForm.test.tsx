@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { crankLengthMessages } from "@/i18n/calculators/crankLength";
 import { CrankLengthCalculatorForm } from "./CrankLengthCalculatorForm";
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); sessionStorage.clear(); });
 
 describe("live crank length calculator", () => {
   it("uses the real discrete threshold on keyboard input and updates the SVG", () => {
@@ -88,7 +88,7 @@ describe("live crank length calculator", () => {
     fireEvent.keyDown(slider, { key: "ArrowLeft" });
     expect(screen.queryByText(crankLengthMessages.nl.invalid)).toBeNull();
     expect(screen.getByRole("region", { name: "Jouw startpunt" })).toBeTruthy();
-    expect(screen.queryByRole("spinbutton")).toBeNull();
+    expect(screen.getByRole("spinbutton", { name: "Je huidige cranklengte (mm)" })).toBeTruthy();
     expect(screen.queryByRole("combobox")).toBeNull();
   });
 });

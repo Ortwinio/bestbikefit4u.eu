@@ -22,6 +22,8 @@ import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { DashboardHomeProfileIndicators } from "@/components/dashboard/DashboardHomeProfileIndicators";
 import { DashboardReportBike } from "@/components/dashboard/DashboardReportBike";
 import { DashboardCalculatorQuickLinks } from "@/components/dashboard/DashboardCalculatorQuickLinks";
+import { DashboardProfilePrompts } from "@/components/dashboard/DashboardProfilePrompts";
+import { DashboardProfileStrength } from "@/components/dashboard/DashboardProfileStrength";
 import { getDashboardReportCopy } from "@/i18n/account/dashboardReport";
 import garageStyles from "@/components/dashboard/DashboardBikeGarage.module.css";
 import numberStyles from "@/components/dashboard/DashboardNumbers.module.css";
@@ -98,6 +100,8 @@ export default function DashboardPage() {
         </div>
       </header>
 
+      <DashboardProfileStrength locale={locale} />
+      <DashboardProfilePrompts locale={locale} />
       <DashboardCalculatorQuickLinks locale={locale} />
 
       {/* Rider profile card */}

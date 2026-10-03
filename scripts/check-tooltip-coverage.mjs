@@ -19,6 +19,8 @@ const PRIMITIVE_FILES = new Set([
 ]);
 
 const EXEMPT_FILES = new Set([
+  // Handoff review uses permanent labels and inline measurement-point guidance.
+  "src/app/welcome/WelcomeClient.tsx",
   // Administrative search/content controls use visible labels and helper copy,
   // matching the existing admin exemptions rather than measurement tooltips.
   "src/app/(dashboard)/admin/geometry/page.tsx",
@@ -80,10 +82,18 @@ const EXEMPT_FILES = new Set([
 ]);
 
 const INPUT_SELECT_ENFORCED_FILES = new Set([
+  "src/components/calculators/AccountCalculatorBike.tsx",
+  "src/components/calculators/CalculatorChainPanel.tsx",
+  "src/app/(public)/calculators/crank-length/CrankLengthCalculatorForm.tsx",
+  "src/app/(public)/calculators/saddle-width/SaddleWidthCalculatorForm.tsx",
+  "src/components/profile/ProfileProvenance.tsx",
+  "src/components/profile/AdviceProgressActions.tsx",
+  "src/components/dashboard/DashboardProfilePrompts.tsx",
   "src/app/(public)/design-system/Playground.tsx",
   "src/app/(auth)/login/page.tsx",
   "src/app/(dashboard)/fit/[sessionId]/results/page.tsx",
   "src/components/bikes/BikeForm.tsx",
+  "src/components/bikes/BikeProfilePanel.tsx",
   "src/components/measurements/StepAdvancedMeasurements.tsx",
   "src/components/measurements/StepBodyMeasurements.tsx",
 ]);

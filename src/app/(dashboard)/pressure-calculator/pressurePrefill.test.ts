@@ -15,13 +15,14 @@ describe("pressure prefill priority", () => {
     })).toMatchObject({ discipline: "mtb", bikeWeightKg: 13, bodyWeightKg: 82,
       widthFrontMm: 60, widthRearMm: 62, tubeType: "inner_tube" });
   });
-  it("keeps saved optional weight absent and all saved inputs ahead of changed source data", () => {
+  it("refreshes shared inputs from live profile and bike while keeping ride preferences", () => {
     const inputSnapshot = { discipline: "gravel" as const, bodyWeightKg: 90, widthFrontMm: 40, widthRearMm: 42,
       tubeType: "latex_tube" as const, surface: "loose_gravel" as const, ridingGoal: "comfort" as const };
     expect(buildPressurePrefill({ saved: { inputSnapshot }, profile: { weightKg: 70 },
       bike: { bikeType: "road", bikeWeightKg: 8 },
       tires: { widthFrontMm: 28, widthRearMm: 28, tubeType: "tubeless" },
-    })).toEqual({ ...inputSnapshot, bikeWeightKg: undefined });
+    })).toEqual({ ...inputSnapshot, discipline: "road", bodyWeightKg: 70, bikeWeightKg: 8,
+      widthFrontMm: 28, widthRearMm: 28, tubeType: "tubeless" });
   });
   it("maps time-trial bikes to the public road discipline without changing saved measurements", () => {
     expect(buildPressurePrefill({ bike: { bikeType: "tt_triathlon", discipline: "tt" }, profile: { weightKg: 180 } }))

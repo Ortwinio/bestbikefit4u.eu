@@ -6,6 +6,7 @@
 import { internalAction } from "../_generated/server";
 import { v } from "convex/values";
 import { internal } from "../_generated/api";
+import { inputProvenanceValidator } from "../advice/validators";
 import type { FitInputs, FitOutputs, ClimbingLevel, Ambition } from "../lib/fitAlgorithm";
 import { calculateBikeFit } from "../lib/fitAlgorithm";
 import { runEngineV1Seed, mapStoredCalculatedFit } from "./seedEngine";
@@ -21,6 +22,8 @@ import {
  */
 export const generateFromData = internalAction({
   args: {
+    inputProvenance: v.optional(inputProvenanceValidator),
+    suppressEmail: v.optional(v.boolean()),
     // Context for storage
     sessionId: v.id("fitSessions"),
     userId: v.id("users"),
@@ -144,6 +147,8 @@ export const generateFromData = internalAction({
 
     // Store the result via an internal mutation (serialised, idempotent)
     await ctx.runMutation(internal.recommendations.internalMutations.storeResult, {
+      inputProvenance: args.inputProvenance,
+      suppressEmail: args.suppressEmail,
       sessionId: args.sessionId,
       userId: args.userId,
       calculatedFit: seed.calculatedFit,

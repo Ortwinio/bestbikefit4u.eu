@@ -1,0 +1,38 @@
+[
+  {
+    "locale": "nl",
+    "width": 1440,
+    "overflow": false,
+    "confirmedOverflow": false,
+    "errors": [],
+    "externalRequests": [],
+    "writesBeforeProfileChoice": 0
+  },
+  {
+    "locale": "nl",
+    "width": 390,
+    "overflow": false,
+    "confirmedOverflow": false,
+    "errors": [],
+    "externalRequests": [],
+    "writesBeforeProfileChoice": 0
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "overflow": false,
+    "confirmedOverflow": false,
+    "errors": [],
+    "externalRequests": [],
+    "writesBeforeProfileChoice": 0
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "overflow": false,
+    "confirmedOverflow": false,
+    "errors": [],
+    "externalRequests": [],
+    "writesBeforeProfileChoice": 0
+  }
+]

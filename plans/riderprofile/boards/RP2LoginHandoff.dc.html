@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Account aanmaken met je gegevens</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#F5F8F3;color:#0F2420;font-family:Figtree,system-ui,sans-serif}h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;margin:0;letter-spacing:-.025em}p{margin:0;line-height:1.5}a{color:#0A7263}a:hover{color:#075A4E}button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #0A7263;outline-offset:3px}.muted{color:#4A5F5A}.mono{font-family:'DM Mono',monospace}.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 24px;border-radius:999px;border:2px solid #0F2420;background:#FFFFFF;color:#0F2420;text-decoration:none;font-weight:700;white-space:nowrap}.btn.primary{background:#0A7263;border-color:#0A7263;color:#FFFFFF}.btn.primary:hover{background:#075A4E;border-color:#075A4E;color:#FFFFFF}.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}.field{width:100%;height:54px;padding:0 18px;border-radius:14px;border:1px solid #B9CCC6;background:#FFFFFF;color:#0F2420;font-size:17px}
+.review-strip{height:44px;min-height:44px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#EEF3EF;border-bottom:1px dashed #B9CCC6}.review-label{font-size:12px;font-weight:700;text-transform:uppercase;color:#4A5F5A;flex-shrink:0}.review-pill{display:inline-flex;align-items:center;justify-content:center;height:44px;min-width:44px;padding:0 2px;border:0;background:transparent;font-size:13px;color:#4A5F5A}.review-pill span{display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;white-space:nowrap}.review-pill[aria-pressed="true"] span{background:#0F2420;color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1004px; display: flex; flex-direction: column; background: #F5F8F3">
+<div class="review-strip" aria-label="Ontwerpstaat"><span class="review-label">Ontwerpstaat</span><div style="display: flex; gap: 4px"><sc-for list="{{views}}" as="view" hint-placeholder-count="2"><button type="button" class="review-pill" aria-pressed="{{view.selected}}" onClick="{{view.pick}}"><span>{{view.label}}</span></button></sc-for></div></div>
+<div style="flex-grow: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr)">
+
+<section style="display: flex; flex-direction: column; gap: 28px; padding: 56px 64px; background: #CFF26A">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #0F2420">
+<svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#0F2420"></circle><circle cx="11" cy="20" r="5" stroke="#CFF26A" stroke-width="2.4"></circle><circle cx="23" cy="20" r="5" stroke="#CFF26A" stroke-width="2.4"></circle><path d="M11 20l4-8h6l2 8M15 12l4 8" stroke="#CFF26A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px">BestBikeFit4U</span>
+</a>
+<div>
+<h1 style="font-size: 64px; line-height: .98; letter-spacing: -.035em">Je gegevens liggen klaar.</h1>
+<p style="margin-top: 16px; font-size: 19px; max-width: 520px">Na het inloggen laten we zien wat we meenemen. Jij kiest wat er in je profiel komt.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 540px">
+<sc-for list="{{items}}" as="i" hint-placeholder-count="5">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 16px; background: #FFFFFF"><span>{{i.label}}</span><span style="display: flex; gap: 8px; align-items: center"><span class="mono">{{i.value}}</span><span class="chip" style="background: {{i.bg}}; color: {{i.fg}}">{{i.kind}}</span></span></div>
+</sc-for>
+</div>
+<p style="font-size: 14px; max-width: 520px; margin-top: auto">Bewaard in deze browser tot je inlogt. We slaan niets op zonder jouw akkoord, en je maten komen niet in statistieken of e-mails.</p>
+</section>
+
+<section style="display: flex; flex-direction: column; justify-content: center; padding: 56px 96px">
+<div style="display: flex; flex-direction: column; gap: 22px; max-width: 480px">
+<nav aria-label="Kies" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 5px; border-radius: 16px; background: #EEF3EF">
+<span aria-current="page" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 12px; background: #FFFFFF; font-weight: 700; box-shadow: 0 1px 4px rgba(15,36,32,.18)">Account aanmaken</span>
+<a href="Login.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 12px; color: #3B4F4A; font-weight: 700; text-decoration: none">Inloggen</a>
+</nav>
+<sc-if value="{{emailStep}}" hint-placeholder-val="{{true}}">
+<h2 style="font-size: 36px">Gratis account in één minuut</h2>
+<p class="muted">Geen wachtwoord nodig. We sturen je een code van 6 cijfers.</p>
+<a href="RP3Welcome.dc.html" class="btn" style="width: 100%">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2420" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 12h8M12 3v18" stroke-linecap="round"></path></svg>
+Ga verder met Google</a>
+<div style="display: flex; align-items: center; gap: 14px; color: #4A5F5A; font-size: 14px"><span style="flex-grow: 1; height: 1px; background: #DCE6E1"></span>of met e-mail<span style="flex-grow: 1; height: 1px; background: #DCE6E1"></span></div>
+<div style="display: flex; flex-direction: column; gap: 8px"><label for="lh-mail" style="font-weight: 700">E-mailadres</label><input id="lh-mail" class="field" type="email" value="sanne@voorbeeld.nl" autocomplete="email"></div>
+<button type="button" class="btn primary" style="width: 100%" onClick="{{sendCode}}">Stuur mijn inlogcode</button>
+<p class="muted" style="font-size: 14px">Door verder te gaan ga je akkoord met de <a href="Legal.dc.html">voorwaarden</a>. Nieuwsbrieven zijn uit tot je ze zelf aanzet.</p>
+</sc-if>
+<sc-if value="{{codeStep}}" hint-placeholder-val="{{false}}">
+<h2 style="font-size: 36px">Check je mail</h2>
+<p class="muted">We stuurden een code naar <strong style="color: #0F2420">sanne@voorbeeld.nl</strong>. Hij is 10 minuten geldig.</p>
+<div style="display: flex; flex-direction: column; gap: 8px"><label for="lh-code" style="font-weight: 700">Inlogcode</label><input id="lh-code" class="field mono" type="text" inputmode="numeric" value="482 913" style="letter-spacing: .3em; font-size: 26px; text-align: center" autocomplete="one-time-code"></div>
+<a href="RP3Welcome.dc.html" class="btn primary" style="width: 100%">Bevestig en bekijk mijn gegevens</a>
+<button type="button" style="min-height: 44px; border: 0; background: transparent; color: #0A7263; font-weight: 700; text-decoration: underline" onClick="{{back}}">Ander e-mailadres</button>
+</sc-if>
+</div>
+</section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1004}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { step: 'email' };
+  }
+  renderVals() {
+    const s = this.state;
+    const m = ['gemeten', '#E1F2EE', '#075A4E'];
+    const f = ['fiets', '#FFFFFF', '#3B4F4A'];
+    return {
+      emailStep: s.step === 'email', codeStep: s.step === 'code',
+      sendCode: () => this.setState({ step: 'code' }),
+      back: () => this.setState({ step: 'email' }),
+      items: [
+        ['Binnenbeenlengte', '81 cm', m], ['Lichaamslengte', '174 cm', m], ['Type fiets', 'Racefiets', f],
+        ['Rijdoel', 'Gebalanceerd', ['opgegeven', '#FFFFFF', '#3B4F4A']], ['Huidige zadelhoogte', '728 mm', f]
+      ].map(([label, value, k]) => ({ label, value, kind: k[0], bg: k[1] === '#FFFFFF' ? '#EEF3EF' : k[1], fg: k[2] })),
+      views: [['email', 'E-mail'], ['code', 'Code invullen']].map(([key, label]) => ({
+        label, selected: String(s.step === key), pick: () => this.setState({ step: key })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

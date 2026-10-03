@@ -1,5 +1,10 @@
 "use client";
 
+import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
+import type { HandoffField } from "@/lib/handoff/store";
+import { PersonalizeAdviceBlock } from "@/components/calculators/PersonalizeAdviceBlock";
+import { HandoffPrefillNotice } from "@/components/calculators/HandoffPrefillNotice";
+
 import type { CalculatorValues } from "../../../../../convex/calculatorStates/validators";
 
 import { useMemo, useState } from "react";
@@ -35,21 +40,52 @@ const INSEAM = { min: 55, max: 105, step: 0.5 };
 export function FrameSizeCalculatorForm({
   isNl = false,
   initialValues,
+  initialInseamSource,
   onValuesChange,
   locale = isNl ? "nl" : "en",
   copy = frameSizeMessages[locale],
 }: {
   isNl?: boolean;
   initialValues?: CalculatorValues<"frame-size">;
+  initialInseamSource?: "measured" | "estimated";
   onValuesChange?: (values: CalculatorValues<"frame-size">) => void;
   locale?: Locale;
   copy?: FrameSizeCalculatorCopy;
 }) {
   const [heightCm, setHeightCm] = useState(initialValues?.heightCm ?? 180);
+  const [inseamMeasured, setInseamMeasured] = useState(initialInseamSource === "measured");
   const [inseamCm, setInseamCm] = useState(initialValues?.inseamCm ?? 84);
   const [heightConfirmed, confirmHeight] = useState(initialValues?.heightConfirmed ?? false);
   const [inseamConfirmed, confirmInseam] = useState(initialValues?.inseamConfirmed ?? false);
   const [category, setCategory] = useState<BikeCategory>(initialValues?.category ?? "road");
+  const publicMode = !initialValues && !onValuesChange;
+  const handoff = usePublicHandoff("frame-size", publicMode);
+  const [prefilled, setPrefilled] = useState(false);
+  const [prefilledFields, setPrefilledFields] = useState<HandoffField[]>([]);
+  // Adopt the first client session snapshot once; edits and account state remain authoritative.
+  if (publicMode && handoff.ready && !prefilled) {
+    setPrefilled(true);
+    const used: HandoffField[] = [];
+    const heightCmEntry = handoff.getPrefill("heightCm");
+    if (typeof heightCmEntry?.value === "number" && heightCmEntry.value >= 130 && heightCmEntry.value <= 210) {
+      setHeightCm(heightCmEntry.value);
+      confirmHeight(true);
+      used.push("heightCm");
+    }
+    const inseamCmEntry = handoff.getPrefill("inseamCm");
+    if (typeof inseamCmEntry?.value === "number" && inseamCmEntry.value >= 55 && inseamCmEntry.value <= 105) {
+      setInseamCm(inseamCmEntry.value);
+      setInseamMeasured(inseamCmEntry.method === "measured");
+      confirmInseam(true);
+      used.push("inseamCm");
+    }
+    const categoryEntry = handoff.getPrefill("bikeCategory");
+    if (typeof categoryEntry?.value === "string" && ["road", "gravel", "mtb", "city"].includes(categoryEntry.value)) {
+      setCategory(categoryEntry.value as BikeCategory);
+      used.push("bikeCategory");
+    }
+    setPrefilledFields(used);
+  }
   useCalculatorValuesChange({ heightCm, inseamCm, heightConfirmed, inseamConfirmed, category }, onValuesChange);
   const confirmed = heightConfirmed && inseamConfirmed;
   const format = new Intl.NumberFormat(locale === "nl" ? "nl-NL" : "en-GB", {
@@ -65,7 +101,7 @@ export function FrameSizeCalculatorForm({
     heightCm,
     inseamCm,
     category,
-    inseamSource: confirmed ? "measured" : "estimated",
+    inseamSource: inseamMeasured ? "measured" : "estimated",
   });
   // Enumerate actual returned bands, rather than maintaining a second sizing formula.
   const bands = useMemo(
@@ -91,6 +127,8 @@ export function FrameSizeCalculatorForm({
 
   return (
     <ConfiguratorLayout
+      notice={publicMode && <HandoffPrefillNotice calculator="frame-size" locale={locale} fields={prefilledFields} />}
+      afterResults={publicMode && <PersonalizeAdviceBlock calculator="frame-size" locale={locale} />}
       eyebrow={copy.eyebrow}
       title={copy.title}
       description={copy.description}
@@ -104,7 +142,7 @@ export function FrameSizeCalculatorForm({
                   label={copy.categories[value].label}
                   description={copy.categories[value].description}
                   selected={category === value}
-                  onClick={() => setCategory(value)}
+                  onClick={() => { setCategory(value); handoff.touch("bikeCategory", value, "none", "bike"); }}
                 />
               ))}
             </div>
@@ -123,12 +161,17 @@ export function FrameSizeCalculatorForm({
               helperText={copy.heightHint}
               onChange={(value) => {
                 setHeightCm(value);
+                handoff.touch("heightCm", value, "cm");
                 confirmHeight(true);
               }}
               ticks={[130, 150, 170, 190, 210].map((value) => ({ value }))}
             />
             {!heightConfirmed && (
-              <Button variant="outline" size="sm" onClick={() => confirmHeight(true)}>
+              <Button variant="outline" size="sm"
+                onClick={() => {
+                confirmHeight(true);
+                handoff.touch("heightCm", heightCm, "cm");
+                }}>
                 {copy.confirmHeight}
               </Button>
             )}
@@ -142,11 +185,17 @@ export function FrameSizeCalculatorForm({
               helperText={copy.inseamHint}
               onChange={(value) => {
                 setInseamCm(value);
+                setInseamMeasured(false);
+                handoff.touch("inseamCm", value, "cm");
                 confirmInseam(true);
               }}
             />
             {!inseamConfirmed && (
-              <Button variant="outline" size="sm" onClick={() => confirmInseam(true)}>
+              <Button variant="outline" size="sm"
+                onClick={() => {
+                confirmInseam(true);
+                handoff.touch("inseamCm", inseamCm, "cm");
+                }}>
                 {copy.confirmInseam}
               </Button>
             )}
@@ -227,7 +276,7 @@ export function FrameSizeCalculatorForm({
             </h2>
             <p className="mt-3 text-[var(--bbf-op-donker)]">{copy.nextBody}</p>
             <div className="mt-5 flex flex-col gap-3">
-              <Link
+              {publicMode && <Link
                 className={
                   "inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--bbf-lime)] " +
                   "px-5 py-3 text-center font-bold text-[var(--bbf-inkt)]"
@@ -235,7 +284,7 @@ export function FrameSizeCalculatorForm({
                 href={withLocalePrefix("/calculators/bike-fit", locale)}
               >
                 {copy.startFit}
-              </Link>
+              </Link>}
               <Link
                 className={
                   "inline-flex min-h-12 items-center justify-center rounded-full border " +

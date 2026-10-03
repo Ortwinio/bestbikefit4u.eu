@@ -29,7 +29,7 @@ const sessionTables = [
 ] as const;
 
 const bikeTables = [
-  "pressureCalculations", "pressureProfiles", "gearingSessions", "saddleWidthSessions", "recommendations",
+  "profileObservations", "pressureCalculations", "pressureProfiles", "gearingSessions", "saddleWidthSessions", "recommendations",
 ] as const;
 
 const scanTables = [

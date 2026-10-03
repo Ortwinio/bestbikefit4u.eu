@@ -14,6 +14,12 @@ const state = vi.hoisted(() => ({
 }));
 
 vi.mock("convex/react", () => ({ useQuery: state.query }));
+vi.mock("@/components/dashboard/DashboardProfilePrompts", () => ({
+  DashboardProfilePrompts: ({ locale }: { locale: Locale }) => <section data-profile-prompts={locale} />,
+}));
+vi.mock("@/components/dashboard/DashboardProfileStrength", () => ({
+  DashboardProfileStrength: ({ locale }: { locale: Locale }) => <section data-profile-strength={locale} />,
+}));
 vi.mock("@/i18n/useDashboardMessages", () => ({
   useDashboardMessages: () => ({ locale: state.locale, messages: getDashboardMessages(state.locale) }),
 }));
@@ -81,6 +87,12 @@ function setup(overrides: Record<string, unknown> = {}) {
 beforeEach(() => { state.locale = "nl"; state.query.mockReset(); });
 
 describe("dashboard home presentation", () => {
+  it.each(["nl", "en"] as const)("mounts the %s profile rings before the prompts", locale => {
+    state.locale = locale;
+    const html = setup();
+    expect(html).toContain(`data-profile-strength="${locale}"`);
+    expect(html.indexOf("data-profile-strength")).toBeLessThan(html.indexOf("data-profile-prompts"));
+  });
   it.each(["nl", "en"] as const)("includes all localized calculator quick links in %s", (locale) => {
     state.locale = locale;
     const html = setup();

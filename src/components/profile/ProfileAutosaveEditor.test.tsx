@@ -34,6 +34,18 @@ beforeEach(() => { vi.useFakeTimers(); state.save.mockReset().mockResolvedValue(
 afterEach(() => { cleanup(); vi.useRealTimers(); });
 
 describe("profile autosave integration", () => {
+  it("displays imported inseam, leaves absent measurements blank and saves only the completed field", async () => {
+    render(<ProfileAutosaveEditor profile={{ _id: "profile", inseamCm: 83 } as Doc<"profiles">}
+      onWeightSaved={vi.fn()} />);
+    expect((screen.getByLabelText("inseamCm") as HTMLInputElement).value).toBe("83");
+    expect((screen.getByLabelText("heightCm") as HTMLInputElement).value).toBe("");
+    expect((screen.getByLabelText("coreStabilityScore") as HTMLInputElement).value).toBe("");
+    await tick();
+    expect(state.save).not.toHaveBeenCalled();
+    change("heightCm", 178);
+    await tick();
+    expect(state.save).toHaveBeenCalledExactlyOnceWith("profiles/mutations:updateMeasurements", { heightCm: 178 });
+  });
   it("does not save on mount; coalesces edits and fades the saved state", async () => {
     render(<ProfileAutosaveEditor profile={profile} onWeightSaved={vi.fn()} />);
     await tick();

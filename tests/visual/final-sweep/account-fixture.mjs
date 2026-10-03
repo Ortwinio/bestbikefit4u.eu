@@ -4,6 +4,7 @@ import { build } from "esbuild";
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { resolve, extname } from "node:path";
+import { extendRiderRuntime } from "./rider-fixtures.mjs";
 
 /** Actual account components with deterministic read-only Convex/auth fixtures from batch 20. */
 export async function prepareAccountFixtures({
@@ -65,10 +66,19 @@ export async function prepareAccountFixtures({
         {
           name: "final-account-fixture",
           setup(builder) {
+            builder.onLoad({ filter: /account-batch1\/entry\.jsx$/ }, async ({ path }) => {
+              const contents = await readFile(path, "utf8");
+              return { loader: "jsx", resolveDir: batch.folder, contents:
+                'import Welcome from "@/app/welcome/page";\nimport Score from "@/app/(dashboard)/profile/score/page";\nimport Advice from "@/app/(dashboard)/profile/advice/page";\n' +
+                contents.replace('const content = ', 'const content = pathname === "/welcome" ? <Welcome /> : pathname === "/profile/score" ? await Score() : pathname === "/profile/advice" ? await Advice() : ')
+                  .replace('const tree = ', 'const tree = pathname === "/welcome" ? content : ') };
+            });
             builder.onLoad({ filter: /runtime\.jsx$/ }, async ({ path }) => {
               if (path !== runtime) return;
-              const contents = await readFile(path, "utf8");
-              if (/export (?:function|const) usePaginatedQuery\b/.test(contents)) return;
+              const contents = extendRiderRuntime(await readFile(path, "utf8"), resolve(folder, "rider-fixtures.mjs"));
+              if (/export (?:function|const) usePaginatedQuery\b/.test(contents)) {
+                return { loader: "jsx", resolveDir: batch.folder, contents };
+              }
               // A closed deletion dialog requests "skip". Never fabricate its destructive preview data.
               return { loader: "jsx", resolveDir: batch.folder, contents: contents + `
 export function usePaginatedQuery(_reference, args) {
@@ -112,7 +122,7 @@ export function usePaginatedQuery(_reference, args) {
       return "bikes";
     }
     if (/^\/(?:fit(?:\/(?:how-it-works|[^/]+\/(?:questionnaire|results)))?|fit-history)$/.test(path)) return "fit";
-    if (/^\/(?:profile|dashboard|login)$/.test(path)) return "profile";
+    if (/^\/(?:profile(?:\/(?:score|advice))?|dashboard|login|welcome)$/.test(path)) return "profile";
     if (/^\/profile\/improve\/(body-measurements|flexibility|core-stability|comfort)$/.test(path)) return "profile";
     const calculatorRoutes = ["bike-fit", "saddle-height", "frame-size", "crank-length",
       "power-speed", "climb-planner", "ftp-wkg", "fuel-hydration"];

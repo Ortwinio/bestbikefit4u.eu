@@ -1,5 +1,8 @@
 "use client";
 
+import { clearHandoff } from "@/lib/handoff/store";
+import { clearNewsletterSignupIntent } from "@/lib/newsletter/signupIntent";
+
 import { SettingsNameField, SettingsUnitsField } from "./SettingsAutosaveFields";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -238,6 +241,8 @@ export default function SettingsPage() {
               <Button
                 variant="link"
                 onClick={async () => {
+                  clearHandoff();
+                  clearNewsletterSignupIntent();
                   await signOut();
                   router.push(withLocalePrefix("/", locale));
                 }}

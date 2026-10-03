@@ -3,12 +3,14 @@ import { act, cleanup, fireEvent, render, screen, within } from "@testing-librar
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SaddleWidthCalculatorForm } from "./SaddleWidthCalculatorForm";
 import { calculateSaddleWidth } from "@/lib/saddle-width-engine";
+import { readHandoff } from "@/lib/handoff/store";
 import { saddleWidthMessages } from "@/i18n/calculators/saddleWidth";
 
 const { saveSession } = vi.hoisted(() => ({ saveSession: vi.fn().mockResolvedValue("session") }));
 vi.mock("convex/react", () => ({ useMutation: () => saveSession }));
 afterEach(() => {
   cleanup();
+  sessionStorage.clear();
   vi.clearAllMocks();
   vi.useRealTimers();
 });
@@ -56,7 +58,7 @@ describe("SaddleWidthCalculatorForm", () => {
     },
   );
 
-  it("keeps example data unsaved and saves a confirmed measured session with real engine output", async () => {
+  it("keeps defaults unsaved and stores only a confirmed measured value in this browser session", async () => {
     vi.useFakeTimers();
     render(<SaddleWidthCalculatorForm locale="en" />);
     await act(async () => {
@@ -70,13 +72,10 @@ describe("SaddleWidthCalculatorForm", () => {
     await act(async () => {
       vi.advanceTimersByTime(500);
     });
-    expect(saveSession).toHaveBeenCalledTimes(1);
-    expect(saveSession.mock.calls[0][0]).toMatchObject({
-      measurementMethod: "measured",
-      sitBoneWidthMm: 126,
-      recommendedWidthMm: 148,
-    });
-    expect(saveSession.mock.calls[0][0]).not.toHaveProperty("heightCm");
+    expect(saveSession).not.toHaveBeenCalled();
+    expect(readHandoff().entries).toEqual([
+      expect.objectContaining({ field: "sitBoneWidthMm", value: 126, method: "measured" }),
+    ]);
   });
 
   it(
@@ -109,14 +108,11 @@ describe("SaddleWidthCalculatorForm", () => {
         ridingType: "endurance_road",
         postureCategory: "balanced",
       });
-      expect(saveSession.mock.calls[0][0]).toMatchObject({
-        measurementMethod: "estimated",
-        heightCm: 181,
-        weightKg: 76,
-        hipCircumferenceCm: 101,
-        recommendedWidthMm: expected.finalRecommendedWidthMm,
-      });
-      expect(saveSession.mock.calls[0][0]).not.toHaveProperty("sitBoneWidthMm");
+      expect(saveSession).not.toHaveBeenCalled();
+      expect(readHandoff().entries).toEqual([
+        expect.objectContaining({ field: "heightCm", value: 181 }),
+        expect.objectContaining({ field: "weightKg", value: 76 }),
+      ]);
       expect(screen.getByRole("img").getAttribute("aria-label")).toContain(
         String(expected.finalRecommendedWidthMm),
       );

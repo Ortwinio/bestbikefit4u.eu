@@ -1,0 +1,17 @@
+export const PROFILE_RANGES = {
+  heightCm: [120, 230],
+  inseamCm: [50, 120],
+  armLengthCm: [35, 110],
+  torsoLengthCm: [30, 90],
+  femurLengthCm: [20, 80],
+  shoulderWidthCm: [25, 70],
+  footLengthCm: [15, 40],
+  handSpanCm: [10, 35],
+  sitBoneWidthMm: [60, 200],
+  coreStabilityScore: [1, 5],
+  age: [10, 100],
+  weightKg: [30, 250],
+  painSeverity: [1, 5],
+  ftpWatts: [30, 700],
+  shoeSizeEu: [20, 55],
+} as const;

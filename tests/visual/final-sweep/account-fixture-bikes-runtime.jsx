@@ -1,4 +1,5 @@
 import { getFunctionName } from "convex/server";
+import { scoreBike } from "../../../shared/profileScore";
 
 const params = new URLSearchParams(window.location.search);
 export const fixture = params.get("fixture") || "filled";
@@ -39,6 +40,9 @@ const user = {
 };
 const bike = {
   _id: "visual-bike",
+  userId: "visual-user",
+  _creationTime: 1780000000000,
+  createdAt: 1780000000000,
   name: "Endurance racefiets",
   brand: "Trek",
   model: "Domane",
@@ -96,6 +100,10 @@ const values = {
         ? null
         : {
             bike,
+            profileScore: scoreBike({ bike }, 1790985600000),
+            bikeObservations: [],
+            riderProfile: profile,
+            adjustmentRoom: { status: "unknown", reason: "seatpost_extension_unknown" },
             bikeProfiles: [{ _id: "profile", isDefault: true, profileType: "base", name: "Endurance" }],
             linkedGeometry: null,
             geometryLinkState: "unlinked",

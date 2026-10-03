@@ -53,11 +53,13 @@ function database() {
           eq: (key: string, value: unknown): Predicate => (row) => row[key] === value,
           and: (...filters: Predicate[]): Predicate => (row) => filters.every((filter) => filter(row)),
         };
-        const results = () => (table === "bikes" ? bikes : rows).filter((row) => predicates.every((filter) => filter(row)));
+        const results = () => (table === "bikes" ? bikes : table === "pressureCalculations" ? rows : [])
+          .filter((row) => predicates.every((filter) => filter(row)));
         const query = {
           filter: (builder: (value: typeof expression) => Predicate) => { predicates.push(builder(expression)); return query; },
           order: (direction: string) => { expect(direction).toBe("desc"); return query; },
           first: async () => results().sort((first, second) => Number(second.createdAt) - Number(first.createdAt))[0] ?? null,
+          unique: async () => results()[0] ?? null,
           collect: async () => results(),
         };
         return query;

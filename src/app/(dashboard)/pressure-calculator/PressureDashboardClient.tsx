@@ -1,5 +1,11 @@
 "use client";
 
+import { useCalculatorChain } from "@/components/calculators/useCalculatorChain";
+import { CalculatorChainLayout } from "@/components/calculators/CalculatorChainPanel";
+import { withChainEvidence } from "@/lib/calculators/standaloneChain";
+import type { ChainBinding } from "@/lib/calculators/chain";
+import type { FunctionReturnType } from "convex/server";
+
 import { useImperativeHandle, useRef, useState, type ReactNode, type Ref } from "react";
 import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
@@ -22,16 +28,17 @@ import nl from "@/i18n/messages/nl";
 import { buildPressurePrefill } from "./pressurePrefill";
 import styles from "./PressureDashboard.module.css";
 
+type ChainContext = FunctionReturnType<typeof api.calculatorChain.queries.getContext>;
 type FormHandle = { flush: () => Promise<boolean> };
 
-function SavedPressureForm({ bikeId, userId, initialValues, header, stale, profilePrefilled, onSaved, ref }: {
+function SavedPressureForm({ bikeId, userId, initialValues, header, stale, profilePrefilled, context, ref }: {
   bikeId?: Id<"bikes">;
   userId: Id<"users">;
   initialValues: PressureCalculatorValues;
   header: ReactNode;
   stale: boolean;
   profilePrefilled: boolean;
-  onSaved: (values: PressureCalculatorValues) => void;
+  context: ChainContext;
   ref: Ref<FormHandle>;
 }) {
   const { locale } = useDashboardMessages();
@@ -39,19 +46,61 @@ function SavedPressureForm({ bikeId, userId, initialValues, header, stale, profi
   const saveCopy = autosaveMessages[locale];
   const copy = accountPressureCalculatorMessages[locale];
   const upsert = useMutation(api.pressureCalculations.mutations.upsertBasic);
-  const [values, setValues] = useState(initialValues);
-  const [formInitialValues] = useState(initialValues);
-  const [initialProfilePrefilled] = useState(profilePrefilled);
+  const apply = useMutation(api.calculatorChain.mutations.applyChanges);
+  const bike = context.bikes.find((item) => item._id === bikeId);
+  const tires = context.activeTireSetup;
+  const bindings: ChainBinding<PressureCalculatorValues>[] = withChainEvidence([
+    { field: "weightKg", source: "profile", value: context.profile?.weightKg, unit: "kg",
+      read: (input) => input.bodyWeightKg,
+      write: (input, value) => ({ ...input, bodyWeightKg: typeof value === "number" ? value : input.bodyWeightKg }) },
+    ...(bike ? [
+      { field: "bikeType", source: "bike" as const, value: bike.bikeType,
+        read: (input: PressureCalculatorValues) => input.discipline === "mtb" ? "mountain" : input.discipline,
+        write: (input: PressureCalculatorValues, value: unknown) => ({ ...input,
+          discipline: value === "mountain" ? "mtb" as const : value === "gravel" ? "gravel" as const : "road" as const }) },
+      { field: "primaryGoal", source: "bike" as const, value: bike.primaryGoal,
+        read: (input: PressureCalculatorValues) => input.ridingGoal === undefined ? undefined
+          : input.ridingGoal === "speed" ? "performance" : input.ridingGoal === "balance" ? "balanced" : "comfort",
+        write: (input: PressureCalculatorValues, value: unknown) => ({ ...input,
+          ridingGoal: value === "comfort" ? "comfort" as const : value === "balanced" ? "balance" as const
+            : value === "performance" || value === "aerodynamics" ? "speed" as const : undefined }) },
+      { field: "bikeWeightKg", source: "bike" as const, value: bike.bikeWeightKg, unit: "kg",
+        read: (input: PressureCalculatorValues) => input.bikeWeightKg,
+        write: (input: PressureCalculatorValues, value: unknown) => ({ ...input,
+          bikeWeightKg: typeof value === "number" ? value : undefined }) },
+      ...(["widthFrontMm", "widthRearMm", "tubeType"] as const).map((field): ChainBinding<PressureCalculatorValues> => ({
+        field: `tires.${field}`, source: "bike", value: tires?.[field], unit: field === "tubeType" ? "" : "mm",
+        read: (input) => input[field],
+        write: (input, value) => ({ ...input, [field]: value ?? input[field] }),
+      })),
+    ] : []),
+  ], context.observations, context.bikeObservations.filter((item) => item.bikeId === bikeId));
+  const chain = useCalculatorChain({ scopeKey: `tire-pressure:${bikeId ?? ""}`, initialValues, bindings,
+    externalKey: JSON.stringify({ inputs: bindings.map(({ field, value, kind, recordedAt }) => ({ field, value, kind, recordedAt })),
+      tireSetup: tires?._id, discipline: bike?.discipline, bikeType: bike?.bikeType }),
+    applyChanges: (changes) => apply({ calculator: "tire-pressure", bikeId,
+      tireSetupId: changes.some((change) => change.field.startsWith("tires.")) ? tires?._id : undefined,
+      changes: changes.map(({ source: _source, ...change }) => {
+        if (change.value === null) throw new Error(saveCopy.invalid);
+        return { ...change, value: change.value,
+          measurePoint: change.measurePoint === "bb_center_to_saddle_top" ? "bb_center_to_saddle_top" as const : undefined };
+      }) }),
+  });
+  const values = chain.values;
   const failed = useRef(false);
+  const persistedRevision = useRef(0);
   const autosave = useAutosave({
     value: values,
+    enabled: chain.canAutosave,
     debounceMs: 500,
     validate: (input) => validatePressureInput(input).length ? saveCopy.invalid : null,
     onSave: async (inputSnapshot) => {
+      if (!chain.canAutosave || chain.revision === persistedRevision.current) return;
+      const revision = chain.revision;
       try {
         await upsert({ bikeId, expectedUserId: userId, inputSnapshot });
+        persistedRevision.current = revision;
         failed.current = false;
-        onSaved(inputSnapshot);
       } catch (error) {
         failed.current = true;
         throw error;
@@ -61,23 +110,23 @@ function SavedPressureForm({ bikeId, userId, initialValues, header, stale, profi
   useImperativeHandle(ref, () => ({
     flush: async () => {
       await autosave.flush();
-      return !failed.current && validatePressureInput(values).length === 0;
+      return chain.pendingChanges.length === 0 && !failed.current && validatePressureInput(values).length === 0;
     },
   }));
 
-  return <PressureCalculatorForm
+  return <CalculatorChainLayout calculator="tire-pressure" locale={locale} chain={chain} context={context} bikeId={bikeId}>
+  <PressureCalculatorForm key={chain.formKey}
     locale={locale}
     labels={dictionary.pressure.form}
     resultLabels={dictionary.pressure.result}
     copy={{ ...tirePressureMessages[locale], intro: copy.intro, excluded: copy.excluded }}
     accountMode
-    initialValues={formInitialValues}
-    onValuesChange={setValues}
+    initialValues={values}
+    onValuesChange={chain.setValues}
     onValuesCommit={() => { setTimeout(() => { void autosave.flush(); }, 0); }}
     headerSlot={header}
     statusSlot={<div className="space-y-2">
-      <p className="text-sm text-muted-foreground">{copy.autosaveHint}</p>
-      {initialProfilePrefilled && <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+      {profilePrefilled && <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
         <span>{copy.profilePrefill}</span>
         <Link href={withLocalePrefix("/profile", locale)} className="inline-flex min-h-11 items-center font-semibold text-primary underline">
           {copy.profileLink}
@@ -88,7 +137,8 @@ function SavedPressureForm({ bikeId, userId, initialValues, header, stale, profi
         error={validatePressureInput(values).length ? saveCopy.invalid : autosave.error} />
       {stale && <p role="note" className="rounded-xl border border-border bg-muted p-3 text-sm">{copy.stale}</p>}
     </div>}
-  />;
+  />
+  </CalculatorChainLayout>;
 }
 
 export function PressureDashboardClient({ initialBikeId }: { initialBikeId?: string }) {
@@ -98,21 +148,20 @@ export function PressureDashboardClient({ initialBikeId }: { initialBikeId?: str
   const bikes = useQuery(api.bikes.queries.listByUser);
   const latestByBike = useQuery(api.pressureCalculations.queries.getLatestByBikeForUser);
   const latestWithoutBike = useQuery(api.pressureCalculations.queries.getLatestWithoutBikeForUser);
-  const profile = useQuery(api.profiles.queries.getMyProfile);
   const [selectedBikeId, setSelectedBikeId] = useState(initialBikeId);
   const [switching, setSwitching] = useState(false);
-  const [savedValues, setSavedValues] = useState<Record<string, PressureCalculatorValues>>({});
   const form = useRef<FormHandle>(null);
   const bike = bikes?.find((entry) => entry._id === selectedBikeId);
   const bikeId = bike?._id;
   const detail = useQuery(api.bikes.queries.getDetail, bikeId ? { bikeId } : "skip");
+  const context = useQuery(api.calculatorChain.queries.getContext, user && bikes !== undefined ? { bikeId } : "skip");
   const stale = useQuery(api.pressureCalculations.queries.isBikePressureStale, bikeId ? { bikeId } : "skip");
   const saved = bikeId
     ? latestByBike?.find((entry) => entry.bikeId === bikeId)?.latestCalculation
     : latestWithoutBike;
   const selectionKey = `${user?._id ?? "loading"}:${bikeId ?? "no-bike"}`;
   const isLoading = !user || bikes === undefined || latestByBike === undefined || latestWithoutBike === undefined ||
-    profile === undefined || Boolean(bikeId && (detail === undefined || stale === undefined));
+    context === undefined || Boolean(bikeId && (detail === undefined || stale === undefined));
 
   async function selectBike(nextBikeId?: string) {
     if (switching || nextBikeId === bikeId) return;
@@ -154,9 +203,9 @@ export function PressureDashboardClient({ initialBikeId }: { initialBikeId?: str
     md:[&_[data-slot=configurator-sticky-result]]:bottom-0`}>
     <SavedPressureForm key={selectionKey} ref={form} bikeId={bikeId} userId={user._id} header={header}
       stale={stale?.isStale === true}
-      profilePrefilled={!saved?.inputSnapshot && profile?.weightKg !== undefined}
-      initialValues={savedValues[selectionKey] ?? buildPressurePrefill({ saved, bike, profile, tires: detail?.activeTireSetup })}
-      onSaved={(values) => setSavedValues((current) => ({ ...current, [selectionKey]: values }))} />
+      context={context}
+      profilePrefilled={context.profile?.weightKg !== undefined}
+      initialValues={buildPressurePrefill({ saved, bike, profile: context.profile, tires: context.activeTireSetup })} />
     {bikes.length > 0 && <section aria-labelledby="pressure-saved" className="mx-auto max-w-[1440px] space-y-4 px-4 sm:px-8 xl:px-16">
       <h2 id="pressure-saved" className="font-display text-3xl font-bold">{copy.saved}</h2>
       <p className="text-sm text-muted-foreground">{copy.savedDescription}</p>

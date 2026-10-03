@@ -35,6 +35,8 @@ interface FieldRef {
   field: string;
 }
 
+type FilterExpression = EqExpression | { all: FilterExpression[] };
+
 class QueryResult<T extends Doc> {
   private rows: T[];
 
@@ -46,7 +48,8 @@ class QueryResult<T extends Doc> {
     predicate: (q: {
       field: (name: string) => FieldRef;
       eq: (left: string | FieldRef, value: unknown) => EqExpression;
-    }) => EqExpression
+      and: (...conditions: FilterExpression[]) => FilterExpression;
+    }) => FilterExpression
   ) {
     const expression = predicate({
       field: (name) => ({ field: name }),
@@ -54,11 +57,12 @@ class QueryResult<T extends Doc> {
         field: typeof left === "string" ? left : left.field,
         value,
       }),
+      and: (...conditions) => ({ all: conditions }),
     });
 
-    const filtered = this.rows.filter(
-      (row) => row[expression.field] === expression.value
-    );
+    const matches = (row: T, condition: FilterExpression): boolean => "all" in condition
+      ? condition.all.every(part => matches(row, part)) : row[condition.field] === condition.value;
+    const filtered = this.rows.filter(row => matches(row, expression));
     return new QueryResult(filtered);
   }
 
@@ -94,7 +98,7 @@ class InMemoryDb {
   async insert(table: string, doc: Record<string, unknown>) {
     const id = `${table}_${(this.idCounters.get(table) ?? 0) + 1}`;
     this.idCounters.set(table, (this.idCounters.get(table) ?? 0) + 1);
-    const row: Doc = { _id: id, ...doc };
+    const row: Doc = { _id: id, _creationTime: Date.now(), ...doc };
     const rows = this.tables.get(table) ?? [];
     rows.push(row);
     this.tables.set(table, rows);

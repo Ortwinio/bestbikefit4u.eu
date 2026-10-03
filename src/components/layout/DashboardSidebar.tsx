@@ -1,5 +1,8 @@
 "use client";
 
+import { clearHandoff } from "@/lib/handoff/store";
+import { clearNewsletterSignupIntent } from "@/lib/newsletter/signupIntent";
+
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -19,6 +22,7 @@ import {
   CircuitBoard,
 } from "lucide-react";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
+import { AccountProfileStrength } from "@/components/profile/AccountProfileStrength";
 import { Button } from "@/components/ui";
 import {
   getEffectiveDisplayName,
@@ -62,6 +66,8 @@ export function DashboardSidebar() {
   );
 
   const handleSignOut = async () => {
+    clearHandoff();
+    clearNewsletterSignupIntent();
     await signOut();
     router.push(toLocalizedPath("/"));
   };
@@ -87,6 +93,7 @@ export function DashboardSidebar() {
           />
         </div>
         <div className="shrink-0 px-5 py-2"><AccountLanguageSwitch /></div>
+        <div className="shrink-0 px-4 py-2"><AccountProfileStrength locale={locale} placement="sidebar" /></div>
 
         <div className="min-h-[88px] flex-1 overflow-y-auto px-4 py-3">
           <div className="space-y-6">

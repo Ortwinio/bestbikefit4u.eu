@@ -39,23 +39,23 @@ export function getSaddleInitialValues(saved?: Saved | null, profile?: Measureme
     const [min, max, fallback] = ranges[field];
     const valid = (value?: number): value is number =>
       value !== undefined && Number.isFinite(value) && value >= min && value <= max;
+    if (valid(profile?.[field])) { profileFields.push(field); return profile[field]; }
     if (valid(saved?.[field])) return saved[field];
     if (saved?.[field] !== undefined) invalidSaved = true;
-    if (valid(profile?.[field])) { profileFields.push(field); return profile[field]; }
     return fallback;
   }
   const measurements = {
     sitBoneWidthMm: resolve("sitBoneWidthMm"), heightCm: resolve("heightCm"),
     weightKg: resolve("weightKg"), hipCircumferenceCm: resolve("hipCircumferenceCm"),
   };
-  const inputMethod = saved?.measurementMethod ??
-    (normalizeProfileSitBoneWidth(profile?.sitBoneWidthMm) ? "measured"
-      : profileFields.length > 0 ? "estimated" : "measured");
+  const inputMethod = normalizeProfileSitBoneWidth(profile?.sitBoneWidthMm) ? "measured"
+    : saved?.measurementMethod ?? (profileFields.length > 0 ? "estimated" : "measured");
   const values: SaddleWidthInput = {
     inputMethod,
     ...measurements,
-    ridingType: saved?.ridingType as SaddleRidingType ?? mapBikeToRidingTypeFromBike(bike),
-    postureCategory: saved?.postureCategory as SaddlePostureCategory ?? mapGoalToPosture(bike?.primaryGoal),
+    ridingType: bike ? mapBikeToRidingTypeFromBike(bike) : saved?.ridingType as SaddleRidingType ?? "endurance_road",
+    postureCategory: bike?.primaryGoal ? mapGoalToPosture(bike.primaryGoal)
+      : saved?.postureCategory as SaddlePostureCategory ?? "balanced",
   };
   return { values, invalidSaved, profileFields: profileFields.filter((field) =>
     inputMethod === "measured" ? field === "sitBoneWidthMm" : field !== "sitBoneWidthMm") };

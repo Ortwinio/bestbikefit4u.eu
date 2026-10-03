@@ -1,0 +1,14 @@
+shared/riderEstimates/types.ts
+shared/riderEstimates/index.ts
+shared/riderEstimates/ftp.ts
+shared/riderEstimates/ftp.test.ts
+shared/riderEstimates/sourcesFtp.ts
+shared/riderEstimates/flexibility.ts
+shared/riderEstimates/flexibility.test.ts
+shared/riderEstimates/sourcesFlexibility.ts
+shared/riderEstimates/contract.test.ts
+src/i18n/account/riderEstimates.ts
+plans/riderprofile/README.md
+plans/riderprofile/messages/A-to-B-R13A-estimate-contract.md
+plans/riderprofile/audit/R13A-notes.md
+plans/riderprofile/audit/files-R13A.txt

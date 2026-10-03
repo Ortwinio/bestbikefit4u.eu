@@ -125,39 +125,15 @@ describe("bike fit calculator page", () => {
   );
 
   it.each(["en", "nl"] as const)(
-    "offers a truthful %s account handoff after the campaign",
+    "leaves %s signup to the calculator handoff block without a duplicate campaign CTA",
     async (language) => {
       locale = language;
       campaignActive = false;
-      render(await BikeFitCalculatorPage());
-
-      const label = locale === "nl" ? "Maak een gratis account aan" : "Create a free account";
-      expect(screen.getByText(label).closest("a")?.getAttribute("href")).toBe(`/${locale}/login?src=bike-fit`);
-      expect(
-        screen.queryByText(
-          /save these results|Sign in to save results|resultaten op te slaan|Meld je aan om te bewaren/,
-        ),
-      ).toBeNull();
-      expect(
-        screen
-          .getByText(locale === "nl" ? "Bekijk prijzen" : "Compare plans")
-          .closest("a")
-          ?.getAttribute("href"),
-      ).toBe(`/${locale}/pricing`);
+      const { container } = render(await BikeFitCalculatorPage());
+      expect(screen.getByText("Bike fit form")).toBeTruthy();
+      expect(container.querySelector('a[href*="/login"]')).toBeNull();
+      expect(screen.queryByText("Create a free account")).toBeNull();
+      expect(screen.queryByText("Maak een gratis account aan")).toBeNull();
     },
   );
-
-  it("keeps the value-first next-step CTAs visible in English", async () => {
-    const ui = await BikeFitCalculatorPage();
-    render(ui);
-
-    expect(screen.getByText("Bike fit form")).toBeTruthy();
-    expect(screen.getByText("Create a free account").closest("a")?.getAttribute("href")).toBe(
-      "/en/login?src=bike-fit",
-    );
-    expect(
-      screen.getByText("Donate via our Alpe d'HuZes page").closest("a")?.getAttribute("href"),
-    ).toBe("https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756");
-    expect(screen.queryByText("Compare plans")).toBeNull();
-  });
 });

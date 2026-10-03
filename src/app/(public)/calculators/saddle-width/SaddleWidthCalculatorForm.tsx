@@ -1,9 +1,12 @@
 "use client";
 
+import { handoffInputMessages } from "@/i18n/calculators/handoffInputs";
+import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
+import type { HandoffField } from "@/lib/handoff/store";
+import { PersonalizeAdviceBlock } from "@/components/calculators/PersonalizeAdviceBlock";
+import { HandoffPrefillNotice } from "@/components/calculators/HandoffPrefillNotice";
+
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import Link from "next/link";
-import { useMutation } from "convex/react";
-import { api } from "../../../../../convex/_generated/api";
 import {
   AdjustOrder,
   Button,
@@ -33,7 +36,6 @@ import {
   WIDTH_BINS,
 } from "@/lib/saddle-width-engine/config";
 import type { Locale } from "@/i18n/config";
-import { withLocalePrefix } from "@/i18n/navigation";
 import {
   saddleWidthMessages,
   type SaddleWidthCalculatorCopy,
@@ -69,6 +71,8 @@ export function SaddleWidthCalculatorForm({
   statusSlot?: ReactNode;
   headerSlot?: ReactNode;
 }) {
+  const [currentSaddle, setCurrentSaddle] = useState("");
+  const inputCopy = handoffInputMessages[locale];
   const [mode, setMode] = useState<SaddleInputMethod>(initialValues?.inputMethod ?? "measured");
   const [sitBone, setSitBone] = useState(initialValues?.sitBoneWidthMm ?? 125);
   const [height, setHeight] = useState(initialValues?.heightCm ?? 180);
@@ -76,14 +80,42 @@ export function SaddleWidthCalculatorForm({
   const [hip, setHip] = useState(initialValues?.hipCircumferenceCm ?? 100);
   const [confirmedFields, setConfirmedFields] = useState<string[]>([]);
   const [ridingType, setRidingType] = useState<SaddleRidingType>(initialValues?.ridingType ?? "endurance_road");
-  const [postureCategory, setPostureCategory] = useState<SaddlePostureCategory>(initialValues?.postureCategory ?? "balanced");
-  const [saveFailed, setSaveFailed] = useState(false);
-  const saveSession = useMutation(api.saddleWidth.mutations.createPublicSaddleWidthSession);
-  const savedSignature = useRef<string | null>(null);
+  const [postureCategory, setPostureCategory] = useState<SaddlePostureCategory>(
+    initialValues?.postureCategory ?? "balanced",
+  );
   const fields = mode === "measured" ? ["sitBone"] : ["height", "weight", "hip"];
   const confirmed = accountMode || fields.every((field) => confirmedFields.includes(field));
   function confirmField(field: string) {
     setConfirmedFields((previous) => (previous.includes(field) ? previous : [...previous, field]));
+  }
+  const publicMode = !initialValues && !onValuesChange && !accountMode;
+  const handoff = usePublicHandoff("saddle-width", publicMode);
+  const [prefilled, setPrefilled] = useState(false);
+  const [prefilledFields, setPrefilledFields] = useState<HandoffField[]>([]);
+  // Adopt the first client session snapshot once; edits and account state remain authoritative.
+  if (publicMode && handoff.ready && !prefilled) {
+    setPrefilled(true);
+    const used: HandoffField[] = [];
+    const sitBoneWidthMmEntry = handoff.getPrefill("sitBoneWidthMm");
+    if (typeof sitBoneWidthMmEntry?.value === "number" && sitBoneWidthMmEntry.method === "measured"
+      && sitBoneWidthMmEntry.value >= SIT_BONE_WIDTH_RANGE.min
+      && sitBoneWidthMmEntry.value <= SIT_BONE_WIDTH_RANGE.max) {
+      setSitBone(sitBoneWidthMmEntry.value);
+      setMode("measured");
+      setConfirmedFields((previous) => [...new Set([...previous, "sitBone"])]);
+      used.push("sitBoneWidthMm");
+    }
+    const heightCmEntry = handoff.getPrefill("heightCm");
+    if (typeof heightCmEntry?.value === "number" && heightCmEntry.value >= 140 && heightCmEntry.value <= 220) {
+      setHeight(heightCmEntry.value);
+      used.push("heightCm");
+    }
+    const weightKgEntry = handoff.getPrefill("weightKg");
+    if (typeof weightKgEntry?.value === "number" && weightKgEntry.value >= 40 && weightKgEntry.value <= 150) {
+      setWeight(weightKgEntry.value);
+      used.push("weightKg");
+    }
+    setPrefilledFields(used);
   }
   const input = useMemo<SaddleWidthInput>(
     () => ({
@@ -112,46 +144,6 @@ export function SaddleWidthCalculatorForm({
     width.finalRecommendedWidthMm < SUPPORTED_WIDTH_RANGE.min ||
     width.finalRecommendedWidthMm > SUPPORTED_WIDTH_RANGE.max;
 
-  useEffect(() => {
-    if (accountMode || !confirmed) return;
-    const { inputMethod, ...measurements } = input;
-    const payload = {
-      ...measurements,
-      measurementMethod: inputMethod,
-      recommendedWidthMm: width.finalRecommendedWidthMm,
-      widthRangeMinMm: width.widthRangeMinMm,
-      widthRangeMaxMm: width.widthRangeMaxMm,
-      primaryWidthClass: width.primaryWidthClass,
-      saddleFamily: suitability.saddleFamily,
-      noseType: suitability.noseType,
-      profileShape: suitability.profileShape,
-      cutoutRecommended: suitability.cutoutRecommended,
-      paddingPreference: suitability.paddingPreference,
-      confidenceScore: width.confidenceScore,
-      confidenceLevel: width.confidenceLevel,
-      explanationKey: width.explanationKey,
-    };
-    const signature = JSON.stringify(payload);
-    if (savedSignature.current === signature) return;
-    let active = true;
-    const timeout = window.setTimeout(() => {
-      void Promise.resolve(saveSession(payload))
-        .then(() => {
-          if (active) {
-            savedSignature.current = signature;
-            setSaveFailed(false);
-          }
-        })
-        .catch(() => {
-          if (active) setSaveFailed(true);
-        });
-    }, 400);
-    return () => {
-      active = false;
-      window.clearTimeout(timeout);
-    };
-  }, [accountMode, confirmed, input, saveSession, suitability, width]);
-
   const label = confirmed ? copy.result : copy.exampleResult;
   const halfWidth = width.finalRecommendedWidthMm * 0.8;
   const halfSitBone = width.resolvedSitBoneWidthMm * 0.8;
@@ -160,6 +152,8 @@ export function SaddleWidthCalculatorForm({
 
   return (
     <ConfiguratorLayout
+      notice={publicMode && <HandoffPrefillNotice calculator="saddle-width" locale={locale} fields={prefilledFields} />}
+      afterResults={publicMode && <PersonalizeAdviceBlock calculator="saddle-width" locale={locale} />}
       eyebrow={copy.eyebrow}
       title={copy.title}
       description={copy.description}
@@ -202,6 +196,7 @@ export function SaddleWidthCalculatorForm({
                   helperText={copy.sitBoneHint}
                   onChange={(value) => {
                     setSitBone(value);
+                    handoff.touch("sitBoneWidthMm", value, "mm", "measured");
                     confirmField("sitBone");
                   }}
                 />
@@ -228,6 +223,7 @@ export function SaddleWidthCalculatorForm({
                   helperText={copy.heightHint}
                   onChange={(value) => {
                     setHeight(value);
+                    handoff.touch("heightCm", value, "cm", "declared");
                     confirmField("height");
                   }}
                 />
@@ -241,6 +237,7 @@ export function SaddleWidthCalculatorForm({
                   helperText={copy.weightHint}
                   onChange={(value) => {
                     setWeight(value);
+                    handoff.touch("weightKg", value, "kg", "declared");
                     confirmField("weight");
                   }}
                 />
@@ -262,14 +259,33 @@ export function SaddleWidthCalculatorForm({
             {!confirmed && (
               <Button
                 variant="outline"
-                onClick={() =>
-                  setConfirmedFields((previous) => [...new Set([...previous, ...fields])])
-                }
+                onClick={() => {
+                  setConfirmedFields((previous) => [...new Set([...previous, ...fields])]);
+                  if (mode === "measured") handoff.touch("sitBoneWidthMm", sitBone, "mm", "measured");
+                  else {
+                    handoff.touch("heightCm", height, "cm");
+                    handoff.touch("weightKg", weight, "kg");
+                  }
+                }}
               >
                 {copy.confirm}
               </Button>
             )}
           </StepCard>
+          {publicMode && <div className="rounded-3xl border border-border bg-card p-5">
+            <label htmlFor="handoff-current-saddle" className="mb-2 block text-sm font-semibold">
+              {inputCopy.currentSaddle}
+            </label>
+            <input id="handoff-current-saddle" type="text" maxLength={120} value={currentSaddle}
+              className="min-h-11 w-full rounded-xl border border-input bg-background px-3 focus-visible:focus-ring"
+              onChange={(event) => {
+                setCurrentSaddle(event.target.value);
+                if (event.target.value.trim()) {
+                  handoff.touch("currentSaddleModel", event.target.value.trim(), "none", "bike");
+                } else handoff.remove("currentSaddleModel");
+              }} />
+            <p className="mt-2 text-sm text-muted-foreground">{inputCopy.optional}</p>
+          </div>}
           <StepCard number={2} title={copy.riding}>
             <div role="group" aria-label={copy.riding} className="grid grid-cols-2 gap-2">
               {RIDES.map((ride) => (
@@ -415,21 +431,6 @@ export function SaddleWidthCalculatorForm({
             </ul>
           </section>
           <AdjustOrder title={copy.order} steps={copy.steps.map((title) => ({ title }))} />
-          {!accountMode && <><Link
-            href={withLocalePrefix("/login?src=saddle-width", locale)}
-            className={
-              "inline-flex min-h-14 items-center justify-center rounded-full bg-primary " +
-              "px-5 py-3 font-bold text-primary-foreground"
-            }
-          >
-            {copy.account}
-          </Link>
-          <p className="text-sm text-muted-foreground">{copy.accountNote}</p></>}
-          {saveFailed && (
-            <p role="status" className="text-sm text-muted-foreground">
-              {copy.saveFailed}
-            </p>
-          )}
         </>
       }
       stickyResult={

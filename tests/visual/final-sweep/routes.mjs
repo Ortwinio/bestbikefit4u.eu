@@ -54,6 +54,8 @@ const publicRoutes = [
 const accountRoutes = [
   "/dashboard",
   "/profile",
+  "/profile/score",
+  "/profile/advice",
   "/profile/improve/body-measurements",
   "/profile/improve/flexibility",
   "/profile/improve/core-stability",
@@ -114,8 +116,8 @@ function concretePath(sourceRoute, blogSlug) {
 }
 
 function expectedResponse(sourceRoute, locale) {
-  if ((sourceRoute === "/bike-fitting" && locale === "nl") ||
-      (sourceRoute === "/bikefitting" && locale === "en")) return { status: 404 };
+  if (sourceRoute === "/bike-fitting" && locale === "nl") return { status: 308, redirectTo: "/nl/bikefitting" };
+  if (sourceRoute === "/bikefitting" && locale === "en") return { status: 308, redirectTo: "/en/bike-fitting" };
   if (sourceRoute === "/use-cases") return { status: 307, redirectTo: `/${locale}/guides` };
   if (sourceRoute === "/use-cases/[slug]") {
     return { status: 307, redirectTo: `/${locale}/guides/bike-fitting-for-lower-back-pain` };
@@ -135,6 +137,7 @@ export function resolveRoutes({ blogSlug } = {}) {
     ...publicRoutes.map((sourceRoute) => ({ sourceRoute, kind: "public", group: "(public)" })),
     { sourceRoute: "/login", kind: "auth", group: "(auth)" },
     ...accountRoutes.map((sourceRoute) => ({ sourceRoute, kind: "account", group: "(dashboard)" })),
+    { sourceRoute: "/welcome", kind: "account", group: "" },
     { sourceRoute: "/app", kind: "installation", group: "" },
   ].map(({ sourceRoute, kind, group }) => {
     const concrete = concretePath(sourceRoute, blogSlug);

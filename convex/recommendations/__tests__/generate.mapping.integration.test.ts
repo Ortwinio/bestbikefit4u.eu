@@ -33,6 +33,8 @@ describe("recommendations.generate mapping integration", () => {
 
     const profile = {
       _id: "profile_1",
+      _creationTime: 1000,
+      updatedAt: 2000,
       userId: "user_1",
       heightCm: 178,
       inseamCm: 82,
@@ -53,8 +55,9 @@ describe("recommendations.generate mapping integration", () => {
         if (id === "profile_1") return profile;
         return null;
       }),
-      query: vi.fn(() => ({
+      query: vi.fn((table: string) => ({
         withIndex: vi.fn(() => ({
+          unique: vi.fn(async () => table === "profiles" ? profile : null),
           collect: vi.fn(async () => []),
         })),
       })),
@@ -106,6 +109,8 @@ describe("recommendations.generate mapping integration", () => {
 
     const profile = {
       _id: "profile_1",
+      _creationTime: 1000,
+      updatedAt: 2000,
       userId: "user_1",
       heightCm: 180,
       inseamCm: 83,
@@ -138,8 +143,9 @@ describe("recommendations.generate mapping integration", () => {
         if (id === "bike_profile_1") return bikeProfile;
         return null;
       }),
-      query: vi.fn(() => ({
+      query: vi.fn((table: string) => ({
         withIndex: vi.fn(() => ({
+          unique: vi.fn(async () => table === "profiles" ? profile : null),
           collect: vi.fn(async () => []),
         })),
       })),

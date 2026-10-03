@@ -1,5 +1,8 @@
 "use client";
 
+import { clearHandoff } from "@/lib/handoff/store";
+import { clearNewsletterSignupIntent } from "@/lib/newsletter/signupIntent";
+
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
@@ -15,6 +18,8 @@ export function AccountMenuFooter() {
   return <div className="mt-5 space-y-3">
     <AccountPlan />
     <Button variant="ghost" className="min-h-11 w-full justify-start gap-3 text-[var(--bbf-petrol-zacht)] hover:bg-white/10" onClick={async () => {
+      clearHandoff();
+      clearNewsletterSignupIntent();
       await signOut();
       router.push(withLocalePrefix("/", locale));
     }}><LogOut size={20} aria-hidden="true" />{messages.common.signOut}</Button>

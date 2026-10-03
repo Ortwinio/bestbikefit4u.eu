@@ -5,9 +5,9 @@ import { isProtectedAppPath } from "@/i18n/navigation";
 const profile = { heightCm: 178, inseamCm: 83, flexibilityScore: "good", coreStabilityScore: 4 };
 describe("account calculator precedence", () => {
   it.each(["saddle-height", "frame-size", "crank-length"] as const)(
-    "restores %s before profile and defaults", (tool) => {
+    "uses live profile before saved %s measurements and defaults", (tool) => {
     const saved = { ...calculatorDefaults[tool], inseamCm: 89 };
-    expect(resolveCalculatorValues(tool, saved, profile)).toEqual({ values: saved, fromProfile: false });
+    expect(resolveCalculatorValues(tool, saved, profile).values.inseamCm).toBe(83);
     expect(resolveCalculatorValues(tool, null, profile).values.inseamCm).toBe(83);
     expect(resolveCalculatorValues(tool, null, null).values.inseamCm).toBe(84);
     expect(resolveCalculatorValues(tool, null, { inseamCm: 500 }).fromProfile).toBe(false);
@@ -15,7 +15,7 @@ describe("account calculator precedence", () => {
   });
   it("maps assessed profile values and keeps untouched defaults as examples", () => {
     const saddle = resolveCalculatorValues("saddle-height", null, profile);
-    expect(saddle.values).toMatchObject({ source: "measured", flexibility: 4, core: 4 });
+    expect(saddle.values).toMatchObject({ source: "estimated", flexibility: 4, core: 4 });
     expect(resolveCalculatorValues("frame-size", null, profile).values).toMatchObject({
       heightCm: 178, heightConfirmed: true, inseamConfirmed: true,
     });

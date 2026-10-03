@@ -4,10 +4,14 @@ import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-libra
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import LoginPage from "./page";
 import AuthLayout, { generateMetadata } from "../layout";
+import { HANDOFF_KEY } from "@/lib/handoff/store";
+import { loginHandoffCopy } from "@/i18n/account/loginHandoff";
+import { NEWSLETTER_INTENT_KEY } from "@/lib/newsletter/signupIntent";
 
 const pushMock = vi.fn();
 const signInMock = vi.fn();
 const logMarketingEventMock = vi.fn();
+const newsletterSaveMock = vi.fn();
 
 let pathname = "/en/login";
 let search = new URLSearchParams("src=pricing_free_cta");
@@ -46,6 +50,8 @@ vi.mock("@convex-dev/auth/react", () => ({
 
 vi.mock("convex/react", () => ({
   useConvexAuth: () => authState,
+  useQuery: () => ({ email: "Rider@example.com" }),
+  useMutation: () => newsletterSaveMock,
 }));
 
 vi.mock("@/components/analytics/MarketingEventTracker", () => ({
@@ -148,6 +154,7 @@ vi.mock("@/components/prototyper-ui/ui/card", () => ({
 }));
 
 beforeEach(() => {
+  sessionStorage.clear();
   pathname = "/en/login";
   search = new URLSearchParams("src=pricing_free_cta");
   authState = { isAuthenticated: false, isLoading: false };
@@ -155,6 +162,7 @@ beforeEach(() => {
   pushMock.mockReset();
   signInMock.mockReset();
   logMarketingEventMock.mockReset();
+  newsletterSaveMock.mockReset().mockResolvedValue({ newsletter: true, granted: true });
 });
 
 afterEach(() => {
@@ -162,6 +170,68 @@ afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
   vi.unstubAllEnvs();
+});
+
+describe("calculator handoff login", () => {
+  const fixture = () => JSON.stringify({ version: 1, entries: [{
+    field: "inseamCm", value: 82.5, unit: "cm", calculator: "saddle-height",
+    method: "measured", touchedAt: Date.now(),
+  }] });
+
+  it.each(["en", "nl"] as const)("shows %s stored values without importing or logging them", async (locale) => {
+    pathname = `/${locale}/login`;
+    search = new URLSearchParams("src=saddle-height&handoff=1");
+    const stored = fixture();
+    sessionStorage.setItem(HANDOFF_KEY, stored);
+    render(<LoginPage />);
+    expect(await screen.findByText(loginHandoffCopy[locale].title)).toBeTruthy();
+    expect(screen.getByText(`${(82.5).toLocaleString(locale)} cm`)).toBeTruthy();
+    expect(screen.queryByText("Ontwerpstaat")).toBeNull();
+    expect(sessionStorage.getItem(HANDOFF_KEY)).toBe(stored);
+    expect(JSON.stringify(logMarketingEventMock.mock.calls)).not.toContain("82.5");
+  });
+
+  it.each([null, "{broken", '{"version":2,"entries":[]}'])("keeps login usable with unusable storage %s", (stored) => {
+    search = new URLSearchParams("handoff=1");
+    if (stored !== null) sessionStorage.setItem(HANDOFF_KEY, stored);
+    render(<LoginPage />);
+    expect(screen.getByText(loginHandoffCopy.en.empty)).toBeTruthy();
+    expect(screen.getAllByPlaceholderText("you@example.com").length).toBeGreaterThan(0);
+  });
+
+  it.each(["en", "nl"] as const)("routes authenticated %s handoffs to welcome without clearing", async (locale) => {
+    pathname = `/${locale}/login`;
+    search = new URLSearchParams("handoff=1");
+    const stored = fixture();
+    sessionStorage.setItem(HANDOFF_KEY, stored);
+    authState = { isAuthenticated: true, isLoading: true };
+    const view = render(<LoginPage />);
+    expect(pushMock).not.toHaveBeenCalled();
+    authState = { isAuthenticated: true, isLoading: false };
+    view.rerender(<LoginPage />);
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith(`/${locale}/welcome`));
+    expect(sessionStorage.getItem(HANDOFF_KEY)).toBe(stored);
+  });
+
+  it.each(["0", "true"])("does not activate the handoff panel for flag %s", (flag) => {
+    search = new URLSearchParams(`handoff=${flag}`);
+    sessionStorage.setItem(HANDOFF_KEY, fixture());
+    render(<LoginPage />);
+    expect(screen.queryByText(loginHandoffCopy.en.title)).toBeNull();
+  });
+
+  it("sends only auth parameters and the clean welcome destination", async () => {
+    search = new URLSearchParams("handoff=1&src=saddle-height");
+    signInMock.mockResolvedValue({ signingIn: false });
+    render(<LoginPage />);
+    const input = screen.getAllByPlaceholderText("you@example.com")[0];
+    fireEvent.change(input, { target: { value: "test@example.com" } });
+    fireEvent.submit(input.closest("form")!);
+    await waitFor(() => expect(signInMock).toHaveBeenCalledWith("resend", {
+      email: "test@example.com", locale: "en", redirectTo: "/en/welcome",
+    }));
+    expect(pushMock).not.toHaveBeenCalled();
+  });
 });
 
 describe("login page", () => {
@@ -330,11 +400,66 @@ it("keeps the resend cooldown, retry feedback and email reset", async () => {
   expect(screen.queryByRole("status")).toBeNull();
 });
 
-it.each(["en", "nl"])("redirects authenticated %s sessions to the localized dashboard", (locale) => {
+it.each(["en", "nl"])("redirects authenticated %s sessions to the localized dashboard", async (locale) => {
   pathname = `/${locale}/login`;
   authState = { isAuthenticated: true, isLoading: false };
   render(<LoginPage />);
-  expect(pushMock).toHaveBeenCalledWith(`/${locale}/dashboard`);
+  await waitFor(() => expect(pushMock).toHaveBeenCalledWith(`/${locale}/dashboard`));
+});
+
+describe("explicit newsletter signup choice", () => {
+  it.each(["nl", "en"] as const)("starts unchecked and does not infer consent in %s", locale => {
+    pathname = `/${locale}/login`;
+    render(<LoginPage />);
+    const checkbox = screen.getByRole("checkbox");
+    expect(checkbox.getAttribute("aria-checked")).toBe("false");
+    expect(sessionStorage.getItem(NEWSLETTER_INTENT_KEY)).toBeNull();
+    expect(newsletterSaveMock).not.toHaveBeenCalled();
+  });
+
+  it("binds a checked email choice to verification, saves before redirect and retains the handoff", async () => {
+    search = new URLSearchParams("handoff=1");
+    signInMock.mockResolvedValueOnce({ signingIn: false }).mockResolvedValueOnce({ signingIn: true });
+    const view = render(<LoginPage />);
+    fireEvent.click(screen.getByRole("checkbox"));
+    const input = screen.getByPlaceholderText("you@example.com");
+    fireEvent.change(input, { target: { value: "Rider@example.com" } });
+    fireEvent.submit(input.closest("form")!);
+    await screen.findByLabelText("Verification Code");
+    expect(newsletterSaveMock).not.toHaveBeenCalled();
+    const intent = JSON.parse(sessionStorage.getItem(NEWSLETTER_INTENT_KEY)!);
+    expect(Object.keys(intent)).not.toContain("email");
+    expect(signInMock.mock.calls[0][1].redirectTo).toBe("/en/login?handoff=1");
+    const code = screen.getByLabelText("Verification Code");
+    fireEvent.change(code, { target: { value: "ABC1234" } });
+    fireEvent.submit(code.closest("form")!);
+    await waitFor(() => expect(signInMock).toHaveBeenCalledTimes(2));
+    authState = { isAuthenticated: true, isLoading: false };
+    view.rerender(<LoginPage />);
+    await waitFor(() => expect(newsletterSaveMock).toHaveBeenCalledOnce());
+    expect(newsletterSaveMock).toHaveBeenCalledWith({ subscribed: true, source: "signup",
+      expectedEmail: "Rider@example.com", consent: { requestId: intent.requestId, locale: "en", wordingVersion: "newsletter-v1" } });
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith("/en/welcome"));
+    expect(sessionStorage.getItem(NEWSLETTER_INTENT_KEY)).toBeNull();
+    expect(logMarketingEventMock).toHaveBeenCalledWith({ eventType: "newsletter_opt_in", locale: "en",
+      pagePath: "/en/login", section: "newsletter" });
+  });
+
+  it("clears a staged choice when the user explicitly unchecks it or changes address", async () => {
+    signInMock.mockResolvedValue({ signingIn: false });
+    render(<LoginPage />);
+    fireEvent.click(screen.getByRole("checkbox"));
+    const input = screen.getByPlaceholderText("you@example.com");
+    fireEvent.change(input, { target: { value: "Rider@example.com" } });
+    fireEvent.submit(input.closest("form")!);
+    await screen.findByLabelText("Verification Code");
+    expect(sessionStorage.getItem(NEWSLETTER_INTENT_KEY)).not.toBeNull();
+    fireEvent.click(screen.getByRole("checkbox"));
+    expect(sessionStorage.getItem(NEWSLETTER_INTENT_KEY)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Use a different email" }));
+    expect(screen.getByRole("checkbox").getAttribute("aria-checked")).toBe("false");
+    expect(newsletterSaveMock).not.toHaveBeenCalled();
+  });
 });
 
 it("keeps Google locale, source tracking and failure recovery", async () => {

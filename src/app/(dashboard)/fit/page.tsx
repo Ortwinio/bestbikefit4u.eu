@@ -2,6 +2,7 @@
 import { localizeAccountError } from "@/i18n/account/clientErrors";
 import { fitAuditCopy } from "@/i18n/account/fitAudit";
 import { accountBikeFitCopy } from "@/i18n/account/bikeFitCalculator";
+import { calculatorChainMessages } from "@/i18n/account/calculatorChain";
 import { bikeFitMessages } from "@/i18n/calculators/bikeFit";
 import { validCalculatorState } from "@/lib/calculators/accountState";
 import { calculatorMatchesBike, calculatorPrimaryGoal } from "../../../../convex/sessions/calculatorInputs";
@@ -82,9 +83,11 @@ export default function NewFitSessionPage() {
   const bikes = useQuery(api.bikes.queries.listByUser);
   const createSession = useMutation(api.sessions.mutations.create);
   const requestedBikeId = searchParams?.get("bikeId") ?? null;
+  const calculatorTrial = searchParams?.get("trial") === "1";
   const requestedCalculator = searchParams?.get("calculator") === "bike-fit";
   const calculatorState = useQuery(api.calculatorStates.queries.get,
-    requestedCalculator ? { calculator: "bike-fit" } : "skip");
+    requestedCalculator && bikes !== undefined
+      ? { calculator: "bike-fit", bikeId: bikes?.find((bike) => bike._id === requestedBikeId)?._id } : "skip");
   const calculatorValues = calculatorState?.state.calculator === "bike-fit"
     && validCalculatorState(calculatorState.state) && calculatorState.state.values.source !== "missing"
     ? calculatorState.state.values : null;
@@ -157,7 +160,7 @@ export default function NewFitSessionPage() {
         ridingStyle: effectiveRidingStyle as "recreational" | "fitness" | "sportive" | "racing" | "commuting" | "touring",
         primaryGoal: effectiveRidingGoal as PrimaryGoal,
         bikeId: selectedBike?._id,
-        ...(requestedCalculator && calculatorState ? { calculatorStateId: calculatorState._id } : {}),
+        ...(requestedCalculator && calculatorState ? { calculatorStateId: calculatorState._id, calculatorTrial } : {}),
       });
       if (campaignActive) {
         logMarketingEvent({
@@ -238,6 +241,9 @@ export default function NewFitSessionPage() {
         <h2 id="calculator-inputs-title" className="font-display text-2xl font-bold">{calculatorCopy.sessionTitle}</h2>
         {calculatorValues ? <>
           <p className="text-sm text-muted-foreground">{calculatorCopy.sessionHint}</p>
+          {calculatorTrial && <p role="status" className="text-sm font-semibold">
+            {calculatorChainMessages[locale].trialStatus}
+          </p>}
           <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               [calculatorLabels.height, `${calculatorValues.heightCm.toLocaleString(locale)} cm`],

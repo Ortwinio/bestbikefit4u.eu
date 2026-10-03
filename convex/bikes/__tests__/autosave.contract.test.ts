@@ -33,7 +33,7 @@ function fixture() {
     Object.assign(rows[id], values);
   });
   const query = { withIndex: vi.fn().mockReturnThis(), first: async () => null, collect: async () => [] };
-  return { rows, ctx: { db: { get: async (id: string) => rows[id], patch, query: () => query } } };
+  return { rows, ctx: { db: { get: async (id: string) => rows[id], patch, insert: vi.fn(async () => "observation"), query: () => query } } };
 }
 beforeEach(() => {
   auth.user = "user";

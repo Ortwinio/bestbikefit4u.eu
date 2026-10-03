@@ -49,6 +49,7 @@ vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
 import NewFitSessionPage from "./page";
 
 const completeProfile = {
+  heightCm: 180, inseamCm: 84, flexibilityScore: "average", coreStabilityScore: 3,
   experienceLevel: "intermediate", weeklyHours: "3-6", typicalRideLength: "medium",
   hasPain: "no", positionPriority: "balanced", painAreas: [],
 };
@@ -88,7 +89,24 @@ describe("fit start presentation and preserved session flow", () => {
     fireEvent.click(screen.getByRole("button", { name: roadBike.name }));
     fireEvent.click(startButton());
     await waitFor(() => expect(state.create).toHaveBeenCalledWith({ bikeType: "road", bikeId: "road-bike",
-      ridingStyle: "touring", primaryGoal: "performance", calculatorStateId: "calculator1" }));
+      ridingStyle: "touring", primaryGoal: "performance", calculatorStateId: "calculator1", calculatorTrial: false }));
+    expect(state.values["profiles/queries:getMyProfile"]).toBe(completeProfile);
+  });
+  it("passes an explicit trial and loads only the owned bike's calculator state", async () => {
+    state.search = new URLSearchParams("calculator=bike-fit&bikeId=road-bike&trial=1");
+    state.values["calculatorStates/queries:get"] = { _id: "calculator1", state: {
+      calculator: "bike-fit", values: { heightCm: 186, inseamCm: 88.5, source: "estimated",
+        flexibility: 4, core: 5, category: "road", ambition: "performance" },
+    } };
+    render(<NewFitSessionPage />);
+    expect(screen.getByText("Trial calculation · not saved to profile or bike")).toBeTruthy();
+    expect(state.query.mock.calls.some(([reference, args]) =>
+      getFunctionName(reference) === "calculatorStates/queries:get"
+      && args?.bikeId === "road-bike")).toBe(true);
+    fireEvent.click(startButton());
+    await waitFor(() => expect(state.create).toHaveBeenCalledWith(expect.objectContaining({
+      calculatorTrial: true, calculatorStateId: "calculator1", bikeId: "road-bike",
+    })));
     expect(state.values["profiles/queries:getMyProfile"]).toBe(completeProfile);
   });
   it("does not silently start a normal profile fit when the calculator handoff is missing", () => {

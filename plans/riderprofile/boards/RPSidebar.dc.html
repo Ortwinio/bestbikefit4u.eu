@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Zijbalk met profielscores</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<aside style="width: 264px; min-height: 1400px; display: flex; flex-direction: column; gap: 22px; padding: 28px 20px; box-sizing: border-box; background: #0F2420; color: #FFFFFF; font-family: Figtree, system-ui, sans-serif; font-size: 15px; line-height: 1.4">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 8px; text-decoration: none; color: #FFFFFF">
+<svg width="32" height="32" viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#CFF26A"></circle><circle cx="11" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><circle cx="23" cy="20" r="5" stroke="#0F2420" stroke-width="2.4"></circle><path d="M11 20l4-8h6l2 8M15 12l4 8" stroke="#0F2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px">BestBikeFit<span style="color: #CFF26A">4U</span></span>
+</a>
+
+<a href="RP5Profile.dc.html" aria-label="Riderprofiel: {{vol}} procent volledig, {{betr}} procent betrouwbaar. Open Mijn profiel" style="display: flex; flex-direction: column; gap: 14px; padding: 18px; border-radius: 20px; background: #17332D; color: #FFFFFF; text-decoration: none">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B9CCC6">Riderprofiel</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px; color: #CFF26A">{{level}}</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<div style="position: relative; width: 76px; height: 76px">
+<svg width="76" height="76" viewBox="0 0 76 76" aria-hidden="true"><circle cx="38" cy="38" r="31" fill="none" stroke="#2E4C45" stroke-width="8"></circle><circle cx="38" cy="38" r="31" fill="none" stroke="#7FD3C2" stroke-width="8" stroke-linecap="round" stroke-dasharray="{{volDash}}" transform="rotate(-90 38 38)"></circle></svg>
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 18px">{{vol}}<span style="font-size: 11px; color: #B9CCC6">%</span></div>
+</div>
+<span style="font-size: 12px; color: #B9CCC6">Volledig</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<div style="position: relative; width: 76px; height: 76px">
+<svg width="76" height="76" viewBox="0 0 76 76" aria-hidden="true"><circle cx="38" cy="38" r="31" fill="none" stroke="#2E4C45" stroke-width="8"></circle><circle cx="38" cy="38" r="31" fill="none" stroke="#CFF26A" stroke-width="8" stroke-linecap="round" stroke-dasharray="{{betrDash}}" transform="rotate(-90 38 38)"></circle></svg>
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 18px">{{betr}}<span style="font-size: 11px; color: #B9CCC6">%</span></div>
+</div>
+<span style="font-size: 12px; color: #B9CCC6">Betrouwbaar</span>
+</div>
+</div>
+<div style="padding-top: 12px; border-top: 1px solid #2E4C45; font-size: 13px; color: #E1F2EE">Volgende stap: <strong style="color: #FFFFFF">{{nextStep}}</strong></div>
+</a>
+
+<nav aria-label="Account" style="display: flex; flex-direction: column; gap: 4px; font-size: 15px; font-weight: 600">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+<a href="{{n.href}}" aria-current="{{n.current}}" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; text-decoration: none; background: {{n.bg}}; color: {{n.fg}}"><span>{{n.label}}</span><sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="font-family: 'DM Mono', monospace; font-size: 12px; min-width: 24px; height: 22px; padding: 0 7px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: #FFD66B; color: #0F2420">{{n.badge}}</span></sc-if></a>
+</sc-for>
+</nav>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 20px; background: #17332D">
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 13px; color: #B9CCC6">Sanne</span><strong>Free</strong></div>
+<p style="margin: 0; font-size: 13px; color: #B9CCC6; line-height: 1.45">Je gegevens en basisadvies blijven altijd gratis.</p>
+<a href="Pricing.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 999px; border: 2px solid #CFF26A; color: #CFF26A; font-weight: 700; text-decoration: none">Wat Pro toevoegt</a>
+</div>
+</aside>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["dashboard","profile","advice","bike","saddle"],"default":"dashboard"},"vol":{"editor":"int","min":0,"max":100,"default":68},"betr":{"editor":"int","min":0,"max":100,"default":57},"nextStep":{"editor":null,"default":"meet je armlengte"},"$preview":{"width":264,"height":1400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const active = this.props.active ?? 'dashboard';
+    const vol = Math.round(this.props.vol ?? 68);
+    const betr = Math.round(this.props.betr ?? 57);
+    const c = 2 * Math.PI * 31;
+    const level = vol >= 90 ? 'Compleet' : vol >= 70 ? 'Sterk' : vol >= 40 ? 'Goed op weg' : 'Basis';
+    const items = [
+      ['dashboard', 'Dashboard', 'RP4Dashboard.dc.html', ''],
+      ['profile', 'Mijn profiel', 'RP5Profile.dc.html', ''],
+      ['advice', 'Mijn adviezen', 'RP7Advice.dc.html', '1'],
+      ['bike', 'Mijn fietsen', 'RP8Bike.dc.html', ''],
+      ['saddle', 'Zadelhoogte', 'RP6SaddleAccount.dc.html', ''],
+      ['fit', 'Bike fit', 'FitStart.dc.html', ''],
+      ['pressure', 'Bandenspanning', 'PressureDashboard.dc.html', ''],
+      ['gearing', 'Verzet', 'GearingDashboard.dc.html', ''],
+      ['settings', 'Instellingen', 'Settings.dc.html', '']
+    ];
+    return {
+      vol, betr, level,
+      nextStep: this.props.nextStep ?? 'meet je armlengte',
+      volDash: (vol / 100 * c).toFixed(1) + ' 999',
+      betrDash: (betr / 100 * c).toFixed(1) + ' 999',
+      nav: items.map(([key, label, href, badge]) => ({
+        label, href, badge, hasBadge: badge !== '',
+        current: key === active ? 'page' : 'false',
+        bg: key === active ? '#CFF26A' : 'transparent',
+        fg: key === active ? '#0F2420' : '#E1F2EE'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

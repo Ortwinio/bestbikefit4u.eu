@@ -1,8 +1,15 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
+import { PersonalizeAdviceBlock } from "@/components/calculators/PersonalizeAdviceBlock";
+import { HandoffPrefillNotice } from "@/components/calculators/HandoffPrefillNotice";
+import type { HandoffField } from "@/lib/handoff/store";
 import type { PerformanceValues } from "../../../../../convex/calculatorStates/validators";
 import { performanceDefaults } from "@/lib/calculators/accountState";
+import { getFtpSliderStart } from "../../../../../shared/riderEstimates/ftpSliderStart";
+import type { RiderSex } from "../../../../../shared/riderDemographics";
+import { ftpSliderStartCopy } from "@/i18n/calculators/ftpSliderStart";
 import { useCalculatorValuesChange } from "@/components/calculators/useCalculatorValuesChange";
 import Link from "next/link";
 import {
@@ -40,13 +47,24 @@ import {
 import { FtpRatings, FuelHeadline, FuelResults, Sources } from "./SourcedResults";
 
 // Both public and account routes use this same form and engine.
-export function PerformanceCalculator({ tool, locale, initialValues, onValuesChange, navigation, account = false }: {
+export function PerformanceCalculator({ tool, locale, initialValues, onValuesChange, navigation, account = false, riderProfile, ftpKnown = initialValues !== undefined }: {
   tool: MoreTool; locale: Locale; initialValues?: PerformanceValues;
-  onValuesChange?: (values: PerformanceValues) => void; navigation?: ReactNode; account?: boolean;
+  onValuesChange?: (values: PerformanceValues, confirmedFields?: readonly string[]) => void; navigation?: ReactNode; account?: boolean;
+  riderProfile?: { sex?: RiderSex; weightKg?: number };
+  ftpKnown?: boolean;
 }) {
   const copy = performanceMessages[locale];
+  const handoff = usePublicHandoff(tool, !account);
+  const prefilled = useRef(false);
+  const [edited, setEdited] = useState(false);
+  const [prefilledFields, setPrefilledFields] = useState<HandoffField[]>([]);
   const initial = initialValues ?? performanceDefaults;
-  const [values, setValues] = useState(initial.values);
+  const [values, setValues] = useState(() => ({
+    ...initial.values,
+    riderMass: initialValues?.values.riderMass ?? riderProfile?.weightKg ?? initial.values.riderMass,
+  }));
+  const [ftpTouched, setFtpTouched] = useState(false);
+  const [weightTouched, setWeightTouched] = useState(false);
   const [bike, setBike] = useState<PerformanceBike>(initial.bike);
   const [surface, setSurface] = useState<PerformanceSurface>(initial.surface);
   const [mode, setMode] = useState<"power" | "speed">(initial.mode);
@@ -54,8 +72,57 @@ export function PerformanceCalculator({ tool, locale, initialValues, onValuesCha
   const [method, setMethod] = useState<FtpMethod>(initial.method);
   const [intensity, setIntensity] = useState<PerformanceValues["intensity"]>(initial.intensity);
   const [sweat, setSweat] = useState<SweatLevel>(initial.sweat);
-  useCalculatorValuesChange({ values, bike, surface, mode, comparison, method, intensity, sweat }, onValuesChange);
-  const [edited, setEdited] = useState(false);
+  const ftpStartCopy = ftpSliderStartCopy[locale];
+  const hasFtpSlider = tool === "climb-planner" || (tool === "ftp-wkg" && method === "known");
+  const rememberedFtp = (handoff.getPrefill("ftpWatts")
+    ?? handoff.initialEntries.find((entry) => entry.field === "ftpWatts"))?.value;
+  const hasRememberedFtp = typeof rememberedFtp === "number"
+    && rememberedFtp >= TOOL_RANGES.ftp.min && rememberedFtp <= TOOL_RANGES.ftp.max;
+  const profileWeight = riderProfile?.weightKg;
+  const hasValidProfileWeight = typeof profileWeight === "number" && Number.isFinite(profileWeight)
+    && profileWeight >= TOOL_RANGES.riderMass.min && profileWeight <= TOOL_RANGES.riderMass.max;
+  const ftpStart = hasFtpSlider && !ftpKnown && !ftpTouched && !hasRememberedFtp
+    ? getFtpSliderStart({
+      sex: riderProfile?.sex,
+      weightKg: hasValidProfileWeight || weightTouched || prefilledFields.includes("weightKg")
+        ? values.riderMass : undefined,
+      ...TOOL_RANGES.ftp,
+    }) : null;
+  const ftpPending = ftpStart !== null;
+  useEffect(() => {
+    if (!handoff.ready || prefilled.current || account) return;
+    prefilled.current = true;
+    const fields: HandoffField[] = [];
+    const next: Partial<PerformanceValues["values"]> = {};
+    const weight = handoff.getPrefill("weightKg");
+    if (tool !== "fuel-hydration" && typeof weight?.value === "number" &&
+      weight.value >= 40 && weight.value <= 150) {
+      next.riderMass = weight.value;
+      fields.push("weightKg");
+    }
+    const ftp = handoff.getPrefill("ftpWatts")
+      ?? handoff.initialEntries.find((entry) => entry.field === "ftpWatts");
+    if (!ftpKnown && !ftpTouched && (tool === "ftp-wkg" || tool === "climb-planner") && typeof ftp?.value === "number" &&
+      ftp.value >= 80 && ftp.value <= 500) {
+      next.ftp = ftp.value;
+      if (tool === "ftp-wkg") {
+        setMethod("known");
+        // Stored FTP is an FTP value, never the raw protocol power expected by other modes.
+        if (handoff.getPrefill("ftpMethod")?.value === "known") fields.push("ftpMethod");
+      }
+      fields.push("ftpWatts");
+    }
+    const sweatEntry = handoff.getPrefill("sweatProfile");
+    if (tool === "fuel-hydration" && ["low", "medium", "high"].includes(String(sweatEntry?.value))) {
+      setSweat(sweatEntry!.value as SweatLevel);
+      fields.push("sweatProfile");
+    }
+    setValues((current) => ({ ...current, ...next }));
+    setPrefilledFields(fields);
+    if (fields.length) setEdited(true);
+  }, [handoff, account, tool, ftpKnown, ftpTouched]);
+  useCalculatorValuesChange({ values, bike, surface, mode, comparison, method, intensity, sweat },
+    ftpPending ? undefined : onValuesChange);
   const format = (value: number, digits = 1) =>
     new Intl.NumberFormat(locale, {
       maximumFractionDigits: digits,
@@ -71,14 +138,15 @@ export function PerformanceCalculator({ tool, locale, initialValues, onValuesCha
   const speed = mode === "power" ? forward.speedKmh : values.speed;
   const watts = mode === "power" ? values.power : powerAtSpeed(conditions, values.speed);
   const split = mode === "power" ? forward.split : powerSplit(conditions, values.speed);
-  const climb = climbPlan({
+  const climb = tool === "climb-planner" && !ftpPending ? climbPlan({
     distanceKm: values.distance,
     gradientPct: values.climbGradient,
     ftpWatts: values.ftp,
     riderMassKg: values.riderMass,
     bike,
-  });
-  const ftp = ftpEstimate(method, values[method === "known" ? "ftp" : method], values.riderMass);
+  }) : null;
+  const ftp = tool === "ftp-wkg" && !ftpPending
+    ? ftpEstimate(method, values[method === "known" ? "ftp" : method], values.riderMass) : null;
   const fuel = tool === "fuel-hydration";
   const guidance = fuelHydration({
     durationHours: values.duration,
@@ -90,16 +158,16 @@ export function PerformanceCalculator({ tool, locale, initialValues, onValuesCha
   const carbs = guidance.carbohydrate;
   const fuelValue = carbs.band === "none" ? copy.noCarbs : carbs.gramsPerHour === null ? copy.smallCarbs
     : `${copy.upTo} ${format(carbs.gramsPerHour)}`;
-  const mainValue = fuel
+  const mainValue = ftpPending ? "—" : fuel
     ? fuelValue
     : tool === "ftp-wkg"
-      ? format(ftp.wattsPerKg, 2)
+      ? format(ftp!.wattsPerKg, 2)
       : tool === "climb-planner"
-        ? climb.minutes === null
+        ? climb!.minutes === null
           ? "—"
-          : format(climb.minutes)
+          : format(climb!.minutes)
         : format(mode === "power" ? speed : watts);
-  const unit = fuel
+  const unit = ftpPending ? "" : fuel
     ? carbs.gramsPerHour && carbs.band !== "none" ? copy.carbsPerHour : ""
     : tool === "ftp-wkg"
       ? "W/kg"
@@ -121,27 +189,59 @@ export function PerformanceCalculator({ tool, locale, initialValues, onValuesCha
     tool === "power-speed" && mode === "power"
       ? forward.limit
       : tool === "climb-planner"
-        ? climb.limit
+        ? climb?.limit
         : null;
   const resultId = `${tool}-result`;
 
+  function changeFtp(value: number) {
+    setFtpTouched(true);
+    if (ftpPending && value === values.ftp) {
+      onValuesChange?.({ values, bike, surface, mode, comparison, method, intensity, sweat }, ["ftpWatts"]);
+    }
+    setValues((current) => ({ ...current, ftp: value }));
+    handoff.touch("ftpWatts", value, "W");
+    if (tool === "ftp-wkg") handoff.touch("ftpMethod", "known", "none");
+    else handoff.remove("ftpMethod");
+    setEdited(true);
+  }
+
   function slider(key: keyof typeof TOOL_RANGES, unit: string) {
+    const displayValue = key === "ftp" ? ftpStart ?? values[key] : values[key];
     return (
+      <div key={key}>
       <Slider
         key={key}
         label={copy[key]}
         min={TOOL_RANGES[key].min}
         max={TOOL_RANGES[key].max}
         step={TOOL_RANGES[key].step}
-        value={values[key]}
-        valueLabel={format(values[key], 2)}
+        value={displayValue}
+        valueLabel={format(displayValue, 2)}
         unit={unit}
-        aria-valuetext={`${format(values[key], 2)} ${unit}`}
+        aria-valuetext={`${format(displayValue, 2)} ${unit}`}
         onChange={(value) => {
+          if (key === "ftp") {
+            changeFtp(value);
+            return;
+          }
           setValues((current) => ({ ...current, [key]: value }));
+          if (key === "riderMass") {
+            setWeightTouched(true);
+            handoff.touch("weightKg", value, "kg");
+          }
           setEdited(true);
         }}
       />
+      {key === "ftp" && ftpPending && (
+        <div className="mt-2 space-y-2">
+          <p className="text-sm text-muted-foreground">{ftpStartCopy.hint}</p>
+          <button type="button" className="min-h-11 rounded-full border border-border px-4 text-sm font-semibold focus-visible:focus-ring"
+            onClick={() => changeFtp(ftpStart)}>
+            {ftpStartCopy.confirm}
+          </button>
+        </div>
+      )}
+      </div>
     );
   }
   function choices<T extends string>(
@@ -179,6 +279,8 @@ export function PerformanceCalculator({ tool, locale, initialValues, onValuesCha
   });
   return (
     <ConfiguratorLayout
+      notice={!account && <HandoffPrefillNotice calculator={tool} locale={locale} fields={prefilledFields} />}
+      afterResults={!account && <PersonalizeAdviceBlock calculator={tool} locale={locale} />}
       eyebrow={copy.eyebrow}
       title={copy.titles[tool]}
       description={copy.intro}
@@ -201,7 +303,12 @@ export function PerformanceCalculator({ tool, locale, initialValues, onValuesCha
             )}
             {tool === "ftp-wkg" && (
               <>
-                {choices(copy.method, copy.methods, method, setMethod)}
+                {choices(copy.method, copy.methods, method, (value) => {
+                  setMethod(value);
+                  // A different protocol must not relabel an earlier FTP or carry its untouched default.
+                  handoff.remove("ftpWatts");
+                  handoff.touch("ftpMethod", value, "none");
+                })}
                 {slider(method === "known" ? "ftp" : method, "W")}
                 <p className="text-sm text-muted-foreground">{copy.convention}</p>
               </>
@@ -218,7 +325,10 @@ export function PerformanceCalculator({ tool, locale, initialValues, onValuesCha
               <>
                 {slider("temperature", "°C")}
                 {slider("bottleSize", "ml")}
-                {choices(copy.sweat, copy.sweats, sweat, setSweat)}
+                {choices(copy.sweat, copy.sweats, sweat, (value) => {
+                  setSweat(value);
+                  handoff.touch("sweatProfile", value, "none");
+                })}
               </>
             ) : (
               slider("riderMass", "kg")
@@ -244,6 +354,7 @@ export function PerformanceCalculator({ tool, locale, initialValues, onValuesCha
         </>
       }
       results={
+        ftpPending ? <p id={resultId} role="status" className="rounded-3xl border border-border bg-card p-6">{ftpStartCopy.pending}</p> :
         <>
           <div id={resultId} className="scroll-mt-8">
             {fuel ? (
@@ -253,7 +364,7 @@ export function PerformanceCalculator({ tool, locale, initialValues, onValuesCha
               label={edited ? metric : `${copy.example} · ${metric}`}
               value={mainValue}
               unit={tool === "ftp-wkg" && comparison !== "both"
-                ? `${unit} · ${copy.comparisons[comparison]} · ${copy.ratings[ftpRating(ftp.wattsPerKg, comparison)]}`
+                ? `${unit} · ${copy.comparisons[comparison]} · ${copy.ratings[ftpRating(ftp!.wattsPerKg, comparison)]}`
                 : unit}
               subtext={fuel ? copy.fuelStart : copy.noWind}
             >
@@ -330,26 +441,26 @@ export function PerformanceCalculator({ tool, locale, initialValues, onValuesCha
           {tool === "climb-planner" && (
             <>
               <div className="grid grid-cols-2 gap-3">
-                <ResultTile label={copy.targetPower} value={format(climb.targetPowerWatts)} unit="W" />
-                <ResultTile label={copy.estimatedSpeed} value={format(climb.speedKmh)} unit={copy.kmh} />
+                <ResultTile label={copy.targetPower} value={format(climb!.targetPowerWatts)} unit="W" />
+                <ResultTile label={copy.estimatedSpeed} value={format(climb!.speedKmh)} unit={copy.kmh} />
               </div>
               <p className="px-2 text-sm text-muted-foreground">{copy.pacing}</p>
             </>
           )}
           {tool === "ftp-wkg" && (
             <>
-              <FtpRatings locale={locale} wattsPerKg={ftp.wattsPerKg} onComparisonChange={setComparison} />
-              <ResultTile label={copy.ftpResult} value={format(ftp.ftpWatts)} unit="W" />
+              <FtpRatings locale={locale} wattsPerKg={ftp!.wattsPerKg} onComparisonChange={setComparison} />
+              <ResultTile label={copy.ftpResult} value={format(ftp!.ftpWatts)} unit="W" />
               <div className="grid grid-cols-2 gap-3">
                 <ResultTile
                   label={copy.flat}
-                  value={format(ftp.flat.speedKmh)}
+                  value={format(ftp!.flat.speedKmh)}
                   unit={copy.kmh}
-                  status={ftp.flat.limit ? copy.capped : undefined}
+                  status={ftp!.flat.limit ? copy.capped : undefined}
                 />
                 <ResultTile
                   label={copy.referenceClimb}
-                  value={ftp.climbMinutes === null ? "—" : format(ftp.climbMinutes)}
+                  value={ftp!.climbMinutes === null ? "—" : format(ftp!.climbMinutes)}
                   unit="min"
                 />
               </div>
@@ -377,12 +488,12 @@ export function PerformanceCalculator({ tool, locale, initialValues, onValuesCha
               </ol>
             </section>
           )}
-          {!fuel && (
+          {!fuel && !account && (
             <section className="rounded-3xl bg-[var(--bbf-inkt)] p-6 text-[var(--bbf-wit)]">
               <h2 className="font-display text-2xl font-bold text-[var(--bbf-wit)]">{copy.next}</h2>
               <p className="my-4 text-[var(--bbf-op-donker)]">{copy.nextBody}</p>
               <Link
-                href={withLocalePrefix(account ? "/gearing" : "/calculators/gearing", locale)}
+                href={withLocalePrefix("/calculators/gearing", locale)}
                 className={
                   "inline-flex min-h-11 items-center rounded-full bg-primary px-5 " +
                   "font-bold text-primary-foreground"

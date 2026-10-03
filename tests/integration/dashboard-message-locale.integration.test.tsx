@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
+import { getFunctionName, type FunctionReference } from "convex/server";
 const { usePathnameMock, useRouterMock, useConvexAuthMock, useQueryMock, useMutationMock } =
   vi.hoisted(() => ({
     usePathnameMock: vi.fn(),
@@ -125,7 +126,11 @@ import DashboardLayout from "../../src/app/(dashboard)/layout";
 describe("dashboard message locale integration", () => {
   it("renders a locale-targeted dashboard banner in the shell", () => {
     usePathnameMock.mockReturnValue("/nl/dashboard");
-    useQueryMock.mockImplementation((_fn: unknown, args?: unknown) => {
+    useQueryMock.mockImplementation((reference: FunctionReference<"query">, args?: unknown) => {
+      if (getFunctionName(reference) === "profiles/queries:getMyProvenance") {
+        expect(args).toEqual({});
+        return { profile: null, observations: [], bikes: [] };
+      }
       if (args === undefined) {
         return { _id: "user_1", adminRole: null };
       }

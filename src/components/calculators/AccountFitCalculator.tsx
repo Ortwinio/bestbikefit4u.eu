@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { SaddleHeightCalculatorForm } from "@/app/(public)/calculators/saddle-height/SaddleHeightCalculatorForm";
@@ -11,7 +10,9 @@ import { accountCalculatorMessages } from "@/i18n/account/calculators";
 import { autosaveMessages } from "@/i18n/account/autosave";
 import { crankLengthMessages } from "@/i18n/calculators/crankLength";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { withLocalePrefix } from "@/i18n/navigation";
+import type { ChainPanelController } from "./useCalculatorChain";
+import { CalculatorChainLayout } from "./CalculatorChainPanel";
+import { AccountCalculatorBike, useAccountCalculatorBike } from "./AccountCalculatorBike";
 import { useCalculatorAccountState } from "./useCalculatorAccountState";
 type FitCalculatorId = "saddle-height" | "frame-size" | "crank-length";
 
@@ -25,49 +26,99 @@ export function AccountFitCalculator({ calculator }: { calculator: FitCalculator
   return <CrankEditor key={user._id} />;
 }
 
-function AccountFrame({ state, children }: {
-  state: Pick<ReturnType<typeof useCalculatorAccountState>, "ready" | "fromProfile" | "autosave">;
+function AccountFrame({ state, children, calculator, selection }: {
+  calculator: FitCalculatorId;
+  selection: ReturnType<typeof useAccountCalculatorBike>;
+  state: Pick<ReturnType<typeof useCalculatorAccountState>, "ready" | "fromProfile" | "autosave" | "context">
+    & { chain: ChainPanelController };
   children: React.ReactNode;
 }) {
   const { locale } = useDashboardMessages();
   const copy = accountCalculatorMessages[locale];
-  if (!state.ready) return <p role="status" className="p-8">{copy.loading}</p>;
+  if (!state.ready || !selection.ready) return <p role="status" className="p-8">{copy.loading}</p>;
   return (
-    <AutosaveField flush={state.autosave.flush} commitOn="release"
-      className={"[&_[data-slot=configurator-sticky-result]]:bottom-[calc(68px+max(8px,env(safe-area-inset-bottom)))] "
-        + "md:[&_[data-slot=configurator-sticky-result]]:bottom-0"}>
+    <AutosaveField
+      flush={state.autosave.flush}
+      commitOn="release"
+      className={
+        "[&_[data-slot=configurator-sticky-result]]:bottom-[calc(68px+max(8px,env(safe-area-inset-bottom)))] " +
+        "md:[&_[data-slot=configurator-sticky-result]]:bottom-0"
+      }
+    >
       <div className="mx-auto max-w-[1440px] px-4 pt-6 sm:px-8 xl:px-16">
-        {state.fromProfile && <p className="text-sm text-muted-foreground">
-          {copy.fromProfile}{" · "}
-          <Link className="inline-flex min-h-11 items-center underline focus-visible:focus-ring"
-            href={withLocalePrefix("/profile", locale)}>{copy.profile}</Link>
-        </p>}
-        <p className="text-sm text-muted-foreground">{copy.savedSeparately}</p>
         <AutosaveStatus {...state.autosave} messages={autosaveMessages[locale]} onRetry={state.autosave.retry} />
       </div>
-      {children}
+      <AccountCalculatorBike selection={selection} locale={locale} />
+      <CalculatorChainLayout
+        calculator={calculator}
+        locale={locale}
+        chain={state.chain}
+        context={state.context}
+        bikeId={selection.bikeId}
+      >
+        {children}
+      </CalculatorChainLayout>
     </AutosaveField>
   );
 }
+
 function SaddleEditor() {
-  const state = useCalculatorAccountState("saddle-height");
+  const selection = useAccountCalculatorBike();
+  const state = useCalculatorAccountState("saddle-height", { bikeId: selection.bikeId });
   const { locale } = useDashboardMessages();
-  return <AccountFrame state={state}>{state.ready && <SaddleHeightCalculatorForm
-    isNl={locale === "nl"} initialValues={state.values} onValuesChange={state.setValues} />}</AccountFrame>;
+  return (
+    <AccountFrame state={state} calculator="saddle-height" selection={selection}>
+      {state.ready && (
+        <SaddleHeightCalculatorForm
+          key={state.formKey}
+          isNl={locale === "nl"}
+          initialValues={state.values}
+          onValuesChange={state.setValues}
+        />
+      )}
+    </AccountFrame>
+  );
 }
+
 function FrameEditor() {
-  const state = useCalculatorAccountState("frame-size");
+  const selection = useAccountCalculatorBike();
+  const state = useCalculatorAccountState("frame-size", { bikeId: selection.bikeId });
   const { locale } = useDashboardMessages();
-  return <AccountFrame state={state}>{state.ready && <FrameSizeCalculatorForm
-    locale={locale} initialValues={state.values} onValuesChange={state.setValues} />}</AccountFrame>;
+  const inseamKind = state.chain.usedInputs.find((input) => input.field === "inseamCm")?.kind;
+  return (
+    <AccountFrame state={state} calculator="frame-size" selection={selection}>
+      {state.ready && (
+        <FrameSizeCalculatorForm
+          key={state.formKey}
+          locale={locale}
+          initialValues={state.values}
+          initialInseamSource={inseamKind === "measured" ? "measured" : "estimated"}
+          onValuesChange={state.setValues}
+        />
+      )}
+    </AccountFrame>
+  );
 }
+
 function CrankEditor() {
-  const state = useCalculatorAccountState("crank-length");
+  const selection = useAccountCalculatorBike();
+  const state = useCalculatorAccountState("crank-length", { bikeId: selection.bikeId });
   const { locale } = useDashboardMessages();
   const accountCopy = accountCalculatorMessages[locale];
-  const copy = { ...crankLengthMessages[locale], intro: accountCopy.crankIntro,
-    save: accountCopy.nextFit, saveHint: accountCopy.nextFitHint };
-  return <AccountFrame state={state}>{state.ready && <CrankLengthCalculatorForm
-    locale={locale} copy={copy} initialCategory="road" continueHref="/fit"
-    initialValues={state.values} onValuesChange={state.setValues} />}</AccountFrame>;
+  const copy = { ...crankLengthMessages[locale], intro: accountCopy.crankIntro };
+  return (
+    <AccountFrame state={state} calculator="crank-length" selection={selection}>
+      {state.ready && (
+        <CrankLengthCalculatorForm
+          key={state.formKey}
+          locale={locale}
+          copy={copy}
+          initialCategory="road"
+          showContinue={false}
+          initialValues={state.values}
+          onValuesChange={state.setValues}
+        />
+      )}
+    </AccountFrame>
+  );
 }

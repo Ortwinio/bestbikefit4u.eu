@@ -23,11 +23,15 @@ export const calculatorDefaults = {
   },
 } satisfies { [K in CalculatorId]: CalculatorValues<K> };
 
-type Profile = {
+export type CalculatorProfile = {
   weightKg?: number; ftpWatts?: number;
   heightCm?: number; inseamCm?: number; flexibilityScore?: string; coreStabilityScore?: number;
-  ridingGoal?: string; positionPriority?: string;
+  ridingGoal?: string; positionPriority?: string; ftpMethod?: string; sweatProfile?: string;
 };
+export interface CalculatorBike {
+  bikeType?: string; bikeWeightKg?: number; primaryGoal?: string;
+  currentSetup?: { saddleHeightMm?: number; crankLengthMm?: number };
+}
 const inRange = (value: number | undefined, min: number, max: number): value is number =>
   value !== undefined && Number.isFinite(value) && value >= min && value <= max;
 
@@ -54,28 +58,53 @@ export function validCalculatorState(state: CalculatorState): boolean {
 }
 
 export function resolveCalculatorValues<K extends CalculatorId>(
-  calculator: K, saved: CalculatorValues<K> | null | undefined, profile?: Profile | null,
+  calculator: K, saved: CalculatorValues<K> | null | undefined, profile?: CalculatorProfile | null,
+  bike?: CalculatorBike | null,
 ): { values: CalculatorValues<K>; fromProfile: boolean } {
-  if (saved) return { values: saved, fromProfile: false };
-  const values: Record<string, unknown> = { ...calculatorDefaults[calculator] };
+  const defaults = calculatorDefaults[calculator];
+  const values: Record<string, unknown> = { ...defaults, ...saved };
+  // Saved states retain preferences only. Body/bike observations always come from the live account.
+  const authoritative = ["inseamCm", "heightCm", "source", "inseamConfirmed", "heightConfirmed", "confirmed",
+    "flexibility", "core", "category", "ambition", "current", "currentConfirmed"];
+  for (const key of authoritative) {
+    if (!bike && ["category", "current", "currentConfirmed"].includes(key)) continue;
+    if (key in defaults) values[key] = (defaults as Record<string, unknown>)[key];
+  }
   let fromProfile = false;
   if ("values" in values) {
-    const inputs = { ...performanceDefaults.values };
-    if (calculator !== "fuel-hydration" && inRange(profile?.weightKg, 40, 150)) {
+    const inputs = { ...performanceDefaults.values, ...((saved as PerformanceValues | undefined)?.values ?? {}) };
+    inputs.riderMass = performanceDefaults.values.riderMass;
+    inputs.ftp = performanceDefaults.values.ftp;
+    if (bike) {
+      inputs.bikeMass = performanceDefaults.values.bikeMass;
+      values.bike = performanceDefaults.bike;
+    }
+    values.sweat = performanceDefaults.sweat;
+    values.method = performanceDefaults.method;
+    if (inRange(profile?.weightKg, 40, 150)) {
       inputs.riderMass = profile.weightKg;
       fromProfile = true;
     }
-    if (calculator !== "fuel-hydration" && inRange(profile?.ftpWatts, 80, 500)) {
+    if (inRange(profile?.ftpWatts, 80, 500)) {
       inputs.ftp = profile.ftpWatts;
-      if (calculator === "power-speed") inputs.power = profile.ftpWatts;
+      if (calculator === "power-speed" && !saved) inputs.power = profile.ftpWatts;
       fromProfile = true;
     }
+    if (inRange(bike?.bikeWeightKg, TOOL_RANGES.bikeMass.min, TOOL_RANGES.bikeMass.max)) {
+      inputs.bikeMass = bike.bikeWeightKg;
+    }
+    if (["road", "gravel", "mountain", "city", "tt_triathlon"].includes(bike?.bikeType ?? "")) {
+      values.bike = bike!.bikeType;
+    }
+    // An already stored FTP is a known wattage; its protocol does not supply raw ramp/20-minute power.
+    values.method = "known";
+    if (["low", "medium", "high"].includes(profile?.sweatProfile ?? "")) values.sweat = profile!.sweatProfile;
     // Comparison starts at both tables; no inference from a rider's sex/gender.
     return { values: { ...values, values: inputs } as CalculatorValues<K>, fromProfile };
   }
   if (inRange(profile?.inseamCm, 55, 105)) {
     values.inseamCm = profile.inseamCm;
-    if (calculator === "saddle-height") values.source = "measured";
+    if (calculator === "saddle-height") values.source = "estimated";
     if (calculator === "frame-size") values.inseamConfirmed = true;
     if (calculator === "crank-length") values.confirmed = true;
     fromProfile = true;
@@ -95,11 +124,21 @@ export function resolveCalculatorValues<K extends CalculatorId>(
       values.core = profile.coreStabilityScore;
       fromProfile = true;
     }
-    const goal = calculator === "bike-fit" ? profile.positionPriority ?? profile.ridingGoal : profile.ridingGoal;
+    const goal = bike?.primaryGoal === "aerodynamics" ? "aero"
+      : bike?.primaryGoal ?? profile.positionPriority ?? profile.ridingGoal;
     if (["comfort", "balanced", "performance", "aero"].includes(goal ?? "")) {
       values.ambition = goal;
       fromProfile = true;
     }
+  }
+  if (bike?.bikeType) {
+    const category = bike.bikeType === "mountain" ? "mtb" : bike.bikeType;
+    if (["road", "gravel", "mtb", "city"].includes(category)) values.category = category;
+  }
+  if (calculator === "saddle-height" && inRange(bike?.currentSetup?.saddleHeightMm, 400, 1100)) {
+    values.current = bike.currentSetup.saddleHeightMm;
+    values.currentConfirmed = true;
+    values.compare = true;
   }
   return { values: values as CalculatorValues<K>, fromProfile };
 }

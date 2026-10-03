@@ -1,4 +1,7 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useState, type ReactNode } from "react";
+import { useCalculatorChainSlots } from "@/components/calculators/CalculatorChainSlots";
 import { cn } from "@/utils/cn";
 
 export interface ConfiguratorLayoutProps {
@@ -6,6 +9,8 @@ export interface ConfiguratorLayoutProps {
   title: ReactNode;
   description?: ReactNode;
   navigation?: ReactNode;
+  notice?: ReactNode;
+  afterResults?: ReactNode;
   inputs: ReactNode;
   results: ReactNode;
   /** A compact summary or result anchor shown at the bottom on smaller screens. */
@@ -18,11 +23,15 @@ export function ConfiguratorLayout({
   title,
   description,
   navigation,
+  notice,
+  afterResults,
   inputs,
   results,
   stickyResult,
   className,
 }: ConfiguratorLayoutProps) {
+  const chain = useCalculatorChainSlots();
+  const [expanded, setExpanded] = useState(chain?.expandInputs ?? false);
   return (
     <div
       className={cn(
@@ -43,14 +52,24 @@ export function ConfiguratorLayout({
           </div>
         )}
       </header>
+      {notice && <div className="mb-6">{notice}</div>}
       <div className="grid min-w-0 items-start gap-6 xl:grid-cols-[minmax(520px,540px)_minmax(0,1fr)] xl:gap-8">
         <div data-slot="configurator-inputs" className="flex min-w-0 flex-col gap-4">
-          {inputs}
+          {chain?.inputs}
+          {chain ? <details open={expanded} onToggle={(event) => setExpanded(event.currentTarget.open)}
+            className="group min-w-0">
+            <summary className="mb-4 flex min-h-11 cursor-pointer items-center rounded-2xl bg-muted px-4 font-semibold">
+              {chain.editLabel}
+            </summary>
+            <div className="flex min-w-0 flex-col gap-4">{inputs}</div>
+          </details> : inputs}
         </div>
         <div data-slot="configurator-results" className="flex min-w-0 flex-col gap-4">
           {results}
         </div>
       </div>
+      {chain?.afterResults && <div className="mt-8">{chain.afterResults}</div>}
+      {afterResults && <div className="mt-8">{afterResults}</div>}
       {stickyResult && (
         <div
           data-slot="configurator-sticky-result"

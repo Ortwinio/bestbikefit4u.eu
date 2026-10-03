@@ -8,6 +8,10 @@ import {
 import { trackAdConversion } from "./conversions";
 
 describe("marketing analytics helpers", () => {
+  it("allows newsletter consent events only for authenticated logging", () => {
+    expect(MARKETING_EVENT_TYPES).toContain("newsletter_opt_in");
+    expect(ANONYMOUS_MARKETING_EVENT_TYPES).not.toContain("newsletter_opt_in");
+  });
   it("keeps public event types typed and discoverable", () => {
     expect(MARKETING_EVENT_TYPES).toContain("pricing_view");
     expect(MARKETING_EVENT_TYPES).toContain("pain_page_view");

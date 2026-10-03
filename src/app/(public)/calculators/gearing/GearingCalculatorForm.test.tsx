@@ -7,9 +7,17 @@ vi.mock("convex/react", () => ({ useMutation: () => save }));
 afterEach(() => {
   cleanup();
   save.mockClear();
+  sessionStorage.clear();
 });
 
 describe("gearing sliders and live result", () => {
+  it.each([true, false])("keeps public gearing FTP-free with visible gear results (NL=%s)", (isNl) => {
+    render(<GearingCalculatorForm isNl={isNl} />);
+    expect(screen.queryByRole("slider", { name: /FTP/i })).toBeNull();
+    expect(screen.queryByRole("spinbutton")).toBeNull();
+    expect(screen.getByTestId("gearing-chainring")).toBeTruthy();
+    expect(save).not.toHaveBeenCalled();
+  });
   it("restores account values without anonymous writes and reports only edits", () => {
     const changed = vi.fn();
     render(<GearingCalculatorForm isNl accountMode initialValues={{ outerChainringTeeth: 48, cadenceRpm: 92 }}
@@ -37,7 +45,7 @@ describe("gearing sliders and live result", () => {
     expect(screen.getByTestId("gearing-chainring").getAttribute("r")).toBe("70");
     expect(screen.queryByRole("spinbutton")).toBeNull();
     expect(screen.queryByRole("combobox")).toBeNull();
-    expect(save).toHaveBeenCalled();
+    expect(save).not.toHaveBeenCalled();
   });
   it("exposes impossible ordering as an error instead of presenting stale results", () => {
     render(<GearingCalculatorForm isNl={false} />);

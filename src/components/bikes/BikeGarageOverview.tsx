@@ -12,6 +12,10 @@ import { getDashboardPressureCalculatorPath } from "@/lib/pressureRoutes";
 import { Mountain, Gauge, Bike, Activity, Ruler, AlertCircle, ArrowRight } from "lucide-react";
 import { FitReportActionGroup } from "@/components/reports";
 import { getBikeUsageCopy } from "@/i18n/account/bikeUsage";
+import type { ProfileScore } from "../../../shared/profileScore/types";
+import { ProfileStrengthRings } from "@/components/profile/ProfileStrengthRings";
+import { getProfileScoreCopy } from "@/i18n/account/profileScore";
+import { bikeProfileFormMessages } from "@/i18n/account/bikeProfileForm";
 import { DeleteBikeAction } from "./DeleteBikeAction";
 
 type DashboardMessages = ReturnType<typeof useDashboardMessages>["messages"];
@@ -20,6 +24,7 @@ export type BikeSummaryRow = {
   _id: string;
   name: string;
   photoUrl?: string;
+  profileScore?: ProfileScore;
   brand?: string;
   model?: string;
   bikeType: Doc<"bikes">["bikeType"];
@@ -123,6 +128,14 @@ export function BikeGarageRow({
   messages: DashboardMessages;
 }) {
   const copy = getBikeUsageCopy(locale);
+  const profileCopy = bikeProfileFormMessages[locale];
+  const scoreCopy = getProfileScoreCopy(locale);
+  const setup = bike.profileScore?.groups.find((group) => group.key === "setup");
+  const setupPercent = setup?.weight ? Math.round(setup.completeness / setup.weight * 100) : 0;
+  const missing = bike.profileScore?.items.filter((item) => !item.complete)
+    .sort((left, right) => right.gain - left.gain)[0];
+  const missingLabel = missing ? scoreCopy.fields[missing.key as keyof typeof scoreCopy.fields] : undefined;
+
   const fitName = latestFit?.session.ridingStyle
     ? messages.sessions.ridingStyle[latestFit.session.ridingStyle]
     : null;
@@ -140,6 +153,15 @@ export function BikeGarageRow({
         <SectionHeader icon={<Bike className="h-5 w-5 text-primary" />} title={bike.name} />
         <CardContent className="space-y-4">
           <BikeImage source={bike.photoUrl} alt={bike.name} />
+          {bike.profileScore && <div className="space-y-3">
+            <ProfileStrengthRings score={bike.profileScore} locale={locale} size="sm" compact title={profileCopy.title} />
+            <p className="text-sm font-semibold">{profileCopy.setup} {setupPercent}%</p>
+            {missing && <Link href={withLocalePrefix(`/bikes/${bike._id}#bike-profile-${missing.key}`, locale)}
+              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm text-primary-foreground">
+              {profileCopy.improve}{missingLabel ? `: ${missingLabel.toLocaleLowerCase(locale)}` : ""}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>}
+          </div>}
           <div className="space-y-1">
             <p className="text-sm font-medium text-foreground">
               {[bike.brand, bike.model].filter(Boolean).join(" ") ||

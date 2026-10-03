@@ -13,6 +13,7 @@ import { StravaAutoImportTrigger } from "@/components/integrations/StravaAutoImp
 import { AccountLanguageSwitch } from "@/components/account/AccountLanguageSwitch";
 import { AccountBottomTabs } from "@/components/account/AccountBottomTabs";
 import { AccountMenuFooter } from "@/components/account/AccountMenuFooter";
+import { AccountProfileStrength } from "@/components/profile/AccountProfileStrength";
 import { accountNavigationGroups, activeAccountPath, accountActiveClassName, accountIdleClassName, accountNavClassName } from "@/components/account/account-navigation";
 import { Dialog, DialogContent, DialogTitle } from "@/components/prototyper-ui/ui/dialog";
 import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
@@ -24,7 +25,7 @@ import { canAccessAdminRoute } from "@/components/admin/auth/admin-route-access"
 import { isAdminRole } from "@/components/admin/auth/admin-auth-shared";
 
 export const DASHBOARD_MOBILE_HEADER_CLASSNAME =
-  "sticky top-0 z-30 flex min-h-[76px] items-center justify-between gap-3 bg-[var(--bbf-inkt)] px-4 py-3 text-white md:hidden";
+  "sticky top-0 z-30 flex min-h-[76px] flex-wrap items-center justify-between gap-3 bg-[var(--bbf-inkt)] px-4 py-3 text-white md:hidden";
 
 export const DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME =
   "panel-backdrop fixed inset-0 z-30 md:hidden";
@@ -97,7 +98,7 @@ export default function DashboardLayoutClient({
         <DashboardSidebar />
       </div>
 
-      <div className={DASHBOARD_MOBILE_HEADER_CLASSNAME}>
+      <header className={DASHBOARD_MOBILE_HEADER_CLASSNAME}>
         <BrandLogo
           href={toLocalizedPath("/")}
           asset="dark"
@@ -122,7 +123,8 @@ export default function DashboardLayoutClient({
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
-      </div>
+        <div className="w-full"><AccountProfileStrength locale={locale} placement="mobile" /></div>
+      </header>
 
       <Dialog open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <DialogContent showCloseButton={false} className={DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME}>

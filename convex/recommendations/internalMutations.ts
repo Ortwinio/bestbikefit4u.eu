@@ -4,6 +4,7 @@ import type { Id } from "../_generated/dataModel";
 import { internal } from "../_generated/api";
 import { getDefaultEngineVersion } from "../lib/engineVersion";
 import { computePressureInsights } from "../lib/pressureFitInteraction";
+import { inputProvenanceValidator } from "../advice/validators";
 
 async function getExistingRecommendationId(
   ctx: MutationCtx,
@@ -39,6 +40,8 @@ const calculatedFitValidator = v.object({
 
 export const storeResult = internalMutation({
   args: {
+    inputProvenance: v.optional(inputProvenanceValidator),
+    suppressEmail: v.optional(v.boolean()),
     sessionId: v.id("fitSessions"),
     userId: v.id("users"),
     calculatedFit: calculatedFitValidator,
@@ -113,6 +116,7 @@ export const storeResult = internalMutation({
     if (existing) return existing;
 
     const session = await ctx.db.get(args.sessionId);
+    if (!session || session.userId !== args.userId) return null;
     const bike = session?.bikeId ? await ctx.db.get(session.bikeId) : null;
     const pressureCalculations =
       session?.bikeId
@@ -152,6 +156,7 @@ export const storeResult = internalMutation({
       comparisonSnapshot: args.comparisonSnapshot,
       recommendationItems: args.recommendationItems,
       calculatedFit: args.calculatedFit,
+      inputProvenance: args.inputProvenance,
       climbingCalculatedFit: args.climbingCalculatedFit,
       confidenceScore: args.confidenceScore,
       algorithmVersion: args.algorithmVersion,
@@ -169,7 +174,7 @@ export const storeResult = internalMutation({
     });
 
     // Schedule results recap email — 60s delay to let user view results first
-    await ctx.scheduler.runAfter(
+    if (!args.suppressEmail) await ctx.scheduler.runAfter(
       60 * 1000,
       internal.emails.lifecycle.sendResultsRecap,
       { userId: args.userId, sessionId: args.sessionId }

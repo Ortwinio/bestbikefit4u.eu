@@ -12,6 +12,18 @@ import {
   DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME,
 } from "./DashboardLayoutClient";
 
+vi.mock("@/components/profile/AccountProfileStrength", () => ({
+  AccountProfileStrength: ({ locale, placement }: { locale: string; placement: string }) =>
+    <div data-testid="profile-strength" data-locale={locale} data-placement={placement} />,
+}));
+
+it("mounts live profile strength in the mobile account header", () => {
+  render(<DashboardLayout>Account page</DashboardLayout>);
+  expect(screen.getByTestId("profile-strength").getAttribute("data-placement")).toBe("mobile");
+  expect(within(screen.getByRole("banner")).getByTestId("profile-strength")).toBeTruthy();
+  expect(within(screen.getByRole("banner")).getByTestId("brand-logo")).toBeTruthy();
+});
+
 const { usePathnameMock, useRouterMock, useConvexAuthMock, useQueryMock } = vi.hoisted(() => ({
   usePathnameMock: vi.fn(),
   useRouterMock: vi.fn(() => ({ replace: vi.fn() })),

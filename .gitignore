@@ -67,3 +67,6 @@ claude/.obsidian/
 
 # Editable illustration and image originals; generated web assets are committed
 /plans/redesign-canvas/illustration-sources/
+
+# Rider-profile review screenshots stay local (not versioned)
+plans/riderprofile/renders/
