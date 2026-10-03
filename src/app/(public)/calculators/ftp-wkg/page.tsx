@@ -1,3 +1,5 @@
+import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { getPerformanceAnswer } from "@/lib/seo/calculatorAnswers/performance";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import { ftpWkgPageMessages } from "@/i18n/calculators/ftpWkgPage";
 import { PerformanceCalculator } from "../power-speed/PerformanceCalculator";
@@ -64,6 +66,9 @@ export default async function FtpWkgCalculatorPage() {
       />
 
       <PerformanceCalculator tool="ftp-wkg" locale={locale} />
+      <CalculatorAnswerSection
+        id="ftp-wkg" locale={locale} content={getPerformanceAnswer("ftp-wkg", locale)}
+      />
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <PublicSection

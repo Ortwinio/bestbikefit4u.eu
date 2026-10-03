@@ -1,0 +1,15 @@
+src/components/science/EditorialLayout.tsx
+src/components/science/editorial-pages.test.tsx
+src/components/account/ProfileWizardGuide.tsx
+src/components/account/ProfileWizardGuide.test.tsx
+src/i18n/marketing/editorialImageAlt.ts
+src/i18n/account/profileWizardGuide.ts
+src/app/(public)/science/calculation-engine/page.tsx
+src/app/(public)/science/bike-fit-methods/page.tsx
+src/app/(public)/science/stack-and-reach/page.tsx
+src/app/(public)/fiets-afstellen/page.tsx
+src/app/(public)/bike-fitting/page.tsx
+src/app/(public)/bikefitting/page.tsx
+src/app/(public)/why-bikefit-matters/page.tsx
+plans/seo-semrush/audit/S6-alt-notes.md
+plans/seo-semrush/audit/files-S6-alt.txt

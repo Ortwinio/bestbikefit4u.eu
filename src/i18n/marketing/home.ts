@@ -2,7 +2,7 @@ import type { Locale } from "@/i18n/config";
 
 type HomeCopy = {
   badge: string; title: string; description: string; start: string; reportLink: string;
-  rating: string; toolsEyebrow: string; toolsTitle: string; toolsDescription: string;
+  toolsEyebrow: string; toolsTitle: string; toolsDescription: string;
   tools: { title: string; description: string }[];
   stepsTitle: string; painEyebrow: string; painTitle: string; readGuide: string;
   pains: { title: string; description: string }[]; testimonialsTitle: string;
@@ -17,7 +17,7 @@ export const homeMarketing: Record<Locale, HomeCopy> = {
   nl: {
     badge: "Online bikefit · gratis starten, geen account nodig", title: "Haal meer uit elke rit.",
     description: "Stel je fiets af op jouw lichaam en rijstijl. Vul je maten in en krijg concrete millimeters voor zadel, reach en stuur.",
-    start: "Start gratis bike fit", reportLink: "Wat zit in het rapport?", rating: "4,8 van 380+ rijders",
+    start: "Start gratis bike fit", reportLink: "Wat zit in het rapport?",
     toolsEyebrow: "Gratis configurators", toolsTitle: "Kies wat je wilt afstellen", toolsDescription: "Gratis tools die je direct kunt gebruiken, zonder account.",
     tools: [
       { title: "Volledige bikefit", description: "Zadel, reach, drop en framemaat in één overzicht." },
@@ -40,13 +40,13 @@ export const homeMarketing: Record<Locale, HomeCopy> = {
     reportTitle: "Je rapport bevat de getallen die ertoe doen", crankAdvice: "Advies voor cranklengte",
     closingTitle: "Begin met een gratis account.", paused: "Betalingen zijn tijdelijk niet beschikbaar. Je kunt wel gratis een account aanmaken.", account: "Maak gratis account", compare: "Vergelijk Free en Pro",
     discover: "Verdiep je verder", foundations: "Fitfundament", guides: "Bikefitting gidsen", scenarios: "Rijsituaties en klachten", allGuides: "Bekijk alle gidsen",
-    foundationLinks: [{ href: "/fiets-afstellen", title: "Fiets afstellen stap voor stap" }, { href: "/bikefitting", title: "Bikefitting uitgelegd" }, { href: "/measurement-guide", title: "Meetgids" }, { href: "/pain", title: "Bikefit bij veelvoorkomende klachten" }, { href: "/science/stack-and-reach", title: "Stack en reach uitgelegd" }],
+    foundationLinks: [{ href: "/guides/road-bike-fit-guide", title: "Racefiets afstellen" }, { href: "/bikefitting", title: "Bikefitting uitgelegd" }, { href: "/measurement-guide", title: "Meetgids" }, { href: "/pain", title: "Bikefit bij veelvoorkomende klachten" }, { href: "/science/stack-and-reach", title: "Stack en reach uitgelegd" }],
     teaser: { try: "Probeer het nu", title: "Startpunt voor je zadel", inseam: "Binnenbeenlengte", direction: "trapas → bovenkant zadel", context: "Racefiets · gebalanceerd · gemiddelde lenigheid en rompstabiliteit. Aanpassingsmarge:", refine: "Verfijn je zadelhoogte", adjust: "Schuif naar jouw maat" },
   },
   en: {
     badge: "Online bike fit · start free, no account needed", title: "Get more from every ride.",
     description: "Set up your bike for your body and riding style. Enter your measurements and get concrete millimeters for saddle, reach, and handlebars.",
-    start: "Start free bike fit", reportLink: "What's in the report?", rating: "4.8 from 380+ riders",
+    start: "Start free bike fit", reportLink: "What's in the report?",
     toolsEyebrow: "Free calculators", toolsTitle: "Choose what to adjust", toolsDescription: "Free tools you can use right away, without an account.",
     tools: [
       { title: "Complete bike fit", description: "Saddle, reach, drop, and frame size in one overview." },

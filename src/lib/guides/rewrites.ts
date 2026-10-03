@@ -1,3 +1,4 @@
+import { getGuideUpdatedDate } from "@/config/authorship";
 import { batchAGuides } from "./content/batch-a";
 import { batchBGuides } from "./content/batch-b";
 import { batchCGuides } from "./content/batch-c";
@@ -53,7 +54,7 @@ export function resolveGuideRewrite(
     ...fallback,
     source: "cms-rewrite",
     illustration: illustration ?? fallback.illustration,
-    updatedAt: cms.lastUpdatedAt ? new Date(cms.lastUpdatedAt).toISOString().slice(0, 10) : fallback.updatedAt,
+    updatedAt: getGuideUpdatedDate(cms.lastUpdatedAt),
     nl: localize("nl"),
     en: localize("en"),
   };

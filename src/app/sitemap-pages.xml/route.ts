@@ -1,6 +1,7 @@
 import { getSitemapNodes } from "@/lib/seo/sitemap/sources";
 import {
   buildXmlHeadResponse,
+  latestSitemapLastmod,
   buildXmlResponse,
   renderUrlSetXml,
 } from "@/lib/seo/sitemap/xml";
@@ -12,7 +13,7 @@ export const revalidate = 3600;
 function buildPayload() {
   const nodes = getSitemapNodes("pages");
   return {
-    lastModified: nodes.map((node) => node.lastmod).sort().at(-1),
+    lastModified: latestSitemapLastmod(nodes),
     xml: renderUrlSetXml(nodes),
   };
 }

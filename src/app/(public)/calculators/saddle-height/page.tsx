@@ -1,3 +1,5 @@
+import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { getFitAnswer } from "@/lib/seo/calculatorAnswers/fit";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import { fitPageDetails } from "@/i18n/calculators/fitPageDetails";
 import type { Metadata } from "next";
@@ -25,8 +27,8 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { getDictionary } from "@/i18n/getDictionary";
 import {
-  CALCULATOR_AGGREGATE_RATING,
   buildHowToSchema,
+  buildFaqPageSchema,
   buildWebApplicationSchema,
 } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
@@ -147,11 +149,11 @@ export default async function SaddleHeightCalculatorPage() {
     <div className="text-foreground">
       <JsonLd
         schema={[
+          buildFaqPageSchema(faqs),
           buildWebApplicationSchema({
             name: fitPageDetails[locale].saddleSchemaName,
             description: fitPageDetails[locale].saddleDescription,
             url: pageUrl,
-            aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
           buildHowToSchema({
             name: isNl ? "Hoe bereken je zadelhoogte" : "How to calculate saddle height",
@@ -171,6 +173,7 @@ export default async function SaddleHeightCalculatorPage() {
       />
 
       <SaddleHeightCalculatorForm isNl={isNl} copy={dictionary.saddleHeightCalculator} />
+      <CalculatorAnswerSection id="saddle-height" locale={locale} content={getFitAnswer("saddle-height", locale)} />
 
       <PublicPageShell className="pt-0 md:pt-0">
         <PublicSection

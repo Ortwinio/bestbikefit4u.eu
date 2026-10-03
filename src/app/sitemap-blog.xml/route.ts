@@ -2,6 +2,7 @@ import { BLOG_SITEMAP_CACHE_CONTROL } from "@/lib/seo/sitemap/config";
 import { getBlogSitemapNodes } from "@/lib/seo/sitemap/sources";
 import {
   buildXmlHeadResponse,
+  latestSitemapLastmod,
   buildXmlResponse,
   renderUrlSetXml,
 } from "@/lib/seo/sitemap/xml";
@@ -13,7 +14,7 @@ export const revalidate = 900;
 async function buildPayload() {
   const nodes = await getBlogSitemapNodes();
   return {
-    lastModified: nodes.map((node) => node.lastmod).sort().at(-1),
+    lastModified: latestSitemapLastmod(nodes),
     xml: renderUrlSetXml(nodes),
   };
 }

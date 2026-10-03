@@ -1,4 +1,5 @@
 import { EditorialFaq } from "@/components/science/EditorialLayout";
+import { editorialImageAlt } from "@/i18n/marketing/editorialImageAlt";
 import {
   nlLandingCopy as page,
   nlLandingFaq as faqItems,
@@ -87,6 +88,7 @@ export default async function BikefittingPage() {
       />
 
       <PublicHero
+        imageAlt={editorialImageAlt.nl.cockpit}
         eyebrow={page.eyebrow}
         title={page.heroTitle}
         description={page.intro}

@@ -1,3 +1,5 @@
+import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { getFitAnswer } from "@/lib/seo/calculatorAnswers/fit";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import { Compass, Ruler, ShieldCheck } from "lucide-react";
@@ -23,7 +25,7 @@ import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getDictionary } from "@/i18n/getDictionary";
 import { getRequestLocale } from "@/i18n/request";
-import { CALCULATOR_AGGREGATE_RATING, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { buildFaqPageSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { FrameSizeCalculatorForm } from "./FrameSizeCalculatorForm";
 
@@ -142,6 +144,7 @@ export default async function FrameSizeCalculatorPage() {
     <>
       <JsonLd
         schema={[
+          buildFaqPageSchema(faqs),
           buildWebApplicationSchema({
             name: isNl
               ? "BestBikeFit4U Framemaat calculator"
@@ -150,12 +153,12 @@ export default async function FrameSizeCalculatorPage() {
               ? "Schat een realistische framemaat op basis van lengte, binnenbeenlengte en fietsdiscipline."
               : "Estimate a realistic frame size based on height, inseam, and bike category.",
             url: pageUrl,
-            aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
         ]}
       />
 
       <FrameSizeCalculatorForm locale={locale} copy={dictionary.frameSizeCalculator} />
+      <CalculatorAnswerSection id="frame-size" locale={locale} content={getFitAnswer("frame-size", locale)} />
       <PublicPageShell className="text-foreground">
         <PublicSection
           className="mt-10"

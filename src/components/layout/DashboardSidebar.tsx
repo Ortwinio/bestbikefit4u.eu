@@ -89,7 +89,6 @@ export function DashboardSidebar() {
             asset="dark"
             className="flex min-h-11 w-[208px] items-center"
             imageClassName="block"
-            ariaLabel={messages.layout.website.home}
           />
         </div>
         <div className="shrink-0 px-5 py-2"><AccountLanguageSwitch /></div>

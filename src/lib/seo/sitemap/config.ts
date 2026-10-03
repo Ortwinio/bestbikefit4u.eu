@@ -9,7 +9,7 @@ import type { SitemapSection } from "./types";
 
 export const SITEMAP_BASE_URL = BRAND.siteUrl;
 export const SITEMAP_INDEX_PATH = "/sitemap.xml";
-export const SITEMAP_SYSTEM_LASTMOD = "2026-02-23";
+export const SITEMAP_SOURCE_TIMEOUT_MS = 1500;
 
 export const DEFAULT_LOCALE_FOR_X_DEFAULT: Locale = DEFAULT_LOCALE;
 

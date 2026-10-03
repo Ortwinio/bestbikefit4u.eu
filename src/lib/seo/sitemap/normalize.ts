@@ -24,15 +24,22 @@ export function toAbsoluteUrl(pathname: string): string {
   return new URL(normalizePathname(pathname), SITEMAP_BASE_URL).toString();
 }
 
-export function normalizeLastmod(rawValue: string): string {
-  if (/^\d{4}-\d{2}-\d{2}$/.test(rawValue)) {
-    return rawValue;
+export function normalizeLastmod(rawValue?: string | number | null): string | undefined {
+  if (rawValue === null || rawValue === undefined) return undefined;
+  if (typeof rawValue === "number") {
+    if (!Number.isFinite(rawValue)) return undefined;
+  } else {
+    if (!/^\d{4}-\d{2}-\d{2}(?:T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,3})?(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d))?$/.test(rawValue)) {
+      return undefined;
+    }
+    const calendarDate = rawValue.slice(0, 10);
+    const calendar = new Date(`${calendarDate}T00:00:00.000Z`);
+    if (!Number.isFinite(calendar.getTime()) || calendar.toISOString().slice(0, 10) !== calendarDate) {
+      return undefined;
+    }
   }
-
   const parsed = new Date(rawValue);
-  if (Number.isNaN(parsed.getTime())) {
-    return new Date().toISOString().slice(0, 10);
-  }
-
-  return parsed.toISOString().slice(0, 10);
+  if (!Number.isFinite(parsed.getTime())) return undefined;
+  const normalized = parsed.toISOString().slice(0, 10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(normalized) ? normalized : undefined;
 }

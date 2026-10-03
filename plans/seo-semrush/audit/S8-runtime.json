@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "path": "/llms.txt",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "bytes": 15520,
+      "headStatus": 200
+    },
+    {
+      "path": "/llms-full.txt",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "bytes": 74277,
+      "headStatus": 200
+    }
+  ]
+}

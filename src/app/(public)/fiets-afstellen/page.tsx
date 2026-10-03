@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { editorialImageAlt } from "@/i18n/marketing/editorialImageAlt";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -148,6 +149,7 @@ export default async function BikeSetupPage() {
         />
 
         <PublicHero
+          imageAlt={editorialImageAlt[locale].cockpit}
           eyebrow={page.eyebrow}
           title={page.title}
           description={page.intro}

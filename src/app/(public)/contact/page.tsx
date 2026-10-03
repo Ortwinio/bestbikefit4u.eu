@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Languages, Mail } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
@@ -50,9 +51,7 @@ function getContent(locale: Locale): ContactCopy {
       responseTimes: "Response Times",
       responseItems: getSupportResponseItems(locale),
       directContactTitle: "Send us an email directly",
-      directContactBody:
-        "For now, the fastest support route is direct email. " +
-        "Include your bike type, goal, and where you are stuck so we can help quickly.",
+      directContactBody: contactPresentation[locale].directContactBody,
       directContactCta: "Open email app",
       directContactHint: "Address: support@bestbikefit4u.eu",
     };
@@ -75,9 +74,7 @@ function getContent(locale: Locale): ContactCopy {
     responseTimes: "Responstijden",
     responseItems: getSupportResponseItems(locale),
     directContactTitle: "Mail ons direct",
-    directContactBody:
-      "Op dit moment helpen we je het snelst via directe e-mail. " +
-      "Vermeld je fietstype, doel en waar je vastloopt voor sneller antwoord.",
+    directContactBody: contactPresentation[locale].directContactBody,
     directContactCta: "Open e-mailapp",
     directContactHint: "Adres: support@bestbikefit4u.eu",
   };
@@ -175,6 +172,7 @@ export default async function ContactPage() {
                 </li>
               ))}
             </ul>
+            <p>{presentation.responseNote}</p>
           </section>
           <section className={styles.faq} aria-labelledby="contact-faq">
             <p className={styles.eyebrow}>{presentation.faqEyebrow}</p>
@@ -195,6 +193,12 @@ export default async function ContactPage() {
             >
               {page.faqLink}
             </Button>
+            <p>{presentation.measurementText}</p>
+            <p>
+              <Link href={withLocalePrefix("/measurement-guide", locale)}>
+                {presentation.measurementLink}
+              </Link>
+            </p>
           </section>
         </div>
       </div>

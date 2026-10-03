@@ -2,7 +2,7 @@ import {
   resolvePreferredLocale,
   type Locale,
 } from "./config";
-import { getLegacyLocaleRedirect } from "./localeRoutes";
+import { getConsolidatedPressureRedirect, getLegacyLocaleRedirect } from "./localeRoutes";
 import {
   extractLocaleFromPathname,
   isBypassedPathname,
@@ -13,7 +13,7 @@ import {
 
 export type ProxyDecision =
   | { type: "bypass" }
-  | { type: "redirect"; pathname: string; locale: Locale; permanent?: boolean }
+  | { type: "redirect"; pathname: string; locale: Locale; permanent?: boolean; statusCode?: 301 }
   | { type: "auth_redirect"; pathname: string; locale: Locale }
   | { type: "rewrite"; pathname: string; locale: Locale };
 
@@ -39,6 +39,16 @@ export function decideProxyAction({
     acceptLanguageHeader,
   });
   const pathLocale = extractLocaleFromPathname(pathname);
+  const pressureRedirect = getConsolidatedPressureRedirect(pathname, preferredLocale);
+  if (pressureRedirect) {
+    return { type: "redirect", pathname: pressureRedirect, locale: pathLocale ?? preferredLocale,
+      permanent: true, statusCode: 301 };
+  }
+
+  if (!pathLocale && pathname === "/fiets-afstellen") {
+    return { type: "redirect", pathname: preferredLocale === "nl" ? "/nl/bikefitting" : "/en/bike-fitting",
+      locale: preferredLocale, permanent: true, statusCode: 301 };
+  }
 
   if (!pathLocale) {
     return {
@@ -51,7 +61,7 @@ export function decideProxyAction({
   const internalPathname = stripLocalePrefix(pathname);
   const legacyRedirect = getLegacyLocaleRedirect(pathname);
   if (legacyRedirect) {
-    return { type: "redirect", pathname: legacyRedirect, locale: pathLocale, permanent: true };
+    return { type: "redirect", pathname: legacyRedirect, locale: pathLocale, permanent: true, statusCode: 301 };
   }
 
   if (isBypassedPathname(internalPathname)) {

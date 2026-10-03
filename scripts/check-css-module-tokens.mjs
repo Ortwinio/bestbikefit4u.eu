@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // CSS Modules may only use design tokens (var(--...)), never raw colors, so
 // every surface follows the brand palette, dark mode and the contrast lint.
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 
 const files = execSync("git ls-files --cached --others --exclude-standard '*.module.css'", { encoding: "utf8" })
   .split("\n")
-  .filter(Boolean);
+  .filter(file => file && existsSync(file));
 
 const RAW_COLOR = /#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab|lab|lch)\(/g;
 let failures = 0;

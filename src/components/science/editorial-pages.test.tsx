@@ -15,6 +15,7 @@ import * as Methods from "@/app/(public)/science/bike-fit-methods/page";
 import * as Engine from "@/app/(public)/science/calculation-engine/page";
 import * as Stack from "@/app/(public)/science/stack-and-reach/page";
 import { StackReachFigure } from "./StackReachFigure";
+import { editorialImageAlt } from "@/i18n/marketing/editorialImageAlt";
 
 let locale: Locale = "nl";
 vi.mock("server-only", () => ({}));
@@ -42,6 +43,26 @@ const pages = [
 ] as const;
 
 describe("editorial page SEO and localized content", () => {
+  it.each(["nl", "en"] as const)("describes informative hero illustrations and leaves decorative art empty in %s", async (language) => {
+    locale = language;
+    const cases = [
+      [Setup, editorialImageAlt[language].cockpit, "03-cockpit-afstellen.webp"],
+      [Methods, editorialImageAlt[language].saddleHeight, "02-zadelhoogte-meten.webp"],
+      [Engine, editorialImageAlt[language].measuringKit, "06-meetset.webp"],
+      [Stack, editorialImageAlt[language].stackReach, "08-stack-en-reach.webp"],
+      [language === "nl" ? DutchLanding : EnglishLanding, editorialImageAlt[language].cockpit, "03-cockpit-afstellen.webp"],
+      [Why, "", "01-racefiets.webp"],
+    ] as const;
+    for (const [page, expectedAlt, image] of cases) {
+      const html = await renderHtml(await page.default());
+      const heroImage = (html.match(/<img\b[^>]*>/g) ?? []).find((tag) => tag.includes(image));
+      expect(heroImage).toBeDefined();
+      expect(heroImage?.match(/\balt="([^"]*)"/)?.[1].replaceAll("&#x27;", "'")).toBe(expectedAlt);
+      expect(heroImage).toContain('width="720"');
+      expect(heroImage).toContain('height="540"');
+      expect(heroImage).toContain('sizes="(max-width: 760px) 100vw, 40vw"');
+    }
+  });
   it("uses Dutch science headings, metadata and setup terminology", async () => {
     locale = "nl";
     const metadata = await Engine.generateMetadata();
@@ -77,7 +98,10 @@ describe("editorial page SEO and localized content", () => {
     locale = language;
     for (const [path, page] of pages) {
       const metadata = await page.generateMetadata();
-      expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}${path}`);
+      const canonicalPath = path === "/fiets-afstellen"
+        ? (locale === "nl" ? "/bikefitting" : "/bike-fitting")
+        : path;
+      expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}${canonicalPath}`);
       const html = await renderHtml(await page.default());
       expect((html.match(/<h1[ >]/g) ?? []).length).toBe(1);
       expect(html).not.toContain("Ontwerpstaat");

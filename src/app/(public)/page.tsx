@@ -11,7 +11,6 @@ import {
   Gauge,
   MoveHorizontal,
   Ruler,
-  Star,
 } from "lucide-react";
 import { LatestBlogSection } from "@/components/home/LatestBlogSection";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
@@ -19,8 +18,6 @@ import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { SaddleHeightTeaser } from "@/components/home/SaddleHeightTeaser";
 import {
   HOME_STEPPER_CONTENT,
-  HOME_PROOF_BAR_CONTENT,
-  HOME_TESTIMONIALS,
 } from "@/components/home/homeRedesignContent";
 import { HOME_GUIDE_LINKS, HOME_SCENARIO_LINKS } from "@/components/home/homeGuideContent";
 import {
@@ -29,6 +26,7 @@ import {
 } from "@/lib/public-calculators";
 import { getDictionary } from "@/i18n/getDictionary";
 import { homeMarketing } from "@/i18n/marketing/home";
+import { homeTrust } from "@/i18n/marketing/homeTrust";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { buildLocaleAlternates } from "@/i18n/metadata";
@@ -77,9 +75,8 @@ export default async function HomePage() {
   const locale = await getRequestLocale();
   const { home } = await getDictionary(locale);
   const copy = homeMarketing[locale];
-  const proof = HOME_PROOF_BAR_CONTENT[locale];
+  const trust = homeTrust[locale];
   const steps = HOME_STEPPER_CONTENT[locale];
-  const testimonials = HOME_TESTIMONIALS[locale];
   const local = (path: string) => withLocalePrefix(path, locale);
   const fitHref = local("/calculators/bike-fit");
 
@@ -113,18 +110,8 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className={styles.rating}>
-            <Star size={18} aria-hidden="true" />
-            <span>
-              {copy.rating.split(/(\d+(?:[.,]\d+)?\+?)/).map((part, index) =>
-                /^\d/.test(part) ? (
-                  <span className={styles.ratingNumber} key={index}>
-                    {part}
-                  </span>
-                ) : (
-                  part
-                ),
-              )}
-            </span>
+            <Check size={18} aria-hidden="true" />
+            <span>{trust.note}</span>
           </div>
         </div>
         <SaddleHeightTeaser locale={locale} />
@@ -132,18 +119,16 @@ export default async function HomePage() {
 
       <section className={styles.proof}>
         <div className={`${styles.container} ${styles.proofInner}`}>
-          {proof.stats.map((stat) => (
+          {trust.stats.map((stat) => (
             <div key={stat.label} className={styles.stat}>
               <strong>{stat.value}</strong>
               <span>{stat.label}</span>
             </div>
           ))}
-          <blockquote>
-            “{proof.quote.quote}”
-            <cite>
-              {proof.quote.name} · {proof.quote.bikeContext}
-            </cite>
-          </blockquote>
+          <div className={styles.principle}>
+            {trust.principle.text}
+            <span>{trust.principle.title} · {trust.principle.context}</span>
+          </div>
         </div>
       </section>
 
@@ -223,17 +208,17 @@ export default async function HomePage() {
 
       <section className={styles.testimonials}>
         <div className={`${styles.container} ${styles.section}`}>
-          <h2>{copy.testimonialsTitle}</h2>
+          <h2>{trust.title}</h2>
           <div className={styles.quotes}>
-            {testimonials.items.map((testimonial, index) => (
-              <blockquote key={testimonial.name} className={styles.quote}>
-                <span className={styles.change}>{copy.changes[index]}</span>
-                <p>“{testimonial.quote}”</p>
-                <cite>
-                  <strong>{testimonial.name}</strong>
-                  {testimonial.bikeContext}
-                </cite>
-              </blockquote>
+            {trust.cards.map((card) => (
+              <article key={card.label} className={styles.quote}>
+                <span className={styles.change}>{card.label}</span>
+                <p>{card.text}</p>
+                <div className={styles.cardContext}>
+                  <strong>{card.title}</strong>
+                  {card.context}
+                </div>
+              </article>
             ))}
           </div>
         </div>

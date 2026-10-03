@@ -172,6 +172,8 @@ vi.mock("@/i18n/metadata", () => ({
 
 vi.mock("@/lib/seo/jsonLd", () => ({
   buildArticleSchema: vi.fn(() => ({})),
+  buildPersonSchema: vi.fn((locale: string) => ({ "@type": "Person", name: "Ortwin Verreck",
+    url: `https://bestbikefit4u.eu/${locale}/authors/ortwin-verreck` })),
   buildBreadcrumbListSchema: vi.fn(() => ({})),
   buildFaqPageSchema: vi.fn(() => ({})),
 }));
@@ -644,7 +646,8 @@ describe("guide page template redesign", () => {
 
     expect(screen.getByText("While you read")).toBeTruthy();
     expect(
-      screen.getByRole("link", { name: /open calculator/i }).getAttribute("data-section")
+      screen.getAllByRole("link").find(link => link.getAttribute("data-section") === "guide_soft_tool_cta")
+        ?.getAttribute("data-section")
     ).toBe("guide_soft_tool_cta");
     expect(screen.getByText("Turn this guide into your own fit setup")).toBeTruthy();
     const startFreeFitLinks = screen.getAllByRole("link", { name: "Start Free Fit" });
@@ -754,5 +757,33 @@ describe("registered rewrite routes", () => {
     ]));
     expect(screen.queryByText("Hub markdown")).toBeNull();
     expect(screen.queryByText("Knee pain intro.")).toBeNull();
+  });
+});
+
+
+describe("guide attribution on legacy templates", () => {
+  it.each(["en", "nl"] as const)("shows the author on hub and leaf pages in %s without a fabricated date", async language => {
+    locale = language;
+    for (const slug of ["ride-types", "bike-fitting-for-knee-pain"]) {
+      const { container, unmount } = render(await GuidePage({ params: Promise.resolve({ slug }) }));
+      const attribution = container.querySelector("[data-guide-attribution]");
+      expect(attribution?.textContent).toContain("Ortwin Verreck");
+      expect(attribution?.textContent).toContain(language === "nl" ? "Auteur" : "Author");
+      expect(attribution?.querySelector("a")?.getAttribute("href"))
+        .toBe(`/${language}/authors/ortwin-verreck`);
+      expect(attribution?.querySelector("time")).toBeNull();
+      expect(attribution?.textContent).toContain(language === "nl"
+        ? "Bijwerkdatum niet beschikbaar." : "Update date unavailable.");
+      unmount();
+    }
+  });
+  it("uses the recorded CMS update date in attribution and Article schema", async () => {
+    const data = makeGuidePageData("bike-fitting-for-knee-pain", "en");
+    Object.assign(data!.dbGuide!, { lastUpdatedAt: Date.parse("2026-09-29T18:45:00Z") });
+    vi.mocked(getGuidePageData).mockResolvedValueOnce(data as Awaited<ReturnType<typeof getGuidePageData>>);
+    const { container } = render(await GuidePage({ params: Promise.resolve({ slug: "bike-fitting-for-knee-pain" }) }));
+    expect(container.querySelector("[data-guide-attribution] time")?.getAttribute("datetime")).toBe("2026-09-29");
+    expect(buildArticleSchema).toHaveBeenCalledWith(expect.objectContaining({ dateModified: "2026-09-29",
+      author: expect.objectContaining({ name: "Ortwin Verreck" }) }));
   });
 });

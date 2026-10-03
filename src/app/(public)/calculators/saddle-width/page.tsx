@@ -1,3 +1,5 @@
+import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { getEquipmentAnswer } from "@/lib/seo/calculatorAnswers/equipment";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import { Gauge, Ruler, ShieldCheck } from "lucide-react";
@@ -24,7 +26,7 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { getDictionary } from "@/i18n/getDictionary";
 import { getRequestLocale } from "@/i18n/request";
 import {
-  CALCULATOR_AGGREGATE_RATING,
+  buildFaqPageSchema,
   buildHowToSchema,
   buildWebApplicationSchema,
 } from "@/lib/seo/jsonLd";
@@ -191,13 +193,13 @@ export default async function SaddleWidthCalculatorPage() {
     <>
       <JsonLd
         schema={[
+          buildFaqPageSchema(faqs),
           buildWebApplicationSchema({
             name: "BestBikeFit4U Saddle Width Calculator",
             description: isNl
               ? "Bereken je ideale zadelbreedteaanbeveling op basis van zitbeenmeting of lichaamsgegevens."
               : "Calculate your ideal saddle width from sit-bone measurement or body data.",
             url: pageUrl,
-            aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
           buildHowToSchema({
             name: isNl ? "Hoe bereken je zadelbreedte" : "How to calculate saddle width",
@@ -222,6 +224,7 @@ export default async function SaddleWidthCalculatorPage() {
       />
 
       <SaddleWidthCalculatorForm locale={locale} copy={dictionary.saddleWidthCalculator} />
+      <CalculatorAnswerSection id="saddle-width" locale={locale} content={getEquipmentAnswer("saddle-width", locale)} />
       <PublicPageShell className="text-foreground">
         <PublicSection
           className="mt-10"

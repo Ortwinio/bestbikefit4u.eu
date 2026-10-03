@@ -40,7 +40,12 @@ describe("approved tool header", () => {
   it("gives the logo, language choices and login 44px hit areas", () => {
     route.path = "/nl/calculators/bike-fit";
     const html = markup();
-    for (const label of ["BestBikeFit4U", "Engels", "Nederlands"]) {
+    const logo = html.match(/<a [^>]*href="\/nl"[^>]*>/)?.[0];
+    expect(logo).toContain("min-h-11");
+    expect(logo).toContain("min-w-11");
+    expect(logo).not.toContain("aria-label");
+    expect(html).toContain('alt="BestBikeFit4U"');
+    for (const label of ["Engels", "Nederlands"]) {
       const anchor = html.match(new RegExp(`<a [^>]*aria-label="${label}"[^>]*>`))?.[0];
       expect(anchor).toContain("min-h-11");
       expect(anchor).toContain("min-w-11");
@@ -64,14 +69,18 @@ describe("approved tool header", () => {
   it.each([
     "/nl/tire-pressure-calculator",
     "/nl/bandenspanning-calculator",
-    "/nl/bandenspanning/racefiets",
-    "/nl/bandenspanning/gravelbike",
-    "/nl/bandenspanning/mtb",
   ])("activates the pressure tab on %s", (path) => {
     route.path = path;
     expect(markup().match(/<a [^>]*aria-current="page"[^>]*>/)?.[0]).toContain(
       'href="/nl/bandenspanning-calculator"',
     );
+  });
+  it.each([
+    "/nl/bandenspanning/racefiets", "/nl/bandenspanning/gravelbike", "/nl/bandenspanning/mountainbike",
+    "/en/tire-pressure/road-bike", "/en/tire-pressure/gravel-bike", "/en/tire-pressure/mountain-bike",
+  ])("uses the marketing header for pressure reference page %s", path => {
+    route.path = path;
+    expect(markup()).toBe("<header>Marketing</header>");
   });
   it("leaves later batches and marketing pages unchanged", () => {
     for (const path of ["/nl/calculators/gearing", "/nl/pricing"]) {

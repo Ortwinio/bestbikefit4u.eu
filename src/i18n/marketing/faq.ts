@@ -1,6 +1,7 @@
 import type { Locale } from "@/i18n/config";
 
 type FAQPresentation = {
+  metadataTitle: string;
   eyebrow: string;
   trustPoints: { title: string; description: string }[];
   guideEyebrow: string;
@@ -10,6 +11,7 @@ type FAQPresentation = {
 
 export const faqPresentation = {
   nl: {
+    metadataTitle: "Veelgestelde vragen over bikefit | BestBikeFit4U",
     eyebrow: "Snel antwoord",
     trustPoints: [
       {
@@ -30,6 +32,7 @@ export const faqPresentation = {
     support: "We helpen je in het Nederlands en Engels.",
   },
   en: {
+    metadataTitle: "Bike Fitting FAQ | BestBikeFit4U",
     eyebrow: "Quick answers",
     trustPoints: [
       {

@@ -1,3 +1,5 @@
+import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { getPerformanceAnswer } from "@/lib/seo/calculatorAnswers/performance";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import { fuelHydrationPageMessages } from "@/i18n/calculators/fuelHydrationPage";
 import { PerformanceCalculator } from "../power-speed/PerformanceCalculator";
@@ -64,6 +66,9 @@ export default async function FuelHydrationPlannerPage() {
       />
 
       <PerformanceCalculator tool="fuel-hydration" locale={locale} />
+      <CalculatorAnswerSection
+        id="fuel-hydration" locale={locale} content={getPerformanceAnswer("fuel-hydration", locale)}
+      />
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <PublicSection

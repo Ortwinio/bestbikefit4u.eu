@@ -36,7 +36,12 @@ vi.mock("@/components/analytics/TrackedCtaLink", () => ({
 }));
 
 vi.mock("@/components/seo/JsonLd", () => ({
-  JsonLd: () => null,
+  JsonLd: ({ schema }: { schema: object | object[] }) => (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  ),
 }));
 
 vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
@@ -72,16 +77,6 @@ vi.mock("@/i18n/metadata", () => ({
   }),
 }));
 
-vi.mock("@/lib/seo/jsonLd", () => ({
-  CALCULATOR_AGGREGATE_RATING: {
-    ratingValue: "4.8",
-    ratingCount: 380,
-    bestRating: "5",
-    worstRating: "1",
-  },
-  buildWebApplicationSchema: () => ({}),
-}));
-
 vi.mock("./CrankLengthCalculatorForm", () => ({
   CrankLengthCalculatorForm: () => <div>Crank Form</div>,
 }));
@@ -99,6 +94,34 @@ afterEach(() => {
 });
 
 describe("crank length page", () => {
+  it.each(["en", "nl"] as const)(
+    "publishes a free WebApplication without ratings in %s",
+    async (language) => {
+      locale = language;
+      const { container } = render(await CrankLengthCalculatorPage({ searchParams: Promise.resolve({}) }));
+      const scripts = Array.from(container.querySelectorAll('script[type="application/ld+json"]'));
+      const schemas = scripts.flatMap((script) => JSON.parse(script.textContent ?? "null"));
+      const application = schemas.find((schema) => schema["@type"] === "WebApplication");
+
+      expect(application).toMatchObject({
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        operatingSystem: "Any",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+      });
+      expect(JSON.stringify(schemas)).not.toContain('"aggregateRating"');
+      expect(JSON.stringify(schemas)).not.toContain('"AggregateRating"');
+      const faqSchemas = schemas.filter((schema) => schema["@type"] === "FAQPage");
+      expect(faqSchemas).toHaveLength(1);
+      for (const question of faqSchemas[0].mainEntity) {
+        expect(container.textContent).toContain(question.name);
+        expect(container.textContent).toContain(question.acceptedAnswer.text);
+      }
+      expect(container.textContent).toContain(language === "nl" ? "84,5 cm" : "84.5 cm");
+
+    },
+  );
+
   it("preserves canonical metadata and Dutch FAQ content", async () => {
     locale = "nl";
     expect((await generateMetadata()).alternates?.canonical).toBe(

@@ -1,3 +1,5 @@
+import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { getEquipmentAnswer } from "@/lib/seo/calculatorAnswers/equipment";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import { ArrowUpDown, Gauge, ShieldCheck } from "lucide-react";
@@ -22,7 +24,6 @@ import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import {
-  CALCULATOR_AGGREGATE_RATING,
   buildFaqPageSchema,
   buildHowToSchema,
   buildWebApplicationSchema,
@@ -163,7 +164,6 @@ export default async function GearingCalculatorPage() {
               ? "Bereken je lichtste en zwaarste versnelling, snelheid bij cadans en een snelle kliminschatting."
               : "Calculate your easiest and hardest gear, speed at cadence, and a quick climb verdict.",
             url: pageUrl,
-            aggregateRating: CALCULATOR_AGGREGATE_RATING,
           }),
           buildHowToSchema({
             name: isNl ? "Hoe gebruik je de verzet calculator" : "How to use the gearing calculator",
@@ -189,6 +189,7 @@ export default async function GearingCalculatorPage() {
       />
 
       <GearingCalculatorForm isNl={isNl} />
+      <CalculatorAnswerSection id="gearing" locale={locale} content={getEquipmentAnswer("gearing", locale)} />
       <div className="text-foreground">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <PublicSection
@@ -277,6 +278,15 @@ export default async function GearingCalculatorPage() {
                   "rider, event, and climb demand."
             }
           />
+
+          <PublicSection className="mt-10" header={{ title: isNl ? "Veelgestelde vragen" : "Frequently asked questions" }}>
+            <div className="space-y-6">
+              {faqs.map((faq) => <article key={faq.q}>
+                <h3 className="text-lg font-semibold">{faq.q}</h3>
+                <p className="mt-2 text-muted-foreground">{faq.a}</p>
+              </article>)}
+            </div>
+          </PublicSection>
 
           <RelatedLinksSection
             title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}

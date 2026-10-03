@@ -106,8 +106,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
   if (locale === "en") {
     return {
       metadata: {
-        title:
-          "BestBikeFit4U FAQ | Online Bike Fitting, Saddle Height, Frame Size & Pain Fixes",
+        title: faqPresentation[locale].metadataTitle,
         description:
           "Answers about BestBikeFit4U online bike fitting: measurements, saddle height, setback, " +
           "reach & drop, stack & reach, MTB/gravel/TT setups, pain troubleshooting, plans, exports, " +
@@ -239,8 +238,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
 
   return {
     metadata: {
-      title:
-        "BestBikeFit4U FAQ | Online bikefitting, zadelhoogte, framemaat & klachten oplossen",
+      title: faqPresentation[locale].metadataTitle,
       description:
         "Antwoorden over BestBikeFit4U online bikefitting: metingen, zadelhoogte, zadelterugstand, " +
         "reach & drop, stack & reach, MTB/gravel/TT, klachten, abonnementen, exports en " +
@@ -377,7 +375,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const alternates = buildLocaleAlternates("/faq", locale);
 
   return {
-    title: page.metadata.title,
+    title: { absolute: page.metadata.title },
     description: page.metadata.description,
     keywords: page.metadata.keywords,
     openGraph: {

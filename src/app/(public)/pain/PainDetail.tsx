@@ -1,3 +1,4 @@
+import { bikeFittingOwnershipMessages } from "@/i18n/marketing/bikeFittingOwnership";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CircleAlert } from "lucide-react";
@@ -62,6 +63,10 @@ export function PainDetail({ locale, slug, copy }: { locale: Locale; slug: strin
           <Image
             src="/illustrations/02-zadelhoogte-meten.webp" width={568} height={460}
             alt={presentation.detailImage} priority
+            sizes={
+              "(max-width: 600px) calc(100vw - 40px), (max-width: 900px) calc(100vw - 48px), "
+              + "(max-width: 1248px) calc(50vw - 56px), 568px"
+            }
           />
         </section>
         <section className={styles.section}>
@@ -83,8 +88,8 @@ export function PainDetail({ locale, slug, copy }: { locale: Locale; slug: strin
             <p className={styles.eyebrow}>{presentation.checkEyebrow}</p>
             <h2>{presentation.checkTitle}</h2><p className={styles.intro}>{presentation.checkIntro}</p>
             {locale === "nl" && (
-              <Link href={withLocalePrefix("/fiets-afstellen", locale)} className={styles.textLink}>
-                {presentation.setup}<ArrowRight size={18} aria-hidden="true" />
+              <Link href={withLocalePrefix("/bikefitting", locale)} className={styles.textLink}>
+                {bikeFittingOwnershipMessages[locale].link}<ArrowRight size={18} aria-hidden="true" />
               </Link>
             )}
           </div>

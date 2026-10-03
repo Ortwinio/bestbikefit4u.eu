@@ -61,10 +61,12 @@ function setLocaleCookie(response: NextResponse, locale: Locale) {
   });
 }
 
-function redirectToPath(request: NextRequest, pathname: string, permanent = false): NextResponse {
+function redirectToPath(
+  request: NextRequest, pathname: string, permanent = false, statusCode?: 301
+): NextResponse {
   const url = request.nextUrl.clone();
   url.pathname = pathname;
-  return NextResponse.redirect(url, permanent ? 308 : 307);
+  return NextResponse.redirect(url, statusCode ?? (permanent ? 308 : 307));
 }
 
 function normalizeRedirectPath(pathname: string): string {
@@ -251,7 +253,10 @@ const convexAuthProxy = convexAuthNextjsMiddleware(
         return applyDeploymentHeaders(request, response, nonce);
       }
 
-      const response = redirectToPath(request, decision.pathname, decision.type === "redirect" && decision.permanent);
+      const response = redirectToPath(
+        request, decision.pathname, decision.type === "redirect" && decision.permanent,
+        decision.type === "redirect" ? decision.statusCode : undefined,
+      );
       setLocaleCookie(response, decision.locale);
       return applyDeploymentHeaders(request, response, nonce);
     }

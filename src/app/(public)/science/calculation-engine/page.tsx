@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui";
 import { EditorialCta } from "@/components/science/EditorialLayout";
 import { scienceExtras } from "@/i18n/marketing/science";
+import { editorialImageAlt } from "@/i18n/marketing/editorialImageAlt";
 import type { Metadata } from "next";
 import { Calculator, Gauge, Ruler, Sigma } from "lucide-react";
 import {
@@ -63,6 +64,7 @@ export default async function CalculationEnginePage() {
         description={page.hero.description}
         chips={page.hero.chips}
         image="/illustrations/06-meetset.webp"
+        imageAlt={editorialImageAlt[locale].measuringKit}
         illustration={<p>{page.hero.caption}</p>}
       />
 

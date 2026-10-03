@@ -1,65 +1,36 @@
-import { getRequestLocale } from "@/i18n/request";
-import { pressureLandingMessages } from "@/i18n/marketing/pressureLanding";
-import { PressureLanding } from "./PressureLanding";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getRequestLocale } from "@/i18n/request";
+import { pressureBikeLandingMessages } from "@/i18n/marketing/pressureBikeLanding";
+import { PressureBikeLanding } from "@/components/seo/PressureBikeLanding";
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import {
-  BIKE_TYPE_LABELS,
-  EN_BIKE_TYPES,
-  WEIGHT_STEPS,
-  buildPressureAlternates,
-  buildEnglishPressureSlug,
-  parseEnglishPressureSlug,
+  BIKE_TYPE_LABELS, EN_BIKE_TYPES, NL_TO_EN, buildPressureBikeAlternates, type EnBikeType,
 } from "@/lib/seo/programmatic/tirePressure";
 
-interface ProgrammaticPressurePageProps {
-  params: Promise<{ slug: string }>;
+interface Props { params: Promise<{ slug: string }> }
+function bikeFromSlug(slug: string): EnBikeType | undefined {
+  if ((EN_BIKE_TYPES as readonly string[]).includes(slug)) return slug as EnBikeType;
+  return Object.hasOwn(NL_TO_EN, slug) ? NL_TO_EN[slug as keyof typeof NL_TO_EN] : undefined;
 }
+export function generateStaticParams() { return EN_BIKE_TYPES.map(slug => ({ slug })); }
 
-export function generateStaticParams() {
-  return WEIGHT_STEPS.flatMap((weight) =>
-    EN_BIKE_TYPES.map((bikeType) => ({
-      slug: buildEnglishPressureSlug(weight, bikeType),
-    })),
-  );
-}
-
-export async function generateMetadata({ params }: ProgrammaticPressurePageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  const bike = bikeFromSlug(slug);
+  if (!bike) return { robots: { index: false, follow: false } };
   const locale = await getRequestLocale();
-  const copy = pressureLandingMessages[locale];
-  const parsed = parseEnglishPressureSlug(slug);
-
-  if (!parsed) {
-    return { title: copy.notFound, robots: { index: false, follow: false } };
-  }
-
-  const label = BIKE_TYPE_LABELS[parsed.bikeType][locale];
-  const title = `${copy.title(parsed.weight, label)} | BestBikeFit4U`;
-  const description = copy.description(parsed.weight, label);
-  const alternates = buildPressureAlternates(parsed.weight, parsed.bikeType, locale);
-
-  return {
-    title,
-    description,
-    keywords: copy.keywords(parsed.weight, label),
-    alternates,
-    openGraph: { title, description, type: "website", url: alternates.canonical },
-  };
+  const copy = pressureBikeLandingMessages[locale];
+  const title = copy.title(BIKE_TYPE_LABELS[bike][locale]);
+  const description = copy.description(BIKE_TYPE_LABELS[bike][locale]);
+  const alternates = buildPressureBikeAlternates(bike, locale);
+  return { title, description, alternates,
+    openGraph: { title, description, type: "website", url: alternates.canonical, images: [DEFAULT_SOCIAL_IMAGE] } };
 }
 
-export default async function ProgrammaticTirePressurePage({ params }: ProgrammaticPressurePageProps) {
+export default async function PressureBikePage({ params }: Props) {
   const { slug } = await params;
-  const parsed = parseEnglishPressureSlug(slug);
-  if (!parsed) notFound();
-  const locale = await getRequestLocale();
-  return (
-    <PressureLanding
-      locale={locale}
-      slug={slug}
-      weight={parsed.weight}
-      bikeType={parsed.bikeType}
-      pathname={`/tire-pressure/${slug}`}
-    />
-  );
+  const bikeType = bikeFromSlug(slug);
+  if (!bikeType) notFound();
+  return <PressureBikeLanding bikeType={bikeType} locale={await getRequestLocale()} />;
 }

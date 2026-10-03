@@ -19,8 +19,8 @@ describe("central locale routes", () => {
     ["/nl/bandenspanning-calculator", "en", "/en/tire-pressure-calculator"],
     ["/en/tire-pressure-calculator", "nl", "/nl/bandenspanning-calculator"],
     ["/nl/guides/fit-science", "en", "/en/guides/fit-science"],
-    ["/nl/bandenspanning/racefiets", "en", "/en/bandenspanning/racefiets"],
-    ["/nl/fiets-afstellen", "en", "/en/fiets-afstellen"],
+    ["/nl/bandenspanning/racefiets", "en", "/en/tire-pressure/road-bike"],
+    ["/nl/fiets-afstellen", "en", "/en/bike-fitting"],
   ] as const)("switches %s to %s without losing the query", (pathname, locale, destination) => {
     expect(buildLocaleSwitchHref({ pathname, locale, queryString: "src=header&test=1" }))
       .toBe(`${destination}?src=header&test=1`);
@@ -51,10 +51,12 @@ describe("central locale routes", () => {
   it.each([
     ["/en/bikefitting", "/en/bike-fitting", "en"],
     ["/nl/bike-fitting", "/nl/bikefitting", "nl"],
+    ["/nl/fiets-afstellen", "/nl/bikefitting", "nl"],
+    ["/en/fiets-afstellen", "/en/bike-fitting", "en"],
   ] as const)("permanently redirects %s without looping", (pathname, destination, locale) => {
     const input = { cookieLocale: "en", acceptLanguageHeader: "nl", isAuthenticated: false };
     expect(decideProxyAction({ ...input, pathname })).toEqual({
-      type: "redirect", pathname: destination, locale, permanent: true,
+      type: "redirect", pathname: destination, locale, permanent: true, statusCode: 301,
     });
     expect(decideProxyAction({ ...input, pathname: destination }).type).toBe("rewrite");
   });

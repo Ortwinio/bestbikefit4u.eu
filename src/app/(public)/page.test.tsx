@@ -295,10 +295,10 @@ describe("home page", () => {
     expect(screen.getByText("Compare Free and Pro").closest("a")?.getAttribute("href")).toBe("/en/pricing");
 
     const pageText = container.textContent ?? "";
-    expect(pageText.indexOf("fits completed")).toBeGreaterThan(-1);
+    expect(pageText.indexOf("your own dimensions")).toBeGreaterThan(-1);
     expect(pageText.indexOf("From measuring to riding in three steps")).toBeGreaterThan(-1);
     expect(pageText.indexOf("Complete bike fit")).toBeGreaterThan(-1);
-    expect(pageText.indexOf("Small adjustment, big difference")).toBeGreaterThan(-1);
+    expect(pageText.indexOf("Make your next adjustment deliberately")).toBeGreaterThan(-1);
     expect(pageText.indexOf("Complete bike fit")).toBeLessThan(
       pageText.indexOf("Create free account")
     );
@@ -320,8 +320,8 @@ describe("home page", () => {
     expect(screen.queryByText("Doneer via onze Alpe d'HuZes-pagina")).toBeNull();
     expect(screen.getByRole("slider", { name: "Binnenbeenlengte" })).toBeTruthy();
     expect(
-      screen.getByText("Fiets afstellen stap voor stap").closest("a")?.getAttribute("href")
-    ).toBe("/nl/fiets-afstellen");
+      screen.getByText("Racefiets afstellen").closest("a")?.getAttribute("href")
+    ).toBe("/nl/guides/road-bike-fit-guide");
     expect(screen.getByText("Bikefitting uitgelegd").closest("a")?.getAttribute("href")).toBe(
       "/nl/bikefitting"
     );

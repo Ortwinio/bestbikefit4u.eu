@@ -17,9 +17,6 @@ const approvedTools: Record<string, ToolTab> = {
   "/calculators/bike-fit": "bike-fit",
   "/tire-pressure-calculator": "tire-pressure",
   "/bandenspanning-calculator": "tire-pressure",
-  "/bandenspanning/racefiets": "tire-pressure",
-  "/bandenspanning/gravelbike": "tire-pressure",
-  "/bandenspanning/mtb": "tire-pressure",
 };
 
 interface ConfiguratorHeaderSwitchProps {

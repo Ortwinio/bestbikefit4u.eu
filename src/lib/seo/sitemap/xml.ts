@@ -3,6 +3,12 @@ import { BRAND } from "@/config/brand";
 import { DEFAULT_SITEMAP_CACHE_CONTROL } from "./config";
 import type { SitemapIndexNode, SitemapUrlNode } from "./types";
 
+export function latestSitemapLastmod(nodes: readonly { lastmod?: string }[]): string | undefined {
+  return nodes.map(node => node.lastmod)
+    .filter((date): date is string => Boolean(date) && Number.isFinite(new Date(date!).getTime()))
+    .sort().at(-1);
+}
+
 function escapeXml(value: string): string {
   return value
     .replaceAll("&", "&amp;")
@@ -26,7 +32,7 @@ function renderAlternates(node: SitemapUrlNode): string {
 export function renderUrlSetXml(nodes: SitemapUrlNode[]): string {
   const urlEntries = nodes
     .map((node) => {
-      const lastmod = `<lastmod>${escapeXml(node.lastmod)}</lastmod>`;
+      const lastmod = node.lastmod ? `<lastmod>${escapeXml(node.lastmod)}</lastmod>` : "";
       const changefreq = node.changefreq
         ? `<changefreq>${escapeXml(node.changefreq)}</changefreq>`
         : "";
@@ -47,9 +53,8 @@ export function renderSitemapIndexXml(nodes: SitemapIndexNode[]): string {
   const sitemapEntries = nodes
     .map(
       (node) =>
-        `<sitemap><loc>${escapeXml(node.loc)}</loc><lastmod>${escapeXml(
-          node.lastmod
-        )}</lastmod></sitemap>`
+        `<sitemap><loc>${escapeXml(node.loc)}</loc>${node.lastmod
+          ? `<lastmod>${escapeXml(node.lastmod)}</lastmod>` : ""}</sitemap>`
     )
     .join("");
 
@@ -77,7 +82,6 @@ function getSitemapRobotsTag(request: Request): string {
 
 function createXmlHeaders(
   request: Request,
-  payload: string,
   etag: string,
   options: XmlResponseOptions = {}
 ): Headers {
@@ -87,10 +91,9 @@ function createXmlHeaders(
     ETag: etag,
     "X-Content-Type-Options": "nosniff",
     "X-Robots-Tag": getSitemapRobotsTag(request),
-    "Content-Length": Buffer.byteLength(payload, "utf8").toString(),
   });
 
-  if (options.lastModified) {
+  if (options.lastModified && Number.isFinite(new Date(options.lastModified).getTime())) {
     headers.set("Last-Modified", new Date(options.lastModified).toUTCString());
   }
 
@@ -107,13 +110,13 @@ export function buildXmlResponse(
   if (ifNoneMatch === etag) {
     return new Response(null, {
       status: 304,
-      headers: createXmlHeaders(request, payload, etag, options),
+      headers: createXmlHeaders(request, etag, options),
     });
   }
 
   return new Response(payload, {
     status: 200,
-    headers: createXmlHeaders(request, payload, etag, options),
+    headers: createXmlHeaders(request, etag, options),
   });
 }
 
@@ -127,12 +130,12 @@ export function buildXmlHeadResponse(
   if (ifNoneMatch === etag) {
     return new Response(null, {
       status: 304,
-      headers: createXmlHeaders(request, payload, etag, options),
+      headers: createXmlHeaders(request, etag, options),
     });
   }
 
   return new Response(null, {
     status: 200,
-    headers: createXmlHeaders(request, payload, etag, options),
+    headers: createXmlHeaders(request, etag, options),
   });
 }

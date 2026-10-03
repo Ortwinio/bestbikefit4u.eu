@@ -1,3 +1,4 @@
+import { bikeFittingOwnershipMessages } from "@/i18n/marketing/bikeFittingOwnership";
 import type { Locale } from "@/i18n/config";
 import { painDetailDutchCopy } from "@/i18n/marketing/pain";
 
@@ -105,7 +106,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       relatedTitle: "Gerelateerde vervolgstappen",
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
-        { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
+        { href: "/bikefitting", label: bikeFittingOwnershipMessages.nl.link },
         { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
         { href: "/case-study", label: painDetailDutchCopy.caseStudy },
       ],
@@ -188,7 +189,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       relatedTitle: "Gerelateerde vervolgstappen",
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
-        { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
+        { href: "/bikefitting", label: bikeFittingOwnershipMessages.nl.link },
         { href: "/how-it-works", label: "Hoe BestBikeFit4U werkt" },
         { href: "/case-study", label: painDetailDutchCopy.caseStudy },
       ],
@@ -271,7 +272,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       relatedTitle: "Gerelateerde vervolgstappen",
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
-        { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
+        { href: "/bikefitting", label: bikeFittingOwnershipMessages.nl.link },
         { href: "/pain/hand-numbness-cycling", label: "Dove handen op de fiets" },
         { href: "/case-study", label: painDetailDutchCopy.caseStudy },
       ],
@@ -354,7 +355,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       relatedTitle: "Gerelateerde vervolgstappen",
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
-        { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
+        { href: "/bikefitting", label: bikeFittingOwnershipMessages.nl.link },
         { href: "/pain/neck-pain-cycling", label: "Nekpijn tijdens fietsen" },
         { href: "/case-study", label: painDetailDutchCopy.caseStudy },
       ],
@@ -438,7 +439,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       relatedTitle: "Gerelateerde vervolgstappen",
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
-        { href: "/fiets-afstellen", label: "Fiets afstellen stap voor stap" },
+        { href: "/bikefitting", label: bikeFittingOwnershipMessages.nl.link },
         { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
         { href: "/pain/hand-numbness-cycling", label: "Dove handen op de fiets" },
         { href: "/case-study", label: painDetailDutchCopy.caseStudy },

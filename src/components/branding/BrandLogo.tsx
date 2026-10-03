@@ -37,7 +37,6 @@ type BrandLogoProps = {
   className?: string;
   imageClassName?: string;
   priority?: boolean | "dark";
-  ariaLabel?: string;
 };
 
 export function BrandLogo({
@@ -46,7 +45,6 @@ export function BrandLogo({
   className,
   imageClassName,
   priority = false,
-  ariaLabel,
 }: BrandLogoProps) {
   const { resolvedTheme } = useTheme();
   const shouldPrioritize = priority === true || priority === "dark";
@@ -63,7 +61,7 @@ export function BrandLogo({
   const image = (
     <Image
       src={selectedAsset.src}
-      alt={ariaLabel ?? BRAND.name}
+      alt={BRAND.name}
       width={selectedAsset.width}
       height={selectedAsset.height}
       priority={shouldPrioritize}
@@ -78,7 +76,6 @@ export function BrandLogo({
   return (
     <Link
       href={href}
-      aria-label={ariaLabel ?? BRAND.name}
       className={cn(className, "flex min-h-11 min-w-11 items-center")}
     >
       {image}

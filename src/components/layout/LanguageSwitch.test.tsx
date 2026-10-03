@@ -26,7 +26,7 @@ describe.each(["account", "marketing"])("%s language switch", (variant) => {
   function mount() {
     render(variant === "account"
       ? <LanguageSwitch locale="en" labels={{ language: "Language", english: "English", dutch: "Dutch" }} />
-      : <MarketingLanguageSwitch locale="en" />);
+      : <MarketingLanguageSwitch locale="en" placement="menu" />);
   }
 
   it("saves immediately before navigating with the existing query", async () => {

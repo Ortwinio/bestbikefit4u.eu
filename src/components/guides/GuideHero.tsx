@@ -19,7 +19,14 @@ export function GuideHero({ eyebrow, title, description, image, imageAlt, illust
         <p>{description}</p>
         {children}
       </div>
-      <Image src={image} alt={imageAlt} width={600} height={440} className={illustration ? styles.illustration : undefined} />
+      <Image
+        src={image} alt={imageAlt} width={600} height={440}
+        sizes={
+          "(max-width: 700px) calc(100vw - 40px), (max-width: 1000px) calc(43.48vw - 31.31px), "
+          + "(max-width: 1248px) calc(43.48vw - 41.74px), 501px"
+        }
+        className={illustration ? styles.illustration : undefined}
+      />
     </header>
   );
 }

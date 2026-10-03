@@ -7,9 +7,13 @@ import { MarketingLogo } from "./MarketingLogo";
 
 afterEach(cleanup);
 
+function renderLogo(props: React.ComponentProps<typeof MarketingLogo>) {
+  return render(<><style>{".hidden { display: none; }"}</style><MarketingLogo {...props} /></>);
+}
+
 describe("marketing logo theme", () => {
   it("keeps a 44px hit area when a caller requests block display", () => {
-    render(<MarketingLogo href="/nl" className="block w-[200px]" />);
+    renderLogo({ href: "/nl", className: "block w-[200px]" });
     const classes = screen.getByRole("link", { name: BRAND.name }).className.split(" ");
     expect(classes).toContain("min-h-11");
     expect(classes).toContain("min-w-11");
@@ -18,7 +22,7 @@ describe("marketing logo theme", () => {
   });
 
   it("provides both theme assets without depending on client hydration", () => {
-    const { container } = render(<MarketingLogo href="/nl" />);
+    const { container } = renderLogo({ href: "/nl" });
     const images = container.querySelectorAll("img");
     expect(images[0].getAttribute("src")).toBe(BRAND.assets.logoPrimary);
     expect(images[0].className).toContain("dark:hidden");
@@ -28,9 +32,11 @@ describe("marketing logo theme", () => {
     expect(screen.getByRole("link", { name: BRAND.name }).getAttribute("href")).toBe("/nl");
   });
 
-  it("exposes one accessible home link with the caller's label", () => {
-    const { container } = render(<MarketingLogo href="/en" ariaLabel="Home" />);
-    expect(screen.getByRole("link", { name: "Home" }).getAttribute("href")).toBe("/en");
-    expect([...container.querySelectorAll("img")].every((image) => image.alt === "")).toBe(true);
+  it("uses the brand image alternative without a duplicate link label", () => {
+    const { container } = renderLogo({ href: "/en" });
+    const link = screen.getByRole("link", { name: BRAND.name });
+    expect(link.getAttribute("href")).toBe("/en");
+    expect(link.hasAttribute("aria-label")).toBe(false);
+    expect([...container.querySelectorAll("img")].every((image) => image.alt === BRAND.name)).toBe(true);
   });
 });

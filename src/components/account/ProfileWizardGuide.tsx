@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
+import { profileWizardGuideImageAlt } from "@/i18n/account/profileWizardGuide";
 
 export const profileWizardCopy = {
   nl: {
@@ -42,7 +43,7 @@ export function ProfileWizardGuide({ step, locale }: { step: number; locale: Loc
     <aside className="min-w-0 space-y-6">
       {step < 3 && (
         <div className="rounded-3xl bg-secondary p-5">
-          <Image src="/illustrations/02-zadelhoogte-meten.webp" alt="" width={420} height={280} className="h-auto w-full object-contain" />
+          <Image src="/illustrations/02-zadelhoogte-meten.webp" alt={profileWizardGuideImageAlt[locale]} width={420} height={280} className="h-auto w-full object-contain" />
         </div>
       )}
       <Card variant="bordered">
