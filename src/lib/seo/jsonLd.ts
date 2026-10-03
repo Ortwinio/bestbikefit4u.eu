@@ -52,36 +52,6 @@ export function buildWebSiteSchema({
   };
 }
 
-export function buildWebApplicationSchema({
-  name,
-  description,
-  url,
-  applicationCategory = "SportsApplication",
-}: {
-  name: string;
-  description: string;
-  url: string;
-  applicationCategory?: string;
-}) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name,
-    description,
-    url,
-    applicationCategory,
-    operatingSystem: "Any",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "EUR",
-    },
-    publisher: {
-      "@id": `${BRAND.siteUrl}/#organization`,
-    },
-  };
-}
-
 export function buildFaqPageSchema(faqs: FaqItem[]) {
   return {
     "@context": "https://schema.org",
@@ -108,6 +78,39 @@ export function buildBreadcrumbListSchema(items: BreadcrumbItem[]) {
       item: entry.item,
     })),
   };
+}
+
+export function buildCalculatorPageSchemas({
+  name,
+  description,
+  url,
+  locale,
+  breadcrumb = true,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  locale: Locale;
+  breadcrumb?: boolean;
+}) {
+  const page = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name,
+    description,
+    url,
+    inLanguage: locale,
+  };
+
+  return [
+    page,
+    ...(breadcrumb
+      ? [buildBreadcrumbListSchema([
+          { name: "Home", item: `${BRAND.siteUrl}/${locale}` },
+          { name, item: url },
+        ])]
+      : []),
+  ];
 }
 
 export function buildArticleSchema({

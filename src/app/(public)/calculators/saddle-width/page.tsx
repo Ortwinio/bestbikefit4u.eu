@@ -28,7 +28,7 @@ import { getRequestLocale } from "@/i18n/request";
 import {
   buildFaqPageSchema,
   buildHowToSchema,
-  buildWebApplicationSchema,
+  buildCalculatorPageSchemas,
 } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { SaddleWidthCalculatorForm } from "./SaddleWidthCalculatorForm";
@@ -194,12 +194,13 @@ export default async function SaddleWidthCalculatorPage() {
       <JsonLd
         schema={[
           buildFaqPageSchema(faqs),
-          buildWebApplicationSchema({
+          ...buildCalculatorPageSchemas({
             name: "BestBikeFit4U Saddle Width Calculator",
             description: isNl
               ? "Bereken je ideale zadelbreedteaanbeveling op basis van zitbeenmeting of lichaamsgegevens."
               : "Calculate your ideal saddle width from sit-bone measurement or body data.",
             url: pageUrl,
+            locale,
           }),
           buildHowToSchema({
             name: isNl ? "Hoe bereken je zadelbreedte" : "How to calculate saddle width",

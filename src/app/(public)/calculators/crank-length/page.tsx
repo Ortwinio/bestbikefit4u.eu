@@ -14,7 +14,7 @@ import { PublicCtaBand, PublicSection } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { BRAND } from "@/config/brand";
-import { buildFaqPageSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { buildFaqPageSchema, buildCalculatorPageSchemas } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { getDictionary } from "@/i18n/getDictionary";
@@ -76,7 +76,7 @@ export default async function CrankLengthCalculatorPage({
       <JsonLd
         schema={[
           buildFaqPageSchema([...copy.faqs]),
-          buildWebApplicationSchema({
+          ...buildCalculatorPageSchemas({
             name:
               locale === "nl"
                 ? "BestBikeFit4U cranklengte calculator"
@@ -86,6 +86,7 @@ export default async function CrankLengthCalculatorPage({
                 ? "Bereken een praktisch startpunt voor cranklengte op basis van binnenbeenlengte en categorie."
                 : "Calculate a practical crank-length starting point based on inseam and category.",
             url: pageUrl,
+            locale,
           }),
         ]}
       />

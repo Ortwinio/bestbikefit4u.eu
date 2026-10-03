@@ -42,8 +42,9 @@ describe.each(["nl", "en"] as const)("%s performance pages preserve SEO", (langu
       );
       const graph = json.flat();
       expect(graph.map((item) => item["@type"])).toEqual(
-        expect.arrayContaining(["WebApplication", "HowTo", "FAQPage"]),
+        expect.arrayContaining(["WebPage", "BreadcrumbList", "HowTo", "FAQPage"]),
       );
+      expect(JSON.stringify(graph)).not.toMatch(/WebApplication|SoftwareApplication|aggregateRating|AggregateRating/);
       const faq = graph.find((item) => item["@type"] === "FAQPage");
       expect(faq.mainEntity).toHaveLength(2);
       for (const question of faq.mainEntity) expect(screen.getByText(question.name)).toBeTruthy();

@@ -29,7 +29,7 @@ import { getDictionary } from "@/i18n/getDictionary";
 import {
   buildHowToSchema,
   buildFaqPageSchema,
-  buildWebApplicationSchema,
+  buildCalculatorPageSchemas,
 } from "@/lib/seo/jsonLd";
 import { getRelatedLinks } from "@/lib/seo/relatedLinks";
 import { SaddleHeightCalculatorForm } from "./SaddleHeightCalculatorForm";
@@ -150,10 +150,11 @@ export default async function SaddleHeightCalculatorPage() {
       <JsonLd
         schema={[
           buildFaqPageSchema(faqs),
-          buildWebApplicationSchema({
+          ...buildCalculatorPageSchemas({
             name: fitPageDetails[locale].saddleSchemaName,
             description: fitPageDetails[locale].saddleDescription,
             url: pageUrl,
+            locale,
           }),
           buildHowToSchema({
             name: isNl ? "Hoe bereken je zadelhoogte" : "How to calculate saddle height",

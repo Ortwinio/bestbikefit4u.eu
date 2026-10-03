@@ -1,0 +1,480 @@
+{
+  "buildId": "8jykiziooi6kgzsBk9PPQ",
+  "startedAt": "2026-10-03T19:02:00.520Z",
+  "finishedAt": "2026-10-03T19:02:13.006Z",
+  "calculators": [
+    {
+      "path": "/en/calculators/bike-fit",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "WebPage",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep"
+      ]
+    },
+    {
+      "path": "/en/calculators/climb-planner",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer"
+      ]
+    },
+    {
+      "path": "/en/calculators/crank-length",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem"
+      ]
+    },
+    {
+      "path": "/en/calculators/frame-size",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem"
+      ]
+    },
+    {
+      "path": "/en/calculators/ftp-wkg",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer"
+      ]
+    },
+    {
+      "path": "/en/calculators/fuel-hydration",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer"
+      ]
+    },
+    {
+      "path": "/en/calculators/gearing",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer"
+      ]
+    },
+    {
+      "path": "/en/calculators/power-speed",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer"
+      ]
+    },
+    {
+      "path": "/en/calculators/saddle-height",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep"
+      ]
+    },
+    {
+      "path": "/en/calculators/saddle-width",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep"
+      ]
+    },
+    {
+      "path": "/en/tire-pressure-calculator",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer"
+      ]
+    },
+    {
+      "path": "/nl/bandenspanning-calculator",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer"
+      ]
+    },
+    {
+      "path": "/nl/calculators/bike-fit",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "WebPage",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep"
+      ]
+    },
+    {
+      "path": "/nl/calculators/climb-planner",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer"
+      ]
+    },
+    {
+      "path": "/nl/calculators/crank-length",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem"
+      ]
+    },
+    {
+      "path": "/nl/calculators/frame-size",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem"
+      ]
+    },
+    {
+      "path": "/nl/calculators/ftp-wkg",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer"
+      ]
+    },
+    {
+      "path": "/nl/calculators/fuel-hydration",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer"
+      ]
+    },
+    {
+      "path": "/nl/calculators/gearing",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer"
+      ]
+    },
+    {
+      "path": "/nl/calculators/power-speed",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer"
+      ]
+    },
+    {
+      "path": "/nl/calculators/saddle-height",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep"
+      ]
+    },
+    {
+      "path": "/nl/calculators/saddle-width",
+      "status": 200,
+      "schemaTypes": [
+        "Organization",
+        "WebSite",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "Question",
+        "Answer",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "ListItem",
+        "HowTo",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep",
+        "HowToStep"
+      ]
+    }
+  ],
+  "failures": [],
+  "otherChecks": {
+    "pressure": 6,
+    "redirects": 65,
+    "guides": 96,
+    "screenshots": 8
+  }
+}

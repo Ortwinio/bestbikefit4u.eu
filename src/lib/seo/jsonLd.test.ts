@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   buildBreadcrumbListSchema,
+  buildCalculatorPageSchemas,
   buildPersonSchema, buildOrganizationSchema, buildArticleSchema,
   buildFaqPageSchema,
-  buildWebApplicationSchema,
 } from "./jsonLd";
 
 describe("seo jsonLd helpers", () => {
@@ -28,24 +28,43 @@ describe("seo jsonLd helpers", () => {
     expect(schema.itemListElement[1]?.name).toBe("Guides");
   });
 
-  it("builds a free calculator WebApplication without ratings", () => {
-    const schema = buildWebApplicationSchema({
-      name: "BestBikeFit4U Bike Fit Calculator",
-      description: "Free bike-fit calculator.",
-      url: "https://bestbikefit4u.eu/en/calculators/bike-fit",
+  it.each(["nl", "en"] as const)("builds calculator WebPage and canonical breadcrumbs in %s", (locale) => {
+    const url = `https://bestbikefit4u.eu/${locale}/calculators/saddle-height`;
+    const schemas = buildCalculatorPageSchemas({
+      name: "Saddle height",
+      description: "Calculate your saddle height.",
+      url,
+      locale,
     });
 
-    expect(schema).toMatchObject({
-      "@type": "WebApplication",
-      operatingSystem: "Any",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "EUR",
+    expect(schemas).toEqual([
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Saddle height",
+        description: "Calculate your saddle height.",
+        url,
+        inLanguage: locale,
       },
+      buildBreadcrumbListSchema([
+        { name: "Home", item: `https://bestbikefit4u.eu/${locale}` },
+        { name: "Saddle height", item: url },
+      ]),
+    ]);
+    expect(JSON.stringify(schemas)).not.toMatch(/SoftwareApplication|WebApplication|aggregateRating/);
+  });
+
+  it("can preserve an existing calculator breadcrumb without adding another", () => {
+    const schemas = buildCalculatorPageSchemas({
+      name: "Bike fit",
+      description: "Calculate your bike fit.",
+      url: "https://bestbikefit4u.eu/en/calculators/bike-fit",
+      locale: "en",
+      breadcrumb: false,
     });
-    expect(schema).not.toHaveProperty("aggregateRating");
-    expect(JSON.stringify(schema)).not.toContain('"AggregateRating"');
+
+    expect(schemas).toHaveLength(1);
+    expect(schemas[0]?.["@type"]).toBe("WebPage");
   });
 });
 

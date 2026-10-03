@@ -16,7 +16,7 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import { buildFaqPageSchema, buildHowToSchema, buildWebApplicationSchema } from "@/lib/seo/jsonLd";
+import { buildFaqPageSchema, buildHowToSchema, buildCalculatorPageSchemas } from "@/lib/seo/jsonLd";
 
 const copy = climbPlannerPageMessages;
 const featureIcons = [
@@ -55,10 +55,11 @@ export default async function ClimbPlannerPage() {
     <div className="text-foreground">
       <JsonLd
         schema={[
-          buildWebApplicationSchema({
+          ...buildCalculatorPageSchemas({
             name: page.metadata.title,
             description: page.metadata.description,
             url: pageUrl,
+            locale,
           }),
           buildHowToSchema({ ...page.howTo, steps: [...page.howTo.steps] }),
           buildFaqPageSchema([...page.faqs]),
