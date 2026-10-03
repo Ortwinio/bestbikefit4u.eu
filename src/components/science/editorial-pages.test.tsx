@@ -101,6 +101,11 @@ describe("editorial page SEO and localized content", () => {
     locale = language;
     const metadata = await page.generateMetadata();
     expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}${path}`);
+    expect(metadata.alternates?.languages).toEqual({
+      en: "https://bestbikefit4u.eu/en/bike-fitting",
+      nl: "https://bestbikefit4u.eu/nl/bikefitting",
+      "x-default": "https://bestbikefit4u.eu/en/bike-fitting",
+    });
     const html = await renderHtml(await page.default());
     expect(html).toContain('"@type":"FAQPage"');
     expect(html).toContain('"@type":"BreadcrumbList"');

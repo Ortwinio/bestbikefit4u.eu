@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
       locale === "nl"
         ? "Log in of maak je account aan om je persoonlijke BestBikeFit4U-dashboard te openen."
         : "Sign in or create your account to open your personal BestBikeFit4U dashboard.",
-    alternates: buildLocaleAlternates("/login", locale),
+    alternates: { canonical: buildLocaleAlternates("/login", locale).canonical },
     robots: {
       index: false,
       follow: true,

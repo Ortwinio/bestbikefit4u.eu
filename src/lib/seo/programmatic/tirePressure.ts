@@ -2,7 +2,8 @@ import type {
   BasicPressureInput,
   Discipline,
 } from "@/lib/pressure-engine";
-import { buildLocalizedAlternates } from "@/i18n/metadata";
+import { buildLocaleAlternates } from "@/i18n/metadata";
+import { PRESSURE_BIKE_SLUGS } from "@/i18n/localeRoutes";
 
 export const WEIGHT_STEPS = [55, 60, 65, 70, 75, 80, 85, 90, 95, 100] as const;
 
@@ -18,11 +19,7 @@ export const EN_TO_DISCIPLINE: Record<EnBikeType, Discipline> = {
   "mountain-bike": "mtb",
 };
 
-export const NL_TO_EN: Record<NlBikeType, EnBikeType> = {
-  racefiets: "road-bike",
-  gravelbike: "gravel-bike",
-  mountainbike: "mountain-bike",
-};
+export const NL_TO_EN: Record<NlBikeType, EnBikeType> = PRESSURE_BIKE_SLUGS;
 
 export const BIKE_TYPE_LABELS: Record<
   EnBikeType,
@@ -147,12 +144,5 @@ export function buildPressureAlternates(
   bikeType: EnBikeType,
   locale: "en" | "nl"
 ) {
-  return buildLocalizedAlternates(
-    {
-      en: `/en/tire-pressure/${buildEnglishPressureSlug(weight, bikeType)}`,
-      nl: `/nl/bandenspanning/${buildDutchPressureSlug(weight, bikeType)}`,
-    },
-    locale,
-    "en"
-  );
+  return buildLocaleAlternates(`/tire-pressure/${buildEnglishPressureSlug(weight, bikeType)}`, locale);
 }

@@ -2,6 +2,7 @@ import {
   resolvePreferredLocale,
   type Locale,
 } from "./config";
+import { getLegacyLocaleRedirect } from "./localeRoutes";
 import {
   extractLocaleFromPathname,
   isBypassedPathname,
@@ -12,7 +13,7 @@ import {
 
 export type ProxyDecision =
   | { type: "bypass" }
-  | { type: "redirect"; pathname: string; locale: Locale }
+  | { type: "redirect"; pathname: string; locale: Locale; permanent?: boolean }
   | { type: "auth_redirect"; pathname: string; locale: Locale }
   | { type: "rewrite"; pathname: string; locale: Locale };
 
@@ -48,6 +49,10 @@ export function decideProxyAction({
   }
 
   const internalPathname = stripLocalePrefix(pathname);
+  const legacyRedirect = getLegacyLocaleRedirect(pathname);
+  if (legacyRedirect) {
+    return { type: "redirect", pathname: legacyRedirect, locale: pathLocale, permanent: true };
+  }
 
   if (isBypassedPathname(internalPathname)) {
     return {

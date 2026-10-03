@@ -1,0 +1,8 @@
+src/app/(auth)/layout.tsx
+src/app/(auth)/login/page.test.tsx
+src/app/email-preferences/page.tsx
+src/app/email-preferences/metadata.test.ts
+plans/seo-crawl-fixes/README.md
+plans/seo-crawl-fixes/audit/S3-notes.md
+plans/seo-crawl-fixes/audit/files-S3.txt
+plans/seo-crawl-fixes/messages/B-to-A-C-S3-scope.md

@@ -411,10 +411,14 @@ it("renders the login in one full-width main without a layout-owned logo", () =>
   expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
 });
 
-it.each(["en", "nl"])("preserves %s login metadata and indexing rules", async (locale) => {
-  pathname = `/${locale}/login`;
+it.each(["en", "nl"].flatMap((locale) => ["", "?src=dashboard", "?src=guide&utm_source=email"]
+  .map((query) => [locale, query])))
+("preserves %s login%s metadata without hreflang", async (locale, query) => {
+  pathname = `/${locale}/login${query}`;
   const metadata = await generateMetadata();
   expect(metadata.title).toBe(locale === "nl" ? "Inloggen | BestBikeFit4U" : "Sign In | BestBikeFit4U");
   expect(metadata.robots).toEqual({ index: false, follow: true });
   expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}/login`);
+  expect(metadata.alternates).toEqual({ canonical: `https://bestbikefit4u.eu/${locale}/login` });
+  expect(metadata.alternates?.languages).toBeUndefined();
 });

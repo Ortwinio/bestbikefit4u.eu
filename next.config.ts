@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   // Keep the repository's maintained agent instructions unchanged by dev startup.
   agentRules: false,
   poweredByHeader: false,
+  htmlLimitedBots: /.*/,
   outputFileTracingIncludes: {
     "/api/reports/*/pdf": [
       "./public/brand/report/**/*",

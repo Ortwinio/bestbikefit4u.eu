@@ -1,6 +1,8 @@
 import type { Locale } from "@/i18n/config";
 import { BRAND } from "@/config/brand";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { getLocaleRoutePair } from "@/i18n/localeRoutes";
+import { buildLocaleAlternates } from "@/i18n/metadata";
 
 function toAbsoluteUrl(pathname: string): string {
   return new URL(pathname, BRAND.siteUrl).toString();
@@ -19,6 +21,10 @@ export function buildSelectiveLocaleAlternates(
 
   if (!canonicalPath) {
     throw new Error(`Missing canonical pathname for locale "${canonicalLocale}"`);
+  }
+
+  if (getLocaleRoutePair(canonicalPath)) {
+    return buildLocaleAlternates(canonicalPath, canonicalLocale);
   }
 
   const languages = Object.fromEntries(
