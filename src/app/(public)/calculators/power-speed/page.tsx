@@ -118,7 +118,7 @@ export default async function PowerSpeedEstimatorPage() {
             <Button
               render={
                 <TrackedCtaLink
-                  href={withLocalePrefix("/login", locale)}
+                  href={withLocalePrefix("/login?src=power-speed", locale)}
                   locale={locale}
                   pagePath={pagePath}
                   section="power_speed_primary_cta"

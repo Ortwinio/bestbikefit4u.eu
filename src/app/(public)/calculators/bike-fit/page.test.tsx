@@ -132,7 +132,7 @@ describe("bike fit calculator page", () => {
       render(await BikeFitCalculatorPage());
 
       const label = locale === "nl" ? "Maak een gratis account aan" : "Create a free account";
-      expect(screen.getByText(label).closest("a")?.getAttribute("href")).toBe(`/${locale}/login`);
+      expect(screen.getByText(label).closest("a")?.getAttribute("href")).toBe(`/${locale}/login?src=bike-fit`);
       expect(
         screen.queryByText(
           /save these results|Sign in to save results|resultaten op te slaan|Meld je aan om te bewaren/,
@@ -153,7 +153,7 @@ describe("bike fit calculator page", () => {
 
     expect(screen.getByText("Bike fit form")).toBeTruthy();
     expect(screen.getByText("Create a free account").closest("a")?.getAttribute("href")).toBe(
-      "/en/login",
+      "/en/login?src=bike-fit",
     );
     expect(
       screen.getByText("Donate via our Alpe d'HuZes page").closest("a")?.getAttribute("href"),

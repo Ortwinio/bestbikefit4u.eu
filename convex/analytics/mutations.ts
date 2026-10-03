@@ -9,6 +9,8 @@ import {
   type MarketingEventType,
 } from "../../src/lib/analytics/marketing";
 
+import { PUBLIC_CALCULATORS, publicCalculatorPath } from "../../src/lib/analytics/calculatorBaseline";
+
 const marketingEventType = v.union(
   ...(MARKETING_EVENT_TYPES.map((eventType) => v.literal(eventType)) as [
     ReturnType<typeof v.literal<MarketingEventType>>,
@@ -144,6 +146,17 @@ export const logMarketingEvent = mutation({
     }
 
     const pagePath = normalizeRelativePath(args.pagePath, "pagePath");
+    if (args.eventType === "calculator_result_view" || args.eventType === "calculator_login_cta_click") {
+      const calculator = PUBLIC_CALCULATORS.find((id) => id === args.sourceTag);
+      const extraFields = [args.section, args.ctaLabel, args.ctaTargetPath, args.valueCents, args.currency];
+      if (
+        !calculator || publicCalculatorPath(calculator, pagePath) !== pagePath ||
+        /[?#]/.test(pagePath) || extraFields.some((value) => value !== undefined)
+      ) {
+        throw new Error("Calculator analytics accepts only calculator, locale and public path");
+      }
+    }
+
     if (args.section) validateShortString(args.section, "section");
     if (args.ctaLabel) validateShortString(args.ctaLabel, "ctaLabel");
     const ctaTargetPath = args.ctaTargetPath

@@ -335,7 +335,7 @@ export function BikeFitCalculatorForm({
             {continueAction ?? <Button
               role="link"
               className="mt-5 w-full whitespace-normal"
-              render={<Link href={withLocalePrefix("/login", locale)} />}
+              render={<Link href={withLocalePrefix("/login?src=bike-fit", locale)} />}
             >
               {copy.accountCta}
             </Button>}

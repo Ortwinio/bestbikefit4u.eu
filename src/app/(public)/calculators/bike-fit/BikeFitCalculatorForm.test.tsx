@@ -145,7 +145,7 @@ describe("BikeFitCalculatorForm", () => {
     expect(screen.getByText(nl.warnings.measurement_warning)).toBeTruthy();
     expect(screen.queryByText(en.warnings.measurement_warning)).toBeNull();
     expect(screen.getByRole("link", { name: nl.accountCta }).getAttribute("href")).toBe(
-      "/nl/login",
+      "/nl/login?src=bike-fit",
     );
     expect(screen.getByText(nl.accountHint)).toBeTruthy();
   });

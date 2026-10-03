@@ -15,6 +15,7 @@ export function ResultHero({ label, value, unit, subtext, variant = "lime", chil
   const dark = variant === "ink";
   return (
     <section
+      data-slot="result-hero"
       aria-label={label}
       className={cn(
         "min-w-0 rounded-[2rem] p-6 sm:p-8",

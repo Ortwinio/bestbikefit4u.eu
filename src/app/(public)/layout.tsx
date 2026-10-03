@@ -1,3 +1,4 @@
+import { CalculatorBaselineTracker } from "@/components/analytics/useCalculatorBaseline";
 import { ConfiguratorHeaderSwitch } from "@/components/layout/ConfiguratorHeaderSwitch";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -26,6 +27,7 @@ export default async function PublicLayout({ children }: { children: React.React
         />
       </ConfiguratorHeaderSwitch>
       <main id="main-content" tabIndex={-1} className="flex-1">
+        <CalculatorBaselineTracker />
         {children}
       </main>
       <Footer

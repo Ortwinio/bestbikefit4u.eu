@@ -38,7 +38,7 @@ export function CrankLengthCalculatorForm({
   copy,
   initialInseamCm,
   initialCategory,
-  continueHref = "/login",
+  continueHref = "/login?src=crank-length",
   initialValues,
   onValuesChange,
 }: CrankLengthCalculatorFormProps) {

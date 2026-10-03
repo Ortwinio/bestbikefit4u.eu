@@ -416,7 +416,7 @@ export function SaddleWidthCalculatorForm({
           </section>
           <AdjustOrder title={copy.order} steps={copy.steps.map((title) => ({ title }))} />
           {!accountMode && <><Link
-            href={withLocalePrefix("/login", locale)}
+            href={withLocalePrefix("/login?src=saddle-width", locale)}
             className={
               "inline-flex min-h-14 items-center justify-center rounded-full bg-primary " +
               "px-5 py-3 font-bold text-primary-foreground"
