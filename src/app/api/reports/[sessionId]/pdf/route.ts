@@ -111,6 +111,15 @@ export async function GET(
   request: Request,
   context: PdfRouteContext
 ): Promise<Response> {
+  const response = await generateReportResponse(request, context);
+  response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  return response;
+}
+
+async function generateReportResponse(
+  request: Request,
+  context: PdfRouteContext
+): Promise<Response> {
   try {
     const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
     if (!convexUrl) {

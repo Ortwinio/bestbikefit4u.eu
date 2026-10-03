@@ -203,6 +203,7 @@ describe("pdf report route", () => {
       params: Promise.resolve({ sessionId: "session_3" }),
     });
     expect(response.status).toBe(status);
+    expect(response.headers.get("X-Robots-Tag")).toBe("noindex, nofollow");
     if (status === 403) {
       expect(await response.json()).toEqual({ error: "pro_required" });
       expect(mocks.mutation).not.toHaveBeenCalled();
@@ -221,6 +222,7 @@ describe("pdf report route", () => {
     });
 
     expect(response.status).toBe(401);
+    expect(response.headers.get("X-Robots-Tag")).toBe("noindex, nofollow");
     expect(await response.json()).toEqual({ error: "Not authenticated." });
     expect(mocks.mutation).not.toHaveBeenCalled();
   });
@@ -235,6 +237,7 @@ describe("pdf report route", () => {
     });
 
     expect(response.status).toBe(429);
+    expect(response.headers.get("X-Robots-Tag")).toBe("noindex, nofollow");
     expect(response.headers.get("Retry-After")).toBe("30");
     expect(mocks.query).toHaveBeenCalledTimes(1);
   });
@@ -249,6 +252,7 @@ describe("pdf report route", () => {
     });
 
     expect(response.status).toBe(404);
+    expect(response.headers.get("X-Robots-Tag")).toBe("noindex, nofollow");
     expect(await response.json()).toEqual({ error: "Session not found." });
     expect(mocks.setAuth).toHaveBeenCalledWith("token-123");
   });
@@ -327,6 +331,7 @@ describe("pdf report route", () => {
 
     expect(response.status).toBe(200);
     expect(mocks.renderPdfFromHtml).toHaveBeenCalledTimes(1);
+    expect(response.headers.get("X-Robots-Tag")).toBe("noindex, nofollow");
     expect(mocks.buildRecommendationPdfLines).toHaveBeenCalledWith({
       session: sessionFixture,
       recommendation: recommendationFixture,
@@ -363,6 +368,7 @@ describe("pdf report route", () => {
 
     expect(response.status).toBe(200);
     expect(mocks.renderPdfFromHtml).not.toHaveBeenCalled();
+    expect(response.headers.get("X-Robots-Tag")).toBe("noindex, nofollow");
     expect(mocks.buildRecommendationPdfLines).toHaveBeenCalledWith({
       session: sessionFixture,
       recommendation: recommendationFixture,
@@ -415,6 +421,7 @@ describe("pdf report route", () => {
     });
 
     expect(response.status).toBe(500);
+    expect(response.headers.get("X-Robots-Tag")).toBe("noindex, nofollow");
     expect(await response.json()).toEqual({
       error: "Failed to generate report.",
     });
@@ -433,5 +440,17 @@ describe("pdf report route", () => {
     });
 
     expect(response.status).toBe(409);
+    expect(response.headers.get("X-Robots-Tag")).toBe("noindex, nofollow");
+  });
+
+  it("prevents indexing when server configuration is missing", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CONVEX_URL", "");
+    const response = await GET(new Request("http://localhost"), {
+      params: Promise.resolve({ sessionId: "session_3" }),
+    });
+    expect(response.status).toBe(500);
+    expect(response.headers.get("X-Robots-Tag")).toBe("noindex, nofollow");
+    expect(await response.json()).toEqual({ error: "Server configuration missing." });
+    expect(mocks.token).not.toHaveBeenCalled();
   });
 });
