@@ -195,7 +195,10 @@ export default async function ContactPage() {
             </Button>
             <p>{presentation.measurementText}</p>
             <p>
-              <Link href={withLocalePrefix("/measurement-guide", locale)}>
+              <Link
+                className={styles.measurementLink}
+                href={withLocalePrefix("/measurement-guide", locale)}
+              >
                 {presentation.measurementLink}
               </Link>
             </p>

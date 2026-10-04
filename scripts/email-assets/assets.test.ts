@@ -13,6 +13,7 @@ describe("hosted email PNG assets", () => {
     ["icon-bike", 48, 48],
     ["icon-plan", 48, 48],
     ["icon-tip", 48, 48],
+    ["icon-gauge", 48, 48],
     ["measuring-kit", 960, 720],
     ["tyre", 960, 720],
     ["stack-reach", 960, 720],

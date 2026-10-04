@@ -55,3 +55,11 @@ targeted brand surfaces and twelve actual report PDF pages have local visual evi
 Release handoff: `audit/RB-notes.md`, `audit/RB-env-switch.md`, `audit/files-rebrand.txt`. Ortwin still
 owns environment/domain/provider switching, legal-entity confirmation and any authorized production
 CMS inventory/update. No commits, deployments, production access or sent emails were performed.
+
+## RB2 follow-ups — 4 October 2026
+
+After explicit PR #14 merge authorization, RP6 result wrapping and the contact measurement-link target
+are fixed. N07Dag7 and N14Dag14 have pure NL/EN renderers and local previews only; no sender or schedule
+is wired. The full source gates, 875 local crawl checks, 12-case UI sweep, targeted before/after geometry
+and 52 email previews pass. See `audit/RB2-notes.md` and `audit/files-RB2.txt` for proof and limitations.
+Other B4 gaps are not marked resolved. Work remains uncommitted for lead review.

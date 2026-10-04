@@ -44,7 +44,13 @@ export interface WinbackData extends PersonalData, PreferenceLinks, FitValues {
 }
 export interface ProExplainerData extends PersonalData, PreferenceLinks, FitValues { actionUrl: string; }
 export interface Day1TipsData extends PersonalData, PreferenceLinks { hasFit: boolean; actionUrl: string; }
+export interface Day7CheckInData extends PersonalData, PreferenceLinks {
+  actionUrl: string;
+  answerUrls: { better: string; same: string; worse: string };
+}
+export interface Day14EvaluationData extends PersonalData, PreferenceLinks { actionUrl: string; }
 export {
   renderLoginCode, renderResultsSummary, renderFitReport, renderFitPassWelcome, renderCaseStudyLead,
   renderCaseStudyConfirmation, renderFitReminder, renderUpgradeNudge, renderWinback, renderProExplainer, renderDay1Tips,
+  renderDay7CheckIn, renderDay14Evaluation,
 } from "./renderers";

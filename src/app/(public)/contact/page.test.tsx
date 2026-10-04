@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import * as commercial from "@/config/commercial";
 import { contactPresentation } from "@/i18n/marketing/contact";
 import ContactPage, { generateMetadata } from "./page";
+import styles from "./contact.module.css";
 
 const mocks = vi.hoisted(() => ({
   locale: "nl" as "nl" | "en",
@@ -25,6 +26,20 @@ afterEach(() => {
 });
 
 describe("Contact marketing page", () => {
+  it.each(["nl", "en"] as const)("puts the measurement target on the native focusable link in %s", async (locale) => {
+    mocks.locale = locale;
+    render(await ContactPage());
+    const link = screen.getByRole("link", { name: contactPresentation[locale].measurementLink });
+
+    expect(link.tagName).toBe("A");
+    expect(link.classList.contains(styles.measurementLink)).toBe(true);
+    expect(link.parentElement?.classList.contains(styles.measurementLink)).toBe(false);
+    expect(link.getAttribute("href")).toBe(`/${locale}/measurement-guide`);
+    expect(link.tabIndex).toBe(0);
+    link.focus();
+    expect(document.activeElement).toBe(link);
+  });
+
   it.each(["nl", "en"] as const)("keeps real support content and mail-only channels in %s", async (locale) => {
     mocks.locale = locale;
     const { container } = render(await ContactPage());

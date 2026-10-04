@@ -14,5 +14,10 @@ The converter uses the existing `sharp` dependency and writes PNGs only to `publ
 All illustration art comes from the repository's existing in-house pen drawings; no stock
 art, third-party downloads or new image generation. Illustrations preserve the full 4:3
 composition at 960 × 720, suitable for 480 px display. PNG palettes keep every asset below
-the existing 300,000-byte public image budget. The tyre illustration is prepared per the
-specification, but no day-14 email is sent/rendered because that feature is out of scope.
+the existing 300,000-byte public image budget. The tyre illustration is used by the
+renderer-only day-14 follow-up; no sending path is introduced.
+
+`node scripts/email-assets/generate.mjs --only=icon-gauge` regenerates only `icon-gauge.png`,
+leaving every existing asset untouched. Its two paths come directly from the approved
+`plans/rebrand/canvas/project/mail/N14Dag14.dc.html` board, with the same 24px viewBox,
+2px petrol stroke and round caps/joins. The 48 × 48 PNG is displayed at 22 × 22 beside the N14 tip.
