@@ -1,6 +1,0 @@
-plans/redesign-canvas/audit/28-notes.md
-plans/redesign-canvas/audit/files-28.txt
-plans/redesign-canvas/final-sweep/28-release/report.md
-plans/redesign-canvas/final-sweep/28-release/report.json
-plans/redesign-canvas/final-sweep/28-release/results.jsonl
-plans/redesign-canvas/final-sweep/28-release/run-context.json

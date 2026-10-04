@@ -1,2 +1,0 @@
-convex/emails/__tests__/newsletter.contract.test.ts
-convex/emails/__tests__/preferences.test.ts

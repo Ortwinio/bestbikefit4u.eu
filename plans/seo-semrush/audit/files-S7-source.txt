@@ -1,9 +1,0 @@
-src/lib/seo/sitemap/sources.ts
-src/lib/seo/sitemap/sources.test.ts
-src/lib/seo/sitemap/config.ts
-src/lib/seo/sitemap/types.ts
-src/lib/seo/sitemap/normalize.ts
-src/lib/seo/sitemap/timeout.ts
-plans/seo-semrush/audit/S7-source-notes.md
-plans/seo-semrush/audit/files-S7-source.txt
-messages/20261003-1630-S7-source-to-parent-contract.md

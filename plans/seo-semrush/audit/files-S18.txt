@@ -1,6 +1,0 @@
-plans/seo-semrush/README.md
-plans/seo-semrush/audit/S18-notes.md
-plans/seo-semrush/audit/S5-after-capture.json
-plans/seo-semrush/audit/S5-home-capture.mjs
-plans/seo-semrush/audit/S8-runtime.mjs
-plans/seo-semrush/audit/files-S18.txt

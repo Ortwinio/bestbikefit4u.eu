@@ -1,6 +1,6 @@
 # Content Localization Style Guide (EN/NL)
 
-This guide standardizes terminology and writing style for public website content on BestBikeFit4U.
+This guide standardizes terminology and writing style for public website content on BikeFitBoost.
 
 ## Terminology Standards
 

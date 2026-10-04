@@ -1,8 +1,0 @@
-src/app/(dashboard)/gearing/GearingControls.tsx
-src/app/(dashboard)/gearing/GearingCalculatorForm.tsx
-src/app/(dashboard)/gearing/GearingCalculatorForm.test.tsx
-src/app/(dashboard)/feedback/FeedbackAccountPage.tsx
-src/app/(dashboard)/feedback/FeedbackAccountPage.test.tsx
-plans/redesign-canvas/README.md
-plans/redesign-canvas/audit/29b-notes.md
-plans/redesign-canvas/audit/files-29b.txt

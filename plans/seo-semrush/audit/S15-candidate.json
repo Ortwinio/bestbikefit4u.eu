@@ -1,9 +1,0 @@
-{
-  "recordedAt": "2026-10-03T14:25:37.959Z",
-  "branch": "fix/seo-semrush",
-  "base": "e93f8c1c1486b56c111b80226a5bad6559b74aa9",
-  "buildId": "rejwcKGnhSNUclqs6ffwl",
-  "files": 1436,
-  "sourceSha256": "22b20d069e2246208c41a88c0b76e3d74dd81411c1ffbe2fc564dd1cc05eeaf7",
-  "algorithm": "Sorted git ls-files cached+untracked, existing files in src/convex/shared/scripts plus package.json/package-lock.json/next.config.ts/tsconfig.json/convex.json; SHA256(path + NUL + fileSHA256 + newline). Plans and renders excluded."
-}

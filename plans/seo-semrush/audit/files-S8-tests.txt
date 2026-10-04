@@ -1,4 +1,0 @@
-src/lib/seo/llms.test.ts
-tests/integration/llms.integration.test.ts
-plans/seo-semrush/audit/S8-tests-notes.md
-plans/seo-semrush/audit/files-S8-tests.txt

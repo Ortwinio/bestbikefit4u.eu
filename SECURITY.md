@@ -2,7 +2,7 @@
 
 ## Overview
 
-We take the security of BestBikeFit4U seriously and appreciate responsible disclosure of security issues.
+We take the security of BikeFitBoost seriously and appreciate responsible disclosure of security issues.
 
 Please **do not disclose security vulnerabilities publicly** in GitHub issues, discussions, pull requests, social media, or other public channels. Report them privately using the process below.
 
@@ -151,7 +151,7 @@ Examples of high-priority categories include:
 
 ## Rewards / bug bounty
 
-At this time, **BestBikeFit4U does not operate a public bug bounty program**, and we cannot guarantee monetary rewards for reports.
+At this time, **BikeFitBoost does not operate a public bug bounty program**, and we cannot guarantee monetary rewards for reports.
 
 Valid reports are still appreciated and will be handled seriously.
 

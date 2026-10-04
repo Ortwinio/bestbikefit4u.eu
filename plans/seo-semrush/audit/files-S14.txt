@@ -1,4 +1,0 @@
-plans/seo-semrush/README.md
-plans/seo-semrush/ai-visibility.md
-plans/seo-semrush/audit/S14-notes.md
-plans/seo-semrush/audit/files-S14.txt

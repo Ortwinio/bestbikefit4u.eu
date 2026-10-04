@@ -1,5 +1,0 @@
-shared/profilePromptPolicy.ts
-shared/profilePromptPolicy.test.ts
-plans/riderprofile/messages/R7-policy-to-parent-api.md
-plans/riderprofile/audit/R7-policy-notes.md
-plans/riderprofile/audit/files-R7-policy.txt

@@ -1,5 +1,0 @@
-crawl-*.json
-crawl-*-build.log
-crawl-*-server.log
-local-before/
-local-after/

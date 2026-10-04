@@ -1,3 +1,0 @@
-tests/integration/sitemap.integration.test.ts
-plans/seo-semrush/audit/S7-route-tests-notes.md
-plans/seo-semrush/audit/files-S7-route-tests.txt

@@ -1,6 +1,0 @@
-src/components/ui/Slider.tsx
-src/components/ui/Slider.test.tsx
-plans/redesign-canvas/audit/25-e-notes.md
-plans/redesign-canvas/audit/25-e-hydration.json
-plans/redesign-canvas/audit/25-e-sweep.json
-plans/redesign-canvas/audit/files-25-e.txt
