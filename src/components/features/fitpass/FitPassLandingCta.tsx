@@ -3,15 +3,10 @@
 import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { isAnnualProduct } from "../../../../shared/pricing/products";
 import { isPaidAccessEnforced } from "../../../../shared/pricing/flags";
 import { fitPassAccessCopy } from "@/i18n/marketing/fitPassAccess";
 import { Button } from "@/components/prototyper-ui/ui/button";
-import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
-import {
-  CONSUMER_CAMPAIGN_CONFIG,
-  getConsumerCampaignCopy,
-  isConsumerCampaignActive,
-} from "@/config/commercial";
 
 interface FitPassLandingCtaProps {
   locale: string;
@@ -26,7 +21,6 @@ export function FitPassLandingCta({
   locale,
   label,
   loadingLabel,
-  loginHref,
   dashboardHref,
 }: FitPassLandingCtaProps) {
   const user = useQuery(api.users.queries.getCurrentUser);
@@ -34,10 +28,8 @@ export function FitPassLandingCta({
   const access = useQuery(api.pricing.queries.getAccess, enforced && user ? {} : "skip");
   const isNl = locale === "nl";
   const copy = fitPassAccessCopy[isNl ? "nl" : "en"];
-  const campaignActive = !enforced && isConsumerCampaignActive();
-  const campaign = getConsumerCampaignCopy(isNl ? "nl" : "en");
   const annualActive = enforced && Boolean(user) && access?.fullReport === true && access.maxBikes === null
-    && (access.productId === "annual" || access.productId === "annual_entry" || access.productId === "annual_personal");
+    && isAnnualProduct(access.productId);
   const legacyActive = !enforced && (user?.tier === "pro" || user?.tier === "premium");
 
   if (user === undefined || (enforced && user && access === undefined)) {
@@ -59,43 +51,6 @@ export function FitPassLandingCta({
           {copy.dashboard}
         </Button>
       </div>
-    );
-  }
-
-  // Not authenticated
-  if (!user) {
-    if (campaignActive) {
-      return (
-        <CampaignCtaGroup
-          locale={isNl ? "nl" : "en"}
-          pagePath={loginHref}
-          startHref={loginHref}
-          startSection="fit_pass_landing_campaign_start"
-          donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-          donateSection="fit_pass_landing_campaign_donate"
-          startLabel={campaign.startFreeCta}
-        />
-      );
-    }
-    return (
-      <Button render={<Link href={`/${isNl ? "nl" : "en"}/checkout?product=single`} />}
-        nativeButton={false} role="link">
-        {label}
-      </Button>
-    );
-  }
-
-  if (campaignActive) {
-    return (
-      <CampaignCtaGroup
-        locale={isNl ? "nl" : "en"}
-        pagePath={dashboardHref}
-        startHref={dashboardHref}
-        startSection="fit_pass_landing_campaign_dashboard"
-        donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-        donateSection="fit_pass_landing_campaign_donate"
-        startLabel={campaign.continueFreeCta}
-      />
     );
   }
 

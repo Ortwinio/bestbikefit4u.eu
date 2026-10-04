@@ -22,13 +22,7 @@ import {
   StepCard,
 } from "@/components/ui";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
-import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { useResolvedImageUrl } from "@/hooks/useResolvedImageUrl";
-import {
-  CONSUMER_CAMPAIGN_CONFIG,
-  getConsumerCampaignCopy,
-  isConsumerCampaignActive,
-} from "@/config/commercial";
 import {
   getBikeTypeLabel,
   isAeroCompatibleBikeType,
@@ -72,8 +66,6 @@ export default function NewFitSessionPage() {
   const toast = useToast();
   const pagePath = withLocalePrefix("/fit", locale);
   const logMarketingEvent = useMarketingEventLogger();
-  const campaignActive = isConsumerCampaignActive();
-  const campaign = getConsumerCampaignCopy(locale);
   const hasTrackedFitViewRef = useRef(false);
   const [selectedBikeId, setSelectedBikeId] = useState<Id<"bikes"> | null>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -162,15 +154,6 @@ export default function NewFitSessionPage() {
         bikeId: selectedBike?._id,
         ...(requestedCalculator && calculatorState ? { calculatorStateId: calculatorState._id, calculatorTrial } : {}),
       });
-      if (campaignActive) {
-        logMarketingEvent({
-          eventType: "free_fit_started_during_campaign",
-          locale,
-          pagePath,
-          section: "fit_start_page",
-          ctaLabel: campaign.startFreeCta,
-        });
-      }
       toast.success({ description: messages.common.toasts.fitSessionStarted });
       router.push(withLocalePrefix(`/fit/${sessionId}/questionnaire`, locale));
     } catch (error) {
@@ -218,23 +201,6 @@ export default function NewFitSessionPage() {
         <p className="text-sm font-bold uppercase tracking-[0.08em]">{copy.eyebrow}</p>
         <h1 className="text-[var(--bbf-inkt)] font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">{copy.title}</h1>
         <p className="max-w-2xl text-base leading-relaxed sm:text-lg">{copy.description}</p>
-        {campaignActive ? (
-          <div className="space-y-3 pt-2">
-            <p className="font-semibold">{campaign.fitStartTitle}</p>
-            <p className="max-w-2xl">{campaign.fitStartDescription}</p>
-            <CampaignCtaGroup
-              locale={locale}
-              pagePath={pagePath}
-              startHref={withLocalePrefix("/fit", locale)}
-              startSection="dashboard_fit_campaign_start"
-              donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-              donateSection="dashboard_fit_campaign_donate"
-              startLabel={campaign.continueFreeCta}
-              buttonSize="sm"
-              className="w-full sm:w-auto"
-            />
-          </div>
-        ) : null}
       </header>
       {requestedCalculator && <section className="space-y-4 rounded-3xl border border-border bg-card p-6"
         aria-labelledby="calculator-inputs-title">

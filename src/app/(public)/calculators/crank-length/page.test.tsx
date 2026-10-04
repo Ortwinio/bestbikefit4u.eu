@@ -44,25 +44,6 @@ vi.mock("@/components/seo/JsonLd", () => ({
   ),
 }));
 
-vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
-  CampaignCtaGroup: ({
-    startHref,
-    donateHref,
-    startLabel,
-    donateLabel,
-  }: {
-    startHref: string;
-    donateHref: string;
-    startLabel?: string;
-    donateLabel?: string;
-  }) => (
-    <div>
-      <a href={startHref}>{startLabel ?? "Create account or sign in"}</a>
-      <a href={donateHref}>{donateLabel ?? "Donate via our Alpe d'HuZes page"}</a>
-    </div>
-  ),
-}));
-
 vi.mock("@/components/seo/RelatedLinksSection", () => ({
   RelatedLinksSection: () => <section>Related links</section>,
 }));

@@ -76,7 +76,6 @@ export interface AccessExpiredData extends PersonalData { bikeName?: string; act
 export interface RenewalReminderData extends PersonalData {
   renewalAt?: number;
   daysUntilRenewal?: number;
-  /** Actual first-year price paid; only the standard annual price supports the board discount claim. */
   firstYearPriceCents?: number;
   bikesAdjusted?: number;
   reportsCreated?: number;
@@ -102,3 +101,5 @@ export {
   renderPurchaseConfirmation, renderSubscriptionWelcome, renderAccessExpired,
   renderRenewalReminder, renderCancellationConfirmation, renderTransitionAnnouncement,
 } from "./pricing";
+export { renderGiftMeasurement } from "./giftMeasurement";
+export type { GiftMeasurementData } from "./giftMeasurement";

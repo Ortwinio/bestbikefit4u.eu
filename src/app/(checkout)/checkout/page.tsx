@@ -6,6 +6,8 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
   const params = await searchParams;
   const product = typeof params.product === "string" ? params.product : undefined;
   return <CheckoutClient locale={await getRequestLocale()}
+    sessionId={typeof params.session_id === "string" ? params.session_id : undefined}
+    cancelled={params.cancelled === "1"}
     appointmentRequested={params.appointment === "1"}
     initialSelection={product || params.bikeId ? { product: parseCheckoutProduct(product), bikeId: typeof params.bikeId === "string" ? params.bikeId : "" } : undefined}
     preview={getCheckoutPreview(typeof params.preview === "string" ? params.preview : undefined, process.env)}

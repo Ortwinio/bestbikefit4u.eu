@@ -1,6 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
-import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { Card, CardContent } from "@/components/prototyper-ui/ui/card";
 import type { Locale } from "@/i18n/config";
@@ -11,13 +10,6 @@ type ClosingCtaBandProps = {
   homePath: string;
   fitHref: string;
   pricingHref: string;
-  campaignActive: boolean;
-  campaign: {
-    startFreeCta: string;
-    donateCta: string;
-    donationUrl: string;
-    optionalNote: string;
-  };
   recommendation: {
     title: string;
     description: string;
@@ -35,8 +27,6 @@ export function ClosingCtaBand({
   homePath,
   fitHref,
   pricingHref,
-  campaignActive,
-  campaign,
   recommendation,
   cta,
 }: ClosingCtaBandProps) {
@@ -79,59 +69,39 @@ export function ClosingCtaBand({
                 {cta.description}
               </p>
               <div className="mt-6 flex flex-col gap-3">
-                {campaignActive ? (
-                  <>
-                    <CampaignCtaGroup
-                      locale={locale}
-                      pagePath={homePath}
-                      startHref={fitHref}
-                      startSection="final_cta_primary"
-                      donateHref={campaign.donationUrl}
-                      donateSection="final_cta_secondary"
-                      startLabel={campaign.startFreeCta}
-                      donateLabel={campaign.donateCta}
-                      buttonSize="lg"
-                      className="items-start"
-                    />
-                    <p className="text-sm text-[color:var(--muted-foreground)]">
-                      {campaign.optionalNote}
-                    </p>
-                  </>
-                ) : (
-                  <div className="flex flex-col gap-3 sm:flex-row">
-                    <Button
-                      size="lg"
-                      className="min-h-12 rounded-full px-6 text-base"
-                      render={
-                        <TrackedCtaLink
-                          href={fitHref}
-                          locale={locale}
-                          pagePath={homePath}
-                          section="final_cta_primary"
-                          ctaLabel={cta.button}
-                        />
-                      }
-                    >
-                      {cta.button}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="min-h-12 rounded-full px-6 text-base"
-                      render={
-                        <TrackedCtaLink
-                          href={pricingHref}
-                          locale={locale}
-                          pagePath={homePath}
-                          section="final_cta_secondary"
-                          ctaLabel={content.pricingLabel}
-                        />
-                      }
-                    >
-                      {content.pricingLabel}
-                    </Button>
-                  </div>
-                )}
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    size="lg"
+                    className="min-h-12 rounded-full px-6 text-base"
+                    render={
+                      <TrackedCtaLink
+                        href={fitHref}
+                        locale={locale}
+                        pagePath={homePath}
+                        section="final_cta_primary"
+                        ctaLabel={cta.button}
+                      />
+                    }
+                  >
+                    {cta.button}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="min-h-12 rounded-full px-6 text-base"
+                    render={
+                      <TrackedCtaLink
+                        href={pricingHref}
+                        locale={locale}
+                        pagePath={homePath}
+                        section="final_cta_secondary"
+                        ctaLabel={content.pricingLabel}
+                      />
+                    }
+                  >
+                    {content.pricingLabel}
+                  </Button>
+                </div>
               </div>
             </Card>
           </div>

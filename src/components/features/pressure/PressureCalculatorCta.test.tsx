@@ -47,25 +47,6 @@ vi.mock("@/components/prototyper-ui/ui/button", () => ({
     ),
 }));
 
-vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
-  CampaignCtaGroup: ({
-    startHref,
-    donateHref,
-    startLabel,
-    donateLabel,
-  }: {
-    startHref: string;
-    donateHref: string;
-    startLabel?: string;
-    donateLabel?: string;
-  }) => (
-    <div>
-      <a href={startHref}>{startLabel ?? "Create a free account"}</a>
-      <a href={donateHref}>{donateLabel ?? "Donate via our Alpe d'HuZes page"}</a>
-    </div>
-  ),
-}));
-
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-05-01T12:00:00Z"));
@@ -87,7 +68,7 @@ describe("PressureCalculatorCta", () => {
           heading: "What is next?",
           body: "Create a free account to set up your bikes, calculate personalized pressure advice, and track future adjustments.",
           primaryButton: "Create a free account",
-          secondaryButton: "Compare Free vs Pro",
+          secondaryButton: "Compare plans",
           loginPrompt: "Already have an account?",
           loginLink: "Log in",
         }}
@@ -98,16 +79,11 @@ describe("PressureCalculatorCta", () => {
     expect(screen.getByText("Create a free account").closest("a")?.getAttribute("href")).toBe(
       "/en/login?src=tire-pressure"
     );
-    expect(
-      screen
-        .getByText("Donate via our Alpe d'HuZes page")
-        .closest("a")
-        ?.getAttribute("href")
-    ).toBe("https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756");
+    expect(screen.queryByText(/Donate|Alpe/)).toBeNull();
     expect(
       screen.getByText("Open bike-fit calculator").closest("a")?.getAttribute("href")
     ).toBe("/en/calculators/bike-fit");
     expect(screen.getByText("Log in").closest("a")?.getAttribute("href")).toBe("/en/login?src=tire-pressure");
-    expect(screen.queryByText("Compare Free vs Pro")).toBeNull();
+    expect(screen.getByText("Compare plans").closest("a")?.getAttribute("href")).toBe("/en/pricing");
   });
 });

@@ -2,7 +2,7 @@ import { httpRouter, makeFunctionReference } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { auth } from "./auth";
-import { stripeWebhookResponse } from "./stripe/webhook";
+import { handleStripeWebhook } from "./stripe/webhook";
 
 const http = httpRouter();
 
@@ -30,11 +30,12 @@ for (const method of ["GET", "POST"] as const) {
   });
 }
 
-// Retain the endpoint, but never apply Stripe events in the stub release.
+// Signature verification precedes the internal transactional event processor.
 http.route({
   path: "/stripe/webhook",
   method: "POST",
-  handler: httpAction(async () => stripeWebhookResponse()),
+  handler: httpAction(async (ctx, request) => handleStripeWebhook(request, payloadJson =>
+    ctx.runMutation(internal.stripe.mutations.processWebhookEvent, { payloadJson }))),
 });
 
 export default http;

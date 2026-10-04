@@ -5,12 +5,6 @@ import type { Metadata } from "next";
 import { Gauge, Ruler, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
-import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
-import {
-  CONSUMER_CAMPAIGN_CONFIG,
-  getConsumerCampaignCopy,
-  isConsumerCampaignActive,
-} from "@/config/commercial";
 import {
   FeatureIconCard,
   type FeatureIconCardColor,
@@ -183,8 +177,6 @@ export default async function SaddleWidthCalculatorPage() {
   const dictionary = await getDictionary(locale);
   const isNl = locale === "nl";
   const pagePath = withLocalePrefix("/calculators/saddle-width", locale);
-  const campaignActive = isConsumerCampaignActive();
-  const campaign = getConsumerCampaignCopy(locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
   const faqs = buildFaqs(isNl);
   const trustPoints = buildTrustPoints(isNl);
@@ -265,48 +257,35 @@ export default async function SaddleWidthCalculatorPage() {
                 "riding profile in a more complete saddle analysis."
           }
           actions={
-            campaignActive ? (
-              <CampaignCtaGroup
-                locale={locale}
-                pagePath={pagePath}
-                startHref={withLocalePrefix("/calculators/bike-fit", locale)}
-                startSection="saddle_width_result"
-                donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-                donateSection="saddle_width_campaign_donate"
-                startLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
-                donateLabel={campaign.donateCta}
-              />
-            ) : (
-              <>
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/calculators/bike-fit", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="saddle_width_result"
-                      ctaLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
-                    />
-                  }
-                >
-                  {isNl ? "Start gratis bike fit" : "Start free bike fit"}
-                </Button>
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/pricing", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="saddle_width_pricing_cta"
-                      ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
-                    />
-                  }
-                  variant="outline"
-                >
-                  {isNl ? "Bekijk prijzen" : "Compare plans"}
-                </Button>
-              </>
-            )
+            <>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/calculators/bike-fit", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="saddle_width_result"
+                    ctaLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
+                  />
+                }
+              >
+                {isNl ? "Start gratis bike fit" : "Start free bike fit"}
+              </Button>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/pricing", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="saddle_width_pricing_cta"
+                    ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
+                  />
+                }
+                variant="outline"
+              >
+                {isNl ? "Bekijk prijzen" : "Compare plans"}
+              </Button>
+            </>
           }
           aside={
             isNl

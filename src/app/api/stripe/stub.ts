@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { stripeNotImplemented } from "@/lib/billing/stripeStub";
 
-/** The release deliberately has no payment-provider integration. */
+/** Inert authenticated adapter retained for explicit disabled-payment consumers. */
 export async function handleStripeStubRequest(request: Request): Promise<Response> {
   const token = await convexAuthNextjsToken();
   if (!token) {

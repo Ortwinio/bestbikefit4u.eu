@@ -80,6 +80,7 @@ export function isProtectedAppPath(pathname: string): boolean {
     "/bikes",
     "/profile",
     "/settings",
+    "/gifts",
     "/fit-history",
     "/saddle-selector",
     DASHBOARD_PRESSURE_CALCULATOR_PATH,

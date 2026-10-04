@@ -4,6 +4,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FitPassLandingCta } from "./FitPassLandingCta";
 import { FitPassPaywall } from "./FitPassPaywall";
+import { isReportAccessOpen } from "@/config/commercial";
 
 const mocks = vi.hoisted(() => ({
   user: null as null | { tier: string },
@@ -34,6 +35,27 @@ function landing(locale: "en" | "nl") {
 }
 
 describe("Fit Pass uses the release 2.0 checkout", () => {
+  it.each(["en", "nl"] as const)("uses the public flag for %s browser presentation without granting server access", locale => {
+    vi.stubEnv("STRIPE_BILLING_ENABLED", undefined);
+    vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "true");
+    render(<FitPassPaywall locale={locale} sessionId="test" userTier="free" />);
+    expect(screen.getByRole("link").getAttribute("href")).toBe(`/${locale}/checkout?product=single`);
+    expect(isReportAccessOpen()).toBe(true);
+  });
+
+  it("keeps browser reports open when only the server flag is enabled", () => {
+    vi.stubEnv("STRIPE_BILLING_ENABLED", "true");
+    vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", undefined);
+    const { container } = render(<FitPassPaywall locale="en" sessionId="test" userTier="free" />);
+    expect(container.innerHTML).toBe("");
+    expect(isReportAccessOpen()).toBe(true);
+  });
+
+  it.each(["en", "nl"] as const)("keeps reports open without a paywall while billing is paused in %s", locale => {
+    const { container } = render(<FitPassPaywall locale={locale} sessionId="test" userTier="free" />);
+    expect(container.innerHTML).toBe("");
+  });
+
   it.each(["en", "nl"] as const)("lets new riders create their account within checkout in %s", locale => {
     render(landing(locale));
     expect(screen.getByRole("link", { name: "Buy Fit Pass" }).getAttribute("href")).toBe(`/${locale}/checkout?product=single`);
@@ -56,6 +78,8 @@ describe("Fit Pass uses the release 2.0 checkout", () => {
   });
 
   it.each(["en", "nl"] as const)("routes report purchases through withdrawal consent in %s", locale => {
+    vi.stubEnv("STRIPE_BILLING_ENABLED", "true");
+    vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "true");
     render(<FitPassPaywall locale={locale} sessionId="test" userTier="free" />);
     const purchaseLink = screen.getAllByRole("link")
       .find(link => link.getAttribute("href") === `/${locale}/checkout?product=single`);

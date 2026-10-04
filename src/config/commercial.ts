@@ -4,89 +4,8 @@ import type { Locale } from "@/i18n/config";
 
 export const COMMERCIAL_CURRENCY = PRODUCTS.single.currency;
 
-export const CONSUMER_CAMPAIGN_CONFIG = {
-  campaignMode: true,
-  campaignEndDate: "2026-06-04T23:59:59+02:00",
-  donationUrl:
-    "https://inschrijving.opgevenisgeenoptie.nl/fundraisers/OrtwinVerreck35756",
-} as const;
-
-/** Report exports stay available while checkout is paused. Authentication still applies. */
-export function isReportAccessOpen(now = new Date()): boolean {
-  return isConsumerCampaignActive(now) || !isStripeBillingEnabled();
-}
-
-export function isConsumerCampaignActive(now = new Date()): boolean {
-  if (!CONSUMER_CAMPAIGN_CONFIG.campaignMode) {
-    return false;
-  }
-
-  return (
-    now.getTime() <= new Date(CONSUMER_CAMPAIGN_CONFIG.campaignEndDate).getTime()
-  );
-}
-
-export function getConsumerCampaignEndLabel(locale: Locale): string {
-  return locale === "nl" ? "4 juni 2026" : "June 4, 2026";
-}
-
-export function getConsumerCampaignCopy(locale: Locale) {
-  const endLabel = getConsumerCampaignEndLabel(locale);
-
-  return locale === "nl"
-    ? {
-        endLabel,
-        startFreeCta: "Start gratis bike fit",
-        donateCta: "Doneer via onze Alpe d'HuZes-pagina",
-        announcement:
-          `BikeFitBoost is tijdelijk gratis tot ${endLabel}. Wil je onze Alpe d'HuZes-campagne steunen, dan kun je een vrijwillige donatie doen.`,
-        homepageEyebrow: "Tijdelijke gratis toegang voor Alpe d'HuZes",
-        homepageTitle: "Gebruik BikeFitBoost gratis tot 4 juni 2026",
-        homepageDescription:
-          "Tot 4 juni 2026 kun je BikeFitBoost gratis gebruiken. In plaats van een verplichte betaling nodigen we je uit om, als je wilt, onze Alpe d'HuZes-fundraisingcampagne te steunen met een vrijwillige donatie.",
-        pricingTitle: "Tijdelijke gratis campagne",
-        pricingDescription:
-          "Tot 4 juni 2026 is BikeFitBoost gratis voor consumenten. Vind je het waardevol, dan kun je onze Alpe d'HuZes-fundraisingcampagne steunen met een vrijwillige donatie.",
-        loginTitle: "Tijdelijk gratis toegang",
-        loginDescription:
-          "Je account blijft gewoon nodig om je sessie op te slaan, je rapport te mailen en je resultaten terug te vinden. Betalen is tijdens deze campagne niet nodig.",
-        fitStartTitle: "Je fit is tijdelijk gratis",
-        fitStartDescription:
-          "Tijdens onze Alpe d'HuZes-campagne kun je deze consumenten-bikefit gratis starten en afronden tot 4 juni 2026. Wil je ons steunen, dan kun je vrijblijvend doneren.",
-        paywallTitle: "Je kunt deze bike fit gratis gebruiken tijdens onze Alpe d'HuZes-campagne.",
-        paywallDescription:
-          "Er is geen verplichte betaling. Wil je ons steunen, dan kun je via onze fundraisingpagina een vrijwillige donatie doen.",
-        continueFreeCta: "Ga gratis verder",
-        donateFirstCta: "Doneer eerst",
-        optionalNote: "Doneren is volledig optioneel.",
-      }
-    : {
-        endLabel,
-        startFreeCta: "Start free bike fit",
-        donateCta: "Donate via our Alpe d'HuZes page",
-        announcement:
-          `BikeFitBoost is temporarily free until ${endLabel}. If you would like to support our Alpe d'HuZes campaign, you can make a voluntary donation.`,
-        homepageEyebrow: "Temporary free access for Alpe d'HuZes",
-        homepageTitle: "Use BikeFitBoost for free until June 4, 2026",
-        homepageDescription:
-          "Until June 4, 2026, you can use BikeFitBoost for free. Instead of a required payment, we invite you to support our Alpe d'HuZes fundraising campaign with a voluntary donation if you want to.",
-        pricingTitle: "Temporary free campaign",
-        pricingDescription:
-          "Until June 4, 2026, BikeFitBoost is free for consumer users. If you find it valuable, you can support our Alpe d'HuZes fundraising campaign with a voluntary donation.",
-        loginTitle: "Temporary free access",
-        loginDescription:
-          "You still need an account to save your session, email your report, and come back to your results. During this campaign there is no required payment.",
-        fitStartTitle: "Your fit is temporarily free",
-        fitStartDescription:
-          "During our Alpe d'HuZes campaign you can start and complete this consumer bike fit for free until June 4, 2026. If you would like to support us, you can make an optional donation.",
-        paywallTitle:
-          "You can use this bike fit for free during our Alpe d'HuZes campaign.",
-        paywallDescription:
-          "There is no required payment. If you would like to support us, you can make a voluntary donation through our fundraising page.",
-        continueFreeCta: "Continue for free",
-        donateFirstCta: "Donate first",
-        optionalNote: "Donating is entirely optional.",
-      };
+export function isReportAccessOpen(): boolean {
+  return !isStripeBillingEnabled();
 }
 
 export const PRODUCT_LIVE_FLAGS = {
@@ -141,29 +60,14 @@ function commercialPrices(locale: Locale) {
     single: formatEuroPriceFromCents(PRODUCTS.single.priceCents, locale),
     annual: formatEuroPriceFromCents(PRODUCTS.annual.priceCents, locale),
     renewal: formatEuroPriceFromCents(PRODUCTS.annual.renewalPriceCents, locale),
-    entry: formatEuroPriceFromCents(PRODUCTS.annual_entry.priceCents, locale),
+    upgrade: formatEuroPriceFromCents(PRODUCTS.annual_upgrade.priceCents, locale),
+    standalone: formatEuroPriceFromCents(PRODUCTS.personal_fit_standalone.priceCents, locale),
     personal: formatEuroPriceFromCents(PRODUCTS.annual_personal.priceCents, locale),
   };
 }
 
 export function getCommercialFaqCopy(locale: Locale) {
   const price = commercialPrices(locale);
-  if (isConsumerCampaignActive()) {
-    const campaign = getConsumerCampaignCopy(locale);
-
-    return {
-      multipleBikeProfiles:
-        locale === "nl"
-          ? "Ja. Je kunt tijdens de campagne nog steeds meerdere fietsen beheren zodra je account hebt aangemaakt."
-          : "Yes. During the campaign you can still manage multiple bikes once you have created your account.",
-      pdfReport:
-        locale === "nl"
-          ? "Ja. Tijdens de campagne kun je je volledige rapport zonder verplichte betaling gebruiken."
-          : "Yes. During the campaign you can use your full report without a required payment.",
-      pricing: campaign.pricingDescription,
-    };
-  }
-
   return {
     multipleBikeProfiles:
       locale === "nl"
@@ -175,8 +79,8 @@ export function getCommercialFaqCopy(locale: Locale) {
         : "A free account can download the PDF of its latest report. A single measurement opens the full setup plan for one bike; an annual subscription covers all your bikes.",
     pricing:
       locale === "nl"
-        ? `Een losse meting kost ${price.single}. Het jaarabonnement kost ${price.annual} in het eerste jaar, daarna ${price.renewal}. Met een persoonlijke bikefit kost het eerste jaar ${price.personal}. Alle prijzen zijn inclusief btw.`
-        : `A single measurement costs ${price.single}. An annual subscription costs ${price.annual} in the first year, then ${price.renewal}. With a personal bike fit, the first year costs ${price.personal}. All prices include VAT.`,
+        ? `Een losse meting kost ${price.single}. Het jaarabonnement kost ${price.annual} per jaar, met automatische verlenging en 2 cadeaumetingen per abonnementsjaar. Binnen zes maanden na aankoop van een losse meting of het inwisselen van een cadeaumeting kun je upgraden voor ${price.upgrade} in het eerste jaar, daarna ${price.renewal} per jaar. Met een persoonlijke bikefit kost het eerste jaar ${price.personal}, daarna ${price.renewal} per jaar zonder nieuwe afspraak. Een losse persoonlijke bikefit-afspraak kost ${price.standalone} voor wie een losse meting heeft gekocht of een jaarabonnement heeft. Alle prijzen zijn inclusief btw.`
+        : `A single measurement costs ${price.single}. An annual subscription costs ${price.annual} per year, renews automatically and includes 2 gift measurements per subscription year. Within six months of buying a single measurement or redeeming a gift measurement, you can upgrade for ${price.upgrade} in the first year, then ${price.renewal} per year. With a personal bike fit, the first year costs ${price.personal}, then ${price.renewal} per year without another appointment. A standalone personal bike fit appointment costs ${price.standalone} for riders who have purchased a single measurement or have an annual subscription. All prices include VAT.`,
   };
 }
 
@@ -194,15 +98,7 @@ export function getSupportResponseItems(locale: Locale): string[] {
 
 export function getSubscriptionTermsCopy(locale: Locale): string {
   const price = commercialPrices(locale);
-  if (isConsumerCampaignActive()) {
-    const campaign = getConsumerCampaignCopy(locale);
-
-    return locale === "nl"
-      ? `BikeFitBoost is tijdelijk gratis voor consumenten tot ${campaign.endLabel}. Vrijwillige donaties verlopen via onze Alpe d'HuZes-pagina en zijn niet verplicht.`
-      : `BikeFitBoost is temporarily free for consumer users until ${campaign.endLabel}. Voluntary donations go through our Alpe d'HuZes page and are never required.`;
-  }
-
   return locale === "nl"
-    ? `Een losse meting kost ${price.single} en geeft drie maanden toegang voor één fiets. Het jaarabonnement kost ${price.annual} in het eerste jaar, daarna ${price.renewal} per jaar. Na een losse meting kost het eerste jaar ${price.entry}. Het jaarabonnement met een persoonlijke bikefit kost ${price.personal} in het eerste jaar en verlengt daarna voor ${price.renewal} zonder nieuwe afspraak. Alle prijzen zijn inclusief btw. Betalen via Stripe is nog niet geïmplementeerd.`
-    : `A single measurement costs ${price.single} and gives three months of access for one bike. An annual subscription costs ${price.annual} in the first year, then ${price.renewal} per year. After a single measurement, the first year costs ${price.entry}. An annual subscription with a personal bike fit costs ${price.personal} in the first year and renews for ${price.renewal} without another appointment. All prices include VAT. Payment through Stripe has not been implemented yet.`;
+    ? `Een losse meting kost ${price.single} en geeft drie maanden toegang voor één fiets. Het jaarabonnement kost ${price.annual} per jaar, verlengt automatisch en geeft twaalf maanden toegang voor al je fietsen, een volledig profiel en 2 cadeaumetingen per abonnementsjaar. Binnen zes maanden na aankoop van een losse meting of het inwisselen van een cadeaumeting kost een upgrade ${price.upgrade} in het eerste jaar, daarna ${price.renewal} per jaar. Het jaarabonnement met een persoonlijke bikefit kost ${price.personal} in het eerste jaar en verlengt daarna voor ${price.renewal} zonder nieuwe afspraak. Een losse persoonlijke bikefit-afspraak kost ${price.standalone} en is alleen beschikbaar als je een losse meting hebt gekocht of een jaarabonnement hebt. Alle prijzen zijn inclusief btw.`
+    : `A single measurement costs ${price.single} and gives three months of access for one bike. An annual subscription costs ${price.annual} per year, renews automatically and includes twelve months of access for all your bikes, a complete profile and 2 gift measurements per subscription year. Within six months of buying a single measurement or redeeming a gift measurement, an upgrade costs ${price.upgrade} in the first year, then ${price.renewal} per year. An annual subscription with a personal bike fit costs ${price.personal} in the first year and renews for ${price.renewal} without another appointment. A standalone personal bike fit appointment costs ${price.standalone} and is only available if you have purchased a single measurement or have an annual subscription. All prices include VAT.`;
 }

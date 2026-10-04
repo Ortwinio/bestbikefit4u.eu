@@ -47,6 +47,13 @@
 .cta h2 { margin-bottom: 8px; }
 .primary { display: inline-flex; flex-shrink: 0; justify-content: center; align-items: center; min-height: 56px; border-radius: 999px; padding: 12px 24px; font-size: 16px; font-weight: 700; text-align: center; text-decoration: none; background: var(--bbf-inkt); color: var(--bbf-wit); }
 .primary:hover { background: var(--bbf-petrol); }
+.free a { display: inline-flex; align-items: center; min-height: 44px; }
+.gift { max-width: 1200px; margin: 44px auto 0; padding: 24px 32px; border-radius: 24px; background: var(--marketing-soft); display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.giftIntro { display: flex; align-items: center; gap: 16px; }
+.giftIcon { width: 48px; height: 48px; flex-shrink: 0; border-radius: 16px; background: var(--marketing-card); color: var(--marketing-link); display: grid; place-items: center; }
+.gift h2 { font-size: 22px; margin: 0 0 4px; }
+.gift p { color: var(--marketing-text); }
+.giftLink { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 8px 22px; border: 2px solid var(--marketing-foreground); border-radius: 999px; color: var(--marketing-foreground); font-weight: 700; text-decoration: none; flex-shrink: 0; }
 @media (max-width: 1000px) { .plans { gap: 16px; } }
 @media (max-width: 767px) {
   .page { padding: 48px 20px 64px; }
@@ -59,4 +66,5 @@
   .sectionHeading { display: block; }
   .sectionHeading a { display: inline-flex; margin-bottom: 12px; }
   .cta { flex-direction: column; align-items: stretch; padding: 32px 24px; }
+  .gift { flex-direction: column; align-items: stretch; padding: 24px; margin-top: 24px; }
 }

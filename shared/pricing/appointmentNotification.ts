@@ -19,8 +19,8 @@ export function prepareFitterNotification({ entitlement, entitlementId, rider, r
   recipient?: string;
   now?: number;
 }): FitterNotificationPlan {
-  if (entitlement.productId !== "annual_personal" || entitlement.source !== "purchase" ||
-    entitlement.status !== "active" || entitlement.startsAt > now || entitlement.expiresAt <= now ||
+  if ((entitlement.productId !== "annual_personal" && entitlement.productId !== "personal_fit_standalone") || entitlement.source !== "purchase" ||
+    entitlement.status !== "active" || entitlement.startsAt > now || (entitlement.productId !== "personal_fit_standalone" && entitlement.expiresAt <= now) ||
     !entitlement.appointmentGranted || entitlement.appointmentUsedAt !== undefined) {
     return { status: "not_eligible" };
   }

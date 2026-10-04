@@ -73,7 +73,8 @@ describe.each(["nl", "en"] as const)("FAQ in %s", (language) => {
     expect(screen.getByText(pricingFaq[language].personal.a)).toBeTruthy();
     expect(screen.getByText(pricingFaq[language].pdf)).toBeTruthy();
     expect(screen.getByText(pricingFaq[language].change)).toBeTruthy();
-    expect(serialized).not.toMatch(/€9\b|€12[,.]50|\/ maand|Free vs Pro/);
+    expect(serialized).not.toMatch(/€9(?:\s|"|$)|€12[,.]50|€24[,.]50|€19[,.]50|\/ maand|Free vs Pro/);
+    expect(serialized).toContain(language === "nl" ? "€9,50" : "€9.50");
     schema.mainEntity.forEach((question: { name: string; acceptedAnswer: { text: string } }, index: number) => {
       expect(disclosures[index].querySelector("summary")?.textContent).toBe(question.name);
       expect(disclosures[index].querySelector("p")?.textContent).toBe(question.acceptedAnswer.text);

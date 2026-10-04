@@ -5,12 +5,6 @@ import type { Metadata } from "next";
 import { Compass, Ruler, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
-import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
-import {
-  CONSUMER_CAMPAIGN_CONFIG,
-  getConsumerCampaignCopy,
-  isConsumerCampaignActive,
-} from "@/config/commercial";
 import {
   FeatureIconCard,
   type FeatureIconCardColor,
@@ -62,8 +56,6 @@ export default async function FrameSizeCalculatorPage() {
   const dictionary = await getDictionary(locale);
   const isNl = locale === "nl";
   const pagePath = withLocalePrefix("/calculators/frame-size", locale);
-  const campaignActive = isConsumerCampaignActive();
-  const campaign = getConsumerCampaignCopy(locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
   const faqs = isNl
     ? [
@@ -199,48 +191,35 @@ export default async function FrameSizeCalculatorPage() {
                 "track future adjustments."
           }
           actions={
-            campaignActive ? (
-              <CampaignCtaGroup
-                locale={locale}
-                pagePath={pagePath}
-                startHref={withLocalePrefix("/calculators/bike-fit", locale)}
-                startSection="frame_size_result"
-                donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-                donateSection="frame_size_campaign_donate"
-                startLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
-                donateLabel={campaign.donateCta}
-              />
-            ) : (
-              <>
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/calculators/bike-fit", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="frame_size_result"
-                      ctaLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
-                    />
-                  }
-                >
-                  {isNl ? "Start gratis bike fit" : "Start free bike fit"}
-                </Button>
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/pricing", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="frame_size_pricing_cta"
-                      ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
-                    />
-                  }
-                  variant="outline"
-                >
-                  {isNl ? "Bekijk prijzen" : "Compare plans"}
-                </Button>
-              </>
-            )
+            <>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/calculators/bike-fit", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="frame_size_result"
+                    ctaLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
+                  />
+                }
+              >
+                {isNl ? "Start gratis bike fit" : "Start free bike fit"}
+              </Button>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/pricing", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="frame_size_pricing_cta"
+                    ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
+                  />
+                }
+                variant="outline"
+              >
+                {isNl ? "Bekijk prijzen" : "Compare plans"}
+              </Button>
+            </>
           }
           aside={
             isNl

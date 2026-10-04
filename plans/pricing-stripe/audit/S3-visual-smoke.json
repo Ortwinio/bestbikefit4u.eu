@@ -1,0 +1,824 @@
+{
+  "scope": "Real pricing page/cards, CheckoutFlow and SubscriptionOverview; esbuild CSS modules, Tailwind globals, local brand fonts. Isolated framework/analytics adapters and fixture service results. No Next build, live authentication, real checkout, backend, email or external network. Checkout paid props are fixtures, not URL proof.",
+  "capturedAt": "2026-10-04T22:10:54.996Z",
+  "sourceHashes": {
+    "src/app/(public)/pricing/page.tsx": "b9244d15c64280edd91b8f2376870c50ff92a70208f840df1732b64a45fcbcea",
+    "src/app/(public)/pricing/pricing.module.css": "99fe76ca36a1d334a118e834aaf87ea65b5681c2f3551e3eda4bfc5a0b18eae7",
+    "src/components/pricing/PricingCard.tsx": "a067a441ba813033b2a31924413dfc7580f770985550e02a7e8c9c3e75414e12",
+    "src/components/pricing/PricingCard.module.css": "0a1952aa6c4a11b8f9c0e183f1d155831405e97d256c737a0c31e579e64e38a1",
+    "src/components/checkout/CheckoutFlow.tsx": "175ea842a2ce20a4a083fa8319ddc1127c1ac70d1df770d87d05a7fa7825c91d",
+    "src/components/checkout/CheckoutFlow.module.css": "16f81c24e71c1a99f5dcb94eb3396275725aaac2ce6c5872b32450f9177cb8d5",
+    "src/components/account/SubscriptionOverview.tsx": "21e2000224dc1c93ce080fa8b08f8bf34048950dd5524c29e5e621b9787abc34",
+    "src/i18n/marketing/pricing.ts": "8c88893ca2dcc1535ef7a87ad07f5e25ae2cdaa5bbe7b1568ced2a23d5b9a427",
+    "src/i18n/marketing/checkout.ts": "f9a860ab42c424676cc206c5004b390fea604e6078ea0f07b5fa4eaf7e0b31c8",
+    "src/i18n/account/subscription.ts": "f8a82c7d29e8d10ad73e30fdc58ddfa078bff8d29e6a8cbeb688c15b3c46b844",
+    "shared/pricing/products.ts": "917eb6d84f6ae4d941b52194756f2bed4917cf0ba23f43e609f6464c2012befa",
+    "src/app/globals.css": "934a50dd4b656bcf488c41f83e28057d7c75af43508c283a266d36b39e1b0293"
+  },
+  "changedDuringCapture": [],
+  "expectedCaptures": 16,
+  "results": [
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "pricing-page",
+      "surface": "pricing",
+      "screenshot": "S3-pricing-page-nl-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [
+          {
+            "tag": "A",
+            "label": "Maak een gratis account",
+            "width": 185.578125,
+            "height": 20,
+            "disabled": false,
+            "effectiveWidth": 185.578125,
+            "effectiveHeight": 20
+          }
+        ],
+        "rawSmallControls": [
+          {
+            "tag": "A",
+            "label": "Maak een gratis account",
+            "width": 185.578125,
+            "height": 20,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "nodes": [
+            {
+              "target": [
+                ".pricing_comparison"
+              ],
+              "failureSummary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+            }
+          ]
+        }
+      ],
+      "calls": [],
+      "headings": [
+        "Een goede bikefit, betaalbaar",
+        "Jaarabonnement",
+        "Losse meting",
+        "Jaarabonnement + persoonlijke bikefit",
+        "Cadeau ontvangen?",
+        "Vergelijk wat erin zit",
+        "Wat een online fit wel en niet doet",
+        "Veelgestelde vragen over prijzen",
+        "Eerst proberen? Geen account nodig."
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual_upgrade-review",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "review",
+      "screenshot": "S3-checkout-annual_upgrade-review-nl-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false,
+            "effectiveWidth": 41.828125,
+            "effectiveHeight": 44
+          }
+        ],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          },
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-personal_fit_standalone-paid",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "paid",
+      "screenshot": "S3-checkout-personal_fit_standalone-paid-nl-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false,
+            "effectiveWidth": 41.828125,
+            "effectiveHeight": 44
+          }
+        ],
+        "rawSmallControls": [
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je persoonlijke bikefit is betaald",
+        "Plan je afspraak"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-cancel-off",
+      "surface": "subscription",
+      "state": "cancel-off",
+      "screenshot": "S3-subscription-cancel-off-nl-1440.png",
+      "errors": [
+        "Failed to load resource: the server responded with a status of 501 (Not Implemented)"
+      ],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"nl\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement",
+        "Abonnement opzeggen?"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "pricing-page",
+      "surface": "pricing",
+      "screenshot": "S3-pricing-page-nl-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "nodes": [
+            {
+              "target": [
+                ".pricing_comparison"
+              ],
+              "failureSummary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+            }
+          ]
+        }
+      ],
+      "calls": [],
+      "headings": [
+        "Een goede bikefit, betaalbaar",
+        "Jaarabonnement",
+        "Losse meting",
+        "Jaarabonnement + persoonlijke bikefit",
+        "Cadeau ontvangen?",
+        "Vergelijk wat erin zit",
+        "Wat een online fit wel en niet doet",
+        "Veelgestelde vragen over prijzen",
+        "Eerst proberen? Geen account nodig."
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual_upgrade-review",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "review",
+      "screenshot": "S3-checkout-annual_upgrade-review-nl-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false,
+            "effectiveWidth": 41.828125,
+            "effectiveHeight": 44
+          }
+        ],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          },
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-personal_fit_standalone-paid",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "paid",
+      "screenshot": "S3-checkout-personal_fit_standalone-paid-nl-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false,
+            "effectiveWidth": 41.828125,
+            "effectiveHeight": 44
+          }
+        ],
+        "rawSmallControls": [
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je persoonlijke bikefit is betaald",
+        "Plan je afspraak"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-cancel-off",
+      "surface": "subscription",
+      "state": "cancel-off",
+      "screenshot": "S3-subscription-cancel-off-nl-390.png",
+      "errors": [
+        "Failed to load resource: the server responded with a status of 501 (Not Implemented)"
+      ],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"nl\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement",
+        "Abonnement opzeggen?"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "pricing-page",
+      "surface": "pricing",
+      "screenshot": "S3-pricing-page-en-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [
+          {
+            "tag": "A",
+            "label": "Create a free account",
+            "width": 165.75,
+            "height": 20,
+            "disabled": false,
+            "effectiveWidth": 165.75,
+            "effectiveHeight": 20
+          }
+        ],
+        "rawSmallControls": [
+          {
+            "tag": "A",
+            "label": "Create a free account",
+            "width": 165.75,
+            "height": 20,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "nodes": [
+            {
+              "target": [
+                ".pricing_comparison"
+              ],
+              "failureSummary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+            }
+          ]
+        }
+      ],
+      "calls": [],
+      "headings": [
+        "A good bike fit, affordable",
+        "Annual plan",
+        "Single measurement",
+        "Annual plan + personal bike fit",
+        "Received a gift?",
+        "Compare what’s included",
+        "What an online fit can and cannot do",
+        "Pricing FAQ",
+        "Try it first. No account needed."
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual_upgrade-review",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "review",
+      "screenshot": "S3-checkout-annual_upgrade-review-en-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [
+          {
+            "tag": "A",
+            "label": "Terms",
+            "width": 35,
+            "height": 44,
+            "disabled": false,
+            "effectiveWidth": 35,
+            "effectiveHeight": 44
+          },
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false,
+            "effectiveWidth": 41.828125,
+            "effectiveHeight": 44
+          }
+        ],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          },
+          {
+            "tag": "A",
+            "label": "Terms",
+            "width": 35,
+            "height": 44,
+            "disabled": false
+          },
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-personal_fit_standalone-paid",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "paid",
+      "screenshot": "S3-checkout-personal_fit_standalone-paid-en-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [
+          {
+            "tag": "A",
+            "label": "Terms",
+            "width": 35,
+            "height": 44,
+            "disabled": false,
+            "effectiveWidth": 35,
+            "effectiveHeight": 44
+          },
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false,
+            "effectiveWidth": 41.828125,
+            "effectiveHeight": 44
+          }
+        ],
+        "rawSmallControls": [
+          {
+            "tag": "A",
+            "label": "Terms",
+            "width": 35,
+            "height": 44,
+            "disabled": false
+          },
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your personal bike fit is paid",
+        "Book your appointment"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-cancel-off",
+      "surface": "subscription",
+      "state": "cancel-off",
+      "screenshot": "S3-subscription-cancel-off-en-1440.png",
+      "errors": [
+        "Failed to load resource: the server responded with a status of 501 (Not Implemented)"
+      ],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"en\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription",
+        "Cancel your subscription?"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "pricing-page",
+      "surface": "pricing",
+      "screenshot": "S3-pricing-page-en-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [
+          {
+            "tag": "A",
+            "label": "Create a free account",
+            "width": 165.75,
+            "height": 20,
+            "disabled": false,
+            "effectiveWidth": 165.75,
+            "effectiveHeight": 20
+          }
+        ],
+        "rawSmallControls": [
+          {
+            "tag": "A",
+            "label": "Create a free account",
+            "width": 165.75,
+            "height": 20,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "nodes": [
+            {
+              "target": [
+                ".pricing_comparison"
+              ],
+              "failureSummary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+            }
+          ]
+        }
+      ],
+      "calls": [],
+      "headings": [
+        "A good bike fit, affordable",
+        "Annual plan",
+        "Single measurement",
+        "Annual plan + personal bike fit",
+        "Received a gift?",
+        "Compare what’s included",
+        "What an online fit can and cannot do",
+        "Pricing FAQ",
+        "Try it first. No account needed."
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual_upgrade-review",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "review",
+      "screenshot": "S3-checkout-annual_upgrade-review-en-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [
+          {
+            "tag": "A",
+            "label": "Terms",
+            "width": 35,
+            "height": 44,
+            "disabled": false,
+            "effectiveWidth": 35,
+            "effectiveHeight": 44
+          },
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false,
+            "effectiveWidth": 41.828125,
+            "effectiveHeight": 44
+          }
+        ],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          },
+          {
+            "tag": "A",
+            "label": "Terms",
+            "width": 35,
+            "height": 44,
+            "disabled": false
+          },
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-personal_fit_standalone-paid",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "paid",
+      "screenshot": "S3-checkout-personal_fit_standalone-paid-en-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [
+          {
+            "tag": "A",
+            "label": "Terms",
+            "width": 35,
+            "height": 44,
+            "disabled": false,
+            "effectiveWidth": 35,
+            "effectiveHeight": 44
+          },
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false,
+            "effectiveWidth": 41.828125,
+            "effectiveHeight": 44
+          }
+        ],
+        "rawSmallControls": [
+          {
+            "tag": "A",
+            "label": "Terms",
+            "width": 35,
+            "height": 44,
+            "disabled": false
+          },
+          {
+            "tag": "A",
+            "label": "Privacy",
+            "width": 41.828125,
+            "height": 44,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your personal bike fit is paid",
+        "Book your appointment"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-cancel-off",
+      "surface": "subscription",
+      "state": "cancel-off",
+      "screenshot": "S3-subscription-cancel-off-en-390.png",
+      "errors": [
+        "Failed to load resource: the server responded with a status of 501 (Not Implemented)"
+      ],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"en\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription",
+        "Cancel your subscription?"
+      ]
+    }
+  ]
+}

@@ -139,13 +139,13 @@ describe("checkout review regressions", () => {
   });
 
   it.each([
-    ["eligibility/price", { introEligible: false }],
+    ["eligibility/price", { upgradeEligible: false }],
     ["account ID", { accountId: "rider-2" }],
     ["account email", { accountEmail: "other@example.test" }],
     ["product prop", { initialSelection: { product: "personal", bikeId: "bike-A" } }],
     ["bike prop", { initialSelection: { product: "annual", bikeId: "bike-B" } }],
   ] satisfies [string, Partial<CheckoutFlowProps>][])("invalidates consent and stub status after a reactive %s change", async (_name, changed) => {
-    const props: CheckoutFlowProps = { ...defaults, introEligible: true, initialSelection: { product: "annual", bikeId: "bike-A" } };
+    const props: CheckoutFlowProps = { ...defaults, upgradeEligible: true, initialSelection: { product: "annual", bikeId: "bike-A" } };
     const view = render(<CheckoutFlow {...props} />);
     await confirm();
     fireEvent.click(screen.getByRole("checkbox"));
@@ -171,13 +171,13 @@ describe("checkout review regressions", () => {
     expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(false);
   });
 
-  it.each(["nl", "en"] as const)("removes intro gifts while retaining only the literal standard annual exception in %s", locale => {
-    const view = render(<CheckoutFlow {...defaults} locale={locale} introEligible />);
+  it.each(["nl", "en"] as const)("includes two annual gift measurements for upgrades and standard subscriptions in %s", locale => {
+    const view = render(<CheckoutFlow {...defaults} locale={locale} upgradeEligible />);
     const choices = screen.getByRole("group", { name: checkoutCopy[locale].choice });
     const annualList = within(choices).getAllByRole("list")[1];
-    expect(within(annualList).getAllByRole("listitem")).toHaveLength(2);
-    expect(annualList.textContent).not.toMatch(/weg te geven|give away/);
-    view.rerender(<CheckoutFlow {...defaults} locale={locale} introEligible={false} />);
+    expect(within(annualList).getAllByRole("listitem")).toHaveLength(3);
+    expect(annualList.textContent).toContain(checkoutCopy[locale].annualBenefits[2]);
+    view.rerender(<CheckoutFlow {...defaults} locale={locale} upgradeEligible={false} />);
     expect(annualList.textContent).toContain(checkoutCopy[locale].annualBenefits[2]);
   });
 });

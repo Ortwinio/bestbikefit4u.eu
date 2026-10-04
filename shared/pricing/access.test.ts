@@ -39,20 +39,20 @@ describe("pricing products and access", () => {
     expect(access([entry()], "bike-b").fullReport).toBe(false);
     expect(access([entry()]).fullReport).toBe(false);
   });
-  it.each(["annual", "annual_entry", "annual_personal"] as const)("%s covers all bikes", (productId) => {
+  it.each(["annual", "annual_upgrade", "annual_personal"] as const)("%s covers all bikes", (productId) => {
     expect(access([entry({ productId })], "other")).toMatchObject({ fullReport: true, maxBikes: null });
   });
   it.each([{ expiresAt: now }, { startsAt: now + 1 }, { status: "expired" }, { status: "revoked" }] as const)("ignores unavailable rights %j", (patch) => {
     expect(access([entry(patch)], "bike-a").fullProfile).toBe(false);
   });
   it("eligibility survives genuine single expiry, but not revocation or future rights", () => {
-    expect(access([entry({ status: "expired" })]).eligibleForEntry).toBe(true);
-    expect(access([entry({ source: "transition" })]).eligibleForEntry).toBe(true);
-    expect(access([entry({ status: "revoked" })]).eligibleForEntry).toBe(false);
-    expect(access([entry({ status: "revoked", revokedReason: "bike_deleted" })]).eligibleForEntry).toBe(true);
-    expect(access([entry({ status: "revoked", revokedReason: "refunded" })]).eligibleForEntry).toBe(false);
-    expect(access([entry({ status: "revoked", revokedReason: "admin" })]).eligibleForEntry).toBe(false);
-    expect(access([entry({ startsAt: now + 1 })]).eligibleForEntry).toBe(false);
+    expect(access([entry({ status: "expired" })]).eligibleForUpgrade).toBe(true);
+    expect(access([entry({ source: "transition" })]).eligibleForUpgrade).toBe(false);
+    expect(access([entry({ status: "revoked" })]).eligibleForUpgrade).toBe(false);
+    expect(access([entry({ status: "revoked", revokedReason: "bike_deleted" })]).eligibleForUpgrade).toBe(true);
+    expect(access([entry({ status: "revoked", revokedReason: "refunded" })]).eligibleForUpgrade).toBe(false);
+    expect(access([entry({ status: "revoked", revokedReason: "admin" })]).eligibleForUpgrade).toBe(false);
+    expect(access([entry({ startsAt: now + 1 })]).eligibleForUpgrade).toBe(false);
   });
   it("appointment requires an unused active personal credit", () => {
     expect(access([entry({ productId: "annual_personal", appointmentGranted: true })]).appointmentAvailable).toBe(true);
@@ -60,11 +60,52 @@ describe("pricing products and access", () => {
     expect(access([entry({ productId: "annual", appointmentGranted: true })]).appointmentAvailable).toBe(false);
   });
   it("uses approved VAT-inclusive prices and calendar durations", () => {
-    expect(Object.values(PRODUCTS).map((product) => product.priceCents)).toEqual([0, 1350, 2450, 1350, 23450]);
-    expect(PRODUCTS.annual.renewalPriceCents).toBe(1950);
+    expect(Object.values(PRODUCTS).map((product) => product.priceCents)).toEqual([0, 1350, 2150, 950, 23450, 20950]);
+    expect(PRODUCTS.annual.renewalPriceCents).toBe(2150);
     expect(addCalendarMonths(Date.UTC(2024, 0, 31, 14), 1)).toBe(Date.UTC(2024, 1, 29, 14));
     expect(addCalendarMonths(Date.UTC(2026, 0, 31), 3)).toBe(Date.UTC(2026, 3, 30));
     expect(addCalendarMonths(Date.UTC(2024, 1, 29), 12)).toBe(Date.UTC(2025, 1, 28));
     expect(() => addCalendarMonths(NaN, 3)).toThrow("INVALID_DURATION");
+  });
+});
+
+
+describe("Stripe pricing eligibility and appointment-only access", () => {
+  it("counts purchase or redeemed gift for six calendar months only", () => {
+    const startsAt = Date.UTC(2026, 0, 31);
+    const end = addCalendarMonths(startsAt, 6);
+    for (const source of ["purchase", "gift"] as const) {
+      const entitlements = [entry({ source, startsAt, status: "expired" })];
+      expect(getAccess({ entitlements }, undefined, { now: end - 1 }).eligibleForUpgrade).toBe(true);
+      expect(getAccess({ entitlements }, undefined, { now: end }).eligibleForUpgrade).toBe(false);
+    }
+    expect(access([entry({ source: "legacy_pro" })]).eligibleForUpgrade).toBe(false);
+  });
+  it("does not offer an upgrade while an annual subscription is already active", () => {
+    expect(access([entry(), entry({ productId: "annual" })]).eligibleForUpgrade).toBe(false);
+    expect(access([entry(), entry({ productId: "annual", status: "expired" })]).eligibleForUpgrade).toBe(true);
+  });
+  it("standalone requires purchased single history or active annual, not a gift or transition", () => {
+    expect(access([entry({ status: "expired" })]).eligibleForPersonalFit).toBe(true);
+    expect(access([entry({ source: "gift" })]).eligibleForPersonalFit).toBe(false);
+    expect(access([entry({ source: "transition" })]).eligibleForPersonalFit).toBe(false);
+    expect(access([entry({ productId: "annual" })]).eligibleForPersonalFit).toBe(true);
+    expect(access([entry({ productId: "annual", expiresAt: now })]).eligibleForPersonalFit).toBe(false);
+    expect(access([entry({ status: "revoked", revokedReason: "refunded" })]).eligibleForPersonalFit).toBe(false);
+  });
+  it("standalone appointment remains bookable but does not unlock timed access", () => {
+    const appointment = entry({ productId: "personal_fit_standalone", expiresAt: 0, appointmentGranted: true });
+    expect(access([appointment], "bike-a")).toMatchObject({
+      fullProfile: false, fullReport: false, maxBikes: 1, profileScoreCap: 80,
+      appointmentAvailable: true, productId: "free", expiresAt: null,
+    });
+    expect(access([{ ...appointment, appointmentUsedAt: now }]).appointmentAvailable).toBe(false);
+    expect(access([{ ...appointment, status: "revoked" }]).appointmentAvailable).toBe(false);
+  });
+  it("normalizes historical entry grants without offering them as products", () => {
+    expect(access([entry({ productId: "annual_entry" })])).toMatchObject({
+      productId: "annual_upgrade", fullProfile: true, fullReport: true,
+    });
+    expect(Object.keys(PRODUCTS)).not.toContain("annual_entry");
   });
 });

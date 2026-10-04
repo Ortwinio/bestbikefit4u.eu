@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { isStripeBillingEnabled } from "@/config/billing";
+import { STRIPE_REQUIRED_ENV } from "@/lib/billing/serverStripe";
 
 export const runtime = "nodejs";
 
@@ -12,6 +14,7 @@ export async function GET(): Promise<Response> {
     "NEXT_PUBLIC_CONVEX_URL",
     "NEXT_PUBLIC_CONVEX_SITE_URL",
   ];
+  if (isStripeBillingEnabled()) requiredVars.push(...STRIPE_REQUIRED_ENV);
 
   const ok = requiredVars.every((name) => hasNonEmptyEnv(name));
 

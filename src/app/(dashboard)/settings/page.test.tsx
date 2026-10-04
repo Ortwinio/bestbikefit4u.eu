@@ -16,6 +16,8 @@ const state = vi.hoisted(() => ({
   renewed: false,
   cancelled: false,
   appointmentAvailable: false,
+  eligibleForUpgrade: false,
+  eligibleForPersonalFit: false,
   subscriptionQuery: vi.fn(),
   update: vi.fn(),
   remove: vi.fn(),
@@ -51,8 +53,8 @@ vi.mock("convex/react", () => ({
     if (getFunctionName(reference) === "pricing/queries:getSubscription") {
       state.subscriptionQuery();
       return state.subscriptionLoading ? undefined : {
-        access: { productId: state.product, expiresAt: Date.UTC(2027, 0, 3), eligibleForEntry: true, appointmentAvailable: state.appointmentAvailable, enforced: process.env.NEXT_PUBLIC_PAID_ACCESS_ENFORCED === "true" },
-        entitlements: state.product === "free" ? [] : [{ productId: state.product, status: "active", startsAt: Date.UTC(2026, 9, 3), expiresAt: Date.UTC(2027, 0, 3), bikeId: "test-bike", renewed: state.renewed, cancelled: state.cancelled, periodPriceCents: state.renewed ? 1950 : 2450 }],
+        access: { productId: state.product, expiresAt: Date.UTC(2027, 0, 3), eligibleForUpgrade: state.eligibleForUpgrade, eligibleForPersonalFit: state.eligibleForPersonalFit, appointmentAvailable: state.appointmentAvailable, enforced: process.env.NEXT_PUBLIC_PAID_ACCESS_ENFORCED === "true" },
+        entitlements: state.product === "free" ? [] : [{ productId: state.product, status: "active", startsAt: Date.UTC(2026, 9, 3), expiresAt: Date.UTC(2027, 0, 3), bikeId: "test-bike", renewed: state.renewed, cancelled: state.cancelled, periodPriceCents: 2150 }],
       };
     }
     if (getFunctionName(reference) === "bikes/queries:get") return { name: "Canyon Endurace" };
@@ -81,6 +83,8 @@ beforeEach(() => {
   state.renewed = false;
   state.cancelled = false;
   state.appointmentAvailable = false;
+  state.eligibleForUpgrade = false;
+  state.eligibleForPersonalFit = false;
   state.subscriptionQuery.mockClear();
   vi.stubEnv("NEXT_PUBLIC_PAID_ACCESS_ENFORCED", "false");
   state.update.mockReset().mockResolvedValue(null);
@@ -89,6 +93,49 @@ beforeEach(() => {
 });
 afterEach(() => { cleanup(); vi.unstubAllEnvs(); vi.unstubAllGlobals(); });
 describe("account settings", () => {
+  it.each(["nl", "en"] as const)("uses server eligibility for upgrade and appointment actions in %s", (locale) => {
+    state.locale = locale;
+    state.product = "free";
+    const copy = subscriptionCopy[locale];
+    const view = render(<SettingsPage />);
+    expect(screen.queryByRole("link", { name: copy.upgrade })).toBeNull();
+    expect(screen.queryByRole("link", { name: copy.buyAppointment })).toBeNull();
+    state.eligibleForUpgrade = true;
+    state.eligibleForPersonalFit = true;
+    view.rerender(<SettingsPage />);
+    expect(screen.getByRole("link", { name: copy.upgrade }).getAttribute("href")).toBe(`/${locale}/checkout?product=annual`);
+    expect(screen.getByRole("link", { name: copy.buyAppointment }).getAttribute("href")).toBe(`/${locale}/checkout?product=personal_fit_standalone`);
+    expect(screen.queryByRole("link", { name: copy.planAppointment })).toBeNull();
+    state.eligibleForUpgrade = false;
+    state.appointmentAvailable = true;
+    view.rerender(<SettingsPage />);
+    expect(screen.queryByRole("link", { name: copy.upgrade })).toBeNull();
+    expect(screen.queryByRole("link", { name: copy.buyAppointment })).toBeNull();
+    expect(screen.getByRole("link", { name: copy.planAppointment }).getAttribute("href")).toBe(`/${locale}/checkout?appointment=1`);
+    expect(state.update).not.toHaveBeenCalled();
+  });
+
+  it("presents an annual upgrade as annual access with gift navigation", () => {
+    state.product = "annual_upgrade";
+    render(<SettingsPage />);
+    expect(screen.getByText(subscriptionCopy.nl.annual)).toBeTruthy();
+    expect(screen.getByRole("link", { name: subscriptionCopy.nl.giveGift })).toBeTruthy();
+    expect(screen.getByText(subscriptionCopy.nl.started).nextElementSibling?.textContent).toBe("3 oktober 2026");
+  });
+
+  it.each(["true", "false"])("links gifts only for actual annual plans with enforcement %s", (flag) => {
+    vi.stubEnv("NEXT_PUBLIC_PAID_ACCESS_ENFORCED", flag);
+    state.product = "free";
+    const view = render(<SettingsPage />);
+    expect(screen.queryByRole("link", { name: subscriptionCopy.nl.giveGift })).toBeNull();
+    state.product = "single";
+    view.rerender(<SettingsPage />);
+    expect(screen.queryByRole("link", { name: subscriptionCopy.nl.giveGift })).toBeNull();
+    state.product = "annual";
+    view.rerender(<SettingsPage />);
+    expect(screen.getByRole("link", { name: subscriptionCopy.nl.giveGift }).getAttribute("href")).toBe("/nl/gifts");
+  });
+
   it.each(["nl", "en"] as const)("has no Strava UI or integration calls in %s", (locale) => {
     state.locale = locale;
     const { container } = render(<SettingsPage />);
@@ -135,7 +182,7 @@ describe("account settings", () => {
     state.cancelled = true;
     render(<SettingsPage />);
     expect(screen.getByText("Jaarabonnement · Opgezegd")).toBeTruthy();
-    expect(screen.getByText(/19,50/)).toBeTruthy();
+    expect(screen.getByText(/21,50/)).toBeTruthy();
     expect(screen.getByText(subscriptionCopy.nl.cancelledOpenDescription)).toBeTruthy();
     expect(screen.queryByRole("button", { name: "Abonnement opzeggen" })).toBeNull();
   });

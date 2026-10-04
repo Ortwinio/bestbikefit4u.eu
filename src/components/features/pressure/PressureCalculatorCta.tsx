@@ -1,12 +1,6 @@
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
-import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { PublicCtaBand } from "@/components/public";
-import {
-  CONSUMER_CAMPAIGN_CONFIG,
-  getConsumerCampaignCopy,
-  isConsumerCampaignActive,
-} from "@/config/commercial";
 import { withLocalePrefix } from "@/i18n/navigation";
 
 interface PressureCalculatorCtaProps {
@@ -28,8 +22,6 @@ export function PressureCalculatorCta({
   labels,
 }: PressureCalculatorCtaProps) {
   const isNl = locale === "nl";
-  const campaignActive = isConsumerCampaignActive();
-  const campaign = getConsumerCampaignCopy(locale);
 
   const disclaimer = isNl
     ? "De calculator geeft een praktisch startpunt. Een persoonlijke fitter kan toegevoegde waarde bieden bij complexe biomechanische kwesties."
@@ -46,79 +38,50 @@ export function PressureCalculatorCta({
       }
       description={labels.body}
       actions={
-        campaignActive ? (
-          <>
-            <CampaignCtaGroup
-              locale={locale}
-              pagePath={pagePath}
-              startHref={withLocalePrefix("/login?src=tire-pressure", locale)}
-              startSection="pressure_cta_primary"
-              donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-              donateSection="pressure_campaign_donate"
-              startLabel={labels.primaryButton}
-              donateLabel={campaign.donateCta}
-            />
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/calculators/bike-fit", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="pressure_bike_fit_cta"
-                  ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-                />
-              }
-              variant="outline"
-            >
-              {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/login?src=tire-pressure", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="pressure_cta_primary"
-                  ctaLabel={labels.primaryButton}
-                  conversionKey="pricing_signup"
-                />
-              }
-            >
-              {labels.primaryButton}
-            </Button>
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/pricing", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="tire_pressure_pricing_cta"
-                  ctaLabel={labels.secondaryButton}
-                />
-              }
-              variant="outline"
-            >
-              {labels.secondaryButton}
-            </Button>
-            <Button
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/calculators/bike-fit", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="pressure_bike_fit_cta"
-                  ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-                />
-              }
-              variant="outline"
-            >
-              {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
-            </Button>
-          </>
-        )
+        <>
+          <Button
+            render={
+              <TrackedCtaLink
+                href={withLocalePrefix("/login?src=tire-pressure", locale)}
+                locale={locale}
+                pagePath={pagePath}
+                section="pressure_cta_primary"
+                ctaLabel={labels.primaryButton}
+                conversionKey="pricing_signup"
+              />
+            }
+          >
+            {labels.primaryButton}
+          </Button>
+          <Button
+            render={
+              <TrackedCtaLink
+                href={withLocalePrefix("/pricing", locale)}
+                locale={locale}
+                pagePath={pagePath}
+                section="tire_pressure_pricing_cta"
+                ctaLabel={labels.secondaryButton}
+              />
+            }
+            variant="outline"
+          >
+            {labels.secondaryButton}
+          </Button>
+          <Button
+            render={
+              <TrackedCtaLink
+                href={withLocalePrefix("/calculators/bike-fit", locale)}
+                locale={locale}
+                pagePath={pagePath}
+                section="pressure_bike_fit_cta"
+                ctaLabel={isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
+              />
+            }
+            variant="outline"
+          >
+            {isNl ? "Ga naar bike fit calculator" : "Open bike-fit calculator"}
+          </Button>
+        </>
       }
       aside={
         <>

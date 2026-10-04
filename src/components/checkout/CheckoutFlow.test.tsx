@@ -126,14 +126,14 @@ describe("checkout flow", () => {
     expect(screen.getAllByRole("button")).toHaveLength(1);
   });
 
-  it("only applies the entry price with authenticated eligibility", async () => {
-    const view = render(<CheckoutFlow {...defaults} introEligible />);
+  it("only applies the upgrade price with authenticated eligibility", async () => {
+    const view = render(<CheckoutFlow {...defaults} upgradeEligible />);
     await confirm();
-    expect(screen.getByRole("button", { name: /^Betaal/ }).textContent).toContain("13,50");
-    expect(JSON.parse(localStorage.getItem(CHECKOUT_STORAGE_KEY)!).product).toBe("annual_entry");
-    view.rerender(<CheckoutFlow {...defaults} authenticated={false} introEligible />);
+    expect(screen.getByRole("button", { name: /^Betaal/ }).textContent).toContain("9,50");
+    expect(JSON.parse(localStorage.getItem(CHECKOUT_STORAGE_KEY)!).product).toBe("annual_upgrade");
+    view.rerender(<CheckoutFlow {...defaults} authenticated={false} upgradeEligible />);
     expect(screen.queryByRole("button", { name: /^Betaal/ })).toBeNull();
-    expect(screen.getByLabelText("Je keuze").textContent).toContain("24,50");
+    expect(screen.getByLabelText("Je keuze").textContent).toContain("21,50");
   });
 
   it("labels preview success explicitly and leaves agenda placeholder until configured", () => {
@@ -156,11 +156,11 @@ describe("checkout flow", () => {
 });
 
 describe("checkout trust boundaries", () => {
-  it("uses canonical IDs/prices and never derives entry eligibility from an input ID", () => {
+  it("uses canonical IDs/prices and never derives upgrade eligibility from an input ID", () => {
     expect(parseCheckoutProduct("annual_personal")).toBe("personal");
-    expect(checkoutProductId(parseCheckoutProduct("annual_entry"), false)).toBe("annual");
-    expect(checkoutPrice("annual", false)).toBe(24.5);
-    expect(checkoutPrice("annual", true)).toBe(13.5);
+    expect(checkoutProductId(parseCheckoutProduct("annual_upgrade"), false)).toBe("annual");
+    expect(checkoutPrice("annual", false)).toBe(21.5);
+    expect(checkoutPrice("annual", true)).toBe(9.5);
     expect(checkoutPrice("personal", true)).toBe(234.5);
   });
   it("denies preview by default and on production deployments even with flags", () => {

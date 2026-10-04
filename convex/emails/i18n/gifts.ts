@@ -1,0 +1,38 @@
+export const giftEmailCopy = {
+  nl: {
+    subject: "{sender} geeft je een bikefit cadeau",
+    anonymousSender: "Iemand",
+    preheader: "Een losse meting t.w.v. {value}. Verzilveren vóór {date}.",
+    eyebrow: "Een cadeau voor jou",
+    intro: "Je hebt een bikefit cadeau gekregen van {sender}, t.w.v. {value}.",
+    message: "Een bericht voor jou",
+    includes: "Dit krijg je",
+    benefits: [
+      "Een volledige meting voor 1 fiets: fit-tabel, stappenplan in volgorde en controleplan.",
+      "3 maanden toegang vanaf het moment dat je verzilvert.",
+      "Geen betaalgegevens nodig. Daarna houd je een gratis account.",
+    ],
+    deadline: "Je hebt 1 maand om je cadeau te verzilveren: vóór {date}. Daarna vervalt de link.",
+    upgrade: "Wil je later meer? Binnen 6 maanden na verzilveren kun je upgraden naar een jaarabonnement voor {upgrade} voor het eerste jaar. Daarna verlengt het automatisch voor {renewal} per jaar.",
+    button: "Verzilver je cadeau",
+    footer: "Je krijgt deze mail omdat {sender} je een cadeau stuurde via BikeFitBoost. We gebruiken je adres alleen voor dit cadeau.",
+  },
+  en: {
+    subject: "{sender} has sent you a bike fit gift",
+    anonymousSender: "Someone",
+    preheader: "A single fit worth {value}. Redeem before {date}.",
+    eyebrow: "A gift for you",
+    intro: "You have received a bike fit gift from {sender}, worth {value}.",
+    message: "A message for you",
+    includes: "What you get",
+    benefits: [
+      "A complete fit for 1 bike: fit table, ordered adjustment steps and a check plan.",
+      "3 months of access from the moment you redeem your gift.",
+      "No payment details required. Afterwards, you keep a free account.",
+    ],
+    deadline: "You have 1 month to redeem your gift: before {date}. The link expires after that.",
+    upgrade: "Want more later? Within 6 months of redeeming, you can upgrade to an annual subscription for {upgrade} for the first year. It then renews automatically at {renewal} per year.",
+    button: "Redeem your gift",
+    footer: "You received this email because {sender} sent you a gift through BikeFitBoost. We use your address only for this gift.",
+  },
+} as const;

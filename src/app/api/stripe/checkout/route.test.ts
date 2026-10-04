@@ -13,7 +13,8 @@ import { POST as refund } from "../refund/route";
 
 const routes = { checkout, portal, cancel, refund };
 const flagValues = [undefined, "false", "true"] as const;
-const flags = flagValues.flatMap((server) => flagValues.map((client) => ({ server, client })));
+const flags = flagValues.flatMap((server) => flagValues.map((client) => ({ server, client })))
+  .filter(({ server, client }) => server !== "true" || client !== "true");
 
 beforeEach(() => {
   vi.clearAllMocks();

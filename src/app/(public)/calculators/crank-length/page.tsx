@@ -3,12 +3,6 @@ import { getFitAnswer } from "@/lib/seo/calculatorAnswers/fit";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
-import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
-import {
-  CONSUMER_CAMPAIGN_CONFIG,
-  getConsumerCampaignCopy,
-  isConsumerCampaignActive,
-} from "@/config/commercial";
 import { Button } from "@/components/ui";
 import { PublicCtaBand, PublicSection } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -68,8 +62,6 @@ export default async function CrankLengthCalculatorPage({
   const inseamCm = parsePositiveNumberParam(params, "inseamCm") ?? undefined;
   const category = parseBikeCategory(getFirstSearchParam(params, "category"));
   const pagePath = withLocalePrefix("/calculators/crank-length", locale);
-  const campaignActive = isConsumerCampaignActive();
-  const campaign = getConsumerCampaignCopy(locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
   return (
     <div className="bg-background text-foreground">
@@ -124,48 +116,35 @@ export default async function CrankLengthCalculatorPage({
           description={copy.nextText}
           aside={copy.aside}
           actions={
-            campaignActive ? (
-              <CampaignCtaGroup
-                locale={locale}
-                pagePath={pagePath}
-                startHref={withLocalePrefix("/calculators/bike-fit", locale)}
-                startSection="crank_length_result"
-                donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-                donateSection="crank_length_campaign_donate"
-                startLabel={copy.start}
-                donateLabel={campaign.donateCta}
-              />
-            ) : (
-              <>
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/calculators/bike-fit", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="crank_length_result"
-                      ctaLabel={copy.start}
-                    />
-                  }
-                >
-                  {copy.start}
-                </Button>
-                <Button
-                  variant="outline"
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/pricing", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="crank_length_pricing_cta"
-                      ctaLabel={copy.pricing}
-                    />
-                  }
-                >
-                  {copy.pricing}
-                </Button>
-              </>
-            )
+            <>
+              <Button
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/calculators/bike-fit", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="crank_length_result"
+                    ctaLabel={copy.start}
+                  />
+                }
+              >
+                {copy.start}
+              </Button>
+              <Button
+                variant="outline"
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/pricing", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="crank_length_pricing_cta"
+                    ctaLabel={copy.pricing}
+                  />
+                }
+              >
+                {copy.pricing}
+              </Button>
+            </>
           }
         />
         <section aria-labelledby="crank-faq">

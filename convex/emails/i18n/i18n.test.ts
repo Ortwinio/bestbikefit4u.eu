@@ -31,8 +31,8 @@ describe("email dictionaries", () => {
   it("preserves fixed subjects, preheaders and numeric labels", () => {
     expect(nl.loginCode.subject).toBe("{code} is je BikeFitBoost-inlogcode");
     expect(en.loginCode.subject).toBe("{code} is your BikeFitBoost login code");
-    expect(nl.upgradeNudge.preheader).toBe("Jaarabonnement: €24,50 in je eerste jaar, daarna €19,50 per jaar.");
-    expect(en.upgradeNudge.preheader).toBe("Annual subscription: €24.50 in your first year, then €19.50 per year.");
+    expect(nl.upgradeNudge.preheader).toBe("Jaarabonnement: €21,50 per jaar, inclusief 2 cadeaumetingen per jaar.");
+    expect(en.upgradeNudge.preheader).toBe("Annual subscription: €21.50 per year, including 2 gift measurements per year.");
     expect(nl.fitReport.geometryHeading).toBe("Framegeometrie");
     expect(en.fitReport.geometryHeading).toBe("Frame geometry");
   });
