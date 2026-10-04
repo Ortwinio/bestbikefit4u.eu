@@ -17,4 +17,13 @@ export function resolveSiteOrigin(...candidates: Array<string | undefined>): str
   return DEFAULT_SITE_ORIGIN;
 }
 
-export const SITE_ORIGIN = resolveSiteOrigin(process.env.NEXT_PUBLIC_SITE_URL, process.env.SITE_URL);
+// Convex evaluates the schema module graph without environment access, so a throwing read falls back to the default.
+function readEnv(name: "NEXT_PUBLIC_SITE_URL" | "SITE_URL"): string | undefined {
+  try {
+    return name === "NEXT_PUBLIC_SITE_URL" ? process.env.NEXT_PUBLIC_SITE_URL : process.env.SITE_URL;
+  } catch {
+    return undefined;
+  }
+}
+
+export const SITE_ORIGIN = resolveSiteOrigin(readEnv("NEXT_PUBLIC_SITE_URL"), readEnv("SITE_URL"));
