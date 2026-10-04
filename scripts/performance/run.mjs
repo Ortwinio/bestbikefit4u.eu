@@ -25,7 +25,7 @@ for (const url of config.ci.collect.url) {
 const chromePath = await findPerformanceBrowser();
 console.log(`Lighthouse browser: ${chromePath}`);
 const command = async phase => {
-  const child = spawn(process.execPath, [resolve(root, "node_modules/@lhci/cli/src/cli.js"), phase, `--config=${configPath}`], {
+  const child = spawn("npx", ["-y", "@lhci/cli@0.15.1", phase, `--config=${configPath}`], {
     cwd: work, env: { ...process.env, CHROME_PATH: chromePath }, stdio: ["ignore", "pipe", "pipe"],
   });
   let log = "";

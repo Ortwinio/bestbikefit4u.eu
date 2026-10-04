@@ -1,5 +1,10 @@
 # Mobile Lighthouse baseline
 
+The runner invokes `npx -y @lhci/cli@0.15.1` on demand for collection and assertions.
+Node.js and npm (including `npx`) must be on `PATH`; the first run needs registry access
+to populate npm's cache. LHCI is not required in the project's installed dependencies.
+The checked-in `lighthouserc.json` remains the source of collection settings and budgets.
+
 Build production first (`npm run build`). Keep `.next` unchanged during collection.
 `node scripts/performance/local.mjs --label=before` starts a temporary HTTPS production server on 3197,
 collects three mobile samples of six templates, asserts strict median budgets and stops the server.
