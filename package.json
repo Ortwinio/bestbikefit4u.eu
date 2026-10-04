@@ -7,8 +7,8 @@
     "dev:frontend": "next dev",
     "dev:backend": "convex dev",
     "dev:backend:optional": "sh -c 'convex dev || { echo \"[warn] convex dev failed; continuing with frontend only.\"; exit 0; }'",
-    "build": "next build --webpack",
-    "build:vercel": "node scripts/check-vercel-env.mjs && next build --webpack",
+    "build": "NEXT_TELEMETRY_DISABLED=1 next build --webpack",
+    "build:vercel": "node scripts/check-vercel-env.mjs && NEXT_TELEMETRY_DISABLED=1 next build --webpack",
     "start": "next start",
     "test:smoke:local": "node scripts/smoke-local.mjs",
     "vercel:preflight": "node scripts/check-vercel-env.mjs",
@@ -60,7 +60,6 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
-    "@lhci/cli": "^0.15.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -75,5 +74,11 @@
     "tsx": "^4.21.0",
     "typescript": "^5",
     "vitest": "^4.1.11"
+  },
+  "allowScripts": {
+    "@sentry/cli": true,
+    "esbuild": true,
+    "unrs-resolver": true,
+    "fsevents": false
   }
 }
