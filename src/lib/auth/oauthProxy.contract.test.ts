@@ -32,7 +32,12 @@ it("round-trips fake provider redirects and separate state cookies through a rea
         ],
       });
     } else if (url.pathname === "/fake-provider") {
-      response.writeHead(302, { Location: `${url.searchParams.get("redirect_uri")}?code=fake-provider-code&state=fake-state` });
+      if (url.searchParams.get("redirect_uri") !== callbackUrl) {
+        response.writeHead(400);
+        response.end("Unexpected redirect_uri");
+        return;
+      }
+      response.writeHead(302, { Location: `${callbackUrl}?code=fake-provider-code&state=fake-state` });
     } else if (url.pathname === "/api/auth/callback/google") {
       if (url.searchParams.get("state") !== "fake-state" || !request.headers.cookie?.includes("fake-pkce")) {
         response.writeHead(400);
