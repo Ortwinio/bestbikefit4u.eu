@@ -34,6 +34,7 @@ import {
 import { runSaddleHeightCalculation } from "@/lib/public-calculators/fitAdapters";
 import { saddleHeightMessages, type SaddleHeightMessages } from "@/i18n/calculators/saddleHeight";
 import { withLocalePrefix } from "@/i18n/navigation";
+import styles from "./SaddleHeightCalculatorForm.module.css";
 
 const CATEGORIES: BikeCategory[] = ["road", "gravel", "mtb", "city"];
 const GOALS: Ambition[] = ["comfort", "balanced", "performance", "aero"];
@@ -356,7 +357,7 @@ export function SaddleHeightCalculatorForm({
           <div
             id="saddle-result"
             tabIndex={-1}
-            className="rounded-[2rem] bg-[var(--bbf-inkt)] p-5 text-[var(--bbf-wit)] focus-visible:focus-ring sm:p-7"
+            className={`${styles.resultCard} rounded-[2rem] bg-[var(--bbf-inkt)] p-5 text-[var(--bbf-wit)] focus-visible:focus-ring sm:p-7`}
           >
             {publicMode && <div className="mb-5">
               <StatusChip status={example || source === "estimated" ? "warn" : "ok"}>
@@ -364,10 +365,7 @@ export function SaddleHeightCalculatorForm({
               </StatusChip>
             </div>}
             <div
-              className={
-                "grid items-start gap-5 sm:grid-cols-[minmax(0,1fr)_minmax(180px,0.8fr)] " +
-                "xl:grid-cols-[minmax(0,1fr)_minmax(160px,0.8fr)]"
-              }
+              className={`${styles.resultGrid} grid items-start gap-5`}
             >
               <ResultHero
                 label={example ? copy.exampleResult : copy.result}
@@ -375,7 +373,7 @@ export function SaddleHeightCalculatorForm({
                 unit="mm"
                 variant="ink"
                 subtext={copy.reference}
-                className="rounded-none p-0 sm:p-0"
+                className={`${styles.resultHero} rounded-none p-0 sm:p-0`}
               >
                 <div className="border-t border-[var(--bbf-gedempt)] pt-5">
                   <p className="text-sm text-[var(--bbf-op-donker)]">{copy.band}</p>

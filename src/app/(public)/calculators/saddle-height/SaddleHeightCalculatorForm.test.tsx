@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { runSaddleHeightCalculation } from "@/lib/public-calculators/fitAdapters";
 import { saddleHeightMessages } from "@/i18n/calculators/saddleHeight";
 import { SaddleHeightCalculatorForm } from "./SaddleHeightCalculatorForm";
+import styles from "./SaddleHeightCalculatorForm.module.css";
 
 afterEach(() => { cleanup(); sessionStorage.clear(); });
 const en = saddleHeightMessages.en;
@@ -24,6 +25,29 @@ function confirmInseam() {
 }
 
 describe("SaddleHeightCalculatorForm", () => {
+  it.each([true, false])("renders the account result and boundary values intact (NL=%s)", (isNl) => {
+    const copy = saddleHeightMessages[isNl ? "nl" : "en"];
+    render(<SaddleHeightCalculatorForm isNl={isNl} initialValues={{
+      inseamCm: 84, source: "measured", category: "road", ambition: "balanced",
+      flexibility: 4, core: 3, compare: false, current: 750, currentConfirmed: false,
+    }} />);
+    const hero = screen.getByRole("region", { name: copy.result });
+    expect(hero.classList.contains(styles.resultHero)).toBe(true);
+    expect(document.getElementById("saddle-result")?.classList.contains(styles.resultCard)).toBe(true);
+    expect(hero.parentElement?.classList.contains(styles.resultGrid)).toBe(true);
+    expect(hero.querySelector("dd > span:first-child")?.textContent).toBe("745");
+    expect(hero.querySelector("dd > span:nth-child(2)")?.textContent).toBe("mm");
+    expect(hero.querySelector("dd")?.classList.contains("font-mono")).toBe(true);
+    const inseam = screen.getByRole("slider", { name: copy.inseam });
+    for (const [key, inseamCm] of [["Home", 55], ["End", 105]] as const) {
+      fireEvent.keyDown(inseam, { key });
+      const result = runSaddleHeightCalculation({ inseamCm, category: "road",
+        ridingGoal: "balanced", flexibility: 4, coreStability: 3, inseamSource: "measured" });
+      expect(hero.querySelector("dd > span:first-child")?.textContent).toBe(String(result.height));
+      expect(hero.querySelector("dd > span:nth-child(2)")?.textContent).toBe("mm");
+    }
+  });
+
   it("starts with an honest example and accessible sliders, not typed numeric fields", () => {
     render(<SaddleHeightCalculatorForm />);
     expect(screen.getByRole("heading", { level: 1, name: en.title })).toBeTruthy();

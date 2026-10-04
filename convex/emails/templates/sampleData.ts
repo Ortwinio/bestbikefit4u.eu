@@ -1,6 +1,7 @@
 import { BRAND } from "../../lib/brand";
 import type {
   ResultsSummaryData, FitReportData, WinbackData, ProExplainerData, Day1TipsData, EmailLocale,
+  Day7CheckInData, Day14EvaluationData,
 } from "./index";
 
 /** Fixed, fictional preview values from SPEC §7. No sender or real recipient is involved. */
@@ -43,5 +44,14 @@ export function sampleData(locale: EmailLocale) {
     } satisfies WinbackData,
     proExplainer: { ...sampleFit, ...preferences, actionUrl } satisfies ProExplainerData,
     day1Tips: { ...personal, ...preferences, hasFit: false } satisfies Day1TipsData,
+    day7CheckIn: {
+      ...personal, ...preferences,
+      answerUrls: {
+        better: `${actionUrl}?preview-only=day7&answer=better`,
+        same: `${actionUrl}?preview-only=day7&answer=same`,
+        worse: `${actionUrl}?preview-only=day7&answer=worse`,
+      },
+    } satisfies Day7CheckInData,
+    day14Evaluation: { ...personal, ...preferences } satisfies Day14EvaluationData,
   };
 }

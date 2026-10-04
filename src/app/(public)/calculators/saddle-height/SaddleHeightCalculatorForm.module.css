@@ -1,0 +1,23 @@
+.resultCard {
+  container-type: inline-size;
+}
+
+.resultGrid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.resultHero dd {
+  font-size: clamp(3rem, 18cqi, 6rem);
+}
+
+.resultHero dd > span:first-child {
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
+@container (min-width: 34rem) {
+  .resultGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  }
+}

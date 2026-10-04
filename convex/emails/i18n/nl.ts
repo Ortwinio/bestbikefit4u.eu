@@ -226,6 +226,30 @@ export const nl = {
     ],
     illustrationAlt: "Pentekening van een meetlint en een boek",
   },
+  day7CheckIn: {
+    subject: "Hoe rijdt je nieuwe zadelhoogte?",
+    preheader: "In 30 seconden: vul je check-in in.",
+    eyebrow: "Je 14-dagenplan · dag 7",
+    progressLabel: "Dag 7 van 14",
+    heading: "Hoe rijdt je nieuwe zadelhoogte?",
+    intro: "een week geleden stelde je je fiets af. Met je check-in zie je meteen of je op koers zit en wat je als volgende aanpast.",
+    question: "Hoe voelen je knieën sinds de aanpassing?",
+    answers: { better: "Beter", same: "Hetzelfde", worse: "Minder goed" },
+    hint: "Eén tik opent je check-in met je antwoord al ingevuld.",
+    button: "Doe mijn check-in",
+  },
+  day14Evaluation: {
+    subject: "Twee weken verder: tijd voor je evaluatie",
+    preheader: "Bekijk je voortgang en zet je nieuwe waarden vast.",
+    eyebrow: "Je 14-dagenplan · afgerond",
+    progressLabel: "Dag 14 van 14 · afgerond",
+    heading: "Twee weken verder",
+    intro: "je 14-dagenplan zit erop. Bekijk hoe je comfort is veranderd en sla je definitieve waarden op.",
+    button: "Bekijk mijn voortgang",
+    illustrationAlt: "Pentekening van een racefietsband",
+    tipTitle: "Nog één ding:",
+    tip: "bereken ook meteen je ideale bandenspanning. Die past bij je gewicht, bandbreedte en wegdek.",
+  },
 } as const;
 
 type Widen<T> = T extends string

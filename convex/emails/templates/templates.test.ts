@@ -16,8 +16,10 @@ const renders = {
   winback: templates.renderWinback,
   proExplainer: templates.renderProExplainer,
   day1Tips: templates.renderDay1Tips,
+  day7CheckIn: templates.renderDay7CheckIn,
+  day14Evaluation: templates.renderDay14Evaluation,
 };
-const service = new Set(["fitReminder", "upgradeNudge", "winback", "proExplainer", "day1Tips"]);
+const service = new Set(["fitReminder", "upgradeNudge", "winback", "proExplainer", "day1Tips", "day7CheckIn", "day14Evaluation"]);
 const expectedSubjects = {
   nl: [
     "482915 is je BikeFitBoost-inlogcode",
@@ -31,6 +33,8 @@ const expectedSubjects = {
     "Klopt je fit nog?",
     "Zo haal je het meeste uit je fitwaarden",
     "3 tips voor een fit die echt klopt",
+    "Hoe rijdt je nieuwe zadelhoogte?",
+    "Twee weken verder: tijd voor je evaluatie",
   ],
   en: [
     "482915 is your BikeFitBoost login code",
@@ -44,6 +48,8 @@ const expectedSubjects = {
     "Is your fit still right?",
     "How to get the most from your fit numbers",
     "3 tips for a fit that's spot on",
+    "How does your new saddle height feel?",
+    "Two weeks on: time for your evaluation",
   ],
 };
 
@@ -68,7 +74,7 @@ describe.each<EmailLocale>(["nl", "en"])("%s email templates", (locale) => {
       expect(doc.body.firstElementChild?.tagName).toBe("SPAN");
       expect(doc.body.firstElementChild?.textContent).toContain(result.preheader);
       expect(doc.querySelector("script")).toBeNull();
-      expect(doc.querySelectorAll('a[href*="preview-only"]').length).toBe(service.has(kind) ? 1 : 0);
+      expect(doc.querySelectorAll('a[href*="token=preview-only"]').length).toBe(service.has(kind) ? 1 : 0);
       const cta = doc.querySelectorAll(`a[href="https://www.bikefitboost.com/${locale}/fit"]`);
       expect(cta.length).toBe(["loginCode", "caseStudyLead"].includes(kind) ? 0 : 1);
       if (cta.length) expect(result.html).toContain("<v:rect");

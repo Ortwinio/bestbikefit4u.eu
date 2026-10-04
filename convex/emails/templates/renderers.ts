@@ -3,13 +3,77 @@ import { emailCopy } from "../i18n";
 import { formatDate, formatNumber, formatPrice } from "../format";
 import {
   renderLayout, heading, paragraph, hero, valueTiles, valueRows, benefits, numberedTips,
-  tipBlock, illustration, primaryButton, codeBlock, chips,
+  tipBlock, illustration, primaryButton, codeBlock, chips, escapeHtml, safeHref,
 } from "../layout";
 import type {
   EmailLocale, RenderedEmail, PreferenceLinks, FitValues, LoginCodeData, ResultsSummaryData, FitReportData,
   FitPassWelcomeData, CaseStudyLeadData, CaseStudyConfirmationData, FitReminderData, UpgradeNudgeData,
-  WinbackData, ProExplainerData, Day1TipsData,
+  WinbackData, ProExplainerData, Day1TipsData, Day7CheckInData, Day14EvaluationData,
 } from "./index";
+
+function planProgress(day: 7 | 14, eyebrow: string, label: string): string {
+  const cells = Array.from({ length: 14 }, (_, index) => {
+    const current = index + 1;
+    const active = day === 7 && current === day;
+    const background = active ? "#0F2420" : current <= day ? "#CFF26A" : "#FFFFFF";
+    const color = active ? "#FFFFFF" : current <= day ? "#0F2420" : "#4A5F5A";
+    const border = current <= day ? background : "#DCE6E1";
+    return `<td align="center" style="padding:0 1px;"><div style="height:30px;line-height:30px;`
+      + `border:1px solid ${border};border-radius:8px;background:${background};color:${color};`
+      + `font-family:'DM Mono','Courier New',monospace;font-size:12px;">${current}</div></td>`;
+  }).join("");
+  return `<p style="margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:0.08em;`
+    + `text-transform:uppercase;color:#0A7263;">${escapeHtml(eyebrow)}</p>`
+    + `<div role="img" aria-label="${escapeHtml(label)}"><table role="presentation" aria-hidden="true" `
+    + `border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed;margin:0 0 20px;">`
+    + `<tr>${cells}</tr></table></div>`;
+}
+
+export function renderDay7CheckIn(data: Day7CheckInData, locale: EmailLocale): RenderedEmail {
+  const copy = emailCopy[locale].day7CheckIn;
+  const mail = createEmail(locale, copy.subject, copy.preheader, data);
+  mail.add(planProgress(7, copy.eyebrow, copy.progressLabel), `${copy.eyebrow}\n${copy.progressLabel}`);
+  mail.heading(copy.heading);
+  mail.paragraph(`${greeting(data.firstName, locale)} ${copy.intro}`);
+  const answers = (["better", "same", "worse"] as const).map((answer, index) =>
+    `<td width="33.33%" valign="top" style="padding:0 2px;"><a href="${safeHref(data.answerUrls[answer])}" `
+    + `style="display:block;padding:12px 4px;border:2px solid ${index === 0 ? "#0F2420" : "#DCE6E1"};`
+    + `border-radius:14px;text-align:center;font-size:15px;font-weight:700;line-height:24px;`
+    + `color:#0F2420;text-decoration:none;">${escapeHtml(copy.answers[answer])}</a></td>`
+  ).join("");
+  mail.add(`<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"><tr>`
+    + `<td style="padding:16px;background:#F5F8F3;border-radius:16px;">`
+    + paragraph(copy.question, { bold: true })
+    + `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" `
+    + `style="table-layout:fixed;margin:0 0 10px;"><tr>${answers}</tr></table>`
+    + paragraph(copy.hint, { small: true }) + "</td></tr></table>",
+  [copy.question, ...(["better", "same", "worse"] as const).map((answer) =>
+    `${copy.answers[answer]}: ${data.answerUrls[answer]}`), copy.hint].join("\n"));
+  mail.button(data.actionUrl, copy.button);
+  return mail.finish();
+}
+
+export function renderDay14Evaluation(data: Day14EvaluationData, locale: EmailLocale): RenderedEmail {
+  const copy = emailCopy[locale].day14Evaluation;
+  const mail = createEmail(locale, copy.subject, copy.preheader, data);
+  mail.add(planProgress(14, copy.eyebrow, copy.progressLabel), `${copy.eyebrow}\n${copy.progressLabel}`);
+  mail.heading(copy.heading);
+  mail.paragraph(`${greeting(data.firstName, locale)} ${copy.intro}`);
+  mail.button(data.actionUrl, copy.button);
+  mail.add(`<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" `
+    + `style="margin:28px 0 12px;"><tr><td align="center" style="background:#E1F2EE;border-radius:16px;">`
+    + `<img src="${BRAND.siteUrl}/email/tyre.png" alt="${escapeHtml(copy.illustrationAlt)}" width="213" height="160" `
+    + `style="display:block;width:213px;max-width:100%;height:auto;border:0;"></td></tr></table>`, "");
+  mail.add(`<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"><tr>`
+    + `<td style="padding:16px;background:#E1F2EE;border-radius:16px;">`
+    + `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"><tr>`
+    + `<td width="22" valign="top" style="padding-right:12px;">`
+    + `<img src="${BRAND.siteUrl}/email/icon-gauge.png" alt="" width="22" height="22" style="display:block;border:0;"></td>`
+    + `<td valign="top" style="font-size:15px;line-height:1.5;color:#0F2420;">`
+    + `<strong>${escapeHtml(copy.tipTitle)}</strong> ${escapeHtml(copy.tip)}</td>`
+    + `</tr></table></td></tr></table>`, `${copy.tipTitle} ${copy.tip}`);
+  return mail.finish();
+}
 
 function fill(copy: string, values: Record<string, string | number>): string {
   return copy.replace(/\{(\w+)\}/g, (_, key: string) => {

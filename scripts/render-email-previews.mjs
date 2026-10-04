@@ -6,7 +6,7 @@ import { pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 
 const root = process.cwd();
-const output = resolve(root, process.env.EMAIL_PREVIEW_OUTPUT || "plans/rebrand/renders/emails");
+const output = resolve(root, process.argv[2] || process.env.EMAIL_PREVIEW_OUTPUT || "plans/rebrand/renders/emails");
 await mkdir(output, { recursive: true });
 await writeFile(join(output, ".gitignore"), "*\n!.gitignore\n");
 const temp = await mkdtemp(join(tmpdir(), "bbf-email-previews-"));
@@ -23,6 +23,7 @@ const templates = await import(pathToFileURL(bundle).href);
 const kinds = [
   "loginCode", "resultsSummary", "fitReport", "fitPassWelcome", "caseStudyLead",
   "caseStudyConfirmation", "fitReminder", "upgradeNudge", "winback", "proExplainer", "day1Tips",
+  "day7CheckIn", "day14Evaluation",
 ];
 const browser = await chromium.launch({ headless: true });
 const checks = [];
@@ -70,4 +71,4 @@ try {
   await browser.close();
 }
 await writeFile(join(output, "checks.json"), JSON.stringify(checks, null, 2) + "\n");
-console.log(`Rendered 22 bilingual HTML/text previews and ${checks.length} screenshots in ${output}`);
+console.log(`Rendered ${kinds.length * 2} bilingual HTML/text previews and ${checks.length} screenshots in ${output}`);
