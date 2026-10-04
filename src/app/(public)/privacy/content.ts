@@ -89,10 +89,10 @@ export const content: Record<Locale, PrivacyCopy> = {
       },
       {
         title: "8. Contact",
-        body: "For privacy-related questions, contact us at support@bestbikefit4u.eu.",
+        body: "For privacy-related questions, contact us at support@bikefitboost.com.",
       },
     ],
-    contactText: "support@bestbikefit4u.eu",
+    contactText: "support@bikefitboost.com",
   },
   nl: {
     metadata: {
@@ -180,9 +180,9 @@ export const content: Record<Locale, PrivacyCopy> = {
       },
       {
         title: "8. Contact",
-        body: "Voor privacyvragen kun je contact opnemen via support@bestbikefit4u.eu.",
+        body: "Voor privacyvragen kun je contact opnemen via support@bikefitboost.com.",
       },
     ],
-    contactText: "support@bestbikefit4u.eu",
+    contactText: "support@bikefitboost.com",
   },
 };

@@ -180,7 +180,6 @@ export const getOverviewStats = query({
       users,
       bikes,
       fitSessions,
-      integrations,
       feedbackItems,
       releases,
       geometryBrands,
@@ -190,7 +189,6 @@ export const getOverviewStats = query({
       ctx.db.query("users").collect(),
       ctx.db.query("bikes").collect(),
       ctx.db.query("fitSessions").collect(),
-      ctx.db.query("integrations").collect(),
       ctx.db.query("feedback_items").collect(),
       ctx.db.query("releases").collect(),
       ctx.db.query("geometry_brands").collect(),
@@ -221,7 +219,6 @@ export const getOverviewStats = query({
       freeUsers: users.filter((user) => user.tier === "free" || !user.tier).length,
       paidUsers: users.filter((user) => user.tier === "pro" || user.tier === "premium").length,
       completedFits: fitSessions.filter((session) => session.status === "completed").length,
-      stravaConnected: integrations.filter((item) => item.accessStatus === "active").length,
       openFeedbackCount: feedbackItems.filter(
         (item) => item.status === "new" || item.status === "triaged"
       ).length,
@@ -323,7 +320,7 @@ export const getUserDetail = query({
   args: { userId: v.id("users") },
   handler: async (ctx, { userId }) => {
     await requirePeopleRead(ctx);
-    const [user, bikes, fitRuns, integration, subscriptions, feedbackItems, receipts, auditLogs] =
+    const [user, bikes, fitRuns, subscriptions, feedbackItems, receipts, auditLogs] =
       await Promise.all([
         ctx.db.get(userId),
         ctx.db.query("bikes").withIndex("by_user", (q) => q.eq("userId", userId)).collect(),
@@ -331,12 +328,6 @@ export const getUserDetail = query({
           .query("fitSessions")
           .withIndex("by_user", (q) => q.eq("userId", userId))
           .collect(),
-        ctx.db
-          .query("integrations")
-          .withIndex("by_user_and_provider", (q) =>
-            q.eq("userId", userId).eq("provider", "strava")
-          )
-          .unique(),
         ctx.db
           .query("subscriptions")
           .withIndex("by_user", (q) => q.eq("userId", userId))
@@ -358,8 +349,6 @@ export const getUserDetail = query({
       fitRuns,
       bikeCount: bikes.length,
       fitRunCount: fitRuns.length,
-      stravaConnected: integration?.accessStatus === "active",
-      integration,
       subscriptions,
       feedbackItems,
       messageReceipts: receipts,
@@ -1022,16 +1011,15 @@ export const estimateMessageReach = query({
   },
   handler: async (ctx, { targets }) => {
     await requireMessagingRead(ctx);
-    const [users, integrations, fitSessions, memberships, bikes] = await Promise.all([
+    if (targets.some((target) => target.targetType === "strava_connected")) {
+      return { estimatedReach: 0 };
+    }
+    const [users, fitSessions, memberships, bikes] = await Promise.all([
       ctx.db.query("users").collect(),
-      ctx.db.query("integrations").collect(),
       ctx.db.query("fitSessions").collect(),
       ctx.db.query("organization_members").collect(),
       ctx.db.query("bikes").collect(),
     ]);
-    const activeIntegrations = new Set(
-      integrations.filter((integration) => integration.accessStatus === "active").map((integration) => integration.userId)
-    );
     const usersWithFit = new Set(fitSessions.map((session) => session.userId));
     const membershipsByUser = new Map<string, Set<string>>();
     for (const membership of memberships) {
@@ -1065,8 +1053,6 @@ export const estimateMessageReach = query({
             );
           case "locale":
             return true;
-          case "strava_connected":
-            return target.targetValue === String(activeIntegrations.has(user._id));
           case "fit_completed":
             return target.targetValue === String(usersWithFit.has(user._id));
           case "bike_type":

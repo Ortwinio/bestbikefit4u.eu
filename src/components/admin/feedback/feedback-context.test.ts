@@ -47,7 +47,7 @@ describe("feedback context helpers", () => {
 
   it("derives context completeness when explicit value is missing", () => {
     const high = makeItem({
-      pageUrl: "https://www.bikefitboost.com/en/dashboard",
+      pageUrl: "https://bikefitboost.com/en/dashboard",
       routeFamily: "dashboard",
       linkedBikeId: "bike_1",
       activitySummary: "Opened the dashboard and started a report.",

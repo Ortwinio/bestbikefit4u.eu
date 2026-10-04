@@ -5,10 +5,10 @@ describe("metadata alternates", () => {
   it("builds reciprocal locale alternates for localized static routes", () => {
     const alternates = buildLocaleAlternates("/guides", "nl");
 
-    expect(alternates.canonical).toBe("https://www.bikefitboost.com/nl/guides");
-    expect(alternates.languages?.en).toBe("https://www.bikefitboost.com/en/guides");
-    expect(alternates.languages?.nl).toBe("https://www.bikefitboost.com/nl/guides");
-    expect(alternates.languages?.["x-default"]).toBe("https://www.bikefitboost.com/en/guides");
+    expect(alternates.canonical).toBe("https://bikefitboost.com/nl/guides");
+    expect(alternates.languages?.en).toBe("https://bikefitboost.com/en/guides");
+    expect(alternates.languages?.nl).toBe("https://bikefitboost.com/nl/guides");
+    expect(alternates.languages?.["x-default"]).toBe("https://bikefitboost.com/en/guides");
   });
 
   it("supports route families whose default locale stays on a different localized path", () => {
@@ -22,13 +22,13 @@ describe("metadata alternates", () => {
     );
 
     expect(alternates.canonical).toBe(
-      "https://www.bikefitboost.com/nl/bandenspanning/75kg-racefiets"
+      "https://bikefitboost.com/nl/bandenspanning/75kg-racefiets"
     );
     expect(alternates.languages?.en).toBe(
-      "https://www.bikefitboost.com/en/tire-pressure/75kg-road-bike"
+      "https://bikefitboost.com/en/tire-pressure/75kg-road-bike"
     );
     expect(alternates.languages?.["x-default"]).toBe(
-      "https://www.bikefitboost.com/en/tire-pressure/75kg-road-bike"
+      "https://bikefitboost.com/en/tire-pressure/75kg-road-bike"
     );
   });
 });

@@ -86,6 +86,27 @@ function makeCtx({
 }
 
 describe("messages.getMyMessages contract", () => {
+  it.each(["true", "false"])("disables legacy targeting %s even alongside all", async (targetValue) => {
+    getAuthUserIdMock.mockResolvedValue("user_1");
+    const ctx = makeCtx({
+      messages: [
+        { _id: "legacy", status: "published", createdAt: 1 },
+        { _id: "ordinary", status: "published", createdAt: 2 },
+      ],
+      targets: [
+        { messageId: "legacy", targetType: "strava_connected", targetValue },
+        { messageId: "legacy", targetType: "all" },
+        { messageId: "ordinary", targetType: "all" },
+      ],
+      user: { _id: "user_1" },
+    });
+    const handler = (getMyMessages as unknown as { _handler: TestHandler })._handler;
+    expect(await handler(ctx, { locale: "en" })).toEqual([
+      expect.objectContaining({ _id: "ordinary" }),
+    ]);
+    expect(ctx.db.query).not.toHaveBeenCalledWith("integrations");
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
   });

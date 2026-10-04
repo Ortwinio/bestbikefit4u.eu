@@ -56,12 +56,12 @@ describe("Contact marketing page", () => {
     }
     const links = screen.getAllByRole("link");
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
-      "mailto:support@bestbikefit4u.eu",
-      "mailto:support@bestbikefit4u.eu",
+      "mailto:support@bikefitboost.com",
+      "mailto:support@bikefitboost.com",
       `/${locale}/faq`,
       `/${locale}/measurement-guide`,
     ]);
-    expect(screen.getByRole("link", { name: "support@bestbikefit4u.eu" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "support@bikefitboost.com" })).toBeTruthy();
     expect(container.querySelector("form, input, textarea, select")).toBeNull();
     expect(container.querySelector("header, footer, main")).toBeNull();
     expect(container.textContent).not.toMatch(/Ontwerpstaat|Voorbeeldgegevens|\[PLACEHOLDER\]/);
@@ -89,7 +89,7 @@ describe("Contact marketing page", () => {
     render(await ContactPage());
     const actions = [
       { label: locale === "nl" ? "Open e-mailapp" : "Open email app",
-        target: "mailto:support@bestbikefit4u.eu", section: "contact_email_cta" },
+        target: "mailto:support@bikefitboost.com", section: "contact_email_cta" },
       { label: locale === "nl" ? "Bekijk FAQ" : "View FAQ",
         target: `/${locale}/faq`, section: "contact_faq_link" },
     ];
@@ -125,13 +125,13 @@ describe("Contact marketing page", () => {
       title,
       description,
       keywords: ["contact BikeFitBoost", "bike fit support", locale === "nl" ? "fiets hulp" : "cycling help"],
-      openGraph: { title, description, type: "website", url: `https://www.bikefitboost.com/${locale}/contact` },
+      openGraph: { title, description, type: "website", url: `https://bikefitboost.com/${locale}/contact` },
       alternates: {
-        canonical: `https://www.bikefitboost.com/${locale}/contact`,
+        canonical: `https://bikefitboost.com/${locale}/contact`,
         languages: {
-          nl: "https://www.bikefitboost.com/nl/contact",
-          en: "https://www.bikefitboost.com/en/contact",
-          "x-default": "https://www.bikefitboost.com/en/contact",
+          nl: "https://bikefitboost.com/nl/contact",
+          en: "https://bikefitboost.com/en/contact",
+          "x-default": "https://bikefitboost.com/en/contact",
         },
       },
     });

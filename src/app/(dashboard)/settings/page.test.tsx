@@ -2,10 +2,14 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { getFunctionName } from "convex/server";
+import en from "@/i18n/messages/en";
 import nl from "@/i18n/messages/nl";
 import SettingsPage from "./page";
 const state = vi.hoisted(() => ({
   loading: false,
+  locale: "nl" as "nl" | "en",
+  queries: vi.fn(),
+  actions: vi.fn(),
   update: vi.fn(),
   remove: vi.fn(),
   signOut: vi.fn(),
@@ -19,8 +23,8 @@ vi.mock("next/navigation", () => ({
 vi.mock("@convex-dev/auth/react", () => ({ useAuthActions: () => ({ signOut: state.signOut }) }));
 vi.mock("@/i18n/useDashboardMessages", () => ({
   useDashboardMessages: () => ({
-    locale: "nl",
-    messages: nl.dashboard,
+    locale: state.locale,
+    messages: state.locale === "nl" ? nl.dashboard : en.dashboard,
     languageSwitchLabels: nl.common,
   }),
 }));
@@ -29,9 +33,6 @@ vi.mock("@/components/ui", async (load) => ({
   useToast: () => state.toast,
 }));
 vi.mock("@/components/profile/ProfilePhotoUpload", () => ({ ProfilePhotoUpload: () => <div /> }));
-vi.mock("@/components/settings/StravaBikeImportSection", () => ({
-  StravaBikeImportSection: () => <div />,
-}));
 vi.mock("@/components/settings/IPhoneAppInstallCard", () => ({
   IPhoneAppInstallCard: () => <div />,
 }));
@@ -40,6 +41,7 @@ vi.mock("@/components/ui/ThemeToggle", () => ({ ThemeToggle: () => <div /> }));
 vi.mock("@/config/billing", () => ({ isStripeBillingEnabled: () => false }));
 vi.mock("convex/react", () => ({
   useQuery: (reference: Parameters<typeof getFunctionName>[0]) => {
+    state.queries(getFunctionName(reference));
     if (getFunctionName(reference).includes("getCurrentUser"))
       return state.loading
         ? undefined
@@ -49,20 +51,33 @@ vi.mock("convex/react", () => ({
             email: "fixture@example.invalid",
             tier: "free",
           };
-    return { accessStatus: "disconnected" };
+    throw new Error(`Unexpected query: ${getFunctionName(reference)}`);
   },
   useMutation: (reference: Parameters<typeof getFunctionName>[0]) =>
     getFunctionName(reference).includes("deleteAccount") ? state.remove : state.update,
-  useAction: () => vi.fn(),
+  useAction: state.actions,
 }));
 beforeEach(() => {
   state.loading = false;
+  state.locale = "nl";
+  state.queries.mockClear();
+  state.actions.mockClear();
   state.update.mockReset().mockResolvedValue(null);
   state.remove.mockReset().mockResolvedValue(null);
   state.push.mockReset();
 });
 afterEach(cleanup);
 describe("account settings", () => {
+  it.each(["nl", "en"] as const)("has no Strava UI or integration calls in %s", (locale) => {
+    state.locale = locale;
+    const { container } = render(<SettingsPage />);
+    expect(container.textContent).not.toMatch(/strava/i);
+    expect(state.queries.mock.calls.flat()).toEqual(["users/queries:getCurrentUser"]);
+    expect(state.actions).not.toHaveBeenCalled();
+    expect(screen.getByRole("textbox")).toHaveProperty("value", "Sanne");
+    expect(container.querySelector(`a[href="/${locale}/privacy"]`)).toBeTruthy();
+  });
+
   it("shows Dutch validation errors returned by the shared error reporter", async () => {
     const logged = vi.spyOn(console, "error").mockImplementation(() => undefined);
     state.update.mockRejectedValueOnce(new Error("Invalid display name"));

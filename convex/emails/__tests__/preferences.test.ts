@@ -48,6 +48,7 @@ async function tokens(category: "service" | "marketing" | "newsletter" = "servic
 beforeEach(() => {
   vi.stubEnv("EMAIL_UNSUBSCRIBE_SECRET", "test-secret-with-at-least-32-characters");
   vi.stubEnv("SITE_URL", "https://bestbikefit4u.example");
+  vi.stubEnv("NEXT_PUBLIC_SITE_URL", "");
   vi.stubEnv("CONVEX_SITE_URL", "https://test-deployment.convex.site");
   auth.userId = null;
 });
@@ -131,7 +132,7 @@ describe("signed email preference links", () => {
     }
     vi.stubEnv("CONVEX_SITE_URL", "https://test.convex.site");
     vi.stubEnv("SITE_URL", "");
-    await expect(tokens()).rejects.toThrow();
+    expect((await tokens()).preferencesUrl).toMatch(/^https:\/\/bikefitboost.com\/nl\/email-preferences#token=/);
   });
 });
 

@@ -1,5 +1,6 @@
 /* @vitest-environment jsdom */
 
+import { getFunctionName } from "convex/server";
 import type { ReactNode } from "react";
 import { act, cleanup, fireEvent, render, screen, within, waitFor } from "@testing-library/react";
 import { accountCalculatorNavigation } from "@/components/account/account-navigation";
@@ -31,7 +32,7 @@ const { usePathnameMock, useRouterMock, useConvexAuthMock, useQueryMock } = vi.h
     isLoading: false,
     isAuthenticated: true,
   })),
-  useQueryMock: vi.fn(() => ({ _id: "user_1", adminRole: null })),
+  useQueryMock: vi.fn((_reference: Parameters<typeof getFunctionName>[0], ..._args: unknown[]) => ({ _id: "user_1", adminRole: null })),
 }));
 
 vi.mock("next/navigation", () => ({
@@ -86,10 +87,6 @@ vi.mock("@/components/layout/LanguageSwitch", () => ({
 
 vi.mock("@/components/dashboard-messages", () => ({
   DashboardMessageSurface: () => <div data-testid="dashboard-message-surface" />,
-}));
-
-vi.mock("@/components/integrations/StravaAutoImportTrigger", () => ({
-  StravaAutoImportTrigger: () => null,
 }));
 
 vi.mock("@/i18n/useDashboardMessages", () => ({
@@ -162,6 +159,15 @@ describe("DashboardLayout feedback context integration", () => {
     expect(html).toContain("md:grid-cols-[264px_minmax(0,1fr)]");
     expect(html).toContain("hidden bg-[var(--bbf-inkt)] md:row-span-2 md:block");
     expect(html).not.toContain("md:pl-[264px]");
+  });
+
+  it.each(["nl", "en"])("does not start Strava queries or auto-import in the %s shell", (locale) => {
+    useQueryMock.mockClear();
+    const html = renderLayout(`/${locale}/dashboard`);
+    expect(html).not.toMatch(/strava/i);
+    for (const call of useQueryMock.mock.calls) {
+      expect(getFunctionName(call[0])).not.toMatch(/integrations|strava/i);
+    }
   });
 
   it("defines an opaque mobile panel contract", () => {

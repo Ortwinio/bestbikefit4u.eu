@@ -28,7 +28,7 @@ If this repository starts using formal versioned releases, this table should be 
 Please report suspected vulnerabilities privately.
 
 ### Preferred reporting channel
-Send an email to: **[security@bestbikefit4u.eu]**  
+Send an email to: **[security@bikefitboost.com]**
 If you do not want to publish a security contact yet, replace this with your preferred address before committing.
 
 ### Alternative
@@ -172,7 +172,7 @@ Sensitive implementation details may be withheld until remediation is complete.
 
 ## Contact
 
-Security contact: **[security@bestbikefit4u.eu]**  
+Security contact: **[security@bikefitboost.com]**
 General support questions should go to the normal support channel, not the security channel.
 
 ---

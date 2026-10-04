@@ -9,7 +9,6 @@ import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { BrandLogo } from "@/components/branding";
 import { Button, LoadingState } from "@/components/ui";
 import { DashboardMessageSurface } from "@/components/dashboard-messages";
-import { StravaAutoImportTrigger } from "@/components/integrations/StravaAutoImportTrigger";
 import { AccountLanguageSwitch } from "@/components/account/AccountLanguageSwitch";
 import { AccountBottomTabs } from "@/components/account/AccountBottomTabs";
 import { AccountMenuFooter } from "@/components/account/AccountMenuFooter";
@@ -232,10 +231,6 @@ export default function DashboardLayoutClient({
           tabIndex={-1}
           className="mx-auto w-full max-w-[1440px] px-4 pt-6 pb-[calc(100px+env(safe-area-inset-bottom))] md:p-12"
         >
-          <StravaAutoImportTrigger
-            userId={user?._id ?? null}
-            lastLoginAt={user?.lastLoginAt ?? null}
-          />
           <DashboardMessageSurface
             showHomeCards={false}
             showModal={false}

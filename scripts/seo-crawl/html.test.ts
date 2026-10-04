@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import { parseHead, parseSitemap, metadataIssues, isNoindex } from "./html.mjs";
 
 const tags = '<title>Real &amp; title</title><meta name="description" content="Real description">'
-  + '<link rel="canonical" href="https://bestbikefit4u.eu/en/guides/example">';
-const canonical = "https://bestbikefit4u.eu/en/guides/example";
+  + '<link rel="canonical" href="https://bikefitboost.com/en/guides/example">';
+const canonical = "https://bikefitboost.com/en/guides/example";
 describe("raw source metadata parser", () => {
   it("finds one complete set inside the explicit head", () => {
     const result = parseHead(`<!doctype html><html><head>${tags}</head><body>Page</body></html>`);
@@ -25,7 +25,7 @@ describe("raw source metadata parser", () => {
   });
   it("handles mixed-case attributes, entities, unquoted values and duplicate metadata", () => {
     const result = parseHead(`<HTML><HEAD>${tags}<META NAME=DESCRIPTION CONTENT='another &amp; one'>
-      <LINK REL='alternate' HREFLANG=nl HREF='https://bestbikefit4u.eu/nl/guides/example'></HEAD></HTML>`);
+      <LINK REL='alternate' HREFLANG=nl HREF='https://bikefitboost.com/nl/guides/example'></HEAD></HTML>`);
     expect(result.descriptions[1].value).toBe("another & one");
     expect(metadataIssues(result, canonical)).toContain("description-count:2");
     expect(result.alternates[0]).toMatchObject({ lang: "nl", inHead: true });
@@ -50,10 +50,10 @@ describe("raw source metadata parser", () => {
   });
   it("parses sitemap indexes and only direct URL loc children", () => {
     expect(parseSitemap('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-      + '<sitemap><loc>https://bestbikefit4u.eu/sitemap-guides.xml</loc></sitemap></sitemapindex>'))
-      .toEqual({ index: true, locations: ["https://bestbikefit4u.eu/sitemap-guides.xml"] });
-    expect(parseSitemap('<urlset><url><loc>https://bestbikefit4u.eu/en?a=1&amp;b=2</loc>'
+      + '<sitemap><loc>https://bikefitboost.com/sitemap-guides.xml</loc></sitemap></sitemapindex>'))
+      .toEqual({ index: true, locations: ["https://bikefitboost.com/sitemap-guides.xml"] });
+    expect(parseSitemap('<urlset><url><loc>https://bikefitboost.com/en?a=1&amp;b=2</loc>'
       + '<image><loc>ignore.jpg</loc></image></url></urlset>').locations)
-      .toEqual(["https://bestbikefit4u.eu/en?a=1&b=2"]);
+      .toEqual(["https://bikefitboost.com/en?a=1&b=2"]);
   });
 });

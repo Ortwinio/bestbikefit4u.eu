@@ -118,14 +118,14 @@ describe.each(["nl", "en"] as const)("FAQ in %s", (language) => {
         title: metadataCopy[language].title,
         description: metadataCopy[language].description,
         type: "website",
-        url: `https://www.bikefitboost.com/${language}/faq`,
+        url: `https://bikefitboost.com/${language}/faq`,
       },
       alternates: {
-        canonical: `https://www.bikefitboost.com/${language}/faq`,
+        canonical: `https://bikefitboost.com/${language}/faq`,
         languages: {
-          nl: "https://www.bikefitboost.com/nl/faq",
-          en: "https://www.bikefitboost.com/en/faq",
-          "x-default": "https://www.bikefitboost.com/en/faq",
+          nl: "https://bikefitboost.com/nl/faq",
+          en: "https://bikefitboost.com/en/faq",
+          "x-default": "https://bikefitboost.com/en/faq",
         },
       },
     });

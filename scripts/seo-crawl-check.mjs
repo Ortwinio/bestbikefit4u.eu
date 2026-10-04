@@ -36,7 +36,7 @@ export function optionsFromArgs(args) {
   }
   if (!/^[a-z0-9-]+$/.test(options.label)) throw new Error("Label must contain lowercase letters, digits and hyphens");
   if (!Number.isFinite(options.delay) || options.delay < 0) throw new Error("Delay must be nonnegative");
-  if (!options.local && !options.base) throw new Error("Use --local or --base https://www.bikefitboost.com");
+  if (!options.local && !options.base) throw new Error("Use --local or --base https://bikefitboost.com");
   if (options.local && options.base) throw new Error("Use either --local or --base");
   if (options.base) {
     const base = new URL(options.base);

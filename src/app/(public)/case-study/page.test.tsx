@@ -168,9 +168,9 @@ describe("case study presentation and unchanged recruitment form", () => {
   it.each(["nl", "en"] as const)("preserves metadata and canonical in %s", async (locale) => {
     state.locale = locale;
     const metadata = await generateMetadata();
-    expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}/case-study`);
+    expect(metadata.alternates?.canonical).toBe(`https://bikefitboost.com/${locale}/case-study`);
     expect(metadata.openGraph).toMatchObject({
-      type: "website", url: `https://www.bikefitboost.com/${locale}/case-study`,
+      type: "website", url: `https://bikefitboost.com/${locale}/case-study`,
     });
   });
 });

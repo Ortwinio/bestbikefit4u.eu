@@ -132,7 +132,7 @@ describe("pricing redesign", () => {
     expect(schema).toContain("Can I manage multiple bikes?");
     const metadata = await generateMetadata();
     expect(metadata.title).toBe("Pricing | BikeFitBoost");
-    expect(metadata.alternates?.canonical).toBe("https://www.bikefitboost.com/en/pricing");
+    expect(metadata.alternates?.canonical).toBe("https://bikefitboost.com/en/pricing");
   });
 
   it("honors either billing kill switch and restores only the existing login route when enabled", async () => {

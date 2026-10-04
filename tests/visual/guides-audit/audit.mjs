@@ -6,15 +6,15 @@ import { fileURLToPath } from 'node:url';
 import { analyzeDutchText } from '../final-sweep/nl-language.mjs';
 
 export async function runGuideAudit({
-  base = 'https://bestbikefit4u.eu',
-  canonicalOrigin = 'https://bestbikefit4u.eu',
+  base = 'https://bikefitboost.com',
+  canonicalOrigin = 'https://bikefitboost.com',
   output = 'plans/redesign-canvas/audit/44a-guides-audit',
   filter = [],
   fetchImpl = fetch,
 } = {}) {
   base = base.replace(/\/$/, '');
   canonicalOrigin = canonicalOrigin.replace(/\/$/, '');
-  if ((base !== 'https://bestbikefit4u.eu' || filter.length)
+  if ((base !== 'https://bikefitboost.com' || filter.length)
     && output === 'plans/redesign-canvas/audit/44a-guides-audit') {
     throw new Error('Local or filtered audits require a separate output to preserve the 44a baseline.');
   }

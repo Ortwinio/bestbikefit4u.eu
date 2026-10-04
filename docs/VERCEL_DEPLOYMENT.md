@@ -37,18 +37,30 @@ to manage or cancel their subscriptions. This does not cancel subscriptions or
 pause renewals at Stripe. Re-enable both flags only after billing configuration
 and end-to-end validation are complete, then rebuild the frontend.
 
-Set these in Convex production deployment env:
+For the approved domain cutover, set `SITE_URL=https://bikefitboost.com` and
+`NEXT_PUBLIC_SITE_URL=https://bikefitboost.com` in Vercel. Set the matching
+`SITE_URL` in Convex. These are owner-run release steps, not changes performed
+by the migration branch. Verify the new Resend sending domain and support and
+security mailboxes before changing mail configuration.
 
-- `SITE_URL=https://bestbikefit4u.eu`
+The canonical host has no `www`. In Vercel, replace the current apex-to-www
+redirect with a www-to-apex 301 before release; do not add the reverse redirect
+in app code while the existing Vercel redirect is active. Attach both legacy
+domains and route them directly to the apex with path and query preserved.
+Users sign in again on the new host; existing host-only cookies do not migrate.
+
+Set these in Convex production deployment env after owner approval:
+
+- `SITE_URL=https://bikefitboost.com`
 - `AUTH_RESEND_KEY=your_resend_api_key`
-- `AUTH_EMAIL_FROM=BestBikeFit4U <noreply@notifications.bestbikefit4u.eu>`
+- `AUTH_EMAIL_FROM=BestBikeFit4U <noreply@notifications.bikefitboost.com>`
 
 CLI equivalent for Convex env:
 
 ```bash
-npx convex env set SITE_URL https://bestbikefit4u.eu --prod
+npx convex env set SITE_URL https://bikefitboost.com --prod
 npx convex env set AUTH_RESEND_KEY your_resend_api_key --prod
-npx convex env set AUTH_EMAIL_FROM 'BestBikeFit4U <noreply@notifications.bestbikefit4u.eu>' --prod
+npx convex env set AUTH_EMAIL_FROM 'BestBikeFit4U <noreply@notifications.bikefitboost.com>' --prod
 ```
 
 ## 3. Deploy Convex Backend
@@ -106,13 +118,13 @@ npx convex run emails/actions:sendFitReport '{"sessionId":"<owner-session-id>","
   - Update Convex `SITE_URL` to the exact production domain and redeploy Convex.
 - Emails not sent:
   - Verify Convex `AUTH_RESEND_KEY` and `AUTH_EMAIL_FROM`.
-  - Verify `AUTH_EMAIL_FROM` stays `BestBikeFit4U <noreply@notifications.bestbikefit4u.eu>`.
+  - Verify `AUTH_EMAIL_FROM` stays `BestBikeFit4U <noreply@notifications.bikefitboost.com>`.
   - Probe Resend directly and inspect response:
     ```bash
     curl -sS https://api.resend.com/emails \
       -H "Authorization: Bearer $AUTH_RESEND_KEY" \
       -H "Content-Type: application/json" \
-      -d '{"from":"BestBikeFit4U <noreply@notifications.bestbikefit4u.eu>","to":["<test-email>"],"subject":"probe","html":"<p>probe</p>"}'
+      -d '{"from":"BestBikeFit4U <noreply@notifications.bikefitboost.com>","to":["<test-email>"],"subject":"probe","html":"<p>probe</p>"}'
     ```
   - Pull recent production logs and match by request ID:
     ```bash

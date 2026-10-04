@@ -1,6 +1,7 @@
 "use node";
 
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { resolveSiteOrigin } from "../../shared/brand";
 
 export type EmailCategory = "service" | "marketing" | "newsletter";
 type TokenPayload = {
@@ -54,19 +55,19 @@ export function verifyEmailPreferenceToken(token: string): TokenPayload {
   return payload;
 }
 
-function origin(name: "SITE_URL" | "CONVEX_SITE_URL") {
-  const value = process.env[name];
+function unsubscribeOrigin() {
+  const value = process.env.CONVEX_SITE_URL;
   if (!value) throw new Error("Email preferences unavailable");
   const url = new URL(value);
   if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash ||
-      url.pathname !== "/" || (name === "CONVEX_SITE_URL" && url.hostname.endsWith(".convex.cloud"))) {
+      url.pathname !== "/" || url.hostname.endsWith(".convex.cloud")) {
     throw new Error("Email preferences unavailable");
   }
   return url.origin;
 }
 
 export function emailPreferencePageUrl(token: string, locale: "nl" | "en") {
-  return `${origin("SITE_URL")}/${locale}/email-preferences#token=${encodeURIComponent(token)}`;
+  return `${resolveSiteOrigin()}/${locale}/email-preferences#token=${encodeURIComponent(token)}`;
 }
 
 export async function buildEmailPreferenceLinks(userId: string, locale: "nl" | "en", category: EmailCategory) {
@@ -79,7 +80,7 @@ export async function buildEmailPreferenceLinks(userId: string, locale: "nl" | "
     } satisfies TokenPayload)).toString("base64url");
     return `${payload}.${signature(payload).toString("base64url")}`;
   };
-  const unsubscribeUrl = `${origin("CONVEX_SITE_URL")}/emails/unsubscribe?token=${sign("unsubscribe")}`;
+  const unsubscribeUrl = `${unsubscribeOrigin()}/emails/unsubscribe?token=${sign("unsubscribe")}`;
   return {
     unsubscribeUrl,
     preferencesUrl: emailPreferencePageUrl(sign("preferences"), locale),

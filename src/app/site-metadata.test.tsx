@@ -61,7 +61,7 @@ describe("site metadata language", () => {
 
   it.each(["nl", "en"])("serves an explicit %s manifest independently of cookies", async (locale) => {
     requestLocale.mockResolvedValue(locale === "nl" ? "en" : "nl");
-    const response = await GET(new Request(`https://www.bikefitboost.com/manifest.webmanifest?locale=${locale}`));
+    const response = await GET(new Request(`https://bikefitboost.com/manifest.webmanifest?locale=${locale}`));
     expect(response.headers.get("Content-Type")).toBe("application/manifest+json");
     expect(response.headers.get("Cache-Control")).toBe("private, no-store");
     expect(await response.json()).toMatchObject({
@@ -76,7 +76,7 @@ describe("site metadata language", () => {
 
   it.each(["", "?locale=unknown"])("keeps request-locale fallback for legacy manifest URLs %s", async (query) => {
     requestLocale.mockResolvedValue("nl");
-    const response = await GET(new Request(`https://www.bikefitboost.com/manifest.webmanifest${query}`));
+    const response = await GET(new Request(`https://bikefitboost.com/manifest.webmanifest${query}`));
     expect(await response.json()).toMatchObject({ lang: "nl", start_url: "/nl" });
     expect(requestLocale).toHaveBeenCalledOnce();
   });

@@ -1,3 +1,5 @@
+import { resolveSiteOrigin } from "../../shared/brand";
+
 export const STRIPE_API_VERSION = "2026-06-24.dahlia" as const;
 
 export const STRIPE_PRODUCT_CATALOG = {
@@ -38,22 +40,8 @@ export function isProductionRuntime(): boolean {
   return process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
 }
 
-export function getStripeSiteUrl(requestOrigin: string): string | null {
-  const configuredSiteUrl = process.env.SITE_URL?.trim();
-  if (configuredSiteUrl) {
-    try {
-      const url = new URL(configuredSiteUrl);
-      return url.origin;
-    } catch {
-      return null;
-    }
-  }
-
-  if (isProductionRuntime()) {
-    return null;
-  }
-
-  return requestOrigin;
+export function getStripeSiteUrl(_requestOrigin?: string): string {
+  return resolveSiteOrigin();
 }
 
 export function getStripeProduct(productKey: StripeProductKey): StripeConfiguredProduct | null {

@@ -106,7 +106,7 @@ beforeEach(() => {
   vi.spyOn(Date, "now").mockReturnValue(Date.now());
   vi.stubEnv("AUTH_RESEND_KEY", "test-only-never-real");
   vi.stubEnv("EMAIL_UNSUBSCRIBE_SECRET", "test-secret-at-least-thirty-two-characters");
-  vi.stubEnv("SITE_URL", "https://bestbikefit4u.eu");
+  vi.stubEnv("SITE_URL", "https://bikefitboost.com");
   vi.stubEnv("CONVEX_SITE_URL", "https://example.convex.site");
   sendEmail.mockReset().mockResolvedValue({ data: { id: "mock-delivery" }, error: null });
 });

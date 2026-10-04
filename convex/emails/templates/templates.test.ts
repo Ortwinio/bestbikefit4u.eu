@@ -75,11 +75,11 @@ describe.each<EmailLocale>(["nl", "en"])("%s email templates", (locale) => {
       expect(doc.body.firstElementChild?.textContent).toContain(result.preheader);
       expect(doc.querySelector("script")).toBeNull();
       expect(doc.querySelectorAll('a[href*="token=preview-only"]').length).toBe(service.has(kind) ? 1 : 0);
-      const cta = doc.querySelectorAll(`a[href="https://www.bikefitboost.com/${locale}/fit"]`);
+      const cta = doc.querySelectorAll(`a[href="https://bikefitboost.com/${locale}/fit"]`);
       expect(cta.length).toBe(["loginCode", "caseStudyLead"].includes(kind) ? 0 : 1);
       if (cta.length) expect(result.html).toContain("<v:rect");
       for (const image of doc.querySelectorAll("img")) {
-        expect(image.src).toMatch(/^https:\/\/www\.bikefitboost\.com\/(?:email\/[a-z0-9-]+|brand\/png\/logo-horizontaal-960)\.png$/);
+        expect(image.src).toMatch(/^https:\/\/bikefitboost\.com\/(?:email\/[a-z0-9-]+|brand\/png\/logo-horizontaal-960)\.png$/);
         expect(image.hasAttribute("alt")).toBe(true);
       }
       dom.window.close();

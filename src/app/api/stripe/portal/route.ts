@@ -3,21 +3,13 @@ import Stripe from "stripe";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../../../convex/_generated/api";
+import { resolveSiteOrigin } from "../../../../../shared/brand";
 
 export const runtime = "nodejs";
 
 type PortalRequestBody = {
   locale?: string;
 };
-
-function resolveSiteUrl(request: Request) {
-  const requestOrigin = new URL(request.url).origin;
-  const siteUrl =
-    process.env.SITE_URL ??
-    (process.env.NODE_ENV === "production" ? undefined : requestOrigin);
-
-  return siteUrl;
-}
 
 function resolveReturnUrl(siteUrl: string, locale?: string) {
   const normalizedLocale = locale === "nl" ? "nl" : "en";
@@ -37,10 +29,7 @@ export async function POST(request: Request): Promise<Response> {
       return NextResponse.json({ error: "Server misconfigured." }, { status: 500 });
     }
 
-    const siteUrl = resolveSiteUrl(request);
-    if (!siteUrl) {
-      return NextResponse.json({ error: "SITE_URL is required in production." }, { status: 500 });
-    }
+    const siteUrl = resolveSiteOrigin();
 
     const stripeKey = process.env.STRIPE_SECRET_KEY;
     if (!stripeKey) {

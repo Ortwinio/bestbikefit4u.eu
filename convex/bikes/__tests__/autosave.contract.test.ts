@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const auth = vi.hoisted(() => ({ user: "user" as string | null }));
 vi.mock("@convex-dev/auth/server", () => ({ getAuthUserId: async () => auth.user }));
 import { update as updateBike } from "../mutations";
+import { getById } from "../queries";
 import { update as updateWheelset } from "../../wheelsets/mutations";
 import { update as updateTires } from "../../tireSetups/mutations";
 
@@ -39,6 +40,23 @@ beforeEach(() => {
   auth.user = "user";
 });
 describe("bike autosave server contract", () => {
+  it("keeps a legacy imported bike readable and editable without changing its provenance", async () => {
+    const { rows, ctx } = fixture();
+    const legacy = {
+      source: "strava",
+      stravaGearId: "legacy-gear",
+      stravaPrimary: true,
+      lifetimeDistanceMeters: 123456,
+      lastStravaSync: 1000,
+      bikeTypeSource: "strava_frame_type",
+    };
+    Object.assign(rows.bike, legacy, { needsTypeConfirmation: true });
+    expect(await run(getById, ctx, { bikeId: "bike" })).toMatchObject(legacy);
+    await run(updateBike, ctx, { bikeId: "bike", name: "My gravel bike", bikeType: "gravel", notes: "Still mine" });
+    expect(rows.bike).toMatchObject({ ...legacy, name: "My gravel bike", bikeType: "gravel", notes: "Still mine" });
+    await run(updateBike, ctx, { bikeId: "bike", bikeTypeSource: "user", needsTypeConfirmation: false });
+    expect(rows.bike).toMatchObject({ source: "strava", stravaGearId: "legacy-gear", bikeTypeSource: "user", needsTypeConfirmation: false });
+  });
   it("clears text and optional riding style without touching archived fits or unrelated measurements", async () => {
     const { rows, ctx } = fixture();
     await run(updateBike, ctx, { bikeId: "bike", notes: "", clearFields: ["ridingStyle"] });

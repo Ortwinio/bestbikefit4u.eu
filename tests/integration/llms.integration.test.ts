@@ -10,7 +10,7 @@ vi.mock("@/lib/seo/llms", () => ({ generateLlmsDocument: vi.fn() }));
 beforeEach(() => {
   vi.mocked(generateLlmsDocument).mockReset().mockImplementation(async (full) => full
     ? "# Full fixture\n\nExisting answer: één meting.\n"
-    : "# Concise fixture\n\nhttps://www.bikefitboost.com/nl\n");
+    : "# Concise fixture\n\nhttps://bikefitboost.com/nl\n");
 });
 
 describe("LLM text route HTTP contracts", () => {
@@ -21,7 +21,7 @@ describe("LLM text route HTTP contracts", () => {
     const response = await route.GET();
     expect(response.status).toBe(200);
     expect(generateLlmsDocument).toHaveBeenCalledExactlyOnceWith(full);
-    expect(await response.text()).toBe(full ? "# Full fixture\n\nExisting answer: één meting.\n" : "# Concise fixture\n\nhttps://www.bikefitboost.com/nl\n");
+    expect(await response.text()).toBe(full ? "# Full fixture\n\nExisting answer: één meting.\n" : "# Concise fixture\n\nhttps://bikefitboost.com/nl\n");
     expect(response.headers.get("content-type")).toBe("text/plain; charset=utf-8");
     expect(response.headers.get("cache-control")).toBe("public, s-maxage=3600, stale-while-revalidate=86400");
     expect(response.headers.get("x-content-type-options")).toBe("nosniff");

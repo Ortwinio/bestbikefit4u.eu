@@ -48,7 +48,7 @@ describe("public personalize block", () => {
     expect(screen.getByText("Lichaamslengte (vorige calculator)")).toBeTruthy();
     expect(screen.getByText("81 cm")).toBeTruthy();
     expect(screen.getByText("geschat")).toBeTruthy();
-    const url = new URL(handoffLoginHref("saddle-height", "nl"), "https://www.bikefitboost.com");
+    const url = new URL(handoffLoginHref("saddle-height", "nl"), "https://bikefitboost.com");
     expect([...url.searchParams.keys()]).toEqual(["src", "handoff"]);
     expect(url.href).not.toMatch(/81|174|balanced/);
   });

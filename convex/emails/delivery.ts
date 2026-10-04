@@ -1,11 +1,12 @@
 "use node";
 
 import { Resend } from "resend";
-import { BRAND, emailSender } from "../lib/brand";
+import { emailSender } from "../lib/brand";
+import { resolveSiteOrigin } from "../../shared/brand";
 import type { EmailLocale, RenderedEmail } from "./templates";
 
 export function emailActionUrl(locale: EmailLocale, path: string) {
-  return `${(process.env.SITE_URL ?? BRAND.siteUrl).replace(/\/$/, "")}/${locale}${path}`;
+  return `${resolveSiteOrigin()}/${locale}${path}`;
 }
 
 export async function deliverEmail(

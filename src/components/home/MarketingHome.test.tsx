@@ -37,7 +37,7 @@ describe("marketing home", () => {
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Get more from every ride.");
     expect(screen.getByRole("link", { name: "Start free bike fit" }).getAttribute("href")).toBe("/en/calculators/bike-fit");
     const metadata = await generateMetadata();
-    expect(metadata.alternates?.canonical).toBe("https://www.bikefitboost.com/en");
+    expect(metadata.alternates?.canonical).toBe("https://bikefitboost.com/en");
     expect(metadata.openGraph).toMatchObject({ type: "website" });
     expect(metadata.description).toBeTruthy();
   });

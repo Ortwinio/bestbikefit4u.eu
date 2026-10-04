@@ -8,6 +8,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const page = content[locale];
 
+  const alternates = buildLocaleAlternates("/privacy", locale);
+
   return {
     title: page.metadata.title,
     description: page.metadata.description,
@@ -16,8 +18,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: page.metadata.title,
       description: page.metadata.description,
       type: "website",
+      url: alternates.canonical,
     },
-    alternates: buildLocaleAlternates("/privacy", locale),
+    alternates,
   };
 }
 

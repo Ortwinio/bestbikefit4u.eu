@@ -1,0 +1,17 @@
+convex/__tests__/stravaRemoval.contract.test.ts
+convex/bikes/__tests__/autosave.contract.test.ts
+convex/bikes/mutations.ts
+convex/crons.ts
+convex/http.ts
+convex/integrations/actions.ts
+convex/integrations/activitySync.ts
+convex/integrations/mutations.ts
+convex/integrations/queries.ts
+convex/integrations/strava.ts
+convex/integrations/stravaToken.ts
+convex/integrations/__tests__/activitySync.test.ts
+convex/integrations/__tests__/autoImport.test.ts
+convex/integrations/__tests__/origin.test.ts
+convex/integrations/__tests__/strava.test.ts
+plans/migratie/audit/M4-backend.md
+plans/migratie/audit/files-M4-backend.txt

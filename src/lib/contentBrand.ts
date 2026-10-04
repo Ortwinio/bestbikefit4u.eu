@@ -1,8 +1,14 @@
 import { BRAND } from "@/config/brand";
+import { LEGACY_SITE_HOST_PATTERN } from "../../shared/brand";
+
+const protectedBrandTokens = new RegExp(
+  String.raw`(?:https?:\/\/|mailto:)[^\s<>"']+|[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}|${LEGACY_SITE_HOST_PATTERN}(?:\/[^\s<>"']*)?|\bBestBikeFit4U\b`,
+  "gi",
+);
 
 export function currentBrandCopy(value: string): string {
   return value.replace(
-    /(?:https?:\/\/|mailto:)[^\s<>"']+|[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}|(?:www\.)?bestbikefit4u\.eu(?:\/[^\s<>"']*)?|\bBestBikeFit4U\b/gi,
+    protectedBrandTokens,
     (match) => /^bestbikefit4u$/i.test(match) ? BRAND.name : match,
   );
 }

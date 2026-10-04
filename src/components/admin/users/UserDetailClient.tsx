@@ -25,7 +25,7 @@ import {
   AdminTableHead,
   AdminTableRow,
 } from "@/components/admin/layout/AdminUi";
-import { formatAdminDate, formatAdminRelativeDate, formatAdminDateTime } from "@/components/admin/shared/admin-format";
+import { formatAdminDate, formatAdminRelativeDate } from "@/components/admin/shared/admin-format";
 import { displayAdminUserName } from "@/components/admin/shared/live-admin-data";
 import { formatAdminRoleLabel } from "../auth/admin-auth-shared";
 
@@ -34,7 +34,6 @@ type TabKey =
   | "profile"
   | "bikes"
   | "fit-history"
-  | "integrations"
   | "license"
   | "feedback"
   | "messages"
@@ -45,7 +44,6 @@ const tabs: Array<{ key: TabKey; label: string }> = [
   { key: "profile", label: "Profile" },
   { key: "bikes", label: "Bikes" },
   { key: "fit-history", label: "Fit History" },
-  { key: "integrations", label: "Integrations" },
   { key: "license", label: "License" },
   { key: "feedback", label: "Feedback" },
   { key: "messages", label: "Messages" },
@@ -88,14 +86,12 @@ type UserDetailData = {
   user: Doc<"users"> | null;
   bikes: Doc<"bikes">[];
   fitRuns: Doc<"fitSessions">[];
-  integration: Doc<"integrations"> | null;
   subscriptions: Doc<"subscriptions">[];
   feedbackItems: Doc<"feedback_items">[];
   messageReceipts: Doc<"message_receipts">[];
   auditLogs: Doc<"admin_audit_logs">[];
   bikeCount: number;
   fitRunCount: number;
-  stravaConnected: boolean;
 };
 
 type RiderData = {
@@ -346,9 +342,6 @@ export function UserDetailClient({ userId }: { userId: string }) {
         ) : (
           <AdminStatusPill tone="neutral">No admin role</AdminStatusPill>
         )}
-        <AdminStatusPill tone={detail.stravaConnected ? "success" : "warning"}>
-          {detail.stravaConnected ? "Strava connected" : "Strava not connected"}
-        </AdminStatusPill>
         <AdminStatusPill tone={liveUser.suspendedAt ? "warning" : "success"}>
           {liveUser.suspendedAt ? "Suspended" : "Active"}
         </AdminStatusPill>
@@ -605,34 +598,6 @@ export function UserDetailClient({ userId }: { userId: string }) {
                 ))}
               </tbody>
             </AdminTable>
-          )}
-        </AdminSectionCard>
-      ) : null}
-
-      {tab === "integrations" ? (
-        <AdminSectionCard title="Integrations" description="Live integration and sync state.">
-          {detail.integration ? (
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Provider" value={detail.integration.provider} />
-              <Field label="Status" value={detail.integration.accessStatus} />
-              <Field label="Last sync" value={formatAdminDateTime(detail.integration.lastSyncAt)} />
-              <Field label="Athlete" value={detail.integration.athleteName ?? "—"} />
-              <Field
-                label="Ride count"
-                value={detail.integration.rideCount !== undefined ? String(detail.integration.rideCount) : "—"}
-              />
-              <Field
-                label="Distance"
-                value={
-                  detail.integration.totalDistanceKm != null
-                    ? `${detail.integration.totalDistanceKm} km`
-                    : "—"
-                }
-              />
-              <Field label="Sync error" value={detail.integration.syncErrorMessage ?? "—"} />
-            </div>
-          ) : (
-            <EmptyState title="No integrations" description="This user has no live integration records." />
           )}
         </AdminSectionCard>
       ) : null}

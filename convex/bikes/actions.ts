@@ -26,15 +26,6 @@ export const generateDescription = action({
       ridingStyle: detail.bike.ridingStyle,
       primaryGoal: detail.bike.primaryGoal,
       notes: detail.bike.notes,
-      activitySummary: detail.bike.activitySummary
-        ? {
-            inferredBikeRole: detail.bike.activitySummary.inferredBikeRole,
-            inferredRidingStyle: detail.bike.activitySummary.inferredRidingStyle,
-            totalDistanceKm: detail.bike.activitySummary.totalDistanceKm,
-            commuteRatio: detail.bike.activitySummary.commuteRatio,
-            trainerRatio: detail.bike.activitySummary.trainerRatio,
-          }
-        : null,
     });
 
     await ctx.runMutation(api.bikes.mutations.update, {

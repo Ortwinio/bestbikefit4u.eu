@@ -128,8 +128,6 @@ const values = {
         ],
   "feedback/queries:getPublicFeedbackDetail": { item: { ...feedback, comments: [] } },
   "messages/queries:getMyMessages": [],
-  "integrations/queries:getStravaStatus": { accessStatus: "disconnected" },
-  "integrations/queries:getStravaBikeOverview": [],
 };
 
 window.__visualQueries = [];

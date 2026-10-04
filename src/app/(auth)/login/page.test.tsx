@@ -543,7 +543,7 @@ it.each(["en", "nl"].flatMap((locale) => ["", "?src=dashboard", "?src=guide&utm_
   const metadata = await generateMetadata();
   expect(metadata.title).toBe(locale === "nl" ? "Inloggen | BikeFitBoost" : "Sign In | BikeFitBoost");
   expect(metadata.robots).toEqual({ index: false, follow: true });
-  expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}/login`);
-  expect(metadata.alternates).toEqual({ canonical: `https://www.bikefitboost.com/${locale}/login` });
+  expect(metadata.alternates?.canonical).toBe(`https://bikefitboost.com/${locale}/login`);
+  expect(metadata.alternates).toEqual({ canonical: `https://bikefitboost.com/${locale}/login` });
   expect(metadata.alternates?.languages).toBeUndefined();
 });

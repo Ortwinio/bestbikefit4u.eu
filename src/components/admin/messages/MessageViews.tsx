@@ -87,7 +87,6 @@ const targetTypeOptions = [
   { value: "plan", label: "Plan" },
   { value: "organization", label: "Organization" },
   { value: "locale", label: "Locale" },
-  { value: "strava_connected", label: "Strava connected" },
   { value: "fit_completed", label: "Fit completed" },
   { value: "bike_type", label: "Bike type" },
 ] as const;
@@ -206,6 +205,17 @@ function AudienceRuleEditor({
   onRemove: () => void;
   canRemove: boolean;
 }) {
+  if (rule.targetType === "strava_connected") {
+    return (
+      <div className="space-y-3 rounded-2xl border p-4">
+        <p>Inactive audience rule. This message will not be delivered until this rule is removed.</p>
+        <Button type="button" variant="outline" onClick={onRemove} disabled={!canRemove}>
+          Remove
+        </Button>
+      </div>
+    );
+  }
+
   const targetValuePlaceholder = (() => {
     switch (rule.targetType) {
       case "user":
@@ -216,7 +226,6 @@ function AudienceRuleEditor({
         return "Organization ID";
       case "locale":
         return "en or nl";
-      case "strava_connected":
       case "fit_completed":
         return "true or false";
       case "bike_type":
@@ -240,7 +249,6 @@ function AudienceRuleEditor({
         return [];
       case "locale":
         return localeOptions.filter((option) => option.value !== "all");
-      case "strava_connected":
       case "fit_completed":
         return [
           { value: "true", label: "true" },
@@ -643,7 +651,7 @@ export function MessageDetailView({ data }: { data: MessageDetailData }) {
               {data.detail.targets.length === 0 ? (
                 <EmptyState
                   title="No audience rules"
-                  description="This message currently targets the default audience."
+                  description="This message has no recipients."
                   className="border-none bg-transparent p-0 shadow-none"
                 />
               ) : (
@@ -653,7 +661,7 @@ export function MessageDetailView({ data }: { data: MessageDetailData }) {
                     className="rounded-[var(--radius-lg)] border border-[color:var(--border)] p-3"
                   >
                     <div className="flex flex-wrap items-center gap-2">
-                      <AdminStatusPill tone="info">{rule.targetType}</AdminStatusPill>
+                      <AdminStatusPill tone="info">{rule.targetType === "strava_connected" ? "Inactive audience rule" : rule.targetType}</AdminStatusPill>
                       <span className="text-sm text-[color:var(--muted-foreground)]">
                         {rule.targetValue ?? "all"}
                       </span>

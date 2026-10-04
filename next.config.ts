@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
-import { LEGACY_SITE_HOSTS, SITE_ORIGIN } from "./shared/brand";
+import { LEGACY_SITE_HOST_PATTERN, SITE_ORIGIN } from "./shared/brand";
 
 const nextConfig: NextConfig = {
   // Keep the repository's maintained agent instructions unchanged by dev startup.
@@ -8,12 +8,12 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   htmlLimitedBots: /.*/,
   async redirects() {
-    return LEGACY_SITE_HOSTS.map((host) => ({
+    return [{
       source: "/:path*",
-      has: [{ type: "host" as const, value: host }],
+      has: [{ type: "host" as const, value: LEGACY_SITE_HOST_PATTERN }],
       destination: `${SITE_ORIGIN}/:path*`,
-      permanent: true,
-    }));
+      statusCode: 301,
+    }];
   },
   outputFileTracingIncludes: {
     "/api/reports/*/pdf": [

@@ -166,14 +166,14 @@ vi.mock("@/i18n/request", () => ({
 
 vi.mock("@/i18n/metadata", () => ({
   buildLocaleAlternates: (path: string, currentLocale: string) => ({
-    canonical: `https://www.bikefitboost.com/${currentLocale}${path}`,
+    canonical: `https://bikefitboost.com/${currentLocale}${path}`,
   }),
 }));
 
 vi.mock("@/lib/seo/jsonLd", () => ({
   buildArticleSchema: vi.fn(() => ({})),
   buildPersonSchema: vi.fn((locale: string) => ({ "@type": "Person", name: "Ortwin Verreck",
-    url: `https://www.bikefitboost.com/${locale}/authors/ortwin-verreck` })),
+    url: `https://bikefitboost.com/${locale}/authors/ortwin-verreck` })),
   buildBreadcrumbListSchema: vi.fn(() => ({})),
   buildFaqPageSchema: vi.fn(() => ({})),
 }));
@@ -584,18 +584,18 @@ describe("guide page template redesign", () => {
     locale = "nl";
     const props = { params: Promise.resolve({ slug: "bike-fitting-for-knee-pain" }) };
     const metadata = await generateMetadata(props);
-    expect(metadata.alternates?.canonical).toBe("https://www.bikefitboost.com/nl/guides/bike-fitting-for-knee-pain");
+    expect(metadata.alternates?.canonical).toBe("https://bikefitboost.com/nl/guides/bike-fitting-for-knee-pain");
     expect(metadata.openGraph).toMatchObject({
       type: "article",
       url: metadata.alternates?.canonical,
-      images: [{ url: "https://www.bikefitboost.com/og/guides/media/003--guides--bike-fitting-for-knee-pain-hero.jpg", alt: "Kniepijn hero", width: 1200, height: 630 }],
+      images: [{ url: "https://bikefitboost.com/og/guides/media/003--guides--bike-fitting-for-knee-pain-hero.jpg", alt: "Kniepijn hero", width: 1200, height: 630 }],
     });
     render(await GuidePage(props));
     expect(buildArticleSchema).toHaveBeenCalledWith(expect.objectContaining({ inLanguage: "nl", description: "Kniepijn desc", url: metadata.alternates?.canonical }));
     expect(buildFaqPageSchema).toHaveBeenCalledWith([{ q: "Kan bike fit kniepijn veroorzaken?", a: "Ja, vooral wanneer belasting en positie samenkomen.\n\n[Start Free Fit](/nl/login)" }]);
     expect(buildBreadcrumbListSchema).toHaveBeenCalledWith([
-      { name: "Home", item: "https://www.bikefitboost.com/nl" },
-      { name: "Gidsen", item: "https://www.bikefitboost.com/nl/guides" },
+      { name: "Home", item: "https://bikefitboost.com/nl" },
+      { name: "Gidsen", item: "https://bikefitboost.com/nl/guides" },
       { name: "Bike Fit voor kniepijn: oorzaken en eerste aanpassingen", item: metadata.alternates?.canonical },
     ]);
   });
@@ -609,7 +609,7 @@ describe("guide page template redesign", () => {
     } as unknown as Awaited<ReturnType<typeof getGuidePageData>>);
     render(await GuidePage({ params: Promise.resolve({ slug }) }));
     expect(buildArticleSchema).toHaveBeenCalledWith(expect.objectContaining({
-      image: "https://www.bikefitboost.com/og/example.jpg",
+      image: "https://bikefitboost.com/og/example.jpg",
     }));
   });
 
@@ -622,7 +622,7 @@ describe("guide page template redesign", () => {
       dbGuide: { ...data.dbGuide, canonicalUrl },
     } as unknown as Awaited<ReturnType<typeof getGuidePageData>>);
     const metadata = await generateMetadata({ params: Promise.resolve({ slug }) });
-    expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/nl/guides/${slug}`);
+    expect(metadata.alternates?.canonical).toBe(`https://bikefitboost.com/nl/guides/${slug}`);
     expect(metadata.openGraph).toMatchObject({ url: metadata.alternates?.canonical });
   });
 
@@ -764,7 +764,7 @@ describe("registered rewrite routes", () => {
     const metadata = await generateMetadata(props);
     expect(metadata.title).toEqual({ absolute: article.metaTitle });
     expect(metadata.description).toBe(article.metaDescription);
-    expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}/guides/${slug}`);
+    expect(metadata.alternates?.canonical).toBe(`https://bikefitboost.com/${locale}/guides/${slug}`);
     const { container } = render(await GuidePage(props));
     expect(container.querySelector('[data-guide-source="code-rewrite"]')).toBeTruthy();
     expect(screen.getByRole("heading", { level: 1, name: article.title })).toBeTruthy();

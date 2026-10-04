@@ -15,7 +15,6 @@ export type AdminUserRow = {
   name: string;
   email: string;
   plan: AdminUserPlan;
-  stravaConnected: boolean;
   bikesCount: number;
   fitRunsCount: number;
   joinedAt: string;
@@ -50,12 +49,6 @@ export type AdminUserDetail = {
     engineVersion: string;
     completedAt: string;
     confidence: string;
-  }>;
-  integrations: Array<{
-    provider: string;
-    status: string;
-    lastSync: string;
-    notes: string;
   }>;
   license: {
     currentPlan: AdminUserPlan;
@@ -95,9 +88,8 @@ export const adminUsers: AdminUserRow[] = [
   {
     id: "user_anna",
     name: "Anna Vermeer",
-    email: "anna@bestbikefit4u.eu",
+    email: "anna@example.com",
     plan: "premium",
-    stravaConnected: true,
     bikesCount: 3,
     fitRunsCount: 12,
     joinedAt: "2024-02-18T09:00:00.000Z",
@@ -107,9 +99,8 @@ export const adminUsers: AdminUserRow[] = [
   {
     id: "user_bram",
     name: "Bram de Vries",
-    email: "bram@bestbikefit4u.eu",
+    email: "bram@example.com",
     plan: "pro",
-    stravaConnected: false,
     bikesCount: 1,
     fitRunsCount: 4,
     joinedAt: "2024-10-01T10:00:00.000Z",
@@ -122,7 +113,6 @@ export const adminUsers: AdminUserRow[] = [
     name: "Celine Jansen",
     email: "celine@shop-example.nl",
     plan: "free",
-    stravaConnected: true,
     bikesCount: 2,
     fitRunsCount: 7,
     joinedAt: "2025-01-13T07:30:00.000Z",
@@ -132,9 +122,8 @@ export const adminUsers: AdminUserRow[] = [
   {
     id: "user_daan",
     name: "Daan Visser",
-    email: "daan@bestbikefit4u.eu",
+    email: "daan@example.com",
     plan: "premium",
-    stravaConnected: true,
     bikesCount: 5,
     fitRunsCount: 18,
     joinedAt: "2023-11-04T16:10:00.000Z",
@@ -144,9 +133,8 @@ export const adminUsers: AdminUserRow[] = [
   {
     id: "user_elsa",
     name: "Elsa Peters",
-    email: "elsa@bestbikefit4u.eu",
+    email: "elsa@example.com",
     plan: "pro",
-    stravaConnected: false,
     bikesCount: 2,
     fitRunsCount: 5,
     joinedAt: "2024-08-22T12:15:00.000Z",
@@ -231,14 +219,6 @@ export const adminUserDetails: Record<string, AdminUserDetail> = {
         confidence: "Medium",
       },
     ],
-    integrations: [
-      {
-        provider: "Strava",
-        status: "active",
-        lastSync: "2026-03-21T17:10:00.000Z",
-        notes: "Synced 3 rides",
-      },
-    ],
     license: {
       currentPlan: "premium",
       assignedAt: "2025-11-12T09:00:00.000Z",
@@ -292,14 +272,6 @@ export const adminUserDetails: Record<string, AdminUserDetail> = {
         engineVersion: "v2.4.1",
         completedAt: "2026-02-14T14:00:00.000Z",
         confidence: "Low",
-      },
-    ],
-    integrations: [
-      {
-        provider: "Strava",
-        status: "not_connected",
-        lastSync: "Never",
-        notes: "Connection missing",
       },
     ],
     license: {
@@ -357,14 +329,6 @@ export const adminUserDetails: Record<string, AdminUserDetail> = {
         confidence: "High",
       },
     ],
-    integrations: [
-      {
-        provider: "Strava",
-        status: "active",
-        lastSync: "2026-03-22T08:20:00.000Z",
-        notes: "Shop demo account",
-      },
-    ],
     license: {
       currentPlan: "free",
       assignedAt: "2025-01-13T07:30:00.000Z",
@@ -396,7 +360,6 @@ export const adminUserDetails: Record<string, AdminUserDetail> = {
     },
     bikes: [],
     fitHistory: [],
-    integrations: [],
     license: {
       currentPlan: "premium",
       assignedAt: "2023-11-04T16:10:00.000Z",
@@ -436,7 +399,6 @@ export const adminUserDetails: Record<string, AdminUserDetail> = {
         confidence: "Medium",
       },
     ],
-    integrations: [],
     license: {
       currentPlan: "pro",
       assignedAt: "2024-08-22T12:15:00.000Z",

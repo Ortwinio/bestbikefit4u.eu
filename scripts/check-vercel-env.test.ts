@@ -29,7 +29,7 @@ describe("Vercel environment preflight", () => {
   });
 
   it("validates frontend billing without requiring the Convex-only webhook secret", () => {
-    const result = run({ VERCEL_ENV: "production", SITE_URL: "https://bestbikefit4u.eu", STRIPE_SECRET_KEY: "test-only", STRIPE_PRO_MONTHLY_PRICE_ID: "price_test" });
+    const result = run({ VERCEL_ENV: "production", SITE_URL: "https://bikefitboost.com", STRIPE_SECRET_KEY: "test-only", STRIPE_PRO_MONTHLY_PRICE_ID: "price_test" });
     expect(result.status).toBe(0);
   });
 

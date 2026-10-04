@@ -76,7 +76,7 @@ try {
             mailto: [...document.querySelectorAll('main a[href^="mailto:"]')].map((link) => link.href),
             expanded: document.querySelectorAll("main details[open]").length,
           }));
-          const canonical = `https://bestbikefit4u.eu/${locale}/${entry.route}`;
+          const canonical = `https://bikefitboost.com/${locale}/${entry.route}`;
           if (metrics.canonical !== canonical) throw new Error("Canonical changed");
           if (entry.route === "contact" && (metrics.forms || !metrics.mailto.length)) {
             throw new Error("Contact must retain mailto, no form");

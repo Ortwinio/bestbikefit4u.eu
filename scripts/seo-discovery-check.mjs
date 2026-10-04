@@ -18,10 +18,10 @@ const report = { buildId: (await readFile(".next/BUILD_ID", "utf8")).trim(), che
   sitemapUrls: [], documents: [], redirects: [], canonicalPages: [], internalSources: {}, failures: [] };
 const check = (condition, message) => { if (!condition) report.failures.push(message); };
 const request = input => new Promise((done, reject) => {
-  const path = new URL(input, "https://bestbikefit4u.eu");
+  const path = new URL(input, "https://bikefitboost.com");
   const req = get(new URL(path.pathname + path.search, `https://127.0.0.1:${port}`), {
     ca: certificate.cert, servername: "localhost", signal: AbortSignal.timeout(45000),
-    headers: { host: "bestbikefit4u.eu", "user-agent": "Screaming Frog SEO Spider/23.0" },
+    headers: { host: "bikefitboost.com", "user-agent": "Screaming Frog SEO Spider/23.0" },
   }, response => {
     let body = ""; response.setEncoding("utf8"); response.on("data", chunk => { body += chunk; });
     response.on("end", () => done({ status: response.statusCode, headers: response.headers, body }));
@@ -53,7 +53,7 @@ try {
   check(!expected.some(retired), "Sitemap contains retired owner or weight URL");
   for (const path of ["/llms.txt", "/llms-full.txt"]) {
     const response = await request(path);
-    const urls = [...new Set([...response.body.matchAll(/\]\((https:\/\/bestbikefit4u\.eu[^\s)]*)\)/g)].map(match => match[1]))].sort();
+    const urls = [...new Set([...response.body.matchAll(/\]\((https:\/\/bikefitboost\.com[^\s)]*)\)/g)].map(match => match[1]))].sort();
     const missing = expected.filter(url => !urls.includes(url));
     const extra = urls.filter(url => !expected.includes(url));
     const stalePublicFile = await access(`public${path}`).then(() => true, () => false);
@@ -70,17 +70,17 @@ try {
   for (const path of ["/nl/fiets-afstellen", "/en/fiets-afstellen", "/nl/bike-fitting", "/en/bikefitting"]) {
     const destination = destinations[path.split("/")[1]];
     const response = await request(path);
-    const location = response.headers.location ? new URL(response.headers.location, "https://bestbikefit4u.eu").pathname : null;
+    const location = response.headers.location ? new URL(response.headers.location, "https://bikefitboost.com").pathname : null;
     const target = await request(destination);
     check(response.status === 301 && location === destination && target.status === 200, `${path}: not a direct 301 to ${destination}`);
     report.redirects.push({ path, status: response.status, destination: location, destinationStatus: target.status });
   }
   for (const [locale, path] of Object.entries(destinations)) {
     const response = await request(path); const parsed = parseHead(response.body);
-    const issues = metadataIssues(parsed, `https://bestbikefit4u.eu${path}`);
+    const issues = metadataIssues(parsed, `https://bikefitboost.com${path}`);
     check(response.status === 200 && !issues.length && !isNoindex(parsed, response.headers["x-robots-tag"]), `${path}: ${issues.join(",")} or nonindexable`);
     for (const [language, target] of Object.entries(destinations)) {
-      check(parsed.alternates.some(link => link.lang === language && link.value === `https://bestbikefit4u.eu${target}`), `${path}: missing reciprocal ${language}`);
+      check(parsed.alternates.some(link => link.lang === language && link.value === `https://bikefitboost.com${target}`), `${path}: missing reciprocal ${language}`);
     }
     report.canonicalPages.push({ locale, path, status: response.status, issues, canonical: parsed.canonicals[0]?.value, alternates: parsed.alternates });
   }
@@ -89,7 +89,7 @@ try {
     const sources = [];
     for (const path of inventory.locales[locale].contextualSourcePages.slice(0, 6)) {
       const response = await request(path); const parsed = parseHead(response.body);
-      const links = parsed.hrefs.filter(href => new URL(href, "https://bestbikefit4u.eu").pathname === destination);
+      const links = parsed.hrefs.filter(href => new URL(href, "https://bikefitboost.com").pathname === destination);
       check(response.status === 200 && links.length > 0, `${path}: no rendered canonical owner link`);
       if (response.status === 200 && links.length) sources.push({ path, destination, links });
     }

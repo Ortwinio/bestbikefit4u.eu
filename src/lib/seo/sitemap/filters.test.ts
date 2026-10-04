@@ -3,7 +3,7 @@ import { dedupeAndSortNodes } from "./filters";
 import type { SitemapUrlNode } from "./types";
 
 describe("sitemap date-aware deduplication", () => {
-  const node = (lastmod?: string): SitemapUrlNode => ({ loc: "https://www.bikefitboost.com/en", alternates: [], lastmod });
+  const node = (lastmod?: string): SitemapUrlNode => ({ loc: "https://bikefitboost.com/en", alternates: [], lastmod });
   it("keeps a real date over an undated duplicate in either order", () => {
     expect(dedupeAndSortNodes([node(), node("2026-10-01")])[0].lastmod).toBe("2026-10-01");
     expect(dedupeAndSortNodes([node("2026-10-01"), node()])[0].lastmod).toBe("2026-10-01");

@@ -20,18 +20,19 @@ async function ensureMessageRecipient(
   messageId: Id<"dashboard_messages">,
   userId: Id<"users">
 ) {
-  const [message, targets, user, integration, fitSessions] = await Promise.all([
+  const [message, targets, user, fitSessions] = await Promise.all([
     ctx.db.get(messageId),
     ctx.db.query("message_targets").withIndex("by_message", (q) => q.eq("messageId", messageId)).collect(),
     ctx.db.get(userId),
-    ctx.db
-      .query("integrations")
-      .withIndex("by_user_and_provider", (q) => q.eq("userId", userId).eq("provider", "strava"))
-      .unique(),
     ctx.db.query("fitSessions").withIndex("by_user", (q) => q.eq("userId", userId)).collect(),
   ]);
 
-  if (!message || message.status !== "published" || message.pausedAt) {
+  if (
+    !message ||
+    message.status !== "published" ||
+    message.pausedAt ||
+    targets.some((target) => target.targetType === "strava_connected")
+  ) {
     throw new Error("Message not available");
   }
 
@@ -41,7 +42,6 @@ async function ensureMessageRecipient(
   }
 
   const userTier = user?.tier ?? "free";
-  const hasActiveStrava = integration?.accessStatus === "active";
   const hasCompletedFit = fitSessions.some((session) => session.status === "completed");
 
   const isTargeted = targets.some((target) => {
@@ -58,8 +58,6 @@ async function ensureMessageRecipient(
           message.locale === undefined ||
           target.targetValue === message.locale
         );
-      case "strava_connected":
-        return target.targetValue === String(hasActiveStrava);
       case "fit_completed":
         return target.targetValue === String(hasCompletedFit);
       default:
