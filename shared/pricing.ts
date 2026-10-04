@@ -41,7 +41,7 @@ export const PERSONAL_FIT_ADDON_CENTS = 21300;
 export const ANNUAL_UPGRADE_COUPON_CENTS = ANNUAL_PRICE_CENTS - ANNUAL_UPGRADE_PRICE_CENTS;
 
 /** A personal bike fit appointment booked after buying a single fit or annual licence. */
-export const PERSONAL_FIT_STANDALONE_CENTS = 19900;
+export const PERSONAL_FIT_STANDALONE_CENTS = 20950;
 
 export const SINGLE_FIT_ACCESS_MONTHS = 3;
 /** The €9,50 upgrade is available up to 6 months after a single fit purchase or gift redemption. */

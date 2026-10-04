@@ -36,8 +36,8 @@ describe("pricing model v2", () => {
     expect(CONSUMER_PRODUCTS.annual_personal_fit.includesPersonalFitAppointment).toBe(true);
   });
 
-  it("sells a standalone personal fit appointment for €199,00 and allows upgrades for 6 months", () => {
-    expect(PERSONAL_FIT_STANDALONE_CENTS).toBe(19900);
+  it("sells a standalone personal fit appointment for €209,50 and allows upgrades for 6 months", () => {
+    expect(PERSONAL_FIT_STANDALONE_CENTS).toBe(20950);
     expect(UPGRADE_WINDOW_MONTHS).toBe(6);
   });
 

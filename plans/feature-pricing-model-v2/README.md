@@ -12,7 +12,7 @@ Replace the €9 per month Fit Pass with an annual licence as the main choice, a
 | Single fit | €13,50 one-off | One-time price €13,50 | None; 1 bike, 3 months |
 | Upgrade single fit or gift → annual (within 6 months) | €9,50 first year | Annual price + coupon €12,00 `once` | €21,50 |
 | Annual + personal bike fit | €234,50 first year | Annual price + one-time item €213,00 | €21,50 |
-| Personal fit appointment (standalone, after a purchase) | €199,00 one-off | Second one-time price on the appointment product | None |
+| Personal fit appointment (standalone, after a purchase) | €209,50 one-off | Second one-time price on the appointment product | None |
 | Gift fit | worth €13,50 | No Stripe product; granted in the app | As single fit; upgrade €9,50 |
 
 Source of truth in code: `shared/pricing.ts`.
@@ -27,7 +27,8 @@ Stripe test mode (sandbox "ormac bv sandbox", created 2026-10-04):
 | Price €13,50 | `price_1UMvc6CJ75oazdcMjEpH4Ycy` | `single_fit_1350` |
 | Product Persoonlijke bikefit-afspraak | `bfb_personal_fit_addon` | |
 | Price €213,00 | `price_1UMvc8CJ75oazdcMJklTMENP` | `personal_fit_addon_21300` |
-| Price €199,00 (standalone appointment) | `price_1UMvtZCJ75oazdcMNPpfpbkE` | `personal_fit_standalone_19900` |
+| Price €209,50 (standalone appointment) | `price_1UMwB8CJ75oazdcMwOK82DaP` | `personal_fit_standalone_20950` |
+| Archived: price €199,00 | `price_1UMvtZCJ75oazdcMNPpfpbkE` | `personal_fit_standalone_19900` |
 | Coupon €12,00 once, annual only | `UPGRADE_SINGLE_FIT_1200` | |
 
 ## Scope
@@ -62,9 +63,9 @@ Stripe stays off (`STRIPE_BILLING_ENABLED=false`) until step 08. Each step is sh
 
 ## Open decisions
 
-Decided 2026-10-04: upgrade window 6 months; gift recipients may upgrade for €9,50; standalone appointment €199,00; all prices include 21% VAT.
+Decided 2026-10-04: upgrade window 6 months; gift recipients may upgrade for €9,50; standalone appointment €209,50; all prices include 21% VAT.
 
-- Bundle vs standalone: annual €21,50 + standalone appointment €199,00 = €220,50, while the bundle costs €234,50. Align?
+- Bundle vs standalone: annual €21,50 + standalone appointment €209,50 = €231,00, while the bundle costs €234,50 (€3,50 difference). Align?
 - An upgrader pays €23,00 in year one (€13,50 + €9,50), €1,50 more than buying the annual licence directly. Keep?
 - Personal fit: location, duration, fitter, booking link, cancellation terms (legal check).
 - Stripe Tax or a fixed 21% inclusive rate.
