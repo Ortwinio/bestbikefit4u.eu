@@ -1735,6 +1735,39 @@ export default defineSchema({
     .index("by_locale_occurred_at", ["locale", "occurredAt"])
     .index("by_page_occurred_at", ["pagePath", "occurredAt"]),
 
+  // Pricing model v2: paid access per user (annual) or per bike (single fit, gift).
+  // New access checks go through `getAccess` in convex/lib/entitlements.ts.
+  entitlements: defineTable({
+    userId: v.id("users"),
+    kind: v.union(v.literal("single_fit"), v.literal("annual"), v.literal("gift_fit")),
+    // Required for single_fit and gift_fit; absent for annual (all bikes).
+    bikeId: v.optional(v.id("bikes")),
+    startsAt: v.number(),
+    endsAt: v.number(),
+    status: v.union(v.literal("active"), v.literal("expired"), v.literal("canceled")),
+    source: v.union(v.literal("stripe"), v.literal("gift"), v.literal("manual")),
+    productKey: v.optional(
+      v.union(
+        v.literal("single_fit"),
+        v.literal("annual"),
+        v.literal("annual_upgrade"),
+        v.literal("annual_personal_fit")
+      )
+    ),
+    stripeCheckoutSessionId: v.optional(v.string()),
+    stripeSubscriptionId: v.optional(v.string()),
+    giftsGranted: v.number(),
+    includesPersonalFitAppointment: v.optional(v.boolean()),
+    createdAt: v.number(),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_bike", ["userId", "bikeId"])
+    .index("by_stripe_subscription", ["stripeSubscriptionId"])
+    .index("by_stripe_checkout_session", ["stripeCheckoutSessionId"])
+    .index("by_status_ends_at", ["status", "endsAt"]),
+
+  // Legacy (Fit Pass per session). Kept for history; pricing model v2 uses `entitlements`.
   fitPassPurchases: defineTable({
     userId: v.id("users"),
     sessionId: v.id("fitSessions"),

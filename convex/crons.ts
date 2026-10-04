@@ -38,4 +38,12 @@ crons.daily(
   {}
 );
 
+// Daily: expire one-off, gifted and missed annual entitlements (pricing model v2)
+crons.daily(
+  "expire ended entitlements",
+  { hourUTC: 2, minuteUTC: 15 },
+  internal.entitlements.mutations.expireEndedEntitlements,
+  {}
+);
+
 export default crons;
