@@ -38,7 +38,7 @@ const server = createServer(async (request, response) => {
     }
     response.setHeader("Content-Type", "text/html");
     response.end('<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/fixture.css"><title>Gift measurements</title></head><body><div id="root"></div><script type="module" src="/fixture.js"></script></body></html>');
-  } catch (error) { response.statusCode = 500; response.end(String(error)); }
+  } catch (error) { console.error(error); response.statusCode = 500; response.end("Fixture error"); }
 });
 await new Promise(done => server.listen(0, "127.0.0.1", done));
 const origin = `http://127.0.0.1:${server.address().port}`;

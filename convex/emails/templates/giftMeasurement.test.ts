@@ -29,7 +29,7 @@ describe.each(["nl", "en"] as const)("M11 %s", locale => {
   it("escapes sender and optional personal message without interpreting markup", () => {
     const email = renderGiftMeasurement({ ...data, senderFirstName: '<img src=x onerror="alert(1)">',
       message: '<script>alert("x")</script> & enjoy' }, locale);
-    expect(email.html).not.toMatch(/<script>|<img src=x|href="javascript:/);
+    for (const unsafe of ["<script", "<img src=x", 'href="javascript:']) expect(email.html).not.toContain(unsafe);
     expect(email.html).toContain("&lt;script&gt;");
     expect(email.text).toContain('<script>alert("x")</script> & enjoy');
   });
