@@ -1,5 +1,9 @@
 # R0 — baseline measurement before Riderprofiel phase 1
 
+## Planned baseline report — 18 October 2026
+
+Retain this directory, `scripts/riderprofile-baseline.mjs` and `convex/analytics/baseline.ts` for the planned 18 October 2026 report. The runner writes `baseline-<from>-<to>.json` and `.md` here. This reminder records the operational requirement; cleanup has not verified or changed any external scheduler and has not run the production query.
+
 **Why:** PLAN §11 of the Riderprofiel plan (Ortwin, 3 okt 2026) asks for two weeks of baseline before phase 1
 goes live. Today public calculator usage is not tracked at all, so "public result → account" cannot be measured.
 **Branch / worktree:** `feature/baseline-measurement` in `/Users/ortwinverreck/Developer/bestbikefit4u-baseline`

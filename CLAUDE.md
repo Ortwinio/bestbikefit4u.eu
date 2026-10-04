@@ -2,9 +2,9 @@
 
 This file contains instructions for Claude when working in this repository. It supplements `AGENTS.md` with Claude-specific guidance.
 
-## Project: BikeFit AI
+## Project: BikeFitBoost
 
-AI-powered bike fitting application. Users input body measurements and riding preferences, answer a dynamic questionnaire, and receive personalized bike fit recommendations.
+Bike fitting application at https://bikefitboost.com. Users input body measurements and riding preferences, answer a dynamic questionnaire, and receive personalized bike fit recommendations.
 
 ### Stack
 
@@ -16,7 +16,7 @@ AI-powered bike fitting application. Users input body measurements and riding pr
 
 ### Key Architectural Decisions
 
-- All data flows through Convex typed RPC — no REST endpoints, no raw fetch calls
+- Application data uses Convex typed RPC; Next.js route handlers also serve HTTP integrations such as report PDFs
 - Auth uses `ConvexAuthNextjsServerProvider` with server-side route protection via `src/proxy.ts`
 - Security headers (CSP, X-Frame-Options, etc.) configured in `next.config.ts`
 - Backend authorization uses `requireUserId()` / `requireXOwner()` pattern in `convex/lib/authz.ts`

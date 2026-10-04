@@ -1,91 +1,38 @@
-# Plans Directory
+# Plans directory
 
-This directory contains project plans. Each project gets its own folder with a structured breakdown of what needs to be built and the prompts to build it.
+Create one descriptively named folder per project, following [CLAUDE.md](../CLAUDE.md) and [AGENTS.md](../AGENTS.md). Prefer `feature-`, `bugfix-`, or `refactor-` prefixes.
 
-## Structure
+## Folder convention
 
-```
-plans/
-├── README.md (this file)
-├── feature-user-auth/
-│   ├── README.md          # Plan overview (goal, scope, status)
-│   ├── 01-first-step.md   # Sequential prompts
-│   ├── 02-second-step.md
-│   └── output-01-*.md     # Deliverables from each step
-└── bugfix-checkout-flow/
-    ├── README.md
-    └── 01-fix-validation.md
+```text
+plans/feature-example/
+├── README.md
+├── 01-first-step.md
+├── 02-next-step.md
+└── output-01-results.md
 ```
 
-Some files in `plans/` are repo-wide operating conventions rather than project folders. Keep those as standalone markdown files when the content is policy or workflow guidance instead of a build sequence.
+The project README records the goal, background where needed, scope and out-of-scope work, approach, acceptance criteria, current status and owner. Numbered prompts must be self-contained so another agent can execute each task without the original conversation.
 
-## Creating a New Plan
+Read the project README first and execute prompts in order. Complete each step and update README progress before continuing. Record validation evidence in repository artifacts such as `output-*.md` or `testplan.md`. Post blockers to `messages/`; continue independent work where possible and explain skipped steps in the README.
 
-### 1. Create a project folder
+Standalone operating policies are allowed when they describe repository workflow rather than an execution sequence. The [tmux-ide operating convention](tmux-ide-minimal-operating-convention.md) remains active. Plans and their evidence take precedence over `.tasks` metadata; completion proof must point to actual repository work.
 
-Name it descriptively. Prefix helps identify the work type: `feature-`, `bugfix-`, `refactor-`, `security-`.
+## Retained operational files
 
-### 2. Write the plan README
+- `cleanup/` contains current cleanup decisions, dependency evidence and checks.
+- `migratie/` contains live migration runbooks and manual actions.
+- `riderprofile-baseline/` retains the workflow and report destination for the planned 18 October 2026 baseline. This records the operational requirement, not verification of an external scheduler.
+- Other retained paths hold script/test inputs, referenced brand/email design sources, or output directory markers. Their presence does not imply the original project remains unfinished.
 
-The project README should contain:
+See [the dependency audit](cleanup/C1-dependency-audit.md) and [retained-file decisions](cleanup/C1-kept.md) before changing operational files. Some generated visual inputs were already ignored and absent from this checkout; the audits record these limitations.
 
-- **Goal**: What you're building or fixing
-- **Background**: Why this work is needed
-- **Scope**: What's included and what's not
-- **Approach**: High-level strategy
-- **Dependencies**: What needs to exist first
-- **Acceptance criteria**: How to know when it's done
-- **Status**: Current step and owner
+## Completing and removing plans
 
-### 3. Create numbered prompt files
+Mark completed work in its README. Remove historical plans only after checking repository references, dynamic paths, script/test inputs, workflows and referenced policies. Keep uncertain dependencies and record why. An output directory may retain a small README instead of old reports; ignored output directories are recreated by their writers. Preserve existing reports another tool reads as inputs.
 
-Break the work into sequential prompts (`01-*.md`, `02-*.md`, ...). Each prompt file should be a self-contained task that an agent can execute.
+Run the cleanup regression check from any working directory using an absolute repository path:
 
-## Writing Prompts
-
-A prompt file should include:
-
-```markdown
-# Task Title
-
-## Objective
-What this step achieves.
-
-## Inputs
-Files and context needed.
-
-## Tasks
-1. Specific work items.
-
-## Deliverable
-What the agent should produce.
-
-## Completion Checklist
-- [ ] Items to verify before moving on.
+```sh
+node --test /path/to/repository/plans/cleanup/C1-required-inputs.test.mjs
 ```
-
-## Rules
-
-- Run prompts in order.
-- Update status at the end of each prompt.
-- Do not skip steps without writing why in the README.
-- If a task defines acceptance or QA requirements, store them in repo artifacts under `plans/` rather than external task metadata only.
-- Good durable artifacts include `README.md`, `testplan.md`, and `output-*.md`.
-
-## tmux-ide Usage in This Repo
-
-If you are coordinating work with `tmux-ide`, use the minimal operating convention in [tmux-ide-minimal-operating-convention.md](/Users/ortwinverreck/Developer/bestbikefit4u/plans/tmux-ide-minimal-operating-convention.md).
-
-Practical rules:
-
-- Treat `plans/` as the durable workflow layer.
-- Treat `.tasks/` as lightweight execution state.
-- Use task proof strings that point to real files, tests, or changed code.
-- Do not use `tmux-ide validate add ...` in this repo.
-- If dispatch files and repo state conflict, prefer repo state and note the mismatch.
-
-## Archiving Completed Plans
-
-When a plan is finished, either:
-- Delete the folder if the prompts have no reuse value
-- Keep it for reference (mark as complete in the README)

@@ -1,7 +1,9 @@
-# BestBikeFit4U — Product Definition Document
+# BikeFitBoost — Product Definition Document
 
 **Version:** 1.0
 **Date:** 2026-03-30
+
+**Maintenance note (2026-10-04):** This document retains the March product strategy and roadmap, not a current release checklist. The canonical site is https://bikefitboost.com. Current commercial behavior is defined in `src/config/commercial.ts`; aspirational Premium features below are not a claim of availability. Strava integration is retired.
 
 ---
 
@@ -9,7 +11,7 @@
 
 Make professional-grade bike fitting accessible to every cyclist — regardless of budget, location, or experience level.
 
-In-person bike fitting costs €150–€500 and requires specialist access that most cyclists don't have. BestBikeFit4U delivers a personalized, algorithm-driven fit recommendation in minutes, from home, at a fraction of the cost.
+In-person bike fitting costs €150–€500 and requires specialist access that most cyclists don't have. BikeFitBoost delivers a personalized, algorithm-driven fit recommendation in minutes, from home, at a fraction of the cost.
 
 ---
 
@@ -117,7 +119,7 @@ Standalone calculator available without login, with a more advanced version in t
 ### 5.6 Reports
 
 - **Email report:** Sent immediately after a session; contains all fit parameters and validation plan
-- **PDF report:** Full branded document (in development); required for Premium clients
+- **PDF report:** Implemented branded download via the authenticated report route; access follows `isReportAccessOpen()` and the route tier check.
 
 ---
 
@@ -263,7 +265,7 @@ Attempts to match target reach using stem length (60–130 mm), angle, and space
 | **Styling** | Tailwind CSS v4 | Utility-first, fast iteration, design token support |
 | **UI Components** | Prototyper UI (Base UI headless) | Accessible primitives, custom design system |
 | **Backend** | Convex | Real-time BaaS, type-safe RPC, no REST layer needed |
-| **Auth** | @convex-dev/auth + Resend | Passwordless magic-link, no password management overhead |
+| **Auth** | @convex-dev/auth + Resend | Passwordless email verification code, no password management overhead |
 | **Language** | TypeScript (end-to-end) | Convex codegen provides full RPC type safety |
 | **Forms** | react-hook-form + Zod | Schema-driven validation, minimal boilerplate |
 | **Deployment** | Vercel | Native Next.js hosting, zero-config CI/CD |
@@ -272,7 +274,7 @@ Attempts to match target reach using stem length (60–130 mm), angle, and space
 
 ### Architecture Principles
 
-1. **All data through Convex RPC** — No REST endpoints. Every query and mutation is type-safe, end-to-end.
+1. **Application data through Convex RPC** — Queries and mutations are typed. Next.js HTTP route handlers also serve integrations such as report PDFs.
 2. **Server-side route protection** — `ConvexAuthNextjsServerProvider` + `src/proxy.ts` enforce auth at the edge.
 3. **Authorization at the data layer** — `requireUserId()`, `requireSessionOwner()`, `requireBikeOwner()` pattern in every mutation.
 4. **Pure algorithm** — The fit engine is a plain TypeScript function, importable on both client and server, with no side effects. Enables public calculator pages without server round-trips.
@@ -328,7 +330,7 @@ Attempts to match target reach using stem length (60–130 mm), angle, and space
 - No feedback loop: the algorithm has no way to learn from whether users accepted or rejected recommendations
 
 **Product**
-- PDF export is promised in the pricing page but not yet implemented — creates expectation gap
+- PDF export is implemented; the earlier expectation gap is closed.
 - Questionnaire is powerful but relies on question definitions being seeded — new environments start empty
 - Bike detail pages are partially built — backend CRUD exists but UI is incomplete
 - Admin dashboard is minimal — operations team has limited tooling for user management and support
@@ -365,7 +367,7 @@ Attempts to match target reach using stem length (60–130 mm), angle, and space
 | Item | Priority |
 |------|----------|
 | Engine v2 default cutover | High — unblocks confidence ranges and shadow-mode validation |
-| PDF report export | High — promised on pricing page; blocks Premium conversion |
+| PDF report export | Completed — authenticated branded PDF route is implemented |
 | Bikes frontend completion (edit, delete, photo) | Medium |
 | Admin dashboard: user management + audit logs | Medium |
 | Femur length integration into algorithm | Low |

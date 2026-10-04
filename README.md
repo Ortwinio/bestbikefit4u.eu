@@ -1,6 +1,8 @@
-# BestBikeFit4U
+# BikeFitBoost
 
-BestBikeFit4U is a Next.js + Convex application for guided bike fit recommendations, questionnaire flows, and downloadable fit reports.
+BikeFitBoost is a Next.js + Convex application for guided bike fit recommendations, questionnaire flows, and downloadable fit reports.
+
+Canonical site: https://bikefitboost.com.
 
 ## Stack
 
@@ -37,7 +39,7 @@ The smoke checker only accepts localhost URLs.
 
 ## Multi-Agent Workflow
 
-When coordinating with `tmux-ide`, use the minimal repo convention in [plans/tmux-ide-minimal-operating-convention.md](/Users/ortwinverreck/Developer/bestbikefit4u/plans/tmux-ide-minimal-operating-convention.md).
+When coordinating with `tmux-ide`, use the minimal repo convention in [plans/tmux-ide-minimal-operating-convention.md](plans/tmux-ide-minimal-operating-convention.md).
 
 In practice:
 

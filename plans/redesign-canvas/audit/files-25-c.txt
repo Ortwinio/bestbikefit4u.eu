@@ -1,9 +1,0 @@
-plans/redesign-canvas/README.md
-plans/redesign-canvas/audit/25-c-before-after.json
-plans/redesign-canvas/audit/25-c-notes.md
-plans/redesign-canvas/audit/25-c-slider-browser.json
-plans/redesign-canvas/audit/files-25-c.txt
-src/components/ui/Slider.accessibility.test.tsx
-src/components/ui/Slider.tsx
-tests/visual/slider-a11y/README.md
-tests/visual/slider-a11y/check.mjs

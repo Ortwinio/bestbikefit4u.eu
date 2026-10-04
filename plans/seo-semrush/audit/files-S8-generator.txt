@@ -1,6 +1,0 @@
-src/lib/seo/llms.ts
-src/lib/seo/llmsContent.ts
-src/i18n/marketing/llms.ts
-plans/seo-semrush/audit/S8-generator-notes.md
-plans/seo-semrush/audit/files-S8-generator.txt
-messages/20261003-1700-S8-generator-to-parent-contract.md

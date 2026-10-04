@@ -1,9 +1,0 @@
-plans/redesign-canvas/README.md
-plans/redesign-canvas/audit/29a-notes.md
-plans/redesign-canvas/audit/29a-touch-targets.json
-plans/redesign-canvas/audit/files-29a.txt
-src/components/prototyper-ui/ui/control-targets.test.tsx
-src/components/prototyper-ui/ui/input.tsx
-src/components/prototyper-ui/ui/select.tsx
-src/components/ui/Tooltip.test.tsx
-src/components/ui/Tooltip.tsx

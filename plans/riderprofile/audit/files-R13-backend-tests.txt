@@ -1,3 +1,0 @@
-shared/riderDemographics.test.ts
-convex/profiles/demographics.contract.test.ts
-convex/profiles/prompts.contract.test.ts

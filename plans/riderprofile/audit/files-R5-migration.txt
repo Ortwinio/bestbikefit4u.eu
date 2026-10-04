@@ -1,8 +1,0 @@
-convex/profiles/migrateObservations.ts
-convex/profiles/migrateObservations.contract.test.ts
-shared/profileObservationMigration.ts
-plans/riderprofile/messages/R5-migration-field-proposal.md
-plans/riderprofile/audit/R5-migration-notes.md
-plans/riderprofile/audit/files-R5-migration.txt
-plans/riderprofile/audit/R5-migration-types.log
-plans/riderprofile/audit/R5-migration-lint.log

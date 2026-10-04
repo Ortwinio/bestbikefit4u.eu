@@ -1,8 +1,0 @@
-convex/schema.ts
-convex/users/mutations.ts
-convex/emails/locale.ts
-convex/emails/locale.test.ts
-convex/users/locale.test.ts
-plans/emails-bilingual/messages/E2-locale-to-B-contract.md
-plans/emails-bilingual/audit/files-E2-locale.txt
-plans/emails-bilingual/audit/E2-locale-notes.md

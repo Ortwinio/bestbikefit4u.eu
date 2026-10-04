@@ -53,14 +53,14 @@ Set these in Convex production deployment env after owner approval:
 
 - `SITE_URL=https://bikefitboost.com`
 - `AUTH_RESEND_KEY=your_resend_api_key`
-- `AUTH_EMAIL_FROM=BestBikeFit4U <noreply@notifications.bikefitboost.com>`
+- `AUTH_EMAIL_FROM=BikeFitBoost <noreply@notifications.bikefitboost.com>`
 
 CLI equivalent for Convex env:
 
 ```bash
 npx convex env set SITE_URL https://bikefitboost.com --prod
 npx convex env set AUTH_RESEND_KEY your_resend_api_key --prod
-npx convex env set AUTH_EMAIL_FROM 'BestBikeFit4U <noreply@notifications.bikefitboost.com>' --prod
+npx convex env set AUTH_EMAIL_FROM 'BikeFitBoost <noreply@notifications.bikefitboost.com>' --prod
 ```
 
 ## 3. Deploy Convex Backend
@@ -118,13 +118,13 @@ npx convex run emails/actions:sendFitReport '{"sessionId":"<owner-session-id>","
   - Update Convex `SITE_URL` to the exact production domain and redeploy Convex.
 - Emails not sent:
   - Verify Convex `AUTH_RESEND_KEY` and `AUTH_EMAIL_FROM`.
-  - Verify `AUTH_EMAIL_FROM` stays `BestBikeFit4U <noreply@notifications.bikefitboost.com>`.
+  - Verify `AUTH_EMAIL_FROM` stays `BikeFitBoost <noreply@notifications.bikefitboost.com>`.
   - Probe Resend directly and inspect response:
     ```bash
     curl -sS https://api.resend.com/emails \
       -H "Authorization: Bearer $AUTH_RESEND_KEY" \
       -H "Content-Type: application/json" \
-      -d '{"from":"BestBikeFit4U <noreply@notifications.bikefitboost.com>","to":["<test-email>"],"subject":"probe","html":"<p>probe</p>"}'
+      -d '{"from":"BikeFitBoost <noreply@notifications.bikefitboost.com>","to":["<test-email>"],"subject":"probe","html":"<p>probe</p>"}'
     ```
   - Pull recent production logs and match by request ID:
     ```bash
