@@ -3,12 +3,12 @@ import Link from "next/link";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getCommercialFaqCopy, PRODUCT_LIVE_FLAGS } from "@/config/commercial";
+import { PRODUCT_LIVE_FLAGS } from "@/config/commercial";
 import type { Locale } from "@/i18n/config";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
-import { faqPresentation } from "@/i18n/marketing/faq";
+import { faqPresentation, pricingFaq } from "@/i18n/marketing/faq";
 import { getDutchGuideTitle } from "@/i18n/marketing/guideTitles";
 import styles from "./faq.module.css";
 
@@ -101,7 +101,7 @@ function buildFaqJsonLd(sections: FAQSection[]): FAQJsonLd {
 }
 
 function getRawContent(locale: Locale): RawFAQCopy {
-  const commercialFaq = getCommercialFaqCopy(locale);
+  const commercialFaq = pricingFaq[locale];
 
   if (locale === "en") {
     return {
@@ -127,11 +127,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
           questions: [
             {
               q: "How accurate is BikeFitBoost?",
-              a:
-                "BikeFitBoost uses established biomechanical formulas, including LeMond/Hamley for saddle " +
-                "height and KOPS-based logic for setback. For most riders, results are close to what a " +
-                "professional fitter would recommend. Adding optional measurements improves accuracy " +
-                "further.",
+              a: commercialFaq.accuracy,
             },
             {
               q: "What measurements do I need?",
@@ -159,7 +155,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
             },
             {
               q: "Can I get a fit for multiple bikes?",
-              a: commercialFaq.multipleBikeProfiles,
+              a: commercialFaq.multipleBikes,
             },
             {
               q: "How does flexibility affect my fit?",
@@ -193,13 +189,14 @@ function getRawContent(locale: Locale): RawFAQCopy {
             },
             {
               q: "Is PDF export available?",
-              a: commercialFaq.pdfReport,
+              a: commercialFaq.pdf,
             },
           ],
         },
         {
           category: "Account and Pricing",
           questions: [
+            commercialFaq.personal,
             {
               q: "Is there a money-back guarantee?",
               a: PRODUCT_LIVE_FLAGS.moneyBackGuarantee
@@ -208,15 +205,12 @@ function getRawContent(locale: Locale): RawFAQCopy {
             },
             {
               q: "Can I change my plan later?",
-              a: "Yes, you can upgrade or downgrade your plan from account settings.",
+              a: commercialFaq.change,
             },
           ],
         },
       ],
-      trustParagraph:
-        "BikeFitBoost uses established bike fitting methodology to give you practical, measurable " +
-        "setup targets. The free calculator is a strong starting point, and Pro adds deeper " +
-        "analysis, multiple bikes, and downloadable reports.",
+      trustParagraph: commercialFaq.next,
       guideTitle: "Popular next-step guides",
       guideBody:
         "If you came here for a specific pain point or bike type, these guides are the fastest next step.",
@@ -228,7 +222,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
       ],
       nextStepTitle: "Ready to get started?",
       nextStepPrimaryCta: "Try the Free Bike Fit Calculator",
-      nextStepSecondaryCta: "Compare Free vs Pro",
+      nextStepSecondaryCta: commercialFaq.compare,
       ctaTitle: "Still have questions?",
       ctaSubtitle: "Get in touch or start your free fit session.",
       contactButton: "Contact Us",
@@ -259,10 +253,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
         questions: [
           {
             q: "Hoe nauwkeurig is BikeFitBoost?",
-            a:
-              "BikeFitBoost gebruikt bewezen biomechanische formules, waaronder de " +
-              "LeMond/Hamley-methode voor zadelhoogte. Voor de meeste rijders zitten de uitkomsten dicht " +
-              "bij een professionele fitting, zeker met extra metingen.",
+            a: commercialFaq.accuracy,
           },
           {
             q: "Welke metingen heb ik nodig?",
@@ -290,7 +281,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
           },
           {
             q: "Kan ik meerdere fietsen fitten?",
-            a: commercialFaq.multipleBikeProfiles,
+            a: commercialFaq.multipleBikes,
           },
           {
             q: "Hoe beïnvloedt flexibiliteit mijn fit?",
@@ -323,13 +314,14 @@ function getRawContent(locale: Locale): RawFAQCopy {
           },
           {
             q: "Is PDF-export beschikbaar?",
-            a: commercialFaq.pdfReport,
+            a: commercialFaq.pdf,
           },
         ],
       },
       {
         category: "Account en prijzen",
         questions: [
+          commercialFaq.personal,
           {
             q: "Is er een geld-terug-garantie?",
             a: PRODUCT_LIVE_FLAGS.moneyBackGuarantee
@@ -338,15 +330,12 @@ function getRawContent(locale: Locale): RawFAQCopy {
           },
           {
             q: "Kan ik later van plan wisselen?",
-            a: "Ja, je kunt je plan op elk moment upgraden of downgraden via je accountinstellingen.",
+            a: commercialFaq.change,
           },
         ],
       },
     ],
-    trustParagraph:
-      "BikeFitBoost gebruikt beproefde bikefitting-methodologie om je praktische, meetbare " +
-      "afstelwaarden te geven. De gratis calculator is een sterk startpunt, en Pro voegt diepere " +
-      "analyse, meerdere fietsen en downloadbare rapporten toe.",
+    trustParagraph: commercialFaq.next,
     guideTitle: "Populaire vervolggidsen",
     guideBody: "Zoek je hulp bij een specifieke klacht of discipline? Start met een van deze gidsen.",
     guideLinks: [
@@ -357,7 +346,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
     ],
     nextStepTitle: "Klaar om te beginnen?",
     nextStepPrimaryCta: "Probeer de gratis bikefit-calculator",
-    nextStepSecondaryCta: "Vergelijk Gratis vs Pro",
+    nextStepSecondaryCta: commercialFaq.compare,
     ctaTitle: "Nog vragen?",
     ctaSubtitle: "Neem contact op of start direct je gratis fit-sessie.",
     contactButton: "Neem contact op",

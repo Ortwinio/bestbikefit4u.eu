@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { query } from "../_generated/server";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
 import { groupAdvice } from "./groupAdvice";
+import { visibleRecommendation } from "../recommendations/access";
 
 export const listAdviceGroups = query({
   args: { bikeId: v.optional(v.id("bikes")) },
@@ -23,7 +24,9 @@ export const listAdviceGroups = query({
     ]);
     const visible = <Row extends { bikeId?: string }>(rows: Row[]) => rows.filter(row =>
       (!args.bikeId || row.bikeId === args.bikeId) && (!row.bikeId || bikes.some(bike => bike._id === row.bikeId)));
-    return groupAdvice({ bikes, profile, observations, tireSetups, wheelsets, rideFeedback, recommendations: visible(recommendations),
+    const safeRecommendations = await Promise.all(visible(recommendations).map(row => visibleRecommendation(ctx, row)));
+    return groupAdvice({ bikes, profile, observations, tireSetups, wheelsets, rideFeedback,
+      recommendations: safeRecommendations.filter(row => row !== null),
       saddleWidth: visible(saddleWidth.filter(row => row.sessionType === "dashboard")),
       gearing: visible(gearing.filter(row => row.sessionType === "dashboard")), pressure: visible(pressure), states: visible(states) }, Date.now());
   },

@@ -87,7 +87,7 @@ describe("Fit Pass senders", () => {
   it("sends the transactional welcome despite opt-outs using current locale", async () => {
     const ctx = { runQuery: vi.fn().mockResolvedValueOnce(emailContext({ emailPreferences: { service: false, marketing: false } })).mockResolvedValueOnce(false), runMutation: vi.fn() };
     await welcome(ctx, { userId: "user_1" });
-    expect(send).toHaveBeenCalledWith(expect.objectContaining({ to: ["fresh@example.com"], html: expect.stringContaining('lang="nl"'), text: expect.stringContaining("Fit Pass") }), { idempotencyKey: "pro_welcome:user_1" });
+    expect(send).toHaveBeenCalledWith(expect.objectContaining({ to: ["fresh@example.com"], html: expect.stringContaining('lang="nl"'), text: expect.stringContaining("volledige toegang") }), { idempotencyKey: "pro_welcome:user_1" });
     expect(send.mock.calls[0][0].headers).toBeUndefined();
     expect(ctx.runMutation).toHaveBeenCalledWith(expect.anything(), { userId: "user_1", emailType: "pro_welcome", locale: "nl" });
   });

@@ -9,6 +9,8 @@ export const PROFILE_RANGES = {
   handSpanCm: [10, 35],
   sitBoneWidthMm: [60, 200],
   coreStabilityScore: [1, 5],
+  flexibilityTestCm: [-20, 20],
+  coreTestSeconds: [0, 180],
   age: [10, 100],
   weightKg: [30, 250],
   painSeverity: [1, 5],

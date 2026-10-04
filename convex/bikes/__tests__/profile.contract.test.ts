@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { MutationCtx } from "../../_generated/server";
 import type { Doc } from "../../_generated/dataModel";
-import { updateFields, bikeProfileSummary } from "../profile";
+import { updateFields, bikeProfileSummary, assertPaidBikeWrite, removeRefinement } from "../profile";
 import { update, create, createBikeWithProfiles } from "../mutations";
 
 const { auth } = vi.hoisted(() => ({ auth: vi.fn(async () => "owner" as string | null) }));
 vi.mock("@convex-dev/auth/server", () => ({ getAuthUserId: auth }));
-afterEach(() => auth.mockResolvedValue("owner"));
+afterEach(() => { auth.mockResolvedValue("owner"); vi.unstubAllEnvs(); });
 type Row = Record<string, unknown>;
 type Handler = { _handler: (ctx: unknown, args: Row) => Promise<unknown> };
 const invoke = (fn: unknown, ctx: unknown, args: Row) => (fn as Handler)._handler(ctx, args);
@@ -45,6 +45,39 @@ const measured = { field: "currentSetup.saddleHeightMm", value: 745, expectedCur
   kind: "measured", measuredAt: 100, measurePoint: "bb_center_to_saddle_top" };
 
 describe("bike profile measurements", () => {
+  it("scopes refinement writes to the purchased bike rather than the user's full rider profile", async () => {
+    vi.stubEnv("PAID_ACCESS_ENFORCED", "true");
+    const { ctx, tables } = fixture();
+    await ctx.db.insert("bikes", { ...baseBike, _id: "other" });
+    const otherId = String(tables.bikes[1]._id);
+    const grantId = await ctx.db.insert("pricingEntitlements", { userId: "owner", productId: "single",
+      bikeId: otherId, status: "active", source: "purchase", startsAt: 0, expiresAt: Date.now() + 100000 });
+    const bike = tables.bikes[0] as unknown as Doc<"bikes">;
+    const changes = { gearing: { chainrings: [50, 34], cassetteTeeth: [11, 28] } };
+    await expect(assertPaidBikeWrite(ctx as unknown as MutationCtx, bike, changes)).rejects.toThrow("PAID_BIKE_ACCESS_REQUIRED");
+    await ctx.db.patch(grantId, { bikeId: "bike" });
+    await expect(assertPaidBikeWrite(ctx as unknown as MutationCtx, bike, changes)).resolves.toBeUndefined();
+    await ctx.db.patch(grantId, { expiresAt: 0 });
+    await expect(assertPaidBikeWrite(ctx as unknown as MutationCtx, bike, changes)).rejects.toThrow("PAID_BIKE_ACCESS_REQUIRED");
+  });
+
+  it("blocks free paid measurements and confirms, preserves unchanged payloads and allows removal", async () => {
+    vi.stubEnv("PAID_ACCESS_ENFORCED", "true");
+    const { ctx, tables } = fixture({ ...baseBike, currentSetup: { handlebarReachMm: 550 } });
+    const bike = tables.bikes[0] as unknown as Doc<"bikes">;
+    await expect(assertPaidBikeWrite(ctx as unknown as MutationCtx, bike, { currentSetup: { handlebarReachMm: 550 } }))
+      .resolves.toBeUndefined();
+    await expect(invoke(updateFields, ctx, { bikeId: "bike", changes: [{ field: "currentSetup.handlebarReachMm",
+      value: 550, expectedCurrentValue: 550, kind: "declared" }] })).rejects.toThrow("PAID_BIKE_ACCESS_REQUIRED");
+    await ctx.db.insert("profileObservations", { userId: "owner", bikeId: "bike", field: "currentSetup.handlebarReachMm",
+      value: 550, status: "current", kind: "derived" });
+    await expect(invoke(removeRefinement, ctx, { bikeId: "bike", field: "currentSetup.handlebarReachMm",
+      expectedCurrentValue: 540 })).rejects.toThrow("BIKE_VALUE_CHANGED");
+    await invoke(removeRefinement, ctx, { bikeId: "bike", field: "currentSetup.handlebarReachMm", expectedCurrentValue: 550 });
+    expect((tables.bikes[0].currentSetup as Row).handlebarReachMm).toBeUndefined();
+    expect(tables.profileObservations[0].status).toBe("superseded");
+  });
+
   it("requires auth and owner before any changes", async () => {
     for (const user of [null, "other"]) {
       auth.mockResolvedValue(user);

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { scoreRiderProfile } from "../../../shared/profileScore";
+import { useProfileAccess } from "@/hooks/useProfileAccess";
+import { getRefinementScoreLabel } from "@/i18n/account/pricingAccess";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getProfileScoreCopy } from "@/i18n/account/profileScore";
@@ -17,16 +19,18 @@ export function AccountProfileStrength({ locale, placement }: {
   placement: "sidebar" | "mobile";
 }) {
   const provenance = useQuery(api.profiles.queries.getMyProvenance, {});
+  const profileAccess = useProfileAccess();
+  const access = profileAccess.access;
   const [now] = useState(() => Date.now());
   const copy = getProfileStrengthCopy(locale);
   const scoreCopy = getProfileScoreCopy(locale);
-  if (provenance === undefined) return <p className={styles.loading} role="status">{copy.loading}</p>;
-  const score = scoreRiderProfile({ profile: provenance.profile ?? {}, observations: provenance.observations }, now);
+  if (provenance === undefined || profileAccess.isLoading) return <p className={styles.loading} role="status">{copy.loading}</p>;
+  const score = scoreRiderProfile({ profile: provenance.profile ?? {}, observations: provenance.observations }, now, profileAccess);
   const nextStep = score.nextStep;
   return <Link className={styles.link} href={withLocalePrefix("/profile", locale)}>
-    <ProfileStrengthRings locale={locale} score={score} size="sm" compact={placement === "mobile"}
+    <ProfileStrengthRings locale={locale} score={score} size="sm" compact={placement === "mobile"} capped={access?.profileScoreCap === 80}
       nextStep={nextStep ? {
-        label: scoreCopy.fields[nextStep.key as keyof typeof scoreCopy.fields],
+        label: getRefinementScoreLabel(locale, nextStep.key) ?? scoreCopy.fields[nextStep.key as keyof typeof scoreCopy.fields],
       } : undefined} />
     <span className="sr-only">{copy.open}</span>
   </Link>;

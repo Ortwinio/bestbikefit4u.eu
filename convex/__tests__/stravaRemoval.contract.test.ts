@@ -28,8 +28,13 @@ describe("retired Strava backend contract", () => {
     expect(http.lookup("/strava/callback", "GET")).toBeNull();
   });
 
-  it("schedules only the five existing email jobs with their original timing", () => {
+  it("schedules the existing email jobs and pricing expiry without retired integrations", () => {
     expect(JSON.parse((crons as unknown as { export(): string }).export())).toEqual({
+      "expire pricing entitlements": {
+        name: "pricing/internal:expireEntitlements",
+        args: [{}],
+        schedule: { type: "daily", hourUTC: 0, minuteUTC: 15 },
+      },
       "day 1 measuring tips emails": {
         name: "emails/lifecycle:runDay1TipsBatch",
         args: [{}],

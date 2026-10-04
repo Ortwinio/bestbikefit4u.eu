@@ -331,6 +331,8 @@ export default defineSchema({
     femurLengthCm: v.optional(v.number()),
     footLengthCm: v.optional(v.number()),
     handSpanCm: v.optional(v.number()),
+    flexibilityTestCm: v.optional(v.number()),
+    coreTestSeconds: v.optional(v.number()),
     sitBoneWidthMm: v.optional(v.number()),
     hipCircumferenceCm: v.optional(v.number()),
 
@@ -1305,6 +1307,7 @@ export default defineSchema({
 
   // Fit recommendations - generated results
   recommendations: defineTable({
+    legacyFullAccess: v.optional(v.boolean()),
     adviceProgress: v.optional(adviceProgressValidator),
     adviceRevision: v.optional(v.number()),
     inputProvenance: v.optional(inputProvenanceValidator),
@@ -2328,6 +2331,64 @@ export default defineSchema({
     .index("by_key", ["key"])
     .index("by_stripe_price", ["stripePriceId"])
     .index("by_stripe_lookup_key", ["stripeLookupKey"]),
+
+  pricingEntitlements: defineTable({
+    userId: v.id("users"),
+    bikeId: v.optional(v.id("bikes")),
+    productId: v.union(v.literal("single"), v.literal("annual"), v.literal("annual_entry"), v.literal("annual_personal")),
+    status: v.union(v.literal("active"), v.literal("expired"), v.literal("revoked")),
+    revokedReason: v.optional(v.union(v.literal("bike_deleted"), v.literal("refunded"), v.literal("admin"))),
+    startsAt: v.number(),
+    expiresAt: v.number(),
+    source: v.union(v.literal("purchase"), v.literal("transition"), v.literal("legacy_pro")),
+    grantKey: v.string(),
+    appointmentGranted: v.boolean(),
+    appointmentUsedAt: v.optional(v.number()),
+    periodPriceCents: v.optional(v.number()),
+    renewed: v.optional(v.boolean()),
+    cancelled: v.optional(v.boolean()),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_bike", ["bikeId"])
+    .index("by_grant_key", ["grantKey"])
+    .index("by_status_expiry", ["status", "expiresAt"]),
+
+  pricingAppointmentNotifications: defineTable({
+    entitlementId: v.id("pricingEntitlements"),
+    userId: v.id("users"),
+    recipient: v.string(),
+    riderName: v.string(),
+    riderEmail: v.string(),
+    locale: v.union(v.literal("nl"), v.literal("en")),
+    status: v.literal("pending_integration"),
+    idempotencyKey: v.string(),
+    createdAt: v.number(),
+  }).index("by_entitlement", ["entitlementId"]).index("by_user", ["userId"]),
+
+  pricingTransitionOffers: defineTable({
+    userId: v.id("users"),
+    goLiveAt: v.number(),
+    redeemBy: v.number(),
+    createdAt: v.number(),
+    redeemedAt: v.optional(v.number()),
+    bikeId: v.optional(v.id("bikes")),
+    entitlementId: v.optional(v.id("pricingEntitlements")),
+  }).index("by_user", ["userId"]),
+
+  pricingTransitionRuns: defineTable({
+    adminUserId: v.id("users"),
+    goLiveAt: v.number(),
+    dryRun: v.boolean(),
+    phase: v.union(v.literal("reports"), v.literal("users"), v.literal("complete")),
+    cursor: v.optional(v.string()),
+    reportCount: v.number(),
+    offerCount: v.number(),
+    legacyProCount: v.number(),
+    createdAt: v.number(),
+    completedAt: v.optional(v.number()),
+    dryRunId: v.optional(v.id("pricingTransitionRuns")),
+  }).index("by_admin", ["adminUserId"]),
 
   subscriptions: defineTable({
     userId: v.optional(v.id("users")),

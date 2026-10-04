@@ -64,11 +64,11 @@ export const en = {
     headingWithoutFrame: "Your fit report",
   },
   fitPassWelcome: {
-    subject: "Your Fit Pass is active. Here's what you can do now",
+    subject: "Your full access is active. Here's what you can do now",
     preheader: "Your PDF, your plan and all your bikes.",
     eyebrow: "THANK YOU, {firstName}",
     eyebrowWithoutName: "THANK YOU",
-    heading: "Your Fit Pass is active",
+    heading: "Your full access is active",
     benefits: [
       {
         title: "Your report as a PDF:",
@@ -133,9 +133,9 @@ export const en = {
   },
   upgradeNudge: {
     subject: "Your fit on paper, and for all your bikes",
-    preheader: "Pro: €9 per month, cancel any month.",
+    preheader: "Annual subscription: €24.50 in your first year, then €19.50 per year.",
     heading: "Get more from your fit",
-    intro: "your fit numbers are ready. Pro adds:",
+    intro: "your fit numbers are ready. An annual subscription adds:",
     benefits: [
       {
         title: "A PDF of your report",
@@ -151,7 +151,8 @@ export const en = {
       },
     ],
     cancel: "cancel any time",
-    button: "See what Pro gives you",
+    price: "€24.50 in your first year · then €19.50 per year · cancel any time",
+    button: "View the annual subscription",
   },
   winback: {
     subject: "Is your fit still right?",

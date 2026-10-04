@@ -1,4 +1,7 @@
 import { bikeProfileSummary } from "./profile";
+import { getUserAccess } from "../pricing/access";
+import { isPaidAccessEnforced } from "../../shared/pricing/flags";
+import { visibleRecommendation } from "../recommendations/access";
 import { query } from "../_generated/server";
 import { v } from "convex/values";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
@@ -364,7 +367,8 @@ export const getDetail = query({
       bike,
       riderProfile: profile,
       ...bikeProfileSummary(bike, observations.filter(item => item.userId === userId),
-        activeWheelset?.activeTireSetup, Date.now(), linkedGeometryRecord),
+        activeWheelset?.activeTireSetup, Date.now(), linkedGeometryRecord,
+        isPaidAccessEnforced() ? await getUserAccess(ctx, userId, bike._id) : undefined),
       bikeProfiles: sortNewestFirst(bikeProfiles),
       photos: photoState.detailPhotos,
       activePhotoStorageId: photoState.activePhotoStorageId,
@@ -372,7 +376,7 @@ export const getDetail = query({
       wheelsets: wheelsetsWithTireSetups,
       activeWheelset,
       activeTireSetup: activeWheelset?.activeTireSetup ?? null,
-      latestRecommendation,
+      latestRecommendation: await visibleRecommendation(ctx, latestRecommendation),
       latestPressureCalculation,
       geometryLinkState,
       linkedGeometry:
@@ -511,7 +515,8 @@ export const listSummariesByUser = query({
 
         return {
           ...bike,
-          ...bikeProfileSummary(bike, observations, activeTireSetup, Date.now(), linkedGeometryRecord),
+          ...bikeProfileSummary(bike, observations, activeTireSetup, Date.now(), linkedGeometryRecord,
+            isPaidAccessEnforced() ? await getUserAccess(ctx, userId, bike._id) : undefined),
           linkedGeometrySummary: linkedGeometryRecord
             ? buildGarageLinkedGeometrySummary({
                 record: {

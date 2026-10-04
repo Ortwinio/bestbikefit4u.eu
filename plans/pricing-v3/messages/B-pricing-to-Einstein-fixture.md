@@ -1,0 +1,17 @@
+# Pricing → Einstein / parent: readiness timeout diagnosed
+
+Current results.json pricing entries fail with `headers was called outside a request scope`, then waitForFunction times out. This is a fixture boundary issue, not a pricing app bug.
+
+`src/app/(public)/pricing/page.tsx` renders the real async `JsonLd` component. `src/components/seo/JsonLd.tsx:9` awaits next/headers for its CSP nonce. P2-visual-fixtures.mjs aliases i18n/request but not JsonLd; pricing's browser createRoot therefore runs a server component without a Next request context. Merely raising readiness timeout or changing the production port will not resolve this path.
+
+Recommended harness-only adapter: intercept `@/components/seo/JsonLd` in the existing esbuild plugin and provide a SYNCHRONOUS fixture component returning the same script[type=application/ld+json] with JSON.stringify(schema), without reading headers/nonce. Preserve the real schema builders/page. A next/headers mock alone retains the async React client-component mismatch, so prefer the synchronous JsonLd adapter. Document nonce/server metadata exclusion in fixture limitations (unit tests already validate pricing schema values/canonicals).
+
+Update during review: Einstein's next/headers fixture adapter has now landed and fresh NL1440 OFF/ON plus NL390 OFF captures succeed with empty runtime errors. This supersedes the speculative async-component concern above: do not make a further adapter change solely on that recommendation. Current captured evidence passes with the existing correction. NL1440 OFF/ON PNG hashes are identical; manual NL1440 visual inspection accepted. Continuing final eight-image coverage as artifacts arrive.
+
+Einstein owns and applies harness fix/retry against C's corrected 58410 server. Pricing worker does not edit app or harness, launch capture, or change server lifecycle. Please publish the eight final pricing captures NL/EN × OFF/ON × 1440/390 and report provenance; pricing worker owns manual review of all eight, grouping only byte-identical outputs with explicit file coverage. Earlier isolated pricing screenshots are not substitutes for final matrix acceptance.
+
+## Final handoff — pricing review complete
+
+Final v2 update: compared all eight pricing PNGs directly to their entries in initial-screenshot-hashes.json (300-entry baseline). **8/8 identical, zero changes.** Final report completed2026-10-03T21:03:47.152Z confirms build `0Dw9Uq506jBKvW5c7Uwwh`, production-server origin `http://127.0.0.1:60620/`, 200/200 captures and zero failures. Pricing metrics clean. Updated audit/P2-pricing-final-visual-review.md provenance; prior manual acceptance carries forward, no duplicate rereview/capture needed. Pricing source stayed frozen. The initial-build paragraph below is historical and superseded for final build provenance.
+
+Eight final pricing captures PASS manual review; four OFF/ON hash-identical pairs explicitly recorded in `audit/P2-pricing-final-visual-review.md`, with two additional mobile viewport inspections. Final report now confirms 200/200 capture completion at 2026-10-03T20:43:52.608Z and production-server CSS from corrected58410, shared build UYxIkN6xXxBU0VSr0nQh7. All pricing captures have loaded fonts, no overflow, no runtime/request errors. Inline account-signup text link is the only small-control observation; no card CTA blocker. Earlier partial timeout evidence is superseded. No pricing app/harness changes or duplicate capture made by reviewer. Parent can include pricing visual acceptance in final P2 report.

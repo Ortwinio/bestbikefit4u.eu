@@ -9,11 +9,15 @@ import { Button, EmptyState, ErrorState, LoadingState } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { fitHistoryCopy } from "@/i18n/account/fitHistory";
+import { isPaidAccessEnforced } from "../../../../shared/pricing/flags";
+import { getPricingAccessCopy } from "@/i18n/account/pricingAccess";
 
 export default function FitHistoryPage() {
   const { locale } = useDashboardMessages();
   const text = fitHistoryCopy[locale];
   const sessions = useQuery(api.sessions.queries.getAllSessionsWithBikes);
+  const access = useQuery(api.pricing.queries.getAccess, isPaidAccessEnforced() ? {} : "skip");
+  const pricing = getPricingAccessCopy(locale);
 
   const groupedSessions = useMemo(() => {
     if (!Array.isArray(sessions)) {
@@ -94,6 +98,11 @@ export default function FitHistoryPage() {
           ))}
         </div>
       )}
+      {access?.enforced && access.maxBikes === 1 && <section className="space-y-3 rounded-3xl bg-primary p-6 text-primary-foreground">
+        <h2 className="font-display text-2xl font-bold">{pricing.history}</h2><p>{pricing.historyDetail}</p>
+        <Link className="inline-flex min-h-11 items-center font-semibold underline focus-visible:focus-ring"
+          href={withLocalePrefix("/checkout?product=annual", locale)}>{pricing.annual}</Link>
+      </section>}
     </div>
   );
 }

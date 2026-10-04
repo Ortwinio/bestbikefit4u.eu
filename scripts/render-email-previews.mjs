@@ -6,7 +6,9 @@ import { pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 
 const root = process.cwd();
-const output = resolve(root, process.argv[2] || process.env.EMAIL_PREVIEW_OUTPUT || "plans/rebrand/renders/emails");
+const outputArg = process.argv.find(arg => arg.startsWith("--output="))?.slice("--output=".length)
+  ?? process.argv.slice(2).find(arg => !arg.startsWith("--"));
+const output = resolve(root, outputArg ?? process.env.EMAIL_PREVIEW_OUTPUT ?? "artifacts/email-previews");
 await mkdir(output, { recursive: true });
 await writeFile(join(output, ".gitignore"), "*\n!.gitignore\n");
 const temp = await mkdtemp(join(tmpdir(), "bbf-email-previews-"));
@@ -24,6 +26,8 @@ const kinds = [
   "loginCode", "resultsSummary", "fitReport", "fitPassWelcome", "caseStudyLead",
   "caseStudyConfirmation", "fitReminder", "upgradeNudge", "winback", "proExplainer", "day1Tips",
   "day7CheckIn", "day14Evaluation",
+  "purchaseConfirmation", "subscriptionWelcome", "accessExpired", "renewalReminder",
+  "cancellationConfirmation", "transitionAnnouncement",
 ];
 const browser = await chromium.launch({ headless: true });
 const checks = [];

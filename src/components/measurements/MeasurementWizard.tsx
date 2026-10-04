@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -66,11 +66,13 @@ const steps = [
 interface MeasurementWizardProps {
   onComplete: (data: WizardFormData) => void;
   defaultValues?: Partial<WizardFormData>;
+  refinementsLocked?: boolean;
 }
 
 export function MeasurementWizard({
   onComplete,
   defaultValues,
+  refinementsLocked = false,
 }: MeasurementWizardProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -100,6 +102,10 @@ export function MeasurementWizard({
   });
 
   const { handleSubmit, trigger } = methods;
+  const { setValue } = methods;
+  useEffect(() => {
+    if (refinementsLocked) setValue("femurLengthCm", defaultValues?.femurLengthCm, { shouldValidate: true });
+  }, [refinementsLocked, defaultValues?.femurLengthCm, setValue]);
   const copy = profileWizardCopy[locale];
   const percentComplete = Math.round((currentStep / steps.length) * 100);
   const percentBucket = toPercentBucket(percentComplete);
@@ -150,7 +156,7 @@ export function MeasurementWizard({
   const renderStep = () => {
     switch (currentStep) {
       case 1: return <StepBodyMeasurements />;
-      case 2: return <StepAdvancedMeasurements />;
+      case 2: return <StepAdvancedMeasurements refinementsLocked={refinementsLocked} />;
       case 3: return <StepFlexibility />;
       case 4: return <StepCoreStability />;
       case 5: return <StepComfort />;

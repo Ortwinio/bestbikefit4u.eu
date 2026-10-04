@@ -151,7 +151,7 @@ describe("dashboard home presentation", () => {
     expect(html).toContain(messages.dashboardHome.noBikeTitle);
     for (const route of ["profile", "fit", "bikes", "bikes/new"]) expect(html).toContain(`href="/${locale}/${route}"`);
     expect(html).not.toMatch(/Voorbeeldgegevens|Ontwerpstaat|Canyon|Lisa/);
-    expect(state.query).toHaveBeenCalledTimes(4);
+    expect(state.query).toHaveBeenCalledTimes(5);
   });
 
   it("preserves missing profile and missing weight as distinct states", () => {

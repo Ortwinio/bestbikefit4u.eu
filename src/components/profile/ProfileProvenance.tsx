@@ -4,7 +4,12 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
 import type { Doc } from "../../../convex/_generated/dataModel";
-import { scoreRiderProfile, type ScoreObservation } from "../../../shared/profileScore";
+import { REFINEMENT_RULES, scoreRiderProfile, type ScoreObservation } from "../../../shared/profileScore";
+import { useProfileAccess } from "@/hooks/useProfileAccess";
+import { getRefinementScoreLabel } from "@/i18n/account/pricingAccess";
+import { isPaidAccessEnforced } from "../../../shared/pricing/flags";
+import { ProfileAccessNotice } from "./ProfileAccessNotice";
+import { ProfileRefinements } from "./ProfileRefinements";
 import { PROFILE_OBSERVATION_FIELDS, validateProfileObservationValue, type ProfileObservationValue } from "../../../shared/profileObservationFields";
 import { Button, Input, Select } from "@/components/ui";
 import { ProfileStrengthRings } from "./ProfileStrengthRings";
@@ -22,6 +27,8 @@ export function ProfileProvenance({ profile, locale, onWeightSaved, onEditDetail
   profile: Doc<"profiles">; locale: Locale; onWeightSaved: (weight: number) => void; onEditDetails: () => void;
 }) {
   const context = useQuery(getMyProvenance, {});
+  const profileAccess = useProfileAccess();
+  const access = profileAccess.access;
   const save = useMutation(saveObservation);
   const copy = getProfileProvenanceCopy(locale);
   const scoreCopy = getProfileScoreCopy(locale);
@@ -40,7 +47,7 @@ export function ProfileProvenance({ profile, locale, onWeightSaved, onEditDetail
     const { value, ...metadata } = observation;
     return Array.isArray(value) ? metadata : { ...metadata, value };
   });
-  const score = context === undefined ? null : scoreRiderProfile({ profile: values, observations: scoreObservations }, now);
+  const score = context === undefined || profileAccess.isLoading ? null : scoreRiderProfile({ profile: values, observations: scoreObservations }, now, profileAccess);
   const names: Record<ProvenanceField, string> = { ...copy.fields, ...copy.additionalFields };
   const valueOf = (field: string) => (values as Record<string, unknown>)[field];
   const labelValue = (value: unknown, field?: string): string => {
@@ -56,7 +63,8 @@ export function ProfileProvenance({ profile, locale, onWeightSaved, onEditDetail
     return ["none", "score", "date"].includes(value) ? "" : value;
   };
   const fields = (group === "all" ? Object.values(fieldGroups).flat() : fieldGroups[group])
-    .filter(field => PROFILE_OBSERVATION_FIELDS[field] || valueOf(field) !== undefined);
+    .filter(field => (PROFILE_OBSERVATION_FIELDS[field] || valueOf(field) !== undefined)
+      && (!isPaidAccessEnforced() || !REFINEMENT_RULES.some(rule => rule.fields.some(refinement => refinement === field))));
   const groupStats = (key: ProvenanceGroup) => {
     const items = key === "all" ? score?.items ?? [] : (score?.items ?? []).filter(item => scoreGroups[key].includes(item.key));
     const weight = items.reduce((sum, item) => sum + item.weight, 0);
@@ -109,10 +117,11 @@ export function ProfileProvenance({ profile, locale, onWeightSaved, onEditDetail
       </div>
     </section>}
     {score ? <section className={styles.summary}>
-      <ProfileStrengthRings score={score} locale={locale} title={copy.score} />
+      <ProfileStrengthRings score={score} locale={locale} title={copy.score} capped={access?.profileScoreCap === 80} />
       <div className={styles.summaryText}>
         <div><h2 className={styles.heading}>{scoreCopy.levels[score.level]}</h2><Link className={styles.link} href={withLocalePrefix("/profile/score", locale)}>{copy.explanation}</Link></div>
         <p>{copy.scoreDescription}</p>
+        {access?.enforced && <ProfileAccessNotice locale={locale} capped={access.profileScoreCap === 80} />}
         <div className={styles.filters} role="group" aria-label={copy.filter}>
           {(Object.keys(copy.groups) as ProvenanceGroup[]).map(key => {
             const stats = groupStats(key);
@@ -127,6 +136,7 @@ export function ProfileProvenance({ profile, locale, onWeightSaved, onEditDetail
         <p>{copy.complete} · {copy.reliable}</p>
       </div>
     </section> : <p role="status">{copy.loading}</p>}
+    {isPaidAccessEnforced() && <ProfileRefinements locale={locale} profile={values} access={access} />}
     {status && <p role={status === "error" ? "alert" : "status"}>{status === "remeasure" ? copy.remeasureHint : copy[status]}</p>}
     <div className={styles.columns}>
       <section className={styles.card} aria-label={group === "all" ? copy.allData : copy.groups[group]}>
@@ -163,7 +173,7 @@ export function ProfileProvenance({ profile, locale, onWeightSaved, onEditDetail
         })}
       </section>
       <aside className={styles.aside}>
-        <section className={styles.tips}><h2>{copy.improve}</h2>{tips.map(tip => <div key={tip.key} className={styles.tip}><strong>{scoreCopy.fields[tip.key as keyof typeof scoreCopy.fields]}</strong><span>{copy.upTo} +{tip.gain.toLocaleString(locale, { maximumFractionDigits: 1 })} {copy.points}</span><p>{copy.improveHint}</p></div>)}{!score ? <p>{copy.loading}</p> : !tips.length && <p>{copy.allComplete}</p>}</section>
+        <section className={styles.tips}><h2>{copy.improve}</h2>{tips.map(tip => <div key={tip.key} className={styles.tip}><strong>{getRefinementScoreLabel(locale, tip.key) ?? scoreCopy.fields[tip.key as keyof typeof scoreCopy.fields]}</strong><span>{copy.upTo} +{tip.gain.toLocaleString(locale, { maximumFractionDigits: 1 })} {copy.points}</span><p>{copy.improveHint}</p></div>)}{!score ? <p>{copy.loading}</p> : !tips.length && <p>{copy.allComplete}</p>}</section>
         <section className={styles.legend}><h2>{copy.legend}</h2>{(["measured", "estimated", "derived", "declared"] as const).map(kind => <div key={kind} className={styles.legendItem}><span className={`${styles.chip} ${styles[kind] ?? ""}`}>{copy.kinds[kind]}</span><p>{copy.kindHints[kind]}</p></div>)}<p>{copy.legacy}</p><p>{copy.ruleNote}</p></section>
         <section className={styles.privacy}><h2>{copy.privacy}</h2><p>{copy.privacyText}</p><Link className={styles.link} href={withLocalePrefix("/settings", locale)}>{copy.privacyLink}</Link><NewsletterPreference locale={locale} /></section>
       </aside>

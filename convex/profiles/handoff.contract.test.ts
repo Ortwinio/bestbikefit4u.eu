@@ -62,9 +62,23 @@ beforeEach(() => {
   auth.mockResolvedValue("user_owner");
   vi.spyOn(Date, "now").mockReturnValue(1791000010000);
 });
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
 describe("public handoff import", () => {
+  it("refuses paid handoff values and unchanged-value provenance upgrades when enforced", async () => {
+    vi.stubEnv("PAID_ACCESS_ENFORCED", "true");
+    const ctx = context();
+    await expect(invoke(ctx, { records: [entry({ field: "femurLengthCm", value: 40 })] }))
+      .rejects.toThrow("PAID_PROFILE_ACCESS_REQUIRED");
+    expect(ctx.db.insert).not.toHaveBeenCalled();
+    await ctx.db.insert("profiles", { userId: "user_owner", femurLengthCm: 40 });
+    ctx.db.insert.mockClear();
+    await expect(invoke(ctx, { records: [entry({ field: "femurLengthCm", value: 40 })] }))
+      .rejects.toThrow("PAID_PROFILE_ACCESS_REQUIRED");
+    expect(ctx.db.insert).not.toHaveBeenCalled();
+    expect(ctx.db.patch).not.toHaveBeenCalled();
+  });
+
   it("creates an inseam-only profile without inventing any other measurement", async () => {
     const ctx = context();
     const result = await invoke(ctx, { records: [entry()] });

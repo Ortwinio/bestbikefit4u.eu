@@ -26,11 +26,25 @@ export function sampleData(locale: EmailLocale) {
     preferencesUrl: `${BRAND.siteUrl}/${locale}/settings`,
   };
   const personal = { firstName: "Lisa", actionUrl };
+  const purchase = {
+    ...personal, productId: "single" as const, bikeName: "Canyon Endurace", amountPaid: 13.5,
+    accessEndsAt: Date.UTC(2027, 0, 3), invoiceAttached: true, withdrawalAcknowledged: true,
+  };
+  const renewal = {
+    ...personal, renewalAt: Date.UTC(2027, 2, 1), daysUntilRenewal: 30, firstYearPriceCents: 2450, bikesAdjusted: 3, reportsCreated: 5,
+    giftsGiven: 2, giftsIncluded: true, cancellationUrl: `${BRAND.siteUrl}/${locale}/settings`,
+  };
   return {
+    purchaseConfirmation: purchase,
+    subscriptionWelcome: { ...personal, accessEndsAt: Date.UTC(2027, 9, 3) },
+    accessExpired: { ...personal, bikeName: "Canyon Endurace" },
+    renewalReminder: renewal,
+    cancellationConfirmation: { ...personal, accessEndsAt: Date.UTC(2027, 2, 1) },
+    transitionAnnouncement: { ...personal, launchAt: null, eligibleTransitionOffer: true, daysUntilLaunch: 14 },
     loginCode: { code: "482915" },
     resultsSummary: { ...sampleFit, actionUrl } satisfies ResultsSummaryData,
     fitReport: { ...sampleFit, actionUrl } satisfies FitReportData,
-    fitPassWelcome: personal,
+    fitPassWelcome: purchase,
     caseStudyLead: {
       name: "Lisa Jansen", email: "lisa@example.test", ridingGoal: "Comfortabel langere ritten fietsen",
       painSummary: "Na een lange rit voel ik mijn onderrug.", sourcePath: "/nl/over-ons",
@@ -38,11 +52,11 @@ export function sampleData(locale: EmailLocale) {
     },
     caseStudyConfirmation: { name: "Lisa Jansen", actionUrl },
     fitReminder: { ...personal, ...preferences },
-    upgradeNudge: { ...personal, ...preferences },
+    upgradeNudge: { ...personal, ...preferences, bikeName: "Canyon Endurace" },
     winback: {
       ...sampleFit, ...preferences, actionUrl, recordedAt: Date.UTC(2026, 1, 15, 12),
     } satisfies WinbackData,
-    proExplainer: { ...sampleFit, ...preferences, actionUrl } satisfies ProExplainerData,
+    proExplainer: { ...sampleFit, ...preferences, ...renewal } satisfies ProExplainerData,
     day1Tips: { ...personal, ...preferences, hasFit: false } satisfies Day1TipsData,
     day7CheckIn: {
       ...personal, ...preferences,

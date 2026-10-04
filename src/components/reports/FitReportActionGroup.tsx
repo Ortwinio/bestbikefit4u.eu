@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAction, useQuery } from "convex/react";
 import { Mail, Download, FileText } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
@@ -18,6 +18,8 @@ import { getPdfResponseError } from "@/lib/reports/pdfResponseError";
 import { reportClientError } from "@/lib/telemetry";
 import { localizeAccountError } from "@/i18n/account/clientErrors";
 import { reportErrors } from "@/i18n/account/reportErrors";
+import { reportAccessCopy } from "@/i18n/account/reportAccess";
+import { isPaidAccessEnforced } from "../../../shared/pricing/flags";
 
 type FitReportActionGroupProps = {
   sessionId: Id<"fitSessions">;
@@ -33,6 +35,12 @@ export function FitReportActionGroup({
   const { locale, messages } = useDashboardMessages();
   const toast = useToast();
   const user = useQuery(api.users.queries.getCurrentUser);
+  const access = useQuery(api.recommendations.queries.getReportAccess, { sessionId });
+  const enforced = isPaidAccessEnforced() || access?.enforced === true;
+  const canDownload = !enforced || access?.canDownloadPdf === true;
+  const canEmail = !enforced || access?.canEmailReport === true;
+  const fullReport = !enforced || access?.fullReport === true;
+  const accessCopy = reportAccessCopy[locale];
   const sendFitReport = useAction(api.emails.actions.sendFitReport);
   const objectUrlRef = useRef<string | null>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -41,7 +49,23 @@ export function FitReportActionGroup({
   const [isEmailing, setIsEmailing] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
+  useEffect(() => {
+    setPdfUrl(null);
+    setViewerOpen(false);
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
+    }
+    return () => {
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+        objectUrlRef.current = null;
+      }
+    };
+  }, [sessionId, locale, canDownload, fullReport]);
+
   const fetchPdfObjectUrl = useCallback(async () => {
+    if (!canDownload) throw new Error(accessCopy.latestOnly);
     if (objectUrlRef.current) {
       return objectUrlRef.current;
     }
@@ -80,7 +104,7 @@ export function FitReportActionGroup({
     } finally {
       setIsFetchingPdf(false);
     }
-  }, [locale, messages.results.errors.pdfGenerateFailed, sessionId]);
+  }, [locale, messages.results.errors.pdfGenerateFailed, sessionId, canDownload, accessCopy.latestOnly]);
 
   const handleOpenViewer = async () => {
     setViewerOpen(true);
@@ -108,6 +132,7 @@ export function FitReportActionGroup({
   };
 
   const handleSendEmail = async () => {
+    if (!canEmail) return;
     const email = user?.email?.trim();
     if (!email) {
       toast.error({ description: messages.results.viewer.emailMissing });
@@ -141,19 +166,24 @@ export function FitReportActionGroup({
   return (
     <>
       <div className={className ?? "flex flex-wrap gap-2"}>
-        <Button size="sm" variant="outline" onClick={handleOpenViewer}>
+        <Button size="sm" variant="outline" onClick={handleOpenViewer} disabled={!canDownload}>
           <FileText className="h-4 w-4" />
           {messages.fitHistory.viewReport}
         </Button>
-        <Button size="sm" variant="outline" onClick={handleDownload} isLoading={isFetchingPdf}>
+        <Button size="sm" variant="outline" onClick={handleDownload} isLoading={isFetchingPdf} disabled={!canDownload}>
           <Download className="h-4 w-4" />
-          {messages.results.actions.downloadPdf}
+          {fullReport ? messages.results.actions.downloadPdf : accessCopy.corePdf}
         </Button>
-        <Button size="sm" variant="outline" onClick={handleSendEmail} isLoading={isEmailing}>
+        <Button size="sm" variant="outline" onClick={handleSendEmail} isLoading={isEmailing} disabled={!canEmail}>
           <Mail className="h-4 w-4" />
           {messages.results.actions.emailReport}
         </Button>
       </div>
+      {enforced && !canDownload && (
+        <p className="mt-2 text-sm text-muted-foreground" role="status">
+          {access === undefined ? accessCopy.unavailable : accessCopy.latestOnly}
+        </p>
+      )}
 
       <Dialog open={viewerOpen} onOpenChange={setViewerOpen}>
         <DialogContent
@@ -183,7 +213,7 @@ export function FitReportActionGroup({
               <Download className="h-4 w-4" />
               {messages.results.actions.downloadPdf}
             </Button>
-            <Button size="sm" variant="outline" onClick={handleSendEmail} isLoading={isEmailing}>
+            <Button size="sm" variant="outline" onClick={handleSendEmail} isLoading={isEmailing} disabled={!canEmail}>
               <Mail className="h-4 w-4" />
               {messages.results.actions.emailReport}
             </Button>

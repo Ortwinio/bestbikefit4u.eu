@@ -1,7 +1,14 @@
-import { cronJobs } from "convex/server";
+import { cronJobs, makeFunctionReference } from "convex/server";
 import { internal } from "./_generated/api";
 
 const crons = cronJobs();
+
+crons.daily(
+  "expire pricing entitlements",
+  { hourUTC: 0, minuteUTC: 15 },
+  makeFunctionReference<"mutation">("pricing/internal:expireEntitlements"),
+  {}
+);
 
 crons.daily(
   "day 1 measuring tips emails",

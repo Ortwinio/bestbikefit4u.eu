@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { CheckCircle } from "lucide-react";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
 import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
@@ -29,8 +30,6 @@ export function FitPassPaywall({
 }: FitPassPaywallProps) {
   const logMarketingEvent = useMarketingEventLogger();
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const isNl = locale === "nl";
   const campaignActive = isConsumerCampaignActive();
@@ -54,23 +53,6 @@ export function FitPassPaywall({
 
   if ((userTier === "pro" || userTier === "premium") && (!campaignActive || !isStripeBillingEnabled())) {
     return null;
-  }
-
-  if (!isStripeBillingEnabled() && !campaignActive) {
-    return (
-      <Card variant="secondary" className="mt-6">
-        <CardContent className="px-6 py-6">
-          <p className="font-semibold">
-            {isNl ? "Betalingen zijn tijdelijk niet beschikbaar." : "Payments are temporarily unavailable."}
-          </p>
-          <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">
-            {isNl
-              ? "Nieuwe betaalde upgrades zijn tijdelijk uitgeschakeld. Je kunt je beschikbare fitresultaten blijven bekijken."
-              : "New paid upgrades are temporarily disabled. You can continue viewing your available fit results."}
-          </p>
-        </CardContent>
-      </Card>
-    );
   }
 
   if (campaignActive) {
@@ -120,9 +102,7 @@ export function FitPassPaywall({
         "Tire pressure context and a 14-day validation plan",
       ];
 
-  const handleUpgrade = async () => {
-    setIsLoading(true);
-    setError(null);
+  const handleUpgrade = () => {
     logMarketingEvent({
       eventType: "fit_pass_checkout_started",
       locale: isNl ? "nl" : "en",
@@ -132,25 +112,6 @@ export function FitPassPaywall({
       valueCents: FIT_PASS_PRODUCT.priceCents,
       currency: COMMERCIAL_CURRENCY,
     });
-    try {
-      const res = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId, locale, productKey: "fit_pass" }),
-      });
-      const data = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !data.url) throw new Error(data.error ?? "Checkout failed");
-      window.location.href = data.url;
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : isNl
-            ? "Er ging iets mis. Probeer het opnieuw."
-            : "Something went wrong. Please try again."
-      );
-      setIsLoading(false);
-    }
   };
 
   const handleDismiss = () => {
@@ -205,15 +166,12 @@ export function FitPassPaywall({
           </span>
         </p>
         <p className="mt-1 text-xs text-[color:var(--muted-foreground)]">
-          {isNl ? "Opzegbaar via accountinstellingen" : "Cancel any time from account settings"}
+          {isNl ? "Eenmalig. Stopt vanzelf na 3 maanden." : "One-time purchase. Ends automatically after 3 months."}
         </p>
 
-        {error ? (
-          <p className="mt-3 text-sm text-[color:var(--destructive)]">{error}</p>
-        ) : null}
-
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <Button onClick={handleUpgrade} isPending={isLoading}>
+          <Button onClick={handleUpgrade} nativeButton={false} role="link"
+            render={<Link href={`/${isNl ? "nl" : "en"}/checkout?product=single`} />}>
             {FIT_PASS_PRODUCT.copy[isNl ? "nl" : "en"].cta}
           </Button>
           <button

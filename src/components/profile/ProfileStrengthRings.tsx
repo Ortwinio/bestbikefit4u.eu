@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { getProfileScoreCopy } from "@/i18n/account/profileScore";
+import { getPricingAccessCopy } from "@/i18n/account/pricingAccess";
 import { profileScoreLevel } from "../../../shared/profileScore";
 import styles from "./ProfileStrengthRings.module.css";
 
@@ -11,13 +12,14 @@ export type ProfileStrengthRingsProps = {
   locale: Locale;
   size?: "sm" | "lg";
   compact?: boolean;
+  capped?: boolean;
   title?: string;
   nextStep?: { label: string; href?: string; gain?: number };
 };
 
 const percentage = (value: number) => Number.isFinite(value) ? Math.round(Math.max(0, Math.min(100, value))) : 0;
 
-export function ProfileStrengthRings({ score, locale, size = "lg", compact = false, title, nextStep }: ProfileStrengthRingsProps) {
+export function ProfileStrengthRings({ score, locale, size = "lg", compact = false, capped = false, title, nextStep }: ProfileStrengthRingsProps) {
   const copy = getProfileScoreCopy(locale);
   const completeness = percentage(score.completeness);
   const reliability = percentage(score.reliability);
@@ -32,12 +34,14 @@ export function ProfileStrengthRings({ score, locale, size = "lg", compact = fal
         { key: "reliability", label: copy.reliability, value: reliability, color: styles.reliable }].map(meter =>
         <div className={styles.item} key={meter.key}>
           <div className={styles.meter} role="meter" aria-label={`${heading}: ${meter.label}`}
-            aria-valuemin={0} aria-valuemax={100} aria-valuenow={meter.value} aria-valuetext={copy.meterValue(meter.value)}>
+            aria-valuemin={0} aria-valuemax={100} aria-valuenow={meter.value} aria-valuetext={`${copy.meterValue(meter.value)}${capped && meter.key === "completeness" ? `, ${getPricingAccessCopy(locale).capMeter}` : ""}`}>
             <svg className={styles.svg} viewBox="0 0 120 120" aria-hidden="true">
               <circle className={styles.track} cx="60" cy="60" r="48" fill="none" strokeWidth="13" />
               <circle className={`${styles.arc} ${meter.color}`} cx="60" cy="60" r="48" fill="none" strokeWidth="13"
                 pathLength="100" strokeDasharray="100 100" strokeDashoffset={100 - meter.value}
                 strokeLinecap={meter.value === 0 ? "butt" : "round"} transform="rotate(-90 60 60)" />
+              {capped && meter.key === "completeness" && <line x1="60" y1="4" x2="60" y2="20"
+                stroke="currentColor" strokeWidth="3" transform="rotate(288 60 60)" />}
             </svg>
             <span className={styles.value}>{meter.value}<span className={styles.percent}>%</span></span>
           </div>

@@ -5,6 +5,7 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { getDashboardMessages } from "@/i18n/dashboardMessages";
 import { getBikeLanguageMessages } from "@/i18n/account/bikesLanguage";
 import { getRequestLocale } from "@/i18n/request";
+import { BikeCreationAccess } from "@/components/bikes/BikeCreationAccess";
 
 export default async function NewBikePage() {
   const locale = await getRequestLocale();
@@ -29,7 +30,7 @@ export default async function NewBikePage() {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <BikeCreationAccess><div className="mx-auto max-w-5xl space-y-6">
       <div>
         <h1 className="font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
           {t.title}
@@ -56,6 +57,6 @@ export default async function NewBikePage() {
           );
         })}
       </div>
-    </div>
+    </div></BikeCreationAccess>
   );
 }

@@ -1,0 +1,3 @@
+# Legacy Fit Pass CTA handling
+
+C owns FitPassLandingCta/FitPassPaywall while B owns new checkout and report gating UI. I will remove their direct payment API calls and send their purchase CTA to localized /checkout?product=single (matching provisional B product IDs, final A contract pending). This ensures the new withdrawal/choice persistence flow handles Stripe stub messaging instead of old bypasses. Existing paid/campaign branches retained unless your replacement makes these components obsolete. Please tell C if B is removing/replacing their usage. No direct SDK or payment call remains there.

@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   buildEntitlementPatch,
-  mapStripePriceToPlanKey,
   mapStripeSubscriptionStatus,
   subscriptionStatusGrantsAccess,
 } from "../mapping";
@@ -23,12 +22,6 @@ describe("stripe mapping helpers", () => {
     expect(subscriptionStatusGrantsAccess("past_due")).toBe(false);
     expect(subscriptionStatusGrantsAccess("canceled")).toBe(false);
     expect(subscriptionStatusGrantsAccess("expired")).toBe(false);
-  });
-
-  it("maps configured Stripe price IDs to the app plan key", () => {
-    expect(mapStripePriceToPlanKey("price_pro", "price_pro")).toBe("pro_monthly");
-    expect(mapStripePriceToPlanKey("price_yearly", "price_pro", "price_yearly")).toBe("pro_yearly");
-    expect(mapStripePriceToPlanKey("price_other", "price_pro")).toBeUndefined();
   });
 
   it("builds entitlement patches for grant and revoke transitions", () => {

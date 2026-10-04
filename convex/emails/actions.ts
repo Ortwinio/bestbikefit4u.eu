@@ -27,12 +27,14 @@ export const sendFitReport = action({
     if (!user.email || args.recipientEmail.toLowerCase() !== user.email.toLowerCase()) {
       throw new Error("Reports can only be sent to your own email address");
     }
-    const recommendation = await ctx.runQuery(api.recommendations.queries.getBySession, {
+    const report = await ctx.runQuery(api.recommendations.queries.getReportV2, {
       sessionId: args.sessionId,
     });
-    if (!recommendation) {
+    if (!report?.recommendation) {
       throw new Error("Recommendation not found");
     }
+    if (!report.access?.canEmailReport) throw new Error("REPORT_ACCESS_REQUIRED");
+    const recommendation = report.recommendation;
 
     const locale = resolveEmailLocale(user, args.locale);
     const email = renderFitReport({

@@ -21,16 +21,28 @@ describe("Vercel environment preflight", () => {
     expect(run({ VERCEL_ENV: "preview" }).status).toBe(0);
   });
 
-  it.each(["production", ""])("still requires billing configuration for production (%s)", (environment) => {
-    const result = run({ VERCEL_ENV: environment });
-    expect(result.status).toBe(1);
-    expect(result.stderr).toContain("STRIPE_PRO_MONTHLY_PRICE_ID");
-    expect(result.stderr).toContain("STRIPE_SECRET_KEY");
+  const flagValues = [undefined, "false", "true"] as const;
+  const flagPairs = flagValues.flatMap((server) => flagValues.map((client) => ({ server, client })));
+
+  it.each(flagPairs)("requires no provider integration with billing flags %j", ({ server, client }) => {
+    for (const environment of ["production", ""]) {
+      const result = run({
+        VERCEL_ENV: environment,
+        ...(server === undefined ? {} : { STRIPE_BILLING_ENABLED: server }),
+        ...(client === undefined ? {} : { NEXT_PUBLIC_STRIPE_BILLING_ENABLED: client }),
+      });
+      expect(result.status).toBe(0);
+      expect(result.stderr).toBe("");
+    }
   });
 
-  it("validates frontend billing without requiring the Convex-only webhook secret", () => {
-    const result = run({ VERCEL_ENV: "production", SITE_URL: "https://bikefitboost.com", STRIPE_SECRET_KEY: "test-only", STRIPE_PRO_MONTHLY_PRICE_ID: "price_test" });
-    expect(result.status).toBe(0);
+  it("still requires a valid Convex deployment URL", () => {
+    const missing = run({ NEXT_PUBLIC_CONVEX_URL: "" });
+    expect(missing.status).toBe(1);
+    expect(missing.stderr).toContain("Missing required environment variable: NEXT_PUBLIC_CONVEX_URL");
+    const malformed = run({ NEXT_PUBLIC_CONVEX_URL: "not-a-url" });
+    expect(malformed.status).toBe(1);
+    expect(malformed.stderr).toContain("Invalid URL in NEXT_PUBLIC_CONVEX_URL");
   });
 
   it("still rejects a preview pointing at localhost", () => {

@@ -1,0 +1,990 @@
+{
+  "report": {
+    "build": "6KW82hm49ljNYI1ddtwmm",
+    "completed": "2026-10-03T21:24:19.592Z",
+    "captured": 200,
+    "failures": [],
+    "css": {
+      "source": "same-build-disk-manifest",
+      "buildId": "6KW82hm49ljNYI1ddtwmm",
+      "manifestPath": ".next/server/app/(auth)/login/page_client-reference-manifest.js",
+      "paths": [
+        "static/css/a094243a1d35beb0.css",
+        "static/css/42dc4f20688e386a.css"
+      ],
+      "serverFailure": "Error: /nl/login: HTTP 500",
+      "origin": "http://127.0.0.1:62855/"
+    },
+    "cssHash": "899fc0bc9c857075af6679c65c5fd83b36ecc689e89213584af9910e00de66ac"
+  },
+  "groups": [
+    {
+      "hash": "a1d8a4e92227052bb806f9a04d0c5c045c97c23f418fc7fafa04b6c10c1c325d",
+      "files": [
+        {
+          "file": "nl-checkout-choose-off-1440.png",
+          "previous": "a1d8a4e92227052bb806f9a04d0c5c045c97c23f418fc7fafa04b6c10c1c325d",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-choose-on-1440.png",
+          "previous": "a1d8a4e92227052bb806f9a04d0c5c045c97c23f418fc7fafa04b6c10c1c325d",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "1577ed0661f5c46bb62f494de90fbbbd8c298f63b1e26850935ac4138067ffed",
+      "files": [
+        {
+          "file": "nl-checkout-account-off-1440.png",
+          "previous": "1577ed0661f5c46bb62f494de90fbbbd8c298f63b1e26850935ac4138067ffed",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-account-on-1440.png",
+          "previous": "1577ed0661f5c46bb62f494de90fbbbd8c298f63b1e26850935ac4138067ffed",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "adf973d793966bee9daa85a20569a169c28cad5940527c0a5f60011b11570c03",
+      "files": [
+        {
+          "file": "nl-checkout-code-off-1440.png",
+          "previous": "adf973d793966bee9daa85a20569a169c28cad5940527c0a5f60011b11570c03",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-code-on-1440.png",
+          "previous": "adf973d793966bee9daa85a20569a169c28cad5940527c0a5f60011b11570c03",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "2c106501fcfa9144564e5508f692b496a3a6823b51b0141ac0366d23ea9b7335",
+      "files": [
+        {
+          "file": "nl-checkout-confirm-off-1440.png",
+          "previous": "2c106501fcfa9144564e5508f692b496a3a6823b51b0141ac0366d23ea9b7335",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-confirm-on-1440.png",
+          "previous": "2c106501fcfa9144564e5508f692b496a3a6823b51b0141ac0366d23ea9b7335",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "858800d3206488bd8b52b9fd5c3409c0cad93f0f697f493e0c0d10da490fce81",
+      "files": [
+        {
+          "file": "nl-checkout-stub-off-1440.png",
+          "previous": "858800d3206488bd8b52b9fd5c3409c0cad93f0f697f493e0c0d10da490fce81",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-stub-on-1440.png",
+          "previous": "858800d3206488bd8b52b9fd5c3409c0cad93f0f697f493e0c0d10da490fce81",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "614ec062506e4457eb62db71c8e954f8c7e2e432d973dacdc2c41053563b91ba",
+      "files": [
+        {
+          "file": "nl-checkout-success-preview-off-1440.png",
+          "previous": "614ec062506e4457eb62db71c8e954f8c7e2e432d973dacdc2c41053563b91ba",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-success-preview-on-1440.png",
+          "previous": "614ec062506e4457eb62db71c8e954f8c7e2e432d973dacdc2c41053563b91ba",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "b673cfe78de71c65a83f2b42299ba6932760ee8d85777c3848ecc7f6eadecdfe",
+      "files": [
+        {
+          "file": "nl-checkout-personal-preview-off-1440.png",
+          "previous": "b673cfe78de71c65a83f2b42299ba6932760ee8d85777c3848ecc7f6eadecdfe",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-personal-preview-on-1440.png",
+          "previous": "b673cfe78de71c65a83f2b42299ba6932760ee8d85777c3848ecc7f6eadecdfe",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "61dc2e4b0e730cd12bec27e78c442409162f7e3f037d9e9f4b92262fd5311db7",
+      "files": [
+        {
+          "file": "nl-checkout-appointment-off-1440.png",
+          "previous": "61dc2e4b0e730cd12bec27e78c442409162f7e3f037d9e9f4b92262fd5311db7",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-appointment-on-1440.png",
+          "previous": "61dc2e4b0e730cd12bec27e78c442409162f7e3f037d9e9f4b92262fd5311db7",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "9968bc71129ec1f9068b114aa8077a7e583197deb3e3d72de0fc41a375eee849",
+      "files": [
+        {
+          "file": "nl-checkout-failure-preview-off-1440.png",
+          "previous": "9968bc71129ec1f9068b114aa8077a7e583197deb3e3d72de0fc41a375eee849",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-failure-preview-on-1440.png",
+          "previous": "9968bc71129ec1f9068b114aa8077a7e583197deb3e3d72de0fc41a375eee849",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "6275d761ee7ba01af332434e481de4fdd0e723dfec9d3fdf0fa2be6cea1bb336",
+      "files": [
+        {
+          "file": "nl-checkout-choose-off-390.png",
+          "previous": "6275d761ee7ba01af332434e481de4fdd0e723dfec9d3fdf0fa2be6cea1bb336",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-choose-on-390.png",
+          "previous": "6275d761ee7ba01af332434e481de4fdd0e723dfec9d3fdf0fa2be6cea1bb336",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "1eac04519b2b7347eb23fbd514301dd3c61a3469497b2c5d14ab8240fcade5ec",
+      "files": [
+        {
+          "file": "nl-checkout-choose-off-390-viewport.png",
+          "previous": "1eac04519b2b7347eb23fbd514301dd3c61a3469497b2c5d14ab8240fcade5ec",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-choose-on-390-viewport.png",
+          "previous": "1eac04519b2b7347eb23fbd514301dd3c61a3469497b2c5d14ab8240fcade5ec",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "32431d0f6eb34a1a0e3c05121505dc11f07625f92ae121fe4c8f451627f7dc39",
+      "files": [
+        {
+          "file": "nl-checkout-account-off-390.png",
+          "previous": "32431d0f6eb34a1a0e3c05121505dc11f07625f92ae121fe4c8f451627f7dc39",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-account-on-390.png",
+          "previous": "32431d0f6eb34a1a0e3c05121505dc11f07625f92ae121fe4c8f451627f7dc39",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "0ecbc04ebc106116fa8adc2ded041ec8a74143d1cb0b6708d55779c75e2cabaf",
+      "files": [
+        {
+          "file": "nl-checkout-account-off-390-viewport.png",
+          "previous": "0ecbc04ebc106116fa8adc2ded041ec8a74143d1cb0b6708d55779c75e2cabaf",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-account-on-390-viewport.png",
+          "previous": "0ecbc04ebc106116fa8adc2ded041ec8a74143d1cb0b6708d55779c75e2cabaf",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "6fc837488b2ca71efff8fb98fd3b8d7f357e324b0b611c54359ea2c997676315",
+      "files": [
+        {
+          "file": "nl-checkout-code-off-390.png",
+          "previous": "6fc837488b2ca71efff8fb98fd3b8d7f357e324b0b611c54359ea2c997676315",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-code-on-390.png",
+          "previous": "6fc837488b2ca71efff8fb98fd3b8d7f357e324b0b611c54359ea2c997676315",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "f73dc21d740376933cc49015eb030093b54de178a3d0d6704eb4410ecc870664",
+      "files": [
+        {
+          "file": "nl-checkout-code-off-390-viewport.png",
+          "previous": "f73dc21d740376933cc49015eb030093b54de178a3d0d6704eb4410ecc870664",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-code-on-390-viewport.png",
+          "previous": "f73dc21d740376933cc49015eb030093b54de178a3d0d6704eb4410ecc870664",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "11391db1ca1a02b4cf9136a60ffa7ee15532f60a9a967abebba089b929bab193",
+      "files": [
+        {
+          "file": "nl-checkout-confirm-off-390.png",
+          "previous": "11391db1ca1a02b4cf9136a60ffa7ee15532f60a9a967abebba089b929bab193",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-confirm-on-390.png",
+          "previous": "11391db1ca1a02b4cf9136a60ffa7ee15532f60a9a967abebba089b929bab193",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "17de29905f62a9eae66d9529eacc7d3a6a58658927be6d1113e7b8f2d290d036",
+      "files": [
+        {
+          "file": "nl-checkout-confirm-off-390-viewport.png",
+          "previous": "17de29905f62a9eae66d9529eacc7d3a6a58658927be6d1113e7b8f2d290d036",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-confirm-on-390-viewport.png",
+          "previous": "17de29905f62a9eae66d9529eacc7d3a6a58658927be6d1113e7b8f2d290d036",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "26255a635a4ce1ebad253eb71a18c3c257a7295c14183e38ef7839f6124e59dd",
+      "files": [
+        {
+          "file": "nl-checkout-stub-off-390.png",
+          "previous": "26255a635a4ce1ebad253eb71a18c3c257a7295c14183e38ef7839f6124e59dd",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-stub-on-390.png",
+          "previous": "26255a635a4ce1ebad253eb71a18c3c257a7295c14183e38ef7839f6124e59dd",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "eb39d8b5d47bf6584beea3cb493d434941ba236b64e44145ae7fc98fd0d02422",
+      "files": [
+        {
+          "file": "nl-checkout-stub-off-390-viewport.png",
+          "previous": "eb39d8b5d47bf6584beea3cb493d434941ba236b64e44145ae7fc98fd0d02422",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-stub-on-390-viewport.png",
+          "previous": "eb39d8b5d47bf6584beea3cb493d434941ba236b64e44145ae7fc98fd0d02422",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "e977c6e702c15bb7c9a499b9455bf80112a8777e4059244ccc9981201d7baed2",
+      "files": [
+        {
+          "file": "nl-checkout-success-preview-off-390.png",
+          "previous": "d59ea99c5a6e6676ea06e95de535edd6623ee9e451a8ff3716c6ff3cdf1aefb5",
+          "changed": true
+        },
+        {
+          "file": "nl-checkout-success-preview-on-390.png",
+          "previous": "d59ea99c5a6e6676ea06e95de535edd6623ee9e451a8ff3716c6ff3cdf1aefb5",
+          "changed": true
+        }
+      ],
+      "inspection": "Manually inspected representative full-size image in final v3 review; paired flag image byte-identical."
+    },
+    {
+      "hash": "6954047102b594e9eba6ea420e30cd3e227eeeb2a2206d28dee4e68dd6d1e662",
+      "files": [
+        {
+          "file": "nl-checkout-success-preview-off-390-viewport.png",
+          "previous": "78ecbe9f8a0ff7dd111d0552cfd58ebe16c64044b74f927490cef834ea637005",
+          "changed": true
+        },
+        {
+          "file": "nl-checkout-success-preview-on-390-viewport.png",
+          "previous": "78ecbe9f8a0ff7dd111d0552cfd58ebe16c64044b74f927490cef834ea637005",
+          "changed": true
+        }
+      ],
+      "inspection": "Manually inspected representative full-size image in final v3 review; paired flag image byte-identical."
+    },
+    {
+      "hash": "79bf31f1c0f92cf05d9e36db1ab4fba63ee97270a538442da39b35efb724ad64",
+      "files": [
+        {
+          "file": "nl-checkout-personal-preview-off-390.png",
+          "previous": "79bf31f1c0f92cf05d9e36db1ab4fba63ee97270a538442da39b35efb724ad64",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-personal-preview-on-390.png",
+          "previous": "79bf31f1c0f92cf05d9e36db1ab4fba63ee97270a538442da39b35efb724ad64",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "bed8ae93b0f6c15f82214630872fd49bffb0c62d74035a8ce69ed454a23e6d3c",
+      "files": [
+        {
+          "file": "nl-checkout-personal-preview-off-390-viewport.png",
+          "previous": "bed8ae93b0f6c15f82214630872fd49bffb0c62d74035a8ce69ed454a23e6d3c",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-personal-preview-on-390-viewport.png",
+          "previous": "bed8ae93b0f6c15f82214630872fd49bffb0c62d74035a8ce69ed454a23e6d3c",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "740408f7acdb9123fd59ce6dadb641e83962cc792927f48a36da58a29393004b",
+      "files": [
+        {
+          "file": "nl-checkout-appointment-off-390.png",
+          "previous": "740408f7acdb9123fd59ce6dadb641e83962cc792927f48a36da58a29393004b",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-appointment-on-390.png",
+          "previous": "740408f7acdb9123fd59ce6dadb641e83962cc792927f48a36da58a29393004b",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "0f86fd1dfda8ef73e0a8ecb064c539ee3c2ac1f8c27403788455b031e40d821c",
+      "files": [
+        {
+          "file": "nl-checkout-appointment-off-390-viewport.png",
+          "previous": "0f86fd1dfda8ef73e0a8ecb064c539ee3c2ac1f8c27403788455b031e40d821c",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-appointment-on-390-viewport.png",
+          "previous": "0f86fd1dfda8ef73e0a8ecb064c539ee3c2ac1f8c27403788455b031e40d821c",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "fd5c6f2c23c1c42272f1da024a925ebfe8f09507fc105c591a0d0884b269937c",
+      "files": [
+        {
+          "file": "nl-checkout-failure-preview-off-390.png",
+          "previous": "fd5c6f2c23c1c42272f1da024a925ebfe8f09507fc105c591a0d0884b269937c",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-failure-preview-on-390.png",
+          "previous": "fd5c6f2c23c1c42272f1da024a925ebfe8f09507fc105c591a0d0884b269937c",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "22f8ed91ddc710eed04ea5874060cd5d47cc38fcdf03b9e5b18ca803252dc669",
+      "files": [
+        {
+          "file": "nl-checkout-failure-preview-off-390-viewport.png",
+          "previous": "22f8ed91ddc710eed04ea5874060cd5d47cc38fcdf03b9e5b18ca803252dc669",
+          "changed": false
+        },
+        {
+          "file": "nl-checkout-failure-preview-on-390-viewport.png",
+          "previous": "22f8ed91ddc710eed04ea5874060cd5d47cc38fcdf03b9e5b18ca803252dc669",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "e7029be253840e5cbe23243ba8341323b687d38d6b26867e8ace65cb852042ca",
+      "files": [
+        {
+          "file": "en-checkout-choose-off-1440.png",
+          "previous": "e7029be253840e5cbe23243ba8341323b687d38d6b26867e8ace65cb852042ca",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-choose-on-1440.png",
+          "previous": "e7029be253840e5cbe23243ba8341323b687d38d6b26867e8ace65cb852042ca",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "596d7ee30827157ba5fa3d1316cbb51b89473ecd15aca5ff4a366210e01211e8",
+      "files": [
+        {
+          "file": "en-checkout-account-off-1440.png",
+          "previous": "596d7ee30827157ba5fa3d1316cbb51b89473ecd15aca5ff4a366210e01211e8",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-account-on-1440.png",
+          "previous": "596d7ee30827157ba5fa3d1316cbb51b89473ecd15aca5ff4a366210e01211e8",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "ceb49b86af555609d88f33b6ac25d1a52c73357819e2e040be82047c20937a0c",
+      "files": [
+        {
+          "file": "en-checkout-code-off-1440.png",
+          "previous": "ceb49b86af555609d88f33b6ac25d1a52c73357819e2e040be82047c20937a0c",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-code-on-1440.png",
+          "previous": "ceb49b86af555609d88f33b6ac25d1a52c73357819e2e040be82047c20937a0c",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "45b2ea3f6146af36e88bceeee97fab730c8ca237ac18f40c3189db80595baddd",
+      "files": [
+        {
+          "file": "en-checkout-confirm-off-1440.png",
+          "previous": "45b2ea3f6146af36e88bceeee97fab730c8ca237ac18f40c3189db80595baddd",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-confirm-on-1440.png",
+          "previous": "45b2ea3f6146af36e88bceeee97fab730c8ca237ac18f40c3189db80595baddd",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "e708ad9ceec279aaf681026edac55f3b02a1d73920189c653488b7ea49447e28",
+      "files": [
+        {
+          "file": "en-checkout-stub-off-1440.png",
+          "previous": "e708ad9ceec279aaf681026edac55f3b02a1d73920189c653488b7ea49447e28",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-stub-on-1440.png",
+          "previous": "e708ad9ceec279aaf681026edac55f3b02a1d73920189c653488b7ea49447e28",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "8a4af3e98e37d01119701579ed8fa7449c2893d88f7515d1177992076a18eb94",
+      "files": [
+        {
+          "file": "en-checkout-success-preview-off-1440.png",
+          "previous": "8a4af3e98e37d01119701579ed8fa7449c2893d88f7515d1177992076a18eb94",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-success-preview-on-1440.png",
+          "previous": "8a4af3e98e37d01119701579ed8fa7449c2893d88f7515d1177992076a18eb94",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "8ce0fef74f43908b84ccaaf54ff741d3cb9b127d3f7b9cc1f1b0fb4b45a0cc32",
+      "files": [
+        {
+          "file": "en-checkout-personal-preview-off-1440.png",
+          "previous": "8ce0fef74f43908b84ccaaf54ff741d3cb9b127d3f7b9cc1f1b0fb4b45a0cc32",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-personal-preview-on-1440.png",
+          "previous": "8ce0fef74f43908b84ccaaf54ff741d3cb9b127d3f7b9cc1f1b0fb4b45a0cc32",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "12ae6e9fd4edc5b3a990a46c30e9f61f7e6c78736fa343c5332b23937a24e7c8",
+      "files": [
+        {
+          "file": "en-checkout-appointment-off-1440.png",
+          "previous": "12ae6e9fd4edc5b3a990a46c30e9f61f7e6c78736fa343c5332b23937a24e7c8",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-appointment-on-1440.png",
+          "previous": "12ae6e9fd4edc5b3a990a46c30e9f61f7e6c78736fa343c5332b23937a24e7c8",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "eca4fc6da274dbced390f2409a7e53134b0b396b78760038c1256c609efb8bf5",
+      "files": [
+        {
+          "file": "en-checkout-failure-preview-off-1440.png",
+          "previous": "eca4fc6da274dbced390f2409a7e53134b0b396b78760038c1256c609efb8bf5",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-failure-preview-on-1440.png",
+          "previous": "eca4fc6da274dbced390f2409a7e53134b0b396b78760038c1256c609efb8bf5",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "51e533c293563cb89f704ee6afbbdd65827bbd5928b4253e31e6c5e553423311",
+      "files": [
+        {
+          "file": "en-checkout-choose-off-390.png",
+          "previous": "51e533c293563cb89f704ee6afbbdd65827bbd5928b4253e31e6c5e553423311",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-choose-on-390.png",
+          "previous": "51e533c293563cb89f704ee6afbbdd65827bbd5928b4253e31e6c5e553423311",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "ef99497b712afd96c1fb9f4c2f502bf1d77ed1f368a26e8e58db6e2aa9eba7d7",
+      "files": [
+        {
+          "file": "en-checkout-choose-off-390-viewport.png",
+          "previous": "ef99497b712afd96c1fb9f4c2f502bf1d77ed1f368a26e8e58db6e2aa9eba7d7",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-choose-on-390-viewport.png",
+          "previous": "ef99497b712afd96c1fb9f4c2f502bf1d77ed1f368a26e8e58db6e2aa9eba7d7",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "53f1e80350579597bb0d4a47baacdcf713483ef3316284018a4699e82295ced4",
+      "files": [
+        {
+          "file": "en-checkout-account-off-390.png",
+          "previous": "53f1e80350579597bb0d4a47baacdcf713483ef3316284018a4699e82295ced4",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-account-on-390.png",
+          "previous": "53f1e80350579597bb0d4a47baacdcf713483ef3316284018a4699e82295ced4",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "81ebf45702c6288568f348ac8dd28dcc21a10257e02165a488ccf11ed3025c81",
+      "files": [
+        {
+          "file": "en-checkout-account-off-390-viewport.png",
+          "previous": "81ebf45702c6288568f348ac8dd28dcc21a10257e02165a488ccf11ed3025c81",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-account-on-390-viewport.png",
+          "previous": "81ebf45702c6288568f348ac8dd28dcc21a10257e02165a488ccf11ed3025c81",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "c94d3b5e8324002816de4894dfe7415ed860522f91d88d180d682b21dce8cf00",
+      "files": [
+        {
+          "file": "en-checkout-code-off-390.png",
+          "previous": "c94d3b5e8324002816de4894dfe7415ed860522f91d88d180d682b21dce8cf00",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-code-on-390.png",
+          "previous": "c94d3b5e8324002816de4894dfe7415ed860522f91d88d180d682b21dce8cf00",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "dc1833aa62ce71d5288de6a069dacf655e6746e23f0bccde0df9c54d7de121fa",
+      "files": [
+        {
+          "file": "en-checkout-code-off-390-viewport.png",
+          "previous": "dc1833aa62ce71d5288de6a069dacf655e6746e23f0bccde0df9c54d7de121fa",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-code-on-390-viewport.png",
+          "previous": "dc1833aa62ce71d5288de6a069dacf655e6746e23f0bccde0df9c54d7de121fa",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "91acb1b7be2e4fdfec39135ab86f1b8c03c1c747f66c6a9047edeffa8adff120",
+      "files": [
+        {
+          "file": "en-checkout-confirm-off-390.png",
+          "previous": "91acb1b7be2e4fdfec39135ab86f1b8c03c1c747f66c6a9047edeffa8adff120",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-confirm-on-390.png",
+          "previous": "91acb1b7be2e4fdfec39135ab86f1b8c03c1c747f66c6a9047edeffa8adff120",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "ca9cf0e0430ee1146c9ab7cd091ed5f26b134a52b530f6e0220a9829175d4e86",
+      "files": [
+        {
+          "file": "en-checkout-confirm-off-390-viewport.png",
+          "previous": "ca9cf0e0430ee1146c9ab7cd091ed5f26b134a52b530f6e0220a9829175d4e86",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-confirm-on-390-viewport.png",
+          "previous": "ca9cf0e0430ee1146c9ab7cd091ed5f26b134a52b530f6e0220a9829175d4e86",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "26372a4644d08401136abebed763edb2b773d7187c6ea6a0ef86fcdae076b1dd",
+      "files": [
+        {
+          "file": "en-checkout-stub-off-390.png",
+          "previous": "26372a4644d08401136abebed763edb2b773d7187c6ea6a0ef86fcdae076b1dd",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-stub-on-390.png",
+          "previous": "26372a4644d08401136abebed763edb2b773d7187c6ea6a0ef86fcdae076b1dd",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "30608f30288c424f89922e013ac57a6df25efde1c2df26a466e4cbcb1c9e3486",
+      "files": [
+        {
+          "file": "en-checkout-stub-off-390-viewport.png",
+          "previous": "30608f30288c424f89922e013ac57a6df25efde1c2df26a466e4cbcb1c9e3486",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-stub-on-390-viewport.png",
+          "previous": "30608f30288c424f89922e013ac57a6df25efde1c2df26a466e4cbcb1c9e3486",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "4f16c733f1b90bc20b30957296f4938fec0fc014628a647a900c46a04aa68c4f",
+      "files": [
+        {
+          "file": "en-checkout-success-preview-off-390.png",
+          "previous": "b177d922d8d6c220830e3975e75cee3b15e1d17459337062d3d7b895d724400f",
+          "changed": true
+        },
+        {
+          "file": "en-checkout-success-preview-on-390.png",
+          "previous": "b177d922d8d6c220830e3975e75cee3b15e1d17459337062d3d7b895d724400f",
+          "changed": true
+        }
+      ],
+      "inspection": "Manually inspected representative full-size image in final v3 review; paired flag image byte-identical."
+    },
+    {
+      "hash": "54add5ca809d415c505597909bee89051581985a0aef1c441136585f30601d2f",
+      "files": [
+        {
+          "file": "en-checkout-success-preview-off-390-viewport.png",
+          "previous": "246fa19cac1091197517051719f478db2d25875674c472615c1c9f98a077dd25",
+          "changed": true
+        },
+        {
+          "file": "en-checkout-success-preview-on-390-viewport.png",
+          "previous": "246fa19cac1091197517051719f478db2d25875674c472615c1c9f98a077dd25",
+          "changed": true
+        }
+      ],
+      "inspection": "Manually inspected representative full-size image in final v3 review; paired flag image byte-identical."
+    },
+    {
+      "hash": "977aadc289b98611b68a2fb46362fed09ebe76f722aa5629d90014b94fa6f7fe",
+      "files": [
+        {
+          "file": "en-checkout-personal-preview-off-390.png",
+          "previous": "977aadc289b98611b68a2fb46362fed09ebe76f722aa5629d90014b94fa6f7fe",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-personal-preview-on-390.png",
+          "previous": "977aadc289b98611b68a2fb46362fed09ebe76f722aa5629d90014b94fa6f7fe",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "daa43db8694b466d5ce9d78f0e8629c8664c6b5f2516b6dde252024d5c8b9548",
+      "files": [
+        {
+          "file": "en-checkout-personal-preview-off-390-viewport.png",
+          "previous": "daa43db8694b466d5ce9d78f0e8629c8664c6b5f2516b6dde252024d5c8b9548",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-personal-preview-on-390-viewport.png",
+          "previous": "daa43db8694b466d5ce9d78f0e8629c8664c6b5f2516b6dde252024d5c8b9548",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "b9fa4d13e99a292bd338dc3f824cb65a096a1054cea40fbea1a63a3cced681be",
+      "files": [
+        {
+          "file": "en-checkout-appointment-off-390.png",
+          "previous": "b9fa4d13e99a292bd338dc3f824cb65a096a1054cea40fbea1a63a3cced681be",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-appointment-on-390.png",
+          "previous": "b9fa4d13e99a292bd338dc3f824cb65a096a1054cea40fbea1a63a3cced681be",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "fd4eb0d7ac5beca33247fc1d26e420a0764c8751c27faece711db6577a838c2c",
+      "files": [
+        {
+          "file": "en-checkout-appointment-off-390-viewport.png",
+          "previous": "fd4eb0d7ac5beca33247fc1d26e420a0764c8751c27faece711db6577a838c2c",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-appointment-on-390-viewport.png",
+          "previous": "fd4eb0d7ac5beca33247fc1d26e420a0764c8751c27faece711db6577a838c2c",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "6483f93fc8e569fe8ac38c076db5558c9f00b467465ebce28678bade8524b344",
+      "files": [
+        {
+          "file": "en-checkout-failure-preview-off-390.png",
+          "previous": "6483f93fc8e569fe8ac38c076db5558c9f00b467465ebce28678bade8524b344",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-failure-preview-on-390.png",
+          "previous": "6483f93fc8e569fe8ac38c076db5558c9f00b467465ebce28678bade8524b344",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    },
+    {
+      "hash": "5e3430b1bb26631023076ea69b24294eec044260a1822e13aab01e7e257f13d3",
+      "files": [
+        {
+          "file": "en-checkout-failure-preview-off-390-viewport.png",
+          "previous": "5e3430b1bb26631023076ea69b24294eec044260a1822e13aab01e7e257f13d3",
+          "changed": false
+        },
+        {
+          "file": "en-checkout-failure-preview-on-390-viewport.png",
+          "previous": "5e3430b1bb26631023076ea69b24294eec044260a1822e13aab01e7e257f13d3",
+          "changed": false
+        }
+      ],
+      "inspection": "Byte-identical to manually reviewed v2 evidence."
+    }
+  ],
+  "errors": [],
+  "successBounds": [
+    {
+      "name": "nl-checkout-success-preview-off-390",
+      "before": [
+        {
+          "text": "Open je stappenplan",
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "viewportWidth": 390,
+          "requiredGutter": 16,
+          "withinGutters": true
+        }
+      ],
+      "after": [
+        {
+          "text": "Open je stappenplan",
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "viewportWidth": 390,
+          "requiredGutter": 16,
+          "withinGutters": true
+        }
+      ]
+    },
+    {
+      "name": "nl-checkout-success-preview-on-390",
+      "before": [
+        {
+          "text": "Open je stappenplan",
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "viewportWidth": 390,
+          "requiredGutter": 16,
+          "withinGutters": true
+        }
+      ],
+      "after": [
+        {
+          "text": "Open je stappenplan",
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "viewportWidth": 390,
+          "requiredGutter": 16,
+          "withinGutters": true
+        }
+      ]
+    },
+    {
+      "name": "en-checkout-success-preview-off-390",
+      "before": [
+        {
+          "text": "Open your action plan",
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "viewportWidth": 390,
+          "requiredGutter": 16,
+          "withinGutters": true
+        }
+      ],
+      "after": [
+        {
+          "text": "Open your action plan",
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "viewportWidth": 390,
+          "requiredGutter": 16,
+          "withinGutters": true
+        }
+      ]
+    },
+    {
+      "name": "en-checkout-success-preview-on-390",
+      "before": [
+        {
+          "text": "Open your action plan",
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "viewportWidth": 390,
+          "requiredGutter": 16,
+          "withinGutters": true
+        }
+      ],
+      "after": [
+        {
+          "text": "Open your action plan",
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "viewportWidth": 390,
+          "requiredGutter": 16,
+          "withinGutters": true
+        }
+      ]
+    }
+  ],
+  "disposition": "PASS: all 72 checkout cases / 108 PNGs covered; 100 byte-identical to reviewed v2; 8 changed files form 4 manually inspected OFF/ON pairs. V01/V02/V03 closed."
+}

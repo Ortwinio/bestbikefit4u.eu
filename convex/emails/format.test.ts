@@ -17,10 +17,11 @@ describe("email locale formatting", () => {
     expect(formatDate(Date.UTC(2026, 1, 5), "nl")).toBe("05-02-2026");
     expect(formatDate(Date.UTC(2026, 1, 5), "en")).toBe("5 Feb 2026");
   });
-  it("uses the literal monthly price and locale-specific decimal separator", () => {
-    expect(formatPrice(9, "nl")).toBe("€9 per maand");
-    expect(formatPrice(9, "en")).toBe("€9 per month");
-    expect(formatPrice(9.5, "nl")).toBe("€9,5 per maand");
-    expect(formatPrice(9.5, "en")).toBe("€9.5 per month");
+  it("formats prices without inventing a billing interval", () => {
+    expect(formatPrice(13.5, "nl")).toBe("€13,50");
+    expect(formatPrice(13.5, "en")).toBe("€13.50");
+    expect(formatPrice(19.5, "nl")).toBe("€19,50");
+    expect(formatPrice(19.5, "en")).toBe("€19.50");
+    expect(formatPrice(5, "nl")).toBe("€5");
   });
 });

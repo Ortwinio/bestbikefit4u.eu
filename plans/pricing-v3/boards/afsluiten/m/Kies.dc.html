@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="nl">
+<head><meta charset="utf-8"><title>Kies je meting · mobiel</title><script src="./support.js"></script></head>
+<body><x-dc><helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#F5F8F3;color:#0F2420;font-family:Figtree,sans-serif}a{color:#0A7263;text-decoration:none}button{cursor:pointer;font-family:inherit}h1,h2{font-family:'Bricolage Grotesque',sans-serif;margin:0}p{margin:0;line-height:1.5}.num{font-family:'DM Mono',monospace;font-weight:500}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #0A7263;outline-offset:3px}
+.review-strip{height:44px;min-height:44px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#EEF3EF;border-bottom:1px dashed #B9CCC6;box-sizing:border-box;font-family:Figtree,sans-serif;flex-shrink:0}.review-label{font-size:12px;font-weight:700;text-transform:uppercase;color:#4A5F5A;flex-shrink:0}.review-scroll{display:flex;align-items:center;gap:4px;overflow-x:auto;min-width:0;height:44px}.review-pill{display:inline-flex;align-items:center;justify-content:center;height:44px;min-height:44px;min-width:44px;flex-shrink:0;padding:0 2px;border:0;background:transparent;font-family:Figtree,sans-serif;font-size:13px;color:#4A5F5A;cursor:pointer}.review-pill span{display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;white-space:nowrap}.review-pill[aria-pressed="true"] span{background:#0F2420;color:#FFFFFF}
+.co-header{height:56px;min-height:56px;display:grid;grid-template-columns:96px minmax(0,1fr) 96px;align-items:center;padding:0 8px;background:#FFFFFF;border-bottom:1px solid #DCE6E1;flex-shrink:0}.co-back{display:inline-flex;align-items:center;gap:6px;min-height:44px;min-width:44px;padding:0 8px;color:#0F2420;font-weight:600;font-size:15px}.co-step{text-align:center;font-size:14px;font-weight:700;color:#0F2420}.co-lock{justify-self:end;display:flex;align-items:center;justify-content:center;width:44px;height:44px;color:#4A5F5A}
+.co-main{flex:1;min-height:0;overflow-y:auto;padding:20px 16px 0;display:flex;flex-direction:column}
+.co-sum{background:#FFFFFF;border:1px solid #DCE6E1;border-radius:20px}.co-sum summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;padding:10px 18px;cursor:pointer;font-weight:700;font-size:16px}.co-sum summary::-webkit-details-marker{display:none}.co-sum[open] .co-chev{transform:rotate(180deg)}.co-sum-body{padding:4px 18px 18px;display:flex;flex-direction:column;gap:14px;border-top:1px solid #DCE6E1;padding-top:16px}.co-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}.co-list li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.45}.co-small{font-size:14px;line-height:1.5;color:#4A5F5A}
+.co-main h1{font-weight:800;font-size:36px;line-height:1.05;letter-spacing:-.03em;margin-top:24px}
+.co-options{display:flex;flex-direction:column;gap:12px;margin-top:20px}.co-option{display:flex;flex-direction:column;gap:6px;width:100%;min-height:44px;text-align:left;padding:18px 20px;border-radius:20px;border:2px solid #DCE6E1;background:#FFFFFF;color:#0F2420;font-size:15px}.co-option[aria-pressed="true"]{border-color:#0F2420;background:#E6F8A8}.co-option-main{padding:22px 22px;background:#0F2420;border-color:#0F2420;color:#FFFFFF}.co-option-main strong{font-size:26px}.co-option-main .co-price{font-size:30px;color:#CFF26A}.co-option-main .co-meta{color:#CFF26A}.co-option-main .co-sub{color:#B9CCC6}.co-option-main[aria-pressed="true"]{background:#0F2420;border-color:#CFF26A;box-shadow:0 0 0 2px #CFF26A}.co-option-fit{border-color:#0A7263}.co-option-fit[aria-pressed="true"]{border-color:#0F2420}.co-option-minor{padding:16px 20px}.co-option-minor strong{font-size:20px}.co-option-minor .co-price{font-size:22px}.co-badge{align-self:flex-start;display:inline-flex;align-items:center;height:26px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:700}.co-badge-lime{background:#CFF26A;color:#0F2420}.co-badge-petrol{background:#0A7263;color:#FFFFFF}.co-option-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.co-radio{width:22px;height:22px;border-radius:50%;border:2px solid #B9CCC6;background:#FFFFFF;flex-shrink:0;margin-left:auto}.co-option[aria-pressed="true"] .co-radio{border:7px solid #0F2420}.co-option-main .co-radio{border-color:#4A5F5A;background:transparent}.co-option-main[aria-pressed="true"] .co-radio{border:7px solid #CFF26A;background:#0F2420}.co-free{display:inline-flex;align-items:center;min-height:44px;font-weight:700;text-decoration:underline;text-underline-offset:3px}.co-option-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.co-option strong{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:22px}.co-price{font-family:'DM Mono',monospace;font-weight:500;font-size:26px}.co-price{white-space:nowrap;flex-shrink:0}.co-option-top strong{min-width:0}.co-meta{font-size:14px;font-weight:700;color:#0A7263}.co-sub{color:#3B4F4A;line-height:1.45}
+.co-legal{margin-top:auto;padding:24px 0 16px;text-align:center;font-size:13px;color:#4A5F5A}.co-legal a{color:#4A5F5A;text-decoration:underline;display:inline-block;min-height:24px}
+.co-foot{position:sticky;bottom:0;height:88px;min-height:88px;padding:16px;background:#FFFFFF;border-top:1px solid #DCE6E1;flex-shrink:0}.co-primary{display:flex;align-items:center;justify-content:center;width:100%;height:56px;border:0;border-radius:999px;background:#0A7263;color:#FFFFFF;font-weight:700;font-size:17px}.co-primary:hover{background:#075A4E}
+</style></helmet>
+<div style="width:390px;height:1040px;display:flex;flex-direction:column;background:#F5F8F3;overflow:hidden">
+<div class="review-strip" aria-label="Ontwerpstaat"><span class="review-label">Ontwerpstaat</span><div class="review-scroll" data-review-scroll="true"><sc-for list="{{states}}" as="item" hint-placeholder-count="3"><button type="button" class="review-pill" aria-pressed="{{item.selected}}" onClick="{{item.pick}}"><span>{{item.label}}</span></button></sc-for></div></div>
+<header class="co-header">
+<a class="co-back" href="../../Pricing.dc.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>Terug</a>
+<div class="co-step">Stap <span class="num">1</span> van <span class="num">3</span></div>
+<span class="co-lock" role="img" aria-label="Veilig betalen via Stripe"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></span>
+</header>
+<main class="co-main">
+<details class="co-sum">
+<summary><span>{{sumName}} · <span class="num">{{sumPrice}}</span></span><svg class="co-chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2420" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary>
+<div class="co-sum-body">
+<sc-if value="{{isSingle}}" hint-placeholder-val="{{true}}"><p class="co-small">voor Canyon Endurace</p></sc-if>
+<p><span class="num" style="font-size:36px">{{sumPrice}}</span> <span class="co-small">incl. btw</span></p>
+<ul class="co-list"><sc-for list="{{benefits}}" as="b" hint-placeholder-count="3"><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A7263" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M5 12l5 5 9-10"></path></svg><span>{{b.text}}</span></li></sc-for></ul>
+<sc-if value="{{isYear}}" hint-placeholder-val="{{true}}"><p class="co-small">Daarna <span class="num">€19,50</span> per jaar. <span class="num">30</span> dagen vooraf een herinnering, altijd online opzegbaar.</p></sc-if>
+<sc-if value="{{isFit}}" hint-placeholder-val="{{false}}"><p class="co-small">De afspraak is eenmalig. Daarna verlengt je abonnement als gewoon jaarabonnement voor <span class="num">€19,50</span> per jaar. <span class="num">30</span> dagen vooraf een herinnering, altijd online opzegbaar.</p></sc-if>
+<p class="co-small" style="font-size:13px">Je gegevens blijven van jou, ook als je stopt.</p>
+</div>
+</details>
+<h1>Kies je meting</h1>
+<div class="co-options" role="group" aria-label="Kies je meting">
+<button type="button" class="co-option co-option-main" aria-pressed="{{annualPressed}}" onClick="{{pickAnnual}}"><span class="co-option-head"><span class="co-badge co-badge-lime">Favoriete keuze</span><span class="co-radio" aria-hidden="true"></span></span><span class="co-option-top"><strong>Jaarabonnement</strong><span class="co-price">{{annualPrice}}</span></span><span class="co-meta">{{annualMeta}}</span><span class="co-sub">{{annualSub}}</span></button>
+<button type="button" class="co-option co-option-minor" aria-pressed="{{singlePressed}}" onClick="{{pickSingle}}"><span class="co-option-top"><strong>Losse meting</strong><span class="co-price">€13,50</span></span><span class="co-meta"><span class="num">1</span> fiets, <span class="num">3</span> maanden</span><span class="co-sub">Volledig stappenplan voor je Canyon Endurace.</span></button>
+<button type="button" class="co-option co-option-fit" aria-pressed="{{fitPressed}}" onClick="{{pickFit}}"><span class="co-option-head"><span class="co-badge co-badge-petrol">Met persoonlijke afspraak</span><span class="co-radio" aria-hidden="true"></span></span><span class="co-option-top"><strong>Jaarabonnement + persoonlijke bikefit</strong><span class="co-price">€234,50</span></span><span class="co-meta">eerste jaar, daarna <span class="num">€19,50</span> per jaar</span><span class="co-sub">Alles van het jaarabonnement plus een afspraak bij een fitter in [LOCATIE].</span></button>
+</div>
+<p class="co-small" style="margin-top:12px">Eerst gratis beginnen? <a class="co-free" href="../../Login.dc.html">Maak een account</a>. Je kernwaarden blijven gratis.</p>
+<p class="co-legal"><a href="../../Legal.dc.html">Voorwaarden</a> · <a href="../../Legal.dc.html">Privacy</a> · Hulp nodig? <a href="../../Contact.dc.html">info@bestbikefit4u.eu</a></p>
+</main>
+<div class="co-foot"><a class="co-primary" href="../Account.dc.html">Doorgaan</a></div>
+</div></x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1040}}'>
+class Component extends DCLogic {
+constructor(props){super(props);this.state={view:'pricing',plan:'annual'};}
+renderVals(){
+const view=this.state.view;
+const instap=view==='instap';
+const plan=this.state.plan;
+const defaults={report:'single',pricing:'annual',instap:'annual',fit:'fit'};
+const yearBenefits=['12 maanden optimaliseren','Al je fietsen afgesteld en vergeleken',instap?'1 losse meting om weg te geven':'2 losse metingen om weg te geven'];
+const singleBenefits=['Volledig stappenplan in de juiste volgorde','Controleplan en bandenspanning voor deze fiets','3 maanden opnieuw berekenen na elke aanpassing'];
+const fitBenefits=['Alles van het jaarabonnement','Persoonlijke bikefit-afspraak bij een fitter in [LOCATIE]','Je fitter start met jouw profiel en metingen'];
+const annualPrice=instap?'€13,50':'€24,50';
+const sum={single:['Losse meting','€13,50',singleBenefits],annual:['Jaarabonnement',annualPrice,yearBenefits],fit:['Jaarabonnement + persoonlijke bikefit','€234,50',fitBenefits]}[plan]||['Jaarabonnement',annualPrice,yearBenefits];
+return {
+states:[['report','Vanuit rapport'],['pricing','Vanuit prijzen'],['instap','Instap na losse meting'],['fit','Persoonlijke bikefit']].map(([id,label])=>({id,label,selected:id===view,pick:()=>this.setState({view:id,plan:defaults[id]})})),
+singlePressed:plan==='single',annualPressed:plan==='annual',fitPressed:plan==='fit',
+pickSingle:()=>this.setState({plan:'single'}),pickAnnual:()=>this.setState({plan:'annual'}),pickFit:()=>this.setState({plan:'fit'}),
+annualPrice,
+annualMeta:instap?'eerste jaar, daarna €19,50':'alle fietsen, 12 maanden',
+annualSub:instap?'Voor hetzelfde bedrag al je fietsen een jaar, plus 1 losse meting om weg te geven.':'Al je fietsen afstellen en vergelijken, 12 maanden optimaliseren, plus 2 losse metingen om weg te geven.',
+isSingle:plan==='single',isYear:plan==='annual',isFit:plan==='fit',
+sumName:sum[0],
+sumPrice:sum[1],
+benefits:sum[2].map(text=>({text}))
+};
+}
+}
+</script></body></html>

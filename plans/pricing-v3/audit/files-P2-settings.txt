@@ -1,0 +1,10 @@
+src/app/(dashboard)/settings/page.tsx
+src/app/(dashboard)/settings/page.test.tsx
+src/components/account/SubscriptionOverview.tsx
+src/components/account/SubscriptionOverviewConnected.tsx
+src/components/account/SubscriptionOverview.test.tsx
+src/i18n/account/subscription.ts
+messages/B-settings-contract.md
+plans/pricing-v3/messages/B-settings-api-followup.md
+plans/pricing-v3/audit/P2-settings-notes.md
+plans/pricing-v3/audit/files-P2-settings.txt

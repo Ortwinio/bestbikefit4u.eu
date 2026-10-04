@@ -4,6 +4,7 @@ import { mutation } from "../_generated/server";
 import type { Doc } from "../_generated/dataModel";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
 import { recordProfileObservations } from "../profiles/provenance";
+import { assertPaidBikeWrite } from "../bikes/profile";
 import { equalProfileObservationValues, PROFILE_OBSERVATION_FIELDS } from "../../shared/profileObservationFields";
 import { valueAt } from "../advice/provenance";
 import { activeTires } from "./wheels";
@@ -71,6 +72,14 @@ export const applyChanges = mutation({
     if (changed.some(change => change.field === "ftpWatts")
       && !planned.some(change => change.field === "ftpMethod")) {
       throw new Error("FTP_METHOD_REQUIRED");
+    }
+    if (bike) {
+      for (const change of changed.filter(item => item.source === "bike" && !item.field.startsWith("tires."))) {
+        const [group, key] = change.field.split(".");
+        const updates = key ? { [group]: { ...(valueAt(bike, group) as object), [key]: change.value } }
+          : { [group]: change.value };
+        await assertPaidBikeWrite(ctx, bike, updates);
+      }
     }
     const now = Date.now();
     const profileUpdates: Record<string, unknown> = {};

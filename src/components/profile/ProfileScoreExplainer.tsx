@@ -2,11 +2,16 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { getProfileScoreCopy } from "@/i18n/account/profileScore";
 import { withLocalePrefix } from "@/i18n/navigation";
-import { BIKE_RULES, RIDER_RULES, type ScoreRule } from "../../../shared/profileScore";
+import { BASE_BIKE_RULES, BASE_RIDER_RULES, BIKE_REFINEMENT_RULES, BIKE_RULES, REFINEMENT_RULES, RIDER_RULES, type ScoreRule } from "../../../shared/profileScore";
+import { isPaidAccessEnforced } from "../../../shared/pricing/flags";
+import { getPricingAccessCopy, getRefinementScoreLabel } from "@/i18n/account/pricingAccess";
 import { ProfileStrengthRings } from "./ProfileStrengthRings";
 
 export function ProfileScoreExplainer({ locale }: { locale: Locale }) {
   const copy = getProfileScoreCopy(locale);
+  const pricing = getPricingAccessCopy(locale);
+  const enforced = isPaidAccessEnforced();
+  const weightLabel = (weight: number) => weight.toLocaleString(locale, { maximumFractionDigits: 1 });
   const panel = "rounded-3xl border border-border bg-card p-5 sm:p-8";
   const heading = "font-display text-2xl font-bold tracking-tight";
   function weights(title: string, rules: readonly ScoreRule[]) {
@@ -18,12 +23,12 @@ export function ProfileScoreExplainer({ locale }: { locale: Locale }) {
           return <div key={group}>
             <h3 className="flex justify-between gap-4 font-semibold">
               <span>{copy.groups[group as keyof typeof copy.groups]}</span>
-              <span className="font-mono">{members.reduce((sum, rule) => sum + rule.weight, 0)}</span>
+              <span className="font-mono">{weightLabel(members.reduce((sum, rule) => sum + rule.weight, 0))}</span>
             </h3>
             <dl className="mt-2 divide-y divide-border">
               {members.map(rule => <div className="flex justify-between gap-4 py-2 text-sm" key={rule.key}>
-                <dt className="min-w-0 text-muted-foreground">{copy.fields[rule.key as keyof typeof copy.fields]}</dt>
-                <dd className="shrink-0 font-mono">{rule.weight}</dd>
+                <dt className="min-w-0 text-muted-foreground">{copy.fields[rule.key as keyof typeof copy.fields] ?? getRefinementScoreLabel(locale, rule.key) ?? pricing.bikeFields[rule.key as keyof typeof pricing.bikeFields]}</dt>
+                <dd className="shrink-0 font-mono">{weightLabel(rule.weight)}</dd>
               </div>)}
             </dl>
           </div>;
@@ -57,6 +62,7 @@ export function ProfileScoreExplainer({ locale }: { locale: Locale }) {
       </figure>
     </header>
     <p className="rounded-2xl border border-border bg-muted p-5 font-medium leading-relaxed">{copy.disclaimer}</p>
+    {enforced && <p className="rounded-2xl border border-border p-5">{pricing.cap}</p>}
     <div className="grid gap-6 lg:grid-cols-2">
       <section className={panel}><h2 className={heading}>{copy.completenessTitle}</h2>
         <p className="mt-4 leading-relaxed text-muted-foreground">{copy.completenessText}</p></section>
@@ -87,7 +93,8 @@ export function ProfileScoreExplainer({ locale }: { locale: Locale }) {
       <p>{copy.warning}</p><p>{copy.legacy}</p>
     </div>
     <div className="grid items-start gap-6 lg:grid-cols-2">
-      {weights(copy.riderWeights, RIDER_RULES)}{weights(copy.bikeWeights, BIKE_RULES)}
+      {weights(copy.riderWeights, enforced ? [...BASE_RIDER_RULES, ...REFINEMENT_RULES] : RIDER_RULES)}
+      {weights(copy.bikeWeights, enforced ? [...BASE_BIKE_RULES, ...BIKE_REFINEMENT_RULES] : BIKE_RULES)}
     </div>
     {factors(copy.bikeQualityTitle, copy.bikeQualityRows)}
     <p className="text-sm leading-relaxed text-muted-foreground">{copy.bikeNote}</p>

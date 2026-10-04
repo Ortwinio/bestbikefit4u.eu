@@ -7,6 +7,19 @@ import { ProfileStrengthRings } from "./ProfileStrengthRings";
 
 afterEach(cleanup);
 
+it.each(["nl", "en"] as const)("marks the free completeness cap without changing the score or reliability in %s", locale => {
+  const view = render(<ProfileStrengthRings locale={locale} capped score={{ completeness: 80, reliability: 57 }} />);
+  const meters = screen.getAllByRole("meter");
+  expect(meters[0].getAttribute("aria-valuenow")).toBe("80");
+  expect(meters[0].getAttribute("aria-valuetext")).toContain(locale === "nl" ? "maximaal 80" : "up to 80");
+  expect(meters[1].getAttribute("aria-valuenow")).toBe("57");
+  expect(meters[1].getAttribute("aria-valuetext")).not.toContain("80");
+  expect(view.container.querySelectorAll('line[transform="rotate(288 60 60)"]')).toHaveLength(1);
+  view.rerender(<ProfileStrengthRings locale={locale} score={{ completeness: 100, reliability: 91 }} />);
+  expect(view.container.querySelector("line")).toBeNull();
+  expect(screen.getAllByRole("meter")[0].getAttribute("aria-valuenow")).toBe("100");
+});
+
 it("retains two labelled meters in the compact mobile presentation", () => {
   render(<ProfileStrengthRings locale="nl" compact size="sm" score={{ completeness: 68, reliability: 57 }} />);
   expect(screen.getAllByRole("meter")).toHaveLength(2);

@@ -2,6 +2,7 @@ import { query } from "../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
+import { visibleRecommendation } from "../recommendations/access";
 
 export const getById = query({
   args: { sessionId: v.id("fitSessions") },
@@ -64,7 +65,8 @@ export const getSessionsWithRecommendationsByBike = query({
       .collect();
 
     const recommendationBySessionId = new Map(
-      recommendations.map((recommendation) => [recommendation.sessionId, recommendation])
+      await Promise.all(recommendations.map(async recommendation =>
+        [recommendation.sessionId, await visibleRecommendation(ctx, recommendation)] as const))
     );
 
     return sessions
@@ -98,7 +100,8 @@ export const getAllSessionsWithBikes = query({
 
     const bikeById = new Map(bikes.map((bike) => [bike._id, bike]));
     const recommendationBySessionId = new Map(
-      recommendations.map((recommendation) => [recommendation.sessionId, recommendation])
+      await Promise.all(recommendations.map(async recommendation =>
+        [recommendation.sessionId, await visibleRecommendation(ctx, recommendation)] as const))
     );
 
     // Batch-load questionnaire responses for all sessions in parallel

@@ -1,10 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { LEGACY_SITE_HOSTS } from "../../shared/brand";
-import { getStripeSiteUrl } from "./stripeServer";
+import { LEGACY_SITE_HOSTS, resolveSiteOrigin } from "../../shared/brand";
 
 afterEach(() => vi.unstubAllEnvs());
 
-describe("Stripe return origin", () => {
+describe("shared server origin used by billing", () => {
   it.each([
     ["", "https://bikefitboost.com"],
     ["invalid", "https://bikefitboost.com"],
@@ -15,10 +14,10 @@ describe("Stripe return origin", () => {
     ["http://localhost:3000", "http://localhost:3000"],
     ...LEGACY_SITE_HOSTS.map((host) => [`https://${host}`, "https://bikefitboost.com"]),
     [`https://nested.${LEGACY_SITE_HOSTS[0]}`, "https://bikefitboost.com"],
-  ])("normalizes %s to %s without trusting a request host", (origin, expected) => {
+  ])("normalizes configured %s to %s", (origin, expected) => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", "");
     vi.stubEnv("SITE_URL", origin);
-    expect(getStripeSiteUrl("https://untrusted.example")).toBe(expected);
+    expect(resolveSiteOrigin()).toBe(expected);
   });
 });
