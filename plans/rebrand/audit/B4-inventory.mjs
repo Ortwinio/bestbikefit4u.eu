@@ -1,6 +1,12 @@
 import { readFile, access } from "node:fs/promises";
 import path from "node:path";
 
+function stripTags(value) {
+  let previous;
+  do { previous = value; value = value.replace(/<[^>]*>/g, ""); } while (value !== previous);
+  return value.replace(/[<>]/g, "");
+}
+
 const sourceRoot = "/Users/ortwinverreck/Developer/bestbikefit4u/plans/redesign-canvas";
 const canvas = JSON.parse(await readFile(`${sourceRoot}/canvas-bfb/project/canvas.json`, "utf8"));
 const publicRoutes = {
@@ -109,7 +115,7 @@ for (const [file, board] of Object.entries(canvas.boards)) {
     const html = await readFile(record.reference, "utf8");
     record.referenceAvailable = true;
     record.boardHeadings = [...html.matchAll(/<h[12][^>]*>([\s\S]*?)<\/h[12]>/g)]
-      .map(match => match[1].replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim()).slice(0, 8);
+      .map(match => stripTags(match[1]).replace(/\s+/g, " ").trim()).slice(0, 8);
   } catch {}
   if (record.source) {
     try { await access(record.source); record.sourceExists = true; }

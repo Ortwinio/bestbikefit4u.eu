@@ -1,4 +1,4 @@
-import { request } from "node:https";
+import { request } from "node:http";
 import { writeFile } from "node:fs/promises";
 import { SITE_ORIGIN, LEGACY_SITE_HOSTS } from "../../../shared/brand.ts";
 
@@ -7,7 +7,7 @@ const records = [];
 function fetchLocal(path, host = new URL(SITE_ORIGIN).host) {
   return new Promise((resolve, reject) => {
     const outgoing = request({ hostname: "127.0.0.1", port, path, method: "GET",
-      rejectUnauthorized: false, headers: { host } }, (response) => {
+      headers: { host } }, (response) => {
       const chunks = [];
       response.on("data", (chunk) => chunks.push(chunk));
       response.on("end", () => resolve({ status: response.statusCode, headers: response.headers,
