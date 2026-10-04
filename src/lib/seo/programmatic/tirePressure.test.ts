@@ -7,13 +7,13 @@ describe("programmatic tire pressure alternates", () => {
     const dutch = buildPressureAlternates(75, "road-bike", "nl");
 
     expect(english.languages["x-default"]).toBe(
-      "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+      "https://www.bikefitboost.com/en/tire-pressure/75kg-road-bike"
     );
     expect(dutch.languages["x-default"]).toBe(
-      "https://bestbikefit4u.eu/en/tire-pressure/75kg-road-bike"
+      "https://www.bikefitboost.com/en/tire-pressure/75kg-road-bike"
     );
     expect(dutch.canonical).toBe(
-      "https://bestbikefit4u.eu/nl/bandenspanning/75kg-racefiets"
+      "https://www.bikefitboost.com/nl/bandenspanning/75kg-racefiets"
     );
   });
 });

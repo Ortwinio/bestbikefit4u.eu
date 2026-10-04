@@ -75,7 +75,7 @@ export const fitPassCopy: Record<
 > = {
   en: {
     metadata: {
-      title: "Fit Pass — Full report, unlimited sessions | BestBikeFit4U",
+      title: "Fit Pass — Full report, unlimited sessions | BikeFitBoost",
       description:
         "Fit Pass gives you a downloadable PDF with all your bike fit values, unlimited sessions, and multiple bike profiles. EUR9/month.",
     },
@@ -113,7 +113,7 @@ export const fitPassCopy: Record<
     faqs: [
       {
         q: "What is Fit Pass?",
-        a: "Fit Pass is the paid tier for BestBikeFit4U, also called Pro. It unlocks PDF reports, unlimited fit sessions, and unlimited bike profiles.",
+        a: "Fit Pass is the paid tier for BikeFitBoost, also called Pro. It unlocks PDF reports, unlimited fit sessions, and unlimited bike profiles.",
       },
       {
         q: "Can I cancel?",
@@ -129,7 +129,7 @@ export const fitPassCopy: Record<
   },
   nl: {
     metadata: {
-      title: "Fit Pass — Volledig rapport, onbeperkte sessies | BestBikeFit4U",
+      title: "Fit Pass — Volledig rapport, onbeperkte sessies | BikeFitBoost",
       description:
         "Met Fit Pass krijg je een downloadbaar PDF met alle bikefitting-waarden, onbeperkte sessies en meerdere fietsprofielen. EUR9/maand.",
     },
@@ -167,7 +167,7 @@ export const fitPassCopy: Record<
     faqs: [
       {
         q: "Wat is Fit Pass?",
-        a: "Fit Pass is het betaalde abonnement van BestBikeFit4U, ook wel Pro genoemd. Het geeft toegang tot PDF-rapporten, onbeperkte fit-sessies en onbeperkte fietsprofielen.",
+        a: "Fit Pass is het betaalde abonnement van BikeFitBoost, ook wel Pro genoemd. Het geeft toegang tot PDF-rapporten, onbeperkte fit-sessies en onbeperkte fietsprofielen.",
       },
       {
         q: "Kan ik opzeggen?",

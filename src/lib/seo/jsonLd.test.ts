@@ -19,8 +19,8 @@ describe("seo jsonLd helpers", () => {
 
   it("builds breadcrumb schema with ordered items", () => {
     const schema = buildBreadcrumbListSchema([
-      { name: "Home", item: "https://bestbikefit4u.eu/en" },
-      { name: "Guides", item: "https://bestbikefit4u.eu/en/guides" },
+      { name: "Home", item: "https://www.bikefitboost.com/en" },
+      { name: "Guides", item: "https://www.bikefitboost.com/en/guides" },
     ]);
 
     expect(schema["@type"]).toBe("BreadcrumbList");
@@ -29,7 +29,7 @@ describe("seo jsonLd helpers", () => {
   });
 
   it.each(["nl", "en"] as const)("builds calculator WebPage and canonical breadcrumbs in %s", (locale) => {
-    const url = `https://bestbikefit4u.eu/${locale}/calculators/saddle-height`;
+    const url = `https://www.bikefitboost.com/${locale}/calculators/saddle-height`;
     const schemas = buildCalculatorPageSchemas({
       name: "Saddle height",
       description: "Calculate your saddle height.",
@@ -47,7 +47,7 @@ describe("seo jsonLd helpers", () => {
         inLanguage: locale,
       },
       buildBreadcrumbListSchema([
-        { name: "Home", item: `https://bestbikefit4u.eu/${locale}` },
+        { name: "Home", item: `https://www.bikefitboost.com/${locale}` },
         { name: "Saddle height", item: url },
       ]),
     ]);
@@ -58,7 +58,7 @@ describe("seo jsonLd helpers", () => {
     const schemas = buildCalculatorPageSchemas({
       name: "Bike fit",
       description: "Calculate your bike fit.",
-      url: "https://bestbikefit4u.eu/en/calculators/bike-fit",
+      url: "https://www.bikefitboost.com/en/calculators/bike-fit",
       locale: "en",
       breadcrumb: false,
     });
@@ -73,14 +73,14 @@ describe("confirmed author identity", () => {
   it.each(["nl", "en"] as const)("links the real author page in %s without invented profiles", locale => {
     const person = buildPersonSchema(locale);
     expect(person).toMatchObject({ "@type": "Person", name: "Ortwin Verreck", sameAs: [],
-      url: `https://bestbikefit4u.eu/${locale}/authors/ortwin-verreck` });
+      url: `https://www.bikefitboost.com/${locale}/authors/ortwin-verreck` });
     expect(person).not.toHaveProperty("jobTitle");
     expect(person).not.toHaveProperty("description");
     const organization = buildOrganizationSchema();
-    expect(organization).toMatchObject({ name: "BestBikeFit4U", url: "https://bestbikefit4u.eu", sameAs: [],
-      logo: "https://bestbikefit4u.eu/brand/logo/logo-horizontaal.svg" });
+    expect(organization).toMatchObject({ name: "BikeFitBoost", url: "https://www.bikefitboost.com", sameAs: [],
+      logo: "https://www.bikefitboost.com/brand/svg/logo-horizontaal.svg" });
     const article = buildArticleSchema({ headline: "Guide", description: "Guide content",
-      url: "https://bestbikefit4u.eu/en/guides/example", author: person, dateModified: "2026-10-01" });
+      url: "https://www.bikefitboost.com/en/guides/example", author: person, dateModified: "2026-10-01" });
     expect(article.author).toEqual(person);
     expect(article.dateModified).toBe("2026-10-01");
     expect(article).not.toHaveProperty("reviewedBy");

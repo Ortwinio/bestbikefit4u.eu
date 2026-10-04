@@ -23,7 +23,7 @@ function makeEntry(overrides: Partial<GuideBacklogEntry>): GuideBacklogEntry {
     path: "/guides/example",
     slug: "example",
     pageTitle: "Example guide",
-    metaTitle: "Example guide | BestBikeFit4U",
+    metaTitle: "Example guide | BikeFitBoost",
     h1: "Example guide",
     pageBrief: "Example guide brief.",
     primaryCtaLabel: "Open calculator",

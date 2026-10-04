@@ -18,9 +18,9 @@ describe("email layout", () => {
     expect(document.body.firstElementChild?.tagName).toBe("SPAN");
     expect(document.body.firstElementChild?.textContent).toContain(base.preheader);
     expect(document.querySelector('meta[name="color-scheme"]')?.getAttribute("content")).toBe("light");
-    const logo = document.querySelector('img[alt="BestBikeFit4U"]');
-    expect(logo?.getAttribute("src")).toBe("https://bestbikefit4u.eu/email/logo.png");
-    expect(logo?.getAttribute("width")).toBe("179");
+    const logo = document.querySelector('img[alt="BikeFitBoost"]');
+    expect(logo?.getAttribute("src")).toBe("https://www.bikefitboost.com/brand/png/logo-horizontaal-960.png");
+    expect(logo?.getAttribute("width")).toBe("172");
     expect(logo?.getAttribute("height")).toBe("30");
     expect(document.body.textContent).toContain("Fijne rit,");
     expect(document.body.textContent).not.toContain("Afmelden");
@@ -29,8 +29,8 @@ describe("email layout", () => {
 
   it.each([ ["nl", "Afmelden", "E-mailvoorkeuren"], ["en", "Unsubscribe", "Email preferences"] ] as const)(
     "localizes optional %s preference links", (locale, unsubscribe, preferences) => {
-      const html = renderLayout({ ...base, locale, unsubscribeUrl: "https://bestbikefit4u.eu/unsubscribe?t=1&u=2",
-        preferencesUrl: "https://bestbikefit4u.eu/preferences" });
+      const html = renderLayout({ ...base, locale, unsubscribeUrl: "https://www.bikefitboost.com/unsubscribe?t=1&u=2",
+        preferencesUrl: "https://www.bikefitboost.com/preferences" });
       expect(html).toContain(unsubscribe);
       expect(html).toContain(preferences);
       expect(html).toContain("?t=1&amp;u=2");
@@ -44,7 +44,7 @@ describe("email layout", () => {
       valueTiles([{ label: input, value: input }]), valueRows([{ label: input, value: input }]),
       benefits([{ title: input, text: input }]), numberedTips([{ title: input, text: input }]),
       tipBlock({ title: input, text: input }), codeBlock(input), illustration("measuring-kit.png", input),
-      primaryButton("https://bestbikefit4u.eu/fit", input),
+      primaryButton("https://www.bikefitboost.com/fit", input),
     ];
     for (const block of blocks) {
       expect(block).not.toContain(input);
@@ -60,7 +60,7 @@ describe("email layout", () => {
     const html = renderLayout({ ...base, content: hero({ eyebrow: "FIT", heading: "Klaar" })
       + valueTiles([{ label: "Zadel", value: "754", unit: "mm" }])
       + chips(["Je afstelwaarden", "Je bandenspanning", "Je stappenplan"])
-      + primaryButton("https://bestbikefit4u.eu/fit", "Bekijk mijn stappenplan") });
+      + primaryButton("https://www.bikefitboost.com/fit", "Bekijk mijn stappenplan") });
     expect(html).not.toMatch(/display\s*:\s*(?:flex|grid)/i);
     expect(html).toContain('role="presentation"');
     expect(html).toContain(".email-card{padding:24px!important}");

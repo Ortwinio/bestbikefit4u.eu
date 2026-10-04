@@ -36,10 +36,10 @@ function getContent(locale: Locale): ContactCopy {
   if (locale === "en") {
     return {
       metadata: {
-        title: "Contact Us - BestBikeFit4U",
+        title: "Contact Us - BikeFitBoost",
         description:
-    "Get in touch with the BestBikeFit4U team. We are here to help with your bike fitting questions and support needs.",
-        keywords: ["contact BestBikeFit4U", "bike fit support", "cycling help"],
+    "Get in touch with the BikeFitBoost team. We are here to help with your bike fitting questions and support needs.",
+        keywords: ["contact BikeFitBoost", "bike fit support", "cycling help"],
       },
       title: "Contact Us",
       subtitle: "Have a question or need help? We'd love to hear from you.",
@@ -59,10 +59,10 @@ function getContent(locale: Locale): ContactCopy {
 
   return {
     metadata: {
-      title: "Contact - BestBikeFit4U",
+      title: "Contact - BikeFitBoost",
       description:
-        "Neem contact op met het BestBikeFit4U-team. We helpen je graag met vragen over bike fitting en support.",
-      keywords: ["contact BestBikeFit4U", "bike fit support", "fiets hulp"],
+        "Neem contact op met het BikeFitBoost-team. We helpen je graag met vragen over bike fitting en support.",
+      keywords: ["contact BikeFitBoost", "bike fit support", "fiets hulp"],
     },
     title: "Contact",
     subtitle: "Heb je een vraag of hulp nodig? We horen graag van je.",

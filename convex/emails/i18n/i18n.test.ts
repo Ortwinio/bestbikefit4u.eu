@@ -29,8 +29,8 @@ describe("email dictionaries", () => {
     }
   });
   it("preserves fixed subjects, preheaders and numeric labels", () => {
-    expect(nl.loginCode.subject).toBe("{code} is je BestBikeFit4U-inlogcode");
-    expect(en.loginCode.subject).toBe("{code} is your BestBikeFit4U login code");
+    expect(nl.loginCode.subject).toBe("{code} is je BikeFitBoost-inlogcode");
+    expect(en.loginCode.subject).toBe("{code} is your BikeFitBoost login code");
     expect(nl.upgradeNudge.preheader).toBe("Pro: €9 per maand, maandelijks opzegbaar.");
     expect(en.upgradeNudge.preheader).toBe("Pro: €9 per month, cancel any month.");
     expect(nl.fitReport.geometryHeading).toBe("Framegeometrie");

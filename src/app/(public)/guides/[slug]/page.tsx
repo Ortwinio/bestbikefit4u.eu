@@ -1,3 +1,4 @@
+import { currentSiteUrl } from "@/lib/seo/siteUrl";
 import { getGuideUpdatedDate } from "@/config/authorship";
 import { GuideAttribution } from "@/components/guides/GuideAttribution";
 import { socialImage } from "@/lib/seo/social-image";
@@ -224,7 +225,7 @@ export async function generateMetadata({
 
   const { entry, dbGuide } = guide;
   const alternates = buildLocaleAlternates(entry.path, locale);
-  const canonical = dbGuide?.canonicalUrl ?? alternates.canonical;
+  const canonical = currentSiteUrl(dbGuide?.canonicalUrl ?? alternates.canonical);
   const description = dbGuide?.metaDescription?.[locale] ?? entry.pageBrief;
   // Guide keywords currently come from the fallback guide content source.
   // We keep current precedence for title/description/canonical/OG metadata and
@@ -345,9 +346,9 @@ export default async function GuidePage({
             inLanguage: locale,
             author: buildPersonSchema(locale),
             dateModified: getGuideUpdatedDate(dbGuide?.lastUpdatedAt),
-            image: dbGuide?.heroImagePublicPath
+            image: currentSiteUrl(dbGuide?.heroImagePublicPath
               ? new URL(dbGuide.heroImagePublicPath, BRAND.siteUrl).toString()
-              : dbGuide?.ogImageUrl,
+              : dbGuide?.ogImageUrl),
           }),
           ...(faqs.length > 0 ? [buildFaqPageSchema(faqs)] : []),
           buildBreadcrumbListSchema([

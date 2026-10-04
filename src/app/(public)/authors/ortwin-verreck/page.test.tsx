@@ -18,19 +18,19 @@ describe("confirmed author page", () => {
     locale = language;
     const { container } = render(await AuthorPage());
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(AUTHORSHIP.name);
-    expect(screen.getByRole("link", { name: "BestBikeFit4U" }).getAttribute("href")).toBe(`/${locale}`);
+    expect(screen.getByRole("link", { name: "BikeFitBoost" }).getAttribute("href")).toBe(`/${locale}`);
     const schema = JSON.parse(container.querySelector('script[type="application/ld+json"]')!.textContent!);
     expect(schema).toMatchObject({ "@type": "Person", name: "Ortwin Verreck", sameAs: [],
-      url: `https://bestbikefit4u.eu/${locale}/authors/ortwin-verreck` });
+      url: `https://www.bikefitboost.com/${locale}/authors/ortwin-verreck` });
     for (const unsupported of ["jobTitle", "description", "award", "hasCredential", "reviewedBy"]) {
       expect(schema).not.toHaveProperty(unsupported);
     }
     const metadata = await generateMetadata();
     expect(metadata.alternates?.canonical).toBe(schema.url);
-    expect(metadata.title).toBe("Ortwin Verreck | BestBikeFit4U");
+    expect(metadata.title).toBe("Ortwin Verreck | BikeFitBoost");
     expect(metadata.alternates?.languages).toMatchObject({
-      nl: "https://bestbikefit4u.eu/nl/authors/ortwin-verreck",
-      en: "https://bestbikefit4u.eu/en/authors/ortwin-verreck",
+      nl: "https://www.bikefitboost.com/nl/authors/ortwin-verreck",
+      en: "https://www.bikefitboost.com/en/authors/ortwin-verreck",
     });
     expect(metadata.openGraph).toMatchObject({ url: schema.url, type: "profile" });
   });

@@ -96,7 +96,7 @@ export function FitReportActionGroup({
       const objectUrl = await fetchPdfObjectUrl();
       const anchor = document.createElement("a");
       anchor.href = objectUrl;
-      anchor.download = `bestbikefit4u-report-${sessionId}-${locale}.pdf`;
+      anchor.download = `bikefitboost-report-${sessionId}-${locale}.pdf`;
       document.body.appendChild(anchor);
       anchor.click();
       anchor.remove();

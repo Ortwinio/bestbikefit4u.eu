@@ -4,7 +4,7 @@ export const road = {
   illustration: "30-racefiets-afstellen",
   nl: {
     title: "Racefiets afstellen: je drie contactpunten",
-    metaTitle: "Racefiets afstellen: contactpunten | BestBikeFit4U",
+    metaTitle: "Racefiets afstellen: contactpunten | BikeFitBoost",
     metaDescription: "Je racefiets afstellen begint bij zadel, pedalen en remgrepen. Leer je houding controleren, maten vastleggen en één kleine wijziging rustig testen.",
     keyword: "racefiets afstellen",
     relatedKeywords: ["zithouding racefiets", "zadel en stuur", "remgrepen bereiken"],
@@ -89,7 +89,7 @@ Bewaar een duidelijke meting van je uitgangspositie en meet opnieuw na een wijzi
   },
   en: {
     title: "Road bike fit: your three contact points",
-    metaTitle: "Road bike fit: contact points | BestBikeFit4U",
+    metaTitle: "Road bike fit: contact points | BikeFitBoost",
     metaDescription: "Road bike fit starts with your saddle, pedals and brake hoods. Learn to check your position, record measurements and test one small adjustment at a time.",
     keyword: "road bike fit",
     relatedKeywords: ["road cycling position", "saddle and handlebars", "brake hood reach"],

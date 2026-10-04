@@ -31,6 +31,7 @@ export function LoginPresentation({
   const logo = (
     <BrandLogo
       href={withLocalePrefix("/", locale)}
+      asset="stacked"
       className="flex min-h-11 w-60 max-w-full items-center rounded-xl bg-background p-2 focus-visible:focus-ring"
       priority
     />

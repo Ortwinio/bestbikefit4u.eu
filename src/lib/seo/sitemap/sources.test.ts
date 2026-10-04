@@ -129,10 +129,10 @@ describe("sitemap sources", () => {
     );
 
     expect(englishNode?.alternates.find((item) => item.hreflang === "x-default")?.href).toBe(
-      "https://bestbikefit4u.eu/en/tire-pressure/road-bike"
+      "https://www.bikefitboost.com/en/tire-pressure/road-bike"
     );
     expect(dutchNode?.alternates.find((item) => item.hreflang === "x-default")?.href).toBe(
-      "https://bestbikefit4u.eu/en/tire-pressure/road-bike"
+      "https://www.bikefitboost.com/en/tire-pressure/road-bike"
     );
   });
 });

@@ -4,7 +4,7 @@ export const hydration = {
   illustration: "39-zweetverlies-meten",
   nl: {
     title: "Zweetverlies meten fietsen",
-    metaTitle: "Zweetverlies meten fietsen | BestBikeFit4U",
+    metaTitle: "Zweetverlies meten fietsen | BikeFitBoost",
     metaDescription:
       "Je zweetverlies meten bij het fietsen? Leg gewicht, drinken en ritduur vast. Leer de schatting gebruiken zonder er een verplicht drinkschema van te maken.",
     keyword: "zweetverlies meten fietsen",
@@ -126,7 +126,7 @@ Houd vochtplanning en natriumadvies uit elkaar. Vraag een sportdiëtist om begel
   },
   en: {
     title: "Cycling sweat rate",
-    metaTitle: "Cycling sweat rate | BestBikeFit4U",
+    metaTitle: "Cycling sweat rate | BikeFitBoost",
     metaDescription:
       "Measure your cycling sweat rate? Record mass, drinks and ride duration. Learn to use the estimate without turning it into a compulsory drinking target.",
     keyword: "cycling sweat rate",

@@ -6,7 +6,7 @@ import { pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 
 const root = process.cwd();
-const output = resolve(root, "plans/emails-bilingual/renders");
+const output = resolve(root, process.env.EMAIL_PREVIEW_OUTPUT || "plans/rebrand/renders/emails");
 await mkdir(output, { recursive: true });
 await writeFile(join(output, ".gitignore"), "*\n!.gitignore\n");
 const temp = await mkdtemp(join(tmpdir(), "bbf-email-previews-"));
@@ -31,7 +31,7 @@ try {
   // Preview hosted assets directly from this worktree. Never sends mail or requests remote resources.
   await page.route("**/*", async (route) => {
     const url = new URL(route.request().url());
-    if (url.origin === "https://bestbikefit4u.eu" && /^\/email\/[a-z0-9-]+\.png$/.test(url.pathname)) {
+    if (/^\/(?:email\/[a-z0-9-]+|brand\/png\/logo-horizontaal-960)\.png$/.test(url.pathname)) {
       await route.fulfill({ body: await readFile(join(root, "public", url.pathname)), contentType: "image/png" });
     } else {
       await route.abort();

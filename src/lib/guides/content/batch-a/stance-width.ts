@@ -6,7 +6,7 @@ export const stanceWidth = {
   "illustration": "20-standbreedte-pedalen",
   "nl": {
     "title": "Standbreedte van pedalen afstellen",
-    "metaTitle": "Standbreedte van pedalen afstellen | BestBikeFit4U",
+    "metaTitle": "Standbreedte van pedalen afstellen | BikeFitBoost",
     "metaDescription": "De standbreedte van je pedalen veranderen? Begrijp crankbreedte, pedaalas en plaatjesstand. Controleer veilige montage en test gericht, zonder gokken.",
     "keyword": "standbreedte van pedalen",
     "relatedKeywords": [
@@ -115,7 +115,7 @@ Dat kun je niet uit de bewegingsrichting alleen besluiten. Een video kan een ges
   },
   "en": {
     "title": "Pedal stance width",
-    "metaTitle": "Pedal stance width | BestBikeFit4U",
+    "metaTitle": "Pedal stance width | BikeFitBoost",
     "metaDescription": "Changing your pedal stance width? Understand crank width, pedal axles and cleat placement first. Check safe installation and test one clear change.",
     "keyword": "pedal stance width",
     "relatedKeywords": [

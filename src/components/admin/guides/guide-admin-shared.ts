@@ -95,9 +95,10 @@ export function slugifyGuideTitle(value: string) {
 
 export function buildGuidePreviewPath(slug: string) {
   const normalized = slug.trim().toLowerCase();
-  return normalized ? `bestbikefit4u.eu/guides/${normalized}` : "bestbikefit4u.eu/guides/{slug}";
+  return `${BRAND.host}/guides/${normalized || "{slug}"}`;
 }
 
 export function isGuideAdminRole(role: string) {
   return GUIDE_ADMIN_ROLES.includes(role as (typeof GUIDE_ADMIN_ROLES)[number]);
 }
+import { BRAND } from "@/config/brand";

@@ -145,8 +145,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: isNl
-      ? "Zadelbreedtecalculator | BestBikeFit4U"
-      : "Saddle Width Calculator | BestBikeFit4U",
+      ? "Zadelbreedtecalculator | BikeFitBoost"
+      : "Saddle Width Calculator | BikeFitBoost",
     description: isNl
       ? "Bereken je ideale zadelbreedteaanbeveling op basis van zitbeenmeting of " +
         "lichaamsgegevens. Inclusief zadelcategorie en betrouwbaarheidsscore."
@@ -195,7 +195,7 @@ export default async function SaddleWidthCalculatorPage() {
         schema={[
           buildFaqPageSchema(faqs),
           ...buildCalculatorPageSchemas({
-            name: "BestBikeFit4U Saddle Width Calculator",
+            name: "BikeFitBoost Saddle Width Calculator",
             description: isNl
               ? "Bereken je ideale zadelbreedteaanbeveling op basis van zitbeenmeting of lichaamsgegevens."
               : "Calculate your ideal saddle width from sit-bone measurement or body data.",

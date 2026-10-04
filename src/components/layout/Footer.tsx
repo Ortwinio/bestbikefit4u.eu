@@ -91,6 +91,7 @@ export function Footer({ locale, labels }: FooterProps) {
             href={withLocalePrefix("/", locale)}
             asset="dark"
             className="flex min-h-11 w-[200px] items-center"
+            imageClassName="h-[34px] w-auto"
           />
           <p className="min-w-0 flex-1 basis-[260px] text-sm leading-relaxed text-[var(--bbf-op-donker)]">
             {copy.tagline}

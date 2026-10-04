@@ -6,7 +6,7 @@ export const guide = {
   illustration: "45-nek-en-schouders",
   nl: {
     title: "Nekpijn fietsen: ontspan je schouders",
-    metaTitle: "Nekpijn fietsen: je houding | BestBikeFit4U",
+    metaTitle: "Nekpijn fietsen: je houding | BikeFitBoost",
     metaDescription: "Nekpijn of stijve schouders op de fiets? Controleer je stuurafstand, kijkhouding en " +
       "belasting. Volg de stappen en test één wijziging tegelijk.",
     keyword: "nekpijn fietsen",
@@ -136,7 +136,7 @@ kunnen nodig zijn; een online maatadvies vervangt geen onderzoek naar zulke sign
   },
   en: {
     title: "Neck pain cycling: relax your shoulders",
-    metaTitle: "Neck pain cycling: check your fit | BestBikeFit4U",
+    metaTitle: "Neck pain cycling: check your fit | BikeFitBoost",
     metaDescription: "Neck pain or tense shoulders on your bike? Check reach, your view of the road and riding " +
       "load. Follow a clear sequence and test one change at a time.",
     keyword: "neck pain cycling",

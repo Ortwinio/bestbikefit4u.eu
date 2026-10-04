@@ -4,7 +4,7 @@ export const reachStem = {
   illustration: "41-stuurpen-bereik",
   nl: {
     title: "Stuurpenlengte bepalen",
-    metaTitle: "Stuurpenlengte bepalen | BestBikeFit4U",
+    metaTitle: "Stuurpenlengte bepalen | BikeFitBoost",
     metaDescription:
       "Stuurpenlengte bepalen voor jouw fiets? Meet je huidige bereik, onderscheid framereach en handpositie en test een wijziging zonder je zit te verschuiven.",
     keyword: "stuurpenlengte bepalen",
@@ -123,7 +123,7 @@ Een passend bereik op papier maakt een technisch ongeschikte montage niet bruikb
   },
   en: {
     title: "Stem length",
-    metaTitle: "Stem length | BestBikeFit4U",
+    metaTitle: "Stem length | BikeFitBoost",
     metaDescription:
       "Choosing stem length for your bike? Measure current reach, separate frame reach from hand position, and compare a change without shifting your seating.",
     keyword: "stem length",

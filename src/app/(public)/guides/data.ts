@@ -36,7 +36,7 @@ export const GUIDES: Guide[] = [
     slug: "bike-fitting-for-knee-pain",
     cluster: "pain",
     en: {
-      seoTitle: "Bike Fitting for Knee Pain | BestBikeFit4U",
+      seoTitle: "Bike Fitting for Knee Pain | BikeFitBoost",
       seoDescription:
         "Learn practical bike fitting adjustments for knee pain and use a structured process to test saddle height, setback, and cleat-related setup changes.",
       seoKeywords: [
@@ -85,7 +85,7 @@ export const GUIDES: Guide[] = [
       secondaryCta: "How It Works",
     },
     nl: {
-      seoTitle: "Bikefitting bij kniepijn | BestBikeFit4U",
+      seoTitle: "Bikefitting bij kniepijn | BikeFitBoost",
       seoDescription:
         "Lees welke bikefitting-aanpassingen vaak helpen bij kniepijn en test zadelhoogte, zadelterugstand en houding stap voor stap.",
       seoKeywords: [
@@ -138,7 +138,7 @@ export const GUIDES: Guide[] = [
     slug: "bike-fitting-for-lower-back-pain",
     cluster: "pain",
     en: {
-      seoTitle: "Bike Fitting for Lower Back Pain | BestBikeFit4U",
+      seoTitle: "Bike Fitting for Lower Back Pain | BikeFitBoost",
       seoDescription:
         "Review lower back discomfort on the bike by improving cockpit length, drop, and pelvic stability with a structured fit process.",
       seoKeywords: [
@@ -180,14 +180,14 @@ export const GUIDES: Guide[] = [
       relatedTitle: "Related resources",
       relatedLinks: [
         { href: "/science/stack-and-reach", label: "Stack and Reach Guide" },
-        { href: "/about", label: "How BestBikeFit4U Works" },
+        { href: "/about", label: "How BikeFitBoost Works" },
         { href: "/guides/bike-fitting-for-knee-pain", label: "Bike Fitting for Knee Pain" },
       ],
       primaryCta: "Start Free Fit",
       secondaryCta: "See Fit Methods",
     },
     nl: {
-      seoTitle: "Bikefitting bij lage rugklachten | BestBikeFit4U",
+      seoTitle: "Bikefitting bij lage rugklachten | BikeFitBoost",
       seoDescription:
         "Beoordeel lage rugklachten op de fiets door reach, stuurdrop en bekkenstabiliteit gericht af te stemmen.",
       seoKeywords: [
@@ -229,7 +229,7 @@ export const GUIDES: Guide[] = [
       relatedTitle: "Gerelateerde bronnen",
       relatedLinks: [
         { href: "/science/stack-and-reach", label: "Stack en reach gids" },
-        { href: "/about", label: "Hoe BestBikeFit4U werkt" },
+        { href: "/about", label: "Hoe BikeFitBoost werkt" },
         { href: "/guides/bike-fitting-for-knee-pain", label: "Bikefitting bij kniepijn" },
       ],
       primaryCta: "Start gratis fit",
@@ -240,7 +240,7 @@ export const GUIDES: Guide[] = [
     slug: "road-bike-fit-guide",
     cluster: "discipline",
     en: {
-      seoTitle: "Road Bike Fit Guide | BestBikeFit4U",
+      seoTitle: "Road Bike Fit Guide | BikeFitBoost",
       seoDescription:
         "Road bike fitting guide for comfort and performance: saddle height, reach, drop, and practical adaptation for endurance or race goals.",
       seoKeywords: ["road bike fit guide", "road bike position", "endurance vs race fit"],
@@ -285,7 +285,7 @@ export const GUIDES: Guide[] = [
       secondaryCta: "Compare Fit Methods",
     },
     nl: {
-      seoTitle: "Racefiets fit gids | BestBikeFit4U",
+      seoTitle: "Racefiets fit gids | BikeFitBoost",
       seoDescription:
         "Praktische racefiets-bikefitting voor comfort en prestaties: zadelhoogte, reach, stuurdrop en verschil tussen endurance en racefocus.",
       seoKeywords: ["racefiets bikefitting", "racefiets positie", "endurance vs race fit"],
@@ -334,7 +334,7 @@ export const GUIDES: Guide[] = [
     slug: "gravel-bike-fit-guide",
     cluster: "discipline",
     en: {
-      seoTitle: "Gravel Bike Fit Guide | BestBikeFit4U",
+      seoTitle: "Gravel Bike Fit Guide | BikeFitBoost",
       seoDescription:
         "Gravel bike fitting guide for control, comfort, and long mixed-surface rides with practical setup priorities.",
       seoKeywords: ["gravel bike fit", "gravel bike position", "gravel bike comfort"],
@@ -379,7 +379,7 @@ export const GUIDES: Guide[] = [
       secondaryCta: "Open Calculators",
     },
     nl: {
-      seoTitle: "Gravel fit gids | BestBikeFit4U",
+      seoTitle: "Gravel fit gids | BikeFitBoost",
       seoDescription:
         "Praktische gravel-bikefitting voor meer controle, comfort en duurzame prestaties op gemengd terrein.",
       seoKeywords: ["gravel bikefitting", "gravel positie", "gravel comfort"],
@@ -428,7 +428,7 @@ export const GUIDES: Guide[] = [
     slug: "mountain-bike-fit-guide",
     cluster: "discipline",
     en: {
-      seoTitle: "Mountain Bike Fit Guide | BestBikeFit4U",
+      seoTitle: "Mountain Bike Fit Guide | BikeFitBoost",
       seoDescription:
         "Mountain bike fitting guide for control, climbing efficiency, and descending confidence with practical setup priorities.",
       seoKeywords: ["mountain bike fit", "MTB bike fitting", "mtb position"],
@@ -473,7 +473,7 @@ export const GUIDES: Guide[] = [
       secondaryCta: "Read Science",
     },
     nl: {
-      seoTitle: "MTB fit gids | BestBikeFit4U",
+      seoTitle: "MTB fit gids | BikeFitBoost",
       seoDescription:
         "Praktische MTB-bikefitting voor meer controle, efficiente klimmen en vertrouwen op technische afdalingen.",
       seoKeywords: ["MTB bikefitting", "mountainbike fit", "MTB positie"],
@@ -522,7 +522,7 @@ export const GUIDES: Guide[] = [
     slug: "triathlon-bike-fit-guide",
     cluster: "discipline",
     en: {
-      seoTitle: "Triathlon Bike Fit Guide | BestBikeFit4U",
+      seoTitle: "Triathlon Bike Fit Guide | BikeFitBoost",
       seoDescription:
         "Triathlon bike fitting guide for aerodynamic position that remains sustainable for race distance and run performance.",
       seoKeywords: ["triathlon bike fit", "TT bike fit", "aero position triathlon"],
@@ -560,14 +560,14 @@ export const GUIDES: Guide[] = [
       relatedTitle: "Related resources",
       relatedLinks: [
         { href: "/science/calculation-engine", label: "Calculation Engine" },
-        { href: "/about", label: "How BestBikeFit4U Works" },
+        { href: "/about", label: "How BikeFitBoost Works" },
         { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
       ],
       primaryCta: "Start Free Fit",
       secondaryCta: "Open FAQ",
     },
     nl: {
-      seoTitle: "Triathlon fit gids | BestBikeFit4U",
+      seoTitle: "Triathlon fit gids | BikeFitBoost",
       seoDescription:
         "Praktische triathlon-bikefitting voor een aerodynamische maar duurzame houding die ook je loopprestatie ondersteunt.",
       seoKeywords: ["triathlon bikefitting", "TT fit", "aero houding triathlon"],
@@ -605,7 +605,7 @@ export const GUIDES: Guide[] = [
       relatedTitle: "Gerelateerde bronnen",
       relatedLinks: [
         { href: "/science/calculation-engine", label: "Calculation engine" },
-        { href: "/about", label: "Hoe BestBikeFit4U werkt" },
+        { href: "/about", label: "Hoe BikeFitBoost werkt" },
         { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
       ],
       primaryCta: "Start gratis fit",

@@ -1,6 +1,6 @@
 export const fitPageDetails = {
   nl: {
-    saddleSchemaName: "BestBikeFit4U Zadelhoogte calculator",
+    saddleSchemaName: "BikeFitBoost Zadelhoogte calculator",
     saddleDescription:
       "Bereken een conservatieve zadelhoogte als startpunt op basis van je fietscategorie, rijdoel, " +
       "lenigheid en rompstabiliteit.",
@@ -14,7 +14,7 @@ export const fitPageDetails = {
     bikeResultStep: "Gebruik de uitkomst als startpunt voor je afstelling.",
   },
   en: {
-    saddleSchemaName: "BestBikeFit4U Saddle Height Calculator",
+    saddleSchemaName: "BikeFitBoost Saddle Height Calculator",
     saddleDescription:
       "Calculate a conservative saddle-height starting point using category, goal, " +
       "flexibility, and core inputs.",

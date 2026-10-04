@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { DesignSystemPlayground } from "./Playground";
 
 export const metadata: Metadata = {
-  title: "Componenten | BestBikeFit4U",
+  title: "Componenten | BikeFitBoost",
   robots: { index: false, follow: false },
 };
 

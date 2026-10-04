@@ -6,7 +6,7 @@ export const en = {
     greeting: "Hi {firstName},",
     genericGreeting: "Hi,",
     signoff: "Enjoy the ride,",
-    team: "Team BestBikeFit4U",
+    team: "Team BikeFitBoost",
     unsubscribe: "Unsubscribe",
     preferences: "Email preferences",
     labels: {
@@ -22,14 +22,14 @@ export const en = {
       topTube: "Effective top tube",
     },
     footer: {
-      transactional: "You receive this email because of your request at BestBikeFit4U.",
-      service: "You receive this email because you have a BestBikeFit4U account.",
+      transactional: "You receive this email because of your request at BikeFitBoost.",
+      service: "You receive this email because you have a BikeFitBoost account.",
       internal: "Internal notification about a new rider story.",
     },
     reply: "Questions? Just reply, a real person reads every email.",
   },
   loginCode: {
-    subject: "{code} is your BestBikeFit4U login code",
+    subject: "{code} is your BikeFitBoost login code",
     preheader: "Valid for 15 minutes. Your bikes are waiting.",
     heading: "Your login code",
     body: "It's valid for 15 minutes. Your bikes and fit numbers are ready for you.",
@@ -186,7 +186,7 @@ export const en = {
     preheader: "Measure more accurately in 5 minutes, and keep your fit in your pocket.",
     heading: "3 tips for a fit that's spot on",
     intro: "the more precisely you measure, the better your advice. These three tips help you get " +
-      "the most out of BestBikeFit4U:",
+      "the most out of BikeFitBoost:",
     tips: [
       {
         title: "Measure barefoot.",
@@ -207,7 +207,7 @@ export const en = {
     button: "Start my fit",
     buttonExisting: "View my fit",
     appEyebrow: "TIP",
-    appHeading: "Put BestBikeFit4U on your phone.",
+    appHeading: "Put BikeFitBoost on your phone.",
     appBody: "Your numbers always at hand: in the shed with the Allen key in your hand, or at the pump " +
       "before your ride. No App Store needed, and it takes up almost no space.",
     chips: [
@@ -216,12 +216,12 @@ export const en = {
       "Your plan",
     ],
     iphone: [
-      "Open bestbikefit4u.eu in Safari",
+      "Open www.bikefitboost.com in Safari",
       "Tap the share icon",
       "Choose Add to Home Screen",
     ],
     android: [
-      "Open bestbikefit4u.eu in Chrome",
+      "Open www.bikefitboost.com in Chrome",
       "Tap the three dots",
       "Choose Install app",
     ],

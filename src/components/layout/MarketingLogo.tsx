@@ -13,18 +13,18 @@ export function MarketingLogo({ href, className, priority = false }: {
       <Image
         src={BRAND.assets.logoPrimary}
         alt={BRAND.name}
-        width={381}
-        height={64}
+        width={344}
+        height={60}
         priority={priority}
-        className="block h-auto w-full object-contain dark:hidden"
+        className="block h-[34px] w-auto object-contain dark:hidden"
       />
       <Image
         src={BRAND.assets.logoDark}
         alt={BRAND.name}
-        width={381}
-        height={64}
+        width={344}
+        height={60}
         priority={priority}
-        className="hidden h-auto w-full object-contain dark:block"
+        className="hidden h-[34px] w-auto object-contain dark:block"
       />
     </Link>
   );

@@ -42,7 +42,7 @@ describe("site metadata language", () => {
     expect(metadata.description).toBe(description);
     expect(metadata.openGraph).toMatchObject({ description, locale: locale === "nl" ? "nl_NL" : "en_US" });
     expect(metadata.twitter).toMatchObject({ description, card: "summary_large_image" });
-    expect(metadata.manifest).toBe(`/manifest.webmanifest?locale=${locale}`);
+    expect(metadata.manifest).toBe("/site.webmanifest");
     const root = await RootLayout({ children: null });
     expect(findSchemas(root)).toContainEqual(expect.objectContaining({ "@type": "WebSite", description, inLanguage: locale }));
   });
@@ -50,10 +50,10 @@ describe("site metadata language", () => {
   it("localizes the app page while preserving English metadata inheritance", async () => {
     requestLocale.mockResolvedValue("nl");
     expect(await appMetadata()).toMatchObject({
-      title: "BestBikeFit4U op je beginscherm",
-      description: "Zet BestBikeFit4U op je beginscherm. Open snel je dashboard en fietsafstelling.",
-      openGraph: { title: "BestBikeFit4U op je beginscherm", images: [BRAND.assets.socialImage] },
-      twitter: { title: "BestBikeFit4U op je beginscherm", images: [BRAND.assets.socialImage] },
+      title: "BikeFitBoost op je beginscherm",
+      description: "Zet BikeFitBoost op je beginscherm. Open snel je dashboard en fietsafstelling.",
+      openGraph: { title: "BikeFitBoost op je beginscherm", images: [BRAND.assets.socialImage] },
+      twitter: { title: "BikeFitBoost op je beginscherm", images: [BRAND.assets.socialImage] },
     });
     requestLocale.mockResolvedValue("en");
     expect(await appMetadata()).toEqual({});
@@ -61,7 +61,7 @@ describe("site metadata language", () => {
 
   it.each(["nl", "en"])("serves an explicit %s manifest independently of cookies", async (locale) => {
     requestLocale.mockResolvedValue(locale === "nl" ? "en" : "nl");
-    const response = await GET(new Request(`https://bestbikefit4u.eu/manifest.webmanifest?locale=${locale}`));
+    const response = await GET(new Request(`https://www.bikefitboost.com/manifest.webmanifest?locale=${locale}`));
     expect(response.headers.get("Content-Type")).toBe("application/manifest+json");
     expect(response.headers.get("Cache-Control")).toBe("private, no-store");
     expect(await response.json()).toMatchObject({
@@ -76,7 +76,7 @@ describe("site metadata language", () => {
 
   it.each(["", "?locale=unknown"])("keeps request-locale fallback for legacy manifest URLs %s", async (query) => {
     requestLocale.mockResolvedValue("nl");
-    const response = await GET(new Request(`https://bestbikefit4u.eu/manifest.webmanifest${query}`));
+    const response = await GET(new Request(`https://www.bikefitboost.com/manifest.webmanifest${query}`));
     expect(await response.json()).toMatchObject({ lang: "nl", start_url: "/nl" });
     expect(requestLocale).toHaveBeenCalledOnce();
   });

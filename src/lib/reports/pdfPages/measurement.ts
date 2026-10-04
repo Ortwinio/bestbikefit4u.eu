@@ -11,7 +11,7 @@ export function renderMeasurementPage(
 ): string {
   const locale = copy.locale === "nl" ? "nl" : "en";
   const text = PDF_MEASUREMENT_COPY[locale];
-  const guide = `https://bestbikefit4u.eu/${locale}/measurement-guide`;
+  const guide = `${BRAND.siteUrl}/${locale}/measurement-guide`;
   return `<div class="pdf-measurement-body">
     <div class="pdf-measurement-intro"><div><h1>${escapeHtml(text.title)}</h1>
       <p>${escapeHtml(text.intro)}</p><p class="pdf-measurement-tools"><strong>${escapeHtml(text.toolsLabel)}</strong>
@@ -88,3 +88,4 @@ export const measurementStyles = `
 .pdf-measurement-guide { margin: 14px 0 0; font-size: 13px; line-height: 1.45; color: var(--bbf-tekst); }
 .pdf-measurement-guide a { font-weight: 700; color: var(--bbf-petrol-hover); }
 `;
+import { BRAND } from "@/config/brand";

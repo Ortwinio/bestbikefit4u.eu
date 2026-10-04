@@ -114,7 +114,7 @@ export function CaseStudyOptIn({ locale, sessionId, userEmail }: Props) {
         <p className="mt-2 text-sm text-muted-foreground">
           {isNl
             ? "We verzamelen echte fietserverhalen. Als deze fit je bruikbare doelwaarden heeft gegeven, horen we dat graag. Duurt 10 minuten via e-mail. Geen marketing zonder toestemming."
-            : "We're collecting real rider stories. If this fit gave you useful targets, we'd love to include your experience on BestBikeFit4U. Takes 10 minutes by email. No marketing without consent."}
+            : "We're collecting real rider stories. If this fit gave you useful targets, we'd love to include your experience on BikeFitBoost. Takes 10 minutes by email. No marketing without consent."}
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
           <Button size="sm" onClick={handleClickYes}>
@@ -245,8 +245,8 @@ export function CaseStudyOptIn({ locale, sessionId, userEmail }: Props) {
             />
             <span>
               {isNl
-                ? "Ik ga akkoord dat BestBikeFit4U mij per e-mail benadert over deze case study. (Verplicht — AVG-toestemming. Je kunt je op elk moment afmelden.)"
-                : "I agree to BestBikeFit4U contacting me by email about this case study. (Required — GDPR consent. You can withdraw at any time.)"}
+                ? "Ik ga akkoord dat BikeFitBoost mij per e-mail benadert over deze case study. (Verplicht — AVG-toestemming. Je kunt je op elk moment afmelden.)"
+                : "I agree to BikeFitBoost contacting me by email about this case study. (Required — GDPR consent. You can withdraw at any time.)"}
             </span>
           </label>
 

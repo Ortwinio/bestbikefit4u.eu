@@ -1,3 +1,4 @@
+import { BRAND } from "../../lib/brand";
 import { emailCopy } from "../i18n";
 import { formatDate, formatNumber, formatPrice } from "../format";
 import {
@@ -43,7 +44,7 @@ function createEmail(
     },
     finish(footerExtra?: string): RenderedEmail {
       const footer = [
-        common.signoff, common.team, reason, footerExtra, "bestbikefit4u.eu",
+        common.signoff, common.team, reason, footerExtra, BRAND.host,
         links ? `${common.unsubscribe}: ${links.unsubscribeUrl}` : undefined,
         links ? `${common.preferences}: ${links.preferencesUrl}` : undefined,
       ].filter(Boolean).join("\n");

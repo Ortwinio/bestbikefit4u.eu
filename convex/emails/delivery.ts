@@ -1,7 +1,7 @@
 "use node";
 
 import { Resend } from "resend";
-import { BRAND } from "../lib/brand";
+import { BRAND, emailSender } from "../lib/brand";
 import type { EmailLocale, RenderedEmail } from "./templates";
 
 export function emailActionUrl(locale: EmailLocale, path: string) {
@@ -15,7 +15,7 @@ export async function deliverEmail(
 ) {
   if (!process.env.AUTH_RESEND_KEY) return null;
   const { data, error } = await new Resend(process.env.AUTH_RESEND_KEY).emails.send({
-    from: process.env.AUTH_EMAIL_FROM || BRAND.authEmailFrom,
+    from: emailSender(),
     to: [recipient], subject: email.subject, html: email.html, text: email.text,
     ...(options.headers ? { headers: options.headers } : {}),
   }, options.idempotencyKey ? { idempotencyKey: options.idempotencyKey } : undefined);

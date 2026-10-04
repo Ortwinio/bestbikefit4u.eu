@@ -31,7 +31,7 @@ describe("Dutch guide titles", () => {
       expect(title, entry.slug).toBeTruthy();
       expect(entry.pageTitle).toBe(title);
       expect(entry.h1).toBe(title);
-      expect(entry.metaTitle).toBe(`${title} | BestBikeFit4U`);
+      expect(entry.metaTitle).toBe(`${title} | BikeFitBoost`);
       if (entry.path.startsWith("/guides/")) expect(getGuideLinkLabel(entry.path, "nl")).toBe(title);
     }
   });
@@ -52,7 +52,7 @@ describe("Dutch guide titles", () => {
   it("uses Dutch summary text for metadata instead of mixed-language setup and power terms", () => {
     const entries = getGuideBacklog("nl");
     expect(entries.find((entry) => entry.slug === "setup-parameters")?.pageBrief)
-      .toBe("Begrijp de aanbevolen maten van BestBikeFit4U en wat elk getal voor je fietsafstelling betekent.");
+      .toBe("Begrijp de aanbevolen maten van BikeFitBoost en wat elk getal voor je fietsafstelling betekent.");
     expect(entries.find((entry) => entry.slug === "power-to-speed-guide")?.pageBrief)
       .toBe("Lees hoe vermogen, aerodynamica, gewicht, banden, helling en weer je snelheid beïnvloeden.");
   });

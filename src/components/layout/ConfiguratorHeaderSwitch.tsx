@@ -40,21 +40,22 @@ export function ConfiguratorHeaderSwitch({
     <header className="border-b border-border bg-background text-foreground">
       <div
         className={
-          "mx-auto grid max-w-[1440px] grid-cols-[1fr_auto] items-center gap-3 px-4 py-4 sm:px-8 " +
-          "xl:grid-cols-[auto_minmax(0,1fr)_auto] xl:gap-6 xl:px-16"
+          "mx-auto flex max-w-[1440px] flex-wrap items-center gap-3 px-4 py-4 sm:px-8 " +
+          "xl:flex-nowrap xl:gap-6 xl:px-16"
         }
       >
         <BrandLogo
           href={withLocalePrefix("/", locale)}
           priority
-          className="w-[140px] shrink-0 xl:w-[184px]"
+          className="w-[195px] shrink-0"
+          imageClassName="h-[34px] w-auto"
         />
         <ToolsTabBar
           activeTool={activeTool}
           locale={locale}
-          className="col-span-2 row-start-2 xl:col-span-1 xl:col-start-2 xl:row-start-1"
+          className="order-3 min-w-0 basis-full xl:order-2 xl:flex-1 xl:basis-auto"
         />
-        <div className="flex items-center justify-end gap-2 xl:col-start-3">
+        <div className="order-2 ml-auto flex shrink-0 items-center justify-end gap-2 xl:order-3">
           <div>
             <LanguageSwitch locale={locale} labels={languageLabels} />
           </div>

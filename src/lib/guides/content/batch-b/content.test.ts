@@ -36,7 +36,7 @@ describe("44b batch B editorial content", () => {
         expect(total).toBeGreaterThanOrEqual(900);
         expect(total).toBeLessThanOrEqual(1500);
         expect(article.metaTitle.length).toBeLessThanOrEqual(60);
-        expect(article.metaTitle).toMatch(/ \| BestBikeFit4U$/);
+        expect(article.metaTitle).toMatch(/ \| BikeFitBoost$/);
         expect(article.metaDescription.length).toBeGreaterThanOrEqual(140);
         expect(article.metaDescription.length).toBeLessThanOrEqual(155);
         expect(article.title.toLowerCase()).toContain(article.keyword.toLowerCase());
@@ -98,7 +98,7 @@ describe("44b batch B editorial content", () => {
       expect(provenance.webpSha256).toBe(createHash("sha256").update(readFileSync(
         `public/illustrations/guides/${guide.illustration}.webp`,
       )).digest("hex"));
-      expect(record.ogImageUrl).toBe(`https://bestbikefit4u.eu/og/illustrations/guides/${guide.illustration}.jpg`);
+      expect(record.ogImageUrl).toBe(`https://www.bikefitboost.com/og/illustrations/guides/${guide.illustration}.jpg`);
     });
   }
 });

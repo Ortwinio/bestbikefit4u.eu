@@ -2,7 +2,7 @@ import type { Locale } from "@/i18n/config";
 
 const nl = {
   title: "Nieuwsbrief", signupLabel: "Stuur mij de nieuwsbrief",
-  description: "Ontvang de nieuwsbrief van BestBikeFit4U met nieuws en fietstips. Optioneel; je kunt je op elk moment afmelden.",
+  description: "Ontvang de nieuwsbrief van BikeFitBoost met nieuws en fietstips. Optioneel; je kunt je op elk moment afmelden.",
   confirmationLabel: "Ja, stuur mij de nieuwsbrief voor dit account",
   confirmTitle: "Bevestig je nieuwsbriefkeuze", confirmText: "Wil je de nieuwsbrief ontvangen op het e-mailadres waarmee je nu bent ingelogd?",
   confirm: "Ja, stuur mij de nieuwsbrief", skip: "Niet nu", saving: "Nieuwsbriefkeuze opslaan…", retry: "Probeer opnieuw",
@@ -14,7 +14,7 @@ const nl = {
 };
 const en: Record<keyof typeof nl, string> = {
   title: "Newsletter", signupLabel: "Send me the newsletter",
-  description: "Receive the BestBikeFit4U newsletter with news and cycling tips. Optional; you can unsubscribe at any time.",
+  description: "Receive the BikeFitBoost newsletter with news and cycling tips. Optional; you can unsubscribe at any time.",
   confirmationLabel: "Yes, send me the newsletter for this account",
   confirmTitle: "Confirm your newsletter choice", confirmText: "Would you like the newsletter sent to the email address you are currently signed in with?",
   confirm: "Yes, send me the newsletter", skip: "Not now", saving: "Saving newsletter choice…", retry: "Try again",

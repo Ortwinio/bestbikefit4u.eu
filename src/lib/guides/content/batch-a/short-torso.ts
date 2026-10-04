@@ -6,7 +6,7 @@ export const shortTorso = {
   illustration: "10-korte-romp-stuurafstand",
   nl: {
     title: "Fiets afstellen bij een korte romp",
-    metaTitle: "Korte romp: fiets afstellen | BestBikeFit4U",
+    metaTitle: "Korte romp: fiets afstellen | BikeFitBoost",
     metaDescription: "Voelt het stuur te ver weg bij een korte romp? Leer zadelpositie, stuurafstand en rembereik apart controleren en vergelijk een gerichte aanpassing.",
     keyword: "korte romp",
     relatedKeywords: ["stuur te ver weg", "korte romp fietsafstelling", "stuurafstand racefiets"],
@@ -118,7 +118,7 @@ Zo voorkom je dat je onderdelen koopt die een andere afstand veranderen dan de a
   },
   en: {
     title: "Bike fit for a short torso",
-    metaTitle: "Short torso bike fit | BestBikeFit4U",
+    metaTitle: "Short torso bike fit | BikeFitBoost",
     metaDescription: "Does the handlebar feel too far away with a short torso? Check saddle position, hand distance and brake access separately, then compare one change.",
     keyword: "short torso",
     relatedKeywords: ["handlebar too far away", "short torso bike fit", "road bike hand reach"],

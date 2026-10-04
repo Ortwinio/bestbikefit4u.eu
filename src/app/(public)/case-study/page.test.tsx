@@ -131,7 +131,7 @@ describe("case study presentation and unchanged recruitment form", () => {
     await renderForm();
     expect(screen.getByRole("button", { name: "Meld je aan voor een praktijkvoorbeeld" })).toBeTruthy();
     const metadata = await generateMetadata();
-    expect(metadata.title).toBe("Deel je praktijkvoorbeeld | BestBikeFit4U");
+    expect(metadata.title).toBe("Deel je praktijkvoorbeeld | BikeFitBoost");
     expect(metadata.description).toContain("praktijkvoorbeelden van fietsers");
     expect(metadata.openGraph).toMatchObject({ title: metadata.title, description: metadata.description });
     expect(JSON.stringify(getCaseStudyMessages("nl"))).not.toMatch(/case.study|follow-up|rider/);
@@ -168,9 +168,9 @@ describe("case study presentation and unchanged recruitment form", () => {
   it.each(["nl", "en"] as const)("preserves metadata and canonical in %s", async (locale) => {
     state.locale = locale;
     const metadata = await generateMetadata();
-    expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}/case-study`);
+    expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}/case-study`);
     expect(metadata.openGraph).toMatchObject({
-      type: "website", url: `https://bestbikefit4u.eu/${locale}/case-study`,
+      type: "website", url: `https://www.bikefitboost.com/${locale}/case-study`,
     });
   });
 });

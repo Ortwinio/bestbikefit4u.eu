@@ -1,3 +1,4 @@
+import { currentSiteUrl } from "@/lib/seo/siteUrl";
 import { socialImage } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -77,7 +78,7 @@ export async function generateMetadata({ params }: BlogArticleProps): Promise<Me
   const title = localizeBlogText(post.metaTitle, locale, localizeBlogText(post.title, locale, slug));
   const description = localizeBlogText(post.metaDescription, locale);
   const alternates = buildLocaleAlternates(`/blog/${slug}`, locale);
-  const canonical = post.canonicalUrl ?? alternates.canonical;
+  const canonical = currentSiteUrl(post.canonicalUrl ?? alternates.canonical);
   const ogImage = post.ogImageUrl ?? post.featuredImageUrl;
 
   return {
@@ -155,7 +156,7 @@ export default async function BlogArticlePage({ params }: BlogArticleProps) {
             description,
             url: pageUrl,
             inLanguage: locale,
-            image: post.ogImageUrl ?? imageUrl,
+            image: currentSiteUrl(post.ogImageUrl ?? imageUrl),
             datePublished: post.publishedAt
               ? new Date(post.publishedAt).toISOString()
               : undefined,

@@ -4,7 +4,7 @@ export const crankLength = {
   illustration: "36-cranklengte",
   nl: {
     title: "Cranklengte kiezen",
-    metaTitle: "Cranklengte kiezen | BestBikeFit4U",
+    metaTitle: "Cranklengte kiezen | BikeFitBoost",
     metaDescription:
       "Welke cranklengte past bij je? Leer je huidige crank meten, vergelijk een berekend startpunt en controleer zadelhoogte en onderdelen voordat je wisselt.",
     keyword: "cranklengte kiezen",
@@ -124,7 +124,7 @@ Gebruik een aankoop daarom niet als gegarandeerde prestatiewinst. Als je prestat
   },
   en: {
     title: "Crank length",
-    metaTitle: "Crank length | BestBikeFit4U",
+    metaTitle: "Crank length | BikeFitBoost",
     metaDescription:
       "Which crank length suits you? Learn to measure your cranks, compare a calculated starting point, and check saddle position and parts before changing.",
     keyword: "crank length",

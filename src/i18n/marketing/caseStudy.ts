@@ -2,7 +2,7 @@ import type { Locale } from "@/i18n/config";
 
 const nl = {
   metadata: {
-    title: "Deel je praktijkvoorbeeld | BestBikeFit4U",
+    title: "Deel je praktijkvoorbeeld | BikeFitBoost",
     description: "Deel je pijn- of comfortklachten op de fiets. Help ons praktijkvoorbeelden van fietsers te verzamelen.",
   },
   submissionError: "Je aanmelding is niet verstuurd. Probeer het opnieuw.",
@@ -66,7 +66,7 @@ const nl = {
 
 const en: typeof nl = {
   metadata: {
-    title: "Case study recruitment | BestBikeFit4U",
+    title: "Case study recruitment | BikeFitBoost",
     description: "Share your fit-related pain or comfort challenge and help us build real rider case studies.",
   },
   submissionError: "Something went wrong. Please try again.",
@@ -98,7 +98,7 @@ const en: typeof nl = {
     emailLabel: "Email address",
     ridingGoalLabel: "Riding goal or context",
     painSummaryLabel: "Describe your pain or fit challenge",
-    consentLabel: "I consent to BestBikeFit4U using this submission to contact me " +
+    consentLabel: "I consent to BikeFitBoost using this submission to contact me " +
       "about a case study or validation round.",
     submitLabel: "Submit case-study interest",
     success: "Thank you. We received your case-study interest.",

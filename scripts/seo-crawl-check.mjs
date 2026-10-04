@@ -8,6 +8,7 @@ import { once } from "node:events";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseHead, parseSitemap, isNoindex, absoluteHttp, metadataIssues } from "./seo-crawl/html.mjs";
+import { SITE_ORIGIN } from "../shared/brand.ts";
 
 export const USER_AGENTS = {
   Googlebot: "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
@@ -35,7 +36,7 @@ export function optionsFromArgs(args) {
   }
   if (!/^[a-z0-9-]+$/.test(options.label)) throw new Error("Label must contain lowercase letters, digits and hyphens");
   if (!Number.isFinite(options.delay) || options.delay < 0) throw new Error("Delay must be nonnegative");
-  if (!options.local && !options.base) throw new Error("Use --local or --base https://bestbikefit4u.eu");
+  if (!options.local && !options.base) throw new Error("Use --local or --base https://www.bikefitboost.com");
   if (options.local && options.base) throw new Error("Use either --local or --base");
   if (options.base) {
     const base = new URL(options.base);
@@ -73,7 +74,7 @@ async function startLocal(options, audit) {
   const base = `https://127.0.0.1:${port}`;
   const localFetch = (url, options = {}) => new Promise((done, reject) => {
     const request = get(url, { ca: certificate.cert, servername: "localhost", signal: options.signal,
-      headers: { ...options.headers, host: "bestbikefit4u.eu" } }, (incoming) => {
+      headers: { ...options.headers, host: new URL(SITE_ORIGIN).host } }, (incoming) => {
       const headers = new Headers();
       for (const [key, value] of Object.entries(incoming.headers)) {
         if (value !== undefined) headers.set(key, Array.isArray(value) ? value.join(", ") : value);
@@ -115,7 +116,7 @@ export async function crawl(options) {
   await mkdir(audit, { recursive: true });
   const local = options.local ? await startLocal(options, audit) : null;
   const base = local?.base ?? options.base;
-  const origin = "https://bestbikefit4u.eu";
+  const origin = SITE_ORIGIN;
   const startedAt = new Date().toISOString();
   const cache = new Map();
   const network = [];

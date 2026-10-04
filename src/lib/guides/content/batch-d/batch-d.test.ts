@@ -23,7 +23,7 @@ describe("Batch D editorial requirements", () => {
     it.each(["nl", "en"] as const)(`${guide.slug} meets the %s editorial limits`, (locale) => {
       const content = guide[locale];
       expect(content.metaTitle.length).toBeLessThanOrEqual(60);
-      expect(content.metaTitle).toMatch(/ \| BestBikeFit4U$/);
+      expect(content.metaTitle).toMatch(/ \| BikeFitBoost$/);
       expect(content.metaDescription.length).toBeGreaterThanOrEqual(140);
       expect(content.metaDescription.length).toBeLessThanOrEqual(155);
       expect(content.title.toLowerCase()).toContain(content.keyword);

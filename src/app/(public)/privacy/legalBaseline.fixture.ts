@@ -3,9 +3,9 @@ export const legalBaseline = {
   privacy: {
     en: {
       metadata: {
-        title: "Privacy Policy - BestBikeFit4U",
-        description: "Learn how BestBikeFit4U collects, uses, and protects your personal data.",
-        keywords: ["privacy policy", "data protection", "BestBikeFit4U privacy"],
+        title: "Privacy Policy - BikeFitBoost",
+        description: "Learn how BikeFitBoost collects, uses, and protects your personal data.",
+        keywords: ["privacy policy", "data protection", "BikeFitBoost privacy"],
       },
       title: "Privacy Policy",
       lastUpdatedLabel: "Last updated",
@@ -94,9 +94,9 @@ export const legalBaseline = {
     },
     nl: {
       metadata: {
-        title: "Privacyverklaring - BestBikeFit4U",
-        description: "Lees hoe BestBikeFit4U jouw persoonsgegevens verzamelt, gebruikt en beschermt.",
-        keywords: ["privacyverklaring", "gegevensbescherming", "BestBikeFit4U privacy"],
+        title: "Privacyverklaring - BikeFitBoost",
+        description: "Lees hoe BikeFitBoost jouw persoonsgegevens verzamelt, gebruikt en beschermt.",
+        keywords: ["privacyverklaring", "gegevensbescherming", "BikeFitBoost privacy"],
       },
       title: "Privacyverklaring",
       lastUpdatedLabel: "Laatst bijgewerkt",
@@ -187,9 +187,9 @@ export const legalBaseline = {
   terms: {
     en: {
       metadata: {
-        title: "Terms of Service - BestBikeFit4U",
-        description: "Read the terms and conditions for using BestBikeFit4U.",
-        keywords: ["terms of service", "terms and conditions", "BestBikeFit4U terms"],
+        title: "Terms of Service - BikeFitBoost",
+        description: "Read the terms and conditions for using BikeFitBoost.",
+        keywords: ["terms of service", "terms and conditions", "BikeFitBoost terms"],
       },
       title: "Terms of Service",
       lastUpdatedLabel: "Last updated",
@@ -197,17 +197,17 @@ export const legalBaseline = {
       sections: [
         {
           title: "1. Acceptance of Terms",
-          body: "By accessing or using BestBikeFit4U, you agree to these Terms of Service.",
+          body: "By accessing or using BikeFitBoost, you agree to these Terms of Service.",
         },
         {
           title: "2. Description of Service",
           body:
-            "BestBikeFit4U provides algorithm-based bike fitting recommendations based on user " +
+            "BikeFitBoost provides algorithm-based bike fitting recommendations based on user " +
             "measurements and preferences.",
         },
         {
           title: "3. Important Disclaimer",
-          warningTitle: "BestBikeFit4U is not a substitute for an in-person professional bike fit.",
+          warningTitle: "BikeFitBoost is not a substitute for an in-person professional bike fit.",
           warningBody:
             "Recommendations depend on the quality of your measurements. Riders with injuries, " +
             "chronic pain, or significant asymmetry should consult a qualified fitter or medical " +
@@ -238,7 +238,7 @@ export const legalBaseline = {
         {
           title: "7. Limitation of Liability",
           body:
-            "To the maximum extent permitted by law, BestBikeFit4U is not liable for indirect or " +
+            "To the maximum extent permitted by law, BikeFitBoost is not liable for indirect or " +
             "consequential damages arising from use of the service. You are responsible for " +
             "implementing fit changes gradually and safely.",
         },
@@ -258,9 +258,9 @@ export const legalBaseline = {
     },
     nl: {
       metadata: {
-        title: "Gebruiksvoorwaarden - BestBikeFit4U",
-        description: "Lees de voorwaarden voor het gebruik van BestBikeFit4U.",
-        keywords: ["gebruiksvoorwaarden", "voorwaarden", "BestBikeFit4U terms"],
+        title: "Gebruiksvoorwaarden - BikeFitBoost",
+        description: "Lees de voorwaarden voor het gebruik van BikeFitBoost.",
+        keywords: ["gebruiksvoorwaarden", "voorwaarden", "BikeFitBoost terms"],
       },
       title: "Gebruiksvoorwaarden",
       lastUpdatedLabel: "Laatst bijgewerkt",
@@ -268,17 +268,17 @@ export const legalBaseline = {
       sections: [
         {
           title: "1. Acceptatie van voorwaarden",
-          body: "Door BestBikeFit4U te gebruiken ga je akkoord met deze gebruiksvoorwaarden.",
+          body: "Door BikeFitBoost te gebruiken ga je akkoord met deze gebruiksvoorwaarden.",
         },
         {
           title: "2. Beschrijving van de dienst",
           body:
-            "BestBikeFit4U biedt algoritme-gedreven bike fitting aanbevelingen op basis van jouw " +
+            "BikeFitBoost biedt algoritme-gedreven bike fitting aanbevelingen op basis van jouw " +
             "metingen en voorkeuren.",
         },
         {
           title: "3. Belangrijke disclaimer",
-          warningTitle: "BestBikeFit4U vervangt geen professionele fysieke bike fitting.",
+          warningTitle: "BikeFitBoost vervangt geen professionele fysieke bike fitting.",
           warningBody:
             "Aanbevelingen hangen af van de nauwkeurigheid van je metingen. Bij blessures, " +
             "chronische pijn of duidelijke asymmetrie raden we professionele begeleiding aan.",
@@ -308,7 +308,7 @@ export const legalBaseline = {
         {
           title: "7. Beperking van aansprakelijkheid",
           body:
-            "Voor zover wettelijk toegestaan is BestBikeFit4U niet aansprakelijk voor indirecte " +
+            "Voor zover wettelijk toegestaan is BikeFitBoost niet aansprakelijk voor indirecte " +
             "of gevolgschade. Je blijft zelf verantwoordelijk voor het veilig doorvoeren van " +
             "aanpassingen.",
         },

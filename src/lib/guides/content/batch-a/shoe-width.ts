@@ -6,7 +6,7 @@ export const shoeWidth = {
   "illustration": "13-fietsschoen-leestbreedte",
   "nl": {
     "title": "Breedte van fietsschoenen: de juiste leest",
-    "metaTitle": "Breedte van fietsschoenen: de juiste leest | BestBikeFit4U",
+    "metaTitle": "Breedte van fietsschoenen: de juiste leest | BikeFitBoost",
     "metaDescription": "Twijfel over de breedte van je fietsschoenen? Leer lengte, leest en ruimte apart controleren. Meet beide voeten en vergelijk schoenen zonder knellen.",
     "keyword": "breedte van fietsschoenen",
     "relatedKeywords": [
@@ -115,7 +115,7 @@ Gebruik pijn of gevoelloosheid niet als gewenningstest. Controleer de sluiting e
   },
   "en": {
     "title": "Cycling shoe width: finding the right last",
-    "metaTitle": "Cycling shoe width: finding your last | BestBikeFit4U",
+    "metaTitle": "Cycling shoe width: finding your last | BikeFitBoost",
     "metaDescription": "Unsure about cycling shoe width? Check length, last shape and internal space separately. Measure both feet and compare shoes without accepting pressure.",
     "keyword": "cycling shoe width",
     "relatedKeywords": [

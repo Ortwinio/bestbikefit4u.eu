@@ -177,7 +177,7 @@ describe("results route preserved behavior", () => {
     URL.createObjectURL = createUrl;
     URL.revokeObjectURL = revokeUrl;
     const click = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (this: HTMLAnchorElement) {
-      expect(this.download).toBe("bestbikefit4u-report-session_1-en.pdf");
+      expect(this.download).toBe("bikefitboost-report-session_1-en.pdf");
     });
     await mount();
     fireEvent.click(screen.getByRole("button", { name: copy.results.actions.downloadPdf }));

@@ -42,10 +42,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = blogMessages[locale].metadataDescription;
 
   return {
-    title: "Blog - BestBikeFit4U",
+    title: "Blog - BikeFitBoost",
     description,
     openGraph: {
-      title: "Blog - BestBikeFit4U",
+      title: "Blog - BikeFitBoost",
       description,
       type: "website",
       url: alternates.canonical,

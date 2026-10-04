@@ -4,7 +4,7 @@ export const nl = {
     greeting: "Hoi {firstName},",
     genericGreeting: "Hoi,",
     signoff: "Fijne rit,",
-    team: "Team BestBikeFit4U",
+    team: "Team BikeFitBoost",
     unsubscribe: "Afmelden",
     preferences: "E-mailvoorkeuren",
     labels: {
@@ -20,14 +20,14 @@ export const nl = {
       topTube: "Effectieve bovenbuis",
     },
     footer: {
-      transactional: "Je ontvangt deze mail vanwege je aanvraag bij BestBikeFit4U.",
-      service: "Je ontvangt deze mail omdat je een account hebt bij BestBikeFit4U.",
+      transactional: "Je ontvangt deze mail vanwege je aanvraag bij BikeFitBoost.",
+      service: "Je ontvangt deze mail omdat je een account hebt bij BikeFitBoost.",
       internal: "Interne melding over een nieuw praktijkverhaal.",
     },
     reply: "Vragen? Beantwoord deze mail, een echt mens leest mee.",
   },
   loginCode: {
-    subject: "{code} is je BestBikeFit4U-inlogcode",
+    subject: "{code} is je BikeFitBoost-inlogcode",
     preheader: "15 minuten geldig. Je fietsen staan klaar.",
     heading: "Je inlogcode",
     body: "Hij is 15 minuten geldig. Je fietsen en fitwaarden staan voor je klaar.",
@@ -185,7 +185,7 @@ export const nl = {
     preheader: "Nauwkeuriger meten in 5 minuten, plus je fit altijd op zak.",
     heading: "3 tips voor een fit die echt klopt",
     intro: "hoe preciezer je meet, hoe beter je advies. Met deze drie tips haal je het meeste uit " +
-      "BestBikeFit4U:",
+      "BikeFitBoost:",
     tips: [
       {
         title: "Meet op blote voeten.",
@@ -206,7 +206,7 @@ export const nl = {
     button: "Start mijn fit",
     buttonExisting: "Bekijk mijn fit",
     appEyebrow: "TIP",
-    appHeading: "Zet BestBikeFit4U op je telefoon.",
+    appHeading: "Zet BikeFitBoost op je telefoon.",
     appBody: "Je waarden altijd bij de hand: in de schuur met de inbussleutel in je hand, of bij de " +
       "pomp voor je rit. Geen App Store nodig, en het neemt bijna geen ruimte in.",
     chips: [
@@ -215,12 +215,12 @@ export const nl = {
       "Je stappenplan",
     ],
     iphone: [
-      "Open bestbikefit4u.eu in Safari",
+      "Open www.bikefitboost.com in Safari",
       "Tik op het deelicoon",
       "Kies Zet op beginscherm",
     ],
     android: [
-      "Open bestbikefit4u.eu in Chrome",
+      "Open www.bikefitboost.com in Chrome",
       "Tik op de drie puntjes",
       "Kies App installeren",
     ],

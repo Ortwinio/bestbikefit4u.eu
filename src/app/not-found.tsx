@@ -125,8 +125,8 @@ export default async function NotFound() {
               src="/mascote/bestbikefit4u-mascote-on-bike-transparent.webp"
               alt={
                 locale === "nl"
-                  ? "BestBikeFit4U-mascotte op de fiets bij een ontbrekende pagina"
-                  : "BestBikeFit4U mascot on a bike at a missing page"
+                  ? "BikeFitBoost-mascotte op de fiets bij een ontbrekende pagina"
+                  : "BikeFitBoost mascot on a bike at a missing page"
               }
               width={880}
               height={880}

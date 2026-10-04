@@ -35,8 +35,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: isNl
-      ? "Cranklengte calculator | BestBikeFit4U"
-      : "Crank Length Calculator | BestBikeFit4U",
+      ? "Cranklengte calculator | BikeFitBoost"
+      : "Crank Length Calculator | BikeFitBoost",
     description: isNl
       ? "Bereken een praktisch startpunt voor cranklengte op basis van binnenbeenlengte en " +
         "fietsdiscipline."
@@ -79,8 +79,8 @@ export default async function CrankLengthCalculatorPage({
           ...buildCalculatorPageSchemas({
             name:
               locale === "nl"
-                ? "BestBikeFit4U cranklengte calculator"
-                : "BestBikeFit4U Crank Length Calculator",
+                ? "BikeFitBoost cranklengte calculator"
+                : "BikeFitBoost Crank Length Calculator",
             description:
               locale === "nl"
                 ? "Bereken een praktisch startpunt voor cranklengte op basis van binnenbeenlengte en categorie."

@@ -1,3 +1,4 @@
+import { BRAND } from "../../lib/brand";
 import type {
   ResultsSummaryData, FitReportData, WinbackData, ProExplainerData, Day1TipsData, EmailLocale,
 } from "./index";
@@ -18,10 +19,10 @@ export const sampleFit = {
   confidenceScore: 90,
 };
 export function sampleData(locale: EmailLocale) {
-  const actionUrl = `https://bestbikefit4u.eu/${locale}/fit`;
+  const actionUrl = `${BRAND.siteUrl}/${locale}/fit`;
   const preferences = {
-    unsubscribeUrl: `https://bestbikefit4u.eu/${locale}/email-preferences?token=preview-only`,
-    preferencesUrl: `https://bestbikefit4u.eu/${locale}/settings`,
+    unsubscribeUrl: `${BRAND.siteUrl}/${locale}/email-preferences?token=preview-only`,
+    preferencesUrl: `${BRAND.siteUrl}/${locale}/settings`,
   };
   const personal = { firstName: "Lisa", actionUrl };
   return {

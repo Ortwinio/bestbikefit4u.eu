@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   return {
-    title: "Bikefitting thuis beginnen | BestBikeFit4U",
+    title: "Bikefitting thuis beginnen | BikeFitBoost",
     description:
       "Ontdek hoe online bikefitting je helpt met een praktisch startplan voor " +
       "zadelhoogte, reach, drop en comfort. Begin thuis en zie wanneer een fysieke " +
@@ -53,7 +53,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "digitale bikefit",
     ],
     openGraph: {
-      title: "Bikefitting thuis beginnen | BestBikeFit4U",
+      title: "Bikefitting thuis beginnen | BikeFitBoost",
       description:
         "Een productgerichte landingspagina voor rijders die online bikefitting " +
         "willen gebruiken als eerste stap.",

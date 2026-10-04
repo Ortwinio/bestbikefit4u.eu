@@ -4,7 +4,7 @@ export const shoeCleat = {
   illustration: "43-schoen-cleat",
   nl: {
     title: "Fietsschoenen en schoenplaatjes afstellen",
-    metaTitle: "Fietsschoenen en schoenplaatjes afstellen | BestBikeFit4U",
+    metaTitle: "Fietsschoenen en schoenplaatjes afstellen | BikeFitBoost",
     metaDescription:
       "Fietsschoenen en schoenplaatjes afstellen? Controleer ruimte en sluiting, daarna de verbinding met je pedaal. Meet je basis en test wijzigingen rustig.",
     keyword: "fietsschoenen en schoenplaatjes afstellen",
@@ -125,7 +125,7 @@ Controleer de handleiding en laat een fietsenmaker helpen bij twijfel. Bereik, p
   },
   en: {
     title: "Cycling shoe and cleat fit",
-    metaTitle: "Cycling shoe and cleat fit | BestBikeFit4U",
+    metaTitle: "Cycling shoe and cleat fit | BikeFitBoost",
     metaDescription:
       "Checking cycling shoe and cleat fit? Assess room and closure first, then the pedal connection. Record your starting position and test each change calmly.",
     keyword: "cycling shoe and cleat fit",

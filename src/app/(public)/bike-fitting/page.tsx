@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   return {
-    title: "Bike fitting at home: where to start | BestBikeFit4U",
+    title: "Bike fitting at home: where to start | BikeFitBoost",
     description:
       "Learn how to start bike fitting at home with better order, clearer setup " +
       "targets, and a practical handoff into the bike fit calculator.",
@@ -52,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "how to fit a bike",
     ],
     openGraph: {
-      title: "Bike fitting at home: where to start | BestBikeFit4U",
+      title: "Bike fitting at home: where to start | BikeFitBoost",
       description:
         "An English landing page for riders who want a practical first step into " + "online bike fitting.",
       type: "website",

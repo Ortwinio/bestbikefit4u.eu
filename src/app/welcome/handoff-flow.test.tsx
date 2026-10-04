@@ -37,7 +37,7 @@ it("public saddle-height → login → confirmed profile preserves inseam proven
   const entry = readHandoff().entries.find((item) => item.field === "inseamCm");
   expect(entry).toMatchObject({ value: 84.5, method: "measured", calculator: "saddle-height" });
   const cta = screen.getAllByRole("link").find((link) => link.getAttribute("href")?.includes("handoff=1"));
-  const destination = new URL(cta!.getAttribute("href")!, "https://bestbikefit4u.eu");
+  const destination = new URL(cta!.getAttribute("href")!, "https://www.bikefitboost.com");
   expect(destination.pathname).toBe("/en/login");
   expect([...destination.searchParams.keys()].sort()).toEqual(["handoff", "src"]);
   expect(destination.search).not.toContain("84");

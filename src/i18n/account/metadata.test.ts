@@ -8,7 +8,7 @@ describe("account metadata language", () => {
     ["settings", "Je instellingen"], ["feedback", "Je feedback"],
   ] as const)("localizes %s metadata and preserves English inheritance", (page, title) => {
     const metadata = getAccountMetadata("nl", page);
-    expect(metadata.title).toBe(`${title} | BestBikeFit4U`);
+    expect(metadata.title).toBe(`${title} | BikeFitBoost`);
     expect(metadata.description).toBe("Fietsafstelling voor comfort, een goede houding en betere prestaties.");
     expect(metadata.openGraph).toMatchObject({ title: metadata.title, description: metadata.description });
     expect(metadata.twitter).toMatchObject({ title: metadata.title, description: metadata.description });

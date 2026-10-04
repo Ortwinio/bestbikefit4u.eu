@@ -437,7 +437,7 @@ const en = {
   },
   pressure: {
     publicPage: {
-      title: "Tire Pressure Calculator | BestBikeFit4U",
+      title: "Tire Pressure Calculator | BikeFitBoost",
       description:
         "Calculate the ideal tire pressure for road, gravel or MTB. Free, no account needed.",
       h1: "Free Tire Pressure Calculator",
@@ -451,18 +451,18 @@ const en = {
       ] as [string, string, string],
     },
     roadPage: {
-      title: "Road Bike Tire Pressure Calculator | BestBikeFit4U",
+      title: "Road Bike Tire Pressure Calculator | BikeFitBoost",
       description:
         "Calculate ideal road bike tyre pressure based on weight, tyre width and surface.",
       h1: "Road Bike Tire Pressure",
     },
     gravelPage: {
-      title: "Gravel Bike Tire Pressure Calculator | BestBikeFit4U",
+      title: "Gravel Bike Tire Pressure Calculator | BikeFitBoost",
       description: "Find the optimal gravel bike tyre pressure for mixed surfaces.",
       h1: "Gravel Bike Tire Pressure",
     },
     mtbPage: {
-      title: "MTB Tire Pressure Calculator | BestBikeFit4U",
+      title: "MTB Tire Pressure Calculator | BikeFitBoost",
       description: "Calculate mountain bike tyre pressure for trail, enduro or XC.",
       h1: "MTB Tire Pressure",
     },
@@ -1460,7 +1460,7 @@ const en = {
           "Use this report as a practical adjustment sequence. Change one variable at a time, " +
           "validate on the bike, and keep notes after each ride.",
         shell: {
-          brandAlt: "BestBikeFit4U brand mark",
+          brandAlt: "BikeFitBoost brand mark",
           dateLabel: "Report date",
           aboutTitle: "About this report",
           aboutBody:
@@ -2179,12 +2179,12 @@ const en = {
       appInstall: {
         settingsTitle: "Install on iPhone",
         settingsDescription:
-          "Create an iPhone home-screen app for BestBikeFit4U. When you open it from the icon, " +
+          "Create an iPhone home-screen app for BikeFitBoost. When you open it from the icon, " +
           "the app will take you straight into your dashboard if you're still signed in.",
         eyebrow: "iPhone app",
-        title: "Install BestBikeFit4U on your iPhone",
+        title: "Install BikeFitBoost on your iPhone",
         description:
-          "Save BestBikeFit4U to your iPhone home screen for an app-like experience with direct " +
+          "Save BikeFitBoost to your iPhone home screen for an app-like experience with direct " +
           "dashboard launch.",
         quickStepsTitle: "Quick steps",
         openInstallPage: "Open install page",
@@ -2192,7 +2192,7 @@ const en = {
         backToSettings: "Back to settings",
         installedTitle: "App installed",
         installedDescription:
-          "BestBikeFit4U is already running in home-screen mode on this device.",
+          "BikeFitBoost is already running in home-screen mode on this device.",
         openInSafariTitle: "Open this in Safari",
         openInSafariDescription:
           "iPhone home-screen install only works from Safari. Open this page in Safari, then use " +
@@ -2255,7 +2255,7 @@ const en = {
         },
         disconnectConfirm: {
           title: "Disconnect Strava?",
-          body: "Your Strava activity data will be removed from BestBikeFit4U. Your profile photo will be kept.",
+          body: "Your Strava activity data will be removed from BikeFitBoost. Your profile photo will be kept.",
           confirm: "Disconnect",
           cancel: "Cancel",
         },

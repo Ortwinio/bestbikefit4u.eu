@@ -90,7 +90,7 @@ export function EmailPreferencesClient({ locale }: { locale: Locale }) {
   return (
     <main id="main-content" className="mx-auto min-h-screen max-w-xl px-5 py-16">
       <div className="space-y-6 rounded-3xl border border-border bg-card p-6 sm:p-10">
-        <p className="font-display font-bold text-primary">BestBikeFit4U</p>
+        <p className="font-display font-bold text-primary">BikeFitBoost</p>
         <h1 className="font-display text-3xl font-bold">{copy.title}</h1>
         <p className="text-muted-foreground">{copy.description}</p>
         {error && <p role="alert">{copy.error}</p>}

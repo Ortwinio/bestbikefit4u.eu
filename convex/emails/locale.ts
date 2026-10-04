@@ -1,3 +1,4 @@
+import { SITE_ORIGIN } from "../../shared/brand";
 import { DEFAULT_LOCALE, type Locale } from "../../src/i18n/config";
 
 export function resolveEmailLocale(
@@ -23,7 +24,7 @@ export function loginEmailLocale(url: string): Locale {
     return DEFAULT_LOCALE;
   }
   try {
-    const parsed = new URL(url, "https://bestbikefit4u.eu");
+    const parsed = new URL(url, SITE_ORIGIN);
     const explicitLocale = pathLocale(parsed.pathname);
     if (explicitLocale) {
       return explicitLocale;

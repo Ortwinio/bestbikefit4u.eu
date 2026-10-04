@@ -69,7 +69,7 @@ describe("Stripe checkout route", () => {
     process.env = { ...originalEnv };
     vi.stubEnv("NODE_ENV", "test");
     process.env.NEXT_PUBLIC_CONVEX_URL = "https://example.convex.cloud";
-    process.env.SITE_URL = "https://bestbikefit4u.eu";
+    process.env.SITE_URL = "https://www.bikefitboost.com";
     process.env.STRIPE_SECRET_KEY = "sk_test_123";
     process.env.STRIPE_PRO_MONTHLY_PRICE_ID = "price_pro_monthly";
     delete process.env.STRIPE_BILLING_ENABLED;
@@ -156,7 +156,7 @@ describe("Stripe checkout route", () => {
 
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({
-      url: "https://bestbikefit4u.eu/pricing?dev=stripe_mock",
+      url: "https://www.bikefitboost.com/pricing?dev=stripe_mock",
     });
     expect(mocks.query).not.toHaveBeenCalled();
     expect(mocks.checkoutSessionsCreate).not.toHaveBeenCalled();
@@ -182,9 +182,9 @@ describe("Stripe checkout route", () => {
       mode: "subscription",
       line_items: [{ price: "price_pro_monthly", quantity: 1 }],
       success_url:
-        "https://bestbikefit4u.eu/nl/fit/session_456/results?checkout=success&checkout_session_id={CHECKOUT_SESSION_ID}",
+        "https://www.bikefitboost.com/nl/fit/session_456/results?checkout=success&checkout_session_id={CHECKOUT_SESSION_ID}",
       cancel_url:
-        "https://bestbikefit4u.eu/nl/fit/session_456/results?checkout=cancelled",
+        "https://www.bikefitboost.com/nl/fit/session_456/results?checkout=cancelled",
       customer: "cus_existing",
       subscription_data: { metadata: { userId: "user_123" } },
       client_reference_id: "user_123",

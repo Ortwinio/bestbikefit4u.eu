@@ -125,7 +125,7 @@ type PageCopy = {
 export const setupCopy: Record<Locale, PageCopy> = {
   nl: {
     metadata: {
-      title: "Fiets afstellen: zadelhoogte, stuur, reach en bikefitting | BestBikeFit4U",
+      title: "Fiets afstellen: zadelhoogte, stuur, reach en bikefitting | BikeFitBoost",
       description:
         "Leer je fiets praktisch afstellen: zadelhoogte, stuurpositie, reach, " +
         "stuurdrop en schoenplaatjes. Gebruik daarna de gratis bike fit calculator " +
@@ -486,7 +486,7 @@ export const setupCopy: Record<Locale, PageCopy> = {
   },
   en: {
     metadata: {
-      title: "Bike setup: saddle height, handlebar reach and bike fitting | BestBikeFit4U",
+      title: "Bike setup: saddle height, handlebar reach and bike fitting | BikeFitBoost",
       description:
         "Learn how to set up your bike in a practical order: saddle height, reach, " +
         "drop, cockpit and cleats. Then use the free bike fit calculator for a " +

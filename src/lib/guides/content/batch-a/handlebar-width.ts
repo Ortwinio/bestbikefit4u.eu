@@ -6,7 +6,7 @@ export const handlebarWidth = {
   illustration: "15-stuurbreedte-remgrepen",
   nl: {
     title: "Stuurbreedte racefiets en remgrepen",
-    metaTitle: "Stuurbreedte racefiets en remgrepen | BestBikeFit4U",
+    metaTitle: "Stuurbreedte racefiets en remgrepen | BikeFitBoost",
     metaDescription: "Twijfel je over de stuurbreedte van je racefiets? Leer breedte en remgreepstand apart beoordelen, meten en veilig vergelijken voor je onderdelen koopt.",
     keyword: "stuurbreedte",
     relatedKeywords: ["remgrepen afstellen", "stuurbreedte meten", "polsstand racefiets"],
@@ -115,7 +115,7 @@ Noteer welke handpositie prettig is en waar je moeite met de bediening hebt. Nee
   },
   en: {
     title: "Handlebar width and hood position",
-    metaTitle: "Handlebar width and hood position | BestBikeFit4U",
+    metaTitle: "Handlebar width and hood position | BikeFitBoost",
     metaDescription: "Unsure about road handlebar width? Learn to assess width and hood position separately, measure your setup and compare safely before buying new parts.",
     keyword: "handlebar width",
     relatedKeywords: ["brake hood position", "measure road handlebars", "road bike wrist position"],

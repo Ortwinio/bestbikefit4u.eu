@@ -1,0 +1,4 @@
+plans/rebrand/audit/B4-canvas-gaps.md
+plans/rebrand/audit/B4-inventory.mjs
+plans/rebrand/audit/B4-inventory.json
+plans/rebrand/audit/files-B4.txt

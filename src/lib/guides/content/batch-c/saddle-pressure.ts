@@ -4,7 +4,7 @@ export const saddlePressure = {
   illustration: "34-zadelsteun",
   nl: {
     title: "Zadelpijn fietsen: steun, druk en wrijving",
-    metaTitle: "Zadelpijn fietsen | BestBikeFit4U",
+    metaTitle: "Zadelpijn fietsen | BikeFitBoost",
     metaDescription:
       "Zadelpijn tijdens het fietsen? Leer steun, druk en wrijving onderscheiden. Controleer je zadel en houding stap voor stap en herken wanneer je hulp vraagt.",
     keyword: "zadelpijn fietsen",
@@ -131,7 +131,7 @@ Bewaar de oude afstelling zodat je bij een slechter resultaat gericht kunt terug
   },
   en: {
     title: "Saddle pain cycling: support, pressure and friction",
-    metaTitle: "Saddle pain cycling | BestBikeFit4U",
+    metaTitle: "Saddle pain cycling | BikeFitBoost",
     metaDescription:
       "Saddle pain when cycling? Separate support, pressure and friction. Check your saddle and position step by step, and recognise when you should seek help.",
     keyword: "saddle pain cycling",

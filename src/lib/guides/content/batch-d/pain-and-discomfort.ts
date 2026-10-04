@@ -6,7 +6,7 @@ export const guide = {
   illustration: "52-pijn-en-contactpunten",
   nl: {
     title: "Pijn bij fietsen: kies je eerste stap",
-    metaTitle: "Pijn bij fietsen: je eerste stap | BestBikeFit4U",
+    metaTitle: "Pijn bij fietsen: je eerste stap | BikeFitBoost",
     metaDescription: "Pijn aan nek, handen, zadel of voeten tijdens fietsen? Beschrijf de klacht, controleer " +
       "je contactpunten en kies een kleine proef. Weet wanneer je stopt.",
     keyword: "pijn bij fietsen",
@@ -141,7 +141,7 @@ niet te beginnen met raden welke instelling je wanneer hebt geprobeerd.`,
   },
   en: {
     title: "Cycling pain: choose your first step",
-    metaTitle: "Cycling pain: choose your first step | BestBikeFit4U",
+    metaTitle: "Cycling pain: choose your first step | BikeFitBoost",
     metaDescription: "Neck, hand, saddle or foot pain while cycling? Describe symptoms, check contact points " +
       "and choose one small trial. Learn when to stop and seek help.",
     keyword: "cycling pain",

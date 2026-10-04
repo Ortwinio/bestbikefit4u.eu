@@ -6,7 +6,7 @@ export const riderProfiles = {
   illustration: "18-lichaamsbouw-fietshouding",
   nl: {
     title: "Fiets afstellen op lichaamsbouw",
-    metaTitle: "Fiets afstellen op lichaamsbouw | BestBikeFit4U",
+    metaTitle: "Fiets afstellen op lichaamsbouw | BikeFitBoost",
     metaDescription: "Dezelfde lengte, toch een andere fietshouding? Leer welke lichaamsmaten en rijdoelen relevant zijn en maak een persoonlijk startpunt voor je afstelling.",
     keyword: "fiets afstellen op lichaamsbouw",
     relatedKeywords: ["lichaamsverhoudingen fiets", "persoonlijke fietsafstelling", "romplengte en fietspositie"],
@@ -119,7 +119,7 @@ Je hoeft een prettige, veilige positie niet voortdurend te veranderen omdat je e
   },
   en: {
     title: "Bike fit and body proportions",
-    metaTitle: "Bike fit and body proportions | BestBikeFit4U",
+    metaTitle: "Bike fit and body proportions | BikeFitBoost",
     metaDescription: "The same height but a different riding position? Learn which body measurements and riding goals matter, then build a personal starting point for your fit.",
     keyword: "bike fit and body proportions",
     relatedKeywords: ["cycling body measurements", "personal bike setup", "torso length and bike position"],

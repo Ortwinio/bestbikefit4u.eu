@@ -1,3 +1,4 @@
+import { SITE_ORIGIN } from "../shared/brand";
 import { httpRouter, makeFunctionReference } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
@@ -38,7 +39,7 @@ http.route({
   path: "/strava/callback",
   method: "GET",
   handler: httpAction(async (ctx, request) => {
-    const siteUrl = process.env.SITE_URL ?? "https://bestbikefit4u.eu";
+    const siteUrl = SITE_ORIGIN;
     const url = new URL(request.url);
     const code = url.searchParams.get("code");
     const state = url.searchParams.get("state");

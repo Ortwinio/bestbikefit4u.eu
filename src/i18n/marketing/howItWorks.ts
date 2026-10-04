@@ -67,15 +67,15 @@ export const howItWorksCopy: Record<
 > = {
   en: {
     metadata: {
-      title: "How It Works | BestBikeFit4U",
+      title: "How It Works | BikeFitBoost",
       description:
-        "See how BestBikeFit4U turns your measurements, riding goals, and bike context into practical fit guidance.",
+        "See how BikeFitBoost turns your measurements, riding goals, and bike context into practical fit guidance.",
       keywords: ["how online bike fit works", "bike fit process", "digital bike fitting"],
     },
     eyebrow: "Transparent process",
-    title: "How BestBikeFit4U works",
+    title: "How BikeFitBoost works",
     intro:
-      "BestBikeFit4U combines your body measurements, riding goals, and bike context to help you make clearer fit decisions. The goal is a better next step on the bike you actually ride.",
+      "BikeFitBoost combines your body measurements, riding goals, and bike context to help you make clearer fit decisions. The goal is a better next step on the bike you actually ride.",
     sectionTitle: "What happens in the fit flow",
     sectionIntro:
       "The flow is designed to move from useful inputs to practical recommendations without forcing riders through unnecessary complexity.",
@@ -104,15 +104,15 @@ export const howItWorksCopy: Record<
   },
   nl: {
     metadata: {
-      title: "Hoe het werkt | BestBikeFit4U",
+      title: "Hoe het werkt | BikeFitBoost",
       description:
-        "Bekijk hoe BestBikeFit4U jouw metingen, rijdoelen en fietscontext omzet in praktische fit-aanbevelingen.",
+        "Bekijk hoe BikeFitBoost jouw metingen, rijdoelen en fietscontext omzet in praktische fit-aanbevelingen.",
       keywords: ["hoe online bikefit werkt", "bikefit proces", "digitale bikefitting"],
     },
     eyebrow: "Transparant proces",
-    title: "Hoe BestBikeFit4U werkt",
+    title: "Hoe BikeFitBoost werkt",
     intro:
-      "BestBikeFit4U combineert je lichaamsmetingen, rijdoelen en fietscontext om je te helpen duidelijkere fitbeslissingen te nemen. Het doel is een betere volgende stap op de fiets die je echt rijdt.",
+      "BikeFitBoost combineert je lichaamsmetingen, rijdoelen en fietscontext om je te helpen duidelijkere fitbeslissingen te nemen. Het doel is een betere volgende stap op de fiets die je echt rijdt.",
     sectionTitle: "Zo verloopt je bikefit",
     sectionIntro:
       "Je vult je gegevens in en krijgt praktische aanbevelingen. Zonder onnodige stappen.",

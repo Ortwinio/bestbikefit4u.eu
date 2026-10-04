@@ -4,7 +4,7 @@ export const powerSpeed = {
   illustration: "29-vermogen-snelheid",
   nl: {
     title: "Vermogen en snelheid fietsen",
-    metaTitle: "Vermogen en snelheid fietsen | BestBikeFit4U",
+    metaTitle: "Vermogen en snelheid fietsen | BikeFitBoost",
     metaDescription: "Waarom geeft hetzelfde vermogen een andere snelheid? Begrijp wind, helling en weerstand, vergelijk je invoer en toets je houding tijdens rustige ritten.",
     keyword: "vermogen en snelheid fietsen",
     relatedKeywords: ["watt naar snelheid", "luchtweerstand fiets", "rolweerstand fietsen"],
@@ -91,7 +91,7 @@ Nee, wind en route kunnen ook veranderd zijn. Beoordeel eerst of je veilig stuur
   },
   en: {
     title: "Cycling power and speed: what changes?",
-    metaTitle: "Cycling power and speed: what changes? | BestBikeFit4U",
+    metaTitle: "Cycling power and speed: what changes? | BikeFitBoost",
     metaDescription: "Why does the same power produce a different speed? Understand wind, gradient and resistance, compare your inputs and check your position on easy rides.",
     keyword: "cycling power and speed",
     relatedKeywords: ["watts to speed", "cycling air resistance", "cycling rolling resistance"],

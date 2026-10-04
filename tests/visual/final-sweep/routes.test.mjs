@@ -31,9 +31,9 @@ test("rider integration routes render account fixtures for both locales", () => 
 
 test("expected locale exceptions and CMS fallback are explicit", () => {
   assert.deepEqual(routes.find((route) => route.sourceRoute === "/bike-fitting").expected.nl,
-    { status: 308, redirectTo: "/nl/bikefitting" });
+    { status: 301, redirectTo: "/nl/bikefitting" });
   assert.deepEqual(routes.find((route) => route.sourceRoute === "/bikefitting").expected.en,
-    { status: 308, redirectTo: "/en/bike-fitting" });
+    { status: 301, redirectTo: "/en/bike-fitting" });
   assert.equal(routes.find((route) => route.sourceRoute === "/use-cases").expected.nl.redirectTo, "/nl/guides");
   assert.equal(routes.find((route) => route.sourceRoute === "/blog/[slug]").fixture, "blog");
   const live = resolveRoutes({ blogSlug: "published-example" }).find((route) => route.sourceRoute === "/blog/[slug]");

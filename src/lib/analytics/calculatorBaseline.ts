@@ -23,7 +23,7 @@ export function calculatorFromPath(pathname: string): PublicCalculator | null {
 /** Put attribution in the Link prop itself: Next's router does not read later DOM href mutations. */
 export function calculatorLoginHref(href: string, calculator: PublicCalculator): string {
   if (!/^\/(?:en\/|nl\/)?login(?:[?#]|$)/.test(href)) return href;
-  const url = new URL(href, "https://bestbikefit4u.eu");
+  const url = new URL(href, BRAND.siteUrl);
   url.searchParams.set("src", calculator);
   return `${url.pathname}${url.search}${url.hash}`;
 }
@@ -98,3 +98,4 @@ export function observeCalculatorEdits(onResult: () => void): () => void {
     document.removeEventListener("pointerup", onPointerUp, true);
   };
 }
+import { BRAND } from "@/config/brand";

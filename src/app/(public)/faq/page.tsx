@@ -108,7 +108,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
       metadata: {
         title: faqPresentation[locale].metadataTitle,
         description:
-          "Answers about BestBikeFit4U online bike fitting: measurements, saddle height, setback, " +
+          "Answers about BikeFitBoost online bike fitting: measurements, saddle height, setback, " +
           "reach & drop, stack & reach, MTB/gravel/TT setups, pain troubleshooting, plans, exports, " +
           "and safety guardrails.",
         keywords: [
@@ -120,15 +120,15 @@ function getRawContent(locale: Locale): RawFAQCopy {
         ],
       },
       title: "Frequently Asked Questions",
-      intro: "Everything you need to know about BestBikeFit4U.",
+      intro: "Everything you need to know about BikeFitBoost.",
       sections: [
         {
           category: "Getting Started",
           questions: [
             {
-              q: "How accurate is BestBikeFit4U?",
+              q: "How accurate is BikeFitBoost?",
               a:
-                "BestBikeFit4U uses established biomechanical formulas, including LeMond/Hamley for saddle " +
+                "BikeFitBoost uses established biomechanical formulas, including LeMond/Hamley for saddle " +
                 "height and KOPS-based logic for setback. For most riders, results are close to what a " +
                 "professional fitter would recommend. Adding optional measurements improves accuracy " +
                 "further.",
@@ -152,7 +152,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
           category: "Bike Fitting",
           questions: [
             {
-              q: "What types of bikes does BestBikeFit4U support?",
+              q: "What types of bikes does BikeFitBoost support?",
               a:
                 "We support road bikes, gravel bikes, mountain bikes, time trial or triathlon bikes, city " +
                 "or commuter bikes, and touring bikes. Each bike type uses category-specific fitting logic.",
@@ -172,7 +172,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
               q: "What if I have existing pain while riding?",
               a:
                 "During the fit questionnaire, you can report the discomfort areas that matter most to " +
-                "you. BestBikeFit4U uses that context to help you review fit-related setup factors first, " +
+                "you. BikeFitBoost uses that context to help you review fit-related setup factors first, " +
                 "but persistent or severe pain may still require an in-person fitter or medical assessment.",
             },
           ],
@@ -204,7 +204,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
               q: "Is there a money-back guarantee?",
               a: PRODUCT_LIVE_FLAGS.moneyBackGuarantee
                 ? "Yes, an active public money-back guarantee is listed on the pricing page."
-                : "No. There is currently no public money-back guarantee claim on BestBikeFit4U.",
+                : "No. There is currently no public money-back guarantee claim on BikeFitBoost.",
             },
             {
               q: "Can I change my plan later?",
@@ -214,7 +214,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
         },
       ],
       trustParagraph:
-        "BestBikeFit4U uses established bike fitting methodology to give you practical, measurable " +
+        "BikeFitBoost uses established bike fitting methodology to give you practical, measurable " +
         "setup targets. The free calculator is a strong starting point, and Pro adds deeper " +
         "analysis, multiple bikes, and downloadable reports.",
       guideTitle: "Popular next-step guides",
@@ -240,7 +240,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
     metadata: {
       title: faqPresentation[locale].metadataTitle,
       description:
-        "Antwoorden over BestBikeFit4U online bikefitting: metingen, zadelhoogte, zadelterugstand, " +
+        "Antwoorden over BikeFitBoost online bikefitting: metingen, zadelhoogte, zadelterugstand, " +
         "reach & drop, stack & reach, MTB/gravel/TT, klachten, abonnementen, exports en " +
         "veiligheidsregels.",
       keywords: [
@@ -252,15 +252,15 @@ function getRawContent(locale: Locale): RawFAQCopy {
       ],
     },
     title: "Veelgestelde vragen",
-    intro: "Alles wat je moet weten over BestBikeFit4U.",
+    intro: "Alles wat je moet weten over BikeFitBoost.",
     sections: [
       {
         category: "Aan de slag",
         questions: [
           {
-            q: "Hoe nauwkeurig is BestBikeFit4U?",
+            q: "Hoe nauwkeurig is BikeFitBoost?",
             a:
-              "BestBikeFit4U gebruikt bewezen biomechanische formules, waaronder de " +
+              "BikeFitBoost gebruikt bewezen biomechanische formules, waaronder de " +
               "LeMond/Hamley-methode voor zadelhoogte. Voor de meeste rijders zitten de uitkomsten dicht " +
               "bij een professionele fitting, zeker met extra metingen.",
           },
@@ -283,7 +283,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
         category: "Bikefitting",
         questions: [
           {
-            q: "Welke fietstypes ondersteunt BestBikeFit4U?",
+            q: "Welke fietstypes ondersteunt BikeFitBoost?",
             a:
               "We ondersteunen racefietsen, gravel, mountainbike, tijdrit of triathlon, stads- en " +
               "tourfietsen. Elk type gebruikt specifieke fitlogica.",
@@ -301,7 +301,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
           {
             q: "Wat als ik nu al pijnklachten heb?",
             a:
-              "Tijdens de fit-vragenlijst kun je aangeven waar je vooral ongemak ervaart. BestBikeFit4U " +
+              "Tijdens de fit-vragenlijst kun je aangeven waar je vooral ongemak ervaart. BikeFitBoost " +
               "gebruikt die context om fitgerelateerde afstelfactoren eerst te laten controleren, maar " +
               "aanhoudende of hevige pijnklachten kunnen alsnog een fysieke fitter of medische " +
               "beoordeling vragen.",
@@ -334,7 +334,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
             q: "Is er een geld-terug-garantie?",
             a: PRODUCT_LIVE_FLAGS.moneyBackGuarantee
               ? "Ja, er staat op dit moment een publieke geld-terug-garantie op de prijzenpagina."
-              : "Nee. BestBikeFit4U doet op dit moment geen publieke claim over een geld-terug-garantie.",
+              : "Nee. BikeFitBoost doet op dit moment geen publieke claim over een geld-terug-garantie.",
           },
           {
             q: "Kan ik later van plan wisselen?",
@@ -344,7 +344,7 @@ function getRawContent(locale: Locale): RawFAQCopy {
       },
     ],
     trustParagraph:
-      "BestBikeFit4U gebruikt beproefde bikefitting-methodologie om je praktische, meetbare " +
+      "BikeFitBoost gebruikt beproefde bikefitting-methodologie om je praktische, meetbare " +
       "afstelwaarden te geven. De gratis calculator is een sterk startpunt, en Pro voegt diepere " +
       "analyse, meerdere fietsen en downloadbare rapporten toe.",
     guideTitle: "Populaire vervolggidsen",

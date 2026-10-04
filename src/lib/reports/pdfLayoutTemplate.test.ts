@@ -29,8 +29,8 @@ describe("six-page PDF report", () => {
       const footer = html.split('<footer class="report-footer">')[1].split("</footer>")[0];
       expect(footer).toContain(locale === "nl" ? "Fitrapport" : "Fit report");
       expect(footer).toContain('class="mono report-footer-fixed"');
-      expect(footer).toMatch(/report-footer-person[\s\S]*Ortwin[\s\S]*bestbikefit4u.eu/);
-      expect(footer).not.toContain("</span><span>bestbikefit4u.eu");
+      expect(footer).toMatch(/report-footer-person[\s\S]*Ortwin[\s\S]*www\.bikefitboost\.com/);
+      expect(footer).not.toContain("</span><span>www.bikefitboost.com");
     },
   );
 
@@ -38,7 +38,7 @@ describe("six-page PDF report", () => {
     const html = renderPdfReportHtml({ report, copy });
     for (const font of ["Bricolage Grotesque", "Figtree", "DM Mono"]) expect(html).toContain(font);
     expect(html.match(/data:font\/woff2;base64,/g)).toHaveLength(9);
-    expect(html).toContain("data:image/svg+xml;base64,");
+    expect(html).toMatch(/<img src="data:image\/png;base64,[^"]+" alt="BikeFitBoost"/);
     expect(html).toContain("data:image/png;base64,");
     expect(html).not.toContain("fonts.googleapis.com");
     expect(html).not.toContain("/_blob/");

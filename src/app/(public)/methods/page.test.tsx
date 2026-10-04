@@ -31,15 +31,15 @@ describe("sources and methods page", () => {
     }
     expect(screen.getByText(copy.pressureRule)).toBeTruthy();
     const metadata = await generateMetadata();
-    expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}/methods`);
+    expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}/methods`);
     expect(metadata.alternates?.languages).toMatchObject({
-      nl: "https://bestbikefit4u.eu/nl/methods", en: "https://bestbikefit4u.eu/en/methods",
+      nl: "https://www.bikefitboost.com/nl/methods", en: "https://www.bikefitboost.com/en/methods",
     });
     expect(metadata.description).toBe(copy.methodsDescription);
     expect(metadata.openGraph).toMatchObject({ title: copy.methodsTitle, description: copy.methodsDescription });
     const schema = JSON.parse(container.querySelector('script[type="application/ld+json"]')!.textContent!);
     expect(schema).toMatchObject({ "@type": "WebPage", inLanguage: locale,
-      url: `https://bestbikefit4u.eu/${locale}/methods` });
+      url: `https://www.bikefitboost.com/${locale}/methods` });
     expect(schema).not.toHaveProperty("reviewedBy");
     expect(schema).not.toHaveProperty("dateReviewed");
   });

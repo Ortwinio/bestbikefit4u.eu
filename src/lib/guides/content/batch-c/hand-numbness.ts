@@ -5,7 +5,7 @@ export const handNumbness = {
   illustration: "33-gevoelloze-handen",
   nl: {
     title: "Gevoelloze handen fietsen: waar begin je?",
-    metaTitle: "Gevoelloze handen fietsen | BestBikeFit4U",
+    metaTitle: "Gevoelloze handen fietsen | BikeFitBoost",
     metaDescription:
       "Gevoelloze handen tijdens het fietsen? Controleer druk, polsstand en stuurafstand. Lees hoe je rustig test en wanneer je hulp vraagt bij je klachten.",
     keyword: "gevoelloze handen fietsen",
@@ -134,7 +134,7 @@ Vertel ook of je buiten het fietsen klachten hebt of minder kracht voelt. Zo hoe
   },
   en: {
     title: "Numb hands cycling: where should you start?",
-    metaTitle: "Numb hands cycling | BestBikeFit4U",
+    metaTitle: "Numb hands cycling | BikeFitBoost",
     metaDescription:
       "Numb hands when cycling? Check pressure, wrist position and handlebar reach. Learn how to test changes calmly and when to seek help with your symptoms.",
     keyword: "numb hands cycling",

@@ -26,7 +26,7 @@ export const methodsCopy: Record<
 > = {
   en: {
     metadata: {
-      title: "Bike Fitting Methods Explained | BestBikeFit4U Science",
+      title: "Bike Fitting Methods Explained | BikeFitBoost Science",
       description:
         "Learn how common bike fitting methods such as LeMond, KOPS, and dynamic fit " +
         "systems work, where each method helps, and when to use a guide instead.",
@@ -79,12 +79,12 @@ export const methodsCopy: Record<
       { href: "/guides/bike-fitting-for-knee-pain", label: "Bike Fitting for Knee Pain" },
       { href: "/science/stack-and-reach", label: "Stack and Reach Guide" },
       { href: "/calculators/saddle-height", label: "Saddle Height Calculator" },
-      { href: "/about", label: "How BestBikeFit4U Works" },
+      { href: "/about", label: "How BikeFitBoost Works" },
     ],
   },
   nl: {
     metadata: {
-      title: "Bikefit-methodes uitgelegd | BestBikeFit4U Wetenschap",
+      title: "Bikefit-methodes uitgelegd | BikeFitBoost Wetenschap",
       description:
         "Leer hoe veelgebruikte bikefit-methodes zoals LeMond, KOPS en dynamische " +
         "fitsystemen werken, waar elke methode helpt en wanneer je beter een gids " +
@@ -138,7 +138,7 @@ export const methodsCopy: Record<
       { href: "/guides/bike-fitting-for-knee-pain", label: "Bikefitting bij kniepijn" },
       { href: "/science/stack-and-reach", label: "Stack en reach gids" },
       { href: "/calculators/saddle-height", label: "Zadelhoogte calculator" },
-      { href: "/about", label: "Hoe BestBikeFit4U werkt" },
+      { href: "/about", label: "Hoe BikeFitBoost werkt" },
     ],
   },
 };
@@ -167,9 +167,9 @@ export const engineCopy: Record<
 > = {
   en: {
     metadata: {
-      title: "Bike Fit Calculation Engine | BestBikeFit4U Science",
+      title: "Bike Fit Calculation Engine | BikeFitBoost Science",
       description:
-        "See how BestBikeFit4U combines body measurements, fit methods, and rider " +
+        "See how BikeFitBoost combines body measurements, fit methods, and rider " +
         "context to calculate saddle height, reach, and next-step fit guidance.",
       keywords: [
         "bike fit calculation engine",
@@ -255,14 +255,14 @@ export const engineCopy: Record<
       { href: "/measurement-guide", label: "Measurement Guide" },
       { href: "/science/bike-fit-methods", label: "Bike Fitting Methods Explained" },
       { href: "/science/stack-and-reach", label: "Stack and Reach Guide" },
-      { href: "/about", label: "How BestBikeFit4U Works" },
+      { href: "/about", label: "How BikeFitBoost Works" },
     ],
   },
   nl: {
     metadata: {
-      title: "Bikefit-rekenmodel | BestBikeFit4U Wetenschap",
+      title: "Bikefit-rekenmodel | BikeFitBoost Wetenschap",
       description:
-        "Bekijk hoe BestBikeFit4U lichaamsmaten, fitmethodes en rijcontext " +
+        "Bekijk hoe BikeFitBoost lichaamsmaten, fitmethodes en rijcontext " +
         "combineert om zadelhoogte, reach en praktische vervolgstappen te berekenen.",
       keywords: [
         "bikefit berekeningen",
@@ -346,7 +346,7 @@ export const engineCopy: Record<
       { href: "/measurement-guide", label: "Meetgids" },
       { href: "/science/bike-fit-methods", label: "Bikefit-methodes uitgelegd" },
       { href: "/science/stack-and-reach", label: "Stack en reach gids" },
-      { href: "/about", label: "Hoe BestBikeFit4U werkt" },
+      { href: "/about", label: "Hoe BikeFitBoost werkt" },
     ],
   },
 };
@@ -371,7 +371,7 @@ export const stackCopy: Record<
 > = {
   en: {
     metadata: {
-      title: "Stack and Reach Explained | BestBikeFit4U Science",
+      title: "Stack and Reach Explained | BikeFitBoost Science",
       description:
         "Learn how stack and reach work, why they are better than seat-tube sizing, " +
         "and how to use them for frame comparison alongside the guide library.",
@@ -427,12 +427,12 @@ export const stackCopy: Record<
       { href: "/guides/road-bike-fit-guide", label: "Road Bike Fit Guide" },
       { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
       { href: "/science/bike-fit-methods", label: "Bike Fitting Methods Explained" },
-      { href: "/about", label: "How BestBikeFit4U Works" },
+      { href: "/about", label: "How BikeFitBoost Works" },
     ],
   },
   nl: {
     metadata: {
-      title: "Stack en reach uitgelegd | BestBikeFit4U Wetenschap",
+      title: "Stack en reach uitgelegd | BikeFitBoost Wetenschap",
       description:
         "Leer hoe stack en reach werken, waarom ze beter zijn dan framematen op " +
         "basis van zitbuislabels en hoe je ze gebruikt voor framevergelijking.",
@@ -484,7 +484,7 @@ export const stackCopy: Record<
       { href: "/guides/road-bike-fit-guide", label: "Racefiets fit gids" },
       { href: "/calculators/bike-fit", label: "Bike fit calculator" },
       { href: "/science/bike-fit-methods", label: "Bikefit-methodes uitgelegd" },
-      { href: "/about", label: "Hoe BestBikeFit4U werkt" },
+      { href: "/about", label: "Hoe BikeFitBoost werkt" },
     ],
   },
 };

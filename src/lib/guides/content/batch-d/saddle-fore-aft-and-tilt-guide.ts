@@ -6,7 +6,7 @@ export const guide = {
   illustration: "54-zadel-terugstand-kanteling",
   nl: {
     title: "Zadel terugstand en kanteling afstellen",
-    metaTitle: "Zadel terugstand en kanteling | BestBikeFit4U",
+    metaTitle: "Zadel terugstand en kanteling | BikeFitBoost",
     metaDescription: "Schuif je op je zadel of leun je zwaar op je handen? Meet terugstand en kanteling apart. " +
       "Kies één kleine wijziging en test je steun tijdens rustige ritten.",
     keyword: "zadel terugstand en kanteling",
@@ -143,7 +143,7 @@ Noteer wat je veranderde en herstel je uitgangspunt wanneer je geen duidelijke v
   },
   en: {
     title: "Saddle setback and tilt adjustment",
-    metaTitle: "Saddle setback and tilt adjustment | BestBikeFit4U",
+    metaTitle: "Saddle setback and tilt adjustment | BikeFitBoost",
     metaDescription: "Sliding on your saddle or loading your hands? Measure setback and tilt separately. " +
       "Choose one small adjustment and compare support during easy rides.",
     keyword: "saddle setback and tilt",

@@ -4,7 +4,7 @@ export const endurance = {
   illustration: "25-lange-ritten",
   nl: {
     title: "Fiets afstellen lange ritten",
-    metaTitle: "Fiets afstellen lange ritten | BestBikeFit4U",
+    metaTitle: "Fiets afstellen lange ritten | BikeFitBoost",
     metaDescription: "Zit je fiets goed aan het begin, maar niet aan het einde? Controleer steun en handposities, test kleine aanpassingen en bouw je langere ritten rustig op.",
     keyword: "fiets afstellen lange ritten",
     relatedKeywords: ["comfort lange fietstocht", "zithouding duurrit", "handdruk fietsen"],
@@ -91,7 +91,7 @@ Vergelijk je notities aan het begin en einde van meerdere vertrouwde ritten. Kij
   },
   en: {
     title: "Endurance bike fit: comfort over distance",
-    metaTitle: "Endurance bike fit: comfort over distance | BestBikeFit4U",
+    metaTitle: "Endurance bike fit: comfort over distance | BikeFitBoost",
     metaDescription: "Does your bike feel right early on, but not later? Check support and hand positions, compare small adjustments, and build towards longer rides gradually.",
     keyword: "endurance bike fit",
     relatedKeywords: ["long ride comfort", "distance cycling position", "cycling hand pressure"],

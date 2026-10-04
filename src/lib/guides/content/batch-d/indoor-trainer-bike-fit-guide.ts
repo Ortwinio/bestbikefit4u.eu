@@ -6,7 +6,7 @@ export const guide = {
   illustration: "51-fiets-op-trainer",
   nl: {
     title: "Fiets afstellen indoortrainer",
-    metaTitle: "Fiets afstellen indoortrainer | BestBikeFit4U",
+    metaTitle: "Fiets afstellen indoortrainer | BikeFitBoost",
     metaDescription: "Voelt je fiets binnen anders dan buiten? Controleer trainerhoogte, steun en koeling " +
       "voordat je het zadel verzet. Test je houding met een vast stappenplan.",
     keyword: "fiets afstellen indoortrainer",
@@ -143,7 +143,7 @@ beweging op de weg worden niet volledig nagebootst door een stilstaande fiets in
   },
   en: {
     title: "Indoor trainer bike fit",
-    metaTitle: "Indoor trainer bike fit: first checks | BestBikeFit4U",
+    metaTitle: "Indoor trainer bike fit: first checks | BikeFitBoost",
     metaDescription: "Does your bike feel different indoors? Check trainer height, support and cooling before " +
       "moving the saddle. Compare your position with a repeatable plan.",
     keyword: "indoor trainer bike fit",

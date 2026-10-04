@@ -93,7 +93,7 @@ function loadGuideBacklog(locale: Locale): GuideBacklogEntry[] {
       path: row[3].replace(/^\/(en|nl)/, ""),
       slug,
       pageTitle: dutchTitle ?? row[5],
-      metaTitle: dutchTitle ? `${dutchTitle} | BestBikeFit4U` : row[6],
+      metaTitle: dutchTitle ? `${dutchTitle} | BikeFitBoost` : row[6],
       h1: dutchTitle ?? row[7],
       pageBrief: locale === "nl" ? getDutchGuideSummary(slug) ?? row[8] : row[8],
       primaryCtaLabel: row[9],

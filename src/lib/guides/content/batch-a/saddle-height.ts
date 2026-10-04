@@ -6,7 +6,7 @@ export const saddleHeight = {
   illustration: "19-zadelhoogte-beenhoek",
   nl: {
     title: "Zadelhoogte instellen",
-    metaTitle: "Zadelhoogte instellen: meten en testen | BestBikeFit4U",
+    metaTitle: "Zadelhoogte instellen: meten en testen | BikeFitBoost",
     metaDescription: "Je zadelhoogte instellen begint met meten. Lees hoe je een startpunt berekent, kleine verschillen test en klachten herkent zonder blind een maat te volgen.",
     keyword: "zadelhoogte instellen",
     relatedKeywords: ["zadelhoogte berekenen", "binnenbeenlengte fiets", "zadelhoogte meten"],
@@ -37,7 +37,7 @@ Cranklengte verandert de cirkel die je voet aflegt. Andere schoenen of pedalen k
 
 Daarom neem je een oude zadelhoogte niet zonder controle over op heel andere onderdelen.
 
-Een maat op basis van binnenbeenlengte blijft een vertrekpunt. De BestBikeFit4U-calculator gebruikt je invoer voor een eerste aanbeveling en vergelijking.
+Een maat op basis van binnenbeenlengte blijft een vertrekpunt. De BikeFitBoost-calculator gebruikt je invoer voor een eerste aanbeveling en vergelijking.
 Hij observeert niet hoe jij beweegt tijdens een lange rit. De tekening in de calculator is schematisch, geen meting van jouw kniehoek.
 
 Een foto kan helpen om veranderingen terug te zien, maar camerastand en het gekozen trapmoment beïnvloeden het beeld.
@@ -117,7 +117,7 @@ Bespreek een groot verschil met een fitter. Neem je meetnotities mee, zodat de v
   },
   en: {
     title: "Saddle height",
-    metaTitle: "Saddle height: measure and compare | BestBikeFit4U",
+    metaTitle: "Saddle height: measure and compare | BikeFitBoost",
     metaDescription: "Setting saddle height starts with a repeatable measurement. Learn how to calculate a starting point, compare small changes and recognise warning signs.",
     keyword: "saddle height",
     relatedKeywords: ["calculate saddle height", "cycling inseam measurement", "measure bicycle saddle height"],
@@ -148,7 +148,7 @@ Crank length changes the circle travelled by your foot. Different shoes or pedal
 
 An old saddle height therefore needs checking when you move to substantially different equipment.
 
-A number based on inseam remains a starting point. The BestBikeFit4U calculator uses your inputs for an initial recommendation and comparison.
+A number based on inseam remains a starting point. The BikeFitBoost calculator uses your inputs for an initial recommendation and comparison.
 It does not observe how you move during a long ride. Its illustration is schematic, not a measurement of your knee angle.
 
 A photograph can help you compare changes, but camera position and the chosen moment of the pedal stroke affect it.

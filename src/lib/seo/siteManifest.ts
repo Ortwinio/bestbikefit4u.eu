@@ -8,7 +8,7 @@ export function buildSiteManifest(locale: Locale): MetadataRoute.Manifest {
   return {
     id: "/",
     name: BRAND.name,
-    short_name: "BestBikeFit4U",
+    short_name: BRAND.name,
     description: getSiteMetadataCopy(locale).description,
     lang: locale,
     start_url: withLocalePrefix("/", locale),

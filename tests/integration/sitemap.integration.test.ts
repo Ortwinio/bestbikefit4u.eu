@@ -31,7 +31,7 @@ beforeEach(() => {
   cms.guides = [];
 });
 
-const origin = "https://bestbikefit4u.eu";
+const origin = "https://www.bikefitboost.com";
 const routes = [
   ["/sitemap.xml", IndexRoute, "sitemapindex", DEFAULT_SITEMAP_CACHE_CONTROL],
   ["/sitemap-pages.xml", PagesRoute, "urlset", DEFAULT_SITEMAP_CACHE_CONTROL],

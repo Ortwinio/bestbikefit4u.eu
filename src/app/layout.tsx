@@ -42,6 +42,7 @@ const baseMetadata: Metadata = {
   applicationName: BRAND.name,
   title: BRAND.name,
   openGraph: {
+    siteName: BRAND.name,
     images: [{ url: BRAND.assets.socialImage, width: 1200, height: 630, alt: BRAND.name }],
   },
   twitter: {
@@ -55,6 +56,11 @@ const baseMetadata: Metadata = {
   },
   icons: {
     icon: [
+      {
+        url: BRAND.assets.favicon,
+        sizes: "48x48",
+        type: "image/x-icon",
+      },
       {
         url: BRAND.assets.appIconSvg,
         type: "image/svg+xml",
@@ -95,7 +101,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     ...baseMetadata,
     description,
-    manifest: `/manifest.webmanifest?locale=${locale}`,
+    manifest: "/site.webmanifest",
     openGraph: { ...baseMetadata.openGraph, description, locale: locale === "nl" ? "nl_NL" : "en_US" },
     twitter: { ...baseMetadata.twitter, description },
   };

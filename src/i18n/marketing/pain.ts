@@ -12,7 +12,7 @@ export const painDetailDutchCopy = {
 
 export const painPresentation = {
   nl: {
-    metadataTitle: "Bikefit bij veelvoorkomende klachten | BestBikeFit4U",
+    metadataTitle: "Bikefit bij veelvoorkomende klachten | BikeFitBoost",
     metadataDescription: "Verken pagina's voor knie-, rug-, nek-, hand- en zadelklachten " +
       "en ontdek welke bikefit-factoren je eerst controleert.",
     eyebrow: "Bikefit bij klachten",
@@ -76,7 +76,7 @@ export const painPresentation = {
     detailCtaIntro: "Start met een gratis fit of meld je aan om je praktijkvoorbeeld te delen.",
   },
   en: {
-    metadataTitle: "Bike Fit for Common Pain Points | BestBikeFit4U",
+    metadataTitle: "Bike Fit for Common Pain Points | BikeFitBoost",
     metadataDescription: "Explore knee, back, neck, hand, and saddle discomfort pages " +
       "to see which bike-fit factors to review first.",
     eyebrow: "Bike fit for discomfort",

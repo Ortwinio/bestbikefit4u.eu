@@ -282,7 +282,7 @@ export default function ResultsPage({ params }: ResultsPageProps) {
       const downloadUrl = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = downloadUrl;
-      anchor.download = `bestbikefit4u-report-${sessionId}-${locale}.pdf`;
+      anchor.download = `bikefitboost-report-${sessionId}-${locale}.pdf`;
       document.body.appendChild(anchor);
       anchor.click();
       anchor.remove();

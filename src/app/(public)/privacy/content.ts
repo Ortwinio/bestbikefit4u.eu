@@ -5,9 +5,9 @@ type PrivacyCopy = LegalCopy & { contactText: string };
 export const content: Record<Locale, PrivacyCopy> = {
   en: {
     metadata: {
-      title: "Privacy Policy - BestBikeFit4U",
-      description: "Learn how BestBikeFit4U collects, uses, and protects your personal data.",
-      keywords: ["privacy policy", "data protection", "BestBikeFit4U privacy"],
+      title: "Privacy Policy - BikeFitBoost",
+      description: "Learn how BikeFitBoost collects, uses, and protects your personal data.",
+      keywords: ["privacy policy", "data protection", "BikeFitBoost privacy"],
     },
     title: "Privacy Policy",
     lastUpdatedLabel: "Last updated",
@@ -96,9 +96,9 @@ export const content: Record<Locale, PrivacyCopy> = {
   },
   nl: {
     metadata: {
-      title: "Privacyverklaring - BestBikeFit4U",
-      description: "Lees hoe BestBikeFit4U jouw persoonsgegevens verzamelt, gebruikt en beschermt.",
-      keywords: ["privacyverklaring", "gegevensbescherming", "BestBikeFit4U privacy"],
+      title: "Privacyverklaring - BikeFitBoost",
+      description: "Lees hoe BikeFitBoost jouw persoonsgegevens verzamelt, gebruikt en beschermt.",
+      keywords: ["privacyverklaring", "gegevensbescherming", "BikeFitBoost privacy"],
     },
     title: "Privacyverklaring",
     lastUpdatedLabel: "Laatst bijgewerkt",

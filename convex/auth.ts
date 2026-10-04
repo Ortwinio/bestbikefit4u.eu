@@ -3,7 +3,7 @@ import { Email } from "@convex-dev/auth/providers/Email";
 import { ConvexCredentials } from "@convex-dev/auth/providers/ConvexCredentials";
 import Google from "@auth/core/providers/google";
 import { Resend } from "resend";
-import { BRAND } from "./lib/brand";
+import { emailSender } from "./lib/brand";
 import { renderLoginCode } from "./emails/templates";
 import { loginEmailLocale } from "./emails/locale";
 import type { Id } from "./_generated/dataModel";
@@ -144,7 +144,7 @@ const EmailProvider = Email({
     const rendered = renderLoginCode({ code: token }, loginEmailLocale(url ?? ""));
 
     const { error } = await resend.emails.send({
-      from: process.env.AUTH_EMAIL_FROM || BRAND.authEmailFrom,
+      from: emailSender(),
       to: [email],
       subject: rendered.subject,
       html: rendered.html,

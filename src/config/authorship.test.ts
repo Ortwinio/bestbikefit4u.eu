@@ -5,8 +5,8 @@ describe("confirmed authorship configuration", () => {
   it("has one confirmed name and no unverified profiles", () => {
     expect(AUTHORSHIP.name).toBe("Ortwin Verreck");
     expect(AUTHORSHIP.sameAs).toEqual({ person: [], organization: [] });
-    expect(getAuthorUrl("nl")).toBe("https://bestbikefit4u.eu/nl/authors/ortwin-verreck");
-    expect(getAuthorUrl("en")).toBe("https://bestbikefit4u.eu/en/authors/ortwin-verreck");
+    expect(getAuthorUrl("nl")).toBe("https://www.bikefitboost.com/nl/authors/ortwin-verreck");
+    expect(getAuthorUrl("en")).toBe("https://www.bikefitboost.com/en/authors/ortwin-verreck");
   });
   it("normalizes the actual recorded day without supplying a fallback", () => {
     expect(getGuideUpdatedDate("2026-10-01")).toBe("2026-10-01");

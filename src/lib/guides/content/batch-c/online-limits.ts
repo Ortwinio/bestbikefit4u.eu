@@ -4,7 +4,7 @@ export const onlineLimits = {
   illustration: "44-grenzen-online-bikefit",
   nl: {
     title: "Wanneer professionele bikefit",
-    metaTitle: "Wanneer professionele bikefit | BestBikeFit4U",
+    metaTitle: "Wanneer professionele bikefit | BikeFitBoost",
     metaDescription:
       "Wanneer helpt een professionele bikefit meer dan online meten? Herken de grenzen van calculators, bereid je vragen voor en kies passende hulp bij klachten.",
     keyword: "wanneer professionele bikefit",
@@ -126,7 +126,7 @@ voor onderzoek naar aanhoudende of verontrustende lichamelijke symptomen.
   },
   en: {
     title: "Online bike fit limitations",
-    metaTitle: "Online bike fit limitations | BestBikeFit4U",
+    metaTitle: "Online bike fit limitations | BikeFitBoost",
     metaDescription:
       "When does professional fitting offer more than online measurements? Recognise calculator limits, prepare useful questions and choose help for symptoms.",
     keyword: "online bike fit limitations",

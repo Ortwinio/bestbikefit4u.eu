@@ -21,8 +21,8 @@ interface AuthorshipCopy {
 }
 export const authorshipMessages: Record<Locale, AuthorshipCopy> = {
   nl: {
-    methodsTitle: "Bronnen en rekenmethodes | BestBikeFit4U",
-    methodsDescription: "Hoe BestBikeFit4U wetenschappelijke bronnen, praktijkreferenties en eigen rekenregels gebruikt.",
+    methodsTitle: "Bronnen en rekenmethodes | BikeFitBoost",
+    methodsDescription: "Hoe BikeFitBoost wetenschappelijke bronnen, praktijkreferenties en eigen rekenregels gebruikt.",
     intro: "Een bron, een praktijkmethode en een rekenregel zijn niet hetzelfde. Hieronder zie je welke rol ze hebben "
       + "in onze uitleg en calculators. Een verwijzing betekent niet dat alle uitkomsten wetenschappelijk zijn gevalideerd.",
     scientificTitle: "Wetenschappelijke bronnen",
@@ -44,8 +44,8 @@ export const authorshipMessages: Record<Locale, AuthorshipCopy> = {
     pressureLink: "Bekijk de bandenspanningcalculator",
   },
   en: {
-    methodsTitle: "Sources and calculation methods | BestBikeFit4U",
-    methodsDescription: "How BestBikeFit4U uses scientific sources, practice references and its own calculation rules.",
+    methodsTitle: "Sources and calculation methods | BikeFitBoost",
+    methodsDescription: "How BikeFitBoost uses scientific sources, practice references and its own calculation rules.",
     intro: "A source, a practical method and a calculation rule are different things. Below we explain their roles "
       + "in our guidance and calculators. A citation does not mean every output has been scientifically validated.",
     scientificTitle: "Scientific sources",

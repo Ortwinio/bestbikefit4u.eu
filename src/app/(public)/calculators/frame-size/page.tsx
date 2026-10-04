@@ -35,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const alternates = buildLocaleAlternates("/calculators/frame-size", locale);
 
   return {
-    title: isNl ? "Framemaat calculator | BestBikeFit4U" : "Frame Size Calculator | BestBikeFit4U",
+    title: isNl ? "Framemaat calculator | BikeFitBoost" : "Frame Size Calculator | BikeFitBoost",
     description: isNl
       ? "Schat een realistische framemaat op basis van lengte, binnenbeenlengte en fietsdiscipline."
       : "Estimate a realistic frame size based on height, inseam, and bike category.",
@@ -147,8 +147,8 @@ export default async function FrameSizeCalculatorPage() {
           buildFaqPageSchema(faqs),
           ...buildCalculatorPageSchemas({
             name: isNl
-              ? "BestBikeFit4U Framemaat calculator"
-              : "BestBikeFit4U Frame Size Calculator",
+              ? "BikeFitBoost Framemaat calculator"
+              : "BikeFitBoost Frame Size Calculator",
             description: isNl
               ? "Schat een realistische framemaat op basis van lengte, binnenbeenlengte en fietsdiscipline."
               : "Estimate a realistic frame size based on height, inseam, and bike category.",

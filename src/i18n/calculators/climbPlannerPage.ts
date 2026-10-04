@@ -12,14 +12,14 @@ export const climbPlannerPageMessages = {
       ],
     },
     metadata: {
-      title: "Climb Planner | BestBikeFit4U",
+      title: "Climb Planner | BikeFitBoost",
       description:
         "Plan climbing effort, pacing, and fueling context before a route or event so the" +
         " first hard climb does not become a guess.",
       keywords: ["climb planner", "cycling climb calculator", "pacing planner"],
     },
     hero: {
-      eyebrow: "BestBikeFit4U calculator",
+      eyebrow: "BikeFitBoost calculator",
       title: "Climb Planner",
       description:
         "Plan a climb with the right pacing and fueling context before the effort starts," +
@@ -118,14 +118,14 @@ export const climbPlannerPageMessages = {
       ],
     },
     metadata: {
-      title: "Klimplanner | BestBikeFit4U",
+      title: "Klimplanner | BikeFitBoost",
       description:
         "Plan kliminspanning, tempo en voedingscontext vóór een route of wedstrijd zodat de " +
         "eerste echte klim geen gok wordt.",
       keywords: ["klimplanner", "fiets klim calculator", "tempoplanner"],
     },
     hero: {
-      eyebrow: "BestBikeFit4U calculator",
+      eyebrow: "BikeFitBoost calculator",
       title: "Klimplanner",
       description:
         "Plan een klim met de juiste tempo- en voedingscontext voordat de inspanning " +

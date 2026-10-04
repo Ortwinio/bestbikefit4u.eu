@@ -6,7 +6,7 @@ export const guide = {
   illustration: "55-natriumconcentratie",
   nl: {
     title: "Natrium sportdrank fietsen: lees de concentratie",
-    metaTitle: "Natrium sportdrank fietsen | BestBikeFit4U",
+    metaTitle: "Natrium sportdrank fietsen | BikeFitBoost",
     metaDescription: "Hoe lees je natrium op een sportdranketiket? Onderscheid concentratie, bidoninhoud en " +
       "inname per uur. Reken je mengsel na en test je drinkplan rustig.",
     keyword: "natrium sportdrank fietsen",
@@ -143,7 +143,7 @@ oordeel over ieder afzonderlijk product.`,
   },
   en: {
     title: "Sodium cycling drink: read the concentration",
-    metaTitle: "Sodium cycling drink concentration | BestBikeFit4U",
+    metaTitle: "Sodium cycling drink concentration | BikeFitBoost",
     metaDescription: "How do you read sodium on a sports drink label? Separate concentration, bottle volume " +
       "and hourly intake. Check the mix and practise a clear drinking plan.",
     keyword: "sodium cycling drink",

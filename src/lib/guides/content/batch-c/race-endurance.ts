@@ -4,7 +4,7 @@ export const raceEndurance = {
   illustration: "42-race-endurance-geometrie",
   nl: {
     title: "Racefiets of endurancegeometrie",
-    metaTitle: "Racefiets of endurancegeometrie | BestBikeFit4U",
+    metaTitle: "Racefiets of endurancegeometrie | BikeFitBoost",
     metaDescription:
       "Racefiets of endurancegeometrie kiezen? Vergelijk stack, reach en stuurpositie voor jouw ritten. Lees hoe je categorieën omzet in een concrete proefrit.",
     keyword: "racefiets of endurancegeometrie",
@@ -127,7 +127,7 @@ een lage positie is geen doel waarvoor je pijn moet accepteren.
   },
   en: {
     title: "Race versus endurance geometry",
-    metaTitle: "Race versus endurance geometry | BestBikeFit4U",
+    metaTitle: "Race versus endurance geometry | BikeFitBoost",
     metaDescription:
       "Choosing race versus endurance geometry? Compare stack, reach and bar position for your riding. Turn category names into a focused, practical test ride.",
     keyword: "race versus endurance geometry",

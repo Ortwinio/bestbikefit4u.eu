@@ -2,6 +2,14 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { buildContentSecurityPolicy, createCspNonce, createCspRequestHeaders } from "./csp";
 
 describe("content security policy", () => {
+  it("allows rebranded and legacy image origins without widening script origins", () => {
+    const policy = buildContentSecurityPolicy("nonce", false);
+    const images = policy.split("; ").find((directive) => directive.startsWith("img-src "))!;
+    expect(images).toContain("https://www.bikefitboost.com");
+    expect(images).toContain("https://bestbikefit4u.eu");
+    expect(images).toContain("https://www.bestbikefit4u.eu");
+    expect(policy.split("; ").find((directive) => directive.startsWith("script-src "))).not.toContain("bikefitboost");
+  });
   afterEach(() => vi.unstubAllEnvs());
 
   it("permits only the configured HTTPS error-ingestion origin without credentials", () => {

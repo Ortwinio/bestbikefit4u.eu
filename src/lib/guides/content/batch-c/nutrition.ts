@@ -4,7 +4,7 @@ export const nutrition = {
   illustration: "40-voeding-drinken",
   nl: {
     title: "Voeding en drinken wielrennen",
-    metaTitle: "Voeding en drinken wielrennen | BestBikeFit4U",
+    metaTitle: "Voeding en drinken wielrennen | BikeFitBoost",
     metaDescription:
       "Voeding en drinken voor het wielrennen plannen? Houd brandstof en vocht apart, lees etiketten en oefen je ritplan rustig voordat je een lange tocht rijdt.",
     keyword: "voeding en drinken wielrennen",
@@ -127,7 +127,7 @@ niet steeds een andere combinatie van repen, poeders of zout.
   },
   en: {
     title: "Cycling nutrition and hydration",
-    metaTitle: "Cycling nutrition and hydration | BestBikeFit4U",
+    metaTitle: "Cycling nutrition and hydration | BikeFitBoost",
     metaDescription:
       "Planning cycling nutrition and hydration? Keep fuel and fluid separate, read product labels and practise a manageable plan before your next long ride.",
     keyword: "cycling nutrition and hydration",

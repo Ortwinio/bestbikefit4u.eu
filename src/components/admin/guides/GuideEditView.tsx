@@ -1714,7 +1714,7 @@ export function GuideEditView({
                     const nextValue = event.currentTarget.value;
                     updateState((current) => ({ ...current, canonicalUrl: nextValue }));
                   }}
-                  helperText="Optional. Must be an absolute bestbikefit4u.eu URL without query parameters."
+                  helperText="Optional. Must be an absolute URL on the site’s current domain without query parameters."
                 />
                 <Select
                   label="Author"

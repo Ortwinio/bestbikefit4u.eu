@@ -6,7 +6,7 @@ export const kneePain = {
   illustration: "11-knie-pedaalbeweging",
   nl: {
     title: "Kniepijn bij fietsen: wat kun je controleren?",
-    metaTitle: "Kniepijn bij fietsen: eerste controles | BestBikeFit4U",
+    metaTitle: "Kniepijn bij fietsen: eerste controles | BikeFitBoost",
     metaDescription: "Kniepijn bij het fietsen? Controleer je afstelling en belasting zonder een diagnose te stellen. Lees welke stappen veilig zijn en wanneer je hulp vraagt.",
     keyword: "kniepijn bij fietsen",
     relatedKeywords: ["kniepijn racefiets", "zadelhoogte knie", "knieklachten fietsen"],
@@ -115,7 +115,7 @@ Vertel of je ook bij lopen of 's nachts pijn hebt. Meld eerdere blessures en wat
   },
   en: {
     title: "Knee pain when cycling: what can you check?",
-    metaTitle: "Knee pain when cycling: first checks | BestBikeFit4U",
+    metaTitle: "Knee pain when cycling: first checks | BikeFitBoost",
     metaDescription: "Knee pain while cycling? Check your setup and riding load without diagnosing yourself. Learn practical first steps and when to seek professional help.",
     keyword: "knee pain when cycling",
     relatedKeywords: ["cycling knee discomfort", "saddle height knee pain", "bike fit knee pain"],

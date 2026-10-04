@@ -12,13 +12,13 @@ export const ftpWkgPageMessages = {
       ],
     },
     metadata: {
-      title: "FTP / W/kg Calculator | BestBikeFit4U",
+      title: "FTP / W/kg Calculator | BikeFitBoost",
       description:
         "Translate threshold power into W/kg and use it to compare climbing context, pacing, and performance goals.",
       keywords: ["FTP calculator", "W/kg calculator", "cycling threshold power"],
     },
     hero: {
-      eyebrow: "BestBikeFit4U calculator",
+      eyebrow: "BikeFitBoost calculator",
       title: "FTP / W/kg Calculator",
       description:
         "Convert threshold power into a clearer performance context, then use that " +
@@ -122,14 +122,14 @@ export const ftpWkgPageMessages = {
       ],
     },
     metadata: {
-      title: "FTP- / W/kg-calculator | BestBikeFit4U",
+      title: "FTP- / W/kg-calculator | BikeFitBoost",
       description:
         "Vertaal drempelvermogen naar W/kg en gebruik het om klimcontext, tempo en " +
         "prestatiedoelen beter te vergelijken.",
       keywords: ["FTP calculator", "W/kg calculator", "drempelvermogen fietsen"],
     },
     hero: {
-      eyebrow: "BestBikeFit4U calculator",
+      eyebrow: "BikeFitBoost calculator",
       title: "FTP- / W/kg-calculator",
       description:
         "Zet drempelvermogen om in duidelijkere prestatiecontext en gebruik die context " +
