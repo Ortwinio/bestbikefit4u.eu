@@ -3,7 +3,7 @@ import { buildXmlHeadResponse, buildXmlResponse, latestSitemapLastmod, renderSit
 
 describe("sitemap xml responses", () => {
   it("returns crawler-friendly XML headers", async () => {
-    const request = new Request("https://www.bikefitboost.com/sitemap.xml");
+    const request = new Request("https://bikefitboost.com/sitemap.xml");
     const response = buildXmlResponse(request, "<urlset></urlset>", {
       lastModified: "2026-03-31",
     });
@@ -26,7 +26,7 @@ describe("sitemap xml responses", () => {
   it("uses forwarded production host headers before internal request URLs", () => {
     const request = new Request("https://bestbikefit4u.vercel.app/sitemap.xml", {
       headers: {
-        "x-forwarded-host": "www.bikefitboost.com",
+        "x-forwarded-host": "bikefitboost.com",
       },
     });
     const response = buildXmlResponse(request, "<urlset></urlset>");
@@ -35,7 +35,7 @@ describe("sitemap xml responses", () => {
   });
 
   it("returns header-only responses for HEAD requests", async () => {
-    const request = new Request("https://www.bikefitboost.com/sitemap.xml", {
+    const request = new Request("https://bikefitboost.com/sitemap.xml", {
       method: "HEAD",
     });
     const response = buildXmlHeadResponse(request, "<urlset></urlset>", {
@@ -48,14 +48,14 @@ describe("sitemap xml responses", () => {
   });
 
   it("omits unsupported dates without inventing a current date", () => {
-    expect(renderSitemapIndexXml([{ loc: "https://www.bikefitboost.com/sitemap-blog.xml" }])).not.toContain("lastmod");
-    expect(renderUrlSetXml([{ loc: "https://www.bikefitboost.com/en", alternates: [] }])).not.toContain("lastmod");
+    expect(renderSitemapIndexXml([{ loc: "https://bikefitboost.com/sitemap-blog.xml" }])).not.toContain("lastmod");
+    expect(renderUrlSetXml([{ loc: "https://bikefitboost.com/en", alternates: [] }])).not.toContain("lastmod");
     expect(latestSitemapLastmod([{}, { lastmod: "invalid" }])).toBeUndefined();
     expect(latestSitemapLastmod([{}, { lastmod: "2026-10-01" }, { lastmod: "2026-09-30" }])).toBe("2026-10-01");
   });
 
   it("keeps GET and conditional responses free of manual content length", async () => {
-    const url = "https://www.bikefitboost.com/sitemap-blog.xml";
+    const url = "https://bikefitboost.com/sitemap-blog.xml";
     const response = buildXmlResponse(new Request(url), renderUrlSetXml([]));
     expect(response.headers.has("content-length")).toBe(false);
     const cached = buildXmlResponse(new Request(url, { headers: { "if-none-match": response.headers.get("etag")! } }),

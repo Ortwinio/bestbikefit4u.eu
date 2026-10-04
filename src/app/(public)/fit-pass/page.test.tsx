@@ -71,15 +71,15 @@ describe("Fit Pass marketing page", () => {
     const metadata = await generateMetadata();
     expect(metadata.title).toBe(fitPassCopy[locale].metadata.title);
     expect(metadata.description).toBe(fitPassCopy[locale].metadata.description);
-    expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}/fit-pass`);
+    expect(metadata.alternates?.canonical).toBe(`https://bikefitboost.com/${locale}/fit-pass`);
     expect(metadata.alternates?.languages).toMatchObject({
-      nl: "https://www.bikefitboost.com/nl/fit-pass",
-      en: "https://www.bikefitboost.com/en/fit-pass",
+      nl: "https://bikefitboost.com/nl/fit-pass",
+      en: "https://bikefitboost.com/en/fit-pass",
     });
     expect(metadata.openGraph).toMatchObject({
       title: fitPassCopy[locale].metadata.title,
       description: fitPassCopy[locale].metadata.description,
-      url: `https://www.bikefitboost.com/${locale}/fit-pass`,
+      url: `https://bikefitboost.com/${locale}/fit-pass`,
     });
   });
 

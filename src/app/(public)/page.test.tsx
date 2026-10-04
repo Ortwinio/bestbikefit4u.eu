@@ -178,7 +178,7 @@ vi.mock("@/i18n/request", () => ({
 }));
 
 vi.mock("@/i18n/metadata", () => ({
-  buildLocaleAlternates: () => ({ canonical: `https://www.bikefitboost.com/${locale}` }),
+  buildLocaleAlternates: () => ({ canonical: `https://bikefitboost.com/${locale}` }),
 }));
 
 vi.mock("@/lib/seo/jsonLd", () => ({

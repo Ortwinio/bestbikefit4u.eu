@@ -53,7 +53,7 @@ function getContent(locale: Locale): ContactCopy {
       directContactTitle: "Send us an email directly",
       directContactBody: contactPresentation[locale].directContactBody,
       directContactCta: "Open email app",
-      directContactHint: "Address: support@bestbikefit4u.eu",
+      directContactHint: "Address: support@bikefitboost.com",
     };
   }
 
@@ -76,7 +76,7 @@ function getContent(locale: Locale): ContactCopy {
     directContactTitle: "Mail ons direct",
     directContactBody: contactPresentation[locale].directContactBody,
     directContactCta: "Open e-mailapp",
-    directContactHint: "Adres: support@bestbikefit4u.eu",
+    directContactHint: "Adres: support@bikefitboost.com",
   };
 }
 
@@ -123,15 +123,15 @@ export default async function ContactPage() {
             <p className={styles.eyebrow}>{presentation.directEyebrow}</p>
             <h2 id="contact-email">{page.directContactTitle}</h2>
             <p>{page.emailSupportText}</p>
-            <a href="mailto:support@bestbikefit4u.eu" className={styles.address}>
-              support@bestbikefit<span className={styles.mono}>4</span>u.eu
+            <a href="mailto:support@bikefitboost.com" className={styles.address}>
+              support@bikefitboost.com
             </a>
             <Button
               className={styles.action}
               role="link"
               render={
                 <TrackedCtaLink
-                  href="mailto:support@bestbikefit4u.eu"
+                  href="mailto:support@bikefitboost.com"
                   locale={locale}
                   pagePath={pagePath}
                   section="contact_email_cta"

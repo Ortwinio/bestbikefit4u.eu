@@ -24,7 +24,7 @@ describe("marketing analytics helpers", () => {
   it("pushes conversions to the browser dataLayer", () => {
     vi.stubGlobal("window", {
       dataLayer: [],
-      location: { hostname: "www.bikefitboost.com" },
+      location: { hostname: "bikefitboost.com" },
     });
     trackAdConversion("case_study_lead", { locale: "en" });
     expect((window as Window).dataLayer).toEqual(
@@ -41,7 +41,7 @@ describe("marketing analytics helpers", () => {
   it("pushes arbitrary analytics events to the dataLayer", () => {
     vi.stubGlobal("window", {
       dataLayer: [],
-      location: { hostname: "www.bikefitboost.com" },
+      location: { hostname: "bikefitboost.com" },
     });
     pushDataLayerEvent({ event: "bbf_test", pagePath: "/pricing" });
     expect((window as Window).dataLayer).toEqual(
@@ -52,7 +52,7 @@ describe("marketing analytics helpers", () => {
   });
 
   it("disables browser marketing helpers outside the production host", () => {
-    expect(isProductionMarketingHost("www.bikefitboost.com")).toBe(true);
+    expect(isProductionMarketingHost("bikefitboost.com")).toBe(true);
     expect(isProductionMarketingHost("preview-bestbikefit4u.vercel.app")).toBe(false);
 
     vi.stubGlobal("window", {

@@ -216,12 +216,12 @@ export const en = {
       "Your plan",
     ],
     iphone: [
-      "Open www.bikefitboost.com in Safari",
+      "Open bikefitboost.com in Safari",
       "Tap the share icon",
       "Choose Add to Home Screen",
     ],
     android: [
-      "Open www.bikefitboost.com in Chrome",
+      "Open bikefitboost.com in Chrome",
       "Tap the three dots",
       "Choose Install app",
     ],

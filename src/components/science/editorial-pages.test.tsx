@@ -101,14 +101,14 @@ describe("editorial page SEO and localized content", () => {
       const canonicalPath = path === "/fiets-afstellen"
         ? (locale === "nl" ? "/bikefitting" : "/bike-fitting")
         : path;
-      expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}${canonicalPath}`);
+      expect(metadata.alternates?.canonical).toBe(`https://bikefitboost.com/${locale}${canonicalPath}`);
       const html = await renderHtml(await page.default());
       expect((html.match(/<h1[ >]/g) ?? []).length).toBe(1);
       expect(html).not.toContain("Ontwerpstaat");
       expect(html).toContain(`/${locale}/calculators/`);
       if (path.startsWith("/science/")) {
         expect(html).toContain('"@type":"Article"');
-        expect(html).toContain(`"mainEntityOfPage":"https://www.bikefitboost.com/${locale}${path}"`);
+        expect(html).toContain(`"mainEntityOfPage":"https://bikefitboost.com/${locale}${path}"`);
       }
       if (path === "/fiets-afstellen") {
         expect(html).toContain('"@type":"FAQPage"');
@@ -124,11 +124,11 @@ describe("editorial page SEO and localized content", () => {
   ] as const)("keeps the %s-only landing and FAQ schema", async (language, path, page) => {
     locale = language;
     const metadata = await page.generateMetadata();
-    expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}${path}`);
+    expect(metadata.alternates?.canonical).toBe(`https://bikefitboost.com/${locale}${path}`);
     expect(metadata.alternates?.languages).toEqual({
-      en: "https://www.bikefitboost.com/en/bike-fitting",
-      nl: "https://www.bikefitboost.com/nl/bikefitting",
-      "x-default": "https://www.bikefitboost.com/en/bike-fitting",
+      en: "https://bikefitboost.com/en/bike-fitting",
+      nl: "https://bikefitboost.com/nl/bikefitting",
+      "x-default": "https://bikefitboost.com/en/bike-fitting",
     });
     const html = await renderHtml(await page.default());
     expect(html).toContain('"@type":"FAQPage"');

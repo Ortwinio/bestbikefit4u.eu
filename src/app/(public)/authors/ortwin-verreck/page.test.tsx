@@ -21,7 +21,7 @@ describe("confirmed author page", () => {
     expect(screen.getByRole("link", { name: "BikeFitBoost" }).getAttribute("href")).toBe(`/${locale}`);
     const schema = JSON.parse(container.querySelector('script[type="application/ld+json"]')!.textContent!);
     expect(schema).toMatchObject({ "@type": "Person", name: "Ortwin Verreck", sameAs: [],
-      url: `https://www.bikefitboost.com/${locale}/authors/ortwin-verreck` });
+      url: `https://bikefitboost.com/${locale}/authors/ortwin-verreck` });
     for (const unsupported of ["jobTitle", "description", "award", "hasCredential", "reviewedBy"]) {
       expect(schema).not.toHaveProperty(unsupported);
     }
@@ -29,8 +29,8 @@ describe("confirmed author page", () => {
     expect(metadata.alternates?.canonical).toBe(schema.url);
     expect(metadata.title).toBe("Ortwin Verreck | BikeFitBoost");
     expect(metadata.alternates?.languages).toMatchObject({
-      nl: "https://www.bikefitboost.com/nl/authors/ortwin-verreck",
-      en: "https://www.bikefitboost.com/en/authors/ortwin-verreck",
+      nl: "https://bikefitboost.com/nl/authors/ortwin-verreck",
+      en: "https://bikefitboost.com/en/authors/ortwin-verreck",
     });
     expect(metadata.openGraph).toMatchObject({ url: schema.url, type: "profile" });
   });

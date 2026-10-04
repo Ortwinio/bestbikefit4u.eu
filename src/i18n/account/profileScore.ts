@@ -34,7 +34,7 @@ const nl = {
   bikeQualityTitle: "Kwaliteit van fietsgegevens",
   bikeQualityRows: [
     ["Gemeten met een vast meetpunt", "1,0"], ["Geometriedatabase", "0,95"],
-    ["Afgelezen van een onderdeel", "0,9"], ["Strava- of advertentie-import", "0,7"], ["Geschat of onbekende herkomst", "0,6"],
+    ["Afgelezen van een onderdeel", "0,9"], ["Geïmporteerde gegevens", "0,7"], ["Geschat of onbekende herkomst", "0,6"],
     ["Afgeleid uit een andere maat", "0,3"],
   ],
   bikeNote: "Voor fietsgegevens is er nog geen tijdskorting. De score gebruikt alleen gegevens van deze fiets. Zonder vast meetpunt krijgt een meting niet automatisch de hoogste kwaliteit.",
@@ -98,7 +98,7 @@ const en: Copy = {
   bikeQualityTitle: "Bike data quality",
   bikeQualityRows: [
     ["Measured with a defined reference point", "1.0"], ["Geometry database", "0.95"],
-    ["Read from a component", "0.9"], ["Strava or listing import", "0.7"], ["Estimated or unknown source", "0.6"],
+    ["Read from a component", "0.9"], ["Imported data", "0.7"], ["Estimated or unknown source", "0.6"],
     ["Derived from another measurement", "0.3"],
   ],
   bikeNote: "Bike data has no age discount yet. The score uses only this bike’s details. A measurement without a defined reference point does not automatically receive the highest quality.",

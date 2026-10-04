@@ -64,14 +64,6 @@ const primaryGoalValidator = v.union(
   v.literal("aerodynamics")
 );
 
-export const bikeSourceValidator = v.union(
-  v.literal("manual"),
-  v.literal("strava"),
-  v.literal("admin_import"),
-  v.literal("marketplace_import"),
-  v.literal("passport_import")
-);
-
 export const descriptionSourceValidator = v.union(
   v.literal("manual"),
   v.literal("generated"),
@@ -91,7 +83,6 @@ type CreateBikeInput = {
   bikeType: "road" | "gravel" | "mountain" | "hybrid" | "tt_triathlon" | "cyclocross" | "touring" | "city";
   source:
     | "manual"
-    | "strava"
     | "admin_import"
     | "marketplace_import"
     | "passport_import";
@@ -134,15 +125,10 @@ type CreateBikeInput = {
   notes?: string;
   bikeTypeSource?:
     | "user"
-    | "strava_frame_type"
     | "fallback_pending_confirmation"
     | "inferred_from_usage"
     | "admin_matched";
   needsTypeConfirmation?: boolean;
-  stravaGearId?: string;
-  stravaPrimary?: boolean;
-  lifetimeDistanceMeters?: number;
-  lastStravaSync?: number;
   geometryRecordId?: Id<"geometry_records"> | null;
   bikePassportId?: string;
   importedFromBikePassportId?: string;
@@ -209,10 +195,6 @@ export async function createBikeWithProfiles(
     notes: args.notes,
     bikeTypeSource: args.bikeTypeSource,
     needsTypeConfirmation: args.needsTypeConfirmation,
-    stravaGearId: args.stravaGearId,
-    stravaPrimary: args.stravaPrimary,
-    lifetimeDistanceMeters: args.lifetimeDistanceMeters,
-    lastStravaSync: args.lastStravaSync,
     geometryRecordId: geometryRecordId ?? undefined,
     bikePassportId,
     importedFromBikePassportId: args.importedFromBikePassportId,

@@ -1,0 +1,16 @@
+convex/authLocalDev.ts
+convex/authLocalDev.test.ts
+convex/emails/delivery.ts
+convex/emails/layout/layout.test.ts
+convex/emails/templates/templates.test.ts
+convex/emails/unsubscribeTokens.ts
+convex/emails/__tests__/origin.test.ts
+convex/emails/__tests__/preferences.test.ts
+convex/integrations/actions.ts
+convex/integrations/__tests__/origin.test.ts
+src/config/stripeServer.ts
+src/config/stripeServer.test.ts
+src/app/api/stripe/portal/route.ts
+src/app/api/stripe/portal/route.test.ts
+plans/migratie/audit/M1-writers.md
+plans/migratie/audit/files-M1-writers.txt

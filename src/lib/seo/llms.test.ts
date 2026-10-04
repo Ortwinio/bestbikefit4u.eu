@@ -26,10 +26,10 @@ vi.mock("convex/nextjs", () => ({ fetchQuery: vi.fn(async (reference: Parameters
 
 beforeEach(() => { cms.blog = []; cms.guides = []; cms.failing = false; });
 
-const origin = "https://www.bikefitboost.com";
+const origin = "https://bikefitboost.com";
 const performanceTools = ["power-speed", "climb-planner", "ftp-wkg", "fuel-hydration"] as const;
 function publicUrls(document: string) {
-  return [...new Set(document.match(/https:\/\/www\.bikefitboost\.com\/(?:en|nl)(?=\/|[\s)<>]|$)[^\s)<>]*/g) ?? [])];
+  return [...new Set(document.match(/https:\/\/bikefitboost\.com\/(?:en|nl)(?=\/|[\s)<>]|$)[^\s)<>]*/g) ?? [])];
 }
 function plain(value: string) {
   return value.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/[*_`]/g, "").replace(/\s+/g, " ").trim();
@@ -76,7 +76,7 @@ describe("generated LLM discovery documents", () => {
     expect(urls).toContain(`${origin}/nl/bandenspanning-calculator`);
     expect(urls).toContain(`${origin}/en/bike-fitting`);
     expect(urls).toContain(`${origin}/nl/bikefitting`);
-    const internalUrls = document.match(/https:\/\/www\.bikefitboost\.com(?:\/[^\s)<>]*)?/g) ?? [];
+    const internalUrls = document.match(/https:\/\/bikefitboost\.com(?:\/[^\s)<>]*)?/g) ?? [];
     for (const url of internalUrls) {
       const parsed = new URL(url);
       expect(parsed.search).toBe("");

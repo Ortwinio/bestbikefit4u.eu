@@ -215,12 +215,12 @@ export const nl = {
       "Je stappenplan",
     ],
     iphone: [
-      "Open www.bikefitboost.com in Safari",
+      "Open bikefitboost.com in Safari",
       "Tik op het deelicoon",
       "Kies Zet op beginscherm",
     ],
     android: [
-      "Open www.bikefitboost.com in Chrome",
+      "Open bikefitboost.com in Chrome",
       "Tik op de drie puntjes",
       "Kies App installeren",
     ],

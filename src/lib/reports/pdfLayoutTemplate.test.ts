@@ -29,8 +29,8 @@ describe("six-page PDF report", () => {
       const footer = html.split('<footer class="report-footer">')[1].split("</footer>")[0];
       expect(footer).toContain(locale === "nl" ? "Fitrapport" : "Fit report");
       expect(footer).toContain('class="mono report-footer-fixed"');
-      expect(footer).toMatch(/report-footer-person[\s\S]*Ortwin[\s\S]*www\.bikefitboost\.com/);
-      expect(footer).not.toContain("</span><span>www.bikefitboost.com");
+      expect(footer).toMatch(/report-footer-person[\s\S]*Ortwin[\s\S]*bikefitboost\.com/);
+      expect(footer).not.toContain("</span><span>bikefitboost.com");
     },
   );
 

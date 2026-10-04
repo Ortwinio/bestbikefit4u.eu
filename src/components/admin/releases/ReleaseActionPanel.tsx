@@ -15,7 +15,6 @@ const notificationTargets = [
   { value: "plan", label: "Plan" },
   { value: "organization", label: "Organization" },
   { value: "locale", label: "Locale" },
-  { value: "strava_connected", label: "Strava connected" },
   { value: "fit_completed", label: "Fit completed" },
   { value: "bike_type", label: "Bike type" },
 ] as const;

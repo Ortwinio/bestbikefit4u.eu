@@ -73,7 +73,7 @@ vi.mock("@/i18n/request", () => ({
 
 vi.mock("@/i18n/metadata", () => ({
   buildLocaleAlternates: () => ({
-    canonical: `https://www.bikefitboost.com/${locale}/calculators/crank-length`,
+    canonical: `https://bikefitboost.com/${locale}/calculators/crank-length`,
   }),
 }));
 
@@ -121,7 +121,7 @@ describe("crank length page", () => {
   it("preserves canonical metadata and Dutch FAQ content", async () => {
     locale = "nl";
     expect((await generateMetadata()).alternates?.canonical).toBe(
-      "https://www.bikefitboost.com/nl/calculators/crank-length",
+      "https://bikefitboost.com/nl/calculators/crank-length",
     );
     render(await CrankLengthCalculatorPage({ searchParams: Promise.resolve({}) }));
     expect(screen.getByText(crankLengthMessages.nl.faqs[0].q).tagName).toBe("SUMMARY");

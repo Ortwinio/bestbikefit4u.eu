@@ -93,7 +93,6 @@ export function OverviewAdminClient() {
         >
           <div className="space-y-3">
             <div className="flex flex-wrap gap-2">
-              <AdminStatusPill tone="success">{stats.stravaConnected} Strava active</AdminStatusPill>
               <AdminStatusPill tone="info">{stats.openFeedbackCount} open feedback</AdminStatusPill>
               <AdminStatusPill tone="neutral">{stats.geometryBrandCount} geometry brands</AdminStatusPill>
             </div>

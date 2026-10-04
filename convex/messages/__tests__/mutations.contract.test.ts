@@ -10,7 +10,7 @@ vi.mock("@convex-dev/auth/server", () => ({
   getAuthUserId: getAuthUserIdMock,
 }));
 
-import { markMessageDismissed } from "../mutations";
+import { markMessageDismissed, markMessageViewed, markMessageAcknowledged, markMessageClicked } from "../mutations";
 
 type FakeRecord = Record<string, unknown>;
 
@@ -83,6 +83,38 @@ function makeCtx({
 }
 
 describe("messages.markMessageDismissed contract", () => {
+  it.each([markMessageDismissed, markMessageViewed, markMessageAcknowledged, markMessageClicked])(
+    "rejects legacy targets without receipt writes and retains ordinary receipts",
+    async (mutation) => {
+      getAuthUserIdMock.mockResolvedValue("user_1");
+      const handler = (mutation as unknown as { _handler: TestHandler })._handler;
+      for (const targetValue of ["true", "false"]) {
+        const ctx = makeCtx({
+          message: { _id: "msg_1", status: "published" },
+          targets: [
+            { messageId: "msg_1", targetType: "strava_connected", targetValue },
+            { messageId: "msg_1", targetType: "all" },
+          ],
+          user: { _id: "user_1" },
+        });
+        await expect(handler(ctx, { messageId: "msg_1" })).rejects.toThrow("Message not available");
+        expect(ctx.db.insert).not.toHaveBeenCalled();
+        expect(ctx.db.patch).not.toHaveBeenCalled();
+        expect(ctx.db.delete).not.toHaveBeenCalled();
+        expect(ctx.db.query).not.toHaveBeenCalledWith("integrations");
+      }
+      const ordinary = makeCtx({
+        message: { _id: "msg_1", status: "published" },
+        targets: [{ messageId: "msg_1", targetType: "all" }],
+        receipts: [{ _id: "receipt_1", messageId: "msg_1", userId: "user_1", deliveredAt: 1 }],
+        user: { _id: "user_1" },
+      });
+      await handler(ordinary, { messageId: "msg_1" });
+      expect(ordinary.db.patch).toHaveBeenCalledWith("receipt_1", expect.any(Object));
+      expect(ordinary.db.query).not.toHaveBeenCalledWith("integrations");
+    }
+  );
+
   beforeEach(() => {
     vi.clearAllMocks();
   });

@@ -44,7 +44,7 @@ signout logout signin signup logout welcoming back forward optional required con
 `.trim().split(/\s+/));
 
 const allowedWords = new Set(`
-stack reach drop cleat cleats gravel bikefit bestbikefit4u bestbikefit convex strava garmin shimano sram campagnolo
+stack reach drop cleat cleats gravel bikefit bestbikefit4u bestbikefit convex garmin shimano sram campagnolo
 ftp wkg vo2max bmi html pdf csv json api url gps rpm bpm mmol acsm jeukendrup sawka allen coggan
 email e-mail account dashboard menu cookies cookie browser internet online offline link links data contact correct
 check feedback help import input is label login maximum minimum open per privacy reset review set start status stop

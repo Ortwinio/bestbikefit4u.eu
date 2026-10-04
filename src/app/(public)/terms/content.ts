@@ -72,7 +72,7 @@ export function getContent(locale: Locale): TermsCopy {
         },
         {
           title: "10. Contact",
-          body: "For questions about these terms, contact support@bestbikefit4u.eu.",
+          body: "For questions about these terms, contact support@bikefitboost.com.",
         },
       ],
     };
@@ -146,7 +146,7 @@ export function getContent(locale: Locale): TermsCopy {
       },
       {
         title: "10. Contact",
-        body: "Voor vragen over deze voorwaarden: support@bestbikefit4u.eu.",
+        body: "Voor vragen over deze voorwaarden: support@bikefitboost.com.",
       },
     ],
   };

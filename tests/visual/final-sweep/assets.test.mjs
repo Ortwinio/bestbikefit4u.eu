@@ -37,7 +37,7 @@ test("only the two exact Vercel scripts on loopback are local no-ops", async () 
   assert.equal(await serveQaAsset(request, res, { staticDir: "/unused" }), true);
   assert.match(res.headers["content-type"], /javascript/);
   assert.equal(res.headers["x-qa-diagnostic"], "local-vercel-analytics-disabled");
-  assert.equal(await serveQaAsset({ ...request, headers: { host: "bestbikefit4u.eu" } }, response(),
+  assert.equal(await serveQaAsset({ ...request, headers: { host: "bikefitboost.com" } }, response(),
     { staticDir: "/unused" }), false);
   assert.equal(await serveQaAsset({ ...request, url: "/_vercel/other.js" }, response(),
     { staticDir: "/unused" }), false);

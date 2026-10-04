@@ -2,9 +2,9 @@ import { SITE_ORIGIN } from "../../shared/brand";
 
 export const BRAND = {
   name: "BikeFitBoost",
-  authEmailFrom: "BikeFitBoost <noreply@notifications.bestbikefit4u.eu>",
+  authEmailFrom: "BikeFitBoost <noreply@notifications.bikefitboost.com>",
   reportTitle: "BikeFitBoost - Fit Recommendation Report",
-  supportEmail: "support@bestbikefit4u.eu",
+  supportEmail: "support@bikefitboost.com",
   siteUrl: SITE_ORIGIN,
   host: new URL(SITE_ORIGIN).host,
 } as const;

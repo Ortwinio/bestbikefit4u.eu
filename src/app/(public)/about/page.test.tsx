@@ -96,10 +96,10 @@ describe("About marketing page", () => {
       },
       alternates,
     });
-    expect(alternates.canonical).toBe(`https://www.bikefitboost.com/${locale}/about`);
+    expect(alternates.canonical).toBe(`https://bikefitboost.com/${locale}/about`);
     expect(alternates.languages).toMatchObject({
-      en: "https://www.bikefitboost.com/en/about",
-      nl: "https://www.bikefitboost.com/nl/about",
+      en: "https://bikefitboost.com/en/about",
+      nl: "https://bikefitboost.com/nl/about",
     });
   });
 

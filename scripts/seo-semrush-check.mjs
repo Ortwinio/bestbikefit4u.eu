@@ -85,7 +85,7 @@ export async function runCheck() {
   const check = (condition, message) => { if (!condition) report.failures.push(message); };
   const request = path => new Promise((done, reject) => {
     const req = get(new URL(path, local.base), { ca: local.certificate.cert, servername: "localhost",
-      headers: { host: "bestbikefit4u.eu", "user-agent": "Screaming Frog SEO Spider/23.0" },
+      headers: { host: "bikefitboost.com", "user-agent": "Screaming Frog SEO Spider/23.0" },
       signal: AbortSignal.timeout(45000) }, response => {
       let html = ""; response.setEncoding("utf8"); response.on("data", chunk => { html += chunk; });
       response.on("end", () => done({ status: response.statusCode, location: response.headers.location, html }));
@@ -97,11 +97,11 @@ export async function runCheck() {
     const parsed = inspectHtml(response.html);
     check(response.status === 200, `${path}: expected200 got${response.status}`);
     check(parsed.titleCount === 1 && parsed.descriptionCount === 1, `${path}: metadata missing/duplicated/outsidehead`);
-    check(parsed.canonical === `https://bestbikefit4u.eu${path}`, `${path}: canonical ${parsed.canonical}`);
+    check(parsed.canonical === `https://bikefitboost.com${path}`, `${path}: canonical ${parsed.canonical}`);
     check(parsed.schemas.some(schema => schema["@type"] === "Organization"), `${path}: missingOrganization`);
     for (const language of ["nl", "en"]) {
       check(parsed.alternatives.some(alternate => alternate.locale === language
-        && alternate.href?.startsWith(`https://bestbikefit4u.eu/${language}/`)), `${path}: missing${language}hreflang`);
+        && alternate.href?.startsWith(`https://bikefitboost.com/${language}/`)), `${path}: missing${language}hreflang`);
     }
     for (const schema of parsed.schemas.filter(item => ["Person", "Organization"].includes(item["@type"]))) {
       check(Array.isArray(schema.sameAs) && schema.sameAs.length === 0, `${path}: sameAs must be empty`);

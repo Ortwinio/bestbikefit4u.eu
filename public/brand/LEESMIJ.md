@@ -1,7 +1,7 @@
 # BikeFitBoost logoset
 
 De set volgt `plans/rebrand/canvas/bikefitboost-merkblad.md`: Badge 1.3.6 en favicon F.
-Het officiële domein is www.bikefitboost.com. De bestaande e-mailadressen blijven behouden.
+Het officiële domein is bikefitboost.com. Het contactadres is support@bikefitboost.com; e-mail wordt verzonden via notifications.bikefitboost.com.
 De SVG-woordmerken bestaan uit Bricolage Grotesque 800 lettercontouren, niet uit tekst.
 
 Opnieuw genereren: `node scripts/rebrand-assets.mjs` vanuit de repository.

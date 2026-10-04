@@ -68,7 +68,7 @@ vi.mock("@/i18n/request", () => ({
 
 vi.mock("@/i18n/metadata", () => ({
   buildLocaleAlternates: () => ({
-    canonical: `https://www.bikefitboost.com/${locale}/calculators/saddle-height`,
+    canonical: `https://bikefitboost.com/${locale}/calculators/saddle-height`,
   }),
 }));
 
@@ -118,7 +118,7 @@ describe("saddle height calculator page", () => {
       locale = language;
       const metadata = await generateMetadata();
       expect(metadata.alternates?.canonical).toBe(
-        `https://www.bikefitboost.com/${language}/calculators/saddle-height`,
+        `https://bikefitboost.com/${language}/calculators/saddle-height`,
       );
       expect(metadata.description).toBeTruthy();
       expect(metadata.openGraph?.url).toBe(metadata.alternates?.canonical);

@@ -140,10 +140,10 @@ it("redirects the Dutch tire-pressure alias and publishes canonical translated a
   const metadata = await generateMetadata();
   expect(metadata.title).toBe("Bandenspanning calculator");
   expect(metadata.openGraph?.title).toBe("Bandenspanning calculator");
-  expect(metadata.alternates?.canonical).toBe("https://www.bikefitboost.com/nl/bandenspanning-calculator");
+  expect(metadata.alternates?.canonical).toBe("https://bikefitboost.com/nl/bandenspanning-calculator");
   expect(metadata.alternates?.languages).toMatchObject({
-    en: "https://www.bikefitboost.com/en/tire-pressure-calculator",
-    nl: "https://www.bikefitboost.com/nl/bandenspanning-calculator",
+    en: "https://bikefitboost.com/en/tire-pressure-calculator",
+    nl: "https://bikefitboost.com/nl/bandenspanning-calculator",
   });
 });
 

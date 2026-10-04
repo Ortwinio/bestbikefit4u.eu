@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { resolveSiteOrigin } from "../shared/brand";
 import { internalMutation } from "./_generated/server";
 
 const LOCALHOST_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "[::1]"]);
@@ -34,7 +35,7 @@ export function isLocalDevAuthAllowed() {
     return false;
   }
   try {
-    const site = new URL(process.env.SITE_URL ?? "");
+    const site = new URL(resolveSiteOrigin(process.env.SITE_URL));
     return (
       (site.protocol === "http:" || site.protocol === "https:") &&
       isAllowedLocalhostHost(site.hostname)

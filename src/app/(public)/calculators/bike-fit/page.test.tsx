@@ -78,7 +78,7 @@ vi.mock("@/i18n/request", () => ({
 
 vi.mock("@/i18n/metadata", () => ({
   buildLocaleAlternates: () => ({
-    canonical: `https://www.bikefitboost.com/${locale}/calculators/bike-fit`,
+    canonical: `https://bikefitboost.com/${locale}/calculators/bike-fit`,
   }),
 }));
 
@@ -127,7 +127,7 @@ describe("bike fit calculator page", () => {
       locale = language;
       const metadata = await generateMetadata();
       expect(metadata.alternates?.canonical).toBe(
-        `https://www.bikefitboost.com/${language}/calculators/bike-fit`,
+        `https://bikefitboost.com/${language}/calculators/bike-fit`,
       );
       expect(metadata.openGraph?.url).toBe(metadata.alternates?.canonical);
       render(await BikeFitCalculatorPage());

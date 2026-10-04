@@ -4,8 +4,8 @@ export const BRAND = {
   name: "BikeFitBoost",
   siteUrl: SITE_ORIGIN,
   host: new URL(SITE_ORIGIN).hostname,
-  authEmailFrom: "BikeFitBoost <noreply@notifications.bestbikefit4u.eu>",
-  supportEmail: "support@bestbikefit4u.eu",
+  authEmailFrom: "BikeFitBoost <noreply@notifications.bikefitboost.com>",
+  supportEmail: "support@bikefitboost.com",
   reportTitle: "BikeFitBoost - Fit Recommendation Report",
   reportSlug: "bikefitboost-report",
   assets: {

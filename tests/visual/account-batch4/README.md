@@ -10,7 +10,7 @@ Convex account, remote network access or persistent writes.
 
 `runtime.jsx` supplies explicit deterministic Convex query fixtures. Unknown queries throw; query names,
 mutations/actions and browser runtime errors are collected. Mutation results are simulated. This does
-not validate backend authorization, real database saves, Strava linking, destructive account deletion
+not validate backend authorization, real database saves, destructive account deletion
 or installed PWA behavior. Example rider/bike names are visibly labelled. `FeedbackPanelProvider`
 is stubbed solely to supply `openPanel`; feedback tabs use the real page, but feedback submission panel
 opening/submission is not validated. Settings deletion opens the real confirmation dialog without

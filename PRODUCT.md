@@ -15,7 +15,7 @@ In-person bike fitting costs €150–€500 and requires specialist access that
 
 ## 2. Goal
 
-Build the leading self-service bike fit platform in Europe — starting with the Netherlands and English-speaking EU markets — by combining a biomechanically grounded fit algorithm, an intuitive guided experience, and deep third-party integrations (Strava, frame geometry databases) that improve recommendation accuracy over time.
+Build the leading self-service bike fit platform in Europe — starting with the Netherlands and English-speaking EU markets — by combining a biomechanically grounded fit algorithm, an intuitive guided experience, and frame geometry data that improve recommendation accuracy over time.
 
 ---
 
@@ -28,7 +28,6 @@ Build the leading self-service bike fit platform in Europe — starting with the
 - Tire pressure calculator (public + authenticated)
 - Multi-bike management with separate fit profiles
 - PDF and email fit reports
-- Strava integration for riding context and bike import
 - Bilingual platform (EN/NL)
 - Tiered SaaS pricing (Free, Pro, Premium)
 
@@ -48,7 +47,7 @@ Build the leading self-service bike fit platform in Europe — starting with the
 - **Rides:** 3–6 hours per week, road or gravel, year-round
 - **Pain point:** Persistent discomfort (knee, lower back, neck) with no clear cause; unwilling or unable to spend €300 on a professional fit
 - **Motivation:** Wants to ride longer and hurt less; performance improvement is secondary
-- **Behaviour:** Researches on forums, trusts science-backed tools, already tracks rides on Strava
+- **Behaviour:** Researches on forums and trusts science-backed tools
 - **Device:** Desktop for initial setup, mobile to check results on a ride day
 - **Tier fit:** Pro (€9/month)
 
@@ -120,15 +119,6 @@ Standalone calculator available without login, with a more advanced version in t
 - **Email report:** Sent immediately after a session; contains all fit parameters and validation plan
 - **PDF report:** Full branded document (in development); required for Premium clients
 
-### 5.7 Strava Integration
-
-- OAuth connect from Settings
-- Profile photo import
-- Recent rides and gear usage import (background job)
-- Riding context inference (frequency, terrain, bike usage patterns)
-- Auto-import of Strava bikes on first connect
-- Gated to Pro tier and above
-
 ---
 
 ## 6. Functional Framework
@@ -157,7 +147,6 @@ AUTHENTICATED LAYER (dashboard)
 │   └── Results + validation plan
 ├── Settings
 │   ├── Account (email, theme, units)
-│   ├── Connected apps (Strava)
 │   └── Subscription tier
 └── Admin (internal)
     ├── User management
@@ -313,7 +302,6 @@ Attempts to match target reach using stem length (60–130 mm), angle, and space
 - Public calculators generate SEO traffic and demonstrate value before sign-up
 - Multi-bike and multi-profile support covers real user needs
 - Tire pressure calculator adds standalone utility and cross-sell surface
-- Strava integration provides automatic context and reduces manual input
 
 **Technology**
 - Type-safe end-to-end with Convex codegen — runtime type errors at the API boundary are eliminated
@@ -368,7 +356,6 @@ Attempts to match target reach using stem length (60–130 mm), angle, and space
 |------|--------|
 | Engine v2 migration (10 phases) | Phases 1–9 complete; phase 10 (cutover) pending |
 | Tire pressure module (public + dashboard) | Public calculator live; dashboard wizard complete |
-| Strava OAuth + photo import | Live |
 | Profile wizard with measurement illustrations | Live |
 | Slider-based calculator UI across all public tools | Live |
 | SEO content expansion (guides, use-cases, science) | Ongoing |
@@ -379,7 +366,6 @@ Attempts to match target reach using stem length (60–130 mm), angle, and space
 |------|----------|
 | Engine v2 default cutover | High — unblocks confidence ranges and shadow-mode validation |
 | PDF report export | High — promised on pricing page; blocks Premium conversion |
-| Strava phase 2: per-bike ride data import | Medium |
 | Bikes frontend completion (edit, delete, photo) | Medium |
 | Admin dashboard: user management + audit logs | Medium |
 | Femur length integration into algorithm | Low |
@@ -390,8 +376,7 @@ Attempts to match target reach using stem length (60–130 mm), angle, and space
 |------|----------|
 | Frame geometry database integration | High — improves frame size recommendations significantly |
 | Client management portal (Premium tier) | High — required to monetise Premium properly |
-| Dynamic validation feedback loop | Medium — Strava or manual ride feedback → algorithm confidence |
-| Strava phase 3: terrain-aware fit intelligence | Medium |
+| Dynamic validation feedback loop | Medium — manual ride feedback → algorithm confidence |
 | Branded PDF export for Premium tier | Medium |
 | API access for integrations (Premium) | Low |
 

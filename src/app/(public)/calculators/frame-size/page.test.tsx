@@ -73,7 +73,7 @@ vi.mock("@/i18n/request", () => ({
 
 vi.mock("@/i18n/metadata", () => ({
   buildLocaleAlternates: () => ({
-    canonical: `https://www.bikefitboost.com/${locale}/calculators/frame-size`,
+    canonical: `https://bikefitboost.com/${locale}/calculators/frame-size`,
   }),
 }));
 
@@ -122,7 +122,7 @@ describe("frame size calculator page", () => {
     locale = language;
     const metadata = await generateMetadata();
     expect(metadata.alternates?.canonical).toBe(
-      `https://www.bikefitboost.com/${language}/calculators/frame-size`,
+      `https://bikefitboost.com/${language}/calculators/frame-size`,
     );
     expect(metadata.openGraph).toBeTruthy();
   });

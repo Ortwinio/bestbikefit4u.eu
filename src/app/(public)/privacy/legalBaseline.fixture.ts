@@ -87,10 +87,10 @@ export const legalBaseline = {
         },
         {
           title: "8. Contact",
-          body: "For privacy-related questions, contact us at support@bestbikefit4u.eu.",
+          body: "For privacy-related questions, contact us at support@bikefitboost.com.",
         },
       ],
-      contactText: "support@bestbikefit4u.eu",
+      contactText: "support@bikefitboost.com",
     },
     nl: {
       metadata: {
@@ -178,10 +178,10 @@ export const legalBaseline = {
         },
         {
           title: "8. Contact",
-          body: "Voor privacyvragen kun je contact opnemen via support@bestbikefit4u.eu.",
+          body: "Voor privacyvragen kun je contact opnemen via support@bikefitboost.com.",
         },
       ],
-      contactText: "support@bestbikefit4u.eu",
+      contactText: "support@bikefitboost.com",
     },
   },
   terms: {
@@ -252,7 +252,7 @@ export const legalBaseline = {
         },
         {
           title: "10. Contact",
-          body: "For questions about these terms, contact support@bestbikefit4u.eu.",
+          body: "For questions about these terms, contact support@bikefitboost.com.",
         },
       ],
     },
@@ -324,7 +324,7 @@ export const legalBaseline = {
         },
         {
           title: "10. Contact",
-          body: "Voor vragen over deze voorwaarden: support@bestbikefit4u.eu.",
+          body: "Voor vragen over deze voorwaarden: support@bikefitboost.com.",
         },
       ],
     },

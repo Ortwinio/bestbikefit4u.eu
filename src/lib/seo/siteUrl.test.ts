@@ -3,7 +3,10 @@ import { BRAND } from "@/config/brand";
 import { currentSiteUrl } from "./siteUrl";
 
 describe("persisted site URL presentation", () => {
-  it.each(["https://bestbikefit4u.eu", "https://www.bestbikefit4u.eu", "http://bestbikefit4u.eu"])(
+  it.each([
+    "https://bestbikefit4u.eu", "https://www.bestbikefit4u.eu", "http://bestbikefit4u.eu",
+    "https://archive.bestbikefit4u.eu", "https://www.bikefitboost.com", "http://bikefitboost.com",
+  ])(
     "moves trusted legacy origin %s without losing URL components", (origin) => {
       expect(currentSiteUrl(`${origin}/nl/guides/example?source=guide#section`))
         .toBe(`${BRAND.siteUrl}/nl/guides/example?source=guide#section`);

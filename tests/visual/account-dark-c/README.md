@@ -19,7 +19,7 @@ gradients are excluded from text checks. SVG/lime panels receive visual inspecti
 supporting evidence, not a complete accessibility audit. The existing layout/LanguageSwitch active
 locale contrast failure is reported separately as a known shared-layout issue owned outside this task.
 
-No live authentication, database writes, Strava linking, destructive deletion or PWA installation is
+No live authentication, database writes, destructive deletion or PWA installation is
 validated. FeedbackPanelProvider only is stubbed to supply openPanel; submission-panel behavior is not
 validated. Settings opens the real confirmation dialog without confirming account deletion.
 

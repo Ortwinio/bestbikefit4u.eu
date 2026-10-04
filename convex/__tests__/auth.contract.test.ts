@@ -55,9 +55,9 @@ const request = { identifier: "rider@example.com", token: "ABCDEFG", expires: ne
 
 describe("email registration and delivery", () => {
   it.each([
-    ["https://bestbikefit4u.eu/nl/login?code=ABCDEFG", "nl", "inlogcode"],
-    ["https://bestbikefit4u.eu/en/login?code=ABCDEFG", "en", "login code"],
-    ["https://bestbikefit4u.eu/?redirectTo=%2Fnl%2Fdashboard", "nl", "inlogcode"],
+    ["https://bikefitboost.com/nl/login?code=ABCDEFG", "nl", "inlogcode"],
+    ["https://bikefitboost.com/en/login?code=ABCDEFG", "en", "login code"],
+    ["https://bikefitboost.com/?redirectTo=%2Fnl%2Fdashboard", "nl", "inlogcode"],
   ])("renders the requested login language from %s", async (url, locale, subjectWord) => {
     const email = (await config()).providers[0].options;
     await email.sendVerificationRequest({ ...request, url }, { runMutation: vi.fn() });
@@ -121,7 +121,7 @@ describe("email registration and delivery", () => {
 
   it("never enables the localhost credential provider for a public site", async () => {
     vi.stubEnv("LOCALHOST_DEV_LOGIN_SECRET", "test-only");
-    vi.stubEnv("SITE_URL", "https://bestbikefit4u.eu");
+    vi.stubEnv("SITE_URL", "https://bikefitboost.com");
     const providers = (await config()).providers;
     expect(providers.some(provider => provider.id === "localhost-dev")).toBe(false);
   });

@@ -7,9 +7,9 @@ import { getSitemapNodes } from "@/lib/seo/sitemap/sources";
 import { getProgrammaticCalculatorEntries } from "@/lib/seo/programmatic/tirePressure";
 
 const languages = {
-  en: "https://www.bikefitboost.com/en/bike-fitting",
-  nl: "https://www.bikefitboost.com/nl/bikefitting",
-  "x-default": "https://www.bikefitboost.com/en/bike-fitting",
+  en: "https://bikefitboost.com/en/bike-fitting",
+  nl: "https://bikefitboost.com/nl/bikefitting",
+  "x-default": "https://bikefitboost.com/en/bike-fitting",
 };
 
 describe("central locale routes", () => {
@@ -33,7 +33,7 @@ describe("central locale routes", () => {
         const source = `/${opposite}${localizedPaths[opposite]}`;
         const target = `/${locale}${localizedPaths[locale]}`;
         expect(buildLocaleSwitchHref({ pathname: source, locale, queryString: "" })).toBe(target);
-        expect(buildLocaleAlternates(source, locale).canonical).toBe(`https://www.bikefitboost.com${target}`);
+        expect(buildLocaleAlternates(source, locale).canonical).toBe(`https://bikefitboost.com${target}`);
       }
     }
   });

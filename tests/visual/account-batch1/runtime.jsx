@@ -62,7 +62,6 @@ const values = {
   "sessions/queries:listByUser": fixture === "loading" ? undefined : fixture === "empty" || fixture === "no-fit" ? empty : [session],
   "pressureCalculations/queries:getRecalculableBikeCount": 1,
   "messages/queries:getMyMessages": empty,
-  "integrations/queries:getStravaStatus": { accessStatus: "disconnected" },
 };
 
 window.__visualQueries = [];

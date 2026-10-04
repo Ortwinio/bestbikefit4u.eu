@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import sharp from "sharp";
 import { batchBGuides } from "./index";
 import { getRewriteFaqs } from "../../rewrite-types";
+import { currentSiteUrl } from "@/lib/seo/siteUrl";
 
 const plain = (value: string) => value.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/[*#`]/g, "");
 const words = (value: string) => plain(value).match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu)?.length ?? 0;
@@ -98,7 +99,7 @@ describe("44b batch B editorial content", () => {
       expect(provenance.webpSha256).toBe(createHash("sha256").update(readFileSync(
         `public/illustrations/guides/${guide.illustration}.webp`,
       )).digest("hex"));
-      expect(record.ogImageUrl).toBe(`https://www.bikefitboost.com/og/illustrations/guides/${guide.illustration}.jpg`);
+      expect(currentSiteUrl(record.ogImageUrl)).toBe(`https://bikefitboost.com/og/illustrations/guides/${guide.illustration}.jpg`);
     });
   }
 });

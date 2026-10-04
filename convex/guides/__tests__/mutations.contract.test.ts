@@ -401,7 +401,7 @@ describe("guide mutations and queries", () => {
 
     const guideId = (await createHandler(ctx, {
       ...createGuideArgs(),
-      canonicalUrl: "https://www.bikefitboost.com/en/guides/test-slug-a",
+      canonicalUrl: "https://bikefitboost.com/en/guides/test-slug-a",
       heroImagePublicPath: "/images/guides/test-guide.jpg",
       featuredImageAlt: { en: "Guide hero", nl: "Gids hero" },
     })) as string;
@@ -437,7 +437,7 @@ describe("guide mutations and queries", () => {
         id: guideId,
         canonicalUrl,
       })
-    ).rejects.toThrow("Canonical URL must use www.bikefitboost.com");
+    ).rejects.toThrow("Canonical URL must use bikefitboost.com");
   });
 
   it("requires localized image alt text when publishing a guide with a hero image", async () => {

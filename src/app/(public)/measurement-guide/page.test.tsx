@@ -54,10 +54,10 @@ describe("measurement guide route", () => {
     expect(metadata.title).toBe(measurementGuideCopy[locale].metadata.title);
     expect(metadata.description).toBe(measurementGuideCopy[locale].metadata.description);
     expect(metadata.keywords).toEqual(measurementGuideCopy[locale].metadata.keywords);
-    expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}/measurement-guide`);
+    expect(metadata.alternates?.canonical).toBe(`https://bikefitboost.com/${locale}/measurement-guide`);
     expect(metadata.alternates?.languages).toMatchObject({
-      nl: "https://www.bikefitboost.com/nl/measurement-guide",
-      en: "https://www.bikefitboost.com/en/measurement-guide",
+      nl: "https://bikefitboost.com/nl/measurement-guide",
+      en: "https://bikefitboost.com/en/measurement-guide",
     });
     expect(metadata.openGraph).toMatchObject({
       title: measurementGuideCopy[locale].metadata.title,

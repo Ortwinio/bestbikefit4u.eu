@@ -52,8 +52,7 @@ try {
             src: image.getAttribute("src"), width: image.getBoundingClientRect().width,
             height: image.getBoundingClientRect().height, loaded: image.complete && image.naturalWidth > 0,
           })));
-          row.oldCopy = /bestbikefit4u/i.test(await page.locator("body").innerText()
-            .then((value) => value.replace(/[\w.+-]+@(?:[\w.-]+\.)?bestbikefit4u\.eu/gi, "")));
+          row.oldCopy = /bestbikefit4u/i.test(await page.locator("body").innerText());
           row.horizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
           const base = `RB-${locale}-${width}-${route}`;
           await page.screenshot({ path: resolve(output, `${base}.png`), fullPage: true, animations: "disabled" });

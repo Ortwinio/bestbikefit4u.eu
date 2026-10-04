@@ -19,7 +19,7 @@ test("Dutch detector catches untranslated UI and English embedded in Dutch copy"
 test("Dutch detector protects Dutch homographs and accepted technical/brand terms", () => {
   for (const text of [
     "Je fiets opslaan", "Geen fietsen gevonden", "Kies je fiets", "Vul dit veld in",
-    "Stack, reach, drop, cleat en gravel", "BestBikeFit4U | Shimano SRAM Garmin Strava",
+    "Stack, reach, drop, cleat en gravel", "BestBikeFit4U | Shimano SRAM Garmin",
     "Je account is online", "De beste fiets voor je lichaam", "20–30 mmol/L · FTP · W/kg",
     "Dit was je eerste fiets", "Informatie over je fiets", "Wil je opslaan of annuleren?",
     "Bekijk je gegevens", "Instellingen en voorkeuren", "De fiets staat op je naam",

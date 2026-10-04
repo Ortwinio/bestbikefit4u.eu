@@ -58,6 +58,7 @@ describe("stripe portal route", () => {
     process.env.NEXT_PUBLIC_CONVEX_URL = "https://example.convex.cloud";
     process.env.STRIPE_SECRET_KEY = "sk_test_123";
     process.env.SITE_URL = "https://www.bikefitboost.com";
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "");
     mocks.token.mockResolvedValue("auth-token");
     mocks.query.mockResolvedValue({
       _id: "user_1",
@@ -70,6 +71,7 @@ describe("stripe portal route", () => {
   });
 
   afterEach(() => {
+    vi.unstubAllEnvs();
     delete process.env.NEXT_PUBLIC_CONVEX_URL;
     delete process.env.STRIPE_SECRET_KEY;
     delete process.env.SITE_URL;
@@ -99,7 +101,17 @@ describe("stripe portal route", () => {
     expect(mocks.setAuth).toHaveBeenCalledWith("auth-token");
     expect(mocks.portalCreate).toHaveBeenCalledWith({
       customer: "cus_123",
-      return_url: "https://www.bikefitboost.com/nl/settings?billing=portal_return",
+      return_url: "https://bikefitboost.com/nl/settings?billing=portal_return",
+    });
+  });
+
+  it.each(["", "not-a-url", "https://user:pass@unsafe.example"])("falls back safely for %s instead of trusting the request host", async (origin) => {
+    vi.stubEnv("SITE_URL", origin);
+    const response = await POST(request({ locale: "nl" }));
+    expect(response.status).toBe(200);
+    expect(mocks.portalCreate).toHaveBeenCalledWith({
+      customer: "cus_123",
+      return_url: "https://bikefitboost.com/nl/settings?billing=portal_return",
     });
   });
 

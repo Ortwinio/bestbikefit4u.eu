@@ -87,7 +87,12 @@ describe.each(["en", "nl"] as const)("Legal pages in %s", (language) => {
     const metadata = await (kind === "privacy" ? privacyMetadata() : termsMetadata());
     expect(metadata).toEqual({
       ...original.metadata,
-      openGraph: { title: original.metadata.title, description: original.metadata.description, type: "website" },
+      openGraph: {
+        title: original.metadata.title,
+        description: original.metadata.description,
+        type: "website",
+        url: buildLocaleAlternates(`/${kind}`, language).canonical,
+      },
       alternates: buildLocaleAlternates(`/${kind}`, language),
     });
   });

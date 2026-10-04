@@ -165,7 +165,7 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       placeholders: {
         bugTitle: "Crash when saving a bike",
         featureRequestTitle: "Add keyboard shortcuts",
-        supportCaseTitle: "Need help connecting Strava",
+        supportCaseTitle: "Need help updating my bike",
         reviewTitle: "This really helped my riding position",
         description: "Tell us what you were trying to do, what happened, and what would have made it better.",
         category: "Dashboard, fit engine, data, setup...",
@@ -305,7 +305,7 @@ const feedbackCopyByLocale: Record<FeedbackLocale, FeedbackCopy> = {
       placeholders: {
         bugTitle: "Crash bij het opslaan van een fiets",
         featureRequestTitle: "Sneltoetsen toevoegen",
-        supportCaseTitle: "Hulp nodig bij Strava-koppeling",
+        supportCaseTitle: "Hulp nodig bij het bijwerken van mijn fiets",
         reviewTitle: "Dit hielp mijn fietspositie echt vooruit",
         description: "Vertel wat je probeerde te doen, wat er gebeurde en wat dit beter had gemaakt.",
         category: feedbackDutch.categoryPlaceholder,

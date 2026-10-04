@@ -36,7 +36,7 @@ describe("rewritten guide rendering", () => {
     expect(article.dateModified).toBe("2026-10-01");
     expect(article.inLanguage).toBe(locale);
     expect(article.author).toMatchObject({ "@type": "Person", name: "Ortwin Verreck",
-      url: `https://www.bikefitboost.com/${locale}/authors/ortwin-verreck`, sameAs: [] });
+      url: `https://bikefitboost.com/${locale}/authors/ortwin-verreck`, sameAs: [] });
     expect(html).toContain(locale === "nl" ? "Auteur:" : "Author:");
     expect(html).toContain(`href="/${locale}/authors/ortwin-verreck"`);
     expect(article).not.toHaveProperty("reviewedBy");

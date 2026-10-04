@@ -272,6 +272,12 @@ const convexAuthProxy = convexAuthNextjsMiddleware(
 );
 
 export function proxy(...args: Parameters<typeof convexAuthProxy>) {
+  const [request] = args;
+  if (/^\/api\/auth\/(signin|callback)(?:\/|$)/.test(request.nextUrl.pathname)) {
+    const nonce = createCspNonce();
+    return applyDeploymentHeaders(request, createNextResponseWithNonce(request, nonce), nonce);
+  }
+
   return convexAuthProxy(...args);
 }
 

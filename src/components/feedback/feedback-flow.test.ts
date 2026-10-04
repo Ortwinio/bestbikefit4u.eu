@@ -108,7 +108,7 @@ describe("feedback-flow", () => {
         },
         locale: "en",
         pathname: "/calculators/bike-fit",
-        pageUrl: "https://www.bikefitboost.com/en/calculators/bike-fit",
+        pageUrl: "https://bikefitboost.com/en/calculators/bike-fit",
         queryString: "step=results",
         routeFamily: "calculators",
         activityTrail: [
@@ -122,7 +122,7 @@ describe("feedback-flow", () => {
       title: "Need help",
       description: "Cannot find the saved result",
       category: undefined,
-      pageUrl: "https://www.bikefitboost.com/en/calculators/bike-fit",
+      pageUrl: "https://bikefitboost.com/en/calculators/bike-fit",
       pathname: "/calculators/bike-fit",
       queryString: "step=results",
       locale: "en",
