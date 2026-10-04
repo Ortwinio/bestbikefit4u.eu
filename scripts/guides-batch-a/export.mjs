@@ -45,7 +45,7 @@ for (const entry of entries) {
     heroImageFileName: `${guide.illustration}.webp`, heroImagePublicPath: hero,
     featuredImageUrl: hero, featuredImageAlt: bilingual(guide, "alt"),
     ogTitle: bilingual(guide, "metaTitle"), ogDescription: bilingual(guide, "metaDescription"),
-    ogImageUrl: `https://bestbikefit4u.eu/og${hero.replace(/\.webp$/, ".jpg")}`, ogImageAlt: bilingual(guide, "alt"),
+    ogImageUrl: `${SITE_ORIGIN}/og${hero.replace(/\.webp$/, ".jpg")}`, ogImageAlt: bilingual(guide, "alt"),
     relatedGuidePaths: links, relatedGuides: links.map((path) => path.replace("/guides/", "")),
     relatedKeywords: locales.flatMap((locale) => [guide[locale].keyword, ...guide[locale].relatedKeywords]),
     primaryCtaTarget: guide.nl.ctaTarget, primaryCtaLabel: bilingual(guide, "ctaLabel"),
@@ -55,3 +55,4 @@ for (const entry of entries) {
   documents.push({ path: `${output}/${guide.slug}.json`, content: `${JSON.stringify(record, null, 2)}\n` });
 }
 process.stdout.write(JSON.stringify(documents));
+import { SITE_ORIGIN } from "../../shared/brand.ts";

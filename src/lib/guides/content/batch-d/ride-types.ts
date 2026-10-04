@@ -6,7 +6,7 @@ export const guide = {
   illustration: "53-fietstype-en-houding",
   nl: {
     title: "Fiets afstellen per fietstype",
-    metaTitle: "Fiets afstellen per fietstype | BestBikeFit4U",
+    metaTitle: "Fiets afstellen per fietstype | BikeFitBoost",
     metaDescription: "Racefiets, gravelbike of mountainbike: welke houding past bij je rit? Vergelijk " +
       "controle, steun en duur. Kies een startpositie en test je afstelling.",
     keyword: "fiets afstellen per fietstype",
@@ -141,7 +141,7 @@ toeschrijft.`,
   },
   en: {
     title: "Bike fit riding styles",
-    metaTitle: "Bike fit riding styles: choose a position | BestBikeFit4U",
+    metaTitle: "Bike fit riding styles: choose a position | BikeFitBoost",
     metaDescription: "Road, gravel or mountain bike: which position suits your ride? Compare control, support " +
       "and duration. Choose a starting position and test one change.",
     keyword: "bike fit riding styles",

@@ -4,7 +4,7 @@ export const lowerBack = {
   illustration: "23-lage-rugpijn",
   nl: {
     title: "Lage rugpijn fietsen: rustig je positie controleren",
-    metaTitle: "Lage rugpijn fietsen: positie controleren | BestBikeFit4U",
+    metaTitle: "Lage rugpijn fietsen: positie controleren | BikeFitBoost",
     metaDescription: "Lage rugpijn tijdens het fietsen? Leg vast wanneer klachten beginnen, controleer je zit en stuur en ontdek wanneer je hulp vraagt bij je afstelling.",
     keyword: "lage rugpijn fietsen",
     relatedKeywords: ["rugklachten fietshouding", "afstand zadel stuur", "stuurdrop rug"],
@@ -92,7 +92,7 @@ Neem je gebruikelijke fietsschoenen, je maatnotities en een kort overzicht van e
   },
   en: {
     title: "Lower back pain cycling: check your position calmly",
-    metaTitle: "Lower back pain cycling: position check | BestBikeFit4U",
+    metaTitle: "Lower back pain cycling: position check | BikeFitBoost",
     metaDescription: "Lower back pain while cycling? Record when symptoms start, check your seating and handlebar position, and learn when to seek help with your setup.",
     keyword: "lower back pain cycling",
     relatedKeywords: ["cycling position back discomfort", "saddle to bar distance", "handlebar drop back"],

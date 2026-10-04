@@ -6,7 +6,7 @@ export const guide = {
   illustration: "49-voet-opmeten",
   nl: {
     title: "Voet opmeten fietsschoenen: lengte en breedte",
-    metaTitle: "Voet opmeten fietsschoenen | BestBikeFit4U",
+    metaTitle: "Voet opmeten fietsschoenen | BikeFitBoost",
     metaDescription: "Knellende fietsschoenen of twijfel over je maat? Meet beide voeten in lengte en breedte. " +
       "Leer je meting vergelijken en controleer de pasvorm op de fiets.",
     keyword: "voet opmeten fietsschoenen",
@@ -136,7 +136,7 @@ pedaalcontact. Aanhoudende pijn of gevoelloosheid vraagt om beoordeling, niet st
   },
   en: {
     title: "Foot measurement cycling: length and width",
-    metaTitle: "Foot measurement cycling | BestBikeFit4U",
+    metaTitle: "Foot measurement cycling | BikeFitBoost",
     metaDescription: "Tight cycling shoes or uncertain sizing? Measure both feet for length and width. Learn " +
       "how to compare charts, check heel support and assess riding fit.",
     keyword: "foot measurement cycling",

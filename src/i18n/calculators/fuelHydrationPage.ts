@@ -12,13 +12,13 @@ export const fuelHydrationPageMessages = {
       ],
     },
     metadata: {
-      title: "Fuel & Hydration Planner | BestBikeFit4U",
+      title: "Fuel & Hydration Planner | BikeFitBoost",
       description:
         "Plan carbs, fluids, and sodium for long rides with a practical first-pass fueling and hydration workflow.",
       keywords: ["fuel hydration planner", "cycling nutrition planner", "hydration calculator"],
     },
     hero: {
-      eyebrow: "BestBikeFit4U calculator",
+      eyebrow: "BikeFitBoost calculator",
       title: "Fuel & Hydration Planner",
       description:
         "Plan a realistic fueling and hydration strategy before a long ride, event, or " +
@@ -122,14 +122,14 @@ export const fuelHydrationPageMessages = {
       ],
     },
     metadata: {
-      title: "Brandstof- en hydratatieplanner | BestBikeFit4U",
+      title: "Brandstof- en hydratatieplanner | BikeFitBoost",
       description:
         "Plan koolhydraten, vocht en natrium voor lange ritten met een praktische eerste " +
         "richting voor voeding en hydratatie.",
       keywords: ["voeding hydratatie planner", "fietsvoeding calculator", "hydratatie calculator"],
     },
     hero: {
-      eyebrow: "BestBikeFit4U calculator",
+      eyebrow: "BikeFitBoost calculator",
       title: "Brandstof- en hydratatieplanner",
       description:
         "Werk een realistische voedings- en hydratatiestrategie uit voordat een lange " +

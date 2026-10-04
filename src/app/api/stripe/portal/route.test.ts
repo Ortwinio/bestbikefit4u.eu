@@ -57,7 +57,7 @@ describe("stripe portal route", () => {
     vi.clearAllMocks();
     process.env.NEXT_PUBLIC_CONVEX_URL = "https://example.convex.cloud";
     process.env.STRIPE_SECRET_KEY = "sk_test_123";
-    process.env.SITE_URL = "https://bestbikefit4u.eu";
+    process.env.SITE_URL = "https://www.bikefitboost.com";
     mocks.token.mockResolvedValue("auth-token");
     mocks.query.mockResolvedValue({
       _id: "user_1",
@@ -99,7 +99,7 @@ describe("stripe portal route", () => {
     expect(mocks.setAuth).toHaveBeenCalledWith("auth-token");
     expect(mocks.portalCreate).toHaveBeenCalledWith({
       customer: "cus_123",
-      return_url: "https://bestbikefit4u.eu/nl/settings?billing=portal_return",
+      return_url: "https://www.bikefitboost.com/nl/settings?billing=portal_return",
     });
   });
 

@@ -34,8 +34,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: isNl
-      ? "Gratis bike fit calculator | BestBikeFit4U"
-      : "Free Bike Fit Calculator | BestBikeFit4U",
+      ? "Gratis bike fit calculator | BikeFitBoost"
+      : "Free Bike Fit Calculator | BikeFitBoost",
     description: isNl
       ? "Bereken een gratis eerste inschatting voor zadelhoogte, reach, drop en framedoelen op " +
         "basis van je lichaamsmaten en rijdoel."
@@ -161,7 +161,7 @@ export default async function BikeFitCalculatorPage() {
             { name: isNl ? "Bike fit calculator" : "Bike Fit Calculator", item: pageUrl },
           ]),
           ...buildCalculatorPageSchemas({
-            name: isNl ? "BestBikeFit4U bike fit calculator" : "BestBikeFit4U Bike Fit Calculator",
+            name: isNl ? "BikeFitBoost bike fit calculator" : "BikeFitBoost Bike Fit Calculator",
             description: isNl
               ? "Gratis bike fit calculator voor een eerste inschatting van zadelhoogte, reach, drop " +
                 "en framedoelen."

@@ -4,7 +4,7 @@ export const triathlon = {
   illustration: "32-triatlonhouding",
   nl: {
     title: "Triatlonfiets afstellen",
-    metaTitle: "Triatlonfiets afstellen | BestBikeFit4U",
+    metaTitle: "Triatlonfiets afstellen | BikeFitBoost",
     metaDescription: "Je triatlonfiets afstellen zonder steeds op te richten? Controleer zadelsteun, armsteunen en zicht. Meet je beginpositie en test één verandering per keer.",
     keyword: "triatlonfiets afstellen",
     relatedKeywords: ["triatlonhouding", "armsteunen afstellen", "ligstuur positie"],
@@ -114,7 +114,7 @@ Gebruik daarom geen willekeurige voorbeeldhoek als doel. Controleer vooral hoe j
   },
   en: {
     title: "Triathlon bike fit: support in aero",
-    metaTitle: "Triathlon bike fit | BestBikeFit4U",
+    metaTitle: "Triathlon bike fit | BikeFitBoost",
     metaDescription: "Keep sitting up on your triathlon bike? Check saddle support, armrests and your view ahead. Measure your position and test one small change at a time.",
     keyword: "triathlon bike fit",
     relatedKeywords: ["triathlon riding position", "armrest adjustment", "aerobar position"],

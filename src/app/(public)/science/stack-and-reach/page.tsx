@@ -50,7 +50,7 @@ export default async function StackAndReachPage() {
     description: page.metadata.description,
     author: {
       "@type": "Organization",
-      name: "BestBikeFit4U",
+      name: "BikeFitBoost",
     },
     mainEntityOfPage: pageUrl,
   };

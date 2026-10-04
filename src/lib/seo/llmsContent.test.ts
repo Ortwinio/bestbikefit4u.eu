@@ -20,7 +20,7 @@ describe("public LLMS answer resolver", () => {
   });
   it.each(["nl", "en"] as const)("does not invent author identity or expose unknown CMS slugs in %s", locale => {
     expect(getLlmsContent("/authors/ortwin-verreck", locale)).toEqual({
-      title: "Ortwin Verreck", answer: "BestBikeFit4U",
+      title: "Ortwin Verreck", answer: "BikeFitBoost",
     });
     const content = getLlmsContent("/blog/sensitive-slug?email=lisa@example.com#value", locale);
     expect(content.answer).toBe(llmsCopy[locale].dynamic);

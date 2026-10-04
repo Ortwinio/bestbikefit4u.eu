@@ -11,14 +11,14 @@ describe("performance template grouping", () => {
   });
   it("removes query values, fragments and dynamic segments from both event dimensions", () => {
     const event = { type: "vital" as const,
-      url: "https://bestbikefit4u.eu/nl/guides/private-slug?email=lisa@example.com#secret", route: "/nl/guides/private-slug" };
+      url: "https://www.bikefitboost.com/nl/guides/private-slug?email=lisa@example.com#secret", route: "/nl/guides/private-slug" };
     expect(groupPerformanceEvent(event)).toEqual({ type: "vital", route: "/templates/guide",
-      url: "https://bestbikefit4u.eu/templates/guide" });
+      url: "https://www.bikefitboost.com/templates/guide" });
     expect(event.url).toContain("private-slug");
   });
   it.each(["/fit/secret-id/results", "/bikes/secret-id", "/profile", "/login/secret", "/guides/a/b"])(
     "does not transmit unsupported or account paths: %s", path => {
-      expect(groupPerformanceEvent({ type: "vital", url: `https://bestbikefit4u.eu/nl${path}` })).toBeNull();
+      expect(groupPerformanceEvent({ type: "vital", url: `https://www.bikefitboost.com/nl${path}` })).toBeNull();
     },
   );
   it.each(["not a URL", "javascript:alert(1)"])("drops invalid URLs: %s", url => {

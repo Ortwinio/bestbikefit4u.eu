@@ -68,7 +68,7 @@ describe("guides library presentation", () => {
     const metadata = await generateMetadata();
     expect(metadata.title).toBe(entry.metaTitle);
     expect(metadata.description).toBe(entry.pageBrief);
-    expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}/guides`);
+    expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}/guides`);
   });
 
   it("keeps localized related-blog filtering and the four-post limit", async () => {

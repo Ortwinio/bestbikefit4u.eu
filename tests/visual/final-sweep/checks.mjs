@@ -1,8 +1,9 @@
 import { analyzeDutchText, collectDutchLanguage } from "./nl-language.mjs";
+import { hasLegacyBrandCopy } from "../../../scripts/check-rebrand-copy.mjs";
 
 /** Browser checks shared by live public pages and rendered account fixtures. */
 export const CHECK_NAMES = [
-  "status", "errors", "overflow", "h1", "locale", "seo", "language", "touchTargets", "images", "axe",
+  "status", "errors", "overflow", "h1", "locale", "seo", "language", "touchTargets", "images", "axe", "brand",
 ];
 
 export const LANGUAGE_LEAKS = {
@@ -124,6 +125,7 @@ export async function checkPage(page, options) {
     return evidence ? [{ ...chunk, ...evidence }] : [];
   }) : null;
   const checks = {
+    brand: result(hasLegacyBrandCopy(measured.text) ? ["Legacy brand remains in rendered page copy."] : []),
     status: result(statusDetails),
     errors: result(errors),
     overflow: result(measured.scrollWidth > measured.width

@@ -118,7 +118,7 @@ export function slugifyBlogTitle(value: string) {
 
 export function buildBlogPreviewPath(slug: string) {
   const normalized = slugifyBlogTitle(slug);
-  return normalized ? `bestbikefit4u.eu/blog/${normalized}` : "bestbikefit4u.eu/blog/{slug}";
+  return `${BRAND.host}/blog/${normalized || "{slug}"}`;
 }
 
 export function formatBlogDate(value?: number | null) {
@@ -169,3 +169,4 @@ export function joinCommaList(value?: string[]) {
 export function optionalBilingual(value: BilingualText) {
   return value.en.trim() || value.nl.trim() ? value : undefined;
 }
+import { BRAND } from "@/config/brand";

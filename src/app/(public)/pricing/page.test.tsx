@@ -59,7 +59,7 @@ describe("pricing campaign regression", () => {
 
     expect(screen.getByText("Clear pricing for real riders")).toBeTruthy();
     expect(screen.getByText("Temporary free campaign")).toBeTruthy();
-    expect(screen.getByText("Use BestBikeFit4U for free until June 4, 2026")).toBeTruthy();
+    expect(screen.getByText("Use BikeFitBoost for free until June 4, 2026")).toBeTruthy();
     expect(screen.getAllByText("Start free bike fit")[0].closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"
     );
@@ -88,7 +88,7 @@ describe("pricing campaign regression", () => {
 
     expect(screen.getByText("Heldere prijzen voor echte rijders")).toBeTruthy();
     expect(screen.getByText("Tijdelijke gratis campagne")).toBeTruthy();
-    expect(screen.getByText("Gebruik BestBikeFit4U gratis tot 4 juni 2026")).toBeTruthy();
+    expect(screen.getByText("Gebruik BikeFitBoost gratis tot 4 juni 2026")).toBeTruthy();
     for (const cta of screen.getAllByText("Start gratis bike fit")) {
       expect(cta.closest("a")?.getAttribute("href")).toBe("/nl/calculators/bike-fit");
     }
@@ -131,8 +131,8 @@ describe("pricing redesign", () => {
     const schema = container.querySelector('script[type="application/ld+json"]')?.textContent ?? "";
     expect(schema).toContain("Can I manage multiple bikes?");
     const metadata = await generateMetadata();
-    expect(metadata.title).toBe("Pricing | BestBikeFit4U");
-    expect(metadata.alternates?.canonical).toBe("https://bestbikefit4u.eu/en/pricing");
+    expect(metadata.title).toBe("Pricing | BikeFitBoost");
+    expect(metadata.alternates?.canonical).toBe("https://www.bikefitboost.com/en/pricing");
   });
 
   it("honors either billing kill switch and restores only the existing login route when enabled", async () => {

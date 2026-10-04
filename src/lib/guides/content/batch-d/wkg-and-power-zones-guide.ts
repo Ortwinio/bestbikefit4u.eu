@@ -6,7 +6,7 @@ export const guide = {
   illustration: "56-gewicht-en-vermogen",
   nl: {
     title: "Watt per kilo fietsen: begrijp je getal",
-    metaTitle: "Watt per kilo fietsen | BestBikeFit4U",
+    metaTitle: "Watt per kilo fietsen | BikeFitBoost",
     metaDescription: "Wat zegt watt per kilo over je fietsen? Begrijp FTP, testkeuze en vergelijkingstabellen. " +
       "Bereken je verhouding en gebruik het getal met de juiste context.",
     keyword: "watt per kilo fietsen",
@@ -145,7 +145,7 @@ of een andere testopzet je beoordeling van de houding vertroebelt.`,
   },
   en: {
     title: "Cycling watts per kilogram: understand the number",
-    metaTitle: "Cycling watts per kilogram | BestBikeFit4U",
+    metaTitle: "Cycling watts per kilogram | BikeFitBoost",
     metaDescription: "What do cycling watts per kilogram mean? Understand FTP, test methods and comparison " +
       "tables. Calculate your ratio and keep the result in context.",
     keyword: "cycling watts per kilogram",

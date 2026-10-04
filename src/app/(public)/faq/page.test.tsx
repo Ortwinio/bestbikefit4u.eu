@@ -50,16 +50,16 @@ const schemaHashes = {
 
 const metadataCopy = {
   nl: {
-    title: "Veelgestelde vragen over bikefit | BestBikeFit4U",
+    title: "Veelgestelde vragen over bikefit | BikeFitBoost",
     description:
-      "Antwoorden over BestBikeFit4U online bikefitting: metingen, zadelhoogte, zadelterugstand, " +
+      "Antwoorden over BikeFitBoost online bikefitting: metingen, zadelhoogte, zadelterugstand, " +
       "reach & drop, stack & reach, MTB/gravel/TT, klachten, abonnementen, exports en veiligheidsregels.",
     keywords: ["online bikefitting FAQ", "zadelhoogte", "framemaat", "reach en drop", "stack en reach"],
   },
   en: {
-    title: "Bike Fitting FAQ | BestBikeFit4U",
+    title: "Bike Fitting FAQ | BikeFitBoost",
     description:
-      "Answers about BestBikeFit4U online bike fitting: measurements, saddle height, setback, " +
+      "Answers about BikeFitBoost online bike fitting: measurements, saddle height, setback, " +
       "reach & drop, stack & reach, MTB/gravel/TT setups, pain troubleshooting, plans, exports, and safety guardrails.",
     keywords: ["online bike fitting FAQ", "saddle height", "frame size", "reach and drop", "stack and reach"],
   },
@@ -72,7 +72,8 @@ describe.each(["nl", "en"] as const)("FAQ in %s", (language) => {
     locale = language;
     const { container } = render(await FAQPage());
     const serialized = container.querySelector('script[type="application/ld+json"]')!.textContent!;
-    expect(createHash("sha256").update(serialized).digest("hex")).toBe(schemaHashes[language]);
+    const originalBrandSchema = serialized.replaceAll("BikeFitBoost", "BestBikeFit4U");
+    expect(createHash("sha256").update(originalBrandSchema).digest("hex")).toBe(schemaHashes[language]);
     const schema = JSON.parse(serialized);
     const disclosures = Array.from(container.querySelectorAll("details"));
     expect(disclosures).toHaveLength(12);
@@ -117,14 +118,14 @@ describe.each(["nl", "en"] as const)("FAQ in %s", (language) => {
         title: metadataCopy[language].title,
         description: metadataCopy[language].description,
         type: "website",
-        url: `https://bestbikefit4u.eu/${language}/faq`,
+        url: `https://www.bikefitboost.com/${language}/faq`,
       },
       alternates: {
-        canonical: `https://bestbikefit4u.eu/${language}/faq`,
+        canonical: `https://www.bikefitboost.com/${language}/faq`,
         languages: {
-          nl: "https://bestbikefit4u.eu/nl/faq",
-          en: "https://bestbikefit4u.eu/en/faq",
-          "x-default": "https://bestbikefit4u.eu/en/faq",
+          nl: "https://www.bikefitboost.com/nl/faq",
+          en: "https://www.bikefitboost.com/en/faq",
+          "x-default": "https://www.bikefitboost.com/en/faq",
         },
       },
     });
@@ -136,7 +137,7 @@ describe.each(["nl", "en"] as const)("FAQ in %s", (language) => {
     expect(metadata.title).toEqual({ absolute: faqPresentation[language].metadataTitle });
     const resolvedTitle = (metadata.title as { absolute: string }).absolute;
     expect(resolvedTitle.length).toBeLessThanOrEqual(60);
-    expect(resolvedTitle.match(/BestBikeFit4U/g)).toHaveLength(1);
+    expect(resolvedTitle.match(/BikeFitBoost/g)).toHaveLength(1);
     expect(metadata.openGraph?.title).toBe(resolvedTitle);
   });
 

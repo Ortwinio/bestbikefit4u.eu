@@ -48,7 +48,7 @@ export function PressureCalculatorHero({
   return (
     <>
       <PublicHero
-        eyebrow="BestBikeFit4U calculator"
+        eyebrow="BikeFitBoost calculator"
         title={title}
         description={subtitle}
         chips={chips}

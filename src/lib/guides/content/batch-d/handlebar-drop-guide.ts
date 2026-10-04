@@ -6,7 +6,7 @@ export const guide = {
   illustration: "50-stuurhoogte-en-drop",
   nl: {
     title: "Stuurhoogte racefiets: vind je drop",
-    metaTitle: "Stuurhoogte racefiets en drop | BestBikeFit4U",
+    metaTitle: "Stuurhoogte racefiets en drop | BikeFitBoost",
     metaDescription: "Staat het stuur van je racefiets te laag? Meet je drop, controleer je kijkhouding en " +
       "bereik de remmen ontspannen. Test één veilige wijziging per keer.",
     keyword: "stuurhoogte racefiets",
@@ -138,7 +138,7 @@ afzonderlijke proef houdt duidelijk welke wijziging effect heeft op je comfort.`
   },
   en: {
     title: "Handlebar drop: find your bar height",
-    metaTitle: "Handlebar drop and bar height | BestBikeFit4U",
+    metaTitle: "Handlebar drop and bar height | BikeFitBoost",
     metaDescription: "Are your road bike bars too low? Measure drop, check your view and reach the brakes " +
       "comfortably. Follow a clear sequence and test one safe change.",
     keyword: "handlebar drop",

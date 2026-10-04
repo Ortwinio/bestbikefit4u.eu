@@ -353,7 +353,7 @@ it("normalizes pasted codes and requires an authenticated sign-in result", async
   expect(signInMock).toHaveBeenLastCalledWith("resend", {
     email: "Rider@example.com", code: "ABCDEFG", locale: "en", redirectTo: "/en/dashboard",
   });
-  expect(screen.queryByText("Welcome to BestBikeFit4U")).toBeNull();
+  expect(screen.queryByText("Welcome to BikeFitBoost")).toBeNull();
   expect(logMarketingEventMock).not.toHaveBeenCalledWith(expect.objectContaining({ eventType: "login_verified" }));
 });
 
@@ -366,7 +366,7 @@ it("shows success only after a code establishes a session", async () => {
   const code = await screen.findByPlaceholderText("Enter verification code");
   fireEvent.change(code, { target: { value: "ABCDEFG" } });
   fireEvent.submit(code.closest("form")!);
-  expect(await screen.findByText("Welcome to BestBikeFit4U")).toBeTruthy();
+  expect(await screen.findByText("Welcome to BikeFitBoost")).toBeTruthy();
   expect(screen.getByRole("status").textContent).toContain("Redirecting to your dashboard");
   expect(pushMock).not.toHaveBeenCalled();
 });
@@ -532,7 +532,7 @@ it("renders the login in one full-width main without a layout-owned logo", () =>
   expect(main.tabIndex).toBe(-1);
   expect(main.parentElement).toBe(container);
   expect(main.className).not.toContain("max-w");
-  expect(screen.getAllByRole("link", { name: "BestBikeFit4U" })).toHaveLength(2);
+  expect(screen.getAllByRole("link", { name: "BikeFitBoost" })).toHaveLength(2);
   expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
 });
 
@@ -541,9 +541,9 @@ it.each(["en", "nl"].flatMap((locale) => ["", "?src=dashboard", "?src=guide&utm_
 ("preserves %s login%s metadata without hreflang", async (locale, query) => {
   pathname = `/${locale}/login${query}`;
   const metadata = await generateMetadata();
-  expect(metadata.title).toBe(locale === "nl" ? "Inloggen | BestBikeFit4U" : "Sign In | BestBikeFit4U");
+  expect(metadata.title).toBe(locale === "nl" ? "Inloggen | BikeFitBoost" : "Sign In | BikeFitBoost");
   expect(metadata.robots).toEqual({ index: false, follow: true });
-  expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}/login`);
-  expect(metadata.alternates).toEqual({ canonical: `https://bestbikefit4u.eu/${locale}/login` });
+  expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}/login`);
+  expect(metadata.alternates).toEqual({ canonical: `https://www.bikefitboost.com/${locale}/login` });
   expect(metadata.alternates?.languages).toBeUndefined();
 });

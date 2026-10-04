@@ -6,11 +6,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
 
   return {
-    title: locale === "nl" ? "Inloggen | BestBikeFit4U" : "Sign In | BestBikeFit4U",
+    title: locale === "nl" ? "Inloggen | BikeFitBoost" : "Sign In | BikeFitBoost",
     description:
       locale === "nl"
-        ? "Log in of maak je account aan om je persoonlijke BestBikeFit4U-dashboard te openen."
-        : "Sign in or create your account to open your personal BestBikeFit4U dashboard.",
+        ? "Log in of maak je account aan om je persoonlijke BikeFitBoost-dashboard te openen."
+        : "Sign in or create your account to open your personal BikeFitBoost dashboard.",
     alternates: { canonical: buildLocaleAlternates("/login", locale).canonical },
     robots: {
       index: false,

@@ -58,7 +58,7 @@ export function PublicPageShell({ children, className }: PublicPageShellProps) {
 }
 
 export function PublicHero({
-  eyebrow = "BestBikeFit4U",
+  eyebrow = "BikeFitBoost",
   title,
   description,
   chips,

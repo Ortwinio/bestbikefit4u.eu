@@ -88,7 +88,7 @@ export function DashboardSidebar() {
             href={toLocalizedPath("/")}
             asset="dark"
             className="flex min-h-11 w-[208px] items-center"
-            imageClassName="block"
+            imageClassName="block h-8 w-auto"
           />
         </div>
         <div className="shrink-0 px-5 py-2"><AccountLanguageSwitch /></div>

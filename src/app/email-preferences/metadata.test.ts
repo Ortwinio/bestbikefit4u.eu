@@ -16,7 +16,7 @@ describe("non-indexable route metadata", () => {
     expect(metadata.robots).toEqual({ index: false, follow: false });
     expect(metadata.referrer).toBe("no-referrer");
     expect(metadata.alternates).toEqual({
-      canonical: `https://bestbikefit4u.eu/${locale}/email-preferences`,
+      canonical: `https://www.bikefitboost.com/${locale}/email-preferences`,
     });
     expect(metadata.alternates?.languages).toBeUndefined();
   });

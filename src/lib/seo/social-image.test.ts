@@ -9,10 +9,11 @@ describe("dedicated social images", () => {
   it("maps relative and owned absolute sources, preserving alt and explicit dimensions", () => {
     const source = "/guides/media/003--guides--bike-fitting-for-knee-pain-hero.png";
     const expected = {
-      url: "https://bestbikefit4u.eu/og/guides/media/003--guides--bike-fitting-for-knee-pain-hero.jpg",
+      url: "https://www.bikefitboost.com/og/guides/media/003--guides--bike-fitting-for-knee-pain-hero.jpg",
       width: 1200, height: 630, alt: "Kniepijn",
     };
     expect(socialImage(source, "Kniepijn")).toEqual(expected);
+    expect(socialImage(`https://www.bikefitboost.com${source}`, "Kniepijn")).toEqual(expected);
     expect(socialImage(`https://bestbikefit4u.eu${source}`, "Kniepijn")).toEqual(expected);
     expect(socialImage(`https://external.example${source}`, "External"))
       .toEqual({ url: `https://external.example${source}`, alt: "External" });

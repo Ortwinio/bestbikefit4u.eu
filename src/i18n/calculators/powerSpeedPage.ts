@@ -12,14 +12,14 @@ export const powerSpeedPageMessages = {
       ],
     },
     metadata: {
-      title: "Power / Speed Estimator | BestBikeFit4U",
+      title: "Power / Speed Estimator | BikeFitBoost",
       description:
         "Estimate speed from power with terrain, drag, and rider context in mind instead " +
         "of treating watts as a shortcut.",
       keywords: ["power speed estimator", "cycling speed calculator", "power to speed"],
     },
     hero: {
-      eyebrow: "BestBikeFit4U calculator",
+      eyebrow: "BikeFitBoost calculator",
       title: "Power / Speed Estimator",
       description:
         "Estimate how power translates into speed on a given course, then use the result " +
@@ -120,14 +120,14 @@ export const powerSpeedPageMessages = {
       ],
     },
     metadata: {
-      title: "Vermogen- / snelheidsschatting | BestBikeFit4U",
+      title: "Vermogen- / snelheidsschatting | BikeFitBoost",
       description:
         "Schat snelheid op basis van vermogen met terrein, luchtweerstand en " +
         "je houding meegewogen. Vermogen alleen bepaalt je snelheid niet.",
       keywords: ["vermogen snelheid calculator", "snelheid calculator", "vermogen naar snelheid"],
     },
     hero: {
-      eyebrow: "BestBikeFit4U calculator",
+      eyebrow: "BikeFitBoost calculator",
       title: "Vermogen- / snelheidsschatting",
       description:
         "Schat hoe vermogen zich vertaalt naar snelheid op een bepaald parcours en " +

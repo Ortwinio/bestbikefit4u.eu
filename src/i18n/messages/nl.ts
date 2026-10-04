@@ -445,7 +445,7 @@ const nl = {
   },
   pressure: {
     publicPage: {
-      title: "Bandenspanningscalculator | BestBikeFit4U",
+      title: "Bandenspanningscalculator | BikeFitBoost",
       description:
         "Bereken de ideale bandenspanning voor race, gravel of MTB. Gratis, zonder account.",
       h1: "Gratis bandenspanningscalculator",
@@ -459,19 +459,19 @@ const nl = {
       ] as [string, string, string],
     },
     roadPage: {
-      title: "Bandenspanning Racefiets Calculator | BestBikeFit4U",
+      title: "Bandenspanning Racefiets Calculator | BikeFitBoost",
       description:
         "Bereken ideale bandenspanning voor je racefiets op basis van gewicht, bandbreedte en " +
         "ondergrond.",
       h1: "Bandenspanning Racefiets",
     },
     gravelPage: {
-      title: "Bandenspanning Gravelbike Calculator | BestBikeFit4U",
+      title: "Bandenspanning Gravelbike Calculator | BikeFitBoost",
       description: "Vind de optimale bandenspanning voor je gravelbike op gemengd terrein.",
       h1: "Bandenspanning Gravelbike",
     },
     mtbPage: {
-      title: "Bandenspanning MTB Calculator | BestBikeFit4U",
+      title: "Bandenspanning MTB Calculator | BikeFitBoost",
       description: "Bereken MTB bandenspanning voor trail, XC of allround mountainbike gebruik.",
       h1: "Bandenspanning MTB",
     },
@@ -1478,7 +1478,7 @@ const nl = {
           "Gebruik dit rapport als praktische volgorde voor aanpassingen. Verander steeds een " +
           "ding tegelijk, valideer op de fiets en noteer wat je voelt na elke rit.",
         shell: {
-          brandAlt: "BestBikeFit4U beeldmerk",
+          brandAlt: "BikeFitBoost beeldmerk",
           dateLabel: "Rapportdatum",
           aboutTitle: "Over dit rapport",
           aboutBody:
@@ -2212,19 +2212,19 @@ const nl = {
       appInstall: {
         settingsTitle: "Installeren op iPhone",
         settingsDescription:
-          "Maak een iPhone-startschermapp voor BestBikeFit4U. Wanneer je die via het icoon " +
+          "Maak een iPhone-startschermapp voor BikeFitBoost. Wanneer je die via het icoon " +
           "opent, ga je direct naar je dashboard zolang je nog bent ingelogd.",
         eyebrow: "iPhone-app",
-        title: "Installeer BestBikeFit4U op je iPhone",
+        title: "Installeer BikeFitBoost op je iPhone",
         description:
-          "Bewaar BestBikeFit4U op het startscherm van je iPhone voor een app-achtige ervaring " +
+          "Bewaar BikeFitBoost op het startscherm van je iPhone voor een app-achtige ervaring " +
           "met directe dashboardstart.",
         quickStepsTitle: "Snelle stappen",
         openInstallPage: "Installatiepagina openen",
         openDashboard: "Dashboard openen",
         backToSettings: "Terug naar instellingen",
         installedTitle: "App geïnstalleerd",
-        installedDescription: "BestBikeFit4U draait al in startschermmodus op dit apparaat.",
+        installedDescription: "BikeFitBoost draait al in startschermmodus op dit apparaat.",
         openInSafariTitle: "Open dit in Safari",
         openInSafariDescription:
           "Installeren op het iPhone-startscherm werkt alleen vanuit Safari. Open deze pagina in " +
@@ -2288,7 +2288,7 @@ const nl = {
         },
         disconnectConfirm: {
           title: "Strava ontkoppelen?",
-          body: "Je Strava-activiteitendata wordt verwijderd van BestBikeFit4U. Je profielfoto blijft bewaard.",
+          body: "Je Strava-activiteitendata wordt verwijderd van BikeFitBoost. Je profielfoto blijft bewaard.",
           confirm: "Ontkoppelen",
           cancel: "Annuleren",
         },

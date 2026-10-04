@@ -4,7 +4,7 @@ export const limitedFlexibility = {
   illustration: "22-beperkte-flexibiliteit",
   nl: {
     title: "Fiets afstellen beperkte flexibiliteit",
-    metaTitle: "Fiets afstellen beperkte flexibiliteit | BestBikeFit4U",
+    metaTitle: "Fiets afstellen beperkte flexibiliteit | BikeFitBoost",
     metaDescription: "Voelt je fietshouding te diep of te lang? Leer je bewegingsruimte controleren, je stuurpositie vastleggen en een kleine wijziging rustig testen.",
     keyword: "fiets afstellen beperkte flexibiliteit",
     relatedKeywords: ["beperkte heupbuiging", "stuur hoger zetten", "comfortabele fietshouding"],
@@ -91,7 +91,7 @@ Je hoeft geen onprettige positie langdurig vast te houden. Je moet wel veilig ku
   },
   en: {
     title: "Bike fit limited flexibility",
-    metaTitle: "Bike fit limited flexibility | BestBikeFit4U",
+    metaTitle: "Bike fit limited flexibility | BikeFitBoost",
     metaDescription: "Does your riding position feel too low or long? Learn to check movement space, record your handlebar position and test one small change on easy rides.",
     keyword: "bike fit limited flexibility",
     relatedKeywords: ["limited hip flexion", "raising handlebars", "comfortable cycling position"],

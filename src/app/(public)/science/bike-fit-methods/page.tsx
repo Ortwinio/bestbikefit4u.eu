@@ -49,7 +49,7 @@ export default async function BikeFitMethodsPage() {
     description: page.metadata.description,
     author: {
       "@type": "Organization",
-      name: "BestBikeFit4U",
+      name: "BikeFitBoost",
     },
     mainEntityOfPage: pageUrl,
   };

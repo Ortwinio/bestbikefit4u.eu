@@ -1,3 +1,4 @@
+import { BRAND } from "@/config/brand";
 import type { ReportV2Copy } from "./reportV2Copy";
 import { PDF_SHELL_COPY } from "./reportV2Copy";
 import type { ReportV2Payload } from "./reportV2Types";
@@ -32,7 +33,7 @@ const documentStyles = `
   .report-page:last-child { break-after:auto; page-break-after:auto; }
   .report-header { display:flex; justify-content:space-between; align-items:center;
     flex:none; gap:18px; border-bottom:4px solid var(--bbf-lime); padding-bottom:14px; }
-  .report-header img { width:179px; height:30px; object-fit:contain; }
+  .report-header img { width:172px; height:30px; object-fit:contain; }
   .report-header span { font-size:12px; font-weight:700; letter-spacing:.08em;
     text-transform:uppercase; color:var(--bbf-petrol); text-align:right; }
   .report-content { flex:1; min-height:0; overflow-wrap:anywhere; }
@@ -75,7 +76,7 @@ export function renderPdfReportHtml({
   const footerPerson = `<span class="report-footer-fixed">${escapeHtml(text.footerLabel)}</span>
     ${report.rider.name ? `<span>·</span><span class="report-footer-name">${escapeHtml(report.rider.name)}</span>` : ""}
     ${date ? `<span>·</span><span class="mono report-footer-fixed">${escapeHtml(date)}</span>` : ""}
-    <span class="report-footer-fixed">· bestbikefit4u.eu</span>`;
+    <span class="report-footer-fixed">· ${escapeHtml(BRAND.host)}</span>`;
   return `<!doctype html><html lang="${locale}"><head><meta charset="utf-8">
     <title>${escapeHtml(text.title)}</title><style>${fontCss}${documentStyles}
     ${summaryStyles}${baseDataStyles}${fitValuesStyles}${tiresStyles}${planStyles}${measurementStyles}
@@ -84,7 +85,7 @@ export function renderPdfReportHtml({
       .map(
         ([board, body], index) => `<article class="report-page" data-report-page="${index + 1}"
       data-board="${board}"><header class="report-header">
-      <img src="${images.logo}" alt="BestBikeFit4U"><span>${escapeHtml(text.sections[index])}</span>
+      <img src="${images.logo}" alt="BikeFitBoost"><span>${escapeHtml(text.sections[index])}</span>
       </header><div class="report-content">${body}</div><footer class="report-footer">
       <span class="report-footer-person">${footerPerson}</span>
       <span class="report-footer-page">${index + 1} / 6</span></footer></article>`,

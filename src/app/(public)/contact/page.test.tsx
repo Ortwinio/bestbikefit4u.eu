@@ -101,22 +101,22 @@ describe("Contact marketing page", () => {
   it.each(["nl", "en"] as const)("retains metadata, canonicals and language alternates in %s", async (locale) => {
     mocks.locale = locale;
     const metadata = await generateMetadata();
-    const title = locale === "nl" ? "Contact - BestBikeFit4U" : "Contact Us - BestBikeFit4U";
+    const title = locale === "nl" ? "Contact - BikeFitBoost" : "Contact Us - BikeFitBoost";
     const description = locale === "nl"
-      ? "Neem contact op met het BestBikeFit4U-team. We helpen je graag met vragen over bike fitting en support."
-      : "Get in touch with the BestBikeFit4U team. " +
+      ? "Neem contact op met het BikeFitBoost-team. We helpen je graag met vragen over bike fitting en support."
+      : "Get in touch with the BikeFitBoost team. " +
         "We are here to help with your bike fitting questions and support needs.";
     expect(metadata).toEqual({
       title,
       description,
-      keywords: ["contact BestBikeFit4U", "bike fit support", locale === "nl" ? "fiets hulp" : "cycling help"],
-      openGraph: { title, description, type: "website", url: `https://bestbikefit4u.eu/${locale}/contact` },
+      keywords: ["contact BikeFitBoost", "bike fit support", locale === "nl" ? "fiets hulp" : "cycling help"],
+      openGraph: { title, description, type: "website", url: `https://www.bikefitboost.com/${locale}/contact` },
       alternates: {
-        canonical: `https://bestbikefit4u.eu/${locale}/contact`,
+        canonical: `https://www.bikefitboost.com/${locale}/contact`,
         languages: {
-          nl: "https://bestbikefit4u.eu/nl/contact",
-          en: "https://bestbikefit4u.eu/en/contact",
-          "x-default": "https://bestbikefit4u.eu/en/contact",
+          nl: "https://www.bikefitboost.com/nl/contact",
+          en: "https://www.bikefitboost.com/en/contact",
+          "x-default": "https://www.bikefitboost.com/en/contact",
         },
       },
     });

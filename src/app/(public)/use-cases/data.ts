@@ -29,7 +29,7 @@ export const USE_CASES: UseCase[] = [
   {
     slug: "endurance-cycling-fit",
     en: {
-      seoTitle: "Bike Fit for Endurance Cyclists | BestBikeFit4U",
+      seoTitle: "Bike Fit for Endurance Cyclists | BikeFitBoost",
       seoDescription: "Stay more comfortable on long rides with a fit that supports steady power over hours in the saddle.",
       seoKeywords: ["endurance cycling bike fit", "long distance cycling position", "bike fit for long rides"],
       cardTitle: "Bike Fit for Endurance Cyclists",
@@ -54,7 +54,7 @@ export const USE_CASES: UseCase[] = [
       primaryCta: "Start Free Fit",
     },
     nl: {
-      seoTitle: "Bikefit voor duurrijders | BestBikeFit4U",
+      seoTitle: "Bikefit voor duurrijders | BikeFitBoost",
       seoDescription: "Beperk vermoeidheid en blijf comfortabel tijdens lange ritten met een positie die urenlang vol te houden is.",
       seoKeywords: ["bikefit duurritten", "lange rit fietspositie", "bikefit voor lange ritten"],
       cardTitle: "Bikefit voor duurrijders",
@@ -82,7 +82,7 @@ export const USE_CASES: UseCase[] = [
   {
     slug: "mountain-cycling-fit",
     en: {
-      seoTitle: "Bike Fit for Mountain Biking | BestBikeFit4U",
+      seoTitle: "Bike Fit for Mountain Biking | BikeFitBoost",
       seoDescription: "Improve climbing efficiency, descending confidence, and trail control with an MTB position tuned for real terrain.",
       seoKeywords: ["MTB bike fit", "mountain bike fitting", "trail bike position"],
       cardTitle: "Bike Fit for Mountain Biking",
@@ -107,7 +107,7 @@ export const USE_CASES: UseCase[] = [
       primaryCta: "Start Free Fit",
     },
     nl: {
-      seoTitle: "Bikefit voor mountainbiken | BestBikeFit4U",
+      seoTitle: "Bikefit voor mountainbiken | BikeFitBoost",
       seoDescription: "Verbeter klimefficiëntie, controle en vertrouwen op technische trails met een MTB-positie die past bij echt terrein.",
       seoKeywords: ["MTB bikefit", "mountainbike afstelling", "trail positie"],
       cardTitle: "Bikefit voor mountainbiken",
@@ -135,7 +135,7 @@ export const USE_CASES: UseCase[] = [
   {
     slug: "gravel-cycling-fit",
     en: {
-      seoTitle: "Bike Fit for Gravel Riding | BestBikeFit4U",
+      seoTitle: "Bike Fit for Gravel Riding | BikeFitBoost",
       seoDescription: "Improve control, comfort, and mixed-terrain stability with a gravel fit that balances road efficiency and off-road confidence.",
       seoKeywords: ["gravel bike fit", "gravel cycling setup", "gravel bike position"],
       cardTitle: "Bike Fit for Gravel Riding",
@@ -160,7 +160,7 @@ export const USE_CASES: UseCase[] = [
       primaryCta: "Start Free Fit",
     },
     nl: {
-      seoTitle: "Bikefit voor gravelrijden | BestBikeFit4U",
+      seoTitle: "Bikefit voor gravelrijden | BikeFitBoost",
       seoDescription: "Verbeter controle, comfort en stabiliteit op gemengd terrein met een gravel-fit die weg- en offroad-eisen combineert.",
       seoKeywords: ["gravel bikefit", "gravel afstelling", "gravel positie"],
       cardTitle: "Bikefit voor gravelrijden",
@@ -188,7 +188,7 @@ export const USE_CASES: UseCase[] = [
   {
     slug: "triathlon-bike-fit",
     en: {
-      seoTitle: "Bike Fit for Triathlon | BestBikeFit4U",
+      seoTitle: "Bike Fit for Triathlon | BikeFitBoost",
       seoDescription: "Find a triathlon position that balances aerodynamics, sustainable power, and a better run off the bike.",
       seoKeywords: ["triathlon bike fit", "TT bike position", "triathlon aero position"],
       cardTitle: "Bike Fit for Triathlon",
@@ -213,7 +213,7 @@ export const USE_CASES: UseCase[] = [
       primaryCta: "Start Free Fit",
     },
     nl: {
-      seoTitle: "Bikefit voor triathlon | BestBikeFit4U",
+      seoTitle: "Bikefit voor triathlon | BikeFitBoost",
       seoDescription: "Vind een triathlon-positie die aerodynamica, duurzaam vermogen en een betere loopprestatie na het fietsen combineert.",
       seoKeywords: ["triathlon bikefit", "TT positie", "triathlon aero houding"],
       cardTitle: "Bikefit voor triathlon",
@@ -241,7 +241,7 @@ export const USE_CASES: UseCase[] = [
   {
     slug: "commuter-bike-fit",
     en: {
-      seoTitle: "Bike Fit for Commuters | BestBikeFit4U",
+      seoTitle: "Bike Fit for Commuters | BikeFitBoost",
       seoDescription: "Make your daily commute more comfortable by correcting the basics: saddle height, reach, handlebar support, and frame size.",
       seoKeywords: ["commuter bike fit", "city bike setup", "commuter cycling position"],
       cardTitle: "Bike Fit for Commuters",
@@ -266,7 +266,7 @@ export const USE_CASES: UseCase[] = [
       primaryCta: "Start Free Fit",
     },
     nl: {
-      seoTitle: "Bikefit voor forenzen | BestBikeFit4U",
+      seoTitle: "Bikefit voor forenzen | BikeFitBoost",
       seoDescription: "Maak je dagelijkse rit comfortabeler door de basis goed te zetten: zadelhoogte, reach, stuurondersteuning en framemaat.",
       seoKeywords: ["forenzen bikefit", "stadsfiets afstelling", "woon-werk fietspositie"],
       cardTitle: "Bikefit voor forenzen",
@@ -294,7 +294,7 @@ export const USE_CASES: UseCase[] = [
   {
     slug: "back-pain-cycling",
     en: {
-      seoTitle: "Bike Fit for Lower Back Pain | BestBikeFit4U",
+      seoTitle: "Bike Fit for Lower Back Pain | BikeFitBoost",
       seoDescription: "Review cycling-related lower back pain by correcting reach, drop, and saddle support with a structured fit approach.",
       seoKeywords: ["lower back pain cycling", "bike fit back pain", "cycling back pain fit"],
       cardTitle: "Bike Fit for Lower Back Pain",
@@ -319,7 +319,7 @@ export const USE_CASES: UseCase[] = [
       primaryCta: "Start Free Fit",
     },
     nl: {
-      seoTitle: "Bikefit bij lage rugklachten | BestBikeFit4U",
+      seoTitle: "Bikefit bij lage rugklachten | BikeFitBoost",
       seoDescription: "Beoordeel lage rugklachten op de fiets door reach, drop en zadelondersteuning gericht te corrigeren.",
       seoKeywords: ["lage rugklachten fietsen", "bikefit rugpijn", "rugpijn op de fiets"],
       cardTitle: "Bikefit bij lage rugklachten",
@@ -347,7 +347,7 @@ export const USE_CASES: UseCase[] = [
   {
     slug: "short-torso-bike-fit",
     en: {
-      seoTitle: "Bike Fit for a Shorter Torso | BestBikeFit4U",
+      seoTitle: "Bike Fit for a Shorter Torso | BikeFitBoost",
       seoDescription: "Review overreach and improve comfort if you have a shorter torso relative to your height.",
       seoKeywords: ["short torso bike fit", "bike fit shorter torso", "cycling position short torso"],
       cardTitle: "Bike Fit for a Shorter Torso",
@@ -372,7 +372,7 @@ export const USE_CASES: UseCase[] = [
       primaryCta: "Start Free Fit",
     },
     nl: {
-      seoTitle: "Bikefit voor een kortere romp | BestBikeFit4U",
+      seoTitle: "Bikefit voor een kortere romp | BikeFitBoost",
       seoDescription: "Beoordeel overreach en verbeter comfort als je romp relatief korter is ten opzichte van je lengte.",
       seoKeywords: ["korte romp bikefit", "bikefit kortere romp", "fietspositie korte romp"],
       cardTitle: "Bikefit voor een kortere romp",
@@ -400,7 +400,7 @@ export const USE_CASES: UseCase[] = [
   {
     slug: "tall-rider-bike-fit",
     en: {
-      seoTitle: "Bike Fit for Tall Riders | BestBikeFit4U",
+      seoTitle: "Bike Fit for Tall Riders | BikeFitBoost",
       seoDescription: "Get a more balanced bike setup if standard sizing leaves you cramped, unstable, or under-supported as a taller rider.",
       seoKeywords: ["bike fit tall rider", "cycling fit for tall riders", "tall cyclist bike setup"],
       cardTitle: "Bike Fit for Tall Riders",
@@ -425,7 +425,7 @@ export const USE_CASES: UseCase[] = [
       primaryCta: "Start Free Fit",
     },
     nl: {
-      seoTitle: "Bikefit voor lange rijders | BestBikeFit4U",
+      seoTitle: "Bikefit voor lange rijders | BikeFitBoost",
       seoDescription: "Krijg een beter gebalanceerde setup als standaard framematen en onderdelen je als lange rijder beperken.",
       seoKeywords: ["bikefit lange rijder", "fietsafstelling lange rijders", "lange fietser setup"],
       cardTitle: "Bikefit voor lange rijders",

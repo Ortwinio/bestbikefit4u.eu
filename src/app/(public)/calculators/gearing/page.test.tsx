@@ -47,7 +47,7 @@ vi.mock("@/i18n/request", () => ({
 
 vi.mock("@/i18n/metadata", () => ({
   buildLocaleAlternates: () => ({
-    canonical: `https://bestbikefit4u.eu/${locale}/calculators/gearing`,
+    canonical: `https://www.bikefitboost.com/${locale}/calculators/gearing`,
   }),
 }));
 

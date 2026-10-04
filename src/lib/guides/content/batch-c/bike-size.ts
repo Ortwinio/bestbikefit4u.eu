@@ -4,7 +4,7 @@ export const bikeSize = {
   illustration: "35-fietsmaat-geometrie",
   nl: {
     title: "Fietsmaat en geometrie",
-    metaTitle: "Fietsmaat en geometrie | BestBikeFit4U",
+    metaTitle: "Fietsmaat en geometrie | BikeFitBoost",
     metaDescription:
       "Twijfel je over fietsmaat en geometrie? Vergelijk stack, reach en verstelruimte met je huidige fiets. Lees welke maten je meet voordat je een fiets kiest.",
     keyword: "fietsmaat en geometrie",
@@ -124,7 +124,7 @@ Neem je meetgegevens en klachtennotities mee naar het gesprek of de proefrit.
   },
   en: {
     title: "Bike size and geometry",
-    metaTitle: "Bike size and geometry | BestBikeFit4U",
+    metaTitle: "Bike size and geometry | BikeFitBoost",
     metaDescription:
       "Unsure about bike size and geometry? Compare stack, reach and adjustment room with your current bike. Learn which measurements to check before choosing.",
     keyword: "bike size and geometry",

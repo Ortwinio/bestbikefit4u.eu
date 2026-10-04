@@ -11,7 +11,7 @@ type FAQPresentation = {
 
 export const faqPresentation = {
   nl: {
-    metadataTitle: "Veelgestelde vragen over bikefit | BestBikeFit4U",
+    metadataTitle: "Veelgestelde vragen over bikefit | BikeFitBoost",
     eyebrow: "Snel antwoord",
     trustPoints: [
       {
@@ -32,7 +32,7 @@ export const faqPresentation = {
     support: "We helpen je in het Nederlands en Engels.",
   },
   en: {
-    metadataTitle: "Bike Fitting FAQ | BestBikeFit4U",
+    metadataTitle: "Bike Fitting FAQ | BikeFitBoost",
     eyebrow: "Quick answers",
     trustPoints: [
       {

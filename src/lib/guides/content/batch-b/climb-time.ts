@@ -4,7 +4,7 @@ export const climbTime = {
   illustration: "24-klimtijd",
   nl: {
     title: "Klimtijd fietsen berekenen",
-    metaTitle: "Klimtijd fietsen berekenen | BestBikeFit4U",
+    metaTitle: "Klimtijd fietsen berekenen | BikeFitBoost",
     metaDescription: "Wil je je klimtijd fietsen berekenen? Begrijp de invloed van helling, vermogen en houding. Vergelijk aannames en bereid je volgende klim rustig voor.",
     keyword: "klimtijd fietsen berekenen",
     relatedKeywords: ["klimvermogen", "hellingspercentage fietsen", "inspanning verdelen klim"],
@@ -93,7 +93,7 @@ Nee, de calculator meet geen zadelhoogte en voorspelt daarvan geen effect. Verst
   },
   en: {
     title: "Cycling climb time: plan your effort",
-    metaTitle: "Cycling climb time: plan your effort | BestBikeFit4U",
+    metaTitle: "Cycling climb time: plan your effort | BikeFitBoost",
     metaDescription: "Estimate your cycling climb time with clear assumptions about gradient, power and position. Compare your inputs and prepare for your next climb calmly.",
     keyword: "cycling climb time",
     relatedKeywords: ["climbing power", "cycling gradient", "climb pacing"],

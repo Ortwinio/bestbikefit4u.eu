@@ -6,7 +6,7 @@ export const insoles = {
   "illustration": "16-inlegzool-voetboog",
   "nl": {
     "title": "Inlegzolen voor fietsschoenen: steun zonder knellen",
-    "metaTitle": "Inlegzolen voor fietsschoenen | BestBikeFit4U",
+    "metaTitle": "Inlegzolen voor fietsschoenen | BikeFitBoost",
     "metaDescription": "Inlegzolen voor fietsschoenen kiezen? Controleer steun, dikte en ruimte zonder harder te drukken. Vergelijk één wijziging en herken wanneer je stopt.",
     "keyword": "inlegzolen voor fietsschoenen",
     "relatedKeywords": [
@@ -115,7 +115,7 @@ Stop de vergelijking en controleer hoeveel ruimte de zool inneemt. Losser sluite
   },
   "en": {
     "title": "Cycling shoe insoles: support without pressure",
-    "metaTitle": "Cycling shoe insoles | BestBikeFit4U",
+    "metaTitle": "Cycling shoe insoles | BikeFitBoost",
     "metaDescription": "Choosing cycling shoe insoles? Check support, thickness and available space without adding pressure. Compare one change and learn when to stop testing.",
     "keyword": "cycling shoe insoles",
     "relatedKeywords": [

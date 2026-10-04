@@ -6,7 +6,7 @@ export const guide = {
   illustration: "48-eten-tijdens-fietsen",
   nl: {
     title: "Eten tijdens fietsen: maak een werkbaar plan",
-    metaTitle: "Eten tijdens fietsen: praktisch plan | BestBikeFit4U",
+    metaTitle: "Eten tijdens fietsen: praktisch plan | BikeFitBoost",
     metaDescription: "Wat neem je mee voor een fietsrit en wanneer eet je het? Maak een plan met bekende " +
       "producten, bereikbare zakken en veilige momenten. Test het rustig.",
     keyword: "eten tijdens fietsen",
@@ -140,7 +140,7 @@ van buiten. Controleer daarom later ook hoe je dezelfde aanpak op een eenvoudige
   },
   en: {
     title: "Cycling fueling basics: build a practical plan",
-    metaTitle: "Cycling fueling basics: a practical plan | BestBikeFit4U",
+    metaTitle: "Cycling fueling basics: a practical plan | BikeFitBoost",
     metaDescription: "What should you carry on a ride, and when should you eat it? Plan familiar foods, " +
       "accessible pockets and safe opportunities. Practise on easy rides.",
     keyword: "cycling fueling basics",

@@ -81,7 +81,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const alternates = buildLocaleAlternates("/calculators/gearing", locale);
 
   return {
-    title: isNl ? "Verzet calculator | BestBikeFit4U" : "Gearing Calculator | BestBikeFit4U",
+    title: isNl ? "Verzet calculator | BikeFitBoost" : "Gearing Calculator | BikeFitBoost",
     description: isNl
       ? "Bereken je lichtste en zwaarste versnelling, snelheid bij cadans en een snelle " +
         "kliminschatting op basis van kettingring, cassette en wielmaat."
@@ -159,7 +159,7 @@ export default async function GearingCalculatorPage() {
       <JsonLd
         schema={[
           ...buildCalculatorPageSchemas({
-            name: isNl ? "BestBikeFit4U Verzet calculator" : "BestBikeFit4U Gearing Calculator",
+            name: isNl ? "BikeFitBoost Verzet calculator" : "BikeFitBoost Gearing Calculator",
             description: isNl
               ? "Bereken je lichtste en zwaarste versnelling, snelheid bij cadans en een snelle kliminschatting."
               : "Calculate your easiest and hardest gear, speed at cadence, and a quick climb verdict.",

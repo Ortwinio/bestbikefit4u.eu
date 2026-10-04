@@ -6,7 +6,7 @@ export const cleatPosition = {
   "illustration": "12-schoenplaatjes-positie",
   "nl": {
     "title": "Schoenplaatjes afstellen",
-    "metaTitle": "Schoenplaatjes afstellen | BestBikeFit4U",
+    "metaTitle": "Schoenplaatjes afstellen | BikeFitBoost",
     "metaDescription": "Schoenplaatjes afstellen zonder gokken? Controleer de montage, leg je beginstand vast en test één verandering tegelijk. Lees hoe je veilig begint.",
     "keyword": "schoenplaatjes afstellen",
     "relatedKeywords": [
@@ -117,7 +117,7 @@ Breek de test af. Controleer de montage volgens de handleiding en herstel zo nod
   },
   "en": {
     "title": "Cleat position",
-    "metaTitle": "Cleat position | BestBikeFit4U",
+    "metaTitle": "Cleat position | BikeFitBoost",
     "metaDescription": "Unsure about cleat position? Check installation, record your starting setup and test one change at a time. Learn how to begin safely on your bike.",
     "keyword": "cleat position",
     "relatedKeywords": [

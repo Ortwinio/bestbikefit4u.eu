@@ -90,7 +90,7 @@ const loginCopy: Record<Locale, LoginCopy> = {
     ],
     accountCreationHint:
       "New here? We create your account as soon as you confirm the code.",
-    successTitle: "Welcome to BestBikeFit4U",
+    successTitle: "Welcome to BikeFitBoost",
     successSubtitle: "Redirecting to your dashboard...",
     back: "Back",
     enterVerificationCode: "Enter Verification Code",
@@ -141,7 +141,7 @@ const loginCopy: Record<Locale, LoginCopy> = {
     ],
     accountCreationHint:
       "Nieuw hier? We maken je account aan zodra je de code bevestigt.",
-    successTitle: "Welkom bij BestBikeFit4U",
+    successTitle: "Welkom bij BikeFitBoost",
     successSubtitle: "Je wordt doorgestuurd naar je dashboard...",
     back: "Terug",
     enterVerificationCode: "Voer verificatiecode in",

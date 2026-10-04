@@ -1,4 +1,8 @@
+import { LEGACY_SITE_HOSTS, SITE_ORIGIN } from "../../shared/brand";
+
 export const NONCE_HEADER_NAME = "x-nonce";
+
+const brandImageOrigins = [SITE_ORIGIN, ...LEGACY_SITE_HOSTS.map((host) => `https://${host}`)].join(" ");
 
 export function createCspNonce() {
   return crypto.randomUUID().replace(/-/g, "");
@@ -31,7 +35,7 @@ export function buildContentSecurityPolicy(
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    "img-src 'self' data: blob: https://*.convex.cloud https://*.convex.site https://dgalywyr863if.cloudfront.net https://lh3.googleusercontent.com",
+    `img-src 'self' ${brandImageOrigins} data: blob: https://*.convex.cloud https://*.convex.site https://dgalywyr863if.cloudfront.net https://lh3.googleusercontent.com`,
     "font-src 'self'",
     "frame-ancestors 'none'",
     ...(!isDev ? ["upgrade-insecure-requests"] : []),

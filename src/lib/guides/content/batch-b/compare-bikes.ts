@@ -4,7 +4,7 @@ export const compareBikes = {
   illustration: "27-fietsen-vergelijken",
   nl: {
     title: "Fietsen vergelijken zithouding",
-    metaTitle: "Fietsen vergelijken zithouding | BestBikeFit4U",
+    metaTitle: "Fietsen vergelijken zithouding | BikeFitBoost",
     metaDescription: "Twijfel je tussen twee fietsen? Vergelijk zadel, stuur en pedalen met vaste meetpunten. Leg je houding vast en controleer verschillen tijdens proefritten.",
     keyword: "fietsen vergelijken zithouding",
     relatedKeywords: ["fietsgeometrie vergelijken", "stack en reach", "zithouding overnemen"],
@@ -116,7 +116,7 @@ Een prettige eerste indruk zegt weinig over een volledige lange rit. Noteer rest
   },
   en: {
     title: "Compare bikes for fit: contact points first",
-    metaTitle: "Compare bikes for fit | BestBikeFit4U",
+    metaTitle: "Compare bikes for fit | BikeFitBoost",
     metaDescription: "Choosing between two bikes? Compare saddle, bars and pedals using consistent reference points. Record your position and check differences on easy rides.",
     keyword: "compare bikes for fit",
     relatedKeywords: ["compare bike geometry", "stack and reach", "transfer riding position"],

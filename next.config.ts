@@ -1,14 +1,24 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
+import { LEGACY_SITE_HOSTS, SITE_ORIGIN } from "./shared/brand";
 
 const nextConfig: NextConfig = {
   // Keep the repository's maintained agent instructions unchanged by dev startup.
   agentRules: false,
   poweredByHeader: false,
   htmlLimitedBots: /.*/,
+  async redirects() {
+    return LEGACY_SITE_HOSTS.map((host) => ({
+      source: "/:path*",
+      has: [{ type: "host" as const, value: host }],
+      destination: `${SITE_ORIGIN}/:path*`,
+      permanent: true,
+    }));
+  },
   outputFileTracingIncludes: {
     "/api/reports/*/pdf": [
       "./public/brand/report/**/*",
+      "./public/brand/png/**/*",
       "./public/illustrations/04-bandenspanning.webp",
       "./public/illustrations/06-meetset.webp",
       "./public/illustrations/08-stack-en-reach.webp",

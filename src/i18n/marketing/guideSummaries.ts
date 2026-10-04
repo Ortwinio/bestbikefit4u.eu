@@ -11,7 +11,7 @@ const dutchGuideSummaries: Readonly<Record<string, string>> = {
   "endurance-bike-fit-guide": "Bekijk hoe ondersteuning en een houdbare positie je helpen op lange ritten. Het gaat om meer dan alleen rechterop zitten.",
   "indoor-trainer-bike-fit-guide": "Lees waarom drukpunten op de fietstrainer sterker opvallen en welke afstelling je eerst controleert.",
   "rider-profiles": "Vind gidsen voor situaties waarin je lichaamsbouw of belastbaarheid om een andere fietsafstelling vraagt.",
-  "setup-parameters": "Begrijp de aanbevolen maten van BestBikeFit4U en wat elk getal voor je fietsafstelling betekent.",
+  "setup-parameters": "Begrijp de aanbevolen maten van BikeFitBoost en wat elk getal voor je fietsafstelling betekent.",
   "saddle-fore-aft-and-tilt-guide": "Lees hoe de voor-achterpositie en kanteling van je zadel samen je bekkenstabiliteit en drukverdeling beïnvloeden.",
   "reach-and-stem-guide": "Bekijk hoe framereach, stuurpenlengte, stuurvorm en de positie van je remgrepen samen je cockpitlengte bepalen.",
   "handlebar-drop-guide": "Kies een stuurdrop die je kunt volhouden. Houd rekening met je flexibiliteit, rompstabiliteit en rijdoel.",
@@ -28,7 +28,7 @@ const dutchGuideSummaries: Readonly<Record<string, string>> = {
   "wkg-and-power-zones-guide": "Lees hoe vermogenszones van je FTP worden afgeleid en waarom W/kg op een klim zwaarder weegt dan op vlak terrein.",
   "power-to-speed-guide": "Lees hoe vermogen, aerodynamica, gewicht, banden, helling en weer je snelheid beïnvloeden.",
   "climb-time-and-event-pacing-guide": "Plan je tempo voor klimmen en toertochten voorzichtig. Houd rekening met voeding en inspanning.",
-  "fit-science": "Bekijk de wetenschap en methodes achter de fietsafstelling van BestBikeFit4U.",
+  "fit-science": "Bekijk de wetenschap en methodes achter de fietsafstelling van BikeFitBoost.",
   about: "Lees welke gegevens je invoert, hoe de berekening werkt en waarom de uitkomst een praktisch startpunt is.",
 };
 

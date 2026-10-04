@@ -4,7 +4,7 @@ export const mountain = {
   illustration: "28-mountainbike-afstellen",
   nl: {
     title: "Mountainbike afstellen",
-    metaTitle: "Mountainbike afstellen | BestBikeFit4U",
+    metaTitle: "Mountainbike afstellen | BikeFitBoost",
     metaDescription: "Je mountainbike afstellen voor klimmen en dalen? Controleer zadel, rembereik en bewegingsruimte. Leg je beginstand vast en test rustig op een bekend pad.",
     keyword: "mountainbike afstellen",
     relatedKeywords: ["zithouding mountainbike", "remhendels afstellen", "zadelhoogte mountainbike"],
@@ -115,7 +115,7 @@ Zo kun je met een fitter of instructeur gericht overleggen. Kies intussen een ma
   },
   en: {
     title: "Mountain bike fit: control and movement",
-    metaTitle: "Mountain bike fit | BestBikeFit4U",
+    metaTitle: "Mountain bike fit | BikeFitBoost",
     metaDescription: "Setting up a mountain bike for climbs and descents? Check saddle position, brake access and room to move. Record your setup and test on a familiar trail.",
     keyword: "mountain bike fit",
     relatedKeywords: ["mountain bike position", "brake lever adjustment", "mountain bike saddle height"],

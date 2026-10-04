@@ -38,14 +38,14 @@ export function getConsumerCampaignCopy(locale: Locale) {
         startFreeCta: "Start gratis bike fit",
         donateCta: "Doneer via onze Alpe d'HuZes-pagina",
         announcement:
-          `BestBikeFit4U is tijdelijk gratis tot ${endLabel}. Wil je onze Alpe d'HuZes-campagne steunen, dan kun je een vrijwillige donatie doen.`,
+          `BikeFitBoost is tijdelijk gratis tot ${endLabel}. Wil je onze Alpe d'HuZes-campagne steunen, dan kun je een vrijwillige donatie doen.`,
         homepageEyebrow: "Tijdelijke gratis toegang voor Alpe d'HuZes",
-        homepageTitle: "Gebruik BestBikeFit4U gratis tot 4 juni 2026",
+        homepageTitle: "Gebruik BikeFitBoost gratis tot 4 juni 2026",
         homepageDescription:
-          "Tot 4 juni 2026 kun je BestBikeFit4U gratis gebruiken. In plaats van een verplichte betaling nodigen we je uit om, als je wilt, onze Alpe d'HuZes-fundraisingcampagne te steunen met een vrijwillige donatie.",
+          "Tot 4 juni 2026 kun je BikeFitBoost gratis gebruiken. In plaats van een verplichte betaling nodigen we je uit om, als je wilt, onze Alpe d'HuZes-fundraisingcampagne te steunen met een vrijwillige donatie.",
         pricingTitle: "Tijdelijke gratis campagne",
         pricingDescription:
-          "Tot 4 juni 2026 is BestBikeFit4U gratis voor consumenten. Vind je het waardevol, dan kun je onze Alpe d'HuZes-fundraisingcampagne steunen met een vrijwillige donatie.",
+          "Tot 4 juni 2026 is BikeFitBoost gratis voor consumenten. Vind je het waardevol, dan kun je onze Alpe d'HuZes-fundraisingcampagne steunen met een vrijwillige donatie.",
         loginTitle: "Tijdelijk gratis toegang",
         loginDescription:
           "Je account blijft gewoon nodig om je sessie op te slaan, je rapport te mailen en je resultaten terug te vinden. Betalen is tijdens deze campagne niet nodig.",
@@ -64,14 +64,14 @@ export function getConsumerCampaignCopy(locale: Locale) {
         startFreeCta: "Start free bike fit",
         donateCta: "Donate via our Alpe d'HuZes page",
         announcement:
-          `BestBikeFit4U is temporarily free until ${endLabel}. If you would like to support our Alpe d'HuZes campaign, you can make a voluntary donation.`,
+          `BikeFitBoost is temporarily free until ${endLabel}. If you would like to support our Alpe d'HuZes campaign, you can make a voluntary donation.`,
         homepageEyebrow: "Temporary free access for Alpe d'HuZes",
-        homepageTitle: "Use BestBikeFit4U for free until June 4, 2026",
+        homepageTitle: "Use BikeFitBoost for free until June 4, 2026",
         homepageDescription:
-          "Until June 4, 2026, you can use BestBikeFit4U for free. Instead of a required payment, we invite you to support our Alpe d'HuZes fundraising campaign with a voluntary donation if you want to.",
+          "Until June 4, 2026, you can use BikeFitBoost for free. Instead of a required payment, we invite you to support our Alpe d'HuZes fundraising campaign with a voluntary donation if you want to.",
         pricingTitle: "Temporary free campaign",
         pricingDescription:
-          "Until June 4, 2026, BestBikeFit4U is free for consumer users. If you find it valuable, you can support our Alpe d'HuZes fundraising campaign with a voluntary donation.",
+          "Until June 4, 2026, BikeFitBoost is free for consumer users. If you find it valuable, you can support our Alpe d'HuZes fundraising campaign with a voluntary donation.",
         loginTitle: "Temporary free access",
         loginDescription:
           "You still need an account to save your session, email your report, and come back to your results. During this campaign there is no required payment.",
@@ -426,8 +426,8 @@ export function getCommercialFaqCopy(locale: Locale) {
         : "Yes. PDF reports are live in Pro. Email reports are available in both Free and Pro.",
     pricing:
       locale === "nl"
-        ? "BestBikeFit4U toont publiek alleen Free en Pro. Alle prijzen zijn per maand in euro."
-        : "BestBikeFit4U currently sells Free and Pro publicly. All prices are monthly and listed in EUR.",
+        ? "BikeFitBoost toont publiek alleen Free en Pro. Alle prijzen zijn per maand in euro."
+        : "BikeFitBoost currently sells Free and Pro publicly. All prices are monthly and listed in EUR.",
   };
 }
 
@@ -448,11 +448,11 @@ export function getSubscriptionTermsCopy(locale: Locale): string {
     const campaign = getConsumerCampaignCopy(locale);
 
     return locale === "nl"
-      ? `BestBikeFit4U is tijdelijk gratis voor consumenten tot ${campaign.endLabel}. Vrijwillige donaties verlopen via onze Alpe d'HuZes-pagina en zijn niet verplicht.`
-      : `BestBikeFit4U is temporarily free for consumer users until ${campaign.endLabel}. Voluntary donations go through our Alpe d'HuZes page and are never required.`;
+      ? `BikeFitBoost is tijdelijk gratis voor consumenten tot ${campaign.endLabel}. Vrijwillige donaties verlopen via onze Alpe d'HuZes-pagina en zijn niet verplicht.`
+      : `BikeFitBoost is temporarily free for consumer users until ${campaign.endLabel}. Voluntary donations go through our Alpe d'HuZes page and are never required.`;
   }
 
   return locale === "nl"
-    ? "BestBikeFit4U toont publiek Free en Pro. Betaalde Pro-plannen worden maandelijks in euro gefactureerd en kunnen op elk moment worden opgezegd."
-    : "BestBikeFit4U publicly offers Free and Pro. Paid Pro plans are billed monthly in EUR and can be cancelled at any time.";
+    ? "BikeFitBoost toont publiek Free en Pro. Betaalde Pro-plannen worden maandelijks in euro gefactureerd en kunnen op elk moment worden opgezegd."
+    : "BikeFitBoost publicly offers Free and Pro. Paid Pro plans are billed monthly in EUR and can be cancelled at any time.";
 }

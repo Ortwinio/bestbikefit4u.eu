@@ -4,7 +4,7 @@ export const setup = {
   illustration: "31-afstelmaten",
   nl: {
     title: "Fiets afstellen: maten vastleggen",
-    metaTitle: "Fiets afstellen: maten vastleggen | BestBikeFit4U",
+    metaTitle: "Fiets afstellen: maten vastleggen | BikeFitBoost",
     metaDescription: "Je fiets afstellen zonder je uitgangspositie kwijt te raken? Leer zadelhoogte, bereik en stuurdrop vastleggen en test daarna één kleine wijziging.",
     keyword: "fiets afstellen",
     relatedKeywords: ["afstelmaten fiets", "zadelhoogte meten", "stuurdrop meten", "zadelterugstand"],
@@ -87,7 +87,7 @@ Maak een nieuwe versie na een bewuste wijziging of onderdelenwissel en bewaar de
   },
   en: {
     title: "Bike setup measurements: record your position",
-    metaTitle: "Bike setup measurements | BestBikeFit4U",
+    metaTitle: "Bike setup measurements | BikeFitBoost",
     metaDescription: "Unsure about your bike setup measurements? Learn to record saddle height, reach and bar drop with clear reference points, then test one small change.",
     keyword: "bike setup measurements",
     relatedKeywords: ["record bike position", "measure saddle height", "measure bar drop", "saddle setback"],

@@ -24,7 +24,12 @@ export function LoginHandoffPanel({ locale, children }: { locale: Locale; childr
   return (
     <div className="grid min-h-dvh w-full min-w-0 bg-background text-foreground lg:grid-cols-2">
       <section aria-labelledby="login-handoff-title" className="flex min-w-0 flex-col gap-7 bg-[color:var(--bbf-lime)] px-5 py-8 text-[color:var(--bbf-inkt)] lg:px-16 lg:py-14">
-        <BrandLogo href={withLocalePrefix("/", locale)} className="flex min-h-11 w-60 max-w-full items-center focus-visible:focus-ring" priority />
+        <BrandLogo
+          href={withLocalePrefix("/", locale)}
+          asset="stacked"
+          className="flex min-h-11 w-60 max-w-full items-center rounded-xl bg-background p-2 focus-visible:focus-ring"
+          priority
+        />
         <div>
           <h2 id="login-handoff-title" className="max-w-lg font-display text-[44px] font-extrabold leading-[0.98] tracking-tight lg:text-[64px]">{text.title}</h2>
           <p className="mt-4 max-w-lg text-[19px] leading-relaxed">{text.description}</p>

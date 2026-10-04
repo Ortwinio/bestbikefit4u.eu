@@ -66,7 +66,7 @@ describe("editorial page SEO and localized content", () => {
   it("uses Dutch science headings, metadata and setup terminology", async () => {
     locale = "nl";
     const metadata = await Engine.generateMetadata();
-    expect(metadata.title).toBe("Bikefit-rekenmodel | BestBikeFit4U Wetenschap");
+    expect(metadata.title).toBe("Bikefit-rekenmodel | BikeFitBoost Wetenschap");
     expect(metadata.openGraph?.title).toBe(metadata.title);
     const engine = await renderHtml(await Engine.default());
     expect(engine).toContain("Hoe het bikefit-rekenmodel werkt");
@@ -83,7 +83,7 @@ describe("editorial page SEO and localized content", () => {
     expect(landing).toContain("Gratis of Pro");
     expect(landing).not.toMatch(/Free vs Pro|trade-offs|live observatie/);
     locale = "en";
-    expect((await Engine.generateMetadata()).title).toBe("Bike Fit Calculation Engine | BestBikeFit4U Science");
+    expect((await Engine.generateMetadata()).title).toBe("Bike Fit Calculation Engine | BikeFitBoost Science");
   });
 
   it("uses theme tokens for the stack/reach drawing and measurement labels", async () => {
@@ -101,14 +101,14 @@ describe("editorial page SEO and localized content", () => {
       const canonicalPath = path === "/fiets-afstellen"
         ? (locale === "nl" ? "/bikefitting" : "/bike-fitting")
         : path;
-      expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}${canonicalPath}`);
+      expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}${canonicalPath}`);
       const html = await renderHtml(await page.default());
       expect((html.match(/<h1[ >]/g) ?? []).length).toBe(1);
       expect(html).not.toContain("Ontwerpstaat");
       expect(html).toContain(`/${locale}/calculators/`);
       if (path.startsWith("/science/")) {
         expect(html).toContain('"@type":"Article"');
-        expect(html).toContain(`"mainEntityOfPage":"https://bestbikefit4u.eu/${locale}${path}"`);
+        expect(html).toContain(`"mainEntityOfPage":"https://www.bikefitboost.com/${locale}${path}"`);
       }
       if (path === "/fiets-afstellen") {
         expect(html).toContain('"@type":"FAQPage"');
@@ -124,11 +124,11 @@ describe("editorial page SEO and localized content", () => {
   ] as const)("keeps the %s-only landing and FAQ schema", async (language, path, page) => {
     locale = language;
     const metadata = await page.generateMetadata();
-    expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}${path}`);
+    expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}${path}`);
     expect(metadata.alternates?.languages).toEqual({
-      en: "https://bestbikefit4u.eu/en/bike-fitting",
-      nl: "https://bestbikefit4u.eu/nl/bikefitting",
-      "x-default": "https://bestbikefit4u.eu/en/bike-fitting",
+      en: "https://www.bikefitboost.com/en/bike-fitting",
+      nl: "https://www.bikefitboost.com/nl/bikefitting",
+      "x-default": "https://www.bikefitboost.com/en/bike-fitting",
     });
     const html = await renderHtml(await page.default());
     expect(html).toContain('"@type":"FAQPage"');

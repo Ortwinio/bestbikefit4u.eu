@@ -4,7 +4,7 @@ export const ftp = {
   illustration: "26-ftp-meten",
   nl: {
     title: "Wat is FTP fietsen?",
-    metaTitle: "Wat is FTP fietsen? | BestBikeFit4U",
+    metaTitle: "Wat is FTP fietsen? | BikeFitBoost",
     metaDescription: "Wat is FTP fietsen en wat zegt je test? Leer hoe de calculator vermogen omrekent, welke aannames gelden en hoe je jouw metingen zorgvuldig vergelijkt.",
     keyword: "wat is FTP fietsen",
     relatedKeywords: ["FTP berekenen", "vermogenstest fietsen", "watt per kilogram"],
@@ -93,7 +93,7 @@ Nee. Watt per kilogram is een verhouding in de berekening, geen persoonlijk gewi
   },
   en: {
     title: "What is cycling FTP?",
-    metaTitle: "What is cycling FTP? | BestBikeFit4U",
+    metaTitle: "What is cycling FTP? | BikeFitBoost",
     metaDescription: "What is cycling FTP and what does your test show? Learn how the calculator converts power, which assumptions apply and how to compare your measurements.",
     keyword: "what is cycling FTP",
     relatedKeywords: ["FTP calculation", "cycling power test", "watts per kilogram"],

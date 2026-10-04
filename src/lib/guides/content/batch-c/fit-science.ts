@@ -4,7 +4,7 @@ export const fitScience = {
   illustration: "37-bikefit-contactpunten",
   nl: {
     title: "Wetenschap achter bikefitting",
-    metaTitle: "Wetenschap achter bikefitting | BestBikeFit4U",
+    metaTitle: "Wetenschap achter bikefitting | BikeFitBoost",
     metaDescription:
       "Wat zegt de wetenschap achter bikefitting over jouw houding? Leer metingen, berekeningen en rijervaring scheiden en vergelijk één wijziging zorgvuldig.",
     keyword: "wetenschap achter bikefitting",
@@ -130,7 +130,7 @@ Behandel een tabelwaarde als informatie in het gesprek, niet als zelfstandig bew
   },
   en: {
     title: "Bike fitting science",
-    metaTitle: "Bike fitting science | BestBikeFit4U",
+    metaTitle: "Bike fitting science | BikeFitBoost",
     metaDescription:
       "What does bike fitting science tell you about your position? Separate measurements, calculations and riding experience, then compare one change carefully.",
     keyword: "bike fitting science",

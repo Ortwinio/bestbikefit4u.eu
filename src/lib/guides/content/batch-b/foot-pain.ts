@@ -4,7 +4,7 @@ export const footPain = {
   illustration: "21-gevoelloze-tenen",
   nl: {
     title: "Gevoelloze tenen fietsen: druk en pasvorm",
-    metaTitle: "Gevoelloze tenen fietsen | BestBikeFit4U",
+    metaTitle: "Gevoelloze tenen fietsen | BikeFitBoost",
     metaDescription: "Gevoelloze tenen tijdens het fietsen? Controleer schoenruimte, sluiting en schoenplaatjes. Ontdek een rustige testvolgorde en wanneer je hulp vraagt.",
     keyword: "gevoelloze tenen fietsen",
     relatedKeywords: ["brandende voeten fietsen", "voetpijn racefiets", "druk fietsschoenen"],
@@ -95,7 +95,7 @@ Niet iedere voet heeft dezelfde vorm. Kopieer daarom geen millimeters zonder de 
   },
   en: {
     title: "Numb toes cycling: pressure and shoe fit",
-    metaTitle: "Numb toes cycling | BestBikeFit4U",
+    metaTitle: "Numb toes cycling | BikeFitBoost",
     metaDescription: "Numb toes while cycling? Check shoe space, fastening and cleat position. Follow a calm testing sequence and learn when your symptoms need assessment.",
     keyword: "numb toes cycling",
     relatedKeywords: ["burning feet cycling", "road cycling foot pain", "cycling shoe pressure"],

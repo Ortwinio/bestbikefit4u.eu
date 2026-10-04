@@ -6,7 +6,7 @@ export const guide = {
   illustration: "46-lange-fietser",
   nl: {
     title: "Fiets afstellen lange fietsers: waar begin je?",
-    metaTitle: "Fiets afstellen lange fietsers | BestBikeFit4U",
+    metaTitle: "Fiets afstellen lange fietsers | BikeFitBoost",
     metaDescription: "Ben je lang en voelt je fiets te klein of te laag? Vergelijk beenlengte, zadelhoogte en " +
       "stuurpositie. Meet je uitgangspunt en pas gericht één maat aan.",
     keyword: "fiets afstellen lange fietsers",
@@ -140,7 +140,7 @@ voor zadelhoogte of stuurafstand, anders kun je het effect slecht onderscheiden.
   },
   en: {
     title: "Bike fit tall riders: where to start",
-    metaTitle: "Bike fit tall riders: first checks | BestBikeFit4U",
+    metaTitle: "Bike fit tall riders: first checks | BikeFitBoost",
     metaDescription: "Tall and feeling cramped or too low on your bike? Compare leg length, saddle height and " +
       "handlebar position. Record your setup and change one setting.",
     keyword: "bike fit tall riders",

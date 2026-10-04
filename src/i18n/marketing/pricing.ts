@@ -26,11 +26,11 @@ export const pricingCopy: Record<
   }
 > = {
   en: {
-    campaignMetadata: { title: "Temporary Free Bike Fit | BestBikeFit4U", keywords: ["free bike fit", "voluntary donation", "Alpe d'HuZes", "temporary campaign"] },
+    campaignMetadata: { title: "Temporary Free Bike Fit | BikeFitBoost", keywords: ["free bike fit", "voluntary donation", "Alpe d'HuZes", "temporary campaign"] },
     metadata: {
-      title: "Pricing | BestBikeFit4U",
+      title: "Pricing | BikeFitBoost",
       description:
-        "Compare BestBikeFit4U Free and Pro plans. All public prices are monthly in EUR and only reflect features that are live today.",
+        "Compare BikeFitBoost Free and Pro plans. All public prices are monthly in EUR and only reflect features that are live today.",
       keywords: ["bike fit pricing", "online bike fit price", "bike fit plans eur"],
     },
     title: "Clear pricing for real riders",
@@ -68,11 +68,11 @@ export const pricingCopy: Record<
     questions: ["Can I manage multiple bikes?", "Do I get reports?", "How does pricing work?"],
   },
   nl: {
-    campaignMetadata: { title: "Tijdelijk gratis bike fit | BestBikeFit4U", keywords: ["gratis bike fit", "vrijwillige donatie", "Alpe d'HuZes", "tijdelijke campagne"] },
+    campaignMetadata: { title: "Tijdelijk gratis bike fit | BikeFitBoost", keywords: ["gratis bike fit", "vrijwillige donatie", "Alpe d'HuZes", "tijdelijke campagne"] },
     metadata: {
-      title: "Prijzen | BestBikeFit4U",
+      title: "Prijzen | BikeFitBoost",
       description:
-        "Vergelijk BestBikeFit4U Free en Pro. Alle publieke prijzen zijn maandelijks in euro en tonen alleen functies die nu live zijn.",
+        "Vergelijk BikeFitBoost Free en Pro. Alle publieke prijzen zijn maandelijks in euro en tonen alleen functies die nu live zijn.",
       keywords: ["bike fit prijzen", "online bike fit prijs", "bike fit plannen euro"],
     },
     title: "Heldere prijzen voor echte rijders",

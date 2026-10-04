@@ -41,7 +41,7 @@ describe("PDF measuring guide", () => {
     expect(reach.textContent).toContain(PDF_MEASUREMENT_COPY[locale].methods.handlebarReach);
     expect(reach.textContent).toContain(locale === "en" ? "saddle-to-handlebar" : "zadelreferentiepunt");
     expect(root.querySelector("a")?.getAttribute("href")).toBe(
-      `https://bestbikefit4u.eu/${locale}/measurement-guide`,
+      `https://www.bikefitboost.com/${locale}/measurement-guide`,
     );
   });
 

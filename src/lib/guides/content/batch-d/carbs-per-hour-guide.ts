@@ -6,7 +6,7 @@ export const guide = {
   illustration: "47-koolhydraten-onderweg",
   nl: {
     title: "Koolhydraten per uur fietsen: maak je plan",
-    metaTitle: "Koolhydraten per uur fietsen | BestBikeFit4U",
+    metaTitle: "Koolhydraten per uur fietsen | BikeFitBoost",
     metaDescription: "Hoeveel koolhydraten neem je mee op de fiets? Gebruik ritduur, etiketten en je ervaring " +
       "om een haalbaar plan te maken. Oefen eten tijdens rustige ritten.",
     keyword: "koolhydraten per uur fietsen",
@@ -142,7 +142,7 @@ calculator kan niet vaststellen waarom je maag reageert of een medisch probleem 
   },
   en: {
     title: "Carbs per hour cycling: make your plan",
-    metaTitle: "Carbs per hour cycling: plan intake | BestBikeFit4U",
+    metaTitle: "Carbs per hour cycling: plan intake | BikeFitBoost",
     metaDescription: "How many carbohydrates should you carry on a ride? Use duration, product labels and " +
       "experience to build a practical plan. Practise eating on easy rides.",
     keyword: "carbs per hour cycling",

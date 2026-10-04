@@ -30,7 +30,7 @@ describe("Batch A bilingual editorial content", () => {
       const content = guide[locale];
       expect(content.title).toBe(guideRewriteTitlesA[guide.slug][locale]);
       expect(content.metaTitle.length).toBeLessThanOrEqual(60);
-      expect(content.metaTitle).toMatch(/ \| BestBikeFit4U$/);
+      expect(content.metaTitle).toMatch(/ \| BikeFitBoost$/);
       expect(content.metaTitle.toLowerCase().startsWith(content.keyword)).toBe(true);
       expect(content.metaDescription.length).toBeGreaterThanOrEqual(140);
       expect(content.metaDescription.length).toBeLessThanOrEqual(155);

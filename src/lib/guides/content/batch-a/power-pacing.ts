@@ -6,7 +6,7 @@ export const powerPacing = {
   illustration: "17-vermogen-gelijkmatig-tempo",
   nl: {
     title: "Vermogen en tempo bij fietsen",
-    metaTitle: "Vermogen en tempo bij fietsen | BestBikeFit4U",
+    metaTitle: "Vermogen en tempo bij fietsen | BikeFitBoost",
     metaDescription: "Twijfel je over je fietstempo? Leer vermogen, FTP en gevoel samen gebruiken, kies een rustige uitgangsrit en vergelijk je houding zonder harder te rijden.",
     keyword: "vermogen en tempo",
     relatedKeywords: ["FTP gebruiken", "tempo verdelen", "vermogen fietshouding"],
@@ -95,7 +95,7 @@ Ja. Kies een bekende route en een rustige, vergelijkbare inspanning. Noteer wann
   },
   en: {
     title: "Cycling power and pacing",
-    metaTitle: "Cycling power and pacing | BestBikeFit4U",
+    metaTitle: "Cycling power and pacing | BikeFitBoost",
     metaDescription: "Unsure about your pace? Learn how power, FTP and effort work together, choose an easy reference ride and compare your position without pushing harder.",
     keyword: "cycling power and pacing",
     relatedKeywords: ["using FTP", "pacing a ride", "power and riding position"],

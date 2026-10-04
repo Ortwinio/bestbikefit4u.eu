@@ -7,7 +7,7 @@ export const aboutPresentation = {
     chips: ["Biomechanische basis", "Praktische afstelstappen", "NL en EN beschikbaar"],
     trustEyebrow: "Waarom dit betrouwbaar voelt",
     trustTitle: "Methodiek zonder schijnnauwkeurigheid",
-    trustBody: "Deze pagina laat zien hoe BestBikeFit4U van fitprincipes naar bruikbare keuzes komt.",
+    trustBody: "Deze pagina laat zien hoe BikeFitBoost van fitprincipes naar bruikbare keuzes komt.",
     scienceEyebrow: "Van maten naar afstelling",
     ctaEyebrow: "Start je fit",
   },
@@ -17,7 +17,7 @@ export const aboutPresentation = {
     chips: ["Biomechanical foundation", "Practical setup steps", "Available in Dutch and English"],
     trustEyebrow: "Why this feels trustworthy",
     trustTitle: "Methodology without false precision",
-    trustBody: "This page shows how BestBikeFit4U moves from fitting principles to usable decisions.",
+    trustBody: "This page shows how BikeFitBoost moves from fitting principles to usable decisions.",
     scienceEyebrow: "From measurements to setup",
     ctaEyebrow: "Start your fit",
   },
@@ -65,9 +65,9 @@ type AboutCopy = {
 export const aboutCopy: Record<Locale, AboutCopy> = {
   en: {
     metadata: {
-      title: "How BestBikeFit4U Works | Bike Fitting Methodology",
+      title: "How BikeFitBoost Works | Bike Fitting Methodology",
       description:
-        "Learn how BestBikeFit4U turns proven bike fitting methods, rider-specific inputs, and " +
+        "Learn how BikeFitBoost turns proven bike fitting methods, rider-specific inputs, and " +
         "practical adjustment priorities into clearer fit guidance.",
       keywords: [
         "bike fitting methodology",
@@ -77,11 +77,11 @@ export const aboutCopy: Record<Locale, AboutCopy> = {
         "cycling biomechanics",
       ],
     },
-    title: "How BestBikeFit4U Works",
+    title: "How BikeFitBoost Works",
     subtitle: "A professional bike fitting method, practical for every rider.",
     scienceTitle: "The Science Behind Your Fit",
     scienceBody:
-      "BestBikeFit4U uses proven biomechanical formulas developed over decades of " +
+      "BikeFitBoost uses proven biomechanical formulas developed over decades of " +
       "professional bike fitting research. Our algorithm combines established methods to " +
       "provide recommendations tailored to your body, riding style, and goals.",
     saddleTitle: "Saddle Height Calculation",
@@ -167,9 +167,9 @@ export const aboutCopy: Record<Locale, AboutCopy> = {
   },
   nl: {
     metadata: {
-      title: "Hoe BestBikeFit4U werkt | Bikefitting methodiek",
+      title: "Hoe BikeFitBoost werkt | Bikefitting methodiek",
       description:
-        "Lees hoe BestBikeFit4U bewezen bikefitting-methodes, persoonlijke gegevens en praktische " +
+        "Lees hoe BikeFitBoost bewezen bikefitting-methodes, persoonlijke gegevens en praktische " +
         "afstelprioriteiten vertaalt naar duidelijkere fitbegeleiding.",
       keywords: [
         "bikefitting methodiek",
@@ -178,11 +178,11 @@ export const aboutCopy: Record<Locale, AboutCopy> = {
         "fietspositie",
       ],
     },
-    title: "Hoe BestBikeFit4U werkt",
+    title: "Hoe BikeFitBoost werkt",
     subtitle: "Een professionele bikefitting-methodiek, praktisch voor elke fietser.",
     scienceTitle: "De wetenschap achter je fit",
     scienceBody:
-      "BestBikeFit4U gebruikt bewezen biomechanische formules uit jarenlange " +
+      "BikeFitBoost gebruikt bewezen biomechanische formules uit jarenlange " +
       "bikefitting-praktijk. Het algoritme combineert meerdere methodes tot aanbevelingen " +
       "die passen bij jouw lichaam, rijstijl en doelen.",
     saddleTitle: "Berekening van zadelhoogte",

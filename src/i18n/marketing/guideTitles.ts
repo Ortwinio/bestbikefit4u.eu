@@ -50,7 +50,7 @@ const dutchGuideTitles: Readonly<Record<string, string>> = {
   "power-to-speed-guide": "Gids voor vermogen en snelheid",
   "climb-time-and-event-pacing-guide": "Gids voor klimtijd en tempoverdeling",
   "fit-science": "Wetenschap achter bikefit",
-  "about": "Hoe BestBikeFit4U werkt",
+  "about": "Hoe BikeFitBoost werkt",
   "science/bike-fit-methods": "Bikefit-methodes uitgelegd",
   "when-online-bike-fit-has-limits": "Wanneer online bikefit grenzen heeft"
 };

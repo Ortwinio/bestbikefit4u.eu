@@ -20,7 +20,7 @@ const renders = {
 const service = new Set(["fitReminder", "upgradeNudge", "winback", "proExplainer", "day1Tips"]);
 const expectedSubjects = {
   nl: [
-    "482915 is je BestBikeFit4U-inlogcode",
+    "482915 is je BikeFitBoost-inlogcode",
     "Je fit is klaar: zadel op 754 mm",
     "Je fitrapport: framemaat XL",
     "Je Fit Pass is actief. Dit kun je nu",
@@ -33,7 +33,7 @@ const expectedSubjects = {
     "3 tips voor een fit die echt klopt",
   ],
   en: [
-    "482915 is your BestBikeFit4U login code",
+    "482915 is your BikeFitBoost login code",
     "Your fit is ready: saddle at 754 mm",
     "Your fit report: frame size XL",
     "Your Fit Pass is active. Here's what you can do now",
@@ -69,11 +69,11 @@ describe.each<EmailLocale>(["nl", "en"])("%s email templates", (locale) => {
       expect(doc.body.firstElementChild?.textContent).toContain(result.preheader);
       expect(doc.querySelector("script")).toBeNull();
       expect(doc.querySelectorAll('a[href*="preview-only"]').length).toBe(service.has(kind) ? 1 : 0);
-      const cta = doc.querySelectorAll(`a[href="https://bestbikefit4u.eu/${locale}/fit"]`);
+      const cta = doc.querySelectorAll(`a[href="https://www.bikefitboost.com/${locale}/fit"]`);
       expect(cta.length).toBe(["loginCode", "caseStudyLead"].includes(kind) ? 0 : 1);
       if (cta.length) expect(result.html).toContain("<v:rect");
       for (const image of doc.querySelectorAll("img")) {
-        expect(image.src).toMatch(/^https:\/\/bestbikefit4u\.eu\/email\/[a-z0-9-]+\.png$/);
+        expect(image.src).toMatch(/^https:\/\/www\.bikefitboost\.com\/(?:email\/[a-z0-9-]+|brand\/png\/logo-horizontaal-960)\.png$/);
         expect(image.hasAttribute("alt")).toBe(true);
       }
       dom.window.close();

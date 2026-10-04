@@ -4,7 +4,7 @@ export const gravelFit = {
   illustration: "38-gravelbike-afstellen",
   nl: {
     title: "Gravelbike afstellen",
-    metaTitle: "Gravelbike afstellen | BestBikeFit4U",
+    metaTitle: "Gravelbike afstellen | BikeFitBoost",
     metaDescription:
       "Je gravelbike afstellen voor meer controle? Controleer bereik, remgrepen en zitpositie op asfalt én grind. Meet je basis en test één verandering per keer.",
     keyword: "gravelbike afstellen",
@@ -125,7 +125,7 @@ zodat je een bagage-effect niet verwart met de afstelling alleen.
   },
   en: {
     title: "Gravel bike fit",
-    metaTitle: "Gravel bike fit | BestBikeFit4U",
+    metaTitle: "Gravel bike fit | BikeFitBoost",
     metaDescription:
       "Setting up your gravel bike for control? Check reach, brake hoods and seating on roads and gravel. Record your baseline and test one change at a time.",
     keyword: "gravel bike fit",

@@ -6,7 +6,7 @@ export const beginners = {
   illustration: "09-beginners-fietsafstelling",
   nl: {
     title: "Fiets afstellen voor beginners",
-    metaTitle: "Fiets afstellen voor beginners | BestBikeFit4U",
+    metaTitle: "Fiets afstellen voor beginners | BikeFitBoost",
     metaDescription: "Net begonnen of opnieuw op de fiets? Leer je uitgangspositie meten, controleer zadel en stuur en test één aanpassing tegelijk met een rustige eerste rit.",
     keyword: "fiets afstellen voor beginners",
     relatedKeywords: ["eerste fietsafstelling", "opnieuw beginnen fietsen", "comfortabel fietsen"],
@@ -120,7 +120,7 @@ Vraag hulp als je houding onzeker blijft of klachten ontstaan. Een langer doel m
   },
   en: {
     title: "Bike fit for beginners",
-    metaTitle: "Bike fit for beginners | BestBikeFit4U",
+    metaTitle: "Bike fit for beginners | BikeFitBoost",
     metaDescription: "Starting cycling or returning after a break? Measure your starting position, check saddle and handlebar access, then test one change on an easy ride.",
     keyword: "bike fit for beginners",
     relatedKeywords: ["first bike setup", "returning to cycling", "comfortable cycling"],

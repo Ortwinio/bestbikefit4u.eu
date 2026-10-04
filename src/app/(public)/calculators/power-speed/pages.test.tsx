@@ -31,7 +31,7 @@ describe.each(["nl", "en"] as const)("%s performance pages preserve SEO", (langu
     async (route, Page, metadata) => {
       locale = language;
       const result = await metadata();
-      expect(result.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}/calculators/${route}`);
+      expect(result.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}/calculators/${route}`);
       const { container } = render(await Page());
       expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
       expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(
@@ -63,7 +63,7 @@ describe("Dutch calculator prose", () => {
   });
   it("uses Dutch power metadata and nutrition advice", async () => {
     locale = "nl";
-    expect((await powerMetadata()).title).toBe("Vermogen- / snelheidsschatting | BestBikeFit4U");
+    expect((await powerMetadata()).title).toBe("Vermogen- / snelheidsschatting | BikeFitBoost");
     render(await FuelPage());
     expect(screen.getByText(/Wat je maag en darmen verdragen, het klimaat/)).toBeTruthy();
     expect(screen.getByText(/Vraag bij een ingewikkelde situatie advies aan een coach of sportdiëtist/)).toBeTruthy();

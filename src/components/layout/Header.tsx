@@ -41,7 +41,7 @@ export function Header({ locale, labels }: HeaderProps) {
         <MarketingLogo
           href={withLocalePrefix("/", locale)}
           priority
-          className="flex min-h-11 w-[164px] shrink-0 items-center sm:w-[200px]"
+          className="flex min-h-11 w-[195px] shrink-0 items-center"
         />
         <MarketingNavigation items={items} label={copy.navigation} />
         <div className="flex items-center gap-2 xl:gap-4">

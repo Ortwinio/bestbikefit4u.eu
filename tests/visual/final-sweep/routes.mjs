@@ -116,8 +116,21 @@ function concretePath(sourceRoute, blogSlug) {
 }
 
 function expectedResponse(sourceRoute, locale) {
-  if (sourceRoute === "/bike-fitting" && locale === "nl") return { status: 308, redirectTo: "/nl/bikefitting" };
-  if (sourceRoute === "/bikefitting" && locale === "en") return { status: 308, redirectTo: "/en/bike-fitting" };
+  if ((sourceRoute === "/bike-fitting" && locale === "nl") || sourceRoute === "/fiets-afstellen") {
+    return { status: 301, redirectTo: locale === "nl" ? "/nl/bikefitting" : "/en/bike-fitting" };
+  }
+  if (sourceRoute === "/bikefitting" && locale === "en") return { status: 301, redirectTo: "/en/bike-fitting" };
+  const pressureAliases = {
+    "/bandenspanning/racefiets": { nl: "/nl/bandenspanning/racefiets", en: "/en/tire-pressure/road-bike" },
+    "/bandenspanning/gravelbike": { nl: "/nl/bandenspanning/gravelbike", en: "/en/tire-pressure/gravel-bike" },
+    "/bandenspanning/mtb": { nl: "/nl/bandenspanning/mountainbike", en: "/en/tire-pressure/mountain-bike" },
+    "/tire-pressure/[slug]": { nl: "/nl/bandenspanning/racefiets", en: "/en/tire-pressure/road-bike" },
+    "/bandenspanning/[slug]": { nl: "/nl/bandenspanning/racefiets", en: "/en/tire-pressure/road-bike" },
+  };
+  const pressureDestination = pressureAliases[sourceRoute]?.[locale];
+  if (pressureDestination && pressureDestination !== `/${locale}${sourceRoute}`) {
+    return { status: 301, redirectTo: pressureDestination };
+  }
   if (sourceRoute === "/use-cases") return { status: 307, redirectTo: `/${locale}/guides` };
   if (sourceRoute === "/use-cases/[slug]") {
     return { status: 307, redirectTo: `/${locale}/guides/bike-fitting-for-lower-back-pain` };

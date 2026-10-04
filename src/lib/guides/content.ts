@@ -178,9 +178,10 @@ export async function getPublishedGuideRecord(
   slug: string
 ): Promise<GuideRecord | null> {
   try {
-    return (await fetchQuery(api.guides.queries.getPublishedGuide, {
+    const guide = (await fetchQuery(api.guides.queries.getPublishedGuide, {
       slug,
     })) as GuideRecord | null;
+    return guide ? currentBrandGuide(guide) : null;
   } catch {
     return null;
   }
@@ -188,10 +189,11 @@ export async function getPublishedGuideRecord(
 
 export async function listPublishedGuideRecords(): Promise<GuideRecord[]> {
   try {
-    return (await fetchQuery(
+    const guides = (await fetchQuery(
       api.guides.queries.listPublishedGuides,
       {}
     )) as GuideRecord[];
+    return guides.map(currentBrandGuide);
   } catch {
     return [];
   }
@@ -217,11 +219,12 @@ export async function getDraftGuideRecord(
       return null;
     }
 
-    return (await fetchQuery(
+    const guide = (await fetchQuery(
       api.guides.queries.getDraftGuide,
       { id: id as Id<"guidePages"> },
       { token }
     )) as GuideRecord | null;
+    return guide ? currentBrandGuide(guide) : null;
   } catch {
     return null;
   }
@@ -278,8 +281,8 @@ export function getGuideLinkLabel(path: string, locale: Locale): string {
 
   const lookup: Record<string, { en: string; nl: string }> = {
     "/about": {
-      en: "How BestBikeFit4U Works",
-      nl: "Hoe BestBikeFit4U werkt",
+      en: "How BikeFitBoost Works",
+      nl: "Hoe BikeFitBoost werkt",
     },
     "/science/bike-fit-methods": {
       en: "Bike Fitting Methods Explained",
@@ -295,7 +298,7 @@ export function getGuideLinkLabel(path: string, locale: Locale): string {
       en: "Bike Fit for Common Pain Points",
       nl: "Bikefit bij veelvoorkomende klachten",
     },
-    "/how-it-works": { en: "How BestBikeFit4U Works", nl: "Hoe BestBikeFit4U werkt" },
+    "/how-it-works": { en: "How BikeFitBoost Works", nl: "Hoe BikeFitBoost werkt" },
     "/why-bikefit-matters": {
       en: "Why Bike Fit Matters",
       nl: "Waarom bike fit telt",
@@ -921,3 +924,4 @@ export function relatedLinkDescription(locale: Locale, path?: string) {
 
   return map[normalized] ?? labels(locale).relatedDefault;
 }
+import { currentBrandGuide } from "@/lib/contentBrand";

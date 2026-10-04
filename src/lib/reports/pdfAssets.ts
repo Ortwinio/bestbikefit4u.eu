@@ -11,7 +11,7 @@ export function getPdfReportAssets() {
     `data:${mime};base64,${readFileSync(join(process.cwd(), "public", relative)).toString("base64")}`;
   cached = {
     images: {
-      logo: embed("brand/report/report-logo.svg", "image/svg+xml"),
+      logo: embed("brand/png/logo-horizontaal-960.png", "image/png"),
       bikeDimensions: embed("brand/report/bike-dimensions.png", "image/png"),
       pressure: embed("illustrations/04-bandenspanning.webp", "image/webp"),
       measureSet: embed("illustrations/06-meetset.webp", "image/webp"),

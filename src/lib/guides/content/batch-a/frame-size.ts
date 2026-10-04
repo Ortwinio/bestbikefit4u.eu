@@ -6,7 +6,7 @@ export const frameSize = {
   illustration: "14-framemaat-meetpunten",
   nl: {
     title: "Framemaat fiets bepalen",
-    metaTitle: "Framemaat fiets bepalen | BestBikeFit4U",
+    metaTitle: "Framemaat fiets bepalen | BikeFitBoost",
     metaDescription: "Twijfel je tussen twee framematen? Leer lengte, binnenbeenmaat, stack en reach vergelijken en controleer of de complete fiets bij je houding past.",
     keyword: "framemaat",
     relatedKeywords: ["fietsmaat kiezen", "stack en reach vergelijken", "binnenbeenlengte fietsmaat"],
@@ -122,7 +122,7 @@ Een onderdeel kopen zonder die controle kan het probleem verplaatsen. Soms is ee
   },
   en: {
     title: "Bike frame size",
-    metaTitle: "Bike frame size | BestBikeFit4U",
+    metaTitle: "Bike frame size | BikeFitBoost",
     metaDescription: "Unsure between two bike frame sizes? Compare height, inseam, stack and reach, then check whether the complete bike can support your riding position.",
     keyword: "bike frame size",
     relatedKeywords: ["choosing a bike size", "compare stack and reach", "inseam and bike size"],

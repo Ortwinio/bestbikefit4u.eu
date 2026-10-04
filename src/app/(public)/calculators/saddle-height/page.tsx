@@ -41,8 +41,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: isNl
-      ? "Zadelhoogte calculator | BestBikeFit4U"
-      : "Saddle Height Calculator | BestBikeFit4U",
+      ? "Zadelhoogte calculator | BikeFitBoost"
+      : "Saddle Height Calculator | BikeFitBoost",
     description: fitPageDetails[locale].saddleDescription,
     keywords: isNl
       ? ["zadelhoogte calculator", "bike fit zadelhoogte", "fiets zadelpositie"]

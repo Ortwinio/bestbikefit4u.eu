@@ -8,7 +8,7 @@ vi.mock("convex/react", () => ({ useMutation: () => vi.fn() }));
 vi.mock("@/i18n/useDashboardMessages", () => ({ useDashboardMessages: () => ({
   messages: { profile: { photo: { upload: "Upload photo" } } },
 }) }));
-it.each(["https://images.example/avatar.webp", "blob:https://bestbikefit4u.eu/123"])(
+it.each(["https://images.example/avatar.webp", "blob:https://www.bikefitboost.com/123"])(
   "retains storage and file-preview URLs: %s", (url) => {
     source = url;
     expect(renderToStaticMarkup(<ProfilePhotoUpload />)).toContain(`src="${url}"`);

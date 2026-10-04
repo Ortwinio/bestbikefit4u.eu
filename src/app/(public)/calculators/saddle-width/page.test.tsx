@@ -67,7 +67,7 @@ vi.mock("@/i18n/request", () => ({
 
 vi.mock("@/i18n/metadata", () => ({
   buildLocaleAlternates: () => ({
-    canonical: `https://bestbikefit4u.eu/${locale}/calculators/saddle-width`,
+    canonical: `https://www.bikefitboost.com/${locale}/calculators/saddle-width`,
   }),
 }));
 
@@ -108,7 +108,7 @@ describe("saddle width calculator page", () => {
     locale = language;
     const metadata = await generateMetadata();
     expect(metadata.alternates?.canonical).toBe(
-      `https://bestbikefit4u.eu/${language}/calculators/saddle-width`,
+      `https://www.bikefitboost.com/${language}/calculators/saddle-width`,
     );
     expect(metadata.openGraph).toBeTruthy();
   });

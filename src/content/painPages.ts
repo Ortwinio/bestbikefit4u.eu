@@ -35,7 +35,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
     slug: "knee-pain-cycling",
     painArea: "knee",
     en: {
-      seoTitle: "Bike Fit for Knee Pain While Cycling | BestBikeFit4U",
+      seoTitle: "Bike Fit for Knee Pain While Cycling | BikeFitBoost",
       seoDescription: "Review front or back knee pain on the bike by checking saddle height, setback, cleat position, and workload progression.",
       keywords: ["bike fit knee pain", "cycling knee pain setup", "saddle height knee pain"],
       categoryLabel: "Pain point",
@@ -74,7 +74,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       secondaryCta: "Join case study",
     },
     nl: {
-      seoTitle: "Bikefit bij kniepijn tijdens fietsen | BestBikeFit4U",
+      seoTitle: "Bikefit bij kniepijn tijdens fietsen | BikeFitBoost",
       seoDescription: painDetailDutchCopy.kneeDescription,
       keywords: ["bikefit kniepijn", "kniepijn fietsen afstelling", "zadelhoogte kniepijn"],
       categoryLabel: "Klacht",
@@ -118,7 +118,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
     slug: "lower-back-pain-cycling",
     painArea: "back",
     en: {
-      seoTitle: "Bike Fit for Lower Back Pain | BestBikeFit4U",
+      seoTitle: "Bike Fit for Lower Back Pain | BikeFitBoost",
       seoDescription: "Review lower-back pain on the bike by assessing reach, bar drop, pelvic support, and ride intensity.",
       keywords: ["bike fit lower back pain", "cycling back pain position", "reach and drop lower back pain"],
       categoryLabel: "Pain point",
@@ -150,14 +150,14 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       relatedTitle: "Related next steps",
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike Fit Calculator" },
-        { href: "/how-it-works", label: "How BestBikeFit4U works" },
+        { href: "/how-it-works", label: "How BikeFitBoost works" },
         { href: "/case-study", label: "Join a pain case study" },
       ],
       primaryCta: "Start free fit",
       secondaryCta: "Join case study",
     },
     nl: {
-      seoTitle: "Bikefit bij lage rugklachten | BestBikeFit4U",
+      seoTitle: "Bikefit bij lage rugklachten | BikeFitBoost",
       seoDescription: "Beoordeel lage rugklachten op de fiets door reach, stuurdrop, bekkenondersteuning en belasting te beoordelen.",
       keywords: ["bikefit lage rugklachten", "rugpijn fietsen positie", "reach drop rugpijn"],
       categoryLabel: "Klacht",
@@ -190,7 +190,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       relatedLinks: [
         { href: "/calculators/bike-fit", label: "Bike fit calculator" },
         { href: "/bikefitting", label: bikeFittingOwnershipMessages.nl.link },
-        { href: "/how-it-works", label: "Hoe BestBikeFit4U werkt" },
+        { href: "/how-it-works", label: "Hoe BikeFitBoost werkt" },
         { href: "/case-study", label: painDetailDutchCopy.caseStudy },
       ],
       primaryCta: "Start gratis fit",
@@ -201,7 +201,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
     slug: "neck-pain-cycling",
     painArea: "neck",
     en: {
-      seoTitle: "Bike Fit for Neck Pain While Riding | BestBikeFit4U",
+      seoTitle: "Bike Fit for Neck Pain While Riding | BikeFitBoost",
       seoDescription: "Review bar drop, reach, hood position, and head posture when neck pain shows up during cycling.",
       keywords: ["bike fit neck pain", "cycling neck pain", "bar drop neck pain"],
       categoryLabel: "Pain point",
@@ -240,7 +240,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       secondaryCta: "Join case study",
     },
     nl: {
-      seoTitle: "Bikefit bij nekpijn tijdens fietsen | BestBikeFit4U",
+      seoTitle: "Bikefit bij nekpijn tijdens fietsen | BikeFitBoost",
       seoDescription: "Beoordeel stuurdrop, reach, remgreeppositie en hoofdhouding wanneer nekpijn tijdens fietsen terugkomt.",
       keywords: ["bikefit nekpijn", "nekpijn fietsen", "stuurdrop nekpijn"],
       categoryLabel: "Klacht",
@@ -284,7 +284,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
     slug: "hand-numbness-cycling",
     painArea: "hands",
     en: {
-      seoTitle: "Bike Fit for Hand Numbness and Pressure | BestBikeFit4U",
+      seoTitle: "Bike Fit for Hand Numbness and Pressure | BikeFitBoost",
       seoDescription: "Hand numbness often comes from too much front-end load. Review reach, bar drop, hood setup, and support through the saddle.",
       keywords: ["bike fit hand numbness", "cycling hand pain", "too much weight on bars"],
       categoryLabel: "Pain point",
@@ -323,7 +323,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       secondaryCta: "Join case study",
     },
     nl: {
-      seoTitle: "Bikefit bij dove handen en druk op de handen | BestBikeFit4U",
+      seoTitle: "Bikefit bij dove handen en druk op de handen | BikeFitBoost",
       seoDescription: "Dove handen komen vaak door te veel belasting op de voorkant. Controleer reach, stuurdrop, remgreeppositie en zadelondersteuning.",
       keywords: ["bikefit dove handen", "handpijn fietsen", "te veel gewicht op het stuur"],
       categoryLabel: "Klacht",
@@ -367,7 +367,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
     slug: "saddle-discomfort-cycling",
     painArea: "saddle",
     en: {
-      seoTitle: "Bike Fit for Saddle Discomfort | BestBikeFit4U",
+      seoTitle: "Bike Fit for Saddle Discomfort | BikeFitBoost",
       seoDescription: "Review saddle discomfort by checking height, setback, support, and weight distribution together.",
       keywords: ["bike fit saddle discomfort", "saddle pain cycling", "bike fit saddle support"],
       categoryLabel: "Pain point",
@@ -407,7 +407,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       secondaryCta: "Join case study",
     },
     nl: {
-      seoTitle: "Bikefit bij zadelongemak | BestBikeFit4U",
+      seoTitle: "Bikefit bij zadelongemak | BikeFitBoost",
       seoDescription: painDetailDutchCopy.saddleDescription,
       keywords: ["bikefit zadelongemak", "zadelpijn fietsen", "zadelondersteuning bikefit"],
       categoryLabel: "Klacht",

@@ -19,7 +19,7 @@ const auth = vi.hoisted(() => ({ isAuthenticated: false }));
 vi.mock("convex/react", () => ({ useConvexAuth: () => auth, useMutation: () => vi.fn() }));
 vi.mock("@convex-dev/auth/react", () => ({ useAuthActions: () => ({ signOut: vi.fn() }) }));
 vi.mock("@/components/branding", () => ({
-  BrandLogo: ({ href }: { href: string }) => <a href={href}>BestBikeFit4U</a>,
+  BrandLogo: ({ href }: { href: string }) => <a href={href}>BikeFitBoost</a>,
 }));
 afterEach(() => { cleanup(); auth.isAuthenticated = false; });
 

@@ -9,18 +9,28 @@ import { cn } from "@/utils/cn";
 const LOGO_ASSETS = {
   primary: {
     src: BRAND.assets.logoPrimary,
-    width: 381,
-    height: 64,
+    width: 344,
+    height: 60,
   },
   dark: {
     src: BRAND.assets.logoDark,
-    width: 381,
-    height: 64,
+    width: 344,
+    height: 60,
+  },
+  stacked: {
+    src: "/brand/svg/logo-gestapeld.svg",
+    width: 344,
+    height: 174,
+  },
+  stackedDark: {
+    src: "/brand/svg/logo-gestapeld-negatief.svg",
+    width: 344,
+    height: 174,
   },
   mark: {
     src: BRAND.assets.mark,
-    width: 64,
-    height: 64,
+    width: 84,
+    height: 60,
   },
   appIcon: {
     src: BRAND.assets.appIconSvg,
@@ -56,7 +66,9 @@ export function BrandLogo({
         : resolvedTheme === "dark"
           ? LOGO_ASSETS.dark
           : LOGO_ASSETS.primary
-      : LOGO_ASSETS[asset];
+      : asset === "stacked" && resolvedTheme === "dark"
+        ? LOGO_ASSETS.stackedDark
+        : LOGO_ASSETS[asset];
 
   const image = (
     <Image

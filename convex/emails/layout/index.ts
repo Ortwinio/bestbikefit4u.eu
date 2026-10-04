@@ -194,8 +194,8 @@ export function renderLayout(data: EmailLayoutData): string {
     + `<tr><td class="email-card" style="padding:40px;background:#FFFFFF;border-radius:24px;`
     + `overflow-wrap:anywhere;word-wrap:break-word;">`
     + `<table ${table} width="100%" style="margin:0 0 28px;"><tr><td style="padding-bottom:24px;">`
-    + `<a href="${BRAND.siteUrl}" style="text-decoration:none;"><img src="${asset("logo.png")}" `
-    + `alt="BestBikeFit4U" width="179" height="30" style="display:block;border:0;"></a></td></tr>`
+    + `<a href="${BRAND.siteUrl}" style="text-decoration:none;"><img src="${BRAND.siteUrl}/brand/png/logo-horizontaal-960.png" `
+    + `alt="BikeFitBoost" width="172" height="30" style="display:block;border:0;"></a></td></tr>`
     + `<tr><td height="4" style="height:4px;background:${colors.lime};font-size:0;line-height:4px;">`
     + `&nbsp;</td></tr></table>${data.content}${data.signOff === false ? "" : signOff(data.locale)}</td></tr>`
     + `<tr><td class="email-footer" align="center" style="padding:24px 40px;font-size:12px;`

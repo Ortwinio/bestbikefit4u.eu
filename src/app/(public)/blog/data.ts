@@ -1,4 +1,5 @@
 import "server-only";
+import { currentBrandCopy } from "@/lib/contentBrand";
 
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
@@ -103,7 +104,7 @@ export function localizeBlogText(
   locale: Locale,
   fallback = ""
 ) {
-  return value?.[locale]?.trim() || value?.en?.trim() || value?.nl?.trim() || fallback;
+  return currentBrandCopy(value?.[locale]?.trim() || value?.en?.trim() || value?.nl?.trim() || fallback);
 }
 
 export function getBlogCategoryLabel(category: string, locale: Locale) {

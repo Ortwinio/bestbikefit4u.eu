@@ -36,7 +36,7 @@ export const whyCopy: Record<
 > = {
   en: {
     metadata: {
-      title: "Why a good bike fit matters | BestBikeFit4U",
+      title: "Why a good bike fit matters | BikeFitBoost",
       description:
         "See why a good bike fit improves comfort, control, efficiency, and " +
         "repeatability, and what a fit actually changes on the bike.",
@@ -167,7 +167,7 @@ export const whyCopy: Record<
   },
   nl: {
     metadata: {
-      title: "Waarom een goede bike fit telt | BestBikeFit4U",
+      title: "Waarom een goede bike fit telt | BikeFitBoost",
       description:
         "Bekijk waarom een goede bike fit comfort, controle, efficientie en " +
         "herhaalbaarheid verbetert en wat een fit daadwerkelijk op de fiets " +

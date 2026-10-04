@@ -77,9 +77,9 @@ describe("blog index presentation and CMS contract", () => {
     expect(container.textContent).not.toMatch(/\[ARTIKEL|Voorbeeldgegevens/);
     expect(fetchQuery).toHaveBeenCalledWith("list", { numItems: 100, cursor: null, category: undefined });
     const metadata = await indexMetadata();
-    expect(metadata.alternates?.canonical).toBe(`https://bestbikefit4u.eu/${locale}/blog`);
+    expect(metadata.alternates?.canonical).toBe(`https://www.bikefitboost.com/${locale}/blog`);
     const schema = JSON.parse(container.querySelector('script[type="application/ld+json"]')!.textContent!);
-    expect(schema.itemListElement[1].item).toBe(`https://bestbikefit4u.eu/${locale}/blog`);
+    expect(schema.itemListElement[1].item).toBe(`https://www.bikefitboost.com/${locale}/blog`);
   });
 
   it.each(["nl", "en"] as const)("renders nine published cards with images and dates in %s", async (language) => {
@@ -155,14 +155,30 @@ describe("blog detail content and SEO contract", () => {
     expect(container.querySelector('a[href$="/blog/unpublished"]')).toBeNull();
     expect(container.querySelector(`a[href="/${locale}/guides/saddle-height"]`)).toBeTruthy();
     const schemas = JSON.parse(container.querySelector('script[type="application/ld+json"]')!.textContent!);
-    expect(schemas[0]).toMatchObject({ "@type": "BlogPosting", headline: post!.h1![locale], description: post!.metaDescription[locale], url: `https://bestbikefit4u.eu/${locale}/blog/cms-post-0`, inLanguage: locale, image: post!.ogImageUrl, datePublished: new Date(post!.publishedAt!).toISOString(), dateModified: new Date(post!.updatedAt).toISOString() });
-    expect(schemas[1].itemListElement[2].item).toBe(`https://bestbikefit4u.eu/${locale}/blog?category=bike-fit`);
+    expect(schemas[0]).toMatchObject({ "@type": "BlogPosting", headline: post!.h1![locale], description: post!.metaDescription[locale], url: `https://www.bikefitboost.com/${locale}/blog/cms-post-0`, inLanguage: locale, image: post!.ogImageUrl, datePublished: new Date(post!.publishedAt!).toISOString(), dateModified: new Date(post!.updatedAt).toISOString() });
+    expect(schemas[1].itemListElement[2].item).toBe(`https://www.bikefitboost.com/${locale}/blog?category=bike-fit`);
     const metadata = await articleMetadata({ params: Promise.resolve({ slug: "cms-post-0" }) });
     expect(metadata.title).toBe(post!.metaTitle[locale]);
     expect(metadata.description).toBe(post!.metaDescription[locale]);
     expect(metadata.alternates?.canonical).toBe(post!.canonicalUrl);
     expect(metadata.robots).toEqual({ index: false, follow: false });
     expect(metadata.openGraph).toMatchObject({ title: post!.ogTitle![locale], description: post!.ogDescription![locale], url: post!.canonicalUrl, images: [{ url: post!.ogImageUrl, alt: post!.ogImageAlt![locale] }], authors: ["CMS Author"] });
+  });
+
+  it("remaps a persisted legacy JSON-LD image without rewriting stored data", async () => {
+    post = { ...fixture(), ogImageUrl: "https://bestbikefit4u.eu/og/example.jpg" };
+    const { container } = render(await BlogArticlePage({ params: Promise.resolve({ slug: post.slug }) }));
+    const schema = JSON.parse(container.querySelector('script[type="application/ld+json"]')!.textContent!);
+    expect(schema[0].image).toBe("https://www.bikefitboost.com/og/example.jpg");
+    expect(post.ogImageUrl).toBe("https://bestbikefit4u.eu/og/example.jpg");
+  });
+
+  it("remaps a persisted legacy canonical for both canonical and Open Graph metadata", async () => {
+    post = { ...fixture(), canonicalUrl: "https://bestbikefit4u.eu/nl/blog/cms-post-0" };
+    const metadata = await articleMetadata({ params: Promise.resolve({ slug: post.slug }) });
+    expect(metadata.alternates?.canonical).toBe("https://www.bikefitboost.com/nl/blog/cms-post-0");
+    expect(metadata.openGraph).toMatchObject({ url: "https://www.bikefitboost.com/nl/blog/cms-post-0" });
+    expect(post.canonicalUrl).toBe("https://bestbikefit4u.eu/nl/blog/cms-post-0");
   });
 
   it("preserves optional-content and metadata fallbacks without unnecessary related queries", async () => {
@@ -174,7 +190,7 @@ describe("blog detail content and SEO contract", () => {
     expect(screen.queryByRole("heading", { name: blogMessages.nl.relatedPosts })).toBeNull();
     expect(fetchQuery).not.toHaveBeenCalledWith("list", expect.anything());
     const metadata = await articleMetadata({ params: Promise.resolve({ slug: post.slug }) });
-    expect(metadata.alternates?.canonical).toBe("https://bestbikefit4u.eu/nl/blog/cms-post-0");
+    expect(metadata.alternates?.canonical).toBe("https://www.bikefitboost.com/nl/blog/cms-post-0");
     expect(metadata.openGraph).toMatchObject({ title: post.metaTitle.nl, description: post.metaDescription.nl });
     expect(metadata.robots).toBeUndefined();
   });

@@ -47,7 +47,7 @@ for (const name of names) {
     heroImageFileName: `${guide.illustration}.webp`, heroImagePublicPath: hero,
     featuredImageUrl: hero, featuredImageAlt: bilingual(guide, "alt"),
     ogTitle: bilingual(guide, "metaTitle"), ogDescription: bilingual(guide, "metaDescription"),
-    ogImageUrl: `https://bestbikefit4u.eu/og${hero.replace(/\.webp$/, ".jpg")}`, ogImageAlt: bilingual(guide, "alt"),
+    ogImageUrl: `${SITE_ORIGIN}/og${hero.replace(/\.webp$/, ".jpg")}`, ogImageAlt: bilingual(guide, "alt"),
     relatedGuidePaths: links, relatedGuides: links.map((path) => path.replace("/guides/", "")),
     relatedKeywords: locales.flatMap((locale) => [guide[locale].keyword, ...guide[locale].relatedKeywords]),
     primaryCtaTarget: guide.nl.ctaTarget, primaryCtaLabel: bilingual(guide, "ctaLabel"),
@@ -62,3 +62,4 @@ await writeFile("src/i18n/marketing/guideRewriteTitlesB.ts",
   "export const guideRewriteTitlesB: Readonly<Record<string, { nl: string; en: string }>> = "
   + JSON.stringify(titles, null, 2) + ";\n");
 console.log(`Wrote ${names.length} Batch B review documents and title records. No database connection.`);
+import { SITE_ORIGIN } from "../../shared/brand.ts";

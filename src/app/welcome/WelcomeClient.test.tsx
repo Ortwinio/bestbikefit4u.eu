@@ -10,7 +10,7 @@ const runtime = vi.hoisted(() => ({ auth: { isAuthenticated: true, isLoading: fa
 vi.mock("convex/react", () => ({ useConvexAuth: () => runtime.auth, useQuery: (...args: unknown[]) => { runtime.query(...args); return runtime.context; }, useMutation: () => runtime.save }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: runtime.replace }) }));
 vi.mock("@/i18n/useDashboardMessages", () => ({ useDashboardMessages: () => ({ locale: runtime.locale }) }));
-vi.mock("@/components/branding/BrandLogo", () => ({ BrandLogo: () => <span>BestBikeFit4U</span> }));
+vi.mock("@/components/branding/BrandLogo", () => ({ BrandLogo: () => <span>BikeFitBoost</span> }));
 
 const entry = (overrides: Partial<HandoffEntry> = {}): HandoffEntry => ({ field: "inseamCm", value: 83, unit: "cm", calculator: "saddle-height", method: "measured", touchedAt: Date.now() - 1000, ...overrides });
 const submit = () => fireEvent.click(screen.getByRole("button", { name: getWelcomeCopy(runtime.locale).confirm }));
